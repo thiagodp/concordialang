@@ -21,3 +21,9 @@ In short:
 ## Features
 
 [ASL's features are written in ASL]((doc/features/)) - *of course! ;)*
+
+## License
+
+![AGPL](http://www.gnu.org/graphics/agplv3-88x31.png)
+
+This software is [licensed](LICENSE.txt) under the GNU Affero General Public License (GNU-AGPL). *Free* as in *freedom*.
