@@ -2,5 +2,5 @@
 
 ## Language Specification
 
-- [English][doc/asl-en.md]
-- [Português][doc/asl-pt.md]
+- [English](doc/asl-en.md)
+- [Português](doc/asl-pt.md)
