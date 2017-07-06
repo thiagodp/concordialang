@@ -7,11 +7,17 @@ In short:
 - Use your favorite text editor (UTF-8).
 - Automate your UI tests: ASL can be transformed automatically to UI tests that verifies whether your software is according to the documentation. Say goodbye to such manual tests.
 
+## Tutorial
+
+- [Writing your first feature](doc/tutorial/first-feature.md)
+- [Improving your specification](doc/tutorial/improving-spec.md)
+- [Generating UI tests](doc/tutorial/gen-ui-tests.md)
+
 ## Language Specification
 
-- [English](doc/asl-en.md)
-- [Português](doc/asl-pt.md)
+- [English](doc/langspec/asl-en.md)
+- [Português](doc/langspec/asl-pt.md)
 
 ## Features
 
-[See here](doc/features/) ASL's features written in ASL (of course! ;)
+[See here](doc/features/) ASL's features written in ASL - *of course! ;)*
