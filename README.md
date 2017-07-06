@@ -20,4 +20,4 @@ In short:
 
 ## Features
 
-[See here](doc/features/) ASL's features written in ASL - *of course! ;)*
+[ASL's features are written in ASL]((doc/features/)) - *of course! ;)*
