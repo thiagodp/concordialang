@@ -65,7 +65,7 @@ let processInput = function( input: Array< string >, flags: any ): void {
 };
 
 //console.log( cli );
-console.log( process.cwd() );
+//console.log( process.cwd() );
 // Note that meow (cli) already deals with the flags "help" and "version"
 if ( ! cli.flags.files && 0 === cli.input.length ) {
     showHelp();
