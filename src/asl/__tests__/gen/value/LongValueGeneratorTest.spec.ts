@@ -2,7 +2,7 @@ import { LongValueGenerator } from '../../../modules/gen/value/LongValueGenerato
 
 describe( 'LongValueGenerator Test', () => {
 
-    let longGen: LongValueGenerator = new LongValueGenerator();
+    let gen: LongValueGenerator = new LongValueGenerator();
 
     it( 'to-do', () => {
     } );  

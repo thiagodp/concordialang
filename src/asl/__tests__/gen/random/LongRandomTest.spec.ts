@@ -1,25 +1,25 @@
-import { LongRandom } from '../../../modules/gen/random/LongRandom';
+import { RandomLong } from '../../../modules/gen/random/RandomLong';
 
-describe( 'LongRandom Test', () => {
+describe( 'RandomLong Test', () => {
 
-    let longRandom: LongRandom = new LongRandom();
+    let random: RandomLong = new RandomLong();
 
     it( 'generates a random value between min and max, inclusive', () => {
         const min = -2, max = 2;
-        let val: number = longRandom.between( min, max );
+        let val: number = random.between( min, max );
         expect( val ).toBeGreaterThanOrEqual( min );
         expect( val ).toBeLessThanOrEqual( max );
     } );
 
     it( 'generates a value greater than a min value', () => {
         const min = -2;
-        let val: number = longRandom.after( min );
+        let val: number = random.after( min );
         expect( val ).toBeGreaterThan( min );
     } );
 
     it( 'generates a value less than a max value', () => {
         const max = 2;
-        let val: number = longRandom.before( max );
+        let val: number = random.before( max );
         expect( val ).toBeLessThan( max );
     } );    
 
