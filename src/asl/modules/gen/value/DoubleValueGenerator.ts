@@ -1,5 +1,5 @@
 import { DefaultValueGenerator } from './DefaultValueGenerator';
-import { DoubleRandom } from '../random/DoubleRandom';
+import { RandomDouble } from '../random/RandomDouble';
 import { DoubleLimits } from '../limits/DoubleLimits';
 
 /**
@@ -12,7 +12,7 @@ export class DoubleValueGenerator extends DefaultValueGenerator< number > {
 	private _min: number;
 	private _max: number;
 	private _delta: number;
-	private _random: DoubleRandom = new DoubleRandom();
+	private _random: RandomDouble = new RandomDouble();
 	
 	/**
 	 * Constructs with a minimum value, a maximum value and a delta value.

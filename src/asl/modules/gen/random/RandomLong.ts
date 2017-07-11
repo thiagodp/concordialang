@@ -3,7 +3,7 @@ import { LongLimits } from '../limits/LongLimits';
 /**
 * Generates random long integer values.
  */
-export class LongRandom {
+export class RandomLong {
 
 	/**
 	 * Generates a random number between a minimum and a maximum value, both

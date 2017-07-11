@@ -3,7 +3,7 @@ import { DoubleLimits } from '../limits/DoubleLimits';
 /**
  * Generates random double values.
  */
-export class DoubleRandom {
+export class RandomDouble {
 
 	/**
 	 * Generates a random number between a minimum and a maximum value, both
