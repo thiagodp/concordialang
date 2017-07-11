@@ -34,14 +34,15 @@
   "dependencies": {
     "meow": "^3.7.0",
     "node-glob": "^1.2.0",
-    "ora": "^1.3.0"
+    "ora": "^1.3.0",
+    "randexp": "^0.4.5"
   },
   "devDependencies": {
-    "typescript": "^2.2.1",
+    "typescript": "^2.4.1",    
     "@types/core-js": "^0.9.42",
-    "@types/node": "^8.0.9",
     "@types/jest": "^18.1.1",
     "@types/nightmare": "^1.6.30",
+    "@types/node": "^8.0.9",
     "jest": "^19.0.2",
     "ts-jest": "^19.0.0"
   },
@@ -49,7 +50,6 @@
     "transform": {
       ".(ts|tsx)": "<rootDir>/node_modules/ts-jest/preprocessor.js"
     },
-    "testRegex": "(/tests/.*|\\.(test|spec))\\.(ts|tsx)$",
     "moduleFileExtensions": [
       "ts",
       "tsx",

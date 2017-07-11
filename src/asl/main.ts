@@ -2,7 +2,7 @@
 
 import meow = require( 'meow' ); // parse cmd line args
 import ora = require( 'ora' ); // spinner
-import { InputProcessor } from './InputProcessor';
+import { InputProcessor } from './modules/cli/InputProcessor';
 
 const cli = meow(`
 	Usage

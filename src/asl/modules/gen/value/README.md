@@ -1,0 +1,1 @@
+Most of the classes on this folder was based on [FunTester](https://github.com/funtester/funtester)'s classes for value generation. See [funtester.core.process.value](https://github.com/funtester/funtester/tree/master/funtester/funtester-core/src/main/java/org/funtester/core/process/value).
