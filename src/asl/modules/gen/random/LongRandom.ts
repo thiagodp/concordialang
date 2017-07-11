@@ -1,4 +1,4 @@
-import { Limits } from './Limits';
+import { LongLimits } from '../limits/LongLimits';
 
 /**
  * Long random value generator.
@@ -20,13 +20,13 @@ export class LongRandom {
 	}
 
 	/**
-	 * Generates a random value lesser than a maximum value.
+	 * Generates a random value less than a maximum value.
 	 * 
 	 * @param max	The maximum value.
-	 * @return		A random value lesser than a maximum value.
+	 * @return		A random value less than a maximum value.
 	 */
 	public before( max: number ): number {
-		return this.between( Limits.MIN_INT, max - 1 );
+		return this.between( LongLimits.MIN, max - 1 );
 	}
 
 	/**
@@ -36,7 +36,7 @@ export class LongRandom {
 	 * @return		A random value greater than a minimum value.
 	 */	
 	public after( min: number ): number {
-		return this.between( min + 1, Limits.MAX_INT );
+		return this.between( min + 1, LongLimits.MAX );
 	}    
     
 }

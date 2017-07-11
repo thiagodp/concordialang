@@ -1,4 +1,4 @@
-import { LongRandom } from '../../../modules/gen/value/LongRandom';
+import { LongRandom } from '../../../modules/gen/random/LongRandom';
 
 describe( 'LongRandom Test', () => {
 
@@ -17,7 +17,7 @@ describe( 'LongRandom Test', () => {
         expect( val ).toBeGreaterThan( min );
     } );
 
-    it( 'generates a value lesser than a max value', () => {
+    it( 'generates a value less than a max value', () => {
         const max = 2;
         let val: number = longRandom.before( max );
         expect( val ).toBeLessThan( max );

@@ -1,6 +1,6 @@
 import { DefaultValueGenerator } from './DefaultValueGenerator';
-import { Limits } from './Limits';
-import { LongRandom } from './LongRandom';
+import { LongLimits } from '../limits/LongLimits';
+import { LongRandom } from '../random/LongRandom';
 
 /**
  * Long value generator.
@@ -13,14 +13,14 @@ export class LongValueGenerator extends DefaultValueGenerator< number > {
 
     constructor( min?: number, max?: number ) {
         super();
-        this._min = min !== undefined ? min: Limits.MIN_INT;
-        this._max = max !== undefined ? max: Limits.MAX_INT;
+        this._min = min !== undefined ? min: LongLimits.MIN;
+        this._max = max !== undefined ? max: LongLimits.MAX;
         this._random = new LongRandom();
     }
 
     /** @inheritDoc */
     public hasAvailableValuesOutOfTheRange(): boolean {
-		return this._min > Limits.MIN_INT || this._max < Limits.MAX_INT;		
+		return this._min > LongLimits.MIN || this._max < LongLimits.MAX;
 	}
 
     /** @inheritDoc */
