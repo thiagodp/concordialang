@@ -18,93 +18,67 @@ export class LongValueGenerator extends DefaultValueGenerator< number > {
         this._random = new LongRandom();
     }
 
-    /**
-     * @inheritDoc
-     */
+    /** @inheritDoc */
     public hasAvailableValuesOutOfTheRange(): boolean {
 		return this._min > Limits.MIN_INT || this._max < Limits.MAX_INT;		
 	}
 
-    /**
-     * @inheritDoc
-     */
+    /** @inheritDoc */
 	public min(): number {
 		return this._min;
 	}
 
-    /**
-     * @inheritDoc
-     */
+    /** @inheritDoc */
 	public max(): number {
 		return this._max;
 	}
 
-    /**
-     * @inheritDoc
-     */
+    /** @inheritDoc */
 	protected zero(): number {
 		return ( 0 >= this._min && 0 <= this._max ) ? 0 : this._min;
 	}
 
-    /**
-     * @inheritDoc
-     */
+    /** @inheritDoc */
 	protected middle(): number {
 		return this._min + ( ( this._max - this._min ) / 2 );
 	}
 	
-    /**
-     * @inheritDoc
-     */    
+    /** @inheritDoc */    
 	protected hasNext( value: number ): boolean {	
 		return value < this._max;
 	}	
 
-    /**
-     * @inheritDoc
-     */
+    /** @inheritDoc */
 	protected next( value: number ): number {
 		return value + 1;
 	}
 	
-    /**
-     * @inheritDoc
-     */    
+    /** @inheritDoc */   
 	protected hasPrior( value: number ): boolean {
 		return this._min < value;
 	}
 
-    /**
-     * @inheritDoc
-     */
+    /** @inheritDoc */
 	protected prior( value: number ): number {
 		return value - 1;
 	}
 
-    /**
-     * @inheritDoc
-     */
+    /** @inheritDoc */
 	protected randomBefore( value: number ): number {
 		return this._random.before( value );
 	}
 
-    /**
-     * @inheritDoc
-     */
+    /** @inheritDoc */
 	protected randomAfter( value: number ): number {
 		return this._random.after( value );
 	}
 	
-    /**
-     * @inheritDoc
-     */    
+    /** @inheritDoc */   
 	protected hasAnyValueBetween( min: number, max: number ): boolean {
 		return ( max - min ) > 0;
 	}
 
-    /**
-     * @inheritDoc
-     */
+    /** @inheritDoc */
 	protected randomBetween( min: number, max: number ): number {
 		return this._random.between( min, max );
 	}    
