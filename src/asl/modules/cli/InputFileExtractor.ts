@@ -7,7 +7,7 @@ export class InputFileExtractor {
     private extensions: Array< string >; // extensions without dots
 
     constructor( extensions?: Array< string > ) {
-        this.extensions = ( extensions ? extensions : [ 'js', 'map' ] );
+        this.extensions = ( extensions ? extensions : [ 'feature' ] );
     }
 
     /**
