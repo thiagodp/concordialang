@@ -1,7 +1,7 @@
 import { DoubleLimits } from '../limits/DoubleLimits';
 
 /**
- * Long random value generator.
+ * Generates random double values.
  */
 export class DoubleRandom {
 

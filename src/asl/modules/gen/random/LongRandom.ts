@@ -1,7 +1,7 @@
 import { LongLimits } from '../limits/LongLimits';
 
 /**
- * Long random value generator.
+* Generates random long integer values.
  */
 export class LongRandom {
 
