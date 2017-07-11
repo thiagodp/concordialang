@@ -1,0 +1,1 @@
+Most of the classes on this folder was based on [FunTester](https://github.com/funtester/funtester)'s classes for random value generation. See [funtester.common.util.rand](https://github.com/funtester/funtester/tree/master/funtester/funtester-common/src/main/java/org/funtester/common/util/rand).
