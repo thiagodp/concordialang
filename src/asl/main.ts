@@ -13,8 +13,10 @@ const cli = meow(`
 
 	Options
 	  -p, --plugin=<name>               Plug-in used to generate or execute test scripts.
-	  -f, --files=<"file1,file2,...">   Documentation files to consider. Use it instead of <dir>.
 	  -l, --lang=<lang-code>            Language used in the documentation files. Default is "en" (english).
+
+	  -i, --ignore=<"file1,file2,...">  Documentation files to ignore. Use it with <dir>.	  
+	  -f, --files=<"file1,file2,...">   Documentation files to consider. Use it instead of <dir>.
 	  
 	  -t, --no-test                     Do not generate abstract test cases.
 	  -s, --no-script                   Do not generate test scripts.
@@ -32,9 +34,10 @@ const cli = meow(`
 	  $ asl path/to/dir -t -s -p=some-plugin      
 `, {
 	alias: {
-        p: 'plugin',
-        f: 'files',
-        l: 'lang',
+		p: 'plugin',
+        l: 'lang',		
+		f: 'files',
+		i: 'ignore',
         t: 'no-test',
         s: 'no-script',
 		r: 'no-run',

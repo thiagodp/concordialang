@@ -50,6 +50,24 @@ export class InputProcessor {
             spinner.start( 'Detecting files in "' + ye( dir ) + '" ...' );
             // Extract files
             files = this.inputFileExtractor.extractFromDirectory( dir );
+            // Exclude files to ignore
+            if ( 'string' === typeof flags.ignore ) {
+                // Get ignored files and transform them to lower case
+                let ignoreFiles = this.inputFileExtractor.extractFromText( flags.ignore )
+                    .map( v => v.toLowerCase() );
+                // Make a copy of the files and transform them to lower case in order to 
+                // compare with the ignored files
+                let filesCopy = files.slice().map( v => v.toLowerCase() );
+                // Remove ignored files, according to the files copy
+                for ( let i in ignoreFiles ) {
+                    let pos = filesCopy.indexOf( ignoreFiles[ i ] );
+                    if ( pos >= 0 ) {
+                        spinner.info( 'Ignoring file "' + ye( ignoreFiles[ i ] ) + '"' );
+                        files.splice( pos, 1 );
+                    }
+                }
+            }
+
         // Files flag was given ?
         } else if ( 'string' === typeof flags.files ) {
             // Extract files
@@ -71,7 +89,7 @@ export class InputProcessor {
 
         let len = files.length;
         if ( len < 1 ) {
-            let msg = 'No files ' + ( 1 === input.length ? 'detected in "' + ye( input[ 0 ] ) + '"' : 'given.' );
+            let msg = 'No files ' + ( 1 === input.length ? 'to consider in "' + ye( input[ 0 ] ) + '"' : 'given.' );
             spinner.fail( msg );
             return false;
         }
@@ -79,7 +97,7 @@ export class InputProcessor {
 
         // Analysing files
         files.forEach( element => {
-            this.write( element );
+            this.write( "  " + this.chalk.gray( element ) );
         });
 
         spinner.succeed( 'Done' );
