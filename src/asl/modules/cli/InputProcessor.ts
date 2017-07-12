@@ -12,12 +12,9 @@ export class InputProcessor {
 
     process( input: Array< string >, flags: any ): boolean {
         /*
-        this.writeFn( 'Input:' );
-        this.writeFn( input );
-        this.writeFn( 'Flags:' );
-        this.writeFn( flags );
+        this.write( 'Input:' );  this.write( input );
+        this.write( 'Flags:' );  this.write( flags );
         */
-
         /*
         const spinner = ora( 'Loading files' ).start();
 
@@ -30,24 +27,47 @@ export class InputProcessor {
         const spinner = this.ora().start( 'Starting...' );
         const ye = this.chalk.yellow;
 
-        //
         // Language
-        let language = ( 'string' === typeof flags.lang ? flags.lang : 'en' );
+        let language = this.detectLanguage( flags );
         spinner.info( 'Using language ' + ye( language ) );
-
-        //
-        // Input files or directory
         spinner.stop();
+
+        // Input files or directory
+        let files: Array< string >;
+        try {
+            files = this.detectFiles( input, flags, spinner, ye );
+        } catch ( err ) {
+            spinner.fail( err.message );
+            return false;
+        }
+
+        // Analysing files
+        files.forEach( element => {
+            this.write( "  " + this.chalk.gray( element ) );
+        });
+
+        spinner.succeed( 'Done' );
+
+        return true;
+    }
+
+
+    detectLanguage( flags: any ): string {
+        return 'string' === typeof flags.lang ? flags.lang : 'en';
+    }
+
+    
+    detectFiles( input: Array< string >, flags: any, spinner: any, color: any ): Array< string > {
         let files: Array< string >;
         // Input directory was given ?
         if ( 1 == input.length ) {
             let dir = input[ 0 ];
             // Check directory
             if ( ! this.inputFileExtractor.directoryExists( dir ) ) {
-                spinner.fail( 'Directory ' + this.chalk.yellow( dir ) + ' does not exist.' );
-                return false;
+                let msg = 'Directory ' + this.chalk.yellow( dir ) + ' does not exist.';
+                throw new Error( msg );
             }
-            spinner.start( 'Detecting files in "' + ye( dir ) + '" ...' );
+            spinner.start( 'Detecting files in "' + color( dir ) + '" ...' );
             // Extract files
             files = this.inputFileExtractor.extractFromDirectory( dir );
             // Exclude files to ignore
@@ -62,7 +82,7 @@ export class InputProcessor {
                 for ( let i in ignoreFiles ) {
                     let pos = filesCopy.indexOf( ignoreFiles[ i ] );
                     if ( pos >= 0 ) {
-                        spinner.info( 'Ignoring file "' + ye( ignoreFiles[ i ] ) + '"' );
+                        spinner.info( 'Ignoring file "' + color( ignoreFiles[ i ] ) + '"' );
                         files.splice( pos, 1 );
                     }
                 }
@@ -80,29 +100,20 @@ export class InputProcessor {
             if ( incorrectFiles.length > 0 ) {
                 let msg = "Invalid files given: \n";
                 for ( let i in incorrectFiles ) {
-                    msg += "\t" + ( parseInt( i ) + 1 ) + ') ' + ye( incorrectFiles[ i ] ) + "\n";
+                    msg += "\t" + ( parseInt( i ) + 1 ) + ') ' + color( incorrectFiles[ i ] ) + "\n";
                 }
-                spinner.fail( msg );
-                return false;
+                throw new Error( msg );
             }
         }
 
         let len = files.length;
         if ( len < 1 ) {
-            let msg = 'No files ' + ( 1 === input.length ? 'to consider in "' + ye( input[ 0 ] ) + '"' : 'given.' );
-            spinner.fail( msg );
-            return false;
+            let msg = 'No files ' + ( 1 === input.length ? 'to consider in "' + color( input[ 0 ] ) + '"' : 'given.' );
+            throw new Error( msg );
         }
-        spinner.info( 'Reading ' + ye( len ) + ' ' + ( len > 1 ? 'files' : 'file' ) + '...' );
+        spinner.info( 'Reading ' + color( len ) + ' ' + ( len > 1 ? 'files' : 'file' ) + '...' );
 
-        // Analysing files
-        files.forEach( element => {
-            this.write( "  " + this.chalk.gray( element ) );
-        });
-
-        spinner.succeed( 'Done' );
-
-        return true;
+        return files;
     }
 
 }
