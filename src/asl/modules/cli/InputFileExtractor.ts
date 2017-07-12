@@ -5,38 +5,59 @@ import glob = require( 'glob' );
 export class InputFileExtractor {
 
     private extensions: Array< string >; // extensions without dots
+    private fileSeparator: string;    
 
-    constructor( extensions?: Array< string > ) {
+    constructor( extensions?: Array< string >, fileSeparator?: string ) {
         this.extensions = ( extensions ? extensions : [ 'feature' ] );
+        this.fileSeparator = fileSeparator ? fileSeparator : ',';
     }
 
     /**
-     * Extract input files according to the command line options.
+     * Returns true if the given directory exists.
      * 
-     * @param input Input
-     * @param flags Flags
-     * @return Detected files.
+     * @param dir Directory to check.
      */
-    extract( input: Array< string >, flags: any ): Array< string > {
-        let files: Array< string > = [];
-        // Handles the directory given. E.g.: $ asm path/to/dir
-        if ( input.length > 0 ) { // dir
-            let dir = input[ 0 ];
-            let ext = 1 === this.extensions.length
-                ? this.extensions[ 0 ]
-                : '{' + this.extensions.join( ',' ) + '}';
-            let filter = dir + '/**/*.' + ext;
-            files = glob.sync( filter );
+    directoryExists( dir: string ): boolean {
+        return fs.existsSync( dir );
+    }
 
-        // Handles flags such as: $ asm --files="path/to/f1.feature,other/f2.feature"
-        } else if ( 'string' === typeof flags.files ) {
-            let filesStr = flags.files;
-            // Remove quotes arround the given value
-            filesStr = filesStr.replace( /^"(.*)"$/, '$1' );
-            // Extract files separated by comma
-            files = filesStr.split( ',' );
+    /**
+     * Returns the invalid files.
+     * 
+     * @param files Files to be checked.
+     */
+    checkFiles( files: Array< string > ): Array< string > {
+        let invalid: Array< string > = [];
+        for ( let i in files  ) {
+            if ( ! fs.existsSync( files[ i ] ) ) {
+                invalid.push( files[ i ] );
+            }
         }
-        return files;
+        return invalid;
+    }
+
+    /**
+     * Extract files from a directory, filtered by the configured extensions.
+     * 
+     * @param dir Directory
+     */
+    extractFromDirectory( dir: string ): Array< string > {
+        let ext = 1 === this.extensions.length
+            ? this.extensions[ 0 ]
+            : '{' + this.extensions.join( ',' ) + '}';
+        let filter = dir + '/**/*.' + ext;
+        return glob.sync( filter );
+    }
+
+    /**
+     * 
+     * @param text Text with the file names, separatted by.
+     */
+    extractFromText( text: string ): Array< string > {
+        // Remove quotes arround the given value
+        let files = text.replace( /^"(.*)"$/, '$1' );
+        // Extract files separated by fileSeparator (i.e. comma)
+        return files.split( this.fileSeparator );        
     }
 
 }
