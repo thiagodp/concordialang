@@ -4,12 +4,18 @@ import { InputFileExtractor } from './InputFileExtractor';
 
 export class InputProcessor {
 
-    private inputFileExtractor: InputFileExtractor;
+    private inputFileExtractor: InputFileExtractor = new InputFileExtractor();
+    private paramSeparator: string = ',';
 
     constructor( private write: Function, private ora: any, private chalk: any ) {
-        this.inputFileExtractor = new InputFileExtractor();
     }
 
+    /**
+     * Process an input.
+     * 
+     * @param input Input
+     * @param flags Flags
+     */
     process( input: Array< string >, flags: any ): boolean {
         /*
         this.write( 'Input:' );  this.write( input );
@@ -51,12 +57,23 @@ export class InputProcessor {
         return true;
     }
 
-
+    /**
+     * Detect input language.
+     * 
+     * @param flags Input flags
+     */
     detectLanguage( flags: any ): string {
         return 'string' === typeof flags.lang ? flags.lang : 'en';
     }
 
-    
+    /**
+     * Detect an input directory or input files.
+     * 
+     * @param input Input
+     * @param flags Flags
+     * @param spinner Spinner
+     * @param color Function to color text
+     */
     detectFiles( input: Array< string >, flags: any, spinner: any, color: any ): Array< string > {
         let files: Array< string >;
         // Input directory was given ?
@@ -69,11 +86,11 @@ export class InputProcessor {
             }
             spinner.start( 'Detecting files in "' + color( dir ) + '" ...' );
             // Extract files
-            files = this.inputFileExtractor.extractFromDirectory( dir );
+            files = this.inputFileExtractor.extractFilesFromDirectory( dir );
             // Exclude files to ignore
             if ( 'string' === typeof flags.ignore ) {
                 // Get ignored files and transform them to lower case
-                let ignoreFiles = this.inputFileExtractor.extractFromText( flags.ignore )
+                let ignoreFiles = this.extractParametersFromText( flags.ignore, this.paramSeparator )
                     .map( v => v.toLowerCase() );
                 // Make a copy of the files and transform them to lower case in order to 
                 // compare with the ignored files
@@ -90,17 +107,24 @@ export class InputProcessor {
 
         // Files flag was given ?
         } else if ( 'string' === typeof flags.files ) {
+
+            // Warn in case of the ignore flag
+            if ( 'string' === typeof flags.ignore ) {
+                spinner.warn( 'The option ' + color( '--ignore' ) + ' should not be used with ' + color( '--files' )
+                    + ' and will be disconsidered.' );
+            }
+
             // Extract files
-            files = this.inputFileExtractor.extractFromText( flags.files );
+            files = this.extractParametersFromText( flags.files, this.paramSeparator )
             // Remove duplicates
             files = Array.from( new Set( files ) );
             // Check files
             spinner.info( 'Checking files...' );
-            let incorrectFiles: Array< string > = this.inputFileExtractor.checkFiles( files );
-            if ( incorrectFiles.length > 0 ) {
+            let nonExistentFiles: Array< string > = this.inputFileExtractor.nonExistentFiles( files );
+            if ( nonExistentFiles.length > 0 ) {
                 let msg = "Invalid files given: \n";
-                for ( let i in incorrectFiles ) {
-                    msg += "\t" + ( parseInt( i ) + 1 ) + ') ' + color( incorrectFiles[ i ] ) + "\n";
+                for ( let i in nonExistentFiles ) {
+                    msg += "\t" + ( parseInt( i ) + 1 ) + ') ' + color( nonExistentFiles[ i ] ) + "\n";
                 }
                 throw new Error( msg );
             }
@@ -115,5 +139,17 @@ export class InputProcessor {
 
         return files;
     }
+
+    /**
+     * Extract parameters.
+     * 
+     * @param text Text with the file names, separatted by.
+     */
+    extractParametersFromText( text: string, separator?: string ): Array< string > {
+        // Remove quotes arround the given value
+        let params = text.replace( /^"(.*)"$/, '$1' );
+        // Extract parameters separated by a separator (i.e. comma)
+        return params.split( separator ? separator : ',' );
+    }    
 
 }
