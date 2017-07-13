@@ -1,14 +1,9 @@
 import path = require( 'path' );
 import fs = require( 'fs' );
 import glob = require( 'glob' );
+import crypto = require( 'crypto' );
 
 export class InputFileExtractor {
-
-    private extensions: Array< string >; // extensions without dots
-
-    constructor( extensions?: Array< string > ) {
-        this.extensions = ( extensions ? extensions : [ 'feature' ] );
-    }
 
     /**
      * Returns true if the given directory exists.
@@ -17,6 +12,29 @@ export class InputFileExtractor {
      */
     directoryExists( dir: string ): boolean {
         return fs.existsSync( dir );
+    }
+
+
+    /**
+     * Filter the given files, returning a new list with only the files that match
+     * the given extensions.
+     * 
+     * @param files Files to filter
+     * @param extensions Extensions to consider, without dots. E.g.: [ 'txt', 'json' ]
+     * @returns Array< string >
+     */
+    filterFilenames( files: Array< string >, extensions: Array< string > ): Array< string > {
+        let filtered: Array< string > = [];
+        let ext: string;
+        for ( let i in files  ) {
+            // Extract the extension and remove the dot
+            ext = path.extname( files[ i ] ).replace( '.', '' );
+            // If it exists in the list of extensions, add it
+            if ( extensions.indexOf( ext ) > 0 ) {
+                filtered.push( files[ i ] );
+            }
+        }
+        return filtered;        
     }
 
     /**
@@ -35,16 +53,43 @@ export class InputFileExtractor {
     }
 
     /**
-     * Extract files from a directory, filtered by the configured extensions.
+     * Extract files from a directory.
      * 
      * @param dir Directory
+     * @param extensions File extensions to filter, without dots (e.g.: [ 'txt', 'json' ]). Optional.
+     * @returns Array< string >
      */
-    extractFilesFromDirectory( dir: string ): Array< string > {
-        let ext = 1 === this.extensions.length
-            ? this.extensions[ 0 ]
-            : '{' + this.extensions.join( ',' ) + '}';
-        let filter = dir + '/**/*.' + ext;
+    extractFilesFromDirectory( dir: string, extensions?: Array< string > ): Array< string > {
+        let filter: string;
+        if ( extensions && extensions.length > 0 ) {
+            let ext = 1 === extensions.length ? extensions[ 0 ] : '{' + extensions.join( ',' ) + '}';
+            filter = dir + '/**/*.' + ext;
+        } else {
+            filter = dir + '/**/*.*';
+        }
         return glob.sync( filter );
     }
+
+
+    /**
+     * Returns a (sha-1) hash for the given file.
+     * 
+     * @param fileName File name
+     */
+    hashOfFile( fileName: string ) {
+        const buffer = fs.readFileSync( fileName );
+        return crypto.createHash( 'sha1' )
+            .update( buffer.toString() )
+            .digest( 'hex' );
+    }
+
+
+    extractFileName( filePath: string ): string {
+        return path.basename( filePath );
+    }
+
+    extractFileExtension( file: string ): string {
+        return path.extname( file );
+    }    
 
 }

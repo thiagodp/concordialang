@@ -1,10 +1,9 @@
-import { isArray } from 'util';
-
 import { InputFileExtractor } from './InputFileExtractor';
 
 export class InputProcessor {
 
     private inputFileExtractor: InputFileExtractor = new InputFileExtractor();
+    private defaultExtensions: Array< string > = [ 'asl', 'feature', 'feat' ];    
     private paramSeparator: string = ',';
 
     constructor( private write: Function, private ora: any, private chalk: any ) {
@@ -17,19 +16,6 @@ export class InputProcessor {
      * @param flags Flags
      */
     process( input: Array< string >, flags: any ): boolean {
-        /*
-        this.write( 'Input:' );  this.write( input );
-        this.write( 'Flags:' );  this.write( flags );
-        */
-        /*
-        const spinner = ora( 'Loading files' ).start();
-
-        setTimeout(() => {
-            spinner.color = 'yellow';
-            spinner.text = 'Loading rainbows';
-        }, 1000);
-        */
-
         const spinner = this.ora().start( 'Starting...' );
         const ye = this.chalk.yellow;
 
@@ -49,8 +35,8 @@ export class InputProcessor {
 
         // Analysing files
         files.forEach( element => {
-            this.write( "  " + this.chalk.gray( element ) );
-        });
+            this.analyzeFile( element );
+        } );
 
         spinner.succeed( 'Done' );
 
@@ -76,6 +62,7 @@ export class InputProcessor {
      */
     detectFiles( input: Array< string >, flags: any, spinner: any, color: any ): Array< string > {
         let files: Array< string >;
+        let readableExtensions: string = this.makeReadableExtensions( this.defaultExtensions, color );
         // Input directory was given ?
         if ( 1 == input.length ) {
             let dir = input[ 0 ];
@@ -84,13 +71,13 @@ export class InputProcessor {
                 let msg = 'Directory ' + this.chalk.yellow( dir ) + ' does not exist.';
                 throw new Error( msg );
             }
-            spinner.start( 'Detecting files in "' + color( dir ) + '" ...' );
+            spinner.start( 'Searching for ' + readableExtensions + ' files in "' + color( dir ) + '" ...' );
             // Extract files
-            files = this.inputFileExtractor.extractFilesFromDirectory( dir );
+            files = this.inputFileExtractor.extractFilesFromDirectory( dir, this.defaultExtensions );
             // Exclude files to ignore
             if ( 'string' === typeof flags.ignore ) {
                 // Get ignored files and transform them to lower case
-                let ignoreFiles = this.extractParametersFromText( flags.ignore, this.paramSeparator )
+                let ignoreFiles = this.extractValuesFromTextualParameter( flags.ignore, this.paramSeparator )
                     .map( v => v.toLowerCase() );
                 // Make a copy of the files and transform them to lower case in order to 
                 // compare with the ignored files
@@ -100,6 +87,7 @@ export class InputProcessor {
                     let pos = filesCopy.indexOf( ignoreFiles[ i ] );
                     if ( pos >= 0 ) {
                         spinner.info( 'Ignoring file "' + color( ignoreFiles[ i ] ) + '"' );
+                        // Remove it from the files array
                         files.splice( pos, 1 );
                     }
                 }
@@ -110,19 +98,32 @@ export class InputProcessor {
 
             // Warn in case of the ignore flag
             if ( 'string' === typeof flags.ignore ) {
-                spinner.warn( 'The option ' + color( '--ignore' ) + ' should not be used with ' + color( '--files' )
-                    + ' and will be disconsidered.' );
+                let msg = 'The option ' + color( '--ignore' ) + ' should not be used with ' + color( '--files' )
+                    + ' and will be disconsidered.';
+                spinner.warn( msg );
             }
 
             // Extract files
-            files = this.extractParametersFromText( flags.files, this.paramSeparator )
+            files = this.extractValuesFromTextualParameter( flags.files, this.paramSeparator )
             // Remove duplicates
             files = Array.from( new Set( files ) );
+            // Remove files with invalid extensions
+            let lengthBefore: number = files.length;
+            files = this.inputFileExtractor.filterFilenames( files, this.defaultExtensions );
+            let lengthAfter: number = files.length;
+            if ( lengthBefore != lengthAfter ) {
+                let diff = lengthBefore - lengthAfter;
+                let isPlural = diff > 1;
+                let msg = 'Ignoring ' + color( diff  ) + ( isPlural ? ' files' : ' file' )
+                    + ' because of ' + ( isPlural ? 'their' : 'its' ) + ' unexpected extension'
+                    + ( isPlural ? 's.' : '.' );
+                spinner.warn( msg );
+            }
             // Check files
-            spinner.info( 'Checking files...' );
+            spinner.info( 'Checking ' + color( lengthAfter ) + ' file' + ( lengthAfter > 1 ? 's': '' ) + '...' );
             let nonExistentFiles: Array< string > = this.inputFileExtractor.nonExistentFiles( files );
             if ( nonExistentFiles.length > 0 ) {
-                let msg = "Invalid files given: \n";
+                let msg = 'Files not found: ' + color( nonExistentFiles.length ) + "\n";
                 for ( let i in nonExistentFiles ) {
                     msg += "\t" + ( parseInt( i ) + 1 ) + ') ' + color( nonExistentFiles[ i ] ) + "\n";
                 }
@@ -132,7 +133,7 @@ export class InputProcessor {
 
         let len = files.length;
         if ( len < 1 ) {
-            let msg = 'No files ' + ( 1 === input.length ? 'to consider in "' + color( input[ 0 ] ) + '"' : 'given.' );
+            let msg = 'No ' + readableExtensions + ' files ' + ( 1 === input.length ? 'to consider in "' + color( input[ 0 ] ) + '"' : 'given.' );
             throw new Error( msg );
         }
         spinner.info( 'Reading ' + color( len ) + ' ' + ( len > 1 ? 'files' : 'file' ) + '...' );
@@ -141,15 +142,39 @@ export class InputProcessor {
     }
 
     /**
-     * Extract parameters.
+     * Returns extensions in a user-readable format.
      * 
-     * @param text Text with the file names, separatted by.
+     * @param extensions Extensions
+     * @param color Function to colorize the extensions.
+     * @returns string
      */
-    extractParametersFromText( text: string, separator?: string ): Array< string > {
+    private makeReadableExtensions( extensions: Array< string >, color: Function ): string {
+        let ext: string = extensions.slice().map( e => color( '.' + e ) ).join( ', ' );
+        if ( ext.length > 1 ) {
+            let pos = ext.lastIndexOf( ',' );
+            ext = ext.slice( 0, pos ) + ' and' + ext.slice( pos + 1 );
+        }
+        return ext;
+    }
+
+    /**
+     * Extract values from a textual parameter.
+     * 
+     * @param text Text to extract the values.
+     * @param separator Separator for the parameters. Optional. Default is ",".
+     * @returns Array< string >
+     */
+    extractValuesFromTextualParameter( text: string, separator?: string ): Array< string > {
         // Remove quotes arround the given value
         let params = text.replace( /^"(.*)"$/, '$1' );
         // Extract parameters separated by a separator (i.e. comma)
         return params.split( separator ? separator : ',' );
     }    
 
+
+    analyzeFile( file: string ) {
+        let dec = [];
+        let hash = this.inputFileExtractor.hashOfFile( file );
+        this.write( this.chalk.gray( '  ' + file + ' (' + hash.substr( 0, 8 ) + ')' ) );
+    }
 }
