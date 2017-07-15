@@ -76,8 +76,8 @@ export class InputFileExtractor {
      * 
      * @param fileName File name
      */
-    hashOfFile( fileName: string ) {
-        const buffer = fs.readFileSync( fileName );
+    hashOfFile( fileName: string, encoding?: string ) {
+        const buffer = fs.readFileSync( fileName, encoding ? encoding : null );
         return crypto.createHash( 'sha1' )
             .update( buffer.toString() )
             .digest( 'hex' );

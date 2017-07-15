@@ -1,5 +1,22 @@
+# ASL
 
-# Structure
+## Overview
+
+```
++-----+     +-----+     +----------+      +----------------+     +-------------------------+
+| DSL | --> | AST | --> | Compiler |  --> | Abstract Tests | --> | Complete Abstract Tests | 
++-----+     +-----+     +----------+      +----------------+     +-------------------------+
+                            |                                             ^      |
+                            |             +-----------+                   |      |
+                            +-----------> | Test Data | ------------------+      |
+                                          +-----------+                          |
+                                              +-------------+     +---------+    |
+                                              | Test Script | <-- | Plug-in | <--+
+                                              +-------------+     +---------+
+```
+
+
+## Structure
 
 ```javascript
 
@@ -16,6 +33,7 @@ parsed[ hash ] =  {
     problems: [
         {
             line: number,
+            column: number,
             message: string,
             type: string // 'error' | 'warning'
         }
@@ -28,12 +46,18 @@ parsed[ hash ] =  {
     features: [
         {
             name: string;
-            description: string;
+            description?: string;
+            location: {
+                line: number,
+                column: number
+            }
 
             scenarios: [
                 {
                     number?: string;
-                    name: string
+                    name?: string;
+                    description?: string;
+                    location: { ... };
                     sentences: string[];
                     parsed: [
                         {
@@ -66,7 +90,7 @@ parsed[ hash ] =  {
                             action: 'script' | 'command',
                             name?: string;
                             content?: string;
-                            // name or content is used, bot not both
+                            // name or content is used, but not both
                         }
                     ]
                 }
@@ -85,3 +109,6 @@ fileHashes = {};
 fileHashes[ 'path/to/a.asl' ] = 'a1b2c3';
 fileHashes[ '../to/a.asl' ] = 'a1b2c3';
 ```
+
+## What will be made with the structure
+

@@ -4,7 +4,8 @@ export class InputProcessor {
 
     private inputFileExtractor: InputFileExtractor = new InputFileExtractor();
     private defaultExtensions: Array< string > = [ 'asl', 'feature', 'feat' ];    
-    private paramSeparator: string = ',';
+    private defaultFileEncoding: string = 'UTF-8';
+    private defaultParamSeparator: string = ',';
 
     constructor( private write: Function, private ora: any, private chalk: any ) {
     }
@@ -77,7 +78,7 @@ export class InputProcessor {
             // Exclude files to ignore
             if ( 'string' === typeof flags.ignore ) {
                 // Get ignored files and transform them to lower case
-                let ignoreFiles = this.extractValuesFromTextualParameter( flags.ignore, this.paramSeparator )
+                let ignoreFiles = this.extractValuesFromTextualParameter( flags.ignore, this.defaultParamSeparator )
                     .map( v => v.toLowerCase() );
                 // Make a copy of the files and transform them to lower case in order to 
                 // compare with the ignored files
@@ -104,7 +105,7 @@ export class InputProcessor {
             }
 
             // Extract files
-            files = this.extractValuesFromTextualParameter( flags.files, this.paramSeparator )
+            files = this.extractValuesFromTextualParameter( flags.files, this.defaultParamSeparator )
             // Remove duplicates
             files = Array.from( new Set( files ) );
             // Remove files with invalid extensions
@@ -174,7 +175,8 @@ export class InputProcessor {
 
     analyzeFile( file: string ) {
         let dec = [];
-        let hash = this.inputFileExtractor.hashOfFile( file );
-        this.write( this.chalk.gray( '  ' + file + ' (' + hash.substr( 0, 8 ) + ')' ) );
+        let hash = this.inputFileExtractor.hashOfFile( file, this.defaultFileEncoding );
+        this.write( this.chalk.gray( '  ' + file + ' (' + hash.substr( 0, 7 ) + ')' ) );
     }
+
 }

@@ -1,6 +1,6 @@
 {
   "name": "asl",
-  "description": "Agile Specification Language Interpreter",
+  "description": "Agile Specification Language Parser",
   "keywords": [
     "agile",
     "specification",
