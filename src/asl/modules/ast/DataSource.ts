@@ -1,4 +1,4 @@
-import { Node } from './Node';
+import { ASTNode } from './ASTNode';
 
 // Example 1:
 // ```
@@ -18,7 +18,7 @@ import { Node } from './Node';
 // ```
 //
 
-export interface DataSource extends Node {
+export interface DataSource extends ASTNode {
     name: string;
     type: 'database' | 'file';
 }

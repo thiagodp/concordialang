@@ -1,5 +1,5 @@
-import { Node } from './Node';
+import { ASTNode } from './ASTNode';
 
-export interface Import extends Node {
+export interface Import extends ASTNode {
     file: string;
 }

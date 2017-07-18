@@ -1,4 +1,4 @@
-import { Node } from './Node';
+import { ASTNode } from './ASTNode';
 
 // Example 1:
 // ```
@@ -8,11 +8,11 @@ import { Node } from './Node';
 // ```
 //
 
-export interface ContantsBlock extends Node {
+export interface ContantsBlock extends ASTNode {
     contants: Array< Constant >;
 }
 
-export interface Constant extends Node {
+export interface Constant extends ASTNode {
     name: string;
     value: string;
 }

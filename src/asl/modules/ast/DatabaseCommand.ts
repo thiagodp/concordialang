@@ -1,6 +1,6 @@
-import { Node } from './Node';
+import { ASTNode } from './ASTNode';
 
-export interface DatabaseCommand extends Node {
+export interface DatabaseCommand extends ASTNode {
     type: 'query' | 'command';
     name: string;
     command: string;

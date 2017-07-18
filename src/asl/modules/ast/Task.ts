@@ -1,4 +1,4 @@
-import { Node } from './Node';
+import { ASTNode } from './ASTNode';
 
 //
 // Task example 1:
@@ -9,7 +9,7 @@ import { Node } from './Node';
 //   - Run command `cmd /k dir`
 // ```
 
-export interface TaskContent extends Node {
+export interface TaskContent extends ASTNode {
     
     action: 'script' | 'command';
     // name or content is used, bot not both
@@ -17,7 +17,7 @@ export interface TaskContent extends Node {
     content?: string;
 }
 
-export interface Task extends Node {
+export interface Task extends ASTNode {
 
     // When:
     // 'BAT' = before all the tests, 
