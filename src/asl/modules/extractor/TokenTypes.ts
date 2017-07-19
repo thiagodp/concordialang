@@ -3,7 +3,7 @@
  */
 export abstract class TokenTypes {
 
-    static EMPTY: string = 'empty';
+    static EMPTY: string = 'empty'; // ignorable
     static FEATURE: string = 'feature';
     static SCENARIO: string = 'scenario';
 

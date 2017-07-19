@@ -22,8 +22,8 @@ export interface Feature extends ASTNode {
 
     name: string;
     description?: string;
-    tags: Array< string >;
+    tags?: Array< string >;
 
-    scenarios: Array< Scenario >;
-    rules: Array< Rule >;
+    scenarios?: Array< Scenario >;
+    rules?: Array< Rule >;
 }

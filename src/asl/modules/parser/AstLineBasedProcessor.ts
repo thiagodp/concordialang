@@ -2,8 +2,8 @@
 import { LineBasedProcessor } from "./LineBasedProcessor";
 import { AstContext } from "./AstContext";
 import { TokenTypes } from "../extractor/TokenTypes";
-import { EmptyTokenDetector } from "../extractor/EmptyTokenDetector";
-import { DictionaryBasedTokenDetector } from "../extractor/DictionaryBasedTokenDetector";
+import { EmptyExtractor } from "../extractor/EmptyExtractor";
+import { DictionaryBasedNodeExtractor } from "../extractor/DictionaryBasedNodeExtractor";
 import { TokenDetector } from "../extractor/TokenDetector";
 
 export class AstLineBasedProcessor implements LineBasedProcessor {
@@ -27,19 +27,19 @@ export class AstLineBasedProcessor implements LineBasedProcessor {
     }
     
     private createDetectors( dictionary ): void {
-        this._detectors[ TokenTypes.EMPTY ] = new EmptyTokenDetector();
+        this._detectors[ TokenTypes.EMPTY ] = new EmptyExtractor();
         // Create dictionary-based token detectors
         let available = TokenTypes.variableTypes();
         for ( let i in available ) {
             let tokenType = available[ i ];
             this._detectors[ tokenType ] = 
-                new DictionaryBasedTokenDetector( tokenType, dictionary[ tokenType ] );
+                new DictionaryBasedNodeExtractor( tokenType, dictionary[ tokenType ] );
         }        
     }
 
     private detectorForTokenType( tokenType: string ): TokenDetector {
         let obj = this._detectors[ tokenType ];
-        return obj || new EmptyTokenDetector();
+        return obj || new EmptyExtractor();
     }
 
     private extractorForTokenType( tokenType: string ): NodeExtractor {

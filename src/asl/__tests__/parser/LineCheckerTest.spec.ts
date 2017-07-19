@@ -42,13 +42,13 @@ describe( 'LineChecker Test', () => {
     // textAfterSeparator
 
     it( 'retrieves any text after colon', () => {
-        expect( checker.textAfterSeparator( 'Hello: Word', separator ) ).toBe( ' Word' );
-        expect( checker.textAfterSeparator( 'Hello:: Word', separator ) ).toBe( ': Word' );
-        expect( checker.textAfterSeparator( 'Hello: Word : !', separator ) ).toBe( ' Word : !' );
+        expect( checker.textAfterSeparator( separator, 'Hello: Word' ) ).toBe( ' Word' );
+        expect( checker.textAfterSeparator( separator, 'Hello:: Word' ) ).toBe( ': Word' );
+        expect( checker.textAfterSeparator( separator, 'Hello: Word : !' ) ).toBe( ' Word : !' );
     } );
 
     it( 'retrieves an empty string when does not have colon', () => {
-        expect( checker.textAfterSeparator( 'Hello Word', separator ) ).toBe( '' );
+        expect( checker.textAfterSeparator( separator, 'Hello Word' ) ).toBe( '' );
     } );
 
 } );
