@@ -1,6 +1,6 @@
 import { Scenario } from './Scenario';
 import { Rule } from "./Rule";
-import { ASTNode } from './ASTNode';
+import { NamedASTNode } from './ASTNode';
 
 // Feature example 1:
 // ```
@@ -18,9 +18,8 @@ import { ASTNode } from './ASTNode';
 //   I would like to login
 // ```
 
-export interface Feature extends ASTNode {
+export interface Feature extends NamedASTNode {
 
-    name: string;
     description?: string;
     tags?: Array< string >;
 

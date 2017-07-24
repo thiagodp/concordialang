@@ -1,12 +1,12 @@
-import { ASTNode } from './ASTNode';
+import { ASTNode, NamedASTNode } from './ASTNode';
+
 
 export interface ScenarioSentence extends ASTNode {
 
 }
 
-export interface Scenario extends ASTNode {
+export interface Scenario extends NamedASTNode {
 
-    name: string;
     description?: string;
 
     sentences: Array< ScenarioSentence >;
