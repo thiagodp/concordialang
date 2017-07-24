@@ -1,12 +1,14 @@
+import { Document } from '../ast/Document';
 import { Feature } from '../ast/Feature';
 import { Scenario } from '../ast/Scenario';
 
-export interface AstContext {
+export interface ASTContext {
 
     inFeature: boolean;
     inScenario: boolean;
 
-    currentFeature?: Feature;
     currentScenario?: Scenario;
+
+    document?: Document;
 
 }

@@ -1,6 +1,6 @@
 import fs = require('fs');
 import readline = require('readline');
-import { LineBasedProcessor } from "./LineBasedProcessor";
+import { DocumentProcessor } from "./DocumentProcessor";
 
 export class FileProcessor {
 
@@ -10,15 +10,12 @@ export class FileProcessor {
     }
 
     /**
-     * Process a file, line-by-line.
+     * Use a processor to process a file, line-by-line.
      * 
      * @param file Input file.
-     * @param processor Line based processor.
+     * @param processor Processor.
      */
-    process(
-        file: string,
-        processor: LineBasedProcessor
-    ) {
+    process( file: string, processor: DocumentProcessor ) {
         let readStream = fs.createReadStream( file );
         readStream.setEncoding( this._encoding );
 
@@ -27,7 +24,7 @@ export class FileProcessor {
         rl.on( 'error', processor.onError );
 
         rl.on( 'line', ( line ) => {
-            processor.onRead( line, ++this._lineNumber );
+            processor.onLineRead( line, ++this._lineNumber );
         } );
 
         rl.on( 'close', () => {

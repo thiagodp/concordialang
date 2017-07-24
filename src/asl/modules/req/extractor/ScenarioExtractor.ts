@@ -1,8 +1,8 @@
 import { NameBasedExtractor } from "./NameBasedExtractor";
-import { Feature } from "../ast/Feature";
 import { TokenTypes } from "./TokenTypes";
+import { Scenario } from "../ast/Scenario";
 
-export class ScenarioExtractor extends NameBasedExtractor< Feature > {
+export class ScenarioExtractor extends NameBasedExtractor< Scenario > {
 
     constructor( words: Array< string > ) {
         super( words, TokenTypes.SCENARIO );

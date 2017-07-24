@@ -29,7 +29,12 @@ describe( 'FeatureExtractor Test', () => {
     it( 'does not detect a feature when the word "feature" is not followed by the title separator', () => {
         let line = 'Feature Hello world';
         expect( extractor.detect( line ) ).toBeNull();
-    } );      
+    } );
+
+    it( 'does not detect a feature not followed by a colon', () => {
+        let line = "feature feature : Hello world";
+        expect( extractor.detect( line ) ).toBeNull();
+    } );    
 
     it( 'detects a feature in the correct position', () => {
         let line = 'Feature: Hello world';
@@ -53,11 +58,6 @@ describe( 'FeatureExtractor Test', () => {
                 location: { line: 1, column: 6 }
             }
         );
-    } );
-
-    it( 'does not detect a feature not followed by a colon', () => {
-        let line = "feature feature : Hello world";
-        expect( extractor.detect( line ) ).toBeNull();
     } );
 
 } );
