@@ -26,29 +26,41 @@ describe( 'LineChecker Test', () => {
     // startsWith
 
     it( 'detects text starting with some value', () => {
-        expect( checker.startsWith( 'hello', 'hello world' ) ).toBeTruthy();
+        expect( checker.caseInsentiveStartsWith( 'hello', 'hello world' ) ).toBeTruthy();
     } );
 
     it( 'detects text starting with some value after spaces and tabs', () => {
-        expect( checker.startsWith( 'hello', '  \t \t\t hello world' ) ).toBeTruthy();
+        expect( checker.caseInsentiveStartsWith( 'hello', '  \t \t\t hello world' ) ).toBeTruthy();
     } );
 
     it( 'detects text starting with some value in a case insensitive way', () => {
-        expect( checker.startsWith( 'hello', '  \t \t\t HeLlo world' ) ).toBeTruthy();
-        expect( checker.startsWith( 'hello', '  \t \t\t hEllO world' ) ).toBeTruthy();
-        expect( checker.startsWith( 'hi', '  \t \t\t hEllO world' ) ).toBeFalsy();
+        expect( checker.caseInsentiveStartsWith( 'hello', '  \t \t\t HeLlo world' ) ).toBeTruthy();
+        expect( checker.caseInsentiveStartsWith( 'hello', '  \t \t\t hEllO world' ) ).toBeTruthy();
+        expect( checker.caseInsentiveStartsWith( 'hi', '  \t \t\t hEllO world' ) ).toBeFalsy();
     } );
 
     // textAfterSeparator
 
-    it( 'retrieves any text after colon', () => {
+    it( 'retrieves any text after the separator', () => {
         expect( checker.textAfterSeparator( separator, 'Hello: Word' ) ).toBe( ' Word' );
         expect( checker.textAfterSeparator( separator, 'Hello:: Word' ) ).toBe( ': Word' );
         expect( checker.textAfterSeparator( separator, 'Hello: Word : !' ) ).toBe( ' Word : !' );
     } );
 
-    it( 'retrieves an empty string when does not have colon', () => {
+    it( 'retrieves an empty string when does not have the separator', () => {
         expect( checker.textAfterSeparator( separator, 'Hello Word' ) ).toBe( '' );
     } );
+
+    // textBeforeSeparator
+
+    it( 'retrieves any text before the separator', () => {
+        expect( checker.textBeforeSeparator( separator, 'Hello : Word' ) ).toBe( 'Hello ' );
+        expect( checker.textBeforeSeparator( separator, 'One:: Two' ) ).toBe( 'One' );
+        expect( checker.textBeforeSeparator( separator, '! Three : Four : !' ) ).toBe( '! Three ' );
+    } );
+
+    it( 'retrieves an empty string when does not have the separator', () => {
+        expect( checker.textBeforeSeparator( separator, 'Hello Word' ) ).toBe( '' );
+    } );    
 
 } );

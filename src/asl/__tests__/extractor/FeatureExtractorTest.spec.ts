@@ -11,6 +11,11 @@ describe( 'FeatureExtractor Test', () => {
         expect( extractor.isInTheLine( line ) ).toBeTruthy();
     } );
 
+    it( 'detects a feature in a line with spaces and tabs', () => {
+        let line = "  \t  \t Feature: Hello world";
+        expect( extractor.isInTheLine( line ) ).toBeTruthy();
+    } );    
+
     it( 'does not detect an inexistent feature in a line', () => {
         let line = 'Someelse: Hello world';
         expect( extractor.isInTheLine( line ) ).toBeFalsy();
@@ -19,7 +24,12 @@ describe( 'FeatureExtractor Test', () => {
     it( 'does not detect a feature when the word "feature" is not the first one', () => {
         let line = 'Not a feature: Hello world';
         expect( extractor.isInTheLine( line ) ).toBeFalsy();
-    } );    
+    } );
+
+    it( 'does not detect a feature when the word "feature" is not followed by the title separator', () => {
+        let line = 'Feature Hello world';
+        expect( extractor.isInTheLine( line ) ).toBeFalsy();
+    } );      
 
     it( 'detects a feature in the correct position', () => {
         let line = 'Feature: Hello world';
@@ -43,11 +53,6 @@ describe( 'FeatureExtractor Test', () => {
                 location: { line: 1, column: 6 }
             }
         );
-    } );
-
-    it( 'detects a feature in a line', () => {
-        let line = 'Feature: Hello world';
-        expect( extractor.isInTheLine( line ) ).toBeTruthy();
-    } );    
+    } );   
 
 } );

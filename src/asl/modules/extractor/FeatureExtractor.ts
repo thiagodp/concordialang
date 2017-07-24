@@ -8,24 +8,25 @@ import { TokenTypes } from './TokenTypes';
 export class FeatureExtractor extends DictionaryBasedNodeExtractor< Feature > {
 
     constructor( words: Array< string > ) {
-        super( words );
+        super( { words: words, separator: Symbols.TITLE_SEPARATOR } );
     }
 
     /** @inheritDoc */
     public extract( line: string, lineNumber: number ): Feature {
 
-        let pos = this.positionInTheLine( line );
+        let pos = this.wordPositionInTheLine( line );
         if ( pos < 0 ) { return null; }
 
-        let separatorPos = this._lineChecker.positionOf( Symbols.TITLE_SEPARATOR, line );
-        if ( separatorPos < 0 ) {
+        let sep = this.options().separator;
+        let separatorPos = line.indexOf( sep );
+        if ( separatorPos < pos ) {
             throw new LocatedException(
-                'The symbol "' + Symbols.TITLE_SEPARATOR + '" is expected after the feature.',
+                'The symbol "' + sep + '" is expected after the feature.',
                 { line: lineNumber, column: pos }
                 );
         }
 
-        let title = this._lineChecker.textAfterSeparator( Symbols.TITLE_SEPARATOR, line ).trim();
+        let title = this._lineChecker.textAfterSeparator( sep, line ).trim();
 
         return {
             keyword: TokenTypes.FEATURE,

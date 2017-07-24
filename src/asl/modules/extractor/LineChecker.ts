@@ -7,11 +7,11 @@ export class LineChecker {
         return 0 === line.trim().length;
     }
 
-    public startsWith( text: string, line: string ): boolean {
-        return 0 === this.positionOf( text.trim(), line.trim() );
+    public caseInsentiveStartsWith( text: string, line: string ): boolean {
+        return 0 === this.caseInsensitivePositionOf( text.trim(), line.trim() );
     }
 
-    public positionOf( text: string, line: string ): number {
+    public caseInsensitivePositionOf( text: string, line: string ): number {
         return line.toLowerCase().indexOf( text.toLowerCase() );
     }
 
@@ -19,5 +19,10 @@ export class LineChecker {
         let i = line.indexOf( separator );
         return i >= 0 && i < ( line.length - 1 ) ? line.substr( i + 1 ) : '';
     }
+
+    public textBeforeSeparator( separator: string, line: string ) {
+        let i = line.indexOf( separator );
+        return i > 0 ? line.substring( 0, i ) : '';
+    }    
 
 }
