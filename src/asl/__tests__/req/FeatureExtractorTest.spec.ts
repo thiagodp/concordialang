@@ -8,27 +8,27 @@ describe( 'FeatureExtractor Test', () => {
 
     it( 'detects a feature in a line', () => {
         let line = 'Feature: Hello world';
-        expect( extractor.isInTheLine( line ) ).toBeTruthy();
+        expect( extractor.detect( line ) ).not.toBeNull();
     } );
 
     it( 'detects a feature in a line with spaces and tabs', () => {
         let line = "  \t  \t Feature: Hello world";
-        expect( extractor.isInTheLine( line ) ).toBeTruthy();
+        expect( extractor.detect( line ) ).not.toBeNull()
     } );    
 
     it( 'does not detect an inexistent feature in a line', () => {
         let line = 'Someelse: Hello world';
-        expect( extractor.isInTheLine( line ) ).toBeFalsy();
+        expect( extractor.detect( line ) ).toBeNull()
     } );
     
     it( 'does not detect a feature when the word "feature" is not the first one', () => {
         let line = 'Not a feature: Hello world';
-        expect( extractor.isInTheLine( line ) ).toBeFalsy();
+        expect( extractor.detect( line ) ).toBeNull();
     } );
 
     it( 'does not detect a feature when the word "feature" is not followed by the title separator', () => {
         let line = 'Feature Hello world';
-        expect( extractor.isInTheLine( line ) ).toBeFalsy();
+        expect( extractor.detect( line ) ).toBeNull();
     } );      
 
     it( 'detects a feature in the correct position', () => {
@@ -53,6 +53,11 @@ describe( 'FeatureExtractor Test', () => {
                 location: { line: 1, column: 6 }
             }
         );
-    } );   
+    } );
+
+    it( 'does not detect a feature not followed by a colon', () => {
+        let line = "feature feature : Hello world";
+        expect( extractor.detect( line ) ).toBeNull();
+    } );
 
 } );
