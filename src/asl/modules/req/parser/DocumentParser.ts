@@ -1,4 +1,4 @@
-import { ASTNodeExtractor, TokenDetection } from '../extractor/ASTNodeExtractor';
+import { ASTNodeExtractor } from '../extractor/ASTNodeExtractor';
 import { FeatureExtractor } from '../extractor/FeatureExtractor';
 import { ScenarioExtractor } from '../extractor/ScenarioExtractor';
 import { Keywords } from '../extractor/Keywords';
@@ -49,57 +49,8 @@ export class DocumentParser implements DocumentProcessor {
             this._context.document = {};
         }
 
-        let detection: TokenDetection;
-
-        // Feature
-        let feature;
-        try {
-            feature = this._featureExtractor.extract( line, lineNumber );
-        } catch ( e ) {
-            this._errors.push( e );
-        }
-
-        if ( feature ) {
-
-            // Just one feature per file
-            if ( this._context.document.feature ) {
-                let err =  new LocatedException( 'Each file must have just one feature.',
-                    { column: detection.position, line: lineNumber } );
-                this._errors.push( err );
-                return;
-            }
-
-            this._context.inFeature = true;
-            this._context.inScenario = false;
-
-            this._context.document.feature = feature;
-            this._context.document.feature.scenarios = [];
-        }
-
-        // Scenario
-        let scenario;
-        try {
-            scenario = this._scenarioExtractor.extract( line, lineNumber );
-        } catch ( e ) {
-            this._errors.push( e );
-        }        
-        if ( scenario ) {
-
-            // Do not have a feature
-            if ( ! this._context.document.feature ) {
-                let err =  new LocatedException( 'A scenario must be declared after a feature.',
-                    { column: detection.position, line: lineNumber } );
-                this._errors.push( err );
-                return;
-            }
-
-            this._context.inFeature = false;
-            this._context.inScenario = true;
-
-            this._context.currentScenario = scenario;
-            this._context.document.feature.scenarios.push( scenario );
-        }
-
+        this.detectFeature( line, lineNumber );
+        this.detectScenario( line, lineNumber );
     }
 
     /** @inheritDoc */
@@ -116,4 +67,59 @@ export class DocumentParser implements DocumentProcessor {
     public result(): Document {
         return this._context.document;
     }
+
+
+    private detectFeature( line: string, lineNumber: number ) {
+        let feature;
+        try {
+            feature = this._featureExtractor.extract( line, lineNumber );
+        } catch ( e ) {
+            this._errors.push( e );
+            return;
+        }
+        if ( ! feature ) {
+            return;
+        }
+
+        // Just one feature per file
+        if ( this._context.document.feature ) {
+            let err =  new LocatedException( 'Each file must have just one feature.',
+                { column: 1, line: lineNumber } );
+            this._errors.push( err );
+            return;
+        }
+
+        this._context.inFeature = true;
+        this._context.inScenario = false;
+
+        this._context.document.feature = feature;
+        this._context.document.feature.scenarios = [];
+    }
+
+    private detectScenario( line: string, lineNumber: number ) {
+        let scenario;
+        try {
+            scenario = this._scenarioExtractor.extract( line, lineNumber );
+        } catch ( e ) {
+            this._errors.push( e );
+            return;
+        }
+        if ( ! scenario ) {
+            return;
+        }
+
+        // Do not have a feature
+        if ( ! this._context.document.feature ) {
+            let err =  new LocatedException( 'A scenario must be declared after a feature.',
+                { column: 1, line: lineNumber } );
+            this._errors.push( err );
+            return;
+        }
+
+        this._context.inFeature = false;
+        this._context.inScenario = true;
+
+        this._context.currentScenario = scenario;
+        this._context.document.feature.scenarios.push( scenario );
+    }    
 }
