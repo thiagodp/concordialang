@@ -1,4 +1,4 @@
-import { LongValueGenerator } from '../../../modules/gen/value/LongValueGenerator';
+import { LongValueGenerator } from '../../modules/data-gen/value/LongValueGenerator';
 
 describe( 'LongValueGenerator Test', () => {
 

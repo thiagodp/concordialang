@@ -1,4 +1,4 @@
-import { LineChecker } from "../../modules/extractor/LineChecker"
+import { LineChecker } from "../../modules/req/extractor/LineChecker"
 
 describe( 'LineChecker Test', () => {
 

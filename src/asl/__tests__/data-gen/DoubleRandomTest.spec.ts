@@ -1,4 +1,4 @@
-import { RandomDouble } from '../../../modules/gen/random/RandomDouble';
+import { RandomDouble } from '../../modules/data-gen/random/RandomDouble';
 
 describe( 'RandomDouble Test', () => {
 

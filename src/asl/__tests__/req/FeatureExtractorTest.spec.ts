@@ -1,5 +1,5 @@
-import { FeatureExtractor } from '../../modules/extractor/FeatureExtractor';
-import { TokenTypes } from '../../modules/extractor/TokenTypes';
+import { FeatureExtractor } from '../../modules/req/extractor/FeatureExtractor';
+import { TokenTypes } from '../../modules/req/extractor/TokenTypes';
 
 describe( 'FeatureExtractor Test', () => {
 
