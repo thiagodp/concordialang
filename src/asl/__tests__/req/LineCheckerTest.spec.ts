@@ -23,20 +23,20 @@ describe( 'LineChecker Test', () => {
         expect( checker.isEmpty( "\t  \t  \n\n" ) ).toBeTruthy();
     } );
 
-    // startsWith
+    // caseInsensitivePositionOf
 
     it( 'detects text starting with some value', () => {
-        expect( checker.caseInsentiveStartsWith( 'hello', 'hello world' ) ).toBeTruthy();
+        expect( checker.caseInsensitivePositionOf( 'hello', 'hello world' ) ).toBe( 0 );
     } );
 
     it( 'detects text starting with some value after spaces and tabs', () => {
-        expect( checker.caseInsentiveStartsWith( 'hello', '  \t \t\t hello world' ) ).toBeTruthy();
+        expect( checker.caseInsensitivePositionOf( 'hello', '  \t \t\t hello world' ) ).toBe( 7 );
     } );
 
     it( 'detects text starting with some value in a case insensitive way', () => {
-        expect( checker.caseInsentiveStartsWith( 'hello', '  \t \t\t HeLlo world' ) ).toBeTruthy();
-        expect( checker.caseInsentiveStartsWith( 'hello', '  \t \t\t hEllO world' ) ).toBeTruthy();
-        expect( checker.caseInsentiveStartsWith( 'hi', '  \t \t\t hEllO world' ) ).toBeFalsy();
+        expect( checker.caseInsensitivePositionOf( 'hello', '  \t \t\t HeLlo world' ) ).toBe( 7 );
+        expect( checker.caseInsensitivePositionOf( 'hello', '  \t \t\t hEllO world' ) ).toBe( 7 );
+        expect( checker.caseInsensitivePositionOf( 'hi', '  \t \t\t hEllO world' ) ).toBe( -1 );
     } );
 
     // textAfterSeparator

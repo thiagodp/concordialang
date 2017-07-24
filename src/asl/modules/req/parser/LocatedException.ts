@@ -2,12 +2,8 @@ import { Location  } from "../ast/Location";
 
 export class LocatedException extends Error {
 
-    constructor( message?: string, private location?: Location ) {
-        super( LocatedException.makeExceptionMessage( message ) );
-    }
-
-    public getLocation(): Location {
-        return this.location;
+    constructor( message?: string, public location?: Location ) {
+        super( LocatedException.makeExceptionMessage( message, location ) );
     }
 
     public static makeExceptionMessage( originalMessage?: string, location?: Location ): string {

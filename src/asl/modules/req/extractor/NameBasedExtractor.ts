@@ -1,10 +1,9 @@
 import { Feature } from '../ast/Feature';
 import { LocatedException } from '../parser/LocatedException';
-import { ASTNodeExtractor, TokenDetection } from './ASTNodeExtractor';
-import { DictionaryBasedNodeExtractor, DictionaryBasedOptions } from './DictionaryBasedNodeExtractor';
+import { ASTNodeExtractor } from './ASTNodeExtractor';
 import { Expressions } from './Expressions';
 import { Symbols } from './Symbols';
-import { TokenTypes } from './TokenTypes';
+import { Keywords } from './Keywords';
 import { ASTNode, NamedASTNode } from '../ast/ASTNode';
 import { LineChecker } from "./LineChecker";
 
@@ -26,29 +25,24 @@ export class NameBasedExtractor< T extends NamedASTNode > implements ASTNodeExtr
     }
 
     /** @inheritDoc */
-    public detect( line: string ): TokenDetection | null {
-        let word;
+    public extract( line: string, lineNumber?: number ): T {
+
+        let word: string;
+        let keyword: string;
+        let pos: number = -1;
+
         for ( let i in this._words ) {
             word = this._words[ i ];
             let exp = new RegExp( this.makeRegexForTheWord( word ), "iu" );
             let result = exp.exec( line );
             if ( result ) {
-                //return { keyword: word, position: result.index };
-                return {
-                    keyword: word,
-                    position: this._lineChecker.caseInsensitivePositionOf( word, line )
-                };
+                keyword = word;
+                pos = this._lineChecker.caseInsensitivePositionOf( word, line );
+                break;
             }
         }
-        return null;
-    }
 
-
-    /** @inheritDoc */
-    public extract( line: string, lineNumber: number ): T {
-
-        let detection = this.detect( line );
-        if ( ! detection ) {
+        if ( pos < 0 ) {
             return null;
         }
 
@@ -56,7 +50,7 @@ export class NameBasedExtractor< T extends NamedASTNode > implements ASTNodeExtr
         return {
             keyword: this._keyword,
             name: name,
-            location: { line: lineNumber, column: detection.position + 1 }
+            location: { line: lineNumber || 0, column: pos + 1 }
         } as T;
     }
 

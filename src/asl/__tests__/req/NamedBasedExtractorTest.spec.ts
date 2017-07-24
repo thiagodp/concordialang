@@ -1,5 +1,5 @@
 import { NameBasedExtractor } from '../../modules/req/extractor/NameBasedExtractor';
-import { TokenTypes } from '../../modules/req/extractor/TokenTypes';
+import { Keywords } from '../../modules/req/extractor/Keywords';
 
 describe( 'NamedBasedExtractor Test', () => {
 
@@ -13,37 +13,37 @@ describe( 'NamedBasedExtractor Test', () => {
 
     it( 'detects the name in a line', () => {
         let line = word + ': Hello world';
-        expect( extractor.detect( line ) ).not.toBeNull();
+        expect( extractor.extract( line ) ).not.toBeNull();
     } );
 
     it( 'detects the name ignoring its case', () => {
         let line = wordInsensitive + ': Hello world';
-        expect( extractor.detect( line ) ).not.toBeNull();
+        expect( extractor.extract( line ) ).not.toBeNull();
     } );    
 
     it( 'detects the name in a line with spaces and tabs', () => {
         let line = "  \t  \t " + word + ": Hello world";
-        expect( extractor.detect( line ) ).not.toBeNull()
+        expect( extractor.extract( line ) ).not.toBeNull()
     } );    
 
     it( 'does not detect an inexistent name in a line', () => {
         let line = 'Someelse: Hello world';
-        expect( extractor.detect( line ) ).toBeNull()
+        expect( extractor.extract( line ) ).toBeNull()
     } );
     
     it( 'does not detect the name when its word is not the first one', () => {
         let line = 'Not the ' + word + ': Hello world';
-        expect( extractor.detect( line ) ).toBeNull();
+        expect( extractor.extract( line ) ).toBeNull();
     } );
 
     it( 'does not detect the name when its word is not followed by its separator', () => {
         let line = word + ' Hello world';
-        expect( extractor.detect( line ) ).toBeNull();
+        expect( extractor.extract( line ) ).toBeNull();
     } );
 
     it( 'does not detect the name not followed by its separator', () => {
         let line = word + ' ' + word + ' : Hello world';
-        expect( extractor.detect( line ) ).toBeNull();
+        expect( extractor.extract( line ) ).toBeNull();
     } );
 
     it( 'detects the name in the correct position', () => {

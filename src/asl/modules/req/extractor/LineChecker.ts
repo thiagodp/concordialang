@@ -7,10 +7,6 @@ export class LineChecker {
         return 0 === line.trim().length;
     }
 
-    public caseInsentiveStartsWith( text: string, line: string ): boolean {
-        return 0 === this.caseInsensitivePositionOf( text.trim(), line.trim() );
-    }
-
     public caseInsensitivePositionOf( text: string, line: string ): number {
         return line.toLowerCase().indexOf( text.toLowerCase() );
     }

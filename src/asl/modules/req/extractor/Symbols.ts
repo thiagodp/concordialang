@@ -9,5 +9,9 @@ export abstract class Symbols {
 
     static TITLE_SEPARATOR = ':';
     static TABLE_CELL_SEPARATOR = '|';
+    static IMPORT_SEPARATOR = ',';
 
+    // wrappers
+
+    static IMPORT_WRAPPER = '"';
 }

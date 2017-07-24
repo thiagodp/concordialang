@@ -1,20 +1,6 @@
 import { ASTNode } from '../ast/ASTNode';
 
-
-export interface TokenDetection {
-    keyword: string;
-    position: number;
-}
-
-
 export interface ASTNodeExtractor< T extends ASTNode > {
-
-    /**
-     * Detects if a token is in the given line.
-     * 
-     * @param line
-     */
-    detect( line: string ): TokenDetection | null;
 
     /**
      * Extracts the node.
@@ -25,6 +11,6 @@ export interface ASTNodeExtractor< T extends ASTNode > {
      * 
      * @throws LocatedException In case of an invalid format.
      */
-    extract( line: string, lineNumber: number ): T;
+    extract( line: string, lineNumber?: number ): T | null;
 
 }

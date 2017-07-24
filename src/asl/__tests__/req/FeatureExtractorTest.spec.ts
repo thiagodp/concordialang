@@ -1,5 +1,5 @@
 import { FeatureExtractor } from '../../modules/req/extractor/FeatureExtractor';
-import { TokenTypes } from '../../modules/req/extractor/TokenTypes';
+import { Keywords } from '../../modules/req/extractor/Keywords';
 
 describe( 'FeatureExtractor Test', () => {
 
@@ -8,32 +8,32 @@ describe( 'FeatureExtractor Test', () => {
 
     it( 'detects a feature in a line', () => {
         let line = 'Feature: Hello world';
-        expect( extractor.detect( line ) ).not.toBeNull();
+        expect( extractor.extract( line ) ).not.toBeNull();
     } );
 
     it( 'detects a feature in a line with spaces and tabs', () => {
         let line = "  \t  \t Feature: Hello world";
-        expect( extractor.detect( line ) ).not.toBeNull()
+        expect( extractor.extract( line ) ).not.toBeNull()
     } );    
 
     it( 'does not detect an inexistent feature in a line', () => {
         let line = 'Someelse: Hello world';
-        expect( extractor.detect( line ) ).toBeNull()
+        expect( extractor.extract( line ) ).toBeNull()
     } );
     
     it( 'does not detect a feature when the word "feature" is not the first one', () => {
         let line = 'Not a feature: Hello world';
-        expect( extractor.detect( line ) ).toBeNull();
+        expect( extractor.extract( line ) ).toBeNull();
     } );
 
     it( 'does not detect a feature when the word "feature" is not followed by the title separator', () => {
         let line = 'Feature Hello world';
-        expect( extractor.detect( line ) ).toBeNull();
+        expect( extractor.extract( line ) ).toBeNull();
     } );
 
     it( 'does not detect a feature not followed by a colon', () => {
         let line = "feature feature : Hello world";
-        expect( extractor.detect( line ) ).toBeNull();
+        expect( extractor.extract( line ) ).toBeNull();
     } );    
 
     it( 'detects a feature in the correct position', () => {
@@ -41,7 +41,7 @@ describe( 'FeatureExtractor Test', () => {
         let node = extractor.extract( line, 1 );
         expect( node ).toEqual(
             {
-                keyword: TokenTypes.FEATURE,
+                keyword: Keywords.FEATURE,
                 name: "Hello world",
                 location: { line: 1, column: 1 }
             }
@@ -53,7 +53,7 @@ describe( 'FeatureExtractor Test', () => {
         let node = extractor.extract( line, 1 );
         expect( node ).toEqual(
             {
-                keyword: TokenTypes.FEATURE,
+                keyword: Keywords.FEATURE,
                 name: "Hello world",
                 location: { line: 1, column: 6 }
             }

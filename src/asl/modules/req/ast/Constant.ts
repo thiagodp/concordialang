@@ -1,5 +1,7 @@
-import { NamedASTNode } from './ASTNode';
+import { ASTNode, NamedASTNode } from './ASTNode';
 
+// CONSTANTS
+//
 // Example 1:
 // ```
 // Contants:

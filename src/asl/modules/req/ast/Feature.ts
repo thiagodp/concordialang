@@ -2,7 +2,9 @@ import { Scenario } from './Scenario';
 import { Rule } from "./Rule";
 import { NamedASTNode } from './ASTNode';
 
-// Feature example 1:
+// FEATURE
+//
+// Example 1:
 // ```
 // Feature: Login
 //   As an administrator
@@ -10,7 +12,7 @@ import { NamedASTNode } from './ASTNode';
 //   So that I can access the system
 // ```
 //
-// Feature example 2:
+// Example 2:
 // ```
 // Feature: Login
 //   In order to access the system

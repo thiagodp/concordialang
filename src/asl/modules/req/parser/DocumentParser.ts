@@ -1,7 +1,7 @@
 import { ASTNodeExtractor, TokenDetection } from '../extractor/ASTNodeExtractor';
 import { FeatureExtractor } from '../extractor/FeatureExtractor';
 import { ScenarioExtractor } from '../extractor/ScenarioExtractor';
-import { TokenTypes } from '../extractor/TokenTypes';
+import { Keywords } from '../extractor/Keywords';
 import { ASTContext } from './ASTContext';
 import { KeywordDictionary } from './KeywordDictionary';
 import { DocumentProcessor } from './DocumentProcessor';
@@ -52,8 +52,14 @@ export class DocumentParser implements DocumentProcessor {
         let detection: TokenDetection;
 
         // Feature
-        detection = this._featureExtractor.detect( line );
-        if ( detection ) {
+        let feature;
+        try {
+            feature = this._featureExtractor.extract( line, lineNumber );
+        } catch ( e ) {
+            this._errors.push( e );
+        }
+
+        if ( feature ) {
 
             // Just one feature per file
             if ( this._context.document.feature ) {
@@ -66,13 +72,18 @@ export class DocumentParser implements DocumentProcessor {
             this._context.inFeature = true;
             this._context.inScenario = false;
 
-            this._context.document.feature = this._featureExtractor.extract( line, lineNumber );
+            this._context.document.feature = feature;
             this._context.document.feature.scenarios = [];
         }
 
         // Scenario
-        detection = this._scenarioExtractor.detect( line );
-        if ( detection ) {
+        let scenario;
+        try {
+            scenario = this._scenarioExtractor.extract( line, lineNumber );
+        } catch ( e ) {
+            this._errors.push( e );
+        }        
+        if ( scenario ) {
 
             // Do not have a feature
             if ( ! this._context.document.feature ) {
@@ -84,8 +95,6 @@ export class DocumentParser implements DocumentProcessor {
 
             this._context.inFeature = false;
             this._context.inScenario = true;
-
-            let scenario = this._scenarioExtractor.extract( line, lineNumber );
 
             this._context.currentScenario = scenario;
             this._context.document.feature.scenarios.push( scenario );
