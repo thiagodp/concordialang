@@ -84,7 +84,7 @@ export class DocumentParser implements DocumentProcessor {
         // Just one feature per file
         if ( this._context.document.feature ) {
             let err =  new LocatedException( 'Each file must have just one feature.',
-                { column: 1, line: lineNumber } );
+                { column: feature.location.column, line: lineNumber } ); );
             this._errors.push( err );
             return;
         }
@@ -111,7 +111,7 @@ export class DocumentParser implements DocumentProcessor {
         // Do not have a feature
         if ( ! this._context.document.feature ) {
             let err =  new LocatedException( 'A scenario must be declared after a feature.',
-                { column: 1, line: lineNumber } );
+                { column: scenario.location.column, line: lineNumber } );
             this._errors.push( err );
             return;
         }
