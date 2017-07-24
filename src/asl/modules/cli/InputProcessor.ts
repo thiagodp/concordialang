@@ -1,4 +1,5 @@
 import { InputFileExtractor } from './InputFileExtractor';
+import cliTruncate = require( 'cli-truncate' );
 
 export class InputProcessor {
 
@@ -174,9 +175,12 @@ export class InputProcessor {
 
 
     analyzeFile( file: string ) {
-        let dec = [];
-        let hash = this.inputFileExtractor.hashOfFile( file, this.defaultFileEncoding );
-        this.write( this.chalk.gray( '  ' + file + ' (' + hash.substr( 0, 7 ) + ')' ) );
+        let columns = process.stdout.columns || 80;
+        let fileHash = this.inputFileExtractor.hashOfFile( file, this.defaultFileEncoding );
+        let hashText = ' (' + fileHash.substr( 0, 7 ) + ')';
+        let fileText = this.chalk.gray( cliTruncate( '  ' + file,
+            ( columns - hashText.length ), { position: 'middle' } ) );
+        this.write( fileText + hashText );
     }
 
 }
