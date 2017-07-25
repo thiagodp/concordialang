@@ -4,4 +4,6 @@ export interface KeywordDictionary {
 
     scenario?: Array< string >
 
+    import?: Array< string >
+
 }

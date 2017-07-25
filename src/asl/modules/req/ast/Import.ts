@@ -1,4 +1,4 @@
-import { ASTNode } from './ASTNode';
+import { ContentASTNode } from './ASTNode';
 
 // IMPORT
 //
@@ -12,6 +12,5 @@ import { ASTNode } from './ASTNode';
 // Import "path/to/file.ext", "path/to/some/otherfile.ext"
 // ```
 
-export interface Import extends ASTNode {
-    file: string;
+export interface Import extends ContentASTNode {
 }

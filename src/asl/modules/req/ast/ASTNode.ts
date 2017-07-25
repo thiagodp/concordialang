@@ -8,3 +8,7 @@ export interface ASTNode {
 export interface NamedASTNode extends ASTNode {
     name: string;
 }
+
+export interface ContentASTNode extends ASTNode {
+    content: string;
+}

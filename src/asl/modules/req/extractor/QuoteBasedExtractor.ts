@@ -1,12 +1,11 @@
-import { Symbols } from '../../extractor/Symbols';
-import { ASTNode } from '../ast/ASTNode';
-import { ASTNodeExtractor, TokenDetection } from './ASTNodeExtractor';
+import { ASTNode, ContentASTNode } from '../ast/ASTNode';
+import { ASTNodeExtractor } from './ASTNodeExtractor';
 import { Expressions } from './Expressions';
 import { LineChecker } from './LineChecker';
-import { Symbols } from './Symbols';
+import { Symbols } from "./Symbols";
 
 
-export class QuoteBasedExtractor< T extends ASTNode > implements ASTNodeExtractor< T >  {
+export class QuoteBasedExtractor< T extends ContentASTNode > implements ASTNodeExtractor< T >  {
 
     private _lineChecker: LineChecker = new LineChecker();
 
@@ -21,27 +20,24 @@ export class QuoteBasedExtractor< T extends ASTNode > implements ASTNodeExtracto
     }
 
     /** @inheritDoc */
-    public detect( line: string ): TokenDetection | null {
-        let word;
+    extract( line: string, lineNumber?: number ): T {
+
+        let word: string;
+        let keyword: string;
+        let pos: number = -1;
+
         for ( let i in this._words ) {
             word = this._words[ i ];
             let exp = new RegExp( this.makeRegexForTheWord( word ), "iu" );
             let result = exp.exec( line );
             if ( result ) {
-                return {
-                    keyword: word,
-                    position: this._lineChecker.caseInsensitivePositionOf( word, line )
-                };
+                keyword = word;
+                pos = this._lineChecker.caseInsensitivePositionOf( word, line );
+                break;
             }
         }
-        return null;
-    }
 
-    /** @inheritDoc */
-    extract( line: string, lineNumber?: number ): T {
-
-        let detection = this.detect( line );
-        if ( ! detection ) {
+        if ( pos < 0 ) {
             return null;
         }
 
@@ -50,8 +46,8 @@ export class QuoteBasedExtractor< T extends ASTNode > implements ASTNodeExtracto
 
         return {
             keyword: this._keyword,
-            location: { line: lineNumber || 0, column: detection.position + 1 },
-
+            location: { line: lineNumber || 0, column: pos + 1 },
+            content: name
         } as T;
     }
 

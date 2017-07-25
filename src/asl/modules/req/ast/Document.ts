@@ -6,6 +6,7 @@ export interface Document {
 
     language?: string;
     tags?: Array< string >;
+    imports?: Array< string >;
 
     feature?: Feature;
 

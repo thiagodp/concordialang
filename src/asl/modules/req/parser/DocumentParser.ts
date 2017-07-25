@@ -1,12 +1,17 @@
+
+import { Import } from '../ast/Import';
 import { ASTNodeExtractor } from '../extractor/ASTNodeExtractor';
 import { FeatureExtractor } from '../extractor/FeatureExtractor';
-import { ScenarioExtractor } from '../extractor/ScenarioExtractor';
+import { ImportExtractor } from '../extractor/ImportExtractor';
 import { Keywords } from '../extractor/Keywords';
+import { ScenarioExtractor } from '../extractor/ScenarioExtractor';
 import { ASTContext } from './ASTContext';
-import { KeywordDictionary } from './KeywordDictionary';
 import { DocumentProcessor } from './DocumentProcessor';
+import { KeywordDictionary } from './KeywordDictionary';
 import { LocatedException } from './LocatedException';
 import { Document } from "../ast/Document";
+import { Feature } from "../ast/Feature";
+import { Scenario } from "../ast/Scenario";
 
 
 export class DocumentParser implements DocumentProcessor {
@@ -14,11 +19,13 @@ export class DocumentParser implements DocumentProcessor {
     private _context: ASTContext;
     private _errors: Array< Error >;
 
+    private _importExtractor: ImportExtractor;
     private _featureExtractor: FeatureExtractor;
-    private _scenarioExtractor: ScenarioExtractor;
+    private _scenarioExtractor: ScenarioExtractor;    
 
     constructor( private _dictionary: KeywordDictionary ) {
         this.reset();
+        this._importExtractor = new ImportExtractor( _dictionary.import );
         this._featureExtractor = new FeatureExtractor( _dictionary.feature );
         this._scenarioExtractor = new ScenarioExtractor( _dictionary.scenario );
     }
@@ -49,6 +56,7 @@ export class DocumentParser implements DocumentProcessor {
             this._context.document = {};
         }
 
+        this.detectImport( line, lineNumber );
         this.detectFeature( line, lineNumber );
         this.detectScenario( line, lineNumber );
     }
@@ -68,9 +76,35 @@ export class DocumentParser implements DocumentProcessor {
         return this._context.document;
     }
 
+    private detectImport( line: string, lineNumber: number ) {
+        let imp: Import;
+        try {
+            imp = this._importExtractor.extract( line, lineNumber );
+        } catch ( e ) {
+            this._errors.push( e );
+            return;
+        }
+        if ( ! imp ) {
+            return;
+        }
+
+        if ( ! this._context.document.imports ) {
+            this._context.document.imports = [];
+        }
+
+        // Detect repeated imports
+        if ( this._context.document.imports.includes( imp.content ) ) {
+            let err =  new LocatedException( 'Repeated import for file "' + imp.content + '".',
+                { column: imp.location.column, line: lineNumber } );
+            this._errors.push( err );
+            return;
+        }
+
+        this._context.document.imports.push( imp.content );
+    }
 
     private detectFeature( line: string, lineNumber: number ) {
-        let feature;
+        let feature: Feature;
         try {
             feature = this._featureExtractor.extract( line, lineNumber );
         } catch ( e ) {
@@ -84,7 +118,7 @@ export class DocumentParser implements DocumentProcessor {
         // Just one feature per file
         if ( this._context.document.feature ) {
             let err =  new LocatedException( 'Each file must have just one feature.',
-                { column: feature.location.column, line: lineNumber } ); );
+                { column: feature.location.column, line: lineNumber } );
             this._errors.push( err );
             return;
         }
@@ -97,7 +131,7 @@ export class DocumentParser implements DocumentProcessor {
     }
 
     private detectScenario( line: string, lineNumber: number ) {
-        let scenario;
+        let scenario: Scenario;
         try {
             scenario = this._scenarioExtractor.extract( line, lineNumber );
         } catch ( e ) {

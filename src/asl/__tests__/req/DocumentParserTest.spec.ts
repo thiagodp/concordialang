@@ -5,7 +5,8 @@ describe( 'DocumentParser Test', () => {
 
     let dict: KeywordDictionary = {
         feature: [ 'feature' ],
-        scenario: [ 'scenario' ]
+        scenario: [ 'scenario' ],
+        import: [ 'import' ]
     };
     
     let parser = new DocumentParser( dict );
@@ -14,7 +15,6 @@ describe( 'DocumentParser Test', () => {
         let i = 0;
         parser.onLineRead( 'Feature: Hello', ++i );
         parser.onLineRead( 'Scenario: World', ++i );
-
         let doc = parser.result();
         expect( parser.errors() ).toHaveLength( 0 );
 
@@ -24,6 +24,16 @@ describe( 'DocumentParser Test', () => {
         expect( doc.feature.scenarios ).toHaveLength( 1 );
         expect( doc.feature.scenarios[ 0 ] ).not.toBeNull();
         expect( doc.feature.scenarios[ 0 ].name ).toBe( 'World' );
+    } );
+
+    it( 'detects a import', () => {
+        let i = 0;
+        parser.onLineRead( 'Import "Hello"', ++i );
+        let doc = parser.result();
+        expect( parser.errors() ).toHaveLength( 0 );
+
+        expect( doc.imports ).not.toBeNull();
+        expect( doc.imports ).toEqual( [ 'Hello' ] );
     } );
 
 } );
