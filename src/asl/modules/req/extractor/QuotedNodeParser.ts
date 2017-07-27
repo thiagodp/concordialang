@@ -1,16 +1,14 @@
-import { Feature } from '../ast/Feature';
-import { LocatedException } from '../parser/LocatedException';
-import { ASTNodeExtractor } from './ASTNodeExtractor';
+import { Node, ContentNode } from '../ast/Node';
+import { NodeParser } from './NodeParser';
 import { Expressions } from './Expressions';
-import { Symbols } from './Symbols';
-import { Keywords } from './Keywords';
-import { ASTNode, NamedASTNode } from '../ast/ASTNode';
-import { LineChecker } from "./LineChecker";
+import { LineChecker } from './LineChecker';
+import { Symbols } from "./Symbols";
 
+/**
+ * Parses a node in the format "keyword "value"".
+ */
+export class QuotedNodeParser< T extends ContentNode > implements NodeParser< T >  {
 
-export class NameBasedExtractor< T extends NamedASTNode > implements ASTNodeExtractor< T > {
-
-    private _separator: string = Symbols.TITLE_SEPARATOR;
     private _lineChecker: LineChecker = new LineChecker();
 
     constructor( private _words: Array< string >, private _keyword: string ) {
@@ -18,14 +16,13 @@ export class NameBasedExtractor< T extends NamedASTNode > implements ASTNodeExtr
 
     private makeRegexForTheWord( word: string ): string {
         return '^' + Expressions.SPACES_OR_TABS
-            + '(' + word + ')'
+            + '(?:' + word + ')'
             + Expressions.SPACES_OR_TABS
-            + this._separator
-            + Expressions.ANYTHING;
+            + '("[^"\r\n]*")';
     }
 
     /** @inheritDoc */
-    public extract( line: string, lineNumber?: number ): T {
+    public parse( line: string, lineNumber?: number ): T {
 
         let word: string;
         let keyword: string;
@@ -46,11 +43,13 @@ export class NameBasedExtractor< T extends NamedASTNode > implements ASTNodeExtr
             return null;
         }
 
-        let name = this._lineChecker.textAfterSeparator( this._separator, line ).trim();
+        let name = this._lineChecker.textAfterSeparator( Symbols.IMPORT_WRAPPER, line )
+            .replace( Symbols.IMPORT_WRAPPER, '' );
+
         return {
             keyword: this._keyword,
-            name: name,
-            location: { line: lineNumber || 0, column: pos + 1 }
+            location: { line: lineNumber || 0, column: pos + 1 },
+            content: name
         } as T;
     }
 

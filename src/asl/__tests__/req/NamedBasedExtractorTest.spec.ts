@@ -1,4 +1,4 @@
-import { NameBasedExtractor } from '../../modules/req/extractor/NameBasedExtractor';
+import { NameBasedExtractor } from '../../modules/req/extractor/NamedNodeParser';
 import { Keywords } from '../../modules/req/extractor/Keywords';
 
 describe( 'NamedBasedExtractor Test', () => {

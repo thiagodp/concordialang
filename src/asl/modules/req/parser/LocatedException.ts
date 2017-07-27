@@ -1,6 +1,9 @@
 import { Location  } from "../ast/Location";
 
-export class LocatedException extends Error {
+/**
+ * Provides an exception that contains information about the location of an error in a line.
+ */
+export abstract class LocatedException extends Error {
 
     constructor( message?: string, public location?: Location ) {
         super( LocatedException.makeExceptionMessage( message, location ) );

@@ -1,14 +1,14 @@
 import { Location } from './Location';
 
-export interface ASTNode {
+export interface Node {
     keyword: string;
     location: Location;
 }
 
-export interface NamedASTNode extends ASTNode {
+export interface NamedNode extends Node {
     name: string;
 }
 
-export interface ContentASTNode extends ASTNode {
+export interface ContentNode extends Node {
     content: string;
 }

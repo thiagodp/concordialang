@@ -1,6 +1,6 @@
 import { Scenario } from './Scenario';
 import { Rule } from "./Rule";
-import { NamedASTNode } from './ASTNode';
+import { NamedNode } from './Node';
 
 // FEATURE
 //
@@ -20,7 +20,7 @@ import { NamedASTNode } from './ASTNode';
 //   I would like to login
 // ```
 
-export interface Feature extends NamedASTNode {
+export interface Feature extends NamedNode {
 
     description?: string;
     tags?: Array< string >;

@@ -1,8 +1,11 @@
-import { NameBasedExtractor } from "./NameBasedExtractor";
+import { NamedNodeParser } from "./NamedNodeParser";
 import { Feature } from "../ast/Feature";
 import { Keywords } from "./Keywords";
 
-export class FeatureExtractor extends NameBasedExtractor< Feature > {
+/**
+ * Parses a Feature.
+ */
+export class FeatureParser extends NamedNodeParser< Feature > {
 
     constructor( words: Array< string > ) {
         super( words, Keywords.FEATURE );

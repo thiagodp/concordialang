@@ -1,10 +1,10 @@
 
 import { Import } from '../ast/Import';
-import { ASTNodeExtractor } from '../extractor/ASTNodeExtractor';
-import { FeatureExtractor } from '../extractor/FeatureExtractor';
-import { ImportExtractor } from '../extractor/ImportExtractor';
+import { NodeParser } from '../extractor/NodeParser';
+import { FeatureParser } from '../extractor/FeatureParser';
+import { ImportParser } from '../extractor/ImportParser';
 import { Keywords } from '../extractor/Keywords';
-import { ScenarioExtractor } from '../extractor/ScenarioExtractor';
+import { ScenarioParser } from '../extractor/ScenarioParser';
 import { ASTContext } from './ASTContext';
 import { DocumentProcessor } from './DocumentProcessor';
 import { KeywordDictionary } from './KeywordDictionary';
@@ -12,6 +12,7 @@ import { LocatedException } from './LocatedException';
 import { Document } from "../ast/Document";
 import { Feature } from "../ast/Feature";
 import { Scenario } from "../ast/Scenario";
+import { SemanticException } from "./SemanticException";
 
 
 export class DocumentParser implements DocumentProcessor {
@@ -19,15 +20,15 @@ export class DocumentParser implements DocumentProcessor {
     private _context: ASTContext;
     private _errors: Array< Error >;
 
-    private _importExtractor: ImportExtractor;
-    private _featureExtractor: FeatureExtractor;
-    private _scenarioExtractor: ScenarioExtractor;    
+    private _importParser: ImportParser;
+    private _featureParser: FeatureParser;
+    private _scenarioParser: ScenarioParser;    
 
     constructor( private _dictionary: KeywordDictionary ) {
         this.reset();
-        this._importExtractor = new ImportExtractor( _dictionary.import );
-        this._featureExtractor = new FeatureExtractor( _dictionary.feature );
-        this._scenarioExtractor = new ScenarioExtractor( _dictionary.scenario );
+        this._importParser = new ImportParser( _dictionary.import );
+        this._featureParser = new FeatureParser( _dictionary.feature );
+        this._scenarioParser = new ScenarioParser( _dictionary.scenario );
     }
 
     private reset(): void {
@@ -79,12 +80,12 @@ export class DocumentParser implements DocumentProcessor {
     private detectImport( line: string, lineNumber: number ) {
         let imp: Import;
         try {
-            imp = this._importExtractor.extract( line, lineNumber );
+            imp = this._importParser.parse( line, lineNumber );
+            if ( ! imp ) {
+                return;
+            }            
         } catch ( e ) {
             this._errors.push( e );
-            return;
-        }
-        if ( ! imp ) {
             return;
         }
 
@@ -94,7 +95,7 @@ export class DocumentParser implements DocumentProcessor {
 
         // Detect repeated imports
         if ( this._context.document.imports.includes( imp.content ) ) {
-            let err =  new LocatedException( 'Repeated import for file "' + imp.content + '".',
+            let err =  new SemanticException( 'Repeated import for file "' + imp.content + '".',
                 { column: imp.location.column, line: lineNumber } );
             this._errors.push( err );
             return;
@@ -106,18 +107,18 @@ export class DocumentParser implements DocumentProcessor {
     private detectFeature( line: string, lineNumber: number ) {
         let feature: Feature;
         try {
-            feature = this._featureExtractor.extract( line, lineNumber );
+            feature = this._featureParser.parse( line, lineNumber );
+            if ( ! feature ) {
+                return;
+            }            
         } catch ( e ) {
             this._errors.push( e );
-            return;
-        }
-        if ( ! feature ) {
             return;
         }
 
         // Just one feature per file
         if ( this._context.document.feature ) {
-            let err =  new LocatedException( 'Each file must have just one feature.',
+            let err =  new SemanticException( 'Each file must have just one feature.',
                 { column: feature.location.column, line: lineNumber } );
             this._errors.push( err );
             return;
@@ -133,18 +134,18 @@ export class DocumentParser implements DocumentProcessor {
     private detectScenario( line: string, lineNumber: number ) {
         let scenario: Scenario;
         try {
-            scenario = this._scenarioExtractor.extract( line, lineNumber );
+            scenario = this._scenarioParser.parse( line, lineNumber );
+            if ( ! scenario ) {
+                return;
+            }            
         } catch ( e ) {
             this._errors.push( e );
-            return;
-        }
-        if ( ! scenario ) {
             return;
         }
 
         // Do not have a feature
         if ( ! this._context.document.feature ) {
-            let err =  new LocatedException( 'A scenario must be declared after a feature.',
+            let err =  new SemanticException( 'A scenario must be declared after a feature.',
                 { column: scenario.location.column, line: lineNumber } );
             this._errors.push( err );
             return;

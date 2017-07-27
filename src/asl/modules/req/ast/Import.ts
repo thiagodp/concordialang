@@ -1,4 +1,4 @@
-import { ContentASTNode } from './ASTNode';
+import { ContentNode } from './Node';
 
 // IMPORT
 //
@@ -12,5 +12,5 @@ import { ContentASTNode } from './ASTNode';
 // Import "path/to/file.ext", "path/to/some/otherfile.ext"
 // ```
 
-export interface Import extends ContentASTNode {
+export interface Import extends ContentNode {
 }

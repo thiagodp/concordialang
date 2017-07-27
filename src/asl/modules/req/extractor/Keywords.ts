@@ -1,5 +1,5 @@
 /**
- * Keywords
+ * Keywords to identify nodes.
  */
 export abstract class Keywords {
 

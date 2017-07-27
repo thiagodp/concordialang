@@ -1,10 +1,10 @@
-import { FeatureExtractor } from '../../modules/req/extractor/FeatureExtractor';
+import { FeatureParser } from '../../modules/req/extractor/FeatureParser';
 import { Keywords } from '../../modules/req/extractor/Keywords';
 
 describe( 'FeatureExtractor Test', () => {
 
     let words = [ 'feature' ];
-    let extractor = new FeatureExtractor( words );
+    let extractor = new FeatureParser( words );
 
     it( 'detects a feature in a line', () => {
         let line = 'Feature: Hello world';

@@ -1,3 +1,6 @@
+/**
+ * Expected symbols.
+ */
 export abstract class Symbols {
 
     // prefixes

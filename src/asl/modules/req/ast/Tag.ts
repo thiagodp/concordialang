@@ -1,4 +1,4 @@
-import { NamedASTNode } from './ASTNode';
+import { NamedNode } from './Node';
 
-export interface Tag extends NamedASTNode {
+export interface Tag extends NamedNode {
 }

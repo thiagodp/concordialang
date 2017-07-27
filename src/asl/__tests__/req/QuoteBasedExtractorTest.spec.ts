@@ -1,6 +1,6 @@
-import { NameBasedExtractor } from '../../modules/req/extractor/NameBasedExtractor';
+import { NameBasedExtractor } from '../../modules/req/extractor/NamedNodeParser';
 import { Keywords } from '../../modules/req/extractor/Keywords';
-import { QuoteBasedExtractor } from "../../modules/req/extractor/QuoteBasedExtractor";
+import { QuotedNodeParser } from "../../modules/req/extractor/QuotedNodeParser";
 
 describe( 'QuoteBasedExtractor Test', () => {
 
@@ -9,7 +9,7 @@ describe( 'QuoteBasedExtractor Test', () => {
     let word = 'import';
     let words = [ word ];    
     
-    let extractor = new QuoteBasedExtractor( words, keyword );
+    let extractor = new QuotedNodeParser( words, keyword );
 
 
     it( 'detects the content in a line', () => {

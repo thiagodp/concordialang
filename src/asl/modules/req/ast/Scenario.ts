@@ -1,11 +1,11 @@
-import { ASTNode, NamedASTNode } from './ASTNode';
+import { Node, NamedNode } from './Node';
 
 
-export interface ScenarioSentence extends ASTNode {
+export interface ScenarioSentence extends Node {
 
 }
 
-export interface Scenario extends NamedASTNode {
+export interface Scenario extends NamedNode {
 
     description?: string;
 

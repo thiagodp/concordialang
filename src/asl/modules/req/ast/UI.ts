@@ -1,9 +1,9 @@
-import { ASTNode } from './ASTNode';
+import { Node } from './Node';
 
-export interface UIElement extends ASTNode {
+export interface UIElement extends Node {
 
 }
 
-export interface UI extends ASTNode {
+export interface UI extends Node {
     elements: Array< UIElement >;
 }
