@@ -1,5 +1,5 @@
 import { Feature } from '../ast/Feature';
-import { LocatedException } from '../parser/LocatedException';
+import { LocatedException } from '../LocatedException';
 import { NodeParser } from './NodeParser';
 import { Expressions } from './Expressions';
 import { Symbols } from './Symbols';

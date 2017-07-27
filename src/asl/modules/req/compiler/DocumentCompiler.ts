@@ -1,21 +1,21 @@
 
 import { Import } from '../ast/Import';
-import { NodeParser } from '../extractor/NodeParser';
-import { FeatureParser } from '../extractor/FeatureParser';
-import { ImportParser } from '../extractor/ImportParser';
-import { Keywords } from '../extractor/Keywords';
-import { ScenarioParser } from '../extractor/ScenarioParser';
-import { ASTContext } from './ASTContext';
+import { NodeParser } from '../parser/NodeParser';
+import { FeatureParser } from '../parser/FeatureParser';
+import { ImportParser } from '../parser/ImportParser';
+import { Keywords } from '../parser/Keywords';
+import { ScenarioParser } from '../parser/ScenarioParser';
+import { ASTContext } from '../analyzer/ASTContext';
 import { DocumentProcessor } from './DocumentProcessor';
 import { KeywordDictionary } from './KeywordDictionary';
-import { LocatedException } from './LocatedException';
+import { LocatedException } from '../LocatedException';
 import { Document } from "../ast/Document";
 import { Feature } from "../ast/Feature";
 import { Scenario } from "../ast/Scenario";
-import { SemanticException } from "./SemanticException";
+import { SemanticException } from "../analyzer/SemanticException";
 
 
-export class DocumentParser implements DocumentProcessor {
+export class DocumentCompiler implements DocumentProcessor {
 
     private _context: ASTContext;
     private _errors: Array< Error >;
@@ -57,9 +57,9 @@ export class DocumentParser implements DocumentProcessor {
             this._context.document = {};
         }
 
-        this.detectImport( line, lineNumber );
-        this.detectFeature( line, lineNumber );
-        this.detectScenario( line, lineNumber );
+        this.parseImport( line, lineNumber );
+        this.parseFeature( line, lineNumber );
+        this.parseScenario( line, lineNumber );
     }
 
     /** @inheritDoc */
@@ -77,7 +77,7 @@ export class DocumentParser implements DocumentProcessor {
         return this._context.document;
     }
 
-    private detectImport( line: string, lineNumber: number ) {
+    private parseImport( line: string, lineNumber: number ): void {
         let imp: Import;
         try {
             imp = this._importParser.parse( line, lineNumber );
@@ -104,7 +104,7 @@ export class DocumentParser implements DocumentProcessor {
         this._context.document.imports.push( imp.content );
     }
 
-    private detectFeature( line: string, lineNumber: number ) {
+    private parseFeature( line: string, lineNumber: number ): void {
         let feature: Feature;
         try {
             feature = this._featureParser.parse( line, lineNumber );
@@ -131,7 +131,7 @@ export class DocumentParser implements DocumentProcessor {
         this._context.document.feature.scenarios = [];
     }
 
-    private detectScenario( line: string, lineNumber: number ) {
+    private parseScenario( line: string, lineNumber: number ): void {
         let scenario: Scenario;
         try {
             scenario = this._scenarioParser.parse( line, lineNumber );

@@ -1,4 +1,4 @@
-import { LocatedException } from './LocatedException';
+import { LocatedException } from '../LocatedException';
 
 /**
  * Semantic exception

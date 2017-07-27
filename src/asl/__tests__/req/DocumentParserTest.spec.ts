@@ -1,5 +1,5 @@
-import { DocumentParser } from '../../modules/req/parser/DocumentParser';
-import { KeywordDictionary } from '../../modules/req/parser/KeywordDictionary';
+import { DocumentCompiler } from '../../modules/req/compiler/DocumentCompiler';
+import { KeywordDictionary } from '../../modules/req/compiler/KeywordDictionary';
 
 describe( 'DocumentParser Test', () => {
 
@@ -9,7 +9,7 @@ describe( 'DocumentParser Test', () => {
         import: [ 'import' ]
     };
     
-    let parser = new DocumentParser( dict );
+    let parser = new DocumentCompiler( dict );
 
     it( 'detects a feature and its scenario', () => {
         let i = 0;
