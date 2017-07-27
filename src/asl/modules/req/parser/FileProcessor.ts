@@ -15,11 +15,14 @@ export class FileProcessor {
      * @param file Input file.
      * @param processor Processor.
      */
-    process( file: string, processor: DocumentProcessor ) {
+    public process( file: string, processor: DocumentProcessor ): void {
+        
         let readStream = fs.createReadStream( file );
         readStream.setEncoding( this._encoding );
 
         const rl = readline.createInterface( { input: readStream } as any );
+
+        processor.onStart( file );
 
         rl.on( 'error', processor.onError );
 

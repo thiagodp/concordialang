@@ -1,12 +1,25 @@
 import { Node } from '../ast/Node';
-import { ASTContext } from './ASTContext';
-import { SemanticException } from './SemanticException';
+import { Document } from '../ast/Document';
+import { LocatedException } from '../LocatedException';
+import { Spec } from "../ast/Spec";
 
 /**
- * Semantic node analyzer
+ * Analyzes a node.
  */
 export interface NodeAnalyzer< T extends Node > {
 
-    analyze( current: T, context: ASTContext, errors: Array< SemanticException > ): void;
+    analyzeInDocument(
+        current: T,
+        doc: Document,
+        errors: Array< LocatedException >,
+        stopOnTheFirstError: boolean
+    ): void;
+
+    analyzeInSpec(
+        current: T,
+        spec: Spec,
+        errors: Array< LocatedException >,
+        stopOnTheFirstError: boolean
+    ): void;
 
 }
