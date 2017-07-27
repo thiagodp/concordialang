@@ -32,7 +32,6 @@ describe( 'DocumentParser Test', () => {
         let doc = parser.result();
         expect( parser.errors() ).toHaveLength( 0 );
 
-        expect( doc.imports ).not.toBeNull();
         expect( doc.imports ).toEqual( [ 'Hello' ] );
     } );
 

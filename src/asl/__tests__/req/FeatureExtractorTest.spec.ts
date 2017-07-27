@@ -14,7 +14,7 @@ describe( 'FeatureExtractor Test', () => {
     it( 'detects a feature in a line with spaces and tabs', () => {
         let line = "  \t  \t Feature: Hello world";
         expect( extractor.extract( line ) ).not.toBeNull()
-    } );    
+    } );
 
     it( 'does not detect an inexistent feature in a line', () => {
         let line = 'Someelse: Hello world';
