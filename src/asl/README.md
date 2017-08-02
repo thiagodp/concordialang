@@ -1,20 +1,32 @@
+# Welcome
 
-Before starting, go to the `src/asl` folder:
+## Before starting
+
+Go to the `src/asl` folder:
 ```shell
 $ cd src/asl
 ```
 
-Installation:
+## Installation
 ```shell
 $ npm install
 $ typings install
 ```
 
-How to run the project:
+## How to run the project
 ```shell
 $ node dist/main.js
 ```
-How to run the tests:
+## How to run the tests
 ```shell
 $ npm test
+```
+### Tip
+Install **jest** as a global to watch files...
+```shell
+$ npm install -g jest
+```
+...then:
+```shell
+$ jest --watch
 ```

@@ -3,10 +3,10 @@ import { Import } from '../ast/Import';
 import { NodeParser } from './NodeParser';
 import { FeatureParser } from './FeatureParser';
 import { ImportParser } from './ImportParser';
-import { Keywords } from './Keywords';
+import { Keywords } from '../Keywords';
 import { ScenarioParser } from './ScenarioParser';
 import { DocumentProcessor } from './DocumentProcessor';
-import { KeywordDictionary } from './KeywordDictionary';
+import { KeywordDictionary } from '../KeywordDictionary';
 import { LocatedException } from '../LocatedException';
 import { Document } from "../ast/Document";
 import { Feature } from "../ast/Feature";
@@ -25,11 +25,11 @@ export class DocumentParser implements DocumentProcessor {
     private _context: ParsingContext;
     private _document: Document;
     private _errors: Array< Error >;
-
     // Parsers
     private _importParser: ImportParser;
     private _featureParser: FeatureParser;
     private _scenarioParser: ScenarioParser;
+
 
     constructor( private _dictionary: KeywordDictionary ) {
         this.reset();
@@ -91,6 +91,7 @@ export class DocumentParser implements DocumentProcessor {
             this._errors.push( e );
             return;
         }
+
         if ( ! this._document.imports ) {
             this._document.imports = [];
         }
@@ -140,6 +141,8 @@ export class DocumentParser implements DocumentProcessor {
             this._errors.push( e );
             return;
         }
+
+        // Add the scenario in the last feature (considered the current)
         let currentFeature = this._document.features[ this._document.features.length - 1 ];
         if ( ! currentFeature.scenarios ) {
             currentFeature.scenarios = [];

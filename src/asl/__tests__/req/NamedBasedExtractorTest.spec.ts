@@ -1,5 +1,5 @@
 import { NamedNodeParser } from '../../modules/req/parser/NamedNodeParser';
-import { Keywords } from '../../modules/req/parser/Keywords';
+import { Keywords } from '../../modules/req/Keywords';
 
 describe( 'NamedBasedExtractor Test', () => {
 

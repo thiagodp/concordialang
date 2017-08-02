@@ -1,4 +1,4 @@
-import { Keywords } from '../../modules/req/parser/Keywords';
+import { Keywords } from '../../modules/req/Keywords';
 import { QuotedNodeParser } from "../../modules/req/parser/QuotedNodeParser";
 
 describe( 'QuoteBasedExtractor Test', () => {

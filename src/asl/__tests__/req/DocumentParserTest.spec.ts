@@ -1,5 +1,5 @@
 import { DocumentParser } from '../../modules/req/parser/DocumentParser';
-import { KeywordDictionary } from '../../modules/req/parser/KeywordDictionary';
+import { KeywordDictionary } from '../../modules/req/KeywordDictionary';
 
 describe( 'DocumentParser Test', () => {
 

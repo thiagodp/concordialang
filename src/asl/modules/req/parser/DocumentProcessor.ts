@@ -1,5 +1,3 @@
-import { Document } from "../ast/Document";
-
 /**
  * Document processor
  * 
@@ -17,10 +15,5 @@ export interface DocumentProcessor {
     onLineRead( line: string, lineNumber: number ): void;
 
     onFinish(): void;
-
-
-    errors(): Array< Error >;
-
-    result(): Document;
 
 }

@@ -1,5 +1,5 @@
 import { FeatureParser } from '../../modules/req/parser/FeatureParser';
-import { Keywords } from '../../modules/req/parser/Keywords';
+import { Keywords } from '../../modules/req/Keywords';
 
 describe( 'FeatureExtractor Test', () => {
 
