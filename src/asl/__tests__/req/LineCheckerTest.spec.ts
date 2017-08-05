@@ -1,5 +1,8 @@
-import { LineChecker } from "../../modules/req/parser/LineChecker";
+import { LineChecker } from "../../modules/req/LineChecker";
 
+/**
+ * @author Thiago Delgado Pinto
+ */
 describe( 'LineChecker Test', () => {
 
     let checker: LineChecker = new LineChecker();
@@ -22,6 +25,14 @@ describe( 'LineChecker Test', () => {
     it( 'detects lines with spaces, tabs, and line ends as empty lines', () => {
         expect( checker.isEmpty( "\t  \t  \n\n" ) ).toBeTruthy();
     } );
+
+    // countLeftSpacesAndTabs
+
+    it( 'count left spaces or tabs correctly', () => {
+        expect( checker.countLeftSpacesAndTabs( "  hi" ) ).toBe( 2 );
+        expect( checker.countLeftSpacesAndTabs( "hi" ) ).toBe( 0 );
+        expect( checker.countLeftSpacesAndTabs( "\t  \thi" ) ).toBe( 4 );
+    } );    
 
     // caseInsensitivePositionOf
 

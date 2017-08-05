@@ -1,8 +1,8 @@
-import { Node } from '../ast/Node';
-import { Document } from '../ast/Document';
-import { Feature } from '../ast/Feature';
-import { Import } from '../ast/Import';
-import { Scenario } from '../ast/Scenario';
+import { Node } from '../old_ast/Node';
+import { Document } from '../old_ast/Document';
+import { Feature } from '../old_ast/Feature';
+import { Import } from '../old_ast/Import';
+import { Scenario } from '../old_ast/Scenario';
 import { LocatedException } from '../LocatedException';
 import { Keywords } from '../Keywords';
 import { AnalyzerMapBuilder } from './AnalyzerMapBuilder';

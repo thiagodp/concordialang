@@ -1,6 +1,9 @@
-import { DocumentParser } from '../../modules/req/parser/DocumentParser';
+import { DocumentParser } from '../../modules/req/old_parser/DocumentParser';
 import { KeywordDictionary } from '../../modules/req/KeywordDictionary';
 
+/**
+ * @author Thiago Delgado Pinto
+ */
 describe( 'DocumentParser Test', () => {
 
     let dict: KeywordDictionary = {

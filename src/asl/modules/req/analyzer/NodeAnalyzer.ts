@@ -1,12 +1,14 @@
-import { Node } from '../ast/Node';
-import { Document } from '../ast/Document';
+import { Node } from '../old_ast/Node';
+import { Document } from '../old_ast/Document';
 import { LocatedException } from '../LocatedException';
-import { Spec } from "../ast/Spec";
+import { Spec } from "./Spec";
 import { SemanticException } from "./SemanticException";
 import { Keywords } from "../Keywords";
 
 /**
  * Analyzes a node.
+ * 
+ * @author Thiago Delgado Pinto
  */
 export abstract class NodeAnalyzer< T extends Node > {
 

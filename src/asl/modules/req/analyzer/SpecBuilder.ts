@@ -1,6 +1,6 @@
-import { Node } from '../ast/Node';
-import { Spec } from '../ast/Spec';
-import { Document } from '../ast/Document';
+import { Node } from '../old_ast/Node';
+import { Spec } from '../old_ast/Spec';
+import { Document } from '../old_ast/Document';
 import { LocatedException } from '../LocatedException';
 import { Keywords } from '../Keywords';
 import { AnalyzerMapBuilder } from './AnalyzerMapBuilder';

@@ -1,4 +1,4 @@
-import { Location  } from "./ast/Location";
+import { Location  } from "./old_ast/Location";
 
 /**
  * Provides an exception that contains information about the location of an error in a line.

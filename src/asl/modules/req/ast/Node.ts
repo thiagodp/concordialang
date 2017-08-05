@@ -1,14 +1,14 @@
 import { Location } from './Location';
 
+/**
+ * Node
+ * 
+ * @author Thiago Delgado Pinto
+ */
 export interface Node {
-    keyword: string;
-    location: Location;
-}
 
-export interface NamedNode extends Node {
-    name: string;
-}
+    tokenType(): string;
 
-export interface ContentNode extends Node {
-    content: string;
+    location(): Location;
+
 }

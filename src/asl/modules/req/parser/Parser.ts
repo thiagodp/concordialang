@@ -1,69 +1,89 @@
-import { Node } from '../ast/Node';
-import { DocumentProcessor } from './DocumentProcessor';
-import { FeatureParser } from './FeatureParser';
-import { ImportParser } from './ImportParser';
-import { KeywordDictionary } from '../KeywordDictionary';
-import { NodeParser } from './NodeParser';
-import { ScenarioParser } from './ScenarioParser';
+import { Lexer } from '../alt-lexer/Lexer';
+import { LexerException } from '../alt-lexer/LexerException';
+import { ParserException } from './ParserException';
+import { FeatureNode } from "../ast/FeatureNode";
+import { Node } from "../ast/Node";
+import { TokenTypes } from "../alt-lexer/TokenTypes";
 
 /**
  * Parser
+ * 
+ * @author Thiago Delgado Pinto
  */
-export class Parser implements DocumentProcessor {
+export class Parser {
 
-    private _nodes: Array< Node >;
-    private _errors: Array< Error >;
-    private _parsers: Array< NodeParser< Node > >;
+    private _input: string;
+    private _file: string;
+    private _tags: string[];
+    private _languageSpecifierLine: number;
 
-    constructor( private _dictionary: KeywordDictionary ) {
-        this._parsers = [
-            new ImportParser( _dictionary.import ),
-            new FeatureParser( _dictionary.feature ),
-            new ScenarioParser( _dictionary.scenario ),
-        ];
-        this.reset();
+    constructor( private _lexer: Lexer ) {
     }
 
-    public reset() {
-        this._nodes = [];
-        this._errors = [];
-    }
+    /**
+     * Parses input and returns a feature node.
+     * 
+     * @param input Input string
+     * @param language Language used in the specification.
+     * @param fileName File name.
+     * @returns FeatureNode
+     */
+    public parse( input: string, language: string = 'en', fileName: string = null ) {
 
-    public errors(): Array< Error > {
-        return this._errors;
-    }
+        // Reset 
+        this._input = input;
+        this._file = fileName;
+        this._tags = [];
+        this._languageSpecifierLine = 0;
 
-    public nodes(): Array< Node > {
-        return this._nodes;
-    }
-
-    /** @inheritDoc */
-    public onStart( name?: string ): void {
-        this.reset();
-    }
-
-    /** @inheritDoc */
-    public onError( message: string ): void {
-        this._errors.push( new Error( message ) );
-    }
-
-    /** @inheritDoc */
-    public onLineRead( line: string, lineNumber: number ): void {
-        if ( 0 === line.trim().length ) { // Ignore empty lines
-            return;
-        }
-        let node: Node;
-        for ( let parser of this._parsers ) {
-            node = parser.parse( line, lineNumber );
-            if ( node ) {
-                this._nodes.push( node );
-                break; // finish parsing the line
+        // Analyze with the lexer
+        try {
+            this._lexer.analyze( input, language );
+        } catch ( e ) {
+            if ( e instanceof LexerException ) {
+                throw new ParserException(
+                    'Lexer exception "' + e.message + '" thrown for file "' + ( fileName || '' ) + '".',
+                    e.location );
             }
+            throw e;
         }
+
+        return this.parseInput();
     }
 
-    /** @inheritDoc */
-    public onFinish(): void {
-        // ?
-    }    
+    protected parseInput(): FeatureNode {
+        let feature: FeatureNode = null;
+        let predictedType: string;
+        let node: Node;
+        while ( TokenTypes.EOC !== ( predictedType = this.predictTokenType() )  ) {
+            
+            node = this.parseExpression();
+            if ( null === node ) {
+                continue;
+            }
+
+            if ( TokenTypes.FEATURE === node.tokenType() ) {
+                if ( feature ) {
+                    throw new ParserException(
+                        'Only one feature is allowed per feature file. But "' + this._file + '" got multiple.',
+                        node.location()
+                    );
+                } else {
+                    feature = node as FeatureNode;
+                }
+            }
+
+
+        }
+        return feature;
+    }
+
+    protected predictTokenType(): string {
+        return null;
+    }
+
+    protected parseExpression(): Node {
+        return null;
+    }
+
 }

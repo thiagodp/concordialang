@@ -17,5 +17,24 @@ export abstract class Expressions {
     public static escape( text: string ): string {
         return text.replace( /[-\/\\^$*+?.()|[\]{}]/g, '\\$&' );
     }
+
+    /**
+     * Return escaped values.
+     * 
+     * @param values Values to be escaped.
+     */    
+    public static escapeAll( values: string[] ): string[] {
+        return values.map( ( val ) => Expressions.escape( val ) );
+    }
+
+    /**
+     * Returns a string with a regex to contain all the possible characters 
+     * except the given ones.
+     * 
+     * @param values Not desired values.
+     */
+    public static anythingBut( values: string[], modifiers: string = 'ug' ): RegExp {
+        return new RegExp( '^((?![' + values.join( '' ) + ']).)*$', modifiers );
+    }
     
 }

@@ -17,16 +17,25 @@ export abstract class Keywords {
     static STEP_AND_GENERIC: string = '*';
     static STEP_BUT: string = 'but';
 
-    static IMPORT: string = 'import';    
+    static IMPORT: string = 'import';
+    static REGEX: string = 'regex';
 
     /**
      * Returns the tokens that are variable, that is, those based on a dictionary.
      */
     static variableTypes(): Array< string > {
         return [
-            Keywords.FEATURE
+            Keywords.LANGUAGE
+            , Keywords.FEATURE
             , Keywords.SCENARIO
+            , Keywords.STEP_GIVEN
+            , Keywords.STEP_WHEN
+            , Keywords.STEP_THEN
+            , Keywords.STEP_AND
+            , Keywords.STEP_AND_GENERIC
+            , Keywords.STEP_BUT
             , Keywords.IMPORT
+            , Keywords.REGEX
         ];
     }
 

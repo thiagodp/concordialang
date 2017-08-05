@@ -1,9 +1,9 @@
-import { Import } from '../ast/Import';
+import { Import } from '../old_ast/Import';
 import { NodeAnalyzer } from './NodeAnalyzer';
-import { Node } from '../ast/Node';
-import { Document } from '../ast/Document';
-import { Feature } from '../ast/Feature';
-import { Spec } from '../ast/Spec';
+import { Node } from '../old_ast/Node';
+import { Document } from '../old_ast/Document';
+import { Feature } from '../old_ast/Feature';
+import { Spec } from '../old_ast/Spec';
 import { Keywords } from '../Keywords';
 import { LocatedException } from '../LocatedException';
 import { SemanticException } from './SemanticException';
