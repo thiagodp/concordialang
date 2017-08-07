@@ -1,5 +1,4 @@
 import { Keywords } from '../../modules/req/Keywords';
-import { StartingKeywordLexer } from '../../modules/req/lexer/StartingKeywordLexer';
 import { AndLexer } from "../../modules/req/lexer/AndLexer";
 
 /**

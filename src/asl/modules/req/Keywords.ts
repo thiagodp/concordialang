@@ -20,6 +20,8 @@ export abstract class Keywords {
     static IMPORT: string = 'import';
     static REGEX: string = 'regex';
 
+    static TEXT: string = 'text'; // not empty, but not recognized
+
     /**
      * Returns the tokens that are variable, that is, those based on a dictionary.
      */
