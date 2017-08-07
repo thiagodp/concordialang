@@ -1,4 +1,4 @@
-import { Parser } from '../../modules/req/old_parser/Parser';
+import { Parser } from '../../modules/req/lexer/Lexer';
 import { KeywordDictionary } from '../../modules/req/KeywordDictionary';
 import { Feature } from "../../modules/req/old_ast/Feature";
 import { Scenario } from "../../modules/req/old_ast/Scenario";

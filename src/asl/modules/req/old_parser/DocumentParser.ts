@@ -4,7 +4,7 @@ import { FeatureLexer } from '../lexer/FeatureLexer';
 import { ImportLexer } from '../lexer/ImportLexer';
 import { Keywords } from '../Keywords';
 import { ScenarioLexer } from '../lexer/ScenarioLexer';
-import { DocumentProcessor } from './DocumentProcessor';
+import { DocumentProcessor } from '../DocumentProcessor';
 import { KeywordDictionary } from '../KeywordDictionary';
 import { LocatedException } from '../LocatedException';
 import { Document } from "../old_ast/Document";

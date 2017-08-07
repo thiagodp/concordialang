@@ -1,8 +1,8 @@
 import { Lexer } from '../alt-lexer/Lexer';
 import { LexerException } from '../alt-lexer/LexerException';
 import { ParserException } from './ParserException';
-import { FeatureNode } from "../ast/FeatureNode";
-import { Node } from "../ast/Node";
+import { FeatureNode } from "../alt-ast/FeatureNode";
+import { Node } from "../alt-ast/Node";
 import { TokenTypes } from "../alt-lexer/TokenTypes";
 
 /**

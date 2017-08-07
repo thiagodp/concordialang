@@ -1,24 +1,24 @@
 import { Node } from '../old_ast/Node';
-import { DocumentProcessor } from './DocumentProcessor';
-import { FeatureLexer } from '../lexer/FeatureLexer';
-import { ImportLexer } from '../lexer/ImportLexer';
+import { DocumentProcessor } from '../DocumentProcessor';
+import { FeatureLexer } from './FeatureLexer';
+import { ImportLexer } from './ImportLexer';
 import { KeywordDictionary } from '../KeywordDictionary';
-import { NodeLexer } from '../lexer/NodeLexer';
-import { ScenarioLexer } from '../lexer/ScenarioLexer';
+import { NodeLexer } from './NodeLexer';
+import { ScenarioLexer } from './ScenarioLexer';
 
 /**
- * Parser
+ * Lexer
  * 
  * @author Thiago Delgado Pinto
  */
-export class Parser implements DocumentProcessor {
+export class Lexer implements DocumentProcessor {
 
     private _nodes: Array< Node >;
     private _errors: Array< Error >;
-    private _parsers: Array< NodeLexer< Node > >;
+    private _lexers: Array< NodeLexer< Node > >;
 
     constructor( private _dictionary: KeywordDictionary ) {
-        this._parsers = [
+        this._lexers = [
             new ImportLexer( _dictionary.import ),
             new FeatureLexer( _dictionary.feature ),
             new ScenarioLexer( _dictionary.scenario ),
@@ -55,7 +55,7 @@ export class Parser implements DocumentProcessor {
             return;
         }
         let node: Node;
-        for ( let parser of this._parsers ) {
+        for ( let parser of this._lexers ) {
             node = parser.analyze( line, lineNumber );
             if ( node ) {
                 this._nodes.push( node );
