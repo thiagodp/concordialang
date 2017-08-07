@@ -6,6 +6,9 @@ import { Symbols } from '../Symbols';
 import { Keywords } from '../Keywords';
 import { Node, NamedNode } from '../old_ast/Node';
 import { LineChecker } from "../LineChecker";
+import { LexicalException } from "../LexicalException";
+
+const XRegExp = require( 'xregexp' );
 
 /**
  * Detects a node in the format "keyword: name".
@@ -46,7 +49,23 @@ export class NamedNodeLexer< T extends NamedNode > implements NodeLexer< T > {
             location: { line: lineNumber || 0, column: pos + 1 }
         } as T;
 
-        return { node: node, errors: [] };
+        let errors = [];
+        if ( ! this.isValidName( name ) ) {
+            let loc = { line: lineNumber || 0, column: line.indexOf( name ) + 1 };
+            let msg = 'Invalid ' + this._keyword + ' name: "' + name + '"';
+            errors.push( new LexicalException( msg, loc ) );
+        }
+
+        return { node: node, errors: errors };
+    }
+
+    /**
+     * Returns true if the given name is a valid one.
+     * 
+     * @param name Name
+     */
+    public isValidName( name: string ): boolean {
+        return XRegExp( '^[\\p{L}][\\p{L}0-9 ._-]*$', 'ui' ).test( name ); // TO-DO: improve the regex
     }
 
 }

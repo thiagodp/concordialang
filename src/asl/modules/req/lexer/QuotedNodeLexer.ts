@@ -3,6 +3,9 @@ import { NodeLexer, LexicalAnalysisResult } from './NodeLexer';
 import { Expressions } from '../Expressions';
 import { LineChecker } from '../LineChecker';
 import { Symbols } from "../Symbols";
+import { LexicalException } from "../LexicalException";
+
+const XRegExp = require( 'xregexp' );
 
 /**
  * Detects a node in the format "keyword "value"".
@@ -34,7 +37,8 @@ export class QuotedNodeLexer< T extends ContentNode > implements NodeLexer< T > 
 
         let pos = this._lineChecker.countLeftSpacesAndTabs( line );
         let name = this._lineChecker.textAfterSeparator( Symbols.IMPORT_WRAPPER, line )
-            .replace( Symbols.IMPORT_WRAPPER, '' );
+            .replace( Symbols.IMPORT_WRAPPER, '' )
+            .trim();
 
         let node = {
             keyword: this._keyword,
@@ -42,7 +46,23 @@ export class QuotedNodeLexer< T extends ContentNode > implements NodeLexer< T > 
             content: name
         } as T;
 
-        return { node: node, errors: [] };
+        let errors = [];
+        if ( ! this.isValidName( name ) ) {
+            let loc = { line: lineNumber || 0, column: line.indexOf( name ) + 1 };
+            let msg = 'Invalid ' + this._keyword + ' name: "' + name + '"';
+            errors.push( new LexicalException( msg, loc ) );
+        }
+
+        return { node: node, errors: errors };
     }
+
+    /**
+     * Returns true if the given name is a valid one.
+     * 
+     * @param name Name
+     */
+    public isValidName( name: string ): boolean {
+        return XRegExp( '^[\\p{L}][\\p{L}0-9 ._-]*$', 'ui' ).test( name ); // TO-DO: improve the regex
+    }    
 
 }
