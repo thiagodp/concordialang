@@ -1,4 +1,4 @@
-import { Import } from '../old_ast/Import';
+import { Import } from '../ast/Import';
 import { QuotedNodeLexer } from './QuotedNodeLexer';
 import { Keywords } from "../Keywords";
 

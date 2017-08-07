@@ -1,6 +1,6 @@
 import { NamedNodeLexer } from "./NamedNodeLexer";
 import { Keywords } from "../Keywords";
-import { Scenario } from "../old_ast/Scenario";
+import { Scenario } from "../ast/Scenario";
 
 /**
  * Detects a Scenario.

@@ -1,4 +1,4 @@
-import { Language } from '../old_ast/Language';
+import { Language } from '../ast/Language';
 import { Expressions } from '../Expressions';
 import { Keywords } from '../Keywords';
 import { Symbols } from '../Symbols';

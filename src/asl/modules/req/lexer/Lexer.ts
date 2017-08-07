@@ -1,4 +1,4 @@
-import { Node } from '../old_ast/Node';
+import { Node } from '../ast/Node';
 import { DocumentProcessor } from '../DocumentProcessor';
 import { FeatureLexer } from './FeatureLexer';
 import { ImportLexer } from './ImportLexer';

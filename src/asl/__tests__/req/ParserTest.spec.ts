@@ -1,8 +1,8 @@
 import { Parser } from '../../modules/req/lexer/Lexer';
 import { KeywordDictionary } from '../../modules/req/KeywordDictionary';
-import { Feature } from "../../modules/req/old_ast/Feature";
-import { Scenario } from "../../modules/req/old_ast/Scenario";
-import { Import } from "../../modules/req/old_ast/Import";
+import { Feature } from "../../modules/req/ast/Feature";
+import { Scenario } from "../../modules/req/ast/Scenario";
+import { Import } from "../../modules/req/ast/Import";
 
 /**
  * @author Thiago Delgado Pinto

@@ -1,4 +1,4 @@
-import { Node } from './Node';
+import { Node } from '../old_ast/Node';
 
 //
 // Task example 1:

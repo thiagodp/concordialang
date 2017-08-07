@@ -1,10 +1,10 @@
-import { Feature } from '../old_ast/Feature';
+import { Feature } from '../ast/Feature';
 import { LocatedException } from '../LocatedException';
 import { NodeLexer, LexicalAnalysisResult } from './NodeLexer';
 import { Expressions } from '../Expressions';
 import { Symbols } from '../Symbols';
 import { Keywords } from '../Keywords';
-import { Node, NamedNode } from '../old_ast/Node';
+import { Node, NamedNode } from '../ast/Node';
 import { LineChecker } from "../LineChecker";
 import { LexicalException } from "../LexicalException";
 

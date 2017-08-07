@@ -1,5 +1,5 @@
 import { NamedNodeLexer } from "./NamedNodeLexer";
-import { Feature } from "../old_ast/Feature";
+import { Feature } from "../ast/Feature";
 import { Keywords } from "../Keywords";
 
 /**

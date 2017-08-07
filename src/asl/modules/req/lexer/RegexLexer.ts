@@ -1,4 +1,4 @@
-import { Regex } from '../old_ast/Regex';
+import { Regex } from '../ast/Regex';
 import { NodeLexer, LexicalAnalysisResult } from './NodeLexer';
 import { Keywords } from "../Keywords";
 import { Symbols } from "../Symbols";

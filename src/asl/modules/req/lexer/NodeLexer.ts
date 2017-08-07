@@ -1,4 +1,4 @@
-import { Node } from '../old_ast/Node';
+import { Node } from '../ast/Node';
 import { LexicalException } from "../LexicalException";
 
 export interface LexicalAnalysisResult< T extends Node > {

@@ -1,4 +1,4 @@
-import { Import } from '../old_ast/Import';
+import { Import } from '../ast/Import';
 import { NodeLexer } from '../lexer/NodeLexer';
 import { FeatureLexer } from '../lexer/FeatureLexer';
 import { ImportLexer } from '../lexer/ImportLexer';
@@ -7,9 +7,9 @@ import { ScenarioLexer } from '../lexer/ScenarioLexer';
 import { DocumentProcessor } from '../DocumentProcessor';
 import { KeywordDictionary } from '../KeywordDictionary';
 import { LocatedException } from '../LocatedException';
-import { Document } from "../old_ast/Document";
-import { Feature } from "../old_ast/Feature";
-import { Scenario } from "../old_ast/Scenario";
+import { Document } from "../ast/Document";
+import { Feature } from "../ast/Feature";
+import { Scenario } from "../ast/Scenario";
 import { SyntaticException } from "./SyntaticException";
 
 /**

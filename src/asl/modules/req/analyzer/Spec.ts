@@ -1,4 +1,4 @@
-import { Document } from '../old_ast/Document';
+import { Document } from '../ast/Document';
 
 /**
  * Specification

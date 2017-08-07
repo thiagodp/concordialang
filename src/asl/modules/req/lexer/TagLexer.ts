@@ -1,4 +1,4 @@
-import { Tag } from '../old_ast/Tag';
+import { Tag } from '../ast/Tag';
 import { NodeLexer, LexicalAnalysisResult } from './NodeLexer';
 import { Keywords } from "../Keywords";
 import { Symbols } from "../Symbols";

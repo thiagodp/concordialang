@@ -1,4 +1,4 @@
-import { Node, ContentNode } from '../old_ast/Node';
+import { Node, ContentNode } from '../ast/Node';
 import { NodeLexer, LexicalAnalysisResult } from './NodeLexer';
 import { Expressions } from '../Expressions';
 import { LineChecker } from '../LineChecker';
