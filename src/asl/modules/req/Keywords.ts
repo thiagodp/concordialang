@@ -14,8 +14,8 @@ export abstract class Keywords {
     static STEP_WHEN: string = 'when';
     static STEP_THEN: string = 'then';
     static STEP_AND: string = 'and';
-    static STEP_AND_GENERIC: string = '*';
-    static STEP_BUT: string = 'but';
+    static STEP_AND_GENERIC: string = '*'; // TO-DO: remove
+    static STEP_BUT: string = 'but'; // TO-DO: remove and include the words as "and"
 
     static IMPORT: string = 'import';
     static REGEX: string = 'regex';

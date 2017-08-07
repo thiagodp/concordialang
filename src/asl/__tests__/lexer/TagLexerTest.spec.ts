@@ -4,7 +4,7 @@ import { Keywords } from "../../modules/req/Keywords";
 /**
  * @author Thiago Delgado Pinto
  */
-describe( 'TagLexer Test', () => {
+describe( 'TagLexerTest', () => {
 
     let lexer = new TagLexer();
 

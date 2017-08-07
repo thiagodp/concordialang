@@ -23,7 +23,7 @@ export class NamedNodeLexer< T extends NamedNode > implements NodeLexer< T > {
     constructor( private _words: Array< string >, private _keyword: string ) {
     }
 
-    private makeRegexForTheWords( words: string[] ): string {
+    protected makeRegexForTheWords( words: string[] ): string {
         return '^' + Expressions.SPACES_OR_TABS
             + '(' + words.join( '|' ) + ')'
             + Expressions.SPACES_OR_TABS

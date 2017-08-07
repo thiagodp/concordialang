@@ -4,7 +4,7 @@ import { Keywords } from '../../modules/req/Keywords';
 /**
  * @author Thiago Delgado Pinto
  */
-describe( 'RegexLexer Test', () => {
+describe( 'RegexLexerTest', () => {
 
     let words = [ 'regex' ];
     let lexer = new RegexLexer( words );

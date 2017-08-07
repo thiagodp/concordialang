@@ -4,7 +4,7 @@ import { QuotedNodeLexer } from "../../modules/req/lexer/QuotedNodeLexer";
 /**
  * @author Thiago Delgado Pinto
  */
-describe( 'QuoteBasedLexer Test', () => {
+describe( 'QuoteBasedLexerTest', () => {
 
     let keyword = 'import';
     let wordInsensitive = 'ImPorT';

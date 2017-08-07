@@ -1,10 +1,11 @@
 import { Lexer } from "../../modules/req/lexer/Lexer";
 import { KeywordDictionary } from "../../modules/req/KeywordDictionary";
+import { Keywords } from "../../modules/req/Keywords";
 
 /**
  * @author Thiago Delgado Pinto
  */
-describe( 'Lexer Test', () => {
+describe( 'LexerTest', () => {
 
     const dictionary: KeywordDictionary = {
         // Non-Gherkin keywords
@@ -53,11 +54,11 @@ describe( 'Lexer Test', () => {
         let nodes = lexer.nodes();
         expect( nodes.length ).toBe( 5 );
 
-        expect( nodes[ 0 ].keyword ).toBe( "language" );
-        expect( nodes[ 1 ].keyword ).toBe( "tag" );
-        expect( nodes[ 2 ].keyword ).toBe( "feature" );
-        expect( nodes[ 3 ].keyword ).toBe( "scenario" );
-        expect( nodes[ 4 ].keyword ).toBe( "regex" );
+        expect( nodes[ 0 ].keyword ).toBe( Keywords.LANGUAGE );
+        expect( nodes[ 1 ].keyword ).toBe( Keywords.TAG );
+        expect( nodes[ 2 ].keyword ).toBe( Keywords.FEATURE );
+        expect( nodes[ 3 ].keyword ).toBe( Keywords.SCENARIO );
+        expect( nodes[ 4 ].keyword ).toBe( Keywords.REGEX );
     } );
 
 } );

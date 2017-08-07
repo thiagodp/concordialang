@@ -4,7 +4,7 @@ import { LanguageLexer } from "../../modules/req/lexer/LanguageLexer";
 /**
  * @author Thiago Delgado Pinto
  */
-describe( 'LanguageLexer Test', () => {
+describe( 'LanguageLexerTest', () => {
 
     let words = [ 'language', 'lang' ];
     let lexer = new LanguageLexer( words );

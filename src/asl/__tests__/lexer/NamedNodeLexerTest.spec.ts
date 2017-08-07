@@ -4,7 +4,7 @@ import { Keywords } from '../../modules/req/Keywords';
 /**
  * @author Thiago Delgado Pinto
  */
-describe( 'NamedNodeLexer Test', () => {
+describe( 'NamedNodeLexerTest', () => {
 
     let keyword = 'feature';
     let wordInsensitive = 'FeAtURe';

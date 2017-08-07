@@ -1,0 +1,44 @@
+import { Keywords } from '../../modules/req/Keywords';
+import { StartingKeywordLexer } from '../../modules/req/lexer/StartingKeywordLexer';
+
+/**
+ * @author Thiago Delgado Pinto
+ */
+describe( 'StartingKeywordLexerTest', () => {
+
+    let words = [ 'hello' ];
+    let keyword = 'hello';
+    let lexer = new StartingKeywordLexer( words, keyword );
+
+    it( 'detects in a line', () => {
+        let line = 'hello world';
+        expect( lexer.analyze( line ) ).not.toBeNull();
+    } );
+
+    it( 'detects in a line with spaces and tabs', () => {
+        let line = "  \t  \t Hello \t\t world";
+        expect( lexer.analyze( line ) ).not.toBeNull()
+    } );
+
+    it( 'does not detect an inexistent feature in a line', () => {
+        let line = 'Someelse world';
+        expect( lexer.analyze( line ) ).toBeNull()
+    } );
+
+    it( 'detects in the correct position', () => {
+        let line = "  \t  \t hello \t world and everybody on it \t";
+        let r = lexer.analyze( line, 1 );
+        expect( r ).not.toBeNull()
+
+        expect( r.node.location.line ).toBe( 1 );
+        expect( r.node.location.column ).toBe( 8 );
+    } );
+    
+    it( 'detects the content correctly', () => {
+        let line = '\t hello  \t\t world \t';
+        let r = lexer.analyze( line, 1 );
+        expect( r ).not.toBeNull()
+        expect( r.node.content ).toBe( 'world' );
+    } );    
+
+} );

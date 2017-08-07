@@ -4,7 +4,7 @@ import { Keywords } from '../../modules/req/Keywords';
 /**
  * @author Thiago Delgado Pinto
  */
-describe( 'FeatureLexer Test', () => {
+describe( 'FeatureLexerTest', () => {
 
     let words = [ 'feature' ];
     let lexer = new FeatureLexer( words );
