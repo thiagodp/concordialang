@@ -19,11 +19,11 @@ export class LanguageLexer implements NodeLexer< Language > {
 
     private makeRegexForTheWords( words: string[] ): string {
         return '^' + Expressions.SPACES_OR_TABS
-            + Symbols.LANGUAGE_PREFIX
+            + Expressions.escape( Symbols.LANGUAGE_PREFIX )
             + Expressions.SPACES_OR_TABS
             + '(' + words.join( '|' ) + ')'
             + Expressions.SPACES_OR_TABS
-            + Symbols.LANGUAGE_SEPARATOR
+            + Expressions.escape( Symbols.LANGUAGE_SEPARATOR )
             + Expressions.ANYTHING;
     }
 

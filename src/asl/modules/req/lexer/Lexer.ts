@@ -45,6 +45,13 @@ export class Lexer {
         return this._errors;
     }
 
+    public stopOnFirstError( stop?: boolean ): boolean {
+        if ( stop !== undefined ) {
+            this._stopOnFirstError = stop;
+        }
+        return this._stopOnFirstError;
+    }
+
     /**
      * Returns true if the lexer was configured to stop on the first error
      * and an error was found.
