@@ -9,6 +9,8 @@ export interface KeywordDictionary {
     
     import?: Array< string >,
 
+    regex?: Array< string >,
+
     // Gherkin keywords
 
     language?: Array< string >,
