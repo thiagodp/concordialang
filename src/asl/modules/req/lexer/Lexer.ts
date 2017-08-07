@@ -13,6 +13,7 @@ import { WhenLexer } from "./WhenLexer";
 import { ThenLexer } from "./ThenLexer";
 import { AndLexer } from "./AndLexer";
 import { ButLexer } from "./ButLexer";
+import { TextLexer } from "./TextLexer";
 
 /**
  * Lexer
@@ -38,6 +39,7 @@ export class Lexer {
             , new AndLexer( _dictionary.stepAnd )
             , new ButLexer( _dictionary.stepBut )
             , new RegexLexer( _dictionary.regex )
+            , new TextLexer() // captures any non-empty
         ];
         this.reset();
     }

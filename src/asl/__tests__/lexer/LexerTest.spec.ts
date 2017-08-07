@@ -45,20 +45,38 @@ describe( 'LexerTest', () => {
             'feature: my feature',
             ' \t',
             'scenario: hello',
+            '  given something',
+            '    and another thing',
+            '  when anything happens',
+            '    and other thing happens',
+            '    but other thing does not happen',
+            '  then the result is anything',
+            '    and another result could also happen',
             '',
-            'regex "my regex": /some regex/'
+            'regex "my regex": /some regex/',
+            '',
+            'this must be recognized as text'
         ].forEach( ( val, index ) => lexer.addNodeFromLine( val, index + 1 ) );
         
         expect( lexer.errors().length ).toBe( 0 );
 
         let nodes = lexer.nodes();
-        expect( nodes.length ).toBe( 5 );
+        expect( nodes.length ).toBe( 13 );
 
-        expect( nodes[ 0 ].keyword ).toBe( Keywords.LANGUAGE );
-        expect( nodes[ 1 ].keyword ).toBe( Keywords.TAG );
-        expect( nodes[ 2 ].keyword ).toBe( Keywords.FEATURE );
-        expect( nodes[ 3 ].keyword ).toBe( Keywords.SCENARIO );
-        expect( nodes[ 4 ].keyword ).toBe( Keywords.REGEX );
+        let i = 0;
+        expect( nodes[ i++ ].keyword ).toBe( Keywords.LANGUAGE );
+        expect( nodes[ i++ ].keyword ).toBe( Keywords.TAG );
+        expect( nodes[ i++ ].keyword ).toBe( Keywords.FEATURE );
+        expect( nodes[ i++ ].keyword ).toBe( Keywords.SCENARIO );
+        expect( nodes[ i++ ].keyword ).toBe( Keywords.STEP_GIVEN );
+        expect( nodes[ i++ ].keyword ).toBe( Keywords.STEP_AND );
+        expect( nodes[ i++ ].keyword ).toBe( Keywords.STEP_WHEN );
+        expect( nodes[ i++ ].keyword ).toBe( Keywords.STEP_AND );
+        expect( nodes[ i++ ].keyword ).toBe( Keywords.STEP_BUT );
+        expect( nodes[ i++ ].keyword ).toBe( Keywords.STEP_THEN );
+        expect( nodes[ i++ ].keyword ).toBe( Keywords.STEP_AND );
+        expect( nodes[ i++ ].keyword ).toBe( Keywords.REGEX );
+        expect( nodes[ i++ ].keyword ).toBe( Keywords.TEXT );
     } );
 
 } );
