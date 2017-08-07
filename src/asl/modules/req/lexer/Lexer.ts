@@ -8,6 +8,11 @@ import { ImportLexer } from './ImportLexer';
 import { FeatureLexer } from './FeatureLexer';
 import { ScenarioLexer } from './ScenarioLexer';
 import { RegexLexer } from './RegexLexer';
+import { GivenLexer } from "./GivenLexer";
+import { WhenLexer } from "./WhenLexer";
+import { ThenLexer } from "./ThenLexer";
+import { AndLexer } from "./AndLexer";
+import { ButLexer } from "./ButLexer";
 
 /**
  * Lexer
@@ -27,6 +32,11 @@ export class Lexer {
             , new ImportLexer( _dictionary.import )
             , new FeatureLexer( _dictionary.feature )
             , new ScenarioLexer( _dictionary.scenario )
+            , new GivenLexer( _dictionary.stepGiven )
+            , new WhenLexer( _dictionary.stepWhen )
+            , new ThenLexer( _dictionary.stepThen )
+            , new AndLexer( _dictionary.stepAnd )
+            , new ButLexer( _dictionary.stepBut )
             , new RegexLexer( _dictionary.regex )
         ];
         this.reset();

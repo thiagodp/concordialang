@@ -8,7 +8,7 @@ import { Expressions } from "../Expressions";
  * 
  * @author Thiago Delgado Pinto
  */
-export class StartingKeywordLexer< T extends ContentNode > implements NodeLexer< T > {
+export abstract class StartingKeywordLexer< T extends ContentNode > implements NodeLexer< T > {
 
     private _lineChecker: LineChecker = new LineChecker();
 

@@ -12,7 +12,7 @@ const XRegExp = require( 'xregexp' );
  * 
  * @author Thiago Delgado Pinto
  */
-export class QuotedNodeLexer< T extends ContentNode > implements NodeLexer< T >  {
+export abstract class QuotedNodeLexer< T extends ContentNode > implements NodeLexer< T >  {
 
     private _lineChecker: LineChecker = new LineChecker();
 
