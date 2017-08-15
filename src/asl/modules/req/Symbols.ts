@@ -25,4 +25,5 @@ export abstract class Symbols {
 
     static IMPORT_WRAPPER = '"';
     static REGEX_WRAPPER = '"';
+    static TEST_CASE_WRAPPER = '"';
 }

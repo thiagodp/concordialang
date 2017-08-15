@@ -1,4 +1,5 @@
 import { Scenario } from './Scenario';
+import { TestCase } from './TestCase';
 import { Rule } from "./Rule";
 import { NamedNode } from './Node';
 
@@ -31,5 +32,8 @@ export interface Feature extends NamedNode {
     tags?: Array< string >;
 
     scenarios?: Array< Scenario >;
+
+    testcases?: Array< TestCase >;
+
     rules?: Array< Rule >;
 }

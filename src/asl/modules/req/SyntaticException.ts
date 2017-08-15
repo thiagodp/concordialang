@@ -1,4 +1,4 @@
-import { LocatedException } from '../LocatedException';
+import { LocatedException } from './LocatedException';
 
 /**
  * Syntatic exception

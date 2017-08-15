@@ -9,6 +9,7 @@ export abstract class Keywords {
 
     static FEATURE: string = 'feature';
     static SCENARIO: string = 'scenario';
+    static TEST_CASE: string = 'testcase';
 
     static STEP_GIVEN: string = 'given';
     static STEP_WHEN: string = 'when';

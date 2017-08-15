@@ -12,13 +12,11 @@ import { Keywords } from "../Keywords";
  */
 export abstract class NodeAnalyzer< T extends Node > {
 
-    protected _hasDeclared = {};
+    /// Controls declarations for keywords
+    protected _hasDeclared = {}; // e.g.: _hasDeclared[ "keyword" ] = true
 
     constructor() {
-        this.initHasDeclared();
-    }
-
-    private initHasDeclared() {
+        // Init _hasDeclared with all the keywords
         let keywords = Keywords.all();
         for ( let k of keywords ) {
             this._hasDeclared[ k ] = false;

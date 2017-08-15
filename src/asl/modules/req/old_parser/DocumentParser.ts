@@ -10,7 +10,7 @@ import { LocatedException } from '../LocatedException';
 import { Document } from "../ast/Document";
 import { Feature } from "../ast/Feature";
 import { Scenario } from "../ast/Scenario";
-import { SyntaticException } from "./SyntaticException";
+import { SyntaticException } from "../SyntaticException";
 
 /**
  * Parsing context

@@ -11,6 +11,8 @@ export interface KeywordDictionary {
 
     regex?: Array< string >,
 
+    testcase?: Array< string >,
+
     // Gherkin keywords
 
     language?: Array< string >,

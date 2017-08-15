@@ -3,6 +3,8 @@ import { Task } from './Task';
 import { UI } from "./UI";
 import { Tag } from "./Tag";
 import { Import } from "./Import";
+import { Language } from "./Language";
+import { Regex } from "./Regex";
 
 /**
  * Document
@@ -13,14 +15,16 @@ export interface Document {
 
     file?: string;
     
-    language?: string;
-    tags?: Array< Tag >;
+    language?: Language;
     imports?: Array< Import >;
+    tags?: Array< Tag >;    
 
-    features?: Array< Feature >;
+    feature?: Feature;
 
     uis?: Array< UI >;
 
     tasks?: Array< Task >;
+
+    regexes?: Array< Regex >;
 
 }
