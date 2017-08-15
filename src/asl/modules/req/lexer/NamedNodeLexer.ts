@@ -15,7 +15,7 @@ const XRegExp = require( 'xregexp' );
  * 
  * @author Thiago Delgado Pinto
  */
-export abstract class NamedNodeLexer< T extends NamedNode > implements NodeLexer< T > {
+export class NamedNodeLexer< T extends NamedNode > implements NodeLexer< T > {
 
     private _separator: string = Symbols.TITLE_SEPARATOR;
     private _lineChecker: LineChecker = new LineChecker();
