@@ -37,7 +37,7 @@ export abstract class QuotedNodeLexer< T extends ContentNode > implements NodeLe
 
         let pos = this._lineChecker.countLeftSpacesAndTabs( line );
         let name = this._lineChecker.textAfterSeparator( Symbols.IMPORT_WRAPPER, line )
-            .replace( Symbols.IMPORT_WRAPPER, '' )
+            .replace( new RegExp( Symbols.IMPORT_WRAPPER , 'g' ), '' ) // replace all '"' with ''
             .trim();
 
         let node = {

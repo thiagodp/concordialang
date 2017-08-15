@@ -46,7 +46,7 @@ export class TestCaseLexer implements NodeLexer< TestCase > {
         let targetScenario = undefined;
         if ( 3 === result.length && result[ 2 ] ) { // keyword is 1 ... "scenario name" is 2 ... : test case name is 3
             targetScenario = result[ 2 ]
-                .replace( new RegExp( Symbols.TEST_CASE_WRAPPER , 'g' ), '' ) // replace '"' with ''
+                .replace( new RegExp( Symbols.TEST_CASE_WRAPPER , 'g' ), '' ) // replace all '"' with ''
                 .trim();            
         }
 
