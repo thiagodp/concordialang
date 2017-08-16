@@ -57,7 +57,7 @@ export class TestCaseLexer implements NodeLexer< TestCase > {
             keyword: this._keyword,
             location: { line: lineNumber || 0, column: pos + 1 },
             name: name,
-            targetScenario: targetScenario
+            scenarioName: targetScenario
         } as TestCase;
 
         let errors = [];

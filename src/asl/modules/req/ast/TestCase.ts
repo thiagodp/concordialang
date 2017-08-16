@@ -14,5 +14,5 @@ import { Scenario } from "./Scenario";
 //
 
 export interface TestCase extends Scenario {
-    targetScenario?: string;
+    scenarioName?: string;
 }

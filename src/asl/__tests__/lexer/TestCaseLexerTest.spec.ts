@@ -70,7 +70,7 @@ describe( 'TestCaseLexerTest', () => {
                 keyword: keyword,
                 location: { line: 1, column: 1 },
                 name: "Hello world",
-                targetScenario: "my scenario"
+                scenarioName: "my scenario"
             } as TestCase
         );
     } );
@@ -88,7 +88,7 @@ describe( 'TestCaseLexerTest', () => {
                 keyword: keyword,
                 location: { line: 1, column: 6 },
                 name: "Hello world",
-                targetScenario: "my scenario"
+                scenarioName: "my scenario"
             } as TestCase
         );
     } );

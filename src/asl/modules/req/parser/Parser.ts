@@ -1,3 +1,4 @@
+import { FeatureParser } from './FeatureParser';
 import { Node } from '../ast/Node';
 import { Document } from '../ast/Document';
 import { Keywords } from '../Keywords';
@@ -5,6 +6,9 @@ import { LanguageParser } from './LanguageParser';
 import { NodeIterator } from './NodeIterator';
 import { NodeParser } from './NodeParser';
 import { ParsingContext } from "./ParsingContext";
+import { ScenarioParser } from './ScenarioParser';
+import { TestCaseParser } from './TestCaseParser';
+import { ScenarioSentenceParser } from './ScenarioSentenceParser';
 
 /**
  * Builds an AST from the nodes detected by the lexer. It checks syntatic properties
@@ -22,6 +26,15 @@ export class Parser {
     constructor( private _stopOnFirstError: boolean = false ) {
         this._parsersMap = {};
         this._parsersMap[ Keywords.LANGUAGE ] = new LanguageParser();
+        this._parsersMap[ Keywords.FEATURE ] = new FeatureParser();
+        this._parsersMap[ Keywords.SCENARIO ] = new ScenarioParser();
+        this._parsersMap[ Keywords.TEST_CASE ] = new TestCaseParser();
+        this._parsersMap[ Keywords.STEP_GIVEN ] = new ScenarioSentenceParser();
+        this._parsersMap[ Keywords.STEP_WHEN ] = new ScenarioSentenceParser();
+        this._parsersMap[ Keywords.STEP_THEN ] = new ScenarioSentenceParser();
+        this._parsersMap[ Keywords.STEP_AND ] = new ScenarioSentenceParser();
+        this._parsersMap[ Keywords.STEP_BUT ] = new ScenarioSentenceParser();
+
     }
 
     /**
@@ -65,7 +78,7 @@ export class Parser {
      */
     public parseIndividualNodes( nodes: Node[], doc: Document ): string[] {
 
-        let ignoredKeywords: string[];
+        let ignoredKeywords: string[] = [];
         let it = new NodeIterator( nodes );
         let errors = [];
         let node: Node = null;
