@@ -12,14 +12,14 @@ export class LanguageParser implements NodeParser< Language > {
 
         // Checks if it is already declared
         if ( context.doc.language ) {
-            let e = new SyntaticException( 'Just one "language" declaration is allowed.', node.location );
+            let e = new SyntaticException( 'Just one language declaration is allowed.', node.location );
             errors.push( e );
             return false;
         }
 
         // Checks if it has a feature declared before it
         if ( context.doc.feature ) {
-            let e = new SyntaticException( 'The "language" must be declared before a feature.', node.location );
+            let e = new SyntaticException( 'The language must be declared before a feature.', node.location );
             errors.push( e );
             return false;
         }        

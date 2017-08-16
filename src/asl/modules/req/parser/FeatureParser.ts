@@ -11,7 +11,7 @@ export class FeatureParser implements NodeParser< Feature > {
 
         // Checks if it is already declared
         if ( context.doc.feature ) {
-            let e = new SyntaticException( 'Just one "feature" declaration is allowed.', node.location );
+            let e = new SyntaticException( 'Just one feature declaration is allowed.', node.location );
             errors.push( e );
             return false;
         }

@@ -11,6 +11,7 @@ describe( 'LexerTest', () => {
         // Non-Gherkin keywords
         import: [ 'import' ],
         regex: [ 'regex' ],
+        testcase: [ 'test case' ],
 
         // Gherkin keywords
         background: [ 'background' ],
@@ -53,6 +54,11 @@ describe( 'LexerTest', () => {
             '  then the result is anything',
             '    and another result could also happen',
             '',
+            'test case for "my scenario": my test case',
+            '  given that I can see the screen "home"',
+            '  when I click on "Price" ',
+            '  then I see "Our Plans"',
+            '',            
             'regex "my regex": /some regex/',
             '',
             'this must be recognized as text'
@@ -61,7 +67,7 @@ describe( 'LexerTest', () => {
         expect( lexer.errors().length ).toBe( 0 );
 
         let nodes = lexer.nodes();
-        expect( nodes.length ).toBe( 13 );
+        expect( nodes.length ).toBe( 17 );
 
         let i = 0;
         expect( nodes[ i++ ].keyword ).toBe( Keywords.LANGUAGE );
@@ -75,6 +81,10 @@ describe( 'LexerTest', () => {
         expect( nodes[ i++ ].keyword ).toBe( Keywords.STEP_BUT );
         expect( nodes[ i++ ].keyword ).toBe( Keywords.STEP_THEN );
         expect( nodes[ i++ ].keyword ).toBe( Keywords.STEP_AND );
+        expect( nodes[ i++ ].keyword ).toBe( Keywords.TEST_CASE );
+        expect( nodes[ i++ ].keyword ).toBe( Keywords.STEP_GIVEN );
+        expect( nodes[ i++ ].keyword ).toBe( Keywords.STEP_WHEN );
+        expect( nodes[ i++ ].keyword ).toBe( Keywords.STEP_THEN );
         expect( nodes[ i++ ].keyword ).toBe( Keywords.REGEX );
         expect( nodes[ i++ ].keyword ).toBe( Keywords.TEXT );
     } );

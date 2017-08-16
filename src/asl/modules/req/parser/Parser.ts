@@ -71,6 +71,15 @@ export class Parser {
         let node: Node = null;
         let nodeParser: NodeParser< any >;
 
+        let context: ParsingContext = {
+            doc: doc,
+            inFeature: false,
+            inScenario: false,
+            inTestCase: false,
+            currentScenario: null,
+            currentTestCase: null
+        };
+
         while ( it.hasNext() ) {
             node = it.next();
 
@@ -82,7 +91,7 @@ export class Parser {
                 continue;
             }
             // Parses the current node            
-            nodeParser.analyze( node, doc, it, errors );
+            nodeParser.analyze( node, context, it, errors );
 
             // Stop if needed
             if ( this._stopOnFirstError && errors.length > 0 ) {

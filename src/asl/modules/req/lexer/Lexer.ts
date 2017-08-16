@@ -1,3 +1,4 @@
+import { TestCaseLexer } from './TestCaseLexer';
 import { Node } from '../ast/Node';
 import { DocumentProcessor } from '../DocumentProcessor';
 import { KeywordDictionary } from '../KeywordDictionary';
@@ -33,6 +34,7 @@ export class Lexer {
             , new ImportLexer( _dictionary.import )
             , new FeatureLexer( _dictionary.feature )
             , new ScenarioLexer( _dictionary.scenario )
+            , new TestCaseLexer( _dictionary.testcase )
             , new GivenLexer( _dictionary.stepGiven )
             , new WhenLexer( _dictionary.stepWhen )
             , new ThenLexer( _dictionary.stepThen )
