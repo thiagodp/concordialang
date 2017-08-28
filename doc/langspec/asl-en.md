@@ -7,7 +7,7 @@
 - [User Interface](#userinterface)
 - [Constant](#constant)
 - [Data Source](#datasource)
-- [Interaction Outline](#interactionoutline)
+- [Interaction Template](#interactiontemplate)
 - [Restriction](#restriction)
 - [Interaction](#interaction)
 - [Test Case](#testcase)
@@ -26,6 +26,15 @@ Example 2 (*more than one per line*):
 ```
 @important @slow @gui @generated
 ```
+
+Reserved tags:
+- `@scenario( <name> )`: references a [scenario](#scenario)
+- `@template( <name> )`: references an [interaction template](#interactiontemplate)
+- `@interaction( <name> )`: references an [interaction](#interaction)
+- `@restriction( <widget>, <property>, <restriction-type> )`: references a [restriction](#restriction). Example: `@restriction( Usuario, length, lt )`, where `lt` means "less than".
+- `@importance( <number> )`: indicates the importance. The importance is as higher as its number.
+- `@generated`: indicates that a declaration was computer-generated.
+
 
 ## Feature
 
@@ -48,7 +57,7 @@ Feature: A feature name
 
 ## State
 
-*State of the system*
+*State of the system.*
 
 Example 1:
 ```
@@ -56,12 +65,12 @@ State: logged in
 
 ...
 
-// precondition (requires iff have the state)
+// Its use as a precondition (requires iff have the state)
 Given that I [ { don't | do not } ] have the state "logged in"
 
 ...
 
-// postcondition (generates iff have the state)
+// Its use as a postcondition (generates iff have the state)
 Then I [ { don't | do not } ] have the state "logged in"
 ```
 
@@ -149,7 +158,7 @@ File: my file
 ```
 
 
-## InteractionOutline
+## InteractionTemplate
 
 *Expected basic interaction with the [user interface](#userinterface).*
 
@@ -157,22 +166,22 @@ File: my file
 
 Example 1:
 ```
-Interaction: successful login
+@scenario( successful login )
+interaction template: successful login
   Given that I am on the Login Page
-  When I fill Username with a valid value
-    And I fill Password with a valid value
+  When I fill Username
+    And I fill Password
     And I click on Enter
   Then I have the state "logged in"
     And I see the text "Welcome"
     And I am not on the Login Page
 ```
 
-
 ## Restriction
 
 *Restrictions about user interface elements.*
 
-*Used along with [interaction outlines](#interactionoutline) to generate [interactions](#interaction)*.
+*Used along with [interaction templates](#interactiontemplate) to generate [interactions](#interaction)*.
 
 Example 1 (*data table*):
 ```
@@ -207,20 +216,21 @@ Restrictions:
       And I must see "Password" with color "red"
 ```
 
+
 ## Interaction
 
 *Expected interaction with the user interface.*
 
-*Commonly generated from [interaction outlines](#interactionoutline) and [restrictions](#restrictions).*
+*Commonly generated from [interaction templates](#interactiontemplate) and [restrictions](#restrictions).*
 
 *Used to generate [test cases](#testcase). [States](#state) are checked.*
 
 Example 1:
 ```
-@generated @outline( successful login )
+@generated @template( successful login )
 Interaction: successful login
   Given that I am on the Login Page
-  When I fill Username with a value under the minimum
+  When I fill Username with a valid value
     And I fill Password with a valid value
     And I click on Enter
   Then I have the state "logged in"
@@ -230,11 +240,11 @@ Interaction: successful login
 
 Example 2:
 ```
-@generated @outline( successful login )
-@restriction( "Username" length must be greater than 1 )
-Interaction: Username length under the minimum
+@generated @template( successful login )
+@restriction( Username, length, lt )
+Interaction: Username with a value lower than the minimum
   Given that I am on the Login Page
-  When I fill Username with a value under the minimum
+  When I fill Username with a value lower than the minimum
     And I fill Password with a valid value
     And I click on Enter
   Then I must see the text ${msg_min_length}
@@ -252,8 +262,7 @@ Test cases are generated from:
 
 Example 1:
 ```
-
-@interaction( successful login )
+@generated @feature( login ) @scenario( sucessful login ) @interaction( successful login )
 Test case: successful login
   I see in the url "/login"
   I fill "#username" with "Bob"
@@ -265,8 +274,13 @@ Test case: successful login
 
 Example 2:
  ```
-Test case: successful login
-     ...
+ @generated @feature( login ) @scenario( sucessful login ) @interaction( Username with a value lower than the minimum )
+Test case: Username with a value lower than the minimum
+  I see in the url "/login"
+  I fill "#username" with ""
+  I fill "#password" with "bobp4ss"
+  I click "Enter"
+  I see "Username must have at least 2 characters."
 ```
 
 Actions:
@@ -332,6 +346,7 @@ Example 3:
 Command: clean users
   - sql: DELETE FROM users
 ```
+
 
 ## Task
 
