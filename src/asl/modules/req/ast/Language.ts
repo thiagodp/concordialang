@@ -1,5 +1,12 @@
 import { ContentNode } from './Node';
 
+// LANGUAGE
+//
+// Example 1:
+// ```
+// # language: pt-br
+// ```
+
 /**
  * Language node.
  * 

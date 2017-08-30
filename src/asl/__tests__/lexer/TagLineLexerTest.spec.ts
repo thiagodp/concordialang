@@ -1,12 +1,12 @@
-import { TagLexer } from "../../modules/req/lexer/TagLexer";
+import { TagLineLexer } from "../../modules/req/lexer/TagLineLexer";
 import { Keywords } from "../../modules/req/Keywords";
 
 /**
  * @author Thiago Delgado Pinto
  */
-describe( 'TagLexerTest', () => {
+describe( 'TagLineLexerTest', () => {
 
-    let lexer = new TagLexer();
+    let lexer = new TagLineLexer();
 
     it( 'detects a tag in a line', () => {
         let line = '@hello';

@@ -4,7 +4,7 @@ import { DocumentProcessor } from '../DocumentProcessor';
 import { KeywordDictionary } from '../KeywordDictionary';
 import { NodeLexer, LexicalAnalysisResult } from './NodeLexer';
 import { LanguageLexer } from "./LanguageLexer";
-import { TagLexer } from "./TagLexer";
+import { TagLineLexer } from "./TagLineLexer";
 import { ImportLexer } from './ImportLexer';
 import { FeatureLexer } from './FeatureLexer';
 import { ScenarioLexer } from './ScenarioLexer';
@@ -30,7 +30,7 @@ export class Lexer {
     constructor( private _dictionary: KeywordDictionary, private _stopOnFirstError: boolean = false ) {
         this._lexers = [
             new LanguageLexer( _dictionary.language )
-            , new TagLexer()
+            , new TagLineLexer()
             , new ImportLexer( _dictionary.import )
             , new FeatureLexer( _dictionary.feature )
             , new ScenarioLexer( _dictionary.scenario )

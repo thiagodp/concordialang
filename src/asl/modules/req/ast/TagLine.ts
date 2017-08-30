@@ -12,11 +12,17 @@ import { Tagged } from './Tagged';
 // ```
 // @one @two
 // ```
+//
+// Example 3:
+// ```
+// @hello( "world" ) @age( 5 )
+// ```
+//
 
 /**
- * Tag node.
+ * Tag line node.
  * 
  * @author Thiago Delgado Pinto
  */
-export interface Tag extends Node, Tagged {
+export interface TagLine extends Node, Tagged {
 }
