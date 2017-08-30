@@ -1,5 +1,13 @@
 # ASL in English
 
+```
++-----+               +-----+               +-----+
+|     | <-- import -- |     | <-- import -- |     |
+|     |               |     |               |     |
++-----+               +-----+               +-----+
+.feature              .expect               .testcase
+```
+
 - [Tag](#tag)
 - [Feature](#feature)
 - [State](#state)
@@ -167,7 +175,7 @@ File: my file
 Example 1:
 ```
 @scenario( successful login )
-interaction template: successful login
+Interaction template: successful login
   Given that I am on the Login Page
   When I fill Username
     And I fill Password
