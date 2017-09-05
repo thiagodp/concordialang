@@ -28,17 +28,20 @@ describe( 'StartingKeywordLexerTest', () => {
     it( 'detects in the correct position', () => {
         let line = "  \t  \t hello \t world and everybody on it \t";
         let r = lexer.analyze( line, 1 );
-        expect( r ).not.toBeNull()
-
-        expect( r.node.location.line ).toBe( 1 );
-        expect( r.node.location.column ).toBe( 8 );
+        expect( r ).toBeDefined();
+        expect( r.nodes ).toHaveLength( 1 );
+        let node = r.nodes[ 0 ];
+        expect( node.location.line ).toBe( 1 );
+        expect( node.location.column ).toBe( 8 );
     } );
     
     it( 'detects the content correctly', () => {
         let line = '\t hello  \t\t world \t';
         let r = lexer.analyze( line, 1 );
-        expect( r ).not.toBeNull()
-        expect( r.node.content ).toBe( 'world' );
+        expect( r ).toBeDefined();
+        expect( r.nodes ).toHaveLength( 1 );
+        let node = r.nodes[ 0 ];
+        expect( node.content ).toBe( 'world' );
     } );    
 
 } );

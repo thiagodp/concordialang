@@ -56,7 +56,7 @@ export class NamedNodeLexer< T extends NamedNode > implements NodeLexer< T > {
             errors.push( new LexicalException( msg, loc ) );
         }
 
-        return { node: node, errors: errors };
+        return { nodes: [ node ], errors: errors };
     }
 
     /**

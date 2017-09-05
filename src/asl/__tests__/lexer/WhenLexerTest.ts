@@ -15,14 +15,15 @@ describe( 'WhenLexerTestTest', () => {
     it( 'detects correctly', () => {
         let line = "  \t  \t When \t the world and everybody on it \t";
         let r = lexer.analyze( line, 1 );
-        expect( r ).not.toBeNull()
+        expect( r ).toBeDefined();
+        let node = r.nodes[ 0 ];
         // Location
-        expect( r.node.location.line ).toBe( 1 );
-        expect( r.node.location.column ).toBe( 8 );
+        expect( node.location.line ).toBe( 1 );
+        expect( node.location.column ).toBe( 8 );
         // Keyword
-        expect( r.node.keyword ).toBe( Keywords.STEP_WHEN );
+        expect( node.keyword ).toBe( Keywords.STEP_WHEN );
         // Content
-        expect( r.node.content ).toBe( 'the world and everybody on it' );
+        expect( node.content ).toBe( 'the world and everybody on it' );
     } );
 
 } );

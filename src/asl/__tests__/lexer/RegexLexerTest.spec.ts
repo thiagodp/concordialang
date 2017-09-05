@@ -36,14 +36,14 @@ describe( 'RegexLexerTest', () => {
 
     it( 'detects when the value is empty', () => {
         let line = 'Regex "hello" :';
-        let node = lexer.analyze( line ).node;
-        expect( node ).not.toBeNull();
+        let node = lexer.analyze( line ).nodes[ 0 ];
+        expect( node ).toBeDefined();
         expect( node.content ).toHaveLength( 0 );
     } );    
 
     it( 'detects in the correct position', () => {
         let line = 'Regex "some name": some value';
-        let node = lexer.analyze( line, 1 ).node;
+        let node = lexer.analyze( line, 1 ).nodes[ 0 ];
         expect( node ).toEqual(
             {
                 keyword: Keywords.REGEX,
@@ -56,7 +56,7 @@ describe( 'RegexLexerTest', () => {
 
     it( 'detects in the correct position even with additional spaces or tabs', () => {
         let line = '\t \t Regex "some name": some value';
-        let node = lexer.analyze( line, 1 ).node;
+        let node = lexer.analyze( line, 1 ).nodes[ 0 ];
         expect( node ).toEqual(
             {
                 keyword: Keywords.REGEX,

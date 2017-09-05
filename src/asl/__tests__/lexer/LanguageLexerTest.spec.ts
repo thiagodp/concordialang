@@ -12,9 +12,9 @@ describe( 'LanguageLexerTest', () => {
     it( 'detects in a line', () => {
         let line = '#language: pt-br';
         let r = lexer.analyze( line );
-        expect( r ).not.toBeNull();
-
-        let node = r.node;
+        expect( r ).toBeDefined();
+        expect( r.nodes ).toHaveLength( 1 );
+        let node = r.nodes[ 0 ];
         expect( node.keyword ).toBe( Keywords.LANGUAGE );
         expect( node.content ).toBe( "pt-br" );
     } );
@@ -22,9 +22,9 @@ describe( 'LanguageLexerTest', () => {
     it( 'detects separated by spaces and tabs', () => {
         let line = '# \tlanguage \t: \tpt-br ';
         let r = lexer.analyze( line );
-        expect( r ).not.toBeNull();
-
-        let node = r.node;
+        expect( r ).toBeDefined();
+        expect( r.nodes ).toHaveLength( 1 );
+        let node = r.nodes[ 0 ];
         expect( node.keyword ).toBe( Keywords.LANGUAGE );
         expect( node.content ).toBe( "pt-br" );
     } );
@@ -41,7 +41,10 @@ describe( 'LanguageLexerTest', () => {
 
     it( 'detects a feature in the correct position', () => {
         let line = '#language: pt-br';
-        let node = lexer.analyze( line, 1 ).node;
+        let r = lexer.analyze( line, 1 );
+        expect( r ).toBeDefined();
+        expect( r.nodes ).toHaveLength( 1 );
+        let node = r.nodes[ 0 ];        
         expect( node ).toEqual(
             {
                 keyword: Keywords.LANGUAGE,
@@ -53,7 +56,10 @@ describe( 'LanguageLexerTest', () => {
 
     it( 'detects in the correct position even with additional spaces or tabs', () => {
         let line = ' \t # \t language \t : \t pt-br \t';
-        let node = lexer.analyze( line, 1 ).node;
+        let r = lexer.analyze( line, 1 );
+        expect( r ).toBeDefined();
+        expect( r.nodes ).toHaveLength( 1 );
+        let node = r.nodes[ 0 ];      
         expect( node ).toEqual(
             {
                 keyword: Keywords.LANGUAGE,

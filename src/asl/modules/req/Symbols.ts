@@ -20,6 +20,7 @@ export abstract class Symbols {
     static TABLE_CELL_SEPARATOR = '|';
     static IMPORT_SEPARATOR = ',';
     static REGEX_SEPARATOR = ':';
+    static TAG_VALUE_SEPARATOR = ',';
 
     // wrappers
 

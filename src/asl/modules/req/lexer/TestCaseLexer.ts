@@ -67,7 +67,7 @@ export class TestCaseLexer implements NodeLexer< TestCase > {
             errors.push( new LexicalException( msg, loc ) );
         }
 
-        return { node: node, errors: errors };
+        return { nodes: [ node ], errors: errors };
     }
 
     /**

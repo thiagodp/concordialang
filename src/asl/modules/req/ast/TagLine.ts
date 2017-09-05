@@ -1,7 +1,6 @@
-import { Node } from './Node';
-import { Tagged } from './Tagged';
+import { HasTags } from './Tag';
 
-// TAG
+// TAG LINE
 //
 // Example 1:
 // ```
@@ -20,9 +19,9 @@ import { Tagged } from './Tagged';
 //
 
 /**
- * Tag line node.
+ * Tag line (is not a node).
  * 
  * @author Thiago Delgado Pinto
  */
-export interface TagLine extends Node, Tagged {
+export interface TagLine extends HasTags {
 }

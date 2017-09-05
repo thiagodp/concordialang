@@ -42,7 +42,10 @@ describe( 'FeatureLexerTest', () => {
     it( 'detects a feature in the correct position', () => {
         let line = 'Feature: Hello world';
         let r = lexer.analyze( line, 1 );
-        expect( r.node ).toEqual(
+        expect( r ).toBeDefined();
+        expect( r.nodes ).toHaveLength( 1 );
+        let node = r.nodes[ 0 ];        
+        expect( node ).toEqual(
             {
                 keyword: Keywords.FEATURE,
                 name: "Hello world",
@@ -54,7 +57,10 @@ describe( 'FeatureLexerTest', () => {
     it( 'detects a feature in the correct position even with additional spaces or tabs', () => {
         let line = "  \t \tfeature \t : \t Hello world     ";
         let r = lexer.analyze( line, 1 );
-        expect( r.node ).toEqual(
+        expect( r ).toBeDefined();
+        expect( r.nodes ).toHaveLength( 1 );
+        let node = r.nodes[ 0 ];        
+        expect( node ).toEqual(
             {
                 keyword: Keywords.FEATURE,
                 name: "Hello world",

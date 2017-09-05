@@ -17,28 +17,28 @@ describe( 'TestCaseLexerTest', () => {
     it( 'detects in a line', () => {
         let line = word + ' for "some scenario": Hello world';
         let r = lexer.analyze( line );
-        expect( r ).not.toBeNull();
+        expect( r ).toBeDefined();
         expect( r.errors ).toHaveLength( 0 );
     } );
 
     it( 'detects in a case insensitive way', () => {
         let line = wordInsensitive + ' for "some scenario": Hello world';        
         let r = lexer.analyze( line );
-        expect( r ).not.toBeNull();
+        expect( r ).toBeDefined();
         expect( r.errors ).toHaveLength( 0 );
     } );    
 
     it( 'detects in a line with spaces and tabs', () => {
         let line = "  \t  \t " + word + ' \t for \t "some scenario" \t : \t Hello world \t ';
         let r = lexer.analyze( line );
-        expect( r ).not.toBeNull();
+        expect( r ).toBeDefined();
         expect( r.errors ).toHaveLength( 0 );
     } );
     
     it( 'detects without the scenario name', () => {
         let line = word + ' : Hello world';
         let r = lexer.analyze( line );
-        expect( r ).not.toBeNull();
+        expect( r ).toBeDefined();
         expect( r.errors ).toHaveLength( 0 );
     } );
 
@@ -61,10 +61,10 @@ describe( 'TestCaseLexerTest', () => {
         let line = word + ' "my scenario" : Hello world ';
 
         let r = lexer.analyze( line, 1 );
-        expect( r ).not.toBeNull();
+        expect( r ).toBeDefined();
         expect( r.errors ).toHaveLength( 0 );
         
-        let node = r.node;
+        let node = r.nodes[ 0 ];
         expect( node ).toEqual(
             {
                 keyword: keyword,
@@ -79,10 +79,10 @@ describe( 'TestCaseLexerTest', () => {
         let line = "  \t \t" + word + ' \t "  my scenario \t " \t : \t Hello world     ';
 
         let r = lexer.analyze( line, 1 );
-        expect( r ).not.toBeNull();
+        expect( r ).toBeDefined();
         expect( r.errors ).toHaveLength( 0 );
 
-        let node = r.node;
+        let node = r.nodes[ 0 ];
         expect( node ).toEqual(
             {
                 keyword: keyword,
@@ -97,7 +97,7 @@ describe( 'TestCaseLexerTest', () => {
         let line = word + ': 1nv4lid n4me ';
         
         let r = lexer.analyze( line, 1 );
-        let node = r.node;
+        let node = r.nodes[ 0 ];
 
         expect( node ).toEqual(
             {

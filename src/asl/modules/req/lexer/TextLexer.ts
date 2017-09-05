@@ -21,14 +21,13 @@ export class TextLexer implements NodeLexer< Text > {
 
         const pos = this._lineChecker.countLeftSpacesAndTabs( line );
 
-        return {
-            node: {
-                keyword: this._keyword,
-                location: { line: lineNumber || 0, column: pos + 1 },
-                content: line
-            },
-            errors: []
+        let node = {
+            keyword: this._keyword,
+            location: { line: lineNumber || 0, column: pos + 1 },
+            content: line
         };
+
+        return { nodes: [ node ], errors: [] };
     }
 
 }

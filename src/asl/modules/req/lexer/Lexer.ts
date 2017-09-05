@@ -4,7 +4,7 @@ import { DocumentProcessor } from '../DocumentProcessor';
 import { KeywordDictionary } from '../KeywordDictionary';
 import { NodeLexer, LexicalAnalysisResult } from './NodeLexer';
 import { LanguageLexer } from "./LanguageLexer";
-import { TagLineLexer } from "./TagLineLexer";
+import { TagLexer } from "./TagLexer";
 import { ImportLexer } from './ImportLexer';
 import { FeatureLexer } from './FeatureLexer';
 import { ScenarioLexer } from './ScenarioLexer';
@@ -30,7 +30,7 @@ export class Lexer {
     constructor( private _dictionary: KeywordDictionary, private _stopOnFirstError: boolean = false ) {
         this._lexers = [
             new LanguageLexer( _dictionary.language )
-            , new TagLineLexer()
+            , new TagLexer()
             , new ImportLexer( _dictionary.import )
             , new FeatureLexer( _dictionary.feature )
             , new ScenarioLexer( _dictionary.scenario )
@@ -95,7 +95,7 @@ export class Lexer {
         for ( let lexer of this._lexers ) {
             result = lexer.analyze( line, lineNumber );
             if ( result ) {
-                this._nodes.push( result.node );
+                this._nodes.push( result.nodes );
                 if ( result.errors ) {
                     // Add the "errors" array to "_errors"
                     this._errors.push.apply( this._errors, result.errors );

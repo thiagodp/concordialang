@@ -51,7 +51,7 @@ export class RegexLexer implements NodeLexer< Regex > {
             content: content
         } as Regex;
 
-        return { node: node, errors: [] };
+        return { nodes: [ node ], errors: [] };
     }   
 
 }

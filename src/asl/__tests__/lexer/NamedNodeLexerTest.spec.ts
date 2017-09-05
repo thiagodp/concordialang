@@ -16,21 +16,21 @@ describe( 'NamedNodeLexerTest', () => {
     it( 'detects the name in a line', () => {
         let line = word + ': Hello world';
         let r = lexer.analyze( line );
-        expect( r ).not.toBeNull();
+        expect( r ).toBeDefined();
         expect( r.errors ).toHaveLength( 0 );
     } );
 
     it( 'detects the name ignoring its case', () => {
         let line = wordInsensitive + ': Hello world';
         let r = lexer.analyze( line );
-        expect( r ).not.toBeNull();
+        expect( r ).toBeDefined();
         expect( r.errors ).toHaveLength( 0 );
     } );    
 
     it( 'detects the name in a line with spaces and tabs', () => {
         let line = "  \t  \t " + word + ": Hello world";
         let r = lexer.analyze( line );
-        expect( r ).not.toBeNull();
+        expect( r ).toBeDefined();
         expect( r.errors ).toHaveLength( 0 );
     } );    
 
@@ -58,10 +58,10 @@ describe( 'NamedNodeLexerTest', () => {
         let line = word + ': Hello world';
 
         let r = lexer.analyze( line, 1 );
-        expect( r ).not.toBeNull();
+        expect( r ).toBeDefined();
         expect( r.errors ).toHaveLength( 0 );
-        
-        let node = r.node;
+        expect( r.nodes ).toHaveLength( 1 );
+        let node = r.nodes[ 0 ];
         expect( node ).toEqual(
             {
                 keyword: keyword,
@@ -75,10 +75,10 @@ describe( 'NamedNodeLexerTest', () => {
         let line = "  \t \t" + word + " \t : \t Hello world     ";
 
         let r = lexer.analyze( line, 1 );
-        expect( r ).not.toBeNull();
+        expect( r ).toBeDefined();
         expect( r.errors ).toHaveLength( 0 );
-
-        let node = r.node;
+        expect( r.nodes ).toHaveLength( 1 );
+        let node = r.nodes[ 0 ];
         expect( node ).toEqual(
             {
                 keyword: keyword,
@@ -92,7 +92,7 @@ describe( 'NamedNodeLexerTest', () => {
         let line = word + ': 1nv4lid n4me ';
         
         let r = lexer.analyze( line, 1 );
-        let node = r.node;
+        let node = r.nodes;
 
         expect( node ).toEqual(
             {

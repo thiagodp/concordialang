@@ -1,7 +1,7 @@
 import { Feature } from './Feature';
 import { Task } from './Task';
 import { UI } from "./UI";
-import { TagLine } from "./TagLine";
+import { Tag } from "./Tag";
 import { Import } from "./Import";
 import { Language } from "./Language";
 import { Regex } from "./Regex";
@@ -17,7 +17,7 @@ export interface Document {
     
     language?: Language;
     imports?: Array< Import >;
-    tags?: Array< TagLine >;    
+    tags?: Array< Tag >;    
 
     feature?: Feature;
 

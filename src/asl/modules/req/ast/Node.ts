@@ -5,10 +5,16 @@ export interface Node {
     location: Location;
 }
 
-export interface NamedNode extends Node {
+export interface HasName {
     name: string;
 }
 
-export interface ContentNode extends Node {
+export interface HasContent {
     content: string;
+}
+
+export interface NamedNode extends Node, HasName {    
+}
+
+export interface ContentNode extends Node, HasContent {
 }

@@ -2,7 +2,7 @@ import { Node } from '../ast/Node';
 import { LexicalException } from "../LexicalException";
 
 export interface LexicalAnalysisResult< T extends Node > {
-    node: T,
+    nodes: Array< T >,
     errors: Array< LexicalException >
 }
 

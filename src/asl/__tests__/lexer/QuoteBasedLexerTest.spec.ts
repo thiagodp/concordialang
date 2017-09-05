@@ -13,25 +13,24 @@ describe( 'QuoteBasedLexerTest', () => {
     
     let lexer = new QuotedNodeLexer( words, keyword );
 
-
     it( 'detects the content in a line', () => {
         let line = word + ' "Hello world"';
         let r = lexer.analyze( line );
-        expect( r ).not.toBeNull();
+        expect( r ).toBeDefined();
         expect( r.errors ).toHaveLength( 0 );
     } );
 
     it( 'detects the content ignoring its case', () => {
         let line = wordInsensitive + ' "Hello world"';
         let r = lexer.analyze( line );
-        expect( r ).not.toBeNull();
+        expect( r ).toBeDefined();
         expect( r.errors ).toHaveLength( 0 );
     } );    
 
     it( 'detects the content in a line with spaces and tabs', () => {
         let line = "  \t  \t " + word + ' "Hello world"';
         let r = lexer.analyze( line );
-        expect( r ).not.toBeNull();
+        expect( r ).toBeDefined();
         expect( r.errors ).toHaveLength( 0 );
     } );    
 
@@ -59,10 +58,11 @@ describe( 'QuoteBasedLexerTest', () => {
         let line = word + ' "Hello world"';
 
         let r = lexer.analyze( line, 1 );
-        expect( r ).not.toBeNull();
+        expect( r ).toBeDefined();
         expect( r.errors ).toHaveLength( 0 );
+        expect( r.nodes ).toHaveLength( 1 );
         
-        let node = r.node;
+        let node = r.nodes[ 0 ];
         expect( node ).toEqual(
             {
                 keyword: keyword,
@@ -76,10 +76,11 @@ describe( 'QuoteBasedLexerTest', () => {
         let line = "  \t \t" + word + " \t " + '"Hello world"';
         
         let r = lexer.analyze( line, 1 );
-        expect( r ).not.toBeNull();
+        expect( r ).toBeDefined();
         expect( r.errors ).toHaveLength( 0 );
+        expect( r.nodes ).toHaveLength( 1 );
         
-        let node = r.node;
+        let node = r.nodes[ 0 ];
         expect( node ).toEqual(
             {
                 keyword: keyword,
@@ -92,7 +93,7 @@ describe( 'QuoteBasedLexerTest', () => {
     it( 'detects a invalid name but registers an error', () => {
         let line = word + ' "1nv4lid n4me" ';
         let r = lexer.analyze( line, 1 );
-        let node = r.node;
+        let node = r.nodes[ 1 ];
 
         expect( node ).toEqual(
             {
