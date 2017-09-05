@@ -9,24 +9,22 @@ describe( 'LanguageLexerTest', () => {
     let words = [ 'language', 'lang' ];
     let lexer = new LanguageLexer( words );
 
-    it( 'detects in a line', () => {
-        let line = '#language: pt-br';
+    let expectIsDetected = function isDetected( line ) {
         let r = lexer.analyze( line );
         expect( r ).toBeDefined();
         expect( r.nodes ).toHaveLength( 1 );
         let node = r.nodes[ 0 ];
         expect( node.keyword ).toBe( Keywords.LANGUAGE );
         expect( node.content ).toBe( "pt-br" );
+    };
+
+    it( 'detects in a line', () => {
+        expectIsDetected( '#language: pt-br' );
+        expectIsDetected( '#language:pt-br' );
     } );
 
     it( 'detects separated by spaces and tabs', () => {
-        let line = '# \tlanguage \t: \tpt-br ';
-        let r = lexer.analyze( line );
-        expect( r ).toBeDefined();
-        expect( r.nodes ).toHaveLength( 1 );
-        let node = r.nodes[ 0 ];
-        expect( node.keyword ).toBe( Keywords.LANGUAGE );
-        expect( node.content ).toBe( "pt-br" );
+        expectIsDetected( '# \tlanguage \t: \tpt-br ' );
     } );
 
     it( 'does not detect when it is not in a line', () => {

@@ -45,7 +45,7 @@ export class LanguageLexer implements NodeLexer< Language > {
             content: content
         } as Language;
 
-        return { nodes: node, errors: [] };
+        return { nodes: [ node ], errors: [] };
     }
 
 }
