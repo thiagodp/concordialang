@@ -270,7 +270,10 @@ Test cases are generated from:
 
 Example 1:
 ```
-@generated @feature( login ) @scenario( sucessful login ) @interaction( successful login )
+@generated
+@feature( login )
+@scenario( sucessful login )
+@interaction( successful login )
 Test case: successful login
   I see in the url "/login"
   I fill "#username" with "Bob"
@@ -282,7 +285,10 @@ Test case: successful login
 
 Example 2:
  ```
- @generated @feature( login ) @scenario( sucessful login ) @interaction( Username with a value lower than the minimum )
+ @generated
+ @feature( login )
+ @scenario( sucessful login )
+ @interaction( Username with a value lower than the minimum )
 Test case: Username with a value lower than the minimum
   I see in the url "/login"
   I fill "#username" with ""
