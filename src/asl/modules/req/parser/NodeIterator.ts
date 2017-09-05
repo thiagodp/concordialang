@@ -1,5 +1,10 @@
 import { Node } from '../ast/Node';
 
+/**
+ * Node iterator.
+ * 
+ * @author Thiago Delgado Pinto
+ */
 export class NodeIterator {
 
     private _index: number;
