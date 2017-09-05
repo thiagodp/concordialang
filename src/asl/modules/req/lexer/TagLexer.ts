@@ -1,4 +1,4 @@
-import { SyntaticException } from '../SyntaticException';
+import { LexicalException } from '../LexicalException';
 import { Tag } from '../ast/Tag';
 import { NodeLexer, LexicalAnalysisResult } from './NodeLexer';
 import { Keywords } from "../Keywords";
@@ -56,7 +56,7 @@ export class TagLexer implements NodeLexer< Tag > {
 
             let result = regex.exec( tag );
             if ( ! result || result.length < 4 ) {
-                errors.push( new SyntaticException( 'Invalid tag declaration: ' + tag, location ) );
+                errors.push( new LexicalException( 'Invalid tag declaration: ' + tag, location ) );
                 continue; // go to the next tag
             }
 
