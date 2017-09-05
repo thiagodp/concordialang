@@ -1,4 +1,4 @@
-import { InputFileExtractor } from './InputFileExtractor';
+import { InputFileExtractor } from '../util/InputFileExtractor';
 import cliTruncate = require( 'cli-truncate' );
 
 export class InputProcessor {

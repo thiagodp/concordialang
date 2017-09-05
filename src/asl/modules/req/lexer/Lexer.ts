@@ -1,7 +1,11 @@
+import { KeywordBaseLexer } from './KeywordBaseLexer';
+import { KeywordDictionaryLoader } from '../dict/KeywordDictionaryLoader';
+import { Language } from '../ast/Language';
+import { Keywords } from '../Keywords';
 import { TestCaseLexer } from './TestCaseLexer';
 import { Node } from '../ast/Node';
 import { DocumentProcessor } from '../DocumentProcessor';
-import { KeywordDictionary } from '../KeywordDictionary';
+import { KeywordDictionary } from '../dict/KeywordDictionary';
 import { NodeLexer, LexicalAnalysisResult } from './NodeLexer';
 import { LanguageLexer } from "./LanguageLexer";
 import { TagLexer } from "./TagLexer";
@@ -27,22 +31,32 @@ export class Lexer {
     private _errors: Array< Error >;
     private _lexers: Array< NodeLexer< Node > >;
 
-    constructor( private _dictionary: KeywordDictionary, private _stopOnFirstError: boolean = false ) {
+    constructor(
+        private _language: string = 'en',
+        private _dictionaryLoader: KeywordDictionaryLoader,
+        private _stopOnFirstError: boolean = false,
+    ) {
+        let dictionary = _dictionaryLoader.load( _language );
+        if ( ! dictionary ) {
+            throw new Error( 'Cannot load language: ' + _language );
+        }
+
         this._lexers = [
-            new LanguageLexer( _dictionary.language )
+            new LanguageLexer( dictionary.language )
             , new TagLexer()
-            , new ImportLexer( _dictionary.import )
-            , new FeatureLexer( _dictionary.feature )
-            , new ScenarioLexer( _dictionary.scenario )
-            , new TestCaseLexer( _dictionary.testcase )
-            , new GivenLexer( _dictionary.stepGiven )
-            , new WhenLexer( _dictionary.stepWhen )
-            , new ThenLexer( _dictionary.stepThen )
-            , new AndLexer( _dictionary.stepAnd )
-            , new ButLexer( _dictionary.stepBut )
-            , new RegexLexer( _dictionary.regex )
+            , new ImportLexer( dictionary.import )
+            , new FeatureLexer( dictionary.feature )
+            , new ScenarioLexer( dictionary.scenario )
+            , new TestCaseLexer( dictionary.testcase )
+            , new GivenLexer( dictionary.stepGiven )
+            , new WhenLexer( dictionary.stepWhen )
+            , new ThenLexer( dictionary.stepThen )
+            , new AndLexer( dictionary.stepAnd )
+            , new ButLexer( dictionary.stepBut )
+            , new RegexLexer( dictionary.regex )
             , new TextLexer() // captures any non-empty
         ];
+
         this.reset();
     }
 
@@ -95,13 +109,27 @@ export class Lexer {
         for ( let lexer of this._lexers ) {
             result = lexer.analyze( line, lineNumber );
             if ( result ) {
+
+                // Detects a language node and tries to change the language
+                if ( result.nodes.length > 0 && Keywords.LANGUAGE === result.nodes[ 0 ].keyword ) {
+                    let language = ( result.nodes[ 0 ] as Language ).content;
+                    if ( language != this._language ) { // needs to change ?
+                        let changed = this.changeLanguage( language );
+                        if ( ! changed ) {
+                            this._errors.push(
+                                new Error( 'Cannot load language "' + language + '".' )
+                                );
+                        }
+                    }
+                }
+
                 // Add the "nodes" array to "_nodes"
                 this._nodes.push.apply( this._nodes, result.nodes );
                 if ( result.errors ) {
                     // Add the "errors" array to "_errors"
                     this._errors.push.apply( this._errors, result.errors );
                 }
-                return true;
+                return true; // found a node in the line
             }
         }
 
@@ -119,5 +147,26 @@ export class Lexer {
         }        
         this._errors.push( new Error( message ) );
         return true;
+    }
+
+    /**
+     * Change the current language iff the given language could be loaded.
+     */
+    private changeLanguage( language: string ): boolean {
+        let dict = this._dictionaryLoader.load( language );
+        if ( ! dict ) {
+            return false;
+        }
+        for ( let lexer of this._lexers ) {
+            if ( this.isAWordBasedLexer( lexer ) ) {
+                let keyword = lexer.keyword();
+                lexer.updateWords( dict[ keyword ] );
+            }
+        }
+        return true;
+    }
+
+    private isAWordBasedLexer( obj: any ): obj is KeywordBaseLexer {
+        return ( < KeywordBaseLexer > obj ).updateWords !== undefined;
     }
 }

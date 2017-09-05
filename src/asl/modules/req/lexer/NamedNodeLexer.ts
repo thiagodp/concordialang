@@ -1,3 +1,4 @@
+import { KeywordBaseLexer } from './KeywordBaseLexer';
 import { Feature } from '../ast/Feature';
 import { LocatedException } from '../LocatedException';
 import { NodeLexer, LexicalAnalysisResult } from './NodeLexer';
@@ -15,13 +16,23 @@ const XRegExp = require( 'xregexp' );
  * 
  * @author Thiago Delgado Pinto
  */
-export class NamedNodeLexer< T extends NamedNode > implements NodeLexer< T > {
+export class NamedNodeLexer< T extends NamedNode > implements NodeLexer< T >, KeywordBaseLexer {
 
     private _separator: string = Symbols.TITLE_SEPARATOR;
     private _lineChecker: LineChecker = new LineChecker();
 
     constructor( private _words: Array< string >, private _keyword: string ) {
     }
+
+    /** @inheritDoc */
+    public keyword(): string {
+        return this._keyword;
+    }
+    
+    /** @inheritDoc */
+    public updateWords( words: string[] ) {
+        this._words = words;   
+    }     
 
     protected makeRegexForTheWords( words: string[] ): string {
         return '^' + Expressions.SPACES_OR_TABS

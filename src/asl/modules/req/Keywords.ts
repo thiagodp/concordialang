@@ -3,23 +3,27 @@
  */
 export abstract class Keywords {
 
+    // Non-Gherkin keywords
+  
+    static IMPORT: string = 'import';
+    static REGEX: string = 'regex';
+    static TEST_CASE: string = 'testcase';
+    
+    // Gherkin keywords
+
     static COMMENT: string = 'comment';
     static TAG: string = 'tag';
     static LANGUAGE: string = 'language';
 
     static FEATURE: string = 'feature';
     static SCENARIO: string = 'scenario';
-    static TEST_CASE: string = 'testcase';
 
-    static STEP_GIVEN: string = 'given';
-    static STEP_WHEN: string = 'when';
-    static STEP_THEN: string = 'then';
-    static STEP_AND: string = 'and';
+    static STEP_GIVEN: string = 'stepGiven';
+    static STEP_WHEN: string = 'stepWhen';
+    static STEP_THEN: string = 'stepThen';
+    static STEP_AND: string = 'stepAnd';
     static STEP_AND_GENERIC: string = '*'; // TO-DO: remove
-    static STEP_BUT: string = 'but'; // TO-DO: remove and include the words as "and"
-
-    static IMPORT: string = 'import';
-    static REGEX: string = 'regex';
+    static STEP_BUT: string = 'stepBut'; // TO-DO: remove and include the words as "and"
 
     static TEXT: string = 'text'; // not empty, but not recognized
 

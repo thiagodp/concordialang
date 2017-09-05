@@ -1,5 +1,7 @@
+import { InMemoryKeywordDictionaryLoader } from '../../modules/req/dict/InMemoryKeywordDictionaryLoader';
+import { KeywordDictionaryLoader } from '../../modules/req/dict/KeywordDictionaryLoader';
 import { Lexer } from "../../modules/req/lexer/Lexer";
-import { KeywordDictionary } from "../../modules/req/KeywordDictionary";
+import { KeywordDictionary } from "../../modules/req/dict/KeywordDictionary";
 import { Keywords } from "../../modules/req/Keywords";
 
 /**
@@ -7,7 +9,7 @@ import { Keywords } from "../../modules/req/Keywords";
  */
 describe( 'LexerTest', () => {
 
-    const dictionary: KeywordDictionary = {
+    const enDictionary: KeywordDictionary = {
         // Non-Gherkin keywords
         import: [ 'import' ],
         regex: [ 'regex' ],
@@ -26,9 +28,37 @@ describe( 'LexerTest', () => {
         stepGiven: [ 'given' ],
         stepThen: [ 'then' ],
         stepWhen: [ 'when' ]
+    };
+
+    const ptDictionary: KeywordDictionary = {
+        // Non-Gherkin keywords
+        import: [ 'importe' ],
+        regex: [ 'expressão' ],
+        testcase: [ 'caso de teste' ],
+
+        // Gherkin keywords
+        background: [ 'background' ],
+        examples: [ 'examplos' ],
+        feature: [ 'funcionalidade', 'característica' ],
+        language: [ 'language' ],
+        outline: [ 'esboço' ],
+        scenario: [ 'cenário' ],
+        step: [ 'dado', 'quando', 'então', 'e', 'mas' ],
+        stepAnd: [ 'e' ],
+        stepBut: [ 'mas' ],
+        stepGiven: [ 'dado' ],
+        stepThen: [ 'então' ],
+        stepWhen: [ 'quando' ]
     };    
 
-    let lexer: Lexer = new Lexer( dictionary );
+    let loader: KeywordDictionaryLoader = new InMemoryKeywordDictionaryLoader(
+        {
+            'en': enDictionary,
+            'pt': ptDictionary
+        }
+    );
+
+    let lexer: Lexer = new Lexer( 'en', loader );
 
     beforeEach( () => {
         lexer.reset();
@@ -38,7 +68,7 @@ describe( 'LexerTest', () => {
         expect( lexer.addNodeFromLine( '', 1 ) ).toBeFalsy();
     } );
 
-    it( 'detects correctly 1', () => {
+    it( 'detects correctly in english', () => {
         [
             '#language:en',
             '',
@@ -88,5 +118,57 @@ describe( 'LexerTest', () => {
         expect( nodes[ i++ ].keyword ).toBe( Keywords.REGEX );
         expect( nodes[ i++ ].keyword ).toBe( Keywords.TEXT );
     } );
+
+
+    it( 'detects correctly in portuguese', () => {
+        [
+            '#language:pt',
+            '',
+            '@importante',
+            'característica: my feature',
+            ' \t',
+            'cenário: hello',
+            '  dado something',
+            '    e another thing',
+            '  quando anything happens',
+            '    e other thing happens',
+            '    mas other thing does not happen',
+            '  então the result is anything',
+            '    e another result could also happen',
+            '',
+            'caso de teste for "my scenario": my test case',
+            '  dado that I can see the screen "home"',
+            '  quando I click on "Price" ',
+            '  então I see "Our Plans"',
+            '',            
+            'expressão "my regex": /some regex/',
+            '',
+            'isso must be recognized as text'
+        ].forEach( ( val, index ) => lexer.addNodeFromLine( val, index + 1 ) );
+        
+        expect( lexer.errors().length ).toBe( 0 );
+
+        let nodes = lexer.nodes();
+        expect( nodes.length ).toBe( 17 );
+
+        let i = 0;
+        expect( nodes[ i++ ].keyword ).toBe( Keywords.LANGUAGE );
+        expect( nodes[ i++ ].keyword ).toBe( Keywords.TAG );
+        expect( nodes[ i++ ].keyword ).toBe( Keywords.FEATURE );
+        expect( nodes[ i++ ].keyword ).toBe( Keywords.SCENARIO );
+        expect( nodes[ i++ ].keyword ).toBe( Keywords.STEP_GIVEN );
+        expect( nodes[ i++ ].keyword ).toBe( Keywords.STEP_AND );
+        expect( nodes[ i++ ].keyword ).toBe( Keywords.STEP_WHEN );
+        expect( nodes[ i++ ].keyword ).toBe( Keywords.STEP_AND );
+        expect( nodes[ i++ ].keyword ).toBe( Keywords.STEP_BUT );
+        expect( nodes[ i++ ].keyword ).toBe( Keywords.STEP_THEN );
+        expect( nodes[ i++ ].keyword ).toBe( Keywords.STEP_AND );
+        expect( nodes[ i++ ].keyword ).toBe( Keywords.TEST_CASE );
+        expect( nodes[ i++ ].keyword ).toBe( Keywords.STEP_GIVEN );
+        expect( nodes[ i++ ].keyword ).toBe( Keywords.STEP_WHEN );
+        expect( nodes[ i++ ].keyword ).toBe( Keywords.STEP_THEN );
+        expect( nodes[ i++ ].keyword ).toBe( Keywords.REGEX );
+        expect( nodes[ i++ ].keyword ).toBe( Keywords.TEXT );
+    } );    
 
 } );

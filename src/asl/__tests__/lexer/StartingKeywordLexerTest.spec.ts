@@ -42,6 +42,12 @@ describe( 'StartingKeywordLexerTest', () => {
         expect( r.nodes ).toHaveLength( 1 );
         let node = r.nodes[ 0 ];
         expect( node.content ).toBe( 'world' );
+    } );
+
+    it( 'does not detect without a space after the keyword', () => {
+        let line = '\t helloworld \t';
+        let r = lexer.analyze( line, 1 );
+        expect( r ).toBeNull();
     } );    
 
 } );

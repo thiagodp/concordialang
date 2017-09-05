@@ -1,7 +1,9 @@
 import { Lexer } from '../../modules/req/lexer/Lexer';
 import { Parser } from '../../modules/req/parser/Parser';
-import { KeywordDictionary } from "../../modules/req/KeywordDictionary";
+import { KeywordDictionary } from "../../modules/req/dict/KeywordDictionary";
 import { Document } from '../../modules/req/ast/Document';
+import { KeywordDictionaryLoader } from "../../modules/req/dict/KeywordDictionaryLoader";
+import { InMemoryKeywordDictionaryLoader } from "../../modules/req/dict/InMemoryKeywordDictionaryLoader";
 /**
  * @author Thiago Delgado Pinto
  */
@@ -28,7 +30,11 @@ describe( 'ParserTest', () => {
         stepWhen: [ 'when' ]
     };    
 
-    let lexer: Lexer = new Lexer( dictionary );    
+    let loader: KeywordDictionaryLoader = new InMemoryKeywordDictionaryLoader(
+        { 'en': dictionary }
+    );
+
+    let lexer: Lexer = new Lexer( 'en', loader );
 
     let parser = new Parser();
     

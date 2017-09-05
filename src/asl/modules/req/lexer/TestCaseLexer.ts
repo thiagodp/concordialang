@@ -1,3 +1,4 @@
+import { KeywordBaseLexer } from './KeywordBaseLexer';
 import { NodeLexer, LexicalAnalysisResult } from './NodeLexer';
 import { Keywords } from "../Keywords";
 import { TestCase } from "../ast/TestCase";
@@ -13,7 +14,7 @@ const XRegExp = require( 'xregexp' );
  * 
  * @author Thiago Delgado Pinto
  */
-export class TestCaseLexer implements NodeLexer< TestCase > {
+export class TestCaseLexer implements NodeLexer< TestCase >, KeywordBaseLexer {
 
     private _separator: string = Symbols.TITLE_SEPARATOR;
     private _lineChecker: LineChecker = new LineChecker();
@@ -21,6 +22,16 @@ export class TestCaseLexer implements NodeLexer< TestCase > {
 
     constructor( private _words: Array< string > ) {
     }
+
+    /** @inheritDoc */
+    public keyword(): string {
+        return Keywords.TEST_CASE;
+    }    
+
+    /** @inheritDoc */
+    public updateWords( words: string[] ) {
+        this._words = words;   
+    }    
 
     protected makeRegexForTheWords( words: string[] ): string {
         return '^' + Expressions.SPACES_OR_TABS

@@ -3,6 +3,11 @@ import fs = require( 'fs' );
 import glob = require( 'glob' );
 import crypto = require( 'crypto' );
 
+/**
+ * Input file extractor
+ * 
+ * @author  Thiago Delgado Pinto
+ */
 export class InputFileExtractor {
 
     /**
@@ -13,7 +18,6 @@ export class InputFileExtractor {
     directoryExists( dir: string ): boolean {
         return fs.existsSync( dir );
     }
-
 
     /**
      * Filter the given files, returning a new list with only the files that match

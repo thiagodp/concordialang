@@ -1,16 +1,16 @@
 /**
  * Keyword dictionary
  * 
+ * @see Keywords
+ * 
  * @author Thiago Delgado Pinto
  */
-export interface KeywordDictionary {
+export interface KeywordDictionary { // properties should exist in Keywords
 
     // Non-Gherkin keywords
     
     import?: Array< string >,
-
     regex?: Array< string >,
-
     testcase?: Array< string >,
 
     // Gherkin keywords

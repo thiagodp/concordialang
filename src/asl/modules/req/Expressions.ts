@@ -5,6 +5,8 @@
  */
 export abstract class Expressions {
 
+    static AT_LEAST_ONE_SPACE_OR_TAB: string = '(?:\t| )+'; // "?:" means "not remember"
+
     static SPACES_OR_TABS: string = '(?:\t| )*'; // "?:" means "not remember"
 
     static ANYTHING: string = '.*';

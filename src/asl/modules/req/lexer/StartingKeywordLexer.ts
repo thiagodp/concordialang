@@ -2,23 +2,34 @@ import { Node, ContentNode } from '../ast/Node';
 import { NodeLexer, LexicalAnalysisResult } from "./NodeLexer";
 import { LineChecker } from "../LineChecker";
 import { Expressions } from "../Expressions";
+import { KeywordBaseLexer } from "./KeywordBaseLexer";
 
 /**
  * Detects a node in the format "keyword anything".
  * 
  * @author Thiago Delgado Pinto
  */
-export class StartingKeywordLexer< T extends ContentNode > implements NodeLexer< T > {
+export class StartingKeywordLexer< T extends ContentNode > implements NodeLexer< T >, KeywordBaseLexer {
 
     private _lineChecker: LineChecker = new LineChecker();
 
     constructor( private _words: Array< string >, private _keyword: string ) {
     }
 
+    /** @inheritDoc */
+    public keyword(): string {
+        return this._keyword;
+    }
+
+    /** @inheritDoc */
+    public updateWords( words: string[] ) {
+        this._words = words;   
+    }    
+
     protected makeRegexForTheWords( words: string[] ): string {
         return '^' + Expressions.SPACES_OR_TABS
             + '(?:' + words.join( '|' ) + ')'
-            + Expressions.SPACES_OR_TABS
+            + Expressions.AT_LEAST_ONE_SPACE_OR_TAB
             + '(' + Expressions.ANYTHING + ')';
     }
 

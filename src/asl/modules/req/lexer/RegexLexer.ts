@@ -1,3 +1,4 @@
+import { KeywordBaseLexer } from './KeywordBaseLexer';
 import { Regex } from '../ast/Regex';
 import { NodeLexer, LexicalAnalysisResult } from './NodeLexer';
 import { Keywords } from "../Keywords";
@@ -10,12 +11,22 @@ import { Expressions } from "../Expressions";
  * 
  * @author Thiago Delgado Pinto
  */
-export class RegexLexer implements NodeLexer< Regex > {
+export class RegexLexer implements NodeLexer< Regex >, KeywordBaseLexer {
 
     private _lineChecker: LineChecker = new LineChecker();
 
     constructor( private _words: string[] ) {
-    }    
+    }
+
+    /** @inheritDoc */
+    public keyword(): string {
+        return Keywords.REGEX;
+    }
+
+    /** @inheritDoc */
+    public updateWords( words: string[] ) {
+        this._words = words;   
+    }     
 
     private makeRegexForTheWords( words: string[] ): string {
         return '^' + Expressions.SPACES_OR_TABS
