@@ -40,7 +40,7 @@ describe( 'LexerTest', () => {
         background: [ 'background' ],
         examples: [ 'examplos' ],
         feature: [ 'funcionalidade', 'característica' ],
-        language: [ 'language' ],
+        language: [ 'language', 'idioma', 'língua' ],
         outline: [ 'esboço' ],
         scenario: [ 'cenário' ],
         step: [ 'dado', 'quando', 'então', 'e', 'mas' ],
