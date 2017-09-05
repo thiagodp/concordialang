@@ -93,7 +93,7 @@ describe( 'QuoteBasedLexerTest', () => {
     it( 'detects a invalid name but registers an error', () => {
         let line = word + ' "1nv4lid n4me" ';
         let r = lexer.analyze( line, 1 );
-        let node = r.nodes[ 1 ];
+        let node = r.nodes[ 0 ];
 
         expect( node ).toEqual(
             {

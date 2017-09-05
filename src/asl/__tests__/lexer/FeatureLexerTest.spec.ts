@@ -24,12 +24,12 @@ describe( 'FeatureLexerTest', () => {
         expect( lexer.analyze( line ) ).toBeNull()
     } );
     
-    it( 'does not detect a feature when the word "feature" is not the first one', () => {
+    it( 'does not detect a feature when its keyword is not the first one', () => {
         let line = 'Not a feature: Hello world';
         expect( lexer.analyze( line ) ).toBeNull();
     } );
 
-    it( 'does not detect a feature when the word "feature" is not followed by the title separator', () => {
+    it( 'does not detect a feature when its keyword is not followed by the title separator', () => {
         let line = 'Feature Hello world';
         expect( lexer.analyze( line ) ).toBeNull();
     } );
