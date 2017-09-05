@@ -95,7 +95,8 @@ export class Lexer {
         for ( let lexer of this._lexers ) {
             result = lexer.analyze( line, lineNumber );
             if ( result ) {
-                this._nodes.push( result.nodes );
+                // Add the "nodes" array to "_nodes"
+                this._nodes.push.apply( this._nodes, result.nodes );
                 if ( result.errors ) {
                     // Add the "errors" array to "_errors"
                     this._errors.push.apply( this._errors, result.errors );
