@@ -1,5 +1,5 @@
 #language: pt
 
-Funcionalidade: Login
+Funcionalidade Login
 
 Cenário: Login com sucesso

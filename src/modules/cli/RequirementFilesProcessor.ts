@@ -1,3 +1,4 @@
+import { ProcessingObserver } from './ProcessingObserver';
 import { EnglishKeywordDictionary } from '../req/dict/EnglishKeywordDictionary';
 import { Document } from '../req/ast/Document';
 import { Node } from '../req/ast/Node';
@@ -29,33 +30,45 @@ export class RequirementFilesProcessor {
         this._fileProcessor = new SyncFileProcessor( _encoding );
     }
 
-    public process( files: string[] ) {
+    public process( files: string[], observer?: ProcessingObserver ) {
 
         let nodes: Node[] = [];
+        let errors: Error[]= [];
         let doc: Document = {};
+        let hadErrors: boolean;
 
         for ( let file of files ) {
+            
+            hadErrors = false;
+            if ( observer ) {
+                observer.onStarted( file );
+            }
 
             // Process the file with the lexer processor
             this._fileProcessor.process( file, this._docProcessor );
             // Get the lexed nodes
             nodes = this._lexer.nodes();
-            this.printErrors( this._lexer.errors() );
+            errors = this._lexer.errors();
+            if ( observer && errors.length > 0 ) {
+                hadErrors = true;
+                observer.onError( file, errors );
+            }
             this._lexer.reset(); // important
     
             // Parses the nodes
             doc = this._parser.analyze( nodes ) || {};
             doc.file = file; // adds the current file
-
-            this.printErrors( this._parser.errors() );
+            errors = this._parser.errors();
+            if ( observer && errors.length > 0 ) {
+                hadErrors = true;
+                observer.onError( file, errors );
+            }            
     
-            this._write( doc ); // <<< TEMPORARY
-        }
-    }
+            //this._write( doc ); // <<< TEMPORARY
 
-    private printErrors( errors: Error[] ) {
-        for ( let error of errors ) {
-            this._write( error.message );
+            if ( observer ) {
+                observer.onFinished( file, ! hadErrors );
+            }            
         }
     }
 
