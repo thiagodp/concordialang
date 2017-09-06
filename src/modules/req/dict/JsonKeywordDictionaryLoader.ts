@@ -13,20 +13,29 @@ export class JsonKeywordDictionaryLoader implements KeywordDictionaryLoader {
      * Constructs the loader.
      * 
      * @param _basePath Path where there is a "dict" folder when the dictionaries.
+     * @param _dictMap Map with each language ( string => KeywordDictionary ).
      */
-    constructor( private _basePath: string = './' ) {
+    constructor( private _basePath: string = './', private _dictMap: Object = {} ) {
     }
 
     /**
      * @inheritDoc
      */
-    load( language: string ): KeywordDictionary | null {
+    public load( language: string ): KeywordDictionary | null {
+
+        // Returns the content in cache, if available
+        if ( this._dictMap[ language ] ) {
+            return this._dictMap[ language ];
+        }
+
         let filePath = this.makeLanguageFilePath( language );
         let fileExists = 0 === ( new InputFileExtractor() ).nonExistentFiles( [ filePath ] ).length;
         if ( ! fileExists ) {
             return null;
         }
-        return require( filePath ) as KeywordDictionary; // synchronous and cacheable
+
+        // require is synchronous and cacheable
+        return this._dictMap[ language ] = require( filePath ) as KeywordDictionary;
     }
 
     private makeLanguageFilePath( language: string ): string {

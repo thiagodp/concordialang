@@ -1,0 +1,21 @@
+{ // pt.json
+    
+    // Non-Gherkin keywords
+    "import": [ "importe" ],
+    "regex": [ "expressão" ],
+    "testcase": [ "caso de teste" ],
+
+    // Gherkin keywords
+    "background": [ "background" ],
+    "examples": [ "examplos" ],
+    "feature": [ "funcionalidade", "característica" ],
+    "language": [ "language", "idioma", "língua" ],
+    "outline": [ "esboço" ],
+    "scenario": [ "cenário" ],
+    "step": [ "dado", "quando", "então", "e", "mas" ],
+    "stepAnd": [ "e" ],
+    "stepBut": [ "mas" ],
+    "stepGiven": [ "dado" ],
+    "stepThen": [ "então" ],
+    "stepWhen": [ "quando" ]
+}

@@ -1,14 +1,22 @@
+import { RequirementFileProcessor } from './RequirementFileProcessor';
 import { InputFileExtractor } from '../util/InputFileExtractor';
-import cliTruncate = require( 'cli-truncate' );
+import cliTruncate = require('cli-truncate');
 
+/**
+ * Input processor
+ * 
+ * @author Thiago Delgado Pinto
+ */
 export class InputProcessor {
 
-    private inputFileExtractor: InputFileExtractor = new InputFileExtractor();
-    private defaultExtensions: Array< string > = [ 'asl', 'feature', 'feat' ];    
-    private defaultFileEncoding: string = 'UTF-8';
-    private defaultParamSeparator: string = ',';
+    private _inputFileExtractor: InputFileExtractor = new InputFileExtractor();
+    private _defaultExtensions: Array< string > = [ 'asl', 'feature', 'feat' ];    
+    private _defaultFileEncoding: string = 'UTF-8';
+    private _defaultParamSeparator: string = ',';
+    private _reqProcessor: RequirementFileProcessor;
 
-    constructor( private write: Function, private ora: any, private chalk: any ) {
+    constructor( private _write: Function, private _ora: any, private _chalk: any ) {
+        this._reqProcessor = new RequirementFileProcessor( _write );
     }
 
     /**
@@ -18,8 +26,8 @@ export class InputProcessor {
      * @param flags Flags
      */
     process( input: Array< string >, flags: any ): boolean {
-        const spinner = this.ora().start( 'Starting...' );
-        const ye = this.chalk.yellow;
+        const spinner = this._ora().start( 'Starting...' );
+        const ye = this._chalk.yellow;
 
         // Language
         let language = this.detectLanguage( flags );
@@ -35,10 +43,11 @@ export class InputProcessor {
             return false;
         }
 
-        // Analysing files
-        files.forEach( element => {
-            this.analyzeFile( element );
-        } );
+        // Printing files
+        files.forEach( element => this.printFileInfo( element ) );
+
+        // Processing files
+        this._reqProcessor.process( files );
 
         spinner.succeed( 'Done' );
 
@@ -64,22 +73,22 @@ export class InputProcessor {
      */
     detectFiles( input: Array< string >, flags: any, spinner: any, color: any ): Array< string > {
         let files: Array< string >;
-        let readableExtensions: string = this.makeReadableExtensions( this.defaultExtensions, color );
+        let readableExtensions: string = this.makeReadableExtensions( this._defaultExtensions, color );
         // Input directory was given ?
         if ( 1 == input.length ) {
             let dir = input[ 0 ];
             // Check directory
-            if ( ! this.inputFileExtractor.directoryExists( dir ) ) {
-                let msg = 'Directory ' + this.chalk.yellow( dir ) + ' does not exist.';
+            if ( ! this._inputFileExtractor.directoryExists( dir ) ) {
+                let msg = 'Directory ' + this._chalk.yellow( dir ) + ' does not exist.';
                 throw new Error( msg );
             }
             spinner.start( 'Searching for ' + readableExtensions + ' files in "' + color( dir ) + '" ...' );
             // Extract files
-            files = this.inputFileExtractor.extractFilesFromDirectory( dir, this.defaultExtensions );
+            files = this._inputFileExtractor.extractFilesFromDirectory( dir, this._defaultExtensions );
             // Exclude files to ignore
             if ( 'string' === typeof flags.ignore ) {
                 // Get ignored files and transform them to lower case
-                let ignoreFiles = this.extractValuesFromTextualParameter( flags.ignore, this.defaultParamSeparator )
+                let ignoreFiles = this.extractValuesFromTextualParameter( flags.ignore, this._defaultParamSeparator )
                     .map( v => v.toLowerCase() );
                 // Make a copy of the files and transform them to lower case in order to 
                 // compare with the ignored files
@@ -106,12 +115,12 @@ export class InputProcessor {
             }
 
             // Extract files
-            files = this.extractValuesFromTextualParameter( flags.files, this.defaultParamSeparator )
+            files = this.extractValuesFromTextualParameter( flags.files, this._defaultParamSeparator )
             // Remove duplicates
             files = Array.from( new Set( files ) );
             // Remove files with invalid extensions
             let lengthBefore: number = files.length;
-            files = this.inputFileExtractor.filterFilenames( files, this.defaultExtensions );
+            files = this._inputFileExtractor.filterFilenames( files, this._defaultExtensions );
             let lengthAfter: number = files.length;
             if ( lengthBefore != lengthAfter ) {
                 let diff = lengthBefore - lengthAfter;
@@ -123,7 +132,7 @@ export class InputProcessor {
             }
             // Check files
             spinner.info( 'Checking ' + color( lengthAfter ) + ' file' + ( lengthAfter > 1 ? 's': '' ) + '...' );
-            let nonExistentFiles: Array< string > = this.inputFileExtractor.nonExistentFiles( files );
+            let nonExistentFiles: Array< string > = this._inputFileExtractor.nonExistentFiles( files );
             if ( nonExistentFiles.length > 0 ) {
                 let msg = 'Files not found: ' + color( nonExistentFiles.length ) + "\n";
                 for ( let i in nonExistentFiles ) {
@@ -174,13 +183,15 @@ export class InputProcessor {
     }    
 
 
-    analyzeFile( file: string ) {
+    printFileInfo( file: string ) {
+        // Print input files
         let columns = process.stdout.columns || 80;
-        let fileHash = this.inputFileExtractor.hashOfFile( file, this.defaultFileEncoding );
-        let hashText = ' (' + fileHash.substr( 0, 7 ) + ')';
-        let fileText = this.chalk.gray( cliTruncate( '  ' + file,
-            ( columns - hashText.length ), { position: 'middle' } ) );
-        this.write( fileText + hashText );
+        let fileHash = this._inputFileExtractor.hashOfFile( file, this._defaultFileEncoding );
+        let hashPiece = ' (' + fileHash.substr( 0, 7 ) + ')';
+        let truncatedFileName = this._chalk.gray(
+            cliTruncate( '  ' + file, ( columns - hashPiece.length ), { position: 'middle' } )
+            );
+        this._write( truncatedFileName + hashPiece );
     }
 
 }

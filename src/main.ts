@@ -6,12 +6,12 @@ import chalk = require( 'chalk' ); // colors & style
 import { InputProcessor } from './modules/cli/InputProcessor';
 
 const cli = meow(`
-	Usage
+	Usage:
 	  $ asl [ <dir> | --files="file1.feature,path/to/file2.feature,..." ] --plugin=<name>
 
 	    where <dir> is the directory of your documentation files.
 
-	Options
+	Options:
 	  -p, --plugin=<name>               Plug-in used to generate or execute test scripts.
 	  -l, --lang=<lang-code>            Language used in the documentation files. Default is "en" (english).
 
@@ -21,14 +21,14 @@ const cli = meow(`
 	  -t, --no-test                     Do not generate abstract test cases.
 	  -s, --no-script                   Do not generate test scripts.
 	  -r, --no-run                      Do not run test scripts.
-	  -e, --no-results                  Do not update the test content with the execution results.
+	  -e, --no-result                   Do not update the test content with the execution results.
 	  
 	  -g, --plugin-list                 Show available plug-ins.
 	  -v, --version                     Show current version.
 	  -a, --about                       Show information about this application.
 	  -h, --help                        Show this help.      
 	  
-	Examples
+	Examples:
 	  $ asl . plugin=some-plugin
 	  $ asl --files="file1.feature,path/to/file2.feature" -p=some-plugin -l=pt-br
 	  $ asl path/to/dir -t -s -p=some-plugin      
@@ -41,7 +41,7 @@ const cli = meow(`
         t: 'no-test',
         s: 'no-script',
 		r: 'no-run',
-        e: 'no-results',
+        e: 'no-result',
         g: 'plugin-list',
         v: 'version',        
         a: 'about',

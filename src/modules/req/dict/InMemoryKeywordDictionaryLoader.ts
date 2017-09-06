@@ -8,11 +8,16 @@ import { KeywordDictionaryLoader } from './KeywordDictionaryLoader';
  */
 export class InMemoryKeywordDictionaryLoader implements KeywordDictionaryLoader {
 
-    constructor( private _map: Object = {} ) {
+    /**
+     * Constructs the loader.
+     * 
+     * @param _dictMap Map with each language ( string => KeywordDictionary ).
+     */    
+    constructor( private _dictMap: Object = {} ) {
     }
 
-    load( language: string ): KeywordDictionary | null {
-        return this._map[ language ];
+    public load( language: string ): KeywordDictionary | null {
+        return this._dictMap[ language ];
     }
 
 }
