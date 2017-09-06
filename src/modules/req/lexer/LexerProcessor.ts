@@ -1,3 +1,4 @@
+import { Finishable } from '../Finishable';
 import { DocumentProcessor } from '../DocumentProcessor';
 import { Lexer } from "./Lexer";
 
@@ -8,7 +9,10 @@ import { Lexer } from "./Lexer";
  */
 export class LexerProcessor implements DocumentProcessor {
 
-    constructor( private _lexer: Lexer ) {
+    constructor(
+        private _lexer: Lexer,
+        private _finishable?: Finishable,
+    ) {
     }
 
     /** @inheritDoc */
@@ -28,6 +32,8 @@ export class LexerProcessor implements DocumentProcessor {
 
     /** @inheritDoc */
     public onFinish(): void {
-        // ?
+        if ( this._finishable ) {
+            this._finishable.onFinish();
+        }
     }    
 }

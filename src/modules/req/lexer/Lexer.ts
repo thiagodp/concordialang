@@ -27,9 +27,9 @@ import { TextLexer } from "./TextLexer";
  */
 export class Lexer {
 
-    private _nodes: Array< Node >;
-    private _errors: Array< Error >;
-    private _lexers: Array< NodeLexer< Node > >;
+    private _nodes: Array< Node > = [];
+    private _errors: Array< Error > = [];
+    private _lexers: Array< NodeLexer< Node > > = [];
 
     constructor(
         private _language: string = 'en',
@@ -56,13 +56,13 @@ export class Lexer {
             , new RegexLexer( dictionary.regex )
             , new TextLexer() // captures any non-empty
         ];
-
-        this.reset();
     }
 
     public reset() {
         this._nodes = [];
         this._errors = [];
+        // Also resets the language
+        this.changeLanguage( this._language = 'en' );
     }
 
     public nodes(): Array< Node > {
@@ -108,29 +108,31 @@ export class Lexer {
         let node: Node;
         for ( let lexer of this._lexers ) {
             result = lexer.analyze( line, lineNumber );
-            if ( result ) {
+            if ( ! result ) {
+                continue; // Analyze with another lexer
+            }
 
-                // Detects a language node and tries to change the language
-                if ( result.nodes.length > 0 && Keywords.LANGUAGE === result.nodes[ 0 ].keyword ) {
-                    let language = ( result.nodes[ 0 ] as Language ).content;
-                    if ( language != this._language ) { // needs to change ?
-                        let changed = this.changeLanguage( language );
-                        if ( ! changed ) {
-                            this._errors.push(
-                                new Error( 'Cannot load language "' + language + '".' )
-                                );
-                        }
+            // Detects a language node and tries to change the language
+            if ( result.nodes.length > 0 && Keywords.LANGUAGE === result.nodes[ 0 ].keyword ) {
+                let language = ( result.nodes[ 0 ] as Language ).content;
+                if ( language != this._language ) { // needs to change ?
+                    try {
+                        this.changeLanguage( language );
+                    } catch ( e ) {
+                        this._errors.push( e );
                     }
                 }
-
-                // Add the "nodes" array to "_nodes"
-                this._nodes.push.apply( this._nodes, result.nodes );
-                if ( result.errors ) {
-                    // Add the "errors" array to "_errors"
-                    this._errors.push.apply( this._errors, result.errors );
-                }
-                return true; // found a node in the line
             }
+
+            // Add the "nodes" array to "_nodes"
+            this._nodes.push.apply( this._nodes, result.nodes );
+
+            if ( result.errors ) {
+                // Add the "errors" array to "_errors"
+                this._errors.push.apply( this._errors, result.errors );
+            }
+
+            return true; // found a node in the line
         }
 
         return false;
@@ -151,19 +153,18 @@ export class Lexer {
 
     /**
      * Change the current language iff the given language could be loaded.
+     * 
+     * @param language Language
+     * @throws Error
      */
-    private changeLanguage( language: string ): boolean {
-        let dict = this._dictionaryLoader.load( language );
-        if ( ! dict ) {
-            return false;
-        }
+    private changeLanguage( language: string ): void {
+        let dict = this._dictionaryLoader.load( language ); // throws Error
         for ( let lexer of this._lexers ) {
             if ( this.isAWordBasedLexer( lexer ) ) {
                 let keyword = lexer.keyword();
                 lexer.updateWords( dict[ keyword ] );
             }
         }
-        return true;
     }
 
     private isAWordBasedLexer( obj: any ): obj is KeywordBaseLexer {

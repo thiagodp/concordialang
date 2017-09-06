@@ -1,11 +1,8 @@
-{ // pt.json
-    
-    // Non-Gherkin keywords
+{
     "import": [ "importe" ],
     "regex": [ "expressão" ],
     "testcase": [ "caso de teste" ],
 
-    // Gherkin keywords
     "background": [ "background" ],
     "examples": [ "examplos" ],
     "feature": [ "funcionalidade", "característica" ],

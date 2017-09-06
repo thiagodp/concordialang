@@ -9,11 +9,12 @@ import { KeywordDictionary } from './KeywordDictionary';
 export interface KeywordDictionaryLoader {
 
     /**
-     * Loads a keyword dictionary for the given language. Returns null if
+     * Loads a keyword dictionary for the given language. Throws an exception if
      * a dictionary were not found.
      * 
      * @param language Language
+     * @throws Error
      */
-    load( language: string ): KeywordDictionary | null;
+    load( language: string ): KeywordDictionary;
 
 }

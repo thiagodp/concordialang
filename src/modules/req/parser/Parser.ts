@@ -34,8 +34,11 @@ export class Parser {
         this._parsersMap[ Keywords.STEP_THEN ] = new ScenarioSentenceParser();
         this._parsersMap[ Keywords.STEP_AND ] = new ScenarioSentenceParser();
         this._parsersMap[ Keywords.STEP_BUT ] = new ScenarioSentenceParser();
-
     }
+
+    public reset(): void {
+        this._errors = [];
+    }    
 
     /**
      * Analyze the given nodes and returns a Document containing the AST.
@@ -44,13 +47,9 @@ export class Parser {
      */
     public analyze( nodes: Node[] ): Document {
         this.reset();
-
         let doc: Document = {};
-
         this.parseIndividualNodes( nodes, doc );
-
         this.performAnalysisBetweenNodes( nodes, doc );
-
         return doc;
     }
 
@@ -59,10 +58,6 @@ export class Parser {
             this._stopOnFirstError = stop;
         }
         return this._stopOnFirstError;
-    }    
-
-    public reset(): void {
-        this._errors = [];
     }
 
     public errors(): Array< Error > {
