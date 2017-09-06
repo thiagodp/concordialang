@@ -1,4 +1,3 @@
-import { Finishable } from '../req/Finishable';
 import { EnglishKeywordDictionary } from '../req/dict/EnglishKeywordDictionary';
 import { Document } from '../req/ast/Document';
 import { Node } from '../req/ast/Node';
