@@ -1,4 +1,4 @@
-import { RequirementFileProcessor } from './RequirementFileProcessor';
+import { RequirementFilesProcessor } from './RequirementFilesProcessor';
 import { InputFileExtractor } from '../util/InputFileExtractor';
 import cliTruncate = require('cli-truncate');
 
@@ -13,10 +13,10 @@ export class InputProcessor {
     private _defaultExtensions: Array< string > = [ 'asl', 'feature', 'feat' ];    
     private _defaultFileEncoding: string = 'UTF-8';
     private _defaultParamSeparator: string = ',';
-    private _reqProcessor: RequirementFileProcessor;
+    private _reqProcessor: RequirementFilesProcessor;
 
     constructor( private _write: Function, private _ora: any, private _chalk: any ) {
-        this._reqProcessor = new RequirementFileProcessor( _write );
+        this._reqProcessor = new RequirementFilesProcessor( _write );
     }
 
     /**

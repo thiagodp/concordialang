@@ -9,10 +9,7 @@ import { Lexer } from "./Lexer";
  */
 export class LexerProcessor implements DocumentProcessor {
 
-    constructor(
-        private _lexer: Lexer,
-        private _finishable?: Finishable,
-    ) {
+    constructor( private _lexer: Lexer ) {
     }
 
     /** @inheritDoc */
@@ -32,8 +29,6 @@ export class LexerProcessor implements DocumentProcessor {
 
     /** @inheritDoc */
     public onFinish(): void {
-        if ( this._finishable ) {
-            this._finishable.onFinish();
-        }
-    }    
+        // ?
+    }
 }
