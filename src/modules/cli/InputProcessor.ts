@@ -17,6 +17,7 @@ export class InputProcessor implements ProcessingObserver {
     private _reqProcessor: RequirementFilesProcessor;
 
     private _spinnersMap: Object = {};
+    private _totalErrors: number = 0;
 
     constructor( private _write: Function, private _ora: any, private _chalk: any ) {
         this._reqProcessor = new RequirementFilesProcessor( _write );
@@ -49,7 +50,11 @@ export class InputProcessor implements ProcessingObserver {
         // Processing files
         this._reqProcessor.process( files, this );
 
-        spinner.succeed( 'Done' );
+        if ( 0 === this._totalErrors ) {
+            spinner.succeed( 'Done' );
+        } else {
+            spinner.info( 'Errors found: ' + this._chalk.red( this._totalErrors ) );
+        }
 
         return true;
     }
@@ -204,6 +209,8 @@ export class InputProcessor implements ProcessingObserver {
 
     /** @inheritDoc */
     public onError( filePath: string, errors: Error[] ): void {
+
+        this._totalErrors += errors.length;
 
         const hasSpinner = this._spinnersMap[ filePath ] !== undefined;
         
