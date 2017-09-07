@@ -22,10 +22,11 @@ $ node dist/main.js
 $ npm test
 ```
 ### Tip
-Install **jest** as a global to watch files...
+Install **jest** and **ts-jest** globally to watch files...
 ```shell
-$ npm install -g jest
+$ npm install -g jest ts-jest
 ```
+
 ...then:
 ```shell
 $ jest --watch
