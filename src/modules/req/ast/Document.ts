@@ -1,3 +1,4 @@
+import { FileInfo } from './FileInfo';
 import { Feature } from './Feature';
 import { Task } from './Task';
 import { UI } from "./UI";
@@ -13,7 +14,7 @@ import { Regex } from "./Regex";
  */
 export interface Document {
 
-    file?: string;
+    fileInfo?: FileInfo;
     
     language?: Language;
     imports?: Array< Import >;

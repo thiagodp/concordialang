@@ -1,9 +1,16 @@
+import { FileInfo } from '../req/ast/FileInfo';
+
+/**
+ * Processing observer.
+ * 
+ * @author Thiago Delgado Pinto
+ */
 export interface ProcessingObserver {
 
-    onStarted( filePath: string ): void;
+    onStarted( fileInfo: FileInfo ): void;
 
-    onError( filePath: string, errors: Error[] ): void;
+    onError( fileInfo: FileInfo, errors: Error[] ): void;
 
-    onFinished( filePath: string, succeeded: boolean ): void;
+    onFinished( fileInfo: FileInfo, succeeded: boolean ): void;
 
 }

@@ -1,3 +1,5 @@
+import { FileInfo } from '../req/ast/FileInfo';
+import { InputFileExtractor } from '../util/InputFileExtractor';
 import { ProcessingObserver } from './ProcessingObserver';
 import { EnglishKeywordDictionary } from '../req/dict/EnglishKeywordDictionary';
 import { Document } from '../req/ast/Document';
@@ -24,50 +26,65 @@ export class RequirementFilesProcessor {
     private _lexer: Lexer = new Lexer( 'en', this._loader );
     private _parser: Parser = new Parser();
     private _docProcessor: DocumentProcessor = new LexerProcessor( this._lexer );
-    private _fileProcessor: FileProcessor;
+    private _inputFileExtractor: InputFileExtractor = new InputFileExtractor();
 
-    constructor( private _write: Function, private _encoding = 'utf8' ) {
-        this._fileProcessor = new SyncFileProcessor( _encoding );
+    constructor( private _write: Function ) {
     }
 
-    public process( files: string[], observer?: ProcessingObserver ) {
+    public process( files: string[], charset: string = 'utf8', observer?: ProcessingObserver ) {
+
+        let fileProcessor: FileProcessor = new SyncFileProcessor( charset );
 
         let nodes: Node[] = [];
         let errors: Error[]= [];
         let doc: Document = {};
         let hadErrors: boolean;
+        let fileInfo: FileInfo;
 
         for ( let file of files ) {
             
             hadErrors = false;
-            if ( observer ) {
-                observer.onStarted( file );
-            }
 
+            fileInfo = {
+                path: file,
+                hash: this._inputFileExtractor.hashOfFile( file, charset ) // Compute file hash
+            };
+
+            // Notify about the start
+            if ( observer ) {
+                observer.onStarted( fileInfo );
+            }        
+
+            // LEXER
             // Process the file with the lexer processor
-            this._fileProcessor.process( file, this._docProcessor );
+            fileProcessor.process( file, this._docProcessor );
             // Get the lexed nodes
             nodes = this._lexer.nodes();
+            // Notify about lexing errors
             errors = this._lexer.errors();
             if ( observer && errors.length > 0 ) {
                 hadErrors = true;
-                observer.onError( file, errors );
+                observer.onError( fileInfo, errors );
             }
-            this._lexer.reset(); // important
+            // Resets the lexer state (important!)
+            this._lexer.reset();
     
+            // PARSER
             // Parses the nodes
             doc = this._parser.analyze( nodes ) || {};
-            doc.file = file; // adds the current file
+            doc.fileInfo = fileInfo;
+            // Notify about parsing errors
             errors = this._parser.errors();
             if ( observer && errors.length > 0 ) {
                 hadErrors = true;
-                observer.onError( file, errors );
+                observer.onError( fileInfo, errors );
             }            
     
             //this._write( doc ); // <<< TEMPORARY
 
+            // Notify about the finish
             if ( observer ) {
-                observer.onFinished( file, ! hadErrors );
+                observer.onFinished( fileInfo, ! hadErrors );
             }            
         }
     }

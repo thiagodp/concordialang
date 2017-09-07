@@ -2,6 +2,7 @@ import { ProcessingObserver } from './ProcessingObserver';
 import { RequirementFilesProcessor } from './RequirementFilesProcessor';
 import { InputFileExtractor } from '../util/InputFileExtractor';
 import cliTruncate = require('cli-truncate');
+import { FileInfo } from "../req/ast/FileInfo";
 
 /**
  * Input processor
@@ -48,7 +49,8 @@ export class InputProcessor implements ProcessingObserver {
         }
 
         // Processing files
-        this._reqProcessor.process( files, this );
+        let charset = 'string' === typeof flags.charset ? flags.charset : 'utf8';
+        this._reqProcessor.process( files, charset, this );
 
         if ( 0 === this._totalErrors ) {
             spinner.succeed( 'Done' );
@@ -187,42 +189,39 @@ export class InputProcessor implements ProcessingObserver {
         return params.split( separator ? separator : ',' );
     }    
 
-
-    printFileInfo( file: string ) {
-        return this._ora( this.makeFileInfo( file ) ).start();
+    printFileInfo( fileInfo: FileInfo) {
+        return this._ora( this.formatFileInfo( fileInfo ) ).start();
     }
 
-    private makeFileInfo( file: string ): string {
+    private formatFileInfo( fileInfo: FileInfo ): string {
         let columns = process.stdout.columns || 80;
-        let fileHash = this._inputFileExtractor.hashOfFile( file, this._defaultFileEncoding );
+        let fileHash = fileInfo.hash || '';
         let hashPiece = ' (' + fileHash.substr( 0, 7 ) + ')';
         let truncatedFileName = this._chalk.white(
-            cliTruncate( '  ' + file, ( columns - hashPiece.length ), { position: 'middle' } )
+            cliTruncate( '  ' + fileInfo.path, ( columns - hashPiece.length ), { position: 'middle' } )
             );
         return truncatedFileName + hashPiece;
     }
 
     /** @inheritDoc */
-    public onStarted( filePath: string ): void {
-        this._spinnersMap[ filePath ] = this.printFileInfo( filePath );
+    public onStarted( fileInfo: FileInfo ): void {
+        this._spinnersMap[ fileInfo.path ] = this.printFileInfo( fileInfo );
     }
 
     /** @inheritDoc */
-    public onError( filePath: string, errors: Error[] ): void {
+    public onError( fileInfo: FileInfo, errors: Error[] ): void {
 
         this._totalErrors += errors.length;
 
-        const hasSpinner = this._spinnersMap[ filePath ] !== undefined;
-        
+        const hasSpinner = this._spinnersMap[ fileInfo.path ] !== undefined;
         if ( hasSpinner ) {
-            let fileInfo = this.makeFileInfo( filePath );
-            this._spinnersMap[ filePath ].fail( fileInfo );
+            this._spinnersMap[ fileInfo.path ].fail( this.formatFileInfo( fileInfo ) );
         }        
             
         for ( let error of errors ) {
             let content = this._chalk.red( "\t" + error.message );
             if ( hasSpinner ) {
-                this._spinnersMap[ filePath ].warn( content );
+                this._spinnersMap[ fileInfo.path ].warn( content );
             } else {
                 this._write( content );
             }
@@ -230,13 +229,9 @@ export class InputProcessor implements ProcessingObserver {
     }    
     
     /** @inheritDoc */
-    public onFinished( filePath: string, succeeded: boolean ): void {
-        if ( ! this._spinnersMap[ filePath ] ) {
-            return;
-        }
-        let fileInfo = this.makeFileInfo( filePath );
-        if ( succeeded ) {
-            this._spinnersMap[ filePath ].succeed( fileInfo );
+    public onFinished( fileInfo: FileInfo, succeeded: boolean ): void {
+        if ( succeeded && this._spinnersMap[ fileInfo.path ] ) {
+            this._spinnersMap[ fileInfo.path ].succeed( this.formatFileInfo( fileInfo ) );
         }
     }
 }
