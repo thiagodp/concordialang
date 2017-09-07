@@ -42,18 +42,6 @@ export class Parser {
         this._errors = [];
     }    
 
-    /**
-     * Analyze the given nodes and fill the document with the AST.
-     * 
-     * @param nodes Nodes to be analyzed.
-     * @param doc Document where to put the AST.
-     */
-    public analyze( nodes: Node[], doc: Document ) {
-        this.reset();
-        this.parseIndividualNodes( nodes, doc );
-        this.performAnalysisBetweenNodes( nodes, doc );
-    }
-
     public stopOnFirstError( stop?: boolean ): boolean {
         if ( stop !== undefined ) {
             this._stopOnFirstError = stop;
@@ -70,13 +58,15 @@ export class Parser {
     }    
 
     /**
-     * Parses the given nodes. Returns the ignored keywords, that were not parsed
-     * because of the lack of parsers.
+     * Analyze the given nodes and fill the document with the AST. Returns 
+     * ignored keywords, that were not parsed because of the lack of parsers.
      * 
-     * @param nodes Nodes to be parsed.
-     * @param doc 
+     * @param nodes Nodes to be analyzed.
+     * @param doc Document where to put the AST.
      */
-    public parseIndividualNodes( nodes: Node[], doc: Document ): string[] {
+    public analyze( nodes: Node[], doc: Document ): string[] {
+
+        this.reset();
 
         let ignoredKeywords: string[] = [];
         let it = new NodeIterator( nodes );
@@ -116,9 +106,6 @@ export class Parser {
         this._errors.push.apply( this._errors, errors );
 
         return ignoredKeywords;
-    }
-
-    protected performAnalysisBetweenNodes( nodes: Node[], doc: Document ): void {
     }
 
 }
