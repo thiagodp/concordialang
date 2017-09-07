@@ -21,9 +21,9 @@ import { SyncFileProcessor } from "../req/SyncFileProcessor";
 export class RequirementFilesProcessor {
 
     private _dictMap = { 'en': new EnglishKeywordDictionary() };
-    private _loader: KeywordDictionaryLoader =
+    private _dictLoader: KeywordDictionaryLoader =
         new JsonKeywordDictionaryLoader( './data/', this._dictMap );
-    private _lexer: Lexer = new Lexer( 'en', this._loader );
+    private _lexer: Lexer = new Lexer( 'en', this._dictLoader );
     private _parser: Parser = new Parser();
     private _docProcessor: DocumentProcessor = new LexerProcessor( this._lexer );
     private _inputFileExtractor: InputFileExtractor = new InputFileExtractor();
@@ -35,17 +35,11 @@ export class RequirementFilesProcessor {
 
         let fileProcessor: FileProcessor = new SyncFileProcessor( charset );
 
-        let nodes: Node[] = [];
-        let errors: Error[]= [];
-        let doc: Document = {};
-        let hadErrors: boolean;
-        let fileInfo: FileInfo;
-
         for ( let file of files ) {
             
-            hadErrors = false;
+            let hadErrors = false;
 
-            fileInfo = {
+            let fileInfo: FileInfo = {
                 path: file,
                 hash: this._inputFileExtractor.hashOfFile( file, charset ) // Compute file hash
             };
@@ -59,25 +53,24 @@ export class RequirementFilesProcessor {
             // Process the file with the lexer processor
             fileProcessor.process( file, this._docProcessor );
             // Get the lexed nodes
-            nodes = this._lexer.nodes();
+            let nodes: Node[] = this._lexer.nodes();
             // Notify about lexing errors
-            errors = this._lexer.errors();
-            if ( observer && errors.length > 0 ) {
+            if ( observer && this._lexer.hasErrors() ) {
                 hadErrors = true;
-                observer.onError( fileInfo, errors );
+                observer.onError( fileInfo, this._lexer.errors() );
             }
             // Resets the lexer state (important!)
             this._lexer.reset();
     
             // PARSER
             // Parses the nodes
-            doc = this._parser.analyze( nodes ) || {};
+            let doc: Document = {};
             doc.fileInfo = fileInfo;
+            this._parser.analyze( nodes, doc );            
             // Notify about parsing errors
-            errors = this._parser.errors();
-            if ( observer && errors.length > 0 ) {
+            if ( observer && this._parser.hasErrors() ) {
                 hadErrors = true;
-                observer.onError( fileInfo, errors );
+                observer.onError( fileInfo, this._parser.errors() );
             }            
     
             //this._write( doc ); // <<< TEMPORARY

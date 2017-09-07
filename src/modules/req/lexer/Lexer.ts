@@ -67,7 +67,11 @@ export class Lexer {
 
     public nodes(): Array< Node > {
         return this._nodes;
-    }    
+    }
+
+    public hasErrors(): boolean {
+        return this._errors.length > 0;
+    }
 
     public errors(): Array< Error > {
         return this._errors;

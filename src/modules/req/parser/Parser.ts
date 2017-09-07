@@ -43,16 +43,15 @@ export class Parser {
     }    
 
     /**
-     * Analyze the given nodes and returns a Document containing the AST.
+     * Analyze the given nodes and fill the document with the AST.
      * 
      * @param nodes Nodes to be analyzed.
+     * @param doc Document where to put the AST.
      */
-    public analyze( nodes: Node[] ): Document {
+    public analyze( nodes: Node[], doc: Document ) {
         this.reset();
-        let doc: Document = {};
         this.parseIndividualNodes( nodes, doc );
         this.performAnalysisBetweenNodes( nodes, doc );
-        return doc;
     }
 
     public stopOnFirstError( stop?: boolean ): boolean {
@@ -61,6 +60,10 @@ export class Parser {
         }
         return this._stopOnFirstError;
     }
+
+    public hasErrors(): boolean {
+        return this._errors.length > 0;
+    }    
 
     public errors(): Array< Error > {
         return this._errors;
