@@ -8,6 +8,11 @@ import { Keywords } from "../Keywords";
 import { ParsingContext } from "./ParsingContext";
 import { TestCase } from "../ast/TestCase";
 
+/**
+ * Test case parser
+ * 
+ * @author Thiago Delgado Pinto
+ */
 export class TestCaseParser implements NodeParser< TestCase > {
 
     public analyze( node: TestCase, context: ParsingContext, it: NodeIterator, errors: Error[] ): boolean {

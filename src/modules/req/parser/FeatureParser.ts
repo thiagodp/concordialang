@@ -5,6 +5,11 @@ import { NodeIterator } from './NodeIterator';
 import { NodeParser } from './NodeParser';
 import { ParsingContext } from "./ParsingContext";
 
+/**
+ * Feature parser
+ * 
+ * @author Thiago Delgado Pinto
+ */
 export class FeatureParser implements NodeParser< Feature > {
 
     public analyze( node: Feature, context: ParsingContext, it: NodeIterator, errors: Error[] ): boolean {

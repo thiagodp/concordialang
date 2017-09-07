@@ -7,6 +7,11 @@ import { NodeParser } from './NodeParser';
 import { Keywords } from "../Keywords";
 import { ParsingContext } from "./ParsingContext";
 
+/**
+ * Scenario sentence parser
+ * 
+ * @author Thiago Delgado Pinto
+ */
 export class ScenarioSentenceParser implements NodeParser< ScenarioSentence > {
 
     public analyze( node: ScenarioSentence, context: ParsingContext, it: NodeIterator, errors: Error[] ): boolean {

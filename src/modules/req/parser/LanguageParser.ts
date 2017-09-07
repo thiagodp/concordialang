@@ -6,6 +6,11 @@ import { NodeIterator } from './NodeIterator';
 import { NodeParser } from './NodeParser';
 import { ParsingContext } from "./ParsingContext";
 
+/**
+ * Language parser
+ * 
+ * @author Thiago Delgado Pinto
+ */
 export class LanguageParser implements NodeParser< Language > {
 
     public analyze( node: Language, context: ParsingContext, it: NodeIterator, errors: Error[] ): boolean {
