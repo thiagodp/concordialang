@@ -17,7 +17,14 @@ export class LanguageParser implements NodeParser< Language > {
             return false;
         }
 
-        // Checks if it has a feature declared before it
+        // Checks if an import is declared before it
+        if ( context.doc.imports && context.doc.imports.length > 0 ) {
+            let e = new SyntaticException( 'The language must be declared an import.', node.location );
+            errors.push( e );
+            return false;            
+        }        
+
+        // Checks if a feature is declared before it
         if ( context.doc.feature ) {
             let e = new SyntaticException( 'The language must be declared before a feature.', node.location );
             errors.push( e );

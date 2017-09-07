@@ -72,6 +72,8 @@ describe( 'LexerTest', () => {
         [
             '#language:en',
             '',
+            'import "somefile.ext"',
+            '',                        
             '@important',
             'feature: my feature',
             ' \t',
@@ -97,10 +99,11 @@ describe( 'LexerTest', () => {
         expect( lexer.errors().length ).toBe( 0 );
 
         let nodes = lexer.nodes();
-        expect( nodes.length ).toBe( 17 );
+        expect( nodes.length ).toBe( 18 );
 
         let i = 0;
         expect( nodes[ i++ ].keyword ).toBe( Keywords.LANGUAGE );
+        expect( nodes[ i++ ].keyword ).toBe( Keywords.IMPORT );
         expect( nodes[ i++ ].keyword ).toBe( Keywords.TAG );
         expect( nodes[ i++ ].keyword ).toBe( Keywords.FEATURE );
         expect( nodes[ i++ ].keyword ).toBe( Keywords.SCENARIO );
@@ -123,6 +126,8 @@ describe( 'LexerTest', () => {
     it( 'detects correctly in portuguese', () => {
         [
             '#language:pt',
+            '',
+            'importe "somefile"',
             '',
             '@importante',
             'característica: my feature',
@@ -149,10 +154,11 @@ describe( 'LexerTest', () => {
         expect( lexer.errors().length ).toBe( 0 );
 
         let nodes = lexer.nodes();
-        expect( nodes.length ).toBe( 17 );
+        expect( nodes.length ).toBe( 18 );
 
         let i = 0;
         expect( nodes[ i++ ].keyword ).toBe( Keywords.LANGUAGE );
+        expect( nodes[ i++ ].keyword ).toBe( Keywords.IMPORT );
         expect( nodes[ i++ ].keyword ).toBe( Keywords.TAG );
         expect( nodes[ i++ ].keyword ).toBe( Keywords.FEATURE );
         expect( nodes[ i++ ].keyword ).toBe( Keywords.SCENARIO );

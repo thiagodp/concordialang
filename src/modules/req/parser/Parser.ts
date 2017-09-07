@@ -9,6 +9,7 @@ import { ParsingContext } from "./ParsingContext";
 import { ScenarioParser } from './ScenarioParser';
 import { TestCaseParser } from './TestCaseParser';
 import { ScenarioSentenceParser } from './ScenarioSentenceParser';
+import { ImportParser } from "./ImportParser";
 
 /**
  * Builds an AST from the nodes detected by the lexer. It checks syntatic properties
@@ -26,6 +27,7 @@ export class Parser {
     constructor( private _stopOnFirstError: boolean = false ) {
         this._parsersMap = {};
         this._parsersMap[ Keywords.LANGUAGE ] = new LanguageParser();
+        this._parsersMap[ Keywords.IMPORT ] = new ImportParser();
         this._parsersMap[ Keywords.FEATURE ] = new FeatureParser();
         this._parsersMap[ Keywords.SCENARIO ] = new ScenarioParser();
         this._parsersMap[ Keywords.TEST_CASE ] = new TestCaseParser();

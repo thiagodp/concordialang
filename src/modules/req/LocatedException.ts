@@ -11,7 +11,7 @@ export abstract class LocatedException extends Error {
 
     public static makeExceptionMessage( originalMessage?: string, location?: Location ): string {
         return location && originalMessage
-            ? '(' + location.line + ':' + location.column + ') ' + originalMessage
+            ? '(' + location.line + ',' + location.column + ') ' + originalMessage
             : originalMessage ? originalMessage : '';
     }
 
