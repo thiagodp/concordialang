@@ -57,6 +57,15 @@ export class InputFileExtractor {
     }
 
     /**
+     * Returns true if the given file exists.
+     * 
+     * @param path File path.
+     */
+    fileExist( path: string ): boolean {
+        return fs.existsSync( path );
+    }
+
+    /**
      * Extract files from a directory.
      * 
      * @param dir Directory

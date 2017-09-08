@@ -19,6 +19,10 @@ export class ImportParser implements NodeParser< Import > {
         errors: Error[]
     ): boolean {
 
+        if ( ! context.doc.imports ) {
+            context.doc.imports = [];
+        }        
+
         // Checks if a feature is declared before it
         if ( context.doc.feature ) {
             let e = new SyntaticException( 'An import must be declared before a feature.', node.location );
@@ -27,9 +31,6 @@ export class ImportParser implements NodeParser< Import > {
         }
 
         // Add the import node to the document
-        if ( ! context.doc.imports ) {
-            context.doc.imports = [];
-        }
         context.doc.imports.push( node );
 
         return true;

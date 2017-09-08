@@ -1,3 +1,5 @@
+import { SemanticAnalysisContext } from '../sa/SemanticAnalysisContext';
+import { NodeBasedSemanticAnalyzer } from '../sa/node/NodeBasedSemanticAnalyzer';
 import { FileInfo } from '../req/ast/FileInfo';
 import { InputFileExtractor } from '../util/InputFileExtractor';
 import { ProcessingObserver } from './ProcessingObserver';
@@ -27,6 +29,8 @@ export class RequirementFilesProcessor {
     private _parser: Parser = new Parser();
     private _docProcessor: DocumentProcessor = new LexerProcessor( this._lexer );
     private _inputFileExtractor: InputFileExtractor = new InputFileExtractor();
+    private _nodeBasedSemanticAnalyzer: NodeBasedSemanticAnalyzer = new NodeBasedSemanticAnalyzer();
+
 
     constructor( private _write: Function ) {
     }
@@ -35,14 +39,26 @@ export class RequirementFilesProcessor {
 
         let fileProcessor: FileProcessor = new SyncFileProcessor( charset );
 
+        let saContext: SemanticAnalysisContext = {
+            docs: []
+        };
+
+        // Make documents for each file
         for ( let file of files ) {
             
+            let doc: Document = {
+                fileErrors: []
+            };
+
             let hadErrors = false;
 
             let fileInfo: FileInfo = {
                 path: file,
                 hash: this._inputFileExtractor.hashOfFile( file, charset ) // Compute file hash
             };
+
+            // Adds the file info to the document
+            doc.fileInfo = fileInfo;            
 
             // Notify about the start
             if ( observer ) {
@@ -54,32 +70,49 @@ export class RequirementFilesProcessor {
             fileProcessor.process( file, this._docProcessor );
             // Get the lexed nodes
             let nodes: Node[] = this._lexer.nodes();
-            // Notify about lexing errors
-            if ( observer && this._lexer.hasErrors() ) {
-                hadErrors = true;
-                observer.onError( fileInfo, this._lexer.errors() );
-            }
+            // Add errors found
+            hadErrors = this._lexer.hasErrors();            
+            this.addErrorsToDoc( this._lexer.errors(), doc );
             // Resets the lexer state (important!)
             this._lexer.reset();
     
             // PARSER
             // Parses the nodes
-            let doc: Document = {};
-            doc.fileInfo = fileInfo;
-            this._parser.analyze( nodes, doc );            
-            // Notify about parsing errors
-            if ( observer && this._parser.hasErrors() ) {
-                hadErrors = true;
-                observer.onError( fileInfo, this._parser.errors() );
-            }            
+            this._parser.analyze( nodes, doc );
+            // Add errors found
+            hadErrors = hadErrors || this._parser.hasErrors();            
+            this.addErrorsToDoc( this._parser.errors(), doc );
+
+            // NODE-BASED SEMANTIC ANALYSIS
+            this._nodeBasedSemanticAnalyzer.analyze( doc, doc.fileErrors );
     
             //this._write( doc ); // <<< TEMPORARY
+
+            // Temporary
+            if ( observer && doc.fileErrors.length > 0 ) {
+                observer.onError( fileInfo, doc.fileErrors );
+            }
 
             // Notify about the finish
             if ( observer ) {
                 observer.onFinished( fileInfo, ! hadErrors );
-            }            
+            }
+            
+            // Adds the document to the semantic analysis context
+            saContext.docs.push( doc );
         }
+
+        // SEMANTIC ANALYSIS
+        // to-do
+
+    }
+
+
+    private addErrorsToDoc( errors: Error[], doc: Document ) {
+        if ( ! doc.fileErrors ) {
+            doc.fileErrors = [];
+        }
+        doc.fileErrors.push.apply( doc.fileErrors, errors );        
     }
 
 }

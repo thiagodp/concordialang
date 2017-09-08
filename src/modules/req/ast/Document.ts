@@ -15,6 +15,7 @@ import { Regex } from "./Regex";
 export interface Document {
 
     fileInfo?: FileInfo;
+    fileErrors?: Error[];
     
     language?: Language;
     imports?: Array< Import >;
