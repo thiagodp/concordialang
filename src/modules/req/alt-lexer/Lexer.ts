@@ -1,5 +1,5 @@
 import { Expressions } from '../Expressions';
-import { KeywordDictionary } from '../dict/KeywordDictionary';
+import { KeywordDictionary } from '../../dict/KeywordDictionary';
 import { Keywords } from '../Keywords';
 import { Symbols } from '../Symbols';
 import { Token } from './Token';

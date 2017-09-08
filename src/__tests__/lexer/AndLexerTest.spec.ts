@@ -1,5 +1,5 @@
 import { Keywords } from '../../modules/req/Keywords';
-import { AndLexer } from "../../modules/req/lexer/AndLexer";
+import { AndLexer } from "../../modules/lexer/AndLexer";
 
 /**
  * @author Thiago Delgado Pinto

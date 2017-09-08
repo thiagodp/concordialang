@@ -1,10 +1,10 @@
 import { NodeSA } from './NodeSA';
 import { LocatedException } from '../../req/LocatedException';
-import { Import } from '../../req/ast/Import';
+import { Import } from '../../ast/Import';
 import { DuplicationChecker } from '../../util/DuplicationChecker';
 import { InputFileExtractor } from "../../util/InputFileExtractor";
 import { SemanticException } from "../SemanticException";
-import { Document } from '../../req/ast/Document';
+import { Document } from '../../ast/Document';
 
 /**
  * Import semantic analyzer.

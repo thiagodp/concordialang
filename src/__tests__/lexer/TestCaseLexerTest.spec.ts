@@ -1,6 +1,6 @@
 import { Keywords } from '../../modules/req/Keywords';
-import { TestCaseLexer } from "../../modules/req/lexer/TestCaseLexer";
-import { TestCase } from "../../modules/req/ast/TestCase";
+import { TestCaseLexer } from "../../modules/lexer/TestCaseLexer";
+import { TestCase } from "../../modules/ast/TestCase";
 
 /**
  * @author Thiago Delgado Pinto

@@ -1,10 +1,10 @@
-import { Scenario } from '../../modules/req/ast/Scenario';
-import { ScenarioParser } from '../../modules/req/parser/ScenarioParser';
-import { Node } from '../../modules/req/ast/Node';
-import { NodeIterator } from '../../modules/req/parser/NodeIterator';
-import { ParsingContext } from '../../modules/req/parser/ParsingContext';
+import { Scenario } from '../../modules/ast/Scenario';
+import { ScenarioParser } from '../../modules/parser/ScenarioParser';
+import { Node } from '../../modules/ast/Node';
+import { NodeIterator } from '../../modules/parser/NodeIterator';
+import { ParsingContext } from '../../modules/parser/ParsingContext';
 import { Keywords } from '../../modules/req/Keywords';
-import { Feature } from '../../modules/req/ast/Feature';
+import { Feature } from '../../modules/ast/Feature';
 
 /**
  * @author Thiago Delgado Pinto

@@ -1,4 +1,4 @@
-import { FileInfo } from '../req/ast/FileInfo';
+import { FileInfo } from '../ast/FileInfo';
 
 /**
  * Processing observer.

@@ -1,7 +1,7 @@
-import { InMemoryKeywordDictionaryLoader } from '../../modules/req/dict/InMemoryKeywordDictionaryLoader';
-import { KeywordDictionaryLoader } from '../../modules/req/dict/KeywordDictionaryLoader';
-import { Lexer } from "../../modules/req/lexer/Lexer";
-import { KeywordDictionary } from "../../modules/req/dict/KeywordDictionary";
+import { InMemoryKeywordDictionaryLoader } from '../../modules/dict/InMemoryKeywordDictionaryLoader';
+import { KeywordDictionaryLoader } from '../../modules/dict/KeywordDictionaryLoader';
+import { Lexer } from "../../modules/lexer/Lexer";
+import { KeywordDictionary } from "../../modules/dict/KeywordDictionary";
 import { Keywords } from "../../modules/req/Keywords";
 
 /**

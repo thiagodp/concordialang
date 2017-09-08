@@ -4,8 +4,8 @@ import { LocatedException } from '../../req/LocatedException';
 import { ImportSA } from './ImportSA';
 import { SemanticException } from '../SemanticException';
 import { InputFileExtractor } from '../../util/InputFileExtractor';
-import { Import } from '../../req/ast/Import';
-import { Document } from '../../req/ast/Document';
+import { Import } from '../../ast/Import';
+import { Document } from '../../ast/Document';
 import { SemanticAnalysisContext } from '../SemanticAnalysisContext';
 
 /**

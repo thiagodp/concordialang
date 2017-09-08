@@ -1,7 +1,7 @@
 import { NodeSA } from './NodeSA';
-import { Scenario } from '../../req/ast/Scenario';
+import { Scenario } from '../../ast/Scenario';
 import { LocatedException } from '../../req/LocatedException';
-import { Document } from '../../req/ast/Document';
+import { Document } from '../../ast/Document';
 import { DuplicationChecker } from "../../util/DuplicationChecker";
 import { SemanticException } from "../SemanticException";
 

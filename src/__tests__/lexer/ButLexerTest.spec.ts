@@ -1,5 +1,5 @@
 import { Keywords } from '../../modules/req/Keywords';
-import { ButLexer } from "../../modules/req/lexer/ButLexer";
+import { ButLexer } from "../../modules/lexer/ButLexer";
 
 /**
  * @author Thiago Delgado Pinto

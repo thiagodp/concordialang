@@ -1,18 +1,18 @@
 import { SemanticAnalysisContext } from '../sa/SemanticAnalysisContext';
 import { NodeBasedSemanticAnalyzer } from '../sa/node/NodeBasedSemanticAnalyzer';
-import { FileInfo } from '../req/ast/FileInfo';
+import { FileInfo } from '../ast/FileInfo';
 import { InputFileExtractor } from '../util/InputFileExtractor';
 import { ProcessingObserver } from './ProcessingObserver';
-import { EnglishKeywordDictionary } from '../req/dict/EnglishKeywordDictionary';
-import { Document } from '../req/ast/Document';
-import { Node } from '../req/ast/Node';
-import { LexerProcessor } from '../req/lexer/LexerProcessor';
+import { EnglishKeywordDictionary } from '../dict/EnglishKeywordDictionary';
+import { Document } from '../ast/Document';
+import { Node } from '../ast/Node';
+import { LexerProcessor } from '../lexer/LexerProcessor';
 import { FileProcessor } from '../req/FileProcessor';
 import { DocumentProcessor } from '../req/DocumentProcessor';
-import { KeywordDictionaryLoader } from "../req/dict/KeywordDictionaryLoader";
-import { JsonKeywordDictionaryLoader } from "../req/dict/JsonKeywordDictionaryLoader";
-import { Lexer } from "../req/lexer/Lexer";
-import { Parser } from "../req/parser/Parser";
+import { KeywordDictionaryLoader } from "../dict/KeywordDictionaryLoader";
+import { JsonKeywordDictionaryLoader } from "../dict/JsonKeywordDictionaryLoader";
+import { Lexer } from "../lexer/Lexer";
+import { Parser } from "../parser/Parser";
 import { SyncFileProcessor } from "../req/SyncFileProcessor";
 
 /**

@@ -1,4 +1,4 @@
-import { RegexLexer } from '../../modules/req/lexer/RegexLexer';
+import { RegexLexer } from '../../modules/lexer/RegexLexer';
 import { Keywords } from '../../modules/req/Keywords';
 
 /**

@@ -1,4 +1,4 @@
-import { TagLexer } from "../../modules/req/lexer/TagLexer";
+import { TagLexer } from "../../modules/lexer/TagLexer";
 import { Keywords } from "../../modules/req/Keywords";
 
 /**

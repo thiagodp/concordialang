@@ -1,9 +1,9 @@
-import { Lexer } from '../../modules/req/lexer/Lexer';
-import { Parser } from '../../modules/req/parser/Parser';
-import { KeywordDictionary } from "../../modules/req/dict/KeywordDictionary";
-import { Document } from '../../modules/req/ast/Document';
-import { KeywordDictionaryLoader } from "../../modules/req/dict/KeywordDictionaryLoader";
-import { InMemoryKeywordDictionaryLoader } from "../../modules/req/dict/InMemoryKeywordDictionaryLoader";
+import { Lexer } from '../../modules/lexer/Lexer';
+import { Parser } from '../../modules/parser/Parser';
+import { KeywordDictionary } from "../../modules/dict/KeywordDictionary";
+import { Document } from '../../modules/ast/Document';
+import { KeywordDictionaryLoader } from "../../modules/dict/KeywordDictionaryLoader";
+import { InMemoryKeywordDictionaryLoader } from "../../modules/dict/InMemoryKeywordDictionaryLoader";
 /**
  * @author Thiago Delgado Pinto
  */

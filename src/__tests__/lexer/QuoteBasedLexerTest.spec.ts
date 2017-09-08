@@ -1,5 +1,5 @@
 import { Keywords } from '../../modules/req/Keywords';
-import { QuotedNodeLexer } from "../../modules/req/lexer/QuotedNodeLexer";
+import { QuotedNodeLexer } from "../../modules/lexer/QuotedNodeLexer";
 
 /**
  * @author Thiago Delgado Pinto

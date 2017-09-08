@@ -2,7 +2,7 @@ import { ProcessingObserver } from './ProcessingObserver';
 import { RequirementFilesProcessor } from './RequirementFilesProcessor';
 import { InputFileExtractor } from '../util/InputFileExtractor';
 import cliTruncate = require('cli-truncate');
-import { FileInfo } from "../req/ast/FileInfo";
+import { FileInfo } from "../ast/FileInfo";
 
 /**
  * Input processor

@@ -1,4 +1,4 @@
-import { KeywordDictionary } from '../../modules/req/dict/KeywordDictionary';
+import { KeywordDictionary } from '../../modules/dict/KeywordDictionary';
 import { Lexer } from '../../modules/req/alt-lexer/Lexer';
 import { Token } from "../../modules/req/alt-lexer/Token";
 import { TokenTypes } from "../../modules/req/alt-lexer/TokenTypes";

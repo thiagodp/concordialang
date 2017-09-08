@@ -1,5 +1,5 @@
 import { Keywords } from '../../modules/req/Keywords';
-import { TextLexer } from "../../modules/req/lexer/TextLexer";
+import { TextLexer } from "../../modules/lexer/TextLexer";
 
 /**
  * @author Thiago Delgado Pinto

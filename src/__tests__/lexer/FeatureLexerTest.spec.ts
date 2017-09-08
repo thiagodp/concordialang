@@ -1,4 +1,4 @@
-import { FeatureLexer } from '../../modules/req/lexer/FeatureLexer';
+import { FeatureLexer } from '../../modules/lexer/FeatureLexer';
 import { Keywords } from '../../modules/req/Keywords';
 
 /**

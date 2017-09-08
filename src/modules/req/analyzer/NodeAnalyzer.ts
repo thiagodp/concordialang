@@ -1,5 +1,5 @@
-import { Node } from '../ast/Node';
-import { Document } from '../ast/Document';
+import { Node } from '../../ast/Node';
+import { Document } from '../../ast/Document';
 import { LocatedException } from '../LocatedException';
 import { Spec } from "./Spec";
 import { SemanticException } from "./SemanticException";

@@ -1,9 +1,9 @@
-import { Node } from '../../modules/req/ast/Node';
-import { NodeIterator } from '../../modules/req/parser/NodeIterator';
-import { ParsingContext } from '../../modules/req/parser/ParsingContext';
+import { Node } from '../../modules/ast/Node';
+import { NodeIterator } from '../../modules/parser/NodeIterator';
+import { ParsingContext } from '../../modules/parser/ParsingContext';
 import { Keywords } from '../../modules/req/Keywords';
-import { Feature } from '../../modules/req/ast/Feature';
-import { FeatureParser } from '../../modules/req/parser/FeatureParser';
+import { Feature } from '../../modules/ast/Feature';
+import { FeatureParser } from '../../modules/parser/FeatureParser';
 
 /**
  * @author Thiago Delgado Pinto

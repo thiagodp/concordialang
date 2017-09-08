@@ -1,4 +1,4 @@
-import { Document } from '../../req/ast/Document';
+import { Document } from '../../ast/Document';
 import { LocatedException } from '../../req/LocatedException';
 
 /**

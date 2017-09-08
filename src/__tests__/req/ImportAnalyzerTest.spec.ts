@@ -1,7 +1,7 @@
 
 import { ImportAnalyzer } from '../../modules/req/analyzer/ImportAnalyzer';
-import { Import } from '../../modules/req/ast/Import';
-import { Location } from '../../modules/req/ast/Location';
+import { Import } from '../../modules/ast/Import';
+import { Location } from '../../modules/ast/Location';
 import { Keywords } from '../../modules/req/Keywords';
 
 /**

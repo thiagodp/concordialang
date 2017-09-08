@@ -1,4 +1,4 @@
-import { NamedNodeLexer } from '../../modules/req/lexer/NamedNodeLexer';
+import { NamedNodeLexer } from '../../modules/lexer/NamedNodeLexer';
 import { Keywords } from '../../modules/req/Keywords';
 
 /**
