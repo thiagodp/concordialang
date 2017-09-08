@@ -30,6 +30,9 @@ export class FeatureParser implements NodeParser< Feature > {
         context.inFeature = true;
 
         // Add backwards tags
+        if ( ! node.tags ) {
+            node.tags = [];
+        }
         ( new TagCollector() ).addBackwardTags( it, node.tags );
 
         return true;

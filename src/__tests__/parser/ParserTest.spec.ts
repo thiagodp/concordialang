@@ -4,6 +4,7 @@ import { KeywordDictionary } from "../../modules/dict/KeywordDictionary";
 import { Document } from '../../modules/ast/Document';
 import { KeywordDictionaryLoader } from "../../modules/dict/KeywordDictionaryLoader";
 import { InMemoryKeywordDictionaryLoader } from "../../modules/dict/InMemoryKeywordDictionaryLoader";
+
 /**
  * @author Thiago Delgado Pinto
  */
@@ -68,8 +69,7 @@ describe( 'ParserTest', () => {
 
         let nodes = lexer.nodes();
         let doc: Document = {};
-        //parser.parseIndividualNodes( nodes, doc );
-        doc = parser.analyze( nodes );
+        parser.analyze( nodes, doc );
 
         expect( parser.errors() ).toEqual( [] );
 

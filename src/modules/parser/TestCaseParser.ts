@@ -43,6 +43,9 @@ export class TestCaseParser implements NodeParser< TestCase > {
         context.currentTestCase = node;
 
         // Adds backward tags
+        if ( ! node.tags ) {
+            node.tags = [];
+        }        
         ( new TagCollector() ).addBackwardTags( it, node.tags );        
 
         return true;
