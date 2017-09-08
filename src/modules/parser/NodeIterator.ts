@@ -7,10 +7,7 @@ import { Node } from '../ast/Node';
  */
 export class NodeIterator {
 
-    private _index: number;
-
-    public constructor( private _nodes: Node[] ) {
-        this.first();
+    public constructor( private _nodes: Node[], private _index: number = -1 ) {
     }
 
     public first(): void {
@@ -44,6 +41,28 @@ export class NodeIterator {
             return null;
         }
         return this._nodes[ this._index + 1 ]; // it does not change the index !
+    }
+
+    public hasPrior(): boolean {
+        return this._index > 0;
+    }
+
+    public prior(): Node | null {
+        if ( ! this.hasPrior() ) {
+            return null;
+        }
+        return this._nodes[ --this._index ];
+    }
+
+    public spyPrior(): Node | null {
+        if ( ! this.hasPrior() ) {
+            return null;
+        }
+        return this._nodes[ this._index - 1 ]; // it does not change the index !
+    }
+
+    public clone(): NodeIterator {
+        return new NodeIterator( this._nodes, this._index );
     }
 
 }

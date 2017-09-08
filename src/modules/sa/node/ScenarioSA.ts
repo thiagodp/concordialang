@@ -15,7 +15,7 @@ export class ScenarioSA implements NodeSA {
     /** @inheritDoc */
     public analyze( doc: Document, errors: LocatedException[] ) {
 
-        // Some checkings
+        // Checking the document
         if ( ! doc.feature ) {
             return;
         }

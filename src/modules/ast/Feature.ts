@@ -2,6 +2,7 @@ import { Scenario } from './Scenario';
 import { TestCase } from './TestCase';
 import { Rule } from "./Rule";
 import { NamedNode } from './Node';
+import { MayHaveTags } from './Tag';
 
 // FEATURE
 //
@@ -26,10 +27,9 @@ import { NamedNode } from './Node';
  * 
  * @author Thiago Delgado Pinto
  */
-export interface Feature extends NamedNode {
+export interface Feature extends NamedNode, MayHaveTags {
 
     description?: string;
-    tags?: Array< string >;
 
     scenarios?: Array< Scenario >;
 

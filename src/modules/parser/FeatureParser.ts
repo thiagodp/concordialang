@@ -1,3 +1,4 @@
+import { TagCollector } from './TagCollector';
 import { Feature } from "../ast/Feature";
 import { Node } from '../ast/Node';
 import { SyntaticException } from '../req/SyntaticException';
@@ -12,6 +13,7 @@ import { ParsingContext } from "./ParsingContext";
  */
 export class FeatureParser implements NodeParser< Feature > {
 
+    /** @inheritDoc */
     public analyze( node: Feature, context: ParsingContext, it: NodeIterator, errors: Error[] ): boolean {
 
         // Checks if it is already declared
@@ -26,6 +28,9 @@ export class FeatureParser implements NodeParser< Feature > {
 
         // Adjust the context
         context.inFeature = true;
+
+        // Add backwards tags
+        ( new TagCollector() ).addBackwardTags( it, node.tags );
 
         return true;
     }

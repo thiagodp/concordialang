@@ -13,6 +13,7 @@ import { ParsingContext } from "./ParsingContext";
  */
 export class LanguageParser implements NodeParser< Language > {
 
+    /** @inheritDoc */
     public analyze( node: Language, context: ParsingContext, it: NodeIterator, errors: Error[] ): boolean {
 
         // Checks if it is already declared

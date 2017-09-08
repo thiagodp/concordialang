@@ -18,6 +18,7 @@ export class ImportSA implements NodeSA {
     /** @inheritDoc */
     public analyze( doc: Document, errors: LocatedException[] ) {
 
+        // Checking the document
         if ( ! doc.imports ) {
             doc.imports = [];
             return;

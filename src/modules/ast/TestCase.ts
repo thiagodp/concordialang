@@ -1,3 +1,4 @@
+import { MayHaveTags } from './Tag';
 import { Scenario } from "./Scenario";
 
 // TEST CASE
@@ -21,6 +22,6 @@ import { Scenario } from "./Scenario";
 // ```
 //
 
-export interface TestCase extends Scenario {
+export interface TestCase extends Scenario, MayHaveTags {
     scenarioName?: string;
 }

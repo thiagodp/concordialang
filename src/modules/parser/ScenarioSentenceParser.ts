@@ -14,6 +14,7 @@ import { ParsingContext } from "./ParsingContext";
  */
 export class ScenarioSentenceParser implements NodeParser< ScenarioSentence > {
 
+    /** @inheritDoc */
     public analyze( node: ScenarioSentence, context: ParsingContext, it: NodeIterator, errors: Error[] ): boolean {
 
         // Checks if a scenario or a test case have been declared before it

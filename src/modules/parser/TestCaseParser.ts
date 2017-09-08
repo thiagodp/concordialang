@@ -7,6 +7,7 @@ import { NodeParser } from './NodeParser';
 import { Keywords } from "../req/Keywords";
 import { ParsingContext } from "./ParsingContext";
 import { TestCase } from "../ast/TestCase";
+import { TagCollector } from "./TagCollector";
 
 /**
  * Test case parser
@@ -15,6 +16,7 @@ import { TestCase } from "../ast/TestCase";
  */
 export class TestCaseParser implements NodeParser< TestCase > {
 
+    /** @inheritDoc */
     public analyze( node: TestCase, context: ParsingContext, it: NodeIterator, errors: Error[] ): boolean {
 
         // Checks if a feature has been declared before it
@@ -25,7 +27,7 @@ export class TestCaseParser implements NodeParser< TestCase > {
             return false;
         }
 
-        // Prepare the feature to receive the test case        
+        // Prepares the feature to receive the test case        
         let feature = context.doc.feature;
         if ( ! feature.testcases ) {
             feature.testcases = [];
@@ -34,11 +36,14 @@ export class TestCaseParser implements NodeParser< TestCase > {
         // Adds the test case to the feature
         feature.testcases.push( node );
 
-        // Adjust the context
+        // Adjusts the context
         context.inFeature = false;
         context.inScenario = false;
         context.inTestCase = true;
         context.currentTestCase = node;
+
+        // Adds backward tags
+        ( new TagCollector() ).addBackwardTags( it, node.tags );        
 
         return true;
     }

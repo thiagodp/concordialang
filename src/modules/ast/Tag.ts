@@ -27,10 +27,10 @@ export interface Tag extends Node, HasName, HasContent {
 }
 
 /**
- * Allows to define something that has tags.
+ * Allows to define something that may have tags.
  * 
  * @author Thiago Delgado Pinto
  */
-export interface HasTags {
-    tags: Array< Tag >;
+export interface MayHaveTags {
+    tags?: Tag[];
 }

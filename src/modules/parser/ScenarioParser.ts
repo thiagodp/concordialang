@@ -14,6 +14,7 @@ import { ParsingContext } from "./ParsingContext";
  */
 export class ScenarioParser implements NodeParser< Scenario > {
 
+    /** @inheritDoc */
     public analyze( node: Scenario, context: ParsingContext, it: NodeIterator, errors: Error[] ): boolean {
 
         // Checks if a feature has been declared before it
