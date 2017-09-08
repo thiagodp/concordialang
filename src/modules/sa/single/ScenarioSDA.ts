@@ -1,4 +1,4 @@
-import { NodeSA } from './NodeSA';
+import { NodeBasedSDA } from './NodeBasedSDA';
 import { Scenario } from '../../ast/Scenario';
 import { LocatedException } from '../../req/LocatedException';
 import { Document } from '../../ast/Document';
@@ -6,11 +6,11 @@ import { DuplicationChecker } from "../../util/DuplicationChecker";
 import { SemanticException } from "../SemanticException";
 
 /**
- * Scenario semantic analyzer.
+ * Scenario single document analyzer.
  * 
  * @author Thiago Delgado Pinto
  */
-export class ScenarioSA implements NodeSA {
+export class ScenarioSDA implements NodeBasedSDA {
 
     /** @inheritDoc */
     public analyze( doc: Document, errors: LocatedException[] ) {

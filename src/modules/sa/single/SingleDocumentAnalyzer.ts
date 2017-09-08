@@ -1,7 +1,7 @@
-import { NodeSA } from './NodeSA';
-import { ScenarioSA } from './ScenarioSA';
+import { NodeBasedSDA } from './NodeBasedSDA';
+import { ScenarioSDA } from './ScenarioSDA';
 import { LocatedException } from '../../req/LocatedException';
-import { ImportSA } from './ImportSA';
+import { ImportSDA } from './ImportSDA';
 import { SemanticException } from '../SemanticException';
 import { InputFileExtractor } from '../../util/InputFileExtractor';
 import { Import } from '../../ast/Import';
@@ -9,23 +9,23 @@ import { Document } from '../../ast/Document';
 import { SemanticAnalysisContext } from '../SemanticAnalysisContext';
 
 /**
- * Node-based Semantic Analyzer
+ * Single-document Semantic Analyzer
  * 
  * @author Thiago Delgado Pinto
  */
-export class NodeBasedSemanticAnalyzer {
+export class SingleDocumentAnalyzer {
 
-    private _nodeSemanticAnalyzers: NodeSA[];
+    private _nodeAnalyzers: NodeBasedSDA[];
 
     constructor() {
-        this._nodeSemanticAnalyzers = [
-            new ImportSA(),
-            new ScenarioSA()
+        this._nodeAnalyzers = [
+            new ImportSDA(),
+            new ScenarioSDA()
         ];
     }
 
     public analyze( doc: Document, errors: LocatedException[] ) {
-        for ( let analyzer of this._nodeSemanticAnalyzers ) {
+        for ( let analyzer of this._nodeAnalyzers ) {
             analyzer.analyze( doc, errors );
         }
     }

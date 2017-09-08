@@ -1,5 +1,7 @@
 /**
  * Keywords to identify nodes.
+ * 
+ * @author Thiago Delgado Pinto
  */
 export abstract class Keywords {
 

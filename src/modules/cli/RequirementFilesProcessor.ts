@@ -1,5 +1,5 @@
 import { SemanticAnalysisContext } from '../sa/SemanticAnalysisContext';
-import { NodeBasedSemanticAnalyzer } from '../sa/node/NodeBasedSemanticAnalyzer';
+import { SingleDocumentAnalyzer } from '../sa/single/SingleDocumentAnalyzer';
 import { FileInfo } from '../ast/FileInfo';
 import { InputFileExtractor } from '../util/InputFileExtractor';
 import { ProcessingObserver } from './ProcessingObserver';
@@ -29,7 +29,7 @@ export class RequirementFilesProcessor {
     private _parser: Parser = new Parser();
     private _docProcessor: DocumentProcessor = new LexerProcessor( this._lexer );
     private _inputFileExtractor: InputFileExtractor = new InputFileExtractor();
-    private _nodeBasedSemanticAnalyzer: NodeBasedSemanticAnalyzer = new NodeBasedSemanticAnalyzer();
+    private _singleDocAnalyzer: SingleDocumentAnalyzer = new SingleDocumentAnalyzer();
 
 
     constructor( private _write: Function ) {
@@ -84,7 +84,7 @@ export class RequirementFilesProcessor {
             this.addErrorsToDoc( this._parser.errors(), doc );
 
             // NODE-BASED SEMANTIC ANALYSIS
-            this._nodeBasedSemanticAnalyzer.analyze( doc, doc.fileErrors );
+            this._singleDocAnalyzer.analyze( doc, doc.fileErrors );
     
             //this._write( doc ); // <<< TEMPORARY
 

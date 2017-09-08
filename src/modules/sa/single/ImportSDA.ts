@@ -1,4 +1,4 @@
-import { NodeSA } from './NodeSA';
+import { NodeBasedSDA } from './NodeBasedSDA';
 import { LocatedException } from '../../req/LocatedException';
 import { Import } from '../../ast/Import';
 import { DuplicationChecker } from '../../util/DuplicationChecker';
@@ -7,11 +7,11 @@ import { SemanticException } from "../SemanticException";
 import { Document } from '../../ast/Document';
 
 /**
- * Import semantic analyzer.
+ * Import single document analyzer.
  * 
  * @author Thiago Delgado Pinto
  */
-export class ImportSA implements NodeSA {
+export class ImportSDA implements NodeBasedSDA {
 
     private _fileUtil: InputFileExtractor = new InputFileExtractor();
 

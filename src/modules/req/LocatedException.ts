@@ -2,6 +2,8 @@ import { Location  } from "../ast/Location";
 
 /**
  * Provides an exception that contains information about the location of an error in a line.
+ * 
+ * @author Thiago Delgado Pinto
  */
 export abstract class LocatedException extends Error {
 
