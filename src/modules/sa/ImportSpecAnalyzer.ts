@@ -1,4 +1,4 @@
-import { Location } from '../req/ast/Location';
+import { Location } from '../ast/Location';
 import { SemanticException } from './SemanticException';
 import { NodeBasedSpecAnalyzer } from './NodeBasedSpecAnalyzer';
 import { Spec } from "../ast/Spec";
