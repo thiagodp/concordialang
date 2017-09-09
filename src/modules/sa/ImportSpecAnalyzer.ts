@@ -4,7 +4,7 @@ import { Spec } from "../ast/Spec";
 import { Document } from "../ast/Document";
 import { LocatedException } from "../req/LocatedException";
 
-var Graph = require( 'graph.js/dist/graph.full.js' );
+const Graph = require( 'graph.js/dist/graph.full.js' );
 
 /**
  * Import semantic analyzer for a specification.
@@ -64,11 +64,14 @@ export class ImportSpecAnalyzer implements NodeBasedSpecAnalyzer {
         // Build the graph
         for ( let doc of spec.docs ) {
             let fromKey = doc.fileInfo.path; // key
+            console.log( 'fromKey: ' + fromKey );
+
             // Add the document as a vertex. If the key already exists, the value is overwriten.
             graph.addVertex( fromKey, doc ); // key, value
             // Make each imported file a vertex, but not overwrite the value if it already exists.
             for ( let imp of doc.imports ) {
-                let toKey = imp.content; // key
+                let toKey = imp.resolvedPath; // key
+                console.log( 'toKey: ' + toKey );
                 graph.ensureVertex( toKey ); // no value
                 // Make an edge from the doc to the imported file.
                 // If the edge already exists, do nothing.

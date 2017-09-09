@@ -6,6 +6,8 @@ import { InputFileExtractor } from "../../util/InputFileExtractor";
 import { SemanticException } from "../SemanticException";
 import { Document } from '../../ast/Document';
 
+const path = require( 'path' );
+
 /**
  * Import single document analyzer.
  * 
@@ -36,16 +38,22 @@ export class ImportSDA implements NodeBasedSDA {
         
         for ( let imp of doc.imports ) {
 
+            let importPath = imp.content;
+            let resolvedPath = path.join( path.dirname( doc.fileInfo.path ), importPath );
+
+            // Add the resolved path to the import
+            imp.resolvedPath = resolvedPath;
+
             // Check for a self reference
-            if ( doc.fileInfo.path === imp.content ) {
-                let msg = 'Imported file is a self reference: "' + imp.content + '".';
+            if ( doc.fileInfo.path === resolvedPath ) {
+                let msg = 'Imported file is a self reference: "' + importPath + '".';
                 let err = new SemanticException( msg, imp.location );
                 errors.push( err );                
             }
 
             // Check if imported files exist
-            if ( ! this._fileUtil.fileExist( imp.content ) ) {
-                let msg = 'Imported file not found: "' + imp.content + '".';
+            if ( ! this._fileUtil.fileExist( resolvedPath ) ) {
+                let msg = 'Imported file not found: "' + importPath + '".';
                 let err = new SemanticException( msg, imp.location );
                 errors.push( err );
             }
