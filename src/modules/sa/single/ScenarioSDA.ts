@@ -15,24 +15,26 @@ export class ScenarioSDA implements NodeBasedSDA {
     /** @inheritDoc */
     public analyze( doc: Document, errors: LocatedException[] ) {
 
-        // Checking the document
+        // Checking the document structure
         if ( ! doc.feature ) {
-            return;
+            return; // nothing to do
         }
         if ( ! doc.feature.scenarios ) {
             doc.feature.scenarios = [];
-            return;
+            return; // nothing to do
         }
 
-        // Check duplicated scenarios
+        this.checkForDuplicatedScenarios( doc, errors );
+    }
+
+    private checkForDuplicatedScenarios( doc: Document, errors: LocatedException[] ) {
         let duplicated: Scenario[] = ( new DuplicationChecker() )
             .withDuplicatedProperty( doc.feature.scenarios, 'name' );
         for ( let dup of duplicated ) {
             let msg = 'Duplicated scenario "' + dup.name + '".';
             let err = new SemanticException( msg, dup.location );
             errors.push( err );             
-        }
-
+        }        
     }
 
 }
