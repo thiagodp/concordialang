@@ -1,7 +1,7 @@
 #language: pt
 
-//Importar "login.feature"
+Importar "login.feature"
 
-Funcionalidade: Login
+Funcionalidade: Z Login
 
 Cenário: Login com sucesso

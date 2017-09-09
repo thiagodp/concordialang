@@ -68,9 +68,11 @@ export class RequirementFilesProcessor {
             doc.fileInfo = fileInfo;            
 
             // Notify about the start
+            /*
             if ( observer ) {
                 observer.onStarted( fileInfo );
-            }        
+            } 
+            */       
 
             // LEXER
             // Process the file with the lexer processor
@@ -96,14 +98,18 @@ export class RequirementFilesProcessor {
             //this._write( doc ); // <<< TEMPORARY
 
             // TEMPORARY <<< TO-DO: present file errors once
+            /*
             if ( observer && doc.fileErrors.length > 0 ) {
                 observer.onError( fileInfo, doc.fileErrors );
             }
+            */
 
             // Notify about the finish
+            /*
             if ( observer ) {
                 observer.onFinished( fileInfo, ! hadErrors );
             }
+            */
             
             // Adds the document to the semantic analysis context
             spec.docs.push( doc );
@@ -113,10 +119,18 @@ export class RequirementFilesProcessor {
         let semanticErrors: LocatedException[] = [];
         this._specAnalyzer.analyze( spec, semanticErrors );
 
-        // Temporary
-        if ( observer && semanticErrors.length > 0 ) {
-            observer.onError( { path: '???', hash: '???' }, semanticErrors );
-        }        
+        // Output
+        if ( observer ) {
+            for ( let doc of spec.docs ) {
+                observer.onStarted( doc.fileInfo );
+                let hadErrors = doc.fileErrors.length > 0;
+                if ( hadErrors ) {
+                    let sortedErrors: LocatedException[] = this.sortErrorsByLocation( doc.fileErrors );
+                    observer.onError( doc.fileInfo, sortedErrors );
+                }
+                observer.onFinished( doc.fileInfo, ! hadErrors ); 
+            }
+        }       
 
     }
 
@@ -126,6 +140,17 @@ export class RequirementFilesProcessor {
             doc.fileErrors = [];
         }
         doc.fileErrors.push.apply( doc.fileErrors, errors );        
+    }
+
+    private sortErrorsByLocation( errors: LocatedException[] ): LocatedException[] {
+        return Array.sort( errors, ( a: LocatedException, b: LocatedException ) => {
+            // Compare the line
+            let lineDiff: number = a.location.line - b.location.line;
+            if ( 0 === lineDiff ) { // Same line, so let's compare the column
+                return a.location.column - b.location.column;
+            }
+            return lineDiff;
+        } );
     }
 
 }

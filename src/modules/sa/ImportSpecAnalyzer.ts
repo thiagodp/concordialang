@@ -1,3 +1,4 @@
+import { Location } from '../req/ast/Location';
 import { SemanticException } from './SemanticException';
 import { NodeBasedSpecAnalyzer } from './NodeBasedSpecAnalyzer';
 import { Spec } from "../ast/Spec";
@@ -5,6 +6,7 @@ import { Document } from "../ast/Document";
 import { LocatedException } from "../req/LocatedException";
 
 const Graph = require( 'graph.js/dist/graph.full.js' );
+const path = require( 'path' );
 
 /**
  * Import semantic analyzer for a specification.
@@ -32,34 +34,36 @@ export class ImportSpecAnalyzer implements NodeBasedSpecAnalyzer {
 
             let fullCycle = cycle.join( '" => "' ) + '" => "' + filePath;
 
+            let doc: Document = this._graph.vertexValue( filePath ); // cycle is a key (that is the file path)
+            let loc = { line: 1, column: 1 };
+            if ( doc ) {
+                // The second file is the imported one, so let's find its location.
+                loc = this.locationOfTheImport( doc, cycle[ 1 ] );
+            }
+
             // Prepare the error
             let msg = 'Cyclic reference: "' + fullCycle + '".';
-            let err = new SemanticException( msg, { line: 1, column: 1 } ); // <<< TO-DO: fix position?
+            let err = new SemanticException( msg, loc );
 
             // Add the error to the detected errors
             errors.push( err );
 
-            // Let's also add the error to the document
-
-            let doc: Document = this._graph.vertexValue( filePath ); // cycle is a key (that is the file path)
-            if ( ! doc ) {
+            // Let's add the error to the document
+            if ( doc ) {
+                if ( ! doc.fileErrors ) {
+                    doc.fileErrors = [];
+                }
+                doc.fileErrors.push( err );                
+            } else {
                 // This should not happen, since all the imported files are checked before,
-                // by the import single document analyzer (class ImportSDA).
-                // Let's represent this as an error, instead of just ignoring it.
-
+                // by the "import single document analyzer" (class ImportSDA).
+                // So let's represent this as an error, instead of just ignoring it.
                 let docError = new SemanticException(
                     'Imported file "' + filePath + '" should have a document.',
                     { line: 1, column: 1 }
                     );
-
                 errors.push( docError );
-
-                continue;
             }
-            if ( ! doc.fileErrors ) {
-                doc.fileErrors = [];
-            }
-            doc.fileErrors.push( err );
         }
     }
 
@@ -74,13 +78,24 @@ export class ImportSpecAnalyzer implements NodeBasedSpecAnalyzer {
             // Make each imported file a vertex, but not overwrite the value if it already exists.
             for ( let imp of doc.imports ) {
                 let toKey = imp.resolvedPath; // key
-                //console.log( 'from ' + fromKey + ' to ' + toKey );
                 graph.ensureVertex( toKey ); // no value
                 // Make an edge from the doc to the imported file.
                 // If the edge already exists, do nothing.
                 graph.ensureEdge( fromKey, toKey );
             }
         }
+    }
+
+
+    private locationOfTheImport( doc: Document, importFile: string ): Location {
+        let fileName = path.basename( importFile ); // name without dir
+        for ( let imp of doc.imports ) {
+            let currentFileName = path.basename( imp.content ); // name without dir
+            if ( fileName == currentFileName ) {
+                return imp.location;
+            }
+        }
+        return { line: 1, column: 1 }; // import not found, so let's return the first position in the file
     }
 
 }
