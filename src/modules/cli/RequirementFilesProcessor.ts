@@ -1,4 +1,5 @@
-import { SemanticAnalysisContext } from '../sa/SemanticAnalysisContext';
+import { LocatedException } from '../req/LocatedException';
+import { SpecAnalyzer } from '../sa/SpecAnalyzer';
 import { SingleDocumentAnalyzer } from '../sa/single/SingleDocumentAnalyzer';
 import { FileInfo } from '../ast/FileInfo';
 import { InputFileExtractor } from '../util/InputFileExtractor';
@@ -14,6 +15,7 @@ import { JsonKeywordDictionaryLoader } from "../dict/JsonKeywordDictionaryLoader
 import { Lexer } from "../lexer/Lexer";
 import { Parser } from "../parser/Parser";
 import { SyncFileProcessor } from "../req/SyncFileProcessor";
+import { Spec } from "../ast/Spec";
 
 /**
  * Requirement files processor.
@@ -30,6 +32,7 @@ export class RequirementFilesProcessor {
     private _docProcessor: DocumentProcessor = new LexerProcessor( this._lexer );
     private _inputFileExtractor: InputFileExtractor = new InputFileExtractor();
     private _singleDocAnalyzer: SingleDocumentAnalyzer = new SingleDocumentAnalyzer();
+    private _specAnalyzer: SpecAnalyzer = new SpecAnalyzer();
 
 
     constructor( private _write: Function ) {
@@ -39,7 +42,7 @@ export class RequirementFilesProcessor {
 
         let fileProcessor: FileProcessor = new SyncFileProcessor( charset );
 
-        let saContext: SemanticAnalysisContext = {
+        let spec: Spec = {
             docs: []
         };
 
@@ -88,7 +91,7 @@ export class RequirementFilesProcessor {
     
             //this._write( doc ); // <<< TEMPORARY
 
-            // Temporary
+            // TEMPORARY <<< TO-DO: present file errors once
             if ( observer && doc.fileErrors.length > 0 ) {
                 observer.onError( fileInfo, doc.fileErrors );
             }
@@ -99,11 +102,17 @@ export class RequirementFilesProcessor {
             }
             
             // Adds the document to the semantic analysis context
-            saContext.docs.push( doc );
+            spec.docs.push( doc );
         }
 
         // SEMANTIC ANALYSIS
-        // to-do
+        let semanticErrors: LocatedException[] = [];
+        this._specAnalyzer.analyze( spec, semanticErrors );
+
+        // Temporary
+        if ( observer && semanticErrors.length > 0 ) {
+            observer.onError( { path: '???', hash: '???' }, semanticErrors );
+        }        
 
     }
 

@@ -34,6 +34,7 @@
   "dependencies": {
     "chalk": "^2.0.1",
     "cli-truncate": "^1.0.0",
+    "graph.js": "^1.21.1",
     "he": "^1.1.1",
     "js-joda": "^1.5.2",
     "meow": "^3.7.0",

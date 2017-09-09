@@ -1,6 +1,6 @@
 //#language: en
 
-Import "login.feature"
+Import "zlogin.feature"
 
 @important
 Feature: My Feature

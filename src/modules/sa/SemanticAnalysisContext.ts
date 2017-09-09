@@ -5,7 +5,7 @@ import { Document } from '../ast/Document';
  * 
  * @author Thiago Delgado Pinto
  */
-export interface SemanticAnalysisContext {
+export class SemanticAnalysisContext {
 
     docs: Document[];
 
