@@ -21,14 +21,19 @@ export class ImportSpecAnalyzer implements NodeBasedSpecAnalyzer {
     }
 
     private findCyclicReferences( spec: Spec, errors: LocatedException[] ) {
-        this.buildGraphWithTheSpec( this._graph, spec );
+
+        this.buildGraphWithTheSpec( this._graph, spec );      
+
         // Let's find cyclic references and report them as errors
-        for ( let cycle of this._graph.cycles() ) {
-            console.log( cycle );
-            let filePath = cycle;
+        for ( let it = this._graph.cycles(), kv; !(kv = it.next()).done;) {
+            let cycle = kv.value;
+        
+            let filePath = cycle[ 0 ]; // first file
+
+            let fullCycle = cycle.join( '" => "' ) + '" => "' + filePath;
 
             // Prepare the error
-            let msg = 'Cyclic reference in the file "' + filePath + '".';
+            let msg = 'Cyclic reference: "' + fullCycle + '".';
             let err = new SemanticException( msg, { line: 1, column: 1 } ); // <<< TO-DO: fix position?
 
             // Add the error to the detected errors
@@ -58,20 +63,18 @@ export class ImportSpecAnalyzer implements NodeBasedSpecAnalyzer {
         }
     }
 
-    private buildGraphWithTheSpec( graph: Graph, spec: Spec ) {
+    private buildGraphWithTheSpec( graph: any, spec: Spec ) {
         // Remove all the vertices and edges
         graph.clear();
         // Build the graph
         for ( let doc of spec.docs ) {
             let fromKey = doc.fileInfo.path; // key
-            console.log( 'fromKey: ' + fromKey );
-
             // Add the document as a vertex. If the key already exists, the value is overwriten.
             graph.addVertex( fromKey, doc ); // key, value
             // Make each imported file a vertex, but not overwrite the value if it already exists.
             for ( let imp of doc.imports ) {
                 let toKey = imp.resolvedPath; // key
-                console.log( 'toKey: ' + toKey );
+                //console.log( 'from ' + fromKey + ' to ' + toKey );
                 graph.ensureVertex( toKey ); // no value
                 // Make an edge from the doc to the imported file.
                 // If the edge already exists, do nothing.

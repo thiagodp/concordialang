@@ -17,6 +17,8 @@ import { Parser } from "../parser/Parser";
 import { SyncFileProcessor } from "../req/SyncFileProcessor";
 import { Spec } from "../ast/Spec";
 
+const path = require( 'path' );
+
 /**
  * Requirement files processor.
  * 
@@ -48,6 +50,8 @@ export class RequirementFilesProcessor {
 
         // Make documents for each file
         for ( let file of files ) {
+
+            let normalizedFilePath = path.join( file, '' ); // @see https://nodejs.org/api/path.html#path_path_join_paths
             
             let doc: Document = {
                 fileErrors: []
@@ -56,8 +60,8 @@ export class RequirementFilesProcessor {
             let hadErrors = false;
 
             let fileInfo: FileInfo = {
-                path: file,
-                hash: this._inputFileExtractor.hashOfFile( file, charset ) // Compute file hash
+                path: normalizedFilePath,
+                hash: this._inputFileExtractor.hashOfFile( normalizedFilePath, charset ) // Compute file hash
             };
 
             // Adds the file info to the document
@@ -70,7 +74,7 @@ export class RequirementFilesProcessor {
 
             // LEXER
             // Process the file with the lexer processor
-            fileProcessor.process( file, this._docProcessor );
+            fileProcessor.process( normalizedFilePath, this._docProcessor );
             // Get the lexed nodes
             let nodes: Node[] = this._lexer.nodes();
             // Add errors found
