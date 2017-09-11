@@ -1,4 +1,4 @@
-import { KeywordBaseLexer } from './KeywordBaseLexer';
+import { KeywordBasedLexer } from './KeywordBasedLexer';
 import { Feature } from '../ast/Feature';
 import { LocatedException } from '../req/LocatedException';
 import { NodeLexer, LexicalAnalysisResult } from './NodeLexer';
@@ -16,7 +16,7 @@ const XRegExp = require( 'xregexp' );
  * 
  * @author Thiago Delgado Pinto
  */
-export class NamedNodeLexer< T extends NamedNode > implements NodeLexer< T >, KeywordBaseLexer {
+export class NamedNodeLexer< T extends NamedNode > implements NodeLexer< T >, KeywordBasedLexer {
 
     private _separator: string = Symbols.TITLE_SEPARATOR;
     private _lineChecker: LineChecker = new LineChecker();

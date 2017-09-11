@@ -1,4 +1,4 @@
-import { KeywordBaseLexer } from './KeywordBaseLexer';
+import { KeywordBasedLexer } from './KeywordBasedLexer';
 import { KeywordDictionaryLoader } from '../dict/KeywordDictionaryLoader';
 import { Language } from '../ast/Language';
 import { Keywords } from '../req/Keywords';
@@ -173,7 +173,7 @@ export class Lexer {
         }
     }
 
-    private isAWordBasedLexer( obj: any ): obj is KeywordBaseLexer {
-        return ( < KeywordBaseLexer > obj ).updateWords !== undefined;
+    private isAWordBasedLexer( obj: any ): obj is KeywordBasedLexer {
+        return ( < KeywordBasedLexer > obj ).updateWords !== undefined;
     }
 }

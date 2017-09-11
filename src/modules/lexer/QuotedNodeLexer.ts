@@ -1,4 +1,4 @@
-import { KeywordBaseLexer } from './KeywordBaseLexer';
+import { KeywordBaseLexer } from './KeywordBasedLexer';
 import { Node, ContentNode } from '../ast/Node';
 import { NodeLexer, LexicalAnalysisResult } from './NodeLexer';
 import { Expressions } from '../req/Expressions';

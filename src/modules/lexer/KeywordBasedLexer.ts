@@ -3,7 +3,7 @@
  * 
  * @author  Thiago Delgado Pinto
  */
-export interface KeywordBaseLexer {
+export interface KeywordBasedLexer {
 
     /**
      * Returns the keyword of the lexer.

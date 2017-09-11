@@ -17,13 +17,7 @@
   - [X] Then
   - [X] And
   - [X] But  
-- [X] Test Case  
-- [X] Test Case Sentences
-  - [X] Given
-  - [X] When
-  - [X] Then
-  - [X] And
-  - [X] But  
+- [X] Test Case
 - [X] Regex
 - [X] State
 - [ ] User Interface

@@ -2,7 +2,7 @@ import { Node, ContentNode } from '../ast/Node';
 import { NodeLexer, LexicalAnalysisResult } from "./NodeLexer";
 import { LineChecker } from "../req/LineChecker";
 import { Expressions } from "../req/Expressions";
-import { KeywordBaseLexer } from "./KeywordBaseLexer";
+import { KeywordBaseLexer } from "./KeywordBasedLexer";
 
 /**
  * Detects a node in the format "keyword anything".
