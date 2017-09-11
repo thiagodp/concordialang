@@ -8,6 +8,8 @@
 .feature              .expect               .testcase
 ```
 
+- [Language](#language)
+- [Import](#import)
 - [Tag](#tag)
 - [Feature](#feature)
 - [State](#state)
