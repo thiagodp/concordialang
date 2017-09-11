@@ -11,7 +11,7 @@
   - [ ] I would like to
   - [ ] In order to
 - [X] Scenario
-- [X] Scenario Sentences
+- [X] Step Sentences
   - [X] Given
   - [X] When
   - [X] Then
@@ -25,7 +25,7 @@
   - [X] And
   - [X] But  
 - [X] Regex
-- [ ] State
+- [X] State
 - [ ] User Interface
 - [ ] Constant
 - [ ] Data Source
@@ -42,30 +42,18 @@
 - [X] Tag
 - [X] Feature
 - [ ] Feature Sentences
-  - [ ] As a
-  - [ ] I would like to
-  - [ ] In order to
 - [X] Scenario
-- [X] Scenario Sentences
-  - [X] Given
-  - [X] When
-  - [X] Then
-  - [X] And
-  - [X] But  
-- [X] Test Case  
-- [ ] Test Case Sentences
-  - [ ] Given
-  - [ ] When
-  - [ ] Then
-  - [ ] And
-  - [ ] But  
-- [ ] Regex
-- [ ] State
+- [ ] Scenario Sentences
+- [ ] Test Case
+- [X] Regex
+- [X] State
 - [ ] User Interface
 - [ ] Constant
 - [ ] Data Source
 - [ ] Interaction Template
+- [ ] Interaction Template Sentences
 - [ ] Interaction
+- [ ] Interaction Sentences
 - [ ] Restriction
 - [ ] Command
 - [ ] Task

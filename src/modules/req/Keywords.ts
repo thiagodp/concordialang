@@ -27,6 +27,8 @@ export abstract class Keywords {
     static STEP_AND_GENERIC: string = '*'; // TO-DO: remove
     static STEP_BUT: string = 'stepBut'; // TO-DO: remove and include the words as "and"
 
+    static STATE: string = 'state';
+
     static TEXT: string = 'text'; // not empty, but not recognized
 
     /**
@@ -34,7 +36,8 @@ export abstract class Keywords {
      */
     static variableTypes(): Array< string > {
         return [
-            Keywords.LANGUAGE
+            Keywords.LANGUAGE            
+            , Keywords.IMPORT            
             , Keywords.FEATURE
             , Keywords.SCENARIO
             , Keywords.STEP_GIVEN
@@ -43,8 +46,8 @@ export abstract class Keywords {
             , Keywords.STEP_AND
             , Keywords.STEP_AND_GENERIC
             , Keywords.STEP_BUT
-            , Keywords.IMPORT
             , Keywords.REGEX
+            , Keywords.STATE
         ];
     }
 

@@ -19,6 +19,7 @@ import { ThenLexer } from "./ThenLexer";
 import { AndLexer } from "./AndLexer";
 import { ButLexer } from "./ButLexer";
 import { TextLexer } from "./TextLexer";
+import { StateLexer } from "./StateLexer";
 
 /**
  * Lexer
@@ -54,6 +55,7 @@ export class Lexer {
             , new AndLexer( dictionary.stepAnd )
             , new ButLexer( dictionary.stepBut )
             , new RegexLexer( dictionary.regex )
+            , new StateLexer( dictionary.state )
             , new TextLexer() // captures any non-empty
         ];
     }

@@ -2,6 +2,7 @@
     "import": [ "importe", "importar" ],
     "regex": [ "expressão" ],
     "testcase": [ "caso de teste" ],
+    "state": [ "estado" ],
 
     "background": [ "background" ],
     "examples": [ "examplos" ],

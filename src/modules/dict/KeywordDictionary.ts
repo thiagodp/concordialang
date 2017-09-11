@@ -12,6 +12,7 @@ export interface KeywordDictionary { // properties should exist in Keywords
     import?: Array< string >,
     regex?: Array< string >,
     testcase?: Array< string >,
+    state: Array< string >,
 
     // Gherkin keywords
 

@@ -10,6 +10,8 @@ import { ScenarioParser } from './ScenarioParser';
 import { TestCaseParser } from './TestCaseParser';
 import { ScenarioSentenceParser } from './ScenarioSentenceParser';
 import { ImportParser } from "./ImportParser";
+import { RegexParser } from "./RegexParser";
+import { StateParser } from "./StateParser";
 
 /**
  * Builds an AST from the nodes detected by the lexer. It checks syntatic properties
@@ -36,6 +38,8 @@ export class Parser {
         this._parsersMap[ Keywords.STEP_THEN ] = new ScenarioSentenceParser();
         this._parsersMap[ Keywords.STEP_AND ] = new ScenarioSentenceParser();
         this._parsersMap[ Keywords.STEP_BUT ] = new ScenarioSentenceParser();
+        this._parsersMap[ Keywords.REGEX ] = new RegexParser();
+        this._parsersMap[ Keywords.STATE ] = new StateParser();
     }
 
     public reset(): void {

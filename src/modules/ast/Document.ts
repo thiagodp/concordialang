@@ -6,6 +6,7 @@ import { Tag } from "./Tag";
 import { Import } from "./Import";
 import { Language } from "./Language";
 import { Regex } from "./Regex";
+import { State } from "./State";
 
 /**
  * Document
@@ -18,15 +19,17 @@ export interface Document {
     fileErrors?: Error[];
     
     language?: Language;
-    imports?: Array< Import >;
-    tags?: Array< Tag >;    
+    imports?: Import[];
+    tags?: Tag[];
 
     feature?: Feature;
 
-    uis?: Array< UI >;
+    states?: State[];
 
-    tasks?: Array< Task >;
+    uis?: UI[];
 
-    regexes?: Array< Regex >;
+    tasks?: Task[];
+
+    regexes?: Regex[];
 
 }
