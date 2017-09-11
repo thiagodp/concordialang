@@ -16,6 +16,7 @@
 - [Scenario](#scenario)
 - [User Interface](#userinterface)
 - [Constant](#constant)
+- [Regular Expression](#regularexpression)
 - [Data Source](#datasource)
 - [Interaction Template](#interactiontemplate)
 - [Restriction](#restriction)
@@ -23,6 +24,27 @@
 - [Test Case](#testcase)
 - [Command](#command)
 - [Task](#task)
+
+
+## Language
+
+Example 1:
+```
+#language: pt
+```
+
+Example 2:
+```
+#language: es-ar
+```
+
+
+## Import
+
+Example 1:
+```
+import "file1.feature"
+```
 
 
 ## Tag
@@ -135,6 +157,22 @@ Example 2:
 Constant: msg_min_length
   - value: "{name} must have at least {min_length} characters."
 ```
+
+
+## RegularExpression
+
+Example 1:
+```
+Regex: name
+  - value: "/[A-Za-z][A-Za-z '-.]{1,59}/"
+```
+
+Example 2:
+```
+Regular expression: name
+  - value: "/[A-Za-z][A-Za-z '-.]{1,59}/"
+```
+
 
 
 ## DataSource

@@ -9,26 +9,27 @@ export class EnglishKeywordDictionary implements KeywordDictionary {
 
     // Non-Gherkin keywords
     
-    import?: Array< string > = [ 'import' ];
-    regex?: Array< string > = [ 'regex' ];
-    testcase?: Array< string > = [ 'test case' ];
+    import?: string[] = [ 'import' ];
+    regex?: string[] = [ 'regex', 'regular expression' ];
+    testcase?: string[] = [ 'test case' ];
+    state: string[] = [ 'state' ];
 
     // Gherkin keywords
 
-    language?: Array< string > = [ 'language' ];
+    language?: string[] = [ 'language' ];
 
-    feature?: Array< string > = [ 'feature' ];
+    feature?: string[] = [ 'feature' ];
 
-    step?: Array< string > = [ 'given', 'when', 'then', 'and', 'but' ];
-    stepGiven?: Array< string > = [ 'given' ];
-    stepWhen?: Array< string > = [ 'when' ];
-    stepThen?: Array< string > = [ 'then' ];
-    stepAnd?: Array< string > = [ 'and' ];
-    stepBut?: Array< string > = [ 'but' ];
+    step?: string[] = [ 'given', 'when', 'then', 'and', 'but' ];
+    stepGiven?: string[] = [ 'given' ];
+    stepWhen?: string[] = [ 'when' ];
+    stepThen?: string[] = [ 'then' ];
+    stepAnd?: string[] = [ 'and' ];
+    stepBut?: string[] = [ 'but' ];
 
-    scenario?: Array< string > = [ 'scenario' ];
-    background?: Array< string > = [ 'background' ];
-    outline?: Array< string > = [ 'outline' ];
-    examples?: Array< string > = [ 'examples' ];
+    scenario?: string[] = [ 'scenario' ];
+    background?: string[] = [ 'background' ];
+    outline?: string[] = [ 'outline' ];
+    examples?: string[] = [ 'examples' ];
 
 }

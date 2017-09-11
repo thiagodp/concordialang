@@ -1,6 +1,6 @@
 {
     "import": [ "importe", "importar" ],
-    "regex": [ "expressão" ],
+    "regex": [ "expressão", "expressão regular" ],
     "testcase": [ "caso de teste" ],
     "state": [ "estado" ],
 
