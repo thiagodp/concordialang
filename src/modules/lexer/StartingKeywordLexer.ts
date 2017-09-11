@@ -2,14 +2,14 @@ import { Node, ContentNode } from '../ast/Node';
 import { NodeLexer, LexicalAnalysisResult } from "./NodeLexer";
 import { LineChecker } from "../req/LineChecker";
 import { Expressions } from "../req/Expressions";
-import { KeywordBaseLexer } from "./KeywordBasedLexer";
+import { KeywordBasedLexer } from "./KeywordBasedLexer";
 
 /**
  * Detects a node in the format "keyword anything".
  * 
  * @author Thiago Delgado Pinto
  */
-export class StartingKeywordLexer< T extends ContentNode > implements NodeLexer< T >, KeywordBaseLexer {
+export class StartingKeywordLexer< T extends ContentNode > implements NodeLexer< T >, KeywordBasedLexer {
 
     private _lineChecker: LineChecker = new LineChecker();
 

@@ -9,7 +9,9 @@ export abstract class Keywords {
   
     static IMPORT: string = 'import';
     static REGEX: string = 'regex';
+    static STATE: string = 'state';    
     static TEST_CASE: string = 'testcase';
+    static TEST_CASE_SENTENCE: string = 'testcaseSentence';
     
     // Gherkin keywords
 
@@ -26,8 +28,6 @@ export abstract class Keywords {
     static STEP_AND: string = 'stepAnd';
     static STEP_AND_GENERIC: string = '*'; // TO-DO: remove
     static STEP_BUT: string = 'stepBut'; // TO-DO: remove and include the words as "and"
-
-    static STATE: string = 'state';
 
     static TEXT: string = 'text'; // not empty, but not recognized
 
