@@ -12,6 +12,7 @@ import { ScenarioSentenceParser } from './ScenarioSentenceParser';
 import { ImportParser } from "./ImportParser";
 import { RegexParser } from "./RegexParser";
 import { StateParser } from "./StateParser";
+import { TestCaseSentenceParser } from "./TestCaseSentenceParser";
 
 /**
  * Builds an AST from the nodes detected by the lexer. It checks syntatic properties
@@ -32,12 +33,13 @@ export class Parser {
         this._parsersMap[ Keywords.IMPORT ] = new ImportParser();
         this._parsersMap[ Keywords.FEATURE ] = new FeatureParser();
         this._parsersMap[ Keywords.SCENARIO ] = new ScenarioParser();
-        this._parsersMap[ Keywords.TEST_CASE ] = new TestCaseParser();
         this._parsersMap[ Keywords.STEP_GIVEN ] = new ScenarioSentenceParser();
         this._parsersMap[ Keywords.STEP_WHEN ] = new ScenarioSentenceParser();
         this._parsersMap[ Keywords.STEP_THEN ] = new ScenarioSentenceParser();
         this._parsersMap[ Keywords.STEP_AND ] = new ScenarioSentenceParser();
         this._parsersMap[ Keywords.STEP_BUT ] = new ScenarioSentenceParser();
+        this._parsersMap[ Keywords.TEST_CASE ] = new TestCaseParser();
+        this._parsersMap[ Keywords.TEST_CASE_SENTENCE ] = new TestCaseSentenceParser();        
         this._parsersMap[ Keywords.REGEX ] = new RegexParser();
         this._parsersMap[ Keywords.STATE ] = new StateParser();
     }
@@ -76,16 +78,9 @@ export class Parser {
         let it = new NodeIterator( nodes );
         let errors = [];
         let node: Node = null;
-        let nodeParser: NodeParser< any >;
+        let nodeParser: NodeParser< any > = null;
 
-        let context: ParsingContext = {
-            doc: doc,
-            inFeature: false,
-            inScenario: false,
-            inTestCase: false,
-            currentScenario: null,
-            currentTestCase: null
-        };
+        let context: ParsingContext = new ParsingContext( doc );
 
         while ( it.hasNext() ) {
             node = it.next();

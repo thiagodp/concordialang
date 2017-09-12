@@ -22,7 +22,7 @@ export class TestCaseParser implements NodeParser< TestCase > {
         // Checks if a feature has been declared before it
         if ( ! context.doc.feature ) {
             let e = new SyntaticException(
-                'A test case must be declared after a feature declaration.', node.location );
+                'A test case must be declared after a feature.', node.location );
             errors.push( e );
             return false;
         }

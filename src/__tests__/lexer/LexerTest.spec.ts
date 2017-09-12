@@ -1,3 +1,4 @@
+import { EnglishKeywordDictionary } from '../../modules/dict/EnglishKeywordDictionary';
 import { InMemoryKeywordDictionaryLoader } from '../../modules/dict/InMemoryKeywordDictionaryLoader';
 import { KeywordDictionaryLoader } from '../../modules/dict/KeywordDictionaryLoader';
 import { Lexer } from "../../modules/lexer/Lexer";
@@ -9,32 +10,15 @@ import { Keywords } from "../../modules/req/Keywords";
  */
 describe( 'LexerTest', () => {
 
-    const enDictionary: KeywordDictionary = {
-        // Non-Gherkin keywords
-        import: [ 'import' ],
-        regex: [ 'regex' ],
-        testcase: [ 'test case' ],
-
-        // Gherkin keywords
-        background: [ 'background' ],
-        examples: [ 'examples' ],
-        feature: [ 'feature' ],
-        language: [ 'language' ],
-        outline: [ 'outline' ],
-        scenario: [ 'scenario' ],
-        step: [ 'given', 'when', 'then', 'and', 'but' ],
-        stepAnd: [ 'and' ],
-        stepBut: [ 'but' ],
-        stepGiven: [ 'given' ],
-        stepThen: [ 'then' ],
-        stepWhen: [ 'when' ]
-    };
+    const enDictionary: KeywordDictionary = new EnglishKeywordDictionary();
 
     const ptDictionary: KeywordDictionary = {
         // Non-Gherkin keywords
         import: [ 'importe' ],
         regex: [ 'expressão' ],
+        state: [ 'estado' ],
         testcase: [ 'caso de teste' ],
+        testcaseSentence: [ 'eu' ],
 
         // Gherkin keywords
         background: [ 'background' ],
@@ -86,10 +70,11 @@ describe( 'LexerTest', () => {
             '  then the result is anything',
             '    and another result could also happen',
             '',
-            'test case for "my scenario": my test case',
-            '  given that I can see the screen "home"',
-            '  when I click on "Price" ',
-            '  then I see "Our Plans"',
+            'test case: my test case',
+            '  I see in the url "/login"',
+            '  I fill "#username" with ""',
+            '  I fill "#password" with "bobp4ss"',
+            '  I click "Enter"',
             '',            
             'regex "my regex": /some regex/',
             '',
@@ -99,7 +84,6 @@ describe( 'LexerTest', () => {
         expect( lexer.errors().length ).toBe( 0 );
 
         let nodes = lexer.nodes();
-        expect( nodes.length ).toBe( 18 );
 
         let i = 0;
         expect( nodes[ i++ ].keyword ).toBe( Keywords.LANGUAGE );
@@ -115,9 +99,10 @@ describe( 'LexerTest', () => {
         expect( nodes[ i++ ].keyword ).toBe( Keywords.STEP_THEN );
         expect( nodes[ i++ ].keyword ).toBe( Keywords.STEP_AND );
         expect( nodes[ i++ ].keyword ).toBe( Keywords.TEST_CASE );
-        expect( nodes[ i++ ].keyword ).toBe( Keywords.STEP_GIVEN );
-        expect( nodes[ i++ ].keyword ).toBe( Keywords.STEP_WHEN );
-        expect( nodes[ i++ ].keyword ).toBe( Keywords.STEP_THEN );
+        expect( nodes[ i++ ].keyword ).toBe( Keywords.TEST_CASE_SENTENCE );
+        expect( nodes[ i++ ].keyword ).toBe( Keywords.TEST_CASE_SENTENCE );
+        expect( nodes[ i++ ].keyword ).toBe( Keywords.TEST_CASE_SENTENCE );
+        expect( nodes[ i++ ].keyword ).toBe( Keywords.TEST_CASE_SENTENCE );
         expect( nodes[ i++ ].keyword ).toBe( Keywords.REGEX );
         expect( nodes[ i++ ].keyword ).toBe( Keywords.TEXT );
     } );
@@ -141,10 +126,11 @@ describe( 'LexerTest', () => {
             '  então the result is anything',
             '    e another result could also happen',
             '',
-            'caso de teste for "my scenario": my test case',
-            '  dado that I can see the screen "home"',
-            '  quando I click on "Price" ',
-            '  então I see "Our Plans"',
+            'caso de teste: my test case',
+            '  Eu vejo a url "/login"',
+            '  Eu preencho "#username" com ""',
+            '  Eu preencho "#password" com "bobp4ss"',
+            '  Eu clico "Enter"',
             '',            
             'expressão "my regex": /some regex/',
             '',
@@ -154,7 +140,6 @@ describe( 'LexerTest', () => {
         expect( lexer.errors().length ).toBe( 0 );
 
         let nodes = lexer.nodes();
-        expect( nodes.length ).toBe( 18 );
 
         let i = 0;
         expect( nodes[ i++ ].keyword ).toBe( Keywords.LANGUAGE );
@@ -170,11 +155,12 @@ describe( 'LexerTest', () => {
         expect( nodes[ i++ ].keyword ).toBe( Keywords.STEP_THEN );
         expect( nodes[ i++ ].keyword ).toBe( Keywords.STEP_AND );
         expect( nodes[ i++ ].keyword ).toBe( Keywords.TEST_CASE );
-        expect( nodes[ i++ ].keyword ).toBe( Keywords.STEP_GIVEN );
-        expect( nodes[ i++ ].keyword ).toBe( Keywords.STEP_WHEN );
-        expect( nodes[ i++ ].keyword ).toBe( Keywords.STEP_THEN );
+        expect( nodes[ i++ ].keyword ).toBe( Keywords.TEST_CASE_SENTENCE );
+        expect( nodes[ i++ ].keyword ).toBe( Keywords.TEST_CASE_SENTENCE );
+        expect( nodes[ i++ ].keyword ).toBe( Keywords.TEST_CASE_SENTENCE );
+        expect( nodes[ i++ ].keyword ).toBe( Keywords.TEST_CASE_SENTENCE );
         expect( nodes[ i++ ].keyword ).toBe( Keywords.REGEX );
         expect( nodes[ i++ ].keyword ).toBe( Keywords.TEXT );
-    } );    
+    } );
 
 } );

@@ -10,6 +10,7 @@ import { NamedNode } from './Node';
  * Regular expression node.
  * 
  * @author Thiago Delgado Pinto
+ * @see /doc/langspec/asl-en.md
  */
 export interface Regex extends NamedNode {
     content: string;

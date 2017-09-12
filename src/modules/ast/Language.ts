@@ -1,16 +1,10 @@
 import { ContentNode } from './Node';
 
-// LANGUAGE
-//
-// Example 1:
-// ```
-// # language: pt-br
-// ```
-
 /**
- * Language node.
+ * Language node
  * 
  * @author Thiago Delgado Pinto
+ * @see /doc/langspec/asl-en.md
  */
 export interface Language extends ContentNode {
 }

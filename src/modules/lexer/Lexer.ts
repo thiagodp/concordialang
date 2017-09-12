@@ -20,6 +20,7 @@ import { AndLexer } from "./AndLexer";
 import { ButLexer } from "./ButLexer";
 import { TextLexer } from "./TextLexer";
 import { StateLexer } from "./StateLexer";
+import { TestCaseSentenceLexer } from "./TestCaseSentenceLexer";
 
 /**
  * Lexer
@@ -48,12 +49,13 @@ export class Lexer {
             , new ImportLexer( dictionary.import )
             , new FeatureLexer( dictionary.feature )
             , new ScenarioLexer( dictionary.scenario )
-            , new TestCaseLexer( dictionary.testcase )
             , new GivenLexer( dictionary.stepGiven )
             , new WhenLexer( dictionary.stepWhen )
             , new ThenLexer( dictionary.stepThen )
             , new AndLexer( dictionary.stepAnd )
             , new ButLexer( dictionary.stepBut )
+            , new TestCaseLexer( dictionary.testcase )
+            , new TestCaseSentenceLexer( dictionary.testcaseSentence )
             , new RegexLexer( dictionary.regex )
             , new StateLexer( dictionary.state )
             , new TextLexer() // captures any non-empty

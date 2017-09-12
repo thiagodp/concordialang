@@ -8,6 +8,8 @@
 .feature              .expect               .testcase
 ```
 
+## Index:
+
 - [Language](#language)
 - [Import](#import)
 - [Tag](#tag)
@@ -19,7 +21,7 @@
 - [Regular Expression](#regularexpression)
 - [Data Source](#datasource)
 - [Interaction Template](#interactiontemplate)
-- [Restriction](#restriction)
+- [Constraint](#constraint)
 - [Interaction](#interaction)
 - [Test Case](#testcase)
 - [Command](#command)
@@ -63,7 +65,7 @@ Reserved tags:
 - `@scenario( <name> )`: references a [scenario](#scenario)
 - `@template( <name> )`: references an [interaction template](#interactiontemplate)
 - `@interaction( <name> )`: references an [interaction](#interaction)
-- `@restriction( <widget>, <property>, <restriction-type> )`: references a [restriction](#restriction). Example: `@restriction( Usuario, length, lt )`, where `lt` means "less than".
+- `@Constraint( <widget>, <property>, <Constraint-type> )`: references a [Constraint](#Constraint). Example: `@Constraint( Usuario, length, lt )`, where `lt` means "less than".
 - `@importance( <number> )`: indicates the importance. The importance is as higher as its number.
 - `@generated`: indicates that a declaration was computer-generated.
 
@@ -188,21 +190,21 @@ Data table: my table
 Example 2:
 ```
 Database: my database
-  - type "mysql"
-  - host "http://127.0.0.1/acme"
-  - username "admin"
-  - password "p4sss"
+  - type: "mysql"
+  - host: "http://127.0.0.1/acme"
+  - username: "admin"
+  - password: "p4sss"
 
 Database table: users
-  - database "my database"
-  - command "SELECT * FROM user"
+  - database: "my database"
+  - command: "SELECT * FROM user"
 ```
 
 Example 3:
 ```
 File: my file
-  - type "json"
-  - path "./path/to/file.json"
+  - type: "json"
+  - path: "./path/to/file.json"
 ```
 
 
@@ -210,7 +212,7 @@ File: my file
 
 *Expected basic interaction with the [user interface](#userinterface).*
 
-*Used along with [restrictions](#restriction) to generate [interactions](#interaction). [States](#state) are NOT checked.*
+*Used along with [Constraints](#Constraint) to generate [interactions](#interaction). [States](#state) are NOT checked.*
 
 Example 1:
 ```
@@ -225,36 +227,36 @@ Interaction template: successful login
     And I am not on the Login Page
 ```
 
-## Restriction
+## Constraint
 
-*Restrictions about user interface elements.*
+*Constraints about user interface elements.*
 
 *Used along with [interaction templates](#interactiontemplate) to generate [interactions](#interaction)*.
 
 Example 1 (*data table*):
 ```
-Restrictions:
+Constraints:
   - "Username" value is in "my table" at column "Username"
   - "Password" value is in "my table" at column "Password" and line as "Username"
 ```
 
 Example 2 (*database table*):
 ```
-Restrictions:
+Constraints:
   - "Username" value is in "users" of "my database" at column "Username"
   - "Password" value is in "users" of "my database" at column "Password" and line as "Username"
 ```
 
 Example 3 (*file*):
 ```
-Restrictions:
+Constraints:
   - "Username" value is in "my file" at column "username"
   - "Password" value is in "my file" at column "password" and line as "username"
 ```
 
-Example 4 (*value restrictions*):
+Example 4 (*value constraints*):
 ```
-Restrictions:
+Constraints:
   - "Username" length must be greater than 1
     Otherwise I must see the text ${msg_min_length}
   - "Username" length must be less than 31
@@ -264,12 +266,44 @@ Restrictions:
       And I must see "Password" with color "red"
 ```
 
+```
+???
+
+Contraint for "username":
+  - Length: greater than 1
+  - Otherwise:
+      I must see the text "some message"
+      And I must see "username"  with color "red"
+
+Contraint for "username":
+  When length is greater than 1
+  Then I must see the text "some message"
+  And I must see "username" with color "red"
+
+Contraint: username
+  - { [value] | length | color } comes from "{ column }" of "{ table | file }"
+
+  - comes from "name" of "users"
+
+
+Constraints of "username":
+  - value: [comes] from "name" of "users"
+  - otherwise: I must see "some message"
+  - value: matches "regexname"
+  - otherwise: I must see "other message"
+  - length: greater than or equal to 3 and less than or equal to 30
+  - otherwise: I must see "Please inform between 3 and 30 characters."
+      And "username" should have color "red"
+
+???
+
+```
 
 ## Interaction
 
 *Expected interaction with the user interface.*
 
-*Commonly generated from [interaction templates](#interactiontemplate) and [restrictions](#restrictions).*
+*Commonly generated from [interaction templates](#interactiontemplate) and [Constraints](#Constraints).*
 
 *Used to generate [test cases](#testcase). [States](#state) are checked.*
 
@@ -289,7 +323,7 @@ Interaction: successful login
 Example 2:
 ```
 @generated @template( successful login )
-@restriction( Username, length, lt )
+@constraint( Username, length, lt )
 Interaction: Username with a value lower than the minimum
   Given that I am on the Login Page
   When I fill Username with a value lower than the minimum
@@ -304,7 +338,7 @@ Interaction: Username with a value lower than the minimum
 Test cases are generated from:
 1. [User Interface](#userinterface) : is such a dictionary for transforming [Interactions](#interactions)' element names into ids, xpaths, etc.
 2. [Interactions](#interaction) : provide the actions to perform.
-3. [Restriction](#restriction) : provide some of the rules that will be explored by the test cases.
+3. [Constraint](#Constraint) : provide some of the rules that will be explored by the test cases.
 4. *Approach's algorithm.*
 
 

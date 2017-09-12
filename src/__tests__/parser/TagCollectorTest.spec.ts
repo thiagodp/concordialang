@@ -14,27 +14,27 @@ describe( 'TagCollectorTest', () => {
 
     let lin = 1;
     
-    let imp: Import = {
+    let importNode: Import = {
         keyword: Keywords.IMPORT,
         location: { line: lin++, column: 1 },
         content: "hello.world"
     };
 
-    let tag1: Tag = {
+    let tagNode1: Tag = {
         keyword: Keywords.TAG,
         location: { line: lin++, column: 1 },
         name: 'important',
         content: null
     };
 
-    let tag2: Tag = {
+    let tagNode2: Tag = {
         keyword: Keywords.TAG,
         location: { line: lin++, column: 1 },
         name: 'hello',
         content: 'world'
     };    
 
-    let feature: Feature = {
+    let featureNode: Feature = {
         keyword: Keywords.FEATURE,
         name: 'My feature',
         location: { line: lin++, column: 1 },
@@ -42,28 +42,29 @@ describe( 'TagCollectorTest', () => {
     };
 
     beforeEach( () => {
-        feature.tags = [];
+        featureNode.tags = [];
     } );
 
 
     it( 'collects backward tags successfully', () => {
 
-        let nodes: Node[] = [ imp, tag1, tag2, feature ];
+        let nodes: Node[] = [ importNode, tagNode1, tagNode2, featureNode ];
         let iterator = new NodeIterator( nodes, nodes.length - 1 ); // points to the last element
 
-        tc.addBackwardTags( iterator, feature.tags );
+        tc.addBackwardTags( iterator, featureNode.tags );
 
-        expect( feature.tags ).toHaveLength( 2 );
-        expect( feature.tags ).toEqual( [ tag1, tag2 ] );
+        expect( featureNode.tags ).toHaveLength( 2 );
+        expect( featureNode.tags ).toEqual( [ tagNode1, tagNode2 ] );
     } );
 
+    
     it( 'does not change the given iterator', () => {
 
-        let nodes: Node[] = [ imp, tag1, tag2, feature ];
+        let nodes: Node[] = [ importNode, tagNode1, tagNode2, featureNode ];
         let iterator = new NodeIterator( nodes, nodes.length - 1 ); // points to the last element
 
         let currentBefore = iterator.current();
-        tc.addBackwardTags( iterator, feature.tags );
+        tc.addBackwardTags( iterator, featureNode.tags );
         let currentAfter = iterator.current();
 
         expect( currentAfter ).toEqual( currentBefore );

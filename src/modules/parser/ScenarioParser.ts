@@ -20,7 +20,7 @@ export class ScenarioParser implements NodeParser< Scenario > {
         // Checks if a feature has been declared before it
         if ( ! context.doc.feature ) {
             let e = new SyntaticException(
-                'A scenario must be declared after a feature declaration.', node.location );
+                'A scenario must be declared after a feature.', node.location );
             errors.push( e );
             return false;
         }

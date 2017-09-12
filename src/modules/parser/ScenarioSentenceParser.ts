@@ -17,10 +17,10 @@ export class ScenarioSentenceParser implements NodeParser< ScenarioSentence > {
     /** @inheritDoc */
     public analyze( node: ScenarioSentence, context: ParsingContext, it: NodeIterator, errors: Error[] ): boolean {
 
-        // Checks if a scenario or a test case have been declared before it
-        if ( ! context.inScenario && ! context.inTestCase ) {
+        // Checks the context
+        if ( ! context.inScenario && ! context.inInteraction ) {
             let e = new SyntaticException(
-                'The "' + node.keyword + '" clause must be declared after a scenario or test case declaration.',
+                'The "' + node.keyword + '" clause must be declared after a scenario or an interaction.',
                 node.location
                 );
             errors.push( e );
@@ -28,7 +28,7 @@ export class ScenarioSentenceParser implements NodeParser< ScenarioSentence > {
         }
 
         // Prepare the owner to receive the given node
-        let owner = context.inScenario ? context.currentScenario : context.currentTestCase;
+        let owner = context.inScenario ? context.currentScenario : context.currentInteraction;
         if ( ! owner.sentences ) {
             owner.sentences = [];
         }
