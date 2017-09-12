@@ -21,7 +21,11 @@ export class NamedNodeLexer< T extends NamedNode > implements NodeLexer< T >, Ke
     private _separator: string = Symbols.TITLE_SEPARATOR;
     private _lineChecker: LineChecker = new LineChecker();
 
-    constructor( private _words: Array< string >, private _keyword: string ) {
+    constructor(
+        private _words: Array< string >,
+        private _keyword: string,
+        private _nameIsRequired: boolean = true
+    ) {
     }
 
     /** @inheritDoc */
@@ -61,7 +65,7 @@ export class NamedNodeLexer< T extends NamedNode > implements NodeLexer< T >, Ke
         } as T;
 
         let errors = [];
-        if ( ! this.isValidName( name ) ) {
+        if ( this._nameIsRequired && ! this.isValidName( name ) ) {
             let loc = { line: lineNumber || 0, column: line.indexOf( name ) + 1 };
             let msg = 'Invalid ' + this._keyword + ' name: "' + name + '"';
             errors.push( new LexicalException( msg, loc ) );

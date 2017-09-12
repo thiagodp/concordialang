@@ -9,7 +9,7 @@ describe( 'NamedNodeLexerTest', () => {
     let keyword = 'feature';
     let wordInsensitive = 'FeAtURe';
     let word = 'feature';
-    let words = [ word ];    
+    let words = [ word ];
     
     let lexer = new NamedNodeLexer( words, keyword );
 
@@ -182,6 +182,25 @@ describe( 'NamedNodeLexerTest', () => {
     it( 'considers valid name - common names', () => {
         expect( lexer.isValidName( 'Some valid name' ) ).toBeTruthy();
         expect( lexer.isValidName( 'Some-name 100 _val.' ) ).toBeTruthy();
-    } );    
+    } );
+
+    // OPTIONAL NAME
+
+    it( 'is able to disconsider the name', () => {
+        let keyword = 'anything';
+        let lexer = new NamedNodeLexer( [ 'anything' ], keyword, false );
+        let r = lexer.analyze( 'Anything:', 1 );
+        expect( r ).toBeDefined();
+        expect( r.errors ).toHaveLength( 0 );
+        expect( r.nodes ).toHaveLength( 1 );
+        let node = r.nodes[ 0 ];
+        expect( node ).toEqual(
+            {
+                keyword: keyword,
+                name: "",
+                location: { line: 1, column: 1 }
+            }
+        );        
+    } );
 
 } );
