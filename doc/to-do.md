@@ -18,6 +18,7 @@
   - [X] And
   - [X] But  
 - [X] Test Case
+- [X] Test Case Sentences
 - [X] Regex
 - [X] State
 - [ ] User Interface
@@ -37,8 +38,9 @@
 - [X] Feature
 - [ ] Feature Sentences
 - [X] Scenario
-- [ ] Scenario Sentences
-- [ ] Test Case
+- [X] Scenario Sentences
+- [X] Test Case
+- [X] Test Case Sentences
 - [X] Regex
 - [X] State
 - [ ] User Interface
