@@ -12,6 +12,7 @@ export class AbstractTestScript {
     feature: NamedATSElement;
     scenarios: NamedATSElement[] = [];
     interactions: NamedATSElement[] = [];
+    testcases: ATSTestCase[] = [];
 
 }
 
@@ -42,6 +43,7 @@ export class ATSTestCase extends NamedATSElement {
     feature: string | undefined;
     scenario: string | undefined;
     interaction: string  | undefined;
+    commands: ATSCommand[] = [];
 }
 
 /**
