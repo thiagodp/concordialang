@@ -25,6 +25,6 @@ interface Match {
 }
 
 interface TrainingSentence {
-    sentence: string;
     entityId: string; // result
+    sentence: string;    
 }

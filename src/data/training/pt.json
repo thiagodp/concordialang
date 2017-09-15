@@ -1,3 +1,23 @@
 {
-    
+    "intents": [
+        {
+            "name": "",
+            "entities": [
+                { "name": "" }
+            ],
+            "matches": [
+                {
+                    "entityId": "",
+                    "sampleText": ""
+                }
+            ]
+        }
+    ],
+
+    "documents": [
+        {
+            "entityId": "",
+            "sentence": ""
+        }
+    ]
 }
