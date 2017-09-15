@@ -14,12 +14,12 @@ export class JsonKeywordDictionaryLoader implements KeywordDictionaryLoader {
     /**
      * Constructs the loader.
      * 
-     * @param _basePath Path where there is a "dict" folder when the dictionaries. Defaults to './'.
+     * @param _path Path of the dictionaries. Defaults to './data/keywords'.
      * @param _dictMap Map with each language ( string => KeywordDictionary ). Defaults to {}.
      * @param _encoding Dictionary file encoding. Defaults to 'utf8'.
      */
     constructor(
-        private _basePath: string = './',
+        private _path: string = './data/keywords/',
         private _dictMap: Object = {},
         private _encoding: string = 'utf8'
     ) {
@@ -45,7 +45,7 @@ export class JsonKeywordDictionaryLoader implements KeywordDictionaryLoader {
     }
 
     private makeLanguageFilePath( language: string ): string {
-        return this._basePath + 'dict/' + language + '.json';
+        return this._path + language + '.json';
     }
 
     private readFileContent( path ): string {
