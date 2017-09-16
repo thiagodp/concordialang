@@ -4,7 +4,7 @@ import { NLPTrainingData, NLPTrainingSentence } from '../../modules/nlp/NLPTrain
 /**
  * @author Thiago Delgado Pinto
  */
-describe('NLPTrainingDataConversorTest', () => {
+describe( 'NLPTrainingDataConversorTest', () => {
 
     let conversor: NLPTrainingDataConversor = new NLPTrainingDataConversor();
 
