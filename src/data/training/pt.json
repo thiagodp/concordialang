@@ -1,23 +1,6 @@
-{
-    "intents": [
-        {
-            "name": "",
-            "entities": [
-                { "name": "" }
-            ],
-            "matches": [
-                {
-                    "entityId": "",
-                    "sampleText": ""
-                }
-            ]
-        }
-    ],
-
-    "documents": [
-        {
-            "entityId": "",
-            "sentence": ""
-        }
-    ]
-}
+[
+    {
+        "entity": "name",
+        "sentence": "hello {name}"
+    }
+]

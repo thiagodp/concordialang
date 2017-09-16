@@ -1,8 +1,9 @@
 {
     "import": [ "importe", "importar" ],
     "regex": [ "expressão", "expressão regular" ],
+    "state": [ "estado" ],    
     "testcase": [ "caso de teste" ],
-    "state": [ "estado" ],
+    "testcaseSentence": [ "eu" ],
 
     "background": [ "background" ],
     "examples": [ "examplos" ],

@@ -11,8 +11,8 @@ export class EnglishKeywordDictionary implements KeywordDictionary {
     
     import: string[] = [ 'import' ];
     regex: string[] = [ 'regex', 'regular expression' ];
+    state: string[] = [ 'state' ];    
     testcase: string[] = [ 'test case' ];
-    state: string[] = [ 'state' ];
     testcaseSentence: string[] = [ 'i' ];
 
     // Gherkin keywords

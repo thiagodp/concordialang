@@ -1,30 +1,45 @@
+
 /**
- * Training Data
+ * Training data
  * 
  * @author Thiago Delgado Pinto
  */
-export interface NLPTrainingData {
-    intents: Array< Intent >;
-    documents: Array< TrainingSentence >;
+export class NLPTrainingData {
+    constructor(
+        public intents: Array< NLPIntent > = [],
+        public documents: Array< NLPTrainingSentence > = []
+    ) {
+    }
 }
 
-interface Intent {
-    name: string;
-    entities: Array< Entity >;
-    matches: Array< Match >;
+export class NLPIntent {
+    constructor(
+        public name: string,
+        public entities: Array< NLPEntity > = []
+    ) {
+    }
 }
 
-interface Entity {
-    name: string;
-    //id: string;
+export class NLPEntity {
+    constructor(
+        public name: string,
+        public matches: Array< NLPMatch > = []
+    ) {
+    }
 }
 
-interface Match {
-    entityId: string; // result
-    sampleText: string; // sample
+export class NLPMatch {
+    constructor(
+        public id: string,
+        public samples: string[] = []
+    ) {
+    }        
 }
 
-interface TrainingSentence {
-    entityId: string; // result
-    sentence: string;    
+export class NLPTrainingSentence {
+    constructor(
+        public entity: string, // result
+        public sentence: string
+    ) {
+    }
 }

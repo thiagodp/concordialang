@@ -11,8 +11,8 @@ export class NLP {
     private _trained: boolean = false;
     private _recognizer;
 
-    constructor( fuzzyRecognizer: boolean = true ) {
-        this._recognizer = fuzzyRecognizer
+    constructor( useFuzzyRecognizer: boolean = true ) {
+        this._recognizer = useFuzzyRecognizer
             ? new Bravey.Nlp.Fuzzy() : new Bravey.Nlp.Sequential();
     }
 
@@ -26,26 +26,30 @@ export class NLP {
         this._trained = true;
         let nlp = this._recognizer;
 
-        // Add intents
+        // Add intents and their recognizers
         for ( let intent of data.intents ) {
+
             // Add the intent with its entities
             nlp.addIntent( intent.name,
                 intent.entities.map( e => { return { id: e.name, name: e.name }; } ) );
 
-            // Create a string entity recognizer, ...
-            let entityRec = new Bravey.StringEntityRecognizer( intent.name );
-            // ...add some samples that match it, ...
-            for ( let m of intent.matches ) {
-                entityRec.addMatch( m.entityId, m.sampleText );
+            // Add entity recognizers with matches. Each match have sample values, that 
+            // are added to the recognizer.
+            for ( let e of intent.entities ) {
+                let entityRec = new Bravey.StringEntityRecognizer( e.name );
+                for ( let m of e.matches ) {
+                    for ( let sample of m.samples ) {
+                        entityRec.addMatch( m.id, sample );
+                    }
+                }
+                nlp.addEntity( entityRec );
             }
-            // then add it to the nlp
-            nlp.addEntity( entityRec );
         }
 
         // Train with examples that include the added entities
         let opt = this.documentTrainingOptions();
         for ( let doc of data.documents ) {
-            nlp.addDocument( doc.sentence, doc.entityId, opt);
+            nlp.addDocument( doc.sentence, doc.entity, opt );
         }
     }
 

@@ -150,32 +150,17 @@ User interface:
 
 Example 1:
 ```
-Constant: msg_password_too_weak
-  - value: "The informed password is too weak."
+Constants:
+  - "msg_min_length" is "{name} must have at least {min_length} characters."
+  - "msg_password_too_weak" is "The informed password is too weak."
 ```
-
-Example 2:
-```
-Constant: msg_min_length
-  - value: "{name} must have at least {min_length} characters."
-```
-
 
 ## RegularExpression
-
-Example 1:
 ```
-Regex: name
-  - value: "/[A-Za-z][A-Za-z '-.]{1,59}/"
-```
+Regexes:
+  - "name" is "/[A-Za-z][A-Za-z '-.]{1,59}/"
 
-Example 2:
 ```
-Regular expression: name
-  - value: "/[A-Za-z][A-Za-z '-.]{1,59}/"
-```
-
-
 
 ## DataSource
 
@@ -187,24 +172,37 @@ Data table: my table
   | Joey     | joeypwd  |
 ```
 
+Example 1:
+```
+Data table: my table
+  | Profession | Salary | Error Message |
+  | Zelador    | 7000  |  |  
+  | Zelador    | 8000  | Por favor... |
+
+  | Field    | Property | Rule | Otherwise |
+  | username | length   | < 1  | I must see "bla" and "whatever" |
+
+
+```
+
 Example 2:
 ```
 Database: my database
-  - type: "mysql"
-  - host: "http://127.0.0.1/acme"
-  - username: "admin"
-  - password: "p4sss"
+  - "type" is "mysql"
+  - "host" is "http://127.0.0.1/acme"
+  - "username" is "admin"
+  - "password" is "p4sss"
 
 Database table: users
-  - database: "my database"
-  - command: "SELECT * FROM user"
+  - "database" is "my database"
+  - "command" is "SELECT * FROM user"
 ```
 
 Example 3:
 ```
 File: my file
-  - type: "json"
-  - path: "./path/to/file.json"
+  - "type" is "json"
+  - "path" is "./path/to/file.json"
 ```
 
 
@@ -250,18 +248,31 @@ Constraints:
 Example 3 (*file*):
 ```
 Constraints:
-  - "Username" value is in "my file" at column "username"
+  - "Username":
+    - value is in "my file" at column "username"
+    - 
   - "Password" value is in "my file" at column "password" and line as "username"
 ```
 
 Example 4 (*value constraints*):
 ```
+
+Contraint for "Username":
+  - "length" is greater than 1
+  Otherwise I must see the text ${msg_min_length}
+  - "value" is in "user_table" at column "username"
+  Otherwise I must see the text ${msg_invalid_username}
+  - "min_length" is in "query_profession" at column "min" with parameter from "profession"
+
+
 Constraints:
-  - "Username" length must be greater than 1
+  - "Username" has length greater than 1
     Otherwise I must see the text ${msg_min_length}
-  - "Username" length must be less than 31
+
+  - "Username" has length must be less than 31
     Otherwise I must see the text ${msg_max_length}
-  - "Password" length must be greater than 5
+
+  - "Password" has length greater than 5
     Otherwise I must see the text ${msg_password_too_weak}
       And I must see "Password" with color "red"
 ```
@@ -275,10 +286,12 @@ Contraint for "username":
       I must see the text "some message"
       And I must see "username"  with color "red"
 
+
+      [_____________] [   ]
+
 Contraint for "username":
-  When length is greater than 1
-  Then I must see the text "some message"
-  And I must see "username" with color "red"
+  length is greater than 0
+  Otherwise I must see color "red"
 
 Contraint: username
   - { [value] | length | color } comes from "{ column }" of "{ table | file }"
@@ -365,7 +378,7 @@ Example 2:
  @interaction( Username with a value lower than the minimum )
 Test case: Username with a value lower than the minimum
   I see in the url "/login"
-  I fill "#username" with ""
+  I fill "#username" with "" @rule( length, lower than 1 )
   I fill "#password" with "bobp4ss"
   I click "Enter"
   I see "Username must have at least 2 characters."

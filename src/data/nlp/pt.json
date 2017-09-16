@@ -1,0 +1,7 @@
+{
+    "first_intent": { // intent name
+        "ui_action": { // entity name
+            "click": [ "clica" ] // match name : [ sample1, sample2 ]
+        }
+    }
+}
