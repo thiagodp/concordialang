@@ -1,4 +1,4 @@
-import { NLPEntity, NLPIntent, NLPMatch, NLPTrainingData, NLPTrainingSentence } from './NLPTrainingData';
+import { NLPEntity, NLPIntent, NLPMatch, NLPTrainingData, NLPEntityUsageExample } from './NLPTrainingData';
 
 /**
  * Training data conversor.
@@ -25,9 +25,9 @@ export class NLPTrainingDataConversor {
      *                                  ...
      *                              }
      *                              ```
-     * @param sentences             Training sentences.
+     * @param examples             Training examples.
      */
-    convert( translationMap4NLP: any, sentences: NLPTrainingSentence[] ): NLPTrainingData {
+    convert( translationMap4NLP: any, examples: NLPEntityUsageExample[] ): NLPTrainingData {
 
         let data: NLPTrainingData = new NLPTrainingData();
 
@@ -50,7 +50,7 @@ export class NLPTrainingDataConversor {
         }
 
         // docs
-        data.documents = sentences;
+        data.examples = examples;
 
         return data;
     }

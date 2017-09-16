@@ -7,7 +7,7 @@
 export class NLPTrainingData {
     constructor(
         public intents: Array< NLPIntent > = [],
-        public documents: Array< NLPTrainingSentence > = []
+        public examples: Array< NLPEntityUsageExample > = []
     ) {
     }
 }
@@ -36,10 +36,10 @@ export class NLPMatch {
     }        
 }
 
-export class NLPTrainingSentence {
+export class NLPEntityUsageExample {
     constructor(
         public entity: string, // result
-        public sentence: string
+        public sentences: string[] = []
     ) {
     }
 }

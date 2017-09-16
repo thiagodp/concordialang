@@ -1,5 +1,5 @@
 import { NLPTrainingDataConversor } from "../../modules/nlp/NLPTrainingDataConversor";
-import { NLPTrainingData, NLPTrainingSentence } from '../../modules/nlp/NLPTrainingData';
+import { NLPTrainingData, NLPEntityUsageExample } from '../../modules/nlp/NLPTrainingData';
 
 /**
  * @author Thiago Delgado Pinto
@@ -32,14 +32,14 @@ describe( 'NLPTrainingDataConversorTest', () => {
         };
 
         let sentences = [
-            new NLPTrainingSentence( "entity1", "whatever" ),
-            new NLPTrainingSentence( "entity2", "something" )
+            new NLPEntityUsageExample( "entity1", [ "whatever", "anything" ] ),
+            new NLPEntityUsageExample( "entity2", [ "something", "sth else" ] )
         ];
 
         let data = conversor.convert( map, sentences );
 
         expect( data.intents ).toHaveLength( 2 );
-        expect( data.documents ).toHaveLength( 2 );
+        expect( data.examples ).toHaveLength( 2 );
 
         expect( data ).toEqual(
             {
@@ -102,9 +102,9 @@ describe( 'NLPTrainingDataConversorTest', () => {
                     
                 ],
 
-                "documents": [
-                    { "entity": "entity1", "sentence": "whatever" },
-                    { "entity": "entity2", "sentence": "something" }
+                "examples": [
+                    { "entity": "entity1", "sentences": [ "whatever", "anything" ] },
+                    { "entity": "entity2", "sentences": [ "something", "sth else" ] }
                 ]
             }
         );
@@ -115,7 +115,7 @@ describe( 'NLPTrainingDataConversorTest', () => {
     it( 'converts an empty object correctly', () => {
         let data = conversor.convert( {}, [] );
         expect( data.intents ).toHaveLength( 0 );
-        expect( data.documents ).toHaveLength( 0 );        
+        expect( data.examples ).toHaveLength( 0 );        
     } );
 
 } );

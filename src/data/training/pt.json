@@ -1,6 +1,6 @@
 [
     {
-        "entity": "name",
+        "entity": "clica",
         "sentence": "hello {name}"
     }
 ]

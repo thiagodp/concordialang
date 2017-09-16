@@ -48,8 +48,10 @@ export class NLP {
 
         // Train with examples that include the added entities
         let opt = this.documentTrainingOptions();
-        for ( let doc of data.documents ) {
-            nlp.addDocument( doc.sentence, doc.entity, opt );
+        for ( let ex of data.examples ) {
+            for ( let sentence of ex.sentences ) {
+                nlp.addDocument( sentence, ex.entity, opt );
+            }
         }
     }
 
