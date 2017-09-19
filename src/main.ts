@@ -5,9 +5,11 @@ import ora = require( 'ora' ); // spinner
 import chalk = require( 'chalk' ); // colors & style
 import { InputProcessor } from './modules/cli/InputProcessor';
 
-const cli = meow(`
+const exeName: string = 'clc';
+
+const cli = meow( `
 	Usage:
-	  $ asl [ <dir> | --files="file1.feature,path/to/file2.feature,..." ] --plugin=<name>
+	  $ ${exeName} [ <dir> | --files="file1.feature,path/to/file2.feature,..." ] --plugin=<name>
 
 	    where <dir> is the directory of your documentation files.
 
@@ -30,9 +32,9 @@ const cli = meow(`
 	  -h, --help                        Show this help.      
 	  
 	Examples:
-	  $ asl . plugin=some-plugin
-	  $ asl --files="file1.feature,path/to/file2.feature" -p=some-plugin -l=pt-br
-	  $ asl path/to/dir -t -s -p=some-plugin      
+	  $ ${exeName} . plugin=some-plugin
+	  $ ${exeName} --files="file1.feature,path/to/file2.feature" -p=some-plugin -l=pt-br
+	  $ ${exeName} path/to/dir -t -s -p=some-plugin      
 `, {
 	alias: {
 		p: 'plugin',
