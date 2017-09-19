@@ -1,16 +1,17 @@
 {
-  "name": "asl",
-  "description": "Agile Specification Language Parser",
+  "name": "clc",
+  "description": "Concordia Language Compiler",
   "keywords": [
+    "concordia",
     "agile",
     "specification",
     "language",
+    "test",
     "verification",
-    "validation",
-    "test"
+    "validation"
   ],
   "license": "AGPL-3.0",
-  "version": "0.1.0",
+  "version": "0.12.1",
   "readme": "README.md",
   "homepage": "https://site.org",
   "repository": {
