@@ -12,7 +12,8 @@
     },
     "exclude": [
         "node_modules",
-        "typings/globals"
+        "typings/globals",
+        "dist"
     ],
     "jest": {
         "transform": {
@@ -23,8 +24,7 @@
           "ts",
           "tsx",
           "js",
-          "jsx",
-          "json"
+          "jsx"
         ]
     }    
 }
