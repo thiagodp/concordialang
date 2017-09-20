@@ -10,6 +10,15 @@ An [Agile Software](https://en.wikipedia.org/wiki/Agile_software_development) Re
 2. Use your favorite text editor (UTF-8) and version control system.
 3. Generate UI tests from the specification, automatically.
 
+## Install
+
+```console
+npm install -g concordia
+```
+
+We also recommend you to install the [Concordia plug-in for CodeceptJS](#) whether you want to generate JavaScript tests for web applications.
+
+
 ## How it works:
 
 1. **Write or update your requirements** specification with the Concordia Language (and validate it with users and stakeholders);
