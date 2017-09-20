@@ -28,7 +28,7 @@ Scenario: Successful Login
   ...
 
 User Interface: Login
-  - "Login Screen" is the url "http://page.com/"
+  - "Login Screen" is the url "/login"
   - "Username" is a textbox with id "user",
     value comes from "Users" at column "username"
   - "Password" is a textbox with id "pass",
@@ -63,11 +63,11 @@ Feature( 'Login', () => {
     Scenario(
         'Successful Login | Sucessful Login Interaction | Valid values',
         ( I ) => {
-        I.seeUrl( 'http://page.com/' );
-        I.fill( '#username', 'alice' );
-        I.fill( '#password', 'd3ar4lice' );
+        I.amOnPage( '/login' );
+        I.fillField( '#username', 'alice' );
+        I.fillField( '#password', 'd3ar4lice' );
         I.click( '#enter' );
-        I.waitAndSee( 'Welcome' );
+        I.waitForText( 'Welcome' );
     } );
 } );
 ```
