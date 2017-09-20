@@ -5,7 +5,7 @@ import ora = require( 'ora' ); // spinner
 import chalk = require( 'chalk' ); // colors & style
 import { InputProcessor } from './modules/cli/InputProcessor';
 
-const exeName: string = 'clc';
+const exeName: string = 'concordia';
 
 const cli = meow( `
 	Usage:
