@@ -16,8 +16,8 @@
 - [Feature](#feature)
 - [State](#state)
 - [Scenario](#scenario)
-- [User Interface](#userinterface)
 - [Constant](#constant)
+- [User Interface Element](#UserInterfaceElement)
 - [Regular Expression](#regularexpression)
 - [Data Source](#datasource)
 - [Constraint](#constraint)
@@ -130,20 +130,6 @@ Scenario: unsuccessful login
 ```
 
 
-## UserInterface
-
-*Identification of user interface elements.*
-
-Example 1:
-```
-User interface:
-  - "Login Page" is a url "/login"
-  - "Username" is a textbox with id "username"
-  - "Password" is a textbox with id "password"
-  - "Enter" is a button with id "enter"
-```
-
-
 ## Constant
 
 Example 1:
@@ -151,6 +137,51 @@ Example 1:
 Constants:
   - "msg_min_length" is "{name} must have at least {min_length} characters."
   - "msg_password_too_weak" is "The informed password is too weak."
+```
+
+
+## UserInterfaceElement
+
+Examples 1:
+```
+UI Element: Login Page
+  - type is url
+  - value is "/login"
+	
+UI Element: Username
+  - type is textbox
+  - id is "username"
+  - minimal length is 2,
+    otherwise I must see the message ${msg_min_len}
+  - maximum length is 30
+  - value comes from "Users" at column "username",
+    otherwise I must see ${invalid_username_password}
+	
+UI Element: Password
+  - type is textbox
+  - id is "password"  
+  - minimal length is 6,
+    otherwise I must see the message "Password is too short."
+	    and I must see the color be changed to "red"
+	    and I must see the color of Username be changed to "red"
+  - value comes from "Users" at column "password" and line as "username",
+    otherwise I must see ${invalid_username_password}
+	
+UI Element: Enter
+  - type is button
+  - id is "enter"
+```
+
+Examples 2:
+```
+UI Element: Profession
+  - type is select
+  - value comes from "profession" at column "name"
+
+UI Element: Salary
+  - type is textbox
+  - minimum value comes from "profession" at the column "min_salary" where "name" is equal to the value of Profession
+
 ```
 
 ## RegularExpression
