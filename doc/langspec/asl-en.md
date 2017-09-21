@@ -18,8 +18,10 @@
 - [Scenario](#scenario)
 - [Constant](#constant)
 - [User Interface Element](#UserInterfaceElement)
-- [Regular Expression](#regularexpression)
-- [Data Source](#datasource)
+- [Regular Expressions](#RegularExpressions)
+- [Table](#table)
+- [Database](#database)
+- [File](#file)
 - [Constraint](#constraint)
 - [Test Case](#testcase)
 - [Command](#command)
@@ -142,6 +144,23 @@ Constants:
 
 ## UserInterfaceElement
 
+Notes about a UI Element:
+- default `type` is `textbox`
+- default `data type` is `string`
+- default `id` is the lowercased element name, without spaces (e.g. "Some Name" becomes "somename")
+
+Notes about data types:
+- Allowed are: `string`, `integer`, `double`, `date`, `time`, `datetime`. <<< include age? Ideas [here](http://respect.github.io/Validation/docs/validators.html)
+- `double` default precision is 2
+- `double`'s precision can be changed, using `with precision` (e.g. `data type is double wih precision 3`)
+
+Notes about queries (inside a constraint of a UI Element):
+1. Should be put inside apostrophes (').
+2. May use grave accents to refer names with spaces (normally, as in ANSI-SQL).
+3. All field names specified like variables are replaced by their values.
+4. Can reference a [Table](#table), a [File](#file) or any construction of a [Database](#database).
+
+
 Examples 1:
 ```
 UI Element: Login Page
@@ -151,10 +170,11 @@ UI Element: Login Page
 UI Element: Username
   - type is textbox
   - id is "username"
+  - data type is string
   - minimal length is 2,
     otherwise I must see the message ${msg_min_len}
   - maximum length is 30
-  - value comes from "Users" at column "username",
+  - value is queried by 'SELECT username FROM users',  
     otherwise I must see ${invalid_username_password}
 	
 UI Element: Password
@@ -164,7 +184,7 @@ UI Element: Password
     otherwise I must see the message "Password is too short."
 	    and I must see the color be changed to "red"
 	    and I must see the color of Username be changed to "red"
-  - value comes from "Users" at column "password" and line as "username",
+  - value is queried by 'SELECT password FROM users WHERE username = ${Username}',
     otherwise I must see ${invalid_username_password}
 	
 UI Element: Enter
@@ -176,150 +196,105 @@ Examples 2:
 ```
 UI Element: Profession
   - type is select
-  - value comes from "profession" at column "name"
+  - value is queried by 'SELECT name FROM profession'
 
 UI Element: Salary
-  - type is textbox
-  - minimum value comes from "profession" at the column "min_salary" where "name" is equal to the value of Profession
+  - data type is double with precision 2
+  - minimum value is queried by 'SELECT min_salary FROM profession WHERE name = ${Profession}'
 
+UI Element: Envy Salary
+  - data type is double with precision 2
+  - value is computed by '${Salary} * 2'
 ```
 
-## RegularExpression
+Examples 3:
 ```
-Regexes:
-  - "name" is "/[A-Za-z][A-Za-z '-.]{1,59}/"
+UI Element: CEP
+  - regex is "/^[0-9]{2}\.[0-9]{3}\-\.[0-9]{3}$/"
 
+UI Element: CPF
+  - regex is a reference to "CPF Regex"
+
+UI Element: CPF 2
+  - regex is the same as in CPF
 ```
 
-## DataSource
+
+## RegularExpressions
 
 Example 1:
 ```
-Data table: my table
-  | Username | Password |
+Regular Expressions:
+  - "name" is "/[A-Za-z][A-Za-z '-.]{1,59}/"
+  - "CPF" is "/^[0-9]{3}\.[0-9]{3}\.[0-9]{3}\-[0-9]{2}$/"
+  - "CNPJ" is ...
+```
+
+
+## Table
+
+Notes:
+- It is NOT allowed to declare database tables or named queries. Just use "queried by" in constraints of user interface elements.
+- Tables are loaded into in-memory tables, queried with ANSI-SQL.
+
+Example 1:
+```
+Table: users
+  | username | password |
   | Bob      | bobp4ss  |
   | Joey     | joeypwd  |
 ```
 
+Examples of queries:
+```sql
+SELECT username FROM users WHERE password = "bobp4ss"
+
+SELECT `some field` FROM `some table` WHERE id = 1
+```
+
+
+## Database
+
+Databases can be referenced in contraints' queries.
+
+Example:
+```sql
+SELECT price FROM `my database`.product WHERE name = "beer"
+```
+
 Example 1:
 ```
-Data table: my table
-  | Profession | Salary | Error Message |
-  | Zelador    | 7000  |  |  
-  | Zelador    | 8000  | Por favor... |
+Database: my database
+  - type is "mysql"
+  - host is "http://127.0.0.1/acme"
+  - username is "admin"
+  - password is "p4sss"
+```
 
-  | Field    | Property | Rule | Otherwise |
-  | username | length   | < 1  | I must see "bla" and "whatever" |
 
+## File
 
+A file is loaded into memory to be queried as a relational database table (with ANSI-SQL).
+
+Example 1:
+```
+File: my json file
+  - type is "json"
+  - path is "./path/to/file.json"
 ```
 
 Example 2:
 ```
-Database: my database
-  - "type" is "mysql"
-  - "host" is "http://127.0.0.1/acme"
-  - "username" is "admin"
-  - "password" is "p4sss"
-
-Database table: users
-  - "database" is "my database"
-  - "command" is "SELECT * FROM user"
+File: my csv file
+  - type is "csv"
+  - path is "./path/to/file.csv"
 ```
 
-Example 3:
-```
-File: my file
-  - "type" is "json"
-  - "path" is "./path/to/file.json"
+Example of a query:
+```sql
+SELECT `some column` FROM `my json file` WHERE `other column` > 50
 ```
 
-## Constraint
-
-*Constraints about user interface elements.*
-
-*Used along with [interaction templates](#interactiontemplate) to generate [interactions](#interaction)*.
-
-Example 1 (*data table*):
-```
-Constraints:
-  - "Username" value is in "my table" at column "Username"
-  - "Password" value is in "my table" at column "Password" and line as "Username"
-```
-
-Example 2 (*database table*):
-```
-Constraints:
-  - "Username" value is in "users" of "my database" at column "Username"
-  - "Password" value is in "users" of "my database" at column "Password" and line as "Username"
-```
-
-Example 3 (*file*):
-```
-Constraints:
-  - "Username":
-    - value is in "my file" at column "username"
-    - 
-  - "Password" value is in "my file" at column "password" and line as "username"
-```
-
-Example 4 (*value constraints*):
-```
-
-Contraint for "Username":
-  - "length" is greater than 1
-  Otherwise I must see the text ${msg_min_length}
-  - "value" is in "user_table" at column "username"
-  Otherwise I must see the text ${msg_invalid_username}
-  - "min_length" is in "query_profession" at column "min" with parameter from "profession"
-
-
-Constraints:
-  - "Username" has length greater than 1
-    Otherwise I must see the text ${msg_min_length}
-
-  - "Username" has length must be less than 31
-    Otherwise I must see the text ${msg_max_length}
-
-  - "Password" has length greater than 5
-    Otherwise I must see the text ${msg_password_too_weak}
-      And I must see "Password" with color "red"
-```
-
-```
-???
-
-Contraint for "username":
-  - Length: greater than 1
-  - Otherwise:
-      I must see the text "some message"
-      And I must see "username"  with color "red"
-
-
-      [_____________] [   ]
-
-Contraint for "username":
-  length is greater than 0
-  Otherwise I must see color "red"
-
-Contraint: username
-  - { [value] | length | color } comes from "{ column }" of "{ table | file }"
-
-  - comes from "name" of "users"
-
-
-Constraints of "username":
-  - value: [comes] from "name" of "users"
-  - otherwise: I must see "some message"
-  - value: matches "regexname"
-  - otherwise: I must see "other message"
-  - length: greater than or equal to 3 and less than or equal to 30
-  - otherwise: I must see "Please inform between 3 and 30 characters."
-      And "username" should have color "red"
-
-???
-
-```
 
 ## TestCase
 
