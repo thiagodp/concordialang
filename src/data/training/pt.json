@@ -3,7 +3,8 @@
         "entity": "click",
         "sentences": [
             "eu {ui_action} em {ui_element}",
-            "eu {ui_action} na opção {ui_element}",
+            "eu {ui_action} no {ui_element}",
+            "eu {ui_action} na {ui_element}",
             "eu {ui_action} na opcao {ui_element}"
         ]
     }
