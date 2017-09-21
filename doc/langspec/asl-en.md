@@ -1,11 +1,11 @@
 # ASL in English
 
 ```
-+-----+               +-----+               +-----+
-|     | <-- import -- |     | <-- import -- |     |
-|     |               |     |               |     |
-+-----+               +-----+               +-----+
-.feature              .expect               .testcase
++-----+               +-----+
+|     | <-- import -- |     |
+|     |               |     |
++-----+               +-----+
+.feature              .testcase
 ```
 
 ## Index:
@@ -22,10 +22,8 @@
 - [Table](#table)
 - [Database](#database)
 - [File](#file)
-- [Constraint](#constraint)
 - [Test Case](#testcase)
-- [Command](#command)
-- [Task](#task)
+- [Events](#events)
 
 
 ## Language
@@ -407,43 +405,18 @@ Element filters, when used without the `with` keyword :
   - `~element` = mobile name `<< MOBILE ONLY`
 
 
-## Command
-
-*Commands to execute over data sources or the operating system.*
-
-Example 1:
-```
-Command: my dir
-  - console: dir /w
-```
-
-Example 2:
-```
-Command: my query
-  - sql: SELECT * FROM user LIMIT 10 ORDER BY username
-```
-
-Example 3:
-```
-Command: clean users
-  - sql: DELETE FROM users
-```
-
-
-## Task
+## Events
 
 *Allows to execute commands during tests.*
 
 Example 1:
 ```
-Task: my task before
-  - moment: before system
-  - console: cls    
-  - command: clean users
-  - sql: INSERT INTO user ( username, password ) VALUES ( 'Bob', 'Dylan' )
-```
+Before Each Test Case:
+  I run in console 'cls'
+  And I run the command 'DELETE FROM users'
+  And I run the command 'INSERT INTO users ( username, password ) VALUES ( "Clark", "Kent" ), ( "Bruce", "Wayne" )'
+``` 
 
-Moments:
-  - { before | after } system
-  - { before | after } feature
-  - { before | after | around } interaction
+Could be:
+- { Before | After | Around } Each Test Case
+- { Before | After | Around } Feature
