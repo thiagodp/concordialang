@@ -1,11 +1,12 @@
 [
     {
-        "entity": "click",
+        "entity": "testcase",
         "sentences": [
             "eu {ui_action} em {ui_element}",
             "eu {ui_action} no {ui_element}",
             "eu {ui_action} na {ui_element}",
-            "eu {ui_action} na opcao {ui_element}"
+            "eu {ui_action} na opcao {ui_element}",
+            "eu {ui_action} com {value}"
         ]
     }
 ]

@@ -9,11 +9,18 @@ import Bravey = require( '../../lib/bravey' ); // .js file
 export class NLP {
 
     private _trained: boolean = false;
-    private _recognizer;
+    private _nlp: any = {}; // Bravey.NLP.XXX
+    private _additionalEntities: string[] = [];
+    private _additionalRecognizers: Object[] = [];
 
-    constructor( useFuzzyRecognizer: boolean = true ) {
-        this._recognizer = useFuzzyRecognizer
+    constructor( useFuzzyProcessor: boolean = true ) {
+
+        this._nlp = useFuzzyProcessor
             ? new Bravey.Nlp.Fuzzy() : new Bravey.Nlp.Sequential();
+
+        // Add an entity named "value" and its recognizer
+        this._additionalEntities.push( 'value' );
+        this._additionalRecognizers.push( this.makeValueEntityRecognizer( 'value' ) );
     }
 
     /**
@@ -24,14 +31,16 @@ export class NLP {
     train( data: NLPTrainingData ): void {
 
         this._trained = true;
-        let nlp = this._recognizer;
+        let nlp = this._nlp;
 
         // Add intents and their recognizers
         for ( let intent of data.intents ) {
 
+            let entities = intent.entities.map( e => { return { id: e.name, name: e.name }; } );
+            this.addDefaultEntitiesTo( entities );
+
             // Add the intent with its entities
-            nlp.addIntent( intent.name,
-                intent.entities.map( e => { return { id: e.name, name: e.name }; } ) );
+            nlp.addIntent( intent.name, entities );
 
             // Add entity recognizers with matches. Each match have sample values, that 
             // are added to the recognizer.
@@ -45,6 +54,9 @@ export class NLP {
                 nlp.addEntity( entityRec );
             }
         }
+
+        // Add other needed recognizers
+        this.addDefaultRecognizersTo( nlp );
 
         // Train with examples that include the added entities
         let opt = this.documentTrainingOptions();
@@ -60,11 +72,53 @@ export class NLP {
     }
 
     recognize( sentence: string ): NLPResult {
-        return this._recognizer.test( sentence );
+        return this._nlp.test( sentence );
     }
 
     private documentTrainingOptions(): Object {
         return { fromTaggedSentence: true, expandIntent: true };
+    }
+
+    /**
+     * Adds default entities to the given entities array.
+     * 
+     * @param entities Entities in which the default entities will be added.
+     */
+    private addDefaultEntitiesTo( entities: Object[] ): void {
+        for ( let entityName of this._additionalEntities ) {
+            entities.push( { id: entityName, name: entityName } );
+        }
+    }
+
+    /**
+     * Add default recognizers to the given processor.
+     * @param nlp Processor
+     */
+    private addDefaultRecognizersTo( nlp: any ): void {
+        for ( let rec of this._additionalRecognizers ) {
+            nlp.addEntity( rec );
+        }
+    }
+
+    /**
+     * Creates a recognizer for values between quotes.
+     * 
+     * Example: I fill "name" with "Bob" --> "name" and "Bob" are recognized.
+     * 
+     * @param entityName Entity name.
+     * @return Bravey.EntityRecognizer
+     */
+    private makeValueEntityRecognizer( entityName: string = 'value' ): any {
+
+        let valueRec = new Bravey.RegexEntityRecognizer( entityName );
+
+        valueRec.addMatch( new RegExp( '"[^"\r\n]*"', "gi" ),
+            function( match ) {
+                //console.log( 'match: ' ); console.log( match );
+                return match.toString().replace( /['"]+/g, '' );
+            } );
+
+        return valueRec;
     }
 
 }
