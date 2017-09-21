@@ -20,9 +20,7 @@
 - [Constant](#constant)
 - [Regular Expression](#regularexpression)
 - [Data Source](#datasource)
-- [Interaction Template](#interactiontemplate)
 - [Constraint](#constraint)
-- [Interaction](#interaction)
 - [Test Case](#testcase)
 - [Command](#command)
 - [Task](#task)
@@ -62,10 +60,10 @@ Example 2 (*more than one per line*):
 ```
 
 Reserved tags:
-- `@scenario( <name> )`: references a [scenario](#scenario)
-- `@template( <name> )`: references an [interaction template](#interactiontemplate)
-- `@interaction( <name> )`: references an [interaction](#interaction)
-- `@Constraint( <widget>, <property>, <Constraint-type> )`: references a [Constraint](#Constraint). Example: `@Constraint( Usuario, length, lt )`, where `lt` means "less than".
+- `@scenario( <name> )`: references a [scenario](#scenario).
+- `@template`: indicates that a test case is a template.
+- `@testcase( <name> )`: references a [test case](#testcase) which is a template.
+- `@invalid( <ui_element>, <constraint> )`: indicates that a test case has an invalid value for a certain user interface element. The `constraint` is the exploited rule, such as "minimum length", "maximum value", etc.
 - `@importance( <number> )`: indicates the importance. The importance is as higher as its number.
 - `@generated`: indicates that a declaration was computer-generated.
 
@@ -205,26 +203,6 @@ File: my file
   - "path" is "./path/to/file.json"
 ```
 
-
-## InteractionTemplate
-
-*Expected basic interaction with the [user interface](#userinterface).*
-
-*Used along with [Constraints](#Constraint) to generate [interactions](#interaction). [States](#state) are NOT checked.*
-
-Example 1:
-```
-@scenario( successful login )
-Interaction template: successful login
-  Given that I am on the Login Page
-  When I fill Username
-    And I fill Password
-    And I click on Enter
-  Then I have the state "logged in"
-    And I see the text "Welcome"
-    And I am not on the Login Page
-```
-
 ## Constraint
 
 *Constraints about user interface elements.*
@@ -312,77 +290,74 @@ Constraints of "username":
 
 ```
 
-## Interaction
+## TestCase
 
-*Expected interaction with the user interface.*
+Can be automatically generated using:
+1. A template test case;
+2. [user interface](#userinterface);
+3. [constraints](#constraint);
+4. [states](#state).
 
-*Commonly generated from [interaction templates](#interactiontemplate) and [Constraints](#Constraints).*
+A generated test case will:
+- Receive all the annotations from the source test case, except the tag `@template`;
+- Receive the tag `@generated`;
+- Have at least one tag `@invalid` added, if the goal is exploit some constraint;
+- Have its name changed, according to the goal;
+- Replace all the clauses in `Then`, when the goal is exploit some constraint;
+- Replace all the involved constants by their corresponding values;
+- Replace all the involved references to user interface elements by their identifiers;
+- Keep informed user interface elements (literals);
+- Keep informed states; <<< Really?
+- Keep informed values;
 
-*Used to generate [test cases](#testcase). [States](#state) are checked.*
+Notes about a template:
+- When a reference to a user interface element is informed **without a value**, values will be produced for the generated test cases, **according to the test goal**;
 
-Example 1:
+Example 1: Template test case for the scenario Successful Login.
 ```
-@generated @template( successful login )
-Interaction: successful login
+@template
+@scenario( Successful Login )
+Test Case: Should be able to login
   Given that I am on the Login Page
-  When I fill Username with a valid value
-    And I fill Password with a valid value
+  When I fill Username
+    And I fill Password
     And I click on Enter
   Then I have the state "logged in"
-    And I see the text "Welcome"
+    And I see the text ${welcomeText}
+    And I see a button "Logout"
     And I am not on the Login Page
 ```
 
-Example 2:
-```
-@generated @template( successful login )
-@constraint( Username, length, lt )
-Interaction: Username with a value lower than the minimum
-  Given that I am on the Login Page
-  When I fill Username with a value lower than the minimum
-    And I fill Password with a valid value
-    And I click on Enter
-  Then I must see the text ${msg_min_length}
-```
-
-
-## TestCase
-
-Test cases are generated from:
-1. [User Interface](#userinterface) : is such a dictionary for transforming [Interactions](#interactions)' element names into ids, xpaths, etc.
-2. [Interactions](#interaction) : provide the actions to perform.
-3. [Constraint](#Constraint) : provide some of the rules that will be explored by the test cases.
-4. *Approach's algorithm.*
-
-
-Example 1:
+Example 2: A test case produced from the template in Example 1.
 ```
 @generated
-@feature( login )
-@scenario( sucessful login )
-@interaction( successful login )
-Test case: successful login
-  I see in the url "/login"
-  I fill "#username" with "Bob"
-  I fill "#password" with "bobp4ss"
-  I click "Enter"
-  I see "Welcome"
-  I don't see in current url "/login"
+@scenario( Successful Login )
+@testcase( Should be able to login )
+Test Case: Should finish successfully
+  Given that I am on the page "/login"
+  When I fill "#username" with "Bob"
+    And I fill "#password" with "bobp4ss"
+    And I click on "Enter"
+  Then I have the state "logged in"    
+    And I see the text "Welcome"
+    And I see a button "Logout"
+    And I am not on the page "/login"
 ```
 
-Example 2:
- ```
- @generated
- @feature( login )
- @scenario( sucessful login )
- @interaction( Username with a value lower than the minimum )
-Test case: Username with a value lower than the minimum
-  I see in the url "/login"
-  I fill "#username" with "" @rule( length, lower than 1 )
-  I fill "#password" with "bobp4ss"
-  I click "Enter"
-  I see "Username must have at least 2 characters."
+Example 3: Another test case produced from the template in Example 1.
 ```
+@generated
+@scenario( Successful Login )
+@testcase( Should be able to login )
+@invalid( Username, minimum length )
+Test Case: Should not finish successfully - Username length is too short
+  Given that I am on the page "/login"
+  When I fill "#username" with ""
+    And I fill "#password" with "bobp4ss"
+    And I click on "Enter"
+  Then I see "Username must have at least 2 characters."
+```
+
 
 Actions:
 
