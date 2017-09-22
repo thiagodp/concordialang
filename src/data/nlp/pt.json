@@ -13,16 +13,16 @@
             "moveCursor": [ "movo o cursor", "movo o mouse", "posiciono o cursor", "posiciono o mouse" ],
             "click": [ "clico", "ativo", "aciono" ],
             "doubleClick": [ "clico duplamente", "clico duas vezes", "dou um duplo clique" ],
-            "rightClick": [ "clico com o botão direito", "aciono o botão direito" ],
+            "rightClick": [ "clico com o botao direito", "aciono o botao direito" ],
             "drag": [ "arrasto", "movo" ],
             "drop": [ "solto", "para" ],
             "saveScreenshot": [ "salvo a tela", "bato uma foto da tela" ],
             
             "amOnPage": [ "estou na pagina", "enxergo a url" ],
-            "refreshPage": [ "atualizo a página", "recarrego a página" ],
-            "scrollPageToBottom": [ "rolo a página para baixo", "desço a página" ],
-            "scrollPageToTop": [ "rolo a página para cima", "subo a página" ],
-            "scrollTo": [ "rolo a página", "posiciono a página" ],
+            "refreshPage": [ "atualizo a pagina", "recarrego a pagina" ],
+            "scrollPageToBottom": [ "rolo a pagina para baixo", "desço a pagina" ],
+            "scrollPageToTop": [ "rolo a pagina para cima", "subo a pagina" ],
+            "scrollTo": [ "rolo a pagina", "posiciono a pagina" ],
             "seeTitle": [ "vejo no titulo", "enxergo no titulo" ],
             "dontSeeTitle": [ "nao vejo no titulo", "nao enxergo no titulo" ],
             "seeCookie": [ "vejo o cookie", "enxergo o cookie" ],
@@ -71,7 +71,7 @@
             "cookie": [ "cookie" ],
             "file": [ "arquivo", "anexo" ],
             "web": [ "web" ],
-            "native": [ "native" ]
+            "native": [ "nativo" ]
         },
 
         "direction": {

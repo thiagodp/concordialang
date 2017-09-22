@@ -14,7 +14,6 @@ export class NLP {
     private _additionalRecognizers: Object[] = [];
 
     constructor( useFuzzyProcessor: boolean = true ) {
-
         this._nlp = useFuzzyProcessor
             ? new Bravey.Nlp.Fuzzy() : new Bravey.Nlp.Sequential();
         // Add an entity named "value" and its recognizer
