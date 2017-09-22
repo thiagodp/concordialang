@@ -2,11 +2,10 @@
     {
         "entity": "testcase",
         "sentences": [
-            "eu {ui_action} em {ui_element}",
-            "eu {ui_action} no {ui_element}",
-            "eu {ui_action} na {ui_element}",
-            "eu {ui_action} na opcao {ui_element}",
-            "eu {ui_action} com {value}"
+            "eu {ui_action} em {value}",
+            "eu {ui_action} com {value}",
+            "eu {ui_action} no {ui_target_type} {value}",
+            "eu {ui_action} o {ui_target_type} com {value}"
         ]
     }
 ]

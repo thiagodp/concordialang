@@ -17,7 +17,6 @@ export class NLP {
 
         this._nlp = useFuzzyProcessor
             ? new Bravey.Nlp.Fuzzy() : new Bravey.Nlp.Sequential();
-
         // Add an entity named "value" and its recognizer
         this._additionalEntities.push( 'value' );
         this._additionalRecognizers.push( this.makeValueEntityRecognizer( 'value' ) );
@@ -31,16 +30,15 @@ export class NLP {
     train( data: NLPTrainingData ): void {
 
         this._trained = true;
-        let nlp = this._nlp;
 
         // Add intents and their recognizers
         for ( let intent of data.intents ) {
 
-            let entities = intent.entities.map( e => { return { id: e.name, name: e.name }; } );
+            let entities = intent.entities.map( e => { return { id: e.name, entity: e.name }; } );
             this.addDefaultEntitiesTo( entities );
 
             // Add the intent with its entities
-            nlp.addIntent( intent.name, entities );
+            this._nlp.addIntent( intent.name, entities );
 
             // Add entity recognizers with matches. Each match have sample values, that 
             // are added to the recognizer.
@@ -51,18 +49,18 @@ export class NLP {
                         entityRec.addMatch( m.id, sample );
                     }
                 }
-                nlp.addEntity( entityRec );
+                this._nlp.addEntity( entityRec );
             }
         }
 
         // Add other needed recognizers
-        this.addDefaultRecognizersTo( nlp );
+        this.addDefaultRecognizersTo( this._nlp );
 
         // Train with examples that include the added entities
         let opt = this.documentTrainingOptions();
         for ( let ex of data.examples ) {
             for ( let sentence of ex.sentences ) {
-                nlp.addDocument( sentence, ex.entity, opt );
+                this._nlp.addDocument( sentence, ex.entity, opt );
             }
         }
     }
@@ -72,7 +70,8 @@ export class NLP {
     }
 
     recognize( sentence: string ): NLPResult {
-        return this._nlp.test( sentence );
+        let method = 'anyEntity'; // | "default"
+        return this._nlp.test( sentence, method );
     }
 
     private documentTrainingOptions(): Object {
@@ -86,7 +85,7 @@ export class NLP {
      */
     private addDefaultEntitiesTo( entities: Object[] ): void {
         for ( let entityName of this._additionalEntities ) {
-            entities.push( { id: entityName, name: entityName } );
+            entities.push( { id: entityName, entity: entityName } );
         }
     }
 

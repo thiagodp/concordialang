@@ -222,8 +222,14 @@ Bravey.Text.unique = function(list) {
  * @param {string} text - The text to be cleaned
  * @returns {string} The cleaned text.
  */
-Bravey.Text.clean = function(text) {
-  return Bravey.Text.removeDiacritics(text).toLowerCase().trim().replace(/ +(?= )/g, '').replace(/[()\[\]]/g, '');
+Bravey.Text.clean = function(text, toLowerCase ) { // <<< by TDP (added toLowerCase)
+  //return Bravey.Text.removeDiacritics(text).toLowerCase().trim().replace(/ +(?= )/g, '').replace(/[()\[\]]/g, '');
+  // <<< by TDP
+  var newText = Bravey.Text.removeDiacritics(text);
+  if ( toLowerCase ) {
+    newText = newText.toLowerCase();
+  }
+  return newText.trim().replace(/ +(?= )/g, '').replace(/[()\[\]]/g, '');
 }
 
 /**
@@ -1062,7 +1068,7 @@ Bravey.StringEntityRecognizer = function(entityName, priority) {
    * @returns {Entity[]} The set of found entities.
    */
   this.getEntities = function(string, out) {
-    // string = Bravey.Text.clean(string); <<< by TDP
+    string = Bravey.Text.clean(string); // <<< by TDP
     if (!sorted) {
       sorted = true;
       reSort();
@@ -1117,7 +1123,7 @@ Bravey.NumberEntityRecognizer = function(entityName) {
    * @returns {Entity[]} The set of found entities.
    */
   this.getEntities = function(string, out) {
-    // string = Bravey.Text.clean(string); <<< by TDP
+    string = Bravey.Text.clean(string); // <<< by TDP
 
     var piece, match;
 
@@ -1187,7 +1193,7 @@ Bravey.RegexEntityRecognizer = function(entityName) {
    * @returns {Entity[]} The set of found entities.
    */
   this.getEntities = function(string, out) {
-    // string = Bravey.Text.clean(string); <<< by TDP
+    string = Bravey.Text.clean(string); // <<< by TDP
 
     var found, piece, match, entitiesFound = [],
       pos = -1;
@@ -5244,7 +5250,9 @@ Bravey.Nlp.Fuzzy = function(nlpName, extensions) {
     for (var i = 0; i < ent.length; i++)
       if (!done[ent[i].entity]) {
         done[ent[i].entity] = 1;
-        entities[ent[i].entity].getEntities(text, out);
+        if ( entities[ent[i].entity] ) { // <<< by TDP
+          entities[ent[i].entity].getEntities(text, out);
+        }
       }
     sortEntities(out);
     return out;
@@ -5567,7 +5575,7 @@ Bravey.Nlp.Fuzzy = function(nlpName, extensions) {
    * @returns {false} When the sentence doesn't match any intent.
    */
   this.test = function(text, method) {
-    // text = Bravey.Text.clean(text); <<< by TDP
+    text = Bravey.Text.clean(text); // <<< by TDP
     switch (method) {
       case "anyEntity":
         {
@@ -5655,7 +5663,9 @@ Bravey.Nlp.Sequential = function(nlpName, extensions) {
     for (var i = 0; i < ent.length; i++)
       if (!done[ent[i].entity]) {
         done[ent[i].entity] = 1;
-        entities[ent[i].entity].getEntities(text, out);
+        if ( entities[ent[i].entity] ) { //  <<< by TDP
+          entities[ent[i].entity].getEntities(text, out);
+        }
       }
     sortEntities(out);
     return out;
@@ -5753,7 +5763,9 @@ Bravey.Nlp.Sequential = function(nlpName, extensions) {
       entitypos = 0;
 
     function forward() { // @TODO: This part can be improved.
-      while (intent.entities[entitypos] && entities[intent.entities[entitypos].entity].expand) {
+      while (intent.entities[entitypos]
+        && entities[intent.entities[entitypos].entity] // <<< by TDP
+        && entities[intent.entities[entitypos].entity].expand) {
         var match = {
           position: pos < 0 ? 0 : pos,
           entity: intent.entities[entitypos].entity,
