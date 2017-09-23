@@ -39,33 +39,38 @@ describe( 'NLPInPortugueseTest', () => {
             expect( r.intent ).toEqual( "testcase" );
             expect( r.entities ).toHaveLength( expectedEntitiesNames.length );
             let entities = r.entities.map( e => e.entity );
-            expect( entities ).toEqual( expectedEntitiesNames );
+            expect( entities ).toEqual( expect.arrayContaining( expectedEntitiesNames ) ); // doesn't matter the array order
         }
     }
 
-    it( 'testcase - pt - recognizes a click with a value', () => {
-        let results = [];
-        results.push( nlp.recognize( 'eu clico em "x"' ) );
-        results.push( nlp.recognize( 'eu clico na opção "x"' ) );
-        shouldHaveEntities( results, [ UI_ACTION, VALUE ] );
-    } );
+    describe( 'testcase', () => {
 
-    it( 'testcase - pt - recognizes a click with a target and a value', () => {
-        let results = [];
-        results.push( nlp.recognize( 'eu clico no botão "x"' ) );
-        shouldHaveEntities( results, [ UI_ACTION, UI_TARGET_TYPE, VALUE ] );
-    } );
+        it( 'recognizes a click with a value', () => {
+            let results = [];
+            results.push( nlp.recognize( 'eu clico em "x"' ) );
+            results.push( nlp.recognize( 'eu clico na opção "x"' ) );
+            shouldHaveEntities( results, [ UI_ACTION, VALUE ] );
+        } );
 
-    it( 'testcase - pt - recognizes a fill with an element', () => {
-        let results = [];
-        results.push( nlp.recognize( 'eu preencho <Nome>' ) );
-        shouldHaveEntities( results, [ UI_ACTION, ELEMENT ] );
-    } );    
+        it( 'recognizes a click with a target and a value', () => {
+            let results = [];
+            results.push( nlp.recognize( 'eu clico no botão "x"' ) );
+            shouldHaveEntities( results, [ UI_ACTION, UI_TARGET_TYPE, VALUE ] );
+        } );
 
-    it( 'testcase - pt - recognizes a fill with an element and a value', () => {
-        let results = [];
-        results.push( nlp.recognize( 'eu preencho <Nome> com "Bob"' ) );
-        shouldHaveEntities( results, [ UI_ACTION, ELEMENT, VALUE ] );
+        it( 'recognizes a fill with an element', () => {
+            let results = [];
+            results.push( nlp.recognize( 'eu preencho <Nome>' ) );
+            shouldHaveEntities( results, [ UI_ACTION, ELEMENT ] );
+        } );    
+
+        it( 'recognizes a fill with an element and a value', () => {
+            let results = [];
+            results.push( nlp.recognize( 'eu preencho <Nome> com "Bob"' ) );
+            results.push( nlp.recognize( 'eu preencho "Bob" em <Nome>' ) );
+            shouldHaveEntities( results, [ UI_ACTION, ELEMENT, VALUE ] );
+        } );
+
     } );
 
 } );
