@@ -1,84 +1,68 @@
 {
     "testcase": {
         "ui_action": {
-            "see": [ "vejo", "enxergo", "consigo ver" ],
-            "dontSee": [ "nao vejo", "nao enxergo", "nao consigo ver" ],
-            "wait": [ "aguardo", "espero" ],
-            "fill": [ "preencho", "informo", "digito", "forneco", "entro" ],
             "append": [ "adiciono", "acrescento", "insiro", "coloco" ],
-            "select": [ "seleciono" ],
+            "attachFile": [ "anexo o arquivo", "adiciono o arquivo", "sobrescrevo o arquivo" ],
             "check": [ "marco", "checo" ],
             "clear": [ "limpo", "apago" ],
-            "press": [ "pressiono", "seguro", "teclo" ],
-            "moveCursor": [ "movo o cursor", "movo o mouse", "posiciono o cursor", "posiciono o mouse" ],
             "click": [ "clico", "ativo", "aciono" ],
+            "close": [ "fecho", "saio" ],
             "doubleClick": [ "clico duplamente", "clico duas vezes", "dou um duplo clique" ],
-            "rightClick": [ "clico com o botao direito", "aciono o botao direito" ],
             "drag": [ "arrasto", "movo" ],
             "drop": [ "solto", "para" ],
-            "saveScreenshot": [ "salvo a tela", "bato uma foto da tela" ],
-            
-            "amOnPage": [ "estou na pagina", "enxergo a url" ],
-            "refreshPage": [ "atualizo a pagina", "recarrego a pagina" ],
-            "scrollPageToBottom": [ "rolo a pagina para baixo", "desço a pagina" ],
-            "scrollPageToTop": [ "rolo a pagina para cima", "subo a pagina" ],
-            "scrollTo": [ "rolo a pagina", "posiciono a pagina" ],
-            "seeTitle": [ "vejo no titulo", "enxergo no titulo" ],
-            "dontSeeTitle": [ "nao vejo no titulo", "nao enxergo no titulo" ],
-            "seeCookie": [ "vejo o cookie", "enxergo o cookie" ],
-            "dontSeeCookie": [ "nao vejo o cookie", "nao enxergo o cookie" ],
-            "clearCookie": [ "limpo o cookie", "apago o cookie" ],
-            "resizeWindow": [ "redimensiono a janela", "mudo o tamanho da janela", "modifico o tamanho da janela" ],
-            "attachFile": [ "anexo o arquivo", "adiciono o arquivo", "sobrescrevo o arquivo" ],
-            "closeCurrentTab": [ "fecho a aba atual" ],
-            "closeOtherTabs": [ "fecho as outras abas", "fecho as demais abas" ],
-            "openNewTab": [ "abro uma nova aba", "abro uma aba" ],
-
-            "tap": [ "toco" ],
-            "show": [ "mostro", "apresento", "exibo" ],
+            "fill": [ "preencho", "informo", "digito", "forneco", "entro" ],
             "hide": [ "escondo", "oculto" ],
-            "swipeUp": [ "deslizo para cima" ],
-            "swipeDown": [ "deslizo para baixo" ],
-            "swipeLeft": [ "deslizo para esquerda" ],
-            "swipeRight": [ "deslizo para direita" ],
-            "switchToWeb": [ "troco para web", "troco para modo web", "mudo para web", "mudo para modo web" ],
-            "switchToNative": [ "troco para nativo", "troco para modo nativo", "mudo para nativo", "mudo para modo nativo" ]
+            "move": [ "movo", "posiciono" ],
+            "open": [ "abro" ],
+            "press": [ "pressiono", "seguro", "teclo" ],
+            "refresh": [ "atualizo", "recarrego" ],
+            "resize": [ "redimensiono", "modifico o tamanho" ],            
+            "rightClick": [ "clico com o botao direito", "aciono o botao direito" ],
+            "saveScreenshot": [ "salvo a tela", "bato uma foto da tela", "tiro uma foto da tela", "tiro um print da tela" ],
+            "scrollTo": [ "rolo" ],
+            "see": [ "vejo", "enxergo", "consigo ver" ],
+            "select": [ "seleciono" ],
+            "show": [ "mostro", "apresento", "exibo" ],
+            "swipe": [ "deslizo" ],
+            "switch": [ "troco", "mudo para" ],
+            "tap": [ "toco" ],
+            "wait": [ "aguardo", "espero" ]
         },
-        "ui_id": {
+
+        "ui_target_type": {
+            "button": [ "botao" ],
+            "checkbox": [ "caixa de marcacao", "checkbox", "check" ],
+            "cookie": [ "cookie" ],
+            "currentTab": [ "aba atual" ],
+            "file": [ "arquivo", "anexo" ],
+            "keyboard": [ "teclado" ],
+            "label": [ "rotulo" ],
+            "otherTabs": [ "outras abas" ],
+            "mouse": [ "mouse", "cursor" ],
+            "native": [ "nativo" ],
+            "newTab": [ "nova aba" ],
+            "screen": [ "tela" ],
+            "select": [ "caixa de selecao", "select", "combo", "combobox" ],
+            "text": [ "texto" ],
+            "title": [ "titulo" ],
+            "web": [ "web" ],
+            "window": [ "janela" ],
+            "url": [ "url", "pagina", "endereco", "dominio", "ip", "local", "sitio" ]
+        },
+
+        "option": {
+            "not": [ "não" ],
+
+            "up": [ "para cima", "acima" ],
+            "down": [ "para baixo", "abaixo" ],
+            "left": [ "para a esquerda", "a direita" ],
+            "right": [ "para a direita", "a esquerda" ],
+
             "id": [ "id", "identificacao" ],
             "name": [ "nome", "chamado" ],
             "class": [ "classe", "estilo" ],
             "xpath": [ "xpath" ],
-            "mobileName": [ "nome mobile" ]
-        },
-        "ui_target_type": {
-            "screen": [ "tela" ],
-            "url": [ "url", "pagina", "endereco", "dominio", "ip", "local", "sitio" ],
-            "button": [ "botao" ],
-            "text": [ "texto" ],
-            "label": [ "rotulo" ],
-            "checkbox": [ "checkbox", "caixa de marcacao" ],
-            "select": [ "caixa de selecao", "select", "combo", "combobox" ],
-            "keyboard": [ "teclado" ],
-
-            "screenshot": [ "foto da tela", "print da tela", "imagem da tela" ],
-            "title": [ "titulo" ],
-            "currentTab": [ "aba atual" ],
-            "otherTabs": [ "outras abas" ],
-            "newTab": [ "nova aba" ],
-            "window": [ "janela" ],
-            "mouse": [ "mouse", "cursor" ],
-            "cookie": [ "cookie" ],
-            "file": [ "arquivo", "anexo" ],
-            "web": [ "web" ],
-            "native": [ "nativo" ]
-        },
-
-        "direction": {
-            "up": [ "para cima", "acima" ],
-            "down": [ "para baixo", "abaixo" ],
-            "left": [ "para a esquerda", "a direita" ],
-            "right": [ "para a direita", "a esquerda" ]
+            "mobileName": [ "nome mobile" ]            
         }
     }
 }

@@ -49,6 +49,12 @@ describe( 'NLPInPortugueseTest', () => {
         let results = [];
         results.push( nlp.recognize( 'eu clico no botão "x"' ) );
         shouldHaveEntities( results, [ "ui_action", "ui_target_type", "value" ] );
+    } );
+
+    it( 'pt - recognizes a fill with a element and a value', () => {
+        let results = [];
+        results.push( nlp.recognize( 'eu preencho <Nome> com "Bob"' ) );
+        shouldHaveEntities( results, [ "ui_action", "element", "value" ] );
     } );    
 
 } );

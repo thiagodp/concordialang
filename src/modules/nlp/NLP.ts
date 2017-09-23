@@ -14,11 +14,17 @@ export class NLP {
     private _additionalRecognizers: Object[] = [];
 
     constructor( useFuzzyProcessor: boolean = true ) {
+
         this._nlp = useFuzzyProcessor
             ? new Bravey.Nlp.Fuzzy() : new Bravey.Nlp.Sequential();
+
         // Add an entity named "value" and its recognizer
         this._additionalEntities.push( 'value' );
         this._additionalRecognizers.push( this.makeValueEntityRecognizer( 'value' ) );
+
+        // Add an entity named "element" and its recognizer
+        this._additionalEntities.push( 'element' );
+        this._additionalRecognizers.push( this.makeValueEntityRecognizer( 'element' ) );        
     }
 
     /**
@@ -101,23 +107,48 @@ export class NLP {
     /**
      * Creates a recognizer for values between quotes.
      * 
-     * Example: I fill "name" with "Bob" --> "name" and "Bob" are recognized.
+     * Example: I fill "name" with "Bob"
+     * --> The words "name" and "Bob" are recognized (without quotes).
      * 
      * @param entityName Entity name.
      * @return Bravey.EntityRecognizer
      */
     private makeValueEntityRecognizer( entityName: string = 'value' ): any {
 
-        let valueRec = new Bravey.RegexEntityRecognizer( entityName );
+        let valueRec = new Bravey.RegexEntityRecognizer( entityName, 10 );
 
         valueRec.addMatch( new RegExp( '"[^"\r\n]*"', "gi" ),
             function( match ) {
                 //console.log( 'match: ' ); console.log( match );
                 return match.toString().replace( /['"]+/g, '' );
-            } );
+            },
+            100 ); // the number is the priority
 
         return valueRec;
     }
+
+    /**
+     * Creates a recognizer for values between < and >.
+     * 
+     * Example: I fill <Name> with "Bob"
+     * --> The word "Name" is recognized (without quotes).
+     * 
+     * @param entityName Entity name.
+     * @return Bravey.EntityRecognizer
+     */
+    private makeElementEntityRecognizer( entityName: string = 'element' ): any {
+
+        var valueRec = new Bravey.RegexEntityRecognizer( entityName, 10 );
+
+        valueRec.addMatch( new RegExp( '<.*>', "gi" ),
+            function( match ) {
+                //console.log( 'match: ' ); console.log( match );
+                return match.toString().replace( '<', '' ).replace( '>', '' );
+            },
+            100 ); // the number is the priority
+
+        return valueRec;
+    }    
 
 }
 

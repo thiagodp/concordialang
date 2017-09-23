@@ -26,27 +26,16 @@ See: `AbstractTestScript.ts`
             "location": { "column": 1, "line": 10 },
             "name": "unsuccessful login"
         }
-    ],
-
-    "interactions": [
-        {
-            "location": { "column": 1, "line": 20 },
-            "name": "successful login"
-        },
-        {
-            "location": { "column": 1, "line": 30 },
-            "name": "unsuccessful login"
-        }
-    ],    
+    ],  
 
     "testcases": [
         {
             "location": { "column": 1, "line": 40 },
             "name": "successful login",
+            "invalid": true,
 
             "feature": "login",
             "scenario": "successful login",
-            "interaction": "successful login",
             
             "commands": [
                 {
@@ -62,9 +51,16 @@ See: `AbstractTestScript.ts`
                     "action": "fill",
                     "target": "#username",
                     "targetType": "textbox",
-                    "value": "bob",
-                    "valueConsideredValid": true
-                }
+                    "values": [ "bob" ],
+                    "invalid": true
+                },
+                {
+                    "location": { "column": 1, "line": 43 },
+                    "id": "s8a7s8",
+                    "action": "click",
+                    "target": "#enter",
+                    "targetType": "button"
+                }                
             ]
         }
     ]
