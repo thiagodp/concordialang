@@ -7,7 +7,12 @@ import { NLP } from '../../modules/nlp/NLP';
  */
 describe( 'NLPInPortugueseTest', () => {
 
-    let nlp: NLP; // under test
+    let nlp: NLP; // under test    
+
+    const UI_ACTION: string = 'ui_action';
+    const UI_TARGET_TYPE: string = 'ui_target_type';
+    const ELEMENT: string = 'element';
+    const VALUE: string = 'value';
 
     let conversor: NLPTrainingDataConversor = new NLPTrainingDataConversor();
     let translationMap = makeTranslationMap();
@@ -42,25 +47,25 @@ describe( 'NLPInPortugueseTest', () => {
         let results = [];
         results.push( nlp.recognize( 'eu clico em "x"' ) );
         results.push( nlp.recognize( 'eu clico na opção "x"' ) );
-        shouldHaveEntities( results, [ "ui_action", "value" ] );
+        shouldHaveEntities( results, [ UI_ACTION, VALUE ] );
     } );
 
     it( 'testcase - pt - recognizes a click with a target and a value', () => {
         let results = [];
         results.push( nlp.recognize( 'eu clico no botão "x"' ) );
-        shouldHaveEntities( results, [ "ui_action", "ui_target_type", "value" ] );
+        shouldHaveEntities( results, [ UI_ACTION, UI_TARGET_TYPE, VALUE ] );
     } );
 
     it( 'testcase - pt - recognizes a fill with an element', () => {
         let results = [];
         results.push( nlp.recognize( 'eu preencho <Nome>' ) );
-        shouldHaveEntities( results, [ "ui_action", "element" ] );
+        shouldHaveEntities( results, [ UI_ACTION, ELEMENT ] );
     } );    
 
     it( 'testcase - pt - recognizes a fill with an element and a value', () => {
         let results = [];
         results.push( nlp.recognize( 'eu preencho <Nome> com "Bob"' ) );
-        shouldHaveEntities( results, [ "ui_action", "element", "value" ] );
+        shouldHaveEntities( results, [ UI_ACTION, ELEMENT, VALUE ] );
     } );
 
 } );
