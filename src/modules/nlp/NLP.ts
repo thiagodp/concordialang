@@ -24,7 +24,7 @@ export class NLP {
 
         // Add an entity named "element" and its recognizer
         this._additionalEntities.push( 'element' );
-        this._additionalRecognizers.push( this.makeValueEntityRecognizer( 'element' ) );        
+        this._additionalRecognizers.push( this.makeElementEntityRecognizer( 'element' ) );        
     }
 
     /**
@@ -32,12 +32,17 @@ export class NLP {
      * 
      * @param data Data to be used in the training.
      */
-    train( data: NLPTrainingData ): void {
+    train( data: NLPTrainingData, intentNameFilter: string = undefined ): void {
 
         this._trained = true;
 
         // Add intents and their recognizers
         for ( let intent of data.intents ) {
+
+            // Ignores the intent if it is equal to the filter (if defined)
+            if ( intentNameFilter && intentNameFilter != intent.name ) {
+                continue; // ignore the intent
+            }
 
             let entities = intent.entities.map( e => { return { id: e.name, entity: e.name }; } );
             this.addDefaultEntitiesTo( entities );
@@ -140,7 +145,7 @@ export class NLP {
 
         var valueRec = new Bravey.RegexEntityRecognizer( entityName, 10 );
 
-        valueRec.addMatch( new RegExp( '<.*>', "gi" ),
+        valueRec.addMatch( new RegExp( '<[^<\r\n]*>', "gi" ),
             function( match ) {
                 //console.log( 'match: ' ); console.log( match );
                 return match.toString().replace( '<', '' ).replace( '>', '' );

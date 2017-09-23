@@ -50,19 +50,23 @@
             "url": [ "url", "pagina", "endereco", "dominio", "ip", "local", "sitio" ]
         },
 
-        "option": {
+        "ui_action_option": {
             "not": [ "não" ],
 
             "up": [ "para cima", "acima" ],
             "down": [ "para baixo", "abaixo" ],
             "left": [ "para a esquerda", "a direita" ],
             "right": [ "para a direita", "a esquerda" ],
+            "mobileName": [ "nome mobile" ]            
+        }
+    },
 
+    "ui_element": {
+        "ui_element_option": {
             "id": [ "id", "identificacao" ],
             "name": [ "nome", "chamado" ],
             "class": [ "classe", "estilo" ],
-            "xpath": [ "xpath" ],
-            "mobileName": [ "nome mobile" ]            
+            "xpath": [ "xpath" ]
         }
     }
 }
