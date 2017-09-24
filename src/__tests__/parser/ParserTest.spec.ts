@@ -116,11 +116,11 @@ describe( 'ParserTest', () => {
             '@feature( my feature )',
             '@scenario( hello )',
             'Test Case: hello',
-            '  I see in the url "/login"',
-            '  I fill "#username" with ""',
-            '  I fill "#password" with "bobp4ss"',
-            '  I click "Enter"',
-            '  I see "Username must have at least 2 characters."'
+            '  Given that I see in the url "/login"',
+            '  When I fill "#username" with ""',
+            '    And I fill "#password" with "bobp4ss"',
+            '    And I click "Enter"',
+            '  Then I see "Username must have at least 2 characters."'
         ].forEach( ( val, index ) => lexer.addNodeFromLine( val, index + 1 ) );
 
         let doc: Document = {};

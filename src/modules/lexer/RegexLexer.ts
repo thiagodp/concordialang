@@ -1,4 +1,4 @@
-import { KeywordBaseLexer } from './KeywordBasedLexer';
+import { KeywordBasedLexer } from './KeywordBasedLexer';
 import { Regex } from '../ast/Regex';
 import { NodeLexer, LexicalAnalysisResult } from './NodeLexer';
 import { Keywords } from "../req/Keywords";
@@ -11,7 +11,7 @@ import { Expressions } from "../req/Expressions";
  * 
  * @author Thiago Delgado Pinto
  */
-export class RegexLexer implements NodeLexer< Regex >, KeywordBaseLexer {
+export class RegexLexer implements NodeLexer< Regex >, KeywordBasedLexer {
 
     private _lineChecker: LineChecker = new LineChecker();
 

@@ -1,4 +1,5 @@
 import { Node, NamedNode, ContentNode } from './Node';
+import { Step } from './Step';
 
 // SCENARIO
 //
@@ -15,29 +16,5 @@ import { Node, NamedNode, ContentNode } from './Node';
 
 export interface Scenario extends NamedNode {
     description?: string;
-    sentences: Array< ScenarioSentence >;
-}
-
-export interface ScenarioSentence extends ContentNode {
-    type: 'given' | 'when' | 'then' | 'and' | 'but';
-}
-
-export interface GivenNode extends ScenarioSentence {
-    type: 'given';
-}
-
-export interface WhenNode extends ScenarioSentence {
-    type: 'when';
-}
-
-export interface ThenNode extends ScenarioSentence {
-    type: 'then';
-}
-
-export interface AndNode extends ScenarioSentence {
-    type: 'and';
-}
-
-export interface ButNode extends ScenarioSentence {
-    type: 'but';
+    sentences: Array< Step >;
 }

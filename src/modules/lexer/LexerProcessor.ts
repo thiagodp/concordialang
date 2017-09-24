@@ -1,4 +1,3 @@
-import { Finishable } from '../req/Finishable';
 import { DocumentProcessor } from '../req/DocumentProcessor';
 import { Lexer } from "./Lexer";
 

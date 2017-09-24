@@ -8,11 +8,10 @@ import { NodeParser } from './NodeParser';
 import { ParsingContext } from "./ParsingContext";
 import { ScenarioParser } from './ScenarioParser';
 import { TestCaseParser } from './TestCaseParser';
-import { ScenarioSentenceParser } from './ScenarioSentenceParser';
+import { StepParser } from './StepParser';
 import { ImportParser } from "./ImportParser";
 import { RegexParser } from "./RegexParser";
 import { StateParser } from "./StateParser";
-import { TestCaseSentenceParser } from "./TestCaseSentenceParser";
 
 /**
  * Builds an AST from the nodes detected by the lexer. It checks syntatic properties
@@ -33,13 +32,11 @@ export class Parser {
         this._parsersMap[ Keywords.IMPORT ] = new ImportParser();
         this._parsersMap[ Keywords.FEATURE ] = new FeatureParser();
         this._parsersMap[ Keywords.SCENARIO ] = new ScenarioParser();
-        this._parsersMap[ Keywords.STEP_GIVEN ] = new ScenarioSentenceParser();
-        this._parsersMap[ Keywords.STEP_WHEN ] = new ScenarioSentenceParser();
-        this._parsersMap[ Keywords.STEP_THEN ] = new ScenarioSentenceParser();
-        this._parsersMap[ Keywords.STEP_AND ] = new ScenarioSentenceParser();
-        this._parsersMap[ Keywords.STEP_BUT ] = new ScenarioSentenceParser();
+        this._parsersMap[ Keywords.STEP_GIVEN ] = new StepParser();
+        this._parsersMap[ Keywords.STEP_WHEN ] = new StepParser();
+        this._parsersMap[ Keywords.STEP_THEN ] = new StepParser();
+        this._parsersMap[ Keywords.STEP_AND ] = new StepParser();
         this._parsersMap[ Keywords.TEST_CASE ] = new TestCaseParser();
-        this._parsersMap[ Keywords.TEST_CASE_SENTENCE ] = new TestCaseSentenceParser();        
         this._parsersMap[ Keywords.REGEX ] = new RegexParser();
         this._parsersMap[ Keywords.STATE ] = new StateParser();
     }

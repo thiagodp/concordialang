@@ -17,18 +17,16 @@
   - [X] Then
   - [X] And
   - [X] But  
-- [X] Test Case
-- [X] Test Case Sentences
-- [X] Regex
-- [X] State
-- [ ] User Interface
-- [ ] Constant
-- [ ] Data Source
-- [ ] Interaction Template
-- [ ] Interaction
-- [ ] Restriction
-- [ ] Command
-- [ ] Task
+- [/] Test Case
+- [/] Test Case Sentences
+- [/] Regular Expressions
+- [/] State
+- [ ] Constants
+- [ ] UI Element
+- [ ] Table
+- [ ] Database
+- [ ] File
+- [ ] Test Events
 
 ## Parser
 
@@ -39,20 +37,21 @@
 - [ ] Feature Sentences
 - [X] Scenario
 - [X] Scenario Sentences
-- [X] Test Case
-- [X] Test Case Sentences
-- [X] Regex
-- [X] State
-- [ ] User Interface
-- [ ] Constant
-- [ ] Data Source
-- [ ] Interaction Template
-- [ ] Interaction Template Sentences
-- [ ] Interaction
-- [ ] Interaction Sentences
-- [ ] Restriction
-- [ ] Command
-- [ ] Task
+- [/] Test Case
+- [/] Test Case Sentences
+- [/] State
+- [/] Regular Expressions
+- [ ] Constants
+- [ ] UI Element
+- [ ] Table
+- [ ] Database
+- [ ] File
+- [ ] Test Events
+
+## NLP Processor
+
+- [ ] Test Case
+- [ ] UI Element
 
 ## Semantic Analyzer
 
@@ -78,16 +77,12 @@
   - [ ] Then
   - [ ] And
   - [ ] But  
-- [ ] Regex
 - [ ] State
-- [ ] User Interface
-- [ ] Constant
-- [ ] Data Source
-- [ ] Interaction Template
-- [ ] Interaction
-- [ ] Restriction
-- [ ] Command
-- [ ] Task
+- ...
+
+## Logic Analyzer
+
+- [ ] ...
 
 ## Data Generation
 

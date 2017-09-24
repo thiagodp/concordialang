@@ -18,7 +18,6 @@ describe( 'LexerTest', () => {
         regex: [ 'expressão' ],
         state: [ 'estado' ],
         testcase: [ 'caso de teste' ],
-        testcaseSentence: [ 'eu' ],
 
         // Gherkin keywords
         background: [ 'background' ],
@@ -27,12 +26,10 @@ describe( 'LexerTest', () => {
         language: [ 'language', 'idioma', 'língua' ],
         outline: [ 'esboço' ],
         scenario: [ 'cenário' ],
-        step: [ 'dado', 'quando', 'então', 'e', 'mas' ],
-        stepAnd: [ 'e' ],
-        stepBut: [ 'mas' ],
         stepGiven: [ 'dado' ],
+        stepWhen: [ 'quando' ],
         stepThen: [ 'então' ],
-        stepWhen: [ 'quando' ]
+        stepAnd: [ 'e', 'mas' ],
     };    
 
     let loader: KeywordDictionaryLoader = new InMemoryKeywordDictionaryLoader(
@@ -42,7 +39,22 @@ describe( 'LexerTest', () => {
         }
     );
 
-    let lexer: Lexer = new Lexer( 'en', loader );
+    let lexer: Lexer = new Lexer( 'en', loader ); // under test
+
+    // Helper function
+    function assertLineExpectations( lines: any[] ) {
+        lines.forEach( ( val, index ) => lexer.addNodeFromLine( val.l, index + 1 ) );
+        
+        expect( lexer.errors().length ).toBe( 0 );
+
+        let expectations = lines
+            .filter( val => val.e !== null ) // only the defined expectations
+            .map( val => val.e ); // return the expectations
+
+        lexer.nodes().forEach( ( node, index ) =>
+            expect( node.keyword ).toBe( expectations[ index ] ) ); // same index as the expectation
+    }
+
 
     beforeEach( () => {
         lexer.reset();
@@ -53,114 +65,70 @@ describe( 'LexerTest', () => {
     } );
 
     it( 'detects correctly in english', () => {
+        let lines = 
         [
-            '#language:en',
-            '',
-            'import "somefile.ext"',
-            '',                        
-            '@important',
-            'feature: my feature',
-            ' \t',
-            'scenario: hello',
-            '  given something',
-            '    and another thing',
-            '  when anything happens',
-            '    and other thing happens',
-            '    but other thing does not happen',
-            '  then the result is anything',
-            '    and another result could also happen',
-            '',
-            'test case: my test case',
-            '  I see in the url "/login"',
-            '  I fill "#username" with ""',
-            '  I fill "#password" with "bobp4ss"',
-            '  I click "Enter"',
-            '',            
-            'regex "my regex": /some regex/',
-            '',
-            'this must be recognized as text'
-        ].forEach( ( val, index ) => lexer.addNodeFromLine( val, index + 1 ) );
-        
-        expect( lexer.errors().length ).toBe( 0 );
+            { l: '#language:en', e: Keywords.LANGUAGE },
+            { l: '', e: null },
+            { l: 'import "somefile"', e: Keywords.IMPORT },
+            { l: '', e: null },
+            { l: '@important', e: Keywords.TAG },
+            { l: 'feature: my feature', e: Keywords.FEATURE },
+            { l: ' \t', e: null },
+            { l: 'scenario: hello', e: Keywords.SCENARIO },
+            { l: '  given something', e: Keywords.STEP_GIVEN },
+            { l: '    and another thing', e: Keywords.STEP_AND },
+            { l: '  when anything happens', e: Keywords.STEP_WHEN },
+            { l: '    and other thing happens', e: Keywords.STEP_AND },
+            { l: '    but other thing does not happen', e: Keywords.STEP_AND },
+            { l: '  then the result is anything', e: Keywords.STEP_THEN },
+            { l: '    and another result could also happen', e: Keywords.STEP_AND },
+            { l: '', e: null },
+            { l: 'Test Case: my test case', e: Keywords.TEST_CASE },
+            { l: '  Given that I see the url "/login"', e: Keywords.STEP_GIVEN },
+            { l: '  When I fill "#username" with ""', e: Keywords.STEP_WHEN },
+            { l: '    And I fill "#password" with "bobp4ss"', e: Keywords.STEP_AND },
+            { l: '    And I click "Enter"', e: Keywords.STEP_AND },
+            { l: '', e: null },
+            { l: 'Regex "my regex": /some regex/', e: Keywords.REGEX },
+            { l: '', e: null },
+            { l: 'this must be recognized as text', e: Keywords.TEXT }
+        ];
 
-        let nodes = lexer.nodes();
-
-        let i = 0;
-        expect( nodes[ i++ ].keyword ).toBe( Keywords.LANGUAGE );
-        expect( nodes[ i++ ].keyword ).toBe( Keywords.IMPORT );
-        expect( nodes[ i++ ].keyword ).toBe( Keywords.TAG );
-        expect( nodes[ i++ ].keyword ).toBe( Keywords.FEATURE );
-        expect( nodes[ i++ ].keyword ).toBe( Keywords.SCENARIO );
-        expect( nodes[ i++ ].keyword ).toBe( Keywords.STEP_GIVEN );
-        expect( nodes[ i++ ].keyword ).toBe( Keywords.STEP_AND );
-        expect( nodes[ i++ ].keyword ).toBe( Keywords.STEP_WHEN );
-        expect( nodes[ i++ ].keyword ).toBe( Keywords.STEP_AND );
-        expect( nodes[ i++ ].keyword ).toBe( Keywords.STEP_BUT );
-        expect( nodes[ i++ ].keyword ).toBe( Keywords.STEP_THEN );
-        expect( nodes[ i++ ].keyword ).toBe( Keywords.STEP_AND );
-        expect( nodes[ i++ ].keyword ).toBe( Keywords.TEST_CASE );
-        expect( nodes[ i++ ].keyword ).toBe( Keywords.TEST_CASE_SENTENCE );
-        expect( nodes[ i++ ].keyword ).toBe( Keywords.TEST_CASE_SENTENCE );
-        expect( nodes[ i++ ].keyword ).toBe( Keywords.TEST_CASE_SENTENCE );
-        expect( nodes[ i++ ].keyword ).toBe( Keywords.TEST_CASE_SENTENCE );
-        expect( nodes[ i++ ].keyword ).toBe( Keywords.REGEX );
-        expect( nodes[ i++ ].keyword ).toBe( Keywords.TEXT );
+        assertLineExpectations( lines );
     } );
 
 
     it( 'detects correctly in portuguese', () => {
+        let lines = 
         [
-            '#language:pt',
-            '',
-            'importe "somefile"',
-            '',
-            '@importante',
-            'característica: my feature',
-            ' \t',
-            'cenário: hello',
-            '  dado something',
-            '    e another thing',
-            '  quando anything happens',
-            '    e other thing happens',
-            '    mas other thing does not happen',
-            '  então the result is anything',
-            '    e another result could also happen',
-            '',
-            'caso de teste: my test case',
-            '  Eu vejo a url "/login"',
-            '  Eu preencho "#username" com ""',
-            '  Eu preencho "#password" com "bobp4ss"',
-            '  Eu clico "Enter"',
-            '',            
-            'expressão "my regex": /some regex/',
-            '',
-            'isso must be recognized as text'
-        ].forEach( ( val, index ) => lexer.addNodeFromLine( val, index + 1 ) );
-        
-        expect( lexer.errors().length ).toBe( 0 );
+            { l: '#language:pt', e: Keywords.LANGUAGE },
+            { l: '', e: null },
+            { l: 'importe "somefile"', e: Keywords.IMPORT },
+            { l: '', e: null },
+            { l: '@importante', e: Keywords.TAG },
+            { l: 'característica: my feature', e: Keywords.FEATURE },
+            { l: ' \t', e: null },
+            { l: 'cenário: hello', e: Keywords.SCENARIO },
+            { l: '  dado something', e: Keywords.STEP_GIVEN },
+            { l: '    e another thing', e: Keywords.STEP_AND },
+            { l: '  quando anything happens', e: Keywords.STEP_WHEN },
+            { l: '    e other thing happens', e: Keywords.STEP_AND },
+            { l: '    mas other thing does not happen', e: Keywords.STEP_AND },
+            { l: '  então the result is anything', e: Keywords.STEP_THEN },
+            { l: '    e another result could also happen', e: Keywords.STEP_AND },
+            { l: '', e: null },
+            { l: 'Caso de Teste: my test case', e: Keywords.TEST_CASE },
+            { l: '  Dado que vejo a url "/login"', e: Keywords.STEP_GIVEN },
+            { l: '  Quando preencho "#username" com ""', e: Keywords.STEP_WHEN },
+            { l: '  E preencho "#password" com "bobp4ss"', e: Keywords.STEP_AND },
+            { l: '  E clico "Enter"', e: Keywords.STEP_AND },
+            { l: '', e: null },
+            { l: 'expressão "my regex": /some regex/', e: Keywords.REGEX },
+            { l: '', e: null },
+            { l: 'isso must be recognized as text', e: Keywords.TEXT }
+        ];
 
-        let nodes = lexer.nodes();
-
-        let i = 0;
-        expect( nodes[ i++ ].keyword ).toBe( Keywords.LANGUAGE );
-        expect( nodes[ i++ ].keyword ).toBe( Keywords.IMPORT );
-        expect( nodes[ i++ ].keyword ).toBe( Keywords.TAG );
-        expect( nodes[ i++ ].keyword ).toBe( Keywords.FEATURE );
-        expect( nodes[ i++ ].keyword ).toBe( Keywords.SCENARIO );
-        expect( nodes[ i++ ].keyword ).toBe( Keywords.STEP_GIVEN );
-        expect( nodes[ i++ ].keyword ).toBe( Keywords.STEP_AND );
-        expect( nodes[ i++ ].keyword ).toBe( Keywords.STEP_WHEN );
-        expect( nodes[ i++ ].keyword ).toBe( Keywords.STEP_AND );
-        expect( nodes[ i++ ].keyword ).toBe( Keywords.STEP_BUT );
-        expect( nodes[ i++ ].keyword ).toBe( Keywords.STEP_THEN );
-        expect( nodes[ i++ ].keyword ).toBe( Keywords.STEP_AND );
-        expect( nodes[ i++ ].keyword ).toBe( Keywords.TEST_CASE );
-        expect( nodes[ i++ ].keyword ).toBe( Keywords.TEST_CASE_SENTENCE );
-        expect( nodes[ i++ ].keyword ).toBe( Keywords.TEST_CASE_SENTENCE );
-        expect( nodes[ i++ ].keyword ).toBe( Keywords.TEST_CASE_SENTENCE );
-        expect( nodes[ i++ ].keyword ).toBe( Keywords.TEST_CASE_SENTENCE );
-        expect( nodes[ i++ ].keyword ).toBe( Keywords.REGEX );
-        expect( nodes[ i++ ].keyword ).toBe( Keywords.TEXT );
+        assertLineExpectations( lines );
     } );
 
 } );

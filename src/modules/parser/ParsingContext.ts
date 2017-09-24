@@ -15,11 +15,9 @@ export class ParsingContext {
 
     inFeature: boolean = false;
     inScenario: boolean = false;
-    inInteraction: boolean = false;
     inTestCase: boolean = false;
 
     currentScenario: Scenario = null;
-    currentInteraction: Interaction = null;
     currentTestCase: TestCase = null;
 
     constructor( doc?: Document ) {

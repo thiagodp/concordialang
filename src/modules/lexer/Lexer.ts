@@ -13,14 +13,12 @@ import { ImportLexer } from './ImportLexer';
 import { FeatureLexer } from './FeatureLexer';
 import { ScenarioLexer } from './ScenarioLexer';
 import { RegexLexer } from './RegexLexer';
-import { GivenLexer } from "./GivenLexer";
-import { WhenLexer } from "./WhenLexer";
-import { ThenLexer } from "./ThenLexer";
-import { AndLexer } from "./AndLexer";
-import { ButLexer } from "./ButLexer";
+import { StepGivenLexer } from "./StepGivenLexer";
+import { StepWhenLexer } from "./StepWhenLexer";
+import { StepThenLexer } from "./StepThenLexer";
+import { StepAndLexer } from "./StepAndLexer";
 import { TextLexer } from "./TextLexer";
 import { StateLexer } from "./StateLexer";
-import { TestCaseSentenceLexer } from "./TestCaseSentenceLexer";
 
 /**
  * Lexer
@@ -49,13 +47,11 @@ export class Lexer {
             , new ImportLexer( dictionary.import )
             , new FeatureLexer( dictionary.feature )
             , new ScenarioLexer( dictionary.scenario )
-            , new GivenLexer( dictionary.stepGiven )
-            , new WhenLexer( dictionary.stepWhen )
-            , new ThenLexer( dictionary.stepThen )
-            , new AndLexer( dictionary.stepAnd )
-            , new ButLexer( dictionary.stepBut )
+            , new StepGivenLexer( dictionary.stepGiven )
+            , new StepWhenLexer( dictionary.stepWhen )
+            , new StepThenLexer( dictionary.stepThen )
+            , new StepAndLexer( dictionary.stepAnd )
             , new TestCaseLexer( dictionary.testcase )
-            , new TestCaseSentenceLexer( dictionary.testcaseSentence )
             , new RegexLexer( dictionary.regex )
             , new StateLexer( dictionary.state )
             , new TextLexer() // captures any non-empty

@@ -9,8 +9,7 @@ import { State } from "../ast/State";
  */
 export class StateLexer extends NamedNodeLexer< State > {
     
-        constructor( words: Array< string > ) {
-            super( words, Keywords.STATE );
-        }
-    
+    constructor( words: Array< string > ) {
+        super( words, Keywords.STATE );
     }
+}

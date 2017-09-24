@@ -8,7 +8,7 @@ import { KeywordBasedLexer } from "./KeywordBasedLexer";
 import { LexicalException } from "../req/LexicalException";
 
 /**
- * Keyword block lexer
+ * Detects a node in the format "keyword:".
  * 
  * @author Thiago Delgado Pinto
  */

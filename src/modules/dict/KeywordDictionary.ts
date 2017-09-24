@@ -12,8 +12,7 @@ export interface KeywordDictionary { // properties should exist in Keywords
     import: string[],
     regex: string[],
     state: string[],
-    testcase: string[],    
-    testcaseSentence: string[],
+    testcase: string[],
 
     // Gherkin keywords
 
@@ -21,12 +20,10 @@ export interface KeywordDictionary { // properties should exist in Keywords
 
     feature: string[],
 
-    step: string[],
     stepGiven: string[],
     stepWhen: string[],
     stepThen: string[],
     stepAnd: string[],
-    stepBut: string[],
 
     scenario: string[],
     background: string[],

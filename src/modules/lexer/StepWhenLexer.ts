@@ -1,16 +1,16 @@
 import { StartingKeywordLexer } from './StartingKeywordLexer';
-import { GivenNode } from "../ast/Scenario";
+import { StepWhen } from "../ast/Step";
 import { Keywords } from "../req/Keywords";
 
 /**
- * Detects a Given node.
+ * Detects a When node.
  * 
  * @author Thiago Delgado Pinto
  */
-export class GivenLexer extends StartingKeywordLexer< GivenNode > {
+export class StepWhenLexer extends StartingKeywordLexer< StepWhen > {
 
     constructor( words: string[] ) {
-        super( words, Keywords.STEP_GIVEN );
+        super( words, Keywords.STEP_WHEN );
     }
 
 }

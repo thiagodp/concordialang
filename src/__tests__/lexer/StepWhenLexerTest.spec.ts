@@ -1,28 +1,27 @@
 import { Keywords } from '../../modules/req/Keywords';
-import { AndLexer } from "../../modules/lexer/AndLexer";
+import { StepWhenLexer } from "../../modules/lexer/StepWhenLexer";
 
 /**
  * @author Thiago Delgado Pinto
  */
-describe( 'AndLexerTest', () => {
+describe( 'StepWhenLexerTest', () => {
 
-    let words = [ 'and' ];
-    let lexer = new AndLexer( words );
+    let words = [ 'when' ];
+    let lexer = new StepWhenLexer( words );
     // IMPORTANT: This lexer inherits from StartingKeywordLexer
     // and StartingKeywordLexerTest checks many important aspects 
     // that does not need to be repeated here.
 
     it( 'detects correctly', () => {
-        let line = "  \t  \t And \t the world and everybody on it \t";
+        let line = "  \t  \t When \t the world and everybody on it \t";
         let r = lexer.analyze( line, 1 );
         expect( r ).toBeDefined();
-        expect( r.nodes ).toHaveLength( 1 );
         let node = r.nodes[ 0 ];
         // Location
         expect( node.location.line ).toBe( 1 );
         expect( node.location.column ).toBe( 8 );
         // Keyword
-        expect( node.keyword ).toBe( Keywords.STEP_AND );
+        expect( node.keyword ).toBe( Keywords.STEP_WHEN );
         // Content
         expect( node.content ).toBe( 'the world and everybody on it' );
     } );

@@ -11,7 +11,6 @@ export abstract class Keywords {
     static REGEX: string = 'regex';
     static STATE: string = 'state';    
     static TEST_CASE: string = 'testcase';
-    static TEST_CASE_SENTENCE: string = 'testcaseSentence';
     
     // Gherkin keywords
 
@@ -26,8 +25,6 @@ export abstract class Keywords {
     static STEP_WHEN: string = 'stepWhen';
     static STEP_THEN: string = 'stepThen';
     static STEP_AND: string = 'stepAnd';
-    static STEP_AND_GENERIC: string = '*'; // TO-DO: remove
-    static STEP_BUT: string = 'stepBut'; // TO-DO: remove and include the words as "and"
 
     static TEXT: string = 'text'; // not empty, but not recognized
 
@@ -36,17 +33,19 @@ export abstract class Keywords {
      */
     static variableTypes(): Array< string > {
         return [
+            Keywords.IMPORT,
+            Keywords.REGEX,
+            Keywords.STATE,
+            Keywords.TEST_CASE,
             Keywords.LANGUAGE            
-            , Keywords.IMPORT            
             , Keywords.FEATURE
             , Keywords.SCENARIO
             , Keywords.STEP_GIVEN
             , Keywords.STEP_WHEN
             , Keywords.STEP_THEN
             , Keywords.STEP_AND
-            , Keywords.STEP_AND_GENERIC
             , Keywords.STEP_BUT
-            , Keywords.REGEX
+            , 
             , Keywords.STATE
         ];
     }

@@ -13,7 +13,6 @@ export class EnglishKeywordDictionary implements KeywordDictionary {
     regex: string[] = [ 'regex', 'regular expression' ];
     state: string[] = [ 'state' ];    
     testcase: string[] = [ 'test case' ];
-    testcaseSentence: string[] = [ 'i' ];
 
     // Gherkin keywords
 
@@ -21,12 +20,10 @@ export class EnglishKeywordDictionary implements KeywordDictionary {
 
     feature: string[] = [ 'feature' ];
 
-    step: string[] = [ 'given', 'when', 'then', 'and', 'but' ];
     stepGiven: string[] = [ 'given' ];
     stepWhen: string[] = [ 'when' ];
     stepThen: string[] = [ 'then' ];
-    stepAnd: string[] = [ 'and' ];
-    stepBut: string[] = [ 'but' ];
+    stepAnd: string[] = [ 'and', 'but' ];
 
     scenario: string[] = [ 'scenario' ];
     background: string[] = [ 'background' ];

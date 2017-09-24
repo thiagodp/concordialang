@@ -1,4 +1,4 @@
-import { KeywordBaseLexer } from './KeywordBasedLexer';
+import { KeywordBasedLexer } from './KeywordBasedLexer';
 import { Node, ContentNode } from '../ast/Node';
 import { NodeLexer, LexicalAnalysisResult } from './NodeLexer';
 import { Expressions } from '../req/Expressions';
@@ -13,7 +13,7 @@ const XRegExp = require( 'xregexp' );
  * 
  * @author Thiago Delgado Pinto
  */
-export class QuotedNodeLexer< T extends ContentNode > implements NodeLexer< T >, KeywordBaseLexer  {
+export class QuotedNodeLexer< T extends ContentNode > implements NodeLexer< T >, KeywordBasedLexer  {
 
     private _lineChecker: LineChecker = new LineChecker();
 

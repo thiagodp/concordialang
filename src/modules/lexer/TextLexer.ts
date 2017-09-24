@@ -4,7 +4,7 @@ import { Keywords } from "../req/Keywords";
 import { LineChecker } from "../req/LineChecker";
 
 /**
- * Detects a Text.
+ * Detects anything not empty.
  * 
  * @author Thiago Delgado Pinto
  */

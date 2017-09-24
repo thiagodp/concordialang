@@ -1,16 +1,16 @@
 import { StartingKeywordLexer } from './StartingKeywordLexer';
-import { WhenNode } from "../ast/Scenario";
+import { StepAnd } from "../ast/Step";
 import { Keywords } from "../req/Keywords";
 
 /**
- * Detects a When node.
+ * Detects an And node.
  * 
  * @author Thiago Delgado Pinto
  */
-export class WhenLexer extends StartingKeywordLexer< WhenNode > {
+export class StepAndLexer extends StartingKeywordLexer< StepAnd > {
 
     constructor( words: string[] ) {
-        super( words, Keywords.STEP_WHEN );
+        super( words, Keywords.STEP_AND );
     }
 
 }

@@ -1,16 +1,16 @@
 import { StartingKeywordLexer } from './StartingKeywordLexer';
-import { ThenNode } from "../ast/Scenario";
+import { StepGiven } from "../ast/Step";
 import { Keywords } from "../req/Keywords";
 
 /**
- * Detects a Then node.
+ * Detects a Given node.
  * 
  * @author Thiago Delgado Pinto
  */
-export class ThenLexer extends StartingKeywordLexer< ThenNode > {
+export class StepGivenLexer extends StartingKeywordLexer< StepGiven > {
 
     constructor( words: string[] ) {
-        super( words, Keywords.STEP_THEN );
+        super( words, Keywords.STEP_GIVEN );
     }
 
 }

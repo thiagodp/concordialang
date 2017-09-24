@@ -3,18 +3,18 @@
     "regex": [ "expressão", "expressão regular" ],
     "state": [ "estado" ],    
     "testcase": [ "caso de teste" ],
-    "testcaseSentence": [ "eu" ],
 
-    "background": [ "background" ],
-    "examples": [ "examplos" ],
-    "feature": [ "funcionalidade", "característica" ],
     "language": [ "language", "idioma", "língua" ],
-    "outline": [ "esboço" ],
-    "scenario": [ "cenário" ],
-    "step": [ "dado", "quando", "então", "e", "mas" ],
-    "stepAnd": [ "e" ],
-    "stepBut": [ "mas" ],
+
+    "feature": [ "funcionalidade", "característica" ],
+
     "stepGiven": [ "dado" ],
-    "stepThen": [ "então" ],
-    "stepWhen": [ "quando" ]
+    "stepWhen": [ "quando" ],
+    "stepThen": [ "então" ],    
+    "stepAnd": [ "e", "mas" ],
+
+    "scenario": [ "cenário" ],
+    "background": [ "background" ],
+    "outline": [ "esboço" ],
+    "examples": [ "examplos" ]
 }
