@@ -1,5 +1,10 @@
 {
     "testcase": {
+
+        "ui_action_modifier": {
+            "not": [ "nao" ]
+        },
+
         "ui_action": {
             "append": [ "adiciono", "acrescento", "insiro", "coloco" ],
             "attachFile": [ "anexo o arquivo", "adiciono o arquivo", "sobrescrevo o arquivo" ],
@@ -51,8 +56,6 @@
         },
 
         "ui_action_option": {
-            "not": [ "não" ],
-
             "up": [ "para cima", "acima" ],
             "down": [ "para baixo", "abaixo" ],
             "left": [ "para a esquerda", "a direita" ],

@@ -1,3 +1,4 @@
+import { TestCaseEntities } from '../../modules/nlp/TestCaseEntities';
 import { NLPTrainingDataConversor } from '../../modules/nlp/NLPTrainingDataConversor';
 import { NLPEntityUsageExample, NLPTrainingData } from '../../modules/nlp/NLPTrainingData';
 import { NLP } from '../../modules/nlp/NLP';
@@ -10,10 +11,11 @@ describe( 'NLPInPortugueseTest', () => {
     let nlp: NLP; // under test    
 
     // entities
-    const UI_ACTION: string = 'ui_action';
-    const UI_TARGET_TYPE: string = 'ui_target_type';
-    const ELEMENT: string = 'element';
-    const VALUE: string = 'value';
+    const UI_ACTION_MODIFIER = TestCaseEntities.UI_ACTION_MODIFIER;
+    const UI_ACTION: string = TestCaseEntities.UI_ACTION;
+    const UI_TARGET_TYPE: string = TestCaseEntities.UI_TARGET_TYPE;
+    const ELEMENT: string = TestCaseEntities.ELEMENT;
+    const VALUE: string = TestCaseEntities.VALUE;
 
     // helpers
     let conversor: NLPTrainingDataConversor = new NLPTrainingDataConversor();

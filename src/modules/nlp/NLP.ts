@@ -79,7 +79,7 @@ export class NLP {
         return this._trained;
     }
 
-    recognize( sentence: string ): NLPResult {
+    recognize( sentence: string ): NLPResult | null {
         let method = 'anyEntity'; // | "default"
         return this._nlp.test( sentence, method );
     }

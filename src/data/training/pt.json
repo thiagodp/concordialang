@@ -5,11 +5,22 @@
             "eu {ui_action} em {value}",
             "eu {ui_action} com {value}",
             "eu {ui_action} o {value}",
+
+            "eu {ui_action_modifier} {ui_action} em {value}",
+            "eu {ui_action_modifier} {ui_action} com {value}",            
+            "eu {ui_action_modifier} {ui_action} o {value}",
+
             "eu {ui_action} no {ui_target_type} {value}",
             "eu {ui_action} o {ui_target_type} com {value}",
 
+            "eu {ui_action_modifier} {ui_action} no {ui_target_type} {value}",
+            "eu {ui_action_modifier} {ui_action} o {ui_target_type} com {value}",
+
             "eu {ui_action} {value} em {element}",
-            "eu {ui_action} {element} com {value}"
+            "eu {ui_action_modifier} {ui_action} {value} em {element}",
+
+            "eu {ui_action} {element} com {value}",
+            "eu {ui_action_modifier} {ui_action} {element} com {value}"
         ]
     }
 ]
