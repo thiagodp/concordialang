@@ -10,7 +10,8 @@ See: `AbstractTestScript.ts`
 
 ```javascript
 {
-    "sourceFile": "path/to/somefile.testcase.json",
+    "schemaVersion": "1.0",
+    "sourceFile": "path/to/somefile.testcase",
 
     "feature": {
         "location": { "column": 1, "line": 1 },
@@ -42,14 +43,14 @@ See: `AbstractTestScript.ts`
                     "location": { "column": 1, "line": 41 },
                     "id": "a7b5c3d4",
                     "action": "see",
-                    "target": "Login",
+                    "target": [ "Login" ],
                     "targetType": "text"
                 },
                 {
                     "location": { "column": 1, "line": 42 },
                     "id": "a8b6c4d5",
                     "action": "fill",
-                    "target": "#username",
+                    "target": [ "#username" ],
                     "targetType": "textbox",
                     "values": [ "bob" ],
                     "invalid": true
@@ -58,7 +59,7 @@ See: `AbstractTestScript.ts`
                     "location": { "column": 1, "line": 43 },
                     "id": "s8a7s8",
                     "action": "click",
-                    "target": "#enter",
+                    "target": [ "#enter" ],
                     "targetType": "button"
                 }                
             ]
