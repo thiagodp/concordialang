@@ -12,8 +12,7 @@ import { FileInfo } from "../ast/FileInfo";
 export class InputProcessor implements ProcessingObserver {
 
     private _inputFileExtractor: InputFileExtractor = new InputFileExtractor();
-    private _defaultExtensions: Array< string > = [ 'asl', 'feature', 'feat' ];    
-    private _defaultFileEncoding: string = 'UTF-8';
+    private _defaultExtensions: Array< string > = [ 'asl', 'feature', 'feat' ];
     private _defaultParamSeparator: string = ',';
     private _reqProcessor: RequirementFilesProcessor;
 
@@ -31,12 +30,28 @@ export class InputProcessor implements ProcessingObserver {
      * @param flags Flags
      */
     process( input: Array< string >, flags: any ): boolean {
+
         const spinner = this._ora().start( 'Starting...' );
         const ye = this._chalk.yellow;
 
         // Language
         let language = this.detectLanguage( flags );
-        spinner.info( 'Using language ' + ye( language ) );
+        if ( this.availableLanguages().indexOf( language ) < 0 ) {
+            spinner.warn( 'Language ' + ye( language ) + ' not available. Available are: ' +
+                this.availableLanguages().join( ', ' ) + '.' );
+            language = 'en';
+        }
+
+        // Encoding
+        let encoding = this.detectEncoding( flags );
+        if ( this.availableEncodings().indexOf( encoding ) < 0 ) {
+            let available: string = Array.from( new Set( this.availableEncodings().map( v => v.replace( '-', '' ) ) ) )
+                .join( ', ' );
+            spinner.warn( 'Encoding ' + ye( encoding ) + ' not available. Available are: ' + available + '.' );
+            encoding = 'utf8';
+        }        
+
+        spinner.info( 'Using language ' + ye( language ) + ' and encoding ' + ye( encoding ) + '.' );
         spinner.stop();
 
         // Input files or directory
@@ -49,8 +64,7 @@ export class InputProcessor implements ProcessingObserver {
         }
 
         // Processing files
-        let charset = 'string' === typeof flags.charset ? flags.charset : 'utf8';
-        this._reqProcessor.process( files, charset, this );
+        this._reqProcessor.process( files, language, encoding, this );
 
         if ( 0 === this._totalErrors ) {
             spinner.succeed( 'Done' );
@@ -62,12 +76,23 @@ export class InputProcessor implements ProcessingObserver {
     }
 
     /**
+     * Detect input charset.
+     * 
+     * @param flags Input flags
+     */    
+    detectEncoding( flags: any ): string {
+        let charset = 'string' === typeof flags.encoding ? flags.encoding : 'utf8';
+        return charset.trim().toLowerCase().replace( '-', '' );
+    }
+
+    /**
      * Detect input language.
      * 
      * @param flags Input flags
      */
     detectLanguage( flags: any ): string {
-        return 'string' === typeof flags.lang ? flags.lang : 'en';
+        let language: string = 'string' === typeof flags.language ? flags.language : 'en';
+        return language.trim().toLowerCase();
     }
 
     /**
@@ -158,6 +183,28 @@ export class InputProcessor implements ProcessingObserver {
 
         return files;
     }
+
+    /**
+     * Returns available languages.
+     */
+    private availableLanguages(): string[] {
+        return [ 'en', 'pt' ]; // TO-DO: detect files
+    }
+
+    /**
+     * Returns available encodings.
+     * 
+     * @see https://github.com/nodejs/node/blob/master/lib/buffer.js
+     */
+    private availableEncodings(): string[] {
+        return [
+            'utf8', 'utf-8',
+            'ascii',
+            'latin1',
+            'ucs2', 'ucs-2',
+            'utf16le', 'utf-16le'
+        ];
+    }    
 
     /**
      * Returns extensions in a user-readable format.

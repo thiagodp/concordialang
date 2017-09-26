@@ -40,10 +40,23 @@ export class RequirementFilesProcessor {
     constructor( private _write: Function ) {
     }
 
-    public process( files: string[], charset: string = 'utf8', observer?: ProcessingObserver ) {
+    private setup( language: string ) {
+        if ( 'en' == language ) { // not needed to setup
+            return;
+        }
+        this._lexer = new Lexer( language, this._dictLoader );
+        this._docProcessor = new LexerProcessor( this._lexer );
+    }
 
-        let normalizedCharset = charset.toLowerCase().replace( '-', '' );
-        let fileProcessor: FileProcessor = new SyncFileProcessor( normalizedCharset );
+    public process(
+        files: string[],
+        language: string,
+        encoding: string,
+        observer?: ProcessingObserver
+    ) {
+        this.setup( language );
+
+        let fileProcessor: FileProcessor = new SyncFileProcessor( encoding );
 
         let spec: Spec = {
             docs: []
@@ -62,7 +75,7 @@ export class RequirementFilesProcessor {
 
             let fileInfo: FileInfo = {
                 path: normalizedFilePath,
-                hash: this._inputFileExtractor.hashOfFile( normalizedFilePath, normalizedCharset ) // Compute file hash
+                hash: this._inputFileExtractor.hashOfFile( normalizedFilePath, encoding ) // Compute file hash
             };
 
             // Adds the file info to the document

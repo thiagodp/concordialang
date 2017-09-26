@@ -16,9 +16,9 @@ const cli = meow( `
  Options:
   -p, --plugin=<name>                   Sets the plug-in to generate or to execute test scripts. NIY
 
-  -l, --lang=<lang-code>                Sets the default language (from "en"glish). NIY
-  -c, --charset=<value>                 Sets the charset (enconding) used to read files. Default is "utf8".
-  -e, --extensions=<".ext1,.ext2,...">  File extensions to consider for the given <dir>. NIY
+  -l, --language=<code>                 Sets the default language (from "en"glish). NIY
+  -e, --encoding=<value>                Sets the enconding to read files. Default is "utf8".
+  -x, --extensions=<".ext1,.ext2,...">  File extensions to consider for the given <dir>. NIY
   -i, --ignore=<"file1,file2,...">      Files to ignore from the given <dir>.
   -f, --files=<"file1,file2,...">       Files to consider instead of <dir>.
 
@@ -49,11 +49,11 @@ const cli = meow( `
 `, {
 	alias: {
 		p: 'plugin',
-		l: 'lang',	
-		c: 'charset',
+		l: 'language',	
+		e: 'encoding',
 		f: 'files',
 		i: 'ignore',
-		e: 'extensions',
+		x: 'extensions',
         t: 'no-test',
         s: 'no-script',
 		r: 'no-run',
