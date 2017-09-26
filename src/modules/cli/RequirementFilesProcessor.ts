@@ -42,7 +42,8 @@ export class RequirementFilesProcessor {
 
     public process( files: string[], charset: string = 'utf8', observer?: ProcessingObserver ) {
 
-        let fileProcessor: FileProcessor = new SyncFileProcessor( charset );
+        let normalizedCharset = charset.toLowerCase().replace( '-', '' );
+        let fileProcessor: FileProcessor = new SyncFileProcessor( normalizedCharset );
 
         let spec: Spec = {
             docs: []
@@ -61,7 +62,7 @@ export class RequirementFilesProcessor {
 
             let fileInfo: FileInfo = {
                 path: normalizedFilePath,
-                hash: this._inputFileExtractor.hashOfFile( normalizedFilePath, charset ) // Compute file hash
+                hash: this._inputFileExtractor.hashOfFile( normalizedFilePath, normalizedCharset ) // Compute file hash
             };
 
             // Adds the file info to the document
