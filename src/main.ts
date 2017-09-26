@@ -14,37 +14,38 @@ const cli = meow( `
    where <dir> is the directory with your documentation files.
 
  Options:
-  -p, --plugin=<name>               Plug-in used to generate or execute test scripts.
-  -l, --lang=<lang-code>            Language used in the documentation files. Default is "en" (english).
-  -c, --charset=<value>             Charset (enconding) used to read the files. Default is "utf8".
+  -p, --plugin=<name>                   Plug-in used to generate or execute test scripts.
+  -l, --lang=<lang-code>                Language used in the documentation files. Default is "en" (english).
+  -c, --charset=<value>                 Charset (enconding) used to read the files. Default is "utf8".
 
-  -i, --ignore=<"file1,file2,...">  Documentation files of the given <dir> to ignore.
-  -f, --files=<"file1,file2,...">   Documentation files to consider instead of <dir>.
+  -i, --ignore=<"file1,file2,...">      Documentation files of the given <dir> to ignore.
+  -f, --files=<"file1,file2,...">       Documentation files to consider instead of <dir>.
+  -e, --extensions=<".ext1,.ext2,...">  File extensions to consider.
 
-  -t, --no-test                     Do not generate abstract test cases.
-  -s, --no-script                   Do not generate test scripts.
-  -r, --no-run                      Do not run test scripts.
-  -u, --no-result                   Do not update the test content with the execution results.
+  -t, --no-test                         Do not generate abstract test cases.
+  -s, --no-script                       Do not generate test scripts.
+  -r, --no-run                          Do not run test scripts.
+  -u, --no-result                       Do not update the test content with the execution results.
 
-  --min-fi-gen=<number>             Min. feature importance to generate test cases.
-  --max-fi-gen=<number>             Max. feature importance to generate test cases.	  
-  --min-si-gen=<number>             Min. scenario importance to generate test cases.
-  --max-si-gen=<number>             Max. scenario importance to generate test cases.
+  --min-fi-gen=<number>                 Min. feature importance to generate test cases.
+  --max-fi-gen=<number>                 Max. feature importance to generate test cases.	  
+  --min-si-gen=<number>                 Min. scenario importance to generate test cases.
+  --max-si-gen=<number>                 Max. scenario importance to generate test cases.
 
-  --min-fi-run=<number>             Min. feature importance to run test scripts.
-  --max-fi-run=<number>             Max. feature importance to run test scripts.	  
-  --min-si-run=<number>             Min. scenario importance to run test scripts.
-  --max-si-run=<number>             Max. scenario importance to run test scripts.  
+  --min-fi-run=<number>                 Min. feature importance to run test scripts.
+  --max-fi-run=<number>                 Max. feature importance to run test scripts.	  
+  --min-si-run=<number>                 Min. scenario importance to run test scripts.
+  --max-si-run=<number>                 Max. scenario importance to run test scripts.  
 
-  -g, --plugin-list                 Show available plug-ins.
-  -v, --version                     Show current version.
-  -a, --about                       Show information about this application.
-  -h, --help                        Show this help.
+  -g, --plugin-list                     Show available plug-ins.
+  -v, --version                         Show current version.
+  -a, --about                           Show information about this application.
+  -h, --help                            Show this help.
 	  
   Examples:
-    $ ${exeName} . plugin=some-plugin
-    $ ${exeName} --files="file1.feature,path/to/file2.feature" -p=some-plugin -l=pt-br
-    $ ${exeName} path/to/dir -t -s -p=some-plugin      
+   $ ${exeName} . plugin=some-plugin
+   $ ${exeName} --files="file1.feature,path/to/file2.feature" -p=some-plugin -l=pt-br
+   $ ${exeName} path/to/dir -t -s -p=some-plugin      
 `, {
 	alias: {
 		p: 'plugin',
@@ -52,6 +53,7 @@ const cli = meow( `
 		c: 'charset',
 		f: 'files',
 		i: 'ignore',
+		e: 'extensions',
         t: 'no-test',
         s: 'no-script',
 		r: 'no-run',
