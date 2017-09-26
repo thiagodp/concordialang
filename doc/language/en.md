@@ -28,6 +28,12 @@
 
 ## Language
 
+*Defines the language used in the current specification file.*
+
+Notes:
+- Local declaration.
+- Just one declaration per file.
+
 Example 1:
 ```
 #language: pt
@@ -41,6 +47,12 @@ Example 2:
 
 ## Import
 
+*Imports the definitions of another file.*
+
+Notes:
+- Local declaration.
+- Allowed more than one declaration per file.
+
 Example 1:
 ```
 import "file1.feature"
@@ -48,6 +60,12 @@ import "file1.feature"
 
 
 ## Tag
+
+*Adds information to a language construction.*
+
+Notes:
+- Local declaration.
+- Allowed more than one declaration per language construction.
 
 Example 1 (*one per line*):
 ```
@@ -66,9 +84,16 @@ Reserved tags:
 - `@invalid( <ui_element>, <constraint> )`: indicates that a test case has an invalid value for a certain user interface element. The `constraint` is the exploited rule, such as "minimum length", "maximum value", etc.
 - `@importance( <number> )`: indicates the importance. The importance is as higher as its number.
 - `@generated`: indicates that a declaration was computer-generated.
+- `@global`: defines an element as global. Can be applied to [User Interface Element](#UserInterfaceElement).
 
 
 ## Feature
+
+*Feature of the system.*
+
+Notes:
+- Global declaration.
+- Just one declaration per file.
 
 Example 1:
 ```
@@ -91,6 +116,10 @@ Feature: A feature name
 
 *State of the system.*
 
+Notes:
+- Global declaration.
+- Allowed more than one declaration per file.
+
 Example 1:
 ```
 State: logged in
@@ -109,7 +138,11 @@ Then I [ { don't | do not } ] have the state "logged in"
 
 ## Scenario
 
-*Not used to generate tests. No states are checked.*
+*Scenario of the system. Not used to generate test cases.*
+
+Notes:
+- Local declaration.
+- Allowed more than one declaration per Feature.
 
 Example 1:
 ```
@@ -132,6 +165,12 @@ Scenario: unsuccessful login
 
 ## Constant
 
+*Declaration of a constant value.*
+
+Notes:
+- Global declaration.
+- Just one declaration per file. One declaration can have more than one constant.
+
 Example 1:
 ```
 Constants:
@@ -141,6 +180,13 @@ Constants:
 
 
 ## UserInterfaceElement
+
+*Element of the User Interface.*
+
+Notes:
+- Local or global declaration.
+- Allowed more than one declaration per Feature.
+- Global declarations allowed through the tag @global.
 
 Notes about a UI Element:
 - default `type` is `textbox`
@@ -208,30 +254,40 @@ UI Element: Envy Salary
 Examples 3:
 ```
 UI Element: CEP
-  - regex is "/^[0-9]{2}\.[0-9]{3}\-\.[0-9]{3}$/"
+  - format is "/^[0-9]{2}\.[0-9]{3}\-\.[0-9]{3}$/"
 
 UI Element: CPF
-  - regex is a reference to "CPF Regex"
+  - format from regex <CPF Regex>
 
 UI Element: CPF 2
-  - regex is the same as in CPF
+  - format is the same as in <CPF>
 ```
 
 
 ## RegularExpressions
 
+*Declares regular expressions that can be used by constraints of UI elements.*
+
+Notes:
+- Global declaration.
+- Just one declaration per file. One declaration can have more than one regular expression.
+
 Example 1:
 ```
 Regular Expressions:
-  - "name" is "/[A-Za-z][A-Za-z '-.]{1,59}/"
-  - "CPF" is "/^[0-9]{3}\.[0-9]{3}\.[0-9]{3}\-[0-9]{2}$/"
-  - "CNPJ" is ...
+  - "Name Regex" is "/[A-Za-z][A-Za-z '-.]{1,59}/"
+  - "CPF Regex" is "/^[0-9]{3}\.[0-9]{3}\.[0-9]{3}\-[0-9]{2}$/"
+  - "CNPJ Regex" is ...
 ```
 
 
 ## Table
 
+*Declares a data table that can be used by constraints of UI elements.*
+
 Notes:
+- Global declaration.
+- Allowed more than one declaration per file.
 - It is NOT allowed to declare database tables or named queries. Just use "queried by" in constraints of user interface elements.
 - Tables are loaded into in-memory tables, queried with ANSI-SQL.
 
@@ -253,9 +309,12 @@ SELECT `some field` FROM `some table` WHERE id = 1
 
 ## Database
 
-Databases can be referenced in contraints' queries.
+*Declares a reference to a database, with its connection parameters.*
 
-Example:
+Notes:
+- Global declaration.
+- Allowed more than one declaration per file.
+- Databases can be referenced inside contraints' queries. Example:
 ```sql
 SELECT price FROM `my database`.product WHERE name = "beer"
 ```
@@ -272,7 +331,12 @@ Database: my database
 
 ## File
 
-A file is loaded into memory to be queried as a relational database table (with ANSI-SQL).
+*Declares a reference to a file.*
+
+Notes:
+- Global declaration.
+- Allowed more than one declaration per file.
+- A file is loaded into memory to be queried as a relational database table (with ANSI-SQL).
 
 Example 1:
 ```
@@ -295,6 +359,12 @@ SELECT `some column` FROM `my json file` WHERE `other column` > 50
 
 
 ## TestCase
+
+*Declares a test case.*
+
+Notes:
+- Local declaration (belongs to a Feature).
+- Allowed more than one declaration per Feature.
 
 Can be automatically generated using:
 1. A template test case;
@@ -407,7 +477,15 @@ Element filters, when used without the `with` keyword :
 
 ## Events
 
-*Allows to execute commands during tests.*
+*Declares events before, after, or around test cases or features. Console commands or SQL scripts can be executed when these events occur.*
+
+Notes:
+- Local declaration (belongs to a Feature).
+- Just one declaration per Feature.
+
+Could be:
+- { Before | After | Around } Each Test Case
+- { Before | After | Around } Feature
 
 Example 1:
 ```
@@ -416,7 +494,3 @@ Before Each Test Case:
   And I run the command 'DELETE FROM users'
   And I run the command 'INSERT INTO users ( username, password ) VALUES ( "Clark", "Kent" ), ( "Bruce", "Wayne" )'
 ``` 
-
-Could be:
-- { Before | After | Around } Each Test Case
-- { Before | After | Around } Feature
