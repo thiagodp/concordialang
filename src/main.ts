@@ -8,33 +8,43 @@ import { InputProcessor } from './modules/cli/InputProcessor';
 const exeName: string = 'concordia';
 
 const cli = meow( `
-	Usage:
-	  $ ${exeName} [ <dir> | --files="file1.feature,path/to/file2.feature,..." ] --plugin=<name>
+ Usage:
+   $ ${exeName} [ <dir> | --files="file1.feature,path/to/file2.feature,..." ] --plugin=<name>
 
-	    where <dir> is the directory of your documentation files.
+   where <dir> is the directory with your documentation files.
 
-	Options:
-	  -p, --plugin=<name>               Plug-in used to generate or execute test scripts.
-	  -l, --lang=<lang-code>            Language used in the documentation files. Default is "en" (english).
-	  -c, --charset=<value>             Charset (enconding) used to read the files. Default is "utf8".
+ Options:
+  -p, --plugin=<name>               Plug-in used to generate or execute test scripts.
+  -l, --lang=<lang-code>            Language used in the documentation files. Default is "en" (english).
+  -c, --charset=<value>             Charset (enconding) used to read the files. Default is "utf8".
 
-	  -i, --ignore=<"file1,file2,...">  Documentation files to ignore. Use it with <dir>.	  
-	  -f, --files=<"file1,file2,...">   Documentation files to consider. Use it instead of <dir>.
+  -i, --ignore=<"file1,file2,...">  Documentation files of the given <dir> to ignore.
+  -f, --files=<"file1,file2,...">   Documentation files to consider instead of <dir>.
+
+  -t, --no-test                     Do not generate abstract test cases.
+  -s, --no-script                   Do not generate test scripts.
+  -r, --no-run                      Do not run test scripts.
+  -u, --no-result                   Do not update the test content with the execution results.
+
+  --min-fi-gen=<number>             Min. feature importance to generate test cases.
+  --max-fi-gen=<number>             Max. feature importance to generate test cases.	  
+  --min-si-gen=<number>             Min. scenario importance to generate test cases.
+  --max-si-gen=<number>             Max. scenario importance to generate test cases.
+
+  --min-fi-run=<number>             Min. feature importance to run test scripts.
+  --max-fi-run=<number>             Max. feature importance to run test scripts.	  
+  --min-si-run=<number>             Min. scenario importance to run test scripts.
+  --max-si-run=<number>             Max. scenario importance to run test scripts.  
+
+  -g, --plugin-list                 Show available plug-ins.
+  -v, --version                     Show current version.
+  -a, --about                       Show information about this application.
+  -h, --help                        Show this help.
 	  
-	  -t, --no-test                     Do not generate abstract test cases.
-	  -s, --no-script                   Do not generate test scripts.
-	  -r, --no-run                      Do not run test scripts.
-	  -u, --no-result                   Do not update the test content with the execution results.
-	  
-	  -g, --plugin-list                 Show available plug-ins.
-	  -v, --version                     Show current version.
-	  -a, --about                       Show information about this application.
-	  -h, --help                        Show this help.      
-	  
-	Examples:
-	  $ ${exeName} . plugin=some-plugin
-	  $ ${exeName} --files="file1.feature,path/to/file2.feature" -p=some-plugin -l=pt-br
-	  $ ${exeName} path/to/dir -t -s -p=some-plugin      
+  Examples:
+    $ ${exeName} . plugin=some-plugin
+    $ ${exeName} --files="file1.feature,path/to/file2.feature" -p=some-plugin -l=pt-br
+    $ ${exeName} path/to/dir -t -s -p=some-plugin      
 `, {
 	alias: {
 		p: 'plugin',
