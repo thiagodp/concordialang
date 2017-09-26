@@ -14,30 +14,30 @@ const cli = meow( `
    where <dir> is the directory with your documentation files.
 
  Options:
-  -p, --plugin=<name>                   Plug-in used to generate or execute test scripts.
-  -l, --lang=<lang-code>                Language used in the documentation files. Default is "en" (english).
-  -c, --charset=<value>                 Charset (enconding) used to read the files. Default is "utf8".
+  -p, --plugin=<name>                   Sets the plug-in to generate or to execute test scripts. NIY
 
-  -i, --ignore=<"file1,file2,...">      Documentation files of the given <dir> to ignore.
-  -f, --files=<"file1,file2,...">       Documentation files to consider instead of <dir>.
-  -e, --extensions=<".ext1,.ext2,...">  File extensions to consider.
+  -l, --lang=<lang-code>                Sets the default language (from "en"glish). NIY
+  -c, --charset=<value>                 Sets the charset (enconding) used to read files. Default is "utf8". NIY
+  -e, --extensions=<".ext1,.ext2,...">  File extensions to consider for the given <dir>. NIY
+  -i, --ignore=<"file1,file2,...">      Files to ignore from the given <dir>.
+  -f, --files=<"file1,file2,...">       Files to consider instead of <dir>.
 
-  -t, --no-test                         Do not generate abstract test cases.
-  -s, --no-script                       Do not generate test scripts.
-  -r, --no-run                          Do not run test scripts.
-  -u, --no-result                       Do not update the test content with the execution results.
+  -t, --no-test                         Do not generate test cases. NIY
+  -s, --no-script                       Do not generate test scripts. NIY
+  -r, --no-run                          Do not run test scripts. NIY
+  -u, --no-result                       Do not read execution results. NIY
 
-  --min-fi-gen=<number>                 Min. feature importance to generate test cases.
-  --max-fi-gen=<number>                 Max. feature importance to generate test cases.	  
-  --min-si-gen=<number>                 Min. scenario importance to generate test cases.
-  --max-si-gen=<number>                 Max. scenario importance to generate test cases.
+  --min-fi-gen=<number>                 Min. feature importance to generate test cases. NIY
+  --max-fi-gen=<number>                 Max. feature importance to generate test cases. NIY
+  --min-si-gen=<number>                 Min. scenario importance to generate test cases. NIY
+  --max-si-gen=<number>                 Max. scenario importance to generate test cases. NIY
 
-  --min-fi-run=<number>                 Min. feature importance to run test scripts.
-  --max-fi-run=<number>                 Max. feature importance to run test scripts.	  
-  --min-si-run=<number>                 Min. scenario importance to run test scripts.
-  --max-si-run=<number>                 Max. scenario importance to run test scripts.  
+  --min-fi-run=<number>                 Min. feature importance to run test scripts. NIY
+  --max-fi-run=<number>                 Max. feature importance to run test scripts. NIY  
+  --min-si-run=<number>                 Min. scenario importance to run test scripts. NIY
+  --max-si-run=<number>                 Max. scenario importance to run test scripts. NIY
 
-  -g, --plugin-list                     Show available plug-ins.
+  -g, --plugin-list                     Show available plug-ins. NIY
   -v, --version                         Show current version.
   -a, --about                           Show information about this application.
   -h, --help                            Show this help.
