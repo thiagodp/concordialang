@@ -35,9 +35,9 @@
 - [X] Feature Sentences
 - [X] Scenario
 - [X] Scenario Sentences
-- [/] Test Case
-- [/] Test Case Sentences
-- [/] State
+- [X] Test Case
+- [X] Test Case Sentences
+- [X] State
 - [ ] Regular Expressions
 - [ ] Constants
 - [ ] UI Element

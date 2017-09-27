@@ -139,6 +139,22 @@ describe( 'ParserTest', () => {
 
         expect( testcase.sentences ).toBeDefined();
         expect( testcase.sentences ).toHaveLength( 5 );
-    } );    
+    } );
+
+
+    it( 'detects states', () => {
+        [
+            '#language:en',
+            '',
+            'State: Some State'
+        ].forEach( ( val, index ) => lexer.addNodeFromLine( val, index + 1 ) );
+
+        let doc: Document = {};
+        parser.analyze( lexer.nodes(), doc );
+
+        expect( parser.errors() ).toEqual( [] );
+        expect( doc.states ).toHaveLength( 1 );
+        expect( doc.states[ 0 ].name ).toBe( 'Some State' );
+    } );
 
 } );
