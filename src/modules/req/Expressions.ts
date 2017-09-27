@@ -12,6 +12,8 @@ export abstract class Expressions {
 
     static SOMETHING_INSIDE_QUOTES = '("[^"\r\n]*")';
 
+    static A_NUMBER = '([0-9]+(\.[0-9]+)?)'; // integer or double
+
     /**
      * Escape characters to be used in a regex.
      * 

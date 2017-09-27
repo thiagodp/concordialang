@@ -7,6 +7,8 @@ import { LineChecker } from "../req/LineChecker";
 import { LexicalException } from "../req/LexicalException";
 
 /**
+ * Detects a node with the format "- "foo" is "bar"".
+ * 
  * @author Thiago Delgado Pinto
  */
 export class NameIsContentLexer< T extends NodeWithNameAndContent > implements NodeLexer< T >, KeywordBasedLexer {
@@ -17,14 +19,13 @@ export class NameIsContentLexer< T extends NodeWithNameAndContent > implements N
     }
         
     protected makeRegexForTheWords( words: string[] ): string {
-        // - "foo" is "bar"
         return '^' + Expressions.OPTIONAL_SPACES_OR_TABS
             + Symbols.LIST_ITEM_PREFIX // -
             + Expressions.OPTIONAL_SPACES_OR_TABS
             + Expressions.SOMETHING_INSIDE_QUOTES
-            + Expressions.AT_LEAST_ONE_SPACE_OR_TAB
+            + Expressions.OPTIONAL_SPACES_OR_TABS
             + '(?:' + words.join( '|' ) + ')' // is
-            + Expressions.AT_LEAST_ONE_SPACE_OR_TAB
+            + Expressions.OPTIONAL_SPACES_OR_TABS
             + Expressions.SOMETHING_INSIDE_QUOTES
             + Expressions.OPTIONAL_SPACES_OR_TABS
             ;
@@ -38,7 +39,7 @@ export class NameIsContentLexer< T extends NodeWithNameAndContent > implements N
     /** @inheritDoc */
     public updateWords( words: string[] ) {
         this._words = words;   
-    }    
+    }
         
     /** @inheritDoc */
     public analyze( line: string, lineNumber?: number ): LexicalAnalysisResult< T > {
@@ -55,8 +56,15 @@ export class NameIsContentLexer< T extends NodeWithNameAndContent > implements N
             .replace( new RegExp( Symbols.VALUE_WRAPPER , 'g' ), '' ) // replace all '"' with ''
             .trim();
 
-        let content = result[ 2 ]
-            .replace( new RegExp( Symbols.VALUE_WRAPPER , 'g' ), '' ); // replace all '"' with ''
+        let content = result[ 2 ]; 
+        // Removes the wrapper of the content, if the wrapper exists
+        let firstWrapperIndex = content.indexOf( Symbols.VALUE_WRAPPER );
+        if ( firstWrapperIndex >= 0 ) {
+            let lastWrapperIndex = content.lastIndexOf( Symbols.VALUE_WRAPPER );
+            if ( firstWrapperIndex != lastWrapperIndex ) {
+                content = content.substring( firstWrapperIndex + 1, lastWrapperIndex );
+            }
+        }
 
         let node = {
             nodeType: this._nodeType,
@@ -66,7 +74,7 @@ export class NameIsContentLexer< T extends NodeWithNameAndContent > implements N
         } as T;
 
         let errors = [];
-        if ( name.length != 0 ) {
+        if ( 0 == name.length ) {
             let msg = this._nodeType + ' cannot have an empty name.';
             errors.push( new LexicalException( msg, node.location ) );
         }

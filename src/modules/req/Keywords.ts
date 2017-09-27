@@ -9,6 +9,8 @@ export abstract class Keywords {
   
     static IMPORT: string = 'import';
     static REGEX_BLOCK: string = 'regexBlock';
+    static CONSTANT_BLOCK: string = 'constantBlock';
+    static IS: string = 'is';
     static STATE: string = 'state';    
     static TEST_CASE: string = 'testcase';
     

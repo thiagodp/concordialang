@@ -1,20 +1,18 @@
 {
     "import": [ "importe", "importar" ],
-    "regex": [ "expressões", "expressões regulares", "regexes" ],
+    "regexBlock": [ "expressões", "expressões regulares", "regexes" ],
+    "constantBlock": [ "constantes" ],
+    "is": [ "é" ],
     "state": [ "estado" ],    
     "testcase": [ "caso de teste" ],
 
-    "language": [ "language", "idioma", "língua" ],
+    "language": [ "linguagem", "idioma", "língua",  "language" ],
 
     "feature": [ "funcionalidade", "característica" ],
+    "scenario": [ "cenário" ],
 
     "stepGiven": [ "dado" ],
     "stepWhen": [ "quando" ],
     "stepThen": [ "então" ],    
-    "stepAnd": [ "e", "mas" ],
-
-    "scenario": [ "cenário" ],
-    "background": [ "background" ],
-    "outline": [ "esboço" ],
-    "examples": [ "examplos" ]
+    "stepAnd": [ "e", "mas" ]
 }

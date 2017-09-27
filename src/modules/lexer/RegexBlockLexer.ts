@@ -1,5 +1,5 @@
 import { KeywordBlockLexer } from "./KeywordBlockLexer";
-import { RegexesBlock } from "../ast/RegexBlock";
+import { RegexBlock } from "../ast/RegexBlock";
 import { NodeTypes } from "../req/NodeTypes";
 
 /**
@@ -7,11 +7,10 @@ import { NodeTypes } from "../req/NodeTypes";
  * 
  * @author Thiago Delgado Pinto
  */
-export class RegexBlockLexer extends KeywordBlockLexer< RegexesBlock > {
+export class RegexBlockLexer extends KeywordBlockLexer< RegexBlock > {
     
     constructor( words: string[] ) {
         super( words, NodeTypes.REGEX_BLOCK );
     }
     
 }
-    

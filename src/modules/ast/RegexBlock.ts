@@ -1,9 +1,10 @@
-import { Node } from './Node';
+import { Node, HasItems } from './Node';
+import { Regex } from './Regex';
 
 /**
  * Regular expression block node.
  * 
  * @author Thiago Delgado Pinto
  */
-export interface RegexesBlock extends Node {
+export interface RegexBlock extends Node, HasItems< Regex > {
 }

@@ -1,4 +1,4 @@
-import { Node } from '../req/old_ast/Node';
+import { Node } from './Node';
 
 //
 // Task example 1:

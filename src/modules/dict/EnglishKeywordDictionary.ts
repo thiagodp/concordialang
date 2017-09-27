@@ -11,6 +11,8 @@ export class EnglishKeywordDictionary implements KeywordDictionary {
     
     import: string[] = [ 'import' ];
     regexBlock: string[] = [ 'regexes', 'regular expressions' ];
+    constantBlock: string[] = [ 'constants' ];
+    is: string[] = [ 'is' ];
     state: string[] = [ 'state' ];    
     testcase: string[] = [ 'test case' ];
 
