@@ -1,7 +1,6 @@
 import { TokenTypes } from '../req/TokenTypes';
 import { NodeLexer, LexicalAnalysisResult } from "./NodeLexer";
 import { Text } from '../ast/Text';
-import { Keywords } from "../req/Keywords";
 import { LineChecker } from "../req/LineChecker";
 
 /**

@@ -1,7 +1,7 @@
 import { Node } from '../../modules/ast/Node';
 import { NodeIterator } from '../../modules/parser/NodeIterator';
 import { ParsingContext } from '../../modules/parser/ParsingContext';
-import { Keywords } from '../../modules/req/Keywords';
+import { TokenTypes } from '../../modules/req/TokenTypes';
 import { Feature } from '../../modules/ast/Feature';
 import { TestCaseParser } from "../../modules/parser/TestCaseParser";
 import { TestCase } from "../../modules/ast/TestCase";
@@ -19,13 +19,13 @@ describe( 'TestCaseParserTest', () => {
     let errors: Error[] = [];
 
     let featureNode: Feature = {
-        keyword: Keywords.FEATURE,
+        keyword: TokenTypes.FEATURE,
         location: { column: 1, line: 1 },
         name: "My feature"
     };
 
     let testCaseNode: TestCase = {
-        keyword: Keywords.TEST_CASE,
+        keyword: TokenTypes.TEST_CASE,
         location: { column: 1, line: 2 },
         name: "My test case",
         sentences: []

@@ -4,7 +4,6 @@ import { LocatedException } from '../req/LocatedException';
 import { NodeLexer, LexicalAnalysisResult } from './NodeLexer';
 import { Expressions } from '../req/Expressions';
 import { Symbols } from '../req/Symbols';
-import { Keywords } from '../req/Keywords';
 import { Node, NamedNode } from '../ast/Node';
 import { LineChecker } from "../req/LineChecker";
 import { LexicalException } from "../req/LexicalException";

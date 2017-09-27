@@ -1,4 +1,4 @@
-import { Keywords } from '../../modules/req/Keywords';
+import { TokenTypes } from '../../modules/req/TokenTypes';
 import { LanguageLexer } from "../../modules/lexer/LanguageLexer";
 
 /**
@@ -14,7 +14,7 @@ describe( 'LanguageLexerTest', () => {
         expect( r ).toBeDefined();
         expect( r.nodes ).toHaveLength( 1 );
         let node = r.nodes[ 0 ];
-        expect( node.keyword ).toBe( Keywords.LANGUAGE );
+        expect( node.keyword ).toBe( TokenTypes.LANGUAGE );
         expect( node.content ).toBe( "pt-br" );
     };
 
@@ -45,7 +45,7 @@ describe( 'LanguageLexerTest', () => {
         let node = r.nodes[ 0 ];        
         expect( node ).toEqual(
             {
-                keyword: Keywords.LANGUAGE,
+                keyword: TokenTypes.LANGUAGE,
                 location: { line: 1, column: 1 },
                 content: "pt-br"
             }
@@ -60,7 +60,7 @@ describe( 'LanguageLexerTest', () => {
         let node = r.nodes[ 0 ];      
         expect( node ).toEqual(
             {
-                keyword: Keywords.LANGUAGE,
+                keyword: TokenTypes.LANGUAGE,
                 location: { line: 1, column: 4 },
                 content: "pt-br"
             }

@@ -1,7 +1,7 @@
 import { KeywordBasedLexer } from './KeywordBasedLexer';
 import { KeywordDictionaryLoader } from '../dict/KeywordDictionaryLoader';
 import { Language } from '../ast/Language';
-import { Keywords } from '../req/Keywords';
+import { TokenTypes } from '../req/TokenTypes';
 import { TestCaseLexer } from './TestCaseLexer';
 import { Node } from '../ast/Node';
 import { DocumentProcessor } from '../req/DocumentProcessor';
@@ -116,7 +116,7 @@ export class Lexer {
             }
 
             // Detects a language node and tries to change the language
-            if ( result.nodes.length > 0 && Keywords.LANGUAGE === result.nodes[ 0 ].keyword ) {
+            if ( result.nodes.length > 0 && TokenTypes.LANGUAGE === result.nodes[ 0 ].keyword ) {
                 let language = ( result.nodes[ 0 ] as Language ).content;
                 if ( language != this._language ) { // needs to change ?
                     try {

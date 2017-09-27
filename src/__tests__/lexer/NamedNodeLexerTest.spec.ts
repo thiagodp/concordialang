@@ -1,5 +1,4 @@
 import { NamedNodeLexer } from '../../modules/lexer/NamedNodeLexer';
-import { Keywords } from '../../modules/req/Keywords';
 
 /**
  * @author Thiago Delgado Pinto

@@ -1,6 +1,6 @@
 import { NamedNodeLexer } from "./NamedNodeLexer";
 import { Feature } from "../ast/Feature";
-import { Keywords } from "../req/Keywords";
+import { TokenTypes } from "../req/TokenTypes";
 
 /**
  * Detects a Feature.
@@ -10,7 +10,7 @@ import { Keywords } from "../req/Keywords";
 export class FeatureLexer extends NamedNodeLexer< Feature > {
 
     constructor( words: Array< string > ) {
-        super( words, Keywords.FEATURE );
+        super( words, TokenTypes.FEATURE );
     }
 
 }

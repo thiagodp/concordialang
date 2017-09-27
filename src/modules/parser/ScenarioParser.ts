@@ -4,7 +4,6 @@ import { Document } from '../ast/Document';
 import { SyntaticException } from '../req/SyntaticException';
 import { NodeIterator } from './NodeIterator';
 import { NodeParser } from './NodeParser';
-import { Keywords } from "../req/Keywords";
 import { ParsingContext } from "./ParsingContext";
 
 /**

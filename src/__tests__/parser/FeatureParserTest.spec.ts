@@ -3,7 +3,7 @@ import { InMemoryKeywordDictionaryLoader } from '../../modules/dict/InMemoryKeyw
 import { Node } from '../../modules/ast/Node';
 import { NodeIterator } from '../../modules/parser/NodeIterator';
 import { ParsingContext } from '../../modules/parser/ParsingContext';
-import { Keywords } from '../../modules/req/Keywords';
+import { TokenTypes } from '../../modules/req/TokenTypes';
 import { Feature } from '../../modules/ast/Feature';
 import { FeatureParser } from '../../modules/parser/FeatureParser';
 import { Lexer } from "../../modules/lexer/Lexer";
@@ -24,7 +24,7 @@ describe( 'FeatureParserTest', () => {
     let errors: Error[] = [];
     
     let featureNode: Feature = {
-        keyword: Keywords.FEATURE,
+        keyword: TokenTypes.FEATURE,
         location: { column: 1, line: 1 },
         name: "My feature"
     };    

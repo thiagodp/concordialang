@@ -1,4 +1,4 @@
-import { Keywords } from "../req/Keywords";
+import { TokenTypes } from "../req/TokenTypes";
 import { NamedNodeLexer } from "./NamedNodeLexer";
 import { TestCase } from "../ast/TestCase";
 
@@ -10,6 +10,6 @@ import { TestCase } from "../ast/TestCase";
 export class TestCaseLexer extends NamedNodeLexer< TestCase > {
     
     constructor( words: string[] ) {
-        super( words, Keywords.TEST_CASE );
+        super( words, TokenTypes.TEST_CASE );
     }
 }

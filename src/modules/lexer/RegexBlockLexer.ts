@@ -1,6 +1,6 @@
 import { KeywordBlockLexer } from "./KeywordBlockLexer";
 import { RegexesBlock } from "../ast/RegexBlock";
-import { Keywords } from "../req/Keywords";
+import { TokenTypes } from "../req/TokenTypes";
 
 /**
  * Detects a Regex Block.
@@ -10,7 +10,7 @@ import { Keywords } from "../req/Keywords";
 export class RegexBlockLexer extends KeywordBlockLexer< RegexesBlock > {
     
     constructor( words: string[] ) {
-        super( words, Keywords.REGEX_BLOCK );
+        super( words, TokenTypes.REGEX_BLOCK );
     }
     
 }

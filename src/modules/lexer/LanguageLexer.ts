@@ -1,7 +1,7 @@
 import { KeywordBasedLexer } from './KeywordBasedLexer';
 import { Language } from '../ast/Language';
 import { Expressions } from '../req/Expressions';
-import { Keywords } from '../req/Keywords';
+import { TokenTypes } from '../req/TokenTypes';
 import { Symbols } from '../req/Symbols';
 import { LineChecker } from '../req/LineChecker';
 import { LexicalAnalysisResult, NodeLexer } from './NodeLexer';
@@ -20,7 +20,7 @@ export class LanguageLexer implements NodeLexer< Language >, KeywordBasedLexer {
 
     /** @inheritDoc */
     public keyword(): string {
-        return Keywords.LANGUAGE;
+        return TokenTypes.LANGUAGE;
     }
 
     /** @inheritDoc */
@@ -51,7 +51,7 @@ export class LanguageLexer implements NodeLexer< Language >, KeywordBasedLexer {
         let content = this._lineChecker.textAfterSeparator( Symbols.LANGUAGE_SEPARATOR, line ).trim();
         
         let node = {
-            keyword: Keywords.LANGUAGE,
+            keyword: TokenTypes.LANGUAGE,
             location: { line: lineNumber || 0, column: pos + 1 },
             content: content
         } as Language;
