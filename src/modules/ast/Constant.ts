@@ -1,9 +1,9 @@
-import { NodeWithNameAndContent } from './Node';
+import { BlockItem } from './Block';
 
 /**
- * Constant node
+ * Constant node.
  * 
  * @author Thiago Delgado Pinto
  */
-export interface Constant extends NodeWithNameAndContent {
+export interface Constant extends BlockItem {
 }

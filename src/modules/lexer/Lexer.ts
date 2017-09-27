@@ -1,4 +1,4 @@
-import { ConstantBlock } from '../ast/ContantBlock';
+import { ConstantBlock } from '../ast/ConstantBlock';
 import { KeywordBasedLexer } from './KeywordBasedLexer';
 import { KeywordDictionaryLoader } from '../dict/KeywordDictionaryLoader';
 import { Language } from '../ast/Language';

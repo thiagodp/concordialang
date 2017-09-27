@@ -1,5 +1,5 @@
 import { KeywordBlockLexer } from "./KeywordBlockLexer";
-import { ConstantBlock } from "../ast/ContantBlock";
+import { ConstantBlock } from "../ast/ConstantBlock";
 import { NodeTypes } from "../req/NodeTypes";
 
 /**

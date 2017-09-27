@@ -1,3 +1,4 @@
+import { NodeTypes } from '../../modules/req/NodeTypes';
 import { EnglishKeywordDictionary } from '../../modules/dict/EnglishKeywordDictionary';
 import { Lexer } from '../../modules/lexer/Lexer';
 import { Parser } from '../../modules/parser/Parser';
@@ -156,5 +157,45 @@ describe( 'ParserTest', () => {
         expect( doc.states ).toHaveLength( 1 );
         expect( doc.states[ 0 ].name ).toBe( 'Some State' );
     } );
+
+
+    it( 'detects a regex block and its regexes', () => {
+        [
+            '#language:en',
+            '',
+            'Regular Expressions:',
+            '  - "name" is "[A-Za-z .\']{2,50}"',
+            '  - "number" is "[0-9]+(\.[0-9]+)?"'
+        ].forEach( ( val, index ) => lexer.addNodeFromLine( val, index + 1 ) );
+
+        let doc: Document = {};
+        parser.analyze( lexer.nodes(), doc );
+
+        expect( parser.errors() ).toEqual( [] );
+        expect( doc.regexBlock ).not.toBeNull();
+        expect( doc.regexBlock.items ).toHaveLength( 2 );
+        expect( doc.regexBlock.items[ 0 ].nodeType ).toBe( NodeTypes.REGEX );
+        expect( doc.regexBlock.items[ 1 ].nodeType ).toBe( NodeTypes.REGEX );
+    } );
+
+
+    it( 'detects a constant block and its constants', () => {
+        [
+            '#language:en',
+            '',
+            'Constants:',
+            '  - "welcome_msg" is "Welcome!"',
+            '  - "pi" is 3.1416'
+        ].forEach( ( val, index ) => lexer.addNodeFromLine( val, index + 1 ) );
+
+        let doc: Document = {};
+        parser.analyze( lexer.nodes(), doc );
+
+        expect( parser.errors() ).toEqual( [] );
+        expect( doc.constantBlock ).not.toBeNull();
+        expect( doc.constantBlock.items ).toHaveLength( 2 );
+        expect( doc.constantBlock.items[ 0 ].nodeType ).toBe( NodeTypes.CONSTANT );
+        expect( doc.constantBlock.items[ 1 ].nodeType ).toBe( NodeTypes.CONSTANT );
+    } );    
 
 } );

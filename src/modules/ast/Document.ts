@@ -1,3 +1,4 @@
+import { ConstantBlock } from './ConstantBlock';
 import { FileInfo } from './FileInfo';
 import { Feature } from './Feature';
 import { Task } from './Task';
@@ -5,7 +6,7 @@ import { UI } from "./UI";
 import { Tag } from "./Tag";
 import { Import } from "./Import";
 import { Language } from "./Language";
-import { RegexesBlock } from "./RegexesBlock";
+import { RegexBlock } from "./RegexBlock";
 import { State } from "./State";
 
 /**
@@ -20,16 +21,15 @@ export interface Document {
     
     language?: Language;
     imports?: Import[];
-    tags?: Tag[];
+    tags?: Tag[]; // needed?
 
     feature?: Feature;
-
     states?: State[];
+    regexBlock?: RegexBlock;
+    constantBlock?: ConstantBlock;
 
     uis?: UI[];
 
     tasks?: Task[];
-
-    regexes?: RegexesBlock[];
 
 }

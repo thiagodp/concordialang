@@ -1,3 +1,6 @@
+import { BlockItemParser } from './BlockItemParser';
+import { ConstantBlockParser } from './ConstantBlockParser';
+import { RegexBlockParser } from './RegexBlockParser';
 import { FeatureParser } from './FeatureParser';
 import { Node } from '../ast/Node';
 import { Document } from '../ast/Document';
@@ -10,7 +13,6 @@ import { ScenarioParser } from './ScenarioParser';
 import { TestCaseParser } from './TestCaseParser';
 import { StepParser } from './StepParser';
 import { ImportParser } from "./ImportParser";
-import { RegexParser } from "./RegexParser";
 import { StateParser } from "./StateParser";
 
 /**
@@ -36,9 +38,12 @@ export class Parser {
         this._parsersMap[ NodeTypes.STEP_WHEN ] = new StepParser();
         this._parsersMap[ NodeTypes.STEP_THEN ] = new StepParser();
         this._parsersMap[ NodeTypes.STEP_AND ] = new StepParser();
-        this._parsersMap[ NodeTypes.TEST_CASE ] = new TestCaseParser();
-        this._parsersMap[ NodeTypes.REGEX ] = new RegexParser();
+        this._parsersMap[ NodeTypes.CONSTANT_BLOCK ] = new ConstantBlockParser();
+        this._parsersMap[ NodeTypes.CONSTANT ] = new BlockItemParser();
+        this._parsersMap[ NodeTypes.REGEX_BLOCK ] = new RegexBlockParser();
+        this._parsersMap[ NodeTypes.REGEX ] = new BlockItemParser();
         this._parsersMap[ NodeTypes.STATE ] = new StateParser();
+        this._parsersMap[ NodeTypes.TEST_CASE ] = new TestCaseParser();        
     }
 
     public reset(): void {

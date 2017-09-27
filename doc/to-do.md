@@ -38,8 +38,10 @@
 - [X] Test Case
 - [X] Test Case Sentences
 - [X] State
-- [ ] Regular Expressions
-- [ ] Constants
+- [X] Regular Expressions Block
+- [X] Regular Expressions
+- [X] Constants Block
+- [X] Constants
 - [ ] UI Element
 - [ ] Table
 - [ ] Database
