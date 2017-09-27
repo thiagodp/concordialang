@@ -7,27 +7,23 @@ import { KeywordDictionary } from './KeywordDictionary';
  */
 export class EnglishKeywordDictionary implements KeywordDictionary {
 
-    // Non-Gherkin keywords
+    // Not available in Gherkin
     
     import: string[] = [ 'import' ];
-    regex: string[] = [ 'regex', 'regular expression' ];
+    regexBlock: string[] = [ 'regexes', 'regular expressions' ];
     state: string[] = [ 'state' ];    
     testcase: string[] = [ 'test case' ];
 
-    // Gherkin keywords
+    // Also available in Gherkin
 
     language: string[] = [ 'language' ];
 
     feature: string[] = [ 'feature' ];
+    scenario: string[] = [ 'scenario' ];
 
     stepGiven: string[] = [ 'given' ];
     stepWhen: string[] = [ 'when' ];
     stepThen: string[] = [ 'then' ];
     stepAnd: string[] = [ 'and', 'but' ];
-
-    scenario: string[] = [ 'scenario' ];
-    background: string[] = [ 'background' ];
-    outline: string[] = [ 'outline' ];
-    examples: string[] = [ 'examples' ];
 
 }

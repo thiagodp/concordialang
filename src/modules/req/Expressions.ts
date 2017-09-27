@@ -6,10 +6,11 @@
 export abstract class Expressions {
 
     static AT_LEAST_ONE_SPACE_OR_TAB: string = '(?:\t| )+'; // "?:" means "not remember"
-
-    static SPACES_OR_TABS: string = '(?:\t| )*'; // "?:" means "not remember"
+    static OPTIONAL_SPACES_OR_TABS: string = '(?:\t| )*'; // "?:" means "not remember"
 
     static ANYTHING: string = '.*';
+
+    static SOMETHING_INSIDE_QUOTES = '("[^"\r\n]*")';
 
     /**
      * Escape characters to be used in a regex.

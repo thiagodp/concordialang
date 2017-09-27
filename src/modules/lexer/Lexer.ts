@@ -5,20 +5,19 @@ import { Keywords } from '../req/Keywords';
 import { TestCaseLexer } from './TestCaseLexer';
 import { Node } from '../ast/Node';
 import { DocumentProcessor } from '../req/DocumentProcessor';
-import { KeywordDictionary } from '../dict/KeywordDictionary';
 import { NodeLexer, LexicalAnalysisResult } from './NodeLexer';
 import { LanguageLexer } from "./LanguageLexer";
 import { TagLexer } from "./TagLexer";
 import { ImportLexer } from './ImportLexer';
 import { FeatureLexer } from './FeatureLexer';
 import { ScenarioLexer } from './ScenarioLexer';
-import { RegexLexer } from './RegexLexer';
 import { StepGivenLexer } from "./StepGivenLexer";
 import { StepWhenLexer } from "./StepWhenLexer";
 import { StepThenLexer } from "./StepThenLexer";
 import { StepAndLexer } from "./StepAndLexer";
 import { TextLexer } from "./TextLexer";
 import { StateLexer } from "./StateLexer";
+import { RegexBlockLexer } from './RegexBlockLexer';
 
 /**
  * Lexer
@@ -52,7 +51,7 @@ export class Lexer {
             , new StepThenLexer( dictionary.stepThen )
             , new StepAndLexer( dictionary.stepAnd )
             , new TestCaseLexer( dictionary.testcase )
-            , new RegexLexer( dictionary.regex )
+            , new RegexBlockLexer( dictionary.regexBlock )
             , new StateLexer( dictionary.state )
             , new TextLexer() // captures any non-empty
         ];

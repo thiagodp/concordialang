@@ -15,11 +15,10 @@
   - [X] Given
   - [X] When
   - [X] Then
-  - [X] And
-  - [X] But  
-- [/] Test Case
-- [/] Test Case Sentences
-- [/] Regular Expressions
+  - [X] And, But
+- [X] Test Case
+- [X] Test Case Sentences
+- [X] Regular Expressions Block
 - [/] State
 - [ ] Constants
 - [ ] UI Element
@@ -68,15 +67,13 @@
   - [ ] Given
   - [ ] When
   - [ ] Then
-  - [ ] And
-  - [ ] But  
+  - [ ] And, But
 - [ ] Test Case  
 - [ ] Test Case Sentences
   - [ ] Given
   - [ ] When
   - [ ] Then
-  - [ ] And
-  - [ ] But  
+  - [ ] And, But
 - [ ] State
 - ...
 

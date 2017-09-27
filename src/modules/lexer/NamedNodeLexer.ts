@@ -35,11 +35,11 @@ export class NamedNodeLexer< T extends NamedNode > implements NodeLexer< T >, Ke
     }     
 
     protected makeRegexForTheWords( words: string[] ): string {
-        return '^' + Expressions.SPACES_OR_TABS
+        return '^' + Expressions.OPTIONAL_SPACES_OR_TABS
             + '(' + words.join( '|' ) + ')'
-            + Expressions.SPACES_OR_TABS
+            + Expressions.OPTIONAL_SPACES_OR_TABS
             + this._separator
-            + Expressions.ANYTHING;
+            + Expressions.ANYTHING; // the name
     }
 
     /** @inheritDoc */

@@ -18,3 +18,6 @@ export interface NamedNode extends Node, HasName {
 
 export interface ContentNode extends Node, HasContent {
 }
+
+export interface NodeWithNameAndContent extends Node, HasName, HasContent {
+}

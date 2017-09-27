@@ -1,5 +1,5 @@
 import { TagLexer } from "../../modules/lexer/TagLexer";
-import { Keywords } from "../../modules/req/Keywords";
+import { TokenTypes } from "../../modules/req/TokenTypes";
 
 /**
  * @author Thiago Delgado Pinto
@@ -16,7 +16,7 @@ describe( 'TagLexerTest', () => {
 
         let node = r.nodes[ 0 ];
         expect( node ).not.toBeNull();
-        expect( node.keyword ).toBe( Keywords.TAG );
+        expect( node.keyword ).toBe( TokenTypes.TAG );
         expect( node.name ).toContain( "hello" );
     } );
 

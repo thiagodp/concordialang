@@ -16,14 +16,14 @@
 - [Feature](#feature)
 - [State](#state)
 - [Scenario](#scenario)
-- [Constant](#constant)
-- [User Interface Element](#UserInterfaceElement)
-- [Regular Expressions](#RegularExpressions)
+- [Constants](#constants)
+- [User Interface Element](#userinterfaceelement)
+- [Regular Expressions](#regularexpressions)
 - [Table](#table)
 - [Database](#database)
 - [File](#file)
 - [Test Case](#testcase)
-- [Events](#events)
+- [Test Events](#testevents)
 
 
 ## Language
@@ -163,7 +163,7 @@ Scenario: unsuccessful login
 ```
 
 
-## Constant
+## Constants
 
 *Declaration of a constant value.*
 
@@ -186,7 +186,8 @@ Constants:
 Notes:
 - Local or global declaration.
 - Allowed more than one declaration per Feature.
-- Global declarations allowed through the tag @global.
+- Global declarations allowed through the tag `@global`.
+- Allow inheritance through the property `extends` (e.g. `- extends <Other Element>`).
 
 Notes about a UI Element:
 - default `type` is `textbox`
@@ -475,7 +476,7 @@ Element filters, when used without the `with` keyword :
   - `~element` = mobile name `<< MOBILE ONLY`
 
 
-## Events
+## TestEvents
 
 *Declares events before, after, or around test cases or features. Console commands or SQL scripts can be executed when these events occur.*
 

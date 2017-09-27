@@ -1,6 +1,6 @@
 import { NodeIterator } from './NodeIterator';
 import { Tag } from "../ast/Tag";
-import { Keywords } from "../req/Keywords";
+import { TokenTypes } from "../req/TokenTypes";
 
 /**
  * Tag collector
@@ -11,7 +11,7 @@ export class TagCollector {
 
     public addBackwardTags( it: NodeIterator, targetTags: Tag[] ) {
         let itClone: NodeIterator = it.clone();
-        while ( itClone.hasPrior() && itClone.spyPrior().keyword === Keywords.TAG ) {
+        while ( itClone.hasPrior() && itClone.spyPrior().keyword === TokenTypes.TAG ) {
             let tag = itClone.prior() as Tag;
             targetTags.unshift( tag ); // Inserts in the beginning
         }        

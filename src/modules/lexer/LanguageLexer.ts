@@ -29,13 +29,13 @@ export class LanguageLexer implements NodeLexer< Language >, KeywordBasedLexer {
     }     
 
     private makeRegexForTheWords( words: string[] ): string {
-        return '^' + Expressions.SPACES_OR_TABS
+        return '^' + Expressions.OPTIONAL_SPACES_OR_TABS
             + Expressions.escape( Symbols.LANGUAGE_PREFIX )
-            + Expressions.SPACES_OR_TABS
+            + Expressions.OPTIONAL_SPACES_OR_TABS
             + '(' + words.join( '|' ) + ')'
-            + Expressions.SPACES_OR_TABS
+            + Expressions.OPTIONAL_SPACES_OR_TABS
             + Expressions.escape( Symbols.LANGUAGE_SEPARATOR )
-            + Expressions.ANYTHING;
+            + Expressions.ANYTHING; // the language code
     }
 
     /** @inheritDoc */

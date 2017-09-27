@@ -3,7 +3,7 @@ import { Node } from '../../modules/ast/Node';
 import { Tag } from '../../modules/ast/Tag';
 import { Feature } from '../../modules/ast/Feature';
 import { TagCollector } from '../../modules/parser/TagCollector';
-import { Keywords } from "../../modules/req/Keywords";
+import { TokenTypes } from "../../modules/req/TokenTypes";
 import { Import } from "../../modules/ast/Import";
 /**
  * @author Thiago Delgado Pinto
@@ -15,27 +15,27 @@ describe( 'TagCollectorTest', () => {
     let lin = 1;
     
     let importNode: Import = {
-        keyword: Keywords.IMPORT,
+        keyword: TokenTypes.IMPORT,
         location: { line: lin++, column: 1 },
         content: "hello.world"
     };
 
     let tagNode1: Tag = {
-        keyword: Keywords.TAG,
+        keyword: TokenTypes.TAG,
         location: { line: lin++, column: 1 },
         name: 'important',
         content: null
     };
 
     let tagNode2: Tag = {
-        keyword: Keywords.TAG,
+        keyword: TokenTypes.TAG,
         location: { line: lin++, column: 1 },
         name: 'hello',
         content: 'world'
     };    
 
     let featureNode: Feature = {
-        keyword: Keywords.FEATURE,
+        keyword: TokenTypes.FEATURE,
         name: 'My feature',
         location: { line: lin++, column: 1 },
         tags: []

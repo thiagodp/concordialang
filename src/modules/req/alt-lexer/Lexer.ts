@@ -180,10 +180,10 @@ import { TokenTypes } from './TokenTypes';
         // e.g. "language|lang"
         let keywords: string = this._keywordDictionary.language.join( '|' );
 
-        let regex = Expressions.SPACES_OR_TABS + Expressions.escape( Symbols.LANGUAGE_PREFIX )
-            + Expressions.SPACES_OR_TABS + '(' + keywords + ')'
-            + Expressions.SPACES_OR_TABS + Expressions.escape( Symbols.LANGUAGE_SEPARATOR ) + Expressions.SPACES_OR_TABS
-            + '[A-Za-z]{2}(?:(?:\-|\_)[A-Za-z]{2})?' + Expressions.SPACES_OR_TABS + '$';
+        let regex = Expressions.OPTIONAL_SPACES_OR_TABS + Expressions.escape( Symbols.LANGUAGE_PREFIX )
+            + Expressions.OPTIONAL_SPACES_OR_TABS + '(' + keywords + ')'
+            + Expressions.OPTIONAL_SPACES_OR_TABS + Expressions.escape( Symbols.LANGUAGE_SEPARATOR ) + Expressions.OPTIONAL_SPACES_OR_TABS
+            + '[A-Za-z]{2}(?:(?:\-|\_)[A-Za-z]{2})?' + Expressions.OPTIONAL_SPACES_OR_TABS + '$';
 
         return this.scanInput( new RegExp( regex, 'ui' ), Keywords.LANGUAGE );
     }
@@ -246,8 +246,8 @@ import { TokenTypes } from './TokenTypes';
         */
         let keywords = this._keywordDictionary.step.join( '|' );
         let regex = new RegExp(
-            Expressions.SPACES_OR_TABS + '(' + keywords + ')'
-                + Expressions.SPACES_OR_TABS + Expressions.ANYTHING
+            Expressions.OPTIONAL_SPACES_OR_TABS + '(' + keywords + ')'
+                + Expressions.OPTIONAL_SPACES_OR_TABS + Expressions.ANYTHING
             , 'ui' );
 
         let result = regex.exec( this.line() );
@@ -505,9 +505,9 @@ import { TokenTypes } from './TokenTypes';
      */
     protected scanInputForKeywords( keywords: string[], separator: string, tokenType: string ): Token | null {
 
-        let regex = Expressions.SPACES_OR_TABS + '(' + keywords.join( '|' ) + ')'
-            + Expressions.SPACES_OR_TABS + Expressions.escape( separator )
-            + Expressions.SPACES_OR_TABS + '(' + Expressions.ANYTHING + ')'
+        let regex = Expressions.OPTIONAL_SPACES_OR_TABS + '(' + keywords.join( '|' ) + ')'
+            + Expressions.OPTIONAL_SPACES_OR_TABS + Expressions.escape( separator )
+            + Expressions.OPTIONAL_SPACES_OR_TABS + '(' + Expressions.ANYTHING + ')'
             ;
         let result = new RegExp( regex, 'ui' ).exec( this.line() );
         if ( ! result ) {

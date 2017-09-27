@@ -1,7 +1,7 @@
 import { FeatureParser } from './FeatureParser';
 import { Node } from '../ast/Node';
 import { Document } from '../ast/Document';
-import { Keywords } from '../req/Keywords';
+import { TokenTypes } from '../req/TokenTypes';
 import { LanguageParser } from './LanguageParser';
 import { NodeIterator } from './NodeIterator';
 import { NodeParser } from './NodeParser';
@@ -28,17 +28,17 @@ export class Parser {
 
     constructor( private _stopOnFirstError: boolean = false ) {
         this._parsersMap = {};
-        this._parsersMap[ Keywords.LANGUAGE ] = new LanguageParser();
-        this._parsersMap[ Keywords.IMPORT ] = new ImportParser();
-        this._parsersMap[ Keywords.FEATURE ] = new FeatureParser();
-        this._parsersMap[ Keywords.SCENARIO ] = new ScenarioParser();
-        this._parsersMap[ Keywords.STEP_GIVEN ] = new StepParser();
-        this._parsersMap[ Keywords.STEP_WHEN ] = new StepParser();
-        this._parsersMap[ Keywords.STEP_THEN ] = new StepParser();
-        this._parsersMap[ Keywords.STEP_AND ] = new StepParser();
-        this._parsersMap[ Keywords.TEST_CASE ] = new TestCaseParser();
-        this._parsersMap[ Keywords.REGEX ] = new RegexParser();
-        this._parsersMap[ Keywords.STATE ] = new StateParser();
+        this._parsersMap[ TokenTypes.LANGUAGE ] = new LanguageParser();
+        this._parsersMap[ TokenTypes.IMPORT ] = new ImportParser();
+        this._parsersMap[ TokenTypes.FEATURE ] = new FeatureParser();
+        this._parsersMap[ TokenTypes.SCENARIO ] = new ScenarioParser();
+        this._parsersMap[ TokenTypes.STEP_GIVEN ] = new StepParser();
+        this._parsersMap[ TokenTypes.STEP_WHEN ] = new StepParser();
+        this._parsersMap[ TokenTypes.STEP_THEN ] = new StepParser();
+        this._parsersMap[ TokenTypes.STEP_AND ] = new StepParser();
+        this._parsersMap[ TokenTypes.TEST_CASE ] = new TestCaseParser();
+        this._parsersMap[ TokenTypes.REGEX ] = new RegexParser();
+        this._parsersMap[ TokenTypes.STATE ] = new StateParser();
     }
 
     public reset(): void {
@@ -62,7 +62,7 @@ export class Parser {
 
     /**
      * Analyze the given nodes and fill the document with the AST. Returns 
-     * ignored keywords, that were not parsed because of the lack of parsers.
+     * ignored TokenTypes, that were not parsed because of the lack of parsers.
      * 
      * @param nodes Nodes to be analyzed.
      * @param doc Document where to put the AST.
@@ -71,7 +71,7 @@ export class Parser {
 
         this.reset();
 
-        let ignoredKeywords: string[] = [];
+        let ignoredTokenTypes: string[] = [];
         let it = new NodeIterator( nodes );
         let errors = [];
         let node: Node = null;
@@ -85,8 +85,8 @@ export class Parser {
             // Retrieves the parser
             nodeParser = this._parsersMap[ node.keyword ];
             if ( ! nodeParser ) {
-                // Remember ignored keywords
-                ignoredKeywords.push( node.keyword );
+                // Remember ignored TokenTypes
+                ignoredTokenTypes.push( node.keyword );
                 continue;
             }
             // Parses the current node            
@@ -101,7 +101,7 @@ export class Parser {
         // Add the "errors" array to "_errors"
         this._errors.push.apply( this._errors, errors );
 
-        return ignoredKeywords;
+        return ignoredTokenTypes;
     }
 
 }

@@ -27,7 +27,7 @@ export class StartingKeywordLexer< T extends ContentNode > implements NodeLexer<
     }    
 
     protected makeRegexForTheWords( words: string[] ): string {
-        return '^' + Expressions.SPACES_OR_TABS
+        return '^' + Expressions.OPTIONAL_SPACES_OR_TABS
             + '(?:' + words.join( '|' ) + ')'
             + Expressions.AT_LEAST_ONE_SPACE_OR_TAB
             + '(' + Expressions.ANYTHING + ')';

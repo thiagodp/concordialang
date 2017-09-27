@@ -5,7 +5,7 @@ import { UI } from "./UI";
 import { Tag } from "./Tag";
 import { Import } from "./Import";
 import { Language } from "./Language";
-import { Regex } from "./Regex";
+import { RegexesBlock } from "./RegexesBlock";
 import { State } from "./State";
 
 /**
@@ -30,6 +30,6 @@ export interface Document {
 
     tasks?: Task[];
 
-    regexes?: Regex[];
+    regexes?: RegexesBlock[];
 
 }

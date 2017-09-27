@@ -1,3 +1,4 @@
+import { TokenTypes } from '../req/TokenTypes';
 import { NodeLexer, LexicalAnalysisResult } from "./NodeLexer";
 import { Text } from '../ast/Text';
 import { Keywords } from "../req/Keywords";
@@ -10,7 +11,7 @@ import { LineChecker } from "../req/LineChecker";
  */
 export class TextLexer implements NodeLexer< Text > {
 
-    private _keyword: string = Keywords.TEXT;
+    private _keyword: string = TokenTypes.TEXT;
     private _lineChecker: LineChecker = new LineChecker();
 
     public analyze( line: string, lineNumber?: number ): LexicalAnalysisResult< Text > {

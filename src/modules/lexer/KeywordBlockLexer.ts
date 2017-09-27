@@ -31,11 +31,11 @@ export class KeywordBlockLexer< T extends Node > implements NodeLexer< T >, Keyw
     }     
 
     protected makeRegexForTheWords( words: string[] ): string {
-        return '^' + Expressions.SPACES_OR_TABS
+        return '^' + Expressions.OPTIONAL_SPACES_OR_TABS
             + '(' + words.join( '|' ) + ')'
-            + Expressions.SPACES_OR_TABS
+            + Expressions.OPTIONAL_SPACES_OR_TABS
             + this._separator
-            + Expressions.SPACES_OR_TABS;
+            + Expressions.OPTIONAL_SPACES_OR_TABS;
     }
 
     /** @inheritDoc */

@@ -31,10 +31,11 @@ export class QuotedNodeLexer< T extends ContentNode > implements NodeLexer< T >,
     }     
 
     protected makeRegexForTheWords( words: string[] ): string {
-        return '^' + Expressions.SPACES_OR_TABS
+        return '^' + Expressions.OPTIONAL_SPACES_OR_TABS
             + '(?:' + words.join( '|' ) + ')'
-            + Expressions.SPACES_OR_TABS
-            + '("[^"\r\n]*")';
+            + Expressions.OPTIONAL_SPACES_OR_TABS
+            + Expressions.SOMETHING_INSIDE_QUOTES
+            + Expressions.OPTIONAL_SPACES_OR_TABS;
     }
 
     /** @inheritDoc */
@@ -47,8 +48,8 @@ export class QuotedNodeLexer< T extends ContentNode > implements NodeLexer< T >,
         }
 
         let pos = this._lineChecker.countLeftSpacesAndTabs( line );
-        let name = this._lineChecker.textAfterSeparator( Symbols.IMPORT_WRAPPER, line )
-            .replace( new RegExp( Symbols.IMPORT_WRAPPER , 'g' ), '' ) // replace all '"' with ''
+        let name = this._lineChecker.textAfterSeparator( Symbols.VALUE_WRAPPER, line )
+            .replace( new RegExp( Symbols.VALUE_WRAPPER , 'g' ), '' ) // replace all '"' with ''
             .trim();
 
         let node = {

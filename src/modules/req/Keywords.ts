@@ -5,17 +5,15 @@
  */
 export abstract class Keywords {
 
-    // Non-Gherkin keywords
+    // Not available in Gherkin
   
     static IMPORT: string = 'import';
-    static REGEX: string = 'regex';
+    static REGEX_BLOCK: string = 'regexBlock';
     static STATE: string = 'state';    
     static TEST_CASE: string = 'testcase';
     
-    // Gherkin keywords
+    // Also available in Gherkin
 
-    static COMMENT: string = 'comment';
-    static TAG: string = 'tag';
     static LANGUAGE: string = 'language';
 
     static FEATURE: string = 'feature';
@@ -26,31 +24,9 @@ export abstract class Keywords {
     static STEP_THEN: string = 'stepThen';
     static STEP_AND: string = 'stepAnd';
 
-    static TEXT: string = 'text'; // not empty, but not recognized
+    // Utilities
 
-    /**
-     * Returns the tokens that are variable, that is, those based on a dictionary.
-     */
-    static variableTypes(): Array< string > {
-        return [
-            Keywords.IMPORT,
-            Keywords.REGEX,
-            Keywords.STATE,
-            Keywords.TEST_CASE,
-            Keywords.LANGUAGE            
-            , Keywords.FEATURE
-            , Keywords.SCENARIO
-            , Keywords.STEP_GIVEN
-            , Keywords.STEP_WHEN
-            , Keywords.STEP_THEN
-            , Keywords.STEP_AND
-            , Keywords.STEP_BUT
-            , 
-            , Keywords.STATE
-        ];
-    }
-
-    static all(): Array< string > {
+    static all(): string[] {
         let set = [];
         for ( let x in Keywords ) {
             if ( 'string' === typeof x ) {

@@ -12,6 +12,7 @@ export abstract class Symbols {
     static LANGUAGE_PREFIX = '#';
     static PY_STRING_PREFIX = '"""';
     static TABLE_PREFIX = '|';
+    static LIST_ITEM_PREFIX = '-';
 
     // separators
 
@@ -24,7 +25,5 @@ export abstract class Symbols {
 
     // wrappers
 
-    static IMPORT_WRAPPER = '"';
-    static REGEX_WRAPPER = '"';
-    static TEST_CASE_WRAPPER = '"';
+    static VALUE_WRAPPER = '"';
 }

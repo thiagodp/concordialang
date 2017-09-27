@@ -1,70 +1,26 @@
 import { RegexLexer } from '../../modules/lexer/RegexLexer';
-import { Keywords } from '../../modules/req/Keywords';
+import { TokenTypes } from '../../modules/req/TokenTypes';
 
 /**
  * @author Thiago Delgado Pinto
  */
 describe( 'RegexLexerTest', () => {
 
-    let words = [ 'regex' ];
+    let words = [ 'regular expressions' ];
     let lexer = new RegexLexer( words );
 
-    it( 'detects in a line', () => {
-        let line = 'Regex "name": some value';
-        expect( lexer.analyze( line ) ).not.toBeNull();
-    } );
-
-    it( 'detects in a line with spaces and tabs', () => {
-        let line = '  \t  \t regex \t "Hello World" \t : \tsome value ';
-        expect( lexer.analyze( line ) ).not.toBeNull()
-    } );
-
-    it( 'does not detect when it is not in a line', () => {
-        let line = 'Someelse: Hello world';
-        expect( lexer.analyze( line ) ).toBeNull()
-    } );
-
-    it( 'does not detect when the word "regex" is not the first one', () => {
-        let line = 'Not a regex "hello": world';
-        expect( lexer.analyze( line ) ).toBeNull();
-    } );
-
-    it( 'does not detect when the word "regex" is not followed by a name', () => {
-        let line = 'Regex : world';
-        expect( lexer.analyze( line ) ).toBeNull();
-    } );
-
-    it( 'detects when the value is empty', () => {
-        let line = 'Regex "hello" :';
-        let node = lexer.analyze( line ).nodes[ 0 ];
-        expect( node ).toBeDefined();
-        expect( node.content ).toHaveLength( 0 );
-    } );    
+    // IMPORTANT: Since RegexLexer inherits from KeywordBlockLexer and 
+    // there is a KeywordBlockLexerTest, few tests are necessary.
 
     it( 'detects in the correct position', () => {
-        let line = 'Regex "some name": some value';
+        let line = '\tRegular expressions\t:\t';
         let node = lexer.analyze( line, 1 ).nodes[ 0 ];
         expect( node ).toEqual(
             {
-                keyword: Keywords.REGEX,
-                location: { line: 1, column: 1 },
-                name: "some name",
-                content: "some value"
+                keyword: TokenTypes.REGEX,
+                location: { line: 1, column: 2 }
             }
         );
-    } );
-
-    it( 'detects in the correct position even with additional spaces or tabs', () => {
-        let line = '\t \t Regex "some name": some value';
-        let node = lexer.analyze( line, 1 ).nodes[ 0 ];
-        expect( node ).toEqual(
-            {
-                keyword: Keywords.REGEX,
-                location: { line: 1, column: 5 },
-                name: "some name",
-                content: "some value"
-            }
-        );
-    } );
+    } );    
 
 } );

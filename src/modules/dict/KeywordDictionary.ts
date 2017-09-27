@@ -1,33 +1,27 @@
 /**
  * Keyword dictionary
  * 
- * @see Keywords
- * 
  * @author Thiago Delgado Pinto
  */
 export interface KeywordDictionary { // properties should exist in Keywords
 
-    // Non-Gherkin keywords
+    // Not available in Gherkin
     
     import: string[],
-    regex: string[],
+    regexBlock: string[],
     state: string[],
     testcase: string[],
 
-    // Gherkin keywords
+    // Also available in Gherkin
 
     language: string[],
 
     feature: string[],
+    scenario: string[],
 
     stepGiven: string[],
     stepWhen: string[],
     stepThen: string[],
-    stepAnd: string[],
-
-    scenario: string[],
-    background: string[],
-    outline: string[],
-    examples: string[]
+    stepAnd: string[]
 
 }
