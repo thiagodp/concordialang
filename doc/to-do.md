@@ -6,21 +6,20 @@
 - [X] Import
 - [X] Tag
 - [X] Feature
-- [ ] Feature Sentences
-  - [ ] As a
-  - [ ] I would like to
-  - [ ] In order to
+- [X] Feature Sentences (as text)
 - [X] Scenario
 - [X] Step Sentences
   - [X] Given
   - [X] When
   - [X] Then
   - [X] And, But
+- [X] State  
+- [X] Regular Expressions Block
+- [X] Regular Expressions
+- [X] Constants Block
+- [X] Contants
 - [X] Test Case
 - [X] Test Case Sentences
-- [X] Regular Expressions Block
-- [/] State
-- [ ] Constants
 - [ ] UI Element
 - [ ] Table
 - [ ] Database
@@ -33,13 +32,13 @@
 - [X] Import
 - [X] Tag
 - [X] Feature
-- [ ] Feature Sentences
+- [X] Feature Sentences
 - [X] Scenario
 - [X] Scenario Sentences
 - [/] Test Case
 - [/] Test Case Sentences
 - [/] State
-- [/] Regular Expressions
+- [ ] Regular Expressions
 - [ ] Constants
 - [ ] UI Element
 - [ ] Table

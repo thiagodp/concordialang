@@ -1,3 +1,4 @@
+import { TextCollector } from './TextCollector';
 import { TagCollector } from './TagCollector';
 import { Feature } from "../ast/Feature";
 import { Node } from '../ast/Node';
@@ -33,7 +34,13 @@ export class FeatureParser implements NodeParser< Feature > {
         if ( ! node.tags ) {
             node.tags = [];
         }
-        ( new TagCollector() ).addBackwardTags( it, node.tags );
+        ( new TagCollector() ).addBackwardTags( it, node.tags ); // does not touch the iterator
+
+        // Add forward text sentences
+        if ( ! node.sentences ) {
+            node.sentences = [];
+        }        
+        ( new TextCollector() ).addForwardTextNodes( it, node.sentences, true ); // true == change iterator
 
         return true;
     }

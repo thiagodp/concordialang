@@ -65,4 +65,12 @@ export class NodeIterator {
         return new NodeIterator( this._nodes, this._index );
     }
 
+    public nodes( newNodes?: Node[] ): Node[] {
+        if ( newNodes ) {
+            this._nodes = newNodes;
+            this.first();
+        }
+        return this._nodes;
+    }
+
 }

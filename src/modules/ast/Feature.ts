@@ -1,8 +1,8 @@
-import { Scenario } from './Scenario';
-import { TestCase } from './TestCase';
-import { Rule } from "./Rule";
 import { NamedNode } from './Node';
 import { MayHaveTags } from './Tag';
+import { Text } from '../ast/Text';
+import { Scenario } from './Scenario';
+import { TestCase } from './TestCase';
 
 /**
  * Feature node.
@@ -13,10 +13,9 @@ import { MayHaveTags } from './Tag';
 export interface Feature extends NamedNode, MayHaveTags {
 
     description?: string;
+    sentences?: Text[];    
+    scenarios?: Scenario[];
+    testcases?: TestCase[];
 
-    scenarios?: Array< Scenario >;
-
-    testcases?: Array< TestCase >;
-
-    rules?: Array< Rule >;
+    //rules?: Array< Rule >; // TO-DO: remove the Rule class and related ones
 }
