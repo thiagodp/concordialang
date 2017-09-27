@@ -19,7 +19,7 @@ export class LanguageLexer implements NodeLexer< Language >, KeywordBasedLexer {
     }
 
     /** @inheritDoc */
-    public nodeType(): string {
+    public affectedKeyword(): string {
         return NodeTypes.LANGUAGE;
     }
 

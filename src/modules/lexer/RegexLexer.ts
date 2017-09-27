@@ -1,4 +1,3 @@
-import { NameIsContentLexer } from './NameIsContentLexer';
 import { Regex } from '../ast/Regex';
 import { NodeTypes } from "../req/NodeTypes";
 import { NodeLexer, LexicalAnalysisResult } from './NodeLexer';
@@ -22,8 +21,8 @@ export class RegexLexer implements NodeLexer< Regex >, KeywordBasedLexer {
     }
 
     /** @inheritDoc */
-    public nodeType(): string {
-        return this._nodeType;
+    public affectedKeyword(): string {
+        return NodeTypes.IS;
     }
 
     /** @inheritDoc */

@@ -21,7 +21,7 @@ export class KeywordBlockLexer< T extends Node > implements NodeLexer< T >, Keyw
     }
 
     /** @inheritDoc */
-    public nodeType(): string {
+    public affectedKeyword(): string {
         return this._nodeType;
     }
     

@@ -21,7 +21,7 @@ export class QuotedNodeLexer< T extends ContentNode > implements NodeLexer< T >,
     }
 
     /** @inheritDoc */
-    public nodeType(): string {
+    public affectedKeyword(): string {
         return this._nodeType;
     }
         

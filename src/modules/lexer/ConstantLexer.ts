@@ -12,7 +12,7 @@ import { Symbols } from '../req/Symbols';
 export class ConstantLexer extends NameIsContentLexer< Constant > {    
 
     constructor( words: string[] ) {
-        super( words, NodeTypes.CONSTANT );
+        super( words, NodeTypes.CONSTANT, NodeTypes.IS );
     }
 
     /** @inheritDoc */

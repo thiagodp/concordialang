@@ -15,7 +15,11 @@ export class NameIsContentLexer< T extends NodeWithNameAndContent > implements N
 
     private _lineChecker: LineChecker = new LineChecker();
     
-    constructor( private _words: string[], private _nodeType: string ) {
+    constructor(
+        private _words: string[],
+        private _nodeType: string,
+        private _affectedKeyword: string
+    ) {
     }
         
     protected makeRegexForTheWords( words: string[] ): string {
@@ -32,8 +36,8 @@ export class NameIsContentLexer< T extends NodeWithNameAndContent > implements N
     }
 
     /** @inheritDoc */
-    public nodeType(): string {
-        return this._nodeType;
+    public affectedKeyword(): string {
+        return this._affectedKeyword;
     }
 
     /** @inheritDoc */

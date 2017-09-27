@@ -17,7 +17,7 @@ export class StartingKeywordLexer< T extends ContentNode > implements NodeLexer<
     }
 
     /** @inheritDoc */
-    public nodeType(): string {
+    public affectedKeyword(): string {
         return this._nodeType;
     }
 

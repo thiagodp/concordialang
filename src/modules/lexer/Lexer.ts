@@ -1,3 +1,4 @@
+import { ConstantBlock } from '../ast/ContantBlock';
 import { KeywordBasedLexer } from './KeywordBasedLexer';
 import { KeywordDictionaryLoader } from '../dict/KeywordDictionaryLoader';
 import { Language } from '../ast/Language';
@@ -18,6 +19,9 @@ import { StepAndLexer } from "./StepAndLexer";
 import { TextLexer } from "./TextLexer";
 import { StateLexer } from "./StateLexer";
 import { RegexBlockLexer } from './RegexBlockLexer';
+import { RegexLexer } from './RegexLexer';
+import { ConstantBlockLexer } from './ConstantBlockLexer';
+import { ConstantLexer } from './ConstantLexer';
 
 /**
  * Lexer
@@ -26,8 +30,8 @@ import { RegexBlockLexer } from './RegexBlockLexer';
  */
 export class Lexer {
 
-    private _nodes: Array< Node > = [];
-    private _errors: Array< Error > = [];
+    private _nodes: Node[] = [];
+    private _errors: Error[] = [];
     private _lexers: Array< NodeLexer< Node > > = [];
 
     constructor(
@@ -41,7 +45,7 @@ export class Lexer {
         }
 
         this._lexers = [
-            new LanguageLexer( dictionary.language )
+              new LanguageLexer( dictionary.language )
             , new TagLexer()
             , new ImportLexer( dictionary.import )
             , new FeatureLexer( dictionary.feature )
@@ -51,7 +55,10 @@ export class Lexer {
             , new StepThenLexer( dictionary.stepThen )
             , new StepAndLexer( dictionary.stepAnd )
             , new TestCaseLexer( dictionary.testcase )
+            , new ConstantBlockLexer( dictionary.constantBlock )
+            , new ConstantLexer( dictionary.is ) // "name" is "value"
             , new RegexBlockLexer( dictionary.regexBlock )
+            , new RegexLexer( dictionary.is ) // "name" is "value"
             , new StateLexer( dictionary.state )
             , new TextLexer() // captures any non-empty
         ];
@@ -64,7 +71,7 @@ export class Lexer {
         this.changeLanguage( this._language = 'en' );
     }
 
-    public nodes(): Array< Node > {
+    public nodes(): Node[] {
         return this._nodes;
     }
 
@@ -72,7 +79,7 @@ export class Lexer {
         return this._errors.length > 0;
     }
 
-    public errors(): Array< Error > {
+    public errors(): Error[] {
         return this._errors;
     }
 
@@ -164,7 +171,7 @@ export class Lexer {
         let dict = this._dictionaryLoader.load( language ); // throws Error
         for ( let lexer of this._lexers ) {
             if ( this.isAWordBasedLexer( lexer ) ) {
-                let nodeType = lexer.nodeType();
+                let nodeType = lexer.affectedKeyword();
                 let words = dict[ nodeType ];
                 if ( words ) {
                     lexer.updateWords( words );

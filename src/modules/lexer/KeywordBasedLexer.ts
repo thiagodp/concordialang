@@ -6,9 +6,9 @@
 export interface KeywordBasedLexer {
 
     /**
-     * Returns the target node type.
+     * Returns the affect dictionary keyword.
      */    
-    nodeType(): string;
+    affectedKeyword(): string;
 
     /**
      * Update the words.

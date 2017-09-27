@@ -13,12 +13,15 @@ describe( 'LexerTest', () => {
     const enDictionary: KeywordDictionary = new EnglishKeywordDictionary();
 
     const ptDictionary: KeywordDictionary = {
+
         // Not available in Gherkin
         import: [ 'importe' ],
         regexBlock: [ 'expressões regulares' ],
+        constantBlock: [ 'constantes' ],
+        is: [ 'é' ],
         state: [ 'estado' ],
         testcase: [ 'caso de teste' ],
-
+        
         // Also available in Gherkin
 
         language: [ 'language', 'idioma', 'língua' ],
@@ -89,7 +92,13 @@ describe( 'LexerTest', () => {
             { l: '    And I fill "#password" with "bobp4ss"', e: NodeTypes.STEP_AND },
             { l: '    And I click "Enter"', e: NodeTypes.STEP_AND },
             { l: '', e: null },
+            { l: 'Constants:', e: NodeTypes.CONSTANT_BLOCK },
+            { l: '  - "msg" is "hello"', e: NodeTypes.CONSTANT },
+            { l: '  - "max_name_size" is 60', e: NodeTypes.CONSTANT },
+            { l: '  - "pi" is 3.14', e: NodeTypes.CONSTANT },
+            { l: '', e: null },
             { l: 'Regular Expressions:', e: NodeTypes.REGEX_BLOCK },
+            { l: '  - "name" is "[A-Za-z]{2,60}"', e: NodeTypes.CONSTANT },
             { l: '', e: null },
             { l: 'this must be recognized as text', e: NodeTypes.TEXT }
         ];
@@ -123,7 +132,13 @@ describe( 'LexerTest', () => {
             { l: '  E preencho "#password" com "bobp4ss"', e: NodeTypes.STEP_AND },
             { l: '  E clico "Enter"', e: NodeTypes.STEP_AND },
             { l: '', e: null },
+            { l: 'Constantes:', e: NodeTypes.CONSTANT_BLOCK },
+            { l: '  - "msg" é "hello"', e: NodeTypes.CONSTANT },
+            { l: '  - "max_name_size" é 60', e: NodeTypes.CONSTANT },
+            { l: '  - "pi" é 3.14', e: NodeTypes.CONSTANT },
+            { l: '', e: null },
             { l: 'Expressões Regulares:', e: NodeTypes.REGEX_BLOCK },
+            { l: '  - "nome" é "[A-Za-z]{2,60}"', e: NodeTypes.CONSTANT },
             { l: '', e: null },
             { l: 'isso must be recognized as text', e: NodeTypes.TEXT }
         ];
