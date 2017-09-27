@@ -1,5 +1,5 @@
 import { TextLexer } from "../../modules/lexer/TextLexer";
-import { TokenTypes } from '../../modules/req/TokenTypes';
+import { NodeTypes } from '../../modules/req/NodeTypes';
 
 /**
  * @author Thiago Delgado Pinto
@@ -21,7 +21,7 @@ describe( 'TextLexerTest', () => {
         expect( node.location.line ).toBe( 1 );
         expect( node.location.column ).toBe( 8 );
         // Keyword
-        expect( node.keyword ).toBe( TokenTypes.TEXT );
+        expect( node.nodeType ).toBe( NodeTypes.TEXT );
         // Content
         expect( node.content ).toBe( '  \t  \t anything here \t' );
     } );

@@ -1,6 +1,6 @@
 import { StartingKeywordLexer } from './StartingKeywordLexer';
 import { StepThen } from "../ast/Step";
-import { TokenTypes } from "../req/TokenTypes";
+import { NodeTypes } from "../req/NodeTypes";
 
 /**
  * Detects a Then node.
@@ -10,7 +10,7 @@ import { TokenTypes } from "../req/TokenTypes";
 export class StepThenLexer extends StartingKeywordLexer< StepThen > {
 
     constructor( words: string[] ) {
-        super( words, TokenTypes.STEP_THEN );
+        super( words, NodeTypes.STEP_THEN );
     }
 
 }

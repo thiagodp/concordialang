@@ -1,6 +1,6 @@
 import { StartingKeywordLexer } from './StartingKeywordLexer';
 import { StepWhen } from "../ast/Step";
-import { TokenTypes } from "../req/TokenTypes";
+import { NodeTypes } from "../req/NodeTypes";
 
 /**
  * Detects a When node.
@@ -10,7 +10,7 @@ import { TokenTypes } from "../req/TokenTypes";
 export class StepWhenLexer extends StartingKeywordLexer< StepWhen > {
 
     constructor( words: string[] ) {
-        super( words, TokenTypes.STEP_WHEN );
+        super( words, NodeTypes.STEP_WHEN );
     }
 
 }

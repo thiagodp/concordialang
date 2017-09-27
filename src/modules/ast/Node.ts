@@ -1,7 +1,7 @@
 import { Location } from './Location';
 
 export interface Node {
-    keyword: string;
+    nodeType: string;
     location: Location;
 }
 

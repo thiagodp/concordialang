@@ -13,12 +13,12 @@ export class StartingKeywordLexer< T extends ContentNode > implements NodeLexer<
 
     private _lineChecker: LineChecker = new LineChecker();
 
-    constructor( private _words: Array< string >, private _keyword: string ) {
+    constructor( private _words: Array< string >, private _nodeType: string ) {
     }
 
     /** @inheritDoc */
-    public keyword(): string {
-        return this._keyword;
+    public nodeType(): string {
+        return this._nodeType;
     }
 
     /** @inheritDoc */
@@ -46,7 +46,7 @@ export class StartingKeywordLexer< T extends ContentNode > implements NodeLexer<
         let content = result[ 1 ].trim();
 
         let node = {
-            keyword: this._keyword,
+            nodeType: this._nodeType,
             location: { line: lineNumber || 0, column: pos + 1 },
             content: content
         } as T;

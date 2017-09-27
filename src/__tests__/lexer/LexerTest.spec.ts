@@ -3,7 +3,7 @@ import { InMemoryKeywordDictionaryLoader } from '../../modules/dict/InMemoryKeyw
 import { KeywordDictionaryLoader } from '../../modules/dict/KeywordDictionaryLoader';
 import { Lexer } from "../../modules/lexer/Lexer";
 import { KeywordDictionary } from "../../modules/dict/KeywordDictionary";
-import { TokenTypes } from "../../modules/req/TokenTypes";
+import { NodeTypes } from "../../modules/req/NodeTypes";
 
 /**
  * @author Thiago Delgado Pinto
@@ -52,7 +52,7 @@ describe( 'LexerTest', () => {
             .map( val => val.e ); // return the expectations
 
         lexer.nodes().forEach( ( node, index ) =>
-            expect( node.keyword ).toBe( expectations[ index ] ) ); // same index as the expectation
+            expect( node.nodeType ).toBe( expectations[ index ] ) ); // same index as the expectation
     }
 
 
@@ -67,31 +67,31 @@ describe( 'LexerTest', () => {
     it( 'detects correctly in english', () => {
         let lines = 
         [
-            { l: '#language:en', e: TokenTypes.LANGUAGE },
+            { l: '#language:en', e: NodeTypes.LANGUAGE },
             { l: '', e: null },
-            { l: 'import "somefile"', e: TokenTypes.IMPORT },
+            { l: 'import "somefile"', e: NodeTypes.IMPORT },
             { l: '', e: null },
-            { l: '@important', e: TokenTypes.TAG },
-            { l: 'feature: my feature', e: TokenTypes.FEATURE },
+            { l: '@important', e: NodeTypes.TAG },
+            { l: 'feature: my feature', e: NodeTypes.FEATURE },
             { l: ' \t', e: null },
-            { l: 'scenario: hello', e: TokenTypes.SCENARIO },
-            { l: '  given something', e: TokenTypes.STEP_GIVEN },
-            { l: '    and another thing', e: TokenTypes.STEP_AND },
-            { l: '  when anything happens', e: TokenTypes.STEP_WHEN },
-            { l: '    and other thing happens', e: TokenTypes.STEP_AND },
-            { l: '    but other thing does not happen', e: TokenTypes.STEP_AND },
-            { l: '  then the result is anything', e: TokenTypes.STEP_THEN },
-            { l: '    and another result could also happen', e: TokenTypes.STEP_AND },
+            { l: 'scenario: hello', e: NodeTypes.SCENARIO },
+            { l: '  given something', e: NodeTypes.STEP_GIVEN },
+            { l: '    and another thing', e: NodeTypes.STEP_AND },
+            { l: '  when anything happens', e: NodeTypes.STEP_WHEN },
+            { l: '    and other thing happens', e: NodeTypes.STEP_AND },
+            { l: '    but other thing does not happen', e: NodeTypes.STEP_AND },
+            { l: '  then the result is anything', e: NodeTypes.STEP_THEN },
+            { l: '    and another result could also happen', e: NodeTypes.STEP_AND },
             { l: '', e: null },
-            { l: 'Test Case: my test case', e: TokenTypes.TEST_CASE },
-            { l: '  Given that I see the url "/login"', e: TokenTypes.STEP_GIVEN },
-            { l: '  When I fill "#username" with ""', e: TokenTypes.STEP_WHEN },
-            { l: '    And I fill "#password" with "bobp4ss"', e: TokenTypes.STEP_AND },
-            { l: '    And I click "Enter"', e: TokenTypes.STEP_AND },
+            { l: 'Test Case: my test case', e: NodeTypes.TEST_CASE },
+            { l: '  Given that I see the url "/login"', e: NodeTypes.STEP_GIVEN },
+            { l: '  When I fill "#username" with ""', e: NodeTypes.STEP_WHEN },
+            { l: '    And I fill "#password" with "bobp4ss"', e: NodeTypes.STEP_AND },
+            { l: '    And I click "Enter"', e: NodeTypes.STEP_AND },
             { l: '', e: null },
-            { l: 'Regular Expressions:', e: TokenTypes.REGEX_BLOCK },
+            { l: 'Regular Expressions:', e: NodeTypes.REGEX_BLOCK },
             { l: '', e: null },
-            { l: 'this must be recognized as text', e: TokenTypes.TEXT }
+            { l: 'this must be recognized as text', e: NodeTypes.TEXT }
         ];
 
         assertLineExpectations( lines );
@@ -101,31 +101,31 @@ describe( 'LexerTest', () => {
     it( 'detects correctly in portuguese', () => {
         let lines = 
         [
-            { l: '#language:pt', e: TokenTypes.LANGUAGE },
+            { l: '#language:pt', e: NodeTypes.LANGUAGE },
             { l: '', e: null },
-            { l: 'importe "somefile"', e: TokenTypes.IMPORT },
+            { l: 'importe "somefile"', e: NodeTypes.IMPORT },
             { l: '', e: null },
-            { l: '@importante', e: TokenTypes.TAG },
-            { l: 'característica: my feature', e: TokenTypes.FEATURE },
+            { l: '@importante', e: NodeTypes.TAG },
+            { l: 'característica: my feature', e: NodeTypes.FEATURE },
             { l: ' \t', e: null },
-            { l: 'cenário: hello', e: TokenTypes.SCENARIO },
-            { l: '  dado something', e: TokenTypes.STEP_GIVEN },
-            { l: '    e another thing', e: TokenTypes.STEP_AND },
-            { l: '  quando anything happens', e: TokenTypes.STEP_WHEN },
-            { l: '    e other thing happens', e: TokenTypes.STEP_AND },
-            { l: '    mas other thing does not happen', e: TokenTypes.STEP_AND },
-            { l: '  então the result is anything', e: TokenTypes.STEP_THEN },
-            { l: '    e another result could also happen', e: TokenTypes.STEP_AND },
+            { l: 'cenário: hello', e: NodeTypes.SCENARIO },
+            { l: '  dado something', e: NodeTypes.STEP_GIVEN },
+            { l: '    e another thing', e: NodeTypes.STEP_AND },
+            { l: '  quando anything happens', e: NodeTypes.STEP_WHEN },
+            { l: '    e other thing happens', e: NodeTypes.STEP_AND },
+            { l: '    mas other thing does not happen', e: NodeTypes.STEP_AND },
+            { l: '  então the result is anything', e: NodeTypes.STEP_THEN },
+            { l: '    e another result could also happen', e: NodeTypes.STEP_AND },
             { l: '', e: null },
-            { l: 'Caso de Teste: my test case', e: TokenTypes.TEST_CASE },
-            { l: '  Dado que vejo a url "/login"', e: TokenTypes.STEP_GIVEN },
-            { l: '  Quando preencho "#username" com ""', e: TokenTypes.STEP_WHEN },
-            { l: '  E preencho "#password" com "bobp4ss"', e: TokenTypes.STEP_AND },
-            { l: '  E clico "Enter"', e: TokenTypes.STEP_AND },
+            { l: 'Caso de Teste: my test case', e: NodeTypes.TEST_CASE },
+            { l: '  Dado que vejo a url "/login"', e: NodeTypes.STEP_GIVEN },
+            { l: '  Quando preencho "#username" com ""', e: NodeTypes.STEP_WHEN },
+            { l: '  E preencho "#password" com "bobp4ss"', e: NodeTypes.STEP_AND },
+            { l: '  E clico "Enter"', e: NodeTypes.STEP_AND },
             { l: '', e: null },
-            { l: 'Expressões Regulares:', e: TokenTypes.REGEX_BLOCK },
+            { l: 'Expressões Regulares:', e: NodeTypes.REGEX_BLOCK },
             { l: '', e: null },
-            { l: 'isso must be recognized as text', e: TokenTypes.TEXT }
+            { l: 'isso must be recognized as text', e: NodeTypes.TEXT }
         ];
 
         assertLineExpectations( lines );

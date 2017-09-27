@@ -1,7 +1,7 @@
 import { LexicalException } from '../req/LexicalException';
 import { Tag } from '../ast/Tag';
 import { NodeLexer, LexicalAnalysisResult } from './NodeLexer';
-import { TokenTypes } from "../req/TokenTypes";
+import { NodeTypes } from "../req/NodeTypes";
 import { Symbols } from "../req/Symbols";
 import { LineChecker } from "../req/LineChecker";
 
@@ -69,7 +69,7 @@ export class TagLexer implements NodeLexer< Tag > {
             }
 
             let node = {
-                keyword: TokenTypes.TAG,
+                nodeType: NodeTypes.TAG,
                 location: location,
                 name: result[ 1 ],
                 content: content

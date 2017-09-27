@@ -1,5 +1,5 @@
 import { FeatureLexer } from '../../modules/lexer/FeatureLexer';
-import { TokenTypes } from '../../modules/req/TokenTypes';
+import { NodeTypes } from '../../modules/req/NodeTypes';
 
 /**
  * @author Thiago Delgado Pinto
@@ -47,7 +47,7 @@ describe( 'FeatureLexerTest', () => {
         let node = r.nodes[ 0 ];        
         expect( node ).toEqual(
             {
-                keyword: TokenTypes.FEATURE,
+                nodeType: NodeTypes.FEATURE,
                 name: "Hello world",
                 location: { line: 1, column: 1 }
             }
@@ -62,7 +62,7 @@ describe( 'FeatureLexerTest', () => {
         let node = r.nodes[ 0 ];        
         expect( node ).toEqual(
             {
-                keyword: TokenTypes.FEATURE,
+                nodeType: NodeTypes.FEATURE,
                 name: "Hello world",
                 location: { line: 1, column: 6 }
             }

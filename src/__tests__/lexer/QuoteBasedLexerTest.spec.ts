@@ -64,7 +64,7 @@ describe( 'QuoteBasedLexerTest', () => {
         let node = r.nodes[ 0 ];
         expect( node ).toEqual(
             {
-                keyword: keyword,
+                nodeType: keyword,
                 content: "Hello world",
                 location: { line: 1, column: 1 }
             }
@@ -82,7 +82,7 @@ describe( 'QuoteBasedLexerTest', () => {
         let node = r.nodes[ 0 ];
         expect( node ).toEqual(
             {
-                keyword: keyword,
+                nodeType: keyword,
                 content: "Hello world",
                 location: { line: 1, column: 6 }
             }
@@ -96,7 +96,7 @@ describe( 'QuoteBasedLexerTest', () => {
 
         expect( node ).toEqual(
             {
-                keyword: keyword,
+                nodeType: keyword,
                 location: { line: 1, column: 1 },
                 content: "1nv4lid n4me"
             }

@@ -6,9 +6,9 @@
 export interface KeywordBasedLexer {
 
     /**
-     * Returns the keyword of the lexer.
-     */
-    keyword(): string;
+     * Returns the target node type.
+     */    
+    nodeType(): string;
 
     /**
      * Update the words.

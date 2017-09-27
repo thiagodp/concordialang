@@ -1,4 +1,4 @@
-import { TokenTypes } from "../req/TokenTypes";
+import { NodeTypes } from "../req/NodeTypes";
 import { NamedNodeLexer } from "./NamedNodeLexer";
 import { State } from "../ast/State";
 
@@ -10,6 +10,6 @@ import { State } from "../ast/State";
 export class StateLexer extends NamedNodeLexer< State > {
     
     constructor( words: Array< string > ) {
-        super( words, TokenTypes.STATE );
+        super( words, NodeTypes.STATE );
     }
 }

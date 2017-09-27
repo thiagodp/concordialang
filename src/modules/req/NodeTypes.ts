@@ -1,11 +1,11 @@
 import { Keywords } from "./Keywords";
 
 /**
- * Token types
+ * Node types
  * 
  * @author Thiago Delgado Pinto
  */
-export abstract class TokenTypes extends Keywords {
+export abstract class NodeTypes extends Keywords {
 
     // Not available in Gherkin
 

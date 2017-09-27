@@ -1,6 +1,6 @@
 import { KeywordBlockLexer } from './KeywordBlockLexer';
 import { NodeLexer, LexicalAnalysisResult } from './NodeLexer';
-import { TokenTypes } from "../req/TokenTypes";
+import { NodeTypes } from "../req/NodeTypes";
 import { Symbols } from "../req/Symbols";
 import { LineChecker } from "../req/LineChecker";
 import { Expressions } from "../req/Expressions";
@@ -14,7 +14,7 @@ import { RegexesBlock } from '../ast/RegexBlock';
 export class RegexLexer extends KeywordBlockLexer< RegexesBlock > {
 
     constructor( words: string[] ) {
-        super( words, TokenTypes.REGEX );
+        super( words, NodeTypes.REGEX );
     }
 }
 

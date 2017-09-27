@@ -18,7 +18,7 @@ describe( 'KeywordBlockLexerTest', () => {
         let node = r.nodes[ 0 ];
         expect( node ).toEqual(
             {
-                keyword: keyword,
+                nodeType: keyword,
                 location: { line: 1, column: 1 }
             }
         );        

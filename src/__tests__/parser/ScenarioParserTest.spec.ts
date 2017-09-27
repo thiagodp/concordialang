@@ -3,7 +3,7 @@ import { ScenarioParser } from '../../modules/parser/ScenarioParser';
 import { Node } from '../../modules/ast/Node';
 import { NodeIterator } from '../../modules/parser/NodeIterator';
 import { ParsingContext } from '../../modules/parser/ParsingContext';
-import { TokenTypes } from '../../modules/req/TokenTypes';
+import { NodeTypes } from '../../modules/req/NodeTypes';
 import { Feature } from '../../modules/ast/Feature';
 
 /**
@@ -19,13 +19,13 @@ describe( 'ScenarioParserTest', () => {
     let errors: Error[] = [];
 
     let featureNode: Feature = {
-        keyword: TokenTypes.FEATURE,
+        nodeType: NodeTypes.FEATURE,
         location: { column: 1, line: 1 },
         name: "My feature"
     };
 
     let scenarioNode: Scenario = {
-        keyword: TokenTypes.SCENARIO,
+        nodeType: NodeTypes.SCENARIO,
         location: { column: 1, line: 2 },
         name: "My scenario",
         sentences: []

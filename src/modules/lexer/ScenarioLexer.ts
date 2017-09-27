@@ -1,5 +1,5 @@
 import { NamedNodeLexer } from "./NamedNodeLexer";
-import { TokenTypes } from "../req/TokenTypes";
+import { NodeTypes } from "../req/NodeTypes";
 import { Scenario } from "../ast/Scenario";
 
 /**
@@ -10,7 +10,7 @@ import { Scenario } from "../ast/Scenario";
 export class ScenarioLexer extends NamedNodeLexer< Scenario > {
 
     constructor( words: Array< string > ) {
-        super( words, TokenTypes.SCENARIO );
+        super( words, NodeTypes.SCENARIO );
     }
 
 }

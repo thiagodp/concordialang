@@ -15,7 +15,7 @@ export class ListItemLexer< T extends ContentNode > implements NodeLexer< T > {
     private _symbol: string = Symbols.LIST_ITEM_PREFIX;
     private _lineChecker: LineChecker = new LineChecker();
     
-    constructor( private _keyword: string ) {
+    constructor( private _nodeType: string ) {
     }
         
     protected makeRegex(): string {
@@ -27,7 +27,7 @@ export class ListItemLexer< T extends ContentNode > implements NodeLexer< T > {
 
     /** @inheritDoc */
     public keyword(): string {
-        return this._keyword;
+        return this._nodeType;
     }
 
     /** @inheritDoc */
@@ -43,14 +43,14 @@ export class ListItemLexer< T extends ContentNode > implements NodeLexer< T > {
         let content = this._lineChecker.textAfterSeparator( this._symbol, line ).trim();
 
         let node = {
-            keyword: this._keyword,
+            nodeType: this._nodeType,
             location: { line: lineNumber || 0, column: pos + 1 },
             content: content
         } as T;
 
         let errors = [];
         if ( 0 === content.length ) {
-            let msg = 'Empty content in ' + this._keyword + '.';
+            let msg = 'Empty content in ' + this._nodeType + '.';
             errors.push( new LexicalException( msg, node.location ) );
         }
 

@@ -19,7 +19,7 @@ export class StepParser implements NodeParser< Step > {
         // Checks the context
         if ( ! context.inScenario && ! context.inTestCase ) {
             let e = new SyntaticException(
-                'The "' + node.keyword + '" clause must be declared after a scenario or a test case.',
+                'The "' + node.nodeType + '" clause must be declared after a scenario or a test case.',
                 node.location
                 );
             errors.push( e );

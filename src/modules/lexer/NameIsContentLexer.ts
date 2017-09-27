@@ -13,7 +13,7 @@ export class NameIsContentLexer< T extends NodeWithNameAndContent > implements N
 
     private _lineChecker: LineChecker = new LineChecker();
     
-    constructor( private _words: string[], private _keyword: string ) {
+    constructor( private _words: string[], private _nodeType: string ) {
     }
         
     protected makeRegexForTheWords( words: string[] ): string {
@@ -31,8 +31,8 @@ export class NameIsContentLexer< T extends NodeWithNameAndContent > implements N
     }
 
     /** @inheritDoc */
-    public keyword(): string {
-        return this._keyword;
+    public nodeType(): string {
+        return this._nodeType;
     }
 
     /** @inheritDoc */
@@ -59,7 +59,7 @@ export class NameIsContentLexer< T extends NodeWithNameAndContent > implements N
             .replace( new RegExp( Symbols.VALUE_WRAPPER , 'g' ), '' ); // replace all '"' with ''
 
         let node = {
-            keyword: this._keyword,
+            nodeType: this._nodeType,
             location: { line: lineNumber || 0, column: pos + 1 },
             name: name,
             content: content
@@ -67,7 +67,7 @@ export class NameIsContentLexer< T extends NodeWithNameAndContent > implements N
 
         let errors = [];
         if ( name.length != 0 ) {
-            let msg = this._keyword + ' cannot have an empty name.';
+            let msg = this._nodeType + ' cannot have an empty name.';
             errors.push( new LexicalException( msg, node.location ) );
         }
 

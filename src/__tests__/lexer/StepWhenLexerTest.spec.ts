@@ -1,4 +1,4 @@
-import { TokenTypes } from '../../modules/req/TokenTypes';
+import { NodeTypes } from '../../modules/req/NodeTypes';
 import { StepWhenLexer } from "../../modules/lexer/StepWhenLexer";
 
 /**
@@ -21,7 +21,7 @@ describe( 'StepWhenLexerTest', () => {
         expect( node.location.line ).toBe( 1 );
         expect( node.location.column ).toBe( 8 );
         // Keyword
-        expect( node.keyword ).toBe( TokenTypes.STEP_WHEN );
+        expect( node.nodeType ).toBe( NodeTypes.STEP_WHEN );
         // Content
         expect( node.content ).toBe( 'the world and everybody on it' );
     } );

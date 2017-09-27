@@ -17,12 +17,12 @@ export class KeywordBlockLexer< T extends Node > implements NodeLexer< T >, Keyw
     private _separator: string = Symbols.TITLE_SEPARATOR;
     private _lineChecker: LineChecker = new LineChecker();
 
-    constructor( private _words: string[], private _keyword: string ) {
+    constructor( private _words: string[], private _nodeType: string ) {
     }
 
     /** @inheritDoc */
-    public keyword(): string {
-        return this._keyword;
+    public nodeType(): string {
+        return this._nodeType;
     }
     
     /** @inheritDoc */
@@ -51,14 +51,14 @@ export class KeywordBlockLexer< T extends Node > implements NodeLexer< T >, Keyw
         let contentAfterSeparator = this._lineChecker.textAfterSeparator( this._separator, line ).trim();
 
         let node = {
-            keyword: this._keyword,
+            nodeType: this._nodeType,
             location: { line: lineNumber || 0, column: pos + 1 }
         } as T;
 
         let errors = [];
         if ( contentAfterSeparator.length != 0 ) {
             let loc = { line: lineNumber || 0, column: line.indexOf( contentAfterSeparator ) + 1 };
-            let msg = 'Invalid content after the ' + this._keyword + ': "' + contentAfterSeparator + '".';
+            let msg = 'Invalid content after the ' + this._nodeType + ': "' + contentAfterSeparator + '".';
             errors.push( new LexicalException( msg, loc ) );
         }
 

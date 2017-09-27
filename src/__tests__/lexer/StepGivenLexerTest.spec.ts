@@ -1,4 +1,4 @@
-import { TokenTypes } from '../../modules/req/TokenTypes';
+import { NodeTypes } from '../../modules/req/NodeTypes';
 import { StepGivenLexer } from "../../modules/lexer/StepGivenLexer";
 
 /**
@@ -22,7 +22,7 @@ describe( 'StepGivenLexerTest', () => {
         expect( node.location.line ).toBe( 1 );
         expect( node.location.column ).toBe( 8 );
         // Keyword
-        expect( node.keyword ).toBe( TokenTypes.STEP_GIVEN );
+        expect( node.nodeType ).toBe( NodeTypes.STEP_GIVEN );
         // Content
         expect( node.content ).toBe( 'the world and everybody on it' );
     } );

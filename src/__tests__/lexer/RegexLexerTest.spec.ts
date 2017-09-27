@@ -1,5 +1,5 @@
 import { RegexLexer } from '../../modules/lexer/RegexLexer';
-import { TokenTypes } from '../../modules/req/TokenTypes';
+import { NodeTypes } from '../../modules/req/NodeTypes';
 
 /**
  * @author Thiago Delgado Pinto
@@ -17,7 +17,7 @@ describe( 'RegexLexerTest', () => {
         let node = lexer.analyze( line, 1 ).nodes[ 0 ];
         expect( node ).toEqual(
             {
-                keyword: TokenTypes.REGEX,
+                nodeType: NodeTypes.REGEX,
                 location: { line: 1, column: 2 }
             }
         );

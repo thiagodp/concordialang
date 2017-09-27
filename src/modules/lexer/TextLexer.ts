@@ -1,4 +1,4 @@
-import { TokenTypes } from '../req/TokenTypes';
+import { NodeTypes } from '../req/NodeTypes';
 import { NodeLexer, LexicalAnalysisResult } from "./NodeLexer";
 import { Text } from '../ast/Text';
 import { LineChecker } from "../req/LineChecker";
@@ -10,7 +10,6 @@ import { LineChecker } from "../req/LineChecker";
  */
 export class TextLexer implements NodeLexer< Text > {
 
-    private _keyword: string = TokenTypes.TEXT;
     private _lineChecker: LineChecker = new LineChecker();
 
     public analyze( line: string, lineNumber?: number ): LexicalAnalysisResult< Text > {
@@ -22,7 +21,7 @@ export class TextLexer implements NodeLexer< Text > {
         const pos = this._lineChecker.countLeftSpacesAndTabs( line );
 
         let node = {
-            keyword: this._keyword,
+            nodeType: NodeTypes.TEXT,
             location: { line: lineNumber || 0, column: pos + 1 },
             content: line
         };

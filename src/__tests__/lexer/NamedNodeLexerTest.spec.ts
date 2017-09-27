@@ -63,7 +63,7 @@ describe( 'NamedNodeLexerTest', () => {
         let node = r.nodes[ 0 ];
         expect( node ).toEqual(
             {
-                keyword: keyword,
+                nodeType: keyword,
                 name: "Hello world",
                 location: { line: 1, column: 1 }
             }
@@ -80,7 +80,7 @@ describe( 'NamedNodeLexerTest', () => {
         let node = r.nodes[ 0 ];
         expect( node ).toEqual(
             {
-                keyword: keyword,
+                nodeType: keyword,
                 name: "Hello world",
                 location: { line: 1, column: 6 }
             }
@@ -95,7 +95,7 @@ describe( 'NamedNodeLexerTest', () => {
 
         expect( node ).toEqual(
             {
-                keyword: keyword,
+                nodeType: keyword,
                 name: "1nv4lid n4me",
                 location: { line: 1, column: 1 }
             }

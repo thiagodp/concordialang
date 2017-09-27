@@ -1,10 +1,10 @@
-import { TokenTypes } from '../../modules/req/TokenTypes';
+import { NodeTypes } from '../../modules/req/NodeTypes';
 import { NameIsContentLexer } from '../../modules/lexer/NameIsContentLexer';
 
 describe( 'NameIsContentLexerTest', () => {
 
     let words = [ 'is' ];
-    let keyword = TokenTypes.REGEX;
+    let keyword = NodeTypes.REGEX;
     let lexer = new NameIsContentLexer( words, keyword );
 
     it( 'recognizes correctly', () => {
@@ -13,7 +13,7 @@ describe( 'NameIsContentLexerTest', () => {
         expect( r ).not.toBeNull();
         expect( r.nodes[ 0 ] ).toEqual(
             {
-                keyword: keyword,
+                nodeType: keyword,
                 location: { line: 1, column: 1 },
                 name: "foo",
                 content: "bar"

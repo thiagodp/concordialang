@@ -1,6 +1,6 @@
 import { StartingKeywordLexer } from './StartingKeywordLexer';
 import { StepAnd } from "../ast/Step";
-import { TokenTypes } from "../req/TokenTypes";
+import { NodeTypes } from "../req/NodeTypes";
 
 /**
  * Detects an And node.
@@ -10,7 +10,7 @@ import { TokenTypes } from "../req/TokenTypes";
 export class StepAndLexer extends StartingKeywordLexer< StepAnd > {
 
     constructor( words: string[] ) {
-        super( words, TokenTypes.STEP_AND );
+        super( words, NodeTypes.STEP_AND );
     }
 
 }

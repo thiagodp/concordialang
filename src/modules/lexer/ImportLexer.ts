@@ -1,6 +1,6 @@
 import { Import } from '../ast/Import';
 import { QuotedNodeLexer } from './QuotedNodeLexer';
-import { TokenTypes } from "../req/TokenTypes";
+import { NodeTypes } from "../req/NodeTypes";
 
 /**
  * Detects an Import.
@@ -10,7 +10,7 @@ import { TokenTypes } from "../req/TokenTypes";
 export class ImportLexer extends QuotedNodeLexer< Import > {
 
     constructor( words: Array< string > ) {
-        super( words, TokenTypes.IMPORT );
+        super( words, NodeTypes.IMPORT );
     }
 
 }

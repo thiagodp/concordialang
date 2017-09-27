@@ -1,6 +1,6 @@
 import { StartingKeywordLexer } from './StartingKeywordLexer';
 import { StepGiven } from "../ast/Step";
-import { TokenTypes } from "../req/TokenTypes";
+import { NodeTypes } from "../req/NodeTypes";
 
 /**
  * Detects a Given node.
@@ -10,7 +10,7 @@ import { TokenTypes } from "../req/TokenTypes";
 export class StepGivenLexer extends StartingKeywordLexer< StepGiven > {
 
     constructor( words: string[] ) {
-        super( words, TokenTypes.STEP_GIVEN );
+        super( words, NodeTypes.STEP_GIVEN );
     }
 
 }
