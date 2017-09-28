@@ -22,13 +22,16 @@ const cli = meow( `
   -i, --ignore=<"file1,file2,...">      Files to ignore from the given <dir>.
   -f, --files=<"file1,file2,...">       Files to consider instead of <dir>.
 
-  -l, --language=<code>                 Sets the default language (from "en"glish). NIY
+  -l, --language=<code>                 Sets the default language (from "en"glish).
   -e, --encoding=<value>                Sets the enconding to read files. Default is "utf8".
 
   -t, --no-test                         Do not generate test cases. NIY
   -s, --no-script                       Do not generate test scripts. NIY
   -r, --no-run                          Do not run test scripts. NIY
   -u, --no-result                       Do not read execution results. NIY
+
+  --test-connection=<name|*>            Tests the connection with a database or file
+                                        which name was defined in the spec. NIY
 
   --min-fi-gen=<number>                 Min. feature importance to generate test cases. NIY
   --max-fi-gen=<number>                 Max. feature importance to generate test cases. NIY
@@ -39,6 +42,8 @@ const cli = meow( `
   --max-fi-run=<number>                 Max. feature importance to run test scripts. NIY  
   --min-si-run=<number>                 Min. scenario importance to run test scripts. NIY
   --max-si-run=<number>                 Max. scenario importance to run test scripts. NIY
+
+  --max-random-tests=<0-999>            Max. number of test cases to use random values. NIY
 
   -g, --plugin-list                     Show available plug-ins. NIY
   -v, --version                         Show current version.

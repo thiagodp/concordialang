@@ -16,11 +16,13 @@ export class InputProcessor implements ProcessingObserver {
     private _defaultParamSeparator: string = ',';
     private _reqProcessor: RequirementFilesProcessor;
 
+    private MAIN_SPINNER_KEY: string = '*'; // "const"    
     private _spinnersMap: Object = {};
     private _totalErrors: number = 0;
 
     constructor( private _write: Function, private _ora: any, private _chalk: any ) {
         this._reqProcessor = new RequirementFilesProcessor( _write );
+        this.makeSpinner( this.MAIN_SPINNER_KEY );
     }
 
     /**
@@ -229,16 +231,35 @@ export class InputProcessor implements ProcessingObserver {
      * @param separator Separator for the parameters. Optional. Default is ",".
      * @returns Array< string >
      */
-    extractValuesFromTextualParameter( text: string, separator?: string ): Array< string > {
+    private extractValuesFromTextualParameter( text: string, separator?: string ): Array< string > {
         // Remove quotes arround the given value
         let params = text.replace( /^"(.*)"$/, '$1' );
         // Extract parameters separated by a separator (i.e. comma)
         return params.split( separator ? separator : ',' );
-    }    
-
-    printFileInfo( fileInfo: FileInfo) {
-        return this._ora( this.formatFileInfo( fileInfo ) ).start();
     }
+
+    private makeSpinner( key: string, value?: string ) {
+        this._spinnersMap[ key ] = this._ora();
+        if ( value ) {
+            this._spinnersMap[ key ].start( value );
+        }
+    }
+
+    private makeSpinnerFromFileInfo( fileInfo: FileInfo ) {
+        return this.makeSpinner( fileInfo.path, this.formatFileInfo( fileInfo ) );
+    }
+
+    private spinnerWithKey( key: string ): any {
+        return this._spinnersMap[ key ];
+    }
+
+    private spinnerWithFileInfo( fileInfo: FileInfo ): any {
+        return this.spinnerWithKey( fileInfo.path );
+    }
+    
+    private mainSpinner(): any {
+        return this.spinnerWithKey( this.MAIN_SPINNER_KEY );
+    }    
 
     private formatFileInfo( fileInfo: FileInfo ): string {
         let columns = process.stdout.columns || 80;
@@ -251,34 +272,43 @@ export class InputProcessor implements ProcessingObserver {
     }
 
     /** @inheritDoc */
-    public onStarted( fileInfo: FileInfo ): void {
-        this._spinnersMap[ fileInfo.path ] = this.printFileInfo( fileInfo );
+    public onFileStarted( fileInfo: FileInfo ): void {
+        this.makeSpinnerFromFileInfo( fileInfo );
     }
 
     /** @inheritDoc */
-    public onError( fileInfo: FileInfo, errors: Error[] ): void {
+    public onFileError( fileInfo: FileInfo, errors: Error[] ): void {
 
         this._totalErrors += errors.length;
 
-        const hasSpinner = this._spinnersMap[ fileInfo.path ] !== undefined;
-        if ( hasSpinner ) {
-            this._spinnersMap[ fileInfo.path ].fail( this.formatFileInfo( fileInfo ) );
-        }        
-            
+        const spinner = this.spinnerWithFileInfo( fileInfo );
+        if ( spinner ) {
+            spinner.fail( this.formatFileInfo( fileInfo ) );
+        }
+        this.printErrors( spinner, errors );
+    }    
+    
+    /** @inheritDoc */
+    public onFileFinished( fileInfo: FileInfo, succeeded: boolean ): void {
+        const spinner = this.spinnerWithFileInfo( fileInfo );
+        if ( succeeded && spinner ) {
+            spinner.succeed( this.formatFileInfo( fileInfo ) );
+        }
+    }
+
+    /** @inheritDoc */
+    public onError( errors: Error[] ): void {
+        this.printErrors( this.mainSpinner(), errors, '' );
+    }
+
+    private printErrors( spinner: any, errors: Error[], prefix: string = "\t" ): void {
         for ( let error of errors ) {
-            let content = this._chalk.red( "\t" + error.message );
-            if ( hasSpinner ) {
-                this._spinnersMap[ fileInfo.path ].warn( content );
+            let content = this._chalk.red( prefix + error.message );
+            if ( spinner ) {
+                spinner.warn( content );
             } else {
                 this._write( content );
             }
         }        
-    }    
-    
-    /** @inheritDoc */
-    public onFinished( fileInfo: FileInfo, succeeded: boolean ): void {
-        if ( succeeded && this._spinnersMap[ fileInfo.path ] ) {
-            this._spinnersMap[ fileInfo.path ].succeed( this.formatFileInfo( fileInfo ) );
-        }
     }
 }

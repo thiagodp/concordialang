@@ -40,21 +40,17 @@ export class RequirementFilesProcessor {
     constructor( private _write: Function ) {
     }
 
-    private setup( language: string ) {
-        if ( 'en' == language ) { // not needed to setup
-            return;
-        }
-        this._lexer = new Lexer( language, this._dictLoader );
-        this._docProcessor = new LexerProcessor( this._lexer );
-    }
-
     public process(
         files: string[],
         language: string,
         encoding: string,
         observer?: ProcessingObserver
     ) {
-        this.setup( language );
+        // Updates the doc processor according to the new language
+        if ( this._lexer.defaultLanguage() != language ) {
+            this._lexer = new Lexer( language, this._dictLoader );
+            this._docProcessor = new LexerProcessor( this._lexer );
+        }
 
         let fileProcessor: FileProcessor = new SyncFileProcessor( encoding );
 
@@ -136,18 +132,17 @@ export class RequirementFilesProcessor {
         // Output
         if ( observer ) {
             for ( let doc of spec.docs ) {
-                observer.onStarted( doc.fileInfo );
+                observer.onFileStarted( doc.fileInfo );
                 let hadErrors = doc.fileErrors.length > 0;
                 if ( hadErrors ) {
                     let sortedErrors: LocatedException[] = this.sortErrorsByLocation( doc.fileErrors );
-                    observer.onError( doc.fileInfo, sortedErrors );
+                    observer.onFileError( doc.fileInfo, sortedErrors );
                 }
-                observer.onFinished( doc.fileInfo, ! hadErrors ); 
+                observer.onFileFinished( doc.fileInfo, ! hadErrors ); 
             }
         }       
 
     }
-
 
     private addErrorsToDoc( errors: Error[], doc: Document ) {
         if ( ! doc.fileErrors ) {

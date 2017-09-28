@@ -7,10 +7,12 @@ import { FileInfo } from '../ast/FileInfo';
  */
 export interface ProcessingObserver {
 
-    onStarted( fileInfo: FileInfo ): void;
+    onFileStarted( fileInfo: FileInfo ): void;
 
-    onError( fileInfo: FileInfo, errors: Error[] ): void;
+    onFileError( fileInfo: FileInfo, errors: Error[] ): void;
 
-    onFinished( fileInfo: FileInfo, succeeded: boolean ): void;
+    onFileFinished( fileInfo: FileInfo, succeeded: boolean ): void;
+
+    onError( errors: Error[] ): void;
 
 }

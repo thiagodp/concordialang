@@ -22,6 +22,7 @@ import { RegexBlockLexer } from './RegexBlockLexer';
 import { RegexLexer } from './RegexLexer';
 import { ConstantBlockLexer } from './ConstantBlockLexer';
 import { ConstantLexer } from './ConstantLexer';
+import { KeywordDictionary } from '../dict/KeywordDictionary';
 
 /**
  * Lexer
@@ -35,13 +36,13 @@ export class Lexer {
     private _lexers: Array< NodeLexer< Node > > = [];
 
     constructor(
-        private _language: string = 'en',
+        private _defaultLanguage: string = 'en',
         private _dictionaryLoader: KeywordDictionaryLoader,
         private _stopOnFirstError: boolean = false,
     ) {
-        let dictionary = _dictionaryLoader.load( _language );
+        let dictionary = _dictionaryLoader.load( _defaultLanguage ); // may throw
         if ( ! dictionary ) {
-            throw new Error( 'Cannot load language: ' + _language );
+            throw new Error( 'Cannot load language: ' + _defaultLanguage );
         }
 
         this._lexers = [
@@ -64,11 +65,15 @@ export class Lexer {
         ];
     }
 
+    public defaultLanguage(): string {
+        return this._defaultLanguage;
+    }
+
     public reset() {
         this._nodes = [];
         this._errors = [];
-        // Also resets the language
-        this.changeLanguage( this._language = 'en' );
+        // Also resets language to the defined default
+        this.changeLanguage( this.defaultLanguage() );
     }
 
     public nodes(): Node[] {
@@ -125,7 +130,7 @@ export class Lexer {
             // Detects a language node and tries to change the language
             if ( result.nodes.length > 0 && NodeTypes.LANGUAGE === result.nodes[ 0 ].nodeType ) {
                 let language = ( result.nodes[ 0 ] as Language ).content;
-                if ( language != this._language ) { // needs to change ?
+                if ( language != this._defaultLanguage ) { // needs to change ?
                     try {
                         this.changeLanguage( language );
                     } catch ( e ) {
@@ -162,12 +167,14 @@ export class Lexer {
     }
 
     /**
-     * Change the current language iff the given language could be loaded.
+     * Change the language (of the internal lexers) iff it could be loaded.
+     * This will *not* change the default lexer language.
      * 
      * @param language Language
-     * @throws Error
+     * @return The loaded keyword dictionary.
+     * @throws Error In case of the language is not available.
      */
-    private changeLanguage( language: string ): void {
+    public changeLanguage( language: string ): KeywordDictionary {
         let dict = this._dictionaryLoader.load( language ); // throws Error
         for ( let lexer of this._lexers ) {
             if ( this.isAWordBasedLexer( lexer ) ) {
@@ -178,6 +185,7 @@ export class Lexer {
                 }
             }
         }
+        return dict;
     }
 
     private isAWordBasedLexer( obj: any ): obj is KeywordBasedLexer {
