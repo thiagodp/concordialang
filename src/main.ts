@@ -9,18 +9,21 @@ const exeName: string = 'concordia';
 
 const cli = meow( `
  Usage:
-   $ ${exeName} [ <dir> | --files="file1.feature,path/to/file2.feature,..." ] --plugin=<name>
 
-   where <dir> is the directory with your documentation files.
+  ${exeName} [ <dir> | --files="file1.feature,path/to/file2.feature,..." ] [options]
+
+    where <dir> is the directory with your specification files.
 
  Options:
+
   -p, --plugin=<name>                   Sets the plug-in to generate or to execute test scripts. NIY
 
-  -l, --language=<code>                 Sets the default language (from "en"glish). NIY
-  -e, --encoding=<value>                Sets the enconding to read files. Default is "utf8".
   -x, --extensions=<".ext1,.ext2,...">  File extensions to consider for the given <dir>. NIY
   -i, --ignore=<"file1,file2,...">      Files to ignore from the given <dir>.
   -f, --files=<"file1,file2,...">       Files to consider instead of <dir>.
+
+  -l, --language=<code>                 Sets the default language (from "en"glish). NIY
+  -e, --encoding=<value>                Sets the enconding to read files. Default is "utf8".
 
   -t, --no-test                         Do not generate test cases. NIY
   -s, --no-script                       Do not generate test scripts. NIY
@@ -43,9 +46,10 @@ const cli = meow( `
   -h, --help                            Show this help.
 	  
   Examples:
-   $ ${exeName} . plugin=some-plugin
-   $ ${exeName} --files="file1.feature,path/to/file2.feature" -p=some-plugin -l=pt-br
-   $ ${exeName} path/to/dir -t -s -p=some-plugin      
+
+   $ ${exeName} . --plugin=some-plugin
+   $ ${exeName} --files="file1.feature,path/to/file2.feature" -p=some-plugin -l=pt
+   $ ${exeName} path/to/dir --no-test --no-script -p=some-plugin      
 `, {
 	alias: {
 		p: 'plugin',
