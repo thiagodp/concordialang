@@ -26,11 +26,15 @@
     "email": "email@site.org",
     "url": "https://site.org"
   },
-  "main": "main.js",
+  "main": "./dist/main.js",
+  "bin": {
+    "concordia": "./dist/main.js"
+  },
   "allow-scripts": true,
   "scripts": {
     "build": "tsc",
-    "test": "jest"
+    "test": "jest",
+    "start": "node ../bin/concordia"
   },
   "dependencies": {
     "chalk": "^2.0.1",
