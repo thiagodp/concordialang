@@ -30,8 +30,8 @@ const cli = meow( `
   -r, --no-run                          Do not run test scripts. NIY
   -u, --no-result                       Do not read execution results. NIY
 
-  --test-connection=<name|*>            Tests the connection with a database or file
-                                        which name was defined in the spec. NIY
+  --test-connection=<name|*>            Tests the connection with a database or
+                                        file which name was defined in the spec. NIY
 
   --min-fi-gen=<number>                 Min. feature importance to generate test cases. NIY
   --max-fi-gen=<number>                 Max. feature importance to generate test cases. NIY

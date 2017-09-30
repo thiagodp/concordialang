@@ -49,6 +49,7 @@
             "screen": [ "tela" ],
             "select": [ "caixa de selecao", "select", "combo", "combobox" ],
             "text": [ "texto" ],
+            "textbox": [ "caixa de texto", "textbox", "input" ],
             "title": [ "titulo" ],
             "web": [ "web" ],
             "window": [ "janela" ],
@@ -64,12 +65,35 @@
         }
     },
 
-    "ui_element": {
-        "ui_element_option": {
+
+    "ui": {
+
+        "ui_property": {
             "id": [ "id", "identificacao" ],
-            "name": [ "nome", "chamado" ],
-            "class": [ "classe", "estilo" ],
-            "xpath": [ "xpath" ]
+            "type": [ "tipo" ],
+            "datatype": [ "tipo de dado" ],
+            "value": [ "valor" ],
+            "minlength": [ "comprimento mínimo" ],
+            "maxlength": [ "comprimento máximo" ],
+            "minvalue": [ "valor mínimo" ],
+            "maxvalue": [ "valor máximo" ],
+            "format": [ "formato" ]
+        },
+
+        "ui_verb": {
+            "is": [ "e", "é" ],
+            "in": [ "em", "esta em" , "incluso em", "incluido em" ],
+            "same": [ "o mesmo que", "igual a", "selhante a", "similar a" ],
+            "queried": [ "consultado", "buscado", "queried" ]
+        },
+
+        "ui_data_type": {
+            "string": [ "texto", "cadeia", "string" ],
+            "integer": [ "inteiro", "integer", "int" ],
+            "double": [ "flutuante", "double", "float", "real" ],
+            "date": [ "data", "date" ],
+            "time": [ "hora", "time" ],
+            "datetime": [ "datahora", "datetime", "timestamp" ]
         }
     }
 }

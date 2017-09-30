@@ -24,7 +24,11 @@ export class NLP {
 
         // Add an entity named "element" and its recognizer
         this._additionalEntities.push( 'element' );
-        this._additionalRecognizers.push( this.makeElementEntityRecognizer( 'element' ) );        
+        this._additionalRecognizers.push( this.makeElementEntityRecognizer( 'element' ) );
+        
+        // Add an entity named "number" and its recognizer
+        this._additionalEntities.push( 'number' );
+        this._additionalRecognizers.push( this.makeNumberEntityRecognizer( 'number' ) );
     }
 
     /**
@@ -79,8 +83,8 @@ export class NLP {
         return this._trained;
     }
 
-    recognize( sentence: string ): NLPResult | null {
-        let method = 'anyEntity'; // | "default"
+    recognize( sentence: string, entity: string = '*' ): NLPResult | null {
+        let method = '*' == entity || ! entity ? 'anyEntity' : entity; // | "default"
         return this._nlp.test( sentence, method );
     }
 
@@ -153,7 +157,22 @@ export class NLP {
             100 ); // the number is the priority
 
         return valueRec;
-    }    
+    }
+
+
+    private makeNumberEntityRecognizer( entityName: string = 'number' ): any {
+
+        var valueRec = new Bravey.RegexEntityRecognizer( entityName, 10 );
+        
+        valueRec.addMatch( new RegExp( '(-?[0-9]+(?:.[0-9]+)?)', "gi" ),
+            function( match ) {
+                //console.log( 'match: ' ); console.log( match );
+                return match.toString().trim();
+            },
+            100 ); // the number is the priority
+
+        return valueRec;
+    }
 
 }
 

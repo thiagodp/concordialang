@@ -2,7 +2,7 @@ import { ConstantBlock } from './ConstantBlock';
 import { FileInfo } from './FileInfo';
 import { Feature } from './Feature';
 import { Task } from './Task';
-import { UI } from "./UI";
+import { UI } from "./UIElement";
 import { Tag } from "./Tag";
 import { Import } from "./Import";
 import { Language } from "./Language";

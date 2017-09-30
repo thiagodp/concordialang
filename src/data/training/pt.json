@@ -22,5 +22,14 @@
             "eu {ui_action} {element} com {value}",
             "eu {ui_action_modifier} {ui_action} {element} com {value}"
         ]
-    }
+    },
+
+    {
+        "entity": "ui",
+        "sentences": [
+            "{ui_property} {ui_verb} {value}",
+            "{ui_property} {ui_verb} {number}",
+            "{ui_property} {ui_verb} {ui_target_type}"
+        ]
+    }    
 ]
