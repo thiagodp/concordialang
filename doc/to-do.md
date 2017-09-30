@@ -93,6 +93,11 @@
 - [ ] Valid values (all types)
 - [ ] Invalid values (all types)
 
+Possibilidades:
+- Usar [alasql][https://github.com/agershun/alasql] para consultas em arquivos e memória.
+- Usar [Node-DBI](https://github.com/DrBenton/Node-DBI/) para consultas em BD relacionais.
+- Reconhecer o banco de dados usado no script e usar a biblioteca capaz de processá-lo.
+
 ## Interaction + Oracle Generation
 
 - [X] Syntax (requirements specification)
