@@ -125,6 +125,12 @@ describe( 'NLPInPortugueseTest', () => {
         it( 'recognizes type definitions', () => {
             let results = [];
             results.push( recognizeInUI( 'tipo é botão' ) );
+            results.push( recognizeInUI( 'tipo é caixa de texto' ) );
+            results.push( recognizeInUI( 'tipo é caixa de seleção' ) );
+            results.push( recognizeInUI( 'tipo é caixa de marcação' ) );
+            results.push( recognizeInUI( 'tipo é janela' ) );
+            results.push( recognizeInUI( 'tipo é url' ) );
+            results.push( recognizeInUI( 'tipo é rótulo' ) );
             shouldHaveUIEntities( results, [ UI_PROPERTY, UI_VERB, UI_TARGET_TYPE ] );
         } );        
         
