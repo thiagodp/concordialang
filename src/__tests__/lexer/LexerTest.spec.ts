@@ -1,5 +1,4 @@
 import { EnglishKeywordDictionary } from '../../modules/dict/EnglishKeywordDictionary';
-import { InMemoryKeywordDictionaryLoader } from '../../modules/dict/InMemoryKeywordDictionaryLoader';
 import { KeywordDictionaryLoader } from '../../modules/dict/KeywordDictionaryLoader';
 import { Lexer } from "../../modules/lexer/Lexer";
 import { KeywordDictionary } from "../../modules/dict/KeywordDictionary";
@@ -11,10 +10,8 @@ import { JsonKeywordDictionaryLoader } from '../../modules/dict/JsonKeywordDicti
  */
 describe( 'LexerTest', () => {
 
-    const enDictionary: KeywordDictionary = new EnglishKeywordDictionary();
-
     let loader: KeywordDictionaryLoader = new JsonKeywordDictionaryLoader(
-        { 'en': enDictionary }
+        { 'en': new EnglishKeywordDictionary() }
     );
 
     let lexer: Lexer = new Lexer( 'en', loader ); // under test
