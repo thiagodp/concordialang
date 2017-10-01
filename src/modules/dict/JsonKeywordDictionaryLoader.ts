@@ -14,13 +14,13 @@ export class JsonKeywordDictionaryLoader implements KeywordDictionaryLoader {
     /**
      * Constructs the loader.
      * 
-     * @param _path Path of the dictionaries. Defaults to './data/keywords'.
      * @param _dictMap Map with each language ( string => KeywordDictionary ). Defaults to {}.
+     * @param _path Path of the dictionaries. Defaults to './data/keywords'.
      * @param _encoding Dictionary file encoding. Defaults to 'utf8'.
      */
     constructor(
-        private _path: string = './data/keywords/',
         private _dictMap: Object = {},
+        private _path: string = './data/keywords/',        
         private _encoding: string = 'utf8'
     ) {
     }

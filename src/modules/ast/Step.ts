@@ -1,7 +1,7 @@
 import { ContentNode } from "./Node";
 
 export interface Step extends ContentNode {
-    type: 'given' | 'when' | 'then' | 'and';
+    type: 'given' | 'when' | 'then' | 'and' | 'otherwise';
 }
 
 export interface StepGiven extends Step {
@@ -18,4 +18,8 @@ export interface StepThen extends Step {
 
 export interface StepAnd extends Step {
     type: 'and';
+}
+
+export interface StepOtherwise extends Step {
+    type: 'otherwise';
 }

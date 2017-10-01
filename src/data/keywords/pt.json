@@ -5,6 +5,7 @@
     "is": [ "é" ],
     "state": [ "estado" ],    
     "testcase": [ "caso de teste" ],
+    "uiElement": [ "elemento da iu" ],
 
     "language": [ "linguagem", "idioma", "língua",  "language" ],
 
@@ -14,5 +15,6 @@
     "stepGiven": [ "dado" ],
     "stepWhen": [ "quando" ],
     "stepThen": [ "então" ],    
-    "stepAnd": [ "e", "mas" ]
+    "stepAnd": [ "e", "mas" ],
+    "stepOtherwise": [ "caso contrário", "senão" ]
 }

@@ -13,6 +13,7 @@ export abstract class Keywords {
     static IS: string = 'is';
     static STATE: string = 'state';    
     static TEST_CASE: string = 'testcase';
+    static UI_ELEMENT: string = 'uiElement';
     
     // Also available in Gherkin
 
@@ -25,6 +26,7 @@ export abstract class Keywords {
     static STEP_WHEN: string = 'stepWhen';
     static STEP_THEN: string = 'stepThen';
     static STEP_AND: string = 'stepAnd';
+    static STEP_OTHERWISE: string = 'stepOtherwise';
 
     // Utilities
 

@@ -1,3 +1,4 @@
+import { UIElementItemParser } from './UIElementItemParser';
 import { BlockItemParser } from './BlockItemParser';
 import { ConstantBlockParser } from './ConstantBlockParser';
 import { RegexBlockParser } from './RegexBlockParser';
@@ -11,9 +12,13 @@ import { NodeParser } from './NodeParser';
 import { ParsingContext } from "./ParsingContext";
 import { ScenarioParser } from './ScenarioParser';
 import { TestCaseParser } from './TestCaseParser';
-import { StepParser } from './StepParser';
 import { ImportParser } from "./ImportParser";
 import { StateParser } from "./StateParser";
+import { StepWhenParser } from './StepWhenParser';
+import { StepGivenParser } from './StepGivenParser';
+import { StepThenParser } from './StepThenParser';
+import { StepAndParser } from './StepAndParser';
+import { StepOtherwiseParser } from './StepOtherwiseParser';
 
 /**
  * Builds an AST from the nodes detected by the lexer. It checks syntatic properties
@@ -34,16 +39,18 @@ export class Parser {
         this._parsersMap[ NodeTypes.IMPORT ] = new ImportParser();
         this._parsersMap[ NodeTypes.FEATURE ] = new FeatureParser();
         this._parsersMap[ NodeTypes.SCENARIO ] = new ScenarioParser();
-        this._parsersMap[ NodeTypes.STEP_GIVEN ] = new StepParser();
-        this._parsersMap[ NodeTypes.STEP_WHEN ] = new StepParser();
-        this._parsersMap[ NodeTypes.STEP_THEN ] = new StepParser();
-        this._parsersMap[ NodeTypes.STEP_AND ] = new StepParser();
+        this._parsersMap[ NodeTypes.STEP_GIVEN ] = new StepGivenParser();
+        this._parsersMap[ NodeTypes.STEP_WHEN ] = new StepWhenParser();
+        this._parsersMap[ NodeTypes.STEP_THEN ] = new StepThenParser();
+        this._parsersMap[ NodeTypes.STEP_AND ] = new StepAndParser();
+        this._parsersMap[ NodeTypes.STEP_OTHERWISE ] = new StepOtherwiseParser();
         this._parsersMap[ NodeTypes.CONSTANT_BLOCK ] = new ConstantBlockParser();
         this._parsersMap[ NodeTypes.CONSTANT ] = new BlockItemParser();
         this._parsersMap[ NodeTypes.REGEX_BLOCK ] = new RegexBlockParser();
         this._parsersMap[ NodeTypes.REGEX ] = new BlockItemParser();
         this._parsersMap[ NodeTypes.STATE ] = new StateParser();
-        this._parsersMap[ NodeTypes.TEST_CASE ] = new TestCaseParser();        
+        this._parsersMap[ NodeTypes.UI_ELEMENT_ITEM ] = new UIElementItemParser();
+        this._parsersMap[ NodeTypes.TEST_CASE ] = new TestCaseParser();
     }
 
     public reset(): void {

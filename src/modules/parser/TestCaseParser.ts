@@ -36,10 +36,9 @@ export class TestCaseParser implements NodeParser< TestCase > {
         feature.testcases.push( node );
 
         // Adjusts the context
+        context.resetInValues();
         context.inTestCase = true; 
-        context.currentTestCase = node;               
-        context.inFeature = false;
-        context.inScenario = false;
+        context.currentTestCase = node;
 
         // Adds backward tags
         if ( ! node.tags ) {

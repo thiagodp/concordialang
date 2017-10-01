@@ -15,6 +15,7 @@ export class EnglishKeywordDictionary implements KeywordDictionary {
     is: string[] = [ 'is' ];
     state: string[] = [ 'state' ];    
     testcase: string[] = [ 'test case' ];
+    uiElement: string[] = [ 'ui element' ];
 
     // Also available in Gherkin
 
@@ -27,5 +28,6 @@ export class EnglishKeywordDictionary implements KeywordDictionary {
     stepWhen: string[] = [ 'when' ];
     stepThen: string[] = [ 'then' ];
     stepAnd: string[] = [ 'and', 'but' ];
+    stepOtherwise: string[] = [ 'otherwise' ];
 
 }

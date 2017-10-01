@@ -28,6 +28,7 @@ export class FeatureParser implements NodeParser< Feature > {
         context.doc.feature = node;
 
         // Adjust the context
+        context.resetInValues();
         context.inFeature = true;
 
         // Add backwards tags

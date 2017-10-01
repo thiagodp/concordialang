@@ -34,7 +34,7 @@ export class ScenarioParser implements NodeParser< Scenario > {
         feature.scenarios.push( node );
 
         // Adjust the context
-        context.inFeature = false;
+        context.resetInValues();
         context.inScenario = true;
         context.currentScenario = node;
 

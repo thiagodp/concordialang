@@ -4,6 +4,7 @@ import { KeywordDictionaryLoader } from '../../modules/dict/KeywordDictionaryLoa
 import { Lexer } from "../../modules/lexer/Lexer";
 import { KeywordDictionary } from "../../modules/dict/KeywordDictionary";
 import { NodeTypes } from "../../modules/req/NodeTypes";
+import { JsonKeywordDictionaryLoader } from '../../modules/dict/JsonKeywordDictionaryLoader';
 
 /**
  * @author Thiago Delgado Pinto
@@ -12,34 +13,8 @@ describe( 'LexerTest', () => {
 
     const enDictionary: KeywordDictionary = new EnglishKeywordDictionary();
 
-    const ptDictionary: KeywordDictionary = {
-
-        // Not available in Gherkin
-        import: [ 'importe' ],
-        regexBlock: [ 'expressões regulares' ],
-        constantBlock: [ 'constantes' ],
-        is: [ 'é' ],
-        state: [ 'estado' ],
-        testcase: [ 'caso de teste' ],
-        
-        // Also available in Gherkin
-
-        language: [ 'language', 'idioma', 'língua' ],
-
-        feature: [ 'funcionalidade', 'característica' ],
-        scenario: [ 'cenário' ],
-
-        stepGiven: [ 'dado' ],
-        stepWhen: [ 'quando' ],
-        stepThen: [ 'então' ],
-        stepAnd: [ 'e', 'mas' ]
-    };    
-
-    let loader: KeywordDictionaryLoader = new InMemoryKeywordDictionaryLoader(
-        {
-            'en': enDictionary,
-            'pt': ptDictionary
-        }
+    let loader: KeywordDictionaryLoader = new JsonKeywordDictionaryLoader(
+        { 'en': enDictionary }
     );
 
     let lexer: Lexer = new Lexer( 'en', loader ); // under test

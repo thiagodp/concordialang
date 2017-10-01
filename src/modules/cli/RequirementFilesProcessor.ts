@@ -28,7 +28,7 @@ export class RequirementFilesProcessor {
 
     private _dictMap = { 'en': new EnglishKeywordDictionary() };
     private _dictLoader: KeywordDictionaryLoader =
-        new JsonKeywordDictionaryLoader( './data/keywords/', this._dictMap );
+        new JsonKeywordDictionaryLoader( this._dictMap, './data/keywords/' );
     private _lexer: Lexer = new Lexer( 'en', this._dictLoader );
     private _parser: Parser = new Parser();
     private _docProcessor: DocumentProcessor = new LexerProcessor( this._lexer );
