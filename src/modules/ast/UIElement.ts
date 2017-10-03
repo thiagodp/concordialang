@@ -8,7 +8,7 @@ import { MayHaveTags } from './Tag';
  * @author Thiago Delgado Pinto
  */
 export interface UIElement extends NamedNode, MayHaveTags {
-    properties: UIElementItem[];
+    items: UIElementItem[];
 }
 
 /**

@@ -29,7 +29,9 @@
         "sentences": [
             "{ui_property} {ui_verb} {value}",
             "{ui_property} {ui_verb} {number}",
-            "{ui_property} {ui_verb} {ui_target_type}"
+            "{ui_property} {ui_verb} {ui_target_type}",
+            "id é {value}",
+            "comprimento máximo é {number}"
         ]
     }    
 ]

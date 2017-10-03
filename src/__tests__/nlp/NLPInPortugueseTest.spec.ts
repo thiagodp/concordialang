@@ -1,6 +1,5 @@
+import { NLPHelper } from './NLPHelper';
 import { Entities } from '../../modules/nlp/Entities';
-import { NLPTrainingDataConversor } from '../../modules/nlp/NLPTrainingDataConversor';
-import { NLPEntityUsageExample, NLPTrainingData } from '../../modules/nlp/NLPTrainingData';
 import { NLP } from '../../modules/nlp/NLP';
 
 /**
@@ -21,23 +20,8 @@ describe( 'NLPInPortugueseTest', () => {
     const UI_VERB: string = Entities.UI_VERB;
     const UI_DATA_TYPE: string = Entities.UI_DATA_TYPE;
 
-    // helpers
-    let conversor: NLPTrainingDataConversor = new NLPTrainingDataConversor();
-    let translationMap = makeTranslationMap();
-    let examples = makeTrainingExamples();
-    let data: NLPTrainingData = conversor.convert( translationMap, examples );
-
-    function makeTranslationMap(): any {
-        return require( '../../data/nlp/pt.json' );
-    }
-
-    function makeTrainingExamples(): NLPEntityUsageExample[] {
-        return require( '../../data/training/pt.json' );
-    }
-
     beforeAll( () => { // once
-        nlp = new NLP();
-        nlp.train( data );
+        nlp = ( new NLPHelper() ).buildTrainedNLP( 'pt' ); // pt == portuguese
     } );
 
     function recognizeInTestCase( sentence: string ) {

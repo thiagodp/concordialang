@@ -167,7 +167,7 @@ export class NLP {
         valueRec.addMatch( new RegExp( '(-?[0-9]+(?:.[0-9]+)?)', "gi" ),
             function( match ) {
                 //console.log( 'match: ' ); console.log( match );
-                return match.toString().trim();
+                return match[ 0 ].toString().trim();
             },
             100 ); // the number is the priority
 

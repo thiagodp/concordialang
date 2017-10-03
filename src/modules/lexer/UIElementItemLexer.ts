@@ -59,6 +59,9 @@ export class UIElementItemLexer implements NodeLexer< UIElementItem > {
             errors.push( new LexicalException( msg, node.location ) );
         }
 
+        // NLP
+        this._sentenceProcessor.analyzeUIElementItems( [ node ], errors );
+
         return { nodes: [ node ], errors: errors };
     }    
 
