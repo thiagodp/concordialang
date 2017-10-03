@@ -1,6 +1,8 @@
 /**
  * Keyword dictionary
  * 
+ * @see Keywords
+ * 
  * @author Thiago Delgado Pinto
  */
 export interface KeywordDictionary { // properties should exist in Keywords
@@ -13,6 +15,7 @@ export interface KeywordDictionary { // properties should exist in Keywords
     is: string[],
     state: string[],
     testcase: string[],
+    uiElement: string[],
 
     // Also available in Gherkin
 
@@ -24,6 +27,7 @@ export interface KeywordDictionary { // properties should exist in Keywords
     stepGiven: string[],
     stepWhen: string[],
     stepThen: string[],
-    stepAnd: string[]
+    stepAnd: string[],
+    stepOtherwise: string[]
 
 }

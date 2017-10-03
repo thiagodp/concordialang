@@ -3,6 +3,7 @@ import { MayHaveTags } from './Tag';
 import { Text } from '../ast/Text';
 import { Scenario } from './Scenario';
 import { TestCase } from './TestCase';
+import { UIElement } from './UIElement';
 
 /**
  * Feature node.
@@ -15,7 +16,7 @@ export interface Feature extends NamedNode, MayHaveTags {
     description?: string;
     sentences?: Text[];    
     scenarios?: Scenario[];
+    uiElements?: UIElement[];
     testcases?: TestCase[];
-
-    //rules?: Array< Rule >; // TO-DO: remove the Rule class and related ones
+    
 }

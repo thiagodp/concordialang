@@ -1,12 +1,13 @@
-import { HasItems, NamedNode, Node } from './Node';
+import { HasItems, NamedNode, ContentNode } from './Node';
 import { Step } from './Step';
+import { MayHaveTags } from './Tag';
 
 /**
  * UI element node.
  * 
  * @author Thiago Delgado Pinto
  */
-export interface UIElement extends NamedNode {
+export interface UIElement extends NamedNode, MayHaveTags {
     properties: UIElementItem[];
 }
 
@@ -15,7 +16,7 @@ export interface UIElement extends NamedNode {
  * 
  * @author Thiago Delgado Pinto
  */
-export interface UIElementItem extends Node {
+export interface UIElementItem extends ContentNode {
 
     property: 'id'      // value is a string between quotes
         | 'type'        // value is a reserved word

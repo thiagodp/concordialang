@@ -2,7 +2,7 @@ import { ConstantBlock } from './ConstantBlock';
 import { FileInfo } from './FileInfo';
 import { Feature } from './Feature';
 import { Task } from './Task';
-import { UI } from "./UIElement";
+import { UIElement } from "./UIElement";
 import { Tag } from "./Tag";
 import { Import } from "./Import";
 import { Language } from "./Language";
@@ -21,15 +21,12 @@ export interface Document {
     
     language?: Language;
     imports?: Import[];
-    tags?: Tag[]; // needed?
 
-    feature?: Feature;
-    states?: State[];
-    regexBlock?: RegexBlock;
-    constantBlock?: ConstantBlock;
+    feature?: Feature; // public
 
-    uis?: UI[];
-
-    tasks?: Task[];
+    states?: State[]; // public
+    regexBlock?: RegexBlock; // public
+    constantBlock?: ConstantBlock; // public
+    uiElements?: UIElement[]; // public, but a feature may have them too
 
 }

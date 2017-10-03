@@ -1,3 +1,4 @@
+import { UIElementLexer } from './UIElementLexer';
 import { ConstantBlock } from '../ast/ConstantBlock';
 import { KeywordBasedLexer } from './KeywordBasedLexer';
 import { KeywordDictionaryLoader } from '../dict/KeywordDictionaryLoader';
@@ -16,6 +17,7 @@ import { StepGivenLexer } from "./StepGivenLexer";
 import { StepWhenLexer } from "./StepWhenLexer";
 import { StepThenLexer } from "./StepThenLexer";
 import { StepAndLexer } from "./StepAndLexer";
+import { StepOtherwiseLexer } from './StepOtherwiseLexer';
 import { TextLexer } from "./TextLexer";
 import { StateLexer } from "./StateLexer";
 import { RegexBlockLexer } from './RegexBlockLexer';
@@ -55,12 +57,14 @@ export class Lexer {
             , new StepWhenLexer( dictionary.stepWhen )
             , new StepThenLexer( dictionary.stepThen )
             , new StepAndLexer( dictionary.stepAnd )
+            , new StepOtherwiseLexer( dictionary.stepOtherwise )
             , new TestCaseLexer( dictionary.testcase )
             , new ConstantBlockLexer( dictionary.constantBlock )
             , new ConstantLexer( dictionary.is ) // "name" is "value"
             , new RegexBlockLexer( dictionary.regexBlock )
             , new RegexLexer( dictionary.is ) // "name" is "value"
             , new StateLexer( dictionary.state )
+            , new UIElementLexer( dictionary.uiElement )
             , new TextLexer() // captures any non-empty
         ];
     }
