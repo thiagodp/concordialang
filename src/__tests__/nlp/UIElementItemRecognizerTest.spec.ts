@@ -1,14 +1,14 @@
 import { UIElementItem } from '../../modules/ast/UIElement';
 import { NodeTypes } from '../../modules/req/NodeTypes';
 import { ContentNode } from '../../modules/ast/Node';
-import { NLPHelper } from './NLPHelper';
+import { NLPBuilder } from '../../modules/nlp/NLPBuilder';
 import { NLP } from '../../modules/nlp/NLP';
 import { UIElementItemRecognizer } from "../../modules/nlp/UIElementItemRecognizer";
 import { Lexer } from '../../modules/lexer/Lexer';
 
 describe( 'UIElementItemRecognizerTest', () => {
 
-    let nlp = ( new NLPHelper() ).buildTrainedNLP( 'pt' ); // pt == portuguese
+    let nlp = ( new NLPBuilder() ).buildTrainedNLP( 'pt' ); // pt == portuguese
     let nodes = [];
     let errors = [];
     let warnings = [];

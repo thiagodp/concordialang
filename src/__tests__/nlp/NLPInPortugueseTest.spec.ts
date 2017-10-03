@@ -1,4 +1,4 @@
-import { NLPHelper } from './NLPHelper';
+import { NLPBuilder } from '../../modules/nlp/NLPBuilder';
 import { Entities } from '../../modules/nlp/Entities';
 import { NLP } from '../../modules/nlp/NLP';
 
@@ -21,7 +21,7 @@ describe( 'NLPInPortugueseTest', () => {
     const UI_DATA_TYPE: string = Entities.UI_DATA_TYPE;
 
     beforeAll( () => { // once
-        nlp = ( new NLPHelper() ).buildTrainedNLP( 'pt' ); // pt == portuguese
+        nlp = ( new NLPBuilder() ).buildTrainedNLP( 'pt' ); // pt == portuguese
     } );
 
     function recognizeInTestCase( sentence: string ) {

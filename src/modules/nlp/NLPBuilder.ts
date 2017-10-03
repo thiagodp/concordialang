@@ -1,13 +1,16 @@
-import { NLPEntityUsageExample, NLPTrainingData } from "../../modules/nlp/NLPTrainingData";
-import { NLPTrainingDataConversor } from "../../modules/nlp/NLPTrainingDataConversor";
-import { NLP } from "../../modules/nlp/NLP";
+import { NLPEntityUsageExample, NLPTrainingData } from "./NLPTrainingData";
+import { NLPTrainingDataConversor } from "./NLPTrainingDataConversor";
+import { NLP } from "./NLP";
 
 /**
  * NLP helper
  * 
  * @author Thiago Delgado Pinto
  */
-export class NLPHelper {
+export class NLPBuilder {
+
+    constructor( private _dataDir = '../../data/' ) {
+    }
 
     buildTrainedNLP( language: string = 'en' ): NLP {
         let translationMap = this.makeTranslationMap( language );
@@ -20,11 +23,11 @@ export class NLPHelper {
     }
 
     makeTranslationMap( language: string = 'en' ): any {
-        return require( `../../data/nlp/${language}.json` );
+        return require( this._dataDir + `nlp/${language}.json` );
     }
 
     makeTrainingExamples( language: string = 'en' ): NLPEntityUsageExample[] {
-        return require( `../../data/training/${language}.json` );
+        return require( this._dataDir + `training/${language}.json` );
     }    
 
 }
