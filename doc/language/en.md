@@ -85,6 +85,7 @@ Reserved tags:
 - `@importance( <number> )`: indicates the importance. The importance is as higher as its number.
 - `@generated`: indicates that a declaration was computer-generated.
 - `@global`: defines an element as global. Can be applied to [User Interface Element](#UserInterfaceElement).
+- `@ignore`: indicates that a test case should be ignored to generate tests.
 
 
 ## Feature
