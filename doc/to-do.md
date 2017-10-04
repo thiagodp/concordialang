@@ -19,8 +19,9 @@
 - [X] Constants Block
 - [X] Contants
 - [X] Test Case
-- [X] Test Case Sentences
-- [ ] UI Element
+- [/] Test Case Sentences
+- [X] UI Element
+- [/] UI Element Items
 - [ ] Table
 - [ ] Database
 - [ ] File
@@ -42,7 +43,8 @@
 - [X] Regular Expressions
 - [X] Constants Block
 - [X] Constants
-- [ ] UI Element
+- [X] UI Element
+- [X] UI Element Items
 - [ ] Table
 - [ ] Database
 - [ ] File
@@ -50,12 +52,12 @@
 
 ## NLP Processor
 
-- [ ] Test Case
-- [ ] UI Element
+- [/] Test Case
+- [/] UI Element
 
 ## Semantic Analyzer
 
-- [ ] Language
+- [ ] Language ?
 - [X] Import
 - [ ] Tag
 - [ ] Feature
@@ -93,27 +95,27 @@
 - [ ] Valid values (all types)
 - [ ] Invalid values (all types)
 
-Possibilidades:
-- Usar [alasql][https://github.com/agershun/alasql] para consultas em arquivos e memória.
-- Usar [Node-DBI](https://github.com/DrBenton/Node-DBI/) para consultas em BD relacionais.
-- Reconhecer o banco de dados usado no script e usar a biblioteca capaz de processá-lo.
+To consider:
+- Use [alasql][https://github.com/agershun/alasql] for in-memory databases and file queries.
+- Use [Node-DBI](https://github.com/DrBenton/Node-DBI/) for relational database queries.
+- Recognize the database/file used in the script and handle it with the corresponding library.
 
 ## Interaction + Oracle Generation
 
 - [X] Syntax (requirements specification)
-- [ ] Algorithm
+- [/] Algorithm
 - [ ] Implementation & tests
 
 ## Test Case Generation
 
 - [X] Syntax (requirements specification)
 - [X] Syntax for the abstract format (JSON)
-- [ ] Algorithm
+- [/] Algorithm
 - [ ] Implementation & tests
 
 ## Test Script Generation, Execution and Reporting
 
 - [X] Architecture
 - [X] Input format (test cases)
-- [ ] Output format (test results)
-- [ ] Plug-in for web-based applications with [CodeceptJS](http://codecept.io)
+- [/] Output format (test results)
+- [/] Plug-in for web-based applications with [CodeceptJS](http://codecept.io)
