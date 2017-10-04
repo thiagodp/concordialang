@@ -24,7 +24,7 @@ export class UIPropertyParser implements NodeParser< UIProperty > {
         ];
         if ( ! it.hasPrior() || allowedPriorNodes.indexOf( it.spyPrior().nodeType ) < 0 ) {
             let e = new SyntaticException(
-                'The "' + node.nodeType + '" clause must be declared after a UI Element, a UI Element Property, a Otherwise, or a And.',
+                'The "' + node.nodeType + '" clause must be declared after a UI Element, a UI Element Property, an Otherwise, or an And.',
                 node.location
                 );
             errors.push( e );

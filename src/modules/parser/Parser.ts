@@ -19,7 +19,7 @@ import { StepThenParser } from './StepThenParser';
 import { StepAndParser } from './StepAndParser';
 import { StepOtherwiseParser } from './StepOtherwiseParser';
 import { UIElementParser } from './UIElementParser';
-import { UIPropertyParser } from './UIElementItemParser';
+import { UIPropertyParser } from './UIPropertyParser';
 
 /**
  * Builds an AST from the nodes detected by the lexer. It checks syntatic properties
