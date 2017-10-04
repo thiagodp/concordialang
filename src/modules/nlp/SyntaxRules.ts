@@ -4,8 +4,39 @@
  * @author Thiago Delgado Pinto
  */
 
+
+/**
+ * RuleBuilder.
+ * 
+ * @author Thiago Delgado Pinto
+ */
+export class RuleBuilder {
+
+    /**
+     * Creates an array of rules applying the default rule to each object,
+     * and then applying the partial rule.
+     * 
+     * @param partialRules Partial rules.
+     * @param defaultRule Default rule.
+     * @return Array with rules.
+     */
+    public build( partialRules: object[], defaultRule: object ): object[] {
+        let rules = [];
+        for ( let rule of partialRules ) {
+            // Starts with the default rules
+            let newRule = Object.assign( {}, defaultRule );
+            // Then receives the new rules
+            newRule = Object.assign( newRule, rule );
+            rules.push( newRule );
+        }
+        return rules;
+    }
+
+}
+
+
  // This syntax rule will be the default for all UI Actions.
-const DEFAULT_UI_ACTION_SYNTAX_RULE = {
+export const DEFAULT_UI_ACTION_SYNTAX_RULE = {
 
     // Minimal number of targets it accepts (has precedence over all min values).
     minTargets: 1,
@@ -32,7 +63,7 @@ const DEFAULT_UI_ACTION_SYNTAX_RULE = {
 
 
 // Syntax rules for the supported UI Actions
-const UI_ACTIONS_SYNTAX_RULES = [
+export const UI_ACTION_SYNTAX_RULES = [
     { name: "append" },
     { name: "attachFile" },
     { name: "check", maxTargets: 999 },
@@ -53,7 +84,7 @@ const UI_ACTIONS_SYNTAX_RULES = [
 
 
  // This syntax rule will be the default for all the properties of UI Elements.
- const DEFAULT_UI_ELEMENT_PROPERTY_SYNTAX_RULE = {
+ export const DEFAULT_UI_PROPERTY_SYNTAX_RULE = {
     
         // Minimal number of targets it accepts (has precedence over all min values).
         minTargets: 1,
@@ -81,7 +112,7 @@ const UI_ACTIONS_SYNTAX_RULES = [
     };
 
 // Syntax rules for the supported properties of UI Elements
-const UI_ELEMENT_PROPERTIES_SYNTAX_RULES = [
+export const UI_PROPERTY_SYNTAX_RULES = [
     { name: "id", targets: [ "value" ] },
     { name: "type", targets: [ "ui_element_type" ] },
     { name: "datatype", targets: [ "datatype" ] }, // e.g. string, integer, ...
@@ -91,4 +122,5 @@ const UI_ELEMENT_PROPERTIES_SYNTAX_RULES = [
     { name: "minvalue", targets: [ "number" ] },
     { name: "maxvalue", targets: [ "value", "number" ] },
     { name: "format", targets: [ "value" ] },
+    //...
 ];
