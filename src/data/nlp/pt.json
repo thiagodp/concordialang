@@ -13,8 +13,8 @@
             "click": [ "clico", "ativo", "aciono" ],
             "close": [ "fecho", "saio" ],
             "doubleClick": [ "clico duplamente", "clico duas vezes", "dou um duplo clique" ],
-            "drag": [ "arrasto", "movo" ],
-            "drop": [ "solto", "para" ],
+            "drag": [ "arrasto" ],
+            "drop": [ "solto em" ],
             "fill": [ "preencho", "informo", "digito", "forneco", "entro" ],
             "hide": [ "escondo", "oculto" ],
             "move": [ "movo", "posiciono" ],
@@ -34,7 +34,7 @@
             "wait": [ "aguardo", "espero" ]
         },
 
-        "ui_target_type": {
+        "ui_element_type": {
             "button": [ "botao" ],
             "checkbox": [ "caixa de marcacao", "checkbox", "check" ],
             "cookie": [ "cookie" ],
@@ -79,6 +79,7 @@
             "minvalue": [ "valor mínimo" ],
             "maxvalue": [ "valor máximo" ],
             "format": [ "formato" ],
+
             "color": [ "cor" ],
             "bgcolor": [ "cor de fundo" ],
             "width": [ "largura" ],

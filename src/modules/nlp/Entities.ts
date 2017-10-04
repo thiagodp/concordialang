@@ -14,7 +14,7 @@ export enum Entities {
     // Test Case
     UI_ACTION_MODIFIER = 'ui_action_modifier',
     UI_ACTION = 'ui_action',
-    UI_TARGET_TYPE = 'ui_target_type',
+    UI_ELEMENT_TYPE = 'ui_element_type',
 
     // UI
     UI_PROPERTY = 'ui_property',

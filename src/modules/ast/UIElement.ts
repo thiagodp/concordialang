@@ -29,7 +29,7 @@ export interface UIElementItem extends ContentNode {
         | 'format'      // value is a string between quotes
         ;
 
-    value: string;
+    values: string[];
 
     otherwiseSentences: Step[];
 }

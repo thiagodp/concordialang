@@ -4,6 +4,7 @@ import { LexicalException } from "../req/LexicalException";
 export interface LexicalAnalysisResult< T extends Node > {
     nodes: Array< T >,
     errors: Array< LexicalException >
+    warnings?: Array< LexicalException >
 }
 
 /**

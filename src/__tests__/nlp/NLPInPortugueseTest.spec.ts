@@ -16,7 +16,7 @@ describe( 'NLPInPortugueseTest', () => {
     const SCRIPT: string = Entities.SCRIPT;
     const UI_ACTION_MODIFIER = Entities.UI_ACTION_MODIFIER;
     const UI_ACTION: string = Entities.UI_ACTION;
-    const UI_TARGET_TYPE: string = Entities.UI_TARGET_TYPE;
+    const UI_ELEMENT_TYPE: string = Entities.UI_ELEMENT_TYPE;
     const UI_PROPERTY: string = Entities.UI_PROPERTY;
     const UI_VERB: string = Entities.UI_VERB;
     const UI_DATA_TYPE: string = Entities.UI_DATA_TYPE;
@@ -67,7 +67,7 @@ describe( 'NLPInPortugueseTest', () => {
         it( 'recognizes a click with a target and a value', () => {
             let results = [];
             results.push( recognizeInTestCase( 'eu clico no botão "x"' ) );
-            shouldHaveTestCaseEntities( results, [ UI_ACTION, UI_TARGET_TYPE, VALUE ] );
+            shouldHaveTestCaseEntities( results, [ UI_ACTION, UI_ELEMENT_TYPE, VALUE ] );
         } );
 
         it( 'recognizes a fill with an element', () => {
@@ -86,13 +86,13 @@ describe( 'NLPInPortugueseTest', () => {
         it( 'recognizes a fill with a target and a value', () => {
             let results = [];
             results.push( recognizeInTestCase( 'eu preencho o botão com "x"' ) );
-            shouldHaveTestCaseEntities( results, [ UI_ACTION, UI_TARGET_TYPE, VALUE ] );
+            shouldHaveTestCaseEntities( results, [ UI_ACTION, UI_ELEMENT_TYPE, VALUE ] );
         } );
 
         it( 'recognizes a fill with a target, an element, and a value', () => {
             let results = [];
             results.push( recognizeInTestCase( 'eu preencho o botão <Nome> com "x"' ) );
-            shouldHaveTestCaseEntities( results, [ UI_ACTION, UI_TARGET_TYPE, ELEMENT, VALUE ] );
+            shouldHaveTestCaseEntities( results, [ UI_ACTION, UI_ELEMENT_TYPE, ELEMENT, VALUE ] );
         } );        
 
     } );
@@ -116,7 +116,7 @@ describe( 'NLPInPortugueseTest', () => {
             results.push( recognizeInUI( 'tipo é janela' ) );
             results.push( recognizeInUI( 'tipo é url' ) );
             results.push( recognizeInUI( 'tipo é rótulo' ) );
-            shouldHaveUIEntities( results, [ UI_PROPERTY, UI_VERB, UI_TARGET_TYPE ] );
+            shouldHaveUIEntities( results, [ UI_PROPERTY, UI_VERB, UI_ELEMENT_TYPE ] );
         } );        
         
         it( 'recognizes datatype definitions', () => {

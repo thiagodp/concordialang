@@ -6,7 +6,7 @@ import { Symbols } from "../req/Symbols";
 import { LineChecker } from "../req/LineChecker";
 import { LexicalException } from "../req/LexicalException";
 import { UIElementItem } from "../ast/UIElement";
-import { SentenceProcessor } from '../nlp/SentenceProcessor';
+import { UIElementItemRecognizer } from '../nlp/UIElementItemRecognizer';
 
 /**
  * Detects a node from a UI Element using NLP.
@@ -19,7 +19,7 @@ export class UIElementItemLexer implements NodeLexer< UIElementItem > {
     private _lineChecker: LineChecker = new LineChecker();
     private _nodeType: string = NodeTypes.UI_ELEMENT_ITEM;
     
-    constructor( private _sentenceProcessor: SentenceProcessor ) {
+    constructor( private _recognizer: UIElementItemRecognizer ) {
     }
         
     protected makeRegex(): string {
@@ -54,15 +54,17 @@ export class UIElementItemLexer implements NodeLexer< UIElementItem > {
         } as UIElementItem;
 
         let errors = [];
+        let warnings = [];
+
         if ( 0 === content.length ) {
             let msg = 'Empty content in ' + this._nodeType + '.';
             errors.push( new LexicalException( msg, node.location ) );
+        } else {
+            // NLP
+            this._recognizer.recognizeSentences( [ node ], errors, warnings );
         }
 
-        // NLP
-        this._sentenceProcessor.analyzeUIElementItems( [ node ], errors );
-
-        return { nodes: [ node ], errors: errors };
+        return { nodes: [ node ], errors: errors, warnings: warnings };
     }    
 
 }

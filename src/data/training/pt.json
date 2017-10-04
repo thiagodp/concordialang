@@ -10,11 +10,11 @@
             "eu {ui_action_modifier} {ui_action} com {value}",            
             "eu {ui_action_modifier} {ui_action} o {value}",
 
-            "eu {ui_action} no {ui_target_type} {value}",
-            "eu {ui_action} o {ui_target_type} com {value}",
+            "eu {ui_action} no {ui_element_type} {value}",
+            "eu {ui_action} o {ui_element_type} com {value}",
 
-            "eu {ui_action_modifier} {ui_action} no {ui_target_type} {value}",
-            "eu {ui_action_modifier} {ui_action} o {ui_target_type} com {value}",
+            "eu {ui_action_modifier} {ui_action} no {ui_element_type} {value}",
+            "eu {ui_action_modifier} {ui_action} o {ui_element_type} com {value}",
 
             "eu {ui_action} {value} em {element}",
             "eu {ui_action_modifier} {ui_action} {value} em {element}",
@@ -29,7 +29,7 @@
         "sentences": [
             "{ui_property} {ui_verb} {value}",
             "{ui_property} {ui_verb} {number}",
-            "{ui_property} {ui_verb} {ui_target_type}",
+            "{ui_property} {ui_verb} {ui_element_type}",
             "id é {value}",
             "comprimento máximo é {number}"
         ]

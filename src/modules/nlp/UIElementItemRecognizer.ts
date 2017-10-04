@@ -1,3 +1,4 @@
+import { Intents } from './Intents';
 import { NodeSentenceRecognizer, NLPResultProcessor } from "./NodeSentenceRecognizer";
 import { UIElementItem } from "../ast/UIElement";
 import { LocatedException } from "../req/LocatedException";
@@ -66,27 +67,30 @@ export class UIElementItemRecognizer {
                 Entities.ELEMENT,
                 Entities.SCRIPT
             ];
-            let entityIndex: number = -1;
+            let values = [];
             for ( let allowed of allowedEntities ) {
-                entityIndex = entityNames.indexOf( allowed );
-                if ( entityIndex >= 0 ) {
-                    break;
-                }
+                // Capture all values
+                let entityIndex = -1;
+                do {
+                    entityIndex = entityNames.indexOf( allowed, entityIndex + 1 );
+                    if ( entityIndex >= 0 ) {
+                        values.push( r.entities[ entityIndex ].value );
+                    }
+                } while ( entityIndex >= 0 );
             }
             // Not found?
-            if ( entityIndex < 0 ) {
+            if ( values.length < 1 ) {
                 let msg = 'Unrecognized value in the sentence "' + node.content + '".';
                 errors.push( new NLPException( msg, node.location ) );
                 return;
             }
             // Found, then changes the node with the recognized content
-            const valueContent = r.entities[ entityIndex ].value;
             let item: UIElementItem = node as UIElementItem;
             item.property = propertyContent;
-            item.value = valueContent;
+            item.values = values;
         };
 
-        const TARGET_INTENT = 'ui';
+        const TARGET_INTENT = Intents.UI;
         const TARGET_NAME = 'UI Element';        
         ( new NodeSentenceRecognizer( this._nlp ) ).recognize(
             nodes, TARGET_INTENT, TARGET_NAME, errors, warnings, processor );

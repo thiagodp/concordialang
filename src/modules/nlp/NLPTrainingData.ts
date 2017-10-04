@@ -1,6 +1,6 @@
 
 /**
- * Training data
+ * Training data for the natural language processor.
  * 
  * @author Thiago Delgado Pinto
  */
@@ -12,6 +12,11 @@ export class NLPTrainingData {
     }
 }
 
+/**
+ * Intent for the training data.
+ * 
+ * @author Thiago Delgado Pinto
+ */
 export class NLPIntent {
     constructor(
         public name: string,
@@ -20,6 +25,11 @@ export class NLPIntent {
     }
 }
 
+/**
+ * Entity for the training data.
+ * 
+ * @author Thiago Delgado Pinto
+ */
 export class NLPEntity {
     constructor(
         public name: string,
@@ -28,6 +38,11 @@ export class NLPEntity {
     }
 }
 
+/**
+ * Match for the training data.
+ * 
+ * @author Thiago Delgado Pinto
+ */
 export class NLPMatch {
     constructor(
         public id: string,
@@ -36,6 +51,11 @@ export class NLPMatch {
     }        
 }
 
+/**
+ * Entity usage example for the training data.
+ * 
+ * @author Thiago Delgado Pinto
+ */
 export class NLPEntityUsageExample {
     constructor(
         public entity: string, // result

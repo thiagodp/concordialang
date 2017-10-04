@@ -1,3 +1,4 @@
+import { Intents } from './Intents';
 import { NodeSentenceRecognizer, NLPResultProcessor } from "./NodeSentenceRecognizer";
 import { UIElementItem } from "../ast/UIElement";
 import { LocatedException } from "../req/LocatedException";
@@ -73,7 +74,7 @@ export class TestCaseSentenceRecognizer {
             */
         };
 
-        const TARGET_INTENT = 'testcase';
+        const TARGET_INTENT = Intents.TEST_CASE;
         const TARGET_NAME = 'Test Case';        
         ( new NodeSentenceRecognizer( this._nlp ) ).recognize(
             nodes, TARGET_INTENT, TARGET_NAME, errors, warnings, processor );

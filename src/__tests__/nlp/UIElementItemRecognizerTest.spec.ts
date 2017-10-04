@@ -9,6 +9,7 @@ import { Lexer } from '../../modules/lexer/Lexer';
 describe( 'UIElementItemRecognizerTest', () => {
 
     let nlp = ( new NLPBuilder() ).buildTrainedNLP( 'pt' ); // pt == portuguese
+
     let nodes = [];
     let errors = [];
     let warnings = [];
@@ -28,7 +29,8 @@ describe( 'UIElementItemRecognizerTest', () => {
         warnings = [];
     } );
 
-    describe( 'In Portuguese', () => {
+
+   describe( 'In Portuguese', () => {
 
         let recPt = new UIElementItemRecognizer( nlp ); // under test
 
@@ -40,9 +42,8 @@ describe( 'UIElementItemRecognizerTest', () => {
             expect( warnings ).toHaveLength( 0 );
 
             expect( node.property ).toBe( property );
-            expect( node.value ).toBe( value );
+            expect( node.values ).toContain( value );
         }
-
 
         it( 'recognizes an id with a value', () => {
             shouldRecognize( '- id é "foo"', 'id', 'foo' );

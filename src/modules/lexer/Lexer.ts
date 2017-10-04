@@ -1,3 +1,5 @@
+import { UIElementItemRecognizer } from '../nlp/UIElementItemRecognizer';
+import { UIElementItemLexer } from './UIElementItemLexer';
 import { UIElementLexer } from './UIElementLexer';
 import { ConstantBlock } from '../ast/ConstantBlock';
 import { KeywordBasedLexer } from './KeywordBasedLexer';
@@ -25,6 +27,7 @@ import { RegexLexer } from './RegexLexer';
 import { ConstantBlockLexer } from './ConstantBlockLexer';
 import { ConstantLexer } from './ConstantLexer';
 import { KeywordDictionary } from '../dict/KeywordDictionary';
+import { NLP } from '../nlp/NLP';
 
 /**
  * Lexer
@@ -37,14 +40,25 @@ export class Lexer {
     private _errors: Error[] = [];
     private _lexers: Array< NodeLexer< Node > > = [];
 
+    /**
+     * Constructs the lexer.
+     * 
+     * @param _nlp Natural language processor to use.
+     * @param _defaultLanguage Default language (e.g.: "en")
+     * @param _dictionaryLoader Keyword dictionary loader.
+     * @param _stopOnFirstError True for stopping on the first error found.
+     * 
+     * @throws Error if the given default language could not be found.
+     */
     constructor(
-        private _defaultLanguage: string = 'en',
+//        private _nlp: NLP,
+        private _defaultLanguage: string,
         private _dictionaryLoader: KeywordDictionaryLoader,
         private _stopOnFirstError: boolean = false,
     ) {
         let dictionary = _dictionaryLoader.load( _defaultLanguage ); // may throw
         if ( ! dictionary ) {
-            throw new Error( 'Cannot load language: ' + _defaultLanguage );
+            throw new Error( 'Cannot load a dictionary for the language: ' + _defaultLanguage );
         }
 
         this._lexers = [
@@ -65,6 +79,7 @@ export class Lexer {
             , new RegexLexer( dictionary.is ) // "name" is "value"
             , new StateLexer( dictionary.state )
             , new UIElementLexer( dictionary.uiElement )
+//            , new UIElementItemLexer( new UIElementItemRecognizer( _nlp ) )
             , new TextLexer() // captures any non-empty
         ];
     }
