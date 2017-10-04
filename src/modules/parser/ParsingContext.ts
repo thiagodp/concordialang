@@ -1,4 +1,4 @@
-import { UIElementItem } from '../ast/UIElement';
+import { UIProperty } from '../ast/UIElement';
 import { ConstantBlock } from '../ast/ConstantBlock';
 import { RegexBlock } from '../ast/RegexBlock';
 import { Interaction } from '../ast/Interaction';
@@ -21,11 +21,11 @@ export class ParsingContext {
     inTestCase: boolean = false;
     inRegexBlock: boolean = false;
     inConstantBlock: boolean = false;
-    inUIElementItem: boolean = false;
+    inUIProperty: boolean = false;
 
     currentScenario: Scenario = null; // because it's allowed more than one declaration
     currentTestCase: TestCase = null; // because it's allowed more than one declaration
-    currentUIElementItem: UIElementItem = null;
+    currentUIProperty: UIProperty = null;
 
     constructor( doc?: Document ) {
         if ( doc ) {
@@ -39,6 +39,6 @@ export class ParsingContext {
         this.inTestCase = false;
         this.inRegexBlock = false;
         this.inConstantBlock = false;        
-        this.inUIElementItem = false;
+        this.inUIProperty = false;
     }
 }

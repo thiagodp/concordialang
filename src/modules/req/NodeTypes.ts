@@ -11,7 +11,7 @@ export abstract class NodeTypes extends Keywords {
 
     static REGEX: string = 'regex';
     static CONSTANT: string = 'constant';
-    static UI_ELEMENT_ITEM: string = 'uiElementItem';
+    static UI_PROPERTY: string = 'uiProperty';
 
     // Also available in Gherkin
 

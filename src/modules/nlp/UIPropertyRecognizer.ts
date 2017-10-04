@@ -1,6 +1,6 @@
 import { Intents } from './Intents';
 import { NodeSentenceRecognizer, NLPResultProcessor } from "./NodeSentenceRecognizer";
-import { UIElementItem } from "../ast/UIElement";
+import { UIProperty } from "../ast/UIElement";
 import { LocatedException } from "../req/LocatedException";
 import { ContentNode } from "../ast/Node";
 import { NLPResult, NLP } from "./NLP";
@@ -9,11 +9,11 @@ import { Entities } from "./Entities";
 import { Warning } from "../req/Warning";
 
 /**
- * UI element item sentence recognizer.
+ * UI element property sentence recognizer.
  * 
  * @author Thiago Delgado Pinto
  */
-export class UIElementItemRecognizer {
+export class UIPropertyRecognizer {
 
     constructor( private _nlp: NLP ) {
     }    
@@ -28,7 +28,7 @@ export class UIElementItemRecognizer {
      * @throws Error If the NLP is not trained.
      */
     recognizeSentences(
-        nodes: UIElementItem[],
+        nodes: UIProperty[],
         errors: LocatedException[],
         warnings: LocatedException[]        
     ) {
@@ -85,7 +85,7 @@ export class UIElementItemRecognizer {
                 return;
             }
             // Found, then changes the node with the recognized content
-            let item: UIElementItem = node as UIElementItem;
+            let item: UIProperty = node as UIProperty;
             item.property = propertyContent;
             item.values = values;
         };

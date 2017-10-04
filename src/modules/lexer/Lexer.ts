@@ -1,5 +1,5 @@
-import { UIElementItemRecognizer } from '../nlp/UIElementItemRecognizer';
-import { UIElementItemLexer } from './UIElementItemLexer';
+import { UIPropertyRecognizer } from '../nlp/UIPropertyRecognizer';
+import { UIPropertyLexer } from './UIPropertyLexer';
 import { UIElementLexer } from './UIElementLexer';
 import { ConstantBlock } from '../ast/ConstantBlock';
 import { KeywordBasedLexer } from './KeywordBasedLexer';

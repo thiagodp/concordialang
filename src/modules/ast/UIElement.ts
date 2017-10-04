@@ -8,15 +8,15 @@ import { MayHaveTags } from './Tag';
  * @author Thiago Delgado Pinto
  */
 export interface UIElement extends NamedNode, MayHaveTags {
-    items: UIElementItem[];
+    items: UIProperty[];
 }
 
 /**
- * UI element item node.
+ * UI property node.
  * 
  * @author Thiago Delgado Pinto
  */
-export interface UIElementItem extends ContentNode {
+export interface UIProperty extends ContentNode {
 
     property: 'id'      // value is a string between quotes
         | 'type'        // value is a reserved word

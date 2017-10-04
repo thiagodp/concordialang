@@ -1,6 +1,6 @@
 import { Intents } from './Intents';
 import { NodeSentenceRecognizer, NLPResultProcessor } from "./NodeSentenceRecognizer";
-import { UIElementItem } from "../ast/UIElement";
+import { UIProperty } from "../ast/UIElement";
 import { LocatedException } from "../req/LocatedException";
 import { ContentNode } from "../ast/Node";
 import { NLPResult, NLP } from "./NLP";
@@ -28,7 +28,7 @@ export class TestCaseSentenceRecognizer {
      * @throws Error If the NLP is not trained.
      */
     recognizeSentences(
-        nodes: UIElementItem[],
+        nodes: UIProperty[],
         errors: LocatedException[],
         warnings: LocatedException[]        
     ) {

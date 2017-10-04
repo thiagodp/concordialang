@@ -5,21 +5,21 @@ import { Expressions } from "../req/Expressions";
 import { Symbols } from "../req/Symbols";
 import { LineChecker } from "../req/LineChecker";
 import { LexicalException } from "../req/LexicalException";
-import { UIElementItem } from "../ast/UIElement";
-import { UIElementItemRecognizer } from '../nlp/UIElementItemRecognizer';
+import { UIProperty } from "../ast/UIElement";
+import { UIPropertyRecognizer } from '../nlp/UIPropertyRecognizer';
 
 /**
  * Detects a node from a UI Element using NLP.
  * 
  * @author Thiago Delgado Pinto
  */
-export class UIElementItemLexer implements NodeLexer< UIElementItem > {
+export class UIPropertyLexer implements NodeLexer< UIProperty > {
 
     private _symbol: string = Symbols.LIST_ITEM_PREFIX;
     private _lineChecker: LineChecker = new LineChecker();
-    private _nodeType: string = NodeTypes.UI_ELEMENT_ITEM;
+    private _nodeType: string = NodeTypes.UI_PROPERTY;
     
-    constructor( private _recognizer: UIElementItemRecognizer ) {
+    constructor( private _recognizer: UIPropertyRecognizer ) {
     }
         
     protected makeRegex(): string {
@@ -35,7 +35,7 @@ export class UIElementItemLexer implements NodeLexer< UIElementItem > {
     }
 
     /** @inheritDoc */
-    public analyze( line: string, lineNumber?: number ): LexicalAnalysisResult< UIElementItem > {
+    public analyze( line: string, lineNumber?: number ): LexicalAnalysisResult< UIProperty > {
         
         let exp = new RegExp( this.makeRegex(), "u" );
         let result = exp.exec( line );
@@ -51,7 +51,7 @@ export class UIElementItemLexer implements NodeLexer< UIElementItem > {
             location: { line: lineNumber || 0, column: pos + 1 },
             content: line.trim(),
             otherwiseSentences: []
-        } as UIElementItem;
+        } as UIProperty;
 
         let errors = [];
         let warnings = [];

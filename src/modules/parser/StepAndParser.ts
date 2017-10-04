@@ -33,22 +33,22 @@ export class StepAndParser implements NodeParser< StepAnd > {
         }
 
         // Checks the context
-        if ( ! context.inScenario && ! context.inTestCase && ! context.inUIElementItem ) {
+        if ( ! context.inScenario && ! context.inTestCase && ! context.inUIProperty ) {
             let e = new SyntaticException(
-                'The "' + node.nodeType + '" clause must be declared after a Scenario, a Test case, or an UI Element Item.',
+                'The "' + node.nodeType + '" clause must be declared after a Scenario, a Test case, or an UI Element Property.',
                 node.location
                 );
             errors.push( e );
             return false;
         }
 
-        if ( context.inUIElementItem ) {
+        if ( context.inUIProperty ) {
             // Prepare the owner to receive the given node
-            if ( ! context.currentUIElementItem.otherwiseSentences ) {
-                context.currentUIElementItem.otherwiseSentences = [];
+            if ( ! context.currentUIProperty.otherwiseSentences ) {
+                context.currentUIProperty.otherwiseSentences = [];
             }
             // Adds the given node
-            context.currentUIElementItem.otherwiseSentences.push( node );
+            context.currentUIProperty.otherwiseSentences.push( node );
         } else {
             // Prepare the owner to receive the given node
             let owner = context.inScenario ? context.currentScenario : context.currentTestCase;

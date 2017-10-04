@@ -1,4 +1,4 @@
-import { UIElementItem } from '../ast/UIElement';
+import { UIProperty } from '../ast/UIElement';
 import { NodeTypes } from '../req/NodeTypes';
 import { StepOtherwise } from '../ast/Step';
 import { SyntaticException } from '../req/SyntaticException';
@@ -17,17 +17,17 @@ export class StepOtherwiseParser implements NodeParser< StepOtherwise > {
     public analyze( node: StepOtherwise, context: ParsingContext, it: NodeIterator, errors: Error[] ): boolean {
 
         // Checks prior nodes
-        const allowedPriorNodes = [ NodeTypes.UI_ELEMENT_ITEM ];
+        const allowedPriorNodes = [ NodeTypes.UI_PROPERTY ];
         if ( ! it.hasPrior() || allowedPriorNodes.indexOf( it.spyPrior().nodeType ) < 0 ) {
             let e = new SyntaticException(
-                'The "' + node.nodeType + '" clause must be declared after a UI Element Item.',
+                'The "' + node.nodeType + '" clause must be declared after a UI Element Property.',
                 node.location
                 );
             errors.push( e );
             return false;                
         }
 
-        let prior: UIElementItem = it.spyPrior() as any;
+        let prior: UIProperty = it.spyPrior() as any;
 
         // Checks the structure
         if ( ! prior.otherwiseSentences ) {

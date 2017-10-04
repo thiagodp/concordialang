@@ -1,12 +1,12 @@
-import { UIElementItem } from '../../modules/ast/UIElement';
+import { UIProperty } from '../../modules/ast/UIElement';
 import { NodeTypes } from '../../modules/req/NodeTypes';
 import { ContentNode } from '../../modules/ast/Node';
 import { NLPBuilder } from '../../modules/nlp/NLPBuilder';
 import { NLP } from '../../modules/nlp/NLP';
-import { UIElementItemRecognizer } from "../../modules/nlp/UIElementItemRecognizer";
+import { UIPropertyRecognizer } from "../../modules/nlp/UIPropertyRecognizer";
 import { Lexer } from '../../modules/lexer/Lexer';
 
-describe( 'UIElementItemRecognizerTest', () => {
+describe( 'UIPropertyRecognizerTest', () => {
 
     let nlp = ( new NLPBuilder() ).buildTrainedNLP( 'pt' ); // pt == portuguese
 
@@ -15,12 +15,12 @@ describe( 'UIElementItemRecognizerTest', () => {
     let warnings = [];
 
     // helper
-    function makeNode( content: string, line = 1, column = 1 ): UIElementItem {
+    function makeNode( content: string, line = 1, column = 1 ): UIProperty {
         return {
-            nodeType: NodeTypes.UI_ELEMENT_ITEM ,
+            nodeType: NodeTypes.UI_PROPERTY ,
             location: { line: line, column: column },
             content: content
-        } as UIElementItem;
+        } as UIProperty;
     }
 
     beforeAll( () => {
@@ -32,7 +32,7 @@ describe( 'UIElementItemRecognizerTest', () => {
 
    describe( 'In Portuguese', () => {
 
-        let recPt = new UIElementItemRecognizer( nlp ); // under test
+        let recPt = new UIPropertyRecognizer( nlp ); // under test
 
         function shouldRecognize( sentence: string, property: string, value: string ): void {
             let node = makeNode( sentence );

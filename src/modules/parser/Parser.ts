@@ -19,7 +19,7 @@ import { StepThenParser } from './StepThenParser';
 import { StepAndParser } from './StepAndParser';
 import { StepOtherwiseParser } from './StepOtherwiseParser';
 import { UIElementParser } from './UIElementParser';
-import { UIElementItemParser } from './UIElementItemParser';
+import { UIPropertyParser } from './UIElementItemParser';
 
 /**
  * Builds an AST from the nodes detected by the lexer. It checks syntatic properties
@@ -51,7 +51,7 @@ export class Parser {
         this._parsersMap[ NodeTypes.REGEX ] = new BlockItemParser();
         this._parsersMap[ NodeTypes.STATE ] = new StateParser();
         this._parsersMap[ NodeTypes.UI_ELEMENT ] = new UIElementParser();
-        this._parsersMap[ NodeTypes.UI_ELEMENT_ITEM ] = new UIElementItemParser();
+        this._parsersMap[ NodeTypes.UI_PROPERTY ] = new UIPropertyParser();
         this._parsersMap[ NodeTypes.TEST_CASE ] = new TestCaseParser();
     }
 
