@@ -29,6 +29,10 @@ export class NLP {
         // Add an entity named "number" and its recognizer
         this._additionalEntities.push( 'number' );
         this._additionalRecognizers.push( this.makeNumberEntityRecognizer( 'number' ) );
+
+        // Add an entity named "script" and its recognizer
+        this._additionalEntities.push( 'script' );
+        this._additionalRecognizers.push( this.makeScriptEntityRecognizer( 'script' ) );
     }
 
     /**
@@ -159,7 +163,15 @@ export class NLP {
         return valueRec;
     }
 
-
+    /**
+     * Creates a recognizer for a number.
+     * 
+     * Example: I fill "name" with -10.33
+     * --> The value -10.33 is recognized.
+     * 
+     * @param entityName Entity name.
+     * @return Bravey.EntityRecognizer
+     */
     private makeNumberEntityRecognizer( entityName: string = 'number' ): any {
 
         var valueRec = new Bravey.RegexEntityRecognizer( entityName, 10 );
@@ -173,6 +185,29 @@ export class NLP {
 
         return valueRec;
     }
+
+    /**
+     * Creates a recognizer for values between apostrophes.
+     * 
+     * Example: - value comes from the query 'SELECT * FROM users'
+     * --> The value "SELECT * FROM users" (without quotes) is recognized.
+     * 
+     * @param entityName Entity name.
+     * @return Bravey.EntityRecognizer
+     */
+    private makeScriptEntityRecognizer( entityName: string = 'script' ): any {
+        
+        let valueRec = new Bravey.RegexEntityRecognizer( entityName, 10 );
+
+        valueRec.addMatch( new RegExp( "'[^']*'", "gi" ),
+            function( match ) {
+                //console.log( 'match: ' ); console.log( match );
+                return match.toString().replace( /['"]+/g, '' );
+            },
+            100 ); // the number is the priority
+
+        return valueRec;
+    }    
 
 }
 

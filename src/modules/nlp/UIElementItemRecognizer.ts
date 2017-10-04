@@ -59,30 +59,28 @@ export class UIElementItemRecognizer {
                 warnings.push( new Warning( msg, node.location ) );
             }
 
-            // Must have a value or a number
-            const valueIndex: number = entityNames.indexOf( Entities.VALUE );
-            const numberIndex: number = entityNames.indexOf( Entities.NUMBER );
-
-            let contentIndex: number = -1;
-            let msg;
-            if ( valueIndex < 0 ) {
-                msg = 'Unrecognized value in the sentence "' + node.content + '".';
-            } else {
-                contentIndex = valueIndex;
+            // Verify allowed entities
+            const allowedEntities = [
+                Entities.VALUE,
+                Entities.NUMBER,
+                Entities.ELEMENT,
+                Entities.SCRIPT
+            ];
+            let entityIndex: number = -1;
+            for ( let allowed of allowedEntities ) {
+                entityIndex = entityNames.indexOf( allowed );
+                if ( entityIndex >= 0 ) {
+                    break;
+                }
             }
-            if ( numberIndex < 0 ) {
-                msg = 'Unrecognized number in the sentence "' + node.content + '".';
-            } else {
-                contentIndex = numberIndex;
-            }
-
-            if ( valueIndex < 0 && numberIndex < 0 ) {
+            // Not found?
+            if ( entityIndex < 0 ) {
+                let msg = 'Unrecognized value in the sentence "' + node.content + '".';
                 errors.push( new NLPException( msg, node.location ) );
-                return;                             
+                return;
             }
-            const valueContent = r.entities[ contentIndex ].value
-
-            // Sets the item
+            // Found, then changes the node with the recognized content
+            const valueContent = r.entities[ entityIndex ].value;
             let item: UIElementItem = node as UIElementItem;
             item.property = propertyContent;
             item.value = valueContent;

@@ -89,7 +89,7 @@
             "is": [ "e", "é" ],
             "in": [ "em", "esta em" , "incluso em", "incluido em" ],
             "same": [ "o mesmo que", "igual a", "selhante a", "similar a" ],
-            "queried": [ "consultado", "buscado", "queried" ]
+            "queried": [ "vem de", "é consultado de", "vem da consulta", "é buscado por", "é recuperado de" ]
         },
 
         "ui_data_type": {

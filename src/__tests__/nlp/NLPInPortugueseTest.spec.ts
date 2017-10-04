@@ -13,6 +13,7 @@ describe( 'NLPInPortugueseTest', () => {
     const ELEMENT: string = Entities.ELEMENT;
     const VALUE: string = Entities.VALUE;
     const NUMBER: string = Entities.NUMBER;
+    const SCRIPT: string = Entities.SCRIPT;
     const UI_ACTION_MODIFIER = Entities.UI_ACTION_MODIFIER;
     const UI_ACTION: string = Entities.UI_ACTION;
     const UI_TARGET_TYPE: string = Entities.UI_TARGET_TYPE;
@@ -52,7 +53,7 @@ describe( 'NLPInPortugueseTest', () => {
     }    
 
 
-    describe( 'testcase', () => {
+    describe( 'testcase entities', () => {
 
         const entity = 'testcase';
 
@@ -98,7 +99,7 @@ describe( 'NLPInPortugueseTest', () => {
 
 
 
-    describe( 'ui', () => {
+    describe( 'ui entities', () => {
 
         it( 'recognizes id definitions', () => {
             let results = [];
@@ -169,7 +170,12 @@ describe( 'NLPInPortugueseTest', () => {
         it( 'recognizes format definitions', () => {
             shouldHaveUIEntities( [ recognizeInUI( 'formato é "[A-Z]"' ) ],
                 [ UI_PROPERTY, UI_VERB, VALUE  ] );                
-        } );         
+        } );
+        
+        it( 'recognizes script definitions', () => {
+            shouldHaveUIEntities( [ recognizeInUI( "valor vem de 'SELECT * FROM someTable'" ) ],
+                [ UI_PROPERTY, UI_VERB, SCRIPT  ] );
+        } );        
 
     } );
 

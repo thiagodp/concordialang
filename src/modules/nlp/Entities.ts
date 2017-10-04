@@ -9,6 +9,7 @@ export enum Entities {
     VALUE = 'value',
     ELEMENT = 'element',
     NUMBER = 'number',
+    SCRIPT = 'script',
 
     // Test Case
     UI_ACTION_MODIFIER = 'ui_action_modifier',

@@ -62,8 +62,11 @@ describe( 'UIElementItemRecognizerTest', () => {
 
         it( 'recognizes a min value with a value', () => {
             shouldRecognize( '- valor mínimo é -15.22', 'minvalue', '-15.22' );
-        } );        
+        } );
 
+        it( 'recognizes a value with a query', () => {
+            shouldRecognize( "- valor vem da consulta 'SELECT * FROM someTable'", 'value', 'SELECT * FROM someTable' );
+        } );
 
     } );
 
