@@ -23,9 +23,11 @@
 - [X] UI Element
 - [/] UI Element Items
 - [ ] Table
+- [ ] Table Rows
 - [ ] Database
+- [ ] Database Properties
 - [ ] File
-- [ ] Test Events
+- [ ] Test-Related Events
 
 ## Parser
 
@@ -46,9 +48,11 @@
 - [X] UI Element
 - [X] UI Element Items
 - [ ] Table
+- [ ] Table Rows
 - [ ] Database
+- [ ] Database Properties
 - [ ] File
-- [ ] Test Events
+- [ ] Test-Related Events
 
 ## NLP Processor
 
