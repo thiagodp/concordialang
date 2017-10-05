@@ -116,7 +116,7 @@ export const UI_PROPERTY_SYNTAX_RULES = [
     { name: "id", targets: [ "value" ] },
     { name: "type", targets: [ "ui_element_type" ] },
     { name: "datatype", targets: [ "datatype" ] }, // e.g. string, integer, ...
-    { name: "value", targets: [ "value", "number" ] },
+    { name: "value", targets: [ "value", "number", "script" ] },
     { name: "minlength", targets: [ "number" ] },
     { name: "maxlength", targets: [ "number" ] },
     { name: "minvalue", targets: [ "number" ] },

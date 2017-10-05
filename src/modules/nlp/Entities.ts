@@ -6,18 +6,18 @@
 export enum Entities {
 
     // General
-    VALUE = 'value',
-    ELEMENT = 'element',
-    NUMBER = 'number',
-    SCRIPT = 'script',
+    VALUE = 'value', // e.g.: "username"
+    ELEMENT = 'element', // e.g.: <Username>
+    NUMBER = 'number', // e.g.: -3.12
+    SCRIPT = 'script', // e.g.: 'SELECT * FROM someTable'
 
     // Test Case
-    UI_ACTION_MODIFIER = 'ui_action_modifier',
-    UI_ACTION = 'ui_action',
-    UI_ELEMENT_TYPE = 'ui_element_type',
+    UI_ACTION_MODIFIER = 'ui_action_modifier', // e.g.: not
+    UI_ACTION = 'ui_action', // e.g.: click, fill, ...
+    UI_ELEMENT_TYPE = 'ui_element_type', // e.g.: button, select, ...
 
     // UI
-    UI_PROPERTY = 'ui_property',
-    UI_VERB = 'ui_verb',
-    UI_DATA_TYPE = 'ui_data_type'
+    UI_PROPERTY = 'ui_property', // e.g.: id, value, ...
+    UI_VERB = 'ui_verb', // e.g.: is, queried, ...
+    UI_DATA_TYPE = 'ui_data_type' // e.g.: string, integer, ...
 }

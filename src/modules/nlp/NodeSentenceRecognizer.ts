@@ -71,4 +71,83 @@ export class NodeSentenceRecognizer {
         }
     }
 
+
+    public validate(
+        node: ContentNode,
+        recognizedEntityNames: string[],
+        syntaxRules: any[],        
+        property: string,
+        errors: LocatedException[],
+        warnings: LocatedException[]
+    ): boolean {
+
+        // Checks if a rule exists for the property
+        const propertyRuleIndex: number = syntaxRules.map( sr => sr.name ).indexOf( property );
+        if ( propertyRuleIndex < 0 ) {
+            const msg = 'The sentence "' + node.content + '" could not be validated due to an inexistent rule for property "' + property + '"';
+            warnings.push( new NLPException( msg, node.location ) );
+            return false;
+        }
+
+        // Let's check the rules!
+        const rule: any = syntaxRules[ propertyRuleIndex ];
+
+        // Count the expected targets, ignores the other ones - like verbs
+        const expectedTargetsCount = recognizedEntityNames.filter( name => rule.targets.indexOf( name ) >= 0 ).length;
+        // Checking minTargets
+        if ( expectedTargetsCount < rule.minTargets ) {
+            const msg = 'The property "' + property + '" expects at least ' + rule.minTargets + ' values, but it was informed ' +  expectedTargetsCount +  '.';
+            errors.push( new NLPException( msg, node.location ) );
+            return false;
+        }
+        // Checking maxTargets
+        if ( expectedTargetsCount > rule.maxTargets ) {
+            const msg = 'The property "' + property + '" expects at most ' + rule.maxTargets + ' values, but it was informed ' + expectedTargetsCount  + '.';
+            errors.push( new NLPException( msg, node.location ) );
+            return false;
+        }
+        // Checking targets
+        for ( let target of rule.targets ) {
+            // Inexistent rule for the target
+            if ( ! rule[ target ] ) {
+                const msg = 'The sentence "' + node.content + '" could not be validated due to an inexistent rule for the target "' + target + '" of the property "' + property + '"';
+                warnings.push( new NLPException( msg, node.location ) );    
+                return false;
+            }
+            const targetRule = rule[ target ];
+            // Disconsider in case of incompatible with minTargets and maxTargets
+            if ( targetRule.min > rule.minTargets || targetRule.max > rule.maxTargets ) {
+                continue;
+            }
+            const numberOfEntitiesOfTheTarget = recognizedEntityNames.filter( name => name === target ).length;
+            if ( numberOfEntitiesOfTheTarget > 0 ) {
+                // Min
+                if ( numberOfEntitiesOfTheTarget < targetRule.min ) {
+                    const msg = 'The property "' + property + '" expects at least ' + targetRule.min + ' for "' + target + '", but it was informed ' + numberOfEntitiesOfTheTarget + '.';
+                    errors.push( new NLPException( msg, node.location ) );
+                    return false;
+                }
+                // Max
+                if ( numberOfEntitiesOfTheTarget > targetRule.min ) {
+                    const msg = 'The property "' + property + '" expects at most ' + targetRule.max + ' for "' + target + '", but it was informed ' + numberOfEntitiesOfTheTarget  + '.';
+                    errors.push( new NLPException( msg, node.location ) );
+                    return false;
+                }
+            }
+        }
+
+        // Checking mustBeUsedWith
+        for ( let otherEntity of rule.mustBeUsedWith ) {
+            // Must have the other entity
+            if ( recognizedEntityNames.indexOf( otherEntity ) < 0 ) {
+                const msg = 'The property "' + property + '" must be used with "' + otherEntity + '".';
+                errors.push( new NLPException( msg, node.location ) );
+                return false;
+            }
+        }
+
+        // Passed
+        return true;
+    }
+
 }

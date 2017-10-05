@@ -8,8 +8,6 @@ import { Lexer } from '../../modules/lexer/Lexer';
 
 describe( 'UIPropertyRecognizerTest', () => {
 
-    let nlp = ( new NLPBuilder() ).buildTrainedNLP( 'pt' ); // pt == portuguese
-
     let nodes = [];
     let errors = [];
     let warnings = [];
@@ -32,12 +30,13 @@ describe( 'UIPropertyRecognizerTest', () => {
 
    describe( 'In Portuguese', () => {
 
-        let recPt = new UIPropertyRecognizer( nlp ); // under test
+        let nlpPt = ( new NLPBuilder() ).buildTrainedNLP( 'pt' ); // pt == portuguese    
+        let rec = new UIPropertyRecognizer( nlpPt ); // under test
 
         function shouldRecognize( sentence: string, property: string, value: string ): void {
             let node = makeNode( sentence );
             nodes.push( node );
-            recPt.recognizeSentences( nodes, errors, warnings );
+            rec.recognizeSentences( nodes, errors, warnings );
             expect( errors ).toHaveLength( 0 );
             expect( warnings ).toHaveLength( 0 );
 
