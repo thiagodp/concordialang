@@ -30,6 +30,7 @@ import { ConstantBlockLexer } from './ConstantBlockLexer';
 import { ConstantLexer } from './ConstantLexer';
 import { KeywordDictionary } from '../dict/KeywordDictionary';
 import { NLP } from '../nlp/NLP';
+import { TableRowLexer } from './TableRowLexer';
 
 /**
  * Lexer
@@ -85,6 +86,7 @@ export class Lexer {
             , new UIElementLexer( dictionary.uiElement )
             , new UIPropertyLexer( new UIPropertyRecognizer( _nlp ) )
             , new TableLexer( dictionary.table )
+            , new TableRowLexer()
             , new TextLexer() // captures any non-empty
         ];
     }

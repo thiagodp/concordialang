@@ -15,14 +15,5 @@ export interface Table extends NamedNode {
  * @author Thiago Delgado Pinto
  */
 export interface TableRow extends Node {
-    cells: TableCell[];
-}
-
-/**
- * Table cell node.
- * 
- * @author Thiago Delgado Pinto
- */
-export interface TableCell extends Node {
-    value: string | number | boolean;
+    cells: string[];
 }

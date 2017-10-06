@@ -17,6 +17,7 @@ export abstract class NodeTypes extends Keywords {
 
     static TAG: string = 'tag';
     static TABLE: string = 'table';
+    static TABLE_ROW: string = 'tableRow';
     static TEXT: string = 'text'; // not empty content
 
 }

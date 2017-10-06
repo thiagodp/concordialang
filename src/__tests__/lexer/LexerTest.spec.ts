@@ -78,6 +78,8 @@ describe( 'LexerTest', () => {
             { l: '  - "name" is "[A-Za-z]{2,60}"', e: NodeTypes.CONSTANT },
             { l: '', e: null },
             { l: 'Table: users', e: NodeTypes.TABLE },
+            { l: '  | column1 | column2 |', e: NodeTypes.TABLE_ROW },
+            { l: '  | value1 | value2 |', e: NodeTypes.TABLE_ROW },            
             { l: '', e: null },            
             { l: 'this must be recognized as text', e: NodeTypes.TEXT }
         ];
@@ -123,6 +125,8 @@ describe( 'LexerTest', () => {
             { l: '  - "nome" é "[A-Za-z]{2,60}"', e: NodeTypes.CONSTANT },
             { l: '', e: null },
             { l: 'Tabela: users', e: NodeTypes.TABLE },
+            { l: '  | column1 | column2 |', e: NodeTypes.TABLE_ROW },
+            { l: '  | value1 | value2 |', e: NodeTypes.TABLE_ROW },
             { l: '', e: null },
             { l: 'isso must be recognized as text', e: NodeTypes.TEXT }
         ];
