@@ -1,3 +1,4 @@
+import { TableLexer } from './TableLexer';
 import { NLPTrainer } from '../nlp/NLPTrainer';
 import { UIPropertyRecognizer } from '../nlp/UIPropertyRecognizer';
 import { UIPropertyLexer } from './UIPropertyLexer';
@@ -83,6 +84,7 @@ export class Lexer {
             , new StateLexer( dictionary.state )
             , new UIElementLexer( dictionary.uiElement )
             , new UIPropertyLexer( new UIPropertyRecognizer( _nlp ) )
+            , new TableLexer( dictionary.table )
             , new TextLexer() // captures any non-empty
         ];
     }

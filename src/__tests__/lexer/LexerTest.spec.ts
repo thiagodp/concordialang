@@ -77,6 +77,8 @@ describe( 'LexerTest', () => {
             { l: 'Regular Expressions:', e: NodeTypes.REGEX_BLOCK },
             { l: '  - "name" is "[A-Za-z]{2,60}"', e: NodeTypes.CONSTANT },
             { l: '', e: null },
+            { l: 'Table: users', e: NodeTypes.TABLE },
+            { l: '', e: null },            
             { l: 'this must be recognized as text', e: NodeTypes.TEXT }
         ];
 
@@ -119,6 +121,8 @@ describe( 'LexerTest', () => {
             { l: '', e: null },
             { l: 'Expressões Regulares:', e: NodeTypes.REGEX_BLOCK },
             { l: '  - "nome" é "[A-Za-z]{2,60}"', e: NodeTypes.CONSTANT },
+            { l: '', e: null },
+            { l: 'Tabela: users', e: NodeTypes.TABLE },
             { l: '', e: null },
             { l: 'isso must be recognized as text', e: NodeTypes.TEXT }
         ];

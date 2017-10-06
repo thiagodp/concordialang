@@ -16,6 +16,7 @@ export class EnglishKeywordDictionary implements KeywordDictionary {
     state: string[] = [ 'state' ];    
     testcase: string[] = [ 'test case' ];
     uiElement: string[] = [ 'ui element' ];
+    table: string[] = [ 'table' ];    
 
     // Also available in Gherkin
 

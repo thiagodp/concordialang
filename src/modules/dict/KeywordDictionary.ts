@@ -9,25 +9,26 @@ export interface KeywordDictionary { // properties should exist in Keywords
 
     // Not available in Gherkin
     
-    import: string[],
-    regexBlock: string[],
-    constantBlock: string[],
-    is: string[],
-    state: string[],
-    testcase: string[],
-    uiElement: string[],
+    import: string[];
+    regexBlock: string[];
+    constantBlock: string[];
+    is: string[];
+    state: string[];
+    testcase: string[];
+    uiElement: string[];
+    table: string[];
 
     // Also available in Gherkin
 
-    language: string[],
+    language: string[];
 
-    feature: string[],
-    scenario: string[],
+    feature: string[];
+    scenario: string[];
 
-    stepGiven: string[],
-    stepWhen: string[],
-    stepThen: string[],
-    stepAnd: string[],
-    stepOtherwise: string[]
+    stepGiven: string[];
+    stepWhen: string[];
+    stepThen: string[];
+    stepAnd: string[];
+    stepOtherwise: string[];
 
 }

@@ -6,6 +6,7 @@
     "state": [ "estado" ],    
     "testcase": [ "caso de teste" ],
     "uiElement": [ "elemento da iu" ],
+    "table": [ "tabela", "table" ],
 
     "language": [ "linguagem", "idioma", "língua",  "language" ],
 

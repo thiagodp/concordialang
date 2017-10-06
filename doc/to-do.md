@@ -21,8 +21,8 @@
 - [X] Test Case
 - [/] Test Case Sentences
 - [X] UI Element
-- [/] UI Element Items
-- [ ] Table
+- [X] UI Element Items
+- [X] Table
 - [ ] Table Rows
 - [ ] Database
 - [ ] Database Properties
