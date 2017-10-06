@@ -1,6 +1,7 @@
 import { InputFileExtractor } from '../util/InputFileExtractor';
 
 var fs = require( 'fs' );
+import path = require( 'path' );
 
 /**
  * Language-based JSON file loader.
@@ -13,12 +14,12 @@ export class LanguageBasedJsonFileLoader {
      * Constructs the loader.
      * 
      * @param _dictMap Map with each language ( string => object | array ). Defaults to {}.
-     * @param _path Path of the files. Defaults to './data/'.
+     * @param _baseDir Base directory to load the files. Defaults to 'data/'.
      * @param _encoding File encoding. Defaults to 'utf8'.
      */
     constructor(
         private _dictMap: Object = {},
-        private _path: string = './data/',
+        private _baseDir: string = path.join( process.cwd(), 'data/' ),
         private _encoding: string = 'utf8'
     ) {
     }
@@ -49,7 +50,7 @@ export class LanguageBasedJsonFileLoader {
     }
 
     private makeLanguageFilePath( language: string ): string {
-        return this._path + language + '.json';
+        return this._baseDir + language + '.json';
     }
 
     private readFileContent( path ): string {

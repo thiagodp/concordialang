@@ -1,3 +1,4 @@
+import { NLPTrainer } from '../nlp/NLPTrainer';
 import { UIPropertyRecognizer } from '../nlp/UIPropertyRecognizer';
 import { UIPropertyLexer } from './UIPropertyLexer';
 import { UIElementLexer } from './UIElementLexer';
@@ -44,6 +45,7 @@ export class Lexer {
      * Constructs the lexer.
      * 
      * @param _nlp Natural language processor to use.
+     * @param _nlpTrainer Makes the NLP be trained in the target language when the language changes.
      * @param _defaultLanguage Default language (e.g.: "en")
      * @param _dictionaryLoader Keyword dictionary loader.
      * @param _stopOnFirstError True for stopping on the first error found.
@@ -51,7 +53,8 @@ export class Lexer {
      * @throws Error if the given default language could not be found.
      */
     constructor(
-//        private _nlp: NLP,
+        private _nlp: NLP,
+        private _nlpTrainer: NLPTrainer,
         private _defaultLanguage: string,
         private _dictionaryLoader: KeywordDictionaryLoader,
         private _stopOnFirstError: boolean = false,
@@ -79,7 +82,7 @@ export class Lexer {
             , new RegexLexer( dictionary.is ) // "name" is "value"
             , new StateLexer( dictionary.state )
             , new UIElementLexer( dictionary.uiElement )
-//            , new UIElementItemLexer( new UIElementItemRecognizer( _nlp ) )
+            , new UIPropertyLexer( new UIPropertyRecognizer( _nlp ) )
             , new TextLexer() // captures any non-empty
         ];
     }
@@ -194,6 +197,11 @@ export class Lexer {
      * @throws Error In case of the language is not available.
      */
     public changeLanguage( language: string ): KeywordDictionary {
+
+        if ( ! this._nlp.isTrained( language ) ) {
+            this._nlpTrainer.trainNLP( this._nlp, language );
+        }
+
         let dict = this._dictionaryLoader.load( language ); // throws Error
         for ( let lexer of this._lexers ) {
             if ( this.isAWordBasedLexer( lexer ) ) {

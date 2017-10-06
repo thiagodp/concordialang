@@ -1,7 +1,7 @@
 import { UIProperty } from '../../modules/ast/UIElement';
 import { NodeTypes } from '../../modules/req/NodeTypes';
 import { ContentNode } from '../../modules/ast/Node';
-import { NLPBuilder } from '../../modules/nlp/NLPBuilder';
+import { NLPTrainer } from '../../modules/nlp/NLPTrainer';
 import { NLP } from '../../modules/nlp/NLP';
 import { UIPropertyRecognizer } from "../../modules/nlp/UIPropertyRecognizer";
 import { Lexer } from '../../modules/lexer/Lexer';
@@ -31,8 +31,9 @@ describe( 'UIPropertyRecognizerTest', () => {
    describe( 'In Portuguese', () => {
 
         const LANGUAGE = 'pt';
-        let nlpPt = ( new NLPBuilder() ).buildTrainedNLP( LANGUAGE ); // pt == portuguese    
-        let rec = new UIPropertyRecognizer( nlpPt ); // under test
+        let nlp = new NLP();
+        ( new NLPTrainer() ).trainNLP( nlp, LANGUAGE );
+        let rec = new UIPropertyRecognizer( nlp ); // under test
 
         function shouldRecognize( sentence: string, property: string, value: string ): void {
             let node = makeNode( sentence );
