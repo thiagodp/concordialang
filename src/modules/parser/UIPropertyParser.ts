@@ -28,13 +28,27 @@ export class UIPropertyParser implements NodeParser< UIProperty > {
                 node.location
                 );
             errors.push( e );
-            return false;              
+            return false;
         }
 
+        if ( context.currentUIElement ) {
+            let e = new SyntaticException(
+                'The "' + node.nodeType + '" clause must be declared for a UI Element.',
+                node.location
+                );
+            errors.push( e );
+            return false;
+        }        
+
         // Adjusts the context
+        const wasInUIElement: boolean = context.inUIElement;
         context.resetInValues();
+        context.inUIElement = wasInUIElement;
         context.inUIProperty = true;
         context.currentUIProperty = node;
+
+        // Adds the node
+        context.currentUIElement.items.push( node );
 
         return true;
     }

@@ -1,5 +1,5 @@
 import { Table } from '../ast/Table';
-import { UIProperty } from '../ast/UIElement';
+import { UIElement, UIProperty } from '../ast/UIElement';
 import { ConstantBlock } from '../ast/ConstantBlock';
 import { RegexBlock } from '../ast/RegexBlock';
 import { Interaction } from '../ast/Interaction';
@@ -22,11 +22,13 @@ export class ParsingContext {
     inTestCase: boolean = false;
     inRegexBlock: boolean = false;
     inConstantBlock: boolean = false;
+    inUIElement: boolean = false;
     inUIProperty: boolean = false;
     inTable: boolean = false;
 
-    currentScenario: Scenario = null; // because it's allowed more than one declaration
-    currentTestCase: TestCase = null; // because it's allowed more than one declaration
+    currentScenario: Scenario = null;
+    currentTestCase: TestCase = null;
+    currentUIElement: UIElement = null;
     currentUIProperty: UIProperty = null;
     currentTable: Table = null;
 
@@ -42,6 +44,7 @@ export class ParsingContext {
         this.inTestCase = false;
         this.inRegexBlock = false;
         this.inConstantBlock = false;        
+        this.inUIElement = false;
         this.inUIProperty = false;
         this.inTable = false;
     }

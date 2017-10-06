@@ -38,6 +38,11 @@ export class UIElementParser implements NodeParser< UIElement > {
             return false;
         }
 
+        // Adjust the context
+        context.resetInValues();
+        context.inUIElement = true;
+        context.currentUIElement = node;
+
         // Checks the structure
         if ( ! owner.uiElements ) {
             owner.uiElements = [];
