@@ -25,6 +25,7 @@ export class UIPropertyRecognizer {
     /**
      * Recognize sentences of UI Elements using NLP.
      * 
+     * @param language Language to be used in the recognition.
      * @param nodes Nodes to be recognized.
      * @param errors Output errors.
      * @param warnings Output warnings.
@@ -32,12 +33,11 @@ export class UIPropertyRecognizer {
      * @throws Error If the NLP is not trained.
      */
     recognizeSentences(
+        language: string,
         nodes: UIProperty[],
         errors: LocatedException[],
         warnings: LocatedException[]        
     ) {
-        //console.log( nodes );
-
         const recognizer = new NodeSentenceRecognizer( this._nlp );
         const syntaxRules = this._syntaxRules;
 
@@ -47,7 +47,6 @@ export class UIPropertyRecognizer {
             errors: LocatedException[],
             warnings: LocatedException[]
         ) {
-
             const recognizedEntityNames: string[] = r.entities.map( e => e.entity );
 
             // Must have a UI Property
@@ -68,9 +67,7 @@ export class UIPropertyRecognizer {
             item.values = r.entities.filter( ( e, i ) => i !== propertyIndex ).map( e => e.value );
         };
 
-        const TARGET_INTENT = Intents.UI;
-        const TARGET_NAME = 'UI Element';        
-        recognizer.recognize( nodes, TARGET_INTENT, TARGET_NAME, errors, warnings, processor );
+        recognizer.recognize( language, nodes, Intents.UI, 'UI Element', errors, warnings, processor );
     }
 
 

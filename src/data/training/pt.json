@@ -3,15 +3,46 @@
         "entity": "testcase",
         "sentences": [
             "eu {ui_action} em {value}",
-            "eu {ui_action} com {value}",
-            "eu {ui_action} o {value}",
+            "eu clico em {value}",
 
-            "eu {ui_action_modifier} {ui_action} em {value}",
-            "eu {ui_action_modifier} {ui_action} com {value}",            
-            "eu {ui_action_modifier} {ui_action} o {value}",
+            "eu {ui_action} em {element}",
+            "eu clico em {element}",
+
+            "eu {ui_action} o {value}",
+            "eu digito o {value}",
+
+            "eu {ui_action} na opção {value}",
+            "eu clico na opção {value}",
+            
+            "eu {ui_action} {value} com {value}",
+            "eu preencho {value} com {value}",
+
+            "eu {ui_action} {value} com {number}",
+            "eu preencho {value} com {number}",
 
             "eu {ui_action} no {ui_element_type} {value}",
+            "eu {ui_action} no {ui_element_type} {value} com {value}",
+            "eu {ui_action} no {ui_element_type} {value} com {number}",
+
+            "eu {ui_action} no {ui_element_type} {element}",
+            "eu {ui_action} no {ui_element_type} {element} com {value}",
+            "eu {ui_action} no {ui_element_type} {element} com {number}",
+
             "eu {ui_action} o {ui_element_type} com {value}",
+            "eu {ui_action} no {ui_element_type} {value} com {value}",
+            "eu {ui_action} no {ui_element_type} {value} com {number}",
+
+            "eu {ui_action} o {ui_element_type} com {number}",
+
+            "eu {ui_action} em {element}",
+            "eu {ui_action} o {element}",
+            "eu {ui_action} na opção {element}",
+
+            "eu {ui_action} {element} com {value}",
+            "eu {ui_action} {element} com {number}",
+
+            "eu {ui_action_modifier} {ui_action} em {value}",
+            "eu {ui_action_modifier} {ui_action} o {value}",
 
             "eu {ui_action_modifier} {ui_action} no {ui_element_type} {value}",
             "eu {ui_action_modifier} {ui_action} o {ui_element_type} com {value}",

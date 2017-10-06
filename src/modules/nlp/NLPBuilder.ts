@@ -18,7 +18,7 @@ export class NLPBuilder {
         let conversor: NLPTrainingDataConversor = new NLPTrainingDataConversor();
         let data: NLPTrainingData = conversor.convert( translationMap, examples );
         let nlp = new NLP();
-        nlp.train( data );
+        nlp.train( language, data );
         return nlp;
     }
 

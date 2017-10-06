@@ -7,6 +7,8 @@ import { NLPResult, NLP } from "./NLP";
 import { NLPException } from "./NLPException";
 import { Entities } from "./Entities";
 import { Warning } from "../req/Warning";
+import { RuleBuilder, UI_ACTION_SYNTAX_RULES, DEFAULT_UI_ACTION_SYNTAX_RULE } from './SyntaxRules';
+import { Step } from '../ast/Step';
 
 /**
  * Test case sentence recognizer.
@@ -15,12 +17,16 @@ import { Warning } from "../req/Warning";
  */
 export class TestCaseSentenceRecognizer {
 
+    private _syntaxRules: any[];
+    
     constructor( private _nlp: NLP ) {
+        this._syntaxRules = this.buildSyntaxRules();
     }
 
     /**
      * Recognize sentences of test cases using NLP.
      * 
+     * @param language Language to be used in the recognition.
      * @param nodes Nodes to be recognized.
      * @param errors Output errors.
      * @param warnings Output warnings.
@@ -28,10 +34,13 @@ export class TestCaseSentenceRecognizer {
      * @throws Error If the NLP is not trained.
      */
     recognizeSentences(
+        language: string,
         nodes: UIProperty[],
         errors: LocatedException[],
         warnings: LocatedException[]        
     ) {
+        const recognizer = new NodeSentenceRecognizer( this._nlp );
+        const syntaxRules = this._syntaxRules;
 
         let processor: NLPResultProcessor = function(
             node: ContentNode,
@@ -39,45 +48,33 @@ export class TestCaseSentenceRecognizer {
             errors: LocatedException[],
             warnings: LocatedException[]
         ) {
-            /* TO-DO
-            const entityNames: string[] = r.entities.map( e => e.entity );
-            
-            // Must have a property
-            const propertyIndex: number = entityNames.indexOf( Entities.UI_PROPERTY );
+            const recognizedEntityNames: string[] = r.entities.map( e => e.entity );
+
+            // Must have a UI Action (? what about a state?)
+            const propertyIndex: number = recognizedEntityNames.indexOf( Entities.UI_ACTION );
             if ( propertyIndex < 0 ) {
                 const msg = 'Unrecognized property in the sentence "' + node.content + '".';
                 errors.push( new NLPException( msg, node.location ) );
                 return;
             }
-            const propertyContent = r.entities[ propertyIndex ].value;
+            const property: string = r.entities[ propertyIndex ].value;
 
-            // Its is recommended to have a verb
-            const verbIndex: number = entityNames.indexOf( Entities.UI_VERB );
-            if ( verbIndex < 0 ) {
-                const msg = 'Unrecognized verb in the sentence "' + node.content + '".';
-                warnings.push( new Warning( msg, node.location ) );
-            }
+            // Validating
+            recognizer.validate( node, recognizedEntityNames, syntaxRules, property, errors, warnings );
 
-            // Must have a value
-            const valueIndex: number = entityNames.indexOf( Entities.VALUE );
-            if ( valueIndex < 0 ) {
-                const msg = 'Unrecognized value in the sentence "' + node.content + '".';
-                errors.push( new NLPException( msg, node.location ) );
-                return;
-            }
-            const valueContent = r.entities[ valueIndex ].value;            
-
-            // Sets the item
-            let item: UIElementItem = node as UIElementItem;
-            item.property = propertyContent;
-            item.value = valueContent;
-            */
+            // Getting the values
+            let item: Step = node as Step;
+            
+            //item.values = r.entities.filter( ( e, i ) => i !== propertyIndex ).map( e => e.value );
         };
 
-        const TARGET_INTENT = Intents.TEST_CASE;
-        const TARGET_NAME = 'Test Case';        
-        ( new NodeSentenceRecognizer( this._nlp ) ).recognize(
-            nodes, TARGET_INTENT, TARGET_NAME, errors, warnings, processor );
+
+        recognizer.recognize( language, nodes, Intents.TEST_CASE, 'Test Case', errors, warnings, processor );
     }
+
+
+    public buildSyntaxRules(): object[] {
+        return ( new RuleBuilder() ).build( UI_ACTION_SYNTAX_RULES, DEFAULT_UI_ACTION_SYNTAX_RULE );
+    }    
 
 }

@@ -58,6 +58,7 @@
         },
 
         "ui_action_option": {
+            "with": [ "com" ],
             "up": [ "para cima", "acima" ],
             "down": [ "para baixo", "abaixo" ],
             "left": [ "para a esquerda", "a direita" ],

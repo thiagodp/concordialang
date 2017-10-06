@@ -8,15 +8,11 @@ import Bravey = require( '../../lib/bravey' ); // .js file
  */
 export class NLP {
 
-    private _trained: boolean = false;
-    private _nlp: any = {}; // Bravey.NLP.XXX
+    private _nlpMap: any = {}; // Maps language => Bravey.NLP
     private _additionalEntities: string[] = [];
     private _additionalRecognizers: Object[] = [];
 
-    constructor( useFuzzyProcessor: boolean = true ) {
-
-        this._nlp = useFuzzyProcessor
-            ? new Bravey.Nlp.Fuzzy() : new Bravey.Nlp.Sequential();
+    constructor( private _useFuzzyProcessor: boolean = true ) {
 
         // Add an entity named "value" and its recognizer
         this._additionalEntities.push( 'value' );
@@ -38,11 +34,18 @@ export class NLP {
     /**
      * Train the recognizer.
      * 
+     * @param language Target language.
      * @param data Data to be used in the training.
+     * @param intentNameFilter Filter for training only using certain intent. Optional. Default undefined.
      */
-    train( data: NLPTrainingData, intentNameFilter: string = undefined ): void {
+    public train( language: string, data: NLPTrainingData, intentNameFilter: string = undefined ): void {
 
-        this._trained = true;
+        if ( ! this._nlpMap[ language ] ) {
+            this._nlpMap[ language ] = { nlp: this.createNLP(), isTrained: true } as MappedNLP;
+        } else {
+            this._nlpMap[ language ].isTrained = true;
+        }
+        let nlp = this._nlpMap[ language ].nlp;
 
         // Add intents and their recognizers
         for ( let intent of data.intents ) {
@@ -56,7 +59,7 @@ export class NLP {
             this.addDefaultEntitiesTo( entities );
 
             // Add the intent with its entities
-            this._nlp.addIntent( intent.name, entities );
+            nlp.addIntent( intent.name, entities );
 
             // Add entity recognizers with matches. Each match have sample values, that 
             // are added to the recognizer.
@@ -67,29 +70,54 @@ export class NLP {
                         entityRec.addMatch( m.id, sample );
                     }
                 }
-                this._nlp.addEntity( entityRec );
+                nlp.addEntity( entityRec );
             }
         }
 
         // Add other needed recognizers
-        this.addDefaultRecognizersTo( this._nlp );
+        this.addDefaultRecognizersTo( nlp );
 
         // Train with examples that include the added entities
         let opt = this.documentTrainingOptions();
         for ( let ex of data.examples ) {
             for ( let sentence of ex.sentences ) {
-                this._nlp.addDocument( sentence, ex.entity, opt );
+                nlp.addDocument( sentence, ex.entity, opt );
             }
         }
     }
 
-    isTrained(): boolean {
-        return this._trained;
+    /**
+     * Returns true if the NLP is trained for a certain language.
+     * 
+     * @param language Language
+     */
+    public isTrained( language: string ): boolean {
+        if ( ( ! this._nlpMap[ language ] ) ) {
+            return false;
+        }
+        return this._nlpMap[ language ].isTrained;
     }
 
-    recognize( sentence: string, entity: string = '*' ): NLPResult | null {
-        let method = '*' == entity || ! entity ? 'anyEntity' : entity; // | "default"
-        return this._nlp.test( sentence, method );
+    /**
+     * Recognizes a sentece.
+     * 
+     * @param language Language to be used in the recognition.
+     * @param sentence Sentence to be recognized.
+     * @param entityFilter Filters the entity to be recognized. Defaults to '*' which means "all" .
+     */
+    public recognize( language: string, sentence: string, entityFilter: string = '*' ): NLPResult | null {
+        let nlp;
+        if ( ! this._nlpMap[ language ] ) {
+            // Creates an untrained NLP
+            this._nlpMap[ language ] = { nlp: this.createNLP(), isTrained: false } as MappedNLP;
+        }
+        nlp = this._nlpMap[ language ].nlp;
+        let method = '*' == entityFilter || ! entityFilter ? 'anyEntity' : entityFilter; // | "default"
+        return nlp.test( sentence, method );
+    }
+
+    private createNLP(): any {
+        return this._useFuzzyProcessor ? new Bravey.Nlp.Fuzzy() : new Bravey.Nlp.Sequential()        
     }
 
     private documentTrainingOptions(): Object {
@@ -210,6 +238,18 @@ export class NLP {
     }    
 
 }
+
+
+/**
+ * Mapped NLP
+ * 
+ * @author Thiago Delgado Pinto
+ */
+interface MappedNLP {
+    nlp: any;
+    isTrained: boolean;
+}
+
 
 /**
  * NLP Result. Currently it has the same structure of Bravey's NlpResult.

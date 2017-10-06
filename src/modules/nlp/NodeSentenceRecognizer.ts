@@ -29,6 +29,7 @@ export class NodeSentenceRecognizer {
     /**
      * Tries to recognize the sentences of the given nodes.
      * 
+     * @param language Language to be used in the recognition.
      * @param nodes Nodes with content to be analyzed.
      * @param targetIntent Target intent, to be used by the NLP.
      * @param targetDisplayName Target name to be displayed to the user in case of error.
@@ -39,6 +40,7 @@ export class NodeSentenceRecognizer {
      * @throws Error If the NLP is not trained.
      */
     public recognize(
+        language: string,
         nodes: ContentNode[],
         targetIntent: string,
         targetDisplayName: string,
@@ -47,12 +49,12 @@ export class NodeSentenceRecognizer {
         resultProcessor: NLPResultProcessor
     ): void {
 
-        if ( ! this._nlp.isTrained() ) {
-            throw new Error( 'A trained NLP is required.' );
+        if ( ! this._nlp.isTrained( language ) ) {
+            throw new Error( 'The NLP is not trained in ' + language );
         }
 
         for ( let node of nodes ) {
-            let r: NLPResult = this._nlp.recognize( node.content, targetIntent );
+            let r: NLPResult = this._nlp.recognize( language, node.content, targetIntent );
 
             // Not recognized?
             if ( ! r ) {

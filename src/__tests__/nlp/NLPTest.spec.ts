@@ -13,15 +13,20 @@ describe( 'NLPTest', () => {
         nlp = new NLP();
     } );
 
-    it( 'starts untrained', () => {
-        expect( nlp.isTrained() ).toBeFalsy();
+    it( 'starts untrained in any language', () => {
+        expect( nlp.isTrained( 'en' ) ).toBeFalsy();
+        expect( nlp.isTrained( 'pt' ) ).toBeFalsy();
     } );
 
-    it( 'can be trained', () => {
+    it( 'can be trained in a language', () => {
         let conversor: NLPTrainingDataConversor = new NLPTrainingDataConversor();
-        let data: NLPTrainingData = conversor.convert( {}, [] );        
-        nlp.train( data );
-        expect( nlp.isTrained() ).toBeTruthy();
+        let data: NLPTrainingData = conversor.convert( {}, [] );
+
+        nlp.train( 'en', data );
+        expect( nlp.isTrained( 'en' ) ).toBeTruthy();
+
+        nlp.train( 'pt', data );
+        expect( nlp.isTrained( 'pt' ) ).toBeTruthy();
     } );
 
 } );

@@ -41,25 +41,22 @@ See: `AbstractTestScript.ts`
             "commands": [
                 {
                     "location": { "column": 1, "line": 41 },
-                    "id": "a7b5c3d4",
                     "action": "see",
-                    "target": [ "Login" ],
+                    "targets": [ "Login" ],
                     "targetType": "text"
                 },
                 {
                     "location": { "column": 1, "line": 42 },
-                    "id": "a8b6c4d5",
                     "action": "fill",
-                    "target": [ "#username" ],
+                    "targets": [ "#username" ],
                     "targetType": "textbox",
                     "values": [ "bob" ],
                     "invalid": true
                 },
                 {
                     "location": { "column": 1, "line": 43 },
-                    "id": "s8a7s8",
                     "action": "click",
-                    "target": [ "#enter" ],
+                    "targets": [ "#enter" ],
                     "targetType": "button"
                 }                
             ]

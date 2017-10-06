@@ -30,13 +30,14 @@ describe( 'UIPropertyRecognizerTest', () => {
 
    describe( 'In Portuguese', () => {
 
-        let nlpPt = ( new NLPBuilder() ).buildTrainedNLP( 'pt' ); // pt == portuguese    
+        const LANGUAGE = 'pt';
+        let nlpPt = ( new NLPBuilder() ).buildTrainedNLP( LANGUAGE ); // pt == portuguese    
         let rec = new UIPropertyRecognizer( nlpPt ); // under test
 
         function shouldRecognize( sentence: string, property: string, value: string ): void {
             let node = makeNode( sentence );
             nodes.push( node );
-            rec.recognizeSentences( nodes, errors, warnings );
+            rec.recognizeSentences( LANGUAGE, nodes, errors, warnings );
             expect( errors ).toHaveLength( 0 );
             expect( warnings ).toHaveLength( 0 );
 
