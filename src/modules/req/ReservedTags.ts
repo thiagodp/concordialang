@@ -6,8 +6,12 @@
 export enum ReservedTags {
 
     GENERATED = 'generated', // example: @generated
+    
     FEATURE = 'feature', // example: @feature( login )
     SCENARIO = 'scenario', // example: @scenario( sucessful login )
-    INTERACTION = 'interaction' // example: @interaction( successful login )
+    INTERACTION = 'interaction', // example: @interaction( successful login )
+
+    GLOBAL = 'global', // example: @global
+    IGNORE = 'ignore' // example: @ignore
 
 }

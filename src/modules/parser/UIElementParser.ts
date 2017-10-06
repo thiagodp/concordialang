@@ -1,3 +1,4 @@
+import { ReservedTags } from '../req/ReservedTags';
 import { NodeTypes } from '../req/NodeTypes';
 import { NodeParser } from "./NodeParser";
 import { ParsingContext } from "./ParsingContext";
@@ -16,7 +17,7 @@ export class UIElementParser implements NodeParser< UIElement > {
     /** @inheritDoc */
     public analyze( node: UIElement, context: ParsingContext, it: NodeIterator, errors: Error[] ): boolean {
 
-        const GLOBAL_TAG_NAME = 'global';
+        const GLOBAL_TAG_NAME = ReservedTags.GLOBAL;
 
         // Adds backward tags
         if ( ! node.tags ) {
