@@ -23,7 +23,7 @@
 - [X] UI Element
 - [X] UI Element Items
 - [X] Table
-- [ ] Table Rows
+- [X] Table Rows
 - [ ] Database
 - [ ] Database Properties
 - [ ] File
@@ -47,8 +47,8 @@
 - [X] Constants
 - [X] UI Element
 - [X] UI Element Items
-- [ ] Table
-- [ ] Table Rows
+- [X] Table
+- [X] Table Rows
 - [ ] Database
 - [ ] Database Properties
 - [ ] File

@@ -1,3 +1,5 @@
+import { TableRowParser } from './TableRowParser';
+import { TableRow } from '../ast/Table';
 import { BlockItemParser } from './BlockItemParser';
 import { ConstantBlockParser } from './ConstantBlockParser';
 import { RegexBlockParser } from './RegexBlockParser';
@@ -20,6 +22,7 @@ import { StepAndParser } from './StepAndParser';
 import { StepOtherwiseParser } from './StepOtherwiseParser';
 import { UIElementParser } from './UIElementParser';
 import { UIPropertyParser } from './UIPropertyParser';
+import { TableParser } from './TableParser';
 
 /**
  * Builds an AST from the nodes detected by the lexer. It checks syntatic properties
@@ -50,6 +53,8 @@ export class Parser {
         this._parsersMap[ NodeTypes.REGEX_BLOCK ] = new RegexBlockParser();
         this._parsersMap[ NodeTypes.REGEX ] = new BlockItemParser();
         this._parsersMap[ NodeTypes.STATE ] = new StateParser();
+        this._parsersMap[ NodeTypes.TABLE ] = new TableParser();
+        this._parsersMap[ NodeTypes.TABLE_ROW ] = new TableRowParser();        
         this._parsersMap[ NodeTypes.UI_ELEMENT ] = new UIElementParser();
         this._parsersMap[ NodeTypes.UI_PROPERTY ] = new UIPropertyParser();
         this._parsersMap[ NodeTypes.TEST_CASE ] = new TestCaseParser();

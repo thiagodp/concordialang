@@ -1,3 +1,4 @@
+import { Table } from '../ast/Table';
 import { UIProperty } from '../ast/UIElement';
 import { ConstantBlock } from '../ast/ConstantBlock';
 import { RegexBlock } from '../ast/RegexBlock';
@@ -22,10 +23,12 @@ export class ParsingContext {
     inRegexBlock: boolean = false;
     inConstantBlock: boolean = false;
     inUIProperty: boolean = false;
+    inTable: boolean = false;
 
     currentScenario: Scenario = null; // because it's allowed more than one declaration
     currentTestCase: TestCase = null; // because it's allowed more than one declaration
     currentUIProperty: UIProperty = null;
+    currentTable: Table = null;
 
     constructor( doc?: Document ) {
         if ( doc ) {
@@ -40,5 +43,6 @@ export class ParsingContext {
         this.inRegexBlock = false;
         this.inConstantBlock = false;        
         this.inUIProperty = false;
+        this.inTable = false;
     }
 }

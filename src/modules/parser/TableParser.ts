@@ -18,6 +18,11 @@ export class TableParser implements NodeParser< Table > {
             context.doc.tables = [];
         }
 
+        // Adjust the content
+        context.resetInValues();
+        context.inTable = true;
+        context.currentTable = node;
+
         // Add the node
         context.doc.tables.push( node );
 

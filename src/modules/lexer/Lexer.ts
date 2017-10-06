@@ -83,10 +83,10 @@ export class Lexer {
             , new RegexBlockLexer( dictionary.regexBlock )
             , new RegexLexer( dictionary.is ) // "name" is "value"
             , new StateLexer( dictionary.state )
+            , new TableLexer( dictionary.table )
+            , new TableRowLexer()            
             , new UIElementLexer( dictionary.uiElement )
             , new UIPropertyLexer( new UIPropertyRecognizer( _nlp ) )
-            , new TableLexer( dictionary.table )
-            , new TableRowLexer()
             , new TextLexer() // captures any non-empty
         ];
     }
