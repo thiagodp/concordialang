@@ -1,6 +1,6 @@
 #language: pt
 
-Importar "login.feature"
+// Importar "login.feature"
 
 Funcionalidade: Z Login
 

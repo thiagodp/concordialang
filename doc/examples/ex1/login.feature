@@ -1,4 +1,4 @@
-//#language: pt
+#language: pt
 
 Importar "myfeature.feature"
 

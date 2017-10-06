@@ -11,6 +11,8 @@ export interface ProcessingObserver {
 
     onFileError( fileInfo: FileInfo, errors: Error[] ): void;
 
+    onFileWarning( fileInfo: FileInfo, warnings: Error[] ): void;
+
     onFileFinished( fileInfo: FileInfo, succeeded: boolean ): void;
 
     onError( errors: Error[] ): void;

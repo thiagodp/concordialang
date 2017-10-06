@@ -19,6 +19,7 @@ export class InputProcessor implements ProcessingObserver {
     private MAIN_SPINNER_KEY: string = '*'; // "const"    
     private _spinnersMap: Object = {};
     private _totalErrors: number = 0;
+    private _totalWarnings: number = 0;
 
     constructor( private _write: Function, private _ora: any, private _chalk: any ) {
         this._reqProcessor = new RequirementFilesProcessor( _write );
@@ -278,14 +279,22 @@ export class InputProcessor implements ProcessingObserver {
 
     /** @inheritDoc */
     public onFileError( fileInfo: FileInfo, errors: Error[] ): void {
-
         this._totalErrors += errors.length;
-
         const spinner = this.spinnerWithFileInfo( fileInfo );
         if ( spinner ) {
             spinner.fail( this.formatFileInfo( fileInfo ) );
         }
         this.printErrors( spinner, errors );
+    }
+    
+    /** @inheritDoc */
+    public onFileWarning( fileInfo: FileInfo, warnings: Error[] ): void {
+        this._totalWarnings += warnings.length;        
+        const spinner = this.spinnerWithFileInfo( fileInfo );
+        if ( spinner ) {
+            spinner.fail( this.formatFileInfo( fileInfo ) );
+        }
+        this.printWarnings( spinner, warnings );
     }    
     
     /** @inheritDoc */
@@ -311,4 +320,15 @@ export class InputProcessor implements ProcessingObserver {
             }
         }        
     }
+
+    private printWarnings( spinner: any, warnings: Error[], prefix: string = "\t" ): void {
+        for ( let warn of warnings ) {
+            let content = this._chalk.yellow( prefix + warn.message );
+            if ( spinner ) {
+                spinner.warn( content );
+            } else {
+                this._write( content );
+            }
+        }        
+    }    
 }

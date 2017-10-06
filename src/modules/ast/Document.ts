@@ -19,6 +19,7 @@ export interface Document {
 
     fileInfo?: FileInfo;
     fileErrors?: Error[];
+    fileWarnings?: Error[];
     
     language?: Language;
     imports?: Import[];

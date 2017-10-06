@@ -1,3 +1,5 @@
+import { NLPException } from '../nlp/NLPException';
+import { NLPBasedSentenceRecognizer } from '../nlp/NLPBasedSentenceRecognizer';
 import { LocatedException } from '../req/LocatedException';
 import { SpecAnalyzer } from '../sa/SpecAnalyzer';
 import { SingleDocumentAnalyzer } from '../sa/single/SingleDocumentAnalyzer';
@@ -32,12 +34,15 @@ export class RequirementFilesProcessor {
     private _dictLoader: KeywordDictionaryLoader =
         new JsonKeywordDictionaryLoader( this._dictMap );
     private _lexer: Lexer = new Lexer( 'en', this._dictLoader );
+    private _docProcessor: DocumentProcessor = new LexerProcessor( this._lexer );    
     private _parser: Parser = new Parser();
-    private _docProcessor: DocumentProcessor = new LexerProcessor( this._lexer );
     private _inputFileExtractor: InputFileExtractor = new InputFileExtractor();
+    private _nlp: NLP = new NLP();
+    private _nlpTrainer: NLPTrainer = new NLPTrainer();
+    private _nlpBasedSentenceRecognizer: NLPBasedSentenceRecognizer =
+        new NLPBasedSentenceRecognizer( this._nlp, 'en' );
     private _singleDocAnalyzer: SingleDocumentAnalyzer = new SingleDocumentAnalyzer();
     private _specAnalyzer: SpecAnalyzer = new SpecAnalyzer();
-
 
     constructor( private _write: Function ) {
     }
@@ -66,7 +71,8 @@ export class RequirementFilesProcessor {
             let normalizedFilePath = path.join( file, '' ); // @see https://nodejs.org/api/path.html#path_path_join_paths
             
             let doc: Document = {
-                fileErrors: []
+                fileErrors: [],
+                fileWarnings: []
             };
 
             let hadErrors = false;
@@ -86,7 +92,7 @@ export class RequirementFilesProcessor {
             } 
             */       
 
-            // LEXER
+            // LEXER ===
             // Process the file with the lexer processor
             fileProcessor.process( normalizedFilePath, this._docProcessor );
             // Get the lexed nodes
@@ -97,14 +103,29 @@ export class RequirementFilesProcessor {
             // Resets the lexer state (important!)
             this._lexer.reset();
     
-            // PARSER
-            // Parses the nodes
+            // PARSER ===
             this._parser.analyze( nodes, doc );
-            // Add errors found
-            hadErrors = hadErrors || this._parser.hasErrors();            
+            hadErrors = hadErrors || this._parser.hasErrors();
             this.addErrorsToDoc( this._parser.errors(), doc );
 
-            // NODE-BASED SEMANTIC ANALYSIS
+            // NLP ===
+            if ( ! this._nlp.isTrained( language ) ) {
+                this._nlpTrainer.trainNLP( this._nlp, language );
+                /*
+                if ( this._nlpTrainer.canBeTrained( language ) ) {
+                    this._nlpTrainer.trainNLP( this._nlp, language );
+                } else {
+                    let errors = [
+                        new Error( 'The NLP cannot be trained in ' + language + '.' )
+                    ];
+                    this.addErrorsToDoc( errors, doc );
+                }
+                */
+            }
+            this._nlpBasedSentenceRecognizer.recognizeSentencesInDocument(
+                doc, doc.fileErrors, doc.fileWarnings );
+
+            // NODE-BASED SEMANTIC ANALYSIS ===
             this._singleDocAnalyzer.analyze( doc, doc.fileErrors );
     
             //this._write( doc ); // <<< TEMPORARY
@@ -135,6 +156,11 @@ export class RequirementFilesProcessor {
         if ( observer ) {
             for ( let doc of spec.docs ) {
                 observer.onFileStarted( doc.fileInfo );
+                let hadWarnings = doc.fileWarnings.length > 0;
+                if ( hadWarnings ) {
+                    let sortedWarnings: LocatedException[] = this.sortErrorsByLocation( doc.fileWarnings );
+                    observer.onFileWarning( doc.fileInfo, sortedWarnings );
+                }                
                 let hadErrors = doc.fileErrors.length > 0;
                 if ( hadErrors ) {
                     let sortedErrors: LocatedException[] = this.sortErrorsByLocation( doc.fileErrors );
