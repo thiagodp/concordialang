@@ -1,4 +1,3 @@
-import { NLPTrainer } from '../nlp/NLPTrainer';
 import { LocatedException } from '../req/LocatedException';
 import { SpecAnalyzer } from '../sa/SpecAnalyzer';
 import { SingleDocumentAnalyzer } from '../sa/single/SingleDocumentAnalyzer';
@@ -18,6 +17,7 @@ import { Parser } from "../parser/Parser";
 import { SyncFileProcessor } from "../req/SyncFileProcessor";
 import { Spec } from "../ast/Spec";
 import { NLP } from '../nlp/NLP';
+import { NLPTrainer } from '../nlp/NLPTrainer';
 
 const path = require( 'path' );
 
@@ -31,7 +31,7 @@ export class RequirementFilesProcessor {
     private _dictMap = { 'en': new EnglishKeywordDictionary() };
     private _dictLoader: KeywordDictionaryLoader =
         new JsonKeywordDictionaryLoader( this._dictMap );
-    private _lexer: Lexer = new Lexer( new NLP(), new NLPTrainer(), 'en', this._dictLoader );
+    private _lexer: Lexer = new Lexer( 'en', this._dictLoader );
     private _parser: Parser = new Parser();
     private _docProcessor: DocumentProcessor = new LexerProcessor( this._lexer );
     private _inputFileExtractor: InputFileExtractor = new InputFileExtractor();

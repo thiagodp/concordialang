@@ -1,6 +1,3 @@
-import { TableLexer } from './TableLexer';
-import { NLPTrainer } from '../nlp/NLPTrainer';
-import { UIPropertyRecognizer } from '../nlp/UIPropertyRecognizer';
 import { UIPropertyLexer } from './UIPropertyLexer';
 import { UIElementLexer } from './UIElementLexer';
 import { ConstantBlock } from '../ast/ConstantBlock';
@@ -29,7 +26,7 @@ import { RegexLexer } from './RegexLexer';
 import { ConstantBlockLexer } from './ConstantBlockLexer';
 import { ConstantLexer } from './ConstantLexer';
 import { KeywordDictionary } from '../dict/KeywordDictionary';
-import { NLP } from '../nlp/NLP';
+import { TableLexer } from './TableLexer';
 import { TableRowLexer } from './TableRowLexer';
 
 /**
@@ -46,8 +43,6 @@ export class Lexer {
     /**
      * Constructs the lexer.
      * 
-     * @param _nlp Natural language processor to use.
-     * @param _nlpTrainer Makes the NLP be trained in the target language when the language changes.
      * @param _defaultLanguage Default language (e.g.: "en")
      * @param _dictionaryLoader Keyword dictionary loader.
      * @param _stopOnFirstError True for stopping on the first error found.
@@ -55,8 +50,6 @@ export class Lexer {
      * @throws Error if the given default language could not be found.
      */
     constructor(
-        private _nlp: NLP,
-        private _nlpTrainer: NLPTrainer,
         private _defaultLanguage: string,
         private _dictionaryLoader: KeywordDictionaryLoader,
         private _stopOnFirstError: boolean = false,
@@ -86,7 +79,7 @@ export class Lexer {
             , new TableLexer( dictionary.table )
             , new TableRowLexer()            
             , new UIElementLexer( dictionary.uiElement )
-            , new UIPropertyLexer( new UIPropertyRecognizer( _nlp ) )
+            , new UIPropertyLexer()
             , new TextLexer() // captures any non-empty
         ];
     }
@@ -201,11 +194,6 @@ export class Lexer {
      * @throws Error In case of the language is not available.
      */
     public changeLanguage( language: string ): KeywordDictionary {
-
-        if ( ! this._nlp.isTrained( language ) ) {
-            this._nlpTrainer.trainNLP( this._nlp, language );
-        }
-
         let dict = this._dictionaryLoader.load( language ); // throws Error
         for ( let lexer of this._lexers ) {
             if ( this.isAWordBasedLexer( lexer ) ) {

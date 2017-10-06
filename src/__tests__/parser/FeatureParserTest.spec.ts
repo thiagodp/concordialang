@@ -1,4 +1,3 @@
-import { NLPTrainer } from '../../modules/nlp/NLPTrainer';
 import { EnglishKeywordDictionary } from '../../modules/dict/EnglishKeywordDictionary';
 import { InMemoryKeywordDictionaryLoader } from '../../modules/dict/InMemoryKeywordDictionaryLoader';
 import { Node } from '../../modules/ast/Node';
@@ -8,7 +7,6 @@ import { NodeTypes } from '../../modules/req/NodeTypes';
 import { Feature } from '../../modules/ast/Feature';
 import { FeatureParser } from '../../modules/parser/FeatureParser';
 import { Lexer } from "../../modules/lexer/Lexer";
-import { NLP } from '../../modules/nlp/NLP';
 
 /**
  * @author Thiago Delgado Pinto
@@ -18,7 +16,7 @@ describe( 'FeatureParserTest', () => {
     let parser = new FeatureParser(); // under test
 
     let dictMap = { 'en': new EnglishKeywordDictionary() };
-    let lexer = new Lexer( new NLP(), new NLPTrainer(), 'en', new InMemoryKeywordDictionaryLoader( dictMap ) );    
+    let lexer = new Lexer( 'en', new InMemoryKeywordDictionaryLoader( dictMap ) );    
 
     let context: ParsingContext = null;
     let errors: Error[] = [];

@@ -1,11 +1,9 @@
-import { NLPTrainer } from '../../modules/nlp/NLPTrainer';
 import { EnglishKeywordDictionary } from '../../modules/dict/EnglishKeywordDictionary';
 import { KeywordDictionaryLoader } from '../../modules/dict/KeywordDictionaryLoader';
 import { Lexer } from "../../modules/lexer/Lexer";
 import { KeywordDictionary } from "../../modules/dict/KeywordDictionary";
 import { NodeTypes } from "../../modules/req/NodeTypes";
 import { JsonKeywordDictionaryLoader } from '../../modules/dict/JsonKeywordDictionaryLoader';
-import { NLP } from '../../modules/nlp/NLP';
 
 /**
  * @author Thiago Delgado Pinto
@@ -16,7 +14,7 @@ describe( 'LexerTest', () => {
         { 'en': new EnglishKeywordDictionary() }
     );
 
-    let lexer: Lexer = new Lexer( new NLP(), new NLPTrainer(), 'en', loader ); // under test
+    let lexer: Lexer = new Lexer( 'en', loader ); // under test
 
     // Helper function
     function assertLineExpectations( lines: any[] ) {

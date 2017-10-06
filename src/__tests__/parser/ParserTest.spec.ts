@@ -6,8 +6,6 @@ import { KeywordDictionary } from "../../modules/dict/KeywordDictionary";
 import { Document } from '../../modules/ast/Document';
 import { KeywordDictionaryLoader } from "../../modules/dict/KeywordDictionaryLoader";
 import { InMemoryKeywordDictionaryLoader } from "../../modules/dict/InMemoryKeywordDictionaryLoader";
-import { NLP } from '../../modules/nlp/NLP';
-import { NLPTrainer } from '../../modules/nlp/NLPTrainer';
 
 /**
  * @author Thiago Delgado Pinto
@@ -20,7 +18,7 @@ describe( 'ParserTest', () => {
         { 'en': new EnglishKeywordDictionary() }
     );
 
-    let lexer: Lexer = new Lexer( new NLP(), new NLPTrainer(), 'en', loader );
+    let lexer: Lexer = new Lexer( 'en', loader );
 
 
     beforeEach( () => {
