@@ -1,3 +1,4 @@
+import { Table } from './Table';
 import { ConstantBlock } from './ConstantBlock';
 import { FileInfo } from './FileInfo';
 import { Feature } from './Feature';
@@ -28,5 +29,6 @@ export interface Document {
     regexBlock?: RegexBlock; // public
     constantBlock?: ConstantBlock; // public
     uiElements?: UIElement[]; // public, but a feature may have them too
+    tables?: Table[]; // public
 
 }
