@@ -1,21 +1,18 @@
-// WARNING: WIP !!!
-
 import { Location } from '../ast/Location';
 
 /**
- * Abstract test script (ATS)
+ * Abstract test script (ATS).
  * 
  * @author Thiago Delgado Pinto
  */
 export class AbstractTestScript {
 
+    schemaVersion: string;
     sourceFile: string;
 
     feature: NamedATSElement;
     scenarios: NamedATSElement[] = [];
-    interactions: NamedATSElement[] = [];
     testcases: ATSTestCase[] = [];
-
 }
 
 /**
@@ -42,11 +39,25 @@ export class NamedATSElement extends ATSElement {
  * @author Thiago Delgado Pinto
  */
 export class ATSTestCase extends NamedATSElement {
+    invalid: boolean | undefined = undefined; // when true, it is expected that the test case will fail
     feature: string | undefined;
     scenario: string | undefined;
-    interaction: string  | undefined;
     commands: ATSCommand[] = [];
-    invalid: boolean | undefined = undefined; // if true, it is expected that the test case will fail
+}
+
+/**
+ * ATS command
+ * 
+ * @author Thiago Delgado Pinto
+ */
+export class ATSCommand extends ATSElement {
+    invalid: boolean | undefined = undefined; // when true, it is expected that the command will make the test to fail    
+    action: string;
+    modifier?: string | undefined = undefined; // modifies the action (e.g. "not")
+    options: string[] = []; // options for the action (e.g. [ "left" ])
+    targets: ATSTarget[] = [];
+    targetType: string | undefined = undefined; // optional for some targets
+    values: string[] | number[] = []; // optional for some actions
 }
 
 /**
@@ -57,17 +68,4 @@ export class ATSTestCase extends NamedATSElement {
 export class ATSTarget {
     type: 'web' | 'android' | 'ios' | 'windows' | 'linux';
     name: string;
-}
-
-/**
- * ATS command
- * 
- * @author Thiago Delgado Pinto
- */
-export class ATSCommand extends ATSElement {
-    action: string;
-    targets: object[] = [];
-    targetType: string | undefined = undefined; // optional for some targets
-    value: string | number | undefined = undefined; // optional for some actions
-    invalid: boolean | undefined = undefined; // if true, it is expected that the test case will fail because of this value
 }
