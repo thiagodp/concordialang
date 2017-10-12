@@ -6,4 +6,5 @@ import { LocatedException } from './LocatedException';
  * @author Thiago Delgado Pinto
  */
 export class Warning extends LocatedException {
+    name = 'Warning';
 }
