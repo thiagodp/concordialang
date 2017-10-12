@@ -1,5 +1,3 @@
-// WARNING: WIP !!!
-
 import { SpecFilter } from "../tc/SpecFilter";
 
 /**
@@ -26,4 +24,54 @@ export class TestScriptExecutionFilter extends SpecFilter {
  * @author Thiago Delgado Pinto
  */
 export class TestScriptExecutionResult {
+
+    schemaVersion: string;
+    sourceFile: string;
+    plugin: {
+        name: string;
+        description: string;
+        version: string;
+        targets: string[];
+    };
+    started: string; // UTC timestamp
+    finished: string; // UTC timestamp    
+    durationMs: number; // milliseconds
+    total: {
+        tests: number;
+        passed: number;
+        skipped: number;
+        failed: number;
+        error: number;
+        unknown: number;
+    };
+    results: TestSuiteResult[];
+}
+
+/**
+ * Test suite result.
+ * 
+ * @author Thiago Delgado Pinto
+ */
+export class TestSuiteResult {
+    suite: string;
+    methods: TestMethodResult[];
+}
+
+/**
+ * Test script method result.
+ * 
+ * @author Thiago Delgado Pinto
+ */
+export class TestMethodResult {
+    name: string;
+    status: 'passed' | 'failed' | 'skipped' | 'error' | 'unknown';
+    durationMs: number; // milliseconds
+    isForSetup: boolean | undefined; // e.g. setUp/setUpOnce/before/beforeAll
+    exception: {
+        type: string;
+        message: string;
+        file: string;
+        line: number;
+        stackTrace: string;
+    } | undefined;
 }
