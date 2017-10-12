@@ -12,8 +12,9 @@ WARNING: WIP
     "sourceFile": "somefile.testcase.json",
     "plugin": {
         "name": "concordialang-codeceptjs",
+        "description": "Generates JavaScript tests for CodeceptJS"
         "version": "1.0",
-        "frameworks": [ "CodeceptJS" ]
+        "targets": [ "CodeceptJS" ]
     },
     "started": "2017-09-29T21:59:18.236Z",
     "finished": "2017-09-29T22:03:18.236Z",
