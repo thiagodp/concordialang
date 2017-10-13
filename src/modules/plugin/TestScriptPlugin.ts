@@ -3,6 +3,11 @@ import { AbstractTestScript } from '../ts/AbstractTestScript';
 import { TestScriptGenerationOptions, TestScriptGenerationResult } from "../ts/TestScriptGeneration";
 import { TestScriptExecutionResult, TestScriptExecutionOptions } from "../ts/TestScriptExecution";
 
+/**
+ * Test script plugin.
+ * 
+ * @author Thiago Delgado Pinto
+ */
 export interface TestScriptPlugin extends Plugin {
 
     /**

@@ -13,7 +13,7 @@ An [Agile Software](https://en.wikipedia.org/wiki/Agile_software_development) Re
 ## Install
 
 ```console
-npm install -g concordia
+npm install -g concordialang
 ```
 
 We also recommend you to install the [Concordia plug-in for CodeceptJS](#) whether you want to generate JavaScript tests for web applications.
@@ -30,47 +30,21 @@ We also recommend you to install the [Concordia plug-in for CodeceptJS](#) wheth
 
 ### 1. Write the feature
 ```concordia
-Feature: Login
-  Given that I ...
-
-Scenario: Successful Login
-  ...
-
-User Interface: Login
-  - "Login Screen" is the url "/login"
-  - "Username" is a textbox with id "user",
-    value comes from "Users" at column "username"
-  - "Password" is a textbox with id "pass",
-    value comes from "Users" at column "password" and line as "username"
-  - "Enter" is a button with id "enter"
-
-Data table: Users
-  | username | password  |
-  | alice    | d3ar4lice |
-  | bob      | b0bp4$s   |
-
-@scenario( Successful Login )
-@template
-Interaction: Sucessful Login Interaction
-  Given that I can see the Login Screen
-  When I fill the Username
-    And the Password
-    And I click on Enter
-  Then I can see the text "Welcome"
+...
 ```
 
 ### 2. Use the tool
 
 ```console
-$ clc --plugin=codeceptjs
+$ concordia --plugin=codeceptjs
 ```
 
-This will generate 5 tests for CodeceptJS, including this one:
+This will generate tests for CodeceptJS, including this one:
 
 ```javascript
 Feature( 'Login', () => {
     Scenario(
-        'Successful Login | Sucessful Login Interaction | Valid values',
+        'Completes the login successfully when entering valid credentials',
         ( I ) => {
         I.amOnPage( '/login' );
         I.fillField( '#username', 'alice' );
@@ -94,6 +68,41 @@ And it will also run the tests:
 
 Concordia can generate test cases from [funcional requirements](https://en.wikipedia.org/wiki/Functional_requirement). Although it is not able to generate test cases for [non-functional requirements](https://en.wikipedia.org/wiki/Non-functional_requirement) automatically, you can create them manually with traditional BDD tools.
 
+### Covered rules for test data:
+
+Each input data will receive values according to these rules:
+
+```
++---------------------------+---------------+--------------------+----------------+
+| RULE                      |   VALUE TYPE  | VALID              | INVALID        |
+|                           | Single | List |                    |                |
++---------------------------+--------+------+--------------------+----------------+
+| mandatory input           | yes    | yes  | valid random       | empty value    |
+| minimum length boundaries | yes    | N/A  | value, value + 1   | value - 1      |
+| maximum length boundaries | yes    | N/A  | value, value - 1   | value + 1      |
+| minimum value boundaries  | yes    | N/A  | value, next value  | prior value    |
+| maximum value boundaries  | yes    | N/A  | value, prior value | next value     |  
+| first last                | N/A    | yes  | yes                | N/A            |
+| last value                | N/A    | yes  | yes                | N/A            |
+| middle length             | yes    | N/A  | yes                | N/A            |
+| middle value              | yes    | yes  | yes                | N/A            |
+| random value              | yes    | yes  | valid random       | invalid random |
+| zero                      | yes    | N/A  | yes                | yes            |
+| regex-based value         | yes    | N/A  | yes                | yes            |
++---------------------------+--------+------+--------------------+----------------+
+| MAXIMUM POSSIBLE TESTS    | 13     | 5    | 13                 | 8              |
++---------------------------+--------+------+--------------------+----------------+
+```
+
+### Covered rules for scenarios:
+
+1. Each scenario will be covered at least once, unless in case of the test case generation to be filtered.
+2. 
+
+Some details:
+1. A scenario shall include all the steps of called scenarios.
+2. A called scenario will receive valid values, in order to complete successfully, unless it is designed to not complete successfully.
+
 ## Tutorial
 
 - [Writing your first feature](doc/tutorial/first-feature.md)
@@ -107,8 +116,6 @@ Concordia can generate test cases from [funcional requirements](https://en.wikip
 
 ## License
 
-`Copyright (c) 2017 by Thiago Delgado Pinto`
+Copyright (c) 2017 by Thiago Delgado Pinto
 
-![AGPL](http://www.gnu.org/graphics/agplv3-88x31.png)   
-
-This software is [licensed](LICENSE.txt) under the GNU Affero General Public License.
+![AGPL](http://www.gnu.org/graphics/agplv3-88x31.png) This software is [licensed](LICENSE.txt) under the GNU Affero General Public License.
