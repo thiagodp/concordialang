@@ -1,4 +1,4 @@
-import { ATSCommand } from "../../../modules/ts/AbstractTestScript";
+import { ATSCommand } from "../../modules/ts/AbstractTestScript";
 import { render } from "mustache";
 
 /**

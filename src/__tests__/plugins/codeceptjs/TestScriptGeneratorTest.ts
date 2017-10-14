@@ -1,4 +1,4 @@
-import { TestScriptGenerator } from "../../../modules/gen/TestScriptGenerator";
+import { TestScriptGenerator } from "../../../plugins/codeceptjs/TestScriptGenerator";
 
 /**
 * @author Matheus Eller Fagundes

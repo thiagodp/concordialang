@@ -1,5 +1,5 @@
-import { ActionMapper } from "../../../data/plugins/CodeceptJS";
 import { ATSCommand } from "../../../modules/ts/AbstractTestScript";
+import { ActionMapper } from "../../../plugins/codeceptjs/ActionMapper";
 
 /**
 * @author Matheus Eller Fagundes

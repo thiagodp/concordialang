@@ -1,7 +1,7 @@
 import { TestScriptPluginFinder } from "./TestScriptPluginFinder";
 import { TestScriptPlugin } from './TestScriptPlugin';
 
-import { CodeceptJS } from '../../data/plugins/CodeceptJS';
+import { CodeceptJS } from '../../plugins/CodeceptJS';
 
 /**
  * Returns the default test script plugins.

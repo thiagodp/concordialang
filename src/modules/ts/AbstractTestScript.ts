@@ -20,8 +20,8 @@ export class AbstractTestScript {
  * 
  * @author Thiago Delgado Pinto
  */
-export class ATSElement {
-    location: Location;
+export interface ATSElement {
+    location?: Location;
 }
 
 /**
@@ -29,7 +29,7 @@ export class ATSElement {
  * 
  * @author Thiago Delgado Pinto
  */
-export class NamedATSElement extends ATSElement {
+export interface NamedATSElement extends ATSElement {
     name: string;
 }
 
@@ -38,11 +38,11 @@ export class NamedATSElement extends ATSElement {
  * 
  * @author Thiago Delgado Pinto
  */
-export class ATSTestCase extends NamedATSElement {
-    invalid: boolean | undefined = undefined; // when true, it is expected that the test case will fail
+export interface ATSTestCase extends NamedATSElement {
+    invalid: boolean | undefined; // when true, it is expected that the test case will fail
     feature: string | undefined;
     scenario: string | undefined;
-    commands: ATSCommand[] = [];
+    commands: ATSCommand[];
 }
 
 /**
@@ -50,14 +50,14 @@ export class ATSTestCase extends NamedATSElement {
  * 
  * @author Thiago Delgado Pinto
  */
-export class ATSCommand extends ATSElement {
-    invalid: boolean | undefined = undefined; // when true, it is expected that the command will make the test to fail    
+export interface ATSCommand extends ATSElement {
+    invalid?: boolean; // when true, it is expected that the command will make the test to fail    
     action: string;
-    modifier?: string | undefined = undefined; // modifies the action (e.g. "not")
-    options: string[] = []; // options for the action (e.g. [ "left" ])
-    targets: ATSTarget[] = [];
-    targetType: string | undefined = undefined; // optional for some targets
-    values: string[] | number[] = []; // optional for some actions
+    modifier?: string; // modifies the action (e.g. "not")
+    options?: string[]; // options for the action (e.g. [ "left" ])
+    targets: ATSTarget[] | string[];
+    targetType?: string; // optional for some targets
+    values?: string[] | number[]; // optional for some actions
 }
 
 /**
@@ -65,7 +65,7 @@ export class ATSCommand extends ATSElement {
  * 
  * @author Thiago Delgado Pinto
  */
-export class ATSTarget {
+export interface ATSTarget {
     type: 'web' | 'android' | 'ios' | 'windows' | 'linux';
     name: string;
 }

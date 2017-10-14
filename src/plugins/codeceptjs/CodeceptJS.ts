@@ -1,7 +1,7 @@
-import { TestScriptPlugin } from '../../../modules/plugin/TestScriptPlugin';
-import { AbstractTestScript } from '../../../modules/ts/AbstractTestScript';
-import { TestScriptGenerationOptions, TestScriptGenerationResult } from '../../../modules/ts/TestScriptGeneration';
-import { TestScriptExecutionOptions, TestScriptExecutionResult } from '../../../modules/ts/TestScriptExecution';
+import { TestScriptPlugin } from '../../modules/plugin/TestScriptPlugin';
+import { AbstractTestScript } from '../../modules/ts/AbstractTestScript';
+import { TestScriptGenerationOptions, TestScriptGenerationResult } from '../../modules/ts/TestScriptGeneration';
+import { TestScriptExecutionOptions, TestScriptExecutionResult } from '../../modules/ts/TestScriptExecution';
 
 /**
  * Plugin for CodeceptJS.

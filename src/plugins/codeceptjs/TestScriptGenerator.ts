@@ -1,6 +1,6 @@
 import { ActionMapper } from "./ActionMapper";
 import { render } from "mustache";
-import { ATSCommand } from "../../../modules/ts/AbstractTestScript";
+import { ATSCommand } from "../../modules/ts/AbstractTestScript";
 const dedent = require('dedent-js');
 
 /**
