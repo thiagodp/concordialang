@@ -44,6 +44,7 @@
     "he": "^1.1.1",
     "is-my-json-valid": "^2.16.1",
     "js-joda": "^1.5.2",
+    "json-schema-generator": "^2.0.3",
     "meow": "^3.7.0",
     "mustache": "^2.3.0",
     "node-cmd": "^3.0.0",
