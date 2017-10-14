@@ -13,27 +13,27 @@ export class CodeceptJS implements TestScriptPlugin {
     private VERSION: string = '0.1';
 
     /** @inheritDoc */
-    isFake(): boolean {
+    public isFake(): boolean {
         return false;    
     }
     
     /** @inheritDoc */
-    name(): string {
+    public name(): string {
         return 'concordialang-codeceptjs';
     }
 
     /** @inheritDoc */
-    description(): string {
+    public description(): string {
         return 'Generate test scripts for CodeceptJS'
     }
 
     /** @inheritDoc */
-    version(): string {
+    public version(): string {
         return this.VERSION;
     }
 
     /** @inheritDoc */
-    targets(): string[] {
+    public targets(): string[] {
         return [ 'CodeceptJS' ];
     }  
 
