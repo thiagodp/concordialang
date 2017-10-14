@@ -1,123 +1,12 @@
-import { AbstractTestScript, ATSCommand } from '../../modules/ts/AbstractTestScript';
-import { TestScriptGenerationOptions, TestScriptGenerationResult } from '../../modules/ts/TestScriptGeneration';
-import { TestScriptExecutionOptions, TestScriptExecutionResult } from '../../modules/ts/TestScriptExecution';
-import { TestScriptPlugin } from '../../modules/plugin/TestScriptPlugin';
-
+import { ATSCommand } from "../../../modules/ts/AbstractTestScript";
 import { render } from "mustache";
-import path = require('path');
-import fs = require('fs');
-const dedent = require('dedent-js');
-
-/**
- * Plugin for CodeceptJS.
- * 
- * @author Thiago Delgado Pinto
- */
-export class CodeceptJS implements TestScriptPlugin {
-
-    private VERSION: string = '0.1';
-
-    /** @inheritDoc */
-    isFake(): boolean {
-        return false;    
-    }
-    
-    /** @inheritDoc */
-    name(): string {
-        return 'concordialang-codeceptjs';
-    }
-
-    /** @inheritDoc */
-    description(): string {
-        return 'Generate test scripts for CodeceptJS'
-    }
-
-    /** @inheritDoc */
-    version(): string {
-        return this.VERSION;
-    }
-
-    /** @inheritDoc */
-    targets(): string[] {
-        return [ 'CodeceptJS' ];
-    }  
-
-    /** @inheritDoc */
-    public generateCode(
-        abstractTestScripts: AbstractTestScript[],
-        options: TestScriptGenerationOptions
-    ): TestScriptGenerationResult {
-        throw new Error('Not implemented yet.');
-    }
-
-    /** @inheritDoc */
-    public executeCode( options: TestScriptExecutionOptions ): TestScriptExecutionResult {
-        throw new Error('Not implemented yet.');
-    }
-
-    /** @inheritDoc */
-    public convertReportFile( filePath: string ): TestScriptExecutionResult {
-        throw new Error('Not implemented yet.');
-    }
-}
-
-
-
-/**
- * Uses [Mustache](https://github.com/janl/mustache.js/) to parse abstract test cases
- * to CodeceptJS code.
- * 
- * @author Matheus Eller Fagundes
- */
-class TestScriptGenerator {
-
-    private template: string;
-    private mapper: ActionMapper;
-
-    constructor() {
-        this.template =
-        dedent
-        `/** Generated with <3 by Concordia. Run the following tests using CodeceptJS. */
-
-        Feature('{{feature.name}}');
-        
-        {{#scenarios}}
-        Scenario('{{name}}', (I) => {
-            {{#commands}}
-            {{{.}}}
-            {{/commands}}
-        });
-        
-        {{/scenarios}}`;
-        this.mapper = new ActionMapper();
-    }
-    
-    public generateScript( testCase: any ): string {
-        testCase.testcases.forEach( ( test: any ) => {
-            let commands: Array<any> = [];
-            test.commands.forEach( ( cmd: any ) => {
-                let command: ATSCommand = cmd;
-                commands.push( this.mapper.map( command ) );
-            });
-            testCase.scenarios.forEach( ( scenario: any ) => {
-                if ( scenario.name === test.scenario ) {
-                    scenario.commands = commands;
-                }
-            });
-        } );
-        return render(this.template, testCase);
-    }
-
-}
-    
-
 
 /**
  * Translates abstract test commands to CodeceptJS commands.
  * 
  * @author Matheus Eller Fagundes
  */
-class ActionMapper {
+export class ActionMapper {
 
     private commandMap: Array<{ action: string, targetType?: string, default? :boolean, template: string }> = [
         //Append
