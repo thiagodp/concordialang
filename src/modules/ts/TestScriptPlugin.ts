@@ -1,14 +1,30 @@
-import { Plugin } from './Plugin';
-import { AbstractTestScript } from '../ts/AbstractTestScript';
-import { TestScriptGenerationOptions, TestScriptGenerationResult } from "../ts/TestScriptGeneration";
-import { TestScriptExecutionResult, TestScriptExecutionOptions } from "../ts/TestScriptExecution";
+import { AbstractTestScript } from './AbstractTestScript';
+import { TestScriptGenerationOptions, TestScriptGenerationResult } from "./TestScriptGeneration";
+import { TestScriptExecutionResult, TestScriptExecutionOptions } from "./TestScriptExecution";
 
 /**
  * Test script plugin.
  * 
  * @author Thiago Delgado Pinto
  */
-export interface TestScriptPlugin extends Plugin {
+export interface TestScriptPlugin {
+
+
+    /** Returns true if the plugin is fake (i.e. for demonstration purposes). */
+    isFake(): boolean;
+
+    /** Returns the plugin name. */
+    name(): string;
+
+    /** Returns the plugin description. */
+    description(): string;
+
+    /** Returns the plugin version. */
+    version(): string;
+
+    /** Returns the target technologies (e.g. frameworks). */
+    targets(): string[];
+        
 
     /**
      * Generate source code from abstract test scripts, according to the given options.

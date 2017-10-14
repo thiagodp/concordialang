@@ -1,4 +1,4 @@
-import { TestScriptPlugin } from '../../modules/plugin/TestScriptPlugin';
+import { TestScriptPlugin } from '../../modules/ts/TestScriptPlugin';
 import { AbstractTestScript } from '../../modules/ts/AbstractTestScript';
 import { TestScriptGenerationOptions, TestScriptGenerationResult } from '../../modules/ts/TestScriptGeneration';
 import { TestScriptExecutionOptions, TestScriptExecutionResult } from '../../modules/ts/TestScriptExecution';
