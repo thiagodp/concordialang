@@ -4,11 +4,11 @@ import glob = require( 'glob' );
 import crypto = require( 'crypto' );
 
 /**
- * Input file extractor
+ * File utilities.
  * 
  * @author  Thiago Delgado Pinto
  */
-export class InputFileExtractor {
+export class FileUtil {
 
     /**
      * Returns true if the given directory exists.
@@ -103,6 +103,6 @@ export class InputFileExtractor {
 
     extractFileExtension( file: string ): string {
         return path.extname( file );
-    }    
+    }
 
 }

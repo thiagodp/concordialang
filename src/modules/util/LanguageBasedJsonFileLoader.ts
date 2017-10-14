@@ -1,4 +1,4 @@
-import { InputFileExtractor } from '../util/InputFileExtractor';
+import { FileUtil } from './FileUtil';
 
 var fs = require( 'fs' );
 import path = require( 'path' );
@@ -41,7 +41,7 @@ export class LanguageBasedJsonFileLoader {
         }
 
         let filePath = this.makeLanguageFilePath( language );
-        let fileExists = 0 === ( new InputFileExtractor() ).nonExistentFiles( [ filePath ] ).length;
+        let fileExists = 0 === ( new FileUtil() ).nonExistentFiles( [ filePath ] ).length;
         if ( ! fileExists ) {
             throw new Error( 'File not found: ' + filePath );
         }

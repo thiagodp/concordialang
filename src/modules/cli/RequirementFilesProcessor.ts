@@ -4,7 +4,7 @@ import { LocatedException } from '../req/LocatedException';
 import { SpecAnalyzer } from '../sa/SpecAnalyzer';
 import { SingleDocumentAnalyzer } from '../sa/single/SingleDocumentAnalyzer';
 import { FileInfo } from '../ast/FileInfo';
-import { InputFileExtractor } from '../util/InputFileExtractor';
+import { FileUtil } from '../util/FileUtil';
 import { ProcessingObserver } from './ProcessingObserver';
 import { EnglishKeywordDictionary } from '../dict/EnglishKeywordDictionary';
 import { Document } from '../ast/Document';
@@ -36,7 +36,7 @@ export class RequirementFilesProcessor {
     private _lexer: Lexer = new Lexer( 'en', this._dictLoader );
     private _docProcessor: DocumentProcessor = new LexerProcessor( this._lexer );    
     private _parser: Parser = new Parser();
-    private _inputFileExtractor: InputFileExtractor = new InputFileExtractor();
+    private _fileUtil: FileUtil = new FileUtil();
     private _nlp: NLP = new NLP();
     private _nlpTrainer: NLPTrainer = new NLPTrainer();
     private _nlpBasedSentenceRecognizer: NLPBasedSentenceRecognizer =
@@ -79,7 +79,7 @@ export class RequirementFilesProcessor {
 
             let fileInfo: FileInfo = {
                 path: normalizedFilePath,
-                hash: this._inputFileExtractor.hashOfFile( normalizedFilePath, encoding ) // Compute file hash
+                hash: this._fileUtil.hashOfFile( normalizedFilePath, encoding ) // Compute file hash
             };
 
             // Adds the file info to the document

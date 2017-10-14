@@ -2,7 +2,7 @@ import { NodeBasedSDA } from './NodeBasedSDA';
 import { LocatedException } from '../../req/LocatedException';
 import { Import } from '../../ast/Import';
 import { DuplicationChecker } from '../../util/DuplicationChecker';
-import { InputFileExtractor } from "../../util/InputFileExtractor";
+import { FileUtil } from "../../util/FileUtil";
 import { SemanticException } from "../SemanticException";
 import { Document } from '../../ast/Document';
 
@@ -15,7 +15,7 @@ const path = require( 'path' );
  */
 export class ImportSDA implements NodeBasedSDA {
 
-    private _fileUtil: InputFileExtractor = new InputFileExtractor();
+    private _fileUtil: FileUtil = new FileUtil();
 
     /** @inheritDoc */
     public analyze( doc: Document, errors: LocatedException[] ) {

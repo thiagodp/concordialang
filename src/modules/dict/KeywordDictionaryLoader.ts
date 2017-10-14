@@ -1,4 +1,3 @@
-import { InputFileExtractor } from '../util/InputFileExtractor';
 import { KeywordDictionary } from './KeywordDictionary';
 
 /**

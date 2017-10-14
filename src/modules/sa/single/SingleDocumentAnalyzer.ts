@@ -3,7 +3,6 @@ import { ScenarioSDA } from './ScenarioSDA';
 import { LocatedException } from '../../req/LocatedException';
 import { ImportSDA } from './ImportSDA';
 import { SemanticException } from '../SemanticException';
-import { InputFileExtractor } from '../../util/InputFileExtractor';
 import { Import } from '../../ast/Import';
 import { Document } from '../../ast/Document';
 import { SemanticAnalysisContext } from '../SemanticAnalysisContext';

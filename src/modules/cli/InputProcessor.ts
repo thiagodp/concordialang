@@ -1,6 +1,6 @@
 import { ProcessingObserver } from './ProcessingObserver';
 import { RequirementFilesProcessor } from './RequirementFilesProcessor';
-import { InputFileExtractor } from '../util/InputFileExtractor';
+import { FileUtil } from '../util/FileUtil';
 import cliTruncate = require('cli-truncate');
 import { FileInfo } from "../ast/FileInfo";
 
@@ -11,7 +11,7 @@ import { FileInfo } from "../ast/FileInfo";
  */
 export class InputProcessor implements ProcessingObserver {
 
-    private _inputFileExtractor: InputFileExtractor = new InputFileExtractor();
+    private _fileUtil: FileUtil = new FileUtil();
     private _defaultExtensions: Array< string > = [ 'asl', 'feature', 'feat' ];
     private _defaultParamSeparator: string = ',';
     private _reqProcessor: RequirementFilesProcessor;
@@ -113,13 +113,13 @@ export class InputProcessor implements ProcessingObserver {
         if ( 1 == input.length ) {
             let dir = input[ 0 ];
             // Check directory
-            if ( ! this._inputFileExtractor.directoryExists( dir ) ) {
+            if ( ! this._fileUtil.directoryExists( dir ) ) {
                 let msg = 'Directory ' + this._chalk.yellow( dir ) + ' does not exist.';
                 throw new Error( msg );
             }
             spinner.start( 'Searching for ' + readableExtensions + ' files in "' + color( dir ) + '" ...' );
             // Extract files
-            files = this._inputFileExtractor.extractFilesFromDirectory( dir, this._defaultExtensions );
+            files = this._fileUtil.extractFilesFromDirectory( dir, this._defaultExtensions );
             // Exclude files to ignore
             if ( 'string' === typeof flags.ignore ) {
                 // Get ignored files and transform them to lower case
@@ -155,7 +155,7 @@ export class InputProcessor implements ProcessingObserver {
             files = Array.from( new Set( files ) );
             // Remove files with invalid extensions
             let lengthBefore: number = files.length;
-            files = this._inputFileExtractor.filterFilenames( files, this._defaultExtensions );
+            files = this._fileUtil.filterFilenames( files, this._defaultExtensions );
             let lengthAfter: number = files.length;
             if ( lengthBefore != lengthAfter ) {
                 let diff = lengthBefore - lengthAfter;
@@ -167,7 +167,7 @@ export class InputProcessor implements ProcessingObserver {
             }
             // Check files
             spinner.info( 'Checking ' + color( lengthAfter ) + ' file' + ( lengthAfter > 1 ? 's': '' ) + '...' );
-            let nonExistentFiles: Array< string > = this._inputFileExtractor.nonExistentFiles( files );
+            let nonExistentFiles: Array< string > = this._fileUtil.nonExistentFiles( files );
             if ( nonExistentFiles.length > 0 ) {
                 let msg = 'Files not found: ' + color( nonExistentFiles.length ) + "\n";
                 for ( let i in nonExistentFiles ) {

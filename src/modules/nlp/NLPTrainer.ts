@@ -1,4 +1,4 @@
-import { InputFileExtractor } from '../util/InputFileExtractor';
+import { FileUtil } from '../util/FileUtil';
 import { NLPEntityUsageExample, NLPTrainingData } from "./NLPTrainingData";
 import { NLPTrainingDataConversor } from "./NLPTrainingDataConversor";
 import { NLP } from "./NLP";
@@ -12,7 +12,7 @@ import path = require( 'path' );
  */
 export class NLPTrainer {
 
-    private _fileUtil = new InputFileExtractor();
+    private _fileUtil = new FileUtil();
 
     constructor( private _dataDir = path.join( process.cwd(), 'data/' ) ) {
     }
