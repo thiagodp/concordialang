@@ -24,6 +24,9 @@ export interface TestScriptPlugin {
 
     /** Returns the target technologies (e.g. frameworks). */
     targets(): string[];
+
+    /** Returns the authors of the plugin. */
+    authors(): string[];
         
 
     /**
