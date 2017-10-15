@@ -35,7 +35,15 @@ export class CodeceptJS implements TestScriptPlugin {
     /** @inheritDoc */
     public targets(): string[] {
         return [ 'CodeceptJS' ];
-    }  
+    }
+
+    /** @inheritDoc */
+    public authors(): string[] {
+        return [
+            'Matheus Eller Fagundes (matheusefagundes@gmail.com)',
+            'Thiago Delgado Pinto (thiago-dp@bol.com.br)'
+        ];
+    }    
 
     /** @inheritDoc */
     public generateCode(
