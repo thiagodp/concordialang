@@ -58,6 +58,7 @@
         },
 
         "ui_action_option": {
+            "inside": [ "dentro de" ],
             "with": [ "com" ],
             "up": [ "para cima", "acima" ],
             "down": [ "para baixo", "abaixo" ],
