@@ -15,8 +15,9 @@ describe( 'NLPInPortugueseTest', () => {
     const VALUE: string = Entities.VALUE;
     const NUMBER: string = Entities.NUMBER;
     const SCRIPT: string = Entities.SCRIPT;
-    const UI_ACTION_MODIFIER = Entities.UI_ACTION_MODIFIER;
     const UI_ACTION: string = Entities.UI_ACTION;
+    const UI_ACTION_MODIFIER = Entities.UI_ACTION_MODIFIER;
+    const UI_ACTION_OPTION = Entities.UI_ACTION_OPTION;
     const UI_ELEMENT_TYPE: string = Entities.UI_ELEMENT_TYPE;
     const UI_PROPERTY: string = Entities.UI_PROPERTY;
     const UI_VERB: string = Entities.UI_VERB;
@@ -72,6 +73,12 @@ describe( 'NLPInPortugueseTest', () => {
             results.push( recognizeInTestCase( 'eu clico no botão "x"' ) );
             shouldHaveTestCaseEntities( results, [ UI_ACTION, UI_ELEMENT_TYPE, VALUE ] );
         } );
+
+        it( 'recognizes a click with a target inside another element', () => {
+            let results = [];
+            results.push( recognizeInTestCase( 'eu clico em "x" dentro de "y"' ) );
+            shouldHaveTestCaseEntities( results, [ UI_ACTION, VALUE, UI_ACTION_OPTION, VALUE ] );
+        } );        
 
         it( 'recognizes a fill with an element', () => {
             let results = [];

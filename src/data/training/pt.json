@@ -20,6 +20,9 @@
             "eu {ui_action} {value} com {number}",
             "eu preencho {value} com {number}",
 
+            "eu {ui_action} {value} {ui_action_option} {value}",
+            "eu preencho {value} dentro de {value}",
+
             "eu {ui_action} no {ui_element_type} {value}",
             "eu {ui_action} no {ui_element_type} {value} com {value}",
             "eu {ui_action} no {ui_element_type} {value} com {number}",
