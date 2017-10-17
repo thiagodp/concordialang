@@ -1,3 +1,4 @@
+import { ConstantBlock } from '../../modules/ast/ConstantBlock';
 import { ConstantBlockLexer } from '../../modules/lexer/ConstantBlockLexer';
 import { NodeTypes } from '../../modules/req/NodeTypes';
 
@@ -18,9 +19,22 @@ describe( 'ConstantBlockLexerTest', () => {
         expect( node ).toEqual(
             {
                 nodeType: NodeTypes.CONSTANT_BLOCK,
-                location: { line: 1, column: 2 }
-            }
+                location: { line: 1, column: 2 },
+                content: 'Constants'
+            } as ConstantBlock
         );
-    } );    
+    } );
+
+    it( 'ignores a comment', () => {
+        let line = 'Constants:# some comment here';
+        let node = lexer.analyze( line, 1 ).nodes[ 0 ];
+        expect( node ).toEqual(
+            {
+                nodeType: NodeTypes.CONSTANT_BLOCK,
+                location: { line: 1, column: 1 },
+                content: 'Constants'
+            } as ConstantBlock
+        );        
+    } );
 
 } );

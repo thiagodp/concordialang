@@ -1,3 +1,4 @@
+import { RegexBlock } from '../../modules/ast/RegexBlock';
 import { RegexBlockLexer } from '../../modules/lexer/RegexBlockLexer';
 import { NodeTypes } from '../../modules/req/NodeTypes';
 
@@ -18,9 +19,22 @@ describe( 'RegexBlockLexerTest', () => {
         expect( node ).toEqual(
             {
                 nodeType: NodeTypes.REGEX_BLOCK,
-                location: { line: 1, column: 2 }
-            }
+                location: { line: 1, column: 2 },
+                content: 'Regular expressions'
+            } as RegexBlock
         );
+    } );
+
+    it( 'ignores a comment', () => {
+        let line = 'Regular expressions:# some comment here';
+        let node = lexer.analyze( line, 1 ).nodes[ 0 ];
+        expect( node ).toEqual(
+            {
+                nodeType: NodeTypes.REGEX_BLOCK,
+                location: { line: 1, column: 1 },
+                content: 'Regular expressions'
+            } as RegexBlock
+        );    
     } );    
 
 } );

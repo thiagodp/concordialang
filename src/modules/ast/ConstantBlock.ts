@@ -1,4 +1,4 @@
-import { Node } from './Node';
+import { ContentNode } from './Node';
 import { Constant } from './Constant';
 import { Block } from './Block';
 
@@ -7,5 +7,5 @@ import { Block } from './Block';
  * 
  * @author Thiago Delgado Pinto
  */
-export interface ConstantBlock extends Node, Block< Constant > {
+export interface ConstantBlock extends ContentNode, Block< Constant > {
 }
