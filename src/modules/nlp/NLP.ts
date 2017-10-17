@@ -1,5 +1,6 @@
+import { Entities } from './Entities';
 import { NLPTrainingData } from "./NLPTrainingData";
-import Bravey = require( '../../lib/bravey' ); // .js file
+import Bravey = require('../../lib/bravey'); // .js file
 
 /**
  * Natural Language Processor
@@ -15,20 +16,20 @@ export class NLP {
     constructor( private _useFuzzyProcessor: boolean = true ) {
 
         // Add an entity named "value" and its recognizer
-        this._additionalEntities.push( 'value' );
-        this._additionalRecognizers.push( this.makeValueEntityRecognizer( 'value' ) );
+        this._additionalEntities.push( Entities.VALUE );
+        this._additionalRecognizers.push( this.makeValueEntityRecognizer( Entities.VALUE ) );
 
         // Add an entity named "element" and its recognizer
-        this._additionalEntities.push( 'element' );
-        this._additionalRecognizers.push( this.makeElementEntityRecognizer( 'element' ) );
+        this._additionalEntities.push( Entities.ELEMENT );
+        this._additionalRecognizers.push( this.makeElementEntityRecognizer( Entities.ELEMENT ) );
         
         // Add an entity named "number" and its recognizer
-        this._additionalEntities.push( 'number' );
-        this._additionalRecognizers.push( this.makeNumberEntityRecognizer( 'number' ) );
+        this._additionalEntities.push( Entities.NUMBER );
+        this._additionalRecognizers.push( this.makeNumberEntityRecognizer( Entities.NUMBER ) );
 
-        // Add an entity named "script" and its recognizer
-        this._additionalEntities.push( 'script' );
-        this._additionalRecognizers.push( this.makeScriptEntityRecognizer( 'script' ) );
+        // Add an entity named "query" and its recognizer
+        this._additionalEntities.push( Entities.QUERY );
+        this._additionalRecognizers.push( this.makeQueryEntityRecognizer( Entities.QUERY ) );
     }
 
     /**
@@ -154,7 +155,7 @@ export class NLP {
      * @param entityName Entity name.
      * @return Bravey.EntityRecognizer
      */
-    private makeValueEntityRecognizer( entityName: string = 'value' ): any {
+    private makeValueEntityRecognizer( entityName: string ): any {
 
         let valueRec = new Bravey.RegexEntityRecognizer( entityName, 10 );
 
@@ -177,7 +178,7 @@ export class NLP {
      * @param entityName Entity name.
      * @return Bravey.EntityRecognizer
      */
-    private makeElementEntityRecognizer( entityName: string = 'element' ): any {
+    private makeElementEntityRecognizer( entityName: string ): any {
 
         var valueRec = new Bravey.RegexEntityRecognizer( entityName, 10 );
 
@@ -200,7 +201,7 @@ export class NLP {
      * @param entityName Entity name.
      * @return Bravey.EntityRecognizer
      */
-    private makeNumberEntityRecognizer( entityName: string = 'number' ): any {
+    private makeNumberEntityRecognizer( entityName: string ): any {
 
         var valueRec = new Bravey.RegexEntityRecognizer( entityName, 10 );
         
@@ -223,7 +224,7 @@ export class NLP {
      * @param entityName Entity name.
      * @return Bravey.EntityRecognizer
      */
-    private makeScriptEntityRecognizer( entityName: string = 'script' ): any {
+    private makeQueryEntityRecognizer( entityName: string ): any {
         
         let valueRec = new Bravey.RegexEntityRecognizer( entityName, 10 );
 

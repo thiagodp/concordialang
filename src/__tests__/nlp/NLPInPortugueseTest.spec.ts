@@ -14,7 +14,7 @@ describe( 'NLPInPortugueseTest', () => {
     const ELEMENT: string = Entities.ELEMENT;
     const VALUE: string = Entities.VALUE;
     const NUMBER: string = Entities.NUMBER;
-    const SCRIPT: string = Entities.SCRIPT;
+    const QUERY: string = Entities.QUERY;
     const UI_ACTION: string = Entities.UI_ACTION;
     const UI_ACTION_MODIFIER = Entities.UI_ACTION_MODIFIER;
     const UI_ACTION_OPTION = Entities.UI_ACTION_OPTION;
@@ -184,7 +184,7 @@ describe( 'NLPInPortugueseTest', () => {
         
         it( 'recognizes script definitions', () => {
             shouldHaveUIEntities( [ recognizeInUI( "valor vem de 'SELECT * FROM someTable'" ) ],
-                [ UI_PROPERTY, UI_VERB, SCRIPT  ] );
+                [ UI_PROPERTY, UI_VERB, QUERY  ] );
         } );        
 
     } );

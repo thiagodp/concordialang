@@ -62,6 +62,7 @@
         "entity": "ui",
         "sentences": [
             "{ui_property} {ui_verb} {value}",
+            "{ui_property} {ui_verb} {query}",
             "{ui_property} {ui_verb} {number}",
             "{ui_property} {ui_verb} {ui_element_type}",
             "id é {value}",

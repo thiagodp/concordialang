@@ -67,7 +67,7 @@ describe( 'UIPropertyRecognizerTest', () => {
         } );
 
         it( 'recognizes a value with a query', () => {
-            shouldRecognize( "- valor vem da consulta 'SELECT * FROM someTable'", 'value', 'SELECT * FROM someTable' );
+            shouldRecognize( "- valor está em 'SELECT * FROM someTable'", 'value', 'SELECT * FROM someTable' );
         } );
 
     } );

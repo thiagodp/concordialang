@@ -102,9 +102,13 @@ export const UI_ACTION_SYNTAX_RULES = [
         //     - min > minTargets
         //     - max > maxTargets
         value: { min: 1, max: 1 },
+
         ui_element_type: { min: 1, max: 1 },
+
         number: { min: 1, max: 1 },    
-        script: { min: 1, max: 1 },
+
+        query: { min: 1, max: 1 },
+
         datatype: { min: 1, max: 1 },
     
         // Other action or actions that must be used together.
@@ -116,7 +120,7 @@ export const UI_PROPERTY_SYNTAX_RULES = [
     { name: "id", targets: [ "value" ] },
     { name: "type", targets: [ "ui_element_type" ] },
     { name: "datatype", targets: [ "datatype" ] }, // e.g. string, integer, ...
-    { name: "value", targets: [ "value", "number", "script" ] },
+    { name: "value", targets: [ "value", "number", "query" ] },
     { name: "minlength", targets: [ "number" ] },
     { name: "maxlength", targets: [ "number" ] },
     { name: "minvalue", targets: [ "number" ] },

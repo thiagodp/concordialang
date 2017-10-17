@@ -90,9 +90,8 @@
 
         "ui_verb": {
             "is": [ "e", "é" ],
-            "in": [ "em", "esta em" , "incluso em", "incluido em", "dentro de" ],
-            "same": [ "o mesmo que", "igual a", "semelhante a", "similar a" ],
-            "queried": [ "vem de", "é consultado de", "vem da consulta", "é buscado por", "é recuperado de" ]
+            "in": [ "em", "esta em" , "incluso em", "incluido em", "dentro de", "vem de" ],
+            "same": [ "o mesmo que", "igual a", "semelhante a", "similar a" ]
         },
 
         "ui_data_type": {

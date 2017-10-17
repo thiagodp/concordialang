@@ -9,7 +9,7 @@ export enum Entities {
     VALUE = 'value', // e.g.: "username"
     ELEMENT = 'element', // e.g.: <Username>
     NUMBER = 'number', // e.g.: -3.12
-    SCRIPT = 'script', // e.g.: 'SELECT * FROM someTable'
+    QUERY = 'query', // e.g.: 'SELECT * FROM someTable'
 
     // Test Case
     UI_ACTION = 'ui_action', // e.g.: click, fill, ...
