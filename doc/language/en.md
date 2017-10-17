@@ -69,12 +69,12 @@ Notes:
 
 Example 1 (*one per line*):
 ```
-@important
+@critical
 ```
 
 Example 2 (*more than one per line*):
 ```
-@important @slow @gui @generated
+@critical @slow @gui @generated
 ```
 
 Reserved tags:
@@ -83,6 +83,7 @@ Reserved tags:
 - `@testcase( <name> )`: references a [test case](#testcase) which is a template.
 - `@invalid( <ui_element>, <constraint> )`: indicates that a test case has an invalid value for a certain user interface element. The `constraint` is the exploited rule, such as "minimum length", "maximum value", etc.
 - `@importance( <number> )`: indicates the importance. The importance is as higher as its number.
+- `@critical`: indicates a very high importance.
 - `@generated`: indicates that a declaration was computer-generated.
 - `@global`: defines an element as global. Can be applied to [User Interface Element](#UserInterfaceElement).
 - `@ignore`: indicates that a test case should be ignored to generate tests.
