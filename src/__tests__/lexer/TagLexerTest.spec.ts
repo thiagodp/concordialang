@@ -6,7 +6,7 @@ import { NodeTypes } from "../../modules/req/NodeTypes";
  */
 describe( 'TagLexerTest', () => {
 
-    let lexer = new TagLexer();
+    let lexer = new TagLexer(); // under test
 
     it( 'detects a tag in a line', () => {
         let line = '@hello';
@@ -82,6 +82,25 @@ describe( 'TagLexerTest', () => {
 
         let nodeHi = r.nodes[ 3 ];
         expect( nodeHi.content ).toEqual( [ 'my friend' ] );
-    } );     
+    } );
+
+    it( 'ignores comments', () => {
+        let line = '@foo#comment';
+        let r = lexer.analyze( line );
+        expect( r ).toBeDefined();
+        expect( r.errors ).toHaveLength( 0 );
+        expect( r.nodes ).toHaveLength( 1 );
+        let nodeOne = r.nodes[ 0 ];
+        expect( nodeOne.name ).toEqual( 'foo' );
+
+        r = lexer.analyze( '@foo(bar) @a(b, c)#comment' );
+        expect( r.errors ).toHaveLength( 0 );
+        nodeOne = r.nodes[ 0 ];
+        expect( nodeOne.name ).toEqual( 'foo' );
+        expect( nodeOne.content ).toEqual( [ 'bar' ] );
+        let nodeTwo = r.nodes[ 1 ];
+        expect( nodeTwo.name ).toEqual( 'a' );
+        expect( nodeTwo.content ).toEqual( [ 'b', 'c' ] );        
+    } );
 
 } );

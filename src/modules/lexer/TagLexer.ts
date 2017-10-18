@@ -24,6 +24,12 @@ export class TagLexer implements NodeLexer< Tag > {
             return null;
         }
 
+        // Ignores a comment
+        let commentPos = line.indexOf( Symbols.COMMENT_PREFIX );
+        if ( commentPos >= 0 ) {
+            trimmedLine = line.substring( 0, commentPos ).trim();
+        }
+
         // Detects all the tags in the line and trims their content
         const SPACE = ' ';
         let tags = ( SPACE + trimmedLine ).split( SPACE + Symbols.TAG_PREFIX )
