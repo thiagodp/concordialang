@@ -3,7 +3,7 @@ import { QuotedNodeLexer } from "../../modules/lexer/QuotedNodeLexer";
 /**
  * @author Thiago Delgado Pinto
  */
-describe( 'QuoteBasedLexerTest', () => {
+describe( 'QuotedNodeLexerTest', () => {
 
     let keyword = 'import';
     let wordInsensitive = 'ImPorT';
@@ -108,6 +108,25 @@ describe( 'QuoteBasedLexerTest', () => {
         expect( e.location.column ).toBe( word.length + ' "'.length + 1 );
     } );
 
+    // COMMENTS
+
+    it( 'ignores a comment after the value', () => {
+        let line = "  \t \t" + word + " \t " + '"Hello world"#comment';
+        
+        let r = lexer.analyze( line, 1 );
+        expect( r ).toBeDefined();
+        expect( r.errors ).toHaveLength( 0 );
+        expect( r.nodes ).toHaveLength( 1 );
+        
+        let node = r.nodes[ 0 ];
+        expect( node ).toEqual(
+            {
+                nodeType: keyword,
+                location: { line: 1, column: 6 },
+                content: "Hello world"                
+            }
+        );
+    } );    
 
 
     // INVALID NAMES

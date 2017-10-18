@@ -47,10 +47,21 @@ export class QuotedNodeLexer< T extends ContentNode > implements NodeLexer< T >,
             return null;
         }
 
+        let commentPos = line.indexOf( Symbols.COMMENT_PREFIX );
+        let name;
+        if ( commentPos >= 0 ) {
+            name = this._lineChecker
+                .textAfterSeparator( Symbols.VALUE_WRAPPER, line.substring( 0, commentPos ) )
+                .replace( new RegExp( Symbols.VALUE_WRAPPER , 'g' ), '' ) // replace all '"' with ''
+                .trim();
+        } else {
+            name = this._lineChecker
+                .textAfterSeparator( Symbols.VALUE_WRAPPER, line )
+                .replace( new RegExp( Symbols.VALUE_WRAPPER , 'g' ), '' ) // replace all '"' with ''
+                .trim();
+        }
+
         let pos = this._lineChecker.countLeftSpacesAndTabs( line );
-        let name = this._lineChecker.textAfterSeparator( Symbols.VALUE_WRAPPER, line )
-            .replace( new RegExp( Symbols.VALUE_WRAPPER , 'g' ), '' ) // replace all '"' with ''
-            .trim();
 
         let node = {
             nodeType: this._nodeType,
