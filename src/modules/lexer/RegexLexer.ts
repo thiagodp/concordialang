@@ -75,14 +75,14 @@ export class RegexLexer implements NodeLexer< Regex >, KeywordBasedLexer {
             .replace( new RegExp( Symbols.VALUE_WRAPPER , 'g' ), '' ) // replace all '"' with ''
             .trim();
 
-        let content = values[ 1 ];
+        let value = values[ 1 ];
         
         // Removes the wrapper of the content, if the wrapper exists
-        let firstWrapperIndex = content.indexOf( Symbols.VALUE_WRAPPER );
+        let firstWrapperIndex = value.indexOf( Symbols.VALUE_WRAPPER );
         if ( firstWrapperIndex >= 0 ) {
-            let lastWrapperIndex = content.lastIndexOf( Symbols.VALUE_WRAPPER );
+            let lastWrapperIndex = value.lastIndexOf( Symbols.VALUE_WRAPPER );
             if ( firstWrapperIndex != lastWrapperIndex ) {
-                content = content.substring( firstWrapperIndex + 1, lastWrapperIndex );
+                value = value.substring( firstWrapperIndex + 1, lastWrapperIndex );
             }
         }
 
@@ -90,7 +90,7 @@ export class RegexLexer implements NodeLexer< Regex >, KeywordBasedLexer {
             nodeType: this._nodeType,
             location: { line: lineNumber || 0, column: pos + 1 },
             name: name,
-            content: content
+            value: value
         } as Regex;
 
         let errors = [];

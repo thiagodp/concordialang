@@ -24,7 +24,7 @@ describe( 'RegexLexerTest', () => {
                 nodeType: keyword,
                 location: { line: 1, column: 1 },
                 name: "foo",
-                content: value
+                value: value
             }
         );        
     } );
@@ -38,7 +38,22 @@ describe( 'RegexLexerTest', () => {
                 nodeType: keyword,
                 location: { line: 1, column: 1 },
                 name: "foo",
-                content: '\\"bar'
+                value: '\\"bar'
+            }
+        );        
+    } );
+    
+    it( 'ignores a comment after the value', () => {
+        let line = '- "foo" is "bar"#comment';
+        let r = lexer.analyze( line, 1 );
+        expect( r ).not.toBeNull();
+        expect( r.errors ).toHaveLength( 0 );
+        expect( r.nodes[ 0 ] ).toEqual(
+            {
+                nodeType: keyword,
+                location: { line: 1, column: 1 },
+                name: "foo",
+                value: "bar"
             }
         );        
     } );    
