@@ -6,11 +6,10 @@ import { KeywordBlockLexer } from "../../modules/lexer/KeywordBlockLexer";
 describe( 'KeywordBlockLexerTest', () => {
 
     let keyword = 'anything';
-    let lexer = new KeywordBlockLexer( [ keyword ], keyword );
     let wordInsensitive = 'AnYtHinG';
+    let lexer = new KeywordBlockLexer( [ keyword ], keyword ); // under test    
     
     it( 'is detected in a line', () => {
-
         let r = lexer.analyze( 'Anything:', 1 );
         expect( r ).toBeDefined();
         expect( r.errors ).toHaveLength( 0 );
@@ -19,7 +18,8 @@ describe( 'KeywordBlockLexerTest', () => {
         expect( node ).toEqual(
             {
                 nodeType: keyword,
-                location: { line: 1, column: 1 }
+                location: { line: 1, column: 1 },
+                content: 'Anything:'
             }
         );        
     } );
@@ -60,7 +60,24 @@ describe( 'KeywordBlockLexerTest', () => {
         expect( r.errors ).toHaveLength( 1 );
 
         let e = r.errors[ 0 ];
-        expect( e.location.column ).toBe( line.indexOf( content ) + 1 );
+        expect( e.location.column ).toBe( line.indexOf( content ) );
+    } );
+
+    it( 'ignores a comment after the separator', () => {
+        let line = "  \t  \t " + wordInsensitive + ":#comment here";
+        let r = lexer.analyze( line );
+        expect( r ).toBeDefined();
+        expect( r.errors ).toHaveLength( 0 );        
+    } );
+
+    it( 'registers an error when there is some content after the separator and before a comment', () => {
+        let content = 'some content here';
+        let line = wordInsensitive + ': ' + content + '#comment';
+        let r = lexer.analyze( line );
+        expect( r.errors ).toHaveLength( 1 );
+
+        let e = r.errors[ 0 ];
+        expect( e.location.column ).toBe( line.indexOf( content ) );
     } );    
 
 } );

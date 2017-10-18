@@ -47,16 +47,24 @@ export class KeywordBlockLexer< T extends ContentNode > implements NodeLexer< T 
             return null;
         }
 
+        let commentPos = line.indexOf( Symbols.COMMENT_PREFIX );
+        let content;
+        if ( commentPos >= 0 ) {
+            content = line.substring( 0, commentPos ).trim();
+        } else {
+            content = line.trim();
+        }
+
         let pos = this._lineChecker.countLeftSpacesAndTabs( line );
-        let contentAfterSeparator = this._lineChecker.textAfterSeparator( this._separator, line ).trim();
 
         let node = {
             nodeType: this._nodeType,
             location: { line: lineNumber || 0, column: pos + 1 },
-            content: this._lineChecker.textBeforeSeparator( this._separator, line ).trim()
+            content: content
         } as T;
 
         let errors = [];
+        let contentAfterSeparator = this._lineChecker.textAfterSeparator( this._separator, content );        
         if ( contentAfterSeparator.length != 0 ) {
             let loc = { line: lineNumber || 0, column: line.indexOf( contentAfterSeparator ) + 1 };
             let msg = 'Invalid content after the ' + this._nodeType + ': "' + contentAfterSeparator + '".';
