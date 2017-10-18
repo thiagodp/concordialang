@@ -6,11 +6,12 @@ import { StepWhenLexer } from "../../modules/lexer/StepWhenLexer";
  */
 describe( 'StepWhenLexerTest', () => {
 
-    let words = [ 'when' ];
-    let lexer = new StepWhenLexer( words );
     // IMPORTANT: This lexer inherits from StartingKeywordLexer
     // and StartingKeywordLexerTest checks many important aspects 
-    // that does not need to be repeated here.
+    // that does not need to be repeated here.    
+
+    let words = [ 'when' ];
+    let lexer = new StepWhenLexer( words );
 
     it( 'detects correctly', () => {
         let line = "  \t  \t When \t the world and everybody on it \t";

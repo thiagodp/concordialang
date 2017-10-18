@@ -6,11 +6,12 @@ import { StepAndLexer } from "../../modules/lexer/StepAndLexer";
  */
 describe( 'StepAndLexerTest', () => {
 
-    let words = [ 'and' ];
-    let lexer = new StepAndLexer( words );
     // IMPORTANT: This lexer inherits from StartingKeywordLexer
     // and StartingKeywordLexerTest checks many important aspects 
-    // that does not need to be repeated here.
+    // that does not need to be repeated here.    
+
+    let words = [ 'and' ];
+    let lexer = new StepAndLexer( words ); // under test
 
     it( 'detects correctly', () => {
         let line = "  \t  \t And \t the world and everybody on it \t";

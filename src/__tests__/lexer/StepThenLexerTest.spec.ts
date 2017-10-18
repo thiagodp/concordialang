@@ -6,11 +6,12 @@ import { StepThenLexer } from "../../modules/lexer/StepThenLexer";
  */
 describe( 'StepThenLexerTest', () => {
 
-    let words = [ 'then' ];
-    let lexer = new StepThenLexer( words );
     // IMPORTANT: This lexer inherits from StartingKeywordLexer
     // and StartingKeywordLexerTest checks many important aspects 
-    // that does not need to be repeated here.
+    // that does not need to be repeated here.    
+
+    let words = [ 'then' ];
+    let lexer = new StepThenLexer( words ); // under test
 
     it( 'detects correctly', () => {
         let line = "  \t  \t Then \t the world and everybody on it \t";
