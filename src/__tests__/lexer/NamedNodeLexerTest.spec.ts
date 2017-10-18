@@ -10,29 +10,13 @@ describe( 'NamedNodeLexerTest', () => {
     let word = 'feature';
     let words = [ word ];
     
-    let lexer = new NamedNodeLexer( words, keyword );
+    let lexer = new NamedNodeLexer( words, keyword ); // under test
 
     it( 'detects the name in a line', () => {
         let line = word + ': Hello world';
         let r = lexer.analyze( line );
         expect( r ).toBeDefined();
         expect( r.errors ).toHaveLength( 0 );
-    } );
-
-    it( 'ignores a comment after the name', () => {
-        let line = word + ': Hello world# some comment here';
-        let r = lexer.analyze( line, 1 );
-        expect( r ).toBeDefined();
-        expect( r.errors ).toHaveLength( 0 );
-        expect( r.nodes ).toHaveLength( 1 );
-        let node = r.nodes[ 0 ];
-        expect( node ).toEqual(
-            {
-                nodeType: keyword,
-                location: { line: 1, column: 1 },
-                name: "Hello world"
-            }
-        );        
     } );
 
     it( 'detects the name ignoring its case', () => {
@@ -47,6 +31,22 @@ describe( 'NamedNodeLexerTest', () => {
         let r = lexer.analyze( line );
         expect( r ).toBeDefined();
         expect( r.errors ).toHaveLength( 0 );
+    } );
+
+    it( 'ignores a comment', () => {
+        let line = word + ': Hello world# some comment here';
+        let r = lexer.analyze( line, 1 );
+        expect( r ).toBeDefined();
+        expect( r.errors ).toHaveLength( 0 );
+        expect( r.nodes ).toHaveLength( 1 );
+        let node = r.nodes[ 0 ];
+        expect( node ).toEqual(
+            {
+                nodeType: keyword,
+                location: { line: 1, column: 1 },
+                name: "Hello world"
+            }
+        );        
     } );    
 
     it( 'does not detect an inexistent name in a line', () => {

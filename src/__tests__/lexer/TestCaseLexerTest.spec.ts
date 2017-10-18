@@ -1,3 +1,4 @@
+import { NodeTypes } from '../../modules/req/NodeTypes';
 import { TestCaseLexer } from "../../modules/lexer/TestCaseLexer";
 import { TestCase } from "../../modules/ast/TestCase";
 
@@ -6,6 +7,9 @@ import { TestCase } from "../../modules/ast/TestCase";
  * @see NamedNodeLexerTest
  */
 describe( 'TestCaseLexerTest', () => {
+
+    // IMPORTANT: This lexer inherits from NamedNodeLexerTest and
+    // since it does not add behavior, no many additional tests are needed.
 
     let keyword = 'testcase';
     let wordInsensitive = 'TesT cAsE';
@@ -18,6 +22,8 @@ describe( 'TestCaseLexerTest', () => {
         let line = word + ': Hello world';
         let r = lexer.analyze( line );
         expect( r ).toBeDefined();
+        expect( r.nodes ).toHaveLength( 1 );
+        expect( r.nodes[ 0 ].nodeType ).toBe( NodeTypes.TEST_CASE );
         expect( r.errors ).toHaveLength( 0 );
     } );
 
