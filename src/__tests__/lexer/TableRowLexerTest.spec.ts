@@ -1,7 +1,11 @@
 import { TableRowLexer } from '../../modules/lexer/TableRowLexer';
+
+/**
+ * @author Thiago Delgado Pinto
+ */
 describe( 'TableRowLexerTest', () => {
 
-    let lexer = new TableRowLexer();
+    let lexer = new TableRowLexer(); // under test
 
     it( 'recognizes a row with a single cell', () => {
         let r = lexer.analyze( '| hello |', 1 );
@@ -38,6 +42,13 @@ describe( 'TableRowLexerTest', () => {
         expect( r ).not.toBeNull();
         let row = r.nodes[ 0 ];
         expect( row.cells ).toEqual( [ '', 'the quick', '', 'brown', 'fox', '', 'jumped', '' ] );
-    } );    
+    } );
+
+    it( 'ignores comments', () => {
+        let r = lexer.analyze( '| foo | bar |#comment', 1 );
+        expect( r ).not.toBeNull();
+        let row = r.nodes[ 0 ];
+        expect( row.cells ).toEqual( [ 'foo', 'bar' ] );        
+    } );
 
 } );
