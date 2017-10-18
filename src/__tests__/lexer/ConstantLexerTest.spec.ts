@@ -24,7 +24,21 @@ describe( 'ConstantLexerTest', () => {
                 name: "foo",
                 content: "bar"
             }
-        );        
+        );
+    } );
+
+    it( 'ignores a comment after a text value', () => {
+        let line = '- "foo" is "bar"# some comment here';
+        let r = lexer.analyze( line, 1 );
+        expect( r ).not.toBeNull();
+        expect( r.nodes[ 0 ] ).toEqual(
+            {
+                nodeType: keyword,
+                location: { line: 1, column: 1 },
+                name: "foo",
+                content: "bar"
+            }
+        );
     } );
 
     it( 'detects correctly with a integer value', () => {
@@ -41,6 +55,20 @@ describe( 'ConstantLexerTest', () => {
         );        
     } );
 
+    it( 'ignores a comment after a integer value', () => {
+        let line = '- "foo" is 1# some comment here';
+        let r = lexer.analyze( line, 1 );
+        expect( r ).not.toBeNull();
+        expect( r.nodes[ 0 ] ).toEqual(
+            {
+                nodeType: keyword,
+                location: { line: 1, column: 1 },
+                name: "foo",
+                content: "1"
+            }
+        );
+    } );    
+
     it( 'detects correctly with a double value', () => {
         let line = '- "foo" is 1.0';
         let r = lexer.analyze( line, 1 );
@@ -52,8 +80,22 @@ describe( 'ConstantLexerTest', () => {
                 name: "foo",
                 content: "1.0"
             }
-        );        
+        );  
     } );
+
+    it( 'ignores a comment after a double value', () => {
+        let line = '- "foo" is 1.0# some comment here';
+        let r = lexer.analyze( line, 1 );
+        expect( r ).not.toBeNull();
+        expect( r.nodes[ 0 ] ).toEqual(
+            {
+                nodeType: keyword,
+                location: { line: 1, column: 1 },
+                name: "foo",
+                content: "1.0"
+            }
+        );
+    } );    
 
     it( 'detects correctly with a big double value', () => {
         let value = '987654321098765432109876543210.33344445555566666677777778888888899999999';
@@ -68,6 +110,21 @@ describe( 'ConstantLexerTest', () => {
                 content: value
             }
         );        
+    } );
+
+    it( 'ignores a comment after a big double value', () => {
+        let value = '987654321098765432109876543210.33344445555566666677777778888888899999999';
+        let line = `- "foo" is ${value}# some comment here`;
+        let r = lexer.analyze( line, 1 );
+        expect( r ).not.toBeNull();
+        expect( r.nodes[ 0 ] ).toEqual(
+            {
+                nodeType: keyword,
+                location: { line: 1, column: 1 },
+                name: "foo",
+                content: value
+            }
+        );
     } );    
 
     it( 'does not detect correctly a double value started with dot', () => {
