@@ -1,5 +1,5 @@
 import { NamedNodeLexer } from "./NamedNodeLexer";
-import { ContentNode } from '../ast/Node';
+import { Node } from '../ast/Node';
 import { Symbols } from "../req/Symbols";
 import { LineChecker } from "../req/LineChecker";
 import { Expressions } from "../req/Expressions";
@@ -12,7 +12,7 @@ import { LexicalException } from "../req/LexicalException";
  * 
  * @author Thiago Delgado Pinto
  */
-export class KeywordBlockLexer< T extends ContentNode > implements NodeLexer< T >, KeywordBasedLexer {
+export class KeywordBlockLexer< T extends Node > implements NodeLexer< T >, KeywordBasedLexer {
 
     private _separator: string = Symbols.TITLE_SEPARATOR;
     private _lineChecker: LineChecker = new LineChecker();
@@ -59,8 +59,7 @@ export class KeywordBlockLexer< T extends ContentNode > implements NodeLexer< T 
 
         let node = {
             nodeType: this._nodeType,
-            location: { line: lineNumber || 0, column: pos + 1 },
-            content: content
+            location: { line: lineNumber || 0, column: pos + 1 }
         } as T;
 
         let errors = [];

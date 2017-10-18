@@ -19,8 +19,7 @@ describe( 'RegexBlockLexerTest', () => {
         expect( node ).toEqual(
             {
                 nodeType: NodeTypes.REGEX_BLOCK,
-                location: { line: 1, column: 2 },
-                content: 'Regular expressions'
+                location: { line: 1, column: 2 }
             } as RegexBlock
         );
     } );
@@ -31,8 +30,7 @@ describe( 'RegexBlockLexerTest', () => {
         expect( node ).toEqual(
             {
                 nodeType: NodeTypes.REGEX_BLOCK,
-                location: { line: 1, column: 1 },
-                content: 'Regular expressions'
+                location: { line: 1, column: 1 }
             } as RegexBlock
         );    
     } );    

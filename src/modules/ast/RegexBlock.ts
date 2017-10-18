@@ -1,4 +1,4 @@
-import { ContentNode } from './Node';
+import { Node } from './Node';
 import { Regex } from './Regex';
 import { Block } from './Block';
 
@@ -7,5 +7,5 @@ import { Block } from './Block';
  * 
  * @author Thiago Delgado Pinto
  */
-export interface RegexBlock extends ContentNode, Block< Regex > {
+export interface RegexBlock extends Node, Block< Regex > {
 }

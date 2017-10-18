@@ -19,8 +19,7 @@ describe( 'ConstantBlockLexerTest', () => {
         expect( node ).toEqual(
             {
                 nodeType: NodeTypes.CONSTANT_BLOCK,
-                location: { line: 1, column: 2 },
-                content: 'Constants'
+                location: { line: 1, column: 2 }
             } as ConstantBlock
         );
     } );
@@ -31,8 +30,7 @@ describe( 'ConstantBlockLexerTest', () => {
         expect( node ).toEqual(
             {
                 nodeType: NodeTypes.CONSTANT_BLOCK,
-                location: { line: 1, column: 1 },
-                content: 'Constants'
+                location: { line: 1, column: 1 }
             } as ConstantBlock
         );        
     } );
