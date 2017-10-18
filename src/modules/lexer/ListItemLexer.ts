@@ -1,4 +1,4 @@
-import { ContentNode } from "../ast/Node";
+import { ContentNode } from '../ast/Node';
 import { NodeLexer, LexicalAnalysisResult } from "./NodeLexer";
 import { Expressions } from "../req/Expressions";
 import { Symbols } from "../req/Symbols";
@@ -39,8 +39,15 @@ export class ListItemLexer< T extends ContentNode > implements NodeLexer< T > {
             return null;
         }
 
+        let commentPos = line.indexOf( Symbols.COMMENT_PREFIX );
+        let content;
+        if ( commentPos >= 0 ) {
+            content = this._lineChecker.textAfterSeparator( this._symbol, line.substring( 0, commentPos ) ).trim();
+        } else {
+            content = this._lineChecker.textAfterSeparator( this._symbol, line ).trim();
+        }
+
         let pos = this._lineChecker.countLeftSpacesAndTabs( line );
-        let content = this._lineChecker.textAfterSeparator( this._symbol, line ).trim();
 
         let node = {
             nodeType: this._nodeType,
