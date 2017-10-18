@@ -37,7 +37,7 @@ describe( 'ParserTest', () => {
 
         expect( parser.errors() ).toEqual( [] );
         expect( doc.language ).toBeDefined();
-        expect( doc.language.content ).toBe( "en" );
+        expect( doc.language.value ).toBe( "en" );
     } );
 
 
@@ -94,7 +94,7 @@ describe( 'ParserTest', () => {
         expect( parser.errors() ).toEqual( [] );
 
         expect( doc.language ).toBeDefined();
-        expect( doc.language.content ).toBe( "en" );
+        expect( doc.language.value ).toBe( "en" );
 
         expect( doc.feature ).toBeDefined();
         expect( doc.feature.name ).toBe( "my feature" );

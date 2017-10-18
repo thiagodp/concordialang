@@ -1,4 +1,4 @@
-import { ContentNode } from './Node';
+import { ValuedNode } from './Node';
 
 /**
  * Language node
@@ -6,5 +6,5 @@ import { ContentNode } from './Node';
  * @author Thiago Delgado Pinto
  * @see /doc/langspec/asl-en.md
  */
-export interface Language extends ContentNode {
+export interface Language extends ValuedNode {
 }

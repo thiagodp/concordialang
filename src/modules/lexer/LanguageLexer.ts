@@ -48,12 +48,12 @@ export class LanguageLexer implements NodeLexer< Language >, KeywordBasedLexer {
         }
 
         let pos = this._lineChecker.countLeftSpacesAndTabs( line );
-        let content = this._lineChecker.textAfterSeparator( Symbols.LANGUAGE_SEPARATOR, line ).trim();
+        let value = this._lineChecker.textAfterSeparator( Symbols.LANGUAGE_SEPARATOR, line ).trim();
         
         let node = {
             nodeType: NodeTypes.LANGUAGE,
             location: { line: lineNumber || 0, column: pos + 1 },
-            content: content
+            value: value
         } as Language;
 
         return { nodes: [ node ], errors: [] };

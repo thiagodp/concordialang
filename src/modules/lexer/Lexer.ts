@@ -148,7 +148,7 @@ export class Lexer {
 
             // Detects a language node and tries to change the language
             if ( result.nodes.length > 0 && NodeTypes.LANGUAGE === result.nodes[ 0 ].nodeType ) {
-                let language = ( result.nodes[ 0 ] as Language ).content;
+                let language = ( result.nodes[ 0 ] as Language ).value;
                 if ( language != this._defaultLanguage ) { // needs to change ?
                     try {
                         this.changeLanguage( language );
