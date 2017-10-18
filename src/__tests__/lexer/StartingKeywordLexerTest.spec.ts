@@ -19,15 +19,39 @@ describe( 'StartingKeywordLexerTest', () => {
         expect( lexer.analyze( line ) ).not.toBeNull()
     } );
 
-    it( 'does not detect an inexistent feature in a line', () => {
-        let line = 'Someelse world';
-        expect( lexer.analyze( line ) ).toBeNull()
+    it( 'ignores a comment', () => {
+        let line = 'hello foo bar #comment';
+        let r = lexer.analyze( line, 1 );
+        expect( r ).not.toBeNull();
+        expect( r.errors ).toHaveLength( 0 );
+        expect( r.nodes ).toHaveLength( 1 );
+        expect( r.nodes[ 0 ].content ).toBe( 'foo bar' );
     } );
+
+    it( 'gives a warning on empty content', () => {
+        let line = 'hello ';
+        let r = lexer.analyze( line, 1 );
+        expect( r ).not.toBeNull();
+        expect( r.errors ).toHaveLength( 0 );
+        expect( r.warnings ).toBeDefined();
+        expect( r.warnings ).toHaveLength( 1 );
+        expect( r.warnings[ 0 ].message ).toMatch( /(empty)/ui );
+    } );
+
+    it( 'gives a warning on empty content, even with a comment', () => {
+        let line = 'hello #comment';
+        let r = lexer.analyze( line, 1 );
+        expect( r ).not.toBeNull();
+        expect( r.errors ).toHaveLength( 0 );
+        expect( r.warnings ).toBeDefined();
+        expect( r.warnings ).toHaveLength( 1 );
+        expect( r.warnings[ 0 ].message ).toMatch( /(empty)/ui );
+    } );    
 
     it( 'detects in the correct position', () => {
         let line = "  \t  \t hello \t world and everybody on it \t";
         let r = lexer.analyze( line, 1 );
-        expect( r ).toBeDefined();
+        expect( r ).not.toBeNull();
         expect( r.nodes ).toHaveLength( 1 );
         let node = r.nodes[ 0 ];
         expect( node.location.line ).toBe( 1 );
@@ -37,11 +61,16 @@ describe( 'StartingKeywordLexerTest', () => {
     it( 'detects the content correctly', () => {
         let line = '\t hello  \t\t world \t';
         let r = lexer.analyze( line, 1 );
-        expect( r ).toBeDefined();
+        expect( r ).not.toBeNull();
         expect( r.nodes ).toHaveLength( 1 );
         let node = r.nodes[ 0 ];
         expect( node.content ).toBe( 'world' );
     } );
+
+    it( 'does not detect a line with a different keyword', () => {
+        let line = 'Someelse world';
+        expect( lexer.analyze( line ) ).toBeNull()
+    } );    
 
     it( 'does not detect without a space after the keyword', () => {
         let line = '\t helloworld \t';

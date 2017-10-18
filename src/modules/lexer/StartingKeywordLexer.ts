@@ -1,3 +1,5 @@
+import { Warning } from '../req/Warning';
+import { Symbols } from '../req/Symbols';
 import { Node, ContentNode } from '../ast/Node';
 import { NodeLexer, LexicalAnalysisResult } from "./NodeLexer";
 import { LineChecker } from "../req/LineChecker";
@@ -42,16 +44,27 @@ export class StartingKeywordLexer< T extends ContentNode > implements NodeLexer<
             return null;
         }
 
-        let pos = this._lineChecker.countLeftSpacesAndTabs( line );
         let content = result[ 1 ].trim();
+        let commentPos = content.indexOf( Symbols.COMMENT_PREFIX );        
+        if ( commentPos >= 0 ) {
+            content = content.substring( 0, commentPos ).trim();
+        }
 
+        let pos = this._lineChecker.countLeftSpacesAndTabs( line );
+        
         let node = {
             nodeType: this._nodeType,
             location: { line: lineNumber || 0, column: pos + 1 },
             content: content
         } as T;
 
-        return { nodes: [ node ], errors: [] };
+        let warnings = [];
+        if ( content.length < 1 ) {
+            let w = new Warning( 'Content is empty', node.location );
+            warnings.push( w );
+        }
+
+        return { nodes: [ node ], errors: [], warnings: warnings };
     }
 
 }
