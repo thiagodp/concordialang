@@ -19,13 +19,24 @@ describe( 'TestCaseLexerTest', () => {
     let lexer = new TestCaseLexer( words ); // under test
 
     it( 'detects in a line', () => {
-        let line = word + ': Hello world';
+        let line = word + ': foo bar';
         let r = lexer.analyze( line );
         expect( r ).toBeDefined();
+        expect( r.errors ).toHaveLength( 0 );
         expect( r.nodes ).toHaveLength( 1 );
         expect( r.nodes[ 0 ].nodeType ).toBe( NodeTypes.TEST_CASE );
-        expect( r.errors ).toHaveLength( 0 );
+        expect( r.nodes[ 0 ].name ).toBe( 'foo bar' );
     } );
+
+    it( 'ignores comments', () => {
+        let line = word + ': foo bar#comment here';
+        let r = lexer.analyze( line );
+        expect( r ).toBeDefined();
+        expect( r.errors ).toHaveLength( 0 );
+        expect( r.nodes ).toHaveLength( 1 );
+        expect( r.nodes[ 0 ].nodeType ).toBe( NodeTypes.TEST_CASE );
+        expect( r.nodes[ 0 ].name ).toBe( 'foo bar' );
+    } );    
 
 } );
 
