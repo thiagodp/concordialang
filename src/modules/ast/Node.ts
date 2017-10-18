@@ -28,6 +28,9 @@ export interface HasItems< T extends Node > {
 export interface NamedNode extends Node, HasName {    
 }
 
+export interface ValuedNode extends Node, HasValue {
+}
+
 export interface ContentNode extends Node, HasContent {
 }
 

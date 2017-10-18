@@ -10,23 +10,23 @@ describe( 'QuotedNodeLexerTest', () => {
     let word = 'import';
     let words = [ word ];    
     
-    let lexer = new QuotedNodeLexer( words, keyword );
+    let lexer = new QuotedNodeLexer( words, keyword ); // under test
 
-    it( 'detects the content in a line', () => {
+    it( 'detects the value in a line', () => {
         let line = word + ' "Hello world"';
         let r = lexer.analyze( line );
         expect( r ).toBeDefined();
         expect( r.errors ).toHaveLength( 0 );
     } );
 
-    it( 'detects the content ignoring its case', () => {
+    it( 'detects the value ignoring its case', () => {
         let line = wordInsensitive + ' "Hello world"';
         let r = lexer.analyze( line );
         expect( r ).toBeDefined();
         expect( r.errors ).toHaveLength( 0 );
     } );    
 
-    it( 'detects the content in a line with spaces and tabs', () => {
+    it( 'detects the value in a line with spaces and tabs', () => {
         let line = "  \t  \t " + word + ' "Hello world"';
         let r = lexer.analyze( line );
         expect( r ).toBeDefined();
@@ -38,22 +38,22 @@ describe( 'QuotedNodeLexerTest', () => {
         expect( lexer.analyze( line ) ).toBeNull()
     } );
     
-    it( 'does not detect the content when its word is not the first one', () => {
+    it( 'does not detect the value when its word is not the first one', () => {
         let line = 'Not the ' + word + ' "Hello world"';
         expect( lexer.analyze( line ) ).toBeNull();
     } );
 
-    it( 'does not detect the content when its word is not surrounded by quotes', () => {
+    it( 'does not detect the value when its word is not surrounded by quotes', () => {
         let line = word + ' Hello world';
         expect( lexer.analyze( line ) ).toBeNull();
     } );
 
-    it( 'does not detect the content not followed by its separator', () => {
+    it( 'does not detect the value not followed by its separator', () => {
         let line = word + ' ' + word + ' "Hello world"';
         expect( lexer.analyze( line ) ).toBeNull();
     } );
 
-    it( 'detects the content in the correct position', () => {
+    it( 'detects the value in the correct position', () => {
         let line = word + ' "Hello world"';
 
         let r = lexer.analyze( line, 1 );
@@ -65,13 +65,13 @@ describe( 'QuotedNodeLexerTest', () => {
         expect( node ).toEqual(
             {
                 nodeType: keyword,
-                content: "Hello world",
-                location: { line: 1, column: 1 }
+                location: { line: 1, column: 1 },
+                value: "Hello world"
             }
         );
     } );
 
-    it( 'detects the content in the correct position even with additional spaces or tabs', () => {
+    it( 'detects the value in the correct position even with additional spaces or tabs', () => {
         let line = "  \t \t" + word + " \t " + '"Hello world"';
         
         let r = lexer.analyze( line, 1 );
@@ -83,8 +83,8 @@ describe( 'QuotedNodeLexerTest', () => {
         expect( node ).toEqual(
             {
                 nodeType: keyword,
-                content: "Hello world",
-                location: { line: 1, column: 6 }
+                location: { line: 1, column: 6 },
+                value: "Hello world"
             }
         );
     } );
@@ -98,7 +98,7 @@ describe( 'QuotedNodeLexerTest', () => {
             {
                 nodeType: keyword,
                 location: { line: 1, column: 1 },
-                content: "1nv4lid n4me"
+                value: "1nv4lid n4me"
             }
         );
 
@@ -123,7 +123,7 @@ describe( 'QuotedNodeLexerTest', () => {
             {
                 nodeType: keyword,
                 location: { line: 1, column: 6 },
-                content: "Hello world"                
+                value: "Hello world"                
             }
         );
     } );    

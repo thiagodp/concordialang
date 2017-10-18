@@ -1,5 +1,5 @@
 import { KeywordBasedLexer } from './KeywordBasedLexer';
-import { Node, ContentNode } from '../ast/Node';
+import { ValuedNode } from '../ast/Node';
 import { NodeLexer, LexicalAnalysisResult } from './NodeLexer';
 import { Expressions } from '../req/Expressions';
 import { LineChecker } from '../req/LineChecker';
@@ -13,7 +13,7 @@ const XRegExp = require( 'xregexp' );
  * 
  * @author Thiago Delgado Pinto
  */
-export class QuotedNodeLexer< T extends ContentNode > implements NodeLexer< T >, KeywordBasedLexer  {
+export class QuotedNodeLexer< T extends ValuedNode > implements NodeLexer< T >, KeywordBasedLexer  {
 
     private _lineChecker: LineChecker = new LineChecker();
 
@@ -48,14 +48,14 @@ export class QuotedNodeLexer< T extends ContentNode > implements NodeLexer< T >,
         }
 
         let commentPos = line.indexOf( Symbols.COMMENT_PREFIX );
-        let name;
+        let value;
         if ( commentPos >= 0 ) {
-            name = this._lineChecker
+            value = this._lineChecker
                 .textAfterSeparator( Symbols.VALUE_WRAPPER, line.substring( 0, commentPos ) )
                 .replace( new RegExp( Symbols.VALUE_WRAPPER , 'g' ), '' ) // replace all '"' with ''
                 .trim();
         } else {
-            name = this._lineChecker
+            value = this._lineChecker
                 .textAfterSeparator( Symbols.VALUE_WRAPPER, line )
                 .replace( new RegExp( Symbols.VALUE_WRAPPER , 'g' ), '' ) // replace all '"' with ''
                 .trim();
@@ -66,13 +66,13 @@ export class QuotedNodeLexer< T extends ContentNode > implements NodeLexer< T >,
         let node = {
             nodeType: this._nodeType,
             location: { line: lineNumber || 0, column: pos + 1 },
-            content: name
+            value: value
         } as T;
 
         let errors = [];
-        if ( ! this.isValidName( name ) ) {
-            let loc = { line: lineNumber || 0, column: line.indexOf( name ) + 1 };
-            let msg = 'Invalid ' + this._nodeType + ' name: "' + name + '"';
+        if ( ! this.isValidName( value ) ) {
+            let loc = { line: lineNumber || 0, column: line.indexOf( value ) + 1 };
+            let msg = 'Invalid ' + this._nodeType + ': "' + value + '"';
             errors.push( new LexicalException( msg, loc ) );
         }
 

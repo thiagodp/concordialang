@@ -1,4 +1,4 @@
-import { ContentNode } from './Node';
+import { ValuedNode } from './Node';
 
 /**
  * Import node.
@@ -6,7 +6,7 @@ import { ContentNode } from './Node';
  * @author Thiago Delgado Pinto
  * @see /doc/langspec/asl-en.md
  */
-export interface Import extends ContentNode {
+export interface Import extends ValuedNode {
 
     // Path according to the location of the current document. For instance,
     // if the current document is in "some/dir" and the import is "../file.ext",

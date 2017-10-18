@@ -28,7 +28,7 @@ describe( 'ImportLexerTest', () => {
             {
                 nodeType: keyword,
                 location: { line: 1, column: 6 },
-                content: "Hello world"                
+                value: "Hello world"                
             }
         );
     } );     
