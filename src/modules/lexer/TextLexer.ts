@@ -1,3 +1,4 @@
+import { Symbols } from '../req/Symbols';
 import { NodeTypes } from '../req/NodeTypes';
 import { NodeLexer, LexicalAnalysisResult } from "./NodeLexer";
 import { Text } from '../ast/Text';
@@ -13,8 +14,17 @@ export class TextLexer implements NodeLexer< Text > {
     private _lineChecker: LineChecker = new LineChecker();
 
     public analyze( line: string, lineNumber?: number ): LexicalAnalysisResult< Text > {
+
+        let trimmedLine = line.trim();
         
-        if ( 0 === line.trim().length ) { // Empty line not accepted
+        // Empty line is not accepted
+        if ( 0 === trimmedLine.length ) {
+            return null;
+        }
+
+        // Comment is not accepted
+        const commentPos = trimmedLine.indexOf( Symbols.COMMENT_PREFIX );
+        if ( 0 === commentPos ) {
             return null;
         }
 

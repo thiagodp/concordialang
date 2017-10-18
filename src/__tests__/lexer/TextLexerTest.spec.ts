@@ -12,6 +12,10 @@ describe( 'TextLexerTest', () => {
         expect( lexer.analyze( '' ) ).toBeNull();
     } );
 
+    it( 'does not recognize comment lines', () => {
+        expect( lexer.analyze( '\t #comment' ) ).toBeNull();
+    } );    
+
     it( 'detects anything as text', () => {
         let line = "  \t  \t anything here \t";
         let r = lexer.analyze( line, 1 );
