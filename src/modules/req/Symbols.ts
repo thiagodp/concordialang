@@ -7,7 +7,7 @@ export abstract class Symbols {
 
     // prefixes
 
-    static COMMENT_PREFIX = '//';
+    static COMMENT_PREFIX = '#';
     static TAG_PREFIX = '@';
     static LANGUAGE_PREFIX = '#';
     static PY_STRING_PREFIX = '"""';

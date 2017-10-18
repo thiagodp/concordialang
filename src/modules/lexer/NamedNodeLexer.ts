@@ -51,12 +51,21 @@ export class NamedNodeLexer< T extends NamedNode > implements NodeLexer< T >, Ke
         }
 
         let pos = this._lineChecker.countLeftSpacesAndTabs( line );
-        let name = this._lineChecker.textAfterSeparator( this._separator, line ).trim();
+
+        let commentPos = line.indexOf( Symbols.COMMENT_PREFIX );
+        let name;
+        if ( commentPos >= 0 ) {
+            name = this._lineChecker
+                .textAfterSeparator( this._separator, line.substring( 0, commentPos ) )
+                .trim();
+        } else {
+            name = this._lineChecker.textAfterSeparator( this._separator, line ).trim();
+        }
 
         let node = {
             nodeType: this._nodeType,
-            name: name,
-            location: { line: lineNumber || 0, column: pos + 1 }
+            location: { line: lineNumber || 0, column: pos + 1 },            
+            name: name
         } as T;
 
         let errors = [];
