@@ -9,12 +9,12 @@ export interface Node {
     location: Location;
 }
 
-export interface HasName {
-    name: string;
+export interface HasContent {
+    content: string; // Useful content, ignoring symbols and keywords
 }
 
-export interface HasContent {
-    content: string;
+export interface HasName {
+    name: string;
 }
 
 export interface HasItems< T extends Node > {
