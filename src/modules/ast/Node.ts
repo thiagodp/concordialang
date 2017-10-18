@@ -17,6 +17,10 @@ export interface HasName {
     name: string;
 }
 
+export interface HasValue {
+    value: string;
+}
+
 export interface HasItems< T extends Node > {
     items: T[];
 }
@@ -27,5 +31,5 @@ export interface NamedNode extends Node, HasName {
 export interface ContentNode extends Node, HasContent {
 }
 
-export interface NodeWithNameAndContent extends Node, HasName, HasContent {
+export interface NodeWithNameAndValue extends Node, HasName, HasValue {
 }

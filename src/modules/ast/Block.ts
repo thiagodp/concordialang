@@ -1,4 +1,4 @@
-import { NodeWithNameAndContent, HasItems } from "./Node";
+import { NodeWithNameAndValue, HasItems } from "./Node";
 
 /**
  * Block node.
@@ -14,5 +14,5 @@ export interface Block< T extends BlockItem > extends HasItems< T > {
  * 
  * @author Thiago Delgado Pinto
  */
-export interface BlockItem extends NodeWithNameAndContent {
+export interface BlockItem extends NodeWithNameAndValue {
 }

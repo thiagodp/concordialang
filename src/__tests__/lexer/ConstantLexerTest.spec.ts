@@ -22,7 +22,7 @@ describe( 'ConstantLexerTest', () => {
                 nodeType: keyword,
                 location: { line: 1, column: 1 },
                 name: "foo",
-                content: "bar"
+                value: "bar"
             }
         );
     } );
@@ -36,7 +36,7 @@ describe( 'ConstantLexerTest', () => {
                 nodeType: keyword,
                 location: { line: 1, column: 1 },
                 name: "foo",
-                content: "bar"
+                value: "bar"
             }
         );
     } );
@@ -50,7 +50,7 @@ describe( 'ConstantLexerTest', () => {
                 nodeType: keyword,
                 location: { line: 1, column: 1 },
                 name: "foo",
-                content: "1"
+                value: "1"
             }
         );        
     } );
@@ -64,7 +64,7 @@ describe( 'ConstantLexerTest', () => {
                 nodeType: keyword,
                 location: { line: 1, column: 1 },
                 name: "foo",
-                content: "1"
+                value: "1"
             }
         );
     } );    
@@ -78,7 +78,7 @@ describe( 'ConstantLexerTest', () => {
                 nodeType: keyword,
                 location: { line: 1, column: 1 },
                 name: "foo",
-                content: "1.0"
+                value: "1.0"
             }
         );  
     } );
@@ -92,7 +92,7 @@ describe( 'ConstantLexerTest', () => {
                 nodeType: keyword,
                 location: { line: 1, column: 1 },
                 name: "foo",
-                content: "1.0"
+                value: "1.0"
             }
         );
     } );    
@@ -107,7 +107,7 @@ describe( 'ConstantLexerTest', () => {
                 nodeType: keyword,
                 location: { line: 1, column: 1 },
                 name: "foo",
-                content: value
+                value: value
             }
         );        
     } );
@@ -122,7 +122,7 @@ describe( 'ConstantLexerTest', () => {
                 nodeType: keyword,
                 location: { line: 1, column: 1 },
                 name: "foo",
-                content: value
+                value: value
             }
         );
     } );    

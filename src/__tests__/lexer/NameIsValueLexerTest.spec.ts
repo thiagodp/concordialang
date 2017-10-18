@@ -1,14 +1,14 @@
 import { NodeTypes } from '../../modules/req/NodeTypes';
-import { NameIsContentLexer } from '../../modules/lexer/NameIsContentLexer';
+import { NameIsValueLexer } from '../../modules/lexer/NameIsValueLexer';
 
 /**
  * @author Thiago Delgado Pinto
  */
-describe( 'NameIsContentLexerTest', () => {
+describe( 'NameIsValueLexerTest', () => {
 
     let words = [ 'is' ];
     let keyword = NodeTypes.REGEX;
-    let lexer = new NameIsContentLexer( words, keyword ); // under test
+    let lexer = new NameIsValueLexer( words, keyword, keyword ); // under test
 
     it( 'detects correctly with a name and a value', () => {
         let line = '- "foo" is "bar"';
@@ -19,7 +19,7 @@ describe( 'NameIsContentLexerTest', () => {
                 nodeType: keyword,
                 location: { line: 1, column: 1 },
                 name: "foo",
-                content: "bar"
+                value: "bar"
             }
         );
     } );

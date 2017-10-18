@@ -1,5 +1,5 @@
 import { NodeTypes } from '../req/NodeTypes';
-import { NameIsContentLexer } from './NameIsContentLexer';
+import { NameIsValueLexer } from './NameIsValueLexer';
 import { Constant } from '../ast/Constant';
 import { Expressions } from '../req/Expressions';
 import { Symbols } from '../req/Symbols';
@@ -9,7 +9,7 @@ import { Symbols } from '../req/Symbols';
  * 
  * @author Thiago Delgado Pinto
  */
-export class ConstantLexer extends NameIsContentLexer< Constant > {    
+export class ConstantLexer extends NameIsValueLexer< Constant > {    
 
     constructor( words: string[] ) {
         super( words, NodeTypes.CONSTANT, NodeTypes.IS );

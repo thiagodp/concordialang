@@ -1,4 +1,4 @@
-import { NodeWithNameAndContent } from "../ast/Node";
+import { NodeWithNameAndValue } from "../ast/Node";
 import { NodeLexer, LexicalAnalysisResult } from "./NodeLexer";
 import { KeywordBasedLexer } from "./KeywordBasedLexer";
 import { Expressions } from "../req/Expressions";
@@ -11,7 +11,7 @@ import { LexicalException } from "../req/LexicalException";
  * 
  * @author Thiago Delgado Pinto
  */
-export class NameIsContentLexer< T extends NodeWithNameAndContent > implements NodeLexer< T >, KeywordBasedLexer {
+export class NameIsValueLexer< T extends NodeWithNameAndValue > implements NodeLexer< T >, KeywordBasedLexer {
 
     private _lineChecker: LineChecker = new LineChecker();
     
@@ -60,13 +60,13 @@ export class NameIsContentLexer< T extends NodeWithNameAndContent > implements N
             .replace( new RegExp( Symbols.VALUE_WRAPPER , 'g' ), '' ) // replace all '"' with ''
             .trim();
 
-        let content = result[ 2 ]; 
+        let value = result[ 2 ]; 
         // Removes the wrapper of the content, if the wrapper exists
-        let firstWrapperIndex = content.indexOf( Symbols.VALUE_WRAPPER );
+        let firstWrapperIndex = value.indexOf( Symbols.VALUE_WRAPPER );
         if ( firstWrapperIndex >= 0 ) {
-            let lastWrapperIndex = content.lastIndexOf( Symbols.VALUE_WRAPPER );
+            let lastWrapperIndex = value.lastIndexOf( Symbols.VALUE_WRAPPER );
             if ( firstWrapperIndex != lastWrapperIndex ) {
-                content = content.substring( firstWrapperIndex + 1, lastWrapperIndex );
+                value = value.substring( firstWrapperIndex + 1, lastWrapperIndex );
             }
         }
 
@@ -74,7 +74,7 @@ export class NameIsContentLexer< T extends NodeWithNameAndContent > implements N
             nodeType: this._nodeType,
             location: { line: lineNumber || 0, column: pos + 1 },
             name: name,
-            content: content
+            value: value
         } as T;
 
         let errors = [];
