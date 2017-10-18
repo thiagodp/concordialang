@@ -69,4 +69,19 @@ describe( 'FeatureLexerTest', () => {
         );
     } );
 
+    it( 'ignores a comment after the name', () => {
+        let line = "  \t \tfeature \t : \t Hello world#a comment";
+        let r = lexer.analyze( line, 1 );
+        expect( r ).toBeDefined();
+        expect( r.nodes ).toHaveLength( 1 );
+        let node = r.nodes[ 0 ];        
+        expect( node ).toEqual(
+            {
+                nodeType: NodeTypes.FEATURE,
+                location: { line: 1, column: 6 },
+                name: "Hello world"
+            }
+        );
+    } );    
+
 } );
