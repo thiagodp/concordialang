@@ -27,20 +27,21 @@ export class FeatureParser implements NodeParser< Feature > {
         // Define the current feature
         context.doc.feature = node;
 
+        // Checks the structure
+        node.tags = node.tags || [];        
+        node.sentences = node.sentences || [];        
+        node.scenarios = node.scenarios || [];
+        node.uiElements = node.uiElements || [];
+        node.testcases = node.testcases || [];
+
         // Adjust the context
         context.resetInValues();
         context.inFeature = true;
 
         // Add backwards tags
-        if ( ! node.tags ) {
-            node.tags = [];
-        }
         ( new TagCollector() ).addBackwardTags( it, node.tags ); // does not touch the iterator
 
         // Add forward text sentences
-        if ( ! node.sentences ) {
-            node.sentences = [];
-        }        
         ( new TextCollector() ).addForwardTextNodes( it, node.sentences, true ); // true == change iterator
 
         return true;

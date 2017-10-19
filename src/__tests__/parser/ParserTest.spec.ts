@@ -205,7 +205,7 @@ describe( 'ParserTest', () => {
             '#language:en',
             '',
             'Database: My DB',
-            '  - type is "mysql"',            
+            '  - type is "mysql"',
             '  - name is "mydb"',
             '  - username is "root"',
             '  - password is ""'
@@ -224,6 +224,71 @@ describe( 'ParserTest', () => {
         expect( db.items[ 1 ].nodeType ).toBe( NodeTypes.DATABASE_PROPERTY );
         expect( db.items[ 2 ].nodeType ).toBe( NodeTypes.DATABASE_PROPERTY );
         expect( db.items[ 3 ].nodeType ).toBe( NodeTypes.DATABASE_PROPERTY );
+    } );
+
+
+    it( 'detects a ui element and its properties', () => {
+        [
+            '#language:en',
+            '',
+            'Feature: foo',
+            '',
+            'UI Element: Full Name',
+            '  - id is "#fullname"',
+            '  - minlength is 2',
+            '    otherwise I must see "Please inform at least two characters at Full Name."',
+            '    and I must see {Full Name} with the color "red"',
+        ].forEach( ( val, index ) => lexer.addNodeFromLine( val, index + 1 ) );
+
+        let doc: Document = {};
+        parser.analyze( lexer.nodes(), doc );
+
+        expect( parser.errors() ).toEqual( [] );
+        expect( doc.feature.uiElements ).toHaveLength( 1 );
+        let uie = doc.feature.uiElements[ 0 ];
+        expect( uie.name ).toBe( 'Full Name' );
+
+        expect( uie.items ).toHaveLength( 2 );
+        expect( uie.items[ 0 ].nodeType ).toBe( NodeTypes.UI_PROPERTY );
+        expect( uie.items[ 1 ].nodeType ).toBe( NodeTypes.UI_PROPERTY );
+
+        expect( uie.items[ 1 ].otherwiseSentences ).toHaveLength( 2 );
+        expect( uie.items[ 1 ].otherwiseSentences[ 0 ].nodeType == NodeTypes.STEP_OTHERWISE );
+        expect( uie.items[ 1 ].otherwiseSentences[ 1 ].nodeType == NodeTypes.STEP_AND );
+    } );
+
+
+    it( 'detects a global ui element and its properties', () => {
+        [
+            '#language:en',
+            '',
+            'Feature: foo',
+            '',            
+            '@global',
+            'UI Element: Full Name',
+            '  - id is "#fullname"',
+            '  - minlength is 2',
+            '    otherwise I must see "Please inform at least two characters at Full Name."',
+            '    and I must see {Full Name} with the color "red"',
+        ].forEach( ( val, index ) => lexer.addNodeFromLine( val, index + 1 ) );
+
+        let doc: Document = {};
+        parser.analyze( lexer.nodes(), doc );
+
+        expect( parser.errors() ).toEqual( [] );
+        expect( doc.feature.uiElements ).toHaveLength( 0 );
+        expect( doc.uiElements ).toHaveLength( 1 );
+
+        let uie = doc.uiElements[ 0 ];
+        expect( uie.name ).toBe( 'Full Name' );
+
+        expect( uie.items ).toHaveLength( 2 );
+        expect( uie.items[ 0 ].nodeType ).toBe( NodeTypes.UI_PROPERTY );
+        expect( uie.items[ 1 ].nodeType ).toBe( NodeTypes.UI_PROPERTY );
+
+        expect( uie.items[ 1 ].otherwiseSentences ).toHaveLength( 2 );
+        expect( uie.items[ 1 ].otherwiseSentences[ 0 ].nodeType == NodeTypes.STEP_OTHERWISE );
+        expect( uie.items[ 1 ].otherwiseSentences[ 1 ].nodeType == NodeTypes.STEP_AND );
     } );    
 
 } );
