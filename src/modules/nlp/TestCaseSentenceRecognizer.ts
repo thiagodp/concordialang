@@ -6,7 +6,8 @@ import { NLPResult, NLP } from "./NLP";
 import { NLPException } from "./NLPException";
 import { Entities } from "./Entities";
 import { Warning } from "../req/Warning";
-import { RuleBuilder, UI_ACTION_SYNTAX_RULES, DEFAULT_UI_ACTION_SYNTAX_RULE } from './SyntaxRules';
+import { RuleBuilder } from './RuleBuilder';
+import { UI_ACTION_SYNTAX_RULES, DEFAULT_UI_ACTION_SYNTAX_RULE } from './SyntaxRules';
 import { Step } from '../ast/Step';
 
 /**

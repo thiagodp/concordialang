@@ -1,4 +1,4 @@
-import { RuleBuilder } from '../../modules/nlp/SyntaxRules';
+import { RuleBuilder } from '../../modules/nlp/RuleBuilder';
 
 /**
  * @author Thiago Delgado Pinto
