@@ -41,7 +41,6 @@ export class UIElementParser implements NodeParser< UIElement > {
 
         // Adjust the context
         context.resetInValues();
-        context.inUIElement = true;
         context.currentUIElement = node;
 
         // Checks the structure

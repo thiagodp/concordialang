@@ -6,7 +6,7 @@ import { SyntaticException } from "../req/SyntaticException";
 import { UIProperty } from '../ast/UIElement';
 
 /**
- * UI element property parser.
+ * Parses a UIElement.
  * 
  * @author Thiago Delgado Pinto
  */

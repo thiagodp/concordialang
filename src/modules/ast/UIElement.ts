@@ -1,6 +1,7 @@
-import { HasItems, NamedNode, ContentNode } from './Node';
+import { HasItems, NamedNode } from './Node';
 import { Step } from './Step';
 import { MayHaveTags } from './Tag';
+import { ListItem } from './ListItem';
 
 /**
  * UI element node.
@@ -16,7 +17,7 @@ export interface UIElement extends NamedNode, MayHaveTags {
  * 
  * @author Thiago Delgado Pinto
  */
-export interface UIProperty extends ContentNode {
+export interface UIProperty extends ListItem {
 
     property: string;
 

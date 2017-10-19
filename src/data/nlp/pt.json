@@ -102,5 +102,20 @@
             "time": [ "hora", "time" ],
             "datetime": [ "datahora", "datetime", "timestamp" ]
         }
+    },
+
+
+    "datasource": {
+
+        "ds_property": {
+            "path": [ "caminho", "path" ],
+            "host": [ "hospedeiro", "host" ],
+            "port": [ "porta", "port" ],
+            "username": [ "usuário", "username" ],
+            "password": [ "senha", "password" ],
+            "charset": [ "conjunto de caracteres", "codificação", "charset", "encoding" ],
+            "options": [ "opções", "options" ]
+        }
+
     }
 }

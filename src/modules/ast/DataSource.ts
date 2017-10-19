@@ -1,5 +1,6 @@
 import { BlockItem } from './Block';
-import { HasItems,  NamedNode} from './Node';
+import { HasItems, HasValue, NamedNode } from './Node';
+import { ListItem } from './ListItem';
 
 // Example 1:
 // ```
@@ -34,7 +35,7 @@ export interface DataSource extends NamedNode {
  * 
  * @author Thiago Delgado Pinto
  */
-export interface Database extends DataSource, HasItems< DatabaseItem > {
+export interface Database extends DataSource, HasItems< DatabaseProperty > {
     type: 'database';
 
     databaseType: string; // should work as a "driver". e.g. 'mysql', 'mongodb', ...
@@ -52,7 +53,8 @@ export interface Database extends DataSource, HasItems< DatabaseItem > {
  * 
  * @author Thiago Delgado Pinto
  */
-export interface DatabaseItem extends BlockItem {
+export interface DatabaseProperty extends ListItem, HasValue {
+    property: string;
 }
 
 /**

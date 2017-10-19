@@ -1,3 +1,4 @@
+import { ListItemParser } from './ListItemParser';
 import { TableRowParser } from './TableRowParser';
 import { TableRow } from '../ast/Table';
 import { BlockItemParser } from './BlockItemParser';
@@ -23,6 +24,7 @@ import { StepOtherwiseParser } from './StepOtherwiseParser';
 import { UIElementParser } from './UIElementParser';
 import { UIPropertyParser } from './UIPropertyParser';
 import { TableParser } from './TableParser';
+import { DatabaseParser } from './DatabaseParser';
 
 /**
  * Builds an AST from the nodes detected by the lexer. It checks syntatic properties
@@ -56,7 +58,9 @@ export class Parser {
         this._parsersMap[ NodeTypes.TABLE ] = new TableParser();
         this._parsersMap[ NodeTypes.TABLE_ROW ] = new TableRowParser();        
         this._parsersMap[ NodeTypes.UI_ELEMENT ] = new UIElementParser();
-        this._parsersMap[ NodeTypes.UI_PROPERTY ] = new UIPropertyParser();
+        this._parsersMap[ NodeTypes.UI_PROPERTY ] = new ListItemParser();
+        this._parsersMap[ NodeTypes.DATABASE ] = new DatabaseParser();
+        this._parsersMap[ NodeTypes.DATABASE_PROPERTY ] = new ListItemParser();
         this._parsersMap[ NodeTypes.TEST_CASE ] = new TestCaseParser();
     }
 

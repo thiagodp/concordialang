@@ -1,3 +1,4 @@
+import { NodeTypes } from '../../modules/req/NodeTypes';
 import { DatabaseLexer } from '../../modules/lexer/DatabaseLexer';
 
 /**
@@ -17,6 +18,7 @@ describe( 'DatabaseLexerTest', () => {
         expect( r.errors ).toHaveLength( 0 );
         expect( r.nodes ).toHaveLength( 1 );
         let n = r.nodes[ 0 ];
+        expect( n.nodeType ).toBe( NodeTypes.DATABASE );
         expect( n.name ).toBe( 'My DB' );
     } );
 

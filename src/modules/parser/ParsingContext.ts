@@ -1,3 +1,4 @@
+import { Database } from '../ast/DataSource';
 import { Table } from '../ast/Table';
 import { UIElement, UIProperty } from '../ast/UIElement';
 import { ConstantBlock } from '../ast/ConstantBlock';
@@ -22,7 +23,6 @@ export class ParsingContext {
     inTestCase: boolean = false;
     inRegexBlock: boolean = false;
     inConstantBlock: boolean = false;
-    inUIElement: boolean = false;
     inUIProperty: boolean = false;
     inTable: boolean = false;
 
@@ -31,6 +31,7 @@ export class ParsingContext {
     currentUIElement: UIElement = null;
     currentUIProperty: UIProperty = null;
     currentTable: Table = null;
+    currentDatabase: Database = null;
 
     constructor( doc?: Document ) {
         if ( doc ) {
@@ -43,8 +44,7 @@ export class ParsingContext {
         this.inScenario = false;
         this.inTestCase = false;
         this.inRegexBlock = false;
-        this.inConstantBlock = false;        
-        this.inUIElement = false;
+        this.inConstantBlock = false;
         this.inUIProperty = false;
         this.inTable = false;
     }

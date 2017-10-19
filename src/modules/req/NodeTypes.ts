@@ -12,6 +12,7 @@ export abstract class NodeTypes extends Keywords {
     static REGEX: string = 'regex';
     static CONSTANT: string = 'constant';
     static UI_PROPERTY: string = 'uiProperty';
+    static DATABASE_PROPERTY: string = 'databaseProperty';
 
     // Also available in Gherkin
 
