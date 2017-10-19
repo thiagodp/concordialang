@@ -64,12 +64,20 @@ export class TestCaseSentenceRecognizer {
 
             // Getting the values
             let item: Step = node as Step;
-            
+            // To-Do
             //item.values = r.entities.filter( ( e, i ) => i !== propertyIndex ).map( e => e.value );
         };
 
 
-        recognizer.recognize( language, nodes, Intents.TEST_CASE, 'Test Case', errors, warnings, processor );
+        recognizer.recognize(
+            language,
+            nodes,
+            Intents.TEST_CASE,
+            'Test Case',
+            errors,
+            warnings,
+            processor
+        );
     }
 
 

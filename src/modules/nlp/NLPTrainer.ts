@@ -13,6 +13,7 @@ import path = require( 'path' );
 export class NLPTrainer {
 
     private _fileUtil = new FileUtil();
+    private _dataCacheMap: object = {}; // Maps language => data
 
     constructor( private _dataDir = path.join( process.cwd(), 'data/' ) ) {
     }
@@ -29,25 +30,32 @@ export class NLPTrainer {
             && this._fileUtil.fileExist( this.trainingPath( language ) );
     }
 
-    trainNLP( nlp: any, language: string ): boolean {
+    trainNLP( nlp: NLP, language: string, internalNameFilter?: string ): boolean {
 
         if ( ! this.canBeTrained( language ) ) {
             return false;
         }
 
-        let translationMap = this.makeTranslationMap( language );
-        let examples = this.makeTrainingExamples( language );
-        let conversor: NLPTrainingDataConversor = new NLPTrainingDataConversor();
-        let data: NLPTrainingData = conversor.convert( translationMap, examples );
-        nlp.train( language, data );
+        let data: NLPTrainingData = this._dataCacheMap[ language ];
+        if ( ! data ) {
+            let translationMap = this.makeTranslationMap( language );
+            let examples = this.makeTrainingExamples( language );
+            let conversor: NLPTrainingDataConversor = new NLPTrainingDataConversor();
+            data = conversor.convert( translationMap, examples );
+            this._dataCacheMap[ language ] = data;
+        } else {
+            data = this._dataCacheMap[ language ];
+        }
+
+        nlp.train( language, data, internalNameFilter );
         return true;
     }
 
-    makeTranslationMap( language: string = 'en' ): any {
+    makeTranslationMap( language: string ): any {
         return require( this.nlpPath( language ) );
     }
 
-    makeTrainingExamples( language: string = 'en' ): NLPEntityUsageExample[] {
+    makeTrainingExamples( language: string ): NLPEntityUsageExample[] {
         return require( this.trainingPath( language ) );
     }
 

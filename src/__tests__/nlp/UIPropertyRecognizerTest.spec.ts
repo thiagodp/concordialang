@@ -21,31 +21,33 @@ describe( 'UIPropertyRecognizerTest', () => {
         } as UIProperty;
     }
 
-    beforeAll( () => {
-        nodes = [];
-        errors = [];
-        warnings = [];
-    } );
-
-
    describe( 'In Portuguese', () => {
 
         const LANGUAGE = 'pt';
         let nlp = new NLP();
         ( new NLPTrainer() ).trainNLP( nlp, LANGUAGE );
+
         let rec = new UIPropertyRecognizer( nlp ); // under test
 
+
         function shouldRecognize( sentence: string, property: string, value: string ): void {
+
+            nodes = [];
+            errors = [];
+            warnings = [];
+
             let node = makeNode( sentence );
             nodes.push( node );
+
             rec.recognizeSentences( LANGUAGE, nodes, errors, warnings );
             expect( errors ).toHaveLength( 0 );
             expect( warnings ).toHaveLength( 0 );
 
             expect( node.property ).toBe( property );
             expect( node.values ).toContain( value );
-        }
+        }       
 
+        
         it( 'recognizes an id with a value', () => {
             shouldRecognize( '- id é "foo"', 'id', 'foo' );
         } );

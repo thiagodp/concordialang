@@ -68,5 +68,18 @@
             "id é {value}",
             "comprimento máximo é {number}"
         ]
-    }    
+    },
+
+    {
+        "entity": "datasource",
+        "sentences": [
+            "{ds_property} {ui_verb} {value}",
+            "{ds_property} {ui_verb} {number}",
+            "caminho é {value}",
+            "nome é {value}",
+            "tipo é {value}",
+            "porta é {number}"
+        ]
+    }
+
 ]

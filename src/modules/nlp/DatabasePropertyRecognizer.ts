@@ -1,21 +1,21 @@
 import { RuleBuilder } from './RuleBuilder';
-import { UI_PROPERTY_SYNTAX_RULES, DEFAULT_UI_PROPERTY_SYNTAX_RULE } from './SyntaxRules';
+import { DATABASE_PROPERTY_SYNTAX_RULES, DEFAULT_DATABASE_PROPERTY_SYNTAX_RULE } from './SyntaxRules';
 import { Intents } from './Intents';
 import { NodeSentenceRecognizer, NLPResultProcessor } from "./NodeSentenceRecognizer";
-import { UIProperty } from "../ast/UIElement";
 import { LocatedException } from "../req/LocatedException";
 import { ContentNode } from "../ast/Node";
 import { NLPResult, NLP } from "./NLP";
 import { NLPException } from "./NLPException";
 import { Entities } from "./Entities";
 import { Warning } from "../req/Warning";
+import { DatabaseProperty } from '../ast/DataSource';
 
 /**
- * UI element property sentence recognizer.
+ * Database property sentence recognizer.
  * 
  * @author Thiago Delgado Pinto
  */
-export class UIPropertyRecognizer {
+export class DatabasePropertyRecognizer {
 
     private _syntaxRules: any[];
 
@@ -35,7 +35,7 @@ export class UIPropertyRecognizer {
      */
     recognizeSentences(
         language: string,
-        nodes: UIProperty[],
+        nodes: DatabaseProperty[],
         errors: LocatedException[],
         warnings: LocatedException[]        
     ) {
@@ -50,8 +50,8 @@ export class UIPropertyRecognizer {
         ) {
             const recognizedEntityNames: string[] = r.entities.map( e => e.entity );
 
-            // Must have a UI Property
-            const propertyIndex: number = recognizedEntityNames.indexOf( Entities.UI_PROPERTY );
+            // Must have a DS Property
+            const propertyIndex: number = recognizedEntityNames.indexOf( Entities.DS_PROPERTY );
             if ( propertyIndex < 0 ) {
                 const msg = 'Unrecognized property in the sentence "' + node.content + '".';
                 errors.push( new NLPException( msg, node.location ) );
@@ -63,16 +63,25 @@ export class UIPropertyRecognizer {
             recognizer.validate( node, recognizedEntityNames, syntaxRules, property, errors, warnings );
 
             // Getting the values
-            let item: UIProperty = node as UIProperty;
-            item.property = property;
-            item.values = r.entities.filter( ( e, i ) => i !== propertyIndex ).map( e => e.value );
+            let values = r.entities
+                .filter( e => e.entity == Entities.VALUE || e.entity == Entities.NUMBER )
+                .map( e => e.value );
+                
+            if ( values.length < 1 ) {
+                const msg = 'Value expected in the sentence "' + node.content + '".';
+                errors.push( new NLPException( msg, node.location ) );
+                return;
+            }            
+            let item: DatabaseProperty = node as DatabaseProperty;
+            item.property = property;            
+            item.value = values[ 0 ];
         };
 
         recognizer.recognize(
             language,
             nodes,
-            Intents.UI,
-            'UI Element',
+            Intents.DATASOURCE,
+            'Database Property',
             errors,
             warnings,
             processor
@@ -81,7 +90,8 @@ export class UIPropertyRecognizer {
 
 
     public buildSyntaxRules(): object[] {
-        return ( new RuleBuilder() ).build( UI_PROPERTY_SYNTAX_RULES, DEFAULT_UI_PROPERTY_SYNTAX_RULE );
+        return ( new RuleBuilder() ).build(
+            DATABASE_PROPERTY_SYNTAX_RULES, DEFAULT_DATABASE_PROPERTY_SYNTAX_RULE );
     }
 
 }

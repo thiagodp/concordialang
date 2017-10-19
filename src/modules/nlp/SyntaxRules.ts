@@ -113,3 +113,54 @@ export const UI_PROPERTY_SYNTAX_RULES = [
 ];
 
 //#endregion
+
+//#region DATABASE PROPERTY
+
+/**
+ * Default syntax rule for Database Properties.
+ * 
+ * @author Thiago Delgado Pinto
+ */
+export const DEFAULT_DATABASE_PROPERTY_SYNTAX_RULE = {
+    
+    // Minimal number of targets it accepts (has precedence over all min values).
+    minTargets: 1,
+    // Maximal number of targets it accepts (has precedence over all max values).
+    maxTargets: 1,
+
+    // Accepted targets (NLP entities).
+    //   When "maxTargets" is 1 and "targets" has more than one element, it accepts one OR another.
+    //   When "maxTargets" > 1, the minimal of each target should be configured.
+    targets: [ "value" ],
+
+    // Minimal and maximal values of each target.
+    //   They will be considered only if they appear in "targets".
+    //   If they do, they will should be *disconsidered* if:
+    //     - min > minTargets
+    //     - max > maxTargets
+    value: { min: 1, max: 1 },
+
+    number: { min: 1, max: 1 },
+
+    // Other action or actions that must be used together.
+    mustBeUsedWith: []    
+};
+
+/**
+ * Syntax rules for the supported Database Properties.
+ * 
+ * @author Thiago Delgado Pinto
+ */
+export const DATABASE_PROPERTY_SYNTAX_RULES = [
+    { name: "type", targets: [ "value" ] },    
+    { name: "path", targets: [ "value" ] },
+    { name: "name", targets: [ "value" ] },
+    { name: "host", targets: [ "value" ] },
+    { name: "port", targets: [ "value", "number" ] },
+    { name: "username", targets: [ "value" ] },
+    { name: "password", targets: [ "value" ] },
+    { name: "charset", targets: [ "value" ] },
+    { name: "options", targets: [ "value" ] }
+];
+
+//#endregion

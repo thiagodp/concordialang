@@ -2,6 +2,8 @@
  * Entities
  * 
  * @author Thiago Delgado Pinto
+ * 
+ * @see Intents
  */
 export enum Entities {
 
@@ -20,5 +22,8 @@ export enum Entities {
     // UI
     UI_PROPERTY = 'ui_property', // e.g.: id, value, ...
     UI_VERB = 'ui_verb', // e.g.: is, queried, ...
-    UI_DATA_TYPE = 'ui_data_type' // e.g.: string, integer, ...
+    UI_DATA_TYPE = 'ui_data_type', // e.g.: string, integer, ...
+
+    // Datasource
+    DS_PROPERTY = 'ds_property' // e.g.: host, port, ...
 }

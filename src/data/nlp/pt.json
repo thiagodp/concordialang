@@ -108,7 +108,8 @@
     "datasource": {
 
         "ds_property": {
-            "path": [ "caminho", "path" ],
+            "type": [ "tipo", "type" ],
+            "path": [ "caminho", "nome", "path", "name" ],
             "host": [ "hospedeiro", "host" ],
             "port": [ "porta", "port" ],
             "username": [ "usuário", "username" ],
