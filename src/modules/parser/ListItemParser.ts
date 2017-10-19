@@ -44,10 +44,7 @@ export class ListItemParser implements NodeParser< ListItem > {
             NodeTypes.STEP_OTHERWISE,
             NodeTypes.STEP_AND
         ];
-        if ( allowedPriorNodes.indexOf( it.spyPrior().nodeType ) < 0 ) {
-            return true;
-        }
-        return false;
+        return allowedPriorNodes.indexOf( it.spyPrior().nodeType ) >= 0;
     }
 
     private handleAsUIProperty( node: ListItem, context: ParsingContext, errors: Error[] ): boolean {
@@ -91,10 +88,7 @@ export class ListItemParser implements NodeParser< ListItem > {
             NodeTypes.DATABASE,
             NodeTypes.DATABASE_PROPERTY
         ];
-        if ( allowedPriorNodes.indexOf( it.spyPrior().nodeType ) < 0 ) {
-            return true;
-        }
-        return false;
+        return allowedPriorNodes.indexOf( it.spyPrior().nodeType ) >= 0;
     }
 
     private handleAsDatabaseProperty( node: ListItem, context: ParsingContext, errors: Error[] ): boolean {

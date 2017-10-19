@@ -19,6 +19,7 @@ export class ImportParser implements NodeParser< Import > {
         errors: Error[]
     ): boolean {
 
+        // Checks the structure
         if ( ! context.doc.imports ) {
             context.doc.imports = [];
         }        

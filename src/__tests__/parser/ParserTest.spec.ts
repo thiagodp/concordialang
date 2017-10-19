@@ -197,6 +197,33 @@ describe( 'ParserTest', () => {
         expect( doc.constantBlock.items ).toHaveLength( 2 );
         expect( doc.constantBlock.items[ 0 ].nodeType ).toBe( NodeTypes.CONSTANT );
         expect( doc.constantBlock.items[ 1 ].nodeType ).toBe( NodeTypes.CONSTANT );
+    } );
+
+    
+    it( 'detects a database and its properties', () => {
+        [
+            '#language:en',
+            '',
+            'Database: My DB',
+            '  - type is "mysql"',            
+            '  - name is "mydb"',
+            '  - username is "root"',
+            '  - password is ""'
+        ].forEach( ( val, index ) => lexer.addNodeFromLine( val, index + 1 ) );
+
+        let doc: Document = {};
+        parser.analyze( lexer.nodes(), doc );
+
+        expect( parser.errors() ).toEqual( [] );
+        expect( doc.databases ).toHaveLength( 1 );
+        let db = doc.databases[ 0 ];
+        expect( db.name ).toBe( 'My DB' );
+
+        expect( db.items ).toHaveLength( 4 );
+        expect( db.items[ 0 ].nodeType ).toBe( NodeTypes.DATABASE_PROPERTY );
+        expect( db.items[ 1 ].nodeType ).toBe( NodeTypes.DATABASE_PROPERTY );
+        expect( db.items[ 2 ].nodeType ).toBe( NodeTypes.DATABASE_PROPERTY );
+        expect( db.items[ 3 ].nodeType ).toBe( NodeTypes.DATABASE_PROPERTY );
     } );    
 
 } );

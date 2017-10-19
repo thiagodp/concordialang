@@ -1,3 +1,4 @@
+import { Database } from './DataSource';
 import { Table } from './Table';
 import { ConstantBlock } from './ConstantBlock';
 import { FileInfo } from './FileInfo';
@@ -31,5 +32,6 @@ export interface Document {
     constantBlock?: ConstantBlock; // public
     uiElements?: UIElement[]; // public, but a feature may have them too
     tables?: Table[]; // public
+    databases?: Database[]; // public
 
 }

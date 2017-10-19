@@ -13,17 +13,17 @@ export class TableParser implements NodeParser< Table > {
     /** @inheritDoc */
     public analyze( node: Table, context: ParsingContext, it: NodeIterator, errors: Error[] ): boolean {
 
-        // Structure checking
+        // Checks the structure
         if ( ! context.doc.tables ) {
             context.doc.tables = [];
         }
 
-        // Adjust the content
+        // Adjusts the content
         context.resetInValues();
         context.inTable = true;
         context.currentTable = node;
 
-        // Add the node
+        // Adds the node
         context.doc.tables.push( node );
 
         return true;

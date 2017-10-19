@@ -1,3 +1,5 @@
+import { DatabasePropertyLexer } from './DatabasePropertyLexer';
+import { DatabaseLexer } from './DatabaseLexer';
 import { UIPropertyLexer } from './UIPropertyLexer';
 import { UIElementLexer } from './UIElementLexer';
 import { ConstantBlock } from '../ast/ConstantBlock';
@@ -80,6 +82,8 @@ export class Lexer {
             , new TableRowLexer()            
             , new UIElementLexer( dictionary.uiElement )
             , new UIPropertyLexer()
+            , new DatabaseLexer( dictionary.database )
+            , new DatabasePropertyLexer()
             , new TextLexer() // captures any non-empty
         ];
     }

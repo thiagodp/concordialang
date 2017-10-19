@@ -13,12 +13,12 @@ export class StateParser implements NodeParser< State > {
     /** @inheritDoc */
     public analyze( node: State, context: ParsingContext, it: NodeIterator, errors: Error[] ): boolean {
 
-        // Structure checking
+        // Checks the structure
         if ( ! context.doc.states ) {
             context.doc.states = [];
         }
 
-        // Add the node
+        // Adds the node
         context.doc.states.push( node );
 
         return true;

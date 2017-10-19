@@ -21,12 +21,12 @@ export class TableRowParser implements NodeParser< TableRow > {
             return false;
         }
 
-        // Checking structure
+        // Checks the structure
         if ( ! context.currentTable.rows ) {
             context.currentTable.rows = [];
         }
 
-        // Adding the node
+        // Adds the node
         context.currentTable.rows.push( node );
         
         return true;
