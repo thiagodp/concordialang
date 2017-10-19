@@ -16,7 +16,7 @@ export interface KeywordDictionary { // properties should exist in Keywords
     state: string[];
     testcase: string[];
     uiElement: string[];
-    table: string[];
+    database: string[];
 
     // Also available in Gherkin
 
@@ -30,5 +30,7 @@ export interface KeywordDictionary { // properties should exist in Keywords
     stepThen: string[];
     stepAnd: string[];
     stepOtherwise: string[];
+
+    table: string[];    
 
 }

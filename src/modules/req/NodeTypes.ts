@@ -16,7 +16,6 @@ export abstract class NodeTypes extends Keywords {
     // Also available in Gherkin
 
     static TAG: string = 'tag';
-    static TABLE: string = 'table';
     static TABLE_ROW: string = 'tableRow';
     static TEXT: string = 'text'; // not empty content
 

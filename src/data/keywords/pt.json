@@ -6,7 +6,7 @@
     "state": [ "estado" ],    
     "testcase": [ "caso de teste" ],
     "uiElement": [ "elemento da iu" ],
-    "table": [ "tabela", "table" ],
+    "database": [ "banco de dados", "database" ],
 
     "language": [ "linguagem", "idioma", "língua",  "language" ],
 
@@ -17,5 +17,7 @@
     "stepWhen": [ "quando" ],
     "stepThen": [ "então" ],    
     "stepAnd": [ "e", "mas" ],
-    "stepOtherwise": [ "caso contrário", "senão" ]
+    "stepOtherwise": [ "caso contrário", "senão" ],
+
+    "table": [ "tabela", "table" ]
 }
