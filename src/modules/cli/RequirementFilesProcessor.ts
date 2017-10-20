@@ -1,3 +1,4 @@
+import { Warning } from '../req/Warning';
 import { NLPException } from '../nlp/NLPException';
 import { NLPBasedSentenceRecognizer } from '../nlp/NLPBasedSentenceRecognizer';
 import { LocatedException } from '../req/LocatedException';
@@ -180,12 +181,22 @@ export class RequirementFilesProcessor {
 
     private sortErrorsByLocation( errors: LocatedException[] ): LocatedException[] {
         return Array.sort( errors, ( a: LocatedException, b: LocatedException ) => {
-            // Compare the line
-            let lineDiff: number = a.location.line - b.location.line;
-            if ( 0 === lineDiff ) { // Same line, so let's compare the column
-                return a.location.column - b.location.column;
+            if ( a.location && b.location ) {
+                // Compare the line
+                let lineDiff: number = a.location.line - b.location.line;
+                if ( 0 === lineDiff ) { // Same line, so let's compare the column
+                    return a.location.column - b.location.column;
+                }
+                return lineDiff;
             }
-            return lineDiff;
+            // No location, so let's compare the error type
+            let aIsWarning = a.name === Warning.name;
+            let bIsWarning = b.name === Warning.name;
+            // Both are warnings, they are equal
+            if ( aIsWarning && bIsWarning ) {
+                return 0;
+            }
+            return aIsWarning ? 1 : -1;
         } );
     }
 

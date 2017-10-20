@@ -1,0 +1,82 @@
+[
+    {
+        "entity": "testcase",
+        "sentences": [
+            "I {ui_action} on {value}",
+            "I click on {value}",
+
+            "I {ui_action} on {element}",
+            "I {ui_action} in the option {element}",
+            "I click on {element}",
+
+            "I {ui_action} the {value}",
+            "I type the {value}",
+
+            "I {ui_action} in the option {value}",
+            "I click in the option {value}",
+            
+            "I {ui_action} {value} with {value}",
+            "I fill {value} with {value}",
+
+            "I {ui_action} {value} with {number}",
+            "I fill {value} with {number}",
+
+            "I {ui_action} {value} {ui_action_option} {value}",
+            "I fill {value} inside {value}",
+
+            "I {ui_action} in {ui_element_type} {value}",
+            "I {ui_action} in {ui_element_type} {value} with {value}",
+            "I {ui_action} in {ui_element_type} {value} with {number}",
+
+            "I {ui_action} in {ui_element_type} {element}",
+            "I {ui_action} in {ui_element_type} {element} with {value}",
+            "I {ui_action} in {ui_element_type} {element} with {number}",
+
+            "I {ui_action} the {ui_element_type} with {value}",
+            "I {ui_action} in {ui_element_type} {value} with {value}",
+            "I {ui_action} in {ui_element_type} {value} with {number}",
+
+            "I {ui_action} the {ui_element_type} with {number}",
+
+            "I {ui_action} {element} with {value}",
+            "I {ui_action} {element} with {number}",
+
+            "I {ui_action_modifier} {ui_action} on {value}",
+            "I {ui_action_modifier} {ui_action} the {value}",
+
+            "I {ui_action_modifier} {ui_action} in {ui_element_type} {value}",
+            "I {ui_action_modifier} {ui_action} the {ui_element_type} with {value}",
+
+            "I {ui_action} {value} in {element}",
+            "I {ui_action_modifier} {ui_action} {value} in {element}",
+
+            "I {ui_action} {element} with {value}",
+            "I {ui_action_modifier} {ui_action} {element} with {value}"
+        ]
+    },
+
+    {
+        "entity": "ui",
+        "sentences": [
+            "{ui_property} {ui_verb} {value}",
+            "{ui_property} {ui_verb} {query}",
+            "{ui_property} {ui_verb} {number}",
+            "{ui_property} {ui_verb} {ui_element_type}",
+            "id is {value}",
+            "maximum length is {number}"
+        ]
+    },
+
+    {
+        "entity": "datasource",
+        "sentences": [
+            "{ds_property} {ui_verb} {value}",
+            "{ds_property} {ui_verb} {number}",
+            "path is {value}",
+            "name is {value}",
+            "type is {value}",
+            "port is {number}"
+        ]
+    }
+
+]

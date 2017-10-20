@@ -30,7 +30,7 @@ export class ImportSDA implements NodeBasedSDA {
         let duplicated: Import[] = ( new DuplicationChecker() )
             .withDuplicatedProperty( doc.imports, 'content' );
         for ( let dup of duplicated ) {
-            let msg = 'Duplicated imported to file "' + dup.content + '".';
+            let msg = 'Duplicated imported to file "' + dup.value + '".';
             let err = new SemanticException( msg, dup.location );
             errors.push( err );            
         }
@@ -38,7 +38,7 @@ export class ImportSDA implements NodeBasedSDA {
         
         for ( let imp of doc.imports ) {
 
-            let importPath = imp.content;
+            let importPath = imp.value;
             let resolvedPath = path.join( path.dirname( doc.fileInfo.path ), importPath );
 
             // Add the resolved path to the import
