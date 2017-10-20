@@ -21,16 +21,15 @@ WARNING: WIP
     "durationMs": 4000,
     "total": {
         "tests": 10,
-        "passed": 7,
-        "skipped": 1,
-        "failed": 1,
-        "error": 1,
+        "failures": 1,
+        "errors": 1,
+        "skip": 1,
         "unknown": 0
     },
     "results": [
         {
-            "suite": "TestSuite",
-            "methods": [
+            "testsuite": "MyTestSuite",
+            "testcases": [
                 {
                     "name": "startServer",
                     "status": "failed",
