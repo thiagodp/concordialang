@@ -26,6 +26,12 @@ export class NLPTrainer {
     }
 
     canBeTrained( language: string ): boolean {
+
+        // Already trained -> can be trained ;)
+        if ( this._dataCacheMap[ language ] ) {
+            return true;
+        }
+
         return this._fileUtil.fileExist( this.nlpPath( language ) )
             && this._fileUtil.fileExist( this.trainingPath( language ) );
     }

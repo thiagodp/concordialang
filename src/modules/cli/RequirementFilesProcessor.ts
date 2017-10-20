@@ -37,10 +37,10 @@ export class RequirementFilesProcessor {
     private _docProcessor: DocumentProcessor = new LexerProcessor( this._lexer );    
     private _parser: Parser = new Parser();
     private _fileUtil: FileUtil = new FileUtil();
-    private _nlp: NLP = new NLP();
+
     private _nlpTrainer: NLPTrainer = new NLPTrainer();
     private _nlpBasedSentenceRecognizer: NLPBasedSentenceRecognizer =
-        new NLPBasedSentenceRecognizer( this._nlp, 'en' );
+        new NLPBasedSentenceRecognizer();
     private _singleDocAnalyzer: SingleDocumentAnalyzer = new SingleDocumentAnalyzer();
     private _specAnalyzer: SpecAnalyzer = new SpecAnalyzer();
 
@@ -109,19 +109,18 @@ export class RequirementFilesProcessor {
             this.addErrorsToDoc( this._parser.errors(), doc );
 
             // NLP ===
-            if ( ! this._nlp.isTrained( language ) ) {
-                this._nlpTrainer.trainNLP( this._nlp, language );
-                /*
-                if ( this._nlpTrainer.canBeTrained( language ) ) {
-                    this._nlpTrainer.trainNLP( this._nlp, language );
+            if ( ! this._nlpBasedSentenceRecognizer.isTrained( language ) ) {
+                //this._nlpBasedSentenceRecognizer.train( language );
+                if ( this._nlpBasedSentenceRecognizer.canBeTrained( language ) ) {
+                    this._nlpBasedSentenceRecognizer.train( language );
                 } else {
                     let errors = [
-                        new Error( 'The NLP cannot be trained in ' + language + '.' )
+                        new Error( 'The NLP cannot be trained in the language "' + language + '".' )
                     ];
-                    this.addErrorsToDoc( errors, doc );
+                    this.addErrorsToDoc( errors, doc );                    
                 }
-                */
             }
+
             this._nlpBasedSentenceRecognizer.recognizeSentencesInDocument(
                 doc, doc.fileErrors, doc.fileWarnings );
 

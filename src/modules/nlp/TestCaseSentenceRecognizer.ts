@@ -1,3 +1,4 @@
+import { NLPTrainer } from './NLPTrainer';
 import { Intents } from './Intents';
 import { NodeSentenceRecognizer, NLPResultProcessor } from "./NodeSentenceRecognizer";
 import { LocatedException } from "../req/LocatedException";
@@ -21,6 +22,14 @@ export class TestCaseSentenceRecognizer {
     
     constructor( private _nlp: NLP ) {
         this._syntaxRules = this.buildSyntaxRules();
+    }
+
+    nlp(): NLP {
+        return this._nlp;
+    }
+    
+    trainMe( trainer: NLPTrainer, language: string ) {
+        return trainer.trainNLP( this._nlp, language, Intents.TEST_CASE );
     }
 
     /**

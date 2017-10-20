@@ -9,6 +9,7 @@ import { NLPResult, NLP } from "./NLP";
 import { NLPException } from "./NLPException";
 import { Entities } from "./Entities";
 import { Warning } from "../req/Warning";
+import { NLPTrainer } from './NLPTrainer';
 
 /**
  * UI element property sentence recognizer.
@@ -21,6 +22,14 @@ export class UIPropertyRecognizer {
 
     constructor( private _nlp: NLP ) {
         this._syntaxRules = this.buildSyntaxRules();
+    }
+
+    nlp(): NLP {
+        return this._nlp;
+    }
+
+    trainMe( trainer: NLPTrainer, language: string ) {
+        return trainer.trainNLP( this._nlp, language, Intents.UI );
     }    
 
     /**

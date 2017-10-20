@@ -9,6 +9,7 @@ import { NLPException } from "./NLPException";
 import { Entities } from "./Entities";
 import { Warning } from "../req/Warning";
 import { DatabaseProperty } from '../ast/DataSource';
+import { NLPTrainer } from './NLPTrainer';
 
 /**
  * Database property sentence recognizer.
@@ -21,6 +22,14 @@ export class DatabasePropertyRecognizer {
 
     constructor( private _nlp: NLP ) {
         this._syntaxRules = this.buildSyntaxRules();
+    }
+
+    nlp(): NLP {
+        return this._nlp;
+    }
+
+    trainMe( trainer: NLPTrainer, language: string ) {
+        return trainer.trainNLP( this._nlp, language, Intents.DATASOURCE );
     }    
 
     /**
@@ -66,7 +75,7 @@ export class DatabasePropertyRecognizer {
             let values = r.entities
                 .filter( e => e.entity == Entities.VALUE || e.entity == Entities.NUMBER )
                 .map( e => e.value );
-                
+
             if ( values.length < 1 ) {
                 const msg = 'Value expected in the sentence "' + node.content + '".';
                 errors.push( new NLPException( msg, node.location ) );
