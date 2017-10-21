@@ -2,6 +2,8 @@ import { TestScriptPlugin } from '../../modules/ts/TestScriptPlugin';
 import { AbstractTestScript } from '../../modules/ts/AbstractTestScript';
 import { TestScriptGenerationOptions, TestScriptGenerationResult } from '../../modules/ts/TestScriptGeneration';
 import { TestScriptExecutionOptions, TestScriptExecutionResult } from '../../modules/ts/TestScriptExecution';
+import { CmdRunner } from "../../modules/cli/CmdRunner";
+import { OutputFileWriter } from "../../modules/cli/OutputFileWriter";
 
 /**
  * Plugin for CodeceptJS.
@@ -9,8 +11,17 @@ import { TestScriptExecutionOptions, TestScriptExecutionResult } from '../../mod
  * @author Thiago Delgado Pinto
  */
 export class CodeceptJS implements TestScriptPlugin {
+   
+    private cmd: CmdRunner;
+    private fileWriter: OutputFileWriter;
 
     private VERSION: string = '0.1';
+    private lastScriptDir: string = '';
+
+    constructor() {
+        this.cmd = new CmdRunner();
+        this.fileWriter = new OutputFileWriter();
+    }
 
     /** @inheritDoc */
     public isFake(): boolean {
@@ -46,16 +57,29 @@ export class CodeceptJS implements TestScriptPlugin {
     }    
 
     /** @inheritDoc */
-    public generateCode(
-        abstractTestScripts: AbstractTestScript[],
-        options: TestScriptGenerationOptions
-    ): TestScriptGenerationResult {
+    public generateCode( abstractTestScripts: AbstractTestScript[], options: TestScriptGenerationOptions ): TestScriptGenerationResult {
+        this.lastScriptDir = options.scriptDir;
         throw new Error('Not implemented yet.');
     }
 
     /** @inheritDoc */
     public executeCode( options: TestScriptExecutionOptions ): TestScriptExecutionResult {
-        throw new Error('Not implemented yet.');
+        // It's only possible to run CodeceptJS if there is a 'codecept.json' file in the folder.
+        this.fileWriter.write( '{}', this.lastScriptDir, 'codecept', 'json' );
+        let commandConfig: any = {
+            helpers: {
+                WebDriverIO: {
+                    browser: "chrome",
+                    url: "http://localhost:8080"
+                }
+            },
+            tests: "*.js"            
+        };
+        let testCommand: string = `codeceptjs run --steps --override '${ JSON.stringify( commandConfig ) }' -c ${ this.lastScriptDir }`;
+        this.cmd.run( testCommand, ( err, data )=>{
+            // TODO: get test results
+        });
+        return null;
     }
 
     /** @inheritDoc */
