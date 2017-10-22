@@ -9,6 +9,7 @@ import { OutputFileWriter } from "../../modules/cli/OutputFileWriter";
  * Plugin for CodeceptJS.
  * 
  * @author Thiago Delgado Pinto
+ * @author Matheus Eller Fagundes
  */
 export class CodeceptJS implements TestScriptPlugin {
    

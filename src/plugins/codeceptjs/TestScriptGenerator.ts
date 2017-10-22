@@ -4,8 +4,8 @@ import { ATSCommand } from "../../modules/ts/AbstractTestScript";
 const dedent = require('dedent-js');
 
 /**
- * Uses [Mustache](https://github.com/janl/mustache.js/) to parse abstract test cases
- * to CodeceptJS code.
+ * Generate test scripts for CodeceptJS.
+ * Uses [Mustache](https://github.com/janl/mustache.js/) for this purpose.
  * 
  * @author Matheus Eller Fagundes
  */
@@ -45,7 +45,7 @@ export class TestScriptGenerator {
                 }
             });
         } );
-        return render(this.template, testCase);
+        return render( this.template, testCase ); // mustache's renderer
     }
 
 }
