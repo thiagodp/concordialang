@@ -10,7 +10,7 @@ describe( 'CodeceptJSTest', () => {
     
     it( 'should execute code', () => {
         let options: TestScriptExecutionOptions = new TestScriptExecutionOptions();
-        options.resultDir = '/home/matheus/concordia';
+        options.resultDir = './output';
         plugin.executeCode( options );
     } );
     
