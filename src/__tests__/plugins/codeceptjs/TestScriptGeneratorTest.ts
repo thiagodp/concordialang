@@ -39,7 +39,7 @@ describe( 'TestScriptGeneratorTest', () => {
             Scenario('successful login', (I) => {});
         `;
 
-        expect( uglify( gen.generateScript( testCase ) ) ).toBe( uglify( expected ) );
+        expect( uglify( gen.generate( testCase ) ) ).toBe( uglify( expected ) );
     } );
     
     it( 'should parse a simple feature structure with two scenarios', () => {
@@ -70,7 +70,7 @@ describe( 'TestScriptGeneratorTest', () => {
             Scenario('unsuccessful login', (I) => {});
         `;
 
-        expect( uglify( gen.generateScript( testCase ) ) ).toBe( uglify( expected ) );
+        expect( uglify( gen.generate( testCase ) ) ).toBe( uglify( expected ) );
     } );
 
     it( 'should parse a simple feature structure with one scenario with actions', () => {
@@ -132,7 +132,7 @@ describe( 'TestScriptGeneratorTest', () => {
             });
         `;
 
-        expect( uglify( gen.generateScript( testCase ) ) ).toBe( uglify( expected ) );
+        expect( uglify( gen.generate( testCase ) ) ).toBe( uglify( expected ) );
     } );
     
 } );

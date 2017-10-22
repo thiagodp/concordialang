@@ -1,6 +1,7 @@
 import { ActionMapper } from "./ActionMapper";
 import { render } from "mustache";
-import { ATSCommand } from "../../modules/ts/AbstractTestScript";
+import { AbstractTestScript, ATSCommand } from '../../modules/ts/AbstractTestScript';
+
 const dedent = require('dedent-js');
 
 /**
@@ -32,20 +33,20 @@ export class TestScriptGenerator {
         this.mapper = new ActionMapper();
     }
     
-    public generateScript( testCase: any ): string {
-        testCase.testcases.forEach( ( test: any ) => {
+    public generate( ats: AbstractTestScript ): string {
+        ats.testcases.forEach( ( test: any ) => {
             let commands: Array<any> = [];
             test.commands.forEach( ( cmd: any ) => {
                 let command: ATSCommand = cmd;
                 commands.push( this.mapper.map( command ) );
             });
-            testCase.scenarios.forEach( ( scenario: any ) => {
+            ats.scenarios.forEach( ( scenario: any ) => {
                 if ( scenario.name === test.scenario ) {
                     scenario.commands = commands;
                 }
             });
         } );
-        return render( this.template, testCase ); // mustache's renderer
+        return render( this.template, ats ); // mustache's renderer
     }
 
 }

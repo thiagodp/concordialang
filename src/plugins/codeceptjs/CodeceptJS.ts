@@ -1,9 +1,13 @@
+import { TestScriptGenerator } from './TestScriptGenerator';
 import { TestScriptPlugin } from '../../modules/ts/TestScriptPlugin';
 import { AbstractTestScript } from '../../modules/ts/AbstractTestScript';
-import { TestScriptGenerationOptions, TestScriptGenerationResult } from '../../modules/ts/TestScriptGeneration';
+import { TestScriptGenerationOptions } from '../../modules/ts/TestScriptGeneration';
 import { TestScriptExecutionOptions, TestScriptExecutionResult } from '../../modules/ts/TestScriptExecution';
 import { CmdRunner } from "../../modules/cli/CmdRunner";
 import { OutputFileWriter } from "../../modules/cli/OutputFileWriter";
+
+import * as fs from 'fs';
+import * as util from 'util';
 
 /**
  * Plugin for CodeceptJS.
@@ -13,15 +17,17 @@ import { OutputFileWriter } from "../../modules/cli/OutputFileWriter";
  */
 export class CodeceptJS implements TestScriptPlugin {
    
-    private cmd: CmdRunner;
-    private fileWriter: OutputFileWriter;
+    private _cmd: CmdRunner;
+    private _fileWriter: OutputFileWriter;
+
+    private _scriptGenerator: TestScriptGenerator = new TestScriptGenerator();
+    private _writeFile = util.promisify( fs.writeFile );
 
     private VERSION: string = '0.1';
-    private lastScriptDir: string = '';
 
-    constructor() {
-        this.cmd = new CmdRunner();
-        this.fileWriter = new OutputFileWriter();
+    constructor( private _fs: any, private _encoding: string = 'utf8' ) {
+        this._cmd = new CmdRunner();
+        this._fileWriter = new OutputFileWriter();
     }
 
     /** @inheritDoc */
@@ -58,15 +64,47 @@ export class CodeceptJS implements TestScriptPlugin {
     }    
 
     /** @inheritDoc */
-    public generateCode( abstractTestScripts: AbstractTestScript[], options: TestScriptGenerationOptions ): TestScriptGenerationResult {
-        this.lastScriptDir = options.scriptDir;
-        throw new Error('Not implemented yet.');
+    generateCode(
+        abstractTestScripts: AbstractTestScript[],
+        options: TestScriptGenerationOptions
+    ): Promise< string >[] {
+        return abstractTestScripts.map( this.processTestScript );
     }
+
+    /**
+     * Tries to generate a source code file from an abstract test script.
+     * 
+     * *Important*: This function should keep the fat arrow style, () => {}, in
+     * order to preverse the context of `this`.
+     * 
+     * @param ats Abstract test script
+     * @returns A promise with the file name as the data.
+     */
+    private processTestScript = ( ats: AbstractTestScript ): Promise< string > => {
+
+        return new Promise( ( resolve, reject ) => {
+            let fileName: string = this.makeFileNameFromFeature( ats.feature.name );
+            let code: string = this._scriptGenerator.generate( ats );
+            this._fs.writeFile( fileName, code, this._encoding, ( err ) => {
+                if ( err ) {
+                    reject( err );
+                } else {
+                    resolve( fileName );
+                }
+            } );
+        } );
+
+    };
+
+    private makeFileNameFromFeature( featureName: string ): string {
+        return featureName.toLowerCase().replace( /( )/g, '-' ) + '.js';
+    }
+
 
     /** @inheritDoc */
     public executeCode( options: TestScriptExecutionOptions ): TestScriptExecutionResult {
         // It's only possible to run CodeceptJS if there is a 'codecept.json' file in the folder.
-        this.fileWriter.write( '{}', this.lastScriptDir, 'codecept', 'json' );
+        this._fileWriter.write( '{}', options.scriptDir, 'codecept', 'json' );
         let commandConfig: any = {
             helpers: {
                 WebDriverIO: {
@@ -77,7 +115,7 @@ export class CodeceptJS implements TestScriptPlugin {
             tests: "*.js"            
         };
         let testCommand: string = `codeceptjs run --steps --override '${ JSON.stringify( commandConfig ) }' -c ${ this.lastScriptDir }`;
-        this.cmd.run( testCommand, ( err, data )=>{
+        this._cmd.run( testCommand, ( err, data )=>{
             // TODO: get test results
         });
         return null;

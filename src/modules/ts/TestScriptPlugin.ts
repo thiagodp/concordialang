@@ -27,19 +27,19 @@ export interface TestScriptPlugin {
 
     /** Returns the authors of the plugin. */
     authors(): string[];
-        
 
+    
     /**
      * Generate source code from abstract test scripts, according to the given options.
      * 
      * @param abstractTestScripts Abstract test scripts.
      * @param options Generation options.
-     * @return Generation results.
+     * @return An array with promises for each file, contaning the file name as the data.
      */
     generateCode(
         abstractTestScripts: AbstractTestScript[],
         options: TestScriptGenerationOptions
-    ): TestScriptGenerationResult;
+    ): Promise< string >[];
 
     /**
      * Execute test scripts, according to the given options.
