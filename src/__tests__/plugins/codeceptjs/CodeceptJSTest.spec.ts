@@ -51,7 +51,7 @@ describe( 'CodeceptJSTest', () => {
         ];
 
         let options: TestScriptGenerationOptions = new TestScriptGenerationOptions();
-        options.scriptDir = outputDir;
+        options.sourceCodeDir = outputDir;
 
         let promises: Promise< string >[] = plugin.generateCode( scripts, options );
         return Promise.all( promises )
@@ -60,10 +60,10 @@ describe( 'CodeceptJSTest', () => {
             } );
     } );
     
-    
+
     it( 'should execute code', () => {
         let options: TestScriptExecutionOptions = new TestScriptExecutionOptions();
-        options.resultDir = './output';
+        options.executionResultDir = './output';
         plugin.executeCode( options );
     } );
     

@@ -1,5 +1,5 @@
 import { AbstractTestScript } from './AbstractTestScript';
-import { TestScriptGenerationOptions, TestScriptGenerationResult } from "./TestScriptGeneration";
+import { TestScriptGenerationOptions } from "./TestScriptGeneration";
 import { TestScriptExecutionResult, TestScriptExecutionOptions } from "./TestScriptExecution";
 
 /**
@@ -32,8 +32,8 @@ export interface TestScriptPlugin {
     /**
      * Generate source code from abstract test scripts, according to the given options.
      * 
-     * @param abstractTestScripts Abstract test scripts.
-     * @param options Generation options.
+     * @param abstractTestScripts Abstract test scripts
+     * @param options Options
      * @return An array with promises for each file, contaning the file name as the data.
      */
     generateCode(

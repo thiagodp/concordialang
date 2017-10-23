@@ -7,8 +7,8 @@ import { SpecFilter } from "../tc/SpecFilter";
  */
 export class TestScriptExecutionOptions {
     public filter: TestScriptExecutionFilter = new TestScriptExecutionFilter();
-    public scriptDir: string = null; // where the script files are
-    public resultDir: string = null; // where to place the file with the execution results
+    public sourceCodeDir: string = null; // where the script files are
+    public executionResultDir: string = null; // where to place the file with the execution results
 }
 
 /**

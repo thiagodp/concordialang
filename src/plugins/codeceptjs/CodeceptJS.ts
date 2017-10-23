@@ -6,8 +6,9 @@ import { TestScriptExecutionOptions, TestScriptExecutionResult } from '../../mod
 import { CmdRunner } from "../../modules/cli/CmdRunner";
 import { OutputFileWriter } from "../../modules/cli/OutputFileWriter";
 
-import * as fs from 'fs';
-import * as util from 'util';
+//import * as fs from 'fs';
+//import * as util from 'util';
+import * as path from 'path';
 
 /**
  * Plugin for CodeceptJS.
@@ -21,7 +22,6 @@ export class CodeceptJS implements TestScriptPlugin {
     private _fileWriter: OutputFileWriter;
 
     private _scriptGenerator: TestScriptGenerator = new TestScriptGenerator();
-    private _writeFile = util.promisify( fs.writeFile );
 
     private VERSION: string = '0.1';
 
@@ -64,11 +64,16 @@ export class CodeceptJS implements TestScriptPlugin {
     }    
 
     /** @inheritDoc */
-    generateCode(
+    public generateCode(
         abstractTestScripts: AbstractTestScript[],
         options: TestScriptGenerationOptions
     ): Promise< string >[] {
-        return abstractTestScripts.map( this.processTestScript );
+        //return abstractTestScripts.map( this.processTestScript );
+        let promises: Promise< string >[] = [];
+        for ( let ats of abstractTestScripts ) {
+            promises.push( this.processTestScript( ats, options.sourceCodeDir ) );
+        }
+        return promises;
     }
 
     /**
@@ -78,14 +83,16 @@ export class CodeceptJS implements TestScriptPlugin {
      * order to preverse the context of `this`.
      * 
      * @param ats Abstract test script
+     * @param targetDir Directory where to put the source code.
      * @returns A promise with the file name as the data.
      */
-    private processTestScript = ( ats: AbstractTestScript ): Promise< string > => {
+    private processTestScript = ( ats: AbstractTestScript, targetDir: string ): Promise< string > => {
 
         return new Promise( ( resolve, reject ) => {
-            let fileName: string = this.makeFileNameFromFeature( ats.feature.name );
-            let code: string = this._scriptGenerator.generate( ats );
-            this._fs.writeFile( fileName, code, this._encoding, ( err ) => {
+            const fileName: string = this.makeFileNameFromFeature( ats.feature.name );
+            const filePath: string = path.normalize( targetDir ) + fileName;
+            const code: string = this._scriptGenerator.generate( ats );
+            this._fs.writeFile( filePath, code, this._encoding, ( err ) => {
                 if ( err ) {
                     reject( err );
                 } else {
@@ -104,7 +111,7 @@ export class CodeceptJS implements TestScriptPlugin {
     /** @inheritDoc */
     public executeCode( options: TestScriptExecutionOptions ): TestScriptExecutionResult {
         // It's only possible to run CodeceptJS if there is a 'codecept.json' file in the folder.
-        this._fileWriter.write( '{}', options.scriptDir, 'codecept', 'json' );
+        this._fileWriter.write( '{}', options.sourceCodeDir, 'codecept', 'json' );
         let commandConfig: any = {
             helpers: {
                 WebDriverIO: {
@@ -114,7 +121,7 @@ export class CodeceptJS implements TestScriptPlugin {
             },
             tests: "*.js"            
         };
-        let testCommand: string = `codeceptjs run --steps --override '${ JSON.stringify( commandConfig ) }' -c ${ this.lastScriptDir }`;
+        let testCommand: string = `codeceptjs run --steps --override '${ JSON.stringify( commandConfig ) }' -c ${ options.executionResultDir }`;
         this._cmd.run( testCommand, ( err, data )=>{
             // TODO: get test results
         });
