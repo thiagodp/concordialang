@@ -63,8 +63,9 @@ describe( 'CodeceptJSTest', () => {
 
     it( 'should execute code', () => {
         let options: TestScriptExecutionOptions = new TestScriptExecutionOptions();
+        options.sourceCodeDir = './input';
         options.executionResultDir = './output';
-        plugin.executeCode( options );
+        return plugin.executeCode( options );
     } );
     
 } );

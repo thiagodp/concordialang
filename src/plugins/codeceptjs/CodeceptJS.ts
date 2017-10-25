@@ -1,3 +1,4 @@
+import { TestScriptExecutor } from './TestScriptExecutor';
 import { TestScriptGenerator } from './TestScriptGenerator';
 import { TestScriptPlugin } from '../../modules/ts/TestScriptPlugin';
 import { AbstractTestScript } from '../../modules/ts/AbstractTestScript';
@@ -18,16 +19,17 @@ import * as path from 'path';
  */
 export class CodeceptJS implements TestScriptPlugin {
    
-    private _cmd: CmdRunner;
-    private _fileWriter: OutputFileWriter;
-
-    private _scriptGenerator: TestScriptGenerator = new TestScriptGenerator();
+    private _scriptGenerator: TestScriptGenerator;
+    private _scriptExecutor: TestScriptExecutor;
 
     private VERSION: string = '0.1';
 
     constructor( private _fs: any, private _encoding: string = 'utf8' ) {
-        this._cmd = new CmdRunner();
-        this._fileWriter = new OutputFileWriter();
+        this._scriptGenerator = new TestScriptGenerator();
+        
+        let fileWriter: OutputFileWriter = new OutputFileWriter( _fs );
+        let cmd: CmdRunner = new CmdRunner();
+        this._scriptExecutor = new TestScriptExecutor( fileWriter, cmd );
     }
 
     /** @inheritDoc */
@@ -107,25 +109,10 @@ export class CodeceptJS implements TestScriptPlugin {
         return featureName.toLowerCase().replace( /( )/g, '-' ) + '.js';
     }
 
-
     /** @inheritDoc */
-    public executeCode( options: TestScriptExecutionOptions ): TestScriptExecutionResult {
-        // It's only possible to run CodeceptJS if there is a 'codecept.json' file in the folder.
-        this._fileWriter.write( '{}', options.sourceCodeDir, 'codecept', 'json' );
-        let commandConfig: any = {
-            helpers: {
-                WebDriverIO: {
-                    browser: "chrome",
-                    url: "http://localhost:8080"
-                }
-            },
-            tests: "*.js"            
-        };
-        let testCommand: string = `codeceptjs run --steps --override '${ JSON.stringify( commandConfig ) }' -c ${ options.executionResultDir }`;
-        this._cmd.run( testCommand, ( err, data )=>{
-            // TODO: get test results
-        });
-        return null;
+    public executeCode( options: TestScriptExecutionOptions ): Promise<TestScriptExecutionResult> {
+        return this._scriptExecutor.execute( options )
+            .then( this.convertReportFile );
     }
 
     /** @inheritDoc */
