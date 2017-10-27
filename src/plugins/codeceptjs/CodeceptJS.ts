@@ -7,8 +7,7 @@ import { TestScriptExecutionOptions, TestScriptExecutionResult } from '../../mod
 import { CmdRunner } from "../../modules/cli/CmdRunner";
 import { OutputFileWriter } from "../../modules/cli/OutputFileWriter";
 
-//import * as fs from 'fs';
-//import * as util from 'util';
+import * as fs from 'fs';
 import * as path from 'path';
 
 /**
@@ -24,12 +23,15 @@ export class CodeceptJS implements TestScriptPlugin {
 
     private VERSION: string = '0.1';
 
-    constructor( private _fs: any, private _encoding: string = 'utf8' ) {
+    constructor( private _fs?: any, private _encoding: string = 'utf8' ) {
+
+        _fs = _fs || fs; // assumes the Node's fs as the default
+
         this._scriptGenerator = new TestScriptGenerator();
-        
-        let fileWriter: OutputFileWriter = new OutputFileWriter( _fs );
-        let cmd: CmdRunner = new CmdRunner();
-        this._scriptExecutor = new TestScriptExecutor( fileWriter, cmd );
+        this._scriptExecutor = new TestScriptExecutor(
+            new OutputFileWriter( _fs ),
+            new CmdRunner()
+        );
     }
 
     /** @inheritDoc */
