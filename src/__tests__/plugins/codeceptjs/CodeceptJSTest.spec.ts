@@ -1,11 +1,11 @@
+import { spawn, exec } from 'child_process';
 import { TestScriptGenerationOptions } from '../../../modules/ts/TestScriptGeneration';
 import { TestCaseGenerationOptions } from '../../../modules/tc/TestCaseOptions';
 import { AbstractTestScript } from '../../../modules/ts/AbstractTestScript';
 import { TestScriptExecutionOptions } from '../../../modules/ts/TestScriptExecution';
 import { CodeceptJS } from "../../../plugins/codeceptjs/CodeceptJS";
 
-//import * as fs from 'fs';
-import { fs, vol } from 'memfs';
+import { fs as memfs, vol } from 'memfs';
 
 /**
  * @author Matheus Eller Fagundes
@@ -13,7 +13,11 @@ import { fs, vol } from 'memfs';
  */
 describe( 'CodeceptJSTest', () => {
 
-    let plugin: CodeceptJS = new CodeceptJS( fs ); // under test
+    let plugin: CodeceptJS = new CodeceptJS( memfs ); // under test
+
+    afterEach( () => {
+        vol.reset(); // erase in-memory files
+    } );
 
     // @see https://facebook.github.io/jest/docs/en/asynchronous.html#promises
     it( 'generate files with the right file names', () => {
@@ -60,12 +64,5 @@ describe( 'CodeceptJSTest', () => {
             } );
     } );
     
-
-    it( 'should execute code', () => {
-        let options: TestScriptExecutionOptions = new TestScriptExecutionOptions();
-        options.sourceCodeDir = './input';
-        options.executionResultDir = './output';
-        return plugin.executeCode( options );
-    } );
     
 } );
