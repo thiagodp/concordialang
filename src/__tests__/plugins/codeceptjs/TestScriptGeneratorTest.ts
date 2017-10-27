@@ -1,11 +1,15 @@
+import { AbstractTestScript } from '../../../modules/ts/AbstractTestScript';
 import { TestScriptGenerator } from "../../../plugins/codeceptjs/TestScriptGenerator";
 
 /**
-* @author Matheus Eller Fagundes
-*/
+ * @author Matheus Eller Fagundes
+ * @author Thiago Delgado Pinto
+ */
 describe( 'TestScriptGeneratorTest', () => {
 
     let gen: TestScriptGenerator; // under test
+
+    const comment = '/** Generated with <3 by Concordia. Run the following tests using CodeceptJS. */';
 
     function uglify(string: string): string{
         return string.replace(/(\r\n|\n|\r|[ \t])/gm, '');
@@ -15,35 +19,31 @@ describe( 'TestScriptGeneratorTest', () => {
         gen = new TestScriptGenerator();
     });
 
-    it( 'should parse a simple feature structure with one scenario', () => {
-        let testCase: any = {
+    it( 'should generate code for a simple feature without testcases', () => {
+
+        let testCase = {
             "schemaVersion": "1.0",
             "sourceFile": "path/to/somefile.testcase",
             "feature": {
                 "location": { "column": 1, "line": 1 },
                 "name": "login"
             },
-            "scenarios": [
-                {
-                    "location": { "column": 1, "line": 3 },
-                    "name": "successful login"
-                }
-            ],  
-            "testcases": [ ]
-        }
-        
+            "scenarios": [],  
+            "testcases": []
+        } as AbstractTestScript;
 
         let expected = `
-            /** Generated with <3 by Concordia. Run the following tests using CodeceptJS. */
+            ${comment}
             Feature('login');
-            Scenario('successful login', (I) => {});
         `;
 
         expect( uglify( gen.generate( testCase ) ) ).toBe( uglify( expected ) );
     } );
     
-    it( 'should parse a simple feature structure with two scenarios', () => {
-        let testCase: any = {
+
+    it( 'should generate code for test cases of two different scenarios, even without commands', () => {
+        
+        let testCase = {
             "schemaVersion": "1.0",
             "sourceFile": "path/to/somefile.testcase",
             "feature": {
@@ -60,21 +60,37 @@ describe( 'TestScriptGeneratorTest', () => {
                     "name": "unsuccessful login"
                 }
             ],  
-            "testcases": [ ]
-        }
+            "testcases": [
+                {
+                    "location": { "column": 1, "line": 40 },
+                    "scenario": "successful login",
+                    "name": "finishes successfully valid values",
+                    "commands": []
+                },
+                {
+                    "location": { "column": 1, "line": 41 },
+                    "scenario": "unsuccessful login",
+                    "name": "finishes unsuccessfully invalid values",
+                    invalid: true,
+                    "commands": []
+                }                
+            ]
+        } as AbstractTestScript;
 
         let expected = `
-            /** Generated with <3 by Concordia. Run the following tests using CodeceptJS. */
+            ${comment}
             Feature('login');
-            Scenario('successful login', (I) => {});
-            Scenario('unsuccessful login', (I) => {});
+            Scenario('successful login | finishes successfully valid values', (I) => {});
+            Scenario('unsuccessful login | finishes unsuccessfully invalid values', (I) => {});
         `;
 
         expect( uglify( gen.generate( testCase ) ) ).toBe( uglify( expected ) );
     } );
 
-    it( 'should parse a simple feature structure with one scenario with actions', () => {
-        let testCase: any = {
+
+    it( 'should generate code for one test case with commands', () => {
+
+        let testCase = {
             "schemaVersion": "1.0",
             "sourceFile": "path/to/somefile.testcase",
             "feature": {
@@ -90,11 +106,8 @@ describe( 'TestScriptGeneratorTest', () => {
             "testcases": [
                 {
                     "location": { "column": 1, "line": 40 },
-                    "name": "successful login",
-                    "invalid": true,
-        
-                    "feature": "login",
                     "scenario": "successful login",
+                    "name": "finishes successfully valid values",
         
                     "commands": [
                         {
@@ -109,8 +122,14 @@ describe( 'TestScriptGeneratorTest', () => {
                             "targets": [ "#username" ],
                             "targetType": "textbox",
                             "values": [ "bob" ],
-                            "invalid": true
                         },
+                        {
+                            "location": { "column": 1, "line": 43 },
+                            "action": "fill",
+                            "targets": [ "#password" ],
+                            "targetType": "textbox",
+                            "values": [ "b0bp4s$" ],
+                        },                        
                         {
                             "location": { "column": 1, "line": 43 },
                             "action": "click",
@@ -120,14 +139,17 @@ describe( 'TestScriptGeneratorTest', () => {
                     ]
                 }        
             ]
-        }
+        } as AbstractTestScript;
 
         let expected = `
-            /** Generated with <3 by Concordia. Run the following tests using CodeceptJS. */
+            ${comment}
+            
             Feature('login');
-            Scenario('successful login', (I) => {
+
+            Scenario('successful login | finishes successfully valid values', (I) => {
                 I.see('Login');
                 I.fillField('#username', 'bob');
+                I.fillField('#password', 'b0bp4s$');
                 I.click('#enter');
             });
         `;

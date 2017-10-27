@@ -2,6 +2,7 @@ import path = require( 'path' );
 
 /**
  * Utility class to write files.
+ * 
  * @author Matheus Eller Fagundes
  */
 export class OutputFileWriter {
@@ -10,6 +11,7 @@ export class OutputFileWriter {
     
     /**
      * Writes content to a file. Creates any directory on the path if needed.
+     * 
      * @param content Content to be written.
      * @param outputDirectory Directory to save the file.
      * @param fileName File name.
@@ -23,14 +25,16 @@ export class OutputFileWriter {
 
     /**
      * Ensures a directory existence, creating any parent directory if needed.
+     * 
      * @param filePath Path of the directory or file.
      */
     private ensureDirectoryExistence( filePath ): void {
         let dirname = path.dirname( filePath );
-        if ( this._fs.existsSync( dirname ) )
+        if ( this._fs.existsSync( dirname ) ) {
             return;
+        }
         this.ensureDirectoryExistence( dirname );
-        this._fs.mkdirSync(dirname);
+        this._fs.mkdirSync( dirname );
       }
 
 }
