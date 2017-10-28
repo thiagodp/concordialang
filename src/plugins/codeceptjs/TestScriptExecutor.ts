@@ -1,3 +1,4 @@
+import { TestCommandGenerator } from './TestCommandGenerator';
 import { CmdRunner } from '../../modules/cli/CmdRunner';
 import { TestScriptExecutionOptions } from '../../modules/ts/TestScriptExecution';
 import { OutputFileWriter } from "../../modules/cli/OutputFileWriter";
@@ -9,7 +10,7 @@ import { OutputFileWriter } from "../../modules/cli/OutputFileWriter";
  */
 export class TestScriptExecutor {
     
-    constructor( private _fileWriter: OutputFileWriter, private _cmd: CmdRunner ) {
+    constructor( private _fileWriter: OutputFileWriter, private _cmd: CmdRunner, private _cmdGenerator: TestCommandGenerator ) {
     }
 
     /**
@@ -18,23 +19,9 @@ export class TestScriptExecutor {
      * @param options Execution options
      */
     public execute( options: TestScriptExecutionOptions ): Promise< any > {
-
         // It's only possible to run CodeceptJS if there is a 'codecept.json' file in the folder.
         this._fileWriter.write( '{}', options.sourceCodeDir, 'codecept', 'json' );
-
-        const commandConfig: object = {
-            helpers: {
-                WebDriverIO: {
-                    browser: "chrome",
-                    url: "http://localhost:8080"
-                }
-            },
-            tests: "*.js"            
-        };
-        const configStr: string = JSON.stringify( commandConfig );
-
-        let testCommand: string = `codeceptjs run --steps --override '${configStr}' -c ${ options.sourceCodeDir }`;
-
+        let testCommand: string = this._cmdGenerator.generateTestCommand( options );
         return this._cmd.run( testCommand );
     }
 
