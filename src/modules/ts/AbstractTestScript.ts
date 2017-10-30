@@ -40,7 +40,6 @@ export interface NamedATSElement extends ATSElement {
  */
 export interface ATSTestCase extends NamedATSElement {
     invalid: boolean | undefined; // when true, it is expected that the test case will fail
-    feature: string | undefined;
     scenario: string | undefined;
     commands: ATSCommand[];
 }

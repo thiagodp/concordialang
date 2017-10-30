@@ -7,7 +7,8 @@ import { SpecFilter } from "../tc/SpecFilter";
  */
 export class TestScriptExecutionOptions {
     public filter: TestScriptExecutionFilter = new TestScriptExecutionFilter();
-    public resultDir: string = null; // directory where to place the files with test results
+    public sourceCodeDir: string = null; // where the script files are
+    public executionResultDir: string = null; // where to place the file with the execution results
 }
 
 /**
@@ -19,6 +20,20 @@ export class TestScriptExecutionFilter extends SpecFilter {
 }
 
 /**
+ * External tool execution result.
+ * 
+ * @author Thiago Delgado Pinto
+ */
+export class ExternalToolExecutionResult {
+
+    success: boolean;
+    details: string; // mainly in case of success is false
+
+    // Undefined if success is false
+    scriptExecutionResult: TestScriptExecutionResult | undefined;
+}
+
+/**
  * Test script execution result.
  * 
  * @author Thiago Delgado Pinto
@@ -26,16 +41,20 @@ export class TestScriptExecutionFilter extends SpecFilter {
 export class TestScriptExecutionResult {
 
     schemaVersion: string;
-    sourceFile: string;
+
+    sourceFile: string; // e.g.: xunit.xml
+    
     plugin: {
         name: string;
         description: string;
         version: string;
         targets: string[];
     };
+
     started: string; // UTC timestamp
     finished: string; // UTC timestamp    
     durationMs: number; // milliseconds
+
     total: {
         tests: number;
         passed: number;

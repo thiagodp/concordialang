@@ -1,17 +1,17 @@
-const cmd = require( 'node-cmd' );
+import { exec } from 'child_process';
+import * as util from 'util';
 
 /**
- * Runs commands on terminal.
+ * Runs commands on a console terminal.
+ * 
  * @author Matheus Eller Fagundes
+ * @author Thiago Delgado Pinto
  */
 export class CmdRunner {
     
-    public run( command: string, callback ?: ( err: any, data: any ) => void ): void {
-        if( callback ) {
-            cmd.get( command, callback );
-        } else {
-            cmd.run( command );
-        }
+    public run( command: string ): Promise< any > {
+        const execute = util.promisify( exec );
+        return execute( command );
     }
 
 }

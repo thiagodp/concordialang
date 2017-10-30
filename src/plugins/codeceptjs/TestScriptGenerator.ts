@@ -1,13 +1,15 @@
 import { ActionMapper } from "./ActionMapper";
 import { render } from "mustache";
-import { ATSCommand } from "../../modules/ts/AbstractTestScript";
+import { AbstractTestScript, ATSCommand } from '../../modules/ts/AbstractTestScript';
+
 const dedent = require('dedent-js');
 
 /**
- * Uses [Mustache](https://github.com/janl/mustache.js/) to parse abstract test cases
- * to CodeceptJS code.
+ * Generate test scripts for CodeceptJS.
+ * Uses [Mustache](https://github.com/janl/mustache.js/) for this purpose.
  * 
  * @author Matheus Eller Fagundes
+ * @author Thiago Delgado Pinto
  */
 export class TestScriptGenerator {
 
@@ -21,31 +23,28 @@ export class TestScriptGenerator {
 
         Feature('{{feature.name}}');
         
-        {{#scenarios}}
-        Scenario('{{name}}', (I) => {
-            {{#commands}}
+        {{#testcases}}
+        Scenario('{{scenario}} | {{name}}', (I) => {
+            {{#convertedCommands}}
             {{{.}}}
-            {{/commands}}
+            {{/convertedCommands}}
         });
         
-        {{/scenarios}}`;
+        {{/testcases}}`;
         this.mapper = new ActionMapper();
     }
     
-    public generateScript( testCase: any ): string {
-        testCase.testcases.forEach( ( test: any ) => {
-            let commands: Array<any> = [];
-            test.commands.forEach( ( cmd: any ) => {
-                let command: ATSCommand = cmd;
-                commands.push( this.mapper.map( command ) );
-            });
-            testCase.scenarios.forEach( ( scenario: any ) => {
-                if ( scenario.name === test.scenario ) {
-                    scenario.commands = commands;
-                }
-            });
-        } );
-        return render(this.template, testCase);
+    public generate = ( ats: AbstractTestScript ): string => {
+
+        let obj: any = { ... ats }; // spread to do a deep clone
+        for ( let test of obj.testcases ) {
+            test.convertedCommands = [];
+            for ( let cmd of test.commands ) {
+                test.convertedCommands.push( this.mapper.map( cmd ) );
+            }
+        }
+
+        return render( this.template, obj ); // mustache's renderer
     }
 
 }
