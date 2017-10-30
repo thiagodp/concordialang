@@ -1,19 +1,27 @@
+import { OutputFileWriter } from '../../../modules/cli/OutputFileWriter';
+import { CmdRunner } from '../../../modules/cli/CmdRunner';
+import { TestScriptExecutor } from '../../../plugins/codeceptjs/TestScriptExecutor';
 import { CodeceptJSOptionsBuilder } from '../../../plugins/codeceptjs/CodeceptJSOptionsBuilder';
 import { TestScriptExecutionOptions } from '../../../modules/ts/TestScriptExecution';
-import { TestCommandGenerator } from '../../../plugins/codeceptjs/TestCommandGenerator';
+import * as fs from 'fs';
 
 /**
  * @author Matheus Eller Fagundes
  */
-describe( 'TestCommandGeneratorTest', () => {
+describe( 'TestScriptExecutorTest', () => {
 
-    let generator: TestCommandGenerator = new TestCommandGenerator(); // under test
+    // under test
+    let executor: TestScriptExecutor = new TestScriptExecutor(
+        new OutputFileWriter( fs ),
+        new CmdRunner()
+    );    
 
-    it( 'generate a correct command', () => {
+    it( 'generates a correct command', () => {
+
         let options: TestScriptExecutionOptions = new TestScriptExecutionOptions();
         options.sourceCodeDir = '/path/to/test/scripts';
 
-        let command = generator.generateTestCommand( options );
+        let command = executor.generateTestCommand( options );
         let configStr = JSON.stringify( new CodeceptJSOptionsBuilder().value() );
 
         let expectedCommand = `codeceptjs run --steps --override '${ configStr }' -c /path/to/test/scripts`;
@@ -21,9 +29,9 @@ describe( 'TestCommandGeneratorTest', () => {
         expect( command ).toEqual( expectedCommand );
     } );
     
-    it( 'throws error if source code directory is missing', () => {
+    it( 'throws an error if source code directory is missing', () => {
         let options: TestScriptExecutionOptions = new TestScriptExecutionOptions();
-        expect( generator.generateTestCommand ).toThrow();
+        expect( executor.generateTestCommand ).toThrow();
     } );
     
 } );

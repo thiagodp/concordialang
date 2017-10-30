@@ -94,7 +94,7 @@ export class CodeceptJS implements TestScriptPlugin {
 
         return new Promise( ( resolve, reject ) => {
             const fileName: string = this.makeFileNameFromFeature( ats.feature.name );
-            const filePath: string = path.normalize( targetDir ) + fileName;
+            const filePath: string = path.normalize( targetDir + '/' + fileName );
             const code: string = this._scriptGenerator.generate( ats );
             this._fs.writeFile( filePath, code, this._encoding, ( err ) => {
                 if ( err ) {
