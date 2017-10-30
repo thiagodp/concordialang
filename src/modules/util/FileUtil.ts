@@ -75,6 +75,7 @@ export class FileUtil {
     extractFilesFromDirectory( dir: string, extensions?: Array< string > ): Array< string > {
         let filter: string;
         if ( extensions && extensions.length > 0 ) {
+            extensions = extensions.map( e => e.replace( '.', '' ) ); // Remove dots
             let ext = 1 === extensions.length ? extensions[ 0 ] : '{' + extensions.join( ',' ) + '}';
             filter = dir + '/**/*.' + ext;
         } else {

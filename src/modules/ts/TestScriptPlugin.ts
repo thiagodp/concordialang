@@ -8,26 +8,6 @@ import { TestScriptExecutionResult, TestScriptExecutionOptions } from "./TestScr
  * @author Thiago Delgado Pinto
  */
 export interface TestScriptPlugin {
-
-
-    /** Returns true if the plugin is fake (i.e. for demonstration purposes). */
-    isFake(): boolean;
-
-    /** Returns the plugin name. */
-    name(): string;
-
-    /** Returns the plugin description. */
-    description(): string;
-
-    /** Returns the plugin version. */
-    version(): string;
-
-    /** Returns the target technologies (e.g. frameworks). */
-    targets(): string[];
-
-    /** Returns the authors of the plugin. */
-    authors(): string[];
-
     
     /**
      * Generate source code from abstract test scripts, according to the given options.

@@ -29,6 +29,7 @@ export class TestScriptExecutor {
      * Generates a command that calls CodeceptJS and can be executed in a terminal.
      * 
      * @param options Execution options
+     * @throws Error
      */
     public generateTestCommand( options: TestScriptExecutionOptions ): string {
         if ( ! options.sourceCodeDir ) {

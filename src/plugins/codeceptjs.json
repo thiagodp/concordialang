@@ -1,3 +1,14 @@
 {
-    "plugin": "codeceptjs/CodeceptJS.ts"
+    "isFake": false,
+    "packageName": "concordialang-codeceptjs",    
+    "name": "codeceptjs",
+    "description": "Generates test scripts for CodeceptJS",
+    "version": "0.1",
+    "targets": [ "CodeceptJS" ],
+    "authors": [
+        "Matheus Eller Fagundes (matheusefagundes@gmail.com)",
+        "Thiago Delgado Pinto (thiago-dp@bol.com.br)"
+    ],
+    "file": "codeceptjs/CodeceptJS.ts",
+    "class": "CodeceptJS"
 }

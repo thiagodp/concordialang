@@ -21,8 +21,6 @@ export class CodeceptJS implements TestScriptPlugin {
     private _scriptGenerator: TestScriptGenerator;
     private _scriptExecutor: TestScriptExecutor;
 
-    private VERSION: string = '0.1';
-
     constructor( private _fs?: any, private _encoding: string = 'utf8' ) {
 
         _fs = _fs || fs; // assumes the Node's fs as the default
@@ -33,40 +31,7 @@ export class CodeceptJS implements TestScriptPlugin {
             new CmdRunner()
         );
     }
-
-    /** @inheritDoc */
-    public isFake(): boolean {
-        return false;    
-    }
     
-    /** @inheritDoc */
-    public name(): string {
-        return 'concordialang-codeceptjs';
-    }
-
-    /** @inheritDoc */
-    public description(): string {
-        return 'Generate test scripts for CodeceptJS'
-    }
-
-    /** @inheritDoc */
-    public version(): string {
-        return this.VERSION;
-    }
-
-    /** @inheritDoc */
-    public targets(): string[] {
-        return [ 'CodeceptJS' ];
-    }
-
-    /** @inheritDoc */
-    public authors(): string[] {
-        return [
-            'Matheus Eller Fagundes (matheusefagundes@gmail.com)',
-            'Thiago Delgado Pinto (thiago-dp@bol.com.br)'
-        ];
-    }    
-
     /** @inheritDoc */
     public generateCode(
         abstractTestScripts: AbstractTestScript[],

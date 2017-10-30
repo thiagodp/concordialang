@@ -1,9 +1,14 @@
 'use strict';
+import meow = require('meow'); // parse cmd line args
+import ora = require('ora'); // spinner
+import chalk = require('chalk'); // colors & style
+import * as path from 'path';
+import * as util from 'util';
+import { sprintf } from 'sprintf-js';
 
-import meow = require( 'meow' ); // parse cmd line args
-import ora = require( 'ora' ); // spinner
-import chalk = require( 'chalk' ); // colors & style
 import { InputProcessor } from './modules/cli/InputProcessor';
+import { JsonBasedTestScriptPluginFinder } from './modules/ts/JsonBasedTestScriptPluginFinder';
+import { TestScriptPluginData } from './modules/ts/TestScriptPluginData';
 
 const exeName: string = 'concordia';
 
@@ -87,7 +92,29 @@ let showAbout = function(): void {
 };
 
 let showPluginList = function(): void {
-    write( 'TODO: show plugin list' );
+
+    let sortPlugins = ( plugins: TestScriptPluginData[] ): TestScriptPluginData[] => {
+        return plugins.sort( ( a: TestScriptPluginData, b: TestScriptPluginData ): number => {
+            return a.name.toLowerCase() > b.name.toLowerCase() ? 1 : -1;
+        } );
+    };
+
+    let drawPlugins = ( plugins: TestScriptPluginData[] ) => {
+        const format = "%-20s %-8s %-22s"; // util.format does not support padding :(
+        write( chalk.yellow( sprintf( format, 'Name', 'Version', 'Description' ) ) );
+        plugins = sortPlugins( plugins );
+        for ( let p of plugins ) {
+            write( sprintf( format, p.name, p.version, p.description ) );
+        }
+    };
+
+    const dir = path.join( process.cwd(), '/plugins' );
+    const finder = new JsonBasedTestScriptPluginFinder( dir );
+    finder.find()
+        .then( ( plugins: TestScriptPluginData[] ) => {
+            drawPlugins( plugins );
+        } )
+        .catch( ( err ) => write( err.message ) );
 };
 
 let processInput = function( input: Array< string >, flags: any ): void {
@@ -98,7 +125,7 @@ let processInput = function( input: Array< string >, flags: any ): void {
 //console.log( cli );
 //console.log( process.cwd() );
 // Note that meow (cli) already deals with the flags "help" and "version"
-if ( ! cli.flags.files && 0 === cli.input.length && ! cli.flags.about ) {
+if ( ! cli.flags.files && 0 === cli.input.length && ! cli.flags.about && ! cli.flags.pluginList ) {
     showHelp();
 } else if ( cli.flags.about ) {
     showAbout();
