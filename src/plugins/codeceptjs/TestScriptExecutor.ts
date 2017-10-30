@@ -1,7 +1,6 @@
-import { TestCommandGenerator } from './TestCommandGenerator';
 import { CmdRunner } from '../../modules/cli/CmdRunner';
 import { TestScriptExecutionOptions } from '../../modules/ts/TestScriptExecution';
-import { OutputFileWriter } from "../../modules/cli/OutputFileWriter";
+import { OutputFileWriter } from "../../modules/util/OutputFileWriter";
 import { CodeceptJSOptionsBuilder } from './CodeceptJSOptionsBuilder';
 
 /**

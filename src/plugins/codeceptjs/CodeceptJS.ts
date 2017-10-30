@@ -5,7 +5,7 @@ import { AbstractTestScript } from '../../modules/ts/AbstractTestScript';
 import { TestScriptGenerationOptions } from '../../modules/ts/TestScriptGeneration';
 import { TestScriptExecutionOptions, TestScriptExecutionResult } from '../../modules/ts/TestScriptExecution';
 import { CmdRunner } from "../../modules/cli/CmdRunner";
-import { OutputFileWriter } from "../../modules/cli/OutputFileWriter";
+import { OutputFileWriter } from "../../modules/util/OutputFileWriter";
 
 import * as fs from 'fs';
 import * as path from 'path';
@@ -94,7 +94,7 @@ export class CodeceptJS implements TestScriptPlugin {
 
         return new Promise( ( resolve, reject ) => {
             const fileName: string = this.makeFileNameFromFeature( ats.feature.name );
-            const filePath: string = path.normalize( targetDir + '/' + fileName );
+            const filePath: string = path.join( targetDir, fileName );
             const code: string = this._scriptGenerator.generate( ats );
             this._fs.writeFile( filePath, code, this._encoding, ( err ) => {
                 if ( err ) {
@@ -112,7 +112,7 @@ export class CodeceptJS implements TestScriptPlugin {
     }
 
     /** @inheritDoc */
-    public executeCode( options: TestScriptExecutionOptions ): Promise<TestScriptExecutionResult> {
+    public executeCode( options: TestScriptExecutionOptions ): Promise< TestScriptExecutionResult > {
         return this._scriptExecutor.execute( options )
             .then( this.convertReportFile );
     }

@@ -27,7 +27,7 @@ describe( 'CodeceptJSTest', () => {
             'remove-product-from-the-shopping-cart.js'
         ];
 
-        const outputDir = './output';
+        const outputDir = './';
         const file1 = expectedFileNames[ 0 ];
         const file2 = expectedFileNames[ 1 ];
         const json = {

@@ -1,4 +1,4 @@
-import { OutputFileWriter } from '../../../modules/cli/OutputFileWriter';
+import { OutputFileWriter } from '../../../modules/util/OutputFileWriter';
 import { CmdRunner } from '../../../modules/cli/CmdRunner';
 import { TestScriptExecutor } from '../../../plugins/codeceptjs/TestScriptExecutor';
 import { CodeceptJSOptionsBuilder } from '../../../plugins/codeceptjs/CodeceptJSOptionsBuilder';
