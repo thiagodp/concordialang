@@ -24,8 +24,8 @@
 - [X] UI Element Items
 - [X] Table
 - [X] Table Rows
-- [ ] Database
-- [ ] Database Properties
+- [X] Database
+- [X] Database Properties
 - [ ] File
 - [ ] Test-Related Events
 
@@ -49,8 +49,8 @@
 - [X] UI Element Items
 - [X] Table
 - [X] Table Rows
-- [ ] Database
-- [ ] Database Properties
+- [X] Database
+- [X] Database Properties
 - [ ] File
 - [ ] Test-Related Events
 
