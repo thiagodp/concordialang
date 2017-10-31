@@ -18,6 +18,13 @@ export interface KeywordDictionary { // properties should exist in Keywords
     uiElement: string[];
     database: string[];
 
+    beforeAll: string[];
+    afterAll: string[];
+    beforeFeature: string[];
+    afterFeature: string[];
+    beforeScenarios: string[];
+    afterScenarios: string[];
+
     // Also available in Gherkin
 
     language: string[];

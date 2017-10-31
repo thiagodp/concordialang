@@ -15,6 +15,13 @@ export abstract class Keywords {
     static TEST_CASE: string = 'testcase';
     static UI_ELEMENT: string = 'uiElement';
     static DATABASE: string = 'database';
+
+    static BEFORE_ALL: string = 'beforeAll';
+    static AFTER_ALL: string = 'afterAll';
+    static BEFORE_FEATURE: string = 'beforeFeature';
+    static AFTER_FEATURE: string = 'afterFeature';
+    static BEFORE_SCENARIOS: string = 'beforeScenarios';
+    static AFTER_SCENARIOS: string = 'afterScenarios';
     
     // Also available in Gherkin
 

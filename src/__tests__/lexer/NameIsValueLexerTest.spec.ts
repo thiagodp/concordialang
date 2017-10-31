@@ -18,6 +18,7 @@ describe( 'NameIsValueLexerTest', () => {
             {
                 nodeType: keyword,
                 location: { line: 1, column: 1 },
+                content: '"foo" is "bar"',
                 name: "foo",
                 value: "bar"
             }
@@ -58,6 +59,7 @@ describe( 'NameIsValueLexerTest', () => {
             {
                 nodeType: keyword,
                 location: { line: 1, column: 1 },
+                content: '"foo" is "bar"',
                 name: "foo",
                 value: "bar"
             }

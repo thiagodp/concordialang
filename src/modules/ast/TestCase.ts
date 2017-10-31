@@ -1,4 +1,4 @@
-import { NamedNode, ContentNode } from './Node';
+import { NamedNode } from './Node';
 import { MayHaveTags } from './Tag';
 import { Step } from './Step';
 

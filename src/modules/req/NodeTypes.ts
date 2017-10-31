@@ -13,6 +13,7 @@ export abstract class NodeTypes extends Keywords {
     static CONSTANT: string = 'constant';
     static UI_PROPERTY: string = 'uiProperty';
     static DATABASE_PROPERTY: string = 'databaseProperty';
+    static TEST_EVENT_ITEM: string = 'testEventItem';
 
     // Also available in Gherkin
 

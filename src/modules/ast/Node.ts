@@ -34,5 +34,5 @@ export interface ValuedNode extends Node, HasValue {
 export interface ContentNode extends Node, HasContent {
 }
 
-export interface NodeWithNameAndValue extends Node, HasName, HasValue {
+export interface NodeWithNameAndValue extends ContentNode, HasName, HasValue {
 }

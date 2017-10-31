@@ -18,6 +18,13 @@ export class EnglishKeywordDictionary implements KeywordDictionary {
     uiElement: string[] = [ 'ui element' ];
     database: string[] = [ 'database' ];
 
+    beforeAll: string[] = [ 'before all' ];
+    afterAll: string[] = [ 'after all' ];
+    beforeFeature: string[] = [ 'before feature' ];
+    afterFeature: string[] = [ 'after feature' ];
+    beforeScenarios: string[] = [ 'before scenarios', 'before each scenario' ];
+    afterScenarios: string[] = [ 'after scenarios', 'after each scenario' ];
+
     // Also available in Gherkin
 
     language: string[] = [ 'language' ];

@@ -70,11 +70,23 @@ export class NameIsValueLexer< T extends NodeWithNameAndValue > implements NodeL
             }
         }
 
+        // Ignores a comment
+        let commentPos = line.indexOf( Symbols.COMMENT_PREFIX );
+        let content;
+        if ( commentPos >= 0 ) {
+            content = this._lineChecker.textAfterSeparator( Symbols.LIST_ITEM_PREFIX,
+                line.substring( 0, commentPos ) ).trim();
+        } else {
+            content = this._lineChecker.textAfterSeparator( Symbols.LIST_ITEM_PREFIX,
+                line ).trim();
+        }
+
         let node = {
             nodeType: this._nodeType,
             location: { line: lineNumber || 0, column: pos + 1 },
             name: name,
-            value: value
+            value: value,
+            content: content
         } as T;
 
         let errors = [];

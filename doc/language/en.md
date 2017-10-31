@@ -487,12 +487,13 @@ Notes:
 - Just one declaration per Feature.
 
 Could be:
-- { Before | After | Around } Each Test Case
+- { Before | After | Around } { Each Scenario | Scenarios }
 - { Before | After | Around } Feature
+- { Before | After | Around } All
 
 Example 1:
 ```
-Before Each Test Case:
+Before Each Scenario:
   I run in console 'cls'
   And I run the command 'DELETE FROM users'
   And I run the command 'INSERT INTO users ( username, password ) VALUES ( "Clark", "Kent" ), ( "Bruce", "Wayne" )'

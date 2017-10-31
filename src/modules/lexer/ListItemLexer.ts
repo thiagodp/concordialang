@@ -1,4 +1,4 @@
-import { ContentNode } from '../ast/Node';
+import { Node, ContentNode, HasContent } from '../ast/Node';
 import { NodeLexer, LexicalAnalysisResult } from "./NodeLexer";
 import { Expressions } from "../req/Expressions";
 import { Symbols } from "../req/Symbols";

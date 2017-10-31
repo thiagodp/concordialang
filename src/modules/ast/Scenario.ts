@@ -1,19 +1,11 @@
-import { Node, NamedNode, ContentNode } from './Node';
+import { NamedNode } from './Node';
 import { Step } from './Step';
 
-// SCENARIO
-//
-// Example 1:
-// ```
-// Scenario: successful login
-//      Given that I can see the login screen
-//      When I inform a username and a password
-//          And active the option "Enter"
-//      Then I see "Welcome"
-//          And I am in the main screen
-// ```
-//
-
+/**
+ * Scenario node.
+ * 
+ * @author Thiago Delgado Pinto
+ */
 export interface Scenario extends NamedNode {
     description?: string;
     sentences: Array< Step >;

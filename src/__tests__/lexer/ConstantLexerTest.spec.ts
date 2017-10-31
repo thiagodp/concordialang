@@ -21,6 +21,7 @@ describe( 'ConstantLexerTest', () => {
             {
                 nodeType: keyword,
                 location: { line: 1, column: 1 },
+                content: '"foo" is "bar"',
                 name: "foo",
                 value: "bar"
             }
@@ -35,6 +36,7 @@ describe( 'ConstantLexerTest', () => {
             {
                 nodeType: keyword,
                 location: { line: 1, column: 1 },
+                content: '"foo" is "bar"',
                 name: "foo",
                 value: "bar"
             }
@@ -49,6 +51,7 @@ describe( 'ConstantLexerTest', () => {
             {
                 nodeType: keyword,
                 location: { line: 1, column: 1 },
+                content: '"foo" is 1',
                 name: "foo",
                 value: "1"
             }
@@ -63,6 +66,7 @@ describe( 'ConstantLexerTest', () => {
             {
                 nodeType: keyword,
                 location: { line: 1, column: 1 },
+                content: '"foo" is 1',
                 name: "foo",
                 value: "1"
             }
@@ -77,6 +81,7 @@ describe( 'ConstantLexerTest', () => {
             {
                 nodeType: keyword,
                 location: { line: 1, column: 1 },
+                content: '"foo" is 1.0',
                 name: "foo",
                 value: "1.0"
             }
@@ -91,6 +96,7 @@ describe( 'ConstantLexerTest', () => {
             {
                 nodeType: keyword,
                 location: { line: 1, column: 1 },
+                content: '"foo" is 1.0',
                 name: "foo",
                 value: "1.0"
             }
@@ -106,6 +112,7 @@ describe( 'ConstantLexerTest', () => {
             {
                 nodeType: keyword,
                 location: { line: 1, column: 1 },
+                content: `"foo" is ${value}`,
                 name: "foo",
                 value: value
             }
@@ -121,6 +128,7 @@ describe( 'ConstantLexerTest', () => {
             {
                 nodeType: keyword,
                 location: { line: 1, column: 1 },
+                content: `"foo" is ${value}`,
                 name: "foo",
                 value: value
             }

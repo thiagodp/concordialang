@@ -1,3 +1,4 @@
+import { BeforeAllLexer, AfterAllLexer, BeforeFeatureLexer, AfterFeatureLexer, BeforeScenariosLexer, AfterScenariosLexer } from './TestEventLexer';
 import { DatabasePropertyLexer } from './DatabasePropertyLexer';
 import { DatabaseLexer } from './DatabaseLexer';
 import { UIPropertyLexer } from './UIPropertyLexer';
@@ -84,6 +85,12 @@ export class Lexer {
             , new UIPropertyLexer()
             , new DatabaseLexer( dictionary.database )
             , new DatabasePropertyLexer()
+            , new BeforeAllLexer( dictionary.beforeAll )
+            , new AfterAllLexer( dictionary.afterAll )
+            , new BeforeFeatureLexer( dictionary.beforeFeature )
+            , new AfterFeatureLexer( dictionary.afterFeature )
+            , new BeforeScenariosLexer( dictionary.beforeScenarios )
+            , new AfterScenariosLexer( dictionary.afterScenarios )
             , new TextLexer() // captures any non-empty
         ];
     }
