@@ -487,7 +487,7 @@ Notes:
 - Just one declaration per Feature.
 
 Could be:
-- { Before | After | Around } { Each Scenario | Scenarios }
+- { Before | After | Around } Each Scenario
 - { Before | After | Around } Feature
 - { Before | After | Around } All
 

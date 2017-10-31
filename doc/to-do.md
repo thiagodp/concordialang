@@ -27,7 +27,8 @@
 - [X] Database
 - [X] Database Properties
 - [ ] File
-- [ ] Test-Related Events
+- [X] Test-Related Events
+- [ ] Test-Related Events Items
 
 ## Parser
 
@@ -53,6 +54,7 @@
 - [X] Database Properties
 - [ ] File
 - [ ] Test-Related Events
+- [ ] Test-Related Events Items
 
 ## NLP Processor
 

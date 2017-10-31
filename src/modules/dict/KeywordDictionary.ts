@@ -22,8 +22,8 @@ export interface KeywordDictionary { // properties should exist in Keywords
     afterAll: string[];
     beforeFeature: string[];
     afterFeature: string[];
-    beforeScenarios: string[];
-    afterScenarios: string[];
+    beforeEachScenario: string[];
+    afterEachScenario: string[];
 
     // Also available in Gherkin
 

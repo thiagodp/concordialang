@@ -22,8 +22,8 @@ export class EnglishKeywordDictionary implements KeywordDictionary {
     afterAll: string[] = [ 'after all' ];
     beforeFeature: string[] = [ 'before feature' ];
     afterFeature: string[] = [ 'after feature' ];
-    beforeScenarios: string[] = [ 'before scenarios', 'before each scenario' ];
-    afterScenarios: string[] = [ 'after scenarios', 'after each scenario' ];
+    beforeEachScenario: string[] = [ 'before each scenario' ];
+    afterEachScenario: string[] = [ 'after each scenario' ];
 
     // Also available in Gherkin
 

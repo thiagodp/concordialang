@@ -20,8 +20,8 @@ export abstract class Keywords {
     static AFTER_ALL: string = 'afterAll';
     static BEFORE_FEATURE: string = 'beforeFeature';
     static AFTER_FEATURE: string = 'afterFeature';
-    static BEFORE_SCENARIOS: string = 'beforeScenarios';
-    static AFTER_SCENARIOS: string = 'afterScenarios';
+    static BEFORE_EACH_SCENARIO: string = 'beforeEachScenario';
+    static AFTER_EACH_SCENARIO: string = 'afterEachScenario';
     
     // Also available in Gherkin
 

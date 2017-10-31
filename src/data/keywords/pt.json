@@ -8,17 +8,17 @@
     "uiElement": [ "elemento da iu" ],
     "database": [ "banco de dados", "database" ],
 
-    "beforeAll": [ "antes de todos", "before all" ],
-    "afterAll": [ "depois de todos", "após todos", "after all" ],
-    "beforeFeature": [ "antes da feature", "before feature" ],
-    "afterFeature": [ "depois da feature", "após a feature", "after feature" ],
-    "beforeScenarios": [ "antes dos cenários", "antes de cada cenário", "before scenarios", "before each scenario" ],
-    "afterScenarios": [ "depois dos cenários", "após os cenários", "depois de cada cenário", "após cada cenário", "after scenarios", "after each scenario" ],
+    "beforeAll": [ "antes de todos", "antes de tudo", "before all" ],
+    "afterAll": [ "depois de todos", "após todos", "depois de tudo", "após tudo", "after all" ],
+    "beforeFeature": [ "antes da funcionalidade", "antes da característica", "antes da feature", "before feature" ],
+    "afterFeature": [ "depois da funcionalidade", "depois da característica", "depois da feature", "após a funcionalidade", "após a característica", "após a feature", "after feature" ],
+    "beforeEachScenario": [ "antes de cada cenário", "before each scenario" ],
+    "afterEachScenario": [ "depois de cada cenário", "após cada cenário", "after each scenario" ],
 
     "language": [ "linguagem", "idioma", "língua",  "language" ],
 
-    "feature": [ "funcionalidade", "característica" ],
-    "scenario": [ "cenário" ],
+    "feature": [ "funcionalidade", "característica", "feature" ],
+    "scenario": [ "cenário", "scenario" ],
 
     "stepGiven": [ "dado" ],
     "stepWhen": [ "quando" ],

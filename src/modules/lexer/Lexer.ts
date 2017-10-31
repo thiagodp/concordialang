@@ -89,8 +89,8 @@ export class Lexer {
             , new AfterAllLexer( dictionary.afterAll )
             , new BeforeFeatureLexer( dictionary.beforeFeature )
             , new AfterFeatureLexer( dictionary.afterFeature )
-            , new BeforeScenariosLexer( dictionary.beforeScenarios )
-            , new AfterScenariosLexer( dictionary.afterScenarios )
+            , new BeforeScenariosLexer( dictionary.beforeEachScenario )
+            , new AfterScenariosLexer( dictionary.afterEachScenario )
             , new TextLexer() // captures any non-empty
         ];
     }

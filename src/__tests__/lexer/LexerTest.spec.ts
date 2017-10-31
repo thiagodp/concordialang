@@ -78,6 +78,13 @@ describe( 'LexerTest', () => {
             { l: 'Table: users', e: NodeTypes.TABLE },
             { l: '  | column1 | column2 |', e: NodeTypes.TABLE_ROW },
             { l: '  | value1 | value2 |', e: NodeTypes.TABLE_ROW },            
+            { l: '', e: null },
+            { l: 'Before All:', e: NodeTypes.BEFORE_ALL },
+            { l: 'After All:', e: NodeTypes.AFTER_ALL },
+            { l: 'Before Feature:', e: NodeTypes.BEFORE_FEATURE },
+            { l: 'After Feature:', e: NodeTypes.AFTER_FEATURE },
+            { l: 'Before Each Scenario:', e: NodeTypes.BEFORE_EACH_SCENARIO },
+            { l: 'After Each Scenario:', e: NodeTypes.AFTER_EACH_SCENARIO },
             { l: '', e: null },            
             { l: 'this must be recognized as text', e: NodeTypes.TEXT }
         ];
@@ -124,8 +131,15 @@ describe( 'LexerTest', () => {
             { l: '', e: null },
             { l: 'Tabela: users', e: NodeTypes.TABLE },
             { l: '  | column1 | column2 |', e: NodeTypes.TABLE_ROW },
-            { l: '  | value1 | value2 |', e: NodeTypes.TABLE_ROW },
+            { l: '  | value1 | value2 |', e: NodeTypes.TABLE_ROW },            
             { l: '', e: null },
+            { l: 'Antes de Todos:', e: NodeTypes.BEFORE_ALL },
+            { l: 'Depois de Todos:', e: NodeTypes.AFTER_ALL },
+            { l: 'Antes da Feature:', e: NodeTypes.BEFORE_FEATURE },
+            { l: 'Após a Feature:', e: NodeTypes.AFTER_FEATURE },
+            { l: 'Antes de Cada Cenário:', e: NodeTypes.BEFORE_EACH_SCENARIO },
+            { l: 'Depois de Cada Cenário:', e: NodeTypes.AFTER_EACH_SCENARIO },
+            { l: '', e: null },            
             { l: 'isso must be recognized as text', e: NodeTypes.TEXT }
         ];
 

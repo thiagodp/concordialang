@@ -65,7 +65,7 @@ export class AfterFeatureLexer extends KeywordBlockLexer< TestEventBlock > {
  */
 export class BeforeScenariosLexer extends KeywordBlockLexer< TestEventBlock > {
     constructor( words: string[] ) {
-        super( words, NodeTypes.BEFORE_SCENARIOS );
+        super( words, NodeTypes.BEFORE_EACH_SCENARIO );
     }
 }
 
@@ -76,6 +76,6 @@ export class BeforeScenariosLexer extends KeywordBlockLexer< TestEventBlock > {
  */
 export class AfterScenariosLexer extends KeywordBlockLexer< TestEventBlock > {
     constructor( words: string[] ) {
-        super( words, NodeTypes.AFTER_SCENARIOS );
+        super( words, NodeTypes.AFTER_EACH_SCENARIO );
     }
 }
