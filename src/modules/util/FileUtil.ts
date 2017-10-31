@@ -1,7 +1,7 @@
-import path = require( 'path' );
-import fs = require( 'fs' );
-import glob = require( 'glob' );
-import crypto = require( 'crypto' );
+import path = require('path');
+import fs = require('fs');
+import glob = require('glob');
+import crypto = require('crypto');
 
 /**
  * File utilities.
@@ -10,13 +10,16 @@ import crypto = require( 'crypto' );
  */
 export class FileUtil {
 
+    constructor( private _fs: any = fs ) {
+    }
+
     /**
      * Returns true if the given directory exists.
      * 
      * @param dir Directory to check.
      */
     directoryExists( dir: string ): boolean {
-        return fs.existsSync( dir );
+        return this._fs.existsSync( dir );
     }
 
     /**
@@ -49,7 +52,7 @@ export class FileUtil {
     nonExistentFiles( files: Array< string > ): Array< string > {
         let invalid: Array< string > = [];
         for ( let i in files  ) {
-            if ( ! fs.existsSync( files[ i ] ) ) {
+            if ( ! this._fs.existsSync( files[ i ] ) ) {
                 invalid.push( files[ i ] );
             }
         }
@@ -62,7 +65,7 @@ export class FileUtil {
      * @param path File path.
      */
     fileExist( path: string ): boolean {
-        return fs.existsSync( path );
+        return this._fs.existsSync( path );
     }
 
     /**
@@ -70,20 +73,24 @@ export class FileUtil {
      * 
      * @param dir Directory
      * @param extensions File extensions to filter, without dots (e.g.: [ 'txt', 'json' ]). Optional.
+     * @param recursively If it should find files recursively. Optional. Default true.
      * @returns Array< string >
      */
-    extractFilesFromDirectory( dir: string, extensions?: Array< string > ): Array< string > {
-        let filter: string;
+    extractFilesFromDirectory(
+        dir: string,
+        extensions?: Array< string >,
+        recursively: boolean = true
+    ): Array< string > {
+        let filter: string = dir + ( recursively ? '/**/' : '/' );
         if ( extensions && extensions.length > 0 ) {
             extensions = extensions.map( e => e.replace( '.', '' ) ); // Remove dots
             let ext = 1 === extensions.length ? extensions[ 0 ] : '{' + extensions.join( ',' ) + '}';
-            filter = dir + '/**/*.' + ext;
+            filter += '*.' + ext;
         } else {
-            filter = dir + '/**/*.*';
+            filter += '*.*';
         }
         return glob.sync( filter );
     }
-
 
     /**
      * Returns a (sha-1) hash for the given file.
@@ -91,7 +98,7 @@ export class FileUtil {
      * @param fileName File name
      */
     hashOfFile( fileName: string, encoding?: string ) {
-        const buffer = fs.readFileSync( fileName, encoding ? encoding : null );
+        const buffer = this._fs.readFileSync( fileName, encoding ? encoding : null );
         return crypto.createHash( 'sha1' )
             .update( buffer.toString() )
             .digest( 'hex' );

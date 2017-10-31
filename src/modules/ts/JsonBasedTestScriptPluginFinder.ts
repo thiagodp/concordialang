@@ -28,7 +28,7 @@ export class JsonBasedTestScriptPluginFinder implements TestScriptPluginFinder {
     public readConfigFiles = ( dir: string ): Promise< string[] > => {
         return new Promise< string[] >( ( resolve, reject ) => {
             const files: string[] =
-                ( new FileUtil() ).extractFilesFromDirectory( dir, [ 'json' ] );
+                ( new FileUtil( this._fs ) ).extractFilesFromDirectory( dir, [ 'json' ], false );
             if ( files.length > 0 ) {
                 return resolve( files );
             } else {
