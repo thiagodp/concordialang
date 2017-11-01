@@ -1,4 +1,4 @@
-import { OutputFileWriter } from '../../../modules/util/OutputFileWriter';
+import { FileUtil } from '../../../modules/util/FileUtil';
 import { CmdRunner } from '../../../modules/cli/CmdRunner';
 import { TestScriptExecutor } from '../../../plugins/codeceptjs/TestScriptExecutor';
 import { CodeceptJSOptionsBuilder } from '../../../plugins/codeceptjs/CodeceptJSOptionsBuilder';
@@ -12,7 +12,7 @@ describe( 'TestScriptExecutorTest', () => {
 
     // under test
     let executor: TestScriptExecutor = new TestScriptExecutor(
-        new OutputFileWriter( fs ),
+        new FileUtil( fs ),
         new CmdRunner()
     );    
 
