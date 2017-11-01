@@ -1,7 +1,8 @@
-import path = require('path');
-import fs = require('fs');
-import glob = require('glob');
-import crypto = require('crypto');
+import * as path from 'path';
+import * as fs from 'fs';
+import * as glob from 'glob';
+import * as crypto from 'crypto';
+import * as util from 'util';
 
 /**
  * File utilities.
@@ -21,6 +22,45 @@ export class FileUtil {
     directoryExists( dir: string ): boolean {
         return this._fs.existsSync( dir );
     }
+
+    /**
+     * Ensures a directory existence, creating any parent directory if needed.
+     * 
+     * @author Matheus Eller Fagundes
+     * 
+     * @param path Path of the directory.
+     */
+    ensureDirectory( path ): void {
+        let dirname = path.dirname( path );
+        if ( this._fs.existsSync( dirname ) ) {
+            return;
+        }
+        this.ensureDirectory( dirname );
+        this._fs.mkdirSync( dirname );
+    }
+
+    /**
+     * Create a file with given content to a file. Output directory is created if needed.
+     * 
+     * @param content Content to be written.
+     * @param outputDirectory Directory to save the file.
+     * @param fileName File name.
+     * @param fileExtension File extension.
+     * 
+     * @return A promise with the file path.
+     */
+    async createFile(
+        content: string,
+        outputDirectory: string,
+        fileName: string,
+        fileExtension: string
+    ): Promise< string > {
+        const writeFile = util.promisify( this._fs.writeFile );
+        let filePath: string = path.join( outputDirectory, fileName + '.' + fileExtension );
+        this.ensureDirectory( filePath );
+        const ok = await writeFile( filePath, content );
+        return filePath;
+    }    
 
     /**
      * Filter the given files, returning a new list with only the files that match

@@ -5,10 +5,11 @@ import { AbstractTestScript } from '../../modules/ts/AbstractTestScript';
 import { TestScriptGenerationOptions } from '../../modules/ts/TestScriptGeneration';
 import { TestScriptExecutionOptions, TestScriptExecutionResult } from '../../modules/ts/TestScriptExecution';
 import { CmdRunner } from "../../modules/cli/CmdRunner";
-import { OutputFileWriter } from "../../modules/util/OutputFileWriter";
+import { FileUtil } from '../../modules/util/FileUtil';
 
 import * as fs from 'fs';
 import * as path from 'path';
+
 
 /**
  * Plugin for CodeceptJS.
@@ -27,7 +28,7 @@ export class CodeceptJS implements TestScriptPlugin {
 
         this._scriptGenerator = new TestScriptGenerator();
         this._scriptExecutor = new TestScriptExecutor(
-            new OutputFileWriter( _fs ),
+            new FileUtil( _fs ),
             new CmdRunner()
         );
     }

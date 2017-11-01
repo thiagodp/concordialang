@@ -1,6 +1,6 @@
+import { FileUtil } from '../../modules/util/FileUtil';
 import { CmdRunner } from '../../modules/cli/CmdRunner';
 import { TestScriptExecutionOptions } from '../../modules/ts/TestScriptExecution';
-import { OutputFileWriter } from "../../modules/util/OutputFileWriter";
 import { CodeceptJSOptionsBuilder } from './CodeceptJSOptionsBuilder';
 
 /**
@@ -10,7 +10,7 @@ import { CodeceptJSOptionsBuilder } from './CodeceptJSOptionsBuilder';
  */
 export class TestScriptExecutor {
     
-    constructor( private _fileWriter: OutputFileWriter, private _cmd: CmdRunner ) {
+    constructor( private _fileUtil: FileUtil, private _cmd: CmdRunner ) {
     }
 
     /**
@@ -18,9 +18,9 @@ export class TestScriptExecutor {
      * 
      * @param options Execution options
      */
-    public execute( options: TestScriptExecutionOptions ): Promise< any > {
+    public async execute( options: TestScriptExecutionOptions ): Promise< any > {
         // It's only possible to run CodeceptJS if there is a 'codecept.json' file in the folder.
-        this._fileWriter.write( '{}', options.sourceCodeDir, 'codecept', 'json' );
+        await this._fileUtil.createFile( '{}', options.sourceCodeDir, 'codecept', 'json' );
         let testCommand: string = this.generateTestCommand( options );
         return this._cmd.run( testCommand );
     }
