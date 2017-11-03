@@ -22,7 +22,10 @@ export class TestScriptExecutor {
         // It's only possible to run CodeceptJS if there is a 'codecept.json' file in the folder.
         await this._fileUtil.createFile( '{}', options.sourceCodeDir, 'codecept', 'json' );
         let testCommand: string = this.generateTestCommand( options );
-        return this._cmd.run( testCommand );
+        return this._cmd.run( testCommand )
+            .then( ( testResult : any ) => {
+                return this.writeResult( testResult, options.executionResultDir );
+            } );
     }
 
     /**
@@ -37,7 +40,33 @@ export class TestScriptExecutor {
         }
         const commandOptions: object = new CodeceptJSOptionsBuilder().value(); //TODO: Accept CodeceptJS options.
         const optionsStr: string = JSON.stringify( commandOptions );
-        return `codeceptjs run --steps --override '${optionsStr}' -c ${ options.sourceCodeDir }`;
-    }    
+        return `codeceptjs run --reporter=JSON --override '${optionsStr}' -c ${ options.sourceCodeDir }`;
+    }
+
+    /**
+     * Writes the test result in a file.
+     * 
+     * @param testResult Test result from CodeceptJS, in JSON format
+     * @param resultDir Path where save the file
+     */
+    public writeResult( testResult: any, resultDir: string ): Promise<string> {
+        let fileName: string = this.generateResultFileName();
+        return this._fileUtil.createFile( JSON.stringify( testResult ), resultDir, fileName, 'json' );
+    }
+
+    /**
+     * Generates the test results file name without the extension.
+     * The file name contains the date and time of tests execution.
+     */
+    private generateResultFileName(): string {
+        let dateString: string = new Date()
+            .toISOString()
+            .replace(/\.\w*/, '')
+            .replace('T', '_')
+            .replace(':', 'h')
+            .replace(':', 'm')
+            .concat('s');
+        return `codecept_${ dateString }`;
+    }
 
 }
