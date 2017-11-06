@@ -8,9 +8,6 @@ export interface TestScriptPluginData {
     /** true if the plugin is fake (i.e. for demonstration purposes). */
     isFake: boolean;
 
-    /** package name. */
-    packageName: string;
-
     /** plugin name. */
     name: string;
 

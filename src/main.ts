@@ -3,6 +3,7 @@
 import meow = require('meow'); // parse cmd line args
 import ora = require('ora'); // spinner
 import chalk = require('chalk'); // colors & style
+import * as util from 'util';
 import { InputProcessor } from './modules/cli/InputProcessor';
 import { PluginInputProcessor } from './modules/ts/PluginInputProcessor';
 
@@ -105,12 +106,19 @@ let processInput = function( input: Array< string >, flags: any ): void {
 //console.log( cli );
 //console.log( process.cwd() );
 // Note that meow (cli) already deals with the flags "help" and "version"
-if ( ! cli.flags.files && 0 === cli.input.length && ! cli.flags.about && ! cli.flags.pluginList ) {
+if ( ! cli.flags.files
+    && 0 === cli.input.length
+    && ! cli.flags.about
+    && ! cli.flags.pluginList
+    && ! cli.flags.pluginAbout
+) {
     showHelp();
 } else if ( cli.flags.about ) {
     showAbout();
 } else if ( cli.flags.pluginList ) {
     ( new PluginInputProcessor( write ) ).list();
+} else if ( cli.flags.pluginAbout && util.isString( cli.flags.pluginAbout ) ) {
+    ( new PluginInputProcessor( write ) ).about( cli.flags.pluginAbout );
 } else if ( cli.input.length > 0 || cli.flags.files ) {
     processInput( cli.input, cli.flags );
 }
