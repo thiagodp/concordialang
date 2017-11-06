@@ -1,14 +1,10 @@
 'use strict';
+
 import meow = require('meow'); // parse cmd line args
 import ora = require('ora'); // spinner
 import chalk = require('chalk'); // colors & style
-import * as path from 'path';
-import * as util from 'util';
-import { sprintf } from 'sprintf-js';
-
 import { InputProcessor } from './modules/cli/InputProcessor';
-import { JsonBasedTestScriptPluginFinder } from './modules/ts/JsonBasedTestScriptPluginFinder';
-import { TestScriptPluginData } from './modules/ts/TestScriptPluginData';
+import { PluginInputProcessor } from './modules/ts/PluginInputProcessor';
 
 const exeName: string = 'concordia';
 
@@ -22,7 +18,8 @@ const cli = meow( `
  Options:
 
   -p,  --plugin <name>                   Sets a plug-in to generate or to execute test scripts. NIY
-  -pl, --plugin-list                     Shows available plug-ins. NIY  
+  -pl, --plugin-list                     Shows available plug-ins. NIY
+  -pa, --plugin-about <name>             Shows more information about a plug-in. NIY
   -pi, --plugin-install <name>           Installs a plug-in. NIY
   -pu, --plugin-uninstall <name>         Uninstalls a plug-in. NIY
 
@@ -68,7 +65,8 @@ const cli = meow( `
 `, {
 	alias: {
         p: 'plugin',
-        pl: 'plugin-list',        
+        pl: 'plugin-list',
+        pa: 'plugin-about',
         pi: 'plugin-install',
         pu: 'plugin-uninstall',
 		l: 'language',	
@@ -99,32 +97,6 @@ let showAbout = function(): void {
     write( cli.pkg.homepage );
 };
 
-let showPluginList = function(): void {
-
-    let sortPlugins = ( plugins: TestScriptPluginData[] ): TestScriptPluginData[] => {
-        return plugins.sort( ( a: TestScriptPluginData, b: TestScriptPluginData ): number => {
-            return a.name.toLowerCase() > b.name.toLowerCase() ? 1 : -1;
-        } );
-    };
-
-    let drawPlugins = ( plugins: TestScriptPluginData[] ) => {
-        const format = "%-20s %-8s %-22s"; // util.format does not support padding :(
-        write( chalk.yellow( sprintf( format, 'Name', 'Version', 'Description' ) ) );
-        plugins = sortPlugins( plugins );
-        for ( let p of plugins ) {
-            write( sprintf( format, p.name, p.version, p.description ) );
-        }
-    };
-
-    const dir = path.join( process.cwd(), '/plugins' );
-    const finder = new JsonBasedTestScriptPluginFinder( dir );
-    finder.find()
-        .then( ( plugins: TestScriptPluginData[] ) => {
-            drawPlugins( plugins );
-        } )
-        .catch( ( err ) => write( err.message ) );
-};
-
 let processInput = function( input: Array< string >, flags: any ): void {
     let processor = new InputProcessor( write, ora, chalk );
     processor.process( input, flags );
@@ -138,7 +110,7 @@ if ( ! cli.flags.files && 0 === cli.input.length && ! cli.flags.about && ! cli.f
 } else if ( cli.flags.about ) {
     showAbout();
 } else if ( cli.flags.pluginList ) {
-    showPluginList();
+    ( new PluginInputProcessor( write ) ).list();
 } else if ( cli.input.length > 0 || cli.flags.files ) {
     processInput( cli.input, cli.flags );
 }
