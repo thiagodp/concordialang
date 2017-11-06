@@ -17,52 +17,60 @@ const cli = meow( `
 
   ${exeName} [ <dir> | --files="file1.feature,path/to/file2.feature,..." ] [options]
 
-    where <dir> is the directory with your specification files.
+    where <dir> is the directory that contains your specification files.
 
  Options:
 
-  -p, --plugin <name>                   Sets the plug-in to generate or to execute test scripts. NIY
+  -p,  --plugin <name>                   Sets a plug-in to generate or to execute test scripts. NIY
+  -pl, --plugin-list                     Shows available plug-ins. NIY  
+  -pi, --plugin-install <name>           Installs a plug-in. NIY
+  -pu, --plugin-uninstall <name>         Uninstalls a plug-in. NIY
 
-  -x, --extensions <".ext1,.ext2,...">  File extensions to consider (when <dir> is informed). NIY
-  -i, --ignore <"file1,file2,...">      Files to ignore (when <dir> is informed).
+  -x,  --extensions <".ext1,.ext2,...">  File extensions to consider (when <dir> is informed). NIY
+  -i,  --ignore <"file1,file2,...">      Files to ignore (when <dir> is informed).
 
-  -f, --files <"file1,file2,...">       Files to consider, instead of <dir>.
+  -f,  --files <"file1,file2,...">       Files to consider, instead of <dir>.
 
-  -l, --language <code>                 Sets the default language (from "en"glish).
-  -e, --encoding <value>                Sets the enconding to read files. Default is "utf8".
+  -l,  --language <code>                 Sets the default language (from "en"glish).
+  -e,  --encoding <value>                Sets the enconding to read files. Default is "utf8".
 
-  -t, --no-test                         Do not generate test cases. NIY
-  -s, --no-script                       Do not generate test scripts. NIY
-  -r, --no-run                          Do not run test scripts. NIY
-  -u, --no-result                       Do not read execution results. NIY
+  -t,  --no-test                         Do not generate test cases. NIY
+  -s,  --no-script                       Do not generate test scripts. NIY
+  -r,  --no-run                          Do not run test scripts. NIY
+  -u,  --no-result                       Do not read execution results. NIY
 
-  --test-connection <name|*>            Tests a database connection with the given name. NIY
+  -tc, --test-connection <name|*>        Tests a database connection with the given name. NIY
 
-  --min-fi-gen <number>                 Min. feature importance to generate test cases. NIY
-  --max-fi-gen <number>                 Max. feature importance to generate test cases. NIY
-  --min-si-gen <number>                 Min. scenario importance to generate test cases. NIY
-  --max-si-gen <number>                 Max. scenario importance to generate test cases. NIY
+  -v,  --version                         Show current version.
+  -a,  --about                           Show information about this application.
+  -h,  --help                            Show this help.  
 
-  --min-fi-run <number>                 Min. feature importance to run test scripts. NIY
-  --max-fi-run <number>                 Max. feature importance to run test scripts. NIY  
-  --min-si-run <number>                 Min. scenario importance to run test scripts. NIY
-  --max-si-run <number>                 Max. scenario importance to run test scripts. NIY
+  Related to the generation of test cases:
 
-  --max-random-tests <0-999>            Max. number of test cases to use random values. NIY
+  --gen-min-feature <number>             Selects only the features with the given minimum importance. NIY
+  --gen-max-feature <number>             Selects only the features with the given maximum importance. NIY
+  --gen-min-scenario <number>            Selects only the scenarios with the given minimum importance. NIY
+  --gen-max-scenario <number>            Selects only the scenarios with the given maximum importance. NIY
+  --gen-max-random-cases <0-999>         Maximum number of test cases that to use random values. NIY
 
-  -g, --plugin-list                     Show available plug-ins. NIY
-  -v, --version                         Show current version.
-  -a, --about                           Show information about this application.
-  -h, --help                            Show this help.
+  Related to the execution of test scripts (used plugin may not support them!):
+
+  --run-min-feature <number>             Executes only the features with the given minimum importance. NIY
+  --run-max-feature <number>             Executes only the features with the given maximum importance. NIY
+  --run-min-scenario <number>            Executes only the scenarios with the given minimum importance. NIY
+  --run-max-scenario <number>            Executes only the scenarios with the given maximum importance. NIY
 	  
   Examples:
 
    $ ${exeName} . --plugin some-plugin
+   $ ${exeName} path/to/dir --no-test --no-script -p some-plugin   
    $ ${exeName} --files "file1.feature,path/to/file2.feature" -p some-plugin -l pt
-   $ ${exeName} path/to/dir --no-test --no-script -p some-plugin
 `, {
 	alias: {
-		p: 'plugin',
+        p: 'plugin',
+        pl: 'plugin-list',        
+        pi: 'plugin-install',
+        pu: 'plugin-uninstall',
 		l: 'language',	
 		e: 'encoding',
 		f: 'files',
@@ -72,7 +80,7 @@ const cli = meow( `
         s: 'no-script',
 		r: 'no-run',
         u: 'no-result',
-        g: 'plugin-list',
+        tc: 'test-connection',
         v: 'version',        
         a: 'about',
         h: 'help'
