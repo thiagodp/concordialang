@@ -4,6 +4,7 @@ import { TestScriptExecutor } from '../../../plugins/codeceptjs/TestScriptExecut
 import { CodeceptJSOptionsBuilder } from '../../../plugins/codeceptjs/CodeceptJSOptionsBuilder';
 import { TestScriptExecutionOptions } from '../../../modules/ts/TestScriptExecution';
 import { fs as memfs, vol } from 'memfs';
+import { join } from 'path';
 
 /**
  * @author Matheus Eller Fagundes
@@ -20,31 +21,34 @@ describe( 'TestScriptExecutorTest', () => {
 
         let options: TestScriptExecutionOptions = new TestScriptExecutionOptions();
         options.sourceCodeDir = '/path/to/test/scripts';
+        options.executionResultDir = '/path/to/result/dir'
 
-        let command = executor.generateTestCommand( options );
-        let configStr = JSON.stringify( new CodeceptJSOptionsBuilder().value() );
+        const outputFile = join( options.executionResultDir, 'output.json' );
+        
+        let command = executor.generateTestCommand( options, outputFile );
+        let configStr = JSON.stringify( new CodeceptJSOptionsBuilder().withOutputFile( outputFile ).value() );
 
-        let expectedCommand = `codeceptjs run --reporter=JSON --override '${ configStr }' -c /path/to/test/scripts`;
+        let expectedCommand = `codeceptjs run --reporter mocha-multi --override '${ configStr }' -c /path/to/test/scripts`;
 
         expect( command ).toEqual( expectedCommand );
     } );
     
     it( 'throws an error if source code directory is missing', () => {
         let options: TestScriptExecutionOptions = new TestScriptExecutionOptions();
-        expect( executor.generateTestCommand ).toThrow();
+        options.executionResultDir = 'some_dir';
+        let testFunction = () => {
+            executor.generateTestCommand( options, 'someFile.json' )
+        };
+        expect( testFunction ).toThrowError( /missing/ );
     } );
 
-    it( 'generate test result files with the right file names', () => {
-        let expectedRegex = /codecept_[0-9]{4}-[0-1][0-9]-[0-3][0-9]_[0-2][0-9]h[0-6][0-9]m[0-6][0-9]s.json/;
-        return expect( executor.writeResult( {}, '/some_dir/' ) ).resolves.toMatch( expectedRegex );
+    it( 'throws an error if execution result directory is missing', () => {
+        let options: TestScriptExecutionOptions = new TestScriptExecutionOptions();
+        options.sourceCodeDir = 'some_dir';
+        let testFunction = () => {
+            executor.generateTestCommand( options, 'someFile.json' )
+        };
+        expect( testFunction ).toThrowError( /missing/ );
     } );
 
-    it( 'writes the right content to file', () => {
-        let resultMock = { test: { result: { ok: true } } };
-        return executor.writeResult( resultMock, '/some_dir/' )
-            .then( ( path: string ) => {
-                expect( memfs.readFileSync( path, { encoding: 'utf8' } ) ).toBe( JSON.stringify( resultMock ) );
-            } );
-    } );
-    
 } );
