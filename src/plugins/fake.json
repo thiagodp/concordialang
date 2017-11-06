@@ -1,0 +1,14 @@
+{
+    "isFake": true,
+    "name": "fake",
+    "description": "Fake plugin that does nothing.",
+    "version": "1.0",
+    "targets": [ "none" ],
+    "authors": [
+        "Thiago Delgado Pinto (thiago-dp@bol.com.br)"
+    ],
+    "file": "there/is/no/file.ts",
+    "class": "NoClass",
+    "install": "npm --version",
+    "uninstall": "node --version"
+}

@@ -38,8 +38,6 @@ export class PluginInputProcessor {
 
     install = ( name: string ): void => {
 
-        this._write( 'Installing the plugin ' + chalk.yellow( name ) + '...' );
-
         this.find()
             .then( ( plugins: TestScriptPluginData[] ) => {
                 let found = plugins.filter( p => p.name === name );
@@ -52,13 +50,30 @@ export class PluginInputProcessor {
                     this._write( 'No "install" property found in the plugin file. Can\'t install it.' );
                     return;
                 }
-                this.runPluginCommand( command, name, 'installed' );
+                this._write( 'Installing the plugin ' + chalk.yellow( name ) + '...' );
+                this.runPluginCommand( command );
             } )
             .catch( ( err ) => this._write( err.message ) );
     };
 
     uninstall = ( name: string ): void => {
         
+        this.find()
+            .then( ( plugins: TestScriptPluginData[] ) => {
+                let found = plugins.filter( p => p.name === name );
+                if ( 0 === found.length ) {
+                    this.showMessageOnNoPluginFound( name );
+                    return;
+                }
+                const command = found[ 0 ].uninstall;
+                if ( ! command ) {
+                    this._write( 'No "uninstall" property found in the plugin file. Can\'t uninstall it.' );
+                    return;
+                }
+                this._write( 'Uninstalling the plugin ' + chalk.yellow( name ) + '...' );
+                this.runPluginCommand( command );
+            } )
+            .catch( ( err ) => this._write( err.message ) );        
     };
 
     private sortPlugins = ( plugins: TestScriptPluginData[] ): TestScriptPluginData[] => {
@@ -90,7 +105,8 @@ export class PluginInputProcessor {
     };
 
     private showMessageOnNoPluginFound = ( name: string ): void => {
-        this._write( 'No plugins found for "' + name + '". Try --plugin-list to see available plugins.' );
+        this._write( 'No plugins found with the name "' + chalk.yellow( name ) + '".'
+            + '\nTry ' + chalk.yellow( '--plugin-list' ) + ' to see the available plugins.' );
     };
 
     private find = (): Promise< TestScriptPluginData[] > => {
@@ -99,7 +115,7 @@ export class PluginInputProcessor {
         return finder.find();
     };
 
-    private runPluginCommand = ( command: string, pluginName: string, msgOnExit: string ): void => {
+    private runPluginCommand = ( command: string ): void => {
         this._write( '---' );        
         const child = childProcess.exec( command );
         
@@ -113,8 +129,7 @@ export class PluginInputProcessor {
 
         child.on( 'exit', ( code ) => {
             this._write( '---' );
-            this._write( 'Plugin ' + chalk.yellow( pluginName ) + ' ' + msgOnExit + ' ' +
-                ( 0 == code ? chalk.green( 'successfully.' ) : chalk.red( ' with errors.' ) ) );
+            this._write( ( 0 == code ? chalk.bgGreen( 'Success' ) : chalk.bgRed( 'Errors were found.' ) ) );
         } );                
     };
 

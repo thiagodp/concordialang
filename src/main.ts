@@ -110,18 +110,21 @@ if ( ! cli.flags.files
     && 0 === cli.input.length
     && ! cli.flags.about
     && ! cli.flags.pluginList
-    && ! cli.flags.pluginAbout
-    && ! cli.flags.pluginInstall
+    && ( ! cli.flags.pluginAbout || ! util.isString( cli.flags.pluginAbout ) )
+    && ( ! cli.flags.pluginInstall || ! util.isString( cli.flags.pluginInstall ) )
+    && ( ! cli.flags.pluginUninstall || ! util.isString( cli.flags.pluginUninstall ) )
 ) {
     showHelp();
 } else if ( cli.flags.about ) {
     showAbout();
 } else if ( cli.flags.pluginList ) {
     ( new PluginInputProcessor( write ) ).list();
-} else if ( cli.flags.pluginAbout && util.isString( cli.flags.pluginAbout ) ) {
+} else if ( cli.flags.pluginAbout ) {
     ( new PluginInputProcessor( write ) ).about( cli.flags.pluginAbout );
-} else if ( cli.flags.pluginInstall && util.isString( cli.flags.pluginInstall ) ) {
+} else if ( cli.flags.pluginInstall ) {
     ( new PluginInputProcessor( write ) ).install( cli.flags.pluginInstall );
+} else if ( cli.flags.pluginUninstall ) {
+    ( new PluginInputProcessor( write ) ).uninstall( cli.flags.pluginUninstall );    
 } else if ( cli.input.length > 0 || cli.flags.files ) {
     processInput( cli.input, cli.flags );
 }
