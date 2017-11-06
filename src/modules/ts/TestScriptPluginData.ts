@@ -28,4 +28,10 @@ export interface TestScriptPluginData {
 
     /** main class */
     class: string;
+
+    /** install command */
+    install: string;
+
+    /** uninstall command */
+    uninstall: string;    
 }

@@ -111,6 +111,7 @@ if ( ! cli.flags.files
     && ! cli.flags.about
     && ! cli.flags.pluginList
     && ! cli.flags.pluginAbout
+    && ! cli.flags.pluginInstall
 ) {
     showHelp();
 } else if ( cli.flags.about ) {
@@ -119,6 +120,8 @@ if ( ! cli.flags.files
     ( new PluginInputProcessor( write ) ).list();
 } else if ( cli.flags.pluginAbout && util.isString( cli.flags.pluginAbout ) ) {
     ( new PluginInputProcessor( write ) ).about( cli.flags.pluginAbout );
+} else if ( cli.flags.pluginInstall && util.isString( cli.flags.pluginInstall ) ) {
+    ( new PluginInputProcessor( write ) ).install( cli.flags.pluginInstall );
 } else if ( cli.input.length > 0 || cli.flags.files ) {
     processInput( cli.input, cli.flags );
 }

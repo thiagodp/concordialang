@@ -3,7 +3,8 @@ import { JsonBasedTestScriptPluginFinder } from "./JsonBasedTestScriptPluginFind
 import * as chalk from 'chalk'; // colors & style
 import { sprintf } from 'sprintf-js';
 import * as path from 'path';
-   
+import * as childProcess from 'child_process';
+
 /**
  * Plugin input processor.
  * 
@@ -27,16 +28,33 @@ export class PluginInputProcessor {
             .then( ( plugins: TestScriptPluginData[] ) => {
                 let found = plugins.filter( p => p.name === name );
                 if ( 0 === found.length ) {
-                    this._write( 'No plugins found for "' + name + '". Try --plugin-list to see available plugins.' );
+                    this.showMessageOnNoPluginFound( name );
                     return;
                 }
                 this.drawSinglePlugin( found[ 0 ] );
             } )
-            .catch( ( err ) => this._write( err.message ) );        
+            .catch( ( err ) => this._write( err.message ) );
     };
 
     install = ( name: string ): void => {
-        
+
+        this._write( 'Installing the plugin ' + chalk.yellow( name ) + '...' );
+
+        this.find()
+            .then( ( plugins: TestScriptPluginData[] ) => {
+                let found = plugins.filter( p => p.name === name );
+                if ( 0 === found.length ) {
+                    this.showMessageOnNoPluginFound( name );
+                    return;
+                }
+                const command = found[ 0 ].install;
+                if ( ! command ) {
+                    this._write( 'No "install" property found in the plugin file. Can\'t install it.' );
+                    return;
+                }
+                this.runPluginCommand( command, name, 'installed' );
+            } )
+            .catch( ( err ) => this._write( err.message ) );
     };
 
     uninstall = ( name: string ): void => {
@@ -71,10 +89,33 @@ export class PluginInputProcessor {
         this._write( sprintf( format, 'class', p.class ) );        
     };
 
+    private showMessageOnNoPluginFound = ( name: string ): void => {
+        this._write( 'No plugins found for "' + name + '". Try --plugin-list to see available plugins.' );
+    };
+
     private find = (): Promise< TestScriptPluginData[] > => {
         const dir = path.join( process.cwd(), '/plugins' );
         const finder = new JsonBasedTestScriptPluginFinder( dir );
         return finder.find();
+    };
+
+    private runPluginCommand = ( command: string, pluginName: string, msgOnExit: string ): void => {
+        this._write( '---' );        
+        const child = childProcess.exec( command );
+        
+        child.stdout.on( 'data', ( chunk ) => {
+            this._write( chunk.toString() );
+        } );
+
+        child.stderr.on( 'data', ( chunk ) => {
+            this._write( chunk.toString() );
+        } );
+
+        child.on( 'exit', ( code ) => {
+            this._write( '---' );
+            this._write( 'Plugin ' + chalk.yellow( pluginName ) + ' ' + msgOnExit + ' ' +
+                ( 0 == code ? chalk.green( 'successfully.' ) : chalk.red( ' with errors.' ) ) );
+        } );                
     };
 
 }
