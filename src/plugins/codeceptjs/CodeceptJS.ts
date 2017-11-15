@@ -1,5 +1,6 @@
 import { TestScriptExecutor } from './TestScriptExecutor';
 import { TestScriptGenerator } from './TestScriptGenerator';
+import { ReportConverter } from './ReportConverter';
 import { TestScriptPlugin } from '../../modules/ts/TestScriptPlugin';
 import { AbstractTestScript } from '../../modules/ts/AbstractTestScript';
 import { TestScriptGenerationOptions } from '../../modules/ts/TestScriptGeneration';
@@ -21,6 +22,9 @@ export class CodeceptJS implements TestScriptPlugin {
    
     private _scriptGenerator: TestScriptGenerator;
     private _scriptExecutor: TestScriptExecutor;
+    private _reportConverter: ReportConverter;
+
+    private readonly PLUGIN_CONFIG_PATH: string = path.join( __dirname, '../', 'codeceptjs.json' );
 
     constructor( private _fs?: any, private _encoding: string = 'utf8' ) {
 
@@ -31,6 +35,7 @@ export class CodeceptJS implements TestScriptPlugin {
             new FileUtil( _fs ),
             new CmdRunner()
         );
+        this._reportConverter = new ReportConverter( _fs );
     }
     
     /** @inheritDoc */
@@ -85,6 +90,6 @@ export class CodeceptJS implements TestScriptPlugin {
 
     /** @inheritDoc */
     public convertReportFile( filePath: string ): TestScriptExecutionResult {
-        throw new Error('Not implemented yet.');    
+        return this._reportConverter.convertFrom( filePath, this.PLUGIN_CONFIG_PATH );
     }
 }
