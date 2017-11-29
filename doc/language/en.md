@@ -89,6 +89,11 @@ Reserved tags:
 - `@ignore`: indicates that a test case should be ignored to generate tests.
 
 
+Reserved for future use:
+- `@issue( <number> )` references an Issue.
+- `@category( <name> )` specifies a category. It can be used for filtering.
+
+
 ## Feature
 
 *Feature of the system.*
