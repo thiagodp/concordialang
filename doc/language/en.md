@@ -22,7 +22,8 @@
 - [Table](#table)
 - [Database](#database)
 - [File](#file)
-- [Test Case](#testcase)
+- [Template](#template)
+- [Variant](#variant)
 - [Test Events](#testevents)
 
 
@@ -365,41 +366,19 @@ Example of a query:
 SELECT `some column` FROM `my json file` WHERE `other column` > 50
 ```
 
+## Template
 
-## TestCase
-
-*Declares a test case.*
+*Declares a template for scenario's variants*
 
 Notes:
-- Local declaration (belongs to a Feature).
-- Allowed more than one declaration per Feature.
+- Local declaration.
+- Belongs to a Scenario.
+- Should be declared after a Scenario.
 
-Can be automatically generated using:
-1. A template test case;
-2. [user interface](#userinterface);
-3. [constraints](#constraint);
-4. [states](#state).
-
-A generated test case will:
-- Receive all the annotations from the source test case, except the tag `@template`;
-- Receive the tag `@generated`;
-- Have at least one tag `@invalid` added, if the goal is exploit some constraint;
-- Have its name changed, according to the goal;
-- Replace all the clauses in `Then`, when the goal is exploit some constraint;
-- Replace all the involved constants by their corresponding values;
-- Replace all the involved references to user interface elements by their identifiers;
-- Keep informed user interface elements (literals);
-- Keep informed states; <<< Really?
-- Keep informed values;
-
-Notes about a template:
-- When a reference to a user interface element is informed **without a value**, values will be produced for the generated test cases, **according to the test goal**;
-
-Example 1: Template test case for the scenario Successful Login.
+Example 1: Template of a scenario's variant.
 ```
-@template
 @scenario( Successful Login )
-Test Case: Should be able to login
+Template: Usual login
   Given that I am on the Login Page
   When I fill Username
     And I fill Password
@@ -410,12 +389,45 @@ Test Case: Should be able to login
     And I am not on the Login Page
 ```
 
-Example 2: A test case produced from the template in Example 1.
+
+
+## Variant
+
+*Declares a scenario's variant*
+
+Notes:
+- Local declaration.
+- Belongs to a Scenario.
+- Can be declared in a different file (e.g. ".var")
+
+Can be generated automatically using:
+1. [template](#template);
+2. [user interface](#userinterface);
+3. [constraints](#constraint);
+4. [states](#state).
+
+A generated variant will:
+- Receive all the annotations from the source variant;
+- Receive the tag `@generated`;
+- Have tags `@invalid` added, if the goal is exploit some constraint;
+- Have its name defined according to the testing goal;
+- Replace the variant's postconditions, i.e., `Then` clauses, with postconditions of the exploited constraint;
+- Replace all the involved constants by their corresponding values;
+- Replace all the involved references to user interface elements by their identifiers;
+- Keep informed user interface elements' literals;
+- Keep informed states; <<< Really?
+- Keep informed values;
+
+Additional notes:
+- When a reference to a user interface element is informed **without a value**, values will be produced for the generated test cases, **according to the test goal**;
+
+
+Example 1: Variant produced from the previous template. Valid input.
 ```
 @generated
-@scenario( Successful Login )
-@testcase( Should be able to login )
-Test Case: Should finish successfully
+@scenario( Successful Login ) # needed only if declared in a external file
+@template( Usual login )
+Variant 1: Valid input 1
   Given that I am on the page "/login"
   When I fill "#username" with "Bob"
     And I fill "#password" with "bobp4ss"
@@ -426,13 +438,13 @@ Test Case: Should finish successfully
     And I am not on the page "/login"
 ```
 
-Example 3: Another test case produced from the template in Example 1.
+Example 2: Another variant produced from previous template. Invalid input.
 ```
 @generated
-@scenario( Successful Login )
-@testcase( Should be able to login )
+@scenario( Successful Login ) # needed only if declared in a external file
+@template( Usual login )
 @invalid( Username, minimum length )
-Test Case: Should not finish successfully - Username length is too short
+Variant 2: Invalid input - Username length is too short
   Given that I am on the page "/login"
   When I fill "#username" with ""
     And I fill "#password" with "bobp4ss"

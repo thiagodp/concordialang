@@ -1,0 +1,26 @@
+import "example.feature"
+
+@generated
+@scenario( Successful Login )
+@template( Usual login )
+Variant 1: Valid input - random
+  Given that I am on the page "/login"
+  When I fill "#username" with "Bob"
+    And I fill "#password" with "bobp4ss"
+    And I click on "Enter"
+  Then I have the state "logged in"    
+    And I see the text "Welcome"
+    And I see a button "Logout"
+    And I am not on the page "/login"
+
+
+@generated
+@scenario( Successful Login )
+@template( Usual login )
+@invalid( Username, minimum length )
+Variant 2: Invalid input - Username length is too short
+  Given that I am on the page "/login"
+  When I fill "#username" with ""
+    And I fill "#password" with "bobp4ss"
+    And I click on "Enter"
+  Then I see "Username must have at least 2 characters."
