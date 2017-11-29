@@ -377,7 +377,6 @@ Notes:
 
 Example 1: Template of a scenario's variant.
 ```
-@scenario( Successful Login )
 Template: Usual login
   Given that I am on the Login Page
   When I fill Username
@@ -386,7 +385,6 @@ Template: Usual login
   Then I have the state "logged in"
     And I see the text ${welcomeText}
     And I see a button "Logout"
-    And I am not on the Login Page
 ```
 
 
@@ -435,7 +433,6 @@ Variant 1: Valid input 1
   Then I have the state "logged in"    
     And I see the text "Welcome"
     And I see a button "Logout"
-    And I am not on the page "/login"
 ```
 
 Example 2: Another variant produced from previous template. Invalid input.
@@ -493,6 +490,7 @@ Element filters, when used without the `with` keyword :
   - `.element` = css
   - `//element` = xpath
   - `~element` = mobile name `<< MOBILE ONLY`
+
 
 
 ## TestEvents
