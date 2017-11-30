@@ -8,7 +8,7 @@ import { KeywordBasedLexer } from './KeywordBasedLexer';
 import { KeywordDictionaryLoader } from '../dict/KeywordDictionaryLoader';
 import { Language } from '../ast/Language';
 import { NodeTypes } from '../req/NodeTypes';
-import { TestCaseLexer } from './TestCaseLexer';
+import { VariantLexer } from './VariantLexer';
 import { Node } from '../ast/Node';
 import { DocumentProcessor } from '../req/DocumentProcessor';
 import { NodeLexer, LexicalAnalysisResult } from './NodeLexer';
@@ -73,7 +73,7 @@ export class Lexer {
             , new StepThenLexer( dictionary.stepThen )
             , new StepAndLexer( dictionary.stepAnd )
             , new StepOtherwiseLexer( dictionary.stepOtherwise )
-            , new TestCaseLexer( dictionary.testcase )
+            , new VariantLexer( dictionary.testcase )
             , new ConstantBlockLexer( dictionary.constantBlock )
             , new ConstantLexer( dictionary.is ) // "name" is "value"
             , new RegexBlockLexer( dictionary.regexBlock )

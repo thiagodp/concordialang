@@ -18,7 +18,7 @@ export class StepGivenParser implements NodeParser< StepGiven > {
         // Checks prior nodes
         const allowedPriorNodes = [
             NodeTypes.SCENARIO,
-            NodeTypes.TEST_CASE,
+            NodeTypes.VARIANT,
             NodeTypes.STEP_GIVEN
         ];
         if ( ! it.hasPrior() || allowedPriorNodes.indexOf( it.spyPrior().nodeType ) < 0 ) {

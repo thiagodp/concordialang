@@ -18,7 +18,7 @@ export class StepWhenParser implements NodeParser< StepWhen > {
         // Checks prior nodes
         const allowedPriorNodes = [
             NodeTypes.SCENARIO,
-            NodeTypes.TEST_CASE,
+            NodeTypes.VARIANT,
             NodeTypes.STEP_GIVEN,
             NodeTypes.STEP_WHEN,
             NodeTypes.STEP_AND

@@ -1,15 +1,15 @@
 import { NodeTypes } from "../req/NodeTypes";
 import { NamedNodeLexer } from "./NamedNodeLexer";
-import { TestCase } from "../ast/TestCase";
+import { Variant } from "../ast/Variant";
 
 /**
- * Detects a TestCase.
+ * Detects a Variant.
  * 
  * @author Thiago Delgado Pinto
  */
-export class TestCaseLexer extends NamedNodeLexer< TestCase > {
+export class VariantLexer extends NamedNodeLexer< Variant > {
     
     constructor( words: string[] ) {
-        super( words, NodeTypes.TEST_CASE );
+        super( words, NodeTypes.VARIANT );
     }
 }

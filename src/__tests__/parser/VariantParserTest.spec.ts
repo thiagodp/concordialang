@@ -3,15 +3,15 @@ import { NodeIterator } from '../../modules/parser/NodeIterator';
 import { ParsingContext } from '../../modules/parser/ParsingContext';
 import { NodeTypes } from '../../modules/req/NodeTypes';
 import { Feature } from '../../modules/ast/Feature';
-import { TestCaseParser } from "../../modules/parser/TestCaseParser";
-import { TestCase } from "../../modules/ast/TestCase";
+import { VariantParser } from "../../modules/parser/VariantParser";
+import { Variant } from "../../modules/ast/Variant";
 
 /**
  * @author Thiago Delgado Pinto
  */
-describe( 'TestCaseParserTest', () => {
+describe( 'VariantParserTest', () => {
 
-    let parser = new TestCaseParser(); // under test
+    let parser = new VariantParser(); // under test
 
     let context: ParsingContext = null;
     let nodes: Node[] = [];
@@ -24,8 +24,8 @@ describe( 'TestCaseParserTest', () => {
         name: "My feature"
     };
 
-    let testCaseNode: TestCase = {
-        nodeType: NodeTypes.TEST_CASE,
+    let testCaseNode: Variant = {
+        nodeType: NodeTypes.VARIANT,
         location: { column: 1, line: 2 },
         name: "My test case",
         sentences: []

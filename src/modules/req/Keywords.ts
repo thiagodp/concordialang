@@ -12,7 +12,8 @@ export abstract class Keywords {
     static CONSTANT_BLOCK: string = 'constantBlock';
     static IS: string = 'is';
     static STATE: string = 'state';    
-    static TEST_CASE: string = 'testcase';
+    static VARIANT: string = 'variant';
+    static TEMPLATE: string = 'template';
     static UI_ELEMENT: string = 'uiElement';
     static DATABASE: string = 'database';
 

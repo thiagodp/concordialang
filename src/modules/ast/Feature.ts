@@ -2,7 +2,7 @@ import { NamedNode } from './Node';
 import { MayHaveTags } from './Tag';
 import { Text } from '../ast/Text';
 import { Scenario } from './Scenario';
-import { TestCase } from './TestCase';
+import { Variant } from './Variant';
 import { UIElement } from './UIElement';
 
 /**
@@ -17,6 +17,6 @@ export interface Feature extends NamedNode, MayHaveTags {
     sentences?: Text[];    
     scenarios?: Scenario[];
     uiElements?: UIElement[];
-    testcases?: TestCase[];
+    testcases?: Variant[];
     
 }

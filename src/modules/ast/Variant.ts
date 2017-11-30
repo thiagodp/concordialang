@@ -3,10 +3,18 @@ import { MayHaveTags } from './Tag';
 import { Step } from './Step';
 
 /**
- * Test case
+ * Variant
  * 
  * @author Thiago Delgado Pinto
  */
-export interface TestCase extends NamedNode, MayHaveTags {
+export interface Variant extends NamedNode, MayHaveTags {
     sentences?: Step[];
+}
+
+/**
+ * Template
+ * 
+ * @author Thiago Delgado Pinto
+ */
+export interface Template extends Variant {
 }

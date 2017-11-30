@@ -13,7 +13,7 @@ import { NodeIterator } from './NodeIterator';
 import { NodeParser } from './NodeParser';
 import { ParsingContext } from "./ParsingContext";
 import { ScenarioParser } from './ScenarioParser';
-import { TestCaseParser } from './TestCaseParser';
+import { VariantParser } from './VariantParser';
 import { ImportParser } from "./ImportParser";
 import { StateParser } from "./StateParser";
 import { StepWhenParser } from './StepWhenParser';
@@ -61,7 +61,7 @@ export class Parser {
         this._parsersMap[ NodeTypes.UI_PROPERTY ] = new ListItemParser();
         this._parsersMap[ NodeTypes.DATABASE ] = new DatabaseParser();
         this._parsersMap[ NodeTypes.DATABASE_PROPERTY ] = new ListItemParser();
-        this._parsersMap[ NodeTypes.TEST_CASE ] = new TestCaseParser();
+        this._parsersMap[ NodeTypes.VARIANT ] = new VariantParser();
     }
 
     public reset(): void {

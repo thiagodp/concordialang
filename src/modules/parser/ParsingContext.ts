@@ -7,7 +7,7 @@ import { Interaction } from '../ast/Interaction';
 import { Document } from '../ast/Document';
 import { Feature } from "../ast/Feature";
 import { Scenario } from "../ast/Scenario";
-import { TestCase } from "../ast/TestCase";
+import { Variant } from "../ast/Variant";
 
 /**
  * Parsing context.
@@ -27,7 +27,7 @@ export class ParsingContext {
     inTable: boolean = false;
 
     currentScenario: Scenario = null;
-    currentTestCase: TestCase = null;
+    currentTestCase: Variant = null;
     currentUIElement: UIElement = null;
     currentUIProperty: UIProperty = null;
     currentTable: Table = null;

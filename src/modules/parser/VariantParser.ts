@@ -5,23 +5,23 @@ import { SyntaticException } from '../req/SyntaticException';
 import { NodeIterator } from './NodeIterator';
 import { NodeParser } from './NodeParser';
 import { ParsingContext } from "./ParsingContext";
-import { TestCase } from "../ast/TestCase";
+import { Variant } from "../ast/Variant";
 import { TagCollector } from "./TagCollector";
 
 /**
- * Test case parser
+ * Variant parser
  * 
  * @author Thiago Delgado Pinto
  */
-export class TestCaseParser implements NodeParser< TestCase > {
+export class VariantParser implements NodeParser< Variant > {
 
     /** @inheritDoc */
-    public analyze( node: TestCase, context: ParsingContext, it: NodeIterator, errors: Error[] ): boolean {
+    public analyze( node: Variant, context: ParsingContext, it: NodeIterator, errors: Error[] ): boolean {
 
         // Checks if a feature has been declared before it
         if ( ! context.doc.feature ) {
             let e = new SyntaticException(
-                'A test case must be declared after a feature.', node.location );
+                'A variant must be declared after a feature.', node.location );
             errors.push( e );
             return false;
         }
