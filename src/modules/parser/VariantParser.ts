@@ -28,12 +28,12 @@ export class VariantParser implements NodeParser< Variant > {
 
         // Prepares the feature to receive the test case        
         let feature = context.doc.feature;
-        if ( ! feature.testcases ) {
-            feature.testcases = [];
+        if ( ! feature.variants ) {
+            feature.variants = [];
         }
 
         // Adds the test case to the feature
-        feature.testcases.push( node );
+        feature.variants.push( node );
 
         // Adjusts the context
         context.resetInValues();

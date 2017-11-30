@@ -48,7 +48,7 @@ describe( 'VariantParserTest', () => {
         context.doc.feature = featureNode;
         parser.analyze( testCaseNode, context, nodeIt, errors );
         expect( errors ).toHaveLength( 0 );
-        expect( context.doc.feature.testcases ).toHaveLength( 1 );
+        expect( context.doc.feature.variants ).toHaveLength( 1 );
     } );    
 
     it( 'indicates that it is in a test case when a test case is detected', () => {

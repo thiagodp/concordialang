@@ -17,6 +17,6 @@ export interface Feature extends NamedNode, MayHaveTags {
     sentences?: Text[];    
     scenarios?: Scenario[];
     uiElements?: UIElement[];
-    testcases?: Variant[];
+    variants?: Variant[];
     
 }

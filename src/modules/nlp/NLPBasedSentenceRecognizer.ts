@@ -79,7 +79,7 @@ export class NLPBasedSentenceRecognizer {
             this._uiPropertyRec.recognizeSentences( language, uiElement.items, errors, warnings );
         }
 
-        for ( let testCase of doc.feature.testcases ) {
+        for ( let testCase of doc.feature.variants ) {
             this._testCaseSentenceRec.recognizeSentences( language, testCase.sentences, errors, warnings );
         }
 
