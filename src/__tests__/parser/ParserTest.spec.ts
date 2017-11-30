@@ -117,7 +117,7 @@ describe( 'ParserTest', () => {
             '',
             '@feature( my feature )',
             '@scenario( hello )',
-            'Test Case: hello',
+            'Variant: hello',
             '  Given that I see in the url "/login"',
             '  When I fill "#username" with ""',
             '    And I fill "#password" with "bobp4ss"',

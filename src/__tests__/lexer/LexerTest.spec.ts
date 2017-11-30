@@ -61,7 +61,7 @@ describe( 'LexerTest', () => {
             { l: '  Then the result is anything', e: NodeTypes.STEP_THEN },
             { l: '    and another result could also happen', e: NodeTypes.STEP_AND },
             { l: '', e: null },
-            { l: 'Test Case: my test case', e: NodeTypes.VARIANT },
+            { l: 'Variant: my test case', e: NodeTypes.VARIANT },
             { l: '  Given that I see the url "/login"', e: NodeTypes.STEP_GIVEN },
             { l: '  When I fill "#username" with ""', e: NodeTypes.STEP_WHEN },
             { l: '    And I fill "#password" with "bobp4ss"', e: NodeTypes.STEP_AND },
@@ -115,7 +115,7 @@ describe( 'LexerTest', () => {
             { l: '  então the result is anything', e: NodeTypes.STEP_THEN },
             { l: '    e another result could also happen', e: NodeTypes.STEP_AND },
             { l: '', e: null },
-            { l: 'Caso de Teste: my test case', e: NodeTypes.VARIANT },
+            { l: 'Variante: my test case', e: NodeTypes.VARIANT },
             { l: '  Dado que vejo a url "/login"', e: NodeTypes.STEP_GIVEN },
             { l: '  Quando preencho "#username" com ""', e: NodeTypes.STEP_WHEN },
             { l: '  E preencho "#password" com "bobp4ss"', e: NodeTypes.STEP_AND },
@@ -140,7 +140,7 @@ describe( 'LexerTest', () => {
             { l: 'Antes de Cada Cenário:', e: NodeTypes.BEFORE_EACH_SCENARIO },
             { l: 'Depois de Cada Cenário:', e: NodeTypes.AFTER_EACH_SCENARIO },
             { l: '', e: null },            
-            { l: 'isso must be recognized as text', e: NodeTypes.TEXT }
+            { l: 'isso deve ser reconhecido como texto', e: NodeTypes.TEXT }
         ];
 
         assertLineExpectations( lines );
