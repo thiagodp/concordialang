@@ -7,6 +7,9 @@ import { KeywordDictionary } from './KeywordDictionary';
  */
 export class EnglishKeywordDictionary implements KeywordDictionary {
 
+    // NOTE: If you want to change some attribute name,
+    //       please do it in the parent interface.
+
     // Not available in Gherkin
     
     import: string[] = [ 'import' ];
@@ -14,7 +17,8 @@ export class EnglishKeywordDictionary implements KeywordDictionary {
     constantBlock: string[] = [ 'constants' ];
     is: string[] = [ 'is' ];
     state: string[] = [ 'state' ];    
-    testcase: string[] = [ 'test case' ];
+    variant: string[] = [ 'variant' ];
+    template: string[] = [ 'template' ];
     uiElement: string[] = [ 'ui element' ];
     database: string[] = [ 'database' ];
 

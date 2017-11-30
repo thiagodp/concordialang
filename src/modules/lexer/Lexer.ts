@@ -1,3 +1,4 @@
+import { TemplateLexer } from './TemplateLexer';
 import { BeforeAllLexer, AfterAllLexer, BeforeFeatureLexer, AfterFeatureLexer, BeforeScenariosLexer, AfterScenariosLexer } from './TestEventLexer';
 import { DatabasePropertyLexer } from './DatabasePropertyLexer';
 import { DatabaseLexer } from './DatabaseLexer';
@@ -73,7 +74,8 @@ export class Lexer {
             , new StepThenLexer( dictionary.stepThen )
             , new StepAndLexer( dictionary.stepAnd )
             , new StepOtherwiseLexer( dictionary.stepOtherwise )
-            , new VariantLexer( dictionary.testcase )
+            , new VariantLexer( dictionary.variant )
+            , new TemplateLexer( dictionary.template )
             , new ConstantBlockLexer( dictionary.constantBlock )
             , new ConstantLexer( dictionary.is ) // "name" is "value"
             , new RegexBlockLexer( dictionary.regexBlock )

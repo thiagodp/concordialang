@@ -4,7 +4,8 @@
     "constantBlock": [ "constantes" ],
     "is": [ "é" ],
     "state": [ "estado" ],    
-    "testcase": [ "caso de teste" ],
+    "variant": [ "variante", "variação", "variant" ],
+    "template": [ "modelo", "template" ],
     "uiElement": [ "elemento da iu" ],
     "database": [ "banco de dados", "database" ],
 
