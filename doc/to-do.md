@@ -18,8 +18,10 @@
 - [X] Regular Expressions
 - [X] Constants Block
 - [X] Contants
-- [X] Test Case
-- [/] Test Case Sentences
+- [X] Variant
+- [X] Variant Sentences
+- [X] Template
+- [X] Template Sentences
 - [X] UI Element
 - [X] UI Element Items
 - [X] Table
@@ -39,8 +41,10 @@
 - [X] Feature Sentences
 - [X] Scenario
 - [X] Scenario Sentences
-- [X] Test Case
-- [X] Test Case Sentences
+- [X] Variant
+- [X] Variant Sentences
+- [X] Template
+- [X] Template Sentences
 - [X] State
 - [X] Regular Expressions Block
 - [X] Regular Expressions
@@ -58,32 +62,14 @@
 
 ## NLP Processor
 
-- [/] Test Case
-- [/] UI Element
+- [/] Variant Sentences
+- [/] Template Sentences
+- [/] UI Element Sentences
 
 ## Semantic Analyzer
 
 - [ ] Language ?
 - [X] Import
-- [ ] Tag
-- [ ] Feature
-- [ ] Feature Sentences
-  - [ ] As a
-  - [ ] I would like to
-  - [ ] In order to
-- [ ] Scenario
-- [ ] Scenario Sentences
-  - [ ] Given
-  - [ ] When
-  - [ ] Then
-  - [ ] And, But
-- [ ] Test Case  
-- [ ] Test Case Sentences
-  - [ ] Given
-  - [ ] When
-  - [ ] Then
-  - [ ] And, But
-- [ ] State
 - ...
 
 ## Logic Analyzer
@@ -106,20 +92,20 @@ To consider:
 - Use [Node-DBI](https://github.com/DrBenton/Node-DBI/) for relational database queries.
 - Recognize the database/file used in the script and handle it with the corresponding library.
 
-## Interaction + Oracle Generation
+## Interaction + oracle generation
 
 - [X] Syntax (requirements specification)
 - [/] Algorithm
 - [ ] Implementation & tests
 
-## Test Case Generation
+## Test case generation
 
 - [X] Syntax (requirements specification)
 - [X] Syntax for the abstract format (JSON)
 - [/] Algorithm
 - [ ] Implementation & tests
 
-## Test Script Generation, Execution and Reporting
+## Test script generation, execution and reporting
 
 - [X] Architecture
 - [X] Input format (test cases)

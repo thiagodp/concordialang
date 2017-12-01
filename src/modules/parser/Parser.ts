@@ -1,3 +1,4 @@
+import { TemplateParser } from './TemplateParser';
 import { ListItemParser } from './ListItemParser';
 import { TableRowParser } from './TableRowParser';
 import { TableRow } from '../ast/Table';
@@ -22,7 +23,6 @@ import { StepThenParser } from './StepThenParser';
 import { StepAndParser } from './StepAndParser';
 import { StepOtherwiseParser } from './StepOtherwiseParser';
 import { UIElementParser } from './UIElementParser';
-import { UIPropertyParser } from './UIPropertyParser';
 import { TableParser } from './TableParser';
 import { DatabaseParser } from './DatabaseParser';
 
@@ -62,6 +62,7 @@ export class Parser {
         this._parsersMap[ NodeTypes.DATABASE ] = new DatabaseParser();
         this._parsersMap[ NodeTypes.DATABASE_PROPERTY ] = new ListItemParser();
         this._parsersMap[ NodeTypes.VARIANT ] = new VariantParser();
+        this._parsersMap[ NodeTypes.TEMPLATE ] = new TemplateParser();
     }
 
     public reset(): void {

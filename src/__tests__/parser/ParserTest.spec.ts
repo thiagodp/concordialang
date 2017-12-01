@@ -106,7 +106,7 @@ describe( 'ParserTest', () => {
     } );
 
 
-    it( 'detects test cases with tags and sentences', () => {
+    it( 'detects variants with tags and sentences', () => {
         
         [
             '#language:en',

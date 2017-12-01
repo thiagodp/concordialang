@@ -1,5 +1,5 @@
 /**
- * Entities
+ * Entities for NLP
  * 
  * @author Thiago Delgado Pinto
  * 

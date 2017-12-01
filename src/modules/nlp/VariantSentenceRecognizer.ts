@@ -12,11 +12,11 @@ import { UI_ACTION_SYNTAX_RULES, DEFAULT_UI_ACTION_SYNTAX_RULE } from './SyntaxR
 import { Step } from '../ast/Step';
 
 /**
- * Test case sentence recognizer.
+ * Variant sentence recognizer.
  * 
  * @author Thiago Delgado Pinto
  */
-export class TestCaseSentenceRecognizer {
+export class VariantSentenceRecognizer {
 
     private _syntaxRules: any[];
     
@@ -33,7 +33,7 @@ export class TestCaseSentenceRecognizer {
     }
 
     /**
-     * Recognize sentences of test cases using NLP.
+     * Recognize sentences using NLP.
      * 
      * @param language Language to be used in the recognition.
      * @param nodes Nodes to be recognized.
@@ -82,7 +82,7 @@ export class TestCaseSentenceRecognizer {
             language,
             nodes,
             Intents.TEST_CASE,
-            'Test Case',
+            'Variant',
             errors,
             warnings,
             processor

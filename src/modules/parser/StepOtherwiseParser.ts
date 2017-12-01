@@ -18,6 +18,7 @@ export class StepOtherwiseParser implements NodeParser< StepOtherwise > {
 
         // Checks prior nodes
         const allowedPriorNodes = [ NodeTypes.UI_PROPERTY ];
+        
         if ( ! it.hasPrior() || allowedPriorNodes.indexOf( it.spyPrior().nodeType ) < 0 ) {
             let e = new SyntaticException(
                 'The "' + node.nodeType + '" clause must be declared after a UI Element Property.',

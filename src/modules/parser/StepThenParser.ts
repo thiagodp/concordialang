@@ -21,6 +21,7 @@ export class StepThenParser implements NodeParser< StepThen > {
             NodeTypes.STEP_WHEN,
             NodeTypes.STEP_AND
         ];
+
         if ( ! it.hasPrior() || allowedPriorNodes.indexOf( it.spyPrior().nodeType ) < 0 ) {
             let e = new SyntaticException(
                 'The "' + node.nodeType + '" clause must be declared after a Given, a When, or an And.',
@@ -30,18 +31,30 @@ export class StepThenParser implements NodeParser< StepThen > {
             return false;                
         }
 
-        // Checks the context
-        if ( ! context.inScenario && ! context.inTestCase ) {
+        // Prepare the owner to receive the given node
+        let owner = null;
+        
+        if ( context.inScenario ) owner = context.currentScenario;
+        else if ( context.inVariant ) owner = context.currentVariant;
+        else if ( context.inTemplate ) owner = context.currentTemplate;
+        else {
             let e = new SyntaticException(
-                'The "' + node.nodeType + '" clause must be declared after a Scenario or a Test Case.',
+                'The "' + node.nodeType + '" clause must be declared after a Scenario, a Template or a Variant.',
                 node.location
                 );
             errors.push( e );
             return false;
         }
 
-        // Prepare the owner to receive the given node
-        let owner = context.inScenario ? context.currentScenario : context.currentTestCase;
+        if ( ! owner ) {
+            let e = new SyntaticException(
+                'Invalid context for the step "' + node.nodeType + '".',
+                node.location
+                );
+            errors.push( e );
+            return false;
+        }        
+
         if ( ! owner.sentences ) {
             owner.sentences = [];
         }

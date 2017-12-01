@@ -18,7 +18,7 @@ export class VariantParser implements NodeParser< Variant > {
     /** @inheritDoc */
     public analyze( node: Variant, context: ParsingContext, it: NodeIterator, errors: Error[] ): boolean {
 
-        // Checks if a feature has been declared before it
+        // Checks if a feature has been declared
         if ( ! context.doc.feature ) {
             let e = new SyntaticException(
                 'A variant must be declared after a feature.', node.location );
@@ -26,19 +26,19 @@ export class VariantParser implements NodeParser< Variant > {
             return false;
         }
 
-        // Prepares the feature to receive the test case        
+        // Prepares the feature to receive the variant
         let feature = context.doc.feature;
         if ( ! feature.variants ) {
             feature.variants = [];
         }
 
-        // Adds the test case to the feature
+        // Adds it to the feature
         feature.variants.push( node );
 
         // Adjusts the context
         context.resetInValues();
-        context.inTestCase = true; 
-        context.currentTestCase = node;
+        context.inVariant = true; 
+        context.currentVariant = node;
 
         // Adds backward tags
         if ( ! node.tags ) {

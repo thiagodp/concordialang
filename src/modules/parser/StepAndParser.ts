@@ -23,6 +23,7 @@ export class StepAndParser implements NodeParser< StepAnd > {
             NodeTypes.STEP_AND,
             NodeTypes.STEP_OTHERWISE
         ];
+
         if ( ! it.hasPrior() || allowedPriorNodes.indexOf( it.spyPrior().nodeType ) < 0 ) {
             let e = new SyntaticException(
                 'The "' + node.nodeType + '" clause must be declared after Given, When, Then, And or Otherwise.',
@@ -30,16 +31,6 @@ export class StepAndParser implements NodeParser< StepAnd > {
                 );
             errors.push( e );
             return false;                
-        }
-
-        // Checks the context
-        if ( ! context.inScenario && ! context.inTestCase && ! context.inUIProperty ) {
-            let e = new SyntaticException(
-                'The "' + node.nodeType + '" clause must be declared after a Scenario, a Test case, or an UI Element Property.',
-                node.location
-                );
-            errors.push( e );
-            return false;
         }
 
         if ( context.inUIProperty ) {
@@ -51,7 +42,29 @@ export class StepAndParser implements NodeParser< StepAnd > {
             context.currentUIProperty.otherwiseSentences.push( node );
         } else {
             // Prepare the owner to receive the given node
-            let owner = context.inScenario ? context.currentScenario : context.currentTestCase;
+            let owner = null;
+
+            if ( context.inScenario ) owner = context.currentScenario;
+            else if ( context.inVariant ) owner = context.currentVariant;
+            else if ( context.inTemplate ) owner = context.currentTemplate;
+            else {
+                let e = new SyntaticException(
+                    'The "' + node.nodeType + '" clause must be declared after a Scenario, a Template, a Variant, or a UI Element Property.',
+                    node.location
+                    );
+                errors.push( e );
+                return false;
+            }
+
+            if ( ! owner ) {
+                let e = new SyntaticException(
+                    'Invalid context for the step "' + node.nodeType + '".',
+                    node.location
+                    );
+                errors.push( e );
+                return false;
+            }
+
             if ( ! owner.sentences ) {
                 owner.sentences = [];
             }

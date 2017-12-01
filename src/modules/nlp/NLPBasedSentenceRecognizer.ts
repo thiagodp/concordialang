@@ -2,7 +2,7 @@ import { Intents } from './Intents';
 import { NLPTrainer } from './NLPTrainer';
 import { DatabasePropertyRecognizer } from './DatabasePropertyRecognizer';
 import { NLPException } from './NLPException';
-import { TestCaseSentenceRecognizer } from './TestCaseSentenceRecognizer';
+import { VariantSentenceRecognizer } from './VariantSentenceRecognizer';
 import { UIPropertyRecognizer } from './UIPropertyRecognizer';
 import { Warning } from '../req/Warning';
 import { LocatedException } from '../req/LocatedException';
@@ -18,7 +18,7 @@ export class NLPBasedSentenceRecognizer {
 
     private _nlpTrainer: NLPTrainer;
     private _uiPropertyRec: UIPropertyRecognizer;
-    private _testCaseSentenceRec: TestCaseSentenceRecognizer;
+    private _testCaseSentenceRec: VariantSentenceRecognizer;
     private _dbPropertyRec: DatabasePropertyRecognizer;
 
     constructor(
@@ -28,7 +28,7 @@ export class NLPBasedSentenceRecognizer {
     ) {
         this._nlpTrainer = new NLPTrainer( dataDir );
         this._uiPropertyRec = new UIPropertyRecognizer( new NLP( _useFuzzyProcessor ) );
-        this._testCaseSentenceRec = new TestCaseSentenceRecognizer( new NLP( _useFuzzyProcessor ) );
+        this._testCaseSentenceRec = new VariantSentenceRecognizer( new NLP( _useFuzzyProcessor ) );
         this._dbPropertyRec = new DatabasePropertyRecognizer( new NLP( _useFuzzyProcessor ) );
     }
 

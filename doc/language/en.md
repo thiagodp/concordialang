@@ -80,14 +80,13 @@ Example 2 (*more than one per line*):
 
 Reserved tags:
 - `@scenario( <name> )`: references a [scenario](#scenario).
-- `@template`: indicates that a test case is a template.
-- `@testcase( <name> )`: references a [test case](#testcase) which is a template.
+- `@template( <name> )`: references a [template](#template).
 - `@invalid( <ui_element>, <constraint> )`: indicates that a test case has an invalid value for a certain user interface element. The `constraint` is the exploited rule, such as "minimum length", "maximum value", etc.
 - `@importance( <number> )`: indicates the importance. The importance is as higher as its number.
 - `@critical`: indicates a very high importance.
 - `@generated`: indicates that a declaration was computer-generated.
 - `@global`: defines an element as global. Can be applied to [User Interface Element](#UserInterfaceElement).
-- `@ignore`: indicates that a test case should be ignored to generate tests.
+- `@ignore`: indicates that a declaration should be ignored to generate tests.
 
 
 Reserved for future use:

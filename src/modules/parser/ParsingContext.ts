@@ -7,7 +7,7 @@ import { Interaction } from '../ast/Interaction';
 import { Document } from '../ast/Document';
 import { Feature } from "../ast/Feature";
 import { Scenario } from "../ast/Scenario";
-import { Variant } from "../ast/Variant";
+import { Template, Variant } from '../ast/Variant';
 
 /**
  * Parsing context.
@@ -20,14 +20,16 @@ export class ParsingContext {
 
     inFeature: boolean = false;
     inScenario: boolean = false;
-    inTestCase: boolean = false;
+    inTemplate: boolean = false;
+    inVariant: boolean = false;
     inRegexBlock: boolean = false;
     inConstantBlock: boolean = false;
     inUIProperty: boolean = false;
     inTable: boolean = false;
 
     currentScenario: Scenario = null;
-    currentTestCase: Variant = null;
+    currentTemplate: Template = null;
+    currentVariant: Variant = null;
     currentUIElement: UIElement = null;
     currentUIProperty: UIProperty = null;
     currentTable: Table = null;
@@ -42,7 +44,8 @@ export class ParsingContext {
     public resetInValues(): void {
         this.inFeature = false;
         this.inScenario = false;
-        this.inTestCase = false;
+        this.inTemplate = false;
+        this.inVariant = false;
         this.inRegexBlock = false;
         this.inConstantBlock = false;
         this.inUIProperty = false;
