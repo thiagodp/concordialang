@@ -81,12 +81,12 @@ describe( 'NLPTest', () => {
     it( 'recognizes a element entity after being trained', () => {
         nlp.train( 'en', fakeTrainingData() );
 
-        let r: NLPResult = nlp.recognize( 'en', ' <foo> ' );
+        let r: NLPResult = nlp.recognize( 'en', ' {foo} ' );
         expect( r.entities ).toHaveLength( 1 );
         expect( r.entities[ 0 ].entity ).toBe( Entities.ELEMENT );
         expect( r.entities[ 0 ].value ).toBe( 'foo' );
 
-        r = nlp.recognize( 'en', ' <foo bar> ' );
+        r = nlp.recognize( 'en', ' {foo bar} ' );
         expect( r.entities ).toHaveLength( 1 );
         expect( r.entities[ 0 ].entity ).toBe( Entities.ELEMENT );
         expect( r.entities[ 0 ].value ).toBe( 'foo bar' );

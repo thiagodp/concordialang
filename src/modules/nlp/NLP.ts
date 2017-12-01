@@ -170,9 +170,9 @@ export class NLP {
     }
 
     /**
-     * Creates a recognizer for values between < and >.
+     * Creates a recognizer for values between { and }.
      * 
-     * Example: I fill <Name> with "Bob"
+     * Example: I fill {Name} with "Bob"
      * --> The word "Name" is recognized (without quotes).
      * 
      * @param entityName Entity name.
@@ -182,10 +182,10 @@ export class NLP {
 
         var valueRec = new Bravey.RegexEntityRecognizer( entityName, 10 );
 
-        valueRec.addMatch( new RegExp( '<[^<\r\n]*>', "gi" ),
+        valueRec.addMatch( new RegExp( '\{[^<\r\n]*\}', "gi" ),
             function( match ) {
                 //console.log( 'match: ' ); console.log( match );
-                return match.toString().replace( '<', '' ).replace( '>', '' );
+                return match.toString().replace( '{', '' ).replace( '}', '' );
             },
             100 ); // the number is the priority
 

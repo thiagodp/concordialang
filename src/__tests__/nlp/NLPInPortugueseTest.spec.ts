@@ -82,13 +82,13 @@ describe( 'NLPInPortugueseTest', () => {
 
         it( 'recognizes a fill with an element', () => {
             let results = [];
-            results.push( recognizeInTestCase( 'eu preencho <Nome>' ) );
+            results.push( recognizeInTestCase( 'eu preencho {Nome}' ) );
             shouldHaveTestCaseEntities( results, [ UI_ACTION, ELEMENT ] );
         } );    
 
         it( 'recognizes a fill with an element and a value', () => {
             let results = [];
-            results.push( recognizeInTestCase( 'eu preencho <Nome> com "Bob"' ) );
+            results.push( recognizeInTestCase( 'eu preencho {Nome} com "Bob"' ) );
             //results.push( recognizeInTestCase( 'eu preencho "Bob" em <Nome>' ) );
             shouldHaveTestCaseEntities( results, [ UI_ACTION, ELEMENT, VALUE ] );
         } );
@@ -101,7 +101,7 @@ describe( 'NLPInPortugueseTest', () => {
 
         it( 'recognizes a fill with a target, an element, and a value', () => {
             let results = [];
-            results.push( recognizeInTestCase( 'eu preencho a caixa de texto <Nome> com "x"' ) );
+            results.push( recognizeInTestCase( 'eu preencho a caixa de texto {Nome} com "x"' ) );
             shouldHaveTestCaseEntities( results, [ UI_ACTION, UI_ELEMENT_TYPE, ELEMENT, VALUE ] );
         } );        
 
