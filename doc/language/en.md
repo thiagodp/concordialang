@@ -5,7 +5,19 @@
 |     | <-- import -- |     |
 |     |               |     |
 +-----+               +-----+
-.feature              .testcase
+.feature              .variant
+```
+
+```
+Lexer
+  >> Parser
+    >> NLP
+      >> Semantic Analyzer
+        >> Logic Analyzer
+          >> Test Case Generator
+            >> Test Script Generator
+              >> Test Script Executor
+                >> Test Result Analyzer
 ```
 
 ## Index:

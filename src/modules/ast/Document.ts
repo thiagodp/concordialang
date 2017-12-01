@@ -1,3 +1,4 @@
+import { Variant } from './Variant';
 import { Database } from './DataSource';
 import { Table } from './Table';
 import { ConstantBlock } from './ConstantBlock';
@@ -22,16 +23,17 @@ export interface Document {
     fileErrors?: Error[];
     fileWarnings?: Error[];
     
-    language?: Language;
-    imports?: Import[];
+    language?: Language; // local
+    imports?: Import[]; // local
 
-    feature?: Feature; // public
+    feature?: Feature; // global
+    variants?: Variant[]; // local, belongs to a feature declared or imported
 
-    states?: State[]; // public
-    regexBlock?: RegexBlock; // public
-    constantBlock?: ConstantBlock; // public
-    uiElements?: UIElement[]; // public, but a feature may have them too
-    tables?: Table[]; // public
-    databases?: Database[]; // public
+    states?: State[]; // global
+    regexBlock?: RegexBlock; // global
+    constantBlock?: ConstantBlock; // global
+    uiElements?: UIElement[]; // global, but a feature may have them too
+    tables?: Table[]; // global
+    databases?: Database[]; // global
 
 }

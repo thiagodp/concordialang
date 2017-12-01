@@ -11,6 +11,11 @@ const path = require( 'path' );
 /**
  * Import single document analyzer.
  * 
+ * Checkings:
+ *  - Duplicated imports
+ *  - Self references
+ *  - Files existence
+ * 
  * @author Thiago Delgado Pinto
  */
 export class ImportSDA implements NodeBasedSDA {

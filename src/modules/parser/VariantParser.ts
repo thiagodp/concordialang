@@ -18,22 +18,23 @@ export class VariantParser implements NodeParser< Variant > {
     /** @inheritDoc */
     public analyze( node: Variant, context: ParsingContext, it: NodeIterator, errors: Error[] ): boolean {
 
-        // Checks if a feature has been declared
-        if ( ! context.doc.feature ) {
+        // Has no feature and has no imports?
+        if ( ! context.doc.feature
+            && ( ! context.doc.imports || context.doc.imports.length < 1 ) ) {
             let e = new SyntaticException(
-                'A variant must be declared after a feature.', node.location );
+                'A variant must be declared after a feature. Please declare or import a feature and then declare the variant.', node.location );
             errors.push( e );
             return false;
         }
 
-        // Prepares the feature to receive the variant
-        let feature = context.doc.feature;
-        if ( ! feature.variants ) {
-            feature.variants = [];
+        // Prepares the owner to receive the variant
+        let owner = context.doc.feature ? context.doc.feature : context.doc;    
+        if ( ! owner.variants ) {
+            owner.variants = [];
         }
 
         // Adds it to the feature
-        feature.variants.push( node );
+        owner.variants.push( node );
 
         // Adjusts the context
         context.resetInValues();
@@ -43,7 +44,7 @@ export class VariantParser implements NodeParser< Variant > {
         // Adds backward tags
         if ( ! node.tags ) {
             node.tags = [];
-        }        
+        }
         ( new TagCollector() ).addBackwardTags( it, node.tags );        
 
         return true;

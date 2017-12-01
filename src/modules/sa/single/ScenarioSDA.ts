@@ -8,6 +8,9 @@ import { SemanticException } from "../SemanticException";
 /**
  * Scenario single document analyzer.
  * 
+ * Checkings:
+ *  - Duplicated scenario names
+ * 
  * @author Thiago Delgado Pinto
  */
 export class ScenarioSDA implements NodeBasedSDA {
