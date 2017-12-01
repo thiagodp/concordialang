@@ -18,7 +18,7 @@ export class NLPBasedSentenceRecognizer {
 
     private _nlpTrainer: NLPTrainer;
     private _uiPropertyRec: UIPropertyRecognizer;
-    private _testCaseSentenceRec: VariantSentenceRecognizer;
+    private _variantSentenceRec: VariantSentenceRecognizer;
     private _dbPropertyRec: DatabasePropertyRecognizer;
 
     constructor(
@@ -28,13 +28,13 @@ export class NLPBasedSentenceRecognizer {
     ) {
         this._nlpTrainer = new NLPTrainer( dataDir );
         this._uiPropertyRec = new UIPropertyRecognizer( new NLP( _useFuzzyProcessor ) );
-        this._testCaseSentenceRec = new VariantSentenceRecognizer( new NLP( _useFuzzyProcessor ) );
+        this._variantSentenceRec = new VariantSentenceRecognizer( new NLP( _useFuzzyProcessor ) );
         this._dbPropertyRec = new DatabasePropertyRecognizer( new NLP( _useFuzzyProcessor ) );
     }
 
     public isTrained( language: string ): boolean {
         return this._uiPropertyRec.nlp().isTrained( language )
-            && this._testCaseSentenceRec.nlp().isTrained( language )
+            && this._variantSentenceRec.nlp().isTrained( language )
             && this._dbPropertyRec.nlp().isTrained( language );
     }
 
@@ -44,7 +44,7 @@ export class NLPBasedSentenceRecognizer {
 
     public train( language: string ): boolean {
         return this._uiPropertyRec.trainMe( this._nlpTrainer, language )
-            && this._testCaseSentenceRec.trainMe( this._nlpTrainer, language )
+            && this._variantSentenceRec.trainMe( this._nlpTrainer, language )
             && this._dbPropertyRec.trainMe( this._nlpTrainer, language );
     }
 
@@ -79,8 +79,8 @@ export class NLPBasedSentenceRecognizer {
             this._uiPropertyRec.recognizeSentences( language, uiElement.items, errors, warnings );
         }
 
-        for ( let testCase of doc.feature.variants ) {
-            this._testCaseSentenceRec.recognizeSentences( language, testCase.sentences, errors, warnings );
+        for ( let variant of doc.feature.variants ) {
+            this._variantSentenceRec.recognizeSentences( language, variant.sentences, errors, warnings );
         }
 
     }

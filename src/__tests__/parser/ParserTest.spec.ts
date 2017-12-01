@@ -133,14 +133,14 @@ describe( 'ParserTest', () => {
         expect( doc.feature.variants ).toBeDefined();
         expect( doc.feature.variants ).toHaveLength( 1 );
 
-        let testcase = doc.feature.variants[ 0 ];
-        expect( testcase.name ).toBe( "hello" );
+        let variant = doc.feature.variants[ 0 ];
+        expect( variant.name ).toBe( "hello" );
 
-        let tagNames = testcase.tags.map( v => v.name );
+        let tagNames = variant.tags.map( v => v.name );
         expect( tagNames ).toEqual( [ "feature", "scenario" ] );
 
-        expect( testcase.sentences ).toBeDefined();
-        expect( testcase.sentences ).toHaveLength( 5 );
+        expect( variant.sentences ).toBeDefined();
+        expect( variant.sentences ).toHaveLength( 5 );
     } );
 
 

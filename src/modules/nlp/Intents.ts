@@ -1,5 +1,5 @@
 /**
- * Intents
+ * Intents for NLP
  * 
  * @author Thiago Delgado Pinto
  * 
