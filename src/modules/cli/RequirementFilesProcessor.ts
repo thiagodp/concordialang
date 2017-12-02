@@ -125,7 +125,7 @@ export class RequirementFilesProcessor {
                 doc, doc.fileErrors, doc.fileWarnings );
 
             // NODE-BASED SEMANTIC ANALYSIS ===
-            this._singleDocAnalyzer.analyze( doc, doc.fileErrors );
+            this._singleDocAnalyzer.analyze( spec, doc, doc.fileErrors );
     
             //this._write( doc ); // <<< TEMPORARY
 
