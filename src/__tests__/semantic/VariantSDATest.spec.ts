@@ -211,6 +211,20 @@ describe( 'VariantSDATest', () => {
         analyzer.analyze( spec, docG, errors );
         expect( errors ).toHaveLength( 1 );
         expect( errors[ 0 ].message ).toMatch( /tag/ui );
-    } );    
+    } );
+
+    it( 'criticizes duplicated variant names', () => {
+        docF.feature.variants.push(
+            {
+                name: "My F variant 1",
+                location: {}
+            } as Variant
+        );
+
+        let errors: Error[] = [];
+        analyzer.analyze( spec, docF, errors );
+        expect( errors ).toHaveLength( 1 );
+        expect( errors[ 0 ].message ).toMatch( /duplicated/ui );
+    } );
 
 } );
