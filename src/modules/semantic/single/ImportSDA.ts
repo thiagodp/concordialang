@@ -10,7 +10,7 @@ import { Document } from '../../ast/Document';
 const path = require( 'path' );
 
 /**
- * Import single document analyzer.
+ * Import analyzer for a single document.
  * 
  * Checkings:
  *  - Duplicated imports

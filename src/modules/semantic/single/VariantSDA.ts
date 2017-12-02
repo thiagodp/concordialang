@@ -14,7 +14,7 @@ import { Variant } from '../../ast/Variant';
 import * as path from 'path';
 
 /**
- * Variant single document analyzer.
+ * Variant analyzer for a single document.
  * 
  * Checkings:
  *  - If variants have a feature

@@ -9,7 +9,10 @@ const Graph = require( 'graph.js/dist/graph.full.js' );
 const path = require( 'path' );
 
 /**
- * Import semantic analyzer for a specification.
+ * Import semantic analyzer.
+ * 
+ * Checkings:
+ * - cyclic references
  * 
  * @author Thiago Delgado Pinto
  */

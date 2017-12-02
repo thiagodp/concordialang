@@ -7,7 +7,7 @@ import { DuplicationChecker } from "../../util/DuplicationChecker";
 import { SemanticException } from "../SemanticException";
 
 /**
- * Scenario single document analyzer.
+ * Scenario analyzer for a single document.
  * 
  * Checkings:
  *  - Duplicated scenario names

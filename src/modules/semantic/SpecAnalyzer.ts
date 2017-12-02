@@ -1,3 +1,4 @@
+import { FeatureSpecAnalyzer } from './FeatureSpecAnalyzer';
 import { ImportSpecAnalyzer } from './ImportSpecAnalyzer';
 import { NodeBasedSpecAnalyzer } from './NodeBasedSpecAnalyzer';
 import { Spec } from "../ast/Spec";
@@ -15,7 +16,8 @@ export class SpecAnalyzer {
 
     constructor() {
         this._analyzers = [
-            new ImportSpecAnalyzer()
+            new ImportSpecAnalyzer(),
+            new FeatureSpecAnalyzer()
         ];
     }
 
