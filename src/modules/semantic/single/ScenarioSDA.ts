@@ -1,3 +1,4 @@
+import { Spec } from '../../ast/Spec';
 import { NodeBasedSDA } from './NodeBasedSDA';
 import { Scenario } from '../../ast/Scenario';
 import { LocatedException } from '../../req/LocatedException';
@@ -16,7 +17,7 @@ import { SemanticException } from "../SemanticException";
 export class ScenarioSDA implements NodeBasedSDA {
 
     /** @inheritDoc */
-    public analyze( doc: Document, errors: LocatedException[] ) {
+    public analyze( spec: Spec, doc: Document, errors: LocatedException[] ) {
 
         // Checking the document structure
         if ( ! doc.feature ) {

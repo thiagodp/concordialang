@@ -1,3 +1,5 @@
+import { VariantSDA } from './VariantSDA';
+import { Spec } from '../../ast/Spec';
 import { NodeBasedSDA } from './NodeBasedSDA';
 import { ScenarioSDA } from './ScenarioSDA';
 import { LocatedException } from '../../req/LocatedException';
@@ -19,13 +21,14 @@ export class SingleDocumentAnalyzer {
     constructor() {
         this._nodeAnalyzers = [
             new ImportSDA(),
-            new ScenarioSDA()
+            new ScenarioSDA(),
+            new VariantSDA()
         ];
     }
 
-    public analyze( doc: Document, errors: LocatedException[] ) {
+    public analyze( spec: Spec, doc: Document, errors: LocatedException[] ) {
         for ( let analyzer of this._nodeAnalyzers ) {
-            analyzer.analyze( doc, errors );
+            analyzer.analyze( spec, doc, errors );
         }
     }
 

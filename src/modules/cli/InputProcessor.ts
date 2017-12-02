@@ -67,7 +67,8 @@ export class InputProcessor implements ProcessingObserver {
         }
 
         // Processing files
-        this._reqProcessor.process( files, language, encoding, this );
+        const basePath = 1 === input.length ? input[ 0 ] : null;        
+        this._reqProcessor.process( basePath, files, language, encoding, this );
 
         if ( 0 === this._totalErrors ) {
             spinner.succeed( 'Done' );

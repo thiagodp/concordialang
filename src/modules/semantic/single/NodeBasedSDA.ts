@@ -1,3 +1,4 @@
+import { Spec } from '../../ast/Spec';
 import { Document } from '../../ast/Document';
 import { LocatedException } from '../../req/LocatedException';
 
@@ -8,6 +9,6 @@ import { LocatedException } from '../../req/LocatedException';
  */
 export interface NodeBasedSDA {
 
-    analyze( doc: Document, errors: LocatedException[] ) ;
+    analyze( spec: Spec, doc: Document, errors: LocatedException[] ) ;
 
 }

@@ -1,3 +1,4 @@
+import { Spec } from '../../ast/Spec';
 import { NodeBasedSDA } from './NodeBasedSDA';
 import { LocatedException } from '../../req/LocatedException';
 import { Import } from '../../ast/Import';
@@ -23,7 +24,7 @@ export class ImportSDA implements NodeBasedSDA {
     private _fileUtil: FileUtil = new FileUtil();
 
     /** @inheritDoc */
-    public analyze( doc: Document, errors: LocatedException[] ) {
+    public analyze( spec: Spec, doc: Document, errors: LocatedException[] ) {
 
         // Checking the document
         if ( ! doc.imports ) {

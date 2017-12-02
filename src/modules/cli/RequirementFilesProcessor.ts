@@ -49,6 +49,7 @@ export class RequirementFilesProcessor {
     }
 
     public process(
+        basePath: string,
         files: string[],
         language: string,
         encoding: string,
@@ -62,9 +63,7 @@ export class RequirementFilesProcessor {
 
         let fileProcessor: FileProcessor = new SyncFileProcessor( encoding );
 
-        let spec: Spec = {
-            docs: []
-        };
+        let spec: Spec = new Spec( basePath );
 
         // Make documents for each file
         for ( let file of files ) {
