@@ -22,14 +22,16 @@ export enum ValueType {
  */
 export class ValueTypeDetector {
 
+    isTrue( val: any ): boolean {
+        return true === val || 'true' === val.toString().toLowerCase();
+    }
+
+    isFalse( val: any ): boolean {
+        return false === val || 'false' === val.toString().toLowerCase();
+    }    
+
     isBoolean( val: any ): boolean {
-        const t = typeof val;
-        if ( 'boolean' === t ) { return true };
-        if ( 'string' === t  ) {
-            const v = val.toLowerCase();
-            return 'true' === v || 'false' === v;
-        }
-        return false;
+        return this.isTrue( val ) || this.isFalse( val );
     }    
 
     isNumber( val: any ): boolean {
@@ -81,11 +83,11 @@ export class ValueTypeDetector {
         const t = typeof val;
         if ( 'object' === t && val instanceof Date ) { return true };
         if ( 'string' === t  ) {
-            if ( moment( val, moment.ISO_8601, true ).isValid() ) {
-                return true;
-            }
             const v = val.toString().trim();
             if ( ! v.indexOf( ' ' ) ) {
+                if ( moment( val, moment.ISO_8601, true ).isValid() ) {
+                    return true;
+                }
                 return false;
             }
             const dt = v.split( ' ' );
@@ -114,7 +116,7 @@ export class ValueTypeDetector {
         return ValueType.STRING;
     }
 
-    detectAll( values: string[] ): ValueType[] {
+    detectAll( values: any[] ): ValueType[] {
         return values.map( v => this.detect( v ) );
     }
 
