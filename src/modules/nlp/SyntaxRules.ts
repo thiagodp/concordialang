@@ -82,7 +82,7 @@ export const DEFAULT_UI_PROPERTY_SYNTAX_RULE = {
     //     - max > maxTargets
     value: { min: 1, max: 1 },
 
-    ui_element_type: { min: 1, max: 1 },
+    ui_property: { min: 1, max: 1 },
 
     number: { min: 1, max: 1 },    
 
@@ -101,7 +101,7 @@ export const DEFAULT_UI_PROPERTY_SYNTAX_RULE = {
  */
 export const UI_PROPERTY_SYNTAX_RULES = [
     { name: "id", targets: [ "value" ] },
-    { name: "type", targets: [ "ui_element_type" ] },
+    { name: "type", targets: [ "ui_property" ] },
     { name: "datatype", targets: [ "datatype" ] }, // e.g. string, integer, ...
     { name: "value", targets: [ "value", "number", "query" ] },
     { name: "minlength", targets: [ "number" ] },

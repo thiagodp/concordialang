@@ -165,7 +165,7 @@ export class RequirementFilesProcessor {
     }
 
 
-    private showOutput( spec: Spec, observer: any ) {
+    private showOutput( spec: Spec, observer: ProcessingObserver ) {
         for ( let doc of spec.docs ) {
             observer.onFileStarted( doc.fileInfo );
             let hadWarnings = doc.fileWarnings.length > 0;

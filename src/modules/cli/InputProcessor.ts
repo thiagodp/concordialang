@@ -311,7 +311,7 @@ export class InputProcessor implements ProcessingObserver {
         this.printErrors( this.mainSpinner(), errors, '' );
     }
 
-    private printErrors( spinner: any, errors: Error[], prefix: string = "\t" ): void {
+    private printErrors( spinner: any, errors: Error[], prefix: string = "   " ): void {
         for ( let error of errors ) {
             let content = this._chalk.red( prefix + error.message );
             if ( spinner ) {
@@ -322,7 +322,7 @@ export class InputProcessor implements ProcessingObserver {
         }        
     }
 
-    private printWarnings( spinner: any, warnings: Error[], prefix: string = "\t" ): void {
+    private printWarnings( spinner: any, warnings: Error[], prefix: string = "   " ): void {
         for ( let warn of warnings ) {
             let content = this._chalk.yellow( prefix + warn.message );
             if ( spinner ) {

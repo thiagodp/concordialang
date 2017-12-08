@@ -66,7 +66,7 @@ export class VariantSentenceRecognizer {
             // Must have a UI Action (? what about a state?)
             const propertyIndex: number = recognizedEntityNames.indexOf( Entities.UI_ACTION );
             if ( propertyIndex < 0 ) {
-                const msg = 'Unrecognized property in the sentence "' + node.content + '".';
+                const msg = 'Unrecognized: ' + node.content;
                 errors.push( new NLPException( msg, node.location ) );
                 return;
             }

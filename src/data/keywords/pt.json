@@ -1,12 +1,12 @@
 {
-    "import": [ "importe", "importar" ],
+    "import": [ "importe", "importar", "import" ],
     "regexBlock": [ "expressões", "expressões regulares", "regexes" ],
-    "constantBlock": [ "constantes" ],
+    "constantBlock": [ "constantes", "constants" ],
     "is": [ "é" ],
     "state": [ "estado" ],    
     "variant": [ "variante", "variação", "variant" ],
     "template": [ "modelo", "template" ],
-    "uiElement": [ "elemento da iu" ],
+    "uiElement": [ "elemento da iu", "elemento de iu", "ui element" ],
     "database": [ "banco de dados", "database" ],
 
     "beforeAll": [ "antes de todos", "antes de tudo", "before all" ],
@@ -21,10 +21,10 @@
     "feature": [ "funcionalidade", "característica", "feature" ],
     "scenario": [ "cenário", "scenario" ],
 
-    "stepGiven": [ "dado" ],
-    "stepWhen": [ "quando" ],
-    "stepThen": [ "então" ],    
-    "stepAnd": [ "e", "mas" ],
+    "stepGiven": [ "dado", "given" ],
+    "stepWhen": [ "quando", "when" ],
+    "stepThen": [ "então", "then" ],
+    "stepAnd": [ "e", "mas", "and", "but" ],
     "stepOtherwise": [ "caso contrário", "senão" ],
 
     "table": [ "tabela", "table" ]

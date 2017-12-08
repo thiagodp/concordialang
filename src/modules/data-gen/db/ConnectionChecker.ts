@@ -1,4 +1,4 @@
-import { ExternalReferenceException } from '../../req/ExternalReferenceException';
+import { RuntimeException } from '../../req/RuntimeException';
 import { DatabaseWrapper } from './DatabaseWrapper';
 import { LocatedException } from '../../req/LocatedException';
 import { Spec } from '../../ast/Spec';
@@ -42,7 +42,7 @@ export class ConnectionChecker {
                     r.success = false;
                     cr.success = false;
                     const msg = 'Could not connect to the database "' + db.name + '". Reason: ' + err.message;
-                    doc.fileWarnings.push( new ExternalReferenceException( msg, db.location ) );
+                    doc.fileWarnings.push( new RuntimeException( msg, db.location ) );
                     continue;
                 }
                 // disconnect
@@ -53,7 +53,7 @@ export class ConnectionChecker {
                 } catch ( err ) {
                     const msg = 'Error while disconnecting from database "' +
                         db.name + '". Details: ' + err.message;
-                    doc.fileWarnings.push( new ExternalReferenceException( msg, db.location ) );
+                    doc.fileWarnings.push( new RuntimeException( msg, db.location ) );
                 }
             }
         }

@@ -72,13 +72,14 @@ export class NodeSentenceRecognizer {
 
             // Not recognized?
             if ( undefined === r || null === r ) {
-                let msg = 'Unrecognized sentence: "' + node.content + '".';
+                let msg = 'Unrecognized: "' + node.content + '".';
                 errors.push( new NLPException( msg, node.location ) );
                 continue;
             }
             // Different intent?
             if ( targetIntent != r.intent ) {
-                let msg = 'Sentence not recognized as part of a ' + targetDisplayName + ': "' + node.content + '".';
+                //let msg = 'Unrecognized as part of a ' + targetDisplayName + ': ' + node.content;
+                let msg = 'Unrecognized: ' + node.content;
                 errors.push( new NLPException( msg, node.location ) );
                 continue;
             }

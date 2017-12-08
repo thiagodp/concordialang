@@ -6,3 +6,14 @@ Banco de dados: Meu BD
   - host é "127.0.0.1"
   - username is "root"
   - password is ""
+
+
+Feature: Hello
+
+Elemento de IU: Enter
+  - tipo é botão
+  - id é "enter"
+
+Elemento de IU: Usuário
+  - id é "usuario"
+  - tipo é caixa de texto  

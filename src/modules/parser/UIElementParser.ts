@@ -31,6 +31,15 @@ export class UIElementParser implements NodeParser< UIElement > {
 
         let owner = hasGlobalTag ? context.doc : context.doc.feature;
 
+        // Adjust the context
+        context.resetInValues();
+        context.currentUIElement = node;
+
+        // Checks the structure
+        if ( owner && ! owner.uiElements ) {
+            owner.uiElements = [];
+        }        
+
         // If it is NOT global, a feature must have been declared
         if ( ! hasGlobalTag && ! context.doc.feature ) {
             let e = new SyntaticException(
@@ -39,17 +48,10 @@ export class UIElementParser implements NodeParser< UIElement > {
             return false;
         }
 
-        // Adjust the context
-        context.resetInValues();
-        context.currentUIElement = node;
-
-        // Checks the structure
-        if ( ! owner.uiElements ) {
-            owner.uiElements = [];
-        }
-
         // Adds the node
-        owner.uiElements.push( node );        
+        if ( owner ) {
+            owner.uiElements.push( node );
+        }
 
         return true;
     }

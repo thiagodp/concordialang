@@ -66,7 +66,7 @@ export class DatabasePropertyRecognizer {
             // Must have a DS Property
             const propertyIndex: number = recognizedEntityNames.indexOf( Entities.DS_PROPERTY );
             if ( propertyIndex < 0 ) {
-                const msg = 'Unrecognized database property in the sentence "' + node.content + '".';
+                const msg = 'Unrecognized: ' + node.content;
                 errors.push( new NLPException( msg, node.location ) );
                 return;
             }
