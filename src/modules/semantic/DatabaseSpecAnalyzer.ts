@@ -29,10 +29,11 @@ export class DatabaseSpecAnalyzer implements NodeBasedSpecAnalyzer {
                 continue;
             }
             for ( let db of doc.databases ) {
+                let loc = db.location;
                 items.push( {
                     file: doc.fileInfo.path,
                     name: db.name,
-                    location: db.location
+                    locationStr: '(' + loc.line + ',' + loc.column + ') '
                 } );
             }
         }
@@ -41,8 +42,8 @@ export class DatabaseSpecAnalyzer implements NodeBasedSpecAnalyzer {
         for ( let prop in map ) {
             let duplications = map[ prop ];
             let msg = 'Duplicated database "' + prop + '" in: ' +
-                duplications.map( item => item.file ).join( ', ' );
-            let err = new SemanticException( msg, duplications[ 0 ].location );
+                duplications.map( item => "\n  " + item.locationStr + item.file ).join( ', ' );
+            let err = new SemanticException( msg );
             errors.push( err );            
         }
         

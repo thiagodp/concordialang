@@ -26,10 +26,11 @@ export class FeatureSpecAnalyzer implements NodeBasedSpecAnalyzer {
         let items = [];
         for ( let doc of spec.docs ) {
             if ( doc.feature ) {
+                let loc = doc.feature.location;
                 items.push( {
                     file: doc.fileInfo.path,
                     name: doc.feature.name,
-                    location: doc.feature.location
+                    locationStr: '(' + loc.line + ',' + loc.column + ') '
                 } );
             }
         }
@@ -38,8 +39,8 @@ export class FeatureSpecAnalyzer implements NodeBasedSpecAnalyzer {
         for ( let prop in map ) {
             let duplications = map[ prop ];
             let msg = 'Duplicated feature "' + prop + '" in: ' +
-                duplications.map( item => item.file ).join( ', ' );
-            let err = new SemanticException( msg, duplications[ 0 ].location );
+                duplications.map( item => "\n  " + item.locationStr + item.file ).join( ', ' );
+            let err = new SemanticException( msg );
             errors.push( err );            
         }
 
