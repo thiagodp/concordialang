@@ -16,7 +16,7 @@ const path = require( 'path' );
  * 
  * @author Thiago Delgado Pinto
  */
-export class ImportSpecAnalyzer implements NodeBasedSpecAnalyzer {
+export class ImportSpecAnalyzer extends NodeBasedSpecAnalyzer {
 
     private _graph = new Graph();
 

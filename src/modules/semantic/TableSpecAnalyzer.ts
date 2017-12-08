@@ -1,44 +1,44 @@
 import { Database } from '../ast/DataSource';
 import { Document } from '../ast/Document';
-import { NodeBasedSpecAnalyzer } from "./NodeBasedSpecAnalyzer";
+import { NodeBasedSpecAnalyzer, ItemToCheck } from "./NodeBasedSpecAnalyzer";
 import { Spec } from "../ast/Spec";
 import { LocatedException } from '../req/LocatedException';
 import { DuplicationChecker } from '../util/DuplicationChecker';
 import { SemanticException } from './SemanticException';
 
 /**
- * Database semantic analyzer.
+ * Table semantic analyzer.
  * 
  * Checkings:
  * - duplicated names
  * 
  * @author Thiago Delgado Pinto
  */
-export class DatabaseSpecAnalyzer extends NodeBasedSpecAnalyzer {
+export class TableSpecAnalyzer extends NodeBasedSpecAnalyzer {
 
      /** @inheritDoc */
-     public analyze( spec: Spec, errors: LocatedException[] ) {
+    public analyze( spec: Spec, errors: LocatedException[] ) {
         this.analyzeDuplicatedNames( spec, errors );
     }
 
     private analyzeDuplicatedNames( spec: Spec, errors: LocatedException[] ) {
         
-        let items = [];
+        let items: ItemToCheck[] = [];
         for ( let doc of spec.docs ) {
-            if ( ! doc.databases ) {
+            if ( ! doc.tables ) {
                 continue;
             }
-            for ( let db of doc.databases ) {
-                let loc = db.location;
+            for ( let tbl of doc.tables ) {
+                let loc = tbl.location;
                 items.push( {
                     file: doc.fileInfo ? doc.fileInfo.path : '',
-                    name: db.name,
+                    name: tbl.name,
                     locationStr: loc ? '(' + loc.line + ',' + loc.column + ') ' : ''
                 } );
             }
         }
 
-        this.checkDuplicatedNames( items, errors, 'database' );        
+        this.checkDuplicatedNames( items, errors, 'table' );
     }
 
 }

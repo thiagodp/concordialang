@@ -1,3 +1,4 @@
+import { TableSpecAnalyzer } from './TableSpecAnalyzer';
 import { DatabaseSpecAnalyzer } from './DatabaseSpecAnalyzer';
 import { FeatureSpecAnalyzer } from './FeatureSpecAnalyzer';
 import { ImportSpecAnalyzer } from './ImportSpecAnalyzer';
@@ -10,7 +11,6 @@ import { LocatedException } from "../req/LocatedException";
  * 
  * @author Thiago Delgado Pinto
  */
-
 export class SpecAnalyzer {
 
     private _analyzers: NodeBasedSpecAnalyzer[];
@@ -19,7 +19,8 @@ export class SpecAnalyzer {
         this._analyzers = [
             new ImportSpecAnalyzer(),
             new FeatureSpecAnalyzer(),
-            new DatabaseSpecAnalyzer()
+            new DatabaseSpecAnalyzer(),
+            new TableSpecAnalyzer()
         ];
     }
 

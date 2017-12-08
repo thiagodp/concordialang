@@ -11,7 +11,7 @@ import { Spec } from '../../modules/ast/Spec';
 /**
  * @author Thiago Delgado Pinto
  */
-describe( 'FeatureSpecAnalyzer', () => {
+describe( 'FeatureSpecAnalyzerTest', () => {
 
     const analyzer = new FeatureSpecAnalyzer(); // under test
 

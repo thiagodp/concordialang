@@ -1,5 +1,5 @@
 import { Document } from '../ast/Document';
-import { NodeBasedSpecAnalyzer } from "./NodeBasedSpecAnalyzer";
+import { ItemToCheck, NodeBasedSpecAnalyzer } from './NodeBasedSpecAnalyzer';
 import { Spec } from "../ast/Spec";
 import { LocatedException } from "../req/LocatedException";
 import { DuplicationChecker } from "../util/DuplicationChecker";
@@ -14,35 +14,28 @@ import { SemanticException } from './SemanticException';
  * 
  * @author Thiago Delgado Pinto
  */
-export class FeatureSpecAnalyzer implements NodeBasedSpecAnalyzer {
+export class FeatureSpecAnalyzer extends NodeBasedSpecAnalyzer {
 
      /** @inheritDoc */
     public analyze( spec: Spec, errors: LocatedException[] ) {
-        this.checkDuplicatedNames( spec, errors );
+        this.analyzeDuplicatedNames( spec, errors );
     }
 
-    private checkDuplicatedNames( spec: Spec, errors: LocatedException[] ) {
+    private analyzeDuplicatedNames( spec: Spec, errors: LocatedException[] ) {
         
-        let items = [];
+        let items: ItemToCheck[] = [];
         for ( let doc of spec.docs ) {
-            if ( doc.feature ) {
-                let loc = doc.feature.location;
-                items.push( {
-                    file: doc.fileInfo.path,
-                    name: doc.feature.name,
-                    locationStr: '(' + loc.line + ',' + loc.column + ') '
-                } );
+            if ( ! doc.feature ) {
+                continue;
             }
+            let loc = doc.feature.location;
+            items.push( {
+                file: doc.fileInfo ? doc.fileInfo.path : '',
+                name: doc.feature.name,
+                locationStr: loc ? '(' + loc.line + ',' + loc.column + ') ' : ''
+            } );
         }
 
-        const map = ( new DuplicationChecker() ).mapDuplicates( items, 'name' );
-        for ( let prop in map ) {
-            let duplications = map[ prop ];
-            let msg = 'Duplicated feature "' + prop + '" in: ' +
-                duplications.map( item => "\n  " + item.locationStr + item.file ).join( ', ' );
-            let err = new SemanticException( msg );
-            errors.push( err );            
-        }
-
+        this.checkDuplicatedNames( items, errors, 'feature' );
     }
 }
