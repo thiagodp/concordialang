@@ -71,6 +71,24 @@ export class DatabaseWrapper {
         } );         
     };
 
+    /**
+     * Reconnect to the database.
+     */
+    reconnect = () => {
+        return new Promise( ( resolve, reject ) => {
+            if ( ! this._dbi ) {
+                return reject( this.dbiError() );
+            }
+            this._dbi.connect( ( err ) => {
+                if ( err ) {
+                    reject( err );
+                } else {
+                    resolve( true );
+                }
+            } );
+        } );         
+    };
+
     exec = ( cmd: string, params?: any ): Promise< any > => {
         return new Promise( ( resolve, reject ) => {
             return reject( new Error( 'Not yet implemented' ) );
