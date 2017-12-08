@@ -28,6 +28,10 @@ export class UIPropertyRecognizer {
         return this._nlp;
     }
 
+    isTrained( language: string ): boolean {
+        return this._nlp.isTrained( language );
+    }
+
     trainMe( trainer: NLPTrainer, language: string ) {
         return trainer.trainNLP( this._nlp, language, Intents.UI );
     }    

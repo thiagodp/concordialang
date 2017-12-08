@@ -22,20 +22,21 @@ export class NLPBasedSentenceRecognizer {
     private _dbPropertyRec: DatabasePropertyRecognizer;
 
     constructor(
-        private dataDir?: string,
         private _defaultLanguage: string = 'en',
-        private _useFuzzyProcessor: boolean = false
+        private _dataDir?: string,       
+        private _useFuzzyProcessor?: boolean
     ) {
-        this._nlpTrainer = new NLPTrainer( dataDir );
+        this._nlpTrainer = new NLPTrainer( _dataDir );
         this._uiPropertyRec = new UIPropertyRecognizer( new NLP( _useFuzzyProcessor ) );
         this._variantSentenceRec = new VariantSentenceRecognizer( new NLP( _useFuzzyProcessor ) );
         this._dbPropertyRec = new DatabasePropertyRecognizer( new NLP( _useFuzzyProcessor ) );
     }
 
     public isTrained( language: string ): boolean {
-        return this._uiPropertyRec.nlp().isTrained( language )
-            && this._variantSentenceRec.nlp().isTrained( language )
-            && this._dbPropertyRec.nlp().isTrained( language );
+        const t1: boolean = this._uiPropertyRec.isTrained( language );
+        const t2: boolean = this._variantSentenceRec.isTrained( language );
+        const t3: boolean = this._dbPropertyRec.isTrained( language );
+        return t1 && t2 && t3;
     }
 
     public canBeTrained( language: string ): boolean {
@@ -43,9 +44,10 @@ export class NLPBasedSentenceRecognizer {
     }
 
     public train( language: string ): boolean {
-        return this._uiPropertyRec.trainMe( this._nlpTrainer, language )
-            && this._variantSentenceRec.trainMe( this._nlpTrainer, language )
-            && this._dbPropertyRec.trainMe( this._nlpTrainer, language );
+        const t1: boolean = this._uiPropertyRec.trainMe( this._nlpTrainer, language );
+        const t2: boolean = this._variantSentenceRec.trainMe( this._nlpTrainer, language );
+        const t3: boolean = this._dbPropertyRec.trainMe( this._nlpTrainer, language );
+        return t1 && t2 && t3;
     }
 
     public recognizeSentencesInDocument(
@@ -54,7 +56,7 @@ export class NLPBasedSentenceRecognizer {
         warnings: Warning[]
     ): void {
         
-        let language = doc.language != null ? doc.language.value : this._defaultLanguage;
+        let language = ! doc.language ? this._defaultLanguage : doc.language.value;
 
         // Global
 

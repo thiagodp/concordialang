@@ -49,15 +49,26 @@ export class NodeSentenceRecognizer {
         resultProcessor: NLPResultProcessor
     ): void {
 
+        // Sanity checking
+        if ( ! nodes ) {
+            return; // nothing to check
+        }
+
         if ( ! this._nlp.isTrained( language ) ) {
-            throw new Error( 'The NLP is not trained in ' + language );
+            throw new NLPException( 'The NLP is not trained in ' + language );
         }
 
         for ( let node of nodes ) {
+
+            //console.log( 'Node before: ' ); console.log( node );
+            //console.log( language, ', ', node.content, ', ', targetIntent );
+
             let r: NLPResult = this._nlp.recognize( language, node.content, targetIntent );
+            //console.log( r );
+            //console.log( 'Node after: ' ); console.log( node );
 
             // Not recognized?
-            if ( ! r ) {
+            if ( undefined === r || null === r ) {
                 let msg = 'Unrecognized sentence: "' + node.content + '".';
                 errors.push( new NLPException( msg, node.location ) );
                 continue;

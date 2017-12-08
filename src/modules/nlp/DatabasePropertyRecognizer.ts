@@ -28,6 +28,10 @@ export class DatabasePropertyRecognizer {
         return this._nlp;
     }
 
+    isTrained( language: string ): boolean {
+        return this._nlp.isTrained( language );
+    }    
+
     trainMe( trainer: NLPTrainer, language: string ) {
         return trainer.trainNLP( this._nlp, language, Intents.DATASOURCE );
     }    
@@ -62,7 +66,7 @@ export class DatabasePropertyRecognizer {
             // Must have a DS Property
             const propertyIndex: number = recognizedEntityNames.indexOf( Entities.DS_PROPERTY );
             if ( propertyIndex < 0 ) {
-                const msg = 'Unrecognized property in the sentence "' + node.content + '".';
+                const msg = 'Unrecognized database property in the sentence "' + node.content + '".';
                 errors.push( new NLPException( msg, node.location ) );
                 return;
             }

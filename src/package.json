@@ -11,7 +11,7 @@
     "validation"
   ],
   "license": "AGPL-3.0",
-  "version": "0.38.0",
+  "version": "0.39.0",
   "readme": "README.md",
   "homepage": "https://site.org",
   "repository": {
@@ -49,6 +49,7 @@
     "meow": "^3.7.0",
     "moment": "^2.19.3",
     "mustache": "^2.3.0",
+    "node-dbi": "^0.7.1",
     "node-glob": "^1.2.0",
     "ora": "^1.3.0",
     "randexp": "^0.4.5",

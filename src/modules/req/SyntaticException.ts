@@ -6,4 +6,5 @@ import { LocatedException } from './LocatedException';
  * @author Thiago Delgado Pinto
  */
 export class SyntaticException extends LocatedException {
+    name = 'SyntaxError'
 }

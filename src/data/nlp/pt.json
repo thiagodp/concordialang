@@ -112,7 +112,7 @@
             "path": [ "caminho", "nome", "path", "name" ],
             "host": [ "hospedeiro", "host" ],
             "port": [ "porta", "port" ],
-            "username": [ "usuário", "username" ],
+            "username": [ "usuário", "username", "user" ],
             "password": [ "senha", "password" ],
             "charset": [ "conjunto de caracteres", "codificação", "charset", "encoding" ],
             "options": [ "opções", "options" ]

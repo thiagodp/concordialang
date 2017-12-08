@@ -6,4 +6,5 @@ import { LocatedException } from '../req/LocatedException';
  * @author Thiago Delgado Pinto
  */
 export class SemanticException extends LocatedException {
+    name = 'SemanticError'
 }

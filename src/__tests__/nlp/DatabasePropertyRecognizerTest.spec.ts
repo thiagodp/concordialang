@@ -47,16 +47,16 @@ describe( 'UIPropertyRecognizerTest', () => {
         }
 
         it( 'recognizes type', () => {
-            shouldRecognize( '- tipo é "mysql"', 'type', 'mysql' );
-            shouldRecognize( '- type é "mysql"', 'type', 'mysql' );
+            shouldRecognize( 'tipo é "mysql"', 'type', 'mysql' );
+            shouldRecognize( 'type é "mysql"', 'type', 'mysql' );
         } );
 
         it( 'recognizes path', () => {
-            shouldRecognize( '- caminho é "path/to/db"', 'path', 'path/to/db' );
-            shouldRecognize( '- path é "path/to/db"', 'path', 'path/to/db' );
+            shouldRecognize( 'caminho é "path/to/db"', 'path', 'path/to/db' );
+            shouldRecognize( 'path é "path/to/db"', 'path', 'path/to/db' );
 
-            shouldRecognize( '- nome é "mydb"', 'path', 'mydb' );
-            shouldRecognize( '- name é "mydb"', 'path', 'mydb' );
+            shouldRecognize( 'nome é "mydb"', 'path', 'mydb' );
+            shouldRecognize( 'name é "mydb"', 'path', 'mydb' );
         } );
 
     } );

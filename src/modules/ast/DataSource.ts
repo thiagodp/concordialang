@@ -27,7 +27,6 @@ import { ListItem } from './ListItem';
  * @author Thiago Delgado Pinto
  */
 export interface DataSource extends NamedNode {
-    type: 'database' | 'file';
 }
 
 /**
@@ -36,16 +35,6 @@ export interface DataSource extends NamedNode {
  * @author Thiago Delgado Pinto
  */
 export interface Database extends DataSource, HasItems< DatabaseProperty > {
-    type: 'database';
-
-    databaseType: string; // should work as a "driver". e.g. 'mysql', 'mongodb', ...
-    path: string; // should also work as an "alias"
-    host?: string;
-    port?: string;
-    username?: string;
-    password?: string;
-    charset?: string;
-    options?: string;
 }
 
 /**
@@ -58,13 +47,20 @@ export interface DatabaseProperty extends ListItem, HasValue {
 }
 
 /**
- * File node.
+ * Database properties.
+ * 
+ * Files could also be represented as a database, using "type", "path", and maybe "options".
+ * Example: { type: 'json', path: 'C://path/to/file.json' }
  * 
  * @author Thiago Delgado Pinto
  */
-export interface File extends DataSource {
-    type: 'file';
-    
-    fileType: string; // ex.: json, xml, csv
-    path: string;
+export enum DatabaseProperties {
+    TYPE = 'type', // should work as a "driver". e.g. 'mysql', 'mongodb', ...
+    PATH = 'path', // also serves as "name" or "alias"
+    HOST = 'host',
+    PORT = 'port',
+    USERNAME = 'username',
+    PASSWORD = 'password',
+    CHARSET = 'charset',
+    OPTIONS = 'options'
 }

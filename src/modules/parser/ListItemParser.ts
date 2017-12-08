@@ -1,11 +1,10 @@
-import { DatabaseProperty } from '../ast/DataSource';
-import { UIProperty } from '../ast/UIElement';
-import { ListItem } from '../ast/ListItem';
 import { NodeParser } from './NodeParser';
+import { ListItem } from '../ast/ListItem';
 import { ParsingContext } from './ParsingContext';
 import { NodeIterator } from './NodeIterator';
-import { NodeTypes } from '../req/NodeTypes';
-import { SyntaticException } from '../req/SyntaticException';
+import { PropertyParser } from './PropertyParser';
+import { UIPropertyParser } from './UIPropertyParser';
+import { DatabasePropertyParser } from './DatabasePropertyParser';
 
 /**
  * Parses a ListItem node and decide what node type it will be.
@@ -13,6 +12,13 @@ import { SyntaticException } from '../req/SyntaticException';
  * @author Thiago Delgado Pinto
  */
 export class ListItemParser implements NodeParser< ListItem > {
+
+    private _propertyParsers: PropertyParser[] = [];
+
+    constructor() {
+        this._propertyParsers.push( new UIPropertyParser() );
+        this._propertyParsers.push( new DatabasePropertyParser() );
+    }
     
     analyze(
         node: ListItem,
@@ -24,102 +30,15 @@ export class ListItemParser implements NodeParser< ListItem > {
         if ( ! it.hasPrior() ) {
             return false; // Nothing to do here
         }
-        
-        if ( this.looksLikeAUIProperty( node, it ) ) {
-            return this.handleAsUIProperty( node, context, errors );
-        } else if ( this.looksLikeADatabaseProperty( node, it ) ) {
-            return this.handleAsDatabaseProperty( node, context, errors );
+
+        for ( let p of this._propertyParsers ) {
+            if ( p.isAccepted( node, it ) ) {
+                p.handle( node, context, errors );
+            }
         }
 
         // Stay as a ListItem
         return true;
     }
-
-    //#region UI PROPERTY
-
-    private looksLikeAUIProperty( node: ListItem, it: NodeIterator ): boolean {
-        const allowedPriorNodes = [
-            NodeTypes.UI_ELEMENT,
-            NodeTypes.UI_PROPERTY,
-            NodeTypes.STEP_OTHERWISE,
-            NodeTypes.STEP_AND
-        ];
-        return allowedPriorNodes.indexOf( it.spyPrior().nodeType ) >= 0;
-    }
-
-    private handleAsUIProperty( node: ListItem, context: ParsingContext, errors: Error[] ): boolean {
-        
-        // Adjusts the node type
-        node.nodeType = NodeTypes.UI_PROPERTY;
-        
-        // Checks the context
-        if ( ! context.currentUIElement ) {
-            let e = new SyntaticException(
-                'The "' + node.nodeType + '" clause must be declared for a UI Element.',
-                node.location
-                );
-            errors.push( e );
-            return false;
-        }
-
-        // Adjusts the context
-        context.resetInValues();
-        context.inUIProperty = true;
-
-        // Checks the structure
-        let uiProperty: UIProperty = node as UIProperty;
-        context.currentUIProperty = uiProperty;
-        if ( ! context.currentUIElement.items ) {
-            context.currentUIElement.items = [];
-        }
-
-        // Adds the node
-        context.currentUIElement.items.push( uiProperty );
-
-        return true;
-    }
-
-    //#endregion
-
-    //#region DATABASE PROPERTY
-
-    private looksLikeADatabaseProperty( node: ListItem, it: NodeIterator ): boolean {
-        const allowedPriorNodes = [
-            NodeTypes.DATABASE,
-            NodeTypes.DATABASE_PROPERTY
-        ];
-        return allowedPriorNodes.indexOf( it.spyPrior().nodeType ) >= 0;
-    }
-
-    private handleAsDatabaseProperty( node: ListItem, context: ParsingContext, errors: Error[] ): boolean {
-        
-        // Adjusts the node type
-        node.nodeType = NodeTypes.DATABASE_PROPERTY;
-
-        // Checks the context
-        if ( ! context.currentDatabase ) {
-            let e = new SyntaticException(
-                'The "' + node.nodeType + '" clause must be declared for a Database.',
-                node.location
-                );
-            errors.push( e );
-            return false;
-        }
-
-        // Adjust the context
-        context.resetInValues();
-
-        // Checks the structure
-        if ( ! context.currentDatabase.items ) {
-            context.currentDatabase.items = [];
-        }
-
-        // Adds the node        
-        context.currentDatabase.items.push( node as DatabaseProperty );
-
-        return true;
-    }
-
-    //#endregion
 
 }

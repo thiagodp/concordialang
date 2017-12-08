@@ -27,6 +27,10 @@ export class VariantSentenceRecognizer {
     nlp(): NLP {
         return this._nlp;
     }
+
+    isTrained( language: string ): boolean {
+        return this._nlp.isTrained( language );
+    }    
     
     trainMe( trainer: NLPTrainer, language: string ) {
         return trainer.trainNLP( this._nlp, language, Intents.TEST_CASE );

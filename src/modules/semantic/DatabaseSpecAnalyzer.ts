@@ -1,32 +1,33 @@
+import { Database } from '../ast/DataSource';
 import { Document } from '../ast/Document';
 import { NodeBasedSpecAnalyzer } from "./NodeBasedSpecAnalyzer";
 import { Spec } from "../ast/Spec";
-import { LocatedException } from "../req/LocatedException";
-import { DuplicationChecker } from "../util/DuplicationChecker";
-import { Feature } from "../ast/Feature";
+import { LocatedException } from '../req/LocatedException';
+import { DuplicationChecker } from '../util/DuplicationChecker';
 import { SemanticException } from './SemanticException';
 
 /**
- * Feature semantic analyzer.
+ * Database semantic analyzer.
  * 
  * Checkings:
  * - duplicated names
  * 
  * @author Thiago Delgado Pinto
  */
-export class FeatureSpecAnalyzer implements NodeBasedSpecAnalyzer {
+export class DatabaseSpecAnalyzer implements NodeBasedSpecAnalyzer {
 
      /** @inheritDoc */
-    public analyze( spec: Spec, errors: LocatedException[] ) {
+     public analyze( spec: Spec, errors: LocatedException[] ) {
         this.checkDuplicatedNames( spec, errors );
     }
 
     private checkDuplicatedNames( spec: Spec, errors: LocatedException[] ) {
         
-        let items: Feature[] = [];
+        let items: Database[] = [];
         for ( let doc of spec.docs ) {
-            if ( doc.feature ) {
-                items.push( doc.feature );
+            if ( doc.databases ) {
+                // Add all the databases
+                items.push.apply( items, doc.databases );
             }
         }       
         
@@ -34,9 +35,10 @@ export class FeatureSpecAnalyzer implements NodeBasedSpecAnalyzer {
             .withDuplicatedProperty( items, 'name' );
 
         for ( let dup of duplicated ) {
-            let msg = 'Duplicated feature "' + dup.name + '".';
+            let msg = 'Duplicated database "' + dup.name + '".';
             let err = new SemanticException( msg, dup.location );
             errors.push( err );             
         }  
     }
+
 }

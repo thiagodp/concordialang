@@ -1,3 +1,4 @@
+import { DatabaseSDA } from './DatabaseSDA';
 import { VariantSDA } from './VariantSDA';
 import { Spec } from '../../ast/Spec';
 import { NodeBasedSDA } from './NodeBasedSDA';
@@ -7,7 +8,6 @@ import { ImportSDA } from './ImportSDA';
 import { SemanticException } from '../SemanticException';
 import { Import } from '../../ast/Import';
 import { Document } from '../../ast/Document';
-import { SemanticAnalysisContext } from '../SemanticAnalysisContext';
 
 /**
  * Single-document Semantic Analyzer
@@ -22,7 +22,8 @@ export class SingleDocumentAnalyzer {
         this._nodeAnalyzers = [
             new ImportSDA(),
             new ScenarioSDA(),
-            new VariantSDA()
+            new VariantSDA(),
+            new DatabaseSDA()
         ];
     }
 

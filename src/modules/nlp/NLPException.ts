@@ -6,4 +6,5 @@ import { LocatedException } from '../req/LocatedException';
  * @author Thiago Delgado Pinto
  */
 export class NLPException extends LocatedException {
+    name = 'NLPError'
 }

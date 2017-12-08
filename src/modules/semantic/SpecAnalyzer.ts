@@ -1,3 +1,4 @@
+import { DatabaseSpecAnalyzer } from './DatabaseSpecAnalyzer';
 import { FeatureSpecAnalyzer } from './FeatureSpecAnalyzer';
 import { ImportSpecAnalyzer } from './ImportSpecAnalyzer';
 import { NodeBasedSpecAnalyzer } from './NodeBasedSpecAnalyzer';
@@ -17,7 +18,8 @@ export class SpecAnalyzer {
     constructor() {
         this._analyzers = [
             new ImportSpecAnalyzer(),
-            new FeatureSpecAnalyzer()
+            new FeatureSpecAnalyzer(),
+            new DatabaseSpecAnalyzer()
         ];
     }
 

@@ -1,3 +1,4 @@
+import { SingleDocumentProcessor } from './SingleDocumentProcessor';
 import { Warning } from '../req/Warning';
 import { NLPException } from '../nlp/NLPException';
 import { NLPBasedSentenceRecognizer } from '../nlp/NLPBasedSentenceRecognizer';
@@ -45,6 +46,9 @@ export class RequirementFilesProcessor {
     private _singleDocAnalyzer: SingleDocumentAnalyzer = new SingleDocumentAnalyzer();
     private _specAnalyzer: SpecAnalyzer = new SpecAnalyzer();
 
+
+    private _singleDocProcessor = new SingleDocumentProcessor();
+
     constructor( private _write: Function ) {
     }
 
@@ -69,63 +73,32 @@ export class RequirementFilesProcessor {
         for ( let file of files ) {
 
             let normalizedFilePath = path.join( file, '' ); // @see https://nodejs.org/api/path.html#path_path_join_paths
-            
-            let doc: Document = {
-                fileErrors: [],
-                fileWarnings: []
-            };
-
-            let hadErrors = false;
 
             let fileInfo: FileInfo = {
                 path: normalizedFilePath,
                 hash: this._fileUtil.hashOfFile( normalizedFilePath, encoding ) // Compute file hash
             };
 
-            // Adds the file info to the document
-            doc.fileInfo = fileInfo;            
+            let doc: Document = {
+                fileErrors: [],
+                fileWarnings: [],
+                fileInfo: fileInfo
+            };
+            
+            // FILE PROCESSOR
+            fileProcessor.process( normalizedFilePath, this._docProcessor );
+            
+            // ANALYSIS
+            let hadErrors = this._singleDocProcessor.analyzeLexedNodes(
+                doc, this._lexer, this._parser, this._nlpBasedSentenceRecognizer, language );
+
 
             // Notify about the start
             /*
             if ( observer ) {
                 observer.onStarted( fileInfo );
             } 
-            */       
-
-            // LEXER ===
-            // Process the file with the lexer processor
-            fileProcessor.process( normalizedFilePath, this._docProcessor );
-            // Get the lexed nodes
-            let nodes: Node[] = this._lexer.nodes();
-            // Add errors found
-            hadErrors = this._lexer.hasErrors();            
-            this.addErrorsToDoc( this._lexer.errors(), doc );
-            // Resets the lexer state (important!)
-            this._lexer.reset();
-    
-            // PARSER ===
-            this._parser.analyze( nodes, doc );
-            hadErrors = hadErrors || this._parser.hasErrors();
-            this.addErrorsToDoc( this._parser.errors(), doc );
-
-            // NLP ===
-            if ( ! this._nlpBasedSentenceRecognizer.isTrained( language ) ) {
-                //this._nlpBasedSentenceRecognizer.train( language );
-                if ( this._nlpBasedSentenceRecognizer.canBeTrained( language ) ) {
-                    this._nlpBasedSentenceRecognizer.train( language );
-                } else {
-                    let errors = [
-                        new Error( 'The NLP cannot be trained in the language "' + language + '".' )
-                    ];
-                    this.addErrorsToDoc( errors, doc );                    
-                }
-            }
-
-            this._nlpBasedSentenceRecognizer.recognizeSentencesInDocument(
-                doc, doc.fileErrors, doc.fileWarnings );
-
-            // NODE-BASED SEMANTIC ANALYSIS ===
-            this._singleDocAnalyzer.analyze( spec, doc, doc.fileErrors );
+            */
     
             //this._write( doc ); // <<< TEMPORARY
 
@@ -169,13 +142,6 @@ export class RequirementFilesProcessor {
             }
         }       
 
-    }
-
-    private addErrorsToDoc( errors: Error[], doc: Document ) {
-        if ( ! doc.fileErrors ) {
-            doc.fileErrors = [];
-        }
-        doc.fileErrors.push.apply( doc.fileErrors, errors );        
     }
 
     private sortErrorsByLocation( errors: LocatedException[] ): LocatedException[] {
