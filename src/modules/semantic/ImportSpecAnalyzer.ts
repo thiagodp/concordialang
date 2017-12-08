@@ -75,6 +75,12 @@ export class ImportSpecAnalyzer implements NodeBasedSpecAnalyzer {
         graph.clear();
         // Build the graph
         for ( let doc of spec.docs ) {
+
+            // Sanity checking
+            if ( ! doc.imports ) {
+                continue;
+            }
+
             let fromKey = doc.fileInfo.path; // key
             // Add the document as a vertex. If the key already exists, the value is overwriten.
             graph.addVertex( fromKey, doc ); // key, value
@@ -91,11 +97,13 @@ export class ImportSpecAnalyzer implements NodeBasedSpecAnalyzer {
 
 
     private locationOfTheImport( doc: Document, importFile: string ): Location {
-        let fileName = path.basename( importFile ); // name without dir
-        for ( let imp of doc.imports ) {
-            let currentFileName = path.basename( imp.content ); // name without dir
-            if ( fileName == currentFileName ) {
-                return imp.location;
+        if ( doc.imports ) {
+            let fileName = path.basename( importFile ); // name without dir
+            for ( let imp of doc.imports ) {
+                let currentFileName = path.basename( imp.content ); // name without dir
+                if ( fileName == currentFileName ) {
+                    return imp.location;
+                }
             }
         }
         return { line: 1, column: 1 }; // import not found, so let's return the first position in the file

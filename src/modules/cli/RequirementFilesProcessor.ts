@@ -1,3 +1,4 @@
+import { ConnectionChecker, ConnectionCheckResult } from '../data-gen/db/ConnectionChecker';
 import { SingleDocumentProcessor } from './SingleDocumentProcessor';
 import { Warning } from '../req/Warning';
 import { NLPException } from '../nlp/NLPException';
@@ -47,7 +48,8 @@ export class RequirementFilesProcessor {
     private _specAnalyzer: SpecAnalyzer = new SpecAnalyzer();
 
 
-    private _singleDocProcessor = new SingleDocumentProcessor();
+    private _singleDocProcessor: SingleDocumentProcessor = new SingleDocumentProcessor();
+    private _connChecker: ConnectionChecker = new ConnectionChecker();
 
     constructor( private _write: Function ) {
     }
@@ -88,7 +90,7 @@ export class RequirementFilesProcessor {
             // FILE PROCESSOR
             fileProcessor.process( normalizedFilePath, this._docProcessor );
             
-            // ANALYSIS
+            // FILE ANALYSIS
             let hadErrors = this._singleDocProcessor.analyzeLexedNodes(
                 doc, this._lexer, this._parser, this._nlpBasedSentenceRecognizer, language );
 
@@ -124,23 +126,20 @@ export class RequirementFilesProcessor {
         let semanticErrors: LocatedException[] = [];
         this._specAnalyzer.analyze( spec, semanticErrors );
 
-        // Output
-        if ( observer ) {
-            for ( let doc of spec.docs ) {
-                observer.onFileStarted( doc.fileInfo );
-                let hadWarnings = doc.fileWarnings.length > 0;
-                if ( hadWarnings ) {
-                    let sortedWarnings: LocatedException[] = this.sortErrorsByLocation( doc.fileWarnings );
-                    observer.onFileWarning( doc.fileInfo, sortedWarnings );
-                }                
-                let hadErrors = doc.fileErrors.length > 0;
-                if ( hadErrors ) {
-                    let sortedErrors: LocatedException[] = this.sortErrorsByLocation( doc.fileErrors );
-                    observer.onFileError( doc.fileInfo, sortedErrors );
+        // LOGIC ANALYSIS
+        // to-do
+
+        // CONNECTION CHECKING
+        this._connChecker.check( spec )
+            .then( ( result: ConnectionCheckResult ) => {
+
+            } )
+            .then( () => {
+                // OUTPUT
+                if ( observer ) {
+                    this.showOutput( spec, observer );
                 }
-                observer.onFileFinished( doc.fileInfo, ! hadErrors ); 
-            }
-        }       
+            } );
 
     }
 
@@ -163,6 +162,24 @@ export class RequirementFilesProcessor {
             }
             return aIsWarning ? 1 : -1;
         } );
+    }
+
+
+    private showOutput( spec: Spec, observer: any ) {
+        for ( let doc of spec.docs ) {
+            observer.onFileStarted( doc.fileInfo );
+            let hadWarnings = doc.fileWarnings.length > 0;
+            if ( hadWarnings ) {
+                let sortedWarnings: LocatedException[] = this.sortErrorsByLocation( doc.fileWarnings );
+                observer.onFileWarning( doc.fileInfo, sortedWarnings );
+            }                
+            let hadErrors = doc.fileErrors.length > 0;
+            if ( hadErrors ) {
+                let sortedErrors: LocatedException[] = this.sortErrorsByLocation( doc.fileErrors );
+                observer.onFileError( doc.fileInfo, sortedErrors );
+            }
+            observer.onFileFinished( doc.fileInfo, ! hadErrors ); 
+        }        
     }
 
 }

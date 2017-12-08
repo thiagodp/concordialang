@@ -59,10 +59,3 @@ UI Element: Password
 UI Element: Enter
   - type is button
   - id is "enter"
-
-
-Database: my database
-  - type is "mysql"
-  - host is "http://127.0.0.1/acme"
-  - username is "admin"
-  - password is "p4sss"

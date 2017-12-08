@@ -10,14 +10,7 @@ import { Spec } from '../../ast/Spec';
  */
 export class ConnectionChecker {
 
-    constructor( private _writer: any ) {
-    }
-
-    async check(
-        spec: Spec,
-        errors: LocatedException[],
-        warnings: LocatedException[]
-    ): Promise< ConnectionCheckResult > {
+    async check( spec: Spec ): Promise< ConnectionCheckResult > {
 
         let r: ConnectionCheckResult = {
             success: true,
@@ -25,6 +18,12 @@ export class ConnectionChecker {
         } as ConnectionCheckResult;
 
         for ( let doc of spec.docs ) {
+
+            // Sanity checking
+            if ( ! doc.databases ) {
+                continue;
+            }
+
             for ( let db of doc.databases ) {
                 let wrapper: DatabaseWrapper = new DatabaseWrapper();
 
@@ -42,8 +41,8 @@ export class ConnectionChecker {
                 } catch ( err ) {
                     r.success = false;
                     cr.success = false;
-                    const msg = 'Cannot connect to database "' + db.name + '".';
-                    errors.push( new ExternalReferenceException( msg, db.location ) );
+                    const msg = 'Could not connect to the database "' + db.name + '". Reason: ' + err.message;
+                    doc.fileWarnings.push( new ExternalReferenceException( msg, db.location ) );
                     continue;
                 }
                 // disconnect
@@ -54,7 +53,7 @@ export class ConnectionChecker {
                 } catch ( err ) {
                     const msg = 'Error while disconnecting from database "' +
                         db.name + '". Details: ' + err.message;
-                    warnings.push( new ExternalReferenceException( msg, db.location ) );
+                    doc.fileWarnings.push( new ExternalReferenceException( msg, db.location ) );
                 }
             }
         }

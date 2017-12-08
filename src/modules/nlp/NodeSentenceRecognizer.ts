@@ -1,5 +1,6 @@
 import * as console from 'console';
 import { ContentNode } from "../ast/Node";
+import { Location } from "../ast/Location";
 import { NLP, NLPResult } from './NLP';
 import { LocatedException } from "../req/LocatedException";
 import { NLPException } from "./NLPException";
@@ -55,7 +56,9 @@ export class NodeSentenceRecognizer {
         }
 
         if ( ! this._nlp.isTrained( language ) ) {
-            throw new NLPException( 'The NLP is not trained in ' + language );
+            let msg = 'The NLP is not trained in ' + language;
+            errors.push( new NLPException( msg, { line: 1, column: 1 } as Location ) );
+            return;            
         }
 
         for ( let node of nodes ) {

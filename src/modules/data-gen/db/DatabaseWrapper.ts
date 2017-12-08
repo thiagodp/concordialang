@@ -121,6 +121,7 @@ export class DatabaseWrapper {
             }
         }
 
+        // Tries to use the database name as the path if the path was not given
         if ( ! dbItems[ DatabaseProperties.PATH ] ) {
             dbItems[ DatabaseProperties.PATH ] = db.name;
         }

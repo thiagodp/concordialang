@@ -14,11 +14,11 @@ export class SingleDocumentProcessor {
     /**
      * Analyzes lexed nodes of a single document.
      * 
-     * @param doc Document to change.
+     * @param doc Document to change
      * @param lexer Lexer
      * @param parser Parser
      * @param nlpRec NLP sentence recognizer
-     * @param language Language
+     * @param defaultLanguage Default language
      * 
      * @returns true if had errors.
      */
@@ -27,7 +27,7 @@ export class SingleDocumentProcessor {
         lexer: Lexer,
         parser: Parser,
         nlpRec: NLPBasedSentenceRecognizer,
-        language: string
+        defaultLanguage: string
     ): boolean {
 
         let hadErrors = false;
@@ -48,6 +48,7 @@ export class SingleDocumentProcessor {
         this.addErrorsToDoc( parser.errors(), doc );
 
         // NLP
+        let language = doc.language ? doc.language.value : defaultLanguage;
         const isTrained: boolean = nlpRec.isTrained( language );
         if ( ! isTrained ) {
             if ( nlpRec.canBeTrained( language ) ) {

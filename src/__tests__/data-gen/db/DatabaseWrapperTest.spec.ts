@@ -10,7 +10,7 @@ describe( 'DatabaseWrapperTest', () => {
 
     let wrapper: DatabaseWrapper = null;
 
-    let makeDB = ( name ): Database => {
+    let makeDB = ( name, path ): Database => {
         return {
             nodeType: NodeTypes.DATABASE,
             location: {},
@@ -27,6 +27,14 @@ describe( 'DatabaseWrapperTest', () => {
                 {
                     nodeType: NodeTypes.DATABASE_PROPERTY,
                     location: { line: 2, column: 1 } as Location,
+                    property: DatabaseProperties.PATH,
+                    value: path,
+                    content: 'path is "' + path + '"' 
+                } as DatabaseProperty,
+
+                {
+                    nodeType: NodeTypes.DATABASE_PROPERTY,
+                    location: { line: 3, column: 1 } as Location,
                     property: DatabaseProperties.USERNAME,
                     value: 'root',
                     content: 'username is root'
@@ -48,7 +56,7 @@ describe( 'DatabaseWrapperTest', () => {
 
 
     it( 'is able to connect to an existing database', async () => {
-        let db = makeDB( 'mysql' );
+        let db = makeDB( 'MySQL Internal DB', 'mysql' );
         try {
             let ok = await wrapper.connect( db );
             expect( ok ).toBeTruthy();
@@ -60,7 +68,7 @@ describe( 'DatabaseWrapperTest', () => {
     } );
 
     it( 'fails when trying to connect to a non existing database', async () => {        
-        let db = makeDB( 'ds98d9' );
+        let db = makeDB( 'Non Existent DB', 'ds98d9' );
         try {
             await wrapper.connect( db );
             fail( 'Should not connect' );
@@ -80,7 +88,7 @@ describe( 'DatabaseWrapperTest', () => {
     } );
 
     it( 'is able to query', async () => {
-        let db = makeDB( 'mysql' );
+        let db = makeDB( 'MySQL DB', 'mysql' );
         try {
             await wrapper.connect( db );
             let result = await wrapper.query(
