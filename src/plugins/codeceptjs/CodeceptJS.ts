@@ -1,9 +1,9 @@
 import { TestScriptExecutor } from './TestScriptExecutor';
 import { TestScriptGenerator } from './TestScriptGenerator';
-import { TestScriptPlugin } from '../../modules/ts/TestScriptPlugin';
-import { AbstractTestScript } from '../../modules/ts/AbstractTestScript';
-import { TestScriptGenerationOptions } from '../../modules/ts/TestScriptGeneration';
-import { TestScriptExecutionOptions, TestScriptExecutionResult } from '../../modules/ts/TestScriptExecution';
+import { TestScriptPlugin } from '../../modules/testscript/TestScriptPlugin';
+import { AbstractTestScript } from '../../modules/testscript/AbstractTestScript';
+import { TestScriptGenerationOptions } from '../../modules/testscript/TestScriptGeneration';
+import { TestScriptExecutionOptions, TestScriptExecutionResult } from '../../modules/testscript/TestScriptExecution';
 import { CmdRunner } from "../../modules/cli/CmdRunner";
 import { FileUtil } from '../../modules/util/FileUtil';
 

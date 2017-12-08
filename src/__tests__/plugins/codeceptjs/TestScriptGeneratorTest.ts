@@ -1,4 +1,4 @@
-import { AbstractTestScript } from '../../../modules/ts/AbstractTestScript';
+import { AbstractTestScript } from '../../../modules/testscript/AbstractTestScript';
 import { TestScriptGenerator } from "../../../plugins/codeceptjs/TestScriptGenerator";
 
 /**

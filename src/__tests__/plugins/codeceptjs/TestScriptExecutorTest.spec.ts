@@ -2,7 +2,7 @@ import { FileUtil } from '../../../modules/util/FileUtil';
 import { CmdRunner } from '../../../modules/cli/CmdRunner';
 import { TestScriptExecutor } from '../../../plugins/codeceptjs/TestScriptExecutor';
 import { CodeceptJSOptionsBuilder } from '../../../plugins/codeceptjs/CodeceptJSOptionsBuilder';
-import { TestScriptExecutionOptions } from '../../../modules/ts/TestScriptExecution';
+import { TestScriptExecutionOptions } from '../../../modules/testscript/TestScriptExecution';
 import * as fs from 'fs';
 
 /**

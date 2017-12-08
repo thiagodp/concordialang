@@ -71,7 +71,7 @@ export class DatabaseWrapper {
         } );         
     };
 
-    exec = ( cmd: string ): Promise< any > => {
+    exec = ( cmd: string, params?: any ): Promise< any > => {
         return new Promise( ( resolve, reject ) => {
             return reject( new Error( 'Not yet implemented' ) );
         } );        

@@ -1,7 +1,6 @@
 import { DatabaseWrapper } from '../../modules/data-gen/db/DatabaseWrapper';
 import { NLPBasedSentenceRecognizer } from '../../modules/nlp/NLPBasedSentenceRecognizer';
 import { SingleDocumentProcessor } from '../../modules/cli/SingleDocumentProcessor';
-import { DatabaseHandler } from '../../modules/data-gen/db/DatabaseHandler';
 import { Parser } from '../../modules/parser/Parser';
 import { KeywordDictionaryLoader } from '../../modules/dict/KeywordDictionaryLoader';
 import { InMemoryKeywordDictionaryLoader } from '../../modules/dict/InMemoryKeywordDictionaryLoader';
@@ -10,6 +9,9 @@ import { Lexer } from '../../modules/lexer/Lexer';
 import { Document } from '../../modules/ast/Document';
 import { JsonKeywordDictionaryLoader } from '../../modules/dict/JsonKeywordDictionaryLoader';
 
+/**
+ * @author Thiago Delgado Pinto
+ */
 describe( 'SingleDocumentProcessorTest', () => {
     
     const LANGUAGE = 'pt';

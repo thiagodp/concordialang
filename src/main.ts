@@ -5,7 +5,7 @@ import ora = require('ora'); // spinner
 import chalk = require('chalk'); // colors & style
 import * as util from 'util';
 import { InputProcessor } from './modules/cli/InputProcessor';
-import { PluginInputProcessor } from './modules/ts/PluginInputProcessor';
+import { PluginInputProcessor } from './modules/testscript/PluginInputProcessor';
 
 const exeName: string = 'concordia';
 

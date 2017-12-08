@@ -1,4 +1,4 @@
-import { SpecFilter } from "../tc/SpecFilter";
+import { SpecFilter } from "../testcase/SpecFilter";
 
 /**
  * Test script execution options.

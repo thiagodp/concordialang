@@ -1,6 +1,6 @@
 import * as console from 'console';
-import { TestScriptPluginData } from '../../modules/ts/TestScriptPluginData';
-import { JsonBasedTestScriptPluginFinder } from '../../modules/ts/JsonBasedTestScriptPluginFinder';
+import { TestScriptPluginData } from '../../modules/testscript/TestScriptPluginData';
+import { JsonBasedTestScriptPluginFinder } from '../../modules/testscript/JsonBasedTestScriptPluginFinder';
 import { fs as memfs, vol } from 'memfs';
 import * as path from 'path';
 /**
