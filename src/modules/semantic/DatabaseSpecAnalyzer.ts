@@ -23,22 +23,29 @@ export class DatabaseSpecAnalyzer implements NodeBasedSpecAnalyzer {
 
     private checkDuplicatedNames( spec: Spec, errors: LocatedException[] ) {
         
-        let items: Database[] = [];
+        let items = [];
         for ( let doc of spec.docs ) {
-            if ( doc.databases ) {
-                // Add all the databases
-                items.push.apply( items, doc.databases );
+            if ( ! doc.databases ) {
+                continue;
             }
-        }       
-        
-        const duplicated = ( new DuplicationChecker() )
-            .withDuplicatedProperty( items, 'name' );
+            for ( let db of doc.databases ) {
+                items.push( {
+                    file: doc.fileInfo.path,
+                    name: db.name,
+                    location: db.location
+                } );
+            }
+        }
 
-        for ( let dup of duplicated ) {
-            let msg = 'Duplicated database "' + dup.name + '".';
-            let err = new SemanticException( msg, dup.location );
-            errors.push( err );             
-        }  
+        const map = ( new DuplicationChecker() ).mapDuplicates( items, 'name' );
+        for ( let prop in map ) {
+            let duplications = map[ prop ];
+            let msg = 'Duplicated database "' + prop + '" in: ' +
+                duplications.map( item => item.file ).join( ', ' );
+            let err = new SemanticException( msg, duplications[ 0 ].location );
+            errors.push( err );            
+        }
+        
     }
 
 }
