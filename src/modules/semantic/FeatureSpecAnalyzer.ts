@@ -23,20 +23,25 @@ export class FeatureSpecAnalyzer implements NodeBasedSpecAnalyzer {
 
     private checkDuplicatedNames( spec: Spec, errors: LocatedException[] ) {
         
-        let items: Feature[] = [];
+        let items = [];
         for ( let doc of spec.docs ) {
             if ( doc.feature ) {
-                items.push( doc.feature );
+                items.push( {
+                    file: doc.fileInfo.path,
+                    name: doc.feature.name,
+                    location: doc.feature.location
+                } );
             }
-        }       
-        
-        const duplicated = ( new DuplicationChecker() )
-            .withDuplicatedProperty( items, 'name' );
+        }
 
-        for ( let dup of duplicated ) {
-            let msg = 'Duplicated feature "' + dup.name + '".';
-            let err = new SemanticException( msg, dup.location );
-            errors.push( err );             
-        }  
+        const map = ( new DuplicationChecker() ).mapDuplicates( items, 'name' );
+        for ( let prop in map ) {
+            let duplications = map[ prop ];
+            let msg = 'Duplicated feature "' + prop + '" in: ' +
+                duplications.map( item => item.file ).join( ', ' );
+            let err = new SemanticException( msg, duplications[ 0 ].location );
+            errors.push( err );            
+        }
+
     }
 }

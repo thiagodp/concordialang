@@ -138,6 +138,8 @@ export class RequirementFilesProcessor {
                 // OUTPUT
                 if ( observer ) {
                     this.showOutput( spec, observer );
+
+                    observer.onError( semanticErrors );
                 }
             } );
 

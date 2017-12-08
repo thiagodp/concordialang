@@ -41,4 +41,37 @@ export class DuplicationChecker {
         return dup;
     }
 
+
+    /**
+     * Returns a map containg the property to compare as a key and 
+     * the duplicated items as an array.
+     * 
+     * @param items Items to compare
+     * @param propertyToCompare Property to compare
+     * @return map
+     */
+    public mapDuplicates( items: any[], propertyToCompare: string ): object {
+        let map = {};
+        for ( let item of items ) {
+            if ( ! item[ propertyToCompare ] ) {
+                continue;
+            }
+            let value = item[ propertyToCompare ];
+            if ( ! map[ value ] ) {
+                map[ value ] = [ item ];
+            } else { // already exists
+                map[ value ].push( item );
+            }
+        }
+
+        // Removing not duplicated ones
+        for ( let prop in map ) {
+            if ( map[ prop ].length < 2 ) {
+                delete map[ prop ];
+            }
+        }
+
+        return map;
+    }    
+
 }

@@ -8,7 +8,7 @@ Banco de dados: Meu BD
   - password is ""
 
 
-Feature: Hello
+Característica: Login
 
 Elemento de IU: Enter
   - tipo é botão
