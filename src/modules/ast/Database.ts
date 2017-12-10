@@ -1,40 +1,26 @@
+import { ConnectionResult } from '../req/ConnectionResult';
 import { BlockItem } from './Block';
 import { HasItems, HasValue, NamedNode } from './Node';
 import { ListItem } from './ListItem';
 
-// Example 1:
+// Example:
 // ```
-// Database: MyTestDB
+// Database: My Test DB
 //   - type is "mysql"
-//   - host is "127.0.0.1"
 //   - path is "mytestdb"
+//   - host is "127.0.0.1"
 //   - username is "admin"
 //   - password is "adminpass"
 //   - charset is "UTF-8"
 // ```
-//
-// Example 2
-// ```
-// File: MyFile
-//   - path is "/path/to/myfile.json"
-//   - encoding is "UTF-8"
-// ```
-//
-
-/**
- * Data source node.
- * 
- * @author Thiago Delgado Pinto
- */
-export interface DataSource extends NamedNode {
-}
 
 /**
  * Database node.
  * 
  * @author Thiago Delgado Pinto
  */
-export interface Database extends DataSource, HasItems< DatabaseProperty > {
+export interface Database extends NamedNode, HasItems< DatabaseProperty > {
+    connectionResult: ConnectionResult;
 }
 
 /**

@@ -1,4 +1,4 @@
-import { Database } from '../ast/DataSource';
+import { Database } from '../ast/Database';
 import { NodeParser } from './NodeParser';
 import { ParsingContext } from './ParsingContext';
 import { NodeIterator } from './NodeIterator';

@@ -1,3 +1,4 @@
+import { NLPResult } from '../nlp/NLPResult';
 import { HasItems, NamedNode } from './Node';
 import { Step } from './Step';
 import { MayHaveTags } from './Tag';
@@ -22,6 +23,8 @@ export interface UIProperty extends ListItem {
     property: string;
 
     values: string[];
+
+    nlpResult: NLPResult;
 
     otherwiseSentences: Step[];
 }

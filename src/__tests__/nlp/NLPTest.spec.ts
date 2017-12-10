@@ -1,6 +1,7 @@
 import { NLPTrainingDataConversor } from '../../modules/nlp/NLPTrainingDataConversor';
 import { NLPEntityUsageExample, NLPTrainingData } from '../../modules/nlp/NLPTrainingData';
-import { NLP, NLPResult } from '../../modules/nlp/NLP';
+import { NLP } from '../../modules/nlp/NLP';
+import { NLPResult } from '../../modules/nlp/NLPResult';
 import { Entities } from '../../modules/nlp/Entities';
 
 /**

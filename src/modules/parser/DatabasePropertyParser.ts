@@ -4,7 +4,7 @@ import { NodeIterator } from './NodeIterator';
 import { ParsingContext } from './ParsingContext';
 import { NodeTypes } from "../req/NodeTypes";
 import { SyntaticException } from "../req/SyntaticException";
-import { DatabaseProperty } from "../ast/DataSource";
+import { DatabaseProperty } from "../ast/Database";
 
 /**
  * Database property parser.

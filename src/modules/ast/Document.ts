@@ -1,5 +1,5 @@
 import { Variant } from './Variant';
-import { Database } from './DataSource';
+import { Database } from './Database';
 import { Table } from './Table';
 import { ConstantBlock } from './ConstantBlock';
 import { FileInfo } from './FileInfo';

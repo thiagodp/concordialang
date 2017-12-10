@@ -1,5 +1,5 @@
 import { NodeTypes } from '../req/NodeTypes';
-import { DatabaseProperty } from '../ast/DataSource';
+import { DatabaseProperty } from '../ast/Database';
 import { ListItemLexer } from './ListItemLexer';
 
 /**

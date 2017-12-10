@@ -1,4 +1,4 @@
-import { Database } from '../ast/DataSource';
+import { Database } from '../ast/Database';
 import { NamedNodeLexer } from "./NamedNodeLexer";
 import { NodeTypes } from "../req/NodeTypes";
 

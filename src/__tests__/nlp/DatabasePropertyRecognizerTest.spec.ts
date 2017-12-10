@@ -1,6 +1,6 @@
 import { Intents } from '../../modules/nlp/Intents';
 import { DatabasePropertyRecognizer } from '../../modules/nlp/DatabasePropertyRecognizer';
-import { DatabaseProperty } from '../../modules/ast/DataSource';
+import { DatabaseProperty } from '../../modules/ast/Database';
 import { NodeTypes } from '../../modules/req/NodeTypes';
 import { ContentNode } from '../../modules/ast/Node';
 import { NLPTrainer } from '../../modules/nlp/NLPTrainer';

@@ -1,4 +1,5 @@
-import { ConnectionChecker, ConnectionCheckResult } from '../data-gen/db/ConnectionChecker';
+import { ConnectionChecker } from '../data-gen/db/ConnectionChecker';
+import { ConnectionCheckResult } from '../req/ConnectionResult';
 import { SingleDocumentProcessor } from './SingleDocumentProcessor';
 import { Warning } from '../req/Warning';
 import { NLPException } from '../nlp/NLPException';

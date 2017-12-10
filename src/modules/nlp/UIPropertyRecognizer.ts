@@ -5,7 +5,8 @@ import { NodeSentenceRecognizer, NLPResultProcessor } from "./NodeSentenceRecogn
 import { UIProperty } from "../ast/UIElement";
 import { LocatedException } from "../req/LocatedException";
 import { ContentNode } from "../ast/Node";
-import { NLPResult, NLP } from "./NLP";
+import { NLP } from "./NLP";
+import { NLPResult } from '../../modules/nlp/NLPResult';
 import { NLPException } from "./NLPException";
 import { Entities } from "./Entities";
 import { Warning } from "../req/Warning";

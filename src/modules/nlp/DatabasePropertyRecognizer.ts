@@ -4,11 +4,12 @@ import { Intents } from './Intents';
 import { NodeSentenceRecognizer, NLPResultProcessor } from "./NodeSentenceRecognizer";
 import { LocatedException } from "../req/LocatedException";
 import { ContentNode } from "../ast/Node";
-import { NLPResult, NLP } from "./NLP";
+import { NLP } from "./NLP";
+import { NLPResult } from '../../modules/nlp/NLPResult';
 import { NLPException } from "./NLPException";
 import { Entities } from "./Entities";
 import { Warning } from "../req/Warning";
-import { DatabaseProperty } from '../ast/DataSource';
+import { DatabaseProperty } from '../ast/Database';
 import { NLPTrainer } from './NLPTrainer';
 
 /**

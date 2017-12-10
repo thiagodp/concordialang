@@ -1,3 +1,4 @@
+import { Database } from './Database';
 import { Document } from './Document';
 import * as path from 'path';
 /**
@@ -10,6 +11,8 @@ export class Spec {
     basePath: string = null;
 
     docs: Document[] = [];
+
+    private _databasesCache: Database[] = null;
 
     constructor( basePath?: string ) {
         this.basePath = basePath;
@@ -36,5 +39,45 @@ export class Spec {
         }
         return null;
     }
+
+    /**
+     * Return all databases. Results are cached.
+     */
+    public databases = (): Database[] => {
+        if ( this._databasesCache !== null ) {
+            return this._databasesCache;
+        }
+        this._databasesCache = [];
+        for ( let doc of this.docs ) {
+            if ( ! doc.databases ) {
+                continue;
+            }
+            for ( let db of doc.databases ) {
+                let loc = db.location;
+
+                // Adjust the file path, to be used in the future (e.g. for the query checker)
+                loc.filePath = ! loc.filePath && doc.fileInfo ? doc.fileInfo.path : loc.filePath;
+
+                this._databasesCache.push( db );
+            }
+        }
+        return this._databasesCache;
+    };
+
+    /**
+     * Returns a database with the given name.
+     * 
+     * @param name Database name.
+     * @return database
+     */
+    public databaseWithName = ( name: string ): Database => {
+        const databases = this.databases();
+        for ( const db of databases ) {
+            if ( name === db.name ) {
+                return db;
+            }
+        }
+        return null;
+    };
 
 }

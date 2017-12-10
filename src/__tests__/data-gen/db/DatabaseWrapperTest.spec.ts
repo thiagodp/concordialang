@@ -1,6 +1,6 @@
 import { Location } from '../../../modules/ast/Location';
 import { NodeTypes } from '../../../modules/req/NodeTypes';
-import { Database, DatabaseProperties, DatabaseProperty } from '../../../modules/ast/DataSource';
+import { Database, DatabaseProperties, DatabaseProperty } from '../../../modules/ast/Database';
 import { DatabaseWrapper } from '../../../modules/data-gen/db/DatabaseWrapper';
 
 /**

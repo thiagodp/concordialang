@@ -1,4 +1,4 @@
-import { Database } from '../ast/DataSource';
+import { Database } from '../ast/Database';
 import { Document } from '../ast/Document';
 import { NodeBasedSpecAnalyzer, ItemToCheck } from "./NodeBasedSpecAnalyzer";
 import { Spec } from "../ast/Spec";

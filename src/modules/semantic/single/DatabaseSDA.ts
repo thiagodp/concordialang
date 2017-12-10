@@ -2,7 +2,7 @@ import { Spec } from '../../ast/Spec';
 import { NodeBasedSDA } from './NodeBasedSDA';
 import { LocatedException } from '../../req/LocatedException';
 import { Document } from '../../ast/Document';
-import { Database, DatabaseProperties } from '../../ast/DataSource';
+import { Database, DatabaseProperties } from '../../ast/Database';
 import { SemanticException } from '../SemanticException';
 
 /**

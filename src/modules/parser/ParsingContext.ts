@@ -1,4 +1,4 @@
-import { Database } from '../ast/DataSource';
+import { Database } from '../ast/Database';
 import { Table } from '../ast/Table';
 import { UIElement, UIProperty } from '../ast/UIElement';
 import { ConstantBlock } from '../ast/ConstantBlock';

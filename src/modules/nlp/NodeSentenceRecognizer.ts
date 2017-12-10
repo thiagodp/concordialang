@@ -1,7 +1,10 @@
+import { UIProperty } from '../ast/UIElement';
+import { NodeTypes } from '../req/NodeTypes';
 import * as console from 'console';
 import { ContentNode } from "../ast/Node";
 import { Location } from "../ast/Location";
-import { NLP, NLPResult } from './NLP';
+import { NLP } from "./NLP";
+import { NLPResult } from '../../modules/nlp/NLPResult';
 import { LocatedException } from "../req/LocatedException";
 import { NLPException } from "./NLPException";
 
@@ -76,6 +79,13 @@ export class NodeSentenceRecognizer {
                 errors.push( new NLPException( msg, node.location ) );
                 continue;
             }
+
+            // Save the result in the node
+            if ( NodeTypes.UI_PROPERTY === node.nodeType ) {
+                let n = node as UIProperty;
+                n.nlpResult = r;
+            }
+
             // Different intent?
             if ( targetIntent != r.intent ) {
                 //let msg = 'Unrecognized as part of a ' + targetDisplayName + ': ' + node.content;

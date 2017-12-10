@@ -1,4 +1,5 @@
-import { Database, DatabaseProperties } from '../../ast/DataSource';
+import { DatabaseInterface } from '../../req/DatabaseInterface';
+import { Database, DatabaseProperties } from '../../ast/Database';
 import { DBWrapper } from 'node-dbi';
 
 /**
@@ -6,13 +7,12 @@ import { DBWrapper } from 'node-dbi';
  * 
  * @author Thiago Delgado Pinto
  */
-export class DatabaseWrapper {
+export class DatabaseWrapper implements DatabaseInterface {
 
     private _dbi: DBWrapper = null; // internal database interface
 
-    /**
-     * Checks if the database is connected.
-     */
+
+    /** @inheritDoc */
     isConnected = (): Promise< boolean > => {
         return new Promise( ( resolve, reject ) => {
             if ( ! this._dbi ) {
@@ -27,9 +27,8 @@ export class DatabaseWrapper {
         } );
     };
 
-    /**
-     * Connects to the database.
-     */    
+
+    /** @inheritDoc */
     connect = ( db: Database ): Promise< boolean > => {
 
         return new Promise( ( resolve, reject ) => {
@@ -53,9 +52,8 @@ export class DatabaseWrapper {
         } );        
     };
 
-    /**
-     * Disconnects from the database.
-     */     
+
+    /** @inheritDoc */     
     disconnect = () => {
         return new Promise( ( resolve, reject ) => {
             if ( ! this._dbi ) {
@@ -71,9 +69,8 @@ export class DatabaseWrapper {
         } );         
     };
 
-    /**
-     * Reconnect to the database.
-     */
+
+    /** @inheritDoc */
     reconnect = () => {
         return new Promise( ( resolve, reject ) => {
             if ( ! this._dbi ) {
@@ -89,12 +86,15 @@ export class DatabaseWrapper {
         } );         
     };
 
+
+    /** @inheritDoc */    
     exec = ( cmd: string, params?: any ): Promise< any > => {
         return new Promise( ( resolve, reject ) => {
             return reject( new Error( 'Not yet implemented' ) );
         } );        
     };
 
+    /** @inheritDoc */    
     query = ( cmd: string, params?: any ) => {
         return new Promise( ( resolve, reject ) => {
             if ( ! this._dbi ) {
@@ -108,6 +108,7 @@ export class DatabaseWrapper {
             } );
         } );        
     };
+    
 
     // private
 
