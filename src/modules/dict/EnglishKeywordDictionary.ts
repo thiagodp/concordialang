@@ -40,7 +40,7 @@ export class EnglishKeywordDictionary implements KeywordDictionary {
     stepWhen: string[] = [ 'when' ];
     stepThen: string[] = [ 'then' ];
     stepAnd: string[] = [ 'and', 'but' ];
-    stepOtherwise: string[] = [ 'otherwise' ];
+    stepOtherwise: string[] = [ 'otherwise', 'when invalid', 'if invalid' ];
 
     table: string[] = [ 'table' ];    
 

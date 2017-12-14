@@ -25,7 +25,7 @@
     "stepWhen": [ "quando", "when" ],
     "stepThen": [ "então", "then" ],
     "stepAnd": [ "e", "mas", "and", "but" ],
-    "stepOtherwise": [ "caso contrário", "senão" ],
+    "stepOtherwise": [ "caso contrário", "senão", "quando inválido", "se inválido" ],
 
     "table": [ "tabela", "table" ]
 }
