@@ -219,13 +219,46 @@ Notes about data types:
 - `double`'s precision can be changed, using `with precision` (e.g. `data type is double wih precision 3`)
 
 Notes about queries (inside a constraint of a UI Element):
-1. Should be put inside apostrophes (').
-2. May use grave accents to refer names with spaces (normally, as in ANSI-SQL).
-3. All field names specified like variables are replaced by their values.
-4. Can reference a [Table](#table), a [File](#file) or any construction of a [Database](#database).
+
+1. Should be put inside quotes (").
+
+2. May use grave accents to refer names with spaces (normally, as in ANSI-SQL). E.g. \`my table\`
+
+3. May use apostrophes to denote values.
+   Example:
+   ```sql
+   SELECT * FROM user WHERE username = 'bob'
+   ```
+
+4. May reference a [Table](#table), a [Database](#database), or a [Constant](#constant)
+   using the format `{{some name}}`.
+
+   Example 1: references a declared table and a declared constant.
+   ```sql
+   SELECT nome FROM {{My Table}} WHERE name = {{Admin Name}}
+   ```
+
+   Example 2: references a declared database and a declared constant.
+   ```sql
+   SELECT nome FROM {{My DB}}.`table` WHERE name = {{Admin Name}}
+   ```
+   
+
+5. May reference UI Elements using the format `{{feature name}}.${ui element name}`.
+   Example:
+   ```sql
+   SELECT password FROM user WHERE username = {{Login}}.${Username}
+   ```
+
+6. May reference UI element using the format `${ui element name}`, considering that
+   the reference UI element belongs to the current feature (the feature of the current file).
+   Example:
+   ```sql
+   SELECT password FROM user WHERE username = ${Username}
+   ```
 
 
-Examples 1:
+**Example 1**:
 ```
 UI Element: Login Page
   - type is url
@@ -238,8 +271,8 @@ UI Element: Username
   - minimal length is 2,
     otherwise I must see the message ${msg_min_len}
   - maximum length is 30
-  - value is queried by 'SELECT username FROM users',  
-    otherwise I must see ${invalid_username_password}
+  - value is queried by "SELECT username FROM {{my db}}.users",
+    otherwise I must see {{invalid_username_password}}
 	
 UI Element: Password
   - type is textbox
@@ -248,23 +281,23 @@ UI Element: Password
     otherwise I must see the message "Password is too short."
 	    and I must see the color be changed to "red"
 	    and I must see the color of Username be changed to "red"
-  - value is queried by 'SELECT password FROM users WHERE username = ${Username}',
-    otherwise I must see ${invalid_username_password}
+  - value is queried by "SELECT password FROM `real db name`.users WHERE username = ${Username} AND profile = 'administrator' ",
+    otherwise I must see {{invalid_username_password}}
 	
 UI Element: Enter
   - type is button
   - id is "enter"
 ```
 
-Examples 2:
+**Examples 2**:
 ```
 UI Element: Profession
   - type is select
-  - value is queried by 'SELECT name FROM profession'
+  - value is queried by "SELECT name FROM profession"
 
 UI Element: Salary
   - data type is double with precision 2
-  - minimum value is queried by 'SELECT min_salary FROM profession WHERE name = ${Profession}'
+  - minimum value is queried by "SELECT min_salary FROM profession WHERE name = ${Profession}"
 
 UI Element: Envy Salary
   - data type is double with precision 2
@@ -336,10 +369,10 @@ Notes:
 - Allowed more than one declaration per file.
 - Databases can be referenced inside contraints' queries. Example:
 ```sql
-SELECT price FROM `my database`.product WHERE name = "beer"
+SELECT price FROM `my database`.product WHERE name = 'beer'
 ```
 
-Example 1:
+**Example 1**: MySQL database
 ```
 Database: my database
   - type is "mysql"
@@ -348,34 +381,22 @@ Database: my database
   - password is "p4sss"
 ```
 
+**Files** can also be represented as databases.
 
-## File
-
-*Declares a reference to a file.*
-
-Notes:
-- Global declaration.
-- Allowed more than one declaration per file.
-- A file is loaded into memory to be queried as a relational database table (with ANSI-SQL).
-
-Example 1:
+**Example 2**: JSON file as a database:
 ```
-File: my json file
+Database my json db
   - type is "json"
-  - path is "./path/to/file.json"
+  - path is "C:\path\to\db.json"
 ```
 
-Example 2:
+**Example 3**: XSL file as a database:
 ```
-File: my csv file
-  - type is "csv"
-  - path is "./path/to/file.csv"
+Database my excel db
+  - type is "excel"
+  - path is "C:\path\to\db.xls"
 ```
 
-Example of a query:
-```sql
-SELECT `some column` FROM `my json file` WHERE `other column` > 50
-```
 
 ## Template
 
