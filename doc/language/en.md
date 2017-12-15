@@ -244,10 +244,12 @@ Notes about queries (inside a constraint of a UI Element):
    ```
    
 
-5. May reference UI Elements using the format `{{feature name}}.${ui element name}`.
+5. May reference UI Elements using the format `${feature name:ui element name}`, in which 
+   `feature name:` is optional. The lack of the feature name should make the tool assuming 
+   that the UI element belongs to the feature.
    Example:
    ```sql
-   SELECT password FROM user WHERE username = {{Login}}.${Username}
+   SELECT password FROM user WHERE username = ${Login:Username}
    ```
 
 6. May reference UI element using the format `${ui element name}`, considering that
