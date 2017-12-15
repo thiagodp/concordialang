@@ -1,7 +1,11 @@
+import { RegexUtil } from '../../util/RegexUtil';
+
 /**
  * @author Thiago Delgado Pinto
  */
 export class QueryParser {
+
+    private _regexUtil = new RegexUtil();
 
     // private readonly VARIABLE_THEN_ONE_DOT: RegExp = /(?:\$\{)([^\}]+)(?:\})\..+/g;
     // private readonly VARIABLE_NOT_PRECEDED_BY_DOT: RegExp = /(?:\$\{)([^\}]+)(?:\})(?!\.)/g;
@@ -203,7 +207,7 @@ export class QueryParser {
      */
     public parseAnyVariables( command: string ): string[] {
         const regex = /(?:\$\{)([^}]+)(?:\})/g;
-        return this.matches( regex, command );
+        return this._regexUtil.matches( regex, command, true );
     }
 
     /**
@@ -214,32 +218,7 @@ export class QueryParser {
      */
     public parseAnyConstants( command: string ): string[] {
         const regex = /(?:\{\{)([^}}]+)(?:\}\})/g;
-        return this.matches( regex, command );
-    }
-
-    /**
-     * Returns matched values.
-     * 
-     * @param regex Regex
-     * @param text Text
-     */
-    public matches( regex: RegExp, text: string ): string[] {
-        let results: string[] = [];
-        let m;
-        while ( ( m = regex.exec( text ) ) !== null ) {
-            // This is necessary to avoid infinite loops with zero-width matches
-            if ( m.index === regex.lastIndex ) {
-                regex.lastIndex++;
-            }
-
-            m.forEach( ( match, groupIndex ) => {
-                if ( 0 === groupIndex ) { // ignores the full match
-                    return;
-                }
-                results.push( match );
-            } );
-        }
-        return results;
+        return this._regexUtil.matches( regex, command, true );
     }
 
 }
