@@ -54,12 +54,12 @@ export class QueryReplacer {
     private replaceAll( query: string, varMap: object, constMap: object ): string {
         let q = query;
         for ( let varName in varMap ) {
-            const regex = new RegExp( '\\$\\{(' + varName + ')\\}', 'g' );
+            const regex = this.makeVarRegex( varName );
             const value = varMap[ varName ];
             q = q.replace( regex, value );
         }
         for ( let constName in constMap ) {
-            const regex = new RegExp( '\\{\\{(' + constName + ')\\}\\}', 'g' );
+            const regex = this.makeNameRegex( constName );
             const value = constMap[ constName ];
             q = q.replace( regex, value );
         }
@@ -76,5 +76,13 @@ export class QueryReplacer {
         //return '"' + content + '"'; // TO-DO: sql injection protection
         return SqlString.escape( content );
     }
+
+    private makeVarRegex( name: string ): RegExp {
+        return ( new QueryParser() ).makeVariableRegex( name );
+    }
+
+    private makeNameRegex( name: string ): RegExp {
+        return ( new QueryParser() ).makeNameRegex( name );
+    }    
 
 }

@@ -231,32 +231,38 @@ Notes about queries (inside a constraint of a UI Element):
    ```
 
 4. May reference a [Table](#table), a [Database](#database), or a [Constant](#constant)
-   using the format `{{some name}}`.
+   using the format `[some name]`, where the content does not contain a dollar sign, `$`.
+   A dollar sign may be use to reference valid Excel table names, instead of referencing 
+   names declared in Concordia.
 
    Example 1: references a declared table and a declared constant.
    ```sql
-   SELECT nome FROM {{My Table}} WHERE name = {{Admin Name}}
+   SELECT nome FROM [My Table] WHERE name = [Some Const Name]
    ```
 
    Example 2: references a declared database and a declared constant.
    ```sql
-   SELECT nome FROM {{My DB}}.`table` WHERE name = {{Admin Name}}
+   SELECT nome FROM [My DB].`table` WHERE name = [Some Const Name]
    ```
    
+   Example 2: NOT A REFERENCE name (e.g. excel table)
+   ```sql
+   SELECT nome FROM [Some Excel Table$] WHERE name = [Some Const Name]
+   ```
 
-5. May reference UI Elements using the format `${feature name:ui element name}`, in which 
+5. May reference UI Elements using the format `{feature name:ui element name}`, in which 
    `feature name:` is optional. The lack of the feature name should make the tool assuming 
    that the UI element belongs to the feature.
    Example:
    ```sql
-   SELECT password FROM user WHERE username = ${Login:Username}
+   SELECT password FROM user WHERE username = {Login:Username}
    ```
 
-6. May reference UI element using the format `${ui element name}`, considering that
+6. May reference UI element using the format `{ui element name}`, considering that
    the reference UI element belongs to the current feature (the feature of the current file).
    Example:
    ```sql
-   SELECT password FROM user WHERE username = ${Username}
+   SELECT password FROM user WHERE username = {Username}
    ```
 
 
