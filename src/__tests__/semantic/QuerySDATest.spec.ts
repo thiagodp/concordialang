@@ -179,4 +179,100 @@ describe( 'QuerySDATest', () => {
         expect( errors[ 0 ].message ).toMatch( /non-existent.*ui element/ui );
     } );    
 
+
+    it( 'recognizes a reference to a ui element with feature name', async () => {
+        
+        let spec = new Spec( '.' );
+
+        let doc1: Document = addToSpec( spec, 
+            [
+                'feature: feature 1',
+                'Database: My DB',
+                ' - type is "mysql"',
+                ' - name is "acme"',
+                ' - host is "127.0.0.1"',
+                ' - username is "root"',
+                ' - password is ""'
+            ] );
+
+        let doc2: Document = addToSpec( spec, 
+            [
+                '#language:pt',
+                'feature: feature 2',
+                'UI Element: Search',
+                ' - id é "sch"',
+                'UI Element: City',
+                ' - id é "cit"',
+                ' - valor está em "SELECT nome FROM `cidade` WHERE nome = {feature 2:Search}"'
+            ] );
+
+        expect( doc1.fileErrors ).toEqual( [] );
+        expect( doc2.fileErrors ).toEqual( [] );
+
+        let errors = await analyzer.check( spec );
+        expect( errors ).toEqual( [] );
+    } );
+
+
+    it( 'recognizes a reference to a ui element of another feature', async () => {
+        
+        let spec = new Spec( '.' );
+
+        let doc1: Document = addToSpec( spec, 
+            [
+                'feature: feature 1',
+                'UI Element: Some Element',
+                ' - id é "se"',
+            ] );
+
+        let doc2: Document = addToSpec( spec, 
+            [
+                '#language:pt',
+                'feature: feature 2',
+                'UI Element: Search',
+                ' - id é "sch"',
+                'UI Element: City',
+                ' - id é "cit"',
+                ' - valor está em "SELECT nome FROM `cidade` WHERE nome = {feature 1:Some Element}"'
+            ] );
+
+        expect( doc1.fileErrors ).toEqual( [] );
+        expect( doc2.fileErrors ).toEqual( [] );
+
+        let errors = await analyzer.check( spec );
+        expect( errors ).toEqual( [] );
+    } );
+
+
+
+    it( 'does not recognize a reference to a non-existent ui element of another feature', async () => {
+        
+        let spec = new Spec( '.' );
+
+        let doc1: Document = addToSpec( spec, 
+            [
+                'feature: feature 1',
+                'UI Element: Some Element',
+                ' - id é "se"',
+            ] );
+
+        let doc2: Document = addToSpec( spec, 
+            [
+                '#language:pt',
+                'feature: feature 2',
+                'UI Element: Search',
+                ' - id é "sch"',
+                'UI Element: City',
+                ' - id é "cit"',
+                ' - valor está em "SELECT nome FROM `cidade` WHERE nome = {feature 1:Wrong Element}"'
+            ] );
+
+        expect( doc1.fileErrors ).toEqual( [] );
+        expect( doc2.fileErrors ).toEqual( [] );
+
+        let errors = await analyzer.check( spec );
+        expect( errors ).not.toEqual( [] );
+        expect( errors[ 0 ].message ).toMatch( /ui element.*feature/ui );
+    } );    
+
 } );

@@ -156,7 +156,7 @@ export class QuerySDA {
         if ( index < 0 ) {
             return null;
         }
-        return v.substring( 0, index - 1 );
+        return v.substring( 0, index );
     };
 
     variableOf = ( v: string ): string => {
@@ -192,6 +192,7 @@ export class QuerySDA {
             if ( ! featureToCheck ) {
                 const msg = 'Query is referencing a non-existent feature: ' + featureName;
                 r.errorsMessages.push( msg );
+                return r; // exit !
             }                        
         }
 
