@@ -9,9 +9,9 @@ export enum Entities {
 
     // General
     VALUE = 'value', // e.g.: "username"
-    ELEMENT = 'element', // e.g.: <Username>
+    ELEMENT = 'element', // e.g.: {Username}
     NUMBER = 'number', // e.g.: -3.12
-    QUERY = 'query', // e.g.: 'SELECT * FROM someTable'
+    QUERY = 'query', // e.g.: "SELECT * FROM someTable"
 
     // Intent "testcase"
     UI_ACTION = 'ui_action', // e.g.: click, fill, ...

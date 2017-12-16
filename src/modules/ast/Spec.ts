@@ -25,6 +25,7 @@ export class Spec {
     private _tableCache: Table[] = null;
     private _featureCache: Feature[] = null;
     //private _uiElementCache: UIElement[] = null;
+    private _nonFeatureNamesCache: string[] = null;
 
     constructor( basePath?: string ) {
         this.basePath = basePath;
@@ -138,6 +139,10 @@ export class Spec {
         return this._featureCache;
     };
 
+    public featureNames = (): string[] => {
+        return this.features().map( v => v.name );
+    };
+
     public featureWithName( name: string, ignoreCase: boolean = false ): Feature | null {
         if ( ! name ) {
             return null;
@@ -157,7 +162,16 @@ export class Spec {
     }
 
 
-
+    public nonFeatureNames( clearCache: boolean = false ): string[] {
+        if ( this._nonFeatureNamesCache !== null && ! clearCache ) {
+            return this._nonFeatureNamesCache;
+        }
+        this._nonFeatureNamesCache = [];
+        this._nonFeatureNamesCache.push.apply( this._nonFeatureNamesCache, this.databaseNames() );
+        this._nonFeatureNamesCache.push.apply( this._nonFeatureNamesCache, this.tableNames() );
+        this._nonFeatureNamesCache.push.apply( this._nonFeatureNamesCache, this.constantNames() );
+        return this._nonFeatureNamesCache;
+    }
 
     // public uiElements = ( clearCache: boolean = false ): UIElement[] => {
     //     if ( this._uiElementCache !== null && ! clearCache ) {

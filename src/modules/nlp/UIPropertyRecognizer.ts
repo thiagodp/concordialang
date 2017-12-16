@@ -34,7 +34,8 @@ export class UIPropertyRecognizer {
     }
 
     trainMe( trainer: NLPTrainer, language: string ) {
-        return trainer.trainNLP( this._nlp, language, Intents.UI );
+        return trainer.trainNLP( this._nlp, language, Intents.UI )
+            && trainer.trainNLP( this._nlp, language, Intents.UI_ITEM_QUERY );
     }    
 
     /**
@@ -79,13 +80,13 @@ export class UIPropertyRecognizer {
             // Getting the values
             let item: UIProperty = node as UIProperty;
             item.property = property;
-            item.values = r.entities.filter( ( e, i ) => i !== propertyIndex ).map( e => e.value );
+            item.values = r.entities.filter( ( e, i ) => i !== propertyIndex ).map( e => e.value );            
         };
 
         recognizer.recognize(
             language,
             nodes,
-            Intents.UI,
+            [ Intents.UI, Intents.UI_ITEM_QUERY ],
             'UI Element',
             errors,
             warnings,

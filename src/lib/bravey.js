@@ -230,7 +230,8 @@ Bravey.Text.clean = function(text, toLowerCase ) { // <<< by TDP (added toLowerC
   if ( toLowerCase ) {
     newText = newText.toLowerCase();
   }
-  return newText.trim().replace(/ +(?= )/g, '').replace(/[()\[\]]/g, '');
+  //return newText.trim().replace(/ +(?= )/g, '').replace(/[()\[\]]/g, ''); // <<< replaced by TDP
+  return newText.trim().replace(/ +(?= )/g, '').replace(/[()]/g, ''); // <<< by TDP
 }
 
 /**

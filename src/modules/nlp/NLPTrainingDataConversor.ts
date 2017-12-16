@@ -1,4 +1,4 @@
-import { NLPEntity, NLPIntent, NLPMatch, NLPTrainingData, NLPEntityUsageExample } from './NLPTrainingData';
+import { NLPEntity, NLPIntent, NLPMatch, NLPTrainingData, NLPIntentExample } from './NLPTrainingData';
 
 /**
  * Training data conversor.
@@ -27,7 +27,7 @@ export class NLPTrainingDataConversor {
      *                              ```
      * @param examples             Training examples.
      */
-    convert( translationMap4NLP: any, examples: NLPEntityUsageExample[] ): NLPTrainingData {
+    convert( translationMap4NLP: any, examples: NLPIntentExample[] ): NLPTrainingData {
 
         let data: NLPTrainingData = new NLPTrainingData();
 

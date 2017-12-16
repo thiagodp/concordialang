@@ -7,7 +7,7 @@
 export class NLPTrainingData {
     constructor(
         public intents: Array< NLPIntent > = [],
-        public examples: Array< NLPEntityUsageExample > = []
+        public examples: Array< NLPIntentExample > = []
     ) {
     }
 }
@@ -56,9 +56,9 @@ export class NLPMatch {
  * 
  * @author Thiago Delgado Pinto
  */
-export class NLPEntityUsageExample {
+export class NLPIntentExample {
     constructor(
-        public entity: string, // result
+        public intent: string, // result
         public sentences: string[] = []
     ) {
     }

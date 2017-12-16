@@ -25,9 +25,8 @@ describe( 'UIPropertyRecognizerTest', () => {
 
         const LANGUAGE = 'pt';
         let nlp = new NLP();
-        ( new NLPTrainer() ).trainNLP( nlp, LANGUAGE );
-
         let rec = new UIPropertyRecognizer( nlp ); // under test
+        rec.trainMe( new NLPTrainer(), LANGUAGE );
 
 
         function shouldRecognize( sentence: string, property: string, value: string ): void {
@@ -69,7 +68,7 @@ describe( 'UIPropertyRecognizerTest', () => {
         } );
 
         it( 'recognizes a value with a query', () => {
-            shouldRecognize( "- valor está em 'SELECT * FROM someTable'", 'value', 'SELECT * FROM someTable' );
+            shouldRecognize( '- valor está em "SELECT * FROM someTable"', 'value', 'SELECT * FROM someTable' );
         } );
 
     } );

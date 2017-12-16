@@ -9,7 +9,6 @@ import { UIElement } from './UIElement';
  * Feature node.
  * 
  * @author Thiago Delgado Pinto
- * @see /doc/langspec/asl-en.md
  */
 export interface Feature extends NamedNode, MayHaveTags {
 

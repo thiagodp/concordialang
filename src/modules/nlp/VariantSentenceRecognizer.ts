@@ -86,7 +86,7 @@ export class VariantSentenceRecognizer {
         recognizer.recognize(
             language,
             nodes,
-            Intents.TEST_CASE,
+            [ Intents.TEST_CASE ],
             'Variant',
             errors,
             warnings,

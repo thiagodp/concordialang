@@ -1,5 +1,5 @@
 import { NLPTrainingDataConversor } from '../../modules/nlp/NLPTrainingDataConversor';
-import { NLPEntityUsageExample, NLPTrainingData } from '../../modules/nlp/NLPTrainingData';
+import { NLPIntentExample, NLPTrainingData } from '../../modules/nlp/NLPTrainingData';
 import { NLP } from '../../modules/nlp/NLP';
 import { NLPResult } from '../../modules/nlp/NLPResult';
 import { Entities } from '../../modules/nlp/Entities';
@@ -97,7 +97,7 @@ describe( 'NLPTest', () => {
     it( 'recognizes a query entity after being trained', () => {
         nlp.train( 'en', fakeTrainingData() );
 
-        let r: NLPResult = nlp.recognize( 'en', " 'SELECT foo FROM bar' " );
+        let r: NLPResult = nlp.recognize( 'en', ' "SELECT foo FROM bar" ' );
         expect( r.entities ).toHaveLength( 1 );
         expect( r.entities[ 0 ].entity ).toBe( Entities.QUERY );
         expect( r.entities[ 0 ].value ).toBe( 'SELECT foo FROM bar' );

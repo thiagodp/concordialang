@@ -12,7 +12,8 @@ import { Document } from '../ast/Document';
 export class SingleDocumentProcessor {
 
     /**
-     * Analyzes lexed nodes of a single document.
+     * Analyzes lexer's nodes of a single document.
+     * Errors and warnings are put in the given document.
      * 
      * @param doc Document to change
      * @param lexer Lexer
@@ -22,7 +23,7 @@ export class SingleDocumentProcessor {
      * 
      * @returns true if had errors.
      */
-    analyzeLexedNodes(
+    analyzeNodes(
         doc: Document,
         lexer: Lexer,
         parser: Parser,

@@ -26,8 +26,8 @@ describe( 'UIPropertyRecognizerTest', () => {
 
         const LANGUAGE = 'pt';
         let nlp = new NLP();
-        ( new NLPTrainer() ).trainNLP( nlp, LANGUAGE, Intents.DATASOURCE ); // << importante DATASOURCE
         let rec = new DatabasePropertyRecognizer( nlp ); // under test
+        rec.trainMe( new NLPTrainer(), LANGUAGE );
 
         function shouldRecognize( sentence: string, property: string, value: string ): void {
 

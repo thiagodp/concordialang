@@ -35,7 +35,7 @@ export class NodeSentenceRecognizer {
      * 
      * @param language Language to be used in the recognition.
      * @param nodes Nodes with content to be analyzed.
-     * @param targetIntent Target intent, to be used by the NLP.
+     * @param targetIntents Target intents, to be used by the NLP.
      * @param targetDisplayName Target name to be displayed to the user in case of error.
      * @param errors Output errors.
      * @param warnings Output warnings.
@@ -46,7 +46,7 @@ export class NodeSentenceRecognizer {
     public recognize(
         language: string,
         nodes: ContentNode[],
-        targetIntent: string,
+        targetIntents: string[],
         targetDisplayName: string,
         errors: LocatedException[],
         warnings: LocatedException[],
@@ -69,7 +69,17 @@ export class NodeSentenceRecognizer {
             //console.log( 'Node before: ' ); console.log( node );
             //console.log( language, ', ', node.content, ', ', targetIntent );
 
-            let r: NLPResult = this._nlp.recognize( language, node.content, targetIntent );
+            let r: NLPResult = this._nlp.recognize( language, node.content );
+            /*
+            let r: NLPResult = null;
+            for ( let ti of targetIntents ) {
+                r = this._nlp.recognize( language, node.content, ti );
+                if ( !! r ) {
+                    break;
+                }
+            }
+            */
+
             //console.log( r );
             //console.log( 'Node after: ' ); console.log( node );
 
@@ -87,7 +97,7 @@ export class NodeSentenceRecognizer {
             }
 
             // Different intent?
-            if ( targetIntent != r.intent ) {
+            if ( targetIntents.indexOf( r.intent ) < 0 ) {
                 //let msg = 'Unrecognized as part of a ' + targetDisplayName + ': ' + node.content;
                 let msg = 'Unrecognized: ' + node.content;
                 errors.push( new NLPException( msg, node.location ) );

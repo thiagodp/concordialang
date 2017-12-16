@@ -15,3 +15,5 @@ string = Bravey.Text.clean(string)
 ```javascript
 text = Bravey.Text.clean(text);
 ```
+
+**c)** method `clean()` changed to not remove `[` and `]`

@@ -94,7 +94,7 @@ export class DatabasePropertyRecognizer {
         recognizer.recognize(
             language,
             nodes,
-            Intents.DATASOURCE,
+            [ Intents.DATASOURCE ],
             'Database Property',
             errors,
             warnings,

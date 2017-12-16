@@ -92,7 +92,7 @@ export class RequirementFilesProcessor {
             fileProcessor.process( normalizedFilePath, this._docProcessor );
             
             // FILE ANALYSIS
-            let hadErrors = this._singleDocProcessor.analyzeLexedNodes(
+            let hadErrors = this._singleDocProcessor.analyzeNodes(
                 doc, this._lexer, this._parser, this._nlpBasedSentenceRecognizer, language );
 
 

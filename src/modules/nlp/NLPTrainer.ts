@@ -1,5 +1,5 @@
 import { FileUtil } from '../util/FileUtil';
-import { NLPEntityUsageExample, NLPTrainingData } from "./NLPTrainingData";
+import { NLPIntentExample, NLPTrainingData } from "./NLPTrainingData";
 import { NLPTrainingDataConversor } from "./NLPTrainingDataConversor";
 import { NLP } from "./NLP";
 
@@ -61,7 +61,7 @@ export class NLPTrainer {
         return require( this.nlpPath( language ) );
     }
 
-    makeTrainingExamples( language: string ): NLPEntityUsageExample[] {
+    makeTrainingExamples( language: string ): NLPIntentExample[] {
         return require( this.trainingPath( language ) );
     }
 

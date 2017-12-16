@@ -1,6 +1,6 @@
 [
     {
-        "entity": "testcase",
+        "intent": "testcase",
         "sentences": [
             "eu {ui_action} em {value}",
             "eu clico em {value}",
@@ -59,19 +59,32 @@
     },
 
     {
-        "entity": "ui",
+        "intent": "ui",
         "sentences": [
             "{ui_property} {ui_verb} {value}",
             "{ui_property} {ui_verb} {query}",
             "{ui_property} {ui_verb} {number}",
             "{ui_property} {ui_verb} {ui_element_type}",
             "id é {value}",
-            "comprimento máximo é {number}"
+            "comprimento máximo é {number}",
+            "valor vem da consulta {query}"
         ]
     },
 
     {
-        "entity": "datasource",
+        "intent": "ui_item_query",
+        "sentences": [
+            "{ui_property} vem de {query}",
+            "{ui_property} vem da consulta {query}",
+            "{ui_property} vem da query {query}",
+            "{ui_property} está em {query}",
+            "{ui_property} está contido em {query}",
+            "{ui_property} está presente em {query}"
+        ]
+    },    
+
+    {
+        "intent": "datasource",
         "sentences": [
             "{ds_property} {ui_verb} {value}",
             "{ds_property} {ui_verb} {number}",

@@ -28,7 +28,7 @@ describe( 'SingleDocumentProcessorTest', () => {
     let singleDocProcessor: SingleDocumentProcessor = new SingleDocumentProcessor();
 
     let analyze = ( doc, lexer ) => {
-        singleDocProcessor.analyzeLexedNodes( doc, lexer, parser, nlpRec, LANGUAGE );
+        singleDocProcessor.analyzeNodes( doc, lexer, parser, nlpRec, LANGUAGE );
     };
 
 

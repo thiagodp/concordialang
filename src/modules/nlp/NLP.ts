@@ -84,7 +84,7 @@ export class NLP {
         let opt = this.documentTrainingOptions();
         for ( let ex of data.examples ) {
             for ( let sentence of ex.sentences ) {
-                nlp.addDocument( sentence, ex.entity, opt );
+                nlp.addDocument( sentence, ex.intent, opt );
             }
         }
     }
@@ -218,9 +218,9 @@ export class NLP {
     }
 
     /**
-     * Creates a recognizer for values between apostrophes.
+     * Creates a recognizer for values that start with select.
      * 
-     * Example: - value comes from the query 'SELECT * FROM users'
+     * Example: - value comes from the query "SELECT * FROM users"
      * --> The value "SELECT * FROM users" (without quotes) is recognized.
      * 
      * @param entityName Entity name.
@@ -228,14 +228,15 @@ export class NLP {
      */
     private makeQueryEntityRecognizer( entityName: string ): any {
         
-        let valueRec = new Bravey.RegexEntityRecognizer( entityName, 10 );
+        let valueRec = new Bravey.RegexEntityRecognizer( entityName, 20 );
 
-        valueRec.addMatch( new RegExp( "'[^']*'", "gi" ),
+        //valueRec.addMatch( new RegExp( "[^']*'", "gi" ),
+        valueRec.addMatch( new RegExp( '"(?:\t| )*SELECT[^"]+"', "gi" ),
             function( match ) {
                 //console.log( 'match: ' ); console.log( match );
                 return match.toString().replace( /['"]+/g, '' );
             },
-            100 ); // the number is the priority
+            200 ); // the number is the priority
 
         return valueRec;
     }    

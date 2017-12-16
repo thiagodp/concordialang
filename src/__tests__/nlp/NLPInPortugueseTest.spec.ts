@@ -1,3 +1,4 @@
+import { Intents } from '../../modules/nlp/Intents';
 import { NLPTrainer } from '../../modules/nlp/NLPTrainer';
 import { Entities } from '../../modules/nlp/Entities';
 import { NLP } from '../../modules/nlp/NLP';
@@ -28,13 +29,21 @@ describe( 'NLPInPortugueseTest', () => {
         ( new NLPTrainer() ).trainNLP( nlp, LANGUAGE );
     } );
 
+    function recognize( sentence: string ) {
+        return nlp.recognize( LANGUAGE, sentence );
+    }    
+
     function recognizeInTestCase( sentence: string ) {
-        return nlp.recognize( LANGUAGE, sentence, 'testcase' );
+        return nlp.recognize( LANGUAGE, sentence, Intents.TEST_CASE );
     }
 
     function recognizeInUI( sentence: string ) {
-        return nlp.recognize( LANGUAGE, sentence, 'ui' );
+        return nlp.recognize( LANGUAGE, sentence, Intents.UI );
     }
+
+    function recognizeInUIItemQuery( sentence: string ) {
+        return nlp.recognize( LANGUAGE, sentence, Intents.UI_ITEM_QUERY );
+    }    
     
     function shouldHaveEntities( results: any[], expectedEntitiesNames: string[], intent: string ) {
         for ( let r of results ) {
@@ -183,7 +192,7 @@ describe( 'NLPInPortugueseTest', () => {
         } );
         
         it( 'recognizes script definitions', () => {
-            shouldHaveUIEntities( [ recognizeInUI( "valor vem de 'SELECT * FROM someTable'" ) ],
+            shouldHaveUIEntities( [ recognize( 'valor vem de "SELECT * FROM someTable"' ) ],
                 [ UI_PROPERTY, UI_VERB, QUERY  ] );
         } );        
 
