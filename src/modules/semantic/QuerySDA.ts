@@ -125,7 +125,7 @@ export class QuerySDA {
             const nonFeatureNames: string[] = spec.nonFeatureNames();
             const inexisting: string[] = queryNames.filter( v => nonFeatureNames.indexOf( v ) < 0 );
             if ( inexisting.length > 0 ) {
-                const msg = 'Inexisting names in query: ' + inexisting.join( ', ' );
+                const msg = 'Query is referencing a non-existent name: ' + inexisting.join( ', ' );
                 const e = new SemanticException( msg, item.location );
                 errors.push( e );
             }
@@ -190,7 +190,7 @@ export class QuerySDA {
                 : spec.featureWithName( featureName ); // search the feature
 
             if ( ! featureToCheck ) {
-                const msg = 'Query referenced an inexisting feature "' + featureName + '".';
+                const msg = 'Query is referencing a non-existent feature: ' + featureName;
                 r.errorsMessages.push( msg );
             }                        
         }
@@ -199,20 +199,20 @@ export class QuerySDA {
 
         const uieNameToCheck = this.variableOf( variable );
         if ( uieNameToCheck.length < 1 ) {
-            const msg = 'Query referenced an empty UI element.';
+            const msg = 'Query is referencing an empty UI element.';
             r.errorsMessages.push( msg );
         }                
 
         // Checking UI element of the feature
 
         if ( ! featureToCheck.uiElements || featureToCheck.uiElements.length < 1 ) {
-            const msg = 'Query referenced a feature without UI elements:' + featureToCheck.name;
+            const msg = 'Query is referencing a feature without UI elements:' + featureToCheck.name;
             r.errorsMessages.push( msg );
         }
 
         const uieNames: string[] = featureToCheck.uiElements.map( v => v.name );
         if ( uieNames.indexOf( uieNameToCheck ) < 0 ) {
-            const msg = 'Query referenced a UI element not found in the feature "' +
+            const msg = 'Query is referencing a non-existent UI element in the feature "' +
                 featureToCheck.name + '": ' + uieNameToCheck;
             r.errorsMessages.push( msg );
         }

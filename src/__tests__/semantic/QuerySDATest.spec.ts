@@ -73,7 +73,7 @@ describe( 'QuerySDATest', () => {
 
         let errors = await analyzer.check( spec );
         expect( errors ).toHaveLength( 1 );
-        expect( errors[ 0 ].message ).toMatch( /inexisting/ui );
+        expect( errors[ 0 ].message ).toMatch( /non-existent/ui );
     } );
 
 
@@ -107,6 +107,76 @@ describe( 'QuerySDATest', () => {
 
         let errors = await analyzer.check( spec );
         expect( errors ).toEqual( [] );
+    } );
+
+
+    it( 'recognizes an existing ui element', async () => {
+        
+        let spec = new Spec( '.' );
+
+        let doc1: Document = addToSpec( spec, 
+            [
+                'feature: feature 1',
+                'Database: My DB',
+                ' - type is "mysql"',
+                ' - name is "acme"',
+                ' - host is "127.0.0.1"',
+                ' - username is "root"',
+                ' - password is ""'
+            ] );
+
+        let doc2: Document = addToSpec( spec, 
+            [
+                '#language:pt',
+                'feature: feature 2',
+                'UI Element: Search',
+                ' - id é "sch"',
+                'UI Element: City',
+                ' - id é "cit"',
+                ' - valor está em "SELECT nome FROM `cidade` WHERE nome = {Search}"'
+            ] );
+
+        expect( doc1.fileErrors ).toEqual( [] );
+        expect( doc2.fileErrors ).toEqual( [] );
+
+        let errors = await analyzer.check( spec );
+        expect( errors ).toEqual( [] );
+    } );
+
+
+
+    it( 'does not recognize an inexisting ui element', async () => {
+        
+        let spec = new Spec( '.' );
+
+        let doc1: Document = addToSpec( spec, 
+            [
+                'feature: feature 1',
+                'Database: My DB',
+                ' - type is "mysql"',
+                ' - name is "acme"',
+                ' - host is "127.0.0.1"',
+                ' - username is "root"',
+                ' - password is ""'
+            ] );
+
+        let doc2: Document = addToSpec( spec, 
+            [
+                '#language:pt',
+                'feature: feature 2',
+                'UI Element: Search',
+                ' - id é "sch"',
+                'UI Element: City',
+                ' - id é "cit"',
+                ' - valor está em "SELECT nome FROM `cidade` WHERE nome = {Foo}"'
+            ] );
+
+        expect( doc1.fileErrors ).toEqual( [] );
+        expect( doc2.fileErrors ).toEqual( [] );
+
+        let errors = await analyzer.check( spec );
+        expect( errors ).not.toEqual( [] );
+        expect( errors[ 0 ].message ).toMatch( /non-existent.*ui element/ui );
     } );    
 
 } );
