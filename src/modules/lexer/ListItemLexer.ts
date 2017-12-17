@@ -26,8 +26,13 @@ export class ListItemLexer< T extends ContentNode > implements NodeLexer< T > {
     }
 
     /** @inheritDoc */
-    public keyword(): string {
+    public nodeType(): string {
         return this._nodeType;
+    }
+
+    /** @inheritDoc */
+    suggestedNextNodeTypes(): string[] {
+        return [];
     }
 
     /** @inheritDoc */

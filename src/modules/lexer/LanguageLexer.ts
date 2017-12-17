@@ -19,6 +19,16 @@ export class LanguageLexer implements NodeLexer< Language >, KeywordBasedLexer {
     }
 
     /** @inheritDoc */
+    public nodeType(): string {
+        return NodeTypes.LANGUAGE;
+    }
+
+    /** @inheritDoc */
+    suggestedNextNodeTypes(): string[] {
+        return [ NodeTypes.IMPORT, NodeTypes.FEATURE, NodeTypes.VARIANT ];
+    }
+
+    /** @inheritDoc */
     public affectedKeyword(): string {
         return NodeTypes.LANGUAGE;
     }

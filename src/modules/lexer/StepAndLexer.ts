@@ -13,4 +13,9 @@ export class StepAndLexer extends StartingKeywordLexer< StepAnd > {
         super( words, NodeTypes.STEP_AND );
     }
 
+    /** @inheritDoc */
+    suggestedNextNodeTypes(): string[] {
+        return [ NodeTypes.STEP_AND, NodeTypes.STEP_WHEN, NodeTypes.STEP_THEN ];
+    }    
+
 }

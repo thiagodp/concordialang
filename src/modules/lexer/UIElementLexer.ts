@@ -13,4 +13,9 @@ export class UIElementLexer extends NamedNodeLexer< UIElement > {
         super( words, NodeTypes.UI_ELEMENT );
     }
 
+    /** @inheritDoc */
+    suggestedNextNodeTypes(): string[] {
+        return [ NodeTypes.UI_PROPERTY ];
+    }
+
 }

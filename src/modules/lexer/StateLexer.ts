@@ -12,4 +12,9 @@ export class StateLexer extends NamedNodeLexer< State > {
     constructor( words: Array< string > ) {
         super( words, NodeTypes.STATE );
     }
+
+    /** @inheritDoc */
+    suggestedNextNodeTypes(): string[] {
+        return [];
+    }    
 }

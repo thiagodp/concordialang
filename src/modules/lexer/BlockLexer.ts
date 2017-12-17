@@ -12,12 +12,22 @@ import { LexicalException } from "../req/LexicalException";
  * 
  * @author Thiago Delgado Pinto
  */
-export class KeywordBlockLexer< T extends Node > implements NodeLexer< T >, KeywordBasedLexer {
+export class BlockLexer< T extends Node > implements NodeLexer< T >, KeywordBasedLexer {
 
     private _separator: string = Symbols.TITLE_SEPARATOR;
     private _lineChecker: LineChecker = new LineChecker();
 
     constructor( private _words: string[], private _nodeType: string ) {
+    }
+
+    /** @inheritDoc */
+    public nodeType(): string {
+        return this._nodeType;
+    }
+
+    /** @inheritDoc */
+    suggestedNextNodeTypes(): string[] {
+        return [];
     }
 
     /** @inheritDoc */

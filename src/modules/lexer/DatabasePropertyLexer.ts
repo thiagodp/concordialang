@@ -13,4 +13,9 @@ export class DatabasePropertyLexer extends ListItemLexer< DatabaseProperty > {
         super( NodeTypes.DATABASE_PROPERTY );
     }
 
+    /** @inheritDoc */
+    suggestedNextNodeTypes(): string[] {
+        return [ NodeTypes.DATABASE_PROPERTY ];
+    }
+
 }

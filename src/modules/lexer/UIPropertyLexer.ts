@@ -13,4 +13,9 @@ export class UIPropertyLexer extends ListItemLexer< UIProperty > {
         super( NodeTypes.UI_PROPERTY );
     }
 
+    /** @inheritDoc */
+    suggestedNextNodeTypes(): string[] {
+        return [ NodeTypes.UI_PROPERTY ];
+    }    
+
 }

@@ -1,6 +1,6 @@
 import { TestEventBlock, TestEventItem } from '../ast/TestEvent';
 import { NodeTypes } from "../req/NodeTypes";
-import { KeywordBlockLexer } from './KeywordBlockLexer';
+import { BlockLexer } from './BlockLexer';
 import { ListItemLexer } from './ListItemLexer';
 
 /**
@@ -9,8 +9,14 @@ import { ListItemLexer } from './ListItemLexer';
  * @author Thiago Delgado Pinto
  */
 export class TestEventItemLexer extends ListItemLexer< TestEventItem > {
+
     constructor() {
         super( NodeTypes.TEST_EVENT_ITEM );
+    }
+
+    /** @inheritDoc */
+    suggestedNextNodeTypes(): string[] {
+        return [ NodeTypes.TEST_EVENT_ITEM ];
     }
 }
 
@@ -19,10 +25,17 @@ export class TestEventItemLexer extends ListItemLexer< TestEventItem > {
  * 
  * @author Thiago Delgado Pinto
  */
-export class BeforeAllLexer extends KeywordBlockLexer< TestEventBlock > {
+export class BeforeAllLexer extends BlockLexer< TestEventBlock > {
+
     constructor( words: string[] ) {
         super( words, NodeTypes.BEFORE_ALL );
     }
+
+    /** @inheritDoc */
+    suggestedNextNodeTypes(): string[] {
+        return [ NodeTypes.TEST_EVENT_ITEM ];
+    }
+
 }
 
 /**
@@ -30,10 +43,17 @@ export class BeforeAllLexer extends KeywordBlockLexer< TestEventBlock > {
  * 
  * @author Thiago Delgado Pinto
  */
-export class AfterAllLexer extends KeywordBlockLexer< TestEventBlock > {
+export class AfterAllLexer extends BlockLexer< TestEventBlock > {
+
     constructor( words: string[] ) {
         super( words, NodeTypes.AFTER_ALL );
     }
+
+    /** @inheritDoc */
+    suggestedNextNodeTypes(): string[] {
+        return [ NodeTypes.TEST_EVENT_ITEM ];
+    }
+
 }
 
 /**
@@ -41,10 +61,17 @@ export class AfterAllLexer extends KeywordBlockLexer< TestEventBlock > {
  * 
  * @author Thiago Delgado Pinto
  */
-export class BeforeFeatureLexer extends KeywordBlockLexer< TestEventBlock > {
+export class BeforeFeatureLexer extends BlockLexer< TestEventBlock > {
+
     constructor( words: string[] ) {
         super( words, NodeTypes.BEFORE_FEATURE );
     }
+
+    /** @inheritDoc */
+    suggestedNextNodeTypes(): string[] {
+        return [ NodeTypes.TEST_EVENT_ITEM ];
+    }
+
 }
 
 /**
@@ -52,10 +79,17 @@ export class BeforeFeatureLexer extends KeywordBlockLexer< TestEventBlock > {
  * 
  * @author Thiago Delgado Pinto
  */
-export class AfterFeatureLexer extends KeywordBlockLexer< TestEventBlock > {
+export class AfterFeatureLexer extends BlockLexer< TestEventBlock > {
+
     constructor( words: string[] ) {
         super( words, NodeTypes.AFTER_FEATURE );
     }
+
+    /** @inheritDoc */
+    suggestedNextNodeTypes(): string[] {
+        return [ NodeTypes.TEST_EVENT_ITEM ];
+    }
+
 }
 
 /**
@@ -63,10 +97,17 @@ export class AfterFeatureLexer extends KeywordBlockLexer< TestEventBlock > {
  * 
  * @author Thiago Delgado Pinto
  */
-export class BeforeScenariosLexer extends KeywordBlockLexer< TestEventBlock > {
+export class BeforeScenariosLexer extends BlockLexer< TestEventBlock > {
+
     constructor( words: string[] ) {
         super( words, NodeTypes.BEFORE_EACH_SCENARIO );
     }
+
+    /** @inheritDoc */
+    suggestedNextNodeTypes(): string[] {
+        return [ NodeTypes.TEST_EVENT_ITEM ];
+    }
+
 }
 
 /**
@@ -74,8 +115,15 @@ export class BeforeScenariosLexer extends KeywordBlockLexer< TestEventBlock > {
  * 
  * @author Thiago Delgado Pinto
  */
-export class AfterScenariosLexer extends KeywordBlockLexer< TestEventBlock > {
+export class AfterScenariosLexer extends BlockLexer< TestEventBlock > {
+
     constructor( words: string[] ) {
         super( words, NodeTypes.AFTER_EACH_SCENARIO );
     }
+
+    /** @inheritDoc */
+    suggestedNextNodeTypes(): string[] {
+        return [ NodeTypes.TEST_EVENT_ITEM ];
+    }
+        
 }

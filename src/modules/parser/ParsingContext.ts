@@ -22,8 +22,10 @@ export class ParsingContext {
     inScenario: boolean = false;
     inTemplate: boolean = false;
     inVariant: boolean = false;
-    inRegexBlock: boolean = false;
     inConstantBlock: boolean = false;
+    inConstant: boolean = false;
+    inRegexBlock: boolean = false;
+    inRegex: boolean = false;    
     inUIProperty: boolean = false;
     inTable: boolean = false;
 
@@ -32,6 +34,8 @@ export class ParsingContext {
     currentVariant: Variant = null;
     currentUIElement: UIElement = null;
     currentUIProperty: UIProperty = null;
+    currentConstantBlock: ConstantBlock = null;
+    currentRegexBlock: RegexBlock = null;
     currentTable: Table = null;
     currentDatabase: Database = null;
 
@@ -46,8 +50,10 @@ export class ParsingContext {
         this.inScenario = false;
         this.inTemplate = false;
         this.inVariant = false;
-        this.inRegexBlock = false;
         this.inConstantBlock = false;
+        this.inConstant = false;
+        this.inRegexBlock = false;
+        this.inRegex = false;        
         this.inUIProperty = false;
         this.inTable = false;
     }

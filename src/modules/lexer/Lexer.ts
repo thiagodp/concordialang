@@ -43,6 +43,9 @@ export class Lexer {
     private _nodes: Node[] = [];
     private _errors: Error[] = [];
     private _lexers: Array< NodeLexer< Node > > = [];
+    private _lexersMap: Map< string, NodeLexer< any > > = 
+        new Map< string, NodeLexer< any > >(); // iterable in insertion order
+    private _lastLexer: NodeLexer< any > = null;
 
     /**
      * Constructs the lexer.
@@ -82,7 +85,7 @@ export class Lexer {
             , new RegexLexer( dictionary.is ) // "name" is "value"
             , new StateLexer( dictionary.state )
             , new TableLexer( dictionary.table )
-            , new TableRowLexer()            
+            , new TableRowLexer()
             , new UIElementLexer( dictionary.uiElement )
             , new UIPropertyLexer()
             , new DatabaseLexer( dictionary.database )
@@ -95,6 +98,12 @@ export class Lexer {
             , new AfterScenariosLexer( dictionary.afterEachScenario )
             , new TextLexer() // captures any non-empty
         ];
+
+        // Building the map
+        for ( let lex of this._lexers ) {
+            this._lexersMap.set( lex.nodeType(), lex );
+        }
+
     }
 
     public defaultLanguage(): string {
@@ -153,36 +162,69 @@ export class Lexer {
         
         let result: LexicalAnalysisResult< Node >;
         let node: Node;
+
+        // Analyze with lexers of the suggested node types
+        if ( this._lastLexer !== null ) {
+
+            const suggestedNodeTypes: string[] = this._lastLexer.suggestedNextNodeTypes();
+            for ( let nodeType of suggestedNodeTypes ) {
+                // Ignores text
+                if ( NodeTypes.TEXT === nodeType ) {
+                    continue; // next lexer
+                }
+                let lexer = this._lexersMap.get( nodeType );
+                if ( ! lexer ) {
+                    continue; // next lexer
+                }
+                result = lexer.analyze( line, lineNumber );
+                if ( ! result ) {
+                    continue; // next lexer
+                }
+                // Stores the last valid lexer
+                this._lastLexer = lexer;
+                // Add the node and errors
+                this.dealWithResult( result );
+                return true; // found a node in the line                
+            }
+        }
+
+        // Analyze with all the lexers
         for ( let lexer of this._lexers ) {
             result = lexer.analyze( line, lineNumber );
             if ( ! result ) {
-                continue; // Analyze with another lexer
+                continue; // next lexer
             }
-
-            // Detects a language node and tries to change the language
-            if ( result.nodes.length > 0 && NodeTypes.LANGUAGE === result.nodes[ 0 ].nodeType ) {
-                let language = ( result.nodes[ 0 ] as Language ).value;
-                if ( language != this._defaultLanguage ) { // needs to change ?
-                    try {
-                        this.changeLanguage( language );
-                    } catch ( e ) {
-                        this._errors.push( e );
-                    }
-                }
-            }
-
-            // Add the "nodes" array to "_nodes"
-            this._nodes.push.apply( this._nodes, result.nodes );
-
-            if ( result.errors ) {
-                // Add the "errors" array to "_errors"
-                this._errors.push.apply( this._errors, result.errors );
-            }
-
+            // Stores the last valid lexer
+            this._lastLexer = lexer;
+            // Add the node and errors      
+            this.dealWithResult( result );
             return true; // found a node in the line
         }
 
         return false;
+    }
+
+    public dealWithResult( result: LexicalAnalysisResult< Node > ): void {
+
+        // Detects a language node and tries to change the language
+        if ( result.nodes.length > 0 && NodeTypes.LANGUAGE === result.nodes[ 0 ].nodeType ) {
+            let language = ( result.nodes[ 0 ] as Language ).value;
+            if ( language != this._defaultLanguage ) { // needs to change ?
+                try {
+                    this.changeLanguage( language );
+                } catch ( e ) {
+                    this._errors.push( e );
+                }
+            }
+        }
+
+        // Add the "nodes" array to "_nodes"
+        this._nodes.push.apply( this._nodes, result.nodes );
+
+        if ( result.errors ) {
+            // Add the "errors" array to "_errors"
+            this._errors.push.apply( this._errors, result.errors );
+        }
     }
     
     /**

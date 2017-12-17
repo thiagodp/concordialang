@@ -13,4 +13,9 @@ export class ImportLexer extends QuotedNodeLexer< Import > {
         super( words, NodeTypes.IMPORT );
     }
 
+    /** @inheritDoc */
+    suggestedNextNodeTypes(): string[] {
+        return [ NodeTypes.FEATURE, NodeTypes.VARIANT ];
+    }
+
 }

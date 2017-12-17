@@ -3,11 +3,11 @@ import { NodeIterator } from './NodeIterator';
 import { ParsingContext } from './ParsingContext';
 
 /**
- * Property parser.
+ * List item node parser.
  * 
  * @author Thiago Delgado Pinto
  */
-export interface PropertyParser {
+export interface ListItemNodeParser {
 
     isAccepted( node: ListItem, it: NodeIterator ): boolean;
 

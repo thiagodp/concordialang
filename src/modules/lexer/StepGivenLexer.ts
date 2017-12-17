@@ -13,4 +13,9 @@ export class StepGivenLexer extends StartingKeywordLexer< StepGiven > {
         super( words, NodeTypes.STEP_GIVEN );
     }
 
+    /** @inheritDoc */
+    suggestedNextNodeTypes(): string[] {
+        return [ NodeTypes.STEP_AND, NodeTypes.STEP_WHEN, NodeTypes.STEP_THEN ];
+    }    
+
 }

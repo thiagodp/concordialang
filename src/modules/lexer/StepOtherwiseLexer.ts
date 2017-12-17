@@ -13,4 +13,9 @@ export class StepOtherwiseLexer extends StartingKeywordLexer< StepOtherwise > {
         super( words, NodeTypes.STEP_OTHERWISE );
     }
 
+    /** @inheritDoc */
+    suggestedNextNodeTypes(): string[] {
+        return [ NodeTypes.STEP_AND ];
+    }    
+
 }

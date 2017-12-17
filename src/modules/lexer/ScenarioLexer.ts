@@ -13,4 +13,9 @@ export class ScenarioLexer extends NamedNodeLexer< Scenario > {
         super( words, NodeTypes.SCENARIO );
     }
 
+    /** @inheritDoc */
+    suggestedNextNodeTypes(): string[] {
+        return [ NodeTypes.STEP_GIVEN, NodeTypes.SCENARIO ];
+    }    
+
 }

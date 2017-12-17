@@ -23,6 +23,7 @@ describe( 'RegexLexerTest', () => {
             {
                 nodeType: keyword,
                 location: { line: 1, column: 1 },
+                content: `"foo" is "${value}"`,
                 name: "foo",
                 value: value
             }
@@ -37,6 +38,7 @@ describe( 'RegexLexerTest', () => {
             {
                 nodeType: keyword,
                 location: { line: 1, column: 1 },
+                content: '"foo" is "\\"bar"',
                 name: "foo",
                 value: '\\"bar'
             }
@@ -52,6 +54,7 @@ describe( 'RegexLexerTest', () => {
             {
                 nodeType: keyword,
                 location: { line: 1, column: 1 },
+                content: '"foo" is "bar"',
                 name: "foo",
                 value: "bar"
             }

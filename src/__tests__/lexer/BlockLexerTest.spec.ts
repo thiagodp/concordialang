@@ -1,13 +1,13 @@
-import { KeywordBlockLexer } from "../../modules/lexer/KeywordBlockLexer";
+import { BlockLexer } from "../../modules/lexer/BlockLexer";
 
 /**
  * @author Thiago Delgado Pinto
  */
-describe( 'KeywordBlockLexerTest', () => {
+describe( 'BlockLexerTest', () => {
 
     let keyword = 'anything';
     let wordInsensitive = 'AnYtHinG';
-    let lexer = new KeywordBlockLexer( [ keyword ], keyword ); // under test    
+    let lexer = new BlockLexer( [ keyword ], keyword ); // under test    
     
     it( 'is detected in a line', () => {
         let r = lexer.analyze( 'Anything:', 1 );

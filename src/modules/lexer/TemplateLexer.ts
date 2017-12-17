@@ -12,4 +12,9 @@ export class TemplateLexer extends NamedNodeLexer< Template > {
     constructor( words: string[] ) {
         super( words, NodeTypes.TEMPLATE );
     }
+
+    /** @inheritDoc */
+    suggestedNextNodeTypes(): string[] {
+        return [ NodeTypes.STEP_GIVEN ];
+    }    
 }

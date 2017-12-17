@@ -1,4 +1,4 @@
-import { PropertyParser } from "./PropertyParser";
+import { ListItemNodeParser } from "./ListItemNodeParser";
 import { ListItem } from '../ast/ListItem';
 import { NodeIterator } from './NodeIterator';
 import { ParsingContext } from './ParsingContext';
@@ -11,7 +11,7 @@ import { SyntaticException } from "../req/SyntaticException";
  * 
  * @author Thiago Delgado Pinto
  */
-export class UIPropertyParser implements PropertyParser {
+export class UIPropertyParser implements ListItemNodeParser {
 
     /** @inheritDoc */
     isAccepted( node: ListItem, it: NodeIterator ): boolean {
@@ -55,7 +55,7 @@ export class UIPropertyParser implements PropertyParser {
         // Adds the node
         context.currentUIElement.items.push( uiProperty );
 
-        return true;        
+        return true;
     }
 
 }

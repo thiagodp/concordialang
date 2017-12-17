@@ -15,6 +15,16 @@ export interface LexicalAnalysisResult< T extends Node > {
 export interface NodeLexer< T extends Node > {
 
     /**
+     * Returns the target node type.
+     */
+    nodeType(): string;
+
+    /**
+     * Suggests nodes types as the next ones to verify.
+     */
+    suggestedNextNodeTypes(): string[];
+
+    /**
      * Perform a lexical analysis of a line. Returns null if the line 
      * does not contain the node, or a lexical analysis result otherwise.
      * 

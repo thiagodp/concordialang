@@ -110,6 +110,34 @@ describe( 'QuerySDATest', () => {
     } );
 
 
+    it( 'recognizes an existing constant', async () => {
+        
+        let spec = new Spec( '.' );
+
+        let doc1: Document = addToSpec( spec, 
+            [
+                'feature: feature 1',
+                'Constants:',
+                ' - "pi" é "3.14"'
+            ] );
+
+        let doc2: Document = addToSpec( spec, 
+            [
+                '#language:pt',
+                'feature: feature 2',
+                'UI Element: City',
+                ' - id é "cit"',
+                ' - valor está em "SELECT nome FROM `cidade` WHERE populacao = [pi]"'
+            ] );
+
+        expect( doc1.fileErrors ).toEqual( [] );
+        expect( doc2.fileErrors ).toEqual( [] );
+
+        let errors = await analyzer.check( spec );
+        expect( errors ).toEqual( [] );
+    } );
+
+
     it( 'recognizes an existing ui element', async () => {
         
         let spec = new Spec( '.' );

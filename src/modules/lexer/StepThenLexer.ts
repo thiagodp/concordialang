@@ -13,4 +13,9 @@ export class StepThenLexer extends StartingKeywordLexer< StepThen > {
         super( words, NodeTypes.STEP_THEN );
     }
 
+    /** @inheritDoc */
+    suggestedNextNodeTypes(): string[] {
+        return [ NodeTypes.STEP_AND ];
+    }    
+
 }

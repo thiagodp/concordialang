@@ -17,6 +17,16 @@ export class TagLexer implements NodeLexer< Tag > {
     private _lineChecker: LineChecker = new LineChecker();
 
     /** @inheritDoc */
+    public nodeType(): string {
+        return NodeTypes.TAG;
+    }
+    
+    /** @inheritDoc */
+    suggestedNextNodeTypes(): string[] {
+        return [ NodeTypes.TAG, NodeTypes.VARIANT, NodeTypes.FEATURE, NodeTypes.SCENARIO ];
+    }
+
+    /** @inheritDoc */
     public analyze( line: string, lineNumber?: number ): LexicalAnalysisResult< Tag > {
 
         let trimmedLine = line.trim();

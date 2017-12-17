@@ -13,4 +13,9 @@ export class TableLexer extends NamedNodeLexer< Table > {
         super( words, NodeTypes.TABLE );
     }
 
+    /** @inheritDoc */
+    suggestedNextNodeTypes(): string[] {
+        return [ NodeTypes.TABLE_ROW ];
+    }    
+
 }

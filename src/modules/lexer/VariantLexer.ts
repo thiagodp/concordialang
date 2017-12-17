@@ -12,4 +12,10 @@ export class VariantLexer extends NamedNodeLexer< Variant > {
     constructor( words: string[] ) {
         super( words, NodeTypes.VARIANT );
     }
+
+    /** @inheritDoc */
+    suggestedNextNodeTypes(): string[] {
+        return [ NodeTypes.STEP_GIVEN ];
+    }
+
 }

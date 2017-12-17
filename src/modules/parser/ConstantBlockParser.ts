@@ -23,6 +23,7 @@ export class ConstantBlockParser implements NodeParser< ConstantBlock > {
         // Adjust the context
         context.resetInValues();
         context.inConstantBlock = true;
+        context.currentConstantBlock = node;
 
         // Add to the doc
         context.doc.constantBlock = node;

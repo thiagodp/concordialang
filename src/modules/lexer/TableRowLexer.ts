@@ -16,6 +16,17 @@ export class TableRowLexer implements NodeLexer< TableRow > {
 
     private _lineChecker: LineChecker = new LineChecker();
 
+    /** @inheritDoc */
+    public nodeType(): string {
+        return NodeTypes.TABLE_ROW;
+    }
+
+    /** @inheritDoc */
+    suggestedNextNodeTypes(): string[] {
+        return [ NodeTypes.TABLE_ROW ];
+    }    
+
+    /** @inheritDoc */
     public analyze( line: string, lineNumber: number ): LexicalAnalysisResult< TableRow > | null {
 
         // Replace empty cells with cells with a space, in order to capture their value correctly.

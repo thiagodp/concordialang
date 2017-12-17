@@ -23,6 +23,7 @@ export class RegexBlockParser implements NodeParser< RegexBlock > {
         // Adjust the context
         context.resetInValues();
         context.inRegexBlock = true;
+        context.currentRegexBlock = node;
 
         // Add to the doc
         context.doc.regexBlock = node;

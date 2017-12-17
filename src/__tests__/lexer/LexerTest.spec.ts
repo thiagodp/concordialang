@@ -26,8 +26,12 @@ describe( 'LexerTest', () => {
             .filter( val => val.e !== null ) // only the defined expectations
             .map( val => val.e ); // return the expectations
 
-        lexer.nodes().forEach( ( node, index ) =>
-            expect( node.nodeType ).toBe( expectations[ index ] ) ); // same index as the expectation
+        lexer.nodes().forEach( ( node, index ) => {
+            if ( node.nodeType !== expectations[ index ] ) {
+                console.log( 'WRONG index: ', index, ' got: ', node.nodeType, ' expected: ', expectations[ index ] );
+            }
+            expect( node.nodeType ).toBe( expectations[ index ] );  // same index as the expectation
+        } );
     }
 
 
@@ -81,7 +85,7 @@ describe( 'LexerTest', () => {
             { l: '  - "pi" is 3.14', e: NodeTypes.CONSTANT },
             { l: '', e: null },
             { l: 'Regular Expressions:', e: NodeTypes.REGEX_BLOCK },
-            { l: '  - "name" is "[A-Za-z]{2,60}"', e: NodeTypes.CONSTANT },
+            { l: '  - "name" is "[A-Za-z]{2,60}"', e: NodeTypes.REGEX },
             { l: '', e: null },
             { l: 'Table: users', e: NodeTypes.TABLE },
             { l: '  | column1 | column2 |', e: NodeTypes.TABLE_ROW },
@@ -143,7 +147,7 @@ describe( 'LexerTest', () => {
             { l: '  - "pi" é 3.14', e: NodeTypes.CONSTANT },
             { l: '', e: null },
             { l: 'Expressões Regulares:', e: NodeTypes.REGEX_BLOCK },
-            { l: '  - "nome" é "[A-Za-z]{2,60}"', e: NodeTypes.CONSTANT },
+            { l: '  - "nome" é "[A-Za-z]{2,60}"', e: NodeTypes.REGEX },
             { l: '', e: null },
             { l: 'Tabela: users', e: NodeTypes.TABLE },
             { l: '  | column1 | column2 |', e: NodeTypes.TABLE_ROW },

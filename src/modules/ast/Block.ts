@@ -1,4 +1,5 @@
-import { NodeWithNameAndValue, HasItems } from "./Node";
+import { ListItem } from './ListItem';
+import { HasItems, HasName, HasValue, NodeWithNameAndValue } from './Node';
 
 /**
  * Block node.
@@ -14,5 +15,5 @@ export interface Block< T extends BlockItem > extends HasItems< T > {
  * 
  * @author Thiago Delgado Pinto
  */
-export interface BlockItem extends NodeWithNameAndValue {
+export interface BlockItem extends ListItem, HasName, HasValue {
 }

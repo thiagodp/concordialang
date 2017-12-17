@@ -19,6 +19,16 @@ export class StartingKeywordLexer< T extends ContentNode > implements NodeLexer<
     }
 
     /** @inheritDoc */
+    public nodeType(): string {
+        return this._nodeType;
+    }
+    
+    /** @inheritDoc */
+    suggestedNextNodeTypes(): string[] {
+        return [];
+    }    
+
+    /** @inheritDoc */
     public affectedKeyword(): string {
         return this._nodeType;
     }

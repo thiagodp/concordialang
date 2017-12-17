@@ -1,8 +1,10 @@
+import { RegexParser } from './RegexParser';
+import { ConstantParser } from './ConstantParser';
 import { NodeParser } from './NodeParser';
 import { ListItem } from '../ast/ListItem';
 import { ParsingContext } from './ParsingContext';
 import { NodeIterator } from './NodeIterator';
-import { PropertyParser } from './PropertyParser';
+import { ListItemNodeParser } from './ListItemNodeParser';
 import { UIPropertyParser } from './UIPropertyParser';
 import { DatabasePropertyParser } from './DatabasePropertyParser';
 
@@ -13,11 +15,13 @@ import { DatabasePropertyParser } from './DatabasePropertyParser';
  */
 export class ListItemParser implements NodeParser< ListItem > {
 
-    private _propertyParsers: PropertyParser[] = [];
+    private _nodeParsers: ListItemNodeParser[] = [];
 
     constructor() {
-        this._propertyParsers.push( new UIPropertyParser() );
-        this._propertyParsers.push( new DatabasePropertyParser() );
+        this._nodeParsers.push( new ConstantParser() );
+        this._nodeParsers.push( new RegexParser() );
+        this._nodeParsers.push( new UIPropertyParser() );
+        this._nodeParsers.push( new DatabasePropertyParser() );
     }
     
     analyze(
@@ -31,7 +35,7 @@ export class ListItemParser implements NodeParser< ListItem > {
             return false; // Nothing to do here
         }
 
-        for ( let p of this._propertyParsers ) {
+        for ( let p of this._nodeParsers ) {
             if ( p.isAccepted( node, it ) ) {
                 p.handle( node, context, errors );
             }

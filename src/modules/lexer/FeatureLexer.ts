@@ -13,4 +13,9 @@ export class FeatureLexer extends NamedNodeLexer< Feature > {
         super( words, NodeTypes.FEATURE );
     }
 
+    /** @inheritDoc */
+    suggestedNextNodeTypes(): string[] {
+        return [ NodeTypes.SCENARIO ];
+    }
+
 }

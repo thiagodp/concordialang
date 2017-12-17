@@ -21,6 +21,16 @@ export class QuotedNodeLexer< T extends ValuedNode > implements NodeLexer< T >, 
     }
 
     /** @inheritDoc */
+    public nodeType(): string {
+        return this._nodeType;
+    }
+
+    /** @inheritDoc */
+    suggestedNextNodeTypes(): string[] {
+        return [];
+    }
+
+    /** @inheritDoc */
     public affectedKeyword(): string {
         return this._nodeType;
     }

@@ -1,4 +1,4 @@
-import { PropertyParser } from "./PropertyParser";
+import { ListItemNodeParser } from "./ListItemNodeParser";
 import { ListItem } from '../ast/ListItem';
 import { NodeIterator } from './NodeIterator';
 import { ParsingContext } from './ParsingContext';
@@ -11,7 +11,7 @@ import { DatabaseProperty } from "../ast/Database";
  * 
  * @author Thiago Delgado Pinto
  */
-export class DatabasePropertyParser implements PropertyParser {
+export class DatabasePropertyParser implements ListItemNodeParser {
 
     /** @inheritDoc */
     isAccepted( node: ListItem, it: NodeIterator ): boolean {

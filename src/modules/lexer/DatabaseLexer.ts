@@ -13,4 +13,9 @@ export class DatabaseLexer extends NamedNodeLexer< Database > {
         super( words, NodeTypes.DATABASE );
     }
 
+    /** @inheritDoc */
+    suggestedNextNodeTypes(): string[] {
+        return [ NodeTypes.DATABASE ];
+    }
+
 }

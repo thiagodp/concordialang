@@ -24,6 +24,16 @@ export class NamedNodeLexer< T extends NamedNode > implements NodeLexer< T >, Ke
     }
 
     /** @inheritDoc */
+    public nodeType(): string {
+        return this._nodeType;
+    }
+
+    /** @inheritDoc */
+    suggestedNextNodeTypes(): string[] {
+        return [];
+    }
+
+    /** @inheritDoc */
     public affectedKeyword(): string {
         return this._nodeType;
     }

@@ -13,4 +13,9 @@ export class StepWhenLexer extends StartingKeywordLexer< StepWhen > {
         super( words, NodeTypes.STEP_WHEN );
     }
 
+    /** @inheritDoc */
+    suggestedNextNodeTypes(): string[] {
+        return [ NodeTypes.STEP_AND, NodeTypes.STEP_THEN ];
+    }    
+
 }

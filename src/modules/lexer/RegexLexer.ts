@@ -21,6 +21,16 @@ export class RegexLexer implements NodeLexer< Regex >, KeywordBasedLexer {
     }
 
     /** @inheritDoc */
+    public nodeType(): string {
+        return this._nodeType;
+    }
+
+    /** @inheritDoc */
+    suggestedNextNodeTypes(): string[] {
+        return [ NodeTypes.REGEX ];
+    }    
+
+    /** @inheritDoc */
     public affectedKeyword(): string {
         return NodeTypes.IS;
     }
@@ -33,19 +43,11 @@ export class RegexLexer implements NodeLexer< Regex >, KeywordBasedLexer {
     /** @inheritDoc */
     public analyze( line: string, lineNumber?: number ): LexicalAnalysisResult< Regex > {
 
-        // - "foo" is
+        // - "foo" is "bar"
         let result = new RegExp(
-            '^' + Expressions.OPTIONAL_SPACES_OR_TABS
-            + Symbols.LIST_ITEM_PREFIX // -
-            + Expressions.OPTIONAL_SPACES_OR_TABS
-            + Expressions.SOMETHING_INSIDE_QUOTES
-            + Expressions.OPTIONAL_SPACES_OR_TABS
-            + '(?:' + this._words.join( '|' ) + ')' // is
-            + Expressions.OPTIONAL_SPACES_OR_TABS
-            + Expressions.ANYTHING
+            this.makeRegexForTheWords( this._words )
             , 'ui'
         ).exec( line );
-
         if ( ! result ) {
             return null;
         }
@@ -65,6 +67,9 @@ export class RegexLexer implements NodeLexer< Regex >, KeywordBasedLexer {
                   values.push( match );
                 }
             } );
+        }
+        if ( values.length < 1 ) {
+            return null;
         }
 
         // Let's extract the interesting parts
@@ -86,9 +91,19 @@ export class RegexLexer implements NodeLexer< Regex >, KeywordBasedLexer {
             }
         }
 
+
+        let commentPos = line.lastIndexOf( Symbols.COMMENT_PREFIX );
+        let content;
+        if ( commentPos >= 0 ) {
+            content = this._lineChecker.textAfterSeparator( Symbols.LIST_ITEM_PREFIX, line.substring( 0, commentPos ) ).trim();
+        } else {
+            content = this._lineChecker.textAfterSeparator( Symbols.LIST_ITEM_PREFIX, line ).trim();
+        }        
+
         let node = {
             nodeType: this._nodeType,
             location: { line: lineNumber || 0, column: pos + 1 },
+            content: content,
             name: name,
             value: value
         } as Regex;
@@ -101,5 +116,19 @@ export class RegexLexer implements NodeLexer< Regex >, KeywordBasedLexer {
 
         return { nodes: [ node ], errors: errors };
     }
+
+
+    protected makeRegexForTheWords( words: string[] ): string {
+        return '^' + Expressions.OPTIONAL_SPACES_OR_TABS
+            + Symbols.LIST_ITEM_PREFIX // -
+            + Expressions.OPTIONAL_SPACES_OR_TABS
+            + Expressions.SOMETHING_INSIDE_QUOTES
+            + Expressions.OPTIONAL_SPACES_OR_TABS
+            + '(?:' + words.join( '|' ) + ')' // is
+            + Expressions.OPTIONAL_SPACES_OR_TABS
+            + '(' + Expressions.SOMETHING_INSIDE_QUOTES + ')'
+            + Expressions.OPTIONAL_SPACES_OR_TABS
+            ;
+    }     
     
 }
