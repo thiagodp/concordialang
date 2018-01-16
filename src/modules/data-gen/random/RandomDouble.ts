@@ -1,9 +1,15 @@
+import { Random } from './Random';
 import { DoubleLimits } from '../limits/DoubleLimits';
 
 /**
  * Generates random double values.
+ * 
+ * @author Thiago Delgado Pinto
  */
 export class RandomDouble {
+
+	constructor( private _random: Random ) {
+	}	
 
 	/**
 	 * Generates a random number between a minimum and a maximum value, both
@@ -14,7 +20,7 @@ export class RandomDouble {
 	 * @return		A number between the minimum and the maximum.
 	 */
 	public between( min: number, max: number ): number {
-        let num = Math.random();  // 0d <= number < 1d
+        let num = this._random.generate();
         return min + ( num * ( max - min ) );
 	}
 	

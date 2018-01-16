@@ -1,8 +1,9 @@
-import { RandomDouble } from '../../modules/data-gen/random/RandomDouble';
+import { RandomDouble } from '../../../modules/data-gen/random/RandomDouble';
+import { Random } from '../../../modules/data-gen/random/Random';
 
-describe( 'RandomDouble Test', () => {
+describe( 'RandomDoubleTest', () => {
 
-    let random: RandomDouble = new RandomDouble();
+    let random: RandomDouble = new RandomDouble( new Random() );
     let delta: number = 0.0000000001;
 
     it( 'generates a random value between min and max, inclusive', () => {

@@ -1,9 +1,15 @@
-import { LongLimits } from '../limits/LongLimits';
+import { Random } from "./Random";
+import { LongLimits } from "../limits/LongLimits";
 
 /**
-* Generates random long integer values.
+ * Generates random long integer values.
+ * 
+ * @author Thiago Delgado Pinto
  */
 export class RandomLong {
+
+	constructor( private _random: Random ) {
+	}
 
 	/**
 	 * Generates a random number between a minimum and a maximum value, both
@@ -15,8 +21,8 @@ export class RandomLong {
 	 */
 	public between( min: number, max: number ): number {
         min = Math.ceil( min );
-        max = Math.floor( max );
-        return Math.floor( Math.random() * ( max - min + 1 ) ) + min;
+		max = Math.floor( max );
+        return Math.floor( this._random.generate() * ( max - min + 1 ) ) + min;
 	}
 
 	/**

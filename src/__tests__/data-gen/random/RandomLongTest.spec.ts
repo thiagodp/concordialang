@@ -1,8 +1,9 @@
-import { RandomLong } from '../../modules/data-gen/random/RandomLong';
+import { RandomLong } from '../../../modules/data-gen/random/RandomLong';
+import { Random } from '../../../modules/data-gen/random/Random';
 
-describe( 'RandomLong Test', () => {
+describe( 'RandomLongTest', () => {
 
-    let random: RandomLong = new RandomLong();
+    let random: RandomLong = new RandomLong( new Random() );
 
     it( 'generates a random value between min and max, inclusive', () => {
         const min = -2, max = 2;
