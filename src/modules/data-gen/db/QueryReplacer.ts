@@ -2,6 +2,10 @@ import { QueryParser } from './QueryParser';
 import * as SqlString from 'sqlstring';
 
 /**
+ * Replaces queries' references to Concordia constructions - such as 
+ * named databases, named tables, ui element names, and constants - with 
+ * their corresponding values.
+ * 
  * @author Thiago Delgado Pinto
  */
 export class QueryReplacer {

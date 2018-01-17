@@ -5,6 +5,8 @@ import { ValueType, ValueTypeDetector } from '../../util/ValueTypeDetector';
 import * as alasql from 'alasql';
 
 /**
+ * Creates a in-memory table from a table declared with Concordia.
+ * 
  * @author Thiago Delgado Pinto
  */
 export class TableHandler {
