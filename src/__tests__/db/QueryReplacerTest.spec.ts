@@ -1,5 +1,5 @@
-import { QueryParser } from '../../../modules/data-gen/db/QueryParser';
-import { QueryReplacer } from '../../../modules/data-gen/db/QueryReplacer';
+import { QueryParser } from '../../modules/db/QueryParser';
+import { QueryReplacer } from '../../modules/db/QueryReplacer';
 
 /**
  * @author Thiago Delgado Pinto

@@ -1,4 +1,4 @@
-import { RegexUtil } from '../../util/RegexUtil';
+import { RegexUtil } from '../util/RegexUtil';
 
 /**
  * @author Thiago Delgado Pinto

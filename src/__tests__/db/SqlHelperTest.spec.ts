@@ -1,5 +1,5 @@
-import { SqlHelper } from "../../../modules/data-gen/db/SqlHelper";
-import { ValueTypeDetector } from "../../../modules/util/ValueTypeDetector";
+import { SqlHelper } from "../../modules/db/SqlHelper";
+import { ValueTypeDetector } from "../../modules/util/ValueTypeDetector";
 import * as alasql from 'alasql';
 
 /**

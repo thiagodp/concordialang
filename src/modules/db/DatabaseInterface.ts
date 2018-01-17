@@ -20,27 +20,29 @@ export interface DatabaseInterface {
     /**
      * Disconnects from the database.
      */     
-    disconnect();
+    disconnect(): Promise< boolean >;
 
     /**
      * Reconnect to the database.
      */
-    reconnect();
+    reconnect(): Promise< boolean >;
 
     /**
      * Executes a command.
      * 
      * @param cmd Command to execute.
      * @param params Parameters of the command. Optional.
+     * @return A promise to an array of values, usually objects.
      */
-    exec( cmd: string, params?: any ): Promise< any >;
+    exec( cmd: string, params?: any ): Promise< any[] >;
 
     /**
      * Queries the database.
      * 
      * @param cmd Command to execute.
      * @param params Parameters of the command. Optional.
+     * @return A promise to an array of values, usually objects.
      */
-    query( cmd: string, params?: any );
+    query( cmd: string, params?: any ): Promise< any[] >;
     
 }

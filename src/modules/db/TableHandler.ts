@@ -1,7 +1,7 @@
 import { SqlHelper } from './SqlHelper';
 import { normalize } from 'path';
-import { Table } from '../../ast/Table';
-import { ValueType, ValueTypeDetector } from '../../util/ValueTypeDetector';
+import { Table } from '../ast/Table';
+import { ValueType, ValueTypeDetector } from '../util/ValueTypeDetector';
 import * as alasql from 'alasql';
 
 /**

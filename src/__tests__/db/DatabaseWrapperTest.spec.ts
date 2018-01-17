@@ -1,7 +1,7 @@
-import { Location } from '../../../modules/ast/Location';
-import { NodeTypes } from '../../../modules/req/NodeTypes';
-import { Database, DatabaseProperties, DatabaseProperty } from '../../../modules/ast/Database';
-import { DatabaseWrapper } from '../../../modules/data-gen/db/DatabaseWrapper';
+import { Location } from '../../modules/ast/Location';
+import { NodeTypes } from '../../modules/req/NodeTypes';
+import { Database, DatabaseProperties, DatabaseProperty } from '../../modules/ast/Database';
+import { DatabaseWrapper } from '../../modules/db/DatabaseWrapper';
 
 /**
  * @author Thiago Delgado Pinto

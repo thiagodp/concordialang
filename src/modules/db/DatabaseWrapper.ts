@@ -1,5 +1,5 @@
-import { DatabaseInterface } from '../../req/DatabaseInterface';
-import { Database, DatabaseProperties } from '../../ast/Database';
+import { DatabaseInterface } from './DatabaseInterface';
+import { Database, DatabaseProperties } from '../ast/Database';
 import { DBWrapper } from 'node-dbi';
 
 /**

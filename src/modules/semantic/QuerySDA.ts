@@ -1,6 +1,6 @@
 import { Feature } from '../ast/Feature';
 import { LocatedException } from '../req/LocatedException';
-import { QueryParser } from '../data-gen/db/QueryParser';
+import { QueryParser } from '../db/QueryParser';
 import { Database } from '../ast/Database';
 import { SemanticException } from './SemanticException';
 import { Entities } from '../nlp/Entities';

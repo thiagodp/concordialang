@@ -1,4 +1,4 @@
-import { DatabaseWrapper } from '../../modules/data-gen/db/DatabaseWrapper';
+import { DatabaseWrapper } from '../../modules/db/DatabaseWrapper';
 import { NLPBasedSentenceRecognizer } from '../../modules/nlp/NLPBasedSentenceRecognizer';
 import { SingleDocumentProcessor } from '../../modules/cli/SingleDocumentProcessor';
 import { Parser } from '../../modules/parser/Parser';

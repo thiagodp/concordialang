@@ -1,4 +1,4 @@
-import { QueryParser } from '../../../modules/data-gen/db/QueryParser';
+import { QueryParser } from '../../modules/db/QueryParser';
 
 /**
  * @author Thiago Delgado Pinto

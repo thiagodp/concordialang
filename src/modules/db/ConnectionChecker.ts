@@ -1,10 +1,10 @@
-import { Database } from '../../ast/Database';
-import { DatabaseInterface } from '../../req/DatabaseInterface';
-import { RuntimeException } from '../../req/RuntimeException';
+import { Database } from '../ast/Database';
+import { DatabaseInterface } from './DatabaseInterface';
+import { RuntimeException } from '../req/RuntimeException';
 import { DatabaseWrapper } from './DatabaseWrapper';
-import { LocatedException } from '../../req/LocatedException';
-import { Spec } from '../../ast/Spec';
-import { ConnectionCheckResult, ConnectionResult } from '../../req/ConnectionResult';
+import { LocatedException } from '../req/LocatedException';
+import { Spec } from '../ast/Spec';
+import { ConnectionCheckResult, ConnectionResult } from '../req/ConnectionResult';
 
 /**
  * Checks all the connections of a specification.

@@ -1,11 +1,11 @@
-import { Table } from '../../../modules/ast/Table';
-import { TableHandler } from '../../../modules/data-gen/db/TableHandler';
-import { Parser } from '../../../modules/parser/Parser';
-import { KeywordDictionaryLoader } from '../../../modules/dict/KeywordDictionaryLoader';
-import { InMemoryKeywordDictionaryLoader } from '../../../modules/dict/InMemoryKeywordDictionaryLoader';
-import { EnglishKeywordDictionary } from '../../../modules/dict/EnglishKeywordDictionary';
-import { Lexer } from '../../../modules/lexer/Lexer';
-import { Document } from '../../../modules/ast/Document';
+import { Table } from '../../modules/ast/Table';
+import { TableHandler } from '../../modules/db/TableHandler';
+import { Parser } from '../../modules/parser/Parser';
+import { KeywordDictionaryLoader } from '../../modules/dict/KeywordDictionaryLoader';
+import { InMemoryKeywordDictionaryLoader } from '../../modules/dict/InMemoryKeywordDictionaryLoader';
+import { EnglishKeywordDictionary } from '../../modules/dict/EnglishKeywordDictionary';
+import { Lexer } from '../../modules/lexer/Lexer';
+import { Document } from '../../modules/ast/Document';
 import * as alasql from 'alasql';
 
 /**

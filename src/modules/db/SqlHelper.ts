@@ -1,4 +1,4 @@
-import { ValueTypeDetector, ValueType } from "../../util/ValueTypeDetector";
+import { ValueTypeDetector, ValueType } from "../util/ValueTypeDetector";
 
 /**
  * SQL helper.

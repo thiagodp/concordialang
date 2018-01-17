@@ -1,4 +1,4 @@
-import { DatabaseInterface } from './DatabaseInterface';
+import { DatabaseInterface } from '../db/DatabaseInterface';
 
 /**
  * Connection result.
