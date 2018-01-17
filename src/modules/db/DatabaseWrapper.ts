@@ -54,7 +54,7 @@ export class DatabaseWrapper implements DatabaseInterface {
 
 
     /** @inheritDoc */     
-    disconnect = () => {
+    disconnect = (): Promise< boolean > => {
         return new Promise( ( resolve, reject ) => {
             if ( ! this._dbi ) {
                 return reject( this.dbiError() );
@@ -71,7 +71,7 @@ export class DatabaseWrapper implements DatabaseInterface {
 
 
     /** @inheritDoc */
-    reconnect = () => {
+    reconnect = (): Promise< boolean > => {
         return new Promise( ( resolve, reject ) => {
             if ( ! this._dbi ) {
                 return reject( this.dbiError() );
@@ -88,14 +88,14 @@ export class DatabaseWrapper implements DatabaseInterface {
 
 
     /** @inheritDoc */    
-    exec = ( cmd: string, params?: any ): Promise< any > => {
+    exec = ( cmd: string, params?: any ): Promise< any[] > => {
         return new Promise( ( resolve, reject ) => {
             return reject( new Error( 'Not yet implemented' ) );
         } );        
     };
 
     /** @inheritDoc */    
-    query = ( cmd: string, params?: any ) => {
+    query = ( cmd: string, params?: any ): Promise< any[] > => {
         return new Promise( ( resolve, reject ) => {
             if ( ! this._dbi ) {
                 return reject( this.dbiError() );

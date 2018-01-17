@@ -1,11 +1,12 @@
 import { Database } from "../ast/Database";
+import { Queryable } from "./Queryable";
 
 /**
  * Database interface
  * 
  * @author Thiago Delgado Pinto
  */
-export interface DatabaseInterface {
+export interface DatabaseInterface extends Queryable {
 
     /**
      * Checks if the database is connected.
@@ -35,14 +36,5 @@ export interface DatabaseInterface {
      * @return A promise to an array of values, usually objects.
      */
     exec( cmd: string, params?: any ): Promise< any[] >;
-
-    /**
-     * Queries the database.
-     * 
-     * @param cmd Command to execute.
-     * @param params Parameters of the command. Optional.
-     * @return A promise to an array of values, usually objects.
-     */
-    query( cmd: string, params?: any ): Promise< any[] >;
     
 }
