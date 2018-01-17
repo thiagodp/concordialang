@@ -10,6 +10,10 @@ describe( 'StringGeneratorTest', () => {
     const aMedian: number = 6;
     const gen: StringGenerator = new StringGenerator( ranL, aMin, aMax );
 
+    it( 'lowest', () => {
+        expect( gen.lowest().length ).toBe( 0 );
+    } );
+
     it( 'random below min', () => {
         expect( gen.randomBelowMin().length ).toBeLessThan( aMin );
     } );    
