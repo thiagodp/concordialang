@@ -54,7 +54,7 @@ export class QueryBasedDataGenerator< T > {
         if ( values.length < 1 ) {
             return null;
         }
-        const index: number = this._random.between( 0, values.length );
+        const index: number = this._random.between( 0, values.length - 1 );
         return this.valueOfTheFirstColumn( values[ index ] );
     };
 
@@ -68,8 +68,9 @@ export class QueryBasedDataGenerator< T > {
 
     public lastElement = async (): Promise< T | null > => {
         const values: any[] = await this.queryValues();
-        return values.length > 0
-            ? this.valueOfTheFirstColumn( values[ values.length - 1 ] )
+        const len: number = values.length;
+        return len > 0
+            ? this.valueOfTheFirstColumn( values[ len - 1 ] )
             : null;
     };
 
@@ -86,7 +87,7 @@ export class QueryBasedDataGenerator< T > {
 
     // UTIL
 
-    private valueOfTheFirstColumn = ( row: any ): T | null => {
+    private valueOfTheFirstColumn = ( row: any[] ): T | null => {
         if ( ! row ) {
             return null;
         }
