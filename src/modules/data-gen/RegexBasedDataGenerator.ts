@@ -1,9 +1,12 @@
-import RandExp from 'randexp';
+import * as RandExp from 'randexp';
 import { RandomString } from './random/RandomString';
 import { StringLimits } from './limits/StringLimits';
 
 /**
  * Regular Expression -based data generator.
+ * 
+ * Known limitations:
+ * - It cannot negate all kinds of expressions. For instance, '.'.
  * 
  * @author Thiago Delgado Pinto
  */
@@ -60,6 +63,9 @@ export class RegexBasedDataGenerator {
      * @param expression Expression
      */
     public negateExpression( expression: string ): string {
+        if ( expression.startsWith( '[^' ) ) {
+            return '[' + expression.substring( 2 );
+        }
         if ( expression.startsWith( '[' ) ) {
             return '[^' + expression.substring( 1 );
         }        
