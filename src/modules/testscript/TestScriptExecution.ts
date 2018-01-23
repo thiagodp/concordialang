@@ -82,10 +82,15 @@ export class TestSuiteResult {
  * @author Thiago Delgado Pinto
  */
 export class TestMethodResult {
+
     name: string;
+    
     status: 'passed' | 'failed' | 'skipped' | 'error' | 'unknown';
+
     durationMs: number; // milliseconds
+
     isForSetup: boolean | undefined; // e.g. setUp/setUpOnce/before/beforeAll
+
     exception: {
         type: string;
         message: string;
@@ -93,4 +98,5 @@ export class TestMethodResult {
         line: number;
         stackTrace: string;
     } | undefined;
+
 }

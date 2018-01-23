@@ -52,11 +52,10 @@ export class NLPBasedSentenceRecognizer {
 
     public recognizeSentencesInDocument(
         doc: Document,
+        language: string,
         errors: LocatedException[],
         warnings: Warning[]
     ): void {
-        
-        let language = ! doc.language ? this._defaultLanguage : doc.language.value;
 
         // Global
 

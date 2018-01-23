@@ -40,6 +40,7 @@ export class NodeSentenceRecognizer {
      * @param errors Output errors.
      * @param warnings Output warnings.
      * @param resultProcessor Function to process each result.
+     * @returns True in case of no errors are found, false otherwise.
      * 
      * @throws Error If the NLP is not trained.
      */
@@ -51,17 +52,17 @@ export class NodeSentenceRecognizer {
         errors: LocatedException[],
         warnings: LocatedException[],
         resultProcessor: NLPResultProcessor
-    ): void {
+    ): boolean {
 
         // Sanity checking
         if ( ! nodes ) {
-            return; // nothing to check
+            return true; // nothing to check
         }
 
         if ( ! this._nlp.isTrained( language ) ) {
             let msg = 'The NLP is not trained in ' + language;
             errors.push( new NLPException( msg, { line: 1, column: 1 } as Location ) );
-            return;            
+            return false;            
         }
 
         for ( let node of nodes ) {
@@ -106,6 +107,8 @@ export class NodeSentenceRecognizer {
             // Process the result
             resultProcessor( node, r, errors, warnings );
         }
+
+        return 0 === errors.length;
     }
 
 

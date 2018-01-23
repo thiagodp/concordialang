@@ -33,7 +33,7 @@ export abstract class NodeBasedSpecAnalyzer {
         const map = ( new DuplicationChecker() ).mapDuplicates( items, 'name' );
         for ( let prop in map ) {
             let duplications = map[ prop ];
-            let msg = 'Duplicated ' + itemName +  '"' + prop + '" in: ' +
+            let msg = 'Duplicated ' + itemName +  ' "' + prop + '" in: ' +
                 duplications.map( item => "\n  " + item.locationStr + item.file ).join( ', ' );
             let err = new SemanticException( msg );
             errors.push( err );            

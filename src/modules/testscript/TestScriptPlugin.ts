@@ -27,7 +27,7 @@ export interface TestScriptPlugin {
      * @param options Execution options.
      * @return Execution results.
      */    
-    executeCode( options: TestScriptExecutionOptions ): Promise<TestScriptExecutionResult>;
+    executeCode( options: TestScriptExecutionOptions ): Promise< TestScriptExecutionResult >;
 
     /**
      * Converts a file produced by the execution of test scripts (e.g. a JSON or a XML file).
@@ -35,6 +35,6 @@ export interface TestScriptPlugin {
      * @param filePath Input file.
      * @return Execution results.
      */     
-    convertReportFile( filePath: string ): TestScriptExecutionResult;    
+    convertReportFile( filePath: string ): Promise< TestScriptExecutionResult >;
 
 }

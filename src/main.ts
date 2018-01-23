@@ -1,5 +1,5 @@
+/*
 'use strict';
-
 import meow = require('meow'); // parse cmd line args
 import ora = require('ora'); // spinner
 import chalk = require('chalk'); // colors & style
@@ -135,3 +135,9 @@ if ( ! cli.flags.files
 } else if ( cli.input.length > 0 || cli.flags.files ) {
     processInput( cli.input, cli.flags );
 }
+*/
+
+
+import { AppController } from "./modules/app/AppController";
+
+( new AppController() ).start();

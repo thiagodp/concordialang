@@ -84,7 +84,7 @@ export class CodeceptJS implements TestScriptPlugin {
     }
 
     /** @inheritDoc */
-    public convertReportFile( filePath: string ): TestScriptExecutionResult {
+    public convertReportFile( filePath: string ): Promise< TestScriptExecutionResult > {
         throw new Error('Not implemented yet.');
     }
 }
