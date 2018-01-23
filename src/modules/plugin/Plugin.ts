@@ -1,13 +1,13 @@
-import { AbstractTestScript } from './AbstractTestScript';
-import { TestScriptGenerationOptions } from "./TestScriptGeneration";
-import { TestScriptExecutionResult, TestScriptExecutionOptions } from "./TestScriptExecution";
+import { AbstractTestScript } from '../testscript/AbstractTestScript';
+import { TestScriptGenerationOptions } from "../testscript/TestScriptGeneration";
+import { TestScriptExecutionResult, TestScriptExecutionOptions } from "../testscript/TestScriptExecution";
 
 /**
  * Test script plugin.
  * 
  * @author Thiago Delgado Pinto
  */
-export interface TestScriptPlugin {
+export interface Plugin {
     
     /**
      * Generate source code from abstract test scripts, according to the given options.

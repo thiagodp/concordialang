@@ -1,6 +1,6 @@
 import { TestScriptExecutor } from './TestScriptExecutor';
 import { TestScriptGenerator } from './TestScriptGenerator';
-import { TestScriptPlugin } from '../../modules/testscript/TestScriptPlugin';
+import { TestScriptPlugin } from '../../modules/plugin/Plugin';
 import { AbstractTestScript } from '../../modules/testscript/AbstractTestScript';
 import { TestScriptGenerationOptions } from '../../modules/testscript/TestScriptGeneration';
 import { TestScriptExecutionOptions, TestScriptExecutionResult } from '../../modules/testscript/TestScriptExecution';

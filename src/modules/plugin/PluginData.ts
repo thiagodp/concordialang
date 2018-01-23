@@ -3,7 +3,7 @@
  * 
  * @author Thiago Delgado Pinto
  */
-export interface TestScriptPluginData {
+export interface PluginData {
 
     /** true if the plugin is fake (i.e. for demonstration purposes). */
     isFake: boolean;

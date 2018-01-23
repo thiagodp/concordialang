@@ -1,5 +1,5 @@
-import { TestScriptPluginFinder } from './TestScriptPluginFinder';
-import { TestScriptPluginData } from './TestScriptPluginData';
+import { PluginFinder } from './PluginFinder';
+import { PluginData } from './PluginData';
 import { JsonSchemaValidator } from '../schema/JsonSchemaValidator';
 import { FileUtil } from '../util/FileUtil';
 import * as fs from 'fs';
@@ -10,14 +10,14 @@ import * as util from 'util';
  * 
  * @author Thiago Delgado Pinto
  */
-export class JsonBasedTestScriptPluginFinder implements TestScriptPluginFinder {
+export class JsonBasedPluginFinder implements PluginFinder {
 
     constructor( private _dir: string, private _fs: any = fs ) {
     }
 
-    public async find(): Promise< TestScriptPluginData[] > {
+    public async find(): Promise< PluginData[] > {
         let files: string[] = await this.readConfigFiles( this._dir );
-        let plugins: TestScriptPluginData[] = [];
+        let plugins: PluginData[] = [];
         for ( let file of files ) {
             let plugin = await this.loadConfigFile( file );
             plugins.push( plugin );
@@ -37,13 +37,13 @@ export class JsonBasedTestScriptPluginFinder implements TestScriptPluginFinder {
         } );
     };
 
-    public async loadConfigFile( file: string ): Promise< TestScriptPluginData > {
+    public async loadConfigFile( file: string ): Promise< PluginData > {
         const read = util.promisify( this._fs.readFile );
         const content = await read( file );
         return this.processConfigFileData( content );
     }
 
-    public async processConfigFileData( data: string ): Promise< TestScriptPluginData > {
+    public async processConfigFileData( data: string ): Promise< PluginData > {
         const schema = ''; // TO-DO
         if ( schema.length > 0 ) {
             ( new JsonSchemaValidator() ).validate( data, schema ); // may throw

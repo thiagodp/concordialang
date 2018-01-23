@@ -1,5 +1,5 @@
 import { CLI } from "../app/CLI";
-import { TestScriptPluginData } from "../testscript/TestScriptPluginData";
+import { TestScriptPluginData } from "./PluginData";
 import { sprintf } from 'sprintf-js';
 
 

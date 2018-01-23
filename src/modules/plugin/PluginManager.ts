@@ -1,7 +1,7 @@
-import { TestScriptPluginData } from "../testscript/TestScriptPluginData";
-import { JsonBasedTestScriptPluginFinder } from "../testscript/JsonBasedTestScriptPluginFinder";
+import { PluginData } from "./PluginData";
+import { JsonBasedPluginFinder } from "./JsonBasedPluginFinder";
 import { PluginDrawer } from "./PluginDrawer";
-import { TestScriptPlugin } from "../testscript/TestScriptPlugin";
+import { Plugin } from "./Plugin";
 import * as path from 'path';
 import * as childProcess from 'child_process';
 
@@ -12,19 +12,21 @@ import * as childProcess from 'child_process';
  */
 export class PluginManager {
 
-    public findAll = async (): Promise< TestScriptPluginData[] > => {
-        const dir = path.join( process.cwd(), '/plugins' );
-        const finder = new JsonBasedTestScriptPluginFinder( dir );
+    public readonly PLUGIN_DIR: string = '/plugins';
+
+    public findAll = async (): Promise< PluginData[] > => {
+        const dir = path.join( process.cwd(), this.PLUGIN_DIR );
+        const finder = new JsonBasedPluginFinder( dir );
         const all = await finder.find();
         return this.sortByName( all );
     };
     
-    public pluginWithName = async ( name: string ): Promise< TestScriptPluginData | undefined > => {
-        const all: TestScriptPluginData[] = await this.findAll();
+    public pluginWithName = async ( name: string ): Promise< PluginData | undefined > => {
+        const all: PluginData[] = await this.findAll();
         return all.find( ( v ) => v.name.toLowerCase() === name.toLowerCase() );
     };
 
-    public install = async ( pluginData: TestScriptPluginData, drawer: PluginDrawer ): Promise< void > => {
+    public install = async ( pluginData: PluginData, drawer: PluginDrawer ): Promise< void > => {
 
         if ( ! pluginData.install ) {
             throw new Error( 'No "install" property found in the plugin file. Can\'t install it.' );
@@ -34,7 +36,7 @@ export class PluginManager {
         this.runCommand( pluginData.install, drawer );
     };
 
-    public uninstall = async ( pluginData: TestScriptPluginData, drawer: PluginDrawer ): Promise< void > => {
+    public uninstall = async ( pluginData: PluginData, drawer: PluginDrawer ): Promise< void > => {
 
         if ( ! pluginData.uninstall ) {
             throw new Error( 'No "uninstall" property found in the plugin file. Can\'t uninstall it.' );
@@ -53,8 +55,8 @@ export class PluginManager {
      */
     public load = async (
         basePluginDirectory: string,
-        pluginData: TestScriptPluginData
-    ): Promise< TestScriptPlugin > => {
+        pluginData: PluginData
+    ): Promise< Plugin > => {
 
         const pluginClassFile = path.join( basePluginDirectory, pluginData.file );
 
@@ -64,7 +66,7 @@ export class PluginManager {
         // Create an instance of the class
         const obj = this.createInstance( pluginClassFileContext, pluginData.class, [] );
 
-        return obj as TestScriptPlugin;        
+        return obj as Plugin;        
     };
 
 
@@ -86,8 +88,8 @@ export class PluginManager {
     };
 
 
-    private sortByName = ( plugins: TestScriptPluginData[] ): TestScriptPluginData[] => {
-        return plugins.sort( ( a: TestScriptPluginData, b: TestScriptPluginData ): number => {
+    private sortByName = ( plugins: PluginData[] ): PluginData[] => {
+        return plugins.sort( ( a: PluginData, b: PluginData ): number => {
             return a.name.toLowerCase() > b.name.toLowerCase() ? 1 : -1;
         } );
     };
