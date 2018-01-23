@@ -37,7 +37,7 @@ export class CliHelp {
   ${chalk.gray('Processing and output')}  
 
   -b,  --verbose                         Verbose output.
-  -ff, --fail-fast                       Stop on the first error.
+  -ff, --fail-fast                       Stop on the first error. ${NIY}
 
   -ns, --no-spec                         Do not process specification files. ${NIY}
   -ne, --no-example                      Do not generate examples. ${NIY}

@@ -31,12 +31,11 @@ export class MultiFileProcessor {
 
             const extensions: string[] = this.prettyExtensions( options.extensions );
             const recursive: boolean = options.recursive;
-            const stopOnFirstError: boolean = options.stopOnTheFirstError;
 
             let filePromises: Promise< ProcessedFileData >[] = [];
             let processedFiles: ProcessedFileData[] = [];
             let errors: Error[] = [];
-            const startTime = Date.now();            
+            const startTime = Date.now();
 
             this._directoryReadListener.directoryReadStarted( dir, extensions );
             this._multiFileProcessListener.multiProcessStarted();
@@ -55,7 +54,7 @@ export class MultiFileProcessor {
                 // .on( 'dir', ( p ) => {
                 //      console.log('dir:  %s', p);
                 // } )
-                .on( 'file', ( p, s ) => {
+                .on( 'file', ( p, s ) => {              
                     this._fileReadListener.fileReadStarted( p, s.size );
                 } )        
                 .on( 'stream', ( rs, p, s, fullPath ) => {
@@ -86,6 +85,7 @@ export class MultiFileProcessor {
 
                         const fileStartTime = Date.now();
                         const fileMeta = new FileMeta( p, s.size, hashStr );
+                        let hasErrors: boolean = false;
                         try {
                             const fileData = new FileData( fileMeta, fileContent );
 
@@ -94,7 +94,7 @@ export class MultiFileProcessor {
                             let promise = this._singleProcessor.process( fileData );
                             filePromises.push( promise );
 
-                            const processedData: ProcessedFileData = await promise;
+                            const processedData: ProcessedFileData = await promise; // executes
 
                             processedFiles.push( processedData );
 
@@ -111,9 +111,6 @@ export class MultiFileProcessor {
 
                 } )
                 .on( 'error', ( err ) => {
-                    if ( stopOnFirstError ) {
-                        return reject( err );
-                    }
                     errors.push( err );
                 } )
                 .on( 'done', async () => {

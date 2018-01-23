@@ -8,7 +8,7 @@ import { LanguageController } from './LanguageController';
 
 export class AppController {
 
-    start = async () => {
+    start = async (): Promise< boolean > => {
 
         let cli = new CLI();
         let ui: UI = new UI( cli );
@@ -17,17 +17,17 @@ export class AppController {
 
         if ( options.help ) {
             ui.showHelp();
-            return;
+            return true;
         }
     
         if ( options.about ) {
             ui.showAbout();
-            return;
+            return true;
         }
 
         if ( options.version ) {
             ui.showVersion();
-            return;
+            return true;
         }
 
         if ( options.somePluginOption() ) {
@@ -36,8 +36,9 @@ export class AppController {
                 await pluginController.process( options );
             } catch ( err ) {
                 cli.newLine( cli.symbolError, err.message );
-            }            
-            return;
+                return false;
+            }
+            return true;
         }
 
         if ( options.languageList ) {
@@ -46,16 +47,19 @@ export class AppController {
                 await langController.process( options );
             } catch ( err ) {
                 cli.newLine( cli.symbolError, err.message );
+                return false;
             }            
-            return;            
+            return true;            
         }
         
+        let hasErrors: boolean = false;
         let spec: Spec = null;
         if ( options.compileSpecification ) {
             let compilerController: CompilerController = new CompilerController();
             try {
                 spec = await compilerController.compile( options, cli ); 
             } catch ( err ) {
+                hasErrors = true;
                 cli.newLine( cli.symbolError, err.message );
             }
         } else {
@@ -95,6 +99,7 @@ export class AppController {
             cli.newLine( cli.symbolWarning, 'Well, you have disabled all the interesting behavior. :)' );
         }
 
+        return ! hasErrors;
     };
 
 }
