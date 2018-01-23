@@ -3,10 +3,15 @@
 # http://editorconfig.org/#download to check if your editor comes with
 # EditorConfig bundled or to download a plugin.
 
-root = true # Top-most EditorConfig file
+root = true
 
-[*] # Applies rules for all files under the current directory and its subdirectories
-insert_final_newline = true # Empty line at the end of file
-charset = utf-8 # Default charset is UTF-8
-indent_style = space # Indentation with spaces
-indent_size = 4 # Indentaion size of 4 (spaces)
+[*]
+charset = utf-8
+indent_style = tab
+indent_size = 4
+trim_trailing_whitespace = true
+insert_final_newline = true
+
+[{package.json,*.yml}]
+indent_style = space
+indent_size = 2
