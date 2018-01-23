@@ -1,6 +1,6 @@
 import { DatabaseWrapper } from '../../modules/db/DatabaseWrapper';
 import { NLPBasedSentenceRecognizer } from '../../modules/nlp/NLPBasedSentenceRecognizer';
-import { SingleDocumentProcessor } from '../../modules/cli/SingleDocumentProcessor';
+import { SingleDocumentProcessor } from '../../modules/app/SingleDocumentProcessor';
 import { Parser } from '../../modules/parser/Parser';
 import { KeywordDictionaryLoader } from '../../modules/dict/KeywordDictionaryLoader';
 import { InMemoryKeywordDictionaryLoader } from '../../modules/dict/InMemoryKeywordDictionaryLoader';

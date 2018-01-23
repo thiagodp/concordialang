@@ -4,7 +4,7 @@ import { TestScriptPlugin } from '../../modules/plugin/Plugin';
 import { AbstractTestScript } from '../../modules/testscript/AbstractTestScript';
 import { TestScriptGenerationOptions } from '../../modules/testscript/TestScriptGeneration';
 import { TestScriptExecutionOptions, TestScriptExecutionResult } from '../../modules/testscript/TestScriptExecution';
-import { CmdRunner } from "../../modules/cli/CmdRunner";
+import { CmdRunner } from "./CmdRunner";
 import { FileUtil } from '../../modules/util/FileUtil';
 
 import * as fs from 'fs';

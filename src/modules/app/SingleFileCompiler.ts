@@ -2,7 +2,7 @@ import { SingleFileProcessor, FileData, ProcessedFileData } from "./SingleFilePr
 import { Lexer } from "../lexer/Lexer";
 import * as os from 'os';
 import { Document } from "../ast/Document";
-import { SingleDocumentProcessor } from "../cli/SingleDocumentProcessor";
+import { SingleDocumentProcessor } from "./SingleDocumentProcessor";
 import { Parser } from "../parser/Parser";
 import { NLPBasedSentenceRecognizer } from "../nlp/NLPBasedSentenceRecognizer";
 

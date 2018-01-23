@@ -1,5 +1,5 @@
 import { FileUtil } from '../../../modules/util/FileUtil';
-import { CmdRunner } from '../../../modules/cli/CmdRunner';
+import { CmdRunner } from '../../../plugins/codeceptjs/CmdRunner';
 import { TestScriptExecutor } from '../../../plugins/codeceptjs/TestScriptExecutor';
 import { CodeceptJSOptionsBuilder } from '../../../plugins/codeceptjs/CodeceptJSOptionsBuilder';
 import { TestScriptExecutionOptions } from '../../../modules/testscript/TestScriptExecution';

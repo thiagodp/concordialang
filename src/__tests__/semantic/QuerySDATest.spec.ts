@@ -1,6 +1,6 @@
 import { JsonKeywordDictionaryLoader } from '../../modules/dict/JsonKeywordDictionaryLoader';
 import { NLPBasedSentenceRecognizer } from '../../modules/nlp/NLPBasedSentenceRecognizer';
-import { SingleDocumentProcessor } from '../../modules/cli/SingleDocumentProcessor';
+import { SingleDocumentProcessor } from '../../modules/app/SingleDocumentProcessor';
 import {Spec} from '../../modules/ast/Spec';
 import {Lexer} from '../../modules/lexer/Lexer';
 import { Document } from '../../modules/ast/Document';
