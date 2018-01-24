@@ -35,6 +35,9 @@ export interface DatabaseInterface extends Queryable {
      * @param params Parameters of the command. Optional.
      * @return A promise to an array of values, usually objects.
      */
-    exec( cmd: string, params?: any ): Promise< any[] >;
+    exec( cmd: string, params?: any[] ): Promise< any[] >;
+    
+    
+    /// @see more methods in Queryable
     
 }
