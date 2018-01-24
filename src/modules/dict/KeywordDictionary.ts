@@ -13,6 +13,7 @@ export interface KeywordDictionary { // properties should exist in Keywords
     regexBlock: string[];
     constantBlock: string[];
     is: string[];
+    with: string[];
     state: string[];
     variant: string[];
     template: string[];

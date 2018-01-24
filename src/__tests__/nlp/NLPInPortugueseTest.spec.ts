@@ -21,7 +21,7 @@ describe( 'NLPInPortugueseTest', () => {
     const UI_ACTION_OPTION = Entities.UI_ACTION_OPTION;
     const UI_ELEMENT_TYPE: string = Entities.UI_ELEMENT_TYPE;
     const UI_PROPERTY: string = Entities.UI_PROPERTY;
-    const UI_VERB: string = Entities.UI_VERB;
+    const UI_CONNECTOR: string = Entities.UI_CONNECTOR;
     const UI_DATA_TYPE: string = Entities.UI_DATA_TYPE;
 
     beforeAll( () => { // once
@@ -123,7 +123,7 @@ describe( 'NLPInPortugueseTest', () => {
         it( 'recognizes id definitions', () => {
             let results = [];
             results.push( recognizeInUI( 'id é "#ok"' ) );
-            shouldHaveUIEntities( results, [ UI_PROPERTY, UI_VERB, VALUE ] );            
+            shouldHaveUIEntities( results, [ UI_PROPERTY, UI_CONNECTOR, VALUE ] );            
         } );
 
         it( 'recognizes type definitions', () => {
@@ -135,7 +135,7 @@ describe( 'NLPInPortugueseTest', () => {
             results.push( recognizeInUI( 'tipo é janela' ) );
             results.push( recognizeInUI( 'tipo é url' ) );
             results.push( recognizeInUI( 'tipo é rótulo' ) );
-            shouldHaveUIEntities( results, [ UI_PROPERTY, UI_VERB, UI_ELEMENT_TYPE ] );
+            shouldHaveUIEntities( results, [ UI_PROPERTY, UI_CONNECTOR, UI_ELEMENT_TYPE ] );
         } );        
         
         it( 'recognizes datatype definitions', () => {
@@ -152,48 +152,48 @@ describe( 'NLPInPortugueseTest', () => {
             results.push( recognizeInUI( 'tipo de dado é time' ) );
             results.push( recognizeInUI( 'tipo de dado é datahora' ) );
             results.push( recognizeInUI( 'tipo de dado é datetime' ) );
-            shouldHaveUIEntities( results, [ UI_PROPERTY, UI_VERB, UI_DATA_TYPE  ] );
+            shouldHaveUIEntities( results, [ UI_PROPERTY, UI_CONNECTOR, UI_DATA_TYPE  ] );
         } );
         
         it( 'recognizes value definitions', () => {
             shouldHaveUIEntities( [ recognizeInUI( 'valor é "foo"' ) ],
-                [ UI_PROPERTY, UI_VERB, VALUE  ] );
+                [ UI_PROPERTY, UI_CONNECTOR, VALUE  ] );
             shouldHaveUIEntities( [ recognizeInUI( 'valor é 3.1416' ) ],
-                [ UI_PROPERTY, UI_VERB, NUMBER  ] );
+                [ UI_PROPERTY, UI_CONNECTOR, NUMBER  ] );
             shouldHaveUIEntities( [ recognizeInUI( 'valor é 0' ) ],
-                [ UI_PROPERTY, UI_VERB, NUMBER  ] );
+                [ UI_PROPERTY, UI_CONNECTOR, NUMBER  ] );
             shouldHaveUIEntities( [ recognizeInUI( 'valor é -3.1416' ) ],
-                [ UI_PROPERTY, UI_VERB, NUMBER  ] );                
+                [ UI_PROPERTY, UI_CONNECTOR, NUMBER  ] );                
         } );
 
         it( 'recognizes min value definitions', () => {
             shouldHaveUIEntities( [ recognizeInUI( 'valor mínimo é -50.2' ) ],
-                [ UI_PROPERTY, UI_VERB, NUMBER  ] );                
+                [ UI_PROPERTY, UI_CONNECTOR, NUMBER  ] );                
         } );
 
         it( 'recognizes max value definitions', () => {
             shouldHaveUIEntities( [ recognizeInUI( 'valor máximo é 50.2' ) ],
-                [ UI_PROPERTY, UI_VERB, NUMBER  ] );                
+                [ UI_PROPERTY, UI_CONNECTOR, NUMBER  ] );                
         } );
         
         it( 'recognizes min length definitions', () => {
             shouldHaveUIEntities( [ recognizeInUI( 'comprimento mínimo é 0' ) ],
-                [ UI_PROPERTY, UI_VERB, NUMBER  ] );                
+                [ UI_PROPERTY, UI_CONNECTOR, NUMBER  ] );                
         } );
 
         it( 'recognizes max length definitions', () => {
             shouldHaveUIEntities( [ recognizeInUI( 'comprimento máximo é 100' ) ],
-                [ UI_PROPERTY, UI_VERB, NUMBER  ] );                
+                [ UI_PROPERTY, UI_CONNECTOR, NUMBER  ] );                
         } );
         
         it( 'recognizes format definitions', () => {
             shouldHaveUIEntities( [ recognizeInUI( 'formato é "[A-Z]"' ) ],
-                [ UI_PROPERTY, UI_VERB, VALUE  ] );                
+                [ UI_PROPERTY, UI_CONNECTOR, VALUE  ] );                
         } );
         
         it( 'recognizes script definitions', () => {
             shouldHaveUIEntities( [ recognize( 'valor vem de "SELECT * FROM someTable"' ) ],
-                [ UI_PROPERTY, UI_VERB, QUERY  ] );
+                [ UI_PROPERTY, UI_CONNECTOR, QUERY  ] );
         } );        
 
     } );

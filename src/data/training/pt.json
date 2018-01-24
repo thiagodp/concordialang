@@ -61,10 +61,10 @@
     {
         "intent": "ui",
         "sentences": [
-            "{ui_property} {ui_verb} {value}",
-            "{ui_property} {ui_verb} {query}",
-            "{ui_property} {ui_verb} {number}",
-            "{ui_property} {ui_verb} {ui_element_type}",
+            "{ui_property} {ui_connector} {value}",
+            "{ui_property} {ui_connector} {query}",
+            "{ui_property} {ui_connector} {number}",
+            "{ui_property} {ui_connector} {ui_element_type}",
             "id é {value}",
             "comprimento máximo é {number}",
             "valor vem da consulta {query}"
@@ -86,8 +86,8 @@
     {
         "intent": "datasource",
         "sentences": [
-            "{ds_property} {ui_verb} {value}",
-            "{ds_property} {ui_verb} {number}",
+            "{ds_property} {ui_connector} {value}",
+            "{ds_property} {ui_connector} {number}",
             "caminho é {value}",
             "nome é {value}",
             "tipo é {value}",

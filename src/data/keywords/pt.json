@@ -3,6 +3,7 @@
     "regexBlock": [ "expressões", "expressões regulares", "regexes" ],
     "constantBlock": [ "constantes", "constants" ],
     "is": [ "é", "is" ],
+    "with": [ "com", "with" ],
     "state": [ "estado", "state" ],
     "variant": [ "variante", "variação", "variant" ],
     "template": [ "modelo", "template" ],

@@ -16,6 +16,7 @@ export class EnglishKeywordDictionary implements KeywordDictionary {
     regexBlock: string[] = [ 'regexes', 'regular expressions' ];
     constantBlock: string[] = [ 'constants' ];
     is: string[] = [ 'is' ];
+    with: string[] = [ "with" ];
     state: string[] = [ 'state' ];    
     variant: string[] = [ 'variant' ];
     template: string[] = [ 'template' ];
