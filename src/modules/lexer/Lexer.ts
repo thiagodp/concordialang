@@ -33,6 +33,7 @@ import { ConstantLexer } from './ConstantLexer';
 import { KeywordDictionary } from '../dict/KeywordDictionary';
 import { TableLexer } from './TableLexer';
 import { TableRowLexer } from './TableRowLexer';
+import { LongStringLexer } from './LongStringLexer';
 
 /**
  * Lexer
@@ -98,6 +99,7 @@ export class Lexer {
             , new AfterFeatureLexer( dictionary.afterFeature )
             , new BeforeScenariosLexer( dictionary.beforeEachScenario )
             , new AfterScenariosLexer( dictionary.afterEachScenario )
+            , new LongStringLexer()
             , new TextLexer() // captures any non-empty
         ];
 

@@ -19,6 +19,7 @@ export abstract class NodeTypes extends Keywords {
 
     static TAG: string = 'tag';
     static TABLE_ROW: string = 'tableRow';
+    static LONG_STRING: string = 'longString'; // a.k.a. py string
     static TEXT: string = 'text'; // not empty content
 
 }
