@@ -9,7 +9,7 @@ import { Variant } from "../../modules/ast/Variant";
 describe( 'VariantLexerTest', () => {
 
     // IMPORTANT: This lexer inherits from NamedNodeLexerTest and
-    // since it does not add behavior, no many additional tests are needed.
+    // since it does not add behavior, few additional tests are necessary. 
 
     let keyword = 'variant';
     let wordInsensitive = 'Variant';

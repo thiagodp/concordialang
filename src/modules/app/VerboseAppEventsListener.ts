@@ -53,13 +53,17 @@ export class VerboseAppEventsListener implements
 
 
     /** @inherited */
-    directoryReadStarted = ( directory: string, extensions: string[] ): void => {
+    directoryReadStarted = ( directory: string, targets: string[], targetsAreFiles: boolean ): void => {
 
         this._cli.newLine( this._cli.symbolInfo, 'Reading directory',
             this._cli.colorHighlight( directory ) );
         
-        this._cli.newLine( this._cli.symbolInfo, 'Looking for',
-            ( extensions.map( e => this._cli.colorHighlight( e ) ).join( ', ' ) ), 'files...' );
+        this._cli.newLine(
+            this._cli.symbolInfo,
+            'Looking for',
+            ( targets.map( e => this._cli.colorHighlight( e ) ).join( ', ' ) ),
+            targetsAreFiles ? '...' : 'files...'
+        );
     };
 
     /** @inherited */

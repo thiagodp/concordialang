@@ -14,6 +14,8 @@ export abstract class Expressions {
 
     static A_NUMBER = '([0-9]+(\.[0-9]+)?)'; // integer or double
 
+    static AN_INTEGER_NUMBER = '([0-9]+)';
+
     /**
      * Escape characters to be used in a regex.
      * 

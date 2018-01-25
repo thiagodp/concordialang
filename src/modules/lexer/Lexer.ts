@@ -167,6 +167,7 @@ export class Lexer {
         if ( this._lastLexer !== null ) {
 
             const suggestedNodeTypes: string[] = this._lastLexer.suggestedNextNodeTypes();
+
             for ( let nodeType of suggestedNodeTypes ) {
                 // Ignores text
                 if ( NodeTypes.TEXT === nodeType ) {

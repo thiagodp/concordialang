@@ -23,13 +23,18 @@ export class MultiFileProcessor {
 
             const dir: string = options.directory;
 
-            const matchRegExp: RegExp = options.files.length > 0
+            const hasFilesToConsider: boolean = options.files.length > 0;
+
+            const matchRegExp: RegExp = hasFilesToConsider
                 ? this.filesToRegExp( options.files )
                 : this.extensionsToRegExp( options.extensions );
 
             const hasFilesToIgnore: boolean = options.ignore.length > 0;
 
-            const extensions: string[] = this.prettyExtensions( options.extensions );
+            const target: string[] = hasFilesToConsider
+                ? options.files
+                : this.prettyExtensions( options.extensions );
+
             const recursive: boolean = options.recursive;
 
             let filePromises: Promise< ProcessedFileData >[] = [];
@@ -37,7 +42,7 @@ export class MultiFileProcessor {
             let errors: Error[] = [];
             const startTime = Date.now();
 
-            this._directoryReadListener.directoryReadStarted( dir, extensions );
+            this._directoryReadListener.directoryReadStarted( dir, target, hasFilesToConsider );
             this._multiFileProcessListener.multiProcessStarted();
 
             const filewalkerOptions = {

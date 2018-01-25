@@ -19,7 +19,7 @@ export interface FileReadListener {
 
 export interface DirectoryReadListener {
     
-    directoryReadStarted( directory: string, extensions: string[] );
+    directoryReadStarted( directory: string, targets: string[], targetsAreFiles: boolean );
 
     directoryReadFinished( result: DirectoryReadResult );
 

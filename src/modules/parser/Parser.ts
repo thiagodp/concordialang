@@ -36,7 +36,6 @@ export class Parser {
 
     private _errors: Error[] = [];
     private _parsersMap: {}; // [ "nodeType" ] = NodeParser
-    private _context: ParsingContext;
 
     constructor( private _stopOnFirstError: boolean = false ) {
         this._parsersMap = {};

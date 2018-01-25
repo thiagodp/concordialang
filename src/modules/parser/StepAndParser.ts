@@ -34,14 +34,14 @@ export class StepAndParser implements NodeParser< StepAnd > {
         }
 
         if ( context.inUIProperty ) {
-            // Prepare the owner to receive the given node
+            // Prepare the owner to receive the node
             if ( ! context.currentUIProperty.otherwiseSentences ) {
                 context.currentUIProperty.otherwiseSentences = [];
             }
-            // Adds the given node
+            // Adds the node
             context.currentUIProperty.otherwiseSentences.push( node );
         } else {
-            // Prepare the owner to receive the given node
+            // Prepare the owner to receive the node
             let owner = null;
 
             if ( context.inScenario ) owner = context.currentScenario;

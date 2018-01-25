@@ -163,7 +163,7 @@ export class NLP {
 
         valueRec.addMatch( new RegExp( '"[^"\r\n]*"', "gi" ),
             function( match ) {
-                //console.log( 'match: ' ); console.log( match );
+                //console.log( 'match: ', match );
                 return match.toString().replace( /['"]+/g, '' );
             },
             100 ); // the number is the priority
@@ -186,7 +186,7 @@ export class NLP {
 
         valueRec.addMatch( new RegExp( '\{[^<\r\n]*\}', "gi" ),
             function( match ) {
-                //console.log( 'match: ' ); console.log( match );
+                //console.log( 'match: ', match );
                 return match.toString().replace( '{', '' ).replace( '}', '' );
             },
             100 ); // the number is the priority
@@ -209,7 +209,7 @@ export class NLP {
         
         valueRec.addMatch( new RegExp( '(-?[0-9]+(?:.[0-9]+)?)', "gi" ),
             function( match ) {
-                //console.log( 'match: ' ); console.log( match );
+                //console.log( 'match: ', match );
                 return match[ 0 ].toString().trim();
             },
             100 ); // the number is the priority
@@ -233,7 +233,7 @@ export class NLP {
         //valueRec.addMatch( new RegExp( "[^']*'", "gi" ),
         valueRec.addMatch( new RegExp( '"(?:\t| )*SELECT[^"]+"', "gi" ),
             function( match ) {
-                //console.log( 'match: ' ); console.log( match );
+                //console.log( 'match: ', match );
                 return match.toString().replace( /['"]+/g, '' );
             },
             200 ); // the number is the priority

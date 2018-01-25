@@ -535,7 +535,7 @@ import { TokenTypes } from './TokenTypes';
             this._allowMultilineArguments = true;
         }
 
-        //console.log( 'Token type:' + tokenType );
+        //console.log( 'Token type:', tokenType );
 
         // Turn on steps searching
         if ( TokenTypes.FEATURE === tokenType

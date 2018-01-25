@@ -57,18 +57,22 @@ export class SimpleAppEventsListener implements
 
 
     /** @inherited */
-    directoryReadStarted = ( directory: string, extensions: string[] ): void => {
+    directoryReadStarted = ( directory: string, targets: string[], targetsAreFiles: boolean ): void => {
 
         this._cli.newLine( this._cli.symbolInfo, 'Reading directory',
             this._cli.colorHighlight( directory ) );
 
         const sameExtensionsAsTheDefaultOnes: boolean = 
-            JSON.stringify( extensions.sort().map( e => e.toLowerCase() ) ) ===
+            JSON.stringify( targets.sort().map( e => e.toLowerCase() ) ) ===
             JSON.stringify( ( new Defaults() ).EXTENSIONS.sort() );
         
         if ( ! sameExtensionsAsTheDefaultOnes ) {
-            this._cli.newLine( this._cli.symbolInfo, 'Looking for',
-                ( extensions.map( e => this._cli.colorHighlight( e ) ).join( ', ' ) ), 'files...' );
+            this._cli.newLine(
+                this._cli.symbolInfo,
+                'Looking for',
+                ( targets.map( e => this._cli.colorHighlight( e ) ).join( ', ' ) ),
+                targetsAreFiles ? '...' : 'files...'
+            );
         }
     };
 

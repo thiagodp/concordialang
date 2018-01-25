@@ -41,7 +41,11 @@ export class NamedNodeLexer< T extends NamedNode > implements NodeLexer< T >, Ke
     /** @inheritDoc */
     public updateWords( words: string[] ) {
         this._words = words;   
-    }     
+    }
+
+    protected separator(): string {
+        return this._separator;
+    }
 
     protected makeRegexForTheWords( words: string[] ): string {
         return '^' + Expressions.OPTIONAL_SPACES_OR_TABS
