@@ -29,6 +29,7 @@ export abstract class Keywords {
     static LANGUAGE: string = 'language';
 
     static FEATURE: string = 'feature';
+    static BACKGROUND: string = 'background';
     static SCENARIO: string = 'scenario';
 
     static STEP_GIVEN: string = 'stepGiven';

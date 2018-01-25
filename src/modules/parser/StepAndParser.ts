@@ -26,7 +26,7 @@ export class StepAndParser implements NodeParser< StepAnd > {
 
         if ( ! it.hasPrior() || allowedPriorNodes.indexOf( it.spyPrior().nodeType ) < 0 ) {
             let e = new SyntaticException(
-                'The "' + node.nodeType + '" clause must be declared after Given, When, Then, And or Otherwise.',
+                'The "' + node.nodeType + '" clause must be declared after a Given, When, Then, And, or Otherwise.',
                 node.location
                 );
             errors.push( e );
@@ -44,12 +44,13 @@ export class StepAndParser implements NodeParser< StepAnd > {
             // Prepare the owner to receive the node
             let owner = null;
 
-            if ( context.inScenario ) owner = context.currentScenario;
+            if ( context.inBackground ) owner = context.currentBackground;
+            else if ( context.inScenario ) owner = context.currentScenario;
             else if ( context.inVariant ) owner = context.currentVariant;
             else if ( context.inTemplate ) owner = context.currentTemplate;
             else {
                 let e = new SyntaticException(
-                    'The "' + node.nodeType + '" clause must be declared after a Scenario, a Template, a Variant, or a UI Element Property.',
+                    'The "' + node.nodeType + '" clause must be declared after a Background, Scenario, Template, Variant, or UI Element Property.',
                     node.location
                     );
                 errors.push( e );

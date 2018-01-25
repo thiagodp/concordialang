@@ -17,6 +17,7 @@ export class StepWhenParser implements NodeParser< StepWhen > {
 
         // Checks prior nodes
         const allowedPriorNodes = [
+            NodeTypes.BACKGROUND,
             NodeTypes.SCENARIO,
             NodeTypes.TEMPLATE,
             NodeTypes.VARIANT,
@@ -27,7 +28,7 @@ export class StepWhenParser implements NodeParser< StepWhen > {
 
         if ( ! it.hasPrior() || allowedPriorNodes.indexOf( it.spyPrior().nodeType ) < 0 ) {
             let e = new SyntaticException(
-                'The "' + node.nodeType + '" clause must be declared after a Scenario, a Template, a Variant, a When, or an And.',
+                'The "' + node.nodeType + '" clause must be declared after a Background, Scenario, Template, Variant, When, or And.',
                 node.location
                 );
             errors.push( e );
@@ -37,12 +38,13 @@ export class StepWhenParser implements NodeParser< StepWhen > {
         // Prepare the owner to receive the given node
         let owner = null;
         
-        if ( context.inScenario ) owner = context.currentScenario;
+        if ( context.inBackground ) owner = context.currentBackground;
+        else if ( context.inScenario ) owner = context.currentScenario;
         else if ( context.inVariant ) owner = context.currentVariant;
         else if ( context.inTemplate ) owner = context.currentTemplate;
         else {
             let e = new SyntaticException(
-                'The "' + node.nodeType + '" clause must be declared after a Scenario, a Template or a Variant.',
+                'The "' + node.nodeType + '" clause must be declared after a Background, Scenario, Template or Variant.',
                 node.location
                 );
             errors.push( e );

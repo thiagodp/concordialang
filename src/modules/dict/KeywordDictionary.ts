@@ -32,6 +32,7 @@ export interface KeywordDictionary { // properties should exist in Keywords
     language: string[];
 
     feature: string[];
+    background: string[];
     scenario: string[];
 
     stepGiven: string[];

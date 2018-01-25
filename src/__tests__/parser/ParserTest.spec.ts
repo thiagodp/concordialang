@@ -65,10 +65,41 @@ describe( 'ParserTest', () => {
         expect( tagNames ).toEqual( [ "important", "hello" ] );
 
         expect( doc.feature.tags[ 1 ].content ).toEqual( [ "world" ] );
-    } );    
-    
+    } );
 
-    it( 'analyzes correctly 1', () => {
+
+    it( 'detects a background', () => {
+
+        [
+            '#language:en',
+            '',
+            '@important',
+            'feature: my feature',
+            ' \t',
+            'background:',
+            '  given something',
+            '    and another thing',
+            '  when anything happens',
+            '    and other thing happens',
+            '    but other thing does not happen',
+            '  then the result is anything',
+            '    and another result could also happen',
+        ].forEach( ( val, index ) => lexer.addNodeFromLine( val, index + 1 ) );
+
+        let doc: Document = {};
+        parser.analyze( lexer.nodes(), doc );
+
+        expect( parser.errors() ).toEqual( [] );
+
+        expect( doc.feature ).toBeDefined();
+        expect( doc.feature.name ).toBe( "my feature" );
+
+        expect( doc.feature.background ).toBeDefined();
+        expect( doc.feature.background.sentences ).toHaveLength( 7 );
+    } );    
+
+    
+    it( 'detects a scenario without tags', () => {
 
         [
             '#language:en',

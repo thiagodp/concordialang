@@ -66,6 +66,9 @@ export class AppController {
             cli.newLine( cli.symbolInfo, 'Specification compilation disabled.' );
         }
 
+        //cli.newLine( '-=[ SPEC ]=-', "\n\n" );
+        //cli.newLine( spec );
+
         if ( options.generateExamples ) {
             // TO-DO
         } else {

@@ -20,6 +20,7 @@
     "language": [ "linguagem", "idioma", "língua",  "language" ],
 
     "feature": [ "funcionalidade", "característica", "feature" ],
+    "background": [ "contexto", "cenário de fundo", "fundo", "background" ],
     "scenario": [ "cenário", "scenario" ],
 
     "stepGiven": [ "dado", "given" ],

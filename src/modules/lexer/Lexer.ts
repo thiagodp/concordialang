@@ -17,6 +17,7 @@ import { LanguageLexer } from "./LanguageLexer";
 import { TagLexer } from "./TagLexer";
 import { ImportLexer } from './ImportLexer';
 import { FeatureLexer } from './FeatureLexer';
+import { BackgroundLexer } from './BackgroundLexer';
 import { ScenarioLexer } from './ScenarioLexer';
 import { StepGivenLexer } from "./StepGivenLexer";
 import { StepWhenLexer } from "./StepWhenLexer";
@@ -61,7 +62,7 @@ export class Lexer {
         private _dictionaryLoader: KeywordDictionaryLoader,
         private _stopOnFirstError: boolean = false,
     ) {
-        let dictionary = _dictionaryLoader.load( _defaultLanguage ); // may throw
+        let dictionary: KeywordDictionary = _dictionaryLoader.load( _defaultLanguage ); // may throw
         if ( ! dictionary ) {
             throw new Error( 'Cannot load a dictionary for the language: ' + _defaultLanguage );
         }
@@ -71,6 +72,7 @@ export class Lexer {
             , new TagLexer()
             , new ImportLexer( dictionary.import )
             , new FeatureLexer( dictionary.feature )
+            , new BackgroundLexer( dictionary.background )
             , new ScenarioLexer( dictionary.scenario )
             , new StepGivenLexer( dictionary.stepGiven )
             , new StepWhenLexer( dictionary.stepWhen )

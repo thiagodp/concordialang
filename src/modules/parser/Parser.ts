@@ -12,6 +12,7 @@ import { LanguageParser } from './LanguageParser';
 import { NodeIterator } from './NodeIterator';
 import { NodeParser } from './NodeParser';
 import { ParsingContext } from "./ParsingContext";
+import { BackgroundParser } from './BackgroundParser';
 import { ScenarioParser } from './ScenarioParser';
 import { VariantParser } from './VariantParser';
 import { ImportParser } from "./ImportParser";
@@ -42,6 +43,7 @@ export class Parser {
         this._parsersMap[ NodeTypes.LANGUAGE ] = new LanguageParser();
         this._parsersMap[ NodeTypes.IMPORT ] = new ImportParser();
         this._parsersMap[ NodeTypes.FEATURE ] = new FeatureParser();
+        this._parsersMap[ NodeTypes.BACKGROUND ] = new BackgroundParser();
         this._parsersMap[ NodeTypes.SCENARIO ] = new ScenarioParser();
         this._parsersMap[ NodeTypes.STEP_GIVEN ] = new StepGivenParser();
         this._parsersMap[ NodeTypes.STEP_WHEN ] = new StepWhenParser();
