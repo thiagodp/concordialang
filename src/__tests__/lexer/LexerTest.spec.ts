@@ -28,7 +28,7 @@ describe( 'LexerTest', () => {
 
         lexer.nodes().forEach( ( node, index ) => {
             if ( node.nodeType !== expectations[ index ] ) {
-                console.log( 'WRONG index: ', index, ' got: ', node.nodeType, ' expected: ', expectations[ index ] );
+                console.log( 'At index', index, 'got', node.nodeType, 'expected', expectations[ index ], "\nnode", node );
             }
             expect( node.nodeType ).toBe( expectations[ index ] );  // same index as the expectation
         } );
@@ -183,5 +183,50 @@ describe( 'LexerTest', () => {
 
         assertLineExpectations( lines );
     } );
+
+
+
+    it( 'recognizes everything inside long strings as text', () => {
+        let lines = 
+        [
+            { l: '"""', e: NodeTypes.LONG_STRING }, // start here
+            { l: '#language:pt', e: NodeTypes.TEXT },
+            { l: '', e: null },
+            { l: 'importe "somefile"', e: NodeTypes.TEXT },
+            { l: '', e: null },
+            { l: '@importante', e: NodeTypes.TEXT },
+            { l: 'Característica: my feature', e: NodeTypes.TEXT },
+            { l: '  Como um user', e: NodeTypes.TEXT },
+            { l: '  Eu gostaria de to login', e: NodeTypes.TEXT },
+            { l: '  Para to access the system', e: NodeTypes.TEXT },
+            { l: '"""', e: NodeTypes.LONG_STRING }, // finish here
+            { l: ' \t', e: null },
+            { l: '#language:pt', e: NodeTypes.LANGUAGE },            
+            { l: 'Característica: my feature', e: NodeTypes.FEATURE },
+            { l: 'Background:', e: NodeTypes.BACKGROUND },
+            { l: '  dado something', e: NodeTypes.STEP_GIVEN },
+            { l: '    e another thing', e: NodeTypes.STEP_AND },
+            { l: '  quando anything happens', e: NodeTypes.STEP_WHEN },
+            { l: '    e other thing happens', e: NodeTypes.STEP_AND },
+            { l: '    mas other thing does not happen', e: NodeTypes.STEP_AND },
+            { l: '  então the result is anything', e: NodeTypes.STEP_THEN },
+            { l: '    e another result could also happen', e: NodeTypes.STEP_AND },               
+            { l: ' \t', e: null },
+            { l: '"""', e: NodeTypes.LONG_STRING }, // restart here
+            { l: 'Cenário: hello', e: NodeTypes.TEXT },
+            { l: '  dado something', e: NodeTypes.TEXT },
+            { l: '    e another thing', e: NodeTypes.TEXT },
+            { l: '  quando anything happens', e: NodeTypes.TEXT },
+            { l: '    e other thing happens', e: NodeTypes.TEXT },
+            { l: '    mas other thing does not happen', e: NodeTypes.TEXT },
+            { l: '  então the result is anything', e: NodeTypes.TEXT },
+            { l: '    e another result could also happen', e: NodeTypes.TEXT },
+            { l: '', e: null },
+            { l: '"""', e: NodeTypes.LONG_STRING }, // finish here
+            { l: 'isso deve ser reconhecido como texto', e: NodeTypes.TEXT }
+        ];
+
+        assertLineExpectations( lines );
+    } );    
 
 } );

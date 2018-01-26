@@ -20,7 +20,7 @@ export class LongStringLexer implements NodeLexer< LongString > {
 
     /** @inheritDoc */
     suggestedNextNodeTypes(): string[] {
-        return [ NodeTypes.LONG_STRING, NodeTypes.TEXT ];
+        return [ NodeTypes.LONG_STRING ];
     }    
 
     /** @inheritDoc */

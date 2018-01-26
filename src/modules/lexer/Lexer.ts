@@ -44,10 +44,14 @@ export class Lexer {
 
     private _nodes: Node[] = [];
     private _errors: Error[] = [];
+
     private _lexers: Array< NodeLexer< Node > > = [];
     private _lexersMap: Map< string, NodeLexer< any > > = 
         new Map< string, NodeLexer< any > >(); // iterable in insertion order
     private _lastLexer: NodeLexer< any > = null;
+
+    private _inLongString: boolean = false;
+    private _mustRecognizeAsText: boolean = false;
 
     /**
      * Constructs the lexer.
@@ -69,7 +73,8 @@ export class Lexer {
         }
 
         this._lexers = [
-              new LanguageLexer( dictionary.language )
+            new LongStringLexer()
+            , new LanguageLexer( dictionary.language )
             , new TagLexer()
             , new ImportLexer( dictionary.import )
             , new FeatureLexer( dictionary.feature )
@@ -99,7 +104,6 @@ export class Lexer {
             , new AfterFeatureLexer( dictionary.afterFeature )
             , new BeforeScenariosLexer( dictionary.beforeEachScenario )
             , new AfterScenariosLexer( dictionary.afterEachScenario )
-            , new LongStringLexer()
             , new TextLexer() // captures any non-empty
         ];
 
@@ -117,6 +121,10 @@ export class Lexer {
     public reset() {
         this._nodes = [];
         this._errors = [];
+
+        this._inLongString = false;
+        this._mustRecognizeAsText = false;
+
         // Also resets language to the defined default
         this.changeLanguage( this.defaultLanguage() );
     }
@@ -146,6 +154,23 @@ export class Lexer {
      */
     public shouldStop(): boolean {
         return this._stopOnFirstError && this._errors.length > 0;
+    }
+
+    public longStringDetected(): void {
+        this._inLongString = ! this._inLongString;
+        this._mustRecognizeAsText = ! this._mustRecognizeAsText;
+    }
+
+    public mustRecognizeAsText(): boolean {
+        return this._mustRecognizeAsText;
+    }
+
+    public changeResultToRecognizedAsText( result: LexicalAnalysisResult< Node > ): void {
+        result.errors = [];
+        result.warnings = [];
+        for ( let node of result.nodes ) {
+            node.nodeType = NodeTypes.TEXT;
+        }
     }
 
     /**
@@ -210,6 +235,14 @@ export class Lexer {
     }
 
     public dealWithResult( result: LexicalAnalysisResult< Node > ): void {
+
+        // Whether a Long String node was detected, indicates it.
+        if ( result.nodes.length > 0 && NodeTypes.LONG_STRING === result.nodes[ 0 ].nodeType ) {
+            this.longStringDetected();
+        // Else whether recognition is disabled, change node type to TEXT            
+        } else if ( this.mustRecognizeAsText() ) {
+            this.changeResultToRecognizedAsText( result );
+        }
 
         // Detects a language node and tries to change the language
         if ( result.nodes.length > 0 && NodeTypes.LANGUAGE === result.nodes[ 0 ].nodeType ) {
