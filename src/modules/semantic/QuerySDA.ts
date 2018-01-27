@@ -36,7 +36,7 @@ export class QuerySDA {
      * 
      * @returns Promise< SemanticException[] >
      */
-    check = async ( spec: Spec ): Promise< SemanticException[] > => {
+    public check = async ( spec: Spec ): Promise< SemanticException[] > => {
 
         //
         // Just to remember:
@@ -70,7 +70,7 @@ export class QuerySDA {
     };
 
 
-    checkQueriesOfUIElements = async (
+    public checkQueriesOfUIElements = async (
         uiElements: UIElement[],
         spec: Spec,
         feature: Feature
@@ -109,7 +109,7 @@ export class QuerySDA {
     };
 
 
-    checkQuery = (
+    public checkQuery = (
         query: string,
         item: UIProperty,
         spec: Spec,
@@ -151,7 +151,7 @@ export class QuerySDA {
         return errors;
     };
 
-    featureNameOfVariable = ( v: string ): string | null => {
+    public featureNameOfVariable = ( v: string ): string | null => {
         const index = v.indexOf( this.FEATURE_SEPARATOR );
         if ( index < 0 ) {
             return null;
@@ -159,7 +159,7 @@ export class QuerySDA {
         return v.substring( 0, index );
     };
 
-    variableOf = ( v: string ): string => {
+    public variableOf = ( v: string ): string => {
         const index = v.indexOf( this.FEATURE_SEPARATOR );
         if ( index < 0 ) {
             return v;
@@ -171,8 +171,7 @@ export class QuerySDA {
     };
 
 
-
-    findUIElement = ( variable: string, spec: Spec, feature: Feature ): UIElementSearchResult => {
+    public findUIElement = ( variable: string, spec: Spec, feature: Feature ): UIElementSearchResult => {
 
         let r = new UIElementSearchResult();
 
@@ -224,11 +223,6 @@ export class QuerySDA {
 
         return r;
     };
-
-
-
-    
-
     
 }
 

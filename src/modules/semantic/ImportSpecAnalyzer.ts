@@ -21,7 +21,7 @@ export class ImportSpecAnalyzer extends NodeBasedSpecAnalyzer {
     private _graph = new Graph();
 
     /** @inheritDoc */
-    public analyze( spec: Spec, errors: LocatedException[] ) {
+    public async analyze( spec: Spec, errors: LocatedException[] ): Promise< void > {
         this.findCyclicReferences( spec, errors );
     }
 
@@ -100,7 +100,7 @@ export class ImportSpecAnalyzer extends NodeBasedSpecAnalyzer {
         if ( doc.imports ) {
             let fileName = path.basename( importFile ); // name without dir
             for ( let imp of doc.imports ) {
-                let currentFileName = path.basename( imp.content ); // name without dir
+                let currentFileName = path.basename( imp.value ); // filename without dir
                 if ( fileName == currentFileName ) {
                     return imp.location;
                 }

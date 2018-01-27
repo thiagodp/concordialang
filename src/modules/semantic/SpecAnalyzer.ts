@@ -24,10 +24,13 @@ export class SpecAnalyzer {
         ];
     }
 
-    public analyze( spec: Spec, errors: LocatedException[] ) {
+    public analyze = async (
+        spec: Spec,
+        errors: LocatedException[]
+    ): Promise< void > => {
         for ( let an of this._analyzers ) {
-            an.analyze( spec, errors );
+            await an.analyze( spec, errors );
         }
-    }
+    };
 
 }

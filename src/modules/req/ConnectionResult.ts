@@ -1,4 +1,5 @@
 import { DatabaseInterface } from '../db/DatabaseInterface';
+import { LocatedException } from './LocatedException';
 
 /**
  * Connection result.
@@ -8,6 +9,7 @@ import { DatabaseInterface } from '../db/DatabaseInterface';
 export interface ConnectionResult {
     databaseName: string;
     success: boolean;
+    errors: LocatedException[];
     dbi: DatabaseInterface;
 }
 

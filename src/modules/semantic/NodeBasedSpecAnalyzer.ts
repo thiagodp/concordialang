@@ -16,7 +16,10 @@ export abstract class NodeBasedSpecAnalyzer {
      * @param spec Specification to analyze.
      * @param errors Errors found.
      */
-    public abstract analyze( spec: Spec, errors: LocatedException[] );
+    public abstract async analyze(
+        spec: Spec,
+        errors: LocatedException[]
+    ): Promise< void >;
 
     /**
      * Checks for duplicated names.

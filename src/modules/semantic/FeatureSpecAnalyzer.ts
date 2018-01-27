@@ -17,7 +17,7 @@ import { SemanticException } from './SemanticException';
 export class FeatureSpecAnalyzer extends NodeBasedSpecAnalyzer {
 
      /** @inheritDoc */
-    public analyze( spec: Spec, errors: LocatedException[] ) {
+    public async analyze( spec: Spec, errors: LocatedException[] ): Promise< void > {
         this.analyzeDuplicatedNames( spec, errors );
     }
 

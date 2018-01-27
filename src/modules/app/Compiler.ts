@@ -51,7 +51,9 @@ export class Compiler {
             startTime = Date.now();
             listener.semanticAnalysisStarted();
             let semanticErrors: LocatedException[] = [];
-            this._specAnalyzer.analyze( spec, semanticErrors );
+
+            await this._specAnalyzer.analyze( spec, semanticErrors );
+
             listener.semanticAnalysisFinished( new ProcessingInfo( Date.now() - startTime, semanticErrors, [] ) );
         }
         

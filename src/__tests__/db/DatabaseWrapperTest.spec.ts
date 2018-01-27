@@ -10,7 +10,7 @@ import * as path from 'path';
 describe( 'DatabaseWrapperTest', () => {
 
     let wrapper: DatabaseWrapper = null;
-    const testDatabasePath: string = path.join( process.cwd(), '/__tests__/db/testdb.sqlite' );
+    const testDatabasePath: string = path.join( process.cwd(), '/__tests__/db/users.json' );
 
     let makeDB = ( name, path ): Database => {
         return {
@@ -22,8 +22,8 @@ describe( 'DatabaseWrapperTest', () => {
                     nodeType: NodeTypes.DATABASE_PROPERTY,
                     location: { line: 1, column: 1 } as Location,
                     property: DatabaseProperties.TYPE,
-                    value: 'sqlite',
-                    content: 'type is sqlite'
+                    value: 'json',
+                    content: 'type is json'
                 } as DatabaseProperty,
 
                 {
@@ -48,7 +48,7 @@ describe( 'DatabaseWrapperTest', () => {
 
     let makeValidDB = () => {
         //console.log( testDatabasePath );
-        return makeDB( 'SQLite Test DB', testDatabasePath );
+        return makeDB( 'JSON Test DB', testDatabasePath );
     };
 
 
@@ -102,7 +102,7 @@ describe( 'DatabaseWrapperTest', () => {
         try {
             await wrapper.connect( db );
             let results = await wrapper.query(
-                'SELECT * FROM user WHERE name LIKE ?',
+                'SELECT * WHERE name LIKE ?',
                 [ 'Bob' ]
                 );
             //console.log( results );

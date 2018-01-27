@@ -3,9 +3,10 @@ import { Database, DatabaseProperties } from '../ast/Database';
 // import { DBWrapper } from 'node-dbi';
 //import * as dbjs from 'database-js2';
 //import { Connection, ConnectionObject } from 'database-js2';
-import dbjs = require( 'database-js2' );
+import dbjs = require( 'database-js' );
 //var Connection = dbjs.Connection;
 //var ConnectionObject = dbjs.ConnectionObject;
+import * as path from 'path';
 
 /**
  * A simple database wrapper.
@@ -17,6 +18,12 @@ export class DatabaseWrapper implements DatabaseInterface {
     private _dbi: dbjs.Connection = null; // internal database interface
     private _db: Database = null;
 
+    /** @inheritDoc */
+    public hasFileBasedDriver = ( databaseType: string ): boolean => {
+        const driverType = this.databaseTypeToDriverType( databaseType );
+        return [ 'json', 'csv', 'xls', 'xml', 'ini', 'yml', 'dbase', 'firebird', 'interbase' ]
+            .indexOf( driverType ) >= 0;
+    };
 
     /** @inheritDoc */
     public isConnected = async (): Promise< boolean > => {
@@ -25,9 +32,9 @@ export class DatabaseWrapper implements DatabaseInterface {
 
 
     /** @inheritDoc */
-    public connect = async ( db: Database ): Promise< boolean > => {
-        this._db = db;       
-        this._dbi = this.createConnectionFromNode( db ); // may throw an Error
+    public connect = async ( db: Database, basePath?: string ): Promise< boolean > => {
+        this._db = db;
+        this._dbi = this.createConnectionFromNode( db, basePath ); // may throw an Error
         return true;
     };
 
@@ -37,7 +44,10 @@ export class DatabaseWrapper implements DatabaseInterface {
         if ( ! this._dbi ) {
             throw this.dbiError();
         }
-        return await this._dbi.close();
+        if ( !! this._dbi.close ) {
+            return await this._dbi.close();
+        }
+        return true;
     };
 
 
@@ -71,8 +81,9 @@ export class DatabaseWrapper implements DatabaseInterface {
      * Returns a database connection from the given database node.
      * 
      * @param db Database node.
+     * @param basePath Base path, in case of the database is file-based.
      */
-    private createConnectionFromNode = ( db: Database ): dbjs.Connection => {
+    private createConnectionFromNode = ( db: Database, basePath?: string ): dbjs.Connection => {
 
         let dbItems = {};
 
@@ -88,6 +99,14 @@ export class DatabaseWrapper implements DatabaseInterface {
         }
 
         const driverType = this.databaseTypeToDriverType( dbItems[ DatabaseProperties.TYPE ] );
+
+        if ( this.hasFileBasedDriver( driverType ) ) {
+            dbItems[ DatabaseProperties.PATH ] =
+                path.resolve(
+                    basePath ? basePath : process.cwd(),
+                    dbItems[ DatabaseProperties.PATH ]
+                );
+        }
 
         return this.makeConnection( driverType, dbItems );
     };
@@ -125,7 +144,7 @@ export class DatabaseWrapper implements DatabaseInterface {
             database: dbItems[ DatabaseProperties.PATH ],
             parameters: dbItems[ DatabaseProperties.OPTIONS ]
         };
-        
+       
         return new dbjs.Connection( connObj );
     };
 

@@ -13,7 +13,7 @@ import { ConnectionCheckResult, ConnectionResult } from '../req/ConnectionResult
  */
 export class ConnectionChecker {
 
-    async check( spec: Spec ): Promise< ConnectionCheckResult > {
+    async check( spec: Spec, errors: LocatedException[] ): Promise< ConnectionCheckResult > {
 
         let r: ConnectionCheckResult = new ConnectionCheckResult( true );
 
@@ -30,6 +30,7 @@ export class ConnectionChecker {
 
                 let cr: ConnectionResult = {
                     success: true,
+                    errors: [],
                     databaseName: db.name,
                     dbi: dbi
                 } as ConnectionResult;
@@ -39,12 +40,18 @@ export class ConnectionChecker {
 
                 // connect
                 try {
-                    await dbi.connect( db );
+                    await dbi.connect( db, spec.basePath );
                 } catch ( err ) {
+
                     r.success = false;
                     cr.success = false;
                     const msg = 'Could not connect to the database "' + db.name + '". Reason: ' + err.message;
-                    doc.fileWarnings.push( new RuntimeException( msg, db.location ) );
+
+                    let e = new RuntimeException( msg, db.location );
+                    cr.errors.push( e );
+                    errors.push( e );
+                    doc.fileWarnings.push( e );
+
                     continue;
                 }
                 // disconnect
@@ -54,8 +61,12 @@ export class ConnectionChecker {
                     }
                 } catch ( err ) {
                     const msg = 'Error while disconnecting from database "' +
-                        db.name + '". Details: ' + err.message;
-                    doc.fileWarnings.push( new RuntimeException( msg, db.location ) );
+                        db.name + '". Details: ' + err.message + ' at ' + err.stack;
+
+                    let e = new RuntimeException( msg, db.location );
+                    cr.errors.push( e );
+                    errors.push( e );
+                    doc.fileWarnings.push( e );
                 }
             }
         }

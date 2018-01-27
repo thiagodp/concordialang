@@ -9,6 +9,13 @@ import { Queryable } from "./Queryable";
 export interface DatabaseInterface extends Queryable {
 
     /**
+     * Returns true if the given database type driver is based on a connection to a file.
+     * 
+     * @param databaseType Database type
+     */
+    hasFileBasedDriver( databaseType: string ): boolean;
+
+    /**
      * Checks if the database is connected.
      */
     isConnected(): Promise< boolean >;
@@ -16,7 +23,7 @@ export interface DatabaseInterface extends Queryable {
     /**
      * Connects to the database.
      */    
-    connect( db: Database ): Promise< boolean >;
+    connect( db: Database, basePath?: string ): Promise< boolean >;
 
     /**
      * Disconnects from the database.

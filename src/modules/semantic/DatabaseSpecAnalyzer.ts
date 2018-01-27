@@ -5,6 +5,9 @@ import { Spec } from "../ast/Spec";
 import { LocatedException } from '../req/LocatedException';
 import { DuplicationChecker } from '../util/DuplicationChecker';
 import { SemanticException } from './SemanticException';
+import { Warning } from '../req/Warning';
+import { ConnectionChecker } from '../db/ConnectionChecker';
+import { ConnectionCheckResult } from '../req/ConnectionResult';
 
 /**
  * Database semantic analyzer.
@@ -17,8 +20,9 @@ import { SemanticException } from './SemanticException';
 export class DatabaseSpecAnalyzer extends NodeBasedSpecAnalyzer {
 
     /** @inheritDoc */
-    public analyze( spec: Spec, errors: LocatedException[] ) {
+    public async analyze( spec: Spec, errors: LocatedException[] ): Promise< void > {
         this.analyzeDuplicatedNames( spec, errors );
+        await this.checkConnections( spec, errors );
     }
 
     private analyzeDuplicatedNames( spec: Spec, errors: LocatedException[] ) {
@@ -37,5 +41,12 @@ export class DatabaseSpecAnalyzer extends NodeBasedSpecAnalyzer {
 
         this.checkDuplicatedNames( items, errors, 'database' );        
     }
+
+    private checkConnections = async ( spec: Spec, errors: LocatedException[] ): Promise< boolean > => {
+        let checker = new ConnectionChecker();
+        // Important: errors and warnings are also added to the corresponding doc
+        let r = await checker.check( spec, errors );
+        return r.success;
+    };
 
 }
