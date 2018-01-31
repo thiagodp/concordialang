@@ -1,6 +1,7 @@
 import { TestScriptExecutor } from './TestScriptExecutor';
 import { TestScriptGenerator } from './TestScriptGenerator';
-import { TestScriptPlugin } from '../../modules/plugin/Plugin';
+import { ReportConverter } from './ReportConverter';
+import { Plugin } from '../../modules/plugin/Plugin';
 import { AbstractTestScript } from '../../modules/testscript/AbstractTestScript';
 import { TestScriptGenerationOptions } from '../../modules/testscript/TestScriptGeneration';
 import { TestScriptExecutionOptions, TestScriptExecutionResult } from '../../modules/testscript/TestScriptExecution';
@@ -13,14 +14,17 @@ import * as path from 'path';
 
 /**
  * Plugin for CodeceptJS.
- * 
+ *
  * @author Thiago Delgado Pinto
  * @author Matheus Eller Fagundes
  */
-export class CodeceptJS implements TestScriptPlugin {
-   
+export class CodeceptJS implements Plugin {
+
     private _scriptGenerator: TestScriptGenerator;
     private _scriptExecutor: TestScriptExecutor;
+    private _reportConverter: ReportConverter;
+
+    private readonly PLUGIN_CONFIG_PATH: string = path.join( __dirname, '../', 'codeceptjs.json' );
 
     constructor( private _fs?: any, private _encoding: string = 'utf8' ) {
 
@@ -31,8 +35,9 @@ export class CodeceptJS implements TestScriptPlugin {
             new FileUtil( _fs ),
             new CmdRunner()
         );
+        this._reportConverter = new ReportConverter( _fs );
     }
-    
+
     /** @inheritDoc */
     public generateCode(
         abstractTestScripts: AbstractTestScript[],
@@ -48,10 +53,10 @@ export class CodeceptJS implements TestScriptPlugin {
 
     /**
      * Tries to generate a source code file from an abstract test script.
-     * 
+     *
      * *Important*: This function should keep the fat arrow style, () => {}, in
      * order to preverse the context of `this`.
-     * 
+     *
      * @param ats Abstract test script
      * @param targetDir Directory where to put the source code.
      * @returns A promise with the file name as the data.
@@ -85,6 +90,6 @@ export class CodeceptJS implements TestScriptPlugin {
 
     /** @inheritDoc */
     public convertReportFile( filePath: string ): Promise< TestScriptExecutionResult > {
-        throw new Error('Not implemented yet.');
+        return this._reportConverter.convertFrom( filePath, this.PLUGIN_CONFIG_PATH );
     }
 }
