@@ -13,7 +13,20 @@ describe( 'CodeceptJSOptionsBuilderTest', () => {
                     url: "http://localhost:8080"
                 }
             },
-            tests: "*.js"
+            tests: "*.js",
+            mocha: {
+                reporterOptions: {
+                    "codeceptjs-cli-reporter": {
+                        stdout: '-',
+                        options: {
+                            steps: true
+                        }
+                    },
+                    json: {
+                        stdout: './output/report.json'
+                    }
+                }
+            }
         };
 
         const options = new CodeceptJSOptionsBuilder().value();
@@ -29,7 +42,20 @@ describe( 'CodeceptJSOptionsBuilderTest', () => {
                     url: "http://localhost:8080"
                 }
             },
-            tests: "*.js"
+            tests: "*.js",
+            mocha: {
+                reporterOptions: {
+                    "codeceptjs-cli-reporter": {
+                        stdout: '-',
+                        options: {
+                            steps: true
+                        }
+                    },
+                    json: {
+                        stdout: './output/report.json'
+                    }
+                }
+            }
         };
 
         const options = new CodeceptJSOptionsBuilder()
@@ -47,7 +73,20 @@ describe( 'CodeceptJSOptionsBuilderTest', () => {
                     url: "http://localhost:8080"
                 }
             },
-            tests: "*.js"
+            tests: "*.js",
+            mocha: {
+                reporterOptions: {
+                    "codeceptjs-cli-reporter": {
+                        stdout: '-',
+                        options: {
+                            steps: true
+                        }
+                    },
+                    json: {
+                        stdout: './output/report.json'
+                    }
+                }
+            }
         };
 
         const options = new CodeceptJSOptionsBuilder()
@@ -65,7 +104,20 @@ describe( 'CodeceptJSOptionsBuilderTest', () => {
                     url: "https://www.mywebsystem.com/"
                 }
             },
-            tests: "*.js"
+            tests: "*.js",
+            mocha: {
+                reporterOptions: {
+                    "codeceptjs-cli-reporter": {
+                        stdout: '-',
+                        options: {
+                            steps: true
+                        }
+                    },
+                    json: {
+                        stdout: './output/report.json'
+                    }
+                }
+            }
         };
 
         const options = new CodeceptJSOptionsBuilder()
@@ -83,7 +135,20 @@ describe( 'CodeceptJSOptionsBuilderTest', () => {
                     url: "http://localhost:8080"
                 }
             },
-            tests: "*_test.js"
+            tests: "*_test.js",
+            mocha: {
+                reporterOptions: {
+                    "codeceptjs-cli-reporter": {
+                        stdout: '-',
+                        options: {
+                            steps: true
+                        }
+                    },
+                    json: {
+                        stdout: './output/report.json'
+                    }
+                }
+            }
         };
 
         const options = new CodeceptJSOptionsBuilder()
@@ -91,6 +156,37 @@ describe( 'CodeceptJSOptionsBuilderTest', () => {
             .value();
 
         expect( options ).toEqual( expectedOptions );
+    } );
+
+    it( 'builds options with custom output file', () => {
+        const defaultOptions: object = {
+            helpers: {
+                WebDriverIO: {
+                    browser: "chrome",
+                    url: "http://localhost:8080"
+                }
+            },
+            tests: "*.js",
+            mocha: {
+                reporterOptions: {
+                    "codeceptjs-cli-reporter": {
+                        stdout: '-',
+                        options: {
+                            steps: true
+                        }
+                    },
+                    json: {
+                        stdout: './out/result.json'
+                    }
+                }
+            }
+        };
+
+        const options = new CodeceptJSOptionsBuilder()
+            .withOutputFile( './out/result.json' )
+            .value();
+
+        expect( options ).toEqual( defaultOptions );
     } );
 
     it( 'builds full customized options', () => {
@@ -101,7 +197,20 @@ describe( 'CodeceptJSOptionsBuilderTest', () => {
                     url: "https://www.mywebsystem.com/"
                 }
             },
-            tests: "*_test.js"
+            tests: "*_test.js",
+            mocha: {
+                reporterOptions: {
+                    "codeceptjs-cli-reporter": {
+                        stdout: '-',
+                        options: {
+                            steps: true
+                        }
+                    },
+                    json: {
+                        stdout: './out/result.json'
+                    }
+                }
+            }
         };
 
         const options = new CodeceptJSOptionsBuilder()
@@ -109,6 +218,7 @@ describe( 'CodeceptJSOptionsBuilderTest', () => {
             .withBrowser( 'firefox' )
             .withFilter( '*_test.js' )
             .withUrl( 'https://www.mywebsystem.com/' )
+            .withOutputFile( './out/result.json' )
             .value();
 
         expect( options ).toEqual( expectedOptions );

@@ -2,7 +2,7 @@ import { SpecFilter } from "../testcase/SpecFilter";
 
 /**
  * Test script execution options.
- * 
+ *
  * @author Thiago Delgado Pinto
  */
 export class TestScriptExecutionOptions {
@@ -13,7 +13,7 @@ export class TestScriptExecutionOptions {
 
 /**
  * Test script execution filter.
- * 
+ *
  * @author Thiago Delgado Pinto
  */
 export class TestScriptExecutionFilter extends SpecFilter {
@@ -21,7 +21,7 @@ export class TestScriptExecutionFilter extends SpecFilter {
 
 /**
  * External tool execution result.
- * 
+ *
  * @author Thiago Delgado Pinto
  */
 export class ExternalToolExecutionResult {
@@ -35,7 +35,7 @@ export class ExternalToolExecutionResult {
 
 /**
  * Test script execution result.
- * 
+ *
  * @author Thiago Delgado Pinto
  */
 export class TestScriptExecutionResult {
@@ -43,7 +43,7 @@ export class TestScriptExecutionResult {
     schemaVersion: string;
 
     sourceFile: string; // e.g.: xunit.xml
-    
+
     plugin: {
         name: string;
         description: string;
@@ -52,7 +52,7 @@ export class TestScriptExecutionResult {
     };
 
     started: string; // UTC timestamp
-    finished: string; // UTC timestamp    
+    finished: string; // UTC timestamp
     durationMs: number; // milliseconds
 
     total: {
@@ -68,7 +68,7 @@ export class TestScriptExecutionResult {
 
 /**
  * Test suite result.
- * 
+ *
  * @author Thiago Delgado Pinto
  */
 export class TestSuiteResult {
@@ -78,13 +78,13 @@ export class TestSuiteResult {
 
 /**
  * Test script method result.
- * 
+ *
  * @author Thiago Delgado Pinto
  */
 export class TestMethodResult {
 
     name: string;
-    
+
     status: 'passed' | 'failed' | 'skipped' | 'error' | 'unknown';
 
     durationMs: number; // milliseconds

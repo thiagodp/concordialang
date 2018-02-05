@@ -28,10 +28,10 @@ export class FileUtil {
      * 
      * @author Matheus Eller Fagundes
      * 
-     * @param path Path of the directory.
+     * @param dirPath Path of the directory.
      */
-    ensureDirectory( path ): void {
-        let dirname = path.dirname( path );
+    ensureDirectory( dirPath ): void {
+        let dirname = path.dirname( dirPath );
         if ( this._fs.existsSync( dirname ) ) {
             return;
         }
