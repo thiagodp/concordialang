@@ -8,6 +8,7 @@ import * as alasql from 'alasql';
  */
 export class InMemoryTableWrapper implements InMemoryTableInterface {
 
+    // @ts-ignore
     constructor( private _db: alasql.Database ) {
     }
 

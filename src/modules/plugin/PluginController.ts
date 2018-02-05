@@ -1,7 +1,6 @@
 import { PluginDrawer } from "./PluginDrawer";
 import { Options } from "../app/Options";
 import { PluginManager } from "./PluginManager";
-import { TestScriptPluginData } from "./PluginData";
 import { CLI } from "../app/CLI";
 
 

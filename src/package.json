@@ -37,8 +37,8 @@
     "start": "node ../bin/concordia"
   },
   "dependencies": {
-    "alasql": "^0.4.3",
-    "chalk": "^2.0.1",
+    "alasql": "^0.4.5",
+    "chalk": "^2.3.0",
     "cli-truncate": "^1.0.0",
     "database-js": "^3.0.2",
     "database-js-json": "^1.2.0",

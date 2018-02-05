@@ -38,7 +38,7 @@ describe( 'InMemoryTableCreatorTest', () => {
 
         const inMemoryTable = await creator.createFromNode( table );        
 
-        const data = await inMemoryTable.query( 'SELECT * FROM foo WHERE b <= 3.01', {} );
+        const data = await inMemoryTable.query( 'SELECT * FROM foo WHERE b <= 3.01', {} as any );
 
         expect( data[ 0 ].a ).toBe( 1 );
         expect( data[ 0 ].b ).toBe( 2.01 );

@@ -1,11 +1,11 @@
 import * as logUpdate from 'log-update';
 import * as logSymbols from 'log-symbols';
-import * as chalk from 'chalk';
+import chalk from 'chalk';
 import * as figures from 'figures';
 
 export class CLI {
 
-    colors = chalk;
+    colors = chalk as any;
 
     log = ( ...args ): void => {
         console.log( ...args );
@@ -46,11 +46,11 @@ export class CLI {
     readonly symbolWarning = logSymbols.warning;
     readonly symbolInfo = logSymbols.info;
 
-    readonly colorSuccess = chalk.rgb(0, 255, 0);
-    readonly colorError = chalk.rgb(255, 0, 0);
-    readonly colorWarning = chalk.yellow;    
-    readonly colorInfo = chalk.gray;
-    readonly colorHighlight = chalk.rgb(255, 242, 0);
-    readonly colorText = chalk.white;
+    readonly colorSuccess = this.colors.rgb(0, 255, 0);
+    readonly colorError = this.colors.rgb(255, 0, 0);
+    readonly colorWarning = this.colors.yellow;    
+    readonly colorInfo = this.colors.gray;
+    readonly colorHighlight = this.colors.rgb(255, 242, 0);
+    readonly colorText = this.colors.white;
 
 }

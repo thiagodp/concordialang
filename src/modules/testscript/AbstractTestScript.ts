@@ -65,6 +65,9 @@ export interface ATSCommand extends ATSElement {
  * @author Thiago Delgado Pinto
  */
 export interface ATSTarget {
-    type: 'web' | 'android' | 'ios' | 'windows' | 'linux';
-    name: string;
+    web?: string;
+    android?: string;
+    ios?: string;
+    windows?: string;
+    linux?: string;
 }

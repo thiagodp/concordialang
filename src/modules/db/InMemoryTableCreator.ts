@@ -51,7 +51,10 @@ export class InMemoryTableCreator {
             }
             */
             // Creating/using the database
+
+            // @ts-ignore
             let db = new alasql.Database( this._dbName );
+            
             let insert: any = null;
             let i = 0;
             const rowCount = table.rows.length;
@@ -79,6 +82,7 @@ export class InMemoryTableCreator {
                                 table.name, row.cells );
                             //console.log( insertCommand );
 
+                            // @ts-ignore
                             insert = alasql.compile( insertCommand );
                         } catch ( e ) {
                             return reject( e );

@@ -17,7 +17,7 @@ describe( 'TagCollectorTest', () => {
     let importNode: Import = {
         nodeType: NodeTypes.IMPORT,
         location: { line: lin++, column: 1 },
-        content: "hello.world"
+        value: "hello.world"
     };
 
     let tagNode1: Tag = {

@@ -1,5 +1,5 @@
 import { CLI } from "../app/CLI";
-import { TestScriptPluginData } from "./PluginData";
+import { PluginData } from "./PluginData";
 import { sprintf } from 'sprintf-js';
 
 
@@ -8,7 +8,7 @@ export class PluginDrawer {
     constructor( private _cli: CLI ) {        
     }
 
-    public drawPluginList = ( plugins: TestScriptPluginData[] ): void => {
+    public drawPluginList = ( plugins: PluginData[] ): void => {
         const highlight = this._cli.colorHighlight;
         const format = "%-20s %-8s %-22s"; // util.format does not support padding :(
         this.write( highlight( sprintf( format, 'Name', 'Version', 'Description' ) ) );
@@ -17,7 +17,7 @@ export class PluginDrawer {
         }
     };
 
-    public drawSinglePlugin = ( p: TestScriptPluginData ): void => {
+    public drawSinglePlugin = ( p: PluginData ): void => {
         const highlight = this._cli.colorHighlight;
         const format = "  - %-12s: %s"; // util.format does not support padding :(
         const authors = p.authors.map( ( a, idx ) => 0 === idx ? a : sprintf( '%-17s %s', '', a ) );
