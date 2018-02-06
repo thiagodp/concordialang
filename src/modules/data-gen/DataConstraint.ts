@@ -37,5 +37,7 @@ export enum DataConstraintTarget {
 export class DataConstraint {
     type: DataConstraintType;
     target: DataConstraintTarget;
-    value: string | number | boolean | string[] | number[];
+    // Value after replacements or validations. It can also be an array.
+    // E.g.: query after replacements, array of strings, etc.
+    value: any;
 }

@@ -1,5 +1,3 @@
-// WARNING: WIP !!!
-
 import { SpecFilter } from './SpecFilter';
 
 /**
@@ -8,6 +6,7 @@ import { SpecFilter } from './SpecFilter';
  * @author Thiago Delgado Pinto
  */
 export class TestCaseGenerationOptions {
+
     public filter: SpecFilter = new SpecFilter();
-    // TO-DO: add options here (?)
+
 }

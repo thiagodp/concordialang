@@ -37,7 +37,6 @@ export class DataGenerator {
 		private readonly _randomDouble: RandomDouble,		
 		private readonly _randomString: RandomString
 	) {
-
 	}
 
 	
@@ -112,20 +111,23 @@ export class DataGenerator {
 				return this.rawGeneratorFor( valueType ).max();
 			
 			case DataTestCase.VALUE_JUST_ABOVE_MAX:
-				return this.next( this.max() );
+			case DataTestCase.LENGTH_JUST_ABOVE_MAX:
+				return this.rawGeneratorFor( valueType ).justAboveMax();
 			
 			case DataTestCase.VALUE_RANDOM_ABOVE_MAX:
-				return this.randomAfter( this.max() );
+			case DataTestCase.LENGTH_RANDOM_ABOVE_MAX:
+				return this.rawGeneratorFor( valueType ).randomAboveMax();
 
 			case DataTestCase.VALUE_GREATEST:
-				return this.greatest();
+			case DataTestCase.LENGTH_GREATEST:
+				return this.rawGeneratorFor( valueType ).greatest();
 
 			default: return null;
 		}
 	}
 
 
-	private rawGeneratorFor( valueType: ValueType, min?: number, max?: number ): RawDataGenerator< any > {
+	private rawGeneratorFor( valueType: ValueType, min?: any, max?: any ): RawDataGenerator< any > {
 		switch ( valueType ) {
 			case ValueType.STRING: return new StringGenerator( this._randomString, min, max );
 			case ValueType.INTEGER: return new LongGenerator( this._randomLong, min, max );
