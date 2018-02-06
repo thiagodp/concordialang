@@ -27,9 +27,9 @@ export class Options {
     public stopOnTheFirstError: boolean = false; // stop on the first error
     public compileSpecification: boolean = true;
     public generateExamples: boolean = true; // generate examples (test cases)
-    public generateScripts: boolean = true; // generate test scripts
-    public executeScripts: boolean = true; // execute test scripts
-    public analyzeResults: boolean = true; // analyze execution results
+    public generateScripts: boolean = true; // generate test scripts through a plugin
+    public executeScripts: boolean = true; // execute test scripts through a plugin
+    public analyzeResults: boolean = true; // analyze execution results through a plugin
     public dirExample: string = '.'; // examples' output directory (test cases)
     public dirScript: string = './test'; // test scripts' output directory
     public dirResult: string = './test'; // test results' output directory
@@ -58,6 +58,7 @@ export class Options {
     public about: boolean = false; // show about
     public version: boolean = false; // show version
     public newer: boolean = false; // check for version updates
+    public debug: boolean = false; // debug mode
 
 
     public shouldSeeHelp(): boolean {
@@ -93,7 +94,15 @@ export class Options {
     }
 
     public somePluginOption(): boolean {
-        return ( this.pluginList || this.pluginAbout || this.pluginInstall || this.pluginUninstall );
+        return this.pluginList || this.pluginAbout || this.pluginInstall || this.pluginUninstall;
+    }
+
+    public someOptionThatRequiresAPlugin(): boolean {
+        return this.generateScripts || this.executeScripts || this.analyzeResults;
+    }
+
+    public hasPluginName(): boolean {
+        return !! this.plugin;
     }
 
     /**
@@ -253,6 +262,7 @@ export class Options {
         this.about = !! flags.about;
         this.version = !! flags.version;
         this.newer = !! flags.newer;
+        this.debug = !! flags.debug;
 
         this.fixInconsistences();
     };

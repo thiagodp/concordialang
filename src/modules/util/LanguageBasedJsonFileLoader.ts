@@ -1,7 +1,5 @@
-import { FileUtil } from './FileUtil';
-
-var fs = require( 'fs' );
-import path = require( 'path' );
+import * as path from 'path';
+import * as fs from 'fs';
 
 /**
  * Language-based JSON file loader.
@@ -20,7 +18,8 @@ export class LanguageBasedJsonFileLoader {
     constructor(
         private _dictMap: Object = {},
         private _baseDir: string = path.join( process.cwd(), 'data/' ),
-        private _encoding: string = 'utf8'
+        private _encoding: string = 'utf8',
+        private _fs = fs
     ) {
     }
 
@@ -41,7 +40,7 @@ export class LanguageBasedJsonFileLoader {
         }
 
         let filePath = this.makeLanguageFilePath( language );
-        let fileExists = 0 === ( new FileUtil() ).nonExistentFiles( [ filePath ] ).length;
+        let fileExists: boolean = this._fs.existsSync( filePath );
         if ( ! fileExists ) {
             throw new Error( 'File not found: ' + filePath );
         }
@@ -54,7 +53,7 @@ export class LanguageBasedJsonFileLoader {
     }
 
     private readFileContent( path ): string {
-        return fs.readFileSync( path, this._encoding );
+        return this._fs.readFileSync( path, this._encoding );
     }
 
 }

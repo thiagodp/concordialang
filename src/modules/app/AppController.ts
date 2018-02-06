@@ -5,14 +5,23 @@ import { CLI } from './CLI';
 import { CompilerController } from './CompilerController';
 import { Spec } from '../ast/Spec';
 import { LanguageController } from './LanguageController';
+import { PluginData } from '../plugin/PluginData';
+import { PluginManager } from '../plugin/PluginManager';
+import { Plugin } from '../plugin/Plugin';
+import { Defaults } from './Defaults';
+import { TestScriptExecutionOptions } from '../testscript/TestScriptExecution';
+import { TestCaseGenerationOptions } from '../testcase/TestCaseOptions';
 
 export class AppController {
 
     start = async (): Promise< boolean > => {
 
+        const defaults: Defaults = new Defaults();
+
         let cli = new CLI();
         let ui: UI = new UI( cli );
         let options: Options = ui.readOptions();
+
         //console.log( options );
 
         if ( options.help ) {
@@ -30,6 +39,10 @@ export class AppController {
             return true;
         }
 
+        let pluginData: PluginData = null;
+        let pluginManager: PluginManager = new PluginManager();
+        let plugin: Plugin = null;
+
         if ( options.somePluginOption() ) {
             let pluginController: PluginController = new PluginController( cli );
             try {
@@ -39,6 +52,27 @@ export class AppController {
                 return false;
             }
             return true;
+
+        } else if ( options.someOptionThatRequiresAPlugin() && options.hasPluginName() ) {
+            try {
+                pluginData = await pluginManager.pluginWithName( options.plugin );
+                plugin = await pluginManager.load( defaults.PLUGIN_DIR, pluginData );
+            } catch ( err ) {
+                options.debug
+                    ? cli.newLine( cli.symbolError, err.message, "\n  DETAILS:", err.stack )
+                    : cli.newLine( cli.symbolError, err.message );
+                return false;
+            }
+            if ( ! pluginData ) { // needed?
+                cli.newLine( cli.symbolError, 'Plugin not found:', options.plugin );
+                return false;
+            }
+            if ( ! plugin ) { // needed?
+                cli.newLine( cli.symbolError, 'Could not load the plugin:', options.plugin );
+                return false;
+            }            
+
+            // can continue
         }
 
         if ( options.languageList ) {
@@ -75,19 +109,27 @@ export class AppController {
             cli.newLine( cli.symbolInfo, 'Example generation disabled.' );
         }
 
-        if ( options.generateScripts ) {
+        if ( options.generateScripts ) { // Requires a plugin
             // TO-DO
         } else {
             cli.newLine( cli.symbolInfo, 'Script generation disabled.' );
         }
 
-        if ( options.executeScripts ) {
+        if ( options.executeScripts ) { // Requires a plugin
             // TO-DO
+            let tseo: TestScriptExecutionOptions = new TestScriptExecutionOptions();
+            try {
+                await plugin.executeCode( tseo );
+            } catch ( err ) {
+                options.debug
+                    ? cli.newLine( cli.symbolError, err.message, "\n  DETAILS:", err.stack )
+                    : cli.newLine( cli.symbolError, err.message );
+            }
         } else {
             cli.newLine( cli.symbolInfo, 'Script execution disabled.' );
         }
 
-        if ( options.analyzeResults ) {
+        if ( options.analyzeResults ) { // Requires a plugin
             // TO-DO
         } else {
             cli.newLine( cli.symbolInfo, 'Results\' analysis disabled.' );

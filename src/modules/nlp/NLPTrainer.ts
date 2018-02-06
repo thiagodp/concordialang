@@ -1,9 +1,8 @@
-import { FileUtil } from '../util/FileUtil';
 import { NLPIntentExample, NLPTrainingData } from "./NLPTrainingData";
 import { NLPTrainingDataConversor } from "./NLPTrainingDataConversor";
 import { NLP } from "./NLP";
-
-import path = require( 'path' );
+import * as path from 'path';
+import * as fs from 'fs';
 
 /**
  * NLP trainer.
@@ -12,10 +11,12 @@ import path = require( 'path' );
  */
 export class NLPTrainer {
 
-    private _fileUtil = new FileUtil();
     private _dataCacheMap: object = {}; // Maps language => data
 
-    constructor( private _dataDir = path.join( process.cwd(), 'data/' ) ) {
+    constructor(
+        private _dataDir = path.join( process.cwd(), 'data/' ),
+        private _fs = fs
+    ) {
     }
 
     dataDir( dir?: string ) {
@@ -32,8 +33,8 @@ export class NLPTrainer {
             return true;
         }
 
-        return this._fileUtil.fileExist( this.nlpPath( language ) )
-            && this._fileUtil.fileExist( this.trainingPath( language ) );
+        return this._fs.existsSync( this.nlpPath( language ) )
+            && this._fs.existsSync( this.trainingPath( language )  );
     }
 
     trainNLP( nlp: NLP, language: string, internalNameFilter?: string ): boolean {

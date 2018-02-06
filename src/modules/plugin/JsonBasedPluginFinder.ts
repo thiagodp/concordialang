@@ -1,7 +1,7 @@
 import { PluginFinder } from './PluginFinder';
 import { PluginData } from './PluginData';
 import { JsonSchemaValidator } from '../schema/JsonSchemaValidator';
-import { FileUtil } from '../util/FileUtil';
+import * as filewalker from 'filewalker';
 import * as fs from 'fs';
 import * as util from 'util';
 
@@ -26,20 +26,30 @@ export class JsonBasedPluginFinder implements PluginFinder {
     };
 
     public readConfigFiles = ( dir: string ): Promise< string[] > => {
+
         return new Promise< string[] >( ( resolve, reject ) => {
-            const files: string[] =
-                ( new FileUtil( this._fs ) ).extractFilesFromDirectory( dir, [ 'json' ], false );
-            if ( files.length > 0 ) {
-                return resolve( files );
-            } else {
-                return reject( new Error( 'No plug-in configuration files found at "' + dir + '".' ) );
-            }
+
+            const options = {
+                maxPending: -1,
+                maxAttempts: 0,
+                attemptTimeout: 1000,
+                matchRegExp: new RegExp( '\\.json$' )
+            };
+
+            let files: string[] = [];
+
+            filewalker( dir, options )
+                .on( 'file', ( relPath, stats, absPath ) => files.push( absPath ) )
+                .on( 'error', ( err ) => reject( err ) )
+                .on( 'done', () => resolve( files ) )
+                .walk()
+                ;
         } );
     };
 
-    public async loadConfigFile( file: string ): Promise< PluginData > {
+    public async loadConfigFile( filePath: string ): Promise< PluginData > {
         const read = util.promisify( this._fs.readFile );
-        const content = await read( file );
+        const content = await read( filePath );
         return this.processConfigFileData( content );
     }
 

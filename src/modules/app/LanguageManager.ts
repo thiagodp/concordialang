@@ -65,7 +65,7 @@ export class LanguageManager {
             let files: string[] = [];
 
             filewalker( this._dir, options )
-                .on( 'file', ( p: string, s ) => files.push( p ) )
+                .on( 'file', ( relPath, stats, absPath ) => files.push( relPath ) )
                 .on( 'error', ( err ) => reject( err ) )
                 .on( 'done', () => resolve( files ) )
                 .walk()

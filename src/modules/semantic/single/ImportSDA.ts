@@ -3,11 +3,10 @@ import { NodeBasedSDA } from './NodeBasedSDA';
 import { LocatedException } from '../../req/LocatedException';
 import { Import } from '../../ast/Import';
 import { DuplicationChecker } from '../../util/DuplicationChecker';
-import { FileUtil } from "../../util/FileUtil";
 import { SemanticException } from "../SemanticException";
 import { Document } from '../../ast/Document';
-
-const path = require( 'path' );
+import * as fs from 'fs';
+import * as path from 'path';
 
 /**
  * Import analyzer for a single document.
@@ -21,7 +20,12 @@ const path = require( 'path' );
  */
 export class ImportSDA implements NodeBasedSDA {
 
-    private _fileUtil: FileUtil = new FileUtil();
+    constructor(
+        private _fs: any = fs
+    ) {
+    }
+
+
 
     /** @inheritDoc */
     public analyze( spec: Spec, doc: Document, errors: LocatedException[] ) {
@@ -57,8 +61,9 @@ export class ImportSDA implements NodeBasedSDA {
                 errors.push( err );                
             }
 
-            // Check if imported files exist
-            if ( ! this._fileUtil.fileExist( resolvedPath ) ) {
+            // Check if the imported file exist
+            const exists: boolean = this._fs.existsSync( resolvedPath );
+            if ( ! exists ) {
                 let msg = 'Imported file not found: "' + importPath + '".';
                 let err = new SemanticException( msg, imp.location );
                 errors.push( err );

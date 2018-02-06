@@ -7,6 +7,8 @@ export class Defaults {
     readonly DIRECTORY: string = '.';
     readonly LANGUAGE_DIR: string = 'data/keywords/';
 
+    readonly PLUGIN_DIR: string = 'dist/plugins/';
+
     /**
      * Returns available encodings.
      * 

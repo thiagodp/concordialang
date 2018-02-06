@@ -58,7 +58,7 @@ export class PluginManager {
         pluginData: PluginData
     ): Promise< Plugin > => {
 
-        const pluginClassFile = path.join( basePluginDirectory, pluginData.file );
+        const pluginClassFile = path.resolve( basePluginDirectory, pluginData.file );
 
         // Dynamically include the file
         const pluginClassFileContext = require( pluginClassFile );

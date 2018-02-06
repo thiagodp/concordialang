@@ -8,7 +8,7 @@
         "Matheus Eller Fagundes (matheusefagundes@gmail.com)",
         "Thiago Delgado Pinto (thiago-dp@bol.com.br)"
     ],
-    "file": "codeceptjs/CodeceptJS.ts",
+    "file": "codeceptjs/CodeceptJS.js",
     "class": "CodeceptJS",
     "install": "npm install mocha mocha-multi codeceptjs selenium-standalone -g",
     "uninstall": "npm uninstall mocha mocha-multi codeceptjs selenium-standalone -g"

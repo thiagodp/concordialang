@@ -6,7 +6,6 @@ import { AbstractTestScript } from '../../modules/testscript/AbstractTestScript'
 import { TestScriptGenerationOptions } from '../../modules/testscript/TestScriptGeneration';
 import { TestScriptExecutionOptions, TestScriptExecutionResult } from '../../modules/testscript/TestScriptExecution';
 import { CmdRunner } from "./CmdRunner";
-import { FileUtil } from '../../modules/util/FileUtil';
 
 import * as fs from 'fs';
 import * as path from 'path';
@@ -32,7 +31,6 @@ export class CodeceptJS implements Plugin {
 
         this._scriptGenerator = new TestScriptGenerator();
         this._scriptExecutor = new TestScriptExecutor(
-            new FileUtil( _fs ),
             new CmdRunner()
         );
         this._reportConverter = new ReportConverter( _fs );
@@ -83,13 +81,14 @@ export class CodeceptJS implements Plugin {
     }
 
     /** @inheritDoc */
-    public executeCode( options: TestScriptExecutionOptions ): Promise< TestScriptExecutionResult > {
+    public executeCode = async ( options: TestScriptExecutionOptions ): Promise< TestScriptExecutionResult > => {
         return this._scriptExecutor.execute( options )
             .then( this.convertReportFile );
-    }
+    };
 
     /** @inheritDoc */
-    public convertReportFile( filePath: string ): Promise< TestScriptExecutionResult > {
+    public convertReportFile = async ( filePath: string ): Promise< TestScriptExecutionResult > => {
         return this._reportConverter.convertFrom( filePath, this.PLUGIN_CONFIG_PATH );
-    }
+    };
+
 }
