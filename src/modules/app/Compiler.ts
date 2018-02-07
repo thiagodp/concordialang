@@ -75,8 +75,9 @@ export class Compiler {
                 return lineDiff;
             }
             // No location, so let's compare the error type
-            let aIsWarning = a.name === Warning.name;
-            let bIsWarning = b.name === Warning.name;
+            const warningName = ( new Warning() ).name;
+            const aIsWarning = a.name === warningName;
+            const bIsWarning = b.name === warningName;
             // Both are warnings, they are equal
             if ( aIsWarning && bIsWarning ) {
                 return 0;

@@ -109,6 +109,11 @@ export class AppController {
             cli.newLine( cli.symbolInfo, 'Example generation disabled.' );
         }
 
+        if ( ! plugin && ( options.generateScripts || options.executeScripts || options.analyzeResults ) ) {
+            cli.newLine( cli.symbolWarning, 'A plugin must be defined.' );
+            return true;
+        }
+
         if ( options.generateScripts ) { // Requires a plugin
             // TO-DO
         } else {
