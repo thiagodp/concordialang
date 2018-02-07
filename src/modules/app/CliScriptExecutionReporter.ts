@@ -12,7 +12,8 @@ export class CliScriptExecutionReporter implements ScriptExecutionReporter {
     constructor( private _cli: CLI ) {
     }
     
-    report( r: TestScriptExecutionResult ): void {
+    /** @inheritDoc */
+    scriptExecuted( r: TestScriptExecutionResult ): void {
         let t = r.total;
         if ( ! t.tests ) {
             this._cli.newLine( this._cli.symbolInfo, 'No tests executed.' );
@@ -43,7 +44,7 @@ export class CliScriptExecutionReporter implements ScriptExecutionReporter {
         */
     }
 
-    cliColorForStatus( status: string ): any {
+    private cliColorForStatus( status: string ): any {
         switch ( status.toLowerCase() ) {
             case 'passed': return this._cli.colorSuccess;
             case 'failed': return this._cli.colorWarning;

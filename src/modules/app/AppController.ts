@@ -8,11 +8,9 @@ import { LanguageController } from './LanguageController';
 import { PluginData } from '../plugin/PluginData';
 import { PluginManager } from '../plugin/PluginManager';
 import { Plugin } from '../plugin/Plugin';
-import { Defaults } from './Defaults';
 import { TestScriptExecutionOptions } from '../testscript/TestScriptExecution';
 import { TestCaseGenerationOptions } from '../testcase/TestCaseOptions';
 import { CliScriptExecutionReporter } from './CliScriptExecutionReporter';
-import { resolve } from 'path';
 
 /**
  * Application controller
@@ -138,7 +136,7 @@ export class AppController {
             let tseo: TestScriptExecutionOptions = new TestScriptExecutionOptions();
             try {
                 let r = await plugin.executeCode( tseo );
-                ( new CliScriptExecutionReporter( cli ) ).report( r );
+                ( new CliScriptExecutionReporter( cli ) ).scriptExecuted( r );
             } catch ( err ) {
                 options.debug
                     ? cli.newLine( cli.symbolError, err.message, this.formattedStackOf( err ) )

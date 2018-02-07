@@ -7,5 +7,5 @@ import { TestScriptExecutionResult } from "../testscript/TestScriptExecution";
  */
 export interface ScriptExecutionReporter {
 
-    report( r: TestScriptExecutionResult ): void;
+    scriptExecuted( r: TestScriptExecutionResult ): void;
 }

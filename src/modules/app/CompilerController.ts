@@ -42,6 +42,7 @@ export class CompilerController {
             throw new Error( 'Informed language is not available: ' + options.language );
         }
 
+        // Verbose output option
         let listener =  options.verbose
             ? new VerboseAppEventsListener( cli )
             : new SimpleAppEventsListener( cli );
