@@ -18,6 +18,7 @@ export class ReportConverter {
      * @param resultFilePath Path to file with CodeceptJS test results.
      */
     public convertFrom( resultFilePath: string, pluginConfigFilePath: string ): TestScriptExecutionResult {
+
         const source: any = JSON.parse( this._fs.readFileSync( resultFilePath ).toString() );
         const pluginConfig = JSON.parse( this._fs.readFileSync( pluginConfigFilePath ).toString() );
         let result: TestScriptExecutionResult = new TestScriptExecutionResult();
@@ -55,9 +56,9 @@ export class ReportConverter {
             tests: source.stats.tests,
             passed: source.stats.passes,
             failed: source.stats.failures,
-            skipped: null,
-            error: null,
-            unknown: null
+            skipped: 0,
+            error: 0,
+            unknown: 0
         };
     }
 
@@ -83,7 +84,8 @@ export class ReportConverter {
      * @param result The Concordia's result to fill.
      */
     private fillResults( source: any, result: TestScriptExecutionResult ): void {
-        if( !result.results ) {
+        
+        if ( ! result.results ) {
             result.results = [];
         }
 
@@ -94,7 +96,7 @@ export class ReportConverter {
             testMethodResult.status = this.isObjectEmpty( method.err ) ? 'passed' : 'failed';
             testMethodResult.durationMs = method.duration;
 
-            if( testMethodResult.status == 'failed' ){
+            if ( 'failed' === testMethodResult.status ) {
                 let stackInfo = this.extractStackInfo( method.err.stack );
                 testMethodResult.exception = {
                     type: method.err.params.type,
@@ -105,7 +107,7 @@ export class ReportConverter {
                 };
             }
 
-            // Pushes the TestMethodResult to it correspondent TestSuiteResult.
+            // Pushes a TestMethodResult to its correspondent TestSuiteResult.
             let suiteName: string = method.fullTitle.split( ':' )[0]; //fullTitle format is 'feature: test'
             this.pushTestMethodResult( result, testMethodResult, suiteName );
         });
@@ -113,18 +115,19 @@ export class ReportConverter {
 
     /**
      * Pushes a Test Method Result to a Test Script Execution Result.
+     * 
      * @param result The Concordia's result to fill.
      * @param testMethodResult TestMethodResult to be pushed.
      * @param suiteName Test Suite Result name.
      */
     private pushTestMethodResult( result: TestScriptExecutionResult, testMethodResult: TestMethodResult, suiteName: string ): void {
         // Finds the correspondent test suite.
-        let testSuiteResult: TestSuiteResult = result.results.filter(( suite: TestSuiteResult ) => {
+        let testSuiteResult: TestSuiteResult = result.results.filter( ( suite: TestSuiteResult ) => {
             return suite.suite === suiteName;
-        })[0];
+        } )[0];
 
         // If the test suite doesn't exists, creates a new one.
-        if( !testSuiteResult ){
+        if ( ! testSuiteResult ) {
             testSuiteResult = new TestSuiteResult();
             testSuiteResult.suite = suiteName;
             testSuiteResult.methods = [];
