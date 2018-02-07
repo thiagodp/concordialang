@@ -33,8 +33,8 @@
   "allow-scripts": true,
   "scripts": {
     "build": "tsc",
-    "test": "jest",
-    "start": "node ../bin/concordia"
+    "test": "node copy.js && jest --all",
+    "start": "node copy.js && node ../bin/concordia"
   },
   "dependencies": {
     "alasql": "^0.4.5",
