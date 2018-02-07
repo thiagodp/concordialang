@@ -14,7 +14,7 @@
   - `lib` - manually installed libraries
   - `modules` - modules of the project
   - `node_modules` - installed libraries
-  - `typings` - installed types (typescript)
+  - `plugins` - plugins
 
 
 ## Before starting
@@ -27,7 +27,6 @@ $ cd src
 ### Installation
 ```shell
 $ npm install
-$ typings install
 $ npm install -g jest ts-jest
 ```
 
