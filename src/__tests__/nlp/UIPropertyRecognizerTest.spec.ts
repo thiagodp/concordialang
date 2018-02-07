@@ -5,12 +5,16 @@ import { NLPTrainer } from '../../modules/nlp/NLPTrainer';
 import { NLP } from '../../modules/nlp/NLP';
 import { UIPropertyRecognizer } from "../../modules/nlp/UIPropertyRecognizer";
 import { Lexer } from '../../modules/lexer/Lexer';
+import { Options } from '../../modules/app/Options';
+import { resolve } from 'path';
 
 describe( 'UIPropertyRecognizerTest', () => {
 
     let nodes = [];
     let errors = [];
     let warnings = [];
+
+    const options: Options = new Options( resolve( process.cwd(), 'dist/' ) );
 
     // helper
     function makeNode( content: string, line = 1, column = 1 ): UIProperty {
@@ -26,7 +30,8 @@ describe( 'UIPropertyRecognizerTest', () => {
         const LANGUAGE = 'pt';
         let nlp = new NLP();
         let rec = new UIPropertyRecognizer( nlp ); // under test
-        rec.trainMe( new NLPTrainer(), LANGUAGE );
+        let nlpTrainer = new NLPTrainer( options.nlpDir, options.trainingDir );
+        rec.trainMe( nlpTrainer, LANGUAGE );
 
 
         function shouldRecognize( sentence: string, property: string, value: string ): void {

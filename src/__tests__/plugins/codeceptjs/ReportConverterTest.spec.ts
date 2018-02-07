@@ -143,9 +143,9 @@ describe( 'ReportConverterTest', () => {
             tests:  2,
             passed: 1,
             failed: 1,
-            skipped: null,
-            error: null,
-            unknown: null
+            skipped: 0,
+            error: 0,
+            unknown: 0
         };
         expected.plugin = {
             description: 'Generates test scripts for CodeceptJS',

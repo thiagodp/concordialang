@@ -3,10 +3,13 @@ import { Options } from "../app/Options";
 import { PluginManager } from "./PluginManager";
 import { CLI } from "../app/CLI";
 
-
+/**
+ * Plugin controller
+ * 
+ * @author Thiago Delgado Pinto
+ */
 export class PluginController {
 
-    private readonly _manager: PluginManager = new PluginManager();
     private readonly _drawer: PluginDrawer;
 
     constructor( cli: CLI ) {
@@ -15,9 +18,11 @@ export class PluginController {
 
     public process = async ( options: Options ): Promise< boolean > => {
         
+        const pm = new PluginManager( options.pluginDir );
+
         if ( options.pluginList ) {
             try {
-                this._drawer.drawPluginList( await this._manager.findAll() );
+                this._drawer.drawPluginList( await pm.findAll() );
                 return true;
             } catch ( e ) {
                 this._drawer.showError( e );
@@ -31,7 +36,7 @@ export class PluginController {
             return false;
         }
 
-        const pluginData = await this._manager.pluginWithName( options.plugin );
+        const pluginData = await pm.pluginWithName( options.plugin );
         // plugin name not available?        
         if ( ! pluginData ) {
             this._drawer.showMessageOnNoPluginFound( options.plugin );
@@ -45,7 +50,7 @@ export class PluginController {
 
         if ( options.pluginInstall ) {
             try {
-                await this._manager.install( pluginData, this._drawer );
+                await pm.install( pluginData, this._drawer );
             } catch ( e ) {
                 this._drawer.showError( e );
             }
@@ -54,7 +59,7 @@ export class PluginController {
 
         if ( options.pluginUninstall ) {
             try {
-                await this._manager.uninstall( pluginData, this._drawer );
+                await pm.uninstall( pluginData, this._drawer );
             } catch ( e ) {
                 this._drawer.showError( e );
             }

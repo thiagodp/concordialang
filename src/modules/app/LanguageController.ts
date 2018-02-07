@@ -11,8 +11,10 @@ export class LanguageController {
     public process = async ( options: Options ): Promise< void > => {
 
         if ( options.languageList ) {
-            const languages: string[] = await ( new LanguageManager() ).availableLanguages();
-            ( new LanguageDrawer( this._cli ) ).drawLanguages( languages );
+            const lm = new LanguageManager( options.languageDir );
+            const languages: string[] = await lm.availableLanguages();
+            const ld = new LanguageDrawer( this._cli );
+            ld.drawLanguages( languages );
         }
 
     };

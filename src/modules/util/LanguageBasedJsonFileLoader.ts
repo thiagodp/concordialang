@@ -1,4 +1,4 @@
-import * as path from 'path';
+import { join } from 'path';
 import * as fs from 'fs';
 
 /**
@@ -11,13 +11,13 @@ export class LanguageBasedJsonFileLoader {
     /**
      * Constructs the loader.
      * 
+     * @param _baseDir Base directory to load the files.
      * @param _dictMap Map with each language ( string => object | array ). Defaults to {}.
-     * @param _baseDir Base directory to load the files. Defaults to 'data/'.
      * @param _encoding File encoding. Defaults to 'utf8'.
      */
     constructor(
+        private _baseDir: string,
         private _dictMap: Object = {},
-        private _baseDir: string = path.join( process.cwd(), 'data/' ),
         private _encoding: string = 'utf8',
         private _fs = fs
     ) {
@@ -49,11 +49,11 @@ export class LanguageBasedJsonFileLoader {
     }
 
     private makeLanguageFilePath( language: string ): string {
-        return this._baseDir + language + '.json';
+        return join( this._baseDir, language + '.json' );
     }
 
-    private readFileContent( path ): string {
-        return this._fs.readFileSync( path, this._encoding );
+    private readFileContent( filePath ): string {
+        return this._fs.readFileSync( filePath, this._encoding );
     }
 
 }

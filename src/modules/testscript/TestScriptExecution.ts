@@ -40,7 +40,7 @@ export class ExternalToolExecutionResult {
  */
 export class TestScriptExecutionResult {
 
-    schemaVersion: string;
+    schemaVersion: string; // Follows semantic versioning (semver.org)
 
     sourceFile: string; // e.g.: xunit.xml
 
@@ -55,15 +55,23 @@ export class TestScriptExecutionResult {
     finished: string; // UTC timestamp
     durationMs: number; // milliseconds
 
-    total: {
-        tests: number;
-        passed: number;
-        skipped: number;
-        failed: number;
-        error: number;
-        unknown: number;
-    };
+    total: TotalExecutionResult = new TotalExecutionResult();
+    
     results: TestSuiteResult[];
+}
+
+/**
+ * Total execution result
+ * 
+ * @author Thiago Delgado Pinto
+ */
+export class TotalExecutionResult {
+    tests: number = 0;
+    passed: number = 0;
+    skipped: number = 0;
+    failed: number = 0;
+    error: number = 0;
+    unknown: number = 0;    
 }
 
 /**
