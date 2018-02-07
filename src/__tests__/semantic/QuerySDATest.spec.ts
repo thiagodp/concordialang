@@ -9,24 +9,27 @@ import {InMemoryKeywordDictionaryLoader} from '../../modules/dict/InMemoryKeywor
 import {KeywordDictionaryLoader} from '../../modules/dict/KeywordDictionaryLoader';
 import {Parser} from '../../modules/parser/Parser';
 import { QuerySDA } from '../../modules/semantic/QuerySDA';
-
+import { NLPTrainer } from '../../modules/nlp/NLPTrainer';
+import { Options } from '../../modules/app/Options';
+import { resolve } from 'path';
 
 describe( 'QuerySDATest', () => {
 
     let analyzer: QuerySDA = new QuerySDA(); // under test
 
+    const options: Options = new Options( resolve( process.cwd(), 'dist/' ) );
 
-    
     const LANGUAGE = 'pt';
 
     let dictMap = { 'en': new EnglishKeywordDictionary() };
     
-    let dictLoader: KeywordDictionaryLoader = new JsonKeywordDictionaryLoader( this._dictMap );
+    let dictLoader: KeywordDictionaryLoader = new JsonKeywordDictionaryLoader( options.languageDir, this._dictMap );
     let lexer: Lexer = new Lexer( LANGUAGE, dictLoader );
 
     let parser = new Parser();
 
-    let nlpRec: NLPBasedSentenceRecognizer = new NLPBasedSentenceRecognizer( LANGUAGE );
+    let nlpTrainer = new NLPTrainer( options.nlpDir, options.trainingDir );
+    let nlpRec: NLPBasedSentenceRecognizer = new NLPBasedSentenceRecognizer( nlpTrainer );
 
     let singleDocProcessor: SingleDocumentProcessor = new SingleDocumentProcessor();
 

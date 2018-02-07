@@ -1,7 +1,7 @@
 import { AppController } from "./modules/app/AppController";
 
 ( new AppController() )
-    .start()
+    .start( __dirname, process.cwd() )
     .then( ( success: boolean ) => {
         process.exit( success ? 0 : 1 );
     } )

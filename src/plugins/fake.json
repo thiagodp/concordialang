@@ -7,8 +7,8 @@
     "authors": [
         "Thiago Delgado Pinto (thiago-dp@bol.com.br)"
     ],
-    "file": "none",
-    "class": "none",
+    "file": "fake/Fake.js",
+    "class": "Fake",
     "install": "npm --version",
     "uninstall": "node --version"
 }

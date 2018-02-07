@@ -4,13 +4,18 @@ import { Lexer } from "../../modules/lexer/Lexer";
 import { KeywordDictionary } from "../../modules/dict/KeywordDictionary";
 import { NodeTypes } from "../../modules/req/NodeTypes";
 import { JsonKeywordDictionaryLoader } from '../../modules/dict/JsonKeywordDictionaryLoader';
+import { Options } from '../../modules/app/Options';
+import { resolve } from 'path';
 
 /**
  * @author Thiago Delgado Pinto
  */
 describe( 'LexerTest', () => {
 
+    const options: Options = new Options( resolve( process.cwd(), 'dist/' ) );
+
     let loader: KeywordDictionaryLoader = new JsonKeywordDictionaryLoader(
+        options.languageDir,
         { 'en': new EnglishKeywordDictionary() }
     );
 

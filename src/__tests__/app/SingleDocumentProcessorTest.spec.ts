@@ -8,6 +8,10 @@ import { EnglishKeywordDictionary } from '../../modules/dict/EnglishKeywordDicti
 import { Lexer } from '../../modules/lexer/Lexer';
 import { Document } from '../../modules/ast/Document';
 import { JsonKeywordDictionaryLoader } from '../../modules/dict/JsonKeywordDictionaryLoader';
+import { Defaults } from '../../modules/app/Defaults';
+import { resolve } from 'path';
+import { NLPTrainer } from '../../modules/nlp/NLPTrainer';
+import { Options } from '../../modules/app/Options';
 
 /**
  * @author Thiago Delgado Pinto
@@ -16,14 +20,17 @@ describe( 'SingleDocumentProcessorTest', () => {
     
     const LANGUAGE = 'pt';
 
+    const options: Options = new Options( resolve( process.cwd(), 'dist/' ) );
+
     let dictMap = { 'en': new EnglishKeywordDictionary() };
     
-    let dictLoader: KeywordDictionaryLoader = new JsonKeywordDictionaryLoader( this._dictMap );
+    let dictLoader: KeywordDictionaryLoader = new JsonKeywordDictionaryLoader( options.languageDir, this._dictMap );
     let lexer: Lexer = new Lexer( LANGUAGE, dictLoader );
 
     let parser = new Parser();
 
-    let nlpRec: NLPBasedSentenceRecognizer = new NLPBasedSentenceRecognizer( LANGUAGE );
+    let nlpTrainer = new NLPTrainer( options.nlpDir, options.trainingDir );
+    let nlpRec: NLPBasedSentenceRecognizer = new NLPBasedSentenceRecognizer( nlpTrainer );
 
     let singleDocProcessor: SingleDocumentProcessor = new SingleDocumentProcessor();
 

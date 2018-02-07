@@ -12,18 +12,19 @@ import * as childProcess from 'child_process';
  */
 export class PluginManager {
 
-    public readonly PLUGIN_DIR: string = '/plugins';
+    constructor( private _pluginDir: string ) {
+    }
 
     public findAll = async (): Promise< PluginData[] > => {
-        const dir = path.join( process.cwd(), this.PLUGIN_DIR );
-        const finder = new JsonBasedPluginFinder( dir );
+        const finder = new JsonBasedPluginFinder( this._pluginDir );
         const all = await finder.find();
         return this.sortByName( all );
     };
     
-    public pluginWithName = async ( name: string ): Promise< PluginData | undefined > => {
+    public pluginWithName = async ( name: string ): Promise< PluginData | null > => {
         const all: PluginData[] = await this.findAll();
-        return all.find( ( v ) => v.name.toLowerCase() === name.toLowerCase() );
+        const withName: PluginData[] = all.filter( v => v.name.toLowerCase() === name.toLowerCase() );
+        return withName.length > 0 ? withName[ 0 ] : null;
     };
 
     public install = async ( pluginData: PluginData, drawer: PluginDrawer ): Promise< void > => {
@@ -50,15 +51,11 @@ export class PluginManager {
     /**
      * Tries to load a plug-in and to return its instance.
      * 
-     * @param basePluginDirectory Base plug-in directory.
      * @param pluginData Plug-in data
      */
-    public load = async (
-        basePluginDirectory: string,
-        pluginData: PluginData
-    ): Promise< Plugin > => {
+    public load = async ( pluginData: PluginData ): Promise< Plugin > => {
 
-        const pluginClassFile = path.resolve( basePluginDirectory, pluginData.file );
+        const pluginClassFile = path.resolve( this._pluginDir, pluginData.file );
 
         // Dynamically include the file
         const pluginClassFileContext = require( pluginClassFile );

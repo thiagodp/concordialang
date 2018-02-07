@@ -1,6 +1,7 @@
-import { Defaults } from './Defaults';
 import * as filewalker from 'filewalker';
 import * as path from 'path';
+import * as fse from 'node-fs-extra';
+import { EnglishKeywordDictionary } from '../dict/EnglishKeywordDictionary';
 
 /**
  * Language manager
@@ -9,43 +10,43 @@ import * as path from 'path';
  */
 export class LanguageManager {
 
-    private _cache: string[] = [];
+    private readonly ENGLISH_LANGUAGE: string = 'en';
 
     /**
      * Constructor
      * 
-     * @param _dir Directory to search language files.
+     * @param _languageDir Directory to search language files.
      */
     constructor(
-        private _dir?: string
+        private _languageDir: string,
+        private _languageCache: Map< string, object > = new Map< string, object >()
     ) {
-        if ( ! this._dir ) {
-            this._dir = path.join( process.cwd(), ( new Defaults() ).LANGUAGE_DIR );
-        }
     }
 
     /**
      * Returns available languages.
      * 
-     * @param useCache Uses cached results whether available. Defaults to false.
+     * @param ignoreCache Whether it should ignore cached content. Defaults to false.
      */
-    public availableLanguages = async ( useCache: boolean = false ): Promise< string[] > => {
+    public availableLanguages = async ( ignoreCache: boolean = false ): Promise< string[] > => {
 
-        if ( useCache && this._cache.length > 0 ) {
-            return this._cache;
+        if ( ! ignoreCache && this._languageCache.size > 0 ) {
+            return [ ... this._languageCache.keys() ];
         }
 
-        // Gets languages from files
-        let files: string[] = await this.languageFiles();
-        let languages: string[] = files.map( f => f.substring( f.lastIndexOf( path.sep ), f.lastIndexOf( '.' ) ) );
+        this._languageCache.clear();
 
-        // Adds the default language
-        languages.push( ( new Defaults() ).LANGUAGE );
+        // Adds the english language
+        this._languageCache.set( this.ENGLISH_LANGUAGE, new EnglishKeywordDictionary() );
 
-        // Add to cache
-        this._cache = languages;
+        // Add file names, without content
+        const files: string[] = await this.languageFiles();
+        for ( let file of files ) {
+            const language: string = file.substring( file.lastIndexOf( path.sep ), file.lastIndexOf( '.' ) );
+            this._languageCache.set( language, null ); // No content yet - will be loaded on demand
+        }
 
-        return languages;
+        return [ ... this._languageCache.keys() ];
     };
 
     /**
@@ -64,7 +65,7 @@ export class LanguageManager {
 
             let files: string[] = [];
 
-            filewalker( this._dir, options )
+            filewalker( this._languageDir, options )
                 .on( 'file', ( relPath, stats, absPath ) => files.push( relPath ) )
                 .on( 'error', ( err ) => reject( err ) )
                 .on( 'done', () => resolve( files ) )
@@ -75,10 +76,37 @@ export class LanguageManager {
     };
 
     /**
+     * Returns a content of a language.
+     * 
+     * @param language Language to load.
+     * @return Promise to the content, null or undefined.
+     */
+    /*
+    public contentOf = async ( language: string, ignoreCache: boolean = false ): Promise< object | null | undefined > => {
+        if ( ignoreCache ) {
+            await this.availableLanguages( true );
+        }
+        if ( ! this._languageCache.has( language ) ) {
+            return null;
+        }
+        let content = this._languageCache.get( language );
+        if ( ! content ) {
+            content = fse.readJson( this.makeLanguageFilePath( language ) );
+            this._languageCache.set( language, content );
+        }
+        return content;
+    };
+    */
+
+    /**
      * Returns the directory used to search files.
      */
     public dir = (): string => {
-        return this._dir;
+        return this._languageDir;
     };
+
+    private makeLanguageFilePath( language: string ): string {
+        return path.join( this._languageDir,  language + '.json' );
+    }    
 
 }

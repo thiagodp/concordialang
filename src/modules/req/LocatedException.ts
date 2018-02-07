@@ -12,9 +12,16 @@ export abstract class LocatedException extends Error {
     }
 
     public static makeExceptionMessage( originalMessage?: string, location?: Location ): string {
-        return location && originalMessage
-            ? '(' + location.line + ',' + location.column + ') ' + originalMessage
-            : originalMessage ? originalMessage : '';
+        let msg = '';
+        if ( location ) {
+            msg += '(' + location.line + ',' + location.column + ') ';
+            if ( location.filePath ) {
+                msg += location.filePath + ': ';
+            }
+        }
+        msg += originalMessage || '';
+
+        return msg;
     }
 
 }

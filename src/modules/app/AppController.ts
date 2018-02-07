@@ -8,19 +8,26 @@ import { LanguageController } from './LanguageController';
 import { PluginData } from '../plugin/PluginData';
 import { PluginManager } from '../plugin/PluginManager';
 import { Plugin } from '../plugin/Plugin';
-import { Defaults } from './Defaults';
 import { TestScriptExecutionOptions } from '../testscript/TestScriptExecution';
 import { TestCaseGenerationOptions } from '../testcase/TestCaseOptions';
+import { CliScriptExecutionReporter } from './CliScriptExecutionReporter';
 
+/**
+ * Application controller
+ * 
+ * @author Thiago Delgado Pinto
+ */
 export class AppController {
 
-    start = async (): Promise< boolean > => {
+    start = async ( appPath: string, processPath: string ): Promise< boolean > => {
 
-        const defaults: Defaults = new Defaults();
+        //console.log( appPath );
+        //console.log( processPath );        
 
+        let options: Options = new Options( appPath, processPath );
         let cli = new CLI();
         let ui: UI = new UI( cli );
-        let options: Options = ui.readOptions();
+        ui.updateOptions( options ); // read from console
 
         //console.log( options );
 
@@ -40,7 +47,7 @@ export class AppController {
         }
 
         let pluginData: PluginData = null;
-        let pluginManager: PluginManager = new PluginManager();
+        let pluginManager: PluginManager = new PluginManager( options.pluginDir );
         let plugin: Plugin = null;
 
         if ( options.somePluginOption() ) {
@@ -56,10 +63,14 @@ export class AppController {
         } else if ( options.someOptionThatRequiresAPlugin() && options.hasPluginName() ) {
             try {
                 pluginData = await pluginManager.pluginWithName( options.plugin );
-                plugin = await pluginManager.load( defaults.PLUGIN_DIR, pluginData );
+                if ( ! pluginData ) {
+                    cli.newLine( cli.symbolError, 'Plugin "' + options.plugin + '" not found at "' + options.pluginDir + '".' );
+                    return true;
+                }
+                plugin = await pluginManager.load( pluginData );
             } catch ( err ) {
                 options.debug
-                    ? cli.newLine( cli.symbolError, err.message, "\n  DETAILS:", err.stack )
+                    ? cli.newLine( cli.symbolError, err.message, this.formattedStackOf( err ) )
                     : cli.newLine( cli.symbolError, err.message );
                 return false;
             }
@@ -109,6 +120,11 @@ export class AppController {
             cli.newLine( cli.symbolInfo, 'Example generation disabled.' );
         }
 
+        if ( ! plugin && ( options.generateScripts || options.executeScripts || options.analyzeResults ) ) {
+            cli.newLine( cli.symbolWarning, 'A plugin must be defined.' );
+            return true;
+        }
+
         if ( options.generateScripts ) { // Requires a plugin
             // TO-DO
         } else {
@@ -119,10 +135,11 @@ export class AppController {
             // TO-DO
             let tseo: TestScriptExecutionOptions = new TestScriptExecutionOptions();
             try {
-                await plugin.executeCode( tseo );
+                let r = await plugin.executeCode( tseo );
+                ( new CliScriptExecutionReporter( cli ) ).scriptExecuted( r );
             } catch ( err ) {
                 options.debug
-                    ? cli.newLine( cli.symbolError, err.message, "\n  DETAILS:", err.stack )
+                    ? cli.newLine( cli.symbolError, err.message, this.formattedStackOf( err ) )
                     : cli.newLine( cli.symbolError, err.message );
             }
         } else {
@@ -146,5 +163,10 @@ export class AppController {
 
         return ! hasErrors;
     };
+
+
+    private formattedStackOf( err: Error ): string {
+        return "\n  DETAILS: " + err.stack.substring( err.stack.indexOf( "\n" ) );
+    }
 
 }

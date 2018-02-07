@@ -16,17 +16,14 @@ import { NLP } from './NLP';
  */
 export class NLPBasedSentenceRecognizer {
 
-    private _nlpTrainer: NLPTrainer;
     private _uiPropertyRec: UIPropertyRecognizer;
     private _variantSentenceRec: VariantSentenceRecognizer;
     private _dbPropertyRec: DatabasePropertyRecognizer;
 
     constructor(
-        private _defaultLanguage: string = 'en',
-        private _dataDir?: string,       
+        private _nlpTrainer: NLPTrainer,
         private _useFuzzyProcessor?: boolean
     ) {
-        this._nlpTrainer = new NLPTrainer( _dataDir );
         this._uiPropertyRec = new UIPropertyRecognizer( new NLP( _useFuzzyProcessor ) );
         this._variantSentenceRec = new VariantSentenceRecognizer( new NLP( _useFuzzyProcessor ) );
         this._dbPropertyRec = new DatabasePropertyRecognizer( new NLP( _useFuzzyProcessor ) );

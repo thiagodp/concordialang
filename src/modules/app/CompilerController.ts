@@ -20,39 +20,37 @@ import { LanguageManager } from "./LanguageManager";
 
 export class CompilerController {
 
-    private _dictMap = { 'en': new EnglishKeywordDictionary() };
-    private _dictLoader: KeywordDictionaryLoader =
-        new JsonKeywordDictionaryLoader( this._dictMap );
-    private _lexer: Lexer = new Lexer( 'en', this._dictLoader );
-
-    private _parser: Parser = new Parser();
-
-    private _nlpTrainer: NLPTrainer = new NLPTrainer();
-    private _nlpBasedSentenceRecognizer: NLPBasedSentenceRecognizer =
-        new NLPBasedSentenceRecognizer();
-
-    private _specAnalyzer: SpecAnalyzer = new SpecAnalyzer();        
-
-
-    constructor() {
-    }
-    
-
     public compile = async ( options: Options, cli: CLI ): Promise< Spec > => {
 
-        const availableLanguages: string[] = await ( new LanguageManager() ).availableLanguages();
+        let dictMap = { 'en': new EnglishKeywordDictionary() };
+
+        let dictLoader: KeywordDictionaryLoader =
+            new JsonKeywordDictionaryLoader( options.languageDir, dictMap, options.encoding );
+
+        let lexer: Lexer = new Lexer( 'en', dictLoader );
+
+        let parser: Parser = new Parser();
+
+        let nlpTrainer: NLPTrainer = new NLPTrainer( options.nlpDir, options.trainingDir );
+        let nlpBasedSentenceRecognizer: NLPBasedSentenceRecognizer = new NLPBasedSentenceRecognizer( nlpTrainer );
+
+        let specAnalyzer: SpecAnalyzer = new SpecAnalyzer();
+        
+        const lm = new LanguageManager( options.languageDir );
+        const availableLanguages: string[] = await lm.availableLanguages();
         if ( availableLanguages.indexOf( options.language ) < 0 ) { // not found
             throw new Error( 'Informed language is not available: ' + options.language );
         }
 
+        // Verbose output option
         let listener =  options.verbose
             ? new VerboseAppEventsListener( cli )
             : new SimpleAppEventsListener( cli );
 
         let singleFileCompiler = new SingleFileCompiler(
-            this._lexer,
-            this._parser,
-            this._nlpBasedSentenceRecognizer,
+            lexer,
+            parser,
+            nlpBasedSentenceRecognizer,
             options.language
         );
 
@@ -60,7 +58,7 @@ export class CompilerController {
 
         let compiler = new Compiler(
             mfp,
-            this._specAnalyzer
+            specAnalyzer
         );
 
         return await compiler.compile( options, listener );

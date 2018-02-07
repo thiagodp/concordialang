@@ -2,6 +2,8 @@ import { Intents } from '../../modules/nlp/Intents';
 import { NLPTrainer } from '../../modules/nlp/NLPTrainer';
 import { Entities } from '../../modules/nlp/Entities';
 import { NLP } from '../../modules/nlp/NLP';
+import { Options } from '../../modules/app/Options';
+import { resolve } from 'path';
 
 /**
  * @author Thiago Delgado Pinto
@@ -10,6 +12,7 @@ describe( 'NLPInPortugueseTest', () => {
 
     let nlp: NLP; // under test    
     const LANGUAGE = 'pt';
+    const options: Options = new Options( resolve( process.cwd(), 'dist/' ) );
 
     // entities
     const ELEMENT: string = Entities.ELEMENT;
@@ -26,7 +29,7 @@ describe( 'NLPInPortugueseTest', () => {
 
     beforeAll( () => { // once
         nlp = new NLP();
-        ( new NLPTrainer() ).trainNLP( nlp, LANGUAGE );
+        ( new NLPTrainer( options.nlpDir, options.trainingDir ) ).trainNLP( nlp, LANGUAGE );
     } );
 
     function recognize( sentence: string ) {

@@ -1,8 +1,8 @@
 import { NLPIntentExample, NLPTrainingData } from "./NLPTrainingData";
 import { NLPTrainingDataConversor } from "./NLPTrainingDataConversor";
 import { NLP } from "./NLP";
-import * as path from 'path';
 import * as fs from 'fs';
+import { resolve } from 'path';
 
 /**
  * NLP trainer.
@@ -14,16 +14,10 @@ export class NLPTrainer {
     private _dataCacheMap: object = {}; // Maps language => data
 
     constructor(
-        private _dataDir = path.join( process.cwd(), 'data/' ),
+        private _nlpDir: string,
+        private _trainingDir: string,
         private _fs = fs
     ) {
-    }
-
-    dataDir( dir?: string ) {
-        if ( dir ) {
-            this._dataDir = dir;
-        }
-        return this._dataDir;
     }
 
     canBeTrained( language: string ): boolean {
@@ -67,11 +61,11 @@ export class NLPTrainer {
     }
 
     nlpPath( language: string ): string {
-        return this._dataDir + `nlp/${language}.json`;
+        return resolve( this._nlpDir, `${language}.json` );
     }
 
     trainingPath( language: string ): string {
-        return this._dataDir + `training/${language}.json`
+        return resolve( this._trainingDir, `${language}.json` );
     }
 
 }

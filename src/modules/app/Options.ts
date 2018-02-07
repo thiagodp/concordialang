@@ -1,4 +1,5 @@
 import * as util from 'util';
+import { resolve } from 'path';
 import { Defaults } from './Defaults';
 
 export class Options { 
@@ -59,6 +60,27 @@ export class Options {
     public version: boolean = false; // show version
     public newer: boolean = false; // check for version updates
     public debug: boolean = false; // debug mode
+
+    // Internal
+    public pluginDir: string = 'plugins/';
+    public languageDir: string = 'data/keywords/';
+    public nlpDir: string = 'data/nlp/';
+    
+    public trainingDir: string = 'data/training/';
+
+
+
+    constructor(
+        public appPath: string = process.cwd(),
+        public processPath: string = process.cwd()
+    ) {
+        const defaults = new Defaults();
+        // Update internals
+        this.pluginDir = resolve( appPath, defaults.PLUGIN_DIR );
+        this.languageDir = resolve( appPath, defaults.LANGUAGE_DIR );
+        this.nlpDir = resolve( appPath, defaults.NLP_DIR );
+        this.trainingDir = resolve( appPath, defaults.TRAINING_DIR );        
+    }
 
 
     public shouldSeeHelp(): boolean {

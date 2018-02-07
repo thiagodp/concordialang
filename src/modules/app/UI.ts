@@ -12,11 +12,9 @@ export class UI {
     constructor( private _cli: CLI ) {
     }
 
-    readOptions(): Options {
+    updateOptions( options: Options ): void {
         this._meowInput = meow( this._cliHelp.content(), this._cliHelp.meowOptions() ); 
-        this._options = new Options();
-        this._options.fromMeow( this._meowInput );
-        return this._options;
+        options.fromMeow( this._meowInput );
     }
 
     showHelp(): void {
@@ -38,10 +36,6 @@ export class UI {
 
     showVersion(): void {
         this._meowInput.showVersion();
-    }
-
-    options(): Options {
-        return this._options;
     }
 
 }
