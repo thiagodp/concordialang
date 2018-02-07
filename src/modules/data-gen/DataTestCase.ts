@@ -155,12 +155,12 @@ export class DataTestCaseGroupDef {
 	 * @param testCase Test case
 	 */
     groupOf( testCase: DataTestCase ): DataTestCaseGroup {
-        if ( this.value.includes( testCase ) ) return DataTestCaseGroup.VALUE;
-        if ( this.length.includes( testCase ) ) return DataTestCaseGroup.LENGTH;
-        if ( this.format.includes( testCase ) ) return DataTestCaseGroup.FORMAT;
-        if ( this.set.includes( testCase ) ) return DataTestCaseGroup.SET;
-        if ( this.required.includes( testCase ) ) return DataTestCaseGroup.REQUIRED;
-        if ( this.computation.includes( testCase ) ) return DataTestCaseGroup.COMPUTATION;
+        if ( this.value.indexOf( testCase ) >= 0 ) return DataTestCaseGroup.VALUE;
+        if ( this.length.indexOf( testCase ) >= 0 ) return DataTestCaseGroup.LENGTH;
+        if ( this.format.indexOf( testCase ) >= 0 ) return DataTestCaseGroup.FORMAT;
+        if ( this.set.indexOf( testCase ) >= 0 ) return DataTestCaseGroup.SET;
+        if ( this.required.indexOf( testCase ) >= 0 ) return DataTestCaseGroup.REQUIRED;
+        if ( this.computation.indexOf( testCase ) >= 0 ) return DataTestCaseGroup.COMPUTATION;
         throw new Error( 'Test case not found in any available group' );
     }
 

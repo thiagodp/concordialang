@@ -1,3 +1,9 @@
+/* tslint:disable */
+
+//
+// ATTENTION: This is an old, alternative version of the Lexer, kept while the another lexer is not complete.
+//
+
 import { Expressions } from '../Expressions';
 import { KeywordDictionary } from '../../dict/KeywordDictionary';
 import { Keywords } from '../Keywords';
