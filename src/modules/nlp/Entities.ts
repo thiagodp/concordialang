@@ -8,10 +8,11 @@
 export enum Entities {
 
     // General
-    VALUE = 'value', // e.g.: "username"
-    ELEMENT = 'element', // e.g.: {Username}
-    NUMBER = 'number', // e.g.: -3.12
-    QUERY = 'query', // e.g.: "SELECT * FROM someTable"
+    VALUE = 'value', // e.g., "username"
+    ELEMENT = 'element', // e.g., {Username}, {My Feature 1:Full Name}
+    NUMBER = 'number', // e.g., -3.12
+    QUERY = 'query', // e.g., "SELECT * FROM someTable"
+    CONSTANT = 'constant', // e.g., [hello]
 
     // Intent "testcase"
     UI_ACTION = 'ui_action', // e.g.: click, fill, ...
