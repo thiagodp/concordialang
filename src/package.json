@@ -16,10 +16,10 @@
   "homepage": "https://site.org",
   "repository": {
     "type": "git",
-    "url": "git://gitlab.com/thiagodp/asl.git"
+    "url": "git://gitlab.com/thiagodp/concordialang.git"
   },
   "bugs": {
-    "url": "https://gitlab.com/thiagodp/asl/issues"
+    "url": "https://gitlab.com/thiagodp/concordialang/issues"
   },
   "author": {
     "name": "Thiago Delgado Pinto",
