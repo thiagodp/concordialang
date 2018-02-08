@@ -7,6 +7,9 @@ Banco de dados: Meu BD
   - username is "root"
   - password is ""
 
+Banco de dados: Meu Outro BD
+  - tipo é "json"
+  - caminho é "../src/__tests__/db/users.json"
 
 Característica: Login
 
@@ -16,4 +19,4 @@ Elemento de IU: Enter
 
 Elemento de IU: Usuário
   - id é "usuario"
-  - tipo é caixa de texto  
+  - tipo é caixa de texto 

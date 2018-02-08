@@ -1,11 +1,11 @@
 import { Table } from '../../modules/ast/Table';
 import { Parser } from '../../modules/parser/Parser';
-import { KeywordDictionaryLoader } from '../../modules/dict/KeywordDictionaryLoader';
-import { InMemoryKeywordDictionaryLoader } from '../../modules/dict/InMemoryKeywordDictionaryLoader';
-import { EnglishKeywordDictionary } from '../../modules/dict/EnglishKeywordDictionary';
 import { Lexer } from '../../modules/lexer/Lexer';
 import { Document } from '../../modules/ast/Document';
 import { InMemoryTableCreator } from '../../modules/db/InMemoryTableCreator';
+import { Options } from '../../modules/app/Options';
+import { LexerBuilder } from '../../modules/lexer/LexerBuilder';
+import { resolve } from 'path';
 
 /**
  * @author Thiago Delgado Pinto
@@ -15,12 +15,8 @@ describe( 'InMemoryTableCreatorTest', () => {
     let creator = new InMemoryTableCreator(); // under test
 
     let parser = new Parser();
-    
-    let loader: KeywordDictionaryLoader = new InMemoryKeywordDictionaryLoader(
-        { 'en': new EnglishKeywordDictionary() }
-    );
-
-    let lexer: Lexer = new Lexer( 'en', loader );
+    const options: Options = new Options( resolve( process.cwd(), 'dist/' ) );
+    let lexer: Lexer = ( new LexerBuilder() ).build( options, 'en' );
 
 
     it( 'creates a database table from a table node', async () => {

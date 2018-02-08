@@ -60,7 +60,8 @@ export class LanguageManager {
                 maxPending: -1,
                 maxAttempts: 0,
                 attemptTimeout: 1000,
-                matchRegExp: new RegExp( '\\.json$' )
+                matchRegExp: new RegExp( '\\.json$' ),
+                recursive: false
             };
 
             let files: string[] = [];

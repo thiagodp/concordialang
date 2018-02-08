@@ -2,16 +2,14 @@ import { DatabaseWrapper } from '../../modules/db/DatabaseWrapper';
 import { NLPBasedSentenceRecognizer } from '../../modules/nlp/NLPBasedSentenceRecognizer';
 import { SingleDocumentProcessor } from '../../modules/app/SingleDocumentProcessor';
 import { Parser } from '../../modules/parser/Parser';
-import { KeywordDictionaryLoader } from '../../modules/dict/KeywordDictionaryLoader';
-import { InMemoryKeywordDictionaryLoader } from '../../modules/dict/InMemoryKeywordDictionaryLoader';
-import { EnglishKeywordDictionary } from '../../modules/dict/EnglishKeywordDictionary';
 import { Lexer } from '../../modules/lexer/Lexer';
 import { Document } from '../../modules/ast/Document';
-import { JsonKeywordDictionaryLoader } from '../../modules/dict/JsonKeywordDictionaryLoader';
 import { Defaults } from '../../modules/app/Defaults';
 import { resolve } from 'path';
 import { NLPTrainer } from '../../modules/nlp/NLPTrainer';
 import { Options } from '../../modules/app/Options';
+import { LanguageContentLoader, JsonLanguageContentLoader } from '../../modules/dict/LanguageContentLoader';
+import { LexerBuilder } from '../../modules/lexer/LexerBuilder';
 
 /**
  * @author Thiago Delgado Pinto
@@ -21,15 +19,14 @@ describe( 'SingleDocumentProcessorTest', () => {
     const LANGUAGE = 'pt';
 
     const options: Options = new Options( resolve( process.cwd(), 'dist/' ) );
+    const langLoader: LanguageContentLoader =
+        new JsonLanguageContentLoader( options.languageDir, {}, options.encoding );
 
-    let dictMap = { 'en': new EnglishKeywordDictionary() };
-    
-    let dictLoader: KeywordDictionaryLoader = new JsonKeywordDictionaryLoader( options.languageDir, this._dictMap );
-    let lexer: Lexer = new Lexer( LANGUAGE, dictLoader );
+    let lexer: Lexer = ( new LexerBuilder( langLoader ) ).build( options, LANGUAGE );
 
     let parser = new Parser();
 
-    let nlpTrainer = new NLPTrainer( options.nlpDir, options.trainingDir );
+    let nlpTrainer = new NLPTrainer( langLoader );
     let nlpRec: NLPBasedSentenceRecognizer = new NLPBasedSentenceRecognizer( nlpTrainer );
 
     let singleDocProcessor: SingleDocumentProcessor = new SingleDocumentProcessor();

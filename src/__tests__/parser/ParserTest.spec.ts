@@ -1,11 +1,11 @@
 import { NodeTypes } from '../../modules/req/NodeTypes';
-import { EnglishKeywordDictionary } from '../../modules/dict/EnglishKeywordDictionary';
 import { Lexer } from '../../modules/lexer/Lexer';
 import { Parser } from '../../modules/parser/Parser';
 import { KeywordDictionary } from "../../modules/dict/KeywordDictionary";
 import { Document } from '../../modules/ast/Document';
-import { KeywordDictionaryLoader } from "../../modules/dict/KeywordDictionaryLoader";
-import { InMemoryKeywordDictionaryLoader } from "../../modules/dict/InMemoryKeywordDictionaryLoader";
+import { Options } from '../../modules/app/Options';
+import { LexerBuilder } from '../../modules/lexer/LexerBuilder';
+import { resolve } from 'path';
 
 /**
  * @author Thiago Delgado Pinto
@@ -14,11 +14,8 @@ describe( 'ParserTest', () => {
 
     let parser = new Parser(); // under test    
 
-    let loader: KeywordDictionaryLoader = new InMemoryKeywordDictionaryLoader(
-        { 'en': new EnglishKeywordDictionary() }
-    );
-
-    let lexer: Lexer = new Lexer( 'en', loader );
+    const options: Options = new Options( resolve( process.cwd(), 'dist/' ) );
+    let lexer: Lexer = ( new LexerBuilder() ).build( options, 'en' );
 
 
     beforeEach( () => {

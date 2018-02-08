@@ -1,10 +1,8 @@
-import { EnglishKeywordDictionary } from '../../modules/dict/EnglishKeywordDictionary';
-import { KeywordDictionaryLoader } from '../../modules/dict/KeywordDictionaryLoader';
 import { Lexer } from "../../modules/lexer/Lexer";
 import { KeywordDictionary } from "../../modules/dict/KeywordDictionary";
 import { NodeTypes } from "../../modules/req/NodeTypes";
-import { JsonKeywordDictionaryLoader } from '../../modules/dict/JsonKeywordDictionaryLoader';
 import { Options } from '../../modules/app/Options';
+import { LexerBuilder } from '../../modules/lexer/LexerBuilder';
 import { resolve } from 'path';
 
 /**
@@ -13,13 +11,7 @@ import { resolve } from 'path';
 describe( 'LexerTest', () => {
 
     const options: Options = new Options( resolve( process.cwd(), 'dist/' ) );
-
-    let loader: KeywordDictionaryLoader = new JsonKeywordDictionaryLoader(
-        options.languageDir,
-        { 'en': new EnglishKeywordDictionary() }
-    );
-
-    let lexer: Lexer = new Lexer( 'en', loader ); // under test
+    let lexer: Lexer = ( new LexerBuilder() ).build( options, 'en' );
 
     // Helper function
     function assertLineExpectations( lines: any[] ) {

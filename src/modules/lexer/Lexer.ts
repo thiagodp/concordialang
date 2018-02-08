@@ -6,7 +6,6 @@ import { UIPropertyLexer } from './UIPropertyLexer';
 import { UIElementLexer } from './UIElementLexer';
 import { ConstantBlock } from '../ast/ConstantBlock';
 import { KeywordBasedLexer } from './KeywordBasedLexer';
-import { KeywordDictionaryLoader } from '../dict/KeywordDictionaryLoader';
 import { Language } from '../ast/Language';
 import { NodeTypes } from '../req/NodeTypes';
 import { VariantLexer } from './VariantLexer';
@@ -34,6 +33,8 @@ import { KeywordDictionary } from '../dict/KeywordDictionary';
 import { TableLexer } from './TableLexer';
 import { TableRowLexer } from './TableRowLexer';
 import { LongStringLexer } from './LongStringLexer';
+import { LanguageContentLoader } from '../dict/LanguageContentLoader';
+import { LanguageContent } from '../dict/LanguageContent';
 
 /**
  * Lexer
@@ -57,17 +58,17 @@ export class Lexer {
      * Constructs the lexer.
      * 
      * @param _defaultLanguage Default language (e.g.: "en")
-     * @param _dictionaryLoader Keyword dictionary loader.
+     * @param _languageContentLoader Language content loader.
      * @param _stopOnFirstError True for stopping on the first error found.
      * 
      * @throws Error if the given default language could not be found.
      */
     constructor(
         private _defaultLanguage: string,
-        private _dictionaryLoader: KeywordDictionaryLoader,
+        private _languageContentLoader: LanguageContentLoader,
         private _stopOnFirstError: boolean = false,
     ) {
-        let dictionary: KeywordDictionary = _dictionaryLoader.load( _defaultLanguage ); // may throw
+        const dictionary: KeywordDictionary = this.loadDictionary( _defaultLanguage ); // may throw Error
         if ( ! dictionary ) {
             throw new Error( 'Cannot load a dictionary for the language: ' + _defaultLanguage );
         }
@@ -287,7 +288,8 @@ export class Lexer {
      * @throws Error In case of the language is not available.
      */
     public changeLanguage( language: string ): KeywordDictionary {
-        let dict = this._dictionaryLoader.load( language ); // throws Error
+        let dict = this.loadDictionary( language ) // may throw Error
+            || {} as KeywordDictionary;
         for ( let lexer of this._lexers ) {
             if ( this.isAWordBasedLexer( lexer ) ) {
                 let nodeType = lexer.affectedKeyword();
@@ -298,6 +300,17 @@ export class Lexer {
             }
         }
         return dict;
+    }
+
+    /**
+     * Loads a dictionary
+     * 
+     * @param language Language
+     * @throws Error
+     */
+    private loadDictionary( language: string ): KeywordDictionary | null {
+        const content: LanguageContent = this._languageContentLoader.load( language ); // may throw Error
+        return content ? content.keywords : null;
     }
 
     private isAWordBasedLexer( obj: any ): obj is KeywordBasedLexer {

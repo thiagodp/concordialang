@@ -7,6 +7,7 @@ import { UIPropertyRecognizer } from "../../modules/nlp/UIPropertyRecognizer";
 import { Lexer } from '../../modules/lexer/Lexer';
 import { Options } from '../../modules/app/Options';
 import { resolve } from 'path';
+import { LanguageContentLoader, JsonLanguageContentLoader } from '../../modules/dict/LanguageContentLoader';
 
 describe( 'UIPropertyRecognizerTest', () => {
 
@@ -15,6 +16,8 @@ describe( 'UIPropertyRecognizerTest', () => {
     let warnings = [];
 
     const options: Options = new Options( resolve( process.cwd(), 'dist/' ) );
+    const langLoader: LanguageContentLoader =
+        new JsonLanguageContentLoader( options.languageDir, {}, options.encoding );
 
     // helper
     function makeNode( content: string, line = 1, column = 1 ): UIProperty {
@@ -30,7 +33,7 @@ describe( 'UIPropertyRecognizerTest', () => {
         const LANGUAGE = 'pt';
         let nlp = new NLP();
         let rec = new UIPropertyRecognizer( nlp ); // under test
-        let nlpTrainer = new NLPTrainer( options.nlpDir, options.trainingDir );
+        let nlpTrainer = new NLPTrainer( langLoader );
         rec.trainMe( nlpTrainer, LANGUAGE );
 
 

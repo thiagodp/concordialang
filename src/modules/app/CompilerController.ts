@@ -7,31 +7,27 @@ import { SimpleAppEventsListener } from "./SimpleAppEventsListener";
 import { Spec } from "../ast/Spec";
 import { Lexer } from "../lexer/Lexer";
 import { LocatedException } from "../req/LocatedException";
-import { EnglishKeywordDictionary } from "../dict/EnglishKeywordDictionary";
-import { KeywordDictionaryLoader } from "../dict/KeywordDictionaryLoader";
-import { JsonKeywordDictionaryLoader } from "../dict/JsonKeywordDictionaryLoader";
 import { Parser } from "../parser/Parser";
 import { NLPTrainer } from "../nlp/NLPTrainer";
 import { NLPBasedSentenceRecognizer } from "../nlp/NLPBasedSentenceRecognizer";
 import { SpecAnalyzer } from "../semantic/SpecAnalyzer";
 import { Compiler } from "./Compiler";
 import { LanguageManager } from "./LanguageManager";
+import { LexerBuilder } from "../lexer/LexerBuilder";
+import { LanguageContentLoader, JsonLanguageContentLoader } from "../dict/LanguageContentLoader";
 
 
 export class CompilerController {
 
     public compile = async ( options: Options, cli: CLI ): Promise< Spec > => {
 
-        let dictMap = { 'en': new EnglishKeywordDictionary() };
+        const langLoader: LanguageContentLoader =
+            new JsonLanguageContentLoader( options.languageDir, {}, options.encoding );        
 
-        let dictLoader: KeywordDictionaryLoader =
-            new JsonKeywordDictionaryLoader( options.languageDir, dictMap, options.encoding );
-
-        let lexer: Lexer = new Lexer( 'en', dictLoader );
-
+        let lexer: Lexer = ( new LexerBuilder( langLoader ) ).build( options );
         let parser: Parser = new Parser();
 
-        let nlpTrainer: NLPTrainer = new NLPTrainer( options.nlpDir, options.trainingDir );
+        let nlpTrainer: NLPTrainer = new NLPTrainer( langLoader );
         let nlpBasedSentenceRecognizer: NLPBasedSentenceRecognizer = new NLPBasedSentenceRecognizer( nlpTrainer );
 
         let specAnalyzer: SpecAnalyzer = new SpecAnalyzer();

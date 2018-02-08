@@ -7,9 +7,7 @@ export class Defaults {
     readonly EXTENSIONS: string[] = [ '.feature', '.example' ];
 
     readonly PLUGIN_DIR: string = 'plugins/';
-    readonly LANGUAGE_DIR: string = 'data/keywords/';    
-    readonly NLP_DIR: string = 'data/nlp/';
-    readonly TRAINING_DIR: string = 'data/training/';
+    readonly LANGUAGE_DIR: string = 'data/';
 
     /**
      * Returns available encodings.

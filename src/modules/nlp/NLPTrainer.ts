@@ -1,8 +1,8 @@
 import { NLPIntentExample, NLPTrainingData } from "./NLPTrainingData";
 import { NLPTrainingDataConversor } from "./NLPTrainingDataConversor";
 import { NLP } from "./NLP";
-import * as fs from 'fs';
-import { resolve } from 'path';
+import { LanguageContentLoader } from "../dict/LanguageContentLoader";
+import { LanguageContent } from "../dict/LanguageContent";
 
 /**
  * NLP trainer.
@@ -11,24 +11,16 @@ import { resolve } from 'path';
  */
 export class NLPTrainer {
 
-    private _dataCacheMap: object = {}; // Maps language => data
+    private _convertedData: Map< string, NLPTrainingData > = 
+        new Map< string, NLPTrainingData >();
 
     constructor(
-        private _nlpDir: string,
-        private _trainingDir: string,
-        private _fs = fs
+        private _langLoader: LanguageContentLoader
     ) {
     }
 
     canBeTrained( language: string ): boolean {
-
-        // Already trained -> can be trained ;)
-        if ( this._dataCacheMap[ language ] ) {
-            return true;
-        }
-
-        return this._fs.existsSync( this.nlpPath( language ) )
-            && this._fs.existsSync( this.trainingPath( language )  );
+        return this._langLoader.has( language );
     }
 
     trainNLP( nlp: NLP, language: string, internalNameFilter?: string ): boolean {
@@ -36,36 +28,19 @@ export class NLPTrainer {
         if ( ! this.canBeTrained( language ) ) {
             return false;
         }
-
-        let data: NLPTrainingData = this._dataCacheMap[ language ];
+        
+        let data: NLPTrainingData = this._convertedData[ language ];
         if ( ! data ) {
-            let translationMap = this.makeTranslationMap( language );
-            let examples = this.makeTrainingExamples( language );
+            const content: LanguageContent = this._langLoader.load( language );
             let conversor: NLPTrainingDataConversor = new NLPTrainingDataConversor();
-            data = conversor.convert( translationMap, examples );
-            this._dataCacheMap[ language ] = data;
+            data = conversor.convert( content.nlp || {}, content.training || [] );
+            this._convertedData[ language ] = data;
         } else {
-            data = this._dataCacheMap[ language ];
+            data = this._convertedData[ language ];
         }
 
         nlp.train( language, data, internalNameFilter );
         return true;
-    }
-
-    makeTranslationMap( language: string ): any {
-        return require( this.nlpPath( language ) );
-    }
-
-    makeTrainingExamples( language: string ): NLPIntentExample[] {
-        return require( this.trainingPath( language ) );
-    }
-
-    nlpPath( language: string ): string {
-        return resolve( this._nlpDir, `${language}.json` );
-    }
-
-    trainingPath( language: string ): string {
-        return resolve( this._trainingDir, `${language}.json` );
     }
 
 }

@@ -2,11 +2,11 @@ import { FeatureSpecAnalyzer } from '../../modules/semantic/FeatureSpecAnalyzer'
 import { Parser } from '../../modules/parser/Parser';
 import { ScenarioSDA } from '../../modules/semantic/single/ScenarioSDA';
 import { Lexer } from '../../modules/lexer/Lexer';
-import { KeywordDictionaryLoader } from '../../modules/dict/KeywordDictionaryLoader';
-import { InMemoryKeywordDictionaryLoader } from '../../modules/dict/InMemoryKeywordDictionaryLoader';
-import { EnglishKeywordDictionary } from '../../modules/dict/EnglishKeywordDictionary';
 import { Document } from '../../modules/ast/Document';
 import { Spec } from '../../modules/ast/Spec';
+import { Options } from '../../modules/app/Options';
+import { LexerBuilder } from '../../modules/lexer/LexerBuilder';
+import { resolve } from 'path';
 
 /**
  * @author Thiago Delgado Pinto
@@ -16,12 +16,8 @@ describe( 'FeatureSpecAnalyzerTest', () => {
     const analyzer = new FeatureSpecAnalyzer(); // under test
 
     let parser = new Parser();
-    
-    let loader: KeywordDictionaryLoader = new InMemoryKeywordDictionaryLoader(
-        { 'en': new EnglishKeywordDictionary() }
-    );
-
-    let lexer: Lexer = new Lexer( 'en', loader );
+    const options: Options = new Options( resolve( process.cwd(), 'dist/' ) );
+    let lexer: Lexer = ( new LexerBuilder() ).build( options, 'en' );
 
     let doc1: Document;    
 

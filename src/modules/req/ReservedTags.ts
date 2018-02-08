@@ -9,7 +9,7 @@ export enum ReservedTags {
     
     FEATURE = 'feature', // example: @feature( login )
     SCENARIO = 'scenario', // example: @scenario( sucessful login )
-    INTERACTION = 'interaction', // example: @interaction( successful login )
+    TEMPLATE = 'template', // example: @template( successful login )
 
     GLOBAL = 'global', // example: @global
     IGNORE = 'ignore' // example: @ignore

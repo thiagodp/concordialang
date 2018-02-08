@@ -41,7 +41,11 @@ export class DataGenerator {
 	) {
 	}
 
-	
+	/**
+	 * Analyzes whether a data can be considered valid or invalid according to the given test case.
+	 * 
+	 * @param testCase Test case to analyze
+	 */
 	public analyze( testCase: DataTestCase ): DataAnalysisResult {
 
 		if ( ( new DataTestCaseGroupDef() ).groupOf( testCase ) !== DataTestCaseGroup.VALUE ) {

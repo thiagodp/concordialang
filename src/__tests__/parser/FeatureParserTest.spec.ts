@@ -1,5 +1,3 @@
-import { EnglishKeywordDictionary } from '../../modules/dict/EnglishKeywordDictionary';
-import { InMemoryKeywordDictionaryLoader } from '../../modules/dict/InMemoryKeywordDictionaryLoader';
 import { Node } from '../../modules/ast/Node';
 import { NodeIterator } from '../../modules/parser/NodeIterator';
 import { ParsingContext } from '../../modules/parser/ParsingContext';
@@ -7,6 +5,9 @@ import { NodeTypes } from '../../modules/req/NodeTypes';
 import { Feature } from '../../modules/ast/Feature';
 import { FeatureParser } from '../../modules/parser/FeatureParser';
 import { Lexer } from "../../modules/lexer/Lexer";
+import { Options } from '../../modules/app/Options';
+import { LexerBuilder } from '../../modules/lexer/LexerBuilder';
+import { resolve } from 'path';
 
 /**
  * @author Thiago Delgado Pinto
@@ -15,8 +16,8 @@ describe( 'FeatureParserTest', () => {
 
     let parser = new FeatureParser(); // under test
 
-    let dictMap = { 'en': new EnglishKeywordDictionary() };
-    let lexer = new Lexer( 'en', new InMemoryKeywordDictionaryLoader( dictMap ) );    
+    const options: Options = new Options( resolve( process.cwd(), 'dist/' ) );
+    let lexer: Lexer = ( new LexerBuilder() ).build( options, 'en' );
 
     let context: ParsingContext = null;
     let errors: Error[] = [];

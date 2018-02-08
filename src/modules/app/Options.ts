@@ -63,11 +63,7 @@ export class Options {
 
     // Internal
     public pluginDir: string = 'plugins/';
-    public languageDir: string = 'data/keywords/';
-    public nlpDir: string = 'data/nlp/';
-    
-    public trainingDir: string = 'data/training/';
-
+    public languageDir: string = 'data/';
 
 
     constructor(
@@ -78,8 +74,6 @@ export class Options {
         // Update internals
         this.pluginDir = resolve( appPath, defaults.PLUGIN_DIR );
         this.languageDir = resolve( appPath, defaults.LANGUAGE_DIR );
-        this.nlpDir = resolve( appPath, defaults.NLP_DIR );
-        this.trainingDir = resolve( appPath, defaults.TRAINING_DIR );        
     }
 
 

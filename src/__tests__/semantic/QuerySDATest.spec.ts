@@ -1,17 +1,15 @@
-import { JsonKeywordDictionaryLoader } from '../../modules/dict/JsonKeywordDictionaryLoader';
 import { NLPBasedSentenceRecognizer } from '../../modules/nlp/NLPBasedSentenceRecognizer';
 import { SingleDocumentProcessor } from '../../modules/app/SingleDocumentProcessor';
-import {Spec} from '../../modules/ast/Spec';
-import {Lexer} from '../../modules/lexer/Lexer';
+import { Spec } from '../../modules/ast/Spec';
+import { Lexer } from '../../modules/lexer/Lexer';
 import { Document } from '../../modules/ast/Document';
-import {EnglishKeywordDictionary} from '../../modules/dict/EnglishKeywordDictionary';
-import {InMemoryKeywordDictionaryLoader} from '../../modules/dict/InMemoryKeywordDictionaryLoader';
-import {KeywordDictionaryLoader} from '../../modules/dict/KeywordDictionaryLoader';
-import {Parser} from '../../modules/parser/Parser';
+import { Parser} from '../../modules/parser/Parser';
 import { QuerySDA } from '../../modules/semantic/QuerySDA';
 import { NLPTrainer } from '../../modules/nlp/NLPTrainer';
 import { Options } from '../../modules/app/Options';
+import { LexerBuilder } from '../../modules/lexer/LexerBuilder';
 import { resolve } from 'path';
+import { LanguageContentLoader, JsonLanguageContentLoader } from '../../modules/dict/LanguageContentLoader';
 
 describe( 'QuerySDATest', () => {
 
@@ -19,16 +17,15 @@ describe( 'QuerySDATest', () => {
 
     const options: Options = new Options( resolve( process.cwd(), 'dist/' ) );
 
-    const LANGUAGE = 'pt';
+    const langLoader: LanguageContentLoader =
+        new JsonLanguageContentLoader( options.languageDir, {}, options.encoding );
 
-    let dictMap = { 'en': new EnglishKeywordDictionary() };
-    
-    let dictLoader: KeywordDictionaryLoader = new JsonKeywordDictionaryLoader( options.languageDir, this._dictMap );
-    let lexer: Lexer = new Lexer( LANGUAGE, dictLoader );
+    const LANGUAGE = 'pt';
+    let lexer: Lexer = ( new LexerBuilder( langLoader ) ).build( options, LANGUAGE );
 
     let parser = new Parser();
 
-    let nlpTrainer = new NLPTrainer( options.nlpDir, options.trainingDir );
+    let nlpTrainer = new NLPTrainer( langLoader );
     let nlpRec: NLPBasedSentenceRecognizer = new NLPBasedSentenceRecognizer( nlpTrainer );
 
     let singleDocProcessor: SingleDocumentProcessor = new SingleDocumentProcessor();

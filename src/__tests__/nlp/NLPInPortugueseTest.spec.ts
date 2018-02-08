@@ -4,6 +4,7 @@ import { Entities } from '../../modules/nlp/Entities';
 import { NLP } from '../../modules/nlp/NLP';
 import { Options } from '../../modules/app/Options';
 import { resolve } from 'path';
+import { LanguageContentLoader, JsonLanguageContentLoader } from '../../modules/dict/LanguageContentLoader';
 
 /**
  * @author Thiago Delgado Pinto
@@ -13,6 +14,8 @@ describe( 'NLPInPortugueseTest', () => {
     let nlp: NLP; // under test    
     const LANGUAGE = 'pt';
     const options: Options = new Options( resolve( process.cwd(), 'dist/' ) );
+    const langLoader: LanguageContentLoader = 
+        new JsonLanguageContentLoader( options.languageDir, {}, options.encoding );
 
     // entities
     const ELEMENT: string = Entities.ELEMENT;
@@ -29,7 +32,7 @@ describe( 'NLPInPortugueseTest', () => {
 
     beforeAll( () => { // once
         nlp = new NLP();
-        ( new NLPTrainer( options.nlpDir, options.trainingDir ) ).trainNLP( nlp, LANGUAGE );
+        ( new NLPTrainer( langLoader ) ).trainNLP( nlp, LANGUAGE );
     } );
 
     function recognize( sentence: string ) {

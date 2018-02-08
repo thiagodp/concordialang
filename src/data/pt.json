@@ -1,0 +1,310 @@
+{
+    "keywords": {
+        "import": [ "importe", "importar", "import" ],
+        "regexBlock": [ "expressões", "expressões regulares", "regexes" ],
+        "constantBlock": [ "constantes", "constants" ],
+        "is": [ "é", "is" ],
+        "with": [ "com", "with" ],
+        "state": [ "estado", "state" ],
+        "variant": [ "variante", "variação", "variant" ],
+        "template": [ "modelo", "template" ],
+        "uiElement": [ "elemento da iu", "elemento de iu", "ui element" ],
+        "database": [ "banco de dados", "database" ],
+    
+        "beforeAll": [ "antes de todos", "antes de tudo", "before all" ],
+        "afterAll": [ "depois de todos", "após todos", "depois de tudo", "após tudo", "after all" ],
+        "beforeFeature": [ "antes da funcionalidade", "antes da característica", "antes da feature", "before feature" ],
+        "afterFeature": [ "depois da funcionalidade", "depois da característica", "depois da feature", "após a funcionalidade", "após a característica", "após a feature", "after feature" ],
+        "beforeEachScenario": [ "antes de cada cenário", "before each scenario" ],
+        "afterEachScenario": [ "depois de cada cenário", "após cada cenário", "after each scenario" ],
+    
+        "language": [ "linguagem", "idioma", "língua",  "language" ],
+    
+        "feature": [ "funcionalidade", "característica", "feature" ],
+        "background": [ "contexto", "cenário de fundo", "fundo", "background" ],
+        "scenario": [ "cenário", "scenario" ],
+    
+        "stepGiven": [ "dado", "given" ],
+        "stepWhen": [ "quando", "when" ],
+        "stepThen": [ "então", "then" ],
+        "stepAnd": [ "e", "mas", "and", "but" ],
+        "stepOtherwise": [ "caso contrário", "senão", "quando inválido", "se inválido" ],
+    
+        "table": [ "tabela", "table" ]
+    },
+
+
+
+    "testCaseNames": {
+
+        "VALUE_LOWEST": "VALUE_LOWEST",
+        "VALUE_RANDOM_BELOW_MIN": "VALUE_RANDOM_BELOW_MIN",
+        "VALUE_JUST_BELOW_MIN": "VALUE_JUST_BELOW_MIN",
+        "VALUE_MIN": "VALUE_MIN",
+        "VALUE_JUST_ABOVE_MIN": "VALUE_JUST_ABOVE_MIN",
+        "VALUE_ZERO": "VALUE_ZERO",
+        "VALUE_MEDIAN": "VALUE_MEDIAN",
+        "VALUE_RANDOM_BETWEEN_MIN_MAX": "VALUE_RANDOM_BETWEEN_MIN_MAX",
+        "VALUE_JUST_BELOW_MAX": "VALUE_JUST_BELOW_MAX",
+        "VALUE_MAX": "VALUE_MAX",
+        "VALUE_JUST_ABOVE_MAX": "VALUE_JUST_ABOVE_MAX",
+        "VALUE_RANDOM_ABOVE_MAX": "VALUE_RANDOM_ABOVE_MAX",
+        "VALUE_GREATEST": "VALUE_GREATEST",
+
+        "LENGTH_LOWEST": "LENGTH_LOWEST",
+        "LENGTH_RANDOM_BELOW_MIN": "LENGTH_RANDOM_BELOW_MIN",
+        "LENGTH_JUST_BELOW_MIN": "LENGTH_JUST_BELOW_MIN",
+        "LENGTH_MIN": "LENGTH_MIN",
+        "LENGTH_JUST_ABOVE_MIN": "LENGTH_JUST_ABOVE_MIN",
+        "LENGTH_MEDIAN": "LENGTH_MEDIAN",
+        "LENGTH_RANDOM_BETWEEN_MIN_MAX": "LENGTH_RANDOM_BETWEEN_MIN_MAX",
+        "LENGTH_JUST_BELOW_MAX": "LENGTH_JUST_BELOW_MAX",
+        "LENGTH_MAX": "LENGTH_MAX",
+        "LENGTH_JUST_ABOVE_MAX": "LENGTH_JUST_ABOVE_MAX",
+        "LENGTH_RANDOM_ABOVE_MAX": "LENGTH_RANDOM_ABOVE_MAX",
+        "LENGTH_GREATEST": "LENGTH_GREATEST",
+
+        "FORMAT_VALID": "FORMAT_VALID",
+        "FORMAT_INVALID": "FORMAT_INVALID",
+
+        "SET_FIRST_ELEMENT": "SET_FIRST_ELEMENT",
+        "SET_SECOND_ELEMENT": "SET_SECOND_ELEMENT",
+        "SET_RANDOM_ELEMENT": "SET_RANDOM_ELEMENT",
+        "SET_PENULTIMATE_ELEMENT": "SET_PENULTIMATE_ELEMENT",
+        "SET_LAST_ELEMENT": "SET_LAST_ELEMENT",
+        "SET_NOT_IN_SET": "SET_NOT_IN_SET",
+
+        "REQUIRED_FILLED": "REQUIRED_FILLED",
+        "REQUIRED_NOT_FILLED": "REQUIRED_NOT_FILLED",
+
+        "COMPUTATION_RIGHT": "COMPUTATION_RIGHT",
+        "COMPUTATION_WRONG": "COMPUTATION_WRONG"
+    },
+
+    
+
+    "nlp": {
+        "testcase": {
+    
+            "ui_action_modifier": {
+                "not": [ "nao" ]
+            },
+    
+            "ui_action": {
+                "append": [ "adiciono", "acrescento", "insiro", "coloco" ],
+                "attachFile": [ "anexo o arquivo", "adiciono o arquivo", "sobrescrevo o arquivo" ],
+                "check": [ "marco", "checo" ],
+                "clear": [ "limpo", "apago" ],
+                "click": [ "clico", "ativo", "aciono" ],
+                "close": [ "fecho", "saio" ],
+                "doubleClick": [ "clico duplamente", "clico duas vezes", "dou um duplo clique" ],
+                "drag": [ "arrasto" ],
+                "drop": [ "solto em" ],
+                "fill": [ "preencho", "informo", "digito", "forneco", "entro" ],
+                "hide": [ "escondo", "oculto" ],
+                "move": [ "movo", "posiciono" ],
+                "open": [ "abro" ],
+                "press": [ "pressiono", "seguro", "teclo" ],
+                "refresh": [ "atualizo", "recarrego" ],
+                "resize": [ "redimensiono", "modifico o tamanho" ],            
+                "rightClick": [ "clico com o botao direito", "aciono o botao direito" ],
+                "saveScreenshot": [ "salvo a tela", "bato uma foto da tela", "tiro uma foto da tela", "tiro um print da tela" ],
+                "scrollTo": [ "rolo" ],
+                "see": [ "vejo", "enxergo", "consigo ver" ],
+                "select": [ "seleciono" ],
+                "show": [ "mostro", "apresento", "exibo" ],
+                "swipe": [ "deslizo" ],
+                "switch": [ "troco", "mudo para" ],
+                "tap": [ "toco" ],
+                "wait": [ "aguardo", "espero" ]
+            },
+    
+            "ui_element_type": {
+                "button": [ "botao" ],
+                "checkbox": [ "caixa de marcacao", "checkbox", "check" ],
+                "cookie": [ "cookie" ],
+                "currentTab": [ "aba atual" ],
+                "file": [ "arquivo", "anexo" ],
+                "keyboard": [ "teclado" ],
+                "label": [ "rotulo" ],
+                "otherTabs": [ "outras abas" ],
+                "mouse": [ "mouse", "cursor" ],
+                "native": [ "nativo" ],
+                "newTab": [ "nova aba" ],
+                "screen": [ "tela" ],
+                "select": [ "caixa de selecao", "select", "combo", "combobox" ],
+                "text": [ "texto" ],
+                "textbox": [ "caixa de texto", "textbox", "input" ],
+                "textarea": [ "area de texto" ],
+                "title": [ "titulo" ],
+                "web": [ "web" ],
+                "window": [ "janela" ],
+                "url": [ "url", "pagina", "endereco", "dominio", "ip", "local", "sitio" ]
+            },
+    
+            "ui_action_option": {
+                "inside": [ "dentro de" ],
+                "with": [ "com" ],
+                "up": [ "para cima", "acima" ],
+                "down": [ "para baixo", "abaixo" ],
+                "left": [ "para a esquerda", "a direita" ],
+                "right": [ "para a direita", "a esquerda" ],
+                "mobileName": [ "nome mobile" ]            
+            }
+        },
+    
+    
+        "ui": {
+    
+            "ui_property": {
+                "id": [ "id", "identificacao" ],
+                "type": [ "tipo" ],
+                "datatype": [ "tipo de dado" ],
+                "value": [ "valor" ],
+                "minlength": [ "comprimento mínimo" ],
+                "maxlength": [ "comprimento máximo" ],
+                "minvalue": [ "valor mínimo" ],
+                "maxvalue": [ "valor máximo" ],
+                "format": [ "formato" ],
+    
+                "color": [ "cor" ],
+                "bgcolor": [ "cor de fundo" ],
+                "width": [ "largura" ],
+                "height": [ "altura" ]
+            },
+    
+            "ui_connector": {
+                "is": [ "e", "é" ],
+                "in": [ "em", "esta em" , "incluso em", "incluido em", "dentro de", "vem de" ],
+                "same": [ "o mesmo que", "igual a", "semelhante a", "similar a" ]
+            },
+    
+            "ui_data_type": {
+                "string": [ "texto", "cadeia", "string" ],
+                "integer": [ "inteiro", "integer", "int" ],
+                "double": [ "flutuante", "double", "float", "real" ],
+                "date": [ "data", "date" ],
+                "time": [ "hora", "time" ],
+                "datetime": [ "datahora", "datetime", "timestamp" ]
+            }
+        },
+    
+    
+        "datasource": {
+    
+            "ds_property": {
+                "type": [ "tipo", "type" ],
+                "path": [ "caminho", "nome", "path", "name" ],
+                "host": [ "hospedeiro", "host" ],
+                "port": [ "porta", "port" ],
+                "username": [ "usuário", "username", "user" ],
+                "password": [ "senha", "password" ],
+                "charset": [ "conjunto de caracteres", "codificação", "charset", "encoding" ],
+                "options": [ "opções", "options" ]
+            }
+    
+        }
+    },
+
+
+
+    "training": [
+        {
+            "intent": "testcase",
+            "sentences": [
+                "eu {ui_action} em {value}",
+                "eu clico em {value}",
+    
+                "eu {ui_action} em {element}",
+                "eu clico em {element}",
+    
+                "eu {ui_action} o {value}",
+                "eu digito o {value}",
+    
+                "eu {ui_action} na opção {value}",
+                "eu clico na opção {value}",
+                
+                "eu {ui_action} {value} com {value}",
+                "eu preencho {value} com {value}",
+    
+                "eu {ui_action} {value} com {number}",
+                "eu preencho {value} com {number}",
+    
+                "eu {ui_action} {value} {ui_action_option} {value}",
+                "eu preencho {value} dentro de {value}",
+    
+                "eu {ui_action} no {ui_element_type} {value}",
+                "eu {ui_action} no {ui_element_type} {value} com {value}",
+                "eu {ui_action} no {ui_element_type} {value} com {number}",
+    
+                "eu {ui_action} no {ui_element_type} {element}",
+                "eu {ui_action} no {ui_element_type} {element} com {value}",
+                "eu {ui_action} no {ui_element_type} {element} com {number}",
+    
+                "eu {ui_action} o {ui_element_type} com {value}",
+                "eu {ui_action} no {ui_element_type} {value} com {value}",
+                "eu {ui_action} no {ui_element_type} {value} com {number}",
+    
+                "eu {ui_action} o {ui_element_type} com {number}",
+    
+                "eu {ui_action} em {element}",
+                "eu {ui_action} o {element}",
+                "eu {ui_action} na opção {element}",
+    
+                "eu {ui_action} {element} com {value}",
+                "eu {ui_action} {element} com {number}",
+    
+                "eu {ui_action_modifier} {ui_action} em {value}",
+                "eu {ui_action_modifier} {ui_action} o {value}",
+    
+                "eu {ui_action_modifier} {ui_action} no {ui_element_type} {value}",
+                "eu {ui_action_modifier} {ui_action} o {ui_element_type} com {value}",
+    
+                "eu {ui_action} {value} em {element}",
+                "eu {ui_action_modifier} {ui_action} {value} em {element}",
+    
+                "eu {ui_action} {element} com {value}",
+                "eu {ui_action_modifier} {ui_action} {element} com {value}"
+            ]
+        },
+    
+        {
+            "intent": "ui",
+            "sentences": [
+                "{ui_property} {ui_connector} {value}",
+                "{ui_property} {ui_connector} {query}",
+                "{ui_property} {ui_connector} {number}",
+                "{ui_property} {ui_connector} {ui_element_type}",
+                "id é {value}",
+                "comprimento máximo é {number}",
+                "valor vem da consulta {query}"
+            ]
+        },
+    
+        {
+            "intent": "ui_item_query",
+            "sentences": [
+                "{ui_property} vem de {query}",
+                "{ui_property} vem da consulta {query}",
+                "{ui_property} vem da query {query}",
+                "{ui_property} está em {query}",
+                "{ui_property} está contido em {query}",
+                "{ui_property} está presente em {query}"
+            ]
+        },    
+    
+        {
+            "intent": "datasource",
+            "sentences": [
+                "{ds_property} {ui_connector} {value}",
+                "{ds_property} {ui_connector} {number}",
+                "caminho é {value}",
+                "nome é {value}",
+                "tipo é {value}",
+                "porta é {number}"
+            ]
+        }
+    
+    ]
+
+}
