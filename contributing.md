@@ -1,4 +1,4 @@
-# Contributing to AVA
+# Contributing to Concordia
 
 ✨ Thanks for contributing to Concordia! ✨
 
