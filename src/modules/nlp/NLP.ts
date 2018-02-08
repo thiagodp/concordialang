@@ -32,6 +32,10 @@ export class NLP {
         // Add an entity named "query" and its recognizer
         this._additionalEntities.push( Entities.QUERY );
         this._additionalRecognizers.push( this.makeQueryEntityRecognizer( Entities.QUERY ) );
+
+        // Add an entity named "constant" and its recognizer
+        this._additionalEntities.push( Entities.CONSTANT );
+        this._additionalRecognizers.push( this.makeConstantEntityRecognizer( Entities.CONSTANT ) );        
     }
 
     /**
@@ -197,7 +201,7 @@ export class NLP {
     /**
      * Creates a recognizer for a number.
      * 
-     * Example: I fill "name" with -10.33
+     * Example: I fill {Name} with -10.33
      * --> The value -10.33 is recognized.
      * 
      * @param entityName Entity name.
@@ -239,7 +243,21 @@ export class NLP {
             200 ); // the number is the priority
 
         return valueRec;
-    }    
+    }
+
+    private makeConstantEntityRecognizer( entityName: string ): any {
+        var valueRec = new Bravey.RegexEntityRecognizer( entityName, 10 );
+
+        const regex = /(?:\[)([^\$\]]+)(?:\])/g;
+        valueRec.addMatch( regex,
+            function( match ) {
+                //console.log( 'match: ', match );
+                return match[ 0 ].toString().replace( '[', '' ).replace( ']', '' ).trim();
+            },
+            100 ); // the number is the priority
+
+        return valueRec;        
+    }
 
 }
 

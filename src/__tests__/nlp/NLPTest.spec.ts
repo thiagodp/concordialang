@@ -79,7 +79,7 @@ describe( 'NLPTest', () => {
     } );
     
 
-    it( 'recognizes a element entity after being trained', () => {
+    it( 'recognizes an element entity after being trained', () => {
         nlp.train( 'en', fakeTrainingData() );
 
         let r: NLPResult = nlp.recognize( 'en', ' {foo} ' );
@@ -96,11 +96,19 @@ describe( 'NLPTest', () => {
     
     it( 'recognizes a query entity after being trained', () => {
         nlp.train( 'en', fakeTrainingData() );
-
         let r: NLPResult = nlp.recognize( 'en', ' "SELECT foo FROM bar" ' );
         expect( r.entities ).toHaveLength( 1 );
         expect( r.entities[ 0 ].entity ).toBe( Entities.QUERY );
         expect( r.entities[ 0 ].value ).toBe( 'SELECT foo FROM bar' );
+    } );
+    
+    
+    it( 'recognizes a constant entity after being trained', () => {
+        nlp.train( 'en', fakeTrainingData() );
+        let r: NLPResult = nlp.recognize( 'en', ' [foo bar] ' );
+        expect( r.entities ).toHaveLength( 1 );
+        expect( r.entities[ 0 ].entity ).toBe( Entities.CONSTANT );
+        expect( r.entities[ 0 ].value ).toBe( 'foo bar' );
     } );    
 
 } );
