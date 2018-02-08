@@ -196,6 +196,14 @@ Constants:
   - "msg_min_length" is "{name} must have at least {min_length} characters."
   - "msg_password_too_weak" is "The informed password is too weak."
 ```
+### Referencing a Constant
+
+A constant can be referenced inside queries or variants by using brackets.
+
+Example:
+  `When I fill {Username} with [default password]`
+
+In this example, `[default password]` is a reference to a constant `default password`.
 
 
 ## UserInterfaceElement
