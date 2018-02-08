@@ -6,6 +6,7 @@ import { DataTestCase } from "../data-gen/DataTestCase";
 import { Symbols } from "../req/Symbols";
 import { Step } from "../ast/Step";
 import { DataTestCaseNames } from "../data-gen/DataTestCaseNames";
+import { Document } from "../ast/Document";
 
 /**
  * Generates Variants from a Template.
@@ -23,6 +24,7 @@ export class VariantGenerator {
      */
     public generate = async (
         template: Template,
+        doc: Document,
         spec: Spec,
         testCases: DataTestCase[],
         keywords: KeywordDictionary,
@@ -30,18 +32,20 @@ export class VariantGenerator {
     ): Promise< VariantGenerationResult[] > => {
 
         let all: VariantGenerationResult[] = [];
+        let tpl: Template = this.replaceReferences( template, doc, spec );
+
+        const variantKeyword: string = keywords.variant[ 0 ] || 'Variant';
+        const withKeyword: string = keywords.with[ 0 ] || 'with';
 
         for ( let tc of testCases ) {
 
-            const variantKeyword: string = keywords.variant[ 0 ] || 'Variant';
-            const withKeyword: string = keywords.with[ 0 ] || 'with';
             const testCaseName: string = testCaseNames[ tc ]
                 || tc.toString().toLowerCase().replace( '_', ' ' );            
         
             let r = new VariantGenerationResult( [], [], [] );
-            this.addTags( r.content, template );
-            this.addName( r.content, template, variantKeyword, testCaseName );
-            this.addSentences( r.content, template.sentences, spec, tc, withKeyword );
+            this.addTags( r.content, tpl );
+            this.addName( r.content, tpl, variantKeyword, testCaseName );
+            this.addSentences( r.content, tpl.sentences, spec, tc, withKeyword );
 
             all.push( r );
         }
@@ -96,11 +100,15 @@ export class VariantGenerator {
 
             let newSentence: string = s.content;
 
-            // Replace references
-            // ...
-
-            // Add values
+            // Adds any command that does not enter a value
             if ( ! s.command || ! this.isValueFillAction( s.command.action ) ) {
+                content.push( newSentence );
+                continue;
+            }
+
+            // Keep sentences that already have values
+            const hasValue: boolean = newSentence.indexOf( Symbols.VALUE_WRAPPER ) >= 0;
+            if ( hasValue ) {
                 content.push( newSentence );
                 continue;
             }
@@ -108,6 +116,26 @@ export class VariantGenerator {
             newSentence += withKeyword + ' ' + this.generateValue( s, spec, tc );
             content.push( newSentence );
         }
+    }
+
+    /**
+     * 
+     * @param template Template to change
+     * @param doc 
+     * @param spec 
+     */
+    public replaceReferences(
+        template: Template,
+        doc: Document,
+        spec: Spec
+    ): Template {
+        let tpl: Template = Object.assign( {}, template );
+
+        // Replace constants with their values
+
+        // Replace UI Elements with their ids
+
+        return tpl;
     }
 
     public isValueFillAction( action: string ): boolean {

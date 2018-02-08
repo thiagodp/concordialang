@@ -4,7 +4,7 @@ import { DataTestCase } from "../../modules/data-gen/DataTestCase";
 
 describe( 'VariantGeneratorTest', () => {
 
-    let gen: VariantGenerator = new VariantGenerator();
+    let gen: VariantGenerator = new VariantGenerator(); // under test
 
     it( 'adds a name correctly', () => {
         let content = [];
