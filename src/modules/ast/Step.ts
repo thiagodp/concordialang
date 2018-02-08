@@ -1,8 +1,14 @@
 import { ContentNode } from "./Node";
+import { NLPResult } from "../nlp/NLPResult";
 
 export interface Step extends ContentNode {
+
     type: 'given' | 'when' | 'then' | 'and' | 'otherwise';
+
+    nlpResult?: NLPResult;
+
     command?: Command;
+    
 }
 
 export interface StepGiven extends Step {
