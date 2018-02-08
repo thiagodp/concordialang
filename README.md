@@ -111,11 +111,20 @@ Some details:
 
 ## Language Specification
 
-- [English](doc/langspec/asl-en.md)
-- [Português](doc/langspec/asl-pt.md)
+- [English](doc/language/en.md)
+- [Português](doc/language/pt.md)
+
+## Join Us
+
+*Wanna help us?*
+
+- [Report]() a bug
+- [Suggest]() a feature or change
+- [Develop](doc/development.md) Concordia with us
+- [Donate](doc/donate.md) to help keeping the project
 
 ## License
 
-Copyright (c) 2017 by Thiago Delgado Pinto
+Copyright (c) Thiago Delgado Pinto
 
 ![AGPL](http://www.gnu.org/graphics/agplv3-88x31.png) This software is [licensed](LICENSE.txt) under the GNU Affero General Public License.
