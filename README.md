@@ -105,14 +105,14 @@ Some details:
 
 ## Tutorial
 
-- [Writing your first feature](doc/tutorial/first-feature.md)
-- [Improving your specification](doc/tutorial/improving-spec.md)
-- [Generating UI tests](doc/tutorial/gen-ui-tests.md)
+- [Writing your first feature](docs/tutorial/first-feature.md)
+- [Improving your specification](docs/tutorial/improving-spec.md)
+- [Generating UI tests](docs/tutorial/gen-ui-tests.md)
 
 ## Language Specification
 
-- [English](doc/language/en.md)
-- [Português](doc/language/pt.md)
+- [English](docs/language/en.md)
+- [Português](docs/language/pt.md)
 
 ## Join Us
 
@@ -120,8 +120,8 @@ Some details:
 
 - [Report]() a bug
 - [Suggest]() a feature or change
-- [Develop](doc/development.md) Concordia with us
-- [Donate](doc/donate.md) to help keeping the project
+- [Develop](docs/development.md) Concordia with us
+- [Donate](docs/donate.md) to help keeping the project
 
 ## License
 
