@@ -6,6 +6,7 @@ import { CompilerListener, ProcessingInfo } from './CompilerListener';
 import * as prettyBytes from 'pretty-bytes';
 import { Defaults } from './Defaults';
 import { Options } from './Options';
+import { sortErrorsByLocation } from '../util/ErrorSorting';
 
 export class SimpleAppEventsListener implements
     FileReadListener,
@@ -128,6 +129,8 @@ export class SimpleAppEventsListener implements
         if ( ! hasErrors && ! hasWarnings ) {
             return;
         }
+        const sortedWarnings = sortErrorsByLocation( info.warnings );
+        const sortedErrors = sortErrorsByLocation( info.errors );
 
         if ( meta ) {
             this._cli.newLine(
@@ -140,21 +143,21 @@ export class SimpleAppEventsListener implements
 
         const spaces = ' ';
 
-        for ( let e of info.warnings ) {
-            if ( meta ) {
-                this._cli.newLine( spaces, this._cli.symbolWarning, e.message );
-            } else {
-                this._cli.newLine( this._cli.symbolWarning, this._cli.colorWarning( e.message ) );
-            }
-        }
-
-        for ( let e of info.errors ) {
+        for ( let e of sortedErrors ) {
             if ( meta ) {
                 this._cli.newLine( spaces, this._cli.symbolError, e.message );
             } else {
                 this._cli.newLine( this._cli.symbolError, this._cli.colorError( e.message ) );
             }
         }
+
+        for ( let e of sortedWarnings ) {
+            if ( meta ) {
+                this._cli.newLine( spaces, this._cli.symbolWarning, e.message );
+            } else {
+                this._cli.newLine( this._cli.symbolWarning, this._cli.colorWarning( e.message ) );
+            }
+        }        
     }
 
 
@@ -213,4 +216,5 @@ export class SimpleAppEventsListener implements
     private formatDuration( durationMs: number ): string {
         return this._cli.colorInfo( '(' + durationMs.toString() + 'ms)' );
     }
+    
 }

@@ -226,6 +226,38 @@ describe( 'VariantGeneratorTest', () => {
 
         expect( newTemplate.sentences[ 1 ].content ).toEqual( 'Quando eu preencho "ax" com "ipsum lorem"' );
         expect( newTemplate.sentences[ 2 ].content ).toEqual( 'E eu preencho "bx" com 3.1416' );
-    } );    
+    } );
+
+
+
+    it( 'adds sentences with generated values', () => {
+
+        let spec = new Spec( '.' );
+
+        let doc2: Document = addToSpec( spec, 
+            [
+                '#language:pt',
+                'Feature: Feature 2',
+                'Scenario: Foo',
+                'Template: Foo',
+                '  Dado que eu estou escrevendo um template',
+                '  Quando eu preencho {A}',
+                '    E eu preencho {B}',
+                'UI Element: A',
+                'UI Element: B'              
+            ] );
+
+        expect( doc2.fileErrors ).toEqual( [] );
+
+        let template = doc2.feature.scenarios[ 0 ].templates[ 0 ];
+        //console.log( 'template sentences', template.sentences );
+        let sentences: string[] = [];
+
+        gen.addSentencesWithGeneratedValues( sentences, template.sentences, spec, DataTestCase.LENGTH_LOWEST, 'com' );
+        expect( sentences ).toHaveLength( 3 );
+        expect( sentences[ 0 ] ).toEqual( 'Dado que eu estou escrevendo um template' );
+        expect( sentences[ 1 ] ).toEqual( 'Quando eu preencho {A} com ""' );
+        expect( sentences[ 2 ] ).toEqual( 'E eu preencho {B} com ""' );
+    } );
 
 } );

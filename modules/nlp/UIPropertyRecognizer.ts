@@ -69,7 +69,7 @@ export class UIPropertyRecognizer {
             const propertyIndex: number = recognizedEntityNames.indexOf( Entities.UI_PROPERTY );
             if ( propertyIndex < 0 ) {
                 const msg = 'Unrecognized: ' + node.content;
-                errors.push( new NLPException( msg, node.location ) );
+                warnings.push( new NLPException( msg, node.location ) );
                 return;
             }
             const property: string = r.entities[ propertyIndex ].value;

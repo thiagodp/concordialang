@@ -11,6 +11,7 @@ import { Warning } from "../req/Warning";
 import { RuleBuilder } from './RuleBuilder';
 import { UI_ACTION_SYNTAX_RULES, DEFAULT_UI_ACTION_SYNTAX_RULE } from './SyntaxRules';
 import { Step } from '../ast/Step';
+import { filter } from 'minimatch';
 
 /**
  * Variant sentence recognizer.
@@ -51,7 +52,8 @@ export class VariantSentenceRecognizer {
         language: string,
         nodes: Step[],
         errors: LocatedException[],
-        warnings: LocatedException[]        
+        warnings: LocatedException[],
+        variantName: string = 'Variant'
     ) {
         const recognizer = new NodeSentenceRecognizer( this._nlp );
         const syntaxRules = this._syntaxRules;
@@ -62,24 +64,36 @@ export class VariantSentenceRecognizer {
             errors: LocatedException[],
             warnings: LocatedException[]
         ) {
-            const recognizedEntityNames: string[] = r.entities.map( e => e.entity );
-
-            // Must have a UI Action (? what about a state?)
-            const propertyIndex: number = recognizedEntityNames.indexOf( Entities.UI_ACTION );
-            if ( propertyIndex < 0 ) {
+            if ( r.entities.length < 1 ) {
                 const msg = 'Unrecognized: ' + node.content;
-                errors.push( new NLPException( msg, node.location ) );
+                warnings.push( new NLPException( msg, node.location ) );
                 return;
             }
-            const property: string = r.entities[ propertyIndex ].value;
+            //console.log( 'Entities', r.entities );
 
-            // Validating
-            recognizer.validate( node, recognizedEntityNames, syntaxRules, property, errors, warnings );
+            const recognizedEntityNames: string[] = r.entities.map( e => e.entity );
 
-            // Getting the values
+            // ACTION (mandatory?, what about a state?)
+            const actionIndex: number = recognizedEntityNames.indexOf( Entities.UI_ACTION );
+            if ( actionIndex < 0 ) {
+                const msg = 'Unrecognized: ' + node.content;
+                warnings.push( new NLPException( msg, node.location ) );
+                return;
+            }
+            const action: string = r.entities[ actionIndex ].value;
+            // validate the action
+            recognizer.validate( node, recognizedEntityNames, syntaxRules, action, errors, warnings );
+
             let item: Step = node as Step;
-            // To-Do
-            //item.values = r.entities.filter( ( e, i ) => i !== propertyIndex ).map( e => e.value );
+            item.action = action;
+
+            // ELEMENTS (optional)
+            item.targets = r.entities.filter( e => e.entity === Entities.ELEMENT ).map( e => e.value );
+            
+            // VALUES (optional)
+            item.values = r.entities
+                .filter( e => e.entity === Entities.VALUE || e.entity === Entities.NUMBER )
+                .map( e => e.value );
         };
 
 
@@ -87,7 +101,7 @@ export class VariantSentenceRecognizer {
             language,
             nodes,
             [ Intents.TEST_CASE ],
-            'Variant',
+            variantName,
             errors,
             warnings,
             processor

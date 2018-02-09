@@ -51,13 +51,13 @@ export class VariantGenerator {
         for ( let tc of testCases ) {
 
             const testCaseName: string = testCaseNames[ tc ] || lower( tc );   
-        
-            let r = new VariantGenerationResult( [], [], [] );
-            this.addTags( r.content, tpl );
-            this.addName( r.content, tpl, variantKeyword, testCaseName );
-            this.addSentences( r.content, tpl.sentences, spec, tc, withKeyword );
+            
+            let sentences: string[] = [];
+            this.addTags( sentences, tpl );
+            this.addName( sentences, tpl, variantKeyword, testCaseName );
+            this.addSentencesWithGeneratedValues( sentences, tpl.sentences, spec, tc, withKeyword );
 
-            all.push( r );
+            all.push( new VariantGenerationResult( sentences, [], [] ) );
         }
 
         return all;
@@ -96,44 +96,6 @@ export class VariantGenerator {
         content.push( 
             variantKeyword + Symbols.TITLE_SEPARATOR + ' ' + template.name + ' - ' + testCaseName
         );
-    }
-
-    /**
-     * Adds sentences replacing all the references and analyzes the action to decide whether a value 
-     * must be added to the corresponding sentence.
-     * 
-     * @param content 
-     * @param sentences 
-     * @param spec 
-     * @param tc 
-     */
-    public addSentences(
-        content: string[],
-        sentences: Step[],
-        spec: Spec,
-        tc: DataTestCase,
-        withKeyword: string
-    ): void {
-        for ( let s of sentences ) {
-
-            let newSentence: string = s.content;
-
-            // Adds any command that does not enter a value
-            if ( ! s.command || ! this.isValueFillAction( s.command.action ) ) {
-                content.push( newSentence );
-                continue;
-            }
-
-            // Keep sentences that already have values
-            const hasValue: boolean = newSentence.indexOf( Symbols.VALUE_WRAPPER ) >= 0;
-            if ( hasValue ) {
-                content.push( newSentence );
-                continue;
-            }
-
-            newSentence += withKeyword + ' ' + this.generateValue( s, spec, tc );
-            content.push( newSentence );
-        }
     }
 
     /**
@@ -191,13 +153,51 @@ export class VariantGenerator {
         return tpl;
     }
 
-    public isValueFillAction( action: string ): boolean {
-        if ( ! action ) {
+    /**
+     * Adds sentences from template's sentences and generates values to those
+     * sentences with "fill" actions.
+     * 
+     * @param targetSentences Target sentences
+     * @param templateSentences Template sentences
+     * @param spec Specification
+     * @param tc Current test case
+     * @param withKeyword Keyword used as a separator between a UI Element and a Value,
+     *                    e.g., in "I fill "Name" with "Bob"", "with" is that keyword.
+     */
+    public addSentencesWithGeneratedValues(
+        targetSentences: string[],
+        templateSentences: Step[],
+        spec: Spec,
+        tc: DataTestCase,
+        withKeyword: string
+    ): void {
+        for ( let s of templateSentences ) {
+
+            let newSentence: string = s.content;
+
+            // Adds any command that does not enter a value
+            if ( ! this.hasFillAction( s ) ) {
+                targetSentences.push( newSentence );
+                continue;
+            }
+
+            // Keep sentences that already have values
+            const hasValue: boolean = newSentence.indexOf( Symbols.VALUE_WRAPPER ) >= 0;
+            if ( hasValue ) {
+                targetSentences.push( newSentence );
+                continue;
+            }
+
+            newSentence += ' ' + withKeyword + ' ' + this.generateValue( s, spec, tc );
+            targetSentences.push( newSentence );
+        }
+    }    
+
+    public hasFillAction( step: Step ): boolean {
+        if ( ! step ) {
             return false;
         }
-        return [
-            'fill'
-        ].indexOf( action.toLowerCase() ) >= 0;
+        return 'fill' === step.action;
     }
 
     public generateValue( s: Step, spec: Spec, tc: DataTestCase ): string {

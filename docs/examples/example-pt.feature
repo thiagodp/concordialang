@@ -9,7 +9,7 @@ Banco de dados: Meu BD
 
 Banco de dados: Meu Outro BD
   - tipo é "json"
-  - caminho é "../src/__tests__/db/users.json"
+  - caminho é "__tests__/db/users.json"
 
 Característica: Login
 

@@ -62,6 +62,10 @@ export class SingleDocumentProcessor {
             }
         }
 
+        if ( ! doc.fileWarnings ) {
+            doc.fileWarnings = [];
+        }
+
         nlpRec.recognizeSentencesInDocument(
             doc, language, doc.fileErrors, doc.fileWarnings );
 

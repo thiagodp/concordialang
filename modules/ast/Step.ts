@@ -7,8 +7,11 @@ export interface Step extends ContentNode {
 
     nlpResult?: NLPResult;
 
-    command?: Command;
-    
+    action: string;
+    targets?: string[];
+    targetType?: string;
+    values?: string[] | number[];
+    invalid?: boolean;
 }
 
 export interface StepGiven extends Step {
@@ -29,12 +32,4 @@ export interface StepAnd extends Step {
 
 export interface StepOtherwise extends Step {
     type: 'otherwise';
-}
-
-export interface Command {
-    action: string;
-    targets?: string[];
-    targetType?: string;
-    values?: string[] | number[];
-    invalid?: boolean;
 }

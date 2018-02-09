@@ -87,7 +87,7 @@ export class NodeSentenceRecognizer {
             // Not recognized?
             if ( undefined === r || null === r ) {
                 let msg = 'Unrecognized: "' + node.content + '".';
-                errors.push( new NLPException( msg, node.location ) );
+                warnings.push( new NLPException( msg, node.location ) );
                 continue;
             }
 
@@ -101,7 +101,7 @@ export class NodeSentenceRecognizer {
             if ( targetIntents.indexOf( r.intent ) < 0 ) {
                 //let msg = 'Unrecognized as part of a ' + targetDisplayName + ': ' + node.content;
                 let msg = 'Unrecognized: ' + node.content;
-                errors.push( new NLPException( msg, node.location ) );
+                warnings.push( new NLPException( msg, node.location ) );
                 continue;
             }
             // Process the result
@@ -168,7 +168,7 @@ export class NodeSentenceRecognizer {
                     return false;
                 }
                 // Max
-                if ( numberOfEntitiesOfTheTarget > targetRule.min ) {
+                if ( numberOfEntitiesOfTheTarget > targetRule.max ) {
                     const msg = 'The property "' + property + '" expects at most ' + targetRule.max + ' for "' + target + '", but it was informed ' + numberOfEntitiesOfTheTarget  + '.';
                     errors.push( new NLPException( msg, node.location ) );
                     return false;

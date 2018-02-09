@@ -77,6 +77,17 @@ export class NLPBasedSentenceRecognizer {
             this._uiPropertyRec.recognizeSentences( language, uiElement.items, errors, warnings );
         }
 
+        if ( doc.feature.scenarios ) {
+            for ( let scenario of doc.feature.scenarios ) {
+                if ( ! scenario.templates ) {
+                    continue;
+                }
+                for ( let template of scenario.templates ) {
+                    this._variantSentenceRec.recognizeSentences( language, template.sentences, errors, warnings, 'Template' );
+                }
+            }
+        }
+
         for ( let variant of doc.feature.variants ) {
             this._variantSentenceRec.recognizeSentences( language, variant.sentences, errors, warnings );
         }
