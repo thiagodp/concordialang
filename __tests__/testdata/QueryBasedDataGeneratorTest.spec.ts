@@ -1,8 +1,8 @@
-import { QueryBasedDataGenerator } from "../../modules/data-gen/QueryBasedDataGenerator";
-import { RandomLong } from "../../modules/data-gen/random/RandomLong";
-import { Random } from "../../modules/data-gen/random/Random";
-import { StringGenerator } from "../../modules/data-gen/raw/StringGenerator";
-import { RandomString } from "../../modules/data-gen/random/RandomString";
+import { QueryBasedDataGenerator } from "../../modules/testdata/QueryBasedDataGenerator";
+import { RandomLong } from "../../modules/testdata/random/RandomLong";
+import { Random } from "../../modules/testdata/random/Random";
+import { StringGenerator } from "../../modules/testdata/raw/StringGenerator";
+import { RandomString } from "../../modules/testdata/random/RandomString";
 import { QueryCache } from "../../modules/db/QueryCache";
 import { Queryable } from "../../modules/db/Queryable";
 

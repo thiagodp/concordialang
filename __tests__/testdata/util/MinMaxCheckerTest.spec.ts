@@ -1,4 +1,4 @@
-import { MinMaxChecker } from "../../../modules/data-gen/util/MinMaxChecker";
+import { MinMaxChecker } from "../../../modules/testdata/util/MinMaxChecker";
 
 describe( 'MinMaxCheckerTest', () => {
 

@@ -1,5 +1,5 @@
-import { RandomLong } from '../../../modules/data-gen/random/RandomLong';
-import { Random } from '../../../modules/data-gen/random/Random';
+import { RandomLong } from '../../../modules/testdata/random/RandomLong';
+import { Random } from '../../../modules/testdata/random/Random';
 
 describe( 'RandomLongTest', () => {
 

@@ -1,6 +1,6 @@
-import { DoubleGenerator } from "../../../modules/data-gen/raw/DoubleGenerator";
-import { RandomDouble } from "../../../modules/data-gen/random/RandomDouble";
-import { Random } from "../../../modules/data-gen/random/Random";
+import { DoubleGenerator } from "../../../modules/testdata/raw/DoubleGenerator";
+import { RandomDouble } from "../../../modules/testdata/random/RandomDouble";
+import { Random } from "../../../modules/testdata/random/Random";
 
 describe( 'DoubleGeneratorTest', () => {
 

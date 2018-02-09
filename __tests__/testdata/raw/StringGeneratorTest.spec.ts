@@ -1,6 +1,6 @@
-import { StringGenerator } from "../../../modules/data-gen/raw/StringGenerator";
-import { RandomString } from "../../../modules/data-gen/random/RandomString";
-import { Random } from "../../../modules/data-gen/random/Random";
+import { StringGenerator } from "../../../modules/testdata/raw/StringGenerator";
+import { RandomString } from "../../../modules/testdata/random/RandomString";
+import { Random } from "../../../modules/testdata/random/Random";
 
 describe( 'StringGeneratorTest', () => {
 

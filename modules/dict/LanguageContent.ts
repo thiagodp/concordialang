@@ -1,6 +1,6 @@
 import { KeywordDictionary } from "./KeywordDictionary";
 import { NLPIntentExample } from "../nlp/NLPTrainingData";
-import { DataTestCaseNames } from "../data-gen/DataTestCaseNames";
+import { DataTestCaseNames } from "../testdata/DataTestCaseNames";
 
 /**
  * Language content

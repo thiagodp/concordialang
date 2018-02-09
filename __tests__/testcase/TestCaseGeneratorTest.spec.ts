@@ -2,7 +2,7 @@ import { LanguageContentLoader, JsonLanguageContentLoader } from '../../modules/
 import { Options } from '../../modules/app/Options';
 import { TestCaseGenerator } from "../../modules/testcase/TestCaseGenerator";
 import { Template } from "../../modules/ast/Variant";
-import { DataTestCase } from "../../modules/data-gen/DataTestCase";
+import { DataTestCase } from "../../modules/testdata/DataTestCase";
 import { SingleDocumentProcessor } from "../../modules/app/SingleDocumentProcessor";
 import { Document } from '../../modules/ast/Document';
 import { resolve } from 'path';
@@ -115,7 +115,7 @@ describe( 'TestCaseGeneratorTest', () => {
 
         let spec = new Spec( '.' );
 
-        let doc2: Document = addToSpec( spec, 
+        let doc: Document = addToSpec( spec, 
             [
                 '#language:pt',
                 'Feature: Feature 2',
@@ -130,10 +130,10 @@ describe( 'TestCaseGeneratorTest', () => {
                 ' - id é "bx"'                
             ] );
 
-        expect( doc2.fileErrors ).toEqual( [] );
+        expect( doc.fileErrors ).toEqual( [] );
 
-        let template = doc2.feature.scenarios[ 0 ].templates[ 0 ];
-        let newTemplate = gen.replaceReferences( template, doc2, spec, CaseType.CAMEL );
+        let template = doc.feature.scenarios[ 0 ].templates[ 0 ];
+        let newTemplate = gen.replaceReferences( template, doc, spec, CaseType.CAMEL );
 
         expect( newTemplate.sentences[ 1 ].content ).toEqual( 'Quando eu preencho "ax" com "ipsum lorem"' );
         expect( newTemplate.sentences[ 2 ].content ).toEqual( 'E eu preencho "bx" com 3.1416' );
@@ -145,7 +145,7 @@ describe( 'TestCaseGeneratorTest', () => {
 
         let spec = new Spec( '.' );
 
-        let doc2: Document = addToSpec( spec, 
+        let doc: Document = addToSpec( spec, 
             [
                 '#language:pt',
                 'Feature: Feature 2',
@@ -158,32 +158,32 @@ describe( 'TestCaseGeneratorTest', () => {
                 'UI Element: Segundo Campo'
             ] );
 
-        expect( doc2.fileErrors ).toEqual( [] );
+        expect( doc.fileErrors ).toEqual( [] );
 
-        let template = doc2.feature.scenarios[ 0 ].templates[ 0 ];
+        let template = doc.feature.scenarios[ 0 ].templates[ 0 ];
 
         // NONE case
-        let newTemplate = gen.replaceReferences( template, doc2, spec, CaseType.NONE );
+        let newTemplate = gen.replaceReferences( template, doc, spec, CaseType.NONE );
         expect( newTemplate.sentences[ 1 ].content ).toEqual( 'Quando eu preencho "Primeiro Campo" com "ipsum lorem"' );
         expect( newTemplate.sentences[ 2 ].content ).toEqual( 'E eu preencho "Segundo Campo" com 3.1416' );
 
         // CAMEL case
-        newTemplate = gen.replaceReferences( template, doc2, spec, CaseType.CAMEL );
+        newTemplate = gen.replaceReferences( template, doc, spec, CaseType.CAMEL );
         expect( newTemplate.sentences[ 1 ].content ).toEqual( 'Quando eu preencho "primeiroCampo" com "ipsum lorem"' );
         expect( newTemplate.sentences[ 2 ].content ).toEqual( 'E eu preencho "segundoCampo" com 3.1416' );
 
         // PASCAL case
-        newTemplate = gen.replaceReferences( template, doc2, spec, CaseType.PASCAL );
+        newTemplate = gen.replaceReferences( template, doc, spec, CaseType.PASCAL );
         expect( newTemplate.sentences[ 1 ].content ).toEqual( 'Quando eu preencho "PrimeiroCampo" com "ipsum lorem"' );
         expect( newTemplate.sentences[ 2 ].content ).toEqual( 'E eu preencho "SegundoCampo" com 3.1416' );
 
         // KEBAB case (aka dashed)
-        newTemplate = gen.replaceReferences( template, doc2, spec, CaseType.KEBAB );
+        newTemplate = gen.replaceReferences( template, doc, spec, CaseType.KEBAB );
         expect( newTemplate.sentences[ 1 ].content ).toEqual( 'Quando eu preencho "primeiro-campo" com "ipsum lorem"' );
         expect( newTemplate.sentences[ 2 ].content ).toEqual( 'E eu preencho "segundo-campo" com 3.1416' );
 
         // SNAKE case
-        newTemplate = gen.replaceReferences( template, doc2, spec, CaseType.SNAKE );
+        newTemplate = gen.replaceReferences( template, doc, spec, CaseType.SNAKE );
         expect( newTemplate.sentences[ 1 ].content ).toEqual( 'Quando eu preencho "primeiro_campo" com "ipsum lorem"' );
         expect( newTemplate.sentences[ 2 ].content ).toEqual( 'E eu preencho "segundo_campo" com 3.1416' );
     } );    
@@ -234,7 +234,7 @@ describe( 'TestCaseGeneratorTest', () => {
 
         let spec = new Spec( '.' );
 
-        let doc2: Document = addToSpec( spec, 
+        let doc: Document = addToSpec( spec, 
             [
                 '#language:pt',
                 'Feature: Feature 2',
@@ -247,13 +247,13 @@ describe( 'TestCaseGeneratorTest', () => {
                 'UI Element: B'              
             ] );
 
-        expect( doc2.fileErrors ).toEqual( [] );
+        expect( doc.fileErrors ).toEqual( [] );
 
-        let template = doc2.feature.scenarios[ 0 ].templates[ 0 ];
+        let template = doc.feature.scenarios[ 0 ].templates[ 0 ];
         //console.log( 'template sentences', template.sentences );
         let sentences: string[] = [];
 
-        gen.addSentencesWithGeneratedValues( sentences, template.sentences, spec, DataTestCase.LENGTH_LOWEST, 'com' );
+        gen.addSentencesWithGeneratedValues( sentences, template.sentences, doc, spec, DataTestCase.LENGTH_LOWEST, 'com' );
         expect( sentences ).toHaveLength( 3 );
         expect( sentences[ 0 ].trim() ).toEqual( 'Dado que eu estou escrevendo um template' );
         expect( sentences[ 1 ].trim() ).toEqual( 'Quando eu preencho {A} com ""' );

@@ -1,6 +1,6 @@
-import { RegexBasedDataGenerator } from "../../modules/data-gen/RegexBasedDataGenerator";
-import { RandomString } from "../../modules/data-gen/random/RandomString";
-import { Random } from "../../modules/data-gen/random/Random";
+import { RegexBasedDataGenerator } from "../../modules/testdata/RegexBasedDataGenerator";
+import { RandomString } from "../../modules/testdata/random/RandomString";
+import { Random } from "../../modules/testdata/random/Random";
 
 describe( 'RegexBaseDataGeneratorTest', () => {
 

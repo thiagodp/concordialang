@@ -1,5 +1,5 @@
-import { RandomString } from "../../../modules/data-gen/random/RandomString";
-import { Random } from "../../../modules/data-gen/random/Random";
+import { RandomString } from "../../../modules/testdata/random/RandomString";
+import { Random } from "../../../modules/testdata/random/Random";
 
 describe( 'RandomStringTest', () => {
 

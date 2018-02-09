@@ -52,16 +52,17 @@ export class DataGenerator {
 			return DataAnalysisResult.NOT_AVAILABLE;
 		}
 
-		const lowerThanMin = this.isTestCaseLowerThanMin( testCase );
-		const greaterThanMax = this.isTestCaseGreaterThanMax( testCase );
+		
+		// const lowerThanMin = this.isTestCaseLowerThanMin( testCase );
+		// const greaterThanMax = this.isTestCaseGreaterThanMax( testCase );
 
-		if ( lowerThanMin || greaterThanMax ) {
-			return DataAnalysisResult.INVALID;
-		} else if ( ! lowerThanMin && ! greaterThanMax ) {
-			return DataAnalysisResult.VALID;
-		} else {
-			return DataAnalysisResult.NOT_AVAILABLE;
-		}
+		// if ( lowerThanMin || greaterThanMax ) {
+		// 	return DataAnalysisResult.INVALID;
+		// } else if ( ! lowerThanMin && ! greaterThanMax ) {
+		// 	return DataAnalysisResult.VALID;
+		// } else {
+		// 	return DataAnalysisResult.NOT_AVAILABLE;
+		// }
 	}
 
 

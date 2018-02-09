@@ -4,10 +4,10 @@ import { Variant, Template } from "../ast/Variant";
 import { Spec } from "../ast/Spec";
 import { LocatedException } from "../req/LocatedException";
 import { KeywordDictionary } from "../dict/KeywordDictionary";
-import { DataTestCase } from "../data-gen/DataTestCase";
+import { DataTestCase } from "../testdata/DataTestCase";
 import { Symbols } from "../req/Symbols";
 import { Step } from "../ast/Step";
-import { DataTestCaseNames } from "../data-gen/DataTestCaseNames";
+import { DataTestCaseNames } from "../testdata/DataTestCaseNames";
 import { Document } from "../ast/Document";
 import { Entities } from "../nlp/Entities";
 import { Constant } from "../ast/Constant";
@@ -55,7 +55,7 @@ export class TestCaseGenerator {
             let sentences: string[] = [];
             this.addTags( sentences, tpl );
             this.addName( sentences, tpl, variantKeyword, testCaseName );
-            this.addSentencesWithGeneratedValues( sentences, tpl.sentences, spec, tc, withKeyword );
+            this.addSentencesWithGeneratedValues( sentences, tpl.sentences, doc, spec, tc, withKeyword );
 
             all.push( new VariantGenerationResult( sentences, [], [] ) );
         }
@@ -167,6 +167,7 @@ export class TestCaseGenerator {
     public addSentencesWithGeneratedValues(
         targetSentences: string[],
         templateSentences: Step[],
+        doc: Document,
         spec: Spec,
         tc: DataTestCase,
         withKeyword: string
@@ -188,7 +189,7 @@ export class TestCaseGenerator {
                 continue;
             }
 
-            newSentence += ' ' + withKeyword + ' ' + this.generateValue( s, spec, tc );
+            newSentence += ' ' + withKeyword + ' ' + this.generateValue( s, doc, spec, tc );
             targetSentences.push( newSentence );
         }
     }    
@@ -200,7 +201,11 @@ export class TestCaseGenerator {
         return 'fill' === step.action;
     }
 
-    public generateValue( s: Step, spec: Spec, tc: DataTestCase ): string {
+    public generateValue( s: Step, doc: Document, spec: Spec, tc: DataTestCase ): string {
+
+        // Retrieve the type of the referenced element (default string), in order
+        // to generate the test value with the right type
+        
         // TO-DO
         return '""';
     }
