@@ -15,7 +15,8 @@ import { ReferenceReplacer } from "../db/ReferenceReplacer";
 import { CaseType } from "../app/CaseType";
 import { convertCase } from '../util/CaseConversor';
 import * as deepcopy from 'deepcopy';
-
+import { lower } from 'case';
+import { ReservedTags } from '../req/ReservedTags';
 
 /**
  * Generates Variants from a Template.
@@ -49,8 +50,7 @@ export class VariantGenerator {
 
         for ( let tc of testCases ) {
 
-            const testCaseName: string = testCaseNames[ tc ]
-                || tc.toString().toLowerCase().replace( '_', ' ' );            
+            const testCaseName: string = testCaseNames[ tc ] || lower( tc );   
         
             let r = new VariantGenerationResult( [], [], [] );
             this.addTags( r.content, tpl );
@@ -73,13 +73,15 @@ export class VariantGenerator {
     public addTags( content: string[], template: Template ): void {
 
         const newTags: string[] = [
-            '@generated',
-            '@template( ' + template.name + ' )'
+            Symbols.TAG_PREFIX + ReservedTags.GENERATED,
+            Symbols.TAG_PREFIX + ReservedTags.TEMPLATE + '(' + template.name + ')'
         ];
+
         // Adds new tags
-        content.push.apply( content, newTags );
-        // Adds all the existing tags from the template
-        content.push.apply( content, template.tags );
+        content.push.apply( content, newTags );        
+
+        // Adds tags from the template
+        content.push.apply( content, template.tags.map( tag => Symbols.TAG_PREFIX + tag.name ) );
     }
 
     /**

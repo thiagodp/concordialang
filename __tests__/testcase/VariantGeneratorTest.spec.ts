@@ -13,6 +13,7 @@ import { NLPTrainer } from '../../modules/nlp/NLPTrainer';
 import { NLPBasedSentenceRecognizer } from '../../modules/nlp/NLPBasedSentenceRecognizer';
 import { Spec } from '../../modules/ast/Spec';
 import { CaseType } from '../../modules/app/CaseType';
+import { Tag } from '../../modules/ast/Tag';
 
 describe( 'VariantGeneratorTest', () => {
 
@@ -41,11 +42,36 @@ describe( 'VariantGeneratorTest', () => {
         return doc;
     }
 
+    //
+    // TESTS
+    //
 
     it( 'adds a name correctly', () => {
         let content = [];
         gen.addName( content, { name: 'Foo' } as Template, 'Variant', DataTestCase.VALUE_MIN );
         expect( content[ 0 ] ).toEqual( 'Variant: Foo - ' + DataTestCase.VALUE_MIN );
+    } );
+
+
+    it( 'add tags correctly', () => {
+
+        const template: Template = {
+            tags: [
+                { name: "important" } as Tag
+            ],
+            name: "Foo Bar",
+            sentences: []
+        } as Template;
+
+        let content: string[] = [];
+        gen.addTags( content, template );
+
+        expect( content ).toEqual( [
+            '@generated',
+            '@template(Foo Bar)',
+            '@important'
+        ] );
+
     } );
 
 
