@@ -1,5 +1,5 @@
-import { NLPResult, NLPEntity } from '../../modules/nlp/NLPResult';
-import { UIElement, UIProperty } from '../../modules/ast/UIElement';
+import { NLPResult, NLPEntity } from '../nlp/NLPResult';
+import { UIElement, UIProperty } from '../ast/UIElement';
 import { Variant, Template } from "../ast/Variant";
 import { Spec } from "../ast/Spec";
 import { LocatedException } from "../req/LocatedException";
@@ -19,11 +19,11 @@ import { lower } from 'case';
 import { ReservedTags } from '../req/ReservedTags';
 
 /**
- * Generates Variants from a Template.
+ * Generates Variants from Templates.
  * 
  * @author Thiago Delgado Pinto
  */
-export class VariantGenerator {
+export class TestCaseGenerator {
 
     /**
      * Generates Variants from a Template.

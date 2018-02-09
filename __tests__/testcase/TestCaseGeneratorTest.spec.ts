@@ -1,6 +1,6 @@
 import { LanguageContentLoader, JsonLanguageContentLoader } from '../../modules/dict/LanguageContentLoader';
 import { Options } from '../../modules/app/Options';
-import { VariantGenerator } from "../../modules/testcase/VariantGenerator";
+import { TestCaseGenerator } from "../../modules/testcase/TestCaseGenerator";
 import { Template } from "../../modules/ast/Variant";
 import { DataTestCase } from "../../modules/data-gen/DataTestCase";
 import { SingleDocumentProcessor } from "../../modules/app/SingleDocumentProcessor";
@@ -15,9 +15,9 @@ import { Spec } from '../../modules/ast/Spec';
 import { CaseType } from '../../modules/app/CaseType';
 import { Tag } from '../../modules/ast/Tag';
 
-describe( 'VariantGeneratorTest', () => {
+describe( 'TestCaseGeneratorTest', () => {
 
-    let gen: VariantGenerator = new VariantGenerator(); // under test
+    let gen: TestCaseGenerator = new TestCaseGenerator(); // under test
 
     const options: Options = new Options( resolve( process.cwd(), 'dist/' ) );
 
@@ -255,9 +255,9 @@ describe( 'VariantGeneratorTest', () => {
 
         gen.addSentencesWithGeneratedValues( sentences, template.sentences, spec, DataTestCase.LENGTH_LOWEST, 'com' );
         expect( sentences ).toHaveLength( 3 );
-        expect( sentences[ 0 ] ).toEqual( 'Dado que eu estou escrevendo um template' );
-        expect( sentences[ 1 ] ).toEqual( 'Quando eu preencho {A} com ""' );
-        expect( sentences[ 2 ] ).toEqual( 'E eu preencho {B} com ""' );
+        expect( sentences[ 0 ].trim() ).toEqual( 'Dado que eu estou escrevendo um template' );
+        expect( sentences[ 1 ].trim() ).toEqual( 'Quando eu preencho {A} com ""' );
+        expect( sentences[ 2 ].trim() ).toEqual( 'E eu preencho {B} com ""' );
     } );
 
 } );
