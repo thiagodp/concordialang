@@ -24,7 +24,7 @@ describe( 'StepWhenLexerTest', () => {
         // Keyword
         expect( node.nodeType ).toBe( NodeTypes.STEP_WHEN );
         // Content
-        expect( node.content ).toBe( 'the world and everybody on it' );
+        expect( node.content ).toBe( 'When \t the world and everybody on it' );
     } );
 
 } );

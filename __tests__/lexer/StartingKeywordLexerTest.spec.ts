@@ -25,7 +25,7 @@ describe( 'StartingKeywordLexerTest', () => {
         expect( r ).not.toBeNull();
         expect( r.errors ).toHaveLength( 0 );
         expect( r.nodes ).toHaveLength( 1 );
-        expect( r.nodes[ 0 ].content ).toBe( 'foo bar' );
+        expect( r.nodes[ 0 ].content ).toBe( 'hello foo bar' );
     } );
 
     it( 'gives a warning on empty content', () => {
@@ -64,7 +64,7 @@ describe( 'StartingKeywordLexerTest', () => {
         expect( r ).not.toBeNull();
         expect( r.nodes ).toHaveLength( 1 );
         let node = r.nodes[ 0 ];
-        expect( node.content ).toBe( 'world' );
+        expect( node.content ).toBe( 'hello  \t\t world' );
     } );
 
     it( 'does not detect a line with a different keyword', () => {

@@ -1,19 +1,25 @@
 import { QueryParser } from './QueryParser';
-import * as SqlString from 'sqlstring';
+import { escapeId, escape } from 'sqlstring';
+import { isNumber } from '../util/TypeChecking';
 
 /**
- * Replaces queries' references to Concordia constructions - such as 
- * named databases, named tables, ui element names, and constants - with 
- * their corresponding values.
+ * Replaces references to Concordia constructions - such as named databases,
+ * named tables, ui element names, and constants - with their corresponding values.
  * 
  * @author Thiago Delgado Pinto
  */
-export class QueryReplacer {
+export class ReferenceReplacer {
 
     /**
-     * Replaces names and values in a query.
+     * @param _sentenceMode When false (default), values are wrapped for queries. Otherwise for sentences.
+     */
+    constructor( private _sentenceMode: boolean = false ) {
+    }
+
+    /**
+     * Replaces names and values in a query or sentence.
      * 
-     * @param query Query to replace
+     * @param sentence Query or sentence to replace.
      * @param databaseNameToNameMap 
      * @param tableNameToNameMap 
      * @param fieldNameToValueMap 
@@ -21,7 +27,7 @@ export class QueryReplacer {
      * @returns A query with all the replacements.
      */
     public replace(
-        query: string,
+        sentence: string,
         databaseNameToNameMap: object,
         tableNameToNameMap: object,
         fieldNameToValueMap: object,
@@ -51,34 +57,41 @@ export class QueryReplacer {
             constMap[ name ] = this.wrapValue( constantNameToValueMap[ name ] );
         }
 
-        return this.replaceAll( query, varMap, constMap );
+        return this.replaceAll( sentence, varMap, constMap );
     }
 
 
-    private replaceAll( query: string, varMap: object, constMap: object ): string {
-        let q = query;
+    private replaceAll( sentence: string, varMap: object, constMap: object ): string {
+        let s = sentence;
         for ( let varName in varMap ) {
             const regex = this.makeVarRegex( varName );
             const value = varMap[ varName ];
-            q = q.replace( regex, value );
+            s = s.replace( regex, value );
         }
         for ( let constName in constMap ) {
             const regex = this.makeNameRegex( constName );
             const value = constMap[ constName ];
-            q = q.replace( regex, value );
+            s = s.replace( regex, value );
         }
-        return q;
+        return s;
     }
 
 
     private wrapName( content: string ): string {
-        //return '`' + content + '`'; // TO-DO: sql injection protection
-        return SqlString.escapeId( content );
+        if ( this._sentenceMode ) {
+            return escapeId( content ).replace( /\`/g, '"' );
+        }
+        return escapeId( content );
     }
 
-    private wrapValue( content: string ): string {
-        //return '"' + content + '"'; // TO-DO: sql injection protection
-        return SqlString.escape( content );
+    private wrapValue( content: string | number ): string | number {
+        if ( this._sentenceMode ) {
+            if ( isNumber( content ) ) {
+                return content;
+            }
+            return escape( content ).replace( /\'/g, '"' );
+        }        
+        return escape( content );
     }
 
     private makeVarRegex( name: string ): RegExp {

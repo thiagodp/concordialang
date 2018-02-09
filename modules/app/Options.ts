@@ -1,19 +1,28 @@
-import * as util from 'util';
 import { resolve } from 'path';
 import { Defaults } from './Defaults';
+import { CaseType } from './CaseType';
+import { isString, isNumber } from '../util/TypeChecking';
 
-export class Options { 
+/**
+ * Application options
+ * 
+ * @author Thiago Delgado Pinto
+ */
+export class Options {
+
+    // Default values - not updatable
+    public readonly defaults: Defaults = new Defaults();
 
     // Files
     public directory: string = '.'; // directory to search
     public recursive: boolean = true; // recursive search
-    public encoding: string = 'utf-8'; // change default encoding
-    public extensions: string[] = [ 'feature', 'example' ]; // extensions to search
+    public encoding: string = this.defaults.ENCODING; // change default encoding
+    public extensions: string[] = this.defaults.EXTENSIONS; // extensions to search
     public ignore: string[] = []; // files to ignore, from the given directory
     public files: string[] = []; // files to consider, instead of the given directory
 
     // Language
-    public language: string = 'en'; // change default language
+    public language: string = this.defaults.LANGUAGE; // change default language
     public languageList: boolean = false; // show available languages
 
     // Plugin
@@ -31,9 +40,13 @@ export class Options {
     public generateScripts: boolean = true; // generate test scripts through a plugin
     public executeScripts: boolean = true; // execute test scripts through a plugin
     public analyzeResults: boolean = true; // analyze execution results through a plugin
-    public dirExample: string = '.'; // examples' output directory (test cases)
-    public dirScript: string = './test'; // test scripts' output directory
-    public dirResult: string = './test'; // test results' output directory
+    public dirExample: string = this.directory; // examples' output directory (test cases)
+    public dirScript: string = this.defaults.DIR_SCRIPT; // output directory of test scripts
+    public dirResult: string = this.defaults.DIR_SCRIPT_RESULT; // output directory of test script results
+
+    // Code generation
+    public caseUi: string = this.defaults.CASE_UI; // string case used for UI Elements' ids when an id is not defined
+    public caseMethod: string = this.defaults.CASE_METHOD; // string case used for test scripts' methods
 
     // Randomic generation
     public randonSeed: number = 0; // random seed to use
@@ -62,18 +75,21 @@ export class Options {
     public debug: boolean = false; // debug mode
 
     // Internal
-    public pluginDir: string = 'plugins/';
-    public languageDir: string = 'data/';
+    public pluginDir: string = this.defaults.DIR_PLUGIN;
+    public languageDir: string = this.defaults.DIR_LANGUAGE;
 
 
     constructor(
         public appPath: string = process.cwd(),
         public processPath: string = process.cwd()
     ) {
-        const defaults = new Defaults();
-        // Update internals
-        this.pluginDir = resolve( appPath, defaults.PLUGIN_DIR );
-        this.languageDir = resolve( appPath, defaults.LANGUAGE_DIR );
+        // Concordia directories
+        this.pluginDir = resolve( appPath, this.defaults.DIR_PLUGIN );
+        this.languageDir = resolve( appPath, this.defaults.DIR_LANGUAGE );
+
+        // User directories
+        this.dirScript = resolve( processPath, this.defaults.DIR_SCRIPT );
+        this.dirResult = resolve( processPath, this.defaults.DIR_SCRIPT_RESULT );
     }
 
 
@@ -143,22 +159,22 @@ export class Options {
                     
         this.recursive = flags.recursive !== false;
 
-        if ( util.isString( flags.encoding ) ) {
+        if ( isString( flags.encoding ) ) {
             this.encoding = flags.encoding.trim().toLowerCase();
         }
-        if ( util.isString( flags.extensions ) ) {
+        if ( isString( flags.extensions ) ) {
             this.extensions = flags.extensions.trim().split( PARAM_SEPARATOR );
         }
-        if ( util.isString( flags.ignore ) ) {
+        if ( isString( flags.ignore ) ) {
             this.ignore = flags.ignore.trim().split( PARAM_SEPARATOR );
         }
-        if ( util.isString( flags.files ) ) {
+        if ( isString( flags.files ) ) {
             this.files = flags.files.trim().split( PARAM_SEPARATOR );
         }
 
         // LANGUAGE
 
-        if ( util.isString( flags.language ) ) {
+        if ( isString( flags.language ) ) {
             this.language = flags.language.trim().toLowerCase();
         }
 
@@ -166,21 +182,21 @@ export class Options {
 
         // PLUG-IN
 
-        if ( util.isString( flags.plugin ) ) {
+        if ( isString( flags.plugin ) ) {
             this.plugin = flags.plugin.trim().toLowerCase();
         }
 
         this.pluginList = !! flags.pluginList;
 
-        if ( util.isString( flags.pluginAbout ) ) {
+        if ( isString( flags.pluginAbout ) ) {
             this.plugin = flags.pluginAbout.trim().toLowerCase();
             this.pluginAbout = true;
         }
-        if ( util.isString( flags.pluginInstall ) ) {
+        if ( isString( flags.pluginInstall ) ) {
             this.plugin = flags.pluginInstall.trim().toLowerCase();
             this.pluginInstall = true;            
         }
-        if ( util.isString( flags.pluginUninstall ) ) {
+        if ( isString( flags.pluginUninstall ) ) {
             this.plugin = flags.pluginUninstall.trim().toLowerCase();
             this.pluginUninstall = true;            
         }
@@ -209,67 +225,75 @@ export class Options {
         this.executeScripts = ! noRun || justRun;
         this.analyzeResults = ! noResult || justResult;
 
-        if ( util.isString( flags.dirExample ) ) {
+        if ( isString( flags.dirExample ) ) {
             this.dirExample = flags.dirExample.trim().toLowerCase();
-        } else if ( util.isString( flags.dirExamples ) ) {
+        } else if ( isString( flags.dirExamples ) ) {
             this.dirExample = flags.dirExamples.trim().toLowerCase();
         }
-        if ( util.isString( flags.dirScript ) ) {
+        if ( isString( flags.dirScript ) ) {
             this.dirScript = flags.dirScript.trim().toLowerCase();
-        } else if ( util.isString( flags.dirScripts ) ) {
+        } else if ( isString( flags.dirScripts ) ) {
             this.dirScript = flags.dirScripts.trim().toLowerCase();
         }
-        if ( util.isString( flags.dirResult ) ) {
+        if ( isString( flags.dirResult ) ) {
             this.dirResult = flags.dirResult.trim().toLowerCase();
-        } else if ( util.isString( flags.dirResults ) ) {
+        } else if ( isString( flags.dirResults ) ) {
             this.dirResult = flags.dirResults.trim().toLowerCase();
+        }
+
+        // CODE GENERATION
+        if ( isString( flags.caseUi ) ) {
+            this.caseUi = flags.caseUi;
+        }
+        if ( isString( flags.caseMethod ) ) {
+            this.caseMethod = flags.caseMethod;
         }
 
         // RANDOMIC GENERATION
 
-        if ( util.isNumber( flags.randomSeed ) ) {
+        if ( isNumber( flags.randomSeed ) ) {
             this.randonSeed = parseInt( flags.randomSeed );
         }
-        if ( util.isNumber( flags.randomValid ) ) {
+        if ( isNumber( flags.randomValid ) ) {
             this.randomValid = parseInt( flags.randomValid );
         }
-        if ( util.isNumber( flags.randomInvalid ) ) {
+        if ( isNumber( flags.randomInvalid ) ) {
             this.randomInvalid = parseInt( flags.randomInvalid );
         }
 
         // SPECIFICATION SELECTION
 
-        if ( util.isNumber( flags.selMinFeature ) ) {
+        if ( isNumber( flags.selMinFeature ) ) {
             this.selMinFeature = parseInt( flags.selMinFeature );
         }
-        if ( util.isNumber( flags.selMaxFeature ) ) {
+        if ( isNumber( flags.selMaxFeature ) ) {
             this.selMaxFeature = parseInt( flags.selMaxFeature );
         }
-        if ( util.isNumber( flags.selMinScenario ) ) {
+        if ( isNumber( flags.selMinScenario ) ) {
             this.selMinScenario = parseInt( flags.selMinScenario );
         }
-        if ( util.isNumber( flags.selMaxScenario ) ) {
+        if ( isNumber( flags.selMaxScenario ) ) {
             this.selMaxScenario = parseInt( flags.selMaxScenario );
         }
-        if ( util.isString( flags.selFilter ) ) {
+        if ( isString( flags.selFilter ) ) {
             this.selFilter = flags.selFilter;
         }
 
         // TEST SCRIPT FILTERING
 
-        if ( util.isNumber( flags.runMinFeature ) ) {
+        if ( isNumber( flags.runMinFeature ) ) {
             this.runMinFeature = parseInt( flags.runMinFeature );
         }
-        if ( util.isNumber( flags.runMaxFeature ) ) {
+        if ( isNumber( flags.runMaxFeature ) ) {
             this.runMaxFeature = parseInt( flags.runMaxFeature );
         }
-        if ( util.isNumber( flags.runMinScenario ) ) {
+        if ( isNumber( flags.runMinScenario ) ) {
             this.runMinScenario = parseInt( flags.runMinScenario );
         }
-        if ( util.isNumber( flags.runMaxScenario ) ) {
+        if ( isNumber( flags.runMaxScenario ) ) {
             this.runMaxScenario = parseInt( flags.runMaxScenario );
         }
-        if ( util.isString( flags.runFilter ) ) {
+        if ( isString( flags.runFilter ) ) {
             this.runFilter = flags.runFilter;
         }
 

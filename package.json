@@ -38,6 +38,7 @@
   },
   "dependencies": {
     "alasql": "^0.4.5",
+    "case": "^1.5.4",
     "chalk": "^2.3.0",
     "cli-truncate": "^1.0.0",
     "database-js": "^3.0.2",

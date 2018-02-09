@@ -24,7 +24,7 @@ describe( 'StepThenLexerTest', () => {
         // Keyword
         expect( node.nodeType ).toBe( NodeTypes.STEP_THEN );
         // Content
-        expect( node.content ).toBe( 'the world and everybody on it' );
+        expect( node.content ).toBe( 'Then \t the world and everybody on it' );
     } );
 
 } );

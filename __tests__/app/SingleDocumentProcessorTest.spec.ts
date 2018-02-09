@@ -4,7 +4,6 @@ import { SingleDocumentProcessor } from '../../modules/app/SingleDocumentProcess
 import { Parser } from '../../modules/parser/Parser';
 import { Lexer } from '../../modules/lexer/Lexer';
 import { Document } from '../../modules/ast/Document';
-import { Defaults } from '../../modules/app/Defaults';
 import { resolve } from 'path';
 import { NLPTrainer } from '../../modules/nlp/NLPTrainer';
 import { Options } from '../../modules/app/Options';

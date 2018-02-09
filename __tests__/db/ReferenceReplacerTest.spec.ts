@@ -1,12 +1,12 @@
 import { QueryParser } from '../../modules/db/QueryParser';
-import { QueryReplacer } from '../../modules/db/QueryReplacer';
+import { ReferenceReplacer } from '../../modules/db/ReferenceReplacer';
 
 /**
  * @author Thiago Delgado Pinto
  */
-describe( 'QueryReplacerTest', () => {
+describe( 'ReferenceReplacerTest', () => {
 
-    let replacer = new QueryReplacer(); // under test   
+    let replacer = new ReferenceReplacer(); // under test   
 
 
     it( 'replaces a query', () => {

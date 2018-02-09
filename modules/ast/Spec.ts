@@ -57,7 +57,7 @@ export class Spec {
      * Return all databases. Results are cached.
      */
     public databases = ( clearCache: boolean = false ): Database[] => {
-        if ( this._databaseCache !== null && ! clearCache ) {
+        if ( !! this._databaseCache && ! clearCache ) {
             return this._databaseCache;
         }
         this._databaseCache = [];
@@ -83,8 +83,11 @@ export class Spec {
     };
 
 
+    /**
+     * Return all constants. Results are cached.
+     */    
     public constants = ( clearCache: boolean = false ): Constant[] => {
-        if ( this._constantCache !== null && ! clearCache ) {
+        if ( !! this._constantCache && ! clearCache ) {
             return this._constantCache;
         }
         this._constantCache = [];
@@ -104,8 +107,11 @@ export class Spec {
     };
 
 
+    /**
+     * Return all tables. Results are cached.
+     */      
     public tables = ( clearCache: boolean = false ): Table[] => {
-        if ( this._tableCache !== null && ! clearCache ) {
+        if ( !! this._tableCache && ! clearCache ) {
             return this._tableCache;
         }
         this._tableCache = [];
@@ -125,8 +131,11 @@ export class Spec {
     };
 
 
+    /**
+     * Return all features. Results are cached.
+     */     
     public features = ( clearCache: boolean = false ): Feature[] => {
-        if ( this._featureCache !== null && ! clearCache ) {
+        if ( !! this._featureCache && ! clearCache ) {
             return this._featureCache;
         }
         this._featureCache = [];

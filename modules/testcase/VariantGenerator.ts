@@ -1,3 +1,5 @@
+import {NLPResult} from '../../src/modules/nlp/NLPResult';
+import {UIElement} from '../../src/modules/ast/UIElement';
 import { Variant, Template } from "../ast/Variant";
 import { Spec } from "../ast/Spec";
 import { LocatedException } from "../req/LocatedException";
@@ -7,6 +9,11 @@ import { Symbols } from "../req/Symbols";
 import { Step } from "../ast/Step";
 import { DataTestCaseNames } from "../data-gen/DataTestCaseNames";
 import { Document } from "../ast/Document";
+import { Entities } from "../nlp/Entities";
+import { Constant } from "../ast/Constant";
+import { ReferenceReplacer } from "../db/ReferenceReplacer";
+import { CaseType } from "../app/CaseType";
+import { convertCase } from '../util/CaseConversor';
 
 /**
  * Generates Variants from a Template.
@@ -28,11 +35,12 @@ export class VariantGenerator {
         spec: Spec,
         testCases: DataTestCase[],
         keywords: KeywordDictionary,
-        testCaseNames: DataTestCaseNames
+        testCaseNames: DataTestCaseNames,
+        caseUi: CaseType | string
     ): Promise< VariantGenerationResult[] > => {
 
         let all: VariantGenerationResult[] = [];
-        let tpl: Template = this.replaceReferences( template, doc, spec );
+        let tpl: Template = this.replaceReferences( template, doc, spec, caseUi );
 
         const variantKeyword: string = keywords.variant[ 0 ] || 'Variant';
         const withKeyword: string = keywords.with[ 0 ] || 'with';
@@ -95,7 +103,13 @@ export class VariantGenerator {
      * @param spec 
      * @param tc 
      */
-    public addSentences( content: string[], sentences: Step[], spec: Spec, tc: DataTestCase, withKeyword: string ): void {
+    public addSentences(
+        content: string[],
+        sentences: Step[],
+        spec: Spec,
+        tc: DataTestCase,
+        withKeyword: string
+    ): void {
         for ( let s of sentences ) {
 
             let newSentence: string = s.content;
@@ -119,21 +133,56 @@ export class VariantGenerator {
     }
 
     /**
+     * Replaces references of a template and returns a new template.
      * 
      * @param template Template to change
-     * @param doc 
-     * @param spec 
+     * @param doc Current document
+     * @param spec Specification
+     * @param caseUi String case to use when not id is defined, e.g. "camel".
      */
     public replaceReferences(
         template: Template,
         doc: Document,
-        spec: Spec
+        spec: Spec,
+        caseUi: CaseType | string
     ): Template {
+        const replacer: ReferenceReplacer = new ReferenceReplacer( true );
         let tpl: Template = Object.assign( {}, template );
 
-        // Replace constants with their values
+        // Map constant names to values
+        let constantNameToValueMap = {};
+        spec.constants().forEach( v => constantNameToValueMap[ v.name ] = v.value );
 
-        // Replace UI Elements with their ids
+        // Retrieve all the ui elements in the doc
+        let uiElements: UIElement[] = [];
+        if ( !! doc.uiElements ) {
+            uiElements.push.apply( uiElements, doc.uiElements );
+        }
+        if ( !! doc.feature.uiElements ) {
+            uiElements.push.apply( uiElements, doc.feature.uiElements );
+        }
+
+        // Map UI element names to its ids
+        let uiElementNameToIdMap = {};
+        uiElements.forEach( ( uie: UIElement ) => {
+
+            // Find a property "id" in the UI element
+            const item: NLPResult = uie.items.find( item => 'id' === item.property );
+
+            if ( !! item ) {
+                // Find an entity "value" in the NLP result
+                const entity = item.nlpResult.entities.find( e => 'value' === e.id );
+                uiElementNameToIdMap[ uie.name ] = !! entity ? entity.value : '';
+            } else {
+                // Use the name as id
+                uiElementNameToIdMap[ uie.name ] = convertCase( uiElementNameToIdMap[ uie.name ], caseUi );
+            }
+        } );
+        //console.log( 'map', uiElementNameToIdMap );
+        
+        for ( let s of tpl.sentences ) {
+            s.content = replacer.replace( s.content, {}, {}, uiElementNameToIdMap, constantNameToValueMap );
+        }
 
         return tpl;
     }

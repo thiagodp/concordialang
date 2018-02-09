@@ -25,7 +25,7 @@ describe( 'StepAndLexerTest', () => {
         // Keyword
         expect( node.nodeType ).toBe( NodeTypes.STEP_AND );
         // Content
-        expect( node.content ).toBe( 'the world and everybody on it' );
+        expect( node.content ).toBe( 'And \t the world and everybody on it' );
     } );
 
 } );
