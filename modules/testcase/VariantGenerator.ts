@@ -1,5 +1,5 @@
-import {NLPResult} from '../../src/modules/nlp/NLPResult';
-import {UIElement} from '../../src/modules/ast/UIElement';
+import { NLPResult, NLPEntity } from '../../modules/nlp/NLPResult';
+import { UIElement, UIProperty } from '../../modules/ast/UIElement';
 import { Variant, Template } from "../ast/Variant";
 import { Spec } from "../ast/Spec";
 import { LocatedException } from "../req/LocatedException";
@@ -14,6 +14,8 @@ import { Constant } from "../ast/Constant";
 import { ReferenceReplacer } from "../db/ReferenceReplacer";
 import { CaseType } from "../app/CaseType";
 import { convertCase } from '../util/CaseConversor';
+import * as deepcopy from 'deepcopy';
+
 
 /**
  * Generates Variants from a Template.
@@ -147,7 +149,7 @@ export class VariantGenerator {
         caseUi: CaseType | string
     ): Template {
         const replacer: ReferenceReplacer = new ReferenceReplacer( true );
-        let tpl: Template = Object.assign( {}, template );
+        let tpl: Template = deepcopy( template );
 
         // Map constant names to values
         let constantNameToValueMap = {};
@@ -167,15 +169,15 @@ export class VariantGenerator {
         uiElements.forEach( ( uie: UIElement ) => {
 
             // Find a property "id" in the UI element
-            const item: NLPResult = uie.items.find( item => 'id' === item.property );
+            const item: UIProperty = uie.items ? uie.items.find( item => 'id' === item.property ) : null;
 
             if ( !! item ) {
                 // Find an entity "value" in the NLP result
-                const entity = item.nlpResult.entities.find( e => 'value' === e.id );
+                const entity = item.nlpResult.entities.find( ( e: NLPEntity ) => 'value' === e.entity );
                 uiElementNameToIdMap[ uie.name ] = !! entity ? entity.value : '';
             } else {
                 // Use the name as id
-                uiElementNameToIdMap[ uie.name ] = convertCase( uiElementNameToIdMap[ uie.name ], caseUi );
+                uiElementNameToIdMap[ uie.name ] = convertCase( uiElementNameToIdMap[ uie.name ] || uie.name, caseUi );
             }
         } );
         //console.log( 'map', uiElementNameToIdMap );
