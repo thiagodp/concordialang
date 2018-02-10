@@ -1,3 +1,4 @@
+import { isDefined } from '../../util/TypeChecking';
 /**
  * Checks minimum and maximum values.
  * 
@@ -19,34 +20,32 @@ export class MinMaxChecker {
 		max?: number | string,
 		delta?: number
 	): void {
-		const minOK: boolean = min !== null && min !== undefined;
-		const maxOK: boolean = max !== null && max !== undefined;
-		const deltaOK: boolean = delta !== null && delta !== undefined;
-
 		// min
-		if ( minOK && isNaN( min as any ) ) {
+		if ( isDefined( min ) && isNaN( min as any ) ) {
 			throw new Error( "min is NaN." );
 		}
 		// max
-		if ( maxOK && isNaN( max as any ) ) {
+		if ( isDefined( max ) && isNaN( max as any ) ) {
 			throw new Error( "max is NaN." );
         }
         // min > max
-        if ( minOK && maxOK && Number( min ) > Number( max ) ) {
+        if ( isDefined( min ) && isDefined( max ) && Number( min ) > Number( max ) ) {
             throw new Error( "min can't be greater than max." );
         }
 		// delta
-		if ( deltaOK && delta < 0 ) {
+		if ( isDefined( delta ) && delta < 0 ) {
 			throw new Error( "delta can't be negative." );
 		}
 	}
 
 
 	/**
-	 * Return the greatest fractional part, according to the precision of
-	 * minimum and maximum values. These values are given as strings because
-	 * JavaScript ignores zeros as decimal places when converting a string
-	 * to a number (e.g. '1.0' becomes 1 instead of 1.0).
+	 * Return the greatest fractional part, according to the precision of 
+	 * minimum and maximum values.
+	 * 
+	 * These values are given as *strings* because JavaScript ignores zeros 
+	 * as decimal places when converting a string to a number (e.g.,
+	 * '1.0' becomes 1 instead of 1.0).
 	 * 
 	 * Examples:
 	 *    min = 2,    max = 10     -> 1
@@ -59,38 +58,27 @@ export class MinMaxChecker {
 	 * @param max The maximum value as string.
 	 */
 	public greatestFractionalPart( defaultDelta: number, min?: string, max?: string ): number {
-		/*
-		if ( undefined === min && undefined === max ) { // both are undefined
-			return defaultDelta;
-		}
-		let minStr: string = ( min !== undefined ) ? min.toString() : "";
-		let maxStr: string = ( max !== undefined ) ? max.toString() : "";
-		let restStr: string = minStr.length > maxStr.length ? minStr : maxStr;
-		let restLen: number = restStr.length - "0.".length;
-		let frac: number = 1 / Math.pow( 10, restLen );
-		return frac;
-		*/
-
-		if ( ( undefined === min || null === min )
-		  && ( undefined === max || null === max ) ) {
-			return defaultDelta;
-		}
-
-		const minIdx: number = min.lastIndexOf( '.' );
-		const maxIdx: number = max.lastIndexOf( '.' );
-		if ( minIdx < 0 && maxIdx < 0 ) { // both are integers
-			return 1; // difference between two integers
-		}
-
-		const minFrac: string = minIdx >= 0 ? min.substring( minIdx + 1 ) : '';
-		const maxFrac: string = maxIdx >= 0 ? max.substring( maxIdx + 1 ) : '';
-
-		let greatestLength: number = minFrac.length > maxFrac.length ? minFrac.length : maxFrac.length;
-		if ( 0 === greatestLength ) { // sanity
+		const minFracLength: number = this.fractionalPartLength( min );
+		const maxFracLength: number = this.fractionalPartLength( max );
+		let greatestLength: number = maxFracLength > minFracLength ? maxFracLength : minFracLength;
+		if ( greatestLength < 1 ) {
 			greatestLength = 1;
 		}
-
 		return 1 / Math.pow( 10, greatestLength );
-	}	
+	}
+
+	/**
+	 * Returns the length of the fractional part of a number.
+	 * E.g., "10.25" has ".25" as its fractional part and "25" has length 2.
+	 * 
+	 * @param num Number
+	 */
+	public fractionalPartLength( num: string ): number {
+		if ( ! isDefined( num ) || '' === num ) return 0;
+		const numStr = num.toString(); // Just to guarantee the right type in the conversion to JS
+		const idx = numStr.lastIndexOf( '.' );
+		if ( idx < 0 ) return 0;
+		return numStr.substring( idx + 1 ).length;
+	}
 
 }
