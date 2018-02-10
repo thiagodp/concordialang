@@ -1,6 +1,7 @@
 import * as RandExp from 'randexp';
 import { RandomString } from './random/RandomString';
 import { StringLimits } from './limits/StringLimits';
+import { RandomLong } from './random/RandomLong';
 
 /**
  * Regular Expression -based data generator.
@@ -15,15 +16,23 @@ export class RegexBasedDataGenerator {
     /**
      * Constructor
      * 
-     * @param _random Random value generator
+     * @param _randomLong Random long value generator to be used as random generator.
+     * @param _randomString Random string value generator
      * @param _expression Regular expression
      * @param _randomTriesToInvalidValues How many tries to generate random invalid values.
      */
     constructor(
-        private _random: RandomString,
+        private _randomLong: RandomLong,
+        private _randomString: RandomString,
         private _expression: string,
         private _randomTriesToInvalidValues: number = 5
     ) {
+
+        // Overrides the number generator in order to get "predictable" random values
+        RandExp.prototype.randInt = ( from, to ) => {
+            return _randomLong.between( from, to );
+        };
+
         if ( this._randomTriesToInvalidValues < 0 ) {
             this._randomTriesToInvalidValues = 0;
         }
@@ -45,7 +54,7 @@ export class RegexBasedDataGenerator {
         // This is faster and possibly less error prone than negate the expression.
         const regex = new RegExp( this._expression );
         for ( let i = 0; i < this._randomTriesToInvalidValues; ++i ) {
-            let val = this._random.between( 0, StringLimits.MAX );
+            let val = this._randomString.between( 0, StringLimits.MAX );
             // If the value does not match the regex, it is considered invalid
             if ( ! regex.test( val ) ) {
                 return val;

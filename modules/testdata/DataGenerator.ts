@@ -110,7 +110,7 @@ export class DataGenerator {
 	 */
 	public async generate( testCase: DataTestCase, cfg: DataGenConfig ): Promise< any > {
 
-		if ( this._dataTestCaseVsValueType.isCompatible( cfg.valueType, testCase ) ) {
+		if ( ! this._dataTestCaseVsValueType.isCompatible( cfg.valueType, testCase ) ) {
 			return null;
 		}
 
@@ -255,15 +255,29 @@ export class DataGenerator {
 	}
 
 	private regexGeneratorFor( cfg: DataGenConfig ): RegexBasedDataGenerator {
-		return new RegexBasedDataGenerator( this._randomString, cfg.regex );
+		return new RegexBasedDataGenerator(
+			this._randomLong,
+			this._randomString,
+			cfg.regex
+		);
 	}
 	
 	private queryGeneratorFor( cfg: DataGenConfig ): QueryBasedDataGenerator< any > {
-		return new QueryBasedDataGenerator( this._randomLong, this.rawGeneratorFor( cfg ), cfg.queryable, this._queryCache, cfg.query );
+		return new QueryBasedDataGenerator(
+			this._randomLong,
+			this.rawGeneratorFor( cfg ),
+			cfg.queryable,
+			this._queryCache,
+			cfg.query
+		);
 	}
 
 	private listGeneratorFor( cfg: DataGenConfig ): ListBasedDataGenerator< any > {
-		return new ListBasedDataGenerator( this._randomLong, this.rawGeneratorFor( cfg ), cfg.listOfValues );
+		return new ListBasedDataGenerator(
+			this._randomLong,
+			this.rawGeneratorFor( cfg ),
+			cfg.listOfValues
+		);
 	}
 	
 

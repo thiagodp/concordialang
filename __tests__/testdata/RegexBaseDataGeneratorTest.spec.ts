@@ -1,10 +1,13 @@
 import { RegexBasedDataGenerator } from "../../modules/testdata/RegexBasedDataGenerator";
 import { RandomString } from "../../modules/testdata/random/RandomString";
 import { Random } from "../../modules/testdata/random/Random";
+import { RandomLong } from "../../modules/testdata/random/RandomLong";
 
 describe( 'RegexBaseDataGeneratorTest', () => {
 
-    const ranS = new RandomString( new Random() );
+    const ran = new Random();
+    const ranL = new RandomLong( ran );    
+    const ranS = new RandomString( ran );
 
     it( 'valid values', () => {
         checkValid( '[a-z]' );
@@ -32,12 +35,12 @@ describe( 'RegexBaseDataGeneratorTest', () => {
 
 
     let checkValid = ( exp ) => {
-        let gen = new RegexBasedDataGenerator( ranS, exp );
+        let gen = new RegexBasedDataGenerator( ranL, ranS, exp );
         expect( gen.valid() ).toMatch( new RegExp( exp ) );        
     };    
 
     let checkInvalid = ( exp ) => {
-        let gen = new RegexBasedDataGenerator( ranS, exp );
+        let gen = new RegexBasedDataGenerator( ranL, ranS, exp );
         expect( gen.invalid() ).not.toMatch( new RegExp( exp ) );        
     };
 
