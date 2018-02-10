@@ -1,6 +1,5 @@
 import { UIProperty } from '../ast/UIElement';
 import { NodeTypes } from '../req/NodeTypes';
-import * as console from 'console';
 import { ContentNode } from "../ast/Node";
 import { Location } from "../ast/Location";
 import { NLP } from "./NLP";

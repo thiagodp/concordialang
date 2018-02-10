@@ -31,7 +31,7 @@ export const DEFAULT_UI_ACTION_SYNTAX_RULE = {
 };
 
 /**
- * Syntax rules for the supported UI Actions.
+ * Syntax rules for the supported UI Actions. Every rule overwrites DEFAULT_UI_ACTION_SYNTAX_RULE.
  * 
  * @author Thiago Delgado Pinto
  */
@@ -95,7 +95,7 @@ export const DEFAULT_UI_PROPERTY_SYNTAX_RULE = {
 };
 
 /**
- * Syntax rules for the supported UI Properties.
+ * Syntax rules for the supported UI Properties. Every rule overwrites DEFAULT_UI_PROPERTY_SYNTAX_RULE.
  * 
  * @author Thiago Delgado Pinto
  */
@@ -109,6 +109,7 @@ export const UI_PROPERTY_SYNTAX_RULES = [
     { name: "minvalue", targets: [ "number" ] },
     { name: "maxvalue", targets: [ "value", "number" ] },
     { name: "format", targets: [ "value" ] },
+    { name: "required", targets: [], minTargets: 0 } // target not needed
     //...
 ];
 
@@ -147,7 +148,7 @@ export const DEFAULT_DATABASE_PROPERTY_SYNTAX_RULE = {
 };
 
 /**
- * Syntax rules for the supported Database Properties.
+ * Syntax rules for the supported Database Properties. Every rule overwrites DEFAULT_DATABASE_PROPERTY_SYNTAX_RULE.
  * 
  * @author Thiago Delgado Pinto
  */

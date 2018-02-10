@@ -245,7 +245,8 @@ describe( 'TestCaseGeneratorTest', () => {
                 '    E eu preencho {B}',
                 'UI Element: A',
                 'UI Element: B',
-                ' - tipo de dado é inteiro'
+                ' - tipo de dado é inteiro',
+                ' - obrigatório'
             ] );
 
         expect( doc.fileErrors ).toEqual( [] );

@@ -166,6 +166,7 @@
                 "minvalue": [ "valor mínimo" ],
                 "maxvalue": [ "valor máximo" ],
                 "format": [ "formato" ],
+                "required": [ "obrigatório", "requerido", "required" ],
     
                 "color": [ "cor" ],
                 "bgcolor": [ "cor de fundo" ],
