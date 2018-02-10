@@ -1,7 +1,7 @@
 import { resolve } from 'path';
 import { Defaults } from './Defaults';
 import { CaseType } from './CaseType';
-import { isString, isNumber } from '../util/TypeChecking';
+import { isString, isNumber, isDefined } from '../util/TypeChecking';
 
 /**
  * Application options
@@ -134,7 +134,7 @@ export class Options {
     }
 
     public hasPluginName(): boolean {
-        return !! this.plugin;
+        return this.plugin !== null && this.plugin !== undefined;
     }
 
     /**
@@ -150,12 +150,11 @@ export class Options {
 
         // FILES
 
-        this.directory = 
-            ( !! flags.directory )
-                ? flags.directory
-                : ( !! input && 1 === input.length )
-                    ? input[ 0 ]
-                    : CURRENT_DIRECTORY;
+        this.directory = isDefined( flags.directory )
+            ? flags.directory
+            : ( isDefined( input ) && 1 === input.length )
+                ? input[ 0 ]
+                : CURRENT_DIRECTORY;
                     
         this.recursive = flags.recursive !== false;
 
@@ -178,7 +177,7 @@ export class Options {
             this.language = flags.language.trim().toLowerCase();
         }
 
-        this.languageList = !! flags.languageList;
+        this.languageList = isDefined( flags.languageList );
 
         // PLUG-IN
 
@@ -186,7 +185,7 @@ export class Options {
             this.plugin = flags.plugin.trim().toLowerCase();
         }
 
-        this.pluginList = !! flags.pluginList;
+        this.pluginList = isDefined( flags.pluginList );
 
         if ( isString( flags.pluginAbout ) ) {
             this.plugin = flags.pluginAbout.trim().toLowerCase();
@@ -203,14 +202,14 @@ export class Options {
 
         // PROCESSING
 
-        this.verbose = !! flags.verbose;        
-        this.stopOnTheFirstError = !! flags.failFast;
+        this.verbose = isDefined( flags.verbose );
+        this.stopOnTheFirstError = isDefined( flags.failFast );
 
-        const justSpec: boolean = !! flags.justSpec || !! flags.justSpecification;
-        const justExample: boolean = !! flags.justExample || !! flags.justExamples;
-        const justScript: boolean = !! flags.justScript || !! flags.justScripts;
-        const justRun: boolean = !! flags.justRun;
-        const justResult: boolean = !! flags.justResult || !! flags.justResults;   
+        const justSpec: boolean = isDefined( flags.justSpec ) || isDefined( flags.justSpecification );
+        const justExample: boolean = isDefined( flags.justExample ) || isDefined( flags.justExamples );
+        const justScript: boolean = isDefined( flags.justScript ) || isDefined( flags.justScripts );
+        const justRun: boolean = isDefined( flags.justRun );
+        const justResult: boolean = isDefined( flags.justResult ) || isDefined( flags.justResults );
 
         // compare to false is important because meow transforms no-xxx to xxx === false
         const noSpec: boolean = false === flags.spec || false === flags.specification;
@@ -298,11 +297,11 @@ export class Options {
         }
 
         // INFO
-        this.help = !! flags.help;        
-        this.about = !! flags.about;
-        this.version = !! flags.version;
-        this.newer = !! flags.newer;
-        this.debug = !! flags.debug;
+        this.help = isDefined( flags.help );        
+        this.about = isDefined( flags.about );
+        this.version = isDefined( flags.version );
+        this.newer = isDefined( flags.newer );
+        this.debug = isDefined( flags.debug );
 
         this.fixInconsistences();
     };

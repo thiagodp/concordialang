@@ -38,12 +38,12 @@ export class DoubleGenerator implements RawDataGenerator< number > {
 		const checker = new MinMaxChecker();
 		checker.check( min, max, delta ); // may throw Error
 	
-		this._min = ( undefined === min ) ? DoubleLimits.MIN : Number( min );
-		this._max = ( undefined === max ) ? DoubleLimits.MAX : Number( max );
+		this._min = min !== null && min !== undefined ? Number( min ) : DoubleLimits.MIN;
+		this._max = max !== null && max !== undefined ? Number( max ) : DoubleLimits.MAX;
 		
-		this._delta = ( undefined === delta )
-			? checker.greatestFractionalPart( this.DEFAULT_DELTA, min, max )
-			: delta;
+		this._delta = delta !== null && delta !== undefined
+			? delta
+			: checker.greatestFractionalPart( this.DEFAULT_DELTA, min, max );
 	}
 	
 	public delta(): number {

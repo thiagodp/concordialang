@@ -19,20 +19,24 @@ export class MinMaxChecker {
 		max?: number | string,
 		delta?: number
 	): void {
+		const minOK: boolean = min !== null && min !== undefined;
+		const maxOK: boolean = max !== null && max !== undefined;
+		const deltaOK: boolean = delta !== null && delta !== undefined;
+
 		// min
-		if ( min !== undefined && isNaN( min as any ) ) {
+		if ( minOK && isNaN( min as any ) ) {
 			throw new Error( "min is NaN." );
 		}
 		// max
-		if ( max !== undefined && isNaN( max as any ) ) {
+		if ( maxOK && isNaN( max as any ) ) {
 			throw new Error( "max is NaN." );
         }
         // min > max
-        if ( min && max && Number( min ) > Number( max ) ) {
+        if ( minOK && maxOK && Number( min ) > Number( max ) ) {
             throw new Error( "min can't be greater than max." );
         }
 		// delta
-		if ( delta && delta < 0 ) {
+		if ( deltaOK && delta < 0 ) {
 			throw new Error( "delta can't be negative." );
 		}
 	}
@@ -67,7 +71,8 @@ export class MinMaxChecker {
 		return frac;
 		*/
 
-		if ( ! min && ! max ) {
+		if ( ( undefined === min || null === min )
+		  && ( undefined === max || null === max ) ) {
 			return defaultDelta;
 		}
 

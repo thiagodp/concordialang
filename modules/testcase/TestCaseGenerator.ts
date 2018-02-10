@@ -14,10 +14,12 @@ import { Constant } from "../ast/Constant";
 import { ReferenceReplacer } from "../db/ReferenceReplacer";
 import { CaseType } from "../app/CaseType";
 import { convertCase } from '../util/CaseConversor';
-import * as deepcopy from 'deepcopy';
-import { lower } from 'case';
 import { ReservedTags } from '../req/ReservedTags';
 import { ValueType, ALL_VALUE_TYPES } from '../util/ValueTypeDetector';
+import { isDefined } from '../util/TypeChecking';
+import * as deepcopy from 'deepcopy';
+import { lower } from 'case';
+
 
 /**
  * Generates Variants from Templates.
@@ -131,7 +133,7 @@ export class TestCaseGenerator {
             // Find a property "id" in the UI element
             const item: UIProperty = uie.items ? uie.items.find( item => 'id' === item.property ) : null;
 
-            if ( !! item ) {
+            if ( isDefined( item ) ) {
                 // Find an entity "value" in the NLP result
                 const entity = item.nlpResult.entities.find( ( e: NLPEntity ) => 'value' === e.entity );
                 uiElementNameToIdMap[ uie.name ] = !! entity ? entity.value : '';
@@ -205,12 +207,12 @@ export class TestCaseGenerator {
         if ( s.targets && s.targets.length > 0 ) {
             // Find the element by name
             const uie = uiElements.find( uie => uie.name === s.targets[ 0 ] );
-            if ( !! uie && !! uie.items ) {
+            if ( isDefined( uie ) && isDefined( uie.items ) ) {
                 // Find the value type, if defined. Property is "datatype" and entity is "ui_data_type".
                 const item = uie.items.find( item => 'datatype' === item.property );
-                if ( !! item ) {
+                if ( isDefined( item ) ) {
                     const entity = item.nlpResult.entities.find( ( e: NLPEntity ) => 'ui_data_type' === e.entity );
-                    if ( !! entity ) {
+                    if ( isDefined( entity ) ) {
                         // Only accepts one of the available data types
                         const dataTypeIndex = ALL_VALUE_TYPES.indexOf( entity.value.trim().toLowerCase() );
                         if ( dataTypeIndex >= 0 ) {
@@ -240,10 +242,10 @@ export class TestCaseGenerator {
 
     private uiElementsOf( doc: Document ): UIElement[] {
         let uiElements: UIElement[] = [];
-        if ( !! doc.uiElements ) {
+        if ( isDefined( doc.uiElements ) ) {
             uiElements.push.apply( uiElements, doc.uiElements );
         }
-        if ( !! doc.feature.uiElements ) {
+        if ( isDefined( doc.feature.uiElements ) ) {
             uiElements.push.apply( uiElements, doc.feature.uiElements );
         }
         return uiElements;        

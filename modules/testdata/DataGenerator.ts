@@ -14,6 +14,7 @@ import { QueryCache } from '../db/QueryCache';
 import { ListBasedDataGenerator } from './ListBasedDataGenerator';
 import { Random } from './random/Random';
 import { Queryable } from '../db/Queryable';
+import { isDefined } from '../util/TypeChecking';
 
 /**
  * Indicates the result of a test case.
@@ -34,8 +35,6 @@ export enum DataAnalysisResult {
  */
 export class DataGenConfig {
 
-	public valueType: ValueType = ValueType.STRING;
-
 	public min: any = null; // mininum value or length
 	public max: any = null; // mininum value or length
 
@@ -45,6 +44,11 @@ export class DataGenConfig {
 	public queryable: Queryable = null; // queriable to use to query the value - db or memory
 
 	public listOfValues: any[] = null; // for list-based generation
+
+	constructor(
+		public valueType: ValueType = ValueType.STRING
+	) {
+	}
 
 }
 
@@ -177,42 +181,42 @@ export class DataGenerator {
 			// SET
 
 			case DataTestCase.SET_FIRST_ELEMENT: {
-				if ( !! cfg.query ) {
+				if ( isDefined( cfg.query ) ) {
 					return await this.queryGeneratorFor( cfg ).firstElement();
 				}
 				return this.listGeneratorFor( cfg ).firstElement();
 			}
 
 			case DataTestCase.SET_SECOND_ELEMENT: {
-				if ( !! cfg.query ) {
+				if ( isDefined( cfg.query ) ) {
 					return await this.queryGeneratorFor( cfg ).secondElement();
 				}
 				return this.listGeneratorFor( cfg ).secondElement();
 			}
 
 			case DataTestCase.SET_RANDOM_ELEMENT: {
-				if ( !! cfg.query ) {
+				if ( isDefined( cfg.query ) ) {
 					return await this.queryGeneratorFor( cfg ).randomElement();
 				}
 				return this.listGeneratorFor( cfg ).randomElement();
 			}			
 
 			case DataTestCase.SET_PENULTIMATE_ELEMENT: {
-				if ( !! cfg.query ) {
+				if ( isDefined( cfg.query ) ) {
 					return await this.queryGeneratorFor( cfg ).penultimateElement();
 				}
 				return this.listGeneratorFor( cfg ).penultimateElement();
 			}
 			
 			case DataTestCase.SET_LAST_ELEMENT: {
-				if ( !! cfg.query ) {
+				if ( isDefined( cfg.query ) ) {
 					return await this.queryGeneratorFor( cfg ).lastElement();
 				}
 				return this.listGeneratorFor( cfg ).lastElement();
 			}
 			
 			case DataTestCase.SET_NOT_IN_SET: {
-				if ( !! cfg.query ) {
+				if ( isDefined( cfg.query ) ) {
 					return await this.queryGeneratorFor( cfg ).notInSet();
 				}
 				return this.listGeneratorFor( cfg ).notInSet();
@@ -221,7 +225,7 @@ export class DataGenerator {
 			// REQUIRED
 
 			case DataTestCase.REQUIRED_FILLED: {
-				if ( !! cfg.query || !! cfg.listOfValues ) {
+				if ( isDefined( cfg.query ) || isDefined( cfg.listOfValues ) ) {
 					return await this.generate( DataTestCase.SET_RANDOM_ELEMENT, cfg );
 				}
 				return this.rawGeneratorFor( cfg ).randomBetweenMinAndMax();

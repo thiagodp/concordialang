@@ -7,7 +7,8 @@ import { UIElement } from './UIElement';
 import { Constant } from './Constant';
 import { Database } from './Database';
 import { Document } from './Document';
-import * as path from 'path';
+import { isDefined } from '../util/TypeChecking';
+import { join } from 'path';
 
 /**
  * Specification
@@ -41,10 +42,10 @@ export class Spec {
      * @param filePath File path.
      */
     public docWithPath( filePath: string ): Document {
-        const relPath = this.basePath ? path.join( this.basePath, filePath ) : filePath;
+        const relPath = this.basePath ? join( this.basePath, filePath ) : filePath;
         for ( let doc of this.docs ) {
             const relDocPath = this.basePath
-                ? path.join( this.basePath, doc.fileInfo.path )
+                ? join( this.basePath, doc.fileInfo.path )
                 : doc.fileInfo.path;
             if ( relPath === relDocPath ) {
                 return doc;
@@ -57,7 +58,7 @@ export class Spec {
      * Return all databases. Results are cached.
      */
     public databases = ( clearCache: boolean = false ): Database[] => {
-        if ( !! this._databaseCache && ! clearCache ) {
+        if ( isDefined( this._databaseCache ) && ! clearCache ) {
             return this._databaseCache;
         }
         this._databaseCache = [];
@@ -87,7 +88,7 @@ export class Spec {
      * Return all constants. Results are cached.
      */    
     public constants = ( clearCache: boolean = false ): Constant[] => {
-        if ( !! this._constantCache && ! clearCache ) {
+        if ( isDefined( this._constantCache ) && ! clearCache ) {
             return this._constantCache;
         }
         this._constantCache = [];
@@ -111,7 +112,7 @@ export class Spec {
      * Return all tables. Results are cached.
      */      
     public tables = ( clearCache: boolean = false ): Table[] => {
-        if ( !! this._tableCache && ! clearCache ) {
+        if ( isDefined( this._tableCache ) && ! clearCache ) {
             return this._tableCache;
         }
         this._tableCache = [];
@@ -135,7 +136,7 @@ export class Spec {
      * Return all features. Results are cached.
      */     
     public features = ( clearCache: boolean = false ): Feature[] => {
-        if ( !! this._featureCache && ! clearCache ) {
+        if ( isDefined( this._featureCache ) && ! clearCache ) {
             return this._featureCache;
         }
         this._featureCache = [];

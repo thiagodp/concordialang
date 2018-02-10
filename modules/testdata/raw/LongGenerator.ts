@@ -31,8 +31,8 @@ export class LongGenerator implements RawDataGenerator< number > {
 	) {		
 		( new MinMaxChecker() ).check( min, max ); // may throw Error
 
-        this._min = min !== undefined ? min: LongLimits.MIN;
-		this._max = max !== undefined ? max: LongLimits.MAX;	
+        this._min = min !== null && min !== undefined ? min: LongLimits.MIN;
+		this._max = max !== null && max !== undefined ? max: LongLimits.MAX;	
 	}
 
 	public diff(): number {

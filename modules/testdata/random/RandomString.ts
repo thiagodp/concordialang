@@ -1,5 +1,6 @@
 import { RandomLong } from "./RandomLong";
 import { Random } from "./Random";
+import { isDefined } from '../../util/TypeChecking';
 
 /**
  * Random string generator, compatible with Unicode. Defaults to the ASCII range,
@@ -49,7 +50,7 @@ export class RandomString {
     }
 
     public minCharCode( min?: number ) {
-        if ( !! min && min >= 0 ) {
+        if ( isDefined( min ) && min >= 0 ) {
             this._minCharCode = min;
             // Prevent range error
             if ( this._maxCharCode < this._minCharCode ) {
@@ -60,7 +61,7 @@ export class RandomString {
     }
 
     public maxCharCode( max?: number ) {
-        if ( !! max && max >= 0 ) {
+        if ( isDefined( max ) && max >= 0 ) {
             this._maxCharCode = max;
             // Prevent range error
             if ( this._minCharCode > this._maxCharCode ) {
