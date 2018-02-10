@@ -211,6 +211,7 @@ export class TestCaseGenerator {
                 if ( !! item ) {
                     const entity = item.nlpResult.entities.find( ( e: NLPEntity ) => 'ui_data_type' === e.entity );
                     if ( !! entity ) {
+                        // Only accepts one of the available data types
                         const dataTypeIndex = ALL_VALUE_TYPES.indexOf( entity.value.trim().toLowerCase() );
                         if ( dataTypeIndex >= 0 ) {
                             dataType = ALL_VALUE_TYPES[ dataTypeIndex ];
@@ -220,9 +221,20 @@ export class TestCaseGenerator {
             }
         }
         //console.log( 'Data type is', dataType );
-        
+
+        let value = '';
+
         // TO-DO
-        return '""';
+        /*
+        let value = await testCaseGenerator.generate( tc, dataType ) || '';
+        */
+
+        // Add quotes if the value is empty or not numeric
+        if ( value.length < 1  || ! ( ValueType.INTEGER === dataType || ValueType.DOUBLE === dataType ) ) {
+            value = '"' + value + '"';
+        }
+        
+        return value;
     }
 
 
