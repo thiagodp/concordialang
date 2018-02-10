@@ -63,6 +63,7 @@ export class UIPropertyRecognizer {
             errors: LocatedException[],
             warnings: LocatedException[]
         ) {
+            //console.log( 'NLPResult is ', r );
             const recognizedEntityNames: string[] = r.entities.map( e => e.entity );
 
             // Must have a UI Property

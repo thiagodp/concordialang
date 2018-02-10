@@ -131,6 +131,8 @@ export class NodeSentenceRecognizer {
 
         // Let's check the rules!
         const rule: any = syntaxRules[ propertyRuleIndex ];
+        //console.log( 'recogized are', recognizedEntityNames );
+        //console.log( 'targets of', rule.name, 'are', rule.targets );
 
         // Count the expected targets, ignores the other ones - like verbs
         const expectedTargetsCount = recognizedEntityNames.filter( name => rule.targets.indexOf( name ) >= 0 ).length;

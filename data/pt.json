@@ -275,6 +275,7 @@
                 "{ui_property} {ui_connector} {query}",
                 "{ui_property} {ui_connector} {number}",
                 "{ui_property} {ui_connector} {ui_element_type}",
+                "{ui_property} {ui_connector} {ui_data_type}",
                 "id é {value}",
                 "comprimento máximo é {number}",
                 "valor vem da consulta {query}"

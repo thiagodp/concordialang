@@ -17,6 +17,7 @@ import { convertCase } from '../util/CaseConversor';
 import * as deepcopy from 'deepcopy';
 import { lower } from 'case';
 import { ReservedTags } from '../req/ReservedTags';
+import { ValueType, ALL_VALUE_TYPES } from '../util/ValueTypeDetector';
 
 /**
  * Generates Variants from Templates.
@@ -42,8 +43,12 @@ export class TestCaseGenerator {
         caseUi: CaseType | string
     ): Promise< VariantGenerationResult[] > => {
 
+        const uiElements: UIElement[] = this.uiElementsOf( doc );
+        let tpl: Template = this.replaceReferences( template, uiElements, spec, caseUi );
+        
+
         let all: VariantGenerationResult[] = [];
-        let tpl: Template = this.replaceReferences( template, doc, spec, caseUi );
+        
 
         const variantKeyword: string = keywords.variant[ 0 ] || 'Variant';
         const withKeyword: string = keywords.with[ 0 ] || 'with';
@@ -55,7 +60,7 @@ export class TestCaseGenerator {
             let sentences: string[] = [];
             this.addTags( sentences, tpl );
             this.addName( sentences, tpl, variantKeyword, testCaseName );
-            this.addSentencesWithGeneratedValues( sentences, tpl.sentences, doc, spec, tc, withKeyword );
+            this.addSentencesWithGeneratedValues( sentences, tpl.sentences, uiElements, spec, tc, withKeyword );
 
             all.push( new VariantGenerationResult( sentences, [], [] ) );
         }
@@ -102,13 +107,13 @@ export class TestCaseGenerator {
      * Replaces references of a template and returns a new template.
      * 
      * @param template Template to change
-     * @param doc Current document
+     * @param uiElements UI elements of the current document
      * @param spec Specification
      * @param caseUi String case to use when not id is defined, e.g. "camel".
      */
     public replaceReferences(
         template: Template,
-        doc: Document,
+        uiElements: UIElement[],
         spec: Spec,
         caseUi: CaseType | string
     ): Template {
@@ -118,15 +123,6 @@ export class TestCaseGenerator {
         // Map constant names to values
         let constantNameToValueMap = {};
         spec.constants().forEach( v => constantNameToValueMap[ v.name ] = v.value );
-
-        // Retrieve all the ui elements in the doc
-        let uiElements: UIElement[] = [];
-        if ( !! doc.uiElements ) {
-            uiElements.push.apply( uiElements, doc.uiElements );
-        }
-        if ( !! doc.feature.uiElements ) {
-            uiElements.push.apply( uiElements, doc.feature.uiElements );
-        }
 
         // Map UI element names to its ids
         let uiElementNameToIdMap = {};
@@ -167,7 +163,7 @@ export class TestCaseGenerator {
     public addSentencesWithGeneratedValues(
         targetSentences: string[],
         templateSentences: Step[],
-        doc: Document,
+        uiElements: UIElement[],
         spec: Spec,
         tc: DataTestCase,
         withKeyword: string
@@ -189,7 +185,7 @@ export class TestCaseGenerator {
                 continue;
             }
 
-            newSentence += ' ' + withKeyword + ' ' + this.generateValue( s, doc, spec, tc );
+            newSentence += ' ' + withKeyword + ' ' + this.generateValue( s, uiElements, spec, tc );
             targetSentences.push( newSentence );
         }
     }    
@@ -201,13 +197,44 @@ export class TestCaseGenerator {
         return 'fill' === step.action;
     }
 
-    public generateValue( s: Step, doc: Document, spec: Spec, tc: DataTestCase ): string {
+    public generateValue( s: Step, uiElements: UIElement[], spec: Spec, tc: DataTestCase ): string {
 
-        // Retrieve the type of the referenced element (default string), in order
+        // Retrieve the value type of the referenced element (default string), in order
         // to generate the test value with the right type
+        let dataType: ValueType = ValueType.STRING;
+        if ( s.targets && s.targets.length > 0 ) {
+            // Find the element by name
+            const uie = uiElements.find( uie => uie.name === s.targets[ 0 ] );
+            if ( !! uie && !! uie.items ) {
+                // Find the value type, if defined. Property is "datatype" and entity is "ui_data_type".
+                const item = uie.items.find( item => 'datatype' === item.property );
+                if ( !! item ) {
+                    const entity = item.nlpResult.entities.find( ( e: NLPEntity ) => 'ui_data_type' === e.entity );
+                    if ( !! entity ) {
+                        const dataTypeIndex = ALL_VALUE_TYPES.indexOf( entity.value.trim().toLowerCase() );
+                        if ( dataTypeIndex >= 0 ) {
+                            dataType = ALL_VALUE_TYPES[ dataTypeIndex ];
+                        }
+                    }
+                }
+            }
+        }
+        //console.log( 'Data type is', dataType );
         
         // TO-DO
         return '""';
+    }
+
+
+    private uiElementsOf( doc: Document ): UIElement[] {
+        let uiElements: UIElement[] = [];
+        if ( !! doc.uiElements ) {
+            uiElements.push.apply( uiElements, doc.uiElements );
+        }
+        if ( !! doc.feature.uiElements ) {
+            uiElements.push.apply( uiElements, doc.feature.uiElements );
+        }
+        return uiElements;        
     }
 
 }

@@ -88,7 +88,7 @@ export const DEFAULT_UI_PROPERTY_SYNTAX_RULE = {
 
     query: { min: 1, max: 1 },
 
-    datatype: { min: 1, max: 1 },
+    ui_data_type: { min: 1, max: 1 },
 
     // Other action or actions that must be used together.
     mustBeUsedWith: []    
@@ -102,7 +102,7 @@ export const DEFAULT_UI_PROPERTY_SYNTAX_RULE = {
 export const UI_PROPERTY_SYNTAX_RULES = [
     { name: "id", targets: [ "value" ] },
     { name: "type", targets: [ "ui_property" ] },
-    { name: "datatype", targets: [ "datatype" ] }, // e.g. string, integer, ...
+    { name: "datatype", targets: [ "ui_data_type" ] }, // e.g. string, integer, ...
     { name: "value", targets: [ "value", "number", "query" ] },
     { name: "minlength", targets: [ "number" ] },
     { name: "maxlength", targets: [ "number" ] },

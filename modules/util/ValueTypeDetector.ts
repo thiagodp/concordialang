@@ -15,6 +15,17 @@ export enum ValueType {
     BOOLEAN = 'boolean'
 }
 
+export const ALL_VALUE_TYPES: ValueType[] = [
+    ValueType.STRING,
+    ValueType.INTEGER,
+    ValueType.DOUBLE,
+    ValueType.DOUBLE,
+    ValueType.DATE,
+    ValueType.TIME,
+    ValueType.DATETIME,
+    ValueType.BOOLEAN
+];
+
 /**
  * Value type detector.
  * 
