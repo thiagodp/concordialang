@@ -25,7 +25,8 @@ export class DataTestCaseVsValueType {
     }
 
     isCompatible( valueType: ValueType, tc: DataTestCase ): boolean {
-        return this._defs.find( ( v ) => v.val === valueType && v.tc === tc ).compatible;
+        let def = this._defs.find( ( v ) => v.val === valueType && v.tc === tc );
+        return def ? def.compatible : false;
     }
 
 	private addStringDefs(): void {
