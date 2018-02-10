@@ -32,9 +32,9 @@
   },
   "allow-scripts": true,
   "scripts": {
-    "build": "tsc",
+    "build": "node copy.js && tsc",
     "test": "node copy.js && jest --all",
-    "start": "node copy.js && node bin/concordia",
+    "start": "node bin/concordia",
     "postversion": "git push && git push --tags"
   },
   "dependencies": {
