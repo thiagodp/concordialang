@@ -116,12 +116,26 @@ describe( 'NLPTest', () => {
 
         describe( 'query', () => {
         
-            it( 'recognizes', () => {
+            it( 'recognizes in uppercase', () => {
                 let r: NLPResult = nlp.recognize( 'en', ' "SELECT foo FROM bar" ' );
                 expect( r.entities ).toHaveLength( 1 );
                 expect( r.entities[ 0 ].entity ).toBe( Entities.QUERY );
                 expect( r.entities[ 0 ].value ).toBe( 'SELECT foo FROM bar' );
             } );
+
+            it( 'recognizes in lowercase', () => {
+                let r: NLPResult = nlp.recognize( 'en', ' "select foo FROM bar" ' );
+                expect( r.entities ).toHaveLength( 1 );
+                expect( r.entities[ 0 ].entity ).toBe( Entities.QUERY );
+                expect( r.entities[ 0 ].value ).toBe( 'select foo FROM bar' );
+            } );
+
+            it( 'recognizes with spaces before select', () => {
+                let r: NLPResult = nlp.recognize( 'en', ' "  SELECT foo FROM bar" ' );
+                expect( r.entities ).toHaveLength( 1 );
+                expect( r.entities[ 0 ].entity ).toBe( Entities.QUERY );
+                expect( r.entities[ 0 ].value ).toBe( 'SELECT foo FROM bar' );
+            } );            
 
         } );
 

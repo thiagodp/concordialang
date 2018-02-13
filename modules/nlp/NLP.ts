@@ -242,7 +242,7 @@ export class NLP {
         valueRec.addMatch( new RegExp( '"(?:\t| )*SELECT[^"]+"', "gi" ),
             function( match ) {
                 //console.log( 'match: ', match );
-                return match.toString().replace( /['"]+/g, '' );
+                return match.toString().replace( /['"]+/g, '' ).trim();
             },
             200 ); // the number is the priority
 
