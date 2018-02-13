@@ -61,9 +61,6 @@ export class MinMaxChecker {
 		const minFracLength: number = this.fractionalPartLength( min );
 		const maxFracLength: number = this.fractionalPartLength( max );
 		let greatestLength: number = maxFracLength > minFracLength ? maxFracLength : minFracLength;
-		if ( greatestLength < 1 ) {
-			greatestLength = 1;
-		}
 		return 1 / Math.pow( 10, greatestLength );
 	}
 
