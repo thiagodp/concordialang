@@ -168,11 +168,14 @@ export class NLP {
     private makeValueEntityRecognizer( entityName: string ): any {
 
         let valueRec = new Bravey.RegexEntityRecognizer( entityName, 10 );
+        //const regex = new RegExp( '"[^"\r\n]*"', "gi" );
+        const regex = /(?:\")(.*[^\\])(?:\")/g;
 
-        valueRec.addMatch( new RegExp( '"[^"\r\n]*"', "gi" ),
+        valueRec.addMatch( regex,
             function( match ) {
                 //console.log( 'match: ', match );
-                return match.toString().replace( /['"]+/g, '' );
+                //return match.toString().replace( /['"]+/g, '' );
+                return match[ 1 ];
             },
             100 ); // the number is the priority
 

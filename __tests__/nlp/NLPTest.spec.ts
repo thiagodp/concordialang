@@ -53,11 +53,18 @@ describe( 'NLPTest', () => {
 
         describe( 'value', () => {
 
-            it( 'recognizes a value between quotes', () => {
+            it( 'between quotes', () => {
                 let r: NLPResult = nlp.recognize( 'en', ' "foo" ' );
                 expect( r.entities ).toHaveLength( 1 );
                 expect( r.entities[ 0 ].entity ).toBe( Entities.VALUE );
                 expect( r.entities[ 0 ].value ).toBe( 'foo' );
+            } );
+
+            it( 'with escaped quotes', () => {
+                let r: NLPResult = nlp.recognize( 'en', ' "foo is \"bar\""' );
+                expect( r.entities ).toHaveLength( 1 );
+                expect( r.entities[ 0 ].entity ).toBe( Entities.VALUE );
+                expect( r.entities[ 0 ].value ).toBe( 'foo is \"bar\"' );
             } );
 
         });
@@ -65,28 +72,28 @@ describe( 'NLPTest', () => {
 
         describe( 'number', () => {
 
-            it( 'recognizes a positive integer number', () => {
+            it( 'positive integer number', () => {
                 let r: NLPResult = nlp.recognize( 'en', ' 3 ' );
                 expect( r.entities ).toHaveLength( 1 );
                 expect( r.entities[ 0 ].entity ).toBe( Entities.NUMBER );      
                 expect( r.entities[ 0 ].value ).toBe( '3' );                
             } );
 
-            it( 'recognizes a positive double number', () => {
+            it( 'positive double number', () => {
                 let r: NLPResult = nlp.recognize( 'en', ' 3.14159 ' );
                 expect( r.entities ).toHaveLength( 1 );
                 expect( r.entities[ 0 ].entity ).toBe( Entities.NUMBER );
                 expect( r.entities[ 0 ].value ).toBe( '3.14159' );
             } );
 
-            it( 'recognizes a negative integer number', () => {
+            it( 'negative integer number', () => {
                 let r: NLPResult = nlp.recognize( 'en', ' -3 ' );
                 expect( r.entities ).toHaveLength( 1 );
                 expect( r.entities[ 0 ].entity ).toBe( Entities.NUMBER );      
                 expect( r.entities[ 0 ].value ).toBe( '-3' );                
             } );
 
-            it( 'recognizes a negative double number', () => {
+            it( 'negative double number', () => {
                 let r: NLPResult = nlp.recognize( 'en', ' -3.14159 ' );
                 expect( r.entities ).toHaveLength( 1 );
                 expect( r.entities[ 0 ].entity ).toBe( Entities.NUMBER );
@@ -116,21 +123,21 @@ describe( 'NLPTest', () => {
 
         describe( 'query', () => {
         
-            it( 'recognizes in uppercase', () => {
+            it( 'in uppercase', () => {
                 let r: NLPResult = nlp.recognize( 'en', ' "SELECT foo FROM bar" ' );
                 expect( r.entities ).toHaveLength( 1 );
                 expect( r.entities[ 0 ].entity ).toBe( Entities.QUERY );
                 expect( r.entities[ 0 ].value ).toBe( 'SELECT foo FROM bar' );
             } );
 
-            it( 'recognizes in lowercase', () => {
+            it( 'in lowercase', () => {
                 let r: NLPResult = nlp.recognize( 'en', ' "select foo FROM bar" ' );
                 expect( r.entities ).toHaveLength( 1 );
                 expect( r.entities[ 0 ].entity ).toBe( Entities.QUERY );
                 expect( r.entities[ 0 ].value ).toBe( 'select foo FROM bar' );
             } );
 
-            it( 'recognizes with spaces before select', () => {
+            it( 'with spaces before select', () => {
                 let r: NLPResult = nlp.recognize( 'en', ' "  SELECT foo FROM bar" ' );
                 expect( r.entities ).toHaveLength( 1 );
                 expect( r.entities[ 0 ].entity ).toBe( Entities.QUERY );
@@ -158,35 +165,35 @@ describe( 'NLPTest', () => {
                 expect( r.entities ).toHaveLength( 0 );
             } );
 
-            it( 'recognizes a single number', () => {
+            it( 'single number', () => {
                 let r: NLPResult = nlp.recognize( 'en', ' [1] ' );
                 expect( r.entities ).toHaveLength( 1 );
                 expect( r.entities[ 0 ].entity ).toBe( Entities.VALUE_LIST );
                 expect( r.entities[ 0 ].value ).toBe( '[1]' );
             } );        
 
-            it( 'recognizes numbers', () => {
+            it( 'numbers', () => {
                 let r: NLPResult = nlp.recognize( 'en', ' [1, 2] ' );
                 expect( r.entities ).toHaveLength( 1 );
                 expect( r.entities[ 0 ].entity ).toBe( Entities.VALUE_LIST );
                 expect( r.entities[ 0 ].value ).toBe( '[1, 2]' );
             } );
 
-            it( 'recognizes strings', () => {
+            it( 'strings', () => {
                 let r: NLPResult = nlp.recognize( 'en', ' [ "alice", "bob" ] ' );
                 expect( r.entities ).toHaveLength( 1 );
                 expect( r.entities[ 0 ].entity ).toBe( Entities.VALUE_LIST );
                 expect( r.entities[ 0 ].value ).toBe( '[ "alice", "bob" ]' );
             } );
 
-            it( 'recognizes strings with escaped strings', () => {
+            it( 'strings with escaped strings', () => {
                 let r: NLPResult = nlp.recognize( 'en', ' [ "alice say \\\"hello\\\"" ] ' );
                 expect( r.entities ).toHaveLength( 1 );
                 expect( r.entities[ 0 ].entity ).toBe( Entities.VALUE_LIST );
                 expect( r.entities[ 0 ].value ).toBe( '[ "alice say \\\"hello\\\"" ]' );
             } );        
 
-            it( 'recognizes strings and numbers mixed', () => {
+            it( 'strings and numbers mixed', () => {
                 let r: NLPResult = nlp.recognize( 'en', ' [ "alice", 1, "bob", 2 ] ' );
                 expect( r.entities ).toHaveLength( 1 );
                 expect( r.entities[ 0 ].entity ).toBe( Entities.VALUE_LIST );
