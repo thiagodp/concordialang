@@ -67,6 +67,12 @@ describe( 'NLPTest', () => {
                 expect( r.entities[ 0 ].value ).toBe( 'foo is \"bar\"' );
             } );
 
+            // documenting a current limitation
+            it( 'still does not recognize a string that ends with escaped backslash', () => {
+                let r: NLPResult = nlp.recognize( 'en', ' "this is not recognized \\"' );
+                expect( r.entities ).toHaveLength( 0 );
+            } );
+
         });
 
 
@@ -158,6 +164,7 @@ describe( 'NLPTest', () => {
 
         } );
 
+
         describe( 'value list', () => {
         
             it( 'does not recognize an empty list', () => {
@@ -191,7 +198,7 @@ describe( 'NLPTest', () => {
                 expect( r.entities ).toHaveLength( 1 );
                 expect( r.entities[ 0 ].entity ).toBe( Entities.VALUE_LIST );
                 expect( r.entities[ 0 ].value ).toBe( '[ "alice say \\\"hello\\\"" ]' );
-            } );        
+            } );
 
             it( 'strings and numbers mixed', () => {
                 let r: NLPResult = nlp.recognize( 'en', ' [ "alice", 1, "bob", 2 ] ' );
