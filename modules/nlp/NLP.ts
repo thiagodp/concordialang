@@ -35,7 +35,11 @@ export class NLP {
 
         // Add an entity named "constant" and its recognizer
         this._additionalEntities.push( Entities.CONSTANT );
-        this._additionalRecognizers.push( this.makeConstantEntityRecognizer( Entities.CONSTANT ) );        
+        this._additionalRecognizers.push( this.makeConstantEntityRecognizer( Entities.CONSTANT ) );
+
+        // Add an entity named "value_list" and its recognizer
+        this._additionalEntities.push( Entities.VALUE_LIST );
+        this._additionalRecognizers.push( this.makeValueListEntityRecognizer( Entities.VALUE_LIST ) );
     }
 
     /**
@@ -256,7 +260,24 @@ export class NLP {
             },
             100 ); // the number is the priority
 
-        return valueRec;        
+        return valueRec;
+    }
+
+    /**
+     * Recognizes values in the format [ 1, "hello", 2, "hi \"Jane\"!" ]
+     * 
+     * @param entityName 
+     */
+    private makeValueListEntityRecognizer( entityName: string ): any {
+        var valueRec = new Bravey.RegexEntityRecognizer( entityName, 10 );
+        const regex = /\[(?: )*((?:,) ?|([0-9]+(\.[0-9]+)?|\"(.*[^\\])\"))+(?: )*\]/g
+        valueRec.addMatch( regex,
+            function( match ) {
+                //console.log( 'match: ', match );
+                return match[ 0 ].toString().trim();
+            },
+            1000 ); // the number is the priority
+        return valueRec;
     }
 
 }

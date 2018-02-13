@@ -44,71 +44,148 @@ describe( 'NLPTest', () => {
     } );
 
 
-    it( 'recognizes a value entity after being trained', () => {
-        nlp.train( 'en', fakeTrainingData() );
-        let r: NLPResult = nlp.recognize( 'en', ' "foo" ' );
-        expect( r.entities ).toHaveLength( 1 );
-        expect( r.entities[ 0 ].entity ).toBe( Entities.VALUE );
-        expect( r.entities[ 0 ].value ).toBe( 'foo' );
-    } );
+    describe( 'simple entities', () => {
+
+        beforeEach( () => {
+            nlp.train( 'en', fakeTrainingData() );
+        } );        
 
 
-    it( 'recognizes a number entity after being trained', () => {
-        nlp.train( 'en', fakeTrainingData() );
-        let r: NLPResult;
+        describe( 'value', () => {
 
-        r = nlp.recognize( 'en', ' 3 ' );
-        expect( r.entities ).toHaveLength( 1 );
-        expect( r.entities[ 0 ].entity ).toBe( Entities.NUMBER );      
-        expect( r.entities[ 0 ].value ).toBe( '3' );
+            it( 'recognizes a value between quotes', () => {
+                let r: NLPResult = nlp.recognize( 'en', ' "foo" ' );
+                expect( r.entities ).toHaveLength( 1 );
+                expect( r.entities[ 0 ].entity ).toBe( Entities.VALUE );
+                expect( r.entities[ 0 ].value ).toBe( 'foo' );
+            } );
 
-        r = nlp.recognize( 'en', ' 3.14159 ' );
-        expect( r.entities ).toHaveLength( 1 );
-        expect( r.entities[ 0 ].entity ).toBe( Entities.NUMBER );
-        expect( r.entities[ 0 ].value ).toBe( '3.14159' );
+        });
 
-        r = nlp.recognize( 'en', ' -3 ' );
-        expect( r.entities ).toHaveLength( 1 );
-        expect( r.entities[ 0 ].entity ).toBe( Entities.NUMBER );
-        expect( r.entities[ 0 ].value ).toBe( '-3' );
+
+        describe( 'number', () => {
+
+            it( 'recognizes a positive integer number', () => {
+                let r: NLPResult = nlp.recognize( 'en', ' 3 ' );
+                expect( r.entities ).toHaveLength( 1 );
+                expect( r.entities[ 0 ].entity ).toBe( Entities.NUMBER );      
+                expect( r.entities[ 0 ].value ).toBe( '3' );                
+            } );
+
+            it( 'recognizes a positive double number', () => {
+                let r: NLPResult = nlp.recognize( 'en', ' 3.14159 ' );
+                expect( r.entities ).toHaveLength( 1 );
+                expect( r.entities[ 0 ].entity ).toBe( Entities.NUMBER );
+                expect( r.entities[ 0 ].value ).toBe( '3.14159' );
+            } );
+
+            it( 'recognizes a negative integer number', () => {
+                let r: NLPResult = nlp.recognize( 'en', ' -3 ' );
+                expect( r.entities ).toHaveLength( 1 );
+                expect( r.entities[ 0 ].entity ).toBe( Entities.NUMBER );      
+                expect( r.entities[ 0 ].value ).toBe( '-3' );                
+            } );
+
+            it( 'recognizes a negative double number', () => {
+                let r: NLPResult = nlp.recognize( 'en', ' -3.14159 ' );
+                expect( r.entities ).toHaveLength( 1 );
+                expect( r.entities[ 0 ].entity ).toBe( Entities.NUMBER );
+                expect( r.entities[ 0 ].value ).toBe( '-3.14159' );
+            } );
+
+        } );
+
+
+        describe( 'element', () => {
         
-        r = nlp.recognize( 'en', ' -3.14159 ' );
-        expect( r.entities ).toHaveLength( 1 );
-        expect( r.entities[ 0 ].entity ).toBe( Entities.NUMBER );
-        expect( r.entities[ 0 ].value ).toBe( '-3.14159' );
+            it( 'recognizes', () => {
+
+                let r: NLPResult = nlp.recognize( 'en', ' {foo} ' );
+                expect( r.entities ).toHaveLength( 1 );
+                expect( r.entities[ 0 ].entity ).toBe( Entities.ELEMENT );
+                expect( r.entities[ 0 ].value ).toBe( 'foo' );
+
+                r = nlp.recognize( 'en', ' {foo bar} ' );
+                expect( r.entities ).toHaveLength( 1 );
+                expect( r.entities[ 0 ].entity ).toBe( Entities.ELEMENT );
+                expect( r.entities[ 0 ].value ).toBe( 'foo bar' );
+            } );
+
+        } );
+
+
+        describe( 'query', () => {
+        
+            it( 'recognizes', () => {
+                let r: NLPResult = nlp.recognize( 'en', ' "SELECT foo FROM bar" ' );
+                expect( r.entities ).toHaveLength( 1 );
+                expect( r.entities[ 0 ].entity ).toBe( Entities.QUERY );
+                expect( r.entities[ 0 ].value ).toBe( 'SELECT foo FROM bar' );
+            } );
+
+        } );
+
+        
+        describe( 'constant', () => {
+
+            it( 'recognizes', () => {
+                let r: NLPResult = nlp.recognize( 'en', ' [foo bar] ' );
+                expect( r.entities ).toHaveLength( 1 );
+                expect( r.entities[ 0 ].entity ).toBe( Entities.CONSTANT );
+                expect( r.entities[ 0 ].value ).toBe( 'foo bar' );
+            } );
+
+        } );
+
+        describe( 'value list', () => {
+        
+            it( 'does not recognize an empty list', () => {
+                let r: NLPResult = nlp.recognize( 'en', ' [] ' );
+                expect( r.entities ).toHaveLength( 0 );
+            } );
+
+            it( 'recognizes a single number', () => {
+                let r: NLPResult = nlp.recognize( 'en', ' [1] ' );
+                expect( r.entities ).toHaveLength( 1 );
+                expect( r.entities[ 0 ].entity ).toBe( Entities.VALUE_LIST );
+                expect( r.entities[ 0 ].value ).toBe( '[1]' );
+            } );        
+
+            it( 'recognizes numbers', () => {
+                let r: NLPResult = nlp.recognize( 'en', ' [1, 2] ' );
+                expect( r.entities ).toHaveLength( 1 );
+                expect( r.entities[ 0 ].entity ).toBe( Entities.VALUE_LIST );
+                expect( r.entities[ 0 ].value ).toBe( '[1, 2]' );
+            } );
+
+            it( 'recognizes strings', () => {
+                let r: NLPResult = nlp.recognize( 'en', ' [ "alice", "bob" ] ' );
+                expect( r.entities ).toHaveLength( 1 );
+                expect( r.entities[ 0 ].entity ).toBe( Entities.VALUE_LIST );
+                expect( r.entities[ 0 ].value ).toBe( '[ "alice", "bob" ]' );
+            } );
+
+            it( 'recognizes strings with escaped strings', () => {
+                let r: NLPResult = nlp.recognize( 'en', ' [ "alice say \\\"hello\\\"" ] ' );
+                expect( r.entities ).toHaveLength( 1 );
+                expect( r.entities[ 0 ].entity ).toBe( Entities.VALUE_LIST );
+                expect( r.entities[ 0 ].value ).toBe( '[ "alice say \\\"hello\\\"" ]' );
+            } );        
+
+            it( 'recognizes strings and numbers mixed', () => {
+                let r: NLPResult = nlp.recognize( 'en', ' [ "alice", 1, "bob", 2 ] ' );
+                expect( r.entities ).toHaveLength( 1 );
+                expect( r.entities[ 0 ].entity ).toBe( Entities.VALUE_LIST );
+                expect( r.entities[ 0 ].value ).toBe( '[ "alice", 1, "bob", 2 ]' );
+
+                r = nlp.recognize( 'en', ' [ 1, "alice", 2, "bob", 3, 4, "bob", "joe" ] ' );
+                expect( r.entities ).toHaveLength( 1 );
+                expect( r.entities[ 0 ].entity ).toBe( Entities.VALUE_LIST );
+                expect( r.entities[ 0 ].value ).toBe( '[ 1, "alice", 2, "bob", 3, 4, "bob", "joe" ]' );            
+            } );        
+
+        } );
+
     } );
-    
-
-    it( 'recognizes an element entity after being trained', () => {
-        nlp.train( 'en', fakeTrainingData() );
-
-        let r: NLPResult = nlp.recognize( 'en', ' {foo} ' );
-        expect( r.entities ).toHaveLength( 1 );
-        expect( r.entities[ 0 ].entity ).toBe( Entities.ELEMENT );
-        expect( r.entities[ 0 ].value ).toBe( 'foo' );
-
-        r = nlp.recognize( 'en', ' {foo bar} ' );
-        expect( r.entities ).toHaveLength( 1 );
-        expect( r.entities[ 0 ].entity ).toBe( Entities.ELEMENT );
-        expect( r.entities[ 0 ].value ).toBe( 'foo bar' );
-    } );
-
-    
-    it( 'recognizes a query entity after being trained', () => {
-        nlp.train( 'en', fakeTrainingData() );
-        let r: NLPResult = nlp.recognize( 'en', ' "SELECT foo FROM bar" ' );
-        expect( r.entities ).toHaveLength( 1 );
-        expect( r.entities[ 0 ].entity ).toBe( Entities.QUERY );
-        expect( r.entities[ 0 ].value ).toBe( 'SELECT foo FROM bar' );
-    } );
-    
-    
-    it( 'recognizes a constant entity after being trained', () => {
-        nlp.train( 'en', fakeTrainingData() );
-        let r: NLPResult = nlp.recognize( 'en', ' [foo bar] ' );
-        expect( r.entities ).toHaveLength( 1 );
-        expect( r.entities[ 0 ].entity ).toBe( Entities.CONSTANT );
-        expect( r.entities[ 0 ].value ).toBe( 'foo bar' );
-    } );    
 
 } );
