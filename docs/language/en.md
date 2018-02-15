@@ -226,6 +226,18 @@ Notes about data types:
 - `double` default precision is 2
 - `double`'s precision can be changed, using `with precision` (e.g. `data type is double wih precision 3`)
 
+Notes about the `id` property:
+- `"value"` denotes an `id`
+- `"#value"` denotes an `id`
+- `"//value"` denotes a `xpath`
+- `"@value"` denotes a `name`
+- `"~value"` denotes a `mobile name`
+- `".value"` denotes a `css`
+- Single identifier is denoted by `id is "<value>"`
+- Example of a single identifier: `id is "birthDate"`
+- Multiple identifiers are denoted by `id in [ "<value1>", "<value2>", ... ]`
+- Example of a multiple identifier:   `id in [ "birthDate", "~birthDate" ]`
+
 Notes about queries (inside a constraint of a UI Element):
 
 1. Should be put inside quotes (").

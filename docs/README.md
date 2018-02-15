@@ -1,114 +1,57 @@
-# ASL
+# Concordia Documentation
 
-## Overview
 
+
+### Data generation
+
+#### Queries
+
+1. Always return rows from the *first* column.
+
+- E.g., `"SELECT name, email FROM user"` will always return data from the `"name"` column.
+
+#### Regular Expressions
+
+1. They will *not* check UI Elements' data type.
+
+- E.g., the following regular expression will generate data such as `US$ 159.03`, although the declared data type (`double`) would not accept `US$` as a valid value.
+```concordia
+UI Element: salary
+  - data type is double
+  - min value is 1000.00
+  - format is "US\$[0-9]{1,7}\.[0-9]{2}"
 ```
-+-----+     +-----+     +----------+      +----------------+     +-------------------------+
-| DSL | --> | AST | --> | Compiler |  --> | Abstract Tests | --> | Complete Abstract Tests | 
-+-----+     +-----+     +----------+      +----------------+     +-------------------------+
-                            |                                             ^      |
-                            |             +-----------+                   |      |
-                            +-----------> | Test Data | ------------------+      |
-                                          +-----------+                          |
-                                              +-------------+     +---------+    |
-                                              | Test Script | <-- | Plug-in | <--+
-                                              +-------------+     +---------+
+
+#### Computation
+
+(future)
+
+1. Declaration specify programming language. Default is `javascript`. E.g.:
+```
+```javascript
 ```
 
-
-## Structure
+2. May access specification elements through global variables:
+- `$uielement`
+- `$constant`
+- `$database`
 
 ```javascript
-
-// file info
-dec[ hash ] = {
-    name: string; // name without path. e.g. "a.asl"
-    paths: string[]; // paths where the file was found. e.g.: [ 'path/to/', '../to/' ]
-    // content: string; // file lines (needed? -> maybe not -> can be read )
-}
-
-// parse
-parsed[ hash ] =  {
-
-    problems: [
-        {
-            line: number,
-            column: number,
-            message: string,
-            type: string // 'error' | 'warning'
-        }
-    ],
-
-    // Used to check inclusions
-    inclusions: string[]; // hashes. e.g. [ "b3c4d6", "c7d6e5" ]
-
-    // Declarations
-    features: [
-        {
-            name: string;
-            description?: string;
-            location: {
-                line: number,
-                column: number
-            }
-
-            scenarios: [
-                {
-                    number?: string;
-                    name?: string;
-                    description?: string;
-                    location: { ... };
-                    sentences: string[];
-                    parsed: [
-                        {
-                            ???
-                        }
-                    ]
-                }
-            ],
-
-            ui: [
-                {
-
-                }
-            ],
-
-            rules: [
-                {
-
-                }
-            ],
-
-            tasks: [
-                {
-                    when: string;   // 'BAT' = before all the tests, 
-                                    // 'BET' = before each test,
-                                    // 'AET' = after each test,
-                                    // 'AAT' = after all the tests
-                    what: [
-                        {
-                            action: 'script' | 'command',
-                            name?: string;
-                            content?: string;
-                            // name or content is used, but not both
-                        }
-                    ]
-                }
-            ]
-
-        }
-    ]
-
-
-};
-
-// Hash for each file.
-// When including a file, generate a hash. If the hash does not exists, include it in "dec".
-//
-fileHashes = {};
-fileHashes[ 'path/to/a.asl' ] = 'a1b2c3';
-fileHashes[ '../to/a.asl' ] = 'a1b2c3';
+$uielement[ 'username' ].value = $uielement[ 'name' ].value.split( ' ' )[ 0 ];
 ```
 
-## What will be made with the structure
 
+
+### Known Limitations
+
+#### Queries
+
+1. Must be declared in a single line.
+
+```concordia
+UI Element: profession
+  - value comes from "SELECT name FROM [MyDB].profession"
+
+UI Element: salary
+  - min value comes from "SELECT salary FROM [MyDB].profession WHERE name = {profession}"
+```
