@@ -51,9 +51,9 @@ describe( 'NLPInPortugueseTest', () => {
         return nlp.recognize( LANGUAGE, sentence, Intents.UI_ITEM_QUERY );
     }    
     
-    function shouldHaveEntities( results: any[], expectedEntitiesNames: string[], intent: string ) {
+    function shouldHaveEntities( results: any[], expectedEntitiesNames: string[], intent: string, debug: boolean = false ) {
         for ( let r of results ) {
-            //console.log( r );
+            if ( debug ) { console.log( r ); }
             expect( r ).not.toBeFalsy();
             expect( r.intent ).toEqual( intent );
             expect( r.entities ).not.toBeNull();
@@ -63,12 +63,12 @@ describe( 'NLPInPortugueseTest', () => {
         }
     }    
 
-    function shouldHaveTestCaseEntities( results: any[], expectedEntitiesNames: string[] ) {
-        shouldHaveEntities( results, expectedEntitiesNames, 'testcase' );
+    function shouldHaveTestCaseEntities( results: any[], expectedEntitiesNames: string[], debug: boolean = false ) {
+        shouldHaveEntities( results, expectedEntitiesNames, 'testcase', debug );
     }
     
-    function shouldHaveUIEntities( results: any[], expectedEntitiesNames: string[] ) {
-        shouldHaveEntities( results, expectedEntitiesNames, 'ui' );
+    function shouldHaveUIEntities( results: any[], expectedEntitiesNames: string[], debug: boolean = false ) {
+        shouldHaveEntities( results, expectedEntitiesNames, 'ui', debug );
     }    
 
 

@@ -61,16 +61,27 @@ describe( 'NLPTest', () => {
             } );
 
             it( 'with escaped quotes', () => {
-                let r: NLPResult = nlp.recognize( 'en', ' "foo is \"bar\""' );
+                let r: NLPResult = nlp.recognize( 'en', ' "foo and \\\"bar\\\"" ' );
                 expect( r.entities ).toHaveLength( 1 );
                 expect( r.entities[ 0 ].entity ).toBe( Entities.VALUE );
-                expect( r.entities[ 0 ].value ).toBe( 'foo is \"bar\"' );
+                expect( r.entities[ 0 ].value ).toBe( 'foo and \\\"bar\\\"' );
             } );
 
             // documenting a current limitation
             it( 'still does not recognize a string that ends with escaped backslash', () => {
                 let r: NLPResult = nlp.recognize( 'en', ' "this is not recognized \\"' );
                 expect( r.entities ).toHaveLength( 0 );
+            } );
+
+            it( 'more than one value', () => {
+                let r: NLPResult = nlp.recognize( 'en', ' prop is "foo" or "bar" ' );
+                expect( r.entities ).toHaveLength( 2 );
+
+                expect( r.entities[ 0 ].entity ).toBe( Entities.VALUE );
+                expect( r.entities[ 0 ].value ).toBe( 'foo' );
+
+                expect( r.entities[ 1 ].entity ).toBe( Entities.VALUE );
+                expect( r.entities[ 1 ].value ).toBe( 'bar' );
             } );
 
         });
