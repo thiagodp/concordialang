@@ -91,10 +91,7 @@ export class NodeSentenceRecognizer {
             }
 
             // Save the result in the node
-            if ( NodeTypes.UI_PROPERTY === node.nodeType ) {
-                let n = node as UIProperty;
-                n.nlpResult = r;
-            }
+            node[ 'nlpResult' ] = r;
 
             // Different intent?
             if ( targetIntents.indexOf( r.intent ) < 0 ) {
