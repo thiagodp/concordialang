@@ -167,11 +167,12 @@
                 "maxvalue": [ "valor máximo" ],
                 "format": [ "formato" ],
                 "required": [ "obrigatório", "requerido", "required" ],
+                "computedBy": [ "calculado como", "computado como", "computed by" ],
     
-                "color": [ "cor" ],
-                "bgcolor": [ "cor de fundo" ],
-                "width": [ "largura" ],
-                "height": [ "altura" ]
+                "color": [ "cor", "cor de frente", "color" ],
+                "bgColor": [ "cor de fundo", "background color" ],
+                "width": [ "largura", "width" ],
+                "height": [ "altura", "height" ]
             },
     
             "ui_connector": {

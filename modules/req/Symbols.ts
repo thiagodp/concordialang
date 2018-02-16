@@ -22,6 +22,7 @@ export abstract class Symbols {
     static IMPORT_SEPARATOR = ',';
     static REGEX_SEPARATOR = ':';
     static TAG_VALUE_SEPARATOR = ',';
+    static VALUE_SEPARATOR = ',';
 
     // wrappers
 

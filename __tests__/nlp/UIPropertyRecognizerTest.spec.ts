@@ -37,7 +37,7 @@ describe( 'UIPropertyRecognizerTest', () => {
         rec.trainMe( nlpTrainer, LANGUAGE );
 
 
-        function shouldRecognize( sentence: string, property: string, value: string ): void {
+        function shouldRecognize( sentence: string, property: string, expectedValue: any ): void {
 
             nodes = [];
             errors = [];
@@ -51,7 +51,8 @@ describe( 'UIPropertyRecognizerTest', () => {
             expect( warnings ).toHaveLength( 0 );
 
             expect( node.property ).toBe( property );
-            expect( node.values ).toContain( value );
+            expect( node.values ).toHaveLength( 1 );
+            expect( node.values[ 0 ].content[ 0 ] ).toBe( expectedValue );
         }       
 
         
@@ -60,19 +61,19 @@ describe( 'UIPropertyRecognizerTest', () => {
         } );
 
         it( 'recognizes a max length with a value', () => {
-            shouldRecognize( '- comprimento máximo é 7', 'maxlength', '7' );
+            shouldRecognize( '- comprimento máximo é 8', 'maxlength', 8 );
         } );
 
         it( 'recognizes a min length with a value', () => {
-            shouldRecognize( '- comprimento mínimo é 1', 'minlength', '1' );
+            shouldRecognize( '- comprimento mínimo é 1', 'minlength', 1 );
         } );
 
         it( 'recognizes a max value with a value', () => {
-            shouldRecognize( '- valor máximo é 7.33', 'maxvalue', '7.33' );
+            shouldRecognize( '- valor máximo é 7.33', 'maxvalue', 7.33 );
         } );
 
         it( 'recognizes a min value with a value', () => {
-            shouldRecognize( '- valor mínimo é -15.22', 'minvalue', '-15.22' );
+            shouldRecognize( '- valor mínimo é -15.22', 'minvalue', -15.22 );
         } );
 
         it( 'recognizes a value with a query', () => {

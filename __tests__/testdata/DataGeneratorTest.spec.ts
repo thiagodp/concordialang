@@ -1,7 +1,9 @@
 import { DataGenerator, DataGenConfig } from "../../modules/testdata/DataGenerator";
 import { Random } from "../../modules/testdata/random/Random";
-import { DataTestCase } from "../../modules/testdata/DataTestCase";
+import { DataTestCase, DataTestCaseGroupDef, DataTestCaseGroup } from "../../modules/testdata/DataTestCase";
 import { ValueType } from "../../modules/util/ValueTypeDetector";
+import * as enumUtil from 'enum-util';
+import { LocalDate, LocalTime, LocalDateTime } from "js-joda";
 
 describe( 'DataGeneratorTest', () => {
 
@@ -15,7 +17,11 @@ describe( 'DataGeneratorTest', () => {
         gen = null;
     } );
 
-    function checkGroupValue( vt: ValueType, min: any, max: any, median: any, zero: any ) {
+    //
+    // helper functions
+    //
+
+    function checkTestCasesOfTheGroupValue( vt: ValueType, min: any, max: any, median: any, zero: any ) {
 
         return () => {
 
@@ -113,8 +119,7 @@ describe( 'DataGeneratorTest', () => {
     }
 
 
-
-    function checkGroupLength( vt: ValueType, min: any, max: any, median: any ) {
+    function checkTestCasesOfTheGroupLength( vt: ValueType, min: any, max: any, median: any ) {
 
         return () => {
 
@@ -202,18 +207,74 @@ describe( 'DataGeneratorTest', () => {
             } );            
 
         };
-    }    
+    }
 
+
+    function checkTestCasesOfTheGroupLengthReturnNullWhenTypeIsNotString( vt: ValueType, min: any, max: any ) {
+
+        return () => {
+
+            async function checkIsNull( tc: DataTestCase ) {
+                let cfg = new DataGenConfig( vt );
+                cfg.min = min;
+                cfg.max = max;
+                const val = await gen.generate( tc, cfg );
+                expect( val ).toBeNull();
+            }
+
+            function makeIt( tc: DataTestCase ) {
+                it( tc.toString(), async() => {
+                    await checkIsNull( tc );
+                } );
+            }
+
+            const testCases = ( new DataTestCaseGroupDef() ).ofGroup( DataTestCaseGroup.LENGTH );
+            for ( const tc of testCases ) {
+                makeIt( tc );
+            }
+
+        };
+    }
+
+
+    //
+    // tests
+    //
 
 
     describe( 'value', () => {
-        describe( 'integer', checkGroupValue( ValueType.INTEGER, 10, 20, 15, 0 ) );
-        describe( 'double', checkGroupValue( ValueType.DOUBLE, 10, 20, 15, 0 ) );
+        describe( 'integer', checkTestCasesOfTheGroupValue( ValueType.INTEGER, 10, 20, 15, 0 ) );
+        describe( 'double', checkTestCasesOfTheGroupValue( ValueType.DOUBLE, 10, 20, 15, 0 ) );
+        // TO-DO other types
     } );
 
+
     describe( 'length', () => {
-        describe( 'string', checkGroupLength( ValueType.STRING, 10, 20, 15 ) );
+
+        describe( 'string', checkTestCasesOfTheGroupLength( ValueType.STRING, 10, 20, 15 ) );
+
+        describe( 'integer', checkTestCasesOfTheGroupLengthReturnNullWhenTypeIsNotString( ValueType.INTEGER, 10, 20 ) );
+        describe( 'double', checkTestCasesOfTheGroupLengthReturnNullWhenTypeIsNotString( ValueType.DOUBLE, 10, 20 ) );
+
+        describe( 'date', checkTestCasesOfTheGroupLengthReturnNullWhenTypeIsNotString(
+            ValueType.DATE,
+            LocalDate.of( 2018, 1, 1 ),
+            LocalDate.of( 2018, 12, 31 )
+        ) );
+
+        describe( 'time', checkTestCasesOfTheGroupLengthReturnNullWhenTypeIsNotString(
+            ValueType.TIME,
+            LocalTime.of( 6, 0, 0 ),
+            LocalTime.of( 12, 0, 0 )
+        ) );
+
+        describe( 'datetime', checkTestCasesOfTheGroupLengthReturnNullWhenTypeIsNotString(
+            ValueType.DATETIME,
+            LocalDateTime.of( LocalDate.of( 2018, 1, 1 ), LocalTime.of( 6, 0, 0 ) ),
+            LocalDateTime.of( LocalDate.of( 2018, 12, 31 ), LocalTime.of( 12, 0, 0 ) )
+        ) );
     } );
+
 
     describe( 'format', () => {
 
