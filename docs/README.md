@@ -55,3 +55,5 @@ UI Element: profession
 UI Element: salary
   - min value comes from "SELECT salary FROM [MyDB].profession WHERE name = {profession}"
 ```
+
+2. References to *global* UI elements is still not supported.

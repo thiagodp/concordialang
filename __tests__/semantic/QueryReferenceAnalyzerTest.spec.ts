@@ -4,16 +4,17 @@ import { Spec } from '../../modules/ast/Spec';
 import { Lexer } from '../../modules/lexer/Lexer';
 import { Document } from '../../modules/ast/Document';
 import { Parser} from '../../modules/parser/Parser';
-import { QuerySDA } from '../../modules/semantic/QuerySDA';
+import { QueryReferenceAnalyzer } from '../../modules/db/QueryReferenceAnalyzer';
 import { NLPTrainer } from '../../modules/nlp/NLPTrainer';
 import { Options } from '../../modules/app/Options';
 import { LexerBuilder } from '../../modules/lexer/LexerBuilder';
 import { resolve } from 'path';
 import { LanguageContentLoader, JsonLanguageContentLoader } from '../../modules/dict/LanguageContentLoader';
 
-describe( 'QuerySDATest', () => {
+describe( 'QueryReferenceAnalyzerTest', () => {
 
-    let analyzer: QuerySDA = new QuerySDA(); // under test
+    let analyzer: QueryReferenceAnalyzer = new QueryReferenceAnalyzer(); // under test
+
 
     const options: Options = new Options( resolve( process.cwd(), 'dist/' ) );
 
@@ -44,7 +45,7 @@ describe( 'QuerySDATest', () => {
 
 
 
-    it( 'recognizes a database name', async () => {
+    it( 'recognizes a database name', () => {
 
         let spec = new Spec( '.' );
 
@@ -71,12 +72,12 @@ describe( 'QuerySDATest', () => {
         expect( doc1.fileErrors ).toEqual( [] );
         expect( doc2.fileErrors ).toEqual( [] );
 
-        let errors = await analyzer.check( spec );
+        let errors = analyzer.check( spec );
         expect( errors ).toEqual( [] );
     } );
 
 
-    it( 'recognizes a constant', async () => {
+    it( 'recognizes a constant', () => {
         
         let spec = new Spec( '.' );
 
@@ -99,12 +100,12 @@ describe( 'QuerySDATest', () => {
         expect( doc1.fileErrors ).toEqual( [] );
         expect( doc2.fileErrors ).toEqual( [] );
 
-        let errors = await analyzer.check( spec );
+        let errors = analyzer.check( spec );
         expect( errors ).toEqual( [] );
     } );
 
 
-    it( 'recognizes a table', async () => {
+    it( 'recognizes a table', () => {
         
         let spec = new Spec( '.' );
 
@@ -128,12 +129,12 @@ describe( 'QuerySDATest', () => {
         expect( doc1.fileErrors ).toEqual( [] );
         expect( doc2.fileErrors ).toEqual( [] );
 
-        let errors = await analyzer.check( spec );
+        let errors = analyzer.check( spec );
         expect( errors ).toEqual( [] );
     } );
 
 
-    it( 'recognizes a ui element', async () => {
+    it( 'recognizes a ui element', () => {
         
         let spec = new Spec( '.' );
 
@@ -162,12 +163,12 @@ describe( 'QuerySDATest', () => {
         expect( doc1.fileErrors ).toEqual( [] );
         expect( doc2.fileErrors ).toEqual( [] );
 
-        let errors = await analyzer.check( spec );
+        let errors = analyzer.check( spec );
         expect( errors ).toEqual( [] );
     } );
 
 
-    it( 'recognizes a ui element with feature name', async () => {
+    it( 'recognizes a ui element with feature name', () => {
         
         let spec = new Spec( '.' );
 
@@ -196,12 +197,12 @@ describe( 'QuerySDATest', () => {
         expect( doc1.fileErrors ).toEqual( [] );
         expect( doc2.fileErrors ).toEqual( [] );
 
-        let errors = await analyzer.check( spec );
+        let errors = analyzer.check( spec );
         expect( errors ).toEqual( [] );
     } );
 
 
-    it( 'recognizes a ui element of another feature', async () => {
+    it( 'recognizes a ui element of another feature', () => {
         
         let spec = new Spec( '.' );
 
@@ -226,12 +227,12 @@ describe( 'QuerySDATest', () => {
         expect( doc1.fileErrors ).toEqual( [] );
         expect( doc2.fileErrors ).toEqual( [] );
 
-        let errors = await analyzer.check( spec );
+        let errors = analyzer.check( spec );
         expect( errors ).toEqual( [] );
     } );
 
 
-    it( 'does not recognize a wrong database', async () => {
+    it( 'does not recognize a wrong database', () => {
         
         let spec = new Spec( '.' );
 
@@ -258,14 +259,14 @@ describe( 'QuerySDATest', () => {
         expect( doc1.fileErrors ).toEqual( [] );
         expect( doc2.fileErrors ).toEqual( [] );
 
-        let errors = await analyzer.check( spec );
+        let errors = analyzer.check( spec );
         expect( errors ).toHaveLength( 1 );
         expect( errors[ 0 ].message ).toMatch( /non-existent/ui );
     } );
 
 
 
-    it( 'does not recognize a wrong constant', async () => {
+    it( 'does not recognize a wrong constant', () => {
         
         let spec = new Spec( '.' );
 
@@ -288,13 +289,13 @@ describe( 'QuerySDATest', () => {
         expect( doc1.fileErrors ).toEqual( [] );
         expect( doc2.fileErrors ).toEqual( [] );
 
-        let errors = await analyzer.check( spec );
+        let errors = analyzer.check( spec );
         expect( errors ).not.toEqual( [] );
         expect( errors[ 0 ].message ).toMatch( /non-existent.*foo/ui );
     } );
     
     
-    it( 'does not recognize a wrong table', async () => {
+    it( 'does not recognize a wrong table', () => {
         
         let spec = new Spec( '.' );
 
@@ -318,13 +319,13 @@ describe( 'QuerySDATest', () => {
         expect( doc1.fileErrors ).toEqual( [] );
         expect( doc2.fileErrors ).toEqual( [] );
 
-        let errors = await analyzer.check( spec );
+        let errors = analyzer.check( spec );
         expect( errors ).not.toEqual( [] );
         expect( errors[ 0 ].message ).toMatch( /non-existent.*wrong table/ui );
     } );
 
 
-    it( 'does not recognize a wrong ui element', async () => {
+    it( 'does not recognize a wrong ui element', () => {
         
         let spec = new Spec( '.' );
 
@@ -353,13 +354,13 @@ describe( 'QuerySDATest', () => {
         expect( doc1.fileErrors ).toEqual( [] );
         expect( doc2.fileErrors ).toEqual( [] );
 
-        let errors = await analyzer.check( spec );
+        let errors = analyzer.check( spec );
         expect( errors ).not.toEqual( [] );
         expect( errors[ 0 ].message ).toMatch( /non-existent.*ui element/ui );
     } );    
     
     
-    it( 'does not recognize a wrong ui element of another feature', async () => {
+    it( 'does not recognize a wrong ui element of another feature', () => {
         
         let spec = new Spec( '.' );
 
@@ -384,13 +385,13 @@ describe( 'QuerySDATest', () => {
         expect( doc1.fileErrors ).toEqual( [] );
         expect( doc2.fileErrors ).toEqual( [] );
 
-        let errors = await analyzer.check( spec );
+        let errors = analyzer.check( spec );
         expect( errors ).not.toEqual( [] );
         expect( errors[ 0 ].message ).toMatch( /ui element.*feature/ui );
     } );
 
 
-    it( 'does not recognize a ui element of a wrong feature', async () => {
+    it( 'does not recognize a ui element of a wrong feature', () => {
         
         let spec = new Spec( '.' );
 
@@ -415,7 +416,7 @@ describe( 'QuerySDATest', () => {
         expect( doc1.fileErrors ).toEqual( [] );
         expect( doc2.fileErrors ).toEqual( [] );
 
-        let errors = await analyzer.check( spec );
+        let errors = analyzer.check( spec );
         expect( errors ).not.toEqual( [] );
         expect( errors[ 0 ].message ).toMatch( /non-existent feature/ui );
     } );    
