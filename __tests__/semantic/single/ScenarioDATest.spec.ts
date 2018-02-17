@@ -1,18 +1,17 @@
-import { Parser } from '../../modules/parser/Parser';
-import { ScenarioSDA } from '../../modules/semantic/single/ScenarioSDA';
-import { Lexer } from '../../modules/lexer/Lexer';
-import { Document } from '../../modules/ast/Document';
-import { Spec } from '../../modules/ast/Spec';
-import { LexerBuilder } from '../../modules/lexer/LexerBuilder';
-import { Options } from '../../modules/app/Options';
+import { Parser } from '../../../modules/parser/Parser';
+import { ScenarioDA } from '../../../modules/semantic/single/ScenarioDA';
+import { Lexer } from '../../../modules/lexer/Lexer';
+import { Document } from '../../../modules/ast/Document';
+import { LexerBuilder } from '../../../modules/lexer/LexerBuilder';
+import { Options } from '../../../modules/app/Options';
 import { resolve } from 'path';
 
 /**
  * @author Thiago Delgado Pinto
  */
-describe( 'ScenarioSDATest', () => {
+describe( 'ScenarioDATest', () => {
 
-    const analyzer = new ScenarioSDA(); // under test
+    const analyzer = new ScenarioDA(); // under test
 
 
     let parser = new Parser();
@@ -36,11 +35,8 @@ describe( 'ScenarioSDATest', () => {
         let doc1: Document = {};
         parser.analyze( lexer.nodes(), doc1 );
 
-        let spec = new Spec( '.' );        
-        spec.docs.push( doc1 );
-
         let errors = [];
-        analyzer.analyze( spec, doc1, errors );
+        analyzer.analyze( doc1, errors );
         expect( errors ).toHaveLength( 0 );
     } );
 
@@ -54,11 +50,8 @@ describe( 'ScenarioSDATest', () => {
         let doc1: Document = {};
         parser.analyze( lexer.nodes(), doc1 );
 
-        let spec = new Spec( '.' );        
-        spec.docs.push( doc1 );
-
         let errors: Error[] = [];
-        analyzer.analyze( spec, doc1, errors );
+        analyzer.analyze( doc1, errors );
         expect( errors ).toHaveLength( 1 );
         expect( errors[ 0 ].message ).toMatch( /duplicated/ui );
     } );    

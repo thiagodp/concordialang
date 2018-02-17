@@ -1,27 +1,26 @@
 import { Document } from '../ast/Document';
-import { ItemToCheck, NodeBasedSpecAnalyzer } from './NodeBasedSpecAnalyzer';
+import { ItemToCheck, SpecSemanticAnalyzer } from './SpecSemanticAnalyzer';
 import { Spec } from "../ast/Spec";
-import { LocatedException } from "../req/LocatedException";
 import { DuplicationChecker } from "../util/DuplicationChecker";
 import { Feature } from "../ast/Feature";
 import { SemanticException } from './SemanticException';
 
 /**
- * Feature semantic analyzer.
+ * Executes semantic analysis of Features in a specification.
  * 
  * Checkings:
  * - duplicated names
  * 
  * @author Thiago Delgado Pinto
  */
-export class FeatureSpecAnalyzer extends NodeBasedSpecAnalyzer {
+export class FeatureSSA extends SpecSemanticAnalyzer {
 
      /** @inheritDoc */
-    public async analyze( spec: Spec, errors: LocatedException[] ): Promise< void > {
+    public async analyze( spec: Spec, errors: SemanticException[] ): Promise< void > {
         this.analyzeDuplicatedNames( spec, errors );
     }
 
-    private analyzeDuplicatedNames( spec: Spec, errors: LocatedException[] ) {
+    private analyzeDuplicatedNames( spec: Spec, errors: SemanticException[] ) {
         
         let items: ItemToCheck[] = [];
         for ( let doc of spec.docs ) {

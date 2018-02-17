@@ -10,7 +10,7 @@ import { LocatedException } from "../req/LocatedException";
 import { Parser } from "../parser/Parser";
 import { NLPTrainer } from "../nlp/NLPTrainer";
 import { NLPBasedSentenceRecognizer } from "../nlp/NLPBasedSentenceRecognizer";
-import { SpecAnalyzer } from "../semantic/SpecAnalyzer";
+import { BatchSpecSemanticAnalyzer } from "../semantic/BatchSpecSemanticAnalyzer";
 import { Compiler } from "./Compiler";
 import { LanguageManager } from "./LanguageManager";
 import { LexerBuilder } from "../lexer/LexerBuilder";
@@ -30,7 +30,7 @@ export class CompilerController {
         let nlpTrainer: NLPTrainer = new NLPTrainer( langLoader );
         let nlpBasedSentenceRecognizer: NLPBasedSentenceRecognizer = new NLPBasedSentenceRecognizer( nlpTrainer );
 
-        let specAnalyzer: SpecAnalyzer = new SpecAnalyzer();
+        let specAnalyzer: BatchSpecSemanticAnalyzer = new BatchSpecSemanticAnalyzer();
         
         const lm = new LanguageManager( options.languageDir );
         const availableLanguages: string[] = await lm.availableLanguages();

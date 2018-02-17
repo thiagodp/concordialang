@@ -1,27 +1,26 @@
 import { Database } from '../ast/Database';
 import { Document } from '../ast/Document';
-import { NodeBasedSpecAnalyzer, ItemToCheck } from "./NodeBasedSpecAnalyzer";
+import { SpecSemanticAnalyzer, ItemToCheck } from "./SpecSemanticAnalyzer";
 import { Spec } from "../ast/Spec";
-import { LocatedException } from '../req/LocatedException';
 import { DuplicationChecker } from '../util/DuplicationChecker';
 import { SemanticException } from './SemanticException';
 
 /**
- * Table semantic analyzer.
+ * Executes semantic analysis of Tables in a specification.
  * 
  * Checkings:
  * - duplicated names
  * 
  * @author Thiago Delgado Pinto
  */
-export class TableSpecAnalyzer extends NodeBasedSpecAnalyzer {
+export class TableSSA extends SpecSemanticAnalyzer {
 
      /** @inheritDoc */
-    public async analyze( spec: Spec, errors: LocatedException[] ): Promise< void > {
+    public async analyze( spec: Spec, errors: SemanticException[] ): Promise< void > {
         this.analyzeDuplicatedNames( spec, errors );
     }
 
-    private analyzeDuplicatedNames( spec: Spec, errors: LocatedException[] ) {
+    private analyzeDuplicatedNames( spec: Spec, errors: SemanticException[] ) {
         
         let items: ItemToCheck[] = [];
         for ( let doc of spec.docs ) {

@@ -8,14 +8,14 @@ import { Variant } from '../../modules/ast/Variant';
 import { Feature } from '../../modules/ast/Feature';
 import { Document } from '../../modules/ast/Document';
 import { Spec } from '../../modules/ast/Spec';
-import { VariantSDA } from '../../modules/semantic/single/VariantSDA';
+import { VariantSSA } from '../../modules/semantic/VariantSSA';
 
 /**
  * @author Thiago Delgado Pinto
  */
-describe( 'VariantSDATest', () => {
+describe( 'VariantSSATest', () => {
 
-    const analyzer = new VariantSDA(); // under test
+    const analyzer = new VariantSSA(); // under test
 
     let spec: Spec;
     let docA: Document;
@@ -165,7 +165,7 @@ describe( 'VariantSDATest', () => {
     it( 'criticizes a variant without a feature and an import', () => {
         docC.imports = []; // empty
         let errors: Error[] = [];
-        analyzer.analyze( spec, docC, errors );
+        analyzer.analyzeDocument( spec, docC, errors );
         expect( errors ).toHaveLength( 1 );
         expect( errors[ 0 ].message ).toMatch( /import/ui );      
     } );
@@ -174,41 +174,41 @@ describe( 'VariantSDATest', () => {
         docC.variants[ 0 ].tags = []; // empty
         docC.imports.splice( 1 ); // remove the B, in order to have just one feature
         let errors: Error[] = [];
-        analyzer.analyze( spec, docC, errors );
+        analyzer.analyzeDocument( spec, docC, errors );
         expect( errors ).toHaveLength( 0 );
     } );
 
     it( 'criticizes the lack of tags if its imports have more than one feature', () => {
         docC.variants[ 0 ].tags = []; // empty
         let errors: Error[] = [];
-        analyzer.analyze( spec, docC, errors );
+        analyzer.analyzeDocument( spec, docC, errors );
         expect( errors ).toHaveLength( 1 );        
         expect( errors[ 0 ].message ).toMatch( /tag/ui );
     } );
 
     it( 'copies variants to the referenced feature', () => {
         let errors: Error[] = [];
-        analyzer.analyze( spec, docC, errors );
+        analyzer.analyzeDocument( spec, docC, errors );
         expect( errors ).toHaveLength( 0 );
         expect( docA.feature.variants ).toHaveLength( 1 );
     } );
 
     it( 'does not criticize the lack of feature if the file has a feature', () => {
         let errors: Error[] = [];
-        analyzer.analyze( spec, docF, errors );
+        analyzer.analyzeDocument( spec, docF, errors );
         expect( errors ).toHaveLength( 0 );
     } );
 
     it( 'does not criticize a referenced feature that is the file\'s feature', () => {
         docG.feature.variants[ 0 ].tags[ 0 ].content = docG.feature.name;
         let errors: Error[] = [];
-        analyzer.analyze( spec, docG, errors );
+        analyzer.analyzeDocument( spec, docG, errors );
         expect( errors ).toHaveLength( 0 );
     } );    
 
     it( 'criticizes a referenced feature not imported', () => {
         let errors: Error[] = [];
-        analyzer.analyze( spec, docG, errors );
+        analyzer.analyzeDocument( spec, docG, errors );
         expect( errors ).toHaveLength( 1 );
         expect( errors[ 0 ].message ).toMatch( /tag/ui );
     } );
@@ -222,7 +222,7 @@ describe( 'VariantSDATest', () => {
         );
 
         let errors: Error[] = [];
-        analyzer.analyze( spec, docF, errors );
+        analyzer.analyzeDocument( spec, docF, errors );
         expect( errors ).toHaveLength( 1 );
         expect( errors[ 0 ].message ).toMatch( /duplicated/ui );
     } );

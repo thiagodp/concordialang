@@ -229,7 +229,7 @@ describe( 'DataGeneratorTest', () => {
             }
 
             const testCases = ( new DataTestCaseGroupDef() ).ofGroup( DataTestCaseGroup.LENGTH );
-            for ( const tc of testCases ) {
+            for ( let tc of testCases ) {
                 makeIt( tc );
             }
 

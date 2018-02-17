@@ -39,7 +39,10 @@ export class QueryReferenceAnalyzer {
     public check( spec: Spec ): SemanticException[] {
         
         const allErrors: SemanticException[] = [];
-        for ( const doc of spec.docs ) {
+        for ( let doc of spec.docs ) {
+
+            // TO-DO: (future) check global UI elements, i.e., doc.uiElements,
+            // and references to them.
 
             // UI elements may have queries that reference the specification.
             // So, whether no UI elements exist in the document, ignores it.
@@ -75,17 +78,17 @@ export class QueryReferenceAnalyzer {
             return errors;
         }
 
-        for ( const uie of uiElements ) {
+        for ( let uie of uiElements ) {
             // No items (properties) ?
             if ( ! uie.items || uie.items.length < 1 ) {
                 continue;
             }
-            for ( const item of uie.items ) {
+            for ( let item of uie.items ) {
                 // No entities?
                 if ( ! item.nlpResult || ! item.nlpResult.entities || item.nlpResult.entities.length < 0 ) {
                     continue;
                 }
-                for ( const e of item.nlpResult.entities ) {
+                for ( let e of item.nlpResult.entities ) {
                     // No query?
                     if ( e.entity != Entities.QUERY ) {
                         continue;

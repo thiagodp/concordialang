@@ -1,14 +1,15 @@
-import { LocatedException } from '../req/LocatedException';
 import { Spec } from "../ast/Spec";
 import { DuplicationChecker } from '../util/DuplicationChecker';
 import { SemanticException } from './SemanticException';
 
 /**
- * Node-based semantic analyzer for a specification.
+ * Specification semantic analyzer.
  * 
  * @author Thiago Delgado Pinto
  */
-export abstract class NodeBasedSpecAnalyzer {
+export abstract class SpecSemanticAnalyzer {
+
+    protected readonly _dupChecker = new DuplicationChecker();
 
     /**
      * Analyzes the given specification.
@@ -18,7 +19,7 @@ export abstract class NodeBasedSpecAnalyzer {
      */
     public abstract async analyze(
         spec: Spec,
-        errors: LocatedException[]
+        errors: SemanticException[]
     ): Promise< void >;
 
     /**
@@ -30,10 +31,10 @@ export abstract class NodeBasedSpecAnalyzer {
      */
     public checkDuplicatedNames(
         items: ItemToCheck[],
-        errors: LocatedException[],
+        errors: SemanticException[],
         itemName: string
     ): void {
-        const map = ( new DuplicationChecker() ).mapDuplicates( items, 'name' );
+        const map = this._dupChecker.mapDuplicates( items, 'name' );
         for ( let prop in map ) {
             let duplications = map[ prop ];
             let msg = 'Duplicated ' + itemName +  ' "' + prop + '" in: ' +

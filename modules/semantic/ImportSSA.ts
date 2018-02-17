@@ -1,31 +1,30 @@
 import { Location } from '../ast/Location';
 import { SemanticException } from './SemanticException';
-import { NodeBasedSpecAnalyzer } from './NodeBasedSpecAnalyzer';
+import { SpecSemanticAnalyzer } from './SpecSemanticAnalyzer';
 import { Spec } from "../ast/Spec";
 import { Document } from "../ast/Document";
-import { LocatedException } from "../req/LocatedException";
 
 const Graph = require( 'graph.js/dist/graph.full.js' );
 const path = require( 'path' );
 
 /**
- * Import semantic analyzer.
+ * Executes semantic analysis of Imports in a specification.
  * 
  * Checkings:
  * - cyclic references
  * 
  * @author Thiago Delgado Pinto
  */
-export class ImportSpecAnalyzer extends NodeBasedSpecAnalyzer {
+export class ImportSSA extends SpecSemanticAnalyzer {
 
     private _graph = new Graph();
 
     /** @inheritDoc */
-    public async analyze( spec: Spec, errors: LocatedException[] ): Promise< void > {
+    public async analyze( spec: Spec, errors: SemanticException[] ): Promise< void > {
         this.findCyclicReferences( spec, errors );
     }
 
-    private findCyclicReferences( spec: Spec, errors: LocatedException[] ) {
+    private findCyclicReferences( spec: Spec, errors: SemanticException[] ) {
 
         this.buildGraphWithTheSpec( this._graph, spec );      
 

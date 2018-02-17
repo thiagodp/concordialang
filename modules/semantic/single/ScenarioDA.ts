@@ -1,7 +1,5 @@
-import { Spec } from '../../ast/Spec';
-import { NodeBasedSDA } from './NodeBasedSDA';
+import { DocAnalyzer } from './DocAnalyzer';
 import { Scenario } from '../../ast/Scenario';
-import { LocatedException } from '../../req/LocatedException';
 import { Document } from '../../ast/Document';
 import { DuplicationChecker } from "../../util/DuplicationChecker";
 import { SemanticException } from "../SemanticException";
@@ -14,10 +12,10 @@ import { SemanticException } from "../SemanticException";
  * 
  * @author Thiago Delgado Pinto
  */
-export class ScenarioSDA implements NodeBasedSDA {
+export class ScenarioDA implements DocAnalyzer {
 
     /** @inheritDoc */
-    public analyze( spec: Spec, doc: Document, errors: LocatedException[] ) {
+    public analyze( doc: Document, errors: SemanticException[] ) {
 
         // Checking the document structure
         if ( ! doc.feature ) {
@@ -31,7 +29,7 @@ export class ScenarioSDA implements NodeBasedSDA {
         this.checkForDuplicatedScenarios( doc, errors );
     }
 
-    private checkForDuplicatedScenarios( doc: Document, errors: LocatedException[] ) {
+    private checkForDuplicatedScenarios( doc: Document, errors: SemanticException[] ) {
         let duplicated: Scenario[] = ( new DuplicationChecker() )
             .withDuplicatedProperty( doc.feature.scenarios, 'name' );
         for ( let dup of duplicated ) {

@@ -1,12 +1,10 @@
-import { Spec } from '../../ast/Spec';
-import { NodeBasedSDA } from './NodeBasedSDA';
-import { LocatedException } from '../../req/LocatedException';
+import { DocAnalyzer } from './DocAnalyzer';
 import { Import } from '../../ast/Import';
 import { DuplicationChecker } from '../../util/DuplicationChecker';
 import { SemanticException } from "../SemanticException";
 import { Document } from '../../ast/Document';
 import * as fs from 'fs';
-import * as path from 'path';
+import { dirname, join } from 'path';
 
 /**
  * Import analyzer for a single document.
@@ -18,17 +16,15 @@ import * as path from 'path';
  * 
  * @author Thiago Delgado Pinto
  */
-export class ImportSDA implements NodeBasedSDA {
+export class ImportDA implements DocAnalyzer {
 
     constructor(
         private _fs: any = fs
     ) {
     }
 
-
-
     /** @inheritDoc */
-    public analyze( spec: Spec, doc: Document, errors: LocatedException[] ) {
+    public analyze( doc: Document, errors: SemanticException[] ) {
 
         // Checking the document
         if ( ! doc.imports ) {
@@ -49,7 +45,7 @@ export class ImportSDA implements NodeBasedSDA {
         for ( let imp of doc.imports ) {
 
             let importPath = imp.value;
-            let resolvedPath = path.join( path.dirname( doc.fileInfo.path ), importPath );
+            let resolvedPath = join( dirname( doc.fileInfo.path ), importPath );
 
             // Add the resolved path to the import
             imp.resolvedPath = resolvedPath;

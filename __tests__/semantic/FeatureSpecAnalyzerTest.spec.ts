@@ -1,6 +1,6 @@
-import { FeatureSpecAnalyzer } from '../../modules/semantic/FeatureSpecAnalyzer';
+import { FeatureSSA } from '../../modules/semantic/FeatureSSA';
 import { Parser } from '../../modules/parser/Parser';
-import { ScenarioSDA } from '../../modules/semantic/single/ScenarioSDA';
+import { ScenarioDA } from '../../modules/semantic/single/ScenarioDA';
 import { Lexer } from '../../modules/lexer/Lexer';
 import { Document } from '../../modules/ast/Document';
 import { Spec } from '../../modules/ast/Spec';
@@ -13,7 +13,7 @@ import { resolve } from 'path';
  */
 describe( 'FeatureSpecAnalyzerTest', () => {
 
-    const analyzer = new FeatureSpecAnalyzer(); // under test
+    const analyzer = new FeatureSSA(); // under test
 
     let parser = new Parser();
     const options: Options = new Options( resolve( process.cwd(), 'dist/' ) );

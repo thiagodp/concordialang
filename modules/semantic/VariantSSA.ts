@@ -1,20 +1,19 @@
-import { Import } from '../../ast/Import';
-import { Spec } from '../../ast/Spec';
-import { ReservedTags } from '../../req/ReservedTags';
-import { NodeBasedSDA } from './NodeBasedSDA';
-import { Scenario } from '../../ast/Scenario';
-import { LocatedException } from '../../req/LocatedException';
-import { Document } from '../../ast/Document';
-import { DuplicationChecker } from "../../util/DuplicationChecker";
-import { SemanticException } from "../SemanticException";
-import { Feature } from '../../ast/Feature';
-import { Tag } from '../../ast/Tag';
-import { Variant } from '../../ast/Variant';
-
+import { Import } from '../ast/Import';
+import { Spec } from '../ast/Spec';
+import { ReservedTags } from '../req/ReservedTags';
+import { Scenario } from '../ast/Scenario';
+import { Document } from '../ast/Document';
+import { DuplicationChecker } from "../util/DuplicationChecker";
+import { SemanticException } from "./SemanticException";
+import { Feature } from '../ast/Feature';
+import { Tag } from '../ast/Tag';
+import { Variant } from '../ast/Variant';
+import { SpecSemanticAnalyzer } from './SpecSemanticAnalyzer';
 import * as path from 'path';
 
+
 /**
- * Variant analyzer for a single document.
+ * Executes semantic analysis of Variants in a specification.
  * 
  * Checkings:
  *  - If variants have a feature
@@ -22,10 +21,19 @@ import * as path from 'path';
  * 
  * @author Thiago Delgado Pinto
  */
-export class VariantSDA implements NodeBasedSDA {
+export class VariantSSA extends SpecSemanticAnalyzer {
 
     /** @inheritDoc */
-    public analyze( spec: Spec, doc: Document, errors: LocatedException[] ) {
+    public async analyze(
+        spec: Spec,
+        errors: SemanticException[]
+    ): Promise< void > {
+        for ( let doc of spec.docs ) {
+            this.analyzeDocument( spec, doc, errors );
+        }
+    }
+
+    public analyzeDocument( spec: Spec, doc: Document, errors: SemanticException[] ) {
 
         // Check if variants have a feature
         if ( doc.variants && doc.variants.length > 0 ) {            
@@ -74,7 +82,7 @@ export class VariantSDA implements NodeBasedSDA {
         this.checkForDuplicatedVariants( doc, errors );
     }
 
-    private checkForDuplicatedVariants( doc: Document, errors: LocatedException[] ) {
+    private checkForDuplicatedVariants( doc: Document, errors: SemanticException[] ) {
 
         let duplicated: Variant[] = ( new DuplicationChecker() )
             .withDuplicatedProperty( doc.feature.variants, 'name' );

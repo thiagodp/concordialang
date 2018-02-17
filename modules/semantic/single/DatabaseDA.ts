@@ -1,6 +1,4 @@
-import { Spec } from '../../ast/Spec';
-import { NodeBasedSDA } from './NodeBasedSDA';
-import { LocatedException } from '../../req/LocatedException';
+import { DocAnalyzer } from './DocAnalyzer';
 import { Document } from '../../ast/Document';
 import { Database, DatabaseProperties } from '../../ast/Database';
 import { SemanticException } from '../SemanticException';
@@ -13,10 +11,10 @@ import { SemanticException } from '../SemanticException';
  * 
  * @author Thiago Delgado Pinto
  */
-export class DatabaseSDA implements NodeBasedSDA {
+export class DatabaseDA implements DocAnalyzer {
 
     /** @inheritDoc */
-    public analyze( spec: Spec, doc: Document, errors: LocatedException[] ): void {
+    public analyze( doc: Document, errors: SemanticException[] ): void {
 
         if ( ! doc.databases || doc.databases.length < 1 ) {
             doc.databases = [];
@@ -29,26 +27,28 @@ export class DatabaseSDA implements NodeBasedSDA {
     }
 
 
-    private validateDatabaseProperties( db: Database, errors: LocatedException[] ): void {
+    private validateDatabaseProperties( db: Database, errors: SemanticException[] ): void {
 
         // Has no items?
-        if ( ! db.items ) {
+        if ( ! db.items || db.items.length < 1 ) {
             let msg = 'Database "' + db.name + '" has no properties.';
             let err = new SemanticException( msg, db.location );
             errors.push( err ); 
             return;
         }
 
+        const properties: string[] = db.items.map( item => item.property );
+
         // Has no type?
-        if ( ! db.items[ DatabaseProperties.TYPE ] ) {
+        if ( properties.indexOf( DatabaseProperties.TYPE ) < 0 ) {
             let msg = 'Database "' + db.name + '" should have a type.';
             let err = new SemanticException( msg, db.location );
             errors.push( err ); 
         }
         
         // Has no path?
-        if ( ! db.items[ DatabaseProperties.PATH ] ) {
-            let msg = 'Database "' + db.name + '" should have a path or a name.';
+        if ( ! db.name && properties.indexOf( DatabaseProperties.PATH ) < 0 ) {
+            let msg = 'Database should have a name or a path.';
             let err = new SemanticException( msg, db.location );
             errors.push( err ); 
         }

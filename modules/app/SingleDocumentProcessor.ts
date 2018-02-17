@@ -3,6 +3,8 @@ import { Parser } from '../parser/Parser';
 import { Lexer } from "../lexer/Lexer";
 import { Node } from '../ast/Node';
 import { Document } from '../ast/Document';
+import { BatchDocSemanticAnalyzer } from '../semantic/single/BatchDocSemanticAnalyzer';
+import { SemanticException } from '../semantic/SemanticException';
 
 /**
  * Single document processor.
@@ -10,6 +12,8 @@ import { Document } from '../ast/Document';
  * @author Thiago Delgado Pinto
  */
 export class SingleDocumentProcessor {
+
+    private _batchDocumentAnalyzer = new BatchDocSemanticAnalyzer();
 
     /**
      * Analyzes lexer's nodes of a single document.
@@ -31,13 +35,10 @@ export class SingleDocumentProcessor {
         defaultLanguage: string
     ): boolean {
 
-        let hadErrors = false;
-
         // Get the lexed nodes
         let nodes: Node[] = lexer.nodes();
 
         // Add errors found
-        hadErrors = lexer.hasErrors();            
         this.addErrorsToDoc( lexer.errors(), doc );
 
         // Resets the lexer state (important!)
@@ -45,7 +46,6 @@ export class SingleDocumentProcessor {
 
         // PARSER
         parser.analyze( nodes, doc );
-        hadErrors = hadErrors || parser.hasErrors();
         this.addErrorsToDoc( parser.errors(), doc );
 
         // NLP
@@ -69,7 +69,12 @@ export class SingleDocumentProcessor {
         nlpRec.recognizeSentencesInDocument(
             doc, language, doc.fileErrors, doc.fileWarnings );
 
-        return hadErrors;
+        // Single-document Semantic Analysis
+        let semanticErrors: SemanticException[] = [];
+        this._batchDocumentAnalyzer.analyze( doc, semanticErrors );
+        this.addErrorsToDoc( semanticErrors, doc );
+
+        return doc.fileErrors.length > 0;
     }
 
 

@@ -44,21 +44,49 @@ describe( 'QueryReferenceAnalyzerTest', () => {
     };
 
 
+    const feature1WithMyDB: string[] =
+    [
+        '#language:pt',
+        'feature: feature 1',
+        'Database: My DB',
+        ' - tipo é "mysql"',
+        ' - nome é "acme"',
+        ' - host é "127.0.0.1"',
+        ' - username é "root"',
+        ' - password é ""'
+    ];
+
+    const feature1WithConstantPi: string[] =
+    [
+        '#language:pt',
+        'feature: feature 1',
+        'Constants:',
+        ' - "pi" é "3.14"'
+    ];
+
+    const feature1WithMyTable: string[] =
+    [
+        '#language:pt',
+        'feature: feature 1',
+        'Table: my table',
+        '|a|b|',
+        '|1|2|'
+    ];
+
+    const feature1WithMyUIElement: string[] =
+    [
+        '#language:pt',
+        'feature: feature 1',
+        'UI Element: My UI Element',
+        ' - id é "myuie"',
+    ];
+
 
     it( 'recognizes a database name', () => {
 
         let spec = new Spec( '.' );
 
-        let doc1: Document = addToSpec( spec, 
-            [
-                'feature: feature 1',
-                'Database: My DB',
-                ' - type is "mysql"',
-                ' - name is "acme"',
-                ' - host is "127.0.0.1"',
-                ' - username is "root"',
-                ' - password is ""'
-            ] );
+        let doc1: Document = addToSpec( spec, feature1WithMyDB );
 
         let doc2: Document = addToSpec( spec, 
             [
@@ -81,12 +109,7 @@ describe( 'QueryReferenceAnalyzerTest', () => {
         
         let spec = new Spec( '.' );
 
-        let doc1: Document = addToSpec( spec, 
-            [
-                'feature: feature 1',
-                'Constants:',
-                ' - "pi" é "3.14"'
-            ] );
+        let doc1: Document = addToSpec( spec, feature1WithConstantPi );
 
         let doc2: Document = addToSpec( spec, 
             [
@@ -109,13 +132,7 @@ describe( 'QueryReferenceAnalyzerTest', () => {
         
         let spec = new Spec( '.' );
 
-        let doc1: Document = addToSpec( spec, 
-            [
-                'feature: feature 1',
-                'Table: my table',
-                '|a|b|',
-                '|1|2|'
-            ] );
+        let doc1: Document = addToSpec( spec, feature1WithMyTable );
 
         let doc2: Document = addToSpec( spec, 
             [
@@ -138,16 +155,7 @@ describe( 'QueryReferenceAnalyzerTest', () => {
         
         let spec = new Spec( '.' );
 
-        let doc1: Document = addToSpec( spec, 
-            [
-                'feature: feature 1',
-                'Database: My DB',
-                ' - type is "mysql"',
-                ' - name is "acme"',
-                ' - host is "127.0.0.1"',
-                ' - username is "root"',
-                ' - password is ""'
-            ] );
+        let doc1: Document = addToSpec( spec, feature1WithMyDB );
 
         let doc2: Document = addToSpec( spec, 
             [
@@ -172,16 +180,7 @@ describe( 'QueryReferenceAnalyzerTest', () => {
         
         let spec = new Spec( '.' );
 
-        let doc1: Document = addToSpec( spec, 
-            [
-                'feature: feature 1',
-                'Database: My DB',
-                ' - type is "mysql"',
-                ' - name is "acme"',
-                ' - host is "127.0.0.1"',
-                ' - username is "root"',
-                ' - password is ""'
-            ] );
+        let doc1: Document = addToSpec( spec, feature1WithMyDB );
 
         let doc2: Document = addToSpec( spec, 
             [
@@ -206,12 +205,7 @@ describe( 'QueryReferenceAnalyzerTest', () => {
         
         let spec = new Spec( '.' );
 
-        let doc1: Document = addToSpec( spec, 
-            [
-                'feature: feature 1',
-                'UI Element: Some Element',
-                ' - id é "se"',
-            ] );
+        let doc1: Document = addToSpec( spec, feature1WithMyUIElement );
 
         let doc2: Document = addToSpec( spec, 
             [
@@ -221,7 +215,7 @@ describe( 'QueryReferenceAnalyzerTest', () => {
                 ' - id é "sch"',
                 'UI Element: City',
                 ' - id é "cit"',
-                ' - valor está em "SELECT nome FROM `cidade` WHERE nome = {feature 1:Some Element}"'
+                ' - valor está em "SELECT nome FROM `cidade` WHERE nome = {feature 1:My UI Element}"'
             ] );
 
         expect( doc1.fileErrors ).toEqual( [] );
@@ -236,16 +230,7 @@ describe( 'QueryReferenceAnalyzerTest', () => {
         
         let spec = new Spec( '.' );
 
-        let doc1: Document = addToSpec( spec, 
-            [
-                'feature: feature 1',
-                'Database: My DB',
-                ' - type is "mysql"',
-                ' - name is "acme"',
-                ' - host is "127.0.0.1"',
-                ' - username is "root"',
-                ' - password is ""'
-            ] );
+        let doc1: Document = addToSpec( spec, feature1WithMyDB );
 
         let doc2: Document = addToSpec( spec, 
             [
@@ -270,12 +255,7 @@ describe( 'QueryReferenceAnalyzerTest', () => {
         
         let spec = new Spec( '.' );
 
-        let doc1: Document = addToSpec( spec, 
-            [
-                'feature: feature 1',
-                'Constants:',
-                ' - "pi" é "3.14"'
-            ] );
+        let doc1: Document = addToSpec( spec, feature1WithConstantPi );
 
         let doc2: Document = addToSpec( spec, 
             [
@@ -299,13 +279,7 @@ describe( 'QueryReferenceAnalyzerTest', () => {
         
         let spec = new Spec( '.' );
 
-        let doc1: Document = addToSpec( spec, 
-            [
-                'feature: feature 1',
-                'Table: my table',
-                '|a|b|',
-                '|1|2|'
-            ] );
+        let doc1: Document = addToSpec( spec, feature1WithMyTable );
 
         let doc2: Document = addToSpec( spec, 
             [
@@ -329,16 +303,7 @@ describe( 'QueryReferenceAnalyzerTest', () => {
         
         let spec = new Spec( '.' );
 
-        let doc1: Document = addToSpec( spec, 
-            [
-                'feature: feature 1',
-                'Database: My DB',
-                ' - type is "mysql"',
-                ' - name is "acme"',
-                ' - host is "127.0.0.1"',
-                ' - username is "root"',
-                ' - password is ""'
-            ] );
+        let doc1: Document = addToSpec( spec, feature1WithMyDB );
 
         let doc2: Document = addToSpec( spec, 
             [
@@ -364,12 +329,7 @@ describe( 'QueryReferenceAnalyzerTest', () => {
         
         let spec = new Spec( '.' );
 
-        let doc1: Document = addToSpec( spec, 
-            [
-                'feature: feature 1',
-                'UI Element: Some Element',
-                ' - id é "se"',
-            ] );
+        let doc1: Document = addToSpec( spec, feature1WithMyUIElement );
 
         let doc2: Document = addToSpec( spec, 
             [
@@ -395,12 +355,7 @@ describe( 'QueryReferenceAnalyzerTest', () => {
         
         let spec = new Spec( '.' );
 
-        let doc1: Document = addToSpec( spec, 
-            [
-                'feature: feature 1',
-                'UI Element: Some Element',
-                ' - id é "se"',
-            ] );
+        let doc1: Document = addToSpec( spec, feature1WithMyUIElement );
 
         let doc2: Document = addToSpec( spec, 
             [
@@ -410,7 +365,7 @@ describe( 'QueryReferenceAnalyzerTest', () => {
                 ' - id é "sch"',
                 'UI Element: City',
                 ' - id é "cit"',
-                ' - valor está em "SELECT nome FROM `cidade` WHERE nome = {feature 3:Some Element}"'
+                ' - valor está em "SELECT nome FROM `cidade` WHERE nome = {feature 3:My UI Element}"'
             ] );
 
         expect( doc1.fileErrors ).toEqual( [] );
