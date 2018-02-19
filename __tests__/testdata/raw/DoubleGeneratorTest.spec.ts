@@ -4,7 +4,7 @@ import { Random } from "../../../modules/testdata/random/Random";
 
 describe( 'DoubleGeneratorTest', () => {
 
-    let ranD = new RandomDouble( new Random() );
+    let ranD = new RandomDouble( new Random( 'concordia' ) ); // under test
 
     it( 'random below min', () => {
         const min = '0.00';

@@ -4,11 +4,11 @@ import { Random } from "../../../modules/testdata/random/Random";
 
 describe( 'LongGeneratorTest', () => {
 
-    const ranL = new RandomLong( new Random() );
+    const ranL = new RandomLong( new Random( 'concordia' ) );
     const aMin: number = 0;
     const aMax: number = 10;
     const aMedian: number = 5;
-    const gen: LongGenerator = new LongGenerator( ranL, aMin, aMax );
+    const gen: LongGenerator = new LongGenerator( ranL, aMin, aMax ); // under test
 
     it( 'random below min', () => {
         expect( gen.randomBelowMin() ).toBeLessThan( aMin );

@@ -4,11 +4,11 @@ import { Random } from "../../../modules/testdata/random/Random";
 
 describe( 'StringGeneratorTest', () => {
 
-    const ranL = new RandomString( new Random() );
+    const ranL = new RandomString( new Random( 'concordia' ) );
     const aMin: number = 2;
     const aMax: number = 10;
     const aMedian: number = 6;
-    const gen: StringGenerator = new StringGenerator( ranL, aMin, aMax );
+    const gen: StringGenerator = new StringGenerator( ranL, aMin, aMax ); // under test
 
     it( 'lowest', () => {
         expect( gen.lowest().length ).toBe( 0 );
