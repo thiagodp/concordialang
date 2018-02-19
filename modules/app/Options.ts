@@ -49,7 +49,7 @@ export class Options {
     public caseMethod: string = this.defaults.CASE_METHOD; // string case used for test scripts' methods
 
     // Randomic generation
-    public randonSeed: number = 0; // random seed to use
+    public randonSeed: string = null; // random seed to use
     public randomValid: number = 1; // number of test cases with valid random values
     public randomInvalid: number = 1; // number of test cases with invalid random values
 
@@ -250,8 +250,8 @@ export class Options {
 
         // RANDOMIC GENERATION
 
-        if ( isNumber( flags.randomSeed ) ) {
-            this.randonSeed = parseInt( flags.randomSeed );
+        if ( isString( flags.randomSeed ) ) {
+            this.randonSeed = flags.randomSeed;
         }
         if ( isNumber( flags.randomValid ) ) {
             this.randomValid = parseInt( flags.randomValid );
