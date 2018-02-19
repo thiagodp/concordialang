@@ -1,11 +1,21 @@
-## v0.0.0 - day month year
+# Changelog
 
-New features:
+*This file must only be updated for public releases.* See [how to add a changelog entry](docs/dev/changelog.md).
+
+
+## v0.0.0 - year-month-day
+
+Added:
 
 - foo
 - bar
 
-Bug fixes:
+Changed:
+
+- foo
+- bar
+
+Fixed:
 
 - foo bar
 
