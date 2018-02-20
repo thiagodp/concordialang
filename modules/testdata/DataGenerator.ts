@@ -19,6 +19,8 @@ import { DateGenerator } from './raw/DateGenerator';
 import { RandomDate } from './random/RandomDate';
 import { TimeGenerator } from './raw/TimeGenerator';
 import { RandomTime } from './random/RandomTime';
+import { DateTimeGenerator } from './raw/DateTimeGenerator';
+import { RandomDateTime } from './random/RandomDateTime';
 
 /**
  * Indicates the result of a test case.
@@ -255,7 +257,7 @@ export class DataGenerator {
 			case ValueType.DOUBLE: return new DoubleGenerator( this._randomDouble, cfg.min, cfg.max );
 			case ValueType.DATE: return new DateGenerator( new RandomDate( this._randomLong ), cfg.min, cfg.max );
 			case ValueType.TIME: return new TimeGenerator( new RandomTime( this._randomLong ), cfg.min, cfg.max );
-			// ... TO-DO
+			case ValueType.DATETIME: return new DateTimeGenerator( new RandomDateTime( this._randomLong ), cfg.min, cfg.max );
 			default: throw Error( 'Generator not available fot the type ' + cfg.valueType );
 		}
 	}
