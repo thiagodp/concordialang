@@ -17,6 +17,8 @@ import { Queryable } from '../db/Queryable';
 import { isDefined } from '../util/TypeChecking';
 import { DateGenerator } from './raw/DateGenerator';
 import { RandomDate } from './random/RandomDate';
+import { TimeGenerator } from './raw/TimeGenerator';
+import { RandomTime } from './random/RandomTime';
 
 /**
  * Indicates the result of a test case.
@@ -252,6 +254,7 @@ export class DataGenerator {
 			case ValueType.INTEGER: return new LongGenerator( this._randomLong, cfg.min, cfg.max );
 			case ValueType.DOUBLE: return new DoubleGenerator( this._randomDouble, cfg.min, cfg.max );
 			case ValueType.DATE: return new DateGenerator( new RandomDate( this._randomLong ), cfg.min, cfg.max );
+			case ValueType.TIME: return new TimeGenerator( new RandomTime( this._randomLong ), cfg.min, cfg.max );
 			// ... TO-DO
 			default: throw Error( 'Generator not available fot the type ' + cfg.valueType );
 		}
