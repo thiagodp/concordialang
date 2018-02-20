@@ -29,7 +29,9 @@ describe( 'TimeGeneratorTest', () => {
     describe( 'median value', () => {
 
         it( 'of ' + aMin.toString() + ' and ' + aMax.toString(), () => {
-            expect( gen.median() ).toEqual( aMedian );
+            const median = gen.median();
+            //expect( median.equals( aMedian ) ).toBeTruthy();
+            expect( median ).toEqual( aMedian );
         } );
 
         it( 'of two consecutive seconds', () => {

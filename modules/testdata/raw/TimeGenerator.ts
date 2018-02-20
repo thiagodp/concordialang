@@ -32,7 +32,7 @@ export class TimeGenerator implements RawDataGenerator< LocalTime > {
     
 
 	public diffInSeconds(): number {
-        return this._min.until( this._max, ChronoUnit.SECONDS );
+		return this._min.until( this._max, ChronoUnit.SECONDS );
 	}
 
 	public hasValuesBetweenMinAndMax(): boolean {
