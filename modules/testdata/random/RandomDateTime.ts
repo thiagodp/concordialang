@@ -2,6 +2,11 @@ import { RandomLong } from "./RandomLong";
 import { LocalDateTime, Period, ChronoUnit } from "js-joda";
 import { DateTimeLimits } from "../limits/DateTimeLimits";
 
+/**
+ * Generates random datetime values.
+ * 
+ * @author Thiago Delgado Pinto
+ */
 export class RandomDateTime {
 
     constructor( private _randomLong: RandomLong ) {

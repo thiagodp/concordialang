@@ -2,6 +2,11 @@ import { RandomLong } from "./RandomLong";
 import { LocalDate, Period } from "js-joda";
 import { DateLimits } from "../limits/DateLimits";
 
+/**
+ * Generates random date values.
+ * 
+ * @author Thiago Delgado Pinto
+ */
 export class RandomDate {
 
     constructor( private _randomLong: RandomLong ) {

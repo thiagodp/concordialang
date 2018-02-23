@@ -50,6 +50,8 @@ export class QueryBasedDataGenerator< T > {
     };
 
     public randomElement = async (): Promise< T | null > => {
+        /// TO-DO: use LIMIT and OFFSET to generate the random number
+        // e.g.: LIMIT 1 OFFSET random( 1, COUNT( * ) )
         const values: any[] = await this.queryValues();
         if ( values.length < 1 ) {
             return null;

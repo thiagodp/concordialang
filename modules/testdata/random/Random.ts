@@ -1,7 +1,7 @@
 import * as seedrandom from 'seedrandom';
 
 /**
- * Predictable random numbers.
+ * Predictable random number generator.
  * 
  * @author  Thiago Delgado Pinto
  * @see     https://github.com/davidbau/seedrandom

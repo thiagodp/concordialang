@@ -2,6 +2,11 @@ import { RandomLong } from "./RandomLong";
 import { LocalTime, ChronoUnit } from "js-joda";
 import { TimeLimits } from "../limits/TimeLimits";
 
+/**
+ * Generates random time values.
+ * 
+ * @author Thiago Delgado Pinto
+ */
 export class RandomTime {
 
     constructor( private _randomLong: RandomLong ) {
