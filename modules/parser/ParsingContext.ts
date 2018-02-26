@@ -3,7 +3,6 @@ import { Table } from '../ast/Table';
 import { UIElement, UIProperty } from '../ast/UIElement';
 import { ConstantBlock } from '../ast/ConstantBlock';
 import { RegexBlock } from '../ast/RegexBlock';
-import { Interaction } from '../ast/Interaction';
 import { Document } from '../ast/Document';
 import { Feature } from "../ast/Feature";
 import { Scenario } from "../ast/Scenario";
