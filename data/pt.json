@@ -103,7 +103,7 @@
                 "fill": [ "preencho", "informo", "digito", "forneco", "entro" ],
                 "hide": [ "escondo", "oculto" ],
                 "move": [ "movo", "posiciono" ],
-                "open": [ "abro" ],
+                "open": [ "abro", "navego para" ],
                 "press": [ "pressiono", "seguro", "teclo" ],
                 "refresh": [ "atualizo", "recarrego" ],
                 "resize": [ "redimensiono", "modifico o tamanho" ],            

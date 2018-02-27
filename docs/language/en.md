@@ -154,6 +154,31 @@ Given that I [ { don't | do not } ] have the state "logged in"
 Then I [ { don't | do not } ] have the state "logged in"
 ```
 
+### UPDATE:
+
+Is state declaration really necessary?
+
+Example of a postcondition:
+
+  Then ~I am logged in~
+
+Example of a precondition:
+
+  Given that ~I am logged in~
+
+Notes:
+- Anything between ~ and ~ can denote a State.
+- States could be LEARNED to be recognized through NLP,
+  e.g., ~I'm logged in~ and ~I am logged in~ could denote the same state.
+
+Problem:
+- How to denote a that a state should not be present?
+
+Solution 1: Detect negation and negate it
+- e.g., ~I'm logged in~      -=>  ~I'm not logged in~
+- e.g., ~I'm not logged in~  -=>  ~I'm logged in~
+- detect contraction forms ( didn't, didnt, did not, hasn't, hasnt, has not, ...)
+
 
 ## Scenario
 
