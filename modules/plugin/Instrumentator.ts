@@ -2,23 +2,69 @@ import { Location  } from "../ast/Location";
 import { RuntimeException } from '../req/RuntimeException';
 import { Warning } from '../req/Warning';
 import * as readline from 'readline';
+import * as fs from 'fs';
 
- /**
-  * 
-  * @author Thiago Delgado Pinto
-  */
-export class DefaultInstrumentator {
+/**
+ * Specification instrumentator interface.
+ * 
+ * @author Thiago Delgado Pinto
+ */
+export interface Instrumentator {
 
-    constructor( private _fs: any, private _encoding: string = 'utf-8' ) {
-    }
+    generateForSpecFile( specFile: string ): string;
+    generateForSpecLineNumber( lineNumber: number ): string;
 
-    public generateSpecFileInstrumentation( specFile: string ): string {
+    retrieveSpecFile( line: string ): string | null;
+    retrieveSpecLineNumber( line: string ): number | null;
+}
+
+/**
+ * Default specification instrumentator that works with double-slashed line comments.
+ * 
+ * Keywords used:
+ * - spec: references a specification file, e.g. "// spec: path/to/file.feature"
+ * - line: references a specification line number, e.g., "// line: 10"
+ * 
+ * @author Thiago Delgado Pinto
+ */
+export class DefaultInstrumentator implements Instrumentator {
+
+    public generateForSpecFile( specFile: string ): string {
         return '// spec: ' + specFile;
     }
 
-    public generateSpecLineInstrumentation( lineNumber: number ): string {
+    public generateForSpecLineNumber( lineNumber: number ): string {
         return '// line: ' + lineNumber;
-    }    
+    }
+
+    public retrieveSpecFile( instrumentedLine: string ): string | null {
+        const regex = /\/\/(?: )*spec(?: )*:(.+)/gui;
+        const r = regex.exec( instrumentedLine );
+        return ( r && r[ 1 ] ) ? r[ 1 ].trim() : null;
+    }
+
+    public retrieveSpecLineNumber( instrumentedLine: string ): number | null {
+        const regex = /\/\/(?: )*line(?: )*:(?: )*([0-9]+)/gui;
+        const r = regex.exec( instrumentedLine );
+        return ( r && r[ 1 ] ) ? parseInt( r[ 1 ] ) : null;
+    }
+
+}
+
+
+ /**
+  * Default script file instrumentation.
+  * 
+  * @author Thiago Delgado Pinto
+  */
+export class FileInstrumentator {
+
+    constructor(
+        private _instrumentator: Instrumentator = new DefaultInstrumentator(),
+        private _fs: any = fs,
+        private _encoding: string = 'utf-8'
+    ) {
+    }
 
     /**
      * Retrieves specification location from a script file location.
@@ -50,17 +96,15 @@ export class DefaultInstrumentator {
     
                 // Retrieve the specification file from the first line
                 if ( 1 === lineCounter ) {
-                    // TO-DO: read the instrumentation about the spec file
-                    specFilePath = this.retrieveSpecFile( content );
+                    specFilePath = this._instrumentator.retrieveSpecFile( content );
                 }
     
                 // Retrive the specification column from the code instrumentation,
                 // i.e., an annotation with the specification column
                 if ( lineCounter === scriptLoc.line ) {
     
-                    // TO-DO: read the instrumentation about the spec line
-                    // specLine = ...
-    
+                    specLineNumber = this._instrumentator.retrieveSpecLineNumber( content );
+
                     // No more to do with the file, so close it.
                     rl.close();
                 }
@@ -87,17 +131,5 @@ export class DefaultInstrumentator {
         } );
 
     }
-    
-
-    public retrieveSpecFile = ( line: string ): string | null => {
-        const regex = /spec: ?(.+)/gu;
-        const r = regex.exec( line );
-        return ( r && r[ 1 ] ) ? r[ 1 ] : null;
-    };
-
-    public retrieveSpecLineNumber = ( line: string ): string | null => {
-        const regex = /line: ?([0-9]+)/gu;
-        const r = regex.exec( line );
-        return ( r && r[ 1 ] ) ? r[ 1 ] : null;
-    };    
+       
 }

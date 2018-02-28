@@ -1,5 +1,5 @@
 import { TestMethodResult, TestScriptExecutionResult, TestSuiteResult } from '../../modules/testscript/TestScriptExecution';
-import { DefaultInstrumentator } from '../../modules/plugin/Instrumentator';
+import { FileInstrumentator, DefaultInstrumentator } from '../../modules/plugin/Instrumentator';
 import { Location } from '../../modules/ast/Location';
 import * as fs from 'fs';
 import * as readline from 'readline';
@@ -14,10 +14,10 @@ import * as readline from 'readline';
  */
 export class ReportConverter {
 
-    private readonly _instrumentator: DefaultInstrumentator;
+    private readonly _instrumentator: FileInstrumentator;
 
     constructor( private _fs: any = fs, private _encoding = 'utf-8' ) {
-        this._instrumentator = new DefaultInstrumentator( _fs, _encoding );
+        this._instrumentator = new FileInstrumentator( new DefaultInstrumentator(), _fs, _encoding );
     }
 
     /**
