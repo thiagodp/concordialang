@@ -1,4 +1,5 @@
 import { SpecFilter } from "../testcase/SpecFilter";
+import { Location } from "../ast/Location";
 
 /**
  * Test script execution options.
@@ -97,14 +98,21 @@ export class TestMethodResult {
 
     durationMs: number; // milliseconds
 
-    isForSetup: boolean | undefined; // e.g. setUp/setUpOnce/before/beforeAll
+    isForSetup?: boolean; // e.g., setUp/setUpOnce/before/beforeAll
 
-    exception: {
-        type: string;
-        message: string;
-        file: string;
-        line: number;
-        stackTrace: string;
-    } | undefined;
+    exception?: TestMethodException;
 
+}
+
+/**
+ * Test method exception.
+ * 
+ * @author Thiago Delgado Pinto
+ */
+export class TestMethodException {
+    type: string;
+    message: string;
+    stackTrace: string;
+    scriptLocation: Location;
+    specLocation?: Location;
 }

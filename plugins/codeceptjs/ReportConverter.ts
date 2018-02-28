@@ -1,32 +1,45 @@
 import { TestMethodResult, TestScriptExecutionResult, TestSuiteResult } from '../../modules/testscript/TestScriptExecution';
+import { DefaultInstrumentator } from '../../modules/plugin/Instrumentator';
+import { Location } from '../../modules/ast/Location';
 import * as fs from 'fs';
+import * as readline from 'readline';
+// import { promisify } from 'util';
+// import { normalize } from 'path';
 
 /**
  * Converts a CodeceptJS execution result to Concordia's format.
  *
  * @author Matheus Fagundes
+ * @author Thiago Delgado Pinto
  */
 export class ReportConverter {
 
-    constructor( private _fs?: any ) {
-        _fs = _fs || fs; // assumes the Node's fs as the default
+    private readonly _instrumentator: DefaultInstrumentator;
+
+    constructor( private _fs: any = fs, private _encoding = 'utf-8' ) {
+        this._instrumentator = new DefaultInstrumentator( _fs, _encoding );
     }
 
     /**
-     * Converts a test execution result from a file.
+     * Reads a execution result file and converts it to the expected Concordia's format.
      *
-     * @param resultFilePath Path to file with CodeceptJS test results.
+     * @param resultFilePath Path to a file with the test results of CodeceptJS.
+     * @param pluginConfigFilePath Path to the plugin configuration file.
      */
-    public convertFrom( resultFilePath: string, pluginConfigFilePath: string ): TestScriptExecutionResult {
+    public async convertFrom(
+        resultFilePath: string,
+        pluginConfigFilePath: string
+    ): Promise< TestScriptExecutionResult > {
 
-        const source: any = JSON.parse( this._fs.readFileSync( resultFilePath ).toString() );
-        const pluginConfig = JSON.parse( this._fs.readFileSync( pluginConfigFilePath ).toString() );
+        const source: any = await this.readJsonFile( resultFilePath );
+        const pluginConfig = await this.readJsonFile( pluginConfigFilePath );
+
         let result: TestScriptExecutionResult = new TestScriptExecutionResult();
-        source.resultFilePath = resultFilePath;
 
+        source.resultFilePath = resultFilePath;
         this.fillMetadata( source, result );
         this.fillStatus( source, result );
-        this.fillResults( source, result );
+        await this.fillResults( source, result );
         this.fillPluginInfo( pluginConfig, result );
 
         return result;
@@ -83,34 +96,43 @@ export class ReportConverter {
      * @param source The CodeceptJS' result in JSON format.
      * @param result The Concordia's result to fill.
      */
-    private fillResults( source: any, result: TestScriptExecutionResult ): void {
+    private async fillResults( source: any, result: TestScriptExecutionResult ): Promise< void > {
         
         if ( ! result.results ) {
             result.results = [];
         }
 
         // Creates a TestMethodResult for each CodeceptJS' test method report.
-        source.tests.forEach( method => {
+        for ( let method of source.tests ) {
+
             let testMethodResult: TestMethodResult = new TestMethodResult();
             testMethodResult.name = method.title;
             testMethodResult.status = this.isObjectEmpty( method.err ) ? 'passed' : 'failed';
             testMethodResult.durationMs = method.duration;
 
             if ( 'failed' === testMethodResult.status ) {
-                let stackInfo = this.extractStackInfo( method.err.stack );
+
+                const scriptLocation: Location = this.extractScriptLocationFromStackTrace( method.err.stack );
+
+                let specLocation: Location;
+                if ( scriptLocation ) {
+                    specLocation = await this.extractSpecLocationFromScriptLocation( scriptLocation );
+                }
+
                 testMethodResult.exception = {
                     type: method.err.params.type,
                     message: method.err.message,
-                    file: stackInfo.file,
-                    line: stackInfo.line,
-                    stackTrace: method.err.stack
+                    stackTrace: method.err.stack,
+
+                    scriptLocation: scriptLocation,
+                    specLocation: specLocation                    
                 };
             }
 
             // Pushes a TestMethodResult to its correspondent TestSuiteResult.
             let suiteName: string = method.fullTitle.split( ':' )[0]; //fullTitle format is 'feature: test'
             this.pushTestMethodResult( result, testMethodResult, suiteName );
-        });
+        }
     }
 
     /**
@@ -121,10 +143,10 @@ export class ReportConverter {
      * @param suiteName Test Suite Result name.
      */
     private pushTestMethodResult( result: TestScriptExecutionResult, testMethodResult: TestMethodResult, suiteName: string ): void {
+
         // Finds the correspondent test suite.
-        let testSuiteResult: TestSuiteResult = result.results.filter( ( suite: TestSuiteResult ) => {
-            return suite.suite === suiteName;
-        } )[0];
+        let testSuiteResult: TestSuiteResult = 
+            result.results.find( ( suite: TestSuiteResult ) => suite.suite === suiteName );
 
         // If the test suite doesn't exists, creates a new one.
         if ( ! testSuiteResult ) {
@@ -147,17 +169,44 @@ export class ReportConverter {
     }
 
     /**
-     * Extract file name and line number of a stack trace.
-     * @param stack The string representation of stack trace.
+     * Extract script location from a stack trace.
+     * 
+     * @param stackTrace Stack trace.
      */
-    private extractStackInfo( stack: string ): { file: string, line: number } {
-        // Extract file name and line (e.g. 'path/to/file.js:15:7').
-        let fileAndLine: string = stack.match(/(\w|\/|\\)+\.js:\d+:\d+/)[0];
-        let info = fileAndLine.split( ':' );
+    public extractScriptLocationFromStackTrace( stackTrace: string ): Location | null {
+
+        // Extract file name and line, e.g., 'path/to/file.js:15:7'
+        const r = stackTrace.match( /(\w|\/|\\|\.\/)+\.js:\d+:\d+/u );
+        if ( ! r || ! r[ 0 ] ) {
+            return null;
+        }
+        const [ path, lin, col ] = r[ 0 ].split( ':' );
         return {
-            file: info[0],
-            line: parseInt( info[1] )
+            filePath: path,
+            line: parseInt( lin ),
+            column: parseInt( col )
         };
+    }
+
+    /**
+     * Extract specification location from a script file.
+     * 
+     * @param scriptFile Script file.
+     */
+    private async extractSpecLocationFromScriptLocation( scriptLoc: Location ): Promise< Location > {
+        return await this._instrumentator.retrieveSpecLocation( scriptLoc );
+    }
+
+    private async readJsonFile( path: string ): Promise< any > {
+        // const readFileAsync = promisify( this._fs.readFile );
+        // return JSON.parse( ( await readFileAsync( path, this._encoding ) ).toString() );
+
+        return new Promise< any >( ( resolve, reject ) => {
+            this._fs.readFile( path, this._encoding, ( err, data ) => {
+                if ( err ) { return reject( err ); }
+                return resolve( JSON.parse( data.toString() ) );
+            } );            
+        } );
     }
 
 }
