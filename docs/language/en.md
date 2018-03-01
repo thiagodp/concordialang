@@ -45,37 +45,35 @@ Language constructions:
 
 ## Formats and References
 
-### Outside queries:
-- Literals:
-  - Value: `"value"`
-  - Number: `5`
-  - UI Element: `<id>` or `<#id>` or `<@name>` or `<//xpath>` or `<~mobile_name>`
-- References:
-  - UI Element: `{UI Element}` or `{Feature:UI Element}`
-  - Constant: `[constant]` ? Alternatives: `${constant}` ?
-  - State: `~state~`
-  - Feature: executes the feature `{{Feature}}` ? Alternatives: `'Feature'`, `"Feature"` ?
-  - Scenario: `{{Scenario}}` ? Same alternatives to Feature.
-    - from the same feature: `executes the scenario {{Scenario}}`
-    - of a different feature: `executes the scenario {{Scenario}} of the feature {{Feature}}`
-    - by number: `#1`, e.g., `executes the scenario #1 of the feature {{Feature}}`
-  - Variant: `{{Variant}}` ? Same alternatives to Feature.
-    - from the same feature: `executes the variant {{Variant}}`
-    - of a different feature: `executes the variant {{Variant}} of the feature {{Feature}}`
-    - by number: `#1`, e.g., `executes the variant #1 of the feature {{Feature}}`
+### Literals
+- Value: `"value"`
+- Number: `5`
+- List: `[ "val1", "val2", ... ]` or `[ 12, 53, ... ]` or `[ "hello", 90, ... ]`
+- UI Element: `<id>` or `<#id>` or `<@name>` or `<//xpath>` or `<~mobile_name>`
+- Query: `"SELECT * FROM tbl WHERE fld = 'hello'"` or `"select ..."`
 
-### Inside queries:
+Notes:
+- To force a **query** to be a **value**, it should be used an exclamation mark (`!`) right before it. E.g., `!"SELECT * FROM foo"`
+
+### References
+- UI Element: `{UI Element}` or `{Feature:UI Element}`
+- Constant: `[constant]` ? Alternatives: `${constant}` ?
+- State: `~state~`
+- Feature: executes the feature `{{Feature}}` ? Alternatives: `'Feature'`, `"Feature"` ?
+- Scenario: `{{Scenario}}` ? Same alternatives to Feature.
+  - from the same feature: `executes the scenario {{Scenario}}`
+  - of a different feature: `executes the scenario {{Scenario}} of the feature {{Feature}}`
+  - by number: `#1`, e.g., `executes the scenario #1 of the feature {{Feature}}`
+- Variant: `{{Variant}}` ? Same alternatives to Feature.
+  - from the same feature: `executes the variant {{Variant}}`
+  - of a different feature: `executes the variant {{Variant}} of the feature {{Feature}}`
+  - by number: `#1`, e.g., `executes the variant #1 of the feature {{Feature}}`
+
+### References inside queries
 - Constant:
   - `[something]` **can** be used whether the project adopts [AlaSQL](https://github.com/agershun/alasql), with the restriction that [it uses](https://github.com/agershun/alasql#read-and-write-excel-and-raw-data-files) only numbers inside brackets, to refer columns of CSV files. E.g., `"SELECT [3] as city, [4] as population from csv( 'path/to/file.csv')"`. So a [Constant](#constants) name could not be a number.
   - `[something]` **can** be used whether the project adopts [Database-JS](https://github.com/mlaanderson/database-js), with the restriction that it uses dollar signs (`$`) to reference rows and columns in Excel files. E.g., `"SELECT * FROM [Sheet1$A1:C52]"`. So [Constants](#constants) names could *not* have dollar signs.
   - References that do not match the format of a [Constant](#constants) name must be ignored, i.e., not replaced by a value.
-
-
-### About References
-
-- Feature:
-- Scenario of the same feature:
-- Variant:
 
 
 
