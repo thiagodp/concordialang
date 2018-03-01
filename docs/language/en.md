@@ -22,6 +22,10 @@ Lexer
 
 ## Index:
 
+General:
+- [Formats and References](#formats)
+
+Language constructions:
 - [Language](#language)
 - [Import](#import)
 - [Tag](#tag)
@@ -33,10 +37,46 @@ Lexer
 - [Regular Expressions](#regularexpressions)
 - [Table](#table)
 - [Database](#database)
-- [File](#file)
 - [Template](#template)
 - [Variant](#variant)
 - [Test Events](#testevents)
+
+
+
+## Formats and References
+
+### Outside queries:
+- Literals:
+  - Value: `"value"`
+  - Number: `5`
+  - UI Element: `<id>` or `<#id>` or `<@name>` or `<//xpath>` or `<~mobile_name>`
+- References:
+  - UI Element: `{UI Element}` or `{Feature:UI Element}`
+  - Constant: `[constant]` ? Alternatives: `${constant}` ?
+  - State: `~state~`
+  - Feature: executes the feature `{{Feature}}` ? Alternatives: `'Feature'`, `"Feature"` ?
+  - Scenario: `{{Scenario}}` ? Same alternatives to Feature.
+    - from the same feature: `executes the scenario {{Scenario}}`
+    - of a different feature: `executes the scenario {{Scenario}} of the feature {{Feature}}`
+    - by number: `#1`, e.g., `executes the scenario #1 of the feature {{Feature}}`
+  - Variant: `{{Variant}}` ? Same alternatives to Feature.
+    - from the same feature: `executes the variant {{Variant}}`
+    - of a different feature: `executes the variant {{Variant}} of the feature {{Feature}}`
+    - by number: `#1`, e.g., `executes the variant #1 of the feature {{Feature}}`
+
+### Inside queries:
+- Constant:
+  - `[something]` **can** be used whether the project adopts [AlaSQL](https://github.com/agershun/alasql), with the restriction that [it uses](https://github.com/agershun/alasql#read-and-write-excel-and-raw-data-files) only numbers inside brackets, to refer columns of CSV files. E.g., `"SELECT [3] as city, [4] as population from csv( 'path/to/file.csv')"`. So a [Constant](#constants) name could not be a number.
+  - `[something]` **can** be used whether the project adopts [Database-JS](https://github.com/mlaanderson/database-js), with the restriction that it uses dollar signs (`$`) to reference rows and columns in Excel files. E.g., `"SELECT * FROM [Sheet1$A1:C52]"`. So [Constants](#constants) names could *not* have dollar signs.
+  - References that do not match the format of a [Constant](#constants) name must be ignored, i.e., not replaced by a value.
+
+
+### About References
+
+- Feature:
+- Scenario of the same feature:
+- Variant:
+
 
 
 ## Language
@@ -386,6 +426,12 @@ Regular Expressions:
   - "CNPJ Regex" is ...
 ```
 
+QUESTION: Aren't constants solving this problem?
+E.g.:
+  UI Element: Foo
+    - format is [CPF Regex]
+
+-> Validation whether the Constant is a valid RegEx could be made during the UI Element's format validation.
 
 ## Table
 
