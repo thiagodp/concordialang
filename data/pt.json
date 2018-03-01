@@ -149,7 +149,17 @@
                 "down": [ "para baixo", "abaixo" ],
                 "left": [ "para a esquerda", "a direita" ],
                 "right": [ "para a direita", "a esquerda" ],
-                "mobileName": [ "nome mobile" ]            
+                "mobileName": [ "nome mobile" ]
+            },
+
+            "exec_action": {
+                "execute": [ "executo", "rodo", "chamo", "invoco" ]
+            },
+
+            "exec_target": {
+                "feature": [ "feature", "característica", "funcionalidade" ],
+                "scenario": [ "scenario", "cenário" ],
+                "variant": [ "variant", "variante", "variação" ]
             }
         },
     
@@ -266,7 +276,12 @@
                 "eu {ui_action_modifier} {ui_action} {value} em {element}",
     
                 "eu {ui_action} {element} com {value}",
-                "eu {ui_action_modifier} {ui_action} {element} com {value}"
+                "eu {ui_action_modifier} {ui_action} {element} com {value}",
+
+
+
+                "eu {exec_action} o {exec_target} {value}",
+                "eu {exec_action} o {exec_target} {value} do {exec_target} {value}"
             ]
         },
     

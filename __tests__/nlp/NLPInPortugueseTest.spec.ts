@@ -5,6 +5,7 @@ import { NLP } from '../../modules/nlp/NLP';
 import { Options } from '../../modules/app/Options';
 import { resolve } from 'path';
 import { LanguageContentLoader, JsonLanguageContentLoader } from '../../modules/dict/LanguageContentLoader';
+import { NLPResult } from '../../modules/nlp/NLPResult';
 
 /**
  * @author Thiago Delgado Pinto
@@ -29,6 +30,8 @@ describe( 'NLPInPortugueseTest', () => {
     const UI_PROPERTY: string = Entities.UI_PROPERTY;
     const UI_CONNECTOR: string = Entities.UI_CONNECTOR;
     const UI_DATA_TYPE: string = Entities.UI_DATA_TYPE;
+    const EXEC_ACTION: string = Entities.EXEC_ACTION;
+    const EXEC_TARGET: string = Entities.EXEC_TARGET;
 
     beforeAll( () => { // once
         nlp = new NLP();
@@ -51,9 +54,14 @@ describe( 'NLPInPortugueseTest', () => {
         return nlp.recognize( LANGUAGE, sentence, Intents.UI_ITEM_QUERY );
     }    
     
-    function shouldHaveEntities( results: any[], expectedEntitiesNames: string[], intent: string, debug: boolean = false ) {
+    function shouldHaveEntities(
+        results: NLPResult[],
+        expectedEntitiesNames: string[],
+        intent: string,
+        debug: boolean = false
+    ) {
         for ( let r of results ) {
-            if ( debug ) { console.log( r ); }
+            if ( debug ) { console.log( 'NLP Result is', r ); }
             expect( r ).not.toBeFalsy();
             expect( r.intent ).toEqual( intent );
             expect( r.entities ).not.toBeNull();
@@ -118,6 +126,39 @@ describe( 'NLPInPortugueseTest', () => {
             let results = [];
             results.push( recognizeInTestCase( 'eu preencho a caixa de texto {Nome} com "x"' ) );
             shouldHaveTestCaseEntities( results, [ UI_ACTION, UI_ELEMENT_TYPE, ELEMENT, VALUE ] );
+        } );
+        
+        it( 'recognizes a execution of a feature', () => {
+            let results = [];
+            let r: NLPResult;
+            results.push( r = recognizeInTestCase( 'eu executo a funcionalidade "x"' ) );
+            shouldHaveTestCaseEntities( results, [ EXEC_ACTION, EXEC_TARGET, VALUE ] );
+            expect( r.entities[ 1 ].value ).toBe( 'feature' );
+        } );
+
+        it( 'recognizes a execution of a scenario', () => {
+            let results = [];
+            let r: NLPResult;
+            results.push( r = recognizeInTestCase( 'eu executo o cenário "x"' ) );
+            shouldHaveTestCaseEntities( results, [ EXEC_ACTION, EXEC_TARGET, VALUE ] );
+            expect( r.entities[ 1 ].value ).toBe( 'scenario' );
+        } );
+        
+        it( 'recognizes a execution of a variant', () => {
+            let results = [];
+            let r: NLPResult;
+            results.push( r = recognizeInTestCase( 'eu executo a variante "x"' ) );
+            shouldHaveTestCaseEntities( results, [ EXEC_ACTION, EXEC_TARGET, VALUE ] );
+            expect( r.entities[ 1 ].value ).toBe( 'variant' );
+        } );
+        
+        it( 'recognizes a execution of a scenario of a external feature', () => {
+            let results = [];
+            let r: NLPResult;
+            results.push( r = recognizeInTestCase( 'eu executo o cenário "x" da feature "y"' ) );
+            shouldHaveTestCaseEntities( results, [ EXEC_ACTION, EXEC_TARGET, VALUE, EXEC_TARGET, VALUE ] );
+            expect( r.entities[ 1 ].value ).toBe( 'scenario' );
+            expect( r.entities[ 3 ].value ).toBe( 'feature' );
         } );        
 
     } );

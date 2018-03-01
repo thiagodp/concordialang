@@ -10,7 +10,7 @@ import { Options } from '../../modules/app/Options';
 import { resolve } from 'path';
 import { LanguageContentLoader, JsonLanguageContentLoader } from '../../modules/dict/LanguageContentLoader';
 
-describe( 'UIPropertyRecognizerTest', () => {
+describe( 'DatabasePropertyRecognizerTest', () => {
 
     let nodes = [];
     let errors = [];

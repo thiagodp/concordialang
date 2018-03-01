@@ -166,18 +166,17 @@ export class NLP {
      * @return Bravey.EntityRecognizer
      */
     private makeValueEntityRecognizer( entityName: string ): any {
-
         let valueRec = new Bravey.RegexEntityRecognizer( entityName, 10 );
         const regex = /"(?:[^"\\]|\\.)*"/g;
-
-        valueRec.addMatch( regex,
+        valueRec.addMatch(
+            regex,
             function( match ) {
                 //console.log( 'match: ', match );
                 const value = match[ 0 ] || '';
                 return value.substring( 1, value.length - 1 ); // exclude quotes
             },
-            100 ); // the number is the priority
-
+            100 // priority
+        );
         return valueRec;
     }
 
@@ -191,16 +190,16 @@ export class NLP {
      * @return Bravey.EntityRecognizer
      */
     private makeElementEntityRecognizer( entityName: string ): any {
-
         var valueRec = new Bravey.RegexEntityRecognizer( entityName, 10 );
-
-        valueRec.addMatch( new RegExp( '\{[^<\r\n]*\}', "gi" ),
+        const regex = new RegExp( '\{[^<\r\n]*\}', "gi" );
+        valueRec.addMatch(
+            regex,
             function( match ) {
                 //console.log( 'match: ', match );
                 return match.toString().replace( '{', '' ).replace( '}', '' );
             },
-            100 ); // the number is the priority
-
+            100 // priority
+        );
         return valueRec;
     }
 
@@ -214,16 +213,16 @@ export class NLP {
      * @return Bravey.EntityRecognizer
      */
     private makeNumberEntityRecognizer( entityName: string ): any {
-
         var valueRec = new Bravey.RegexEntityRecognizer( entityName, 10 );
-        
-        valueRec.addMatch( new RegExp( '(-?[0-9]+(?:.[0-9]+)?)', "gi" ),
+        const regex = new RegExp( '(-?[0-9]+(?:.[0-9]+)?)', "gi" );
+        valueRec.addMatch(
+            regex,
             function( match ) {
                 //console.log( 'match: ', match );
                 return match[ 0 ].toString().trim();
             },
-            100 ); // the number is the priority
-
+            10 // priority
+        );
         return valueRec;
     }
 
@@ -234,51 +233,62 @@ export class NLP {
      * --> The value "SELECT * FROM users" (without quotes) is recognized.
      * 
      * @param entityName Entity name.
-     * @return Bravey.EntityRecognizer
+     * @returns Bravey.EntityRecognizer
      */
     private makeQueryEntityRecognizer( entityName: string ): any {
-        
-        let valueRec = new Bravey.RegexEntityRecognizer( entityName, 20 );
-
-        //valueRec.addMatch( new RegExp( "[^']*'", "gi" ),
-        valueRec.addMatch( new RegExp( '"(?:\t| )*SELECT[^"]+"', "gi" ),
+        let valueRec = new Bravey.RegexEntityRecognizer( entityName, 10 );
+        const regex = new RegExp( '"(?:\t| )*SELECT[^"]+"', "gi" );
+        valueRec.addMatch(
+            regex,
             function( match ) {
                 //console.log( 'match: ', match );
                 return match.toString().replace( /['"]+/g, '' ).trim();
             },
-            200 ); // the number is the priority
-
-        return valueRec;
-    }
-
-    private makeConstantEntityRecognizer( entityName: string ): any {
-        var valueRec = new Bravey.RegexEntityRecognizer( entityName, 10 );
-
-        const regex = /(?:\[)([^\$\]]+)(?:\])/g;
-        valueRec.addMatch( regex,
-            function( match ) {
-                //console.log( 'match: ', match );
-                return match[ 0 ].toString().replace( '[', '' ).replace( ']', '' ).trim();
-            },
-            100 ); // the number is the priority
-
+            200 // priority
+        );
         return valueRec;
     }
 
     /**
-     * Recognizes values in the format [ 1, "hello", 2, "hi \"Jane\"!" ]
+     * Creates a recognizer for Constant references in the format [name].
+     * A Constant name should not:
+     * - be a number, e.g., [1] is invalid.
+     * - have a dollar sign, e.g., [Foo$] is invalid.
      * 
-     * @param entityName 
+     * @param entityName Entity name.
+     * @returns Bravey.EntityRecognizer
+     */    
+    private makeConstantEntityRecognizer( entityName: string ): any {
+        var valueRec = new Bravey.RegexEntityRecognizer( entityName, 10 );
+        const regex = /(?:\[)([^\$\]\d][^\$\]]+)(?:\])/g;
+        valueRec.addMatch(
+            regex,
+            function( match ) {
+                //console.log( 'match: ', match );
+                return match[ 0 ].toString().replace( '[', '' ).replace( ']', '' ).trim();
+            },
+            500 // priority
+        );
+        return valueRec;
+    }
+
+    /**
+     * Creates a recognizer for a list of values, in the format [ 1, "hello", 2, "hi \"Jane\"!" ]
+     * 
+     * @param entityName Entity name.
+     * @returns Bravey.EntityRecognizer
      */
     private makeValueListEntityRecognizer( entityName: string ): any {
         var valueRec = new Bravey.RegexEntityRecognizer( entityName, 10 );
         const regex = /\[(?: )*((?:,) ?|([0-9]+(\.[0-9]+)?|\"(.*[^\\])\"))+(?: )*\]/g
-        valueRec.addMatch( regex,
+        valueRec.addMatch(
+            regex,
             function( match ) {
                 //console.log( 'match: ', match );
                 return match[ 0 ].toString().trim();
             },
-            1000 ); // the number is the priority
+            1000 // priority
+        );
         return valueRec;
     }
 
