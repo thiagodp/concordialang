@@ -39,13 +39,13 @@ export class DefaultInstrumentator implements Instrumentator {
     }
 
     public retrieveSpecFile( instrumentedLine: string ): string | null {
-        const regex = /\/\/(?: )*spec(?: )*:(.+)/gui;
+        const regex = /\/\/(?: )*spec(?: )*:(.+)/ui;
         const r = regex.exec( instrumentedLine );
         return ( r && r[ 1 ] ) ? r[ 1 ].trim() : null;
     }
 
     public retrieveSpecLineNumber( instrumentedLine: string ): number | null {
-        const regex = /\/\/(?: )*line(?: )*:(?: )*([0-9]+)/gui;
+        const regex = /\/\/(?: )*line(?: )*:(?: )*([0-9]+)/ui;
         const r = regex.exec( instrumentedLine );
         return ( r && r[ 1 ] ) ? parseInt( r[ 1 ] ) : null;
     }
