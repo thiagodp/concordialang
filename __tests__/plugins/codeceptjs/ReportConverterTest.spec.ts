@@ -1,7 +1,8 @@
 import { ReportConverter } from '../../../plugins/codeceptjs/ReportConverter';
 import { TestScriptExecutionResult, TestSuiteResult, TestMethodResult } from '../../../modules/testscript/TestScriptExecution';
-import { Volume } from 'memfs';
-import { normalize } from 'path';
+import { resolve, join, normalize } from 'path';
+import { promisify } from 'util';
+import { vol, fs as memfs } from 'memfs';
 
 /**
  * @author Matheus Eller Fagundes
@@ -11,19 +12,24 @@ describe( 'ReportConverterTest', () => {
 
     // helper variables
 
-    let vol: Volume;
+    // const dir = resolve( __dirname );
+    const dir = normalize( process.cwd() );
+    const reportFilePath = join( dir, 'report.json' );
+    const pluginConfigPath = join( dir, 'codeceptJS.json' );
 
-    const reportFilePath = './report.json';
-    const pluginConfigPath = './codeceptJS.json';
-    const scriptFilePath = './test.js';
+    const scriptFilePath = join( dir, 'test.js' );
     const scriptFileLine = 5;
     const scriptFileColumn = 7;
 
-    const stackTrace = "expected web page to include \"vai falhar\"\n\nScenario Steps:\n\n- I.see(\"vai falhar\") at Test.Scenario (" +
-        `${scriptFilePath}:${scriptFileLine}:${scriptFileColumn}` +
-        ")\n- I.amOnPage(\"/\") at Test.Scenario (" +
-        `${scriptFilePath}:${scriptFileLine}:${scriptFileColumn - 1}` +
-        ")\n\n";
+    const stackTrace = `expected web page to include "vai falhar"
+
+        Scenario Steps:
+        
+        - I.see( "vai falhar" ) at Test.Scenario (${scriptFilePath}:${scriptFileLine}:${scriptFileColumn})
+        - I.amOnPage( "/" ) at Test.Scenario (${scriptFilePath}:${scriptFileLine}:${scriptFileColumn - 1})`;
+
+    const specFilePath = 'path/to/login.feature';
+    const specFileLine = 50;
 
     const report: any = {
         "stats": {
@@ -117,95 +123,93 @@ describe( 'ReportConverterTest', () => {
     };
 
     const scriptFileLines: string[] = [
-        '// spec: path/to/login.feature',
+        `// spec: ${specFilePath}`,
         '',
         'describe( "foo", () => {',
         '   it( "bar", () => {',
-        '       fake(); // line: 50', // << this is the line number 5 in the script file
+        `       fake(); // line: ${specFileLine}`, // << this is the line number 5 in the script file
         '   } );',
         '} );'
     ];
 
     let createFiles = () => {
-        // Create files in memory
-        let files = {};
-        files[ reportFilePath ] = JSON.stringify( report );
-        files[ pluginConfigPath ] = JSON.stringify( pluginConfig );
-        files[ scriptFilePath ] =  scriptFileLines.join( "\n" );
-
-        vol = Volume.fromJSON( files );
+        
+        // Synchronize the current path (IMPORTANT!)
+        vol.mkdirpSync( dir );
+        
+        memfs.writeFileSync( reportFilePath, JSON.stringify( report ) );
+        memfs.writeFileSync( pluginConfigPath, JSON.stringify( pluginConfig ) );
+        memfs.writeFileSync( scriptFilePath, scriptFileLines.join( "\n" ) );        
     };
 
     let eraseFiles = () => {
         vol.reset(); // erase in-memory files
-        vol = null;
     };
 
+    beforeEach( createFiles );
+    afterEach( eraseFiles );
 
 
-    it( 'foo', () => {} );
+    it( 'succefully converts a CodeceptJS report', async () => {
 
+        let converter: ReportConverter = new ReportConverter( memfs ); // under test
 
-    //
-    // COMMENTED BECAUSE OF AN ANNOYING BUG IN mem-fs !!!!!!!!!!!!!
-    //    
+        let received: TestScriptExecutionResult =
+            await converter.convertFrom( reportFilePath, pluginConfigPath );
 
-    // beforeEach( createFiles );
-    // afterEach( eraseFiles );
+        let expectedMethod1:TestMethodResult = new TestMethodResult();
+        expectedMethod1.durationMs = 1723;
+        expectedMethod1.name = 'successful login';
+        expectedMethod1.status = 'passed';
 
-    // it( 'succefully converts a CodeceptJS report', async () => {
+        let expectedMethod2:TestMethodResult = new TestMethodResult();
+        expectedMethod2.durationMs = 1655;
+        expectedMethod2.name = 'unsuccessful login';
+        expectedMethod2.status = 'failed';
+        expectedMethod2.exception = {         
+            message: 'expected web page to include "vai falhar"',
+            stackTrace: stackTrace,
+            type: 'to include',
 
-    //     let converter: ReportConverter = new ReportConverter( vol ); // under test
+            scriptLocation: {
+                filePath: scriptFilePath,
+                line: scriptFileLine, // << important to retrieve spec line from the script file
+                column: scriptFileColumn
+            },
+            
+            specLocation: {
+                filePath: specFilePath,
+                line: specFileLine,
+                column: 1
+            }            
+        };
 
-    //     let received: TestScriptExecutionResult =
-    //         await converter.convertFrom( reportFilePath, pluginConfigPath );
+        let expectedSuite: TestSuiteResult = new TestSuiteResult();
+        expectedSuite.suite = 'login';
+        expectedSuite.methods = [ expectedMethod1, expectedMethod2 ];
 
-    //     let expectedMethod1:TestMethodResult = new TestMethodResult();
-    //     expectedMethod1.durationMs = 1723;
-    //     expectedMethod1.name = 'successful login';
-    //     expectedMethod1.status = 'passed';
+        let expected: TestScriptExecutionResult = new TestScriptExecutionResult();
+        expected.sourceFile = reportFilePath;
+        expected.started = '2017-11-06T00:20:32.304Z';
+        expected.finished = '2017-11-06T00:20:38.977Z';
+        expected.durationMs = 6673;
+        expected.total= {
+            tests:  2,
+            passed: 1,
+            failed: 1,
+            skipped: 0,
+            error: 0,
+            unknown: 0
+        };
+        expected.plugin = {
+            description: 'Generates test scripts for CodeceptJS',
+            name: 'codeceptjs',
+            targets: [ "CodeceptJS" ],
+            version: '0.1'
+        };
+        expected.results = [ expectedSuite ];
 
-    //     let expectedMethod2:TestMethodResult = new TestMethodResult();
-    //     expectedMethod2.durationMs = 1655;
-    //     expectedMethod2.name = 'unsuccessful login';
-    //     expectedMethod2.status = 'failed';
-    //     expectedMethod2.exception = {
-    //         scriptLocation: {
-    //             filePath: scriptFilePath,
-    //             line: scriptFileLine, // << important to retrieve spec line from the script file
-    //             column: scriptFileColumn
-    //         },            
-    //         message: 'expected web page to include "vai falhar"',
-    //         stackTrace: stackTrace,
-    //         type: 'to include'
-    //     };
-
-    //     let expectedSuite: TestSuiteResult = new TestSuiteResult();
-    //     expectedSuite.suite = 'login';
-    //     expectedSuite.methods = [ expectedMethod1, expectedMethod2 ];
-
-    //     let expected: TestScriptExecutionResult = new TestScriptExecutionResult();
-    //     expected.sourceFile = reportFilePath;
-    //     expected.started = '2017-11-06T00:20:32.304Z';
-    //     expected.finished = '2017-11-06T00:20:38.977Z';
-    //     expected.durationMs = 6673;
-    //     expected.total= {
-    //         tests:  2,
-    //         passed: 1,
-    //         failed: 1,
-    //         skipped: 0,
-    //         error: 0,
-    //         unknown: 0
-    //     };
-    //     expected.plugin = {
-    //         description: 'Generates test scripts for CodeceptJS',
-    //         name: 'codeceptjs',
-    //         targets: [ "CodeceptJS" ],
-    //         version: '0.1'
-    //     };
-    //     expected.results = [ expectedSuite ];
-
-    //     expect( received ).toEqual( expected );
-    // } );
+        expect( received ).toEqual( expected );
+    } );
 
 } );

@@ -3,8 +3,7 @@ import { FileInstrumentator, DefaultInstrumentator } from '../../modules/plugin/
 import { Location } from '../../modules/ast/Location';
 import * as fs from 'fs';
 import * as readline from 'readline';
-// import { promisify } from 'util';
-// import { normalize } from 'path';
+import { promisify } from 'util';
 
 /**
  * Converts a CodeceptJS execution result to Concordia's format.
@@ -175,12 +174,14 @@ export class ReportConverter {
      */
     public extractScriptLocationFromStackTrace( stackTrace: string ): Location | null {
 
-        // Extract file name and line, e.g., 'path/to/file.js:15:7'
-        const r = stackTrace.match( /(\w|\/|\\|\.\/)+\.js:\d+:\d+/u );
-        if ( ! r || ! r[ 0 ] ) {
+        // Extract file name and line, e.g., 'path/to/file.js:15:7'        
+        const regex = /((\w:| |\w|\/|\\|\.\/)+\.js):(\d+):(\d+)/umi;
+        const r = regex.exec( stackTrace );
+        if ( ! r || ! r[ 1 ] ) {
             return null;
         }
-        const [ path, lin, col ] = r[ 0 ].split( ':' );
+        const [ _, path, __, lin, col ] = r;
+
         return {
             filePath: path,
             line: parseInt( lin ),
@@ -198,15 +199,8 @@ export class ReportConverter {
     }
 
     private async readJsonFile( path: string ): Promise< any > {
-        // const readFileAsync = promisify( this._fs.readFile );
-        // return JSON.parse( ( await readFileAsync( path, this._encoding ) ).toString() );
-
-        return new Promise< any >( ( resolve, reject ) => {
-            this._fs.readFile( path, this._encoding, ( err, data ) => {
-                if ( err ) { return reject( err ); }
-                return resolve( JSON.parse( data.toString() ) );
-            } );            
-        } );
+        const readFileAsync = promisify( this._fs.readFile );
+        return JSON.parse( ( await readFileAsync( path, this._encoding ) ).toString() );
     }
 
 }
