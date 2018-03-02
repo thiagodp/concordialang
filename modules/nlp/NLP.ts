@@ -28,8 +28,8 @@ export class NLP {
         this._additionalRecognizers.push( erMaker.makeUIElement( Entities.UI_ELEMENT ) );
 
         // Add an entity named "ui_element_literal" and its recognizer
-        this._additionalEntities.push( Entities.UI_ELEMENT_LITERAL );
-        this._additionalRecognizers.push( erMaker.makeUIElementLiteral( Entities.UI_ELEMENT_LITERAL ) );        
+        this._additionalEntities.push( Entities.UI_LITERAL );
+        this._additionalRecognizers.push( erMaker.makeUILiteral( Entities.UI_LITERAL ) );        
         
         // Add an entity named "number" and its recognizer
         this._additionalEntities.push( Entities.NUMBER );
@@ -240,7 +240,7 @@ class EntityRecognizerMaker {
      * @param entityName Entity name.
      * @return Bravey.EntityRecognizer
      */
-    public makeUIElementLiteral( entityName: string ): any {
+    public makeUILiteral( entityName: string ): any {
         var valueRec = new Bravey.RegexEntityRecognizer( entityName, 10 );
         const regex = /(?:\<)((?:#|@|\/\/|~|[a-zA-ZÀ-ÖØ-öø-ÿ])[^<\r\n]*[^\>])(?:\>)/g;
         valueRec.addMatch(
