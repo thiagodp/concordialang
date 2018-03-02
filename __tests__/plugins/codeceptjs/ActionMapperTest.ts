@@ -209,7 +209,7 @@ describe( 'ActionMapperTest', () => {
         expect(mapper.map(command)).toContainEqual("I.wait(2);");
     });
 
-    it('should translate wait for element', () => {
+    it('should translate wait for a ui element', () => {
         let command: ATSCommand = {
             action: 'wait',
             targets: ['#login'],
