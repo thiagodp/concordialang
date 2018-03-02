@@ -101,7 +101,7 @@ export class UIPropertyRecognizer {
                     case Entities.NUMBER    : uiv = new UIValue( [ adjust( e.value ) ], UIValueReferenceType.NONE );     break;
                     case Entities.VALUE_LIST: uiv = new UIValue( makeList( e.value ), UIValueReferenceType.NONE );       break;
                     case Entities.QUERY     : uiv = new UIValue( [ e.value ], UIValueReferenceType.DATABASE_AND_TABLE ); break;
-                    case Entities.ELEMENT   : uiv = new UIValue( [ e.value ], UIValueReferenceType.ELEMENT );            break;
+                    case Entities.UI_ELEMENT   : uiv = new UIValue( [ e.value ], UIValueReferenceType.UI_ELEMENT );            break;
                     case Entities.CONSTANT  : uiv = new UIValue( [ e.value ], UIValueReferenceType.CONSTANT );           break;
                     default                 : uiv = null;
                 }

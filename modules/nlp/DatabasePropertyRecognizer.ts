@@ -34,7 +34,7 @@ export class DatabasePropertyRecognizer {
     }    
 
     trainMe( trainer: NLPTrainer, language: string ) {
-        return trainer.trainNLP( this._nlp, language, Intents.DATASOURCE );
+        return trainer.trainNLP( this._nlp, language, Intents.DATABASE );
     }    
 
     /**
@@ -65,7 +65,7 @@ export class DatabasePropertyRecognizer {
             const recognizedEntityNames: string[] = r.entities.map( e => e.entity );
 
             // Must have a DS Property
-            const propertyIndex: number = recognizedEntityNames.indexOf( Entities.DS_PROPERTY );
+            const propertyIndex: number = recognizedEntityNames.indexOf( Entities.DB_PROPERTY );
             if ( propertyIndex < 0 ) {
                 const msg = 'Unrecognized: ' + node.content;
                 warnings.push( new NLPException( msg, node.location ) );
@@ -94,7 +94,7 @@ export class DatabasePropertyRecognizer {
         recognizer.recognize(
             language,
             nodes,
-            [ Intents.DATASOURCE ],
+            [ Intents.DATABASE ],
             'Database Property',
             errors,
             warnings,

@@ -10,5 +10,5 @@ export enum Intents {
     TEST_CASE = 'testcase',
     UI = 'ui',
     UI_ITEM_QUERY = 'ui_item_query',
-    DATASOURCE = 'datasource'
+    DATABASE = 'database'
 }

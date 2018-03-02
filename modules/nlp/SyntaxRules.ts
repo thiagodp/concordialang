@@ -13,16 +13,16 @@ export const DEFAULT_UI_ACTION_SYNTAX_RULE = {
     maxTargets: 1,
 
     // Accepted targets (NLP entities).
-    //   When "maxTargets" is 1 and "targets" has more than one element, it accepts one OR another.
+    //   When "maxTargets" is 1 and "targets" has more than one ui element, it accepts one OR another.
     //   When "maxTargets" > 1, the minimal of each target should be configured.
-    targets: [ "element", "value" ],
+    targets: [ "ui_element", "value" ],
 
     // Minimal and maximal values of each target.
     //   They will be considered only if they appear in "targets".
     //   If they do, they will should be *disconsidered* if:
     //     - min > minTargets
     //     - max > maxTargets
-    element: { min: 1, max: 999 },
+    ui_element: { min: 1, max: 999 },
     value: { min: 1, max: 999 },
     number: { min: 1, max: 999 },
 
@@ -47,7 +47,7 @@ export const UI_ACTION_SYNTAX_RULES = [
     { name: "drop", mustBeUsedWith: [ "drag" ] },
     { name: "fill", maxTargets: 999, value: { min: 0, max: 1 } },
     { name: "hide", maxTargets: 999 },
-    { name: "move", minTargets: 1, maxTargets: 3, targets: [ "element", "number" ], element: { min: 1, max: 1 }, number: { min: 0, max: 2 } },
+    { name: "move", minTargets: 1, maxTargets: 3, targets: [ "ui_element", "number" ], ui_element: { min: 1, max: 1 }, number: { min: 0, max: 2 } },
     { name: "open" },
     { name: "press", targets: [ "value" ], maxTargets: 5 },
     { name: "refresh" },
@@ -71,7 +71,7 @@ export const DEFAULT_UI_PROPERTY_SYNTAX_RULE = {
     maxTargets: 1,
 
     // Accepted targets (NLP entities).
-    //   When "maxTargets" is 1 and "targets" has more than one element, it accepts one OR another.
+    //   When "maxTargets" is 1 and "targets" has more than one ui element, it accepts one OR another.
     //   When "maxTargets" > 1, the minimal of each target should be configured.
     targets: [ "value" ],
 
@@ -130,7 +130,7 @@ export const DEFAULT_DATABASE_PROPERTY_SYNTAX_RULE = {
     maxTargets: 1,
 
     // Accepted targets (NLP entities).
-    //   When "maxTargets" is 1 and "targets" has more than one element, it accepts one OR another.
+    //   When "maxTargets" is 1 and "targets" has more than one ui element, it accepts one OR another.
     //   When "maxTargets" > 1, the minimal of each target should be configured.
     targets: [ "value" ],
 

@@ -126,10 +126,10 @@ describe( 'NLPTest', () => {
         } );
 
 
-        describe( 'element', () => {
+        describe( 'ui_element', () => {
 
             function recogElement( text: string, expected: string | null ): NLPResult | null {
-                return recog( text, expected, Entities.ELEMENT );
+                return recog( text, expected, Entities.UI_ELEMENT );
             }
 
             describe( 'recognizes', () => {

@@ -59,9 +59,9 @@
         },
     
     
-        "datasource": {
+        "database": {
             
-            "ds_property": {
+            "db_property": {
                 "type": [ "type" ],
                 "path": [ "path", "name" ],
                 "host": [ "host" ],
@@ -84,9 +84,9 @@
                 "I {ui_action} on {value}",
                 "I click on {value}",
 
-                "I {ui_action} on {element}",
-                "I {ui_action} in the option {element}",
-                "I click on {element}",
+                "I {ui_action} on {ui_element}",
+                "I {ui_action} in the option {ui_element}",
+                "I click on {ui_element}",
 
                 "I {ui_action} the {value}",
                 "I type the {value}",
@@ -107,9 +107,9 @@
                 "I {ui_action} in {ui_element_type} {value} with {value}",
                 "I {ui_action} in {ui_element_type} {value} with {number}",
 
-                "I {ui_action} in {ui_element_type} {element}",
-                "I {ui_action} in {ui_element_type} {element} with {value}",
-                "I {ui_action} in {ui_element_type} {element} with {number}",
+                "I {ui_action} in {ui_element_type} {ui_element}",
+                "I {ui_action} in {ui_element_type} {ui_element} with {value}",
+                "I {ui_action} in {ui_element_type} {ui_element} with {number}",
 
                 "I {ui_action} the {ui_element_type} with {value}",
                 "I {ui_action} in {ui_element_type} {value} with {value}",
@@ -117,8 +117,8 @@
 
                 "I {ui_action} the {ui_element_type} with {number}",
 
-                "I {ui_action} {element} with {value}",
-                "I {ui_action} {element} with {number}",
+                "I {ui_action} {ui_element} with {value}",
+                "I {ui_action} {ui_element} with {number}",
 
                 "I {ui_action_modifier} {ui_action} on {value}",
                 "I {ui_action_modifier} {ui_action} the {value}",
@@ -126,11 +126,11 @@
                 "I {ui_action_modifier} {ui_action} in {ui_element_type} {value}",
                 "I {ui_action_modifier} {ui_action} the {ui_element_type} with {value}",
 
-                "I {ui_action} {value} in {element}",
-                "I {ui_action_modifier} {ui_action} {value} in {element}",
+                "I {ui_action} {value} in {ui_element}",
+                "I {ui_action_modifier} {ui_action} {value} in {ui_element}",
 
-                "I {ui_action} {element} with {value}",
-                "I {ui_action_modifier} {ui_action} {element} with {value}"
+                "I {ui_action} {ui_element} with {value}",
+                "I {ui_action_modifier} {ui_action} {ui_element} with {value}"
             ]
         },
 
@@ -147,10 +147,10 @@
         },
 
         {
-            "entity": "datasource",
+            "entity": "database",
             "sentences": [
-                "{ds_property} {ui_connector} {value}",
-                "{ds_property} {ui_connector} {number}",
+                "{db_property} {ui_connector} {value}",
+                "{db_property} {ui_connector} {number}",
                 "path is {value}",
                 "name is {value}",
                 "type is {value}",

@@ -19,7 +19,7 @@ describe( 'NLPInPortugueseTest', () => {
         new JsonLanguageContentLoader( options.languageDir, {}, options.encoding );
 
     // entities
-    const ELEMENT: string = Entities.ELEMENT;
+    const ELEMENT: string = Entities.UI_ELEMENT;
     const VALUE: string = Entities.VALUE;
     const NUMBER: string = Entities.NUMBER;
     const QUERY: string = Entities.QUERY;
@@ -97,13 +97,13 @@ describe( 'NLPInPortugueseTest', () => {
             shouldHaveTestCaseEntities( results, [ UI_ACTION, UI_ELEMENT_TYPE, VALUE ] );
         } );
 
-        it( 'recognizes a click with a target inside another element', () => {
+        it( 'recognizes a click with a target inside another ui element', () => {
             let results = [];
             results.push( recognizeInTestCase( 'eu clico em "x" dentro de "y"' ) );
             shouldHaveTestCaseEntities( results, [ UI_ACTION, VALUE, UI_ACTION_OPTION, VALUE ] );
         } );        
 
-        it( 'recognizes a fill with an element', () => {
+        it( 'recognizes a fill with a ui element', () => {
             let results = [];
             results.push( recognizeInTestCase( 'eu preencho {Nome}' ) );
             shouldHaveTestCaseEntities( results, [ UI_ACTION, ELEMENT ] );

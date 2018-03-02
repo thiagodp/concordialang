@@ -22,8 +22,8 @@ export class NLP {
         this._additionalRecognizers.push( this.makeValueEntityRecognizer( Entities.VALUE ) );
 
         // Add an entity named "element" and its recognizer
-        this._additionalEntities.push( Entities.ELEMENT );
-        this._additionalRecognizers.push( this.makeElementEntityRecognizer( Entities.ELEMENT ) );
+        this._additionalEntities.push( Entities.UI_ELEMENT );
+        this._additionalRecognizers.push( this.makeElementEntityRecognizer( Entities.UI_ELEMENT ) );
         
         // Add an entity named "number" and its recognizer
         this._additionalEntities.push( Entities.NUMBER );
@@ -260,12 +260,14 @@ export class NLP {
      */    
     private makeConstantEntityRecognizer( entityName: string ): any {
         var valueRec = new Bravey.RegexEntityRecognizer( entityName, 10 );
-        const regex = /(?:\[)([^\$\]\d][^\$\]]+)(?:\])/g;
+        //const regex = /(?:\[)([^\$\]\d][^\$\]]+)(?:\])/g;
+        const regex = /((?!\").{1}|^.{0,1})(?:\[)([^\$\]\d][^\$\]]+)(?:\])/g
         valueRec.addMatch(
             regex,
             function( match ) {
-                //console.log( 'match: ', match );
-                return match[ 0 ].toString().replace( '[', '' ).replace( ']', '' ).trim();
+                //console.log( 'match: ', match, '\nvalue is', match[ 2 ] );
+                //return match[ 0 ].toString().replace( '[', '' ).replace( ']', '' ).trim();
+                return match[ 2 ].toString().trim();
             },
             500 // priority
         );

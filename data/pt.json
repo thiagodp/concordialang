@@ -202,9 +202,9 @@
         },
     
     
-        "datasource": {
+        "database": {
     
-            "ds_property": {
+            "db_property": {
                 "type": [ "tipo", "type" ],
                 "path": [ "caminho", "nome", "path", "name" ],
                 "host": [ "hospedeiro", "host" ],
@@ -224,59 +224,33 @@
         {
             "intent": "testcase",
             "sentences": [
-                "eu {ui_action} em {value}",
-                "eu clico em {value}",
-    
-                "eu {ui_action} em {element}",
-                "eu clico em {element}",
-    
-                "eu {ui_action} o {value}",
-                "eu digito o {value}",
-    
-                "eu {ui_action} na opção {value}",
-                "eu clico na opção {value}",
-                
-                "eu {ui_action} {value} com {value}",
-                "eu preencho {value} com {value}",
-    
-                "eu {ui_action} {value} com {number}",
-                "eu preencho {value} com {number}",
-    
-                "eu {ui_action} {value} {ui_action_option} {value}",
-                "eu preencho {value} dentro de {value}",
-    
-                "eu {ui_action} no {ui_element_type} {value}",
-                "eu {ui_action} no {ui_element_type} {value} com {value}",
-                "eu {ui_action} no {ui_element_type} {value} com {number}",
-    
-                "eu {ui_action} no {ui_element_type} {element}",
-                "eu {ui_action} no {ui_element_type} {element} com {value}",
-                "eu {ui_action} no {ui_element_type} {element} com {number}",
-    
-                "eu {ui_action} o {ui_element_type} com {value}",
-                "eu {ui_action} no {ui_element_type} {value} com {value}",
-                "eu {ui_action} no {ui_element_type} {value} com {number}",
-    
-                "eu {ui_action} o {ui_element_type} com {number}",
-    
-                "eu {ui_action} em {element}",
-                "eu {ui_action} o {element}",
-                "eu {ui_action} na opção {element}",
-    
-                "eu {ui_action} {element} com {value}",
-                "eu {ui_action} {element} com {number}",
-    
-                "eu {ui_action_modifier} {ui_action} em {value}",
-                "eu {ui_action_modifier} {ui_action} o {value}",
-    
-                "eu {ui_action_modifier} {ui_action} no {ui_element_type} {value}",
-                "eu {ui_action_modifier} {ui_action} o {ui_element_type} com {value}",
-    
-                "eu {ui_action} {value} em {element}",
-                "eu {ui_action_modifier} {ui_action} {value} em {element}",
-    
-                "eu {ui_action} {element} com {value}",
-                "eu {ui_action_modifier} {ui_action} {element} com {value}",
+
+                "{ui_action} {ui_element}",
+                "{ui_action} {value}",
+                "{ui_action} {number}",
+                "{ui_action} {constant}",
+                "{ui_action} {ui_element} {value}",
+                "{ui_action} {ui_element} {number}",
+                "{ui_action} {ui_element} {constant}",
+                "{ui_action} {ui_element} {ui_action_option}",
+                "{ui_action} {ui_element_type} {value}",
+                "{ui_action} {ui_element_type} {number}",
+                "{ui_action} {ui_element_type} {constant}",
+                "{ui_action} {ui_element_type} {ui_element}",
+                "{ui_action} {ui_element_type} {ui_element} {value}",
+                "{ui_action} {ui_element_type} {ui_element} {number}",
+                "{ui_action} {ui_element_type} {ui_element} {constant}",
+                "{ui_action_modifier} {ui_action} {ui_element}",
+                "{ui_action_modifier} {ui_action} {value} {ui_element}",
+                "{ui_action_modifier} {ui_action} {number} {ui_element}",
+                "{ui_action_modifier} {ui_action} {constant} {ui_element}",
+                "{ui_action_modifier} {ui_action} {ui_element_type}",
+                "{ui_action_modifier} {ui_action} {ui_element_type} {value}",
+                "{ui_action_modifier} {ui_action} {ui_element_type} {number}",
+                "{ui_action_modifier} {ui_action} {ui_element_type} {constant}",
+
+
+
 
 
 
@@ -289,10 +263,14 @@
             "intent": "ui",
             "sentences": [
                 "{ui_property} {ui_connector} {value}",
-                "{ui_property} {ui_connector} {query}",
                 "{ui_property} {ui_connector} {number}",
-                "{ui_property} {ui_connector} {ui_element_type}",
+                "{ui_property} {ui_connector} {constant}",
+                "{ui_property} {ui_connector} {value_list}",
                 "{ui_property} {ui_connector} {ui_data_type}",
+                "{ui_property} {ui_connector} {ui_element_type}",
+                "{ui_property} {ui_connector} {query}",
+
+
                 "id é {value}",
                 "comprimento máximo é {number}",
                 "valor vem da consulta {query}"
@@ -312,10 +290,10 @@
         },    
     
         {
-            "intent": "datasource",
+            "intent": "database",
             "sentences": [
-                "{ds_property} {ui_connector} {value}",
-                "{ds_property} {ui_connector} {number}",
+                "{db_property} {ui_connector} {value}",
+                "{db_property} {ui_connector} {number}",
                 "caminho é {value}",
                 "nome é {value}",
                 "tipo é {value}",

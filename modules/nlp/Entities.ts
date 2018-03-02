@@ -7,10 +7,14 @@
  */
 export enum Entities {
 
+    //
+    // REMEMBER: On update any of these values, update SyntaxRules and .json files as well.
+    //
+
     // Value entities (no specific intent)
     VALUE = 'value', //                           e.g., "username"
     NUMBER = 'number', //                         e.g., -3.12    
-    ELEMENT = 'element', //                       e.g., {Username}, {My Feature 1:Full Name}
+    UI_ELEMENT = 'ui_element', //                       e.g., {Username}, {My Feature 1:Full Name}
     QUERY = 'query', //                           e.g., "SELECT * FROM someTable"
     CONSTANT = 'constant', //                     e.g., [hello]
     VALUE_LIST = 'value_list', //                 e.g., [ 1, "hello", 2 ]
@@ -28,6 +32,6 @@ export enum Entities {
     UI_CONNECTOR = 'ui_connector', //             e.g.: is, queried, ...
     UI_DATA_TYPE = 'ui_data_type', //             e.g.: string, integer, ...
 
-    // from the intent "datasource"
-    DS_PROPERTY = 'ds_property' //                e.g.: host, port, ...
+    // from the intent "database"
+    DB_PROPERTY = 'db_property' //                e.g.: host, port, ...
 }

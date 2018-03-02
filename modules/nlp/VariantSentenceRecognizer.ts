@@ -88,7 +88,7 @@ export class VariantSentenceRecognizer {
             item.action = action;
 
             // ELEMENTS (optional)
-            item.targets = r.entities.filter( e => e.entity === Entities.ELEMENT ).map( e => e.value );
+            item.targets = r.entities.filter( e => e.entity === Entities.UI_ELEMENT ).map( e => e.value );
             
             // VALUES (optional)
             item.values = r.entities

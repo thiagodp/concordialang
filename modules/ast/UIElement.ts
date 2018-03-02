@@ -41,21 +41,21 @@ export interface UIProperty extends ListItem {
 /**
  * UI value target.
  * 
- *     UIValueTarget | expected value type | values' length
- *     --------------|---------------------|---------------
- *     VALUE         | string | number     | 1
- *     VALUE_LIST    | any[]               | 1+
- *     ELEMENT_REF   | string              | 1
- *     REGEX         | string              | 1
- *     QUERY         | string              | 1+
- *     COMPUTATION   | string              | 1+  
+ *     UIValueTarget   | expected value type | values' length
+ *     ----------------|---------------------|---------------
+ *     VALUE           | string | number     | 1
+ *     VALUE_LIST      | any[]               | 1+
+ *     UI_ELEMENT_REF  | string              | 1
+ *     REGEX           | string              | 1
+ *     QUERY           | string              | 1+
+ *     COMPUTATION     | string              | 1+  
  * 
  * @author Thiago Delgado Pinto
  */
 export enum UIValueTarget {
     VALUE = 'value',
     VALUE_LIST = 'value_list',
-    ELEMENT_REF = 'element', // Refers to another UI element
+    UI_ELEMENT_REF = 'ui_element', // Refers to another UI element
     REGEX = 'regex',
     QUERY = 'query',
     COMPUTATION = 'computation'	
@@ -66,7 +66,7 @@ export enum UIValueReferenceType {
     DATABASE = 'database',
     TABLE = 'table',
     DATABASE_AND_TABLE = 'database_and_table',
-    ELEMENT = 'element',
+    UI_ELEMENT = 'ui_element',
     CONSTANT = 'constant'
 }
 
