@@ -17,29 +17,35 @@ export class NLP {
 
     constructor( private _useFuzzyProcessor: boolean = true ) {
 
+        const erMaker = new EntityRecognizerMaker();
+
         // Add an entity named "value" and its recognizer
         this._additionalEntities.push( Entities.VALUE );
-        this._additionalRecognizers.push( this.makeValueEntityRecognizer( Entities.VALUE ) );
+        this._additionalRecognizers.push( erMaker.makeValue( Entities.VALUE ) );
 
-        // Add an entity named "element" and its recognizer
+        // Add an entity named "ui_element" and its recognizer
         this._additionalEntities.push( Entities.UI_ELEMENT );
-        this._additionalRecognizers.push( this.makeElementEntityRecognizer( Entities.UI_ELEMENT ) );
+        this._additionalRecognizers.push( erMaker.makeUIElement( Entities.UI_ELEMENT ) );
+
+        // Add an entity named "ui_element_literal" and its recognizer
+        this._additionalEntities.push( Entities.UI_ELEMENT_LITERAL );
+        this._additionalRecognizers.push( erMaker.makeUIElementLiteral( Entities.UI_ELEMENT_LITERAL ) );        
         
         // Add an entity named "number" and its recognizer
         this._additionalEntities.push( Entities.NUMBER );
-        this._additionalRecognizers.push( this.makeNumberEntityRecognizer( Entities.NUMBER ) );
+        this._additionalRecognizers.push( erMaker.makeNumber( Entities.NUMBER ) );
 
         // Add an entity named "query" and its recognizer
         this._additionalEntities.push( Entities.QUERY );
-        this._additionalRecognizers.push( this.makeQueryEntityRecognizer( Entities.QUERY ) );
+        this._additionalRecognizers.push( erMaker.makeQuery( Entities.QUERY ) );
 
         // Add an entity named "constant" and its recognizer
         this._additionalEntities.push( Entities.CONSTANT );
-        this._additionalRecognizers.push( this.makeConstantEntityRecognizer( Entities.CONSTANT ) );
+        this._additionalRecognizers.push( erMaker.makeConstant( Entities.CONSTANT ) );
 
         // Add an entity named "value_list" and its recognizer
         this._additionalEntities.push( Entities.VALUE_LIST );
-        this._additionalRecognizers.push( this.makeValueListEntityRecognizer( Entities.VALUE_LIST ) );
+        this._additionalRecognizers.push( erMaker.makeValueList( Entities.VALUE_LIST ) );
     }
 
     /**
@@ -156,6 +162,26 @@ export class NLP {
         }
     }
 
+}
+
+/**
+ * Mapped NLP
+ * 
+ * @author Thiago Delgado Pinto
+ */
+interface MappedNLP {
+    nlp: any;
+    isTrained: boolean;
+}
+
+
+/**
+ * EntityRecognizer maker
+ * 
+ * @author Thiago Delgado Pinto
+ */
+class EntityRecognizerMaker {
+
     /**
      * Creates a recognizer for values between quotes.
      * 
@@ -165,7 +191,7 @@ export class NLP {
      * @param entityName Entity name.
      * @return Bravey.EntityRecognizer
      */
-    private makeValueEntityRecognizer( entityName: string ): any {
+    public makeValue( entityName: string ): any {
         let valueRec = new Bravey.RegexEntityRecognizer( entityName, 10 );
         const regex = /"(?:[^"\\]|\\.)*"/g;
         valueRec.addMatch(
@@ -189,7 +215,7 @@ export class NLP {
      * @param entityName Entity name.
      * @return Bravey.EntityRecognizer
      */
-    private makeElementEntityRecognizer( entityName: string ): any {
+    public makeUIElement( entityName: string ): any {
         var valueRec = new Bravey.RegexEntityRecognizer( entityName, 10 );
         const regex = new RegExp( '\{[^<\r\n]*\}', "gi" );
         valueRec.addMatch(
@@ -204,6 +230,31 @@ export class NLP {
     }
 
     /**
+     * Creates a recognizer for values between < and >, with restrictions.
+     * 
+     * Example: I fill <username> with "Bob"
+     * --> The word "username" is recognized (without quotes).
+     * 
+     * Supported formats: <id>, <#id>, <@name>, <//xpath>, <~mobilename>.
+     * 
+     * @param entityName Entity name.
+     * @return Bravey.EntityRecognizer
+     */
+    public makeUIElementLiteral( entityName: string ): any {
+        var valueRec = new Bravey.RegexEntityRecognizer( entityName, 10 );
+        const regex = /(?:\<)((?:#|@|\/\/|~|[a-zA-ZÀ-ÖØ-öø-ÿ])[^<\r\n]*[^\>])(?:\>)/g;
+        valueRec.addMatch(
+            regex,
+            function( match ) {
+                //console.log( 'match: ', match );
+                return match[ 1 ].toString();
+            },
+            100 // priority
+        );
+        return valueRec;
+    }    
+
+    /**
      * Creates a recognizer for a number.
      * 
      * Example: I fill {Name} with -10.33
@@ -212,7 +263,7 @@ export class NLP {
      * @param entityName Entity name.
      * @return Bravey.EntityRecognizer
      */
-    private makeNumberEntityRecognizer( entityName: string ): any {
+    public makeNumber( entityName: string ): any {
         var valueRec = new Bravey.RegexEntityRecognizer( entityName, 10 );
         const regex = new RegExp( '(-?[0-9]+(?:.[0-9]+)?)', "gi" );
         valueRec.addMatch(
@@ -235,7 +286,7 @@ export class NLP {
      * @param entityName Entity name.
      * @returns Bravey.EntityRecognizer
      */
-    private makeQueryEntityRecognizer( entityName: string ): any {
+    public makeQuery( entityName: string ): any {
         let valueRec = new Bravey.RegexEntityRecognizer( entityName, 10 );
         const regex = new RegExp( '"(?:\t| )*SELECT[^"]+"', "gi" );
         valueRec.addMatch(
@@ -258,10 +309,11 @@ export class NLP {
      * @param entityName Entity name.
      * @returns Bravey.EntityRecognizer
      */    
-    private makeConstantEntityRecognizer( entityName: string ): any {
+    public makeConstant( entityName: string ): any {
         var valueRec = new Bravey.RegexEntityRecognizer( entityName, 10 );
-        //const regex = /(?:\[)([^\$\]\d][^\$\]]+)(?:\])/g;
+        //const regex = /(?:\[)([^\$\]\d][^\$\]]+)(?:\])/g;        
         const regex = /((?!\").{1}|^.{0,1})(?:\[)([^\$\]\d][^\$\]]+)(?:\])/g
+        // ^^^ See lookbehind simulation at https://stackoverflow.com/questions/7376238/javascript-regex-look-behind-alternative#answer-27213935
         valueRec.addMatch(
             regex,
             function( match ) {
@@ -280,7 +332,7 @@ export class NLP {
      * @param entityName Entity name.
      * @returns Bravey.EntityRecognizer
      */
-    private makeValueListEntityRecognizer( entityName: string ): any {
+    public makeValueList( entityName: string ): any {
         var valueRec = new Bravey.RegexEntityRecognizer( entityName, 10 );
         const regex = /\[(?: )*((?:,) ?|([0-9]+(\.[0-9]+)?|\"(.*[^\\])\"))+(?: )*\]/g
         valueRec.addMatch(
@@ -294,15 +346,4 @@ export class NLP {
         return valueRec;
     }
 
-}
-
-
-/**
- * Mapped NLP
- * 
- * @author Thiago Delgado Pinto
- */
-interface MappedNLP {
-    nlp: any;
-    isTrained: boolean;
 }

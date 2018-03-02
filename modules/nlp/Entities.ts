@@ -14,7 +14,8 @@ export enum Entities {
     // Value entities (no specific intent)
     VALUE = 'value', //                           e.g., "username"
     NUMBER = 'number', //                         e.g., -3.12    
-    UI_ELEMENT = 'ui_element', //                       e.g., {Username}, {My Feature 1:Full Name}
+    UI_ELEMENT = 'ui_element', //                 e.g., {Username}, {My Feature 1:Full Name}
+    UI_ELEMENT_LITERAL = 'ui_element_literal', // e.g., <id> or <#id> or <@name> or <//xpath> or <~mobilename>
     QUERY = 'query', //                           e.g., "SELECT * FROM someTable"
     CONSTANT = 'constant', //                     e.g., [hello]
     VALUE_LIST = 'value_list', //                 e.g., [ 1, "hello", 2 ]
