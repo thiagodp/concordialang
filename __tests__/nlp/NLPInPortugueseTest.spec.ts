@@ -19,9 +19,11 @@ describe( 'NLPInPortugueseTest', () => {
         new JsonLanguageContentLoader( options.languageDir, {}, options.encoding );
 
     // entities
-    const ELEMENT: string = Entities.UI_ELEMENT;
+    const UI_ELEMENT: string = Entities.UI_ELEMENT;
+    const UI_LITERAL: string = Entities.UI_LITERAL;
     const VALUE: string = Entities.VALUE;
     const NUMBER: string = Entities.NUMBER;
+    const CONSTANT: string = Entities.CONSTANT;
     const QUERY: string = Entities.QUERY;
     const UI_ACTION: string = Entities.UI_ACTION;
     const UI_ACTION_MODIFIER = Entities.UI_ACTION_MODIFIER;
@@ -84,6 +86,153 @@ describe( 'NLPInPortugueseTest', () => {
 
         const entity = 'testcase';
 
+        // it( '', () => {
+
+        // } );
+
+        it( '{ui_action} {ui_element}', () => {
+            let results = [];
+            results.push( recognizeInTestCase( 'eu clico em {Salvar}' ) );            
+            results.push( recognizeInTestCase( 'eu preencho {Nome}' ) );
+            shouldHaveTestCaseEntities( results, [ UI_ACTION, UI_ELEMENT ] );
+        } );
+        
+        it( '{ui_action} {ui_literal}', () => {
+            let results = [];
+            results.push( recognizeInTestCase( 'eu clico em <salvar>' ) );
+            shouldHaveTestCaseEntities( results, [ UI_ACTION, UI_LITERAL ] );
+        } );
+        
+        it( '{ui_action} {value}', () => {
+            let results = [];
+            results.push( recognizeInTestCase( 'eu pressiono "F8"' ) );
+            results.push( recognizeInTestCase( 'eu clico em "x"' ) );
+            results.push( recognizeInTestCase( 'eu clico na opção "x"' ) );
+            shouldHaveTestCaseEntities( results, [ UI_ACTION, VALUE ] );
+        } );
+        
+        it( '{ui_action} {number}', () => {
+            let results = [];
+            results.push( recognizeInTestCase( 'eu pressiono 1' ) );
+            shouldHaveTestCaseEntities( results, [ UI_ACTION, NUMBER ] );
+        } );
+        
+        it( '{ui_action} {constant}', () => {
+            let results = [];
+            results.push( recognizeInTestCase( 'eu pressiono [Ajuda]' ) );
+            shouldHaveTestCaseEntities( results, [ UI_ACTION, CONSTANT ] );
+        } );
+        
+        it( '{ui_action} {ui_element} {value}', () => {
+            let results = [];
+            results.push( recognizeInTestCase( 'eu preencho o {Nome} com "Jane"' ) );
+            shouldHaveTestCaseEntities( results, [ UI_ACTION, UI_ELEMENT, VALUE ] );
+        } );
+
+        it( '{ui_action} {ui_element} {number}', () => {
+            let results = [];
+            results.push( recognizeInTestCase( 'eu preencho o {Salário} com 5000' ) );
+            shouldHaveTestCaseEntities( results, [ UI_ACTION, UI_ELEMENT, NUMBER ] );
+        } );
+        
+        it( '{ui_action} {ui_element} {constant}', () => {
+            let results = [];
+            results.push( recognizeInTestCase( 'eu preencho o {Salário} com [Salário Padrão]' ) );
+            shouldHaveTestCaseEntities( results, [ UI_ACTION, UI_ELEMENT, CONSTANT ] );
+        } );
+        
+        it( '{ui_action} {ui_element} {ui_action_option}', () => {
+            let results = [];
+            results.push( recognizeInTestCase( 'eu arrasto a {Foto} para a direita' ) );
+            shouldHaveTestCaseEntities( results, [ UI_ACTION, UI_ELEMENT, UI_ACTION_OPTION ] );
+        } );
+        
+        it( '{ui_action} {value} {ui_element}', () => {
+            let results = [];
+            results.push( recognizeInTestCase( 'eu digito "Jane" em {Nome}' ) );
+            shouldHaveTestCaseEntities( results, [ UI_ACTION, VALUE, UI_ELEMENT ] );
+        } );
+        
+        it( '{ui_action} {number} {ui_element}', () => {
+            let results = [];
+            results.push( recognizeInTestCase( 'eu digito 5000 em {Salário}' ) );
+            shouldHaveTestCaseEntities( results, [ UI_ACTION, NUMBER, UI_ELEMENT ] );
+        } );
+        
+        it( '{ui_action} {constant} {ui_element}', () => {
+            let results = [];
+            results.push( recognizeInTestCase( 'eu digito [Salário Padrão] em {Salário}' ) );
+            shouldHaveTestCaseEntities( results, [ UI_ACTION, CONSTANT, UI_ELEMENT ] );
+        } );
+        
+        it( '{ui_action} {ui_literal} {value}', () => {
+            let results = [];
+            results.push( recognizeInTestCase( 'eu preencho o <nome> com "Jane"' ) );
+            shouldHaveTestCaseEntities( results, [ UI_ACTION, UI_LITERAL, VALUE ] );
+        } );
+        
+        it( '{ui_action} {ui_literal} {number}', () => {
+            let results = [];
+            results.push( recognizeInTestCase( 'eu preencho o <salario> com 5000' ) );
+            shouldHaveTestCaseEntities( results, [ UI_ACTION, UI_LITERAL, NUMBER ] );
+        } );
+        
+        it( '{ui_action} {ui_literal} {constant}', () => {
+            let results = [];
+            results.push( recognizeInTestCase( 'eu preencho o <salario> com [Salário Padrão]' ) );
+            shouldHaveTestCaseEntities( results, [ UI_ACTION, UI_LITERAL, CONSTANT ] );
+        } );
+        
+        it( '{ui_action} {ui_literal} {ui_action_option}', () => {
+            let results = [];
+            results.push( recognizeInTestCase( 'eu arrasto a <foto> para a direita' ) );
+            shouldHaveTestCaseEntities( results, [ UI_ACTION, UI_LITERAL, UI_ACTION_OPTION ] );
+        } );
+
+        it( '{ui_action} {value} {ui_literal}', () => {
+            let results = [];
+            results.push( recognizeInTestCase( 'eu entro com "Jane" em <nome>' ) );
+            shouldHaveTestCaseEntities( results, [ UI_ACTION, VALUE, UI_LITERAL ] );
+        } );        
+
+        it( '{ui_action} {number} {ui_literal}', () => {
+            let results = [];
+            results.push( recognizeInTestCase( 'eu entro com 1 em <salario>' ) );
+            shouldHaveTestCaseEntities( results, [ UI_ACTION, NUMBER, UI_LITERAL ] );
+        } );   
+        
+        it( '{ui_action} {constant} {ui_literal}', () => {
+            let results = [];
+            results.push( recognizeInTestCase( 'eu entro com [Salário Padrão] em <salario>' ) );
+            shouldHaveTestCaseEntities( results, [ UI_ACTION, CONSTANT, UI_LITERAL ] );
+        } );
+        
+        it( '{ui_action} {ui_element_type} {value}', () => {
+            let results = [];
+            results.push( recognizeInTestCase( 'eu vejo o título da janela com "Documento 1"' ) );
+            shouldHaveTestCaseEntities( results, [ UI_ACTION, UI_ELEMENT_TYPE, VALUE ] );
+        } );
+        
+        it( '{ui_action} {ui_element_type} {number}', () => {
+            let results = [];
+            results.push( recognizeInTestCase( 'eu vejo o título da janela com 100' ) );
+            shouldHaveTestCaseEntities( results, [ UI_ACTION, UI_ELEMENT_TYPE, NUMBER ] );
+        } );    
+        
+        it( '{ui_action} {ui_element_type} {constant}', () => {
+            let results = [];
+            results.push( recognizeInTestCase( 'eu vejo o título da janela com [Título Padrão]' ) );
+            shouldHaveTestCaseEntities( results, [ UI_ACTION, UI_ELEMENT_TYPE, CONSTANT ] );
+        } );        
+
+        // it( '{ui_action} {ui_element_type} {ui_property} {constant}', () => {
+        //     let results = [];
+        //     results.push( recognizeInTestCase( 'eu vejo a janela com cor [Cor Padrão]' ) );
+        //     shouldHaveTestCaseEntities( results, [ UI_ACTION, UI_ELEMENT_TYPE, UI_PROPERTY, CONSTANT ] );
+        // } );         
+
+        // ---
+
         it( 'recognizes a click with a value', () => {
             let results = [];
             results.push( recognizeInTestCase( 'eu clico em "x"' ) );
@@ -101,19 +250,19 @@ describe( 'NLPInPortugueseTest', () => {
             let results = [];
             results.push( recognizeInTestCase( 'eu clico em "x" dentro de "y"' ) );
             shouldHaveTestCaseEntities( results, [ UI_ACTION, VALUE, UI_ACTION_OPTION, VALUE ] );
-        } );        
+        } );
 
         it( 'recognizes a fill with a ui element', () => {
             let results = [];
             results.push( recognizeInTestCase( 'eu preencho {Nome}' ) );
-            shouldHaveTestCaseEntities( results, [ UI_ACTION, ELEMENT ] );
+            shouldHaveTestCaseEntities( results, [ UI_ACTION, UI_ELEMENT ] );
         } );    
 
         it( 'recognizes a fill with an element and a value', () => {
             let results = [];
             results.push( recognizeInTestCase( 'eu preencho {Nome} com "Bob"' ) );
             //results.push( recognizeInTestCase( 'eu preencho "Bob" em <Nome>' ) );
-            shouldHaveTestCaseEntities( results, [ UI_ACTION, ELEMENT, VALUE ] );
+            shouldHaveTestCaseEntities( results, [ UI_ACTION, UI_ELEMENT, VALUE ] );
         } );
 
         it( 'recognizes a fill with a target and a value', () => {
@@ -125,7 +274,7 @@ describe( 'NLPInPortugueseTest', () => {
         it( 'recognizes a fill with a target, an element, and a value', () => {
             let results = [];
             results.push( recognizeInTestCase( 'eu preencho a caixa de texto {Nome} com "x"' ) );
-            shouldHaveTestCaseEntities( results, [ UI_ACTION, UI_ELEMENT_TYPE, ELEMENT, VALUE ] );
+            shouldHaveTestCaseEntities( results, [ UI_ACTION, UI_ELEMENT_TYPE, UI_ELEMENT, VALUE ] );
         } );
         
         it( 'recognizes a execution of a feature', () => {
@@ -159,7 +308,7 @@ describe( 'NLPInPortugueseTest', () => {
             shouldHaveTestCaseEntities( results, [ EXEC_ACTION, EXEC_TARGET, VALUE, EXEC_TARGET, VALUE ] );
             expect( r.entities[ 1 ].value ).toBe( 'scenario' );
             expect( r.entities[ 3 ].value ).toBe( 'feature' );
-        } );        
+        } );
 
     } );
 
@@ -183,7 +332,7 @@ describe( 'NLPInPortugueseTest', () => {
             results.push( recognizeInUI( 'tipo é url' ) );
             results.push( recognizeInUI( 'tipo é rótulo' ) );
             shouldHaveUIEntities( results, [ UI_PROPERTY, UI_CONNECTOR, UI_ELEMENT_TYPE ] );
-        } );        
+        } );
         
         it( 'recognizes datatype definitions', () => {
             let results = [];
@@ -241,7 +390,7 @@ describe( 'NLPInPortugueseTest', () => {
         it( 'recognizes script definitions', () => {
             shouldHaveUIEntities( [ recognize( 'valor vem de "SELECT * FROM someTable"' ) ],
                 [ UI_PROPERTY, UI_CONNECTOR, QUERY  ] );
-        } );        
+        } );
 
     } );
 

@@ -136,10 +136,17 @@
                 "text": [ "texto" ],
                 "textbox": [ "caixa de texto", "textbox", "input" ],
                 "textarea": [ "area de texto" ],
-                "title": [ "titulo" ],
                 "web": [ "web" ],
                 "window": [ "janela" ],
                 "url": [ "url", "pagina", "endereco", "dominio", "ip", "local", "sitio" ]
+            },
+
+            "ui_property": {
+                "backgroundColor": [ "cor de fundo", "background color" ],                
+                "color": [ "cor", "cor de frente", "color" ],
+                "height": [ "altura", "height" ],
+                "title": [ "título" ],
+                "width": [ "largura", "width" ]
             },
     
             "ui_action_option": {
@@ -179,10 +186,10 @@
                 "required": [ "obrigatório", "requerido", "required" ],
                 "computedBy": [ "calculado como", "computado como", "computed by" ],
     
+                "backgroundColor": [ "cor de fundo", "background color" ],
                 "color": [ "cor", "cor de frente", "color" ],
-                "bgColor": [ "cor de fundo", "background color" ],
-                "width": [ "largura", "width" ],
-                "height": [ "altura", "height" ]
+                "height": [ "altura", "height" ],
+                "width": [ "largura", "width" ]
             },
     
             "ui_connector": {

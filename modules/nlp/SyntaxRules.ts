@@ -15,7 +15,7 @@ export const DEFAULT_UI_ACTION_SYNTAX_RULE = {
     // Accepted targets (NLP entities).
     //   When "maxTargets" is 1 and "targets" has more than one ui element, it accepts one OR another.
     //   When "maxTargets" > 1, the minimal of each target should be configured.
-    targets: [ "ui_element", "value" ],
+    targets: [ "ui_element", "ui_literal", "value" ],
 
     // Minimal and maximal values of each target.
     //   They will be considered only if they appear in "targets".
@@ -23,8 +23,10 @@ export const DEFAULT_UI_ACTION_SYNTAX_RULE = {
     //     - min > minTargets
     //     - max > maxTargets
     ui_element: { min: 1, max: 999 },
+    ui_literal: { min: 1, max: 999 },
     value: { min: 1, max: 999 },
     number: { min: 1, max: 999 },
+    constant: { min: 1, max: 999 },
 
     // Other action or actions that must be used together.
     mustBeUsedWith: []    
@@ -47,7 +49,11 @@ export const UI_ACTION_SYNTAX_RULES = [
     { name: "drop", mustBeUsedWith: [ "drag" ] },
     { name: "fill", maxTargets: 999, value: { min: 0, max: 1 } },
     { name: "hide", maxTargets: 999 },
-    { name: "move", minTargets: 1, maxTargets: 3, targets: [ "ui_element", "number" ], ui_element: { min: 1, max: 1 }, number: { min: 0, max: 2 } },
+    { name: "move", minTargets: 1, maxTargets: 3,
+        targets: [ "ui_element", "ui_literal", "number" ],
+        ui_element: { min: 1, max: 1 },
+        ui_literal: { min: 1, max: 1 },
+        number: { min: 0, max: 2 } },
     { name: "open" },
     { name: "press", targets: [ "value" ], maxTargets: 5 },
     { name: "refresh" },
