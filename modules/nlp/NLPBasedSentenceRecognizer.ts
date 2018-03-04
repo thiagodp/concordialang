@@ -54,29 +54,38 @@ export class NLPBasedSentenceRecognizer {
         warnings: Warning[]
     ): void {
 
-        // Global
+        //
+        // GLOBAL
+        //
 
+        // UI Elements
         if ( doc.uiElements ) {
             for ( let uiElement of doc.uiElements ) {
                 this._uiPropertyRec.recognizeSentences( language, uiElement.items, errors, warnings );
             }
         }
 
+        // Databases
         if ( doc.databases ) {
             for ( let db of doc.databases ) {
                 this._dbPropertyRec.recognizeSentences( language, db.items, errors, warnings );                
             }
         }
 
-        // Local
+        //
+        // LOCAL
+        //
+
         if ( ! doc.feature ) {
             return;
         }
-
+        
+        // UI Elements inside features
         for ( let uiElement of doc.feature.uiElements ) {
             this._uiPropertyRec.recognizeSentences( language, uiElement.items, errors, warnings );
         }
 
+        // Templates inside scenarios
         if ( doc.feature.scenarios ) {
             for ( let scenario of doc.feature.scenarios ) {
                 if ( ! scenario.templates ) {
@@ -88,6 +97,7 @@ export class NLPBasedSentenceRecognizer {
             }
         }
 
+        // Variants inside features
         for ( let variant of doc.feature.variants ) {
             this._variantSentenceRec.recognizeSentences( language, variant.sentences, errors, warnings );
         }
