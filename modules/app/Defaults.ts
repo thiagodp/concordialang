@@ -16,6 +16,8 @@ export class Defaults {
     readonly CASE_UI: string = CaseType.CAMEL.toString(); // e.g., fullName
     readonly CASE_METHOD: string = CaseType.SNAKE.toString(); // e.g., my_test_method
 
+    readonly IMPORTANCE: number = 5; // 0..9
+
     /**
      * Returns available encodings.
      * 
