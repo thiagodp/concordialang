@@ -5,7 +5,7 @@ import { NodeTypes } from '../req/NodeTypes';
 import { Tag } from './Tag';
 import { UIElement } from './UIElement';
 import { Constant } from './Constant';
-import { Database } from './Database';
+import { Database, DatabaseProperties } from './Database';
 import { Document } from './Document';
 import { isDefined } from '../util/TypeChecking';
 import { join } from 'path';
@@ -21,6 +21,8 @@ export class Spec {
 
     docs: Document[] = [];
 
+    private _relPathToDocumentCache: Map< string, Document > = null;
+
     private _databaseCache: Database[] = null;
     private _constantCache: Constant[] = null;
     private _tableCache: Table[] = null;
@@ -33,7 +35,7 @@ export class Spec {
     }
 
     /**
-     * Returns a document with the given path.
+     * Returns a document with the given path or null if not found.
      * 
      * Both the given path and the path of available documents are 
      * normalized with relation to the base path, if the latter exists,
@@ -41,17 +43,25 @@ export class Spec {
      * 
      * @param filePath File path.
      */
-    public docWithPath( filePath: string ): Document {
-        const relPath = this.basePath ? join( this.basePath, filePath ) : filePath;
-        for ( let doc of this.docs ) {
-            const relDocPath = this.basePath
-                ? join( this.basePath, doc.fileInfo.path )
-                : doc.fileInfo.path;
-            if ( relPath === relDocPath ) {
-                return doc;
-            }
-        }
-        return null;
+    public docWithPath( filePath: string, clearCache: boolean = false ): Document | null {
+
+        if ( ! isDefined( this._relPathToDocumentCache ) || clearCache ) {
+
+            this._relPathToDocumentCache = new Map< string, Document >();
+
+            // Fill cache
+            for ( let doc of this.docs ) {
+
+                const relDocPath = isDefined( this.basePath )
+                    ? join( this.basePath, doc.fileInfo.path )
+                    : doc.fileInfo.path;
+
+                this._relPathToDocumentCache.set( relDocPath, doc );
+            }            
+        }       
+
+        const relFilePath = isDefined( this.basePath ) ? join( this.basePath, filePath ) : filePath; 
+        return this._relPathToDocumentCache.get( relFilePath )|| null;
     }
 
     /**
@@ -67,10 +77,11 @@ export class Spec {
                 continue;
             }
             for ( let db of doc.databases ) {
-                let loc = db.location;
 
-                // Adjust the file path, to be used in the future (e.g. for the query checker)
-                loc.filePath = ! loc.filePath && doc.fileInfo ? doc.fileInfo.path : loc.filePath;
+                // Adjust filePath if not defined
+                if ( ! db.location.filePath && doc.fileInfo ) {
+                    db.location.filePath = doc.fileInfo.path || '';
+                }
 
                 this._databaseCache.push( db );
             }
@@ -79,9 +90,13 @@ export class Spec {
     };
 
 
-    public databaseNames = (): string[] => {
-        return this.databases().map( db => db.name );
+    public databaseNames = ( clearCache: boolean = false ): string[] => {
+        return this.databases( clearCache ).map( db => db.name );
     };
+
+    public databaseWithName( name: string, clearCache: boolean = false ): Database | null {
+        return this.databases( clearCache ).find( db => db.name.toLowerCase() === name.toLowerCase() );
+    }
 
 
     /**
@@ -97,6 +112,12 @@ export class Spec {
                 continue;
             }
             for ( let ct of doc.constantBlock.items ) {
+
+                // Adjust filePath if not defined
+                if ( ! ct.location.filePath && doc.fileInfo ) {
+                    ct.location.filePath = doc.fileInfo.path || '';
+                }
+
                 this._constantCache.push( ct );
             }
         }
@@ -106,6 +127,13 @@ export class Spec {
     public constantNames = (): string[] => {
         return this.constants().map( c => c.name );
     };
+
+    public constantValue( name: string ): string | number | null {
+        if ( ! isDefined( this._constantCache[ name ] ) ) {
+            return null;
+        }
+        return ( this._constantCache[ name ] as Constant ).value;
+    }
 
 
     /**
@@ -121,6 +149,12 @@ export class Spec {
                 continue;
             }
             for ( let tbl of doc.tables ) {
+
+                // Adjust filePath if not defined
+                if ( ! tbl.location.filePath && doc.fileInfo ) {
+                    tbl.location.filePath = doc.fileInfo.path || '';
+                }
+
                 this._tableCache.push( tbl );
             }
         }
@@ -144,6 +178,12 @@ export class Spec {
             if ( ! doc.feature ) {
                 continue;
             }
+
+            // Adjust filePath if not defined
+            if ( ! doc.feature.location.filePath && doc.fileInfo ) {
+                doc.feature.location.filePath = doc.fileInfo.path || '';
+            }
+
             this._featureCache.push( doc.feature );
         }
         return this._featureCache;
@@ -223,4 +263,38 @@ export class Spec {
     //     return tag.name === ReservedTags.GLOBAL;
     // };
 
+
+    public makeGlobalSymbolsMap(): GlobalSymbolsMap {
+
+        let databaseNameToNameMap = {};
+        // TO-DO: refactor to another class (Database?)
+        this.databases().forEach( ( db ) => {
+            databaseNameToNameMap[ db.name ] =
+                db.items.find( item => item.property === DatabaseProperties.PATH ) || db.name;
+        } );
+
+
+        let tableNameToNameMap = {};
+        this.tables().forEach( t => tableNameToNameMap[ t.name ] = t.name );
+
+        let constantNameToValueMap = {};
+        this.constants().forEach( c => constantNameToValueMap[ c.name ] = c.value );
+
+
+        return new GlobalSymbolsMap(
+            databaseNameToNameMap,
+            tableNameToNameMap,
+            constantNameToValueMap
+        );
+    }    
+}
+
+export class GlobalSymbolsMap {
+
+    constructor(
+        public databaseNameToNameMap = {},
+        public tableNameToNameMap = {},
+        public constantNameToValueMap = {}
+    ) {        
+    }
 }
