@@ -3,7 +3,7 @@ import { SemanticException } from './SemanticException';
 import { SpecSemanticAnalyzer } from './SpecSemanticAnalyzer';
 import { Spec } from "../ast/Spec";
 import { Document } from "../ast/Document";
-import { ImportBasedGraphBuilder } from '../util/ImportBasedGraphBuilder';
+import { ImportBasedGraphBuilder } from '../selection/ImportBasedGraphBuilder';
 import { basename } from 'path';
 
 /**
