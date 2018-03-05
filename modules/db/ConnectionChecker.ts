@@ -13,7 +13,11 @@ import { ConnectionCheckResult, ConnectionResult } from '../req/ConnectionResult
  */
 export class ConnectionChecker {
 
-    async check( spec: Spec, errors: LocatedException[] ): Promise< ConnectionCheckResult > {
+    async check(
+        spec: Spec,
+        errors: LocatedException[],
+        disconnectAfterConnecting: boolean = false
+    ): Promise< ConnectionCheckResult > {
 
         let r: ConnectionCheckResult = new ConnectionCheckResult( true );
 
@@ -54,6 +58,11 @@ export class ConnectionChecker {
 
                     continue;
                 }
+
+                if ( ! disconnectAfterConnecting ) {
+                    continue;
+                }
+
                 // disconnect
                 try {
                     if ( await dbi.isConnected() ) {
