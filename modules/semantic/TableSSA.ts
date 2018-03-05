@@ -10,6 +10,7 @@ import { SemanticException } from './SemanticException';
  * 
  * Checkings:
  * - duplicated names
+ * - declared table structure through its instantiation << TO-DO ???
  * 
  * @author Thiago Delgado Pinto
  */
@@ -17,27 +18,7 @@ export class TableSSA extends SpecSemanticAnalyzer {
 
      /** @inheritDoc */
     public async analyze( spec: Spec, errors: SemanticException[] ): Promise< void > {
-        this.analyzeDuplicatedNames( spec, errors );
-    }
-
-    private analyzeDuplicatedNames( spec: Spec, errors: SemanticException[] ) {
-        
-        let items: ItemToCheck[] = [];
-        for ( let doc of spec.docs ) {
-            if ( ! doc.tables ) {
-                continue;
-            }
-            for ( let tbl of doc.tables ) {
-                let loc = tbl.location;
-                items.push( {
-                    file: doc.fileInfo ? doc.fileInfo.path : '',
-                    name: tbl.name,
-                    locationStr: loc ? '(' + loc.line + ',' + loc.column + ') ' : ''
-                } );
-            }
-        }
-
-        this.checkDuplicatedNames( items, errors, 'table' );
+        this.checkDuplicatedNamedNodes( spec.tables(), errors, 'table' );
     }
 
 }

@@ -13,6 +13,7 @@ import { ConnectionCheckResult } from '../req/ConnectionResult';
  * 
  * Checkings:
  * - duplicated names
+ * - connection to the defined databases <<< NEDDED HERE ???
  * 
  * @author Thiago Delgado Pinto
  */
@@ -20,25 +21,8 @@ export class DatabaseSSA extends SpecSemanticAnalyzer {
 
     /** @inheritDoc */
     public async analyze( spec: Spec, errors: SemanticException[] ): Promise< void > {
-        this.analyzeDuplicatedNames( spec, errors );
+        this.checkDuplicatedNamedNodes( spec.databases(), errors, 'database' );
         await this.checkConnections( spec, errors );
-    }
-
-    private analyzeDuplicatedNames( spec: Spec, errors: SemanticException[] ) {
-        
-        let items: ItemToCheck[] = [];
-        const databases: Database[] = spec.databases();
-        
-        for ( let db of databases ) {
-            let loc = db.location;
-            items.push( {
-                file: db.location ? db.location.filePath : '',
-                name: db.name,
-                locationStr: loc ? '(' + loc.line + ',' + loc.column + ') ' : ''
-            } );
-        }
-
-        this.checkDuplicatedNames( items, errors, 'database' );        
     }
 
     private checkConnections = async ( spec: Spec, errors: SemanticException[] ): Promise< boolean > => {

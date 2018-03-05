@@ -17,24 +17,7 @@ export class FeatureSSA extends SpecSemanticAnalyzer {
 
      /** @inheritDoc */
     public async analyze( spec: Spec, errors: SemanticException[] ): Promise< void > {
-        this.analyzeDuplicatedNames( spec, errors );
+        this.checkDuplicatedNamedNodes( spec.features(), errors, 'feature' );
     }
-
-    private analyzeDuplicatedNames( spec: Spec, errors: SemanticException[] ) {
-        
-        let items: ItemToCheck[] = [];
-        for ( let doc of spec.docs ) {
-            if ( ! doc.feature ) {
-                continue;
-            }
-            let loc = doc.feature.location;
-            items.push( {
-                file: doc.fileInfo ? doc.fileInfo.path : '',
-                name: doc.feature.name,
-                locationStr: loc ? '(' + loc.line + ',' + loc.column + ') ' : ''
-            } );
-        }
-
-        this.checkDuplicatedNames( items, errors, 'feature' );
-    }
+    
 }

@@ -6,6 +6,7 @@ import { SpecSemanticAnalyzer } from './SpecSemanticAnalyzer';
 import { Spec } from "../ast/Spec";
 import { VariantSSA } from './VariantSSA';
 import { SemanticException } from './SemanticException';
+import { ConstantSSA } from './ConstantSSA';
 
 /**
  * Executes many semantic analyzers to a specification in batch.
@@ -20,19 +21,20 @@ export class BatchSpecSemanticAnalyzer {
         this._analyzers = [
             new ImportSSA(),
             new FeatureSSA(),
+            new ConstantSSA(),
             new DatabaseSSA(),
             new TableSSA(),
             new VariantSSA()
         ];
     }
 
-    public analyze = async (
+    public async analyze(
         spec: Spec,
         errors: SemanticException[]
-    ): Promise< void > => {
+    ): Promise< void > {
         for ( let analyzer of this._analyzers ) {
             await analyzer.analyze( spec, errors );
         }
-    };
+    }
 
 }

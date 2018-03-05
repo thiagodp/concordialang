@@ -3,9 +3,8 @@ import { SemanticException } from './SemanticException';
 import { SpecSemanticAnalyzer } from './SpecSemanticAnalyzer';
 import { Spec } from "../ast/Spec";
 import { Document } from "../ast/Document";
-
-const Graph = require( 'graph.js/dist/graph.full.js' );
-const path = require( 'path' );
+import { ImportBasedGraphBuilder } from '../util/ImportBasedGraphBuilder';
+import { basename } from 'path';
 
 /**
  * Executes semantic analysis of Imports in a specification.
@@ -17,8 +16,6 @@ const path = require( 'path' );
  */
 export class ImportSSA extends SpecSemanticAnalyzer {
 
-    private _graph = new Graph();
-
     /** @inheritDoc */
     public async analyze( spec: Spec, errors: SemanticException[] ): Promise< void > {
         this.findCyclicReferences( spec, errors );
@@ -26,17 +23,17 @@ export class ImportSSA extends SpecSemanticAnalyzer {
 
     private findCyclicReferences( spec: Spec, errors: SemanticException[] ) {
 
-        this.buildGraphWithTheSpec( this._graph, spec );      
+        let graph = ( new ImportBasedGraphBuilder() ).buildFrom( spec );
 
         // Let's find cyclic references and report them as errors
-        for ( let it = this._graph.cycles(), kv; !(kv = it.next()).done;) {
+        for ( let it = graph.cycles(), kv; ! ( kv = it.next() ).done; ) {
             let cycle = kv.value;
         
             let filePath = cycle[ 0 ]; // first file
 
             let fullCycle = cycle.join( '" => "' ) + '" => "' + filePath;
 
-            let doc: Document = this._graph.vertexValue( filePath ); // cycle is a key (that is the file path)
+            let doc: Document = graph.vertexValue( filePath ); // cycle is a key (that is the file path)
             let loc = { line: 1, column: 1 };
             if ( doc ) {
                 // The second file is the imported one, so let's find its location.
@@ -69,37 +66,11 @@ export class ImportSSA extends SpecSemanticAnalyzer {
         }
     }
 
-    private buildGraphWithTheSpec( graph: any, spec: Spec ) {
-        // Remove all the vertices and edges
-        graph.clear();
-        // Build the graph
-        for ( let doc of spec.docs ) {
-
-            // Sanity checking
-            if ( ! doc.imports ) {
-                continue;
-            }
-
-            let fromKey = doc.fileInfo.path; // key
-            // Add the document as a vertex. If the key already exists, the value is overwriten.
-            graph.addVertex( fromKey, doc ); // key, value
-            // Make each imported file a vertex, but not overwrite the value if it already exists.
-            for ( let imp of doc.imports ) {
-                let toKey = imp.resolvedPath; // key
-                graph.ensureVertex( toKey ); // no value
-                // Make an edge from the doc to the imported file.
-                // If the edge already exists, do nothing.
-                graph.ensureEdge( fromKey, toKey );
-            }
-        }
-    }
-
-
     private locationOfTheImport( doc: Document, importFile: string ): Location {
         if ( doc.imports ) {
-            let fileName = path.basename( importFile ); // name without dir
+            let fileName = basename( importFile ); // name without dir
             for ( let imp of doc.imports ) {
-                let currentFileName = path.basename( imp.value ); // filename without dir
+                let currentFileName = basename( imp.value ); // filename without dir
                 if ( fileName == currentFileName ) {
                     return imp.location;
                 }
