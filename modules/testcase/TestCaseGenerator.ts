@@ -11,7 +11,7 @@ import { DataTestCaseNames } from "../testdata/DataTestCaseNames";
 import { Document } from "../ast/Document";
 import { Entities } from "../nlp/Entities";
 import { Constant } from "../ast/Constant";
-import { ReferenceReplacer } from "../db/ReferenceReplacer";
+import { ReferenceReplacer } from "../util/ReferenceReplacer";
 import { CaseType } from "../app/CaseType";
 import { convertCase } from '../util/CaseConversor';
 import { ReservedTags } from '../req/ReservedTags';
@@ -19,6 +19,7 @@ import { ValueType, ALL_VALUE_TYPES } from '../util/ValueTypeDetector';
 import { isDefined } from '../util/TypeChecking';
 import * as deepcopy from 'deepcopy';
 import { lower } from 'case';
+import { UIElementUtil } from '../util/UIElementUtil';
 
 
 /**
@@ -42,15 +43,20 @@ export class TestCaseGenerator {
         testCases: DataTestCase[],
         keywords: KeywordDictionary,
         testCaseNames: DataTestCaseNames,
-        caseUi: CaseType | string
+        caseOption: CaseType | string
     ): Promise< VariantGenerationResult[] > => {
 
         const uiElements: UIElement[] = this.uiElementsOf( doc );
-        let tpl: Template = this.replaceReferences( template, uiElements, spec, caseUi );
-        
+
+        // Replace references
+        let tpl: Template = this.replaceReferences(
+            template,
+            uiElements,
+            spec,
+            caseOption
+        );
 
         let all: VariantGenerationResult[] = [];
-        
 
         const variantKeyword: string = keywords.variant[ 0 ] || 'Variant';
         const withKeyword: string = keywords.with[ 0 ] || 'with';
@@ -105,47 +111,34 @@ export class TestCaseGenerator {
         );
     }
 
-    /**
-     * Replaces references of a template and returns a new template.
-     * 
-     * @param template Template to change
-     * @param uiElements UI elements of the current document
-     * @param spec Specification
-     * @param caseUi String case to use when not id is defined, e.g. "camel".
-     */
     public replaceReferences(
         template: Template,
         uiElements: UIElement[],
         spec: Spec,
-        caseUi: CaseType | string
+        caseOption: CaseType | string
     ): Template {
-        const replacer: ReferenceReplacer = new ReferenceReplacer( true );
+
+        // Generate the literals
+        const uiElementNameToLiteralMap: Map< string, string > =
+            ( new UIElementUtil() ).generateIds( uiElements, caseOption );
+
+        // Get constant values
+        const constantNameToValueMap: Map< string, string | number > =
+            spec.constantNameToValueMap();
+
+        // Copy the original template
         let tpl: Template = deepcopy( template );
 
-        // Map constant names to values
-        let constantNameToValueMap = {};
-        spec.constants().forEach( v => constantNameToValueMap[ v.name ] = v.value );
-
-        // Map UI element names to its ids
-        let uiElementNameToIdMap = {};
-        uiElements.forEach( ( uie: UIElement ) => {
-
-            // Find a property "id" in the UI element
-            const item: UIProperty = uie.items ? uie.items.find( item => 'id' === item.property ) : null;
-
-            if ( isDefined( item ) ) {
-                // Find an entity "value" in the NLP result
-                const entity = item.nlpResult.entities.find( ( e: NLPEntity ) => 'value' === e.entity );
-                uiElementNameToIdMap[ uie.name ] = !! entity ? entity.value : '';
-            } else {
-                // Use the name as id
-                uiElementNameToIdMap[ uie.name ] = convertCase( uiElementNameToIdMap[ uie.name ] || uie.name, caseUi );
-            }
-        } );
-        //console.log( 'map', uiElementNameToIdMap );
-        
+        // Replace references
+        const replacer: ReferenceReplacer = new ReferenceReplacer();
         for ( let s of tpl.sentences ) {
-            s.content = replacer.replace( s.content, {}, {}, uiElementNameToIdMap, constantNameToValueMap );
+            s.content = replacer.replaceTestCaseSentence(
+                s.content,
+                s.nlpResult,
+                uiElementNameToLiteralMap,
+                constantNameToValueMap,
+                caseOption
+            );
         }
 
         return tpl;
