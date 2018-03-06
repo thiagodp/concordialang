@@ -27,8 +27,12 @@ export class Spec {
     private _constantCache: Constant[] = null;
     private _tableCache: Table[] = null;
     private _featureCache: Feature[] = null;
-    //private _uiElementCache: UIElement[] = null;
+    // private _uiElementCache: UIElement[] = null; // global UI Elements
     private _nonFeatureNamesCache: string[] = null;
+
+    private _constantNameToValueMap: Map< string, string | number > = new Map< string, string | number >();
+
+
 
     constructor( basePath?: string ) {
         this.basePath = basePath;
@@ -99,13 +103,21 @@ export class Spec {
     }
 
 
+    public isConstantCacheFilled(): boolean {
+        return isDefined( this._constantCache );
+    }
+
     /**
      * Return all constants. Results are cached.
      */    
     public constants = ( clearCache: boolean = false ): Constant[] => {
-        if ( isDefined( this._constantCache ) && ! clearCache ) {
+        if ( this.isConstantCacheFilled() && ! clearCache ) {
             return this._constantCache;
         }
+        return this.fillConstantsCache();       
+    };
+
+    private fillConstantsCache(): Constant[] {
         this._constantCache = [];
         for ( let doc of this.docs ) {
             if ( ! doc.constantBlock || ! doc.constantBlock.items || doc.constantBlock.items.length < 1 ) {
@@ -119,20 +131,26 @@ export class Spec {
                 }
 
                 this._constantCache.push( ct );
+
+                this._constantNameToValueMap.set( ct.name, ct.value );
             }
         }
-        return this._constantCache;        
-    };
+        return this._constantCache;
+    }
 
-    public constantNames = (): string[] => {
-        return this.constants().map( c => c.name );
-    };
+    public constantNameToValueMap(): Map< string, string | number > {
+        if ( ! this.isConstantCacheFilled() ) {
+            this.fillConstantsCache();
+        }
+        return this._constantNameToValueMap;        
+    }
+
+    public constantNames(): string[] {
+        return [ ... this.constantNameToValueMap().keys() ];
+    }
 
     public constantValue( name: string ): string | number | null {
-        if ( ! isDefined( this._constantCache[ name ] ) ) {
-            return null;
-        }
-        return ( this._constantCache[ name ] as Constant ).value;
+        return this.constantNameToValueMap().get( name ) || null;
     }
 
 
@@ -263,38 +281,4 @@ export class Spec {
     //     return tag.name === ReservedTags.GLOBAL;
     // };
 
-
-    public makeGlobalSymbolsMap(): GlobalSymbolsMap {
-
-        let databaseNameToNameMap = {};
-        // TO-DO: refactor to another class (Database?)
-        this.databases().forEach( ( db ) => {
-            databaseNameToNameMap[ db.name ] =
-                db.items.find( item => item.property === DatabaseProperties.PATH ) || db.name;
-        } );
-
-
-        let tableNameToNameMap = {};
-        this.tables().forEach( t => tableNameToNameMap[ t.name ] = t.name );
-
-        let constantNameToValueMap = {};
-        this.constants().forEach( c => constantNameToValueMap[ c.name ] = c.value );
-
-
-        return new GlobalSymbolsMap(
-            databaseNameToNameMap,
-            tableNameToNameMap,
-            constantNameToValueMap
-        );
-    }    
-}
-
-export class GlobalSymbolsMap {
-
-    constructor(
-        public databaseNameToNameMap = {},
-        public tableNameToNameMap = {},
-        public constantNameToValueMap = {}
-    ) {        
-    }
 }
