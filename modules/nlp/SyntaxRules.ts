@@ -47,7 +47,7 @@ export const UI_ACTION_SYNTAX_RULES = [
     { name: "doubleClick" },
     { name: "drag", mustBeUsedWith: [ "drop" ] },
     { name: "drop", mustBeUsedWith: [ "drag" ] },
-    { name: "fill", maxTargets: 999, value: { min: 0, max: 1 } },
+    { name: "fill", maxTargets: 999, minTargets: 0, value: { min: 0, max: 1 }, number: { min: 0, max: 1 } },
     { name: "hide", maxTargets: 999 },
     { name: "move", minTargets: 1, maxTargets: 3,
         targets: [ "ui_element", "ui_literal", "number" ],
