@@ -4,10 +4,27 @@
  * @author Thiago Delgado Pinto
  */
 export interface NLPResult {
-    entities: Array< NLPEntity >; // The ordered list of found entities.
-    entitiesIndex: Array< number >; // An map version of entities, with key as entity ID and value as entity value.
-    intent: string; // The matched intent.
-    score: number; // The score of the matched sentence intent.
+
+    // Number of found entities.
+    found: number;    
+    // Ordered list of found entities.
+    entities: Array< NLPEntity >;
+    // A mapped version of the entities, in which the key is the entity id and value is a NLPEntity.
+    entitiesIndex: Map< string, NLPEntity >;
+    // Matched intent.
+    intent: string;
+    // Score of the matched sentence intent. E.g., 0.8999999999999999
+    score: number;
+    // Sentence with recognized entities, E.g., "Hello {name}".
+    text: string;
+
+    // IGNORED Bravey ATTRIBUTES:
+    //
+    // exceedEntities: boolean;
+    // extraEntities: boolean;
+    // missingEntities: boolean;
+    // sentences: Array< { string: string } | NLPEntity >
+
 }
 
 /**
@@ -16,9 +33,9 @@ export interface NLPResult {
  * @author Thiago Delgado Pinto
  */
 export interface NLPEntity {
-    entity: string; // The entity type.
-    string: string; // The raw text representing the entity.
-    position: number; // The entity position in a sentence.
-    value: any; // The entity logic value.
-    priority: number; // The entity relative priority.    
+    entity: string; //      Entity type.
+    string: string; //      Raw text representing the entity.
+    position: number; //    Entity position in a sentence.
+    value: any; //          Entity logic value.
+    priority: number; //    Entity relative priority.    
 }
