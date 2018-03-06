@@ -317,7 +317,8 @@ class EntityRecognizerMaker {
         valueRec.addMatch(
             regex,
             function( match ) {
-                return match[ 0 ].toString().replace( '[', '' ).replace( ']', '' ).trim();
+                const value = match[ 0 ].toString();
+                return value.substring( 1, value.length - 1 ); // exclude '[' and ']'
             },
             10 // priority
         );
