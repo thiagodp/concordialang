@@ -184,10 +184,6 @@ describe( 'NLPTest', () => {
                     recogConstant( ' [foo bar] ', 'foo bar' );
                 } );
 
-                it( 'words with spaces around', () => {
-                    recogConstant( ' [  foo bar  ] ', 'foo bar' );
-                } );
-
                 it( 'words with numbers', () => {
                     recogConstant( ' [foo 1 bar 2] ', 'foo 1 bar 2' );
                 } );                
@@ -202,6 +198,10 @@ describe( 'NLPTest', () => {
 
                 it( 'a number', () => {
                     recogConstant( ' [1] ', null );
+                } );
+                
+                it( 'words with spaces around', () => {
+                    recogConstant( ' [  foo bar  ] ', null );
                 } );                
 
             } );  

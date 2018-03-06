@@ -305,23 +305,21 @@ class EntityRecognizerMaker {
      * A Constant name should not:
      * - be a number, e.g., [1] is invalid.
      * - have a dollar sign, e.g., [Foo$] is invalid.
+     * - have spaces around, e.g., [ Foo ] is invalid.
+     * - have quotes, e.g., [Foo"] is invalid.
      * 
      * @param entityName Entity name.
      * @returns Bravey.EntityRecognizer
      */    
     public makeConstant( entityName: string ): any {
         var valueRec = new Bravey.RegexEntityRecognizer( entityName, 10 );
-        //const regex = /(?:\[)([^\$\]\d][^\$\]]+)(?:\])/g;        
-        const regex = /((?!\").{1}|^.{0,1})(?:\[)([^\$\]\d][^\$\]]+)(?:\])/g
-        // ^^^ See lookbehind simulation at https://stackoverflow.com/questions/7376238/javascript-regex-look-behind-alternative#answer-27213935
+        const regex = /\[[a-zA-ZÀ-ÖØ-öø-ÿ_][a-zA-ZÀ-ÖØ-öø-ÿ0-9 _-]+\]/g;
         valueRec.addMatch(
             regex,
             function( match ) {
-                //console.log( 'match: ', match, '\nvalue is', match[ 2 ] );
-                //return match[ 0 ].toString().replace( '[', '' ).replace( ']', '' ).trim();
-                return match[ 2 ].toString().trim();
+                return match[ 0 ].toString().replace( '[', '' ).replace( ']', '' ).trim();
             },
-            500 // priority
+            10 // priority
         );
         return valueRec;
     }
