@@ -23,6 +23,9 @@ export abstract class Keywords {
     static AFTER_FEATURE: string = 'afterFeature';
     static BEFORE_EACH_SCENARIO: string = 'beforeEachScenario';
     static AFTER_EACH_SCENARIO: string = 'afterEachScenario';
+
+    static IMPORTANCE_TAG = 'importanceTag';
+    static IGNORE_TAG = 'ignoreTag';
     
     // Also available in Gherkin
 

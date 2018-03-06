@@ -30,6 +30,9 @@ export class EnglishKeywordDictionary implements KeywordDictionary {
     beforeEachScenario: string[] = [ 'before each scenario' ];
     afterEachScenario: string[] = [ 'after each scenario' ];
 
+    importanceTag: string[] = [ 'importance' ];
+    ignoreTag: string[] = [ 'ignore' ];
+
     // Also available in Gherkin
 
     language: string[] = [ 'language' ];

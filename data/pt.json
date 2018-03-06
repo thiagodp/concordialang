@@ -17,6 +17,10 @@
         "afterFeature": [ "depois da funcionalidade", "depois da característica", "depois da feature", "após a funcionalidade", "após a característica", "após a feature", "after feature" ],
         "beforeEachScenario": [ "antes de cada cenário", "before each scenario" ],
         "afterEachScenario": [ "depois de cada cenário", "após cada cenário", "after each scenario" ],
+
+        "importanceTag": [ "importance" ],
+        "ignoreTag": [ "ignore" ],
+        
     
         "language": [ "linguagem", "idioma", "língua",  "language" ],
     

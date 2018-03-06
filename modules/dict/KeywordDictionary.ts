@@ -27,6 +27,9 @@ export interface KeywordDictionary { // properties should exist in Keywords
     beforeEachScenario: string[];
     afterEachScenario: string[];
 
+    importanceTag: string[];
+    ignoreTag: string[];
+
     // Also available in Gherkin
 
     language: string[];
