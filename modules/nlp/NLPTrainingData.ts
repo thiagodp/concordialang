@@ -6,34 +6,34 @@
  */
 export class NLPTrainingData {
     constructor(
-        public intents: Array< NLPIntent > = [],
-        public examples: Array< NLPIntentExample > = []
+        public intents: NLPTrainingIntent[] = [],
+        public examples: NLPTrainingIntentExample[] = []
     ) {
     }
 }
 
 /**
- * Intent for the training data.
+ * Training Intent.
  * 
  * @author Thiago Delgado Pinto
  */
-export class NLPIntent {
+export class NLPTrainingIntent {
     constructor(
         public name: string,
-        public entities: Array< NLPEntity > = []
+        public entities: NLPTrainingEntity[] = []
     ) {
     }
 }
 
 /**
- * Entity for the training data.
+ * Training Entity.
  * 
  * @author Thiago Delgado Pinto
  */
-export class NLPEntity {
+export class NLPTrainingEntity {
     constructor(
         public name: string,
-        public matches: Array< NLPMatch > = []
+        public matches: NLPTrainingMatch[] = []
     ) {
     }
 }
@@ -43,7 +43,7 @@ export class NLPEntity {
  * 
  * @author Thiago Delgado Pinto
  */
-export class NLPMatch {
+export class NLPTrainingMatch {
     constructor(
         public id: string,
         public samples: string[] = []
@@ -56,7 +56,7 @@ export class NLPMatch {
  * 
  * @author Thiago Delgado Pinto
  */
-export class NLPIntentExample {
+export class NLPTrainingIntentExample {
     constructor(
         public intent: string, // result
         public sentences: string[] = []

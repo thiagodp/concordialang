@@ -1,4 +1,4 @@
-import { NLPEntity, NLPIntent, NLPMatch, NLPTrainingData, NLPIntentExample } from './NLPTrainingData';
+import { NLPTrainingEntity, NLPTrainingIntent, NLPTrainingMatch, NLPTrainingData, NLPTrainingIntentExample } from './NLPTrainingData';
 
 /**
  * Training data conversor.
@@ -27,17 +27,17 @@ export class NLPTrainingDataConversor {
      *                              ```
      * @param examples             Training examples.
      */
-    convert( translationMap4NLP: any, examples: NLPIntentExample[] ): NLPTrainingData {
+    convert( translationMap4NLP: any, examples: NLPTrainingIntentExample[] ): NLPTrainingData {
 
         let data: NLPTrainingData = new NLPTrainingData();
 
         // i18n
         for ( let intentName in translationMap4NLP ) {
-            let intent: NLPIntent = new NLPIntent( intentName );
+            let intent: NLPTrainingIntent = new NLPTrainingIntent( intentName );
             for ( let entityName in translationMap4NLP[ intentName ] ) {
-                let entity: NLPEntity = new NLPEntity( entityName );
+                let entity: NLPTrainingEntity = new NLPTrainingEntity( entityName );
                 for ( let matchName in translationMap4NLP[ intentName ][ entityName ] ) {
-                    let match: NLPMatch = new NLPMatch( matchName );
+                    let match: NLPTrainingMatch = new NLPTrainingMatch( matchName );
                     match.samples = translationMap4NLP[ intentName ][ entityName ][ matchName ];
                     // add the match to the entity
                     entity.matches.push( match );

@@ -1,5 +1,5 @@
 import { NLPTrainingDataConversor } from "../../modules/nlp/NLPTrainingDataConversor";
-import { NLPTrainingData, NLPIntentExample } from '../../modules/nlp/NLPTrainingData';
+import { NLPTrainingData, NLPTrainingIntentExample } from '../../modules/nlp/NLPTrainingData';
 
 /**
  * @author Thiago Delgado Pinto
@@ -32,8 +32,8 @@ describe( 'NLPTrainingDataConversorTest', () => {
         };
 
         let sentences = [
-            new NLPIntentExample( "intent1", [ "whatever", "anything" ] ),
-            new NLPIntentExample( "intent2", [ "something", "sth else" ] )
+            new NLPTrainingIntentExample( "intent1", [ "whatever", "anything" ] ),
+            new NLPTrainingIntentExample( "intent2", [ "something", "sth else" ] )
         ];
 
         let data = conversor.convert( map, sentences );
