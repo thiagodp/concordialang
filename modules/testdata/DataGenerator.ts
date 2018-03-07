@@ -44,7 +44,7 @@ export class DataGenConfig {
 	public min: any = null; // mininum value or length
 	public max: any = null; // mininum value or length
 
-	public regex: string = null;
+	public regex: string = null; // format regex
 
 	public query: string = null;
 	public queryable: Queryable = null; // queriable to use to query the value - db or memory
@@ -111,16 +111,16 @@ export class DataGenerator {
 	/**
 	 * Generates a value, according to the given test case and configuration.
 	 * 
-	 * @param testCase Target test case
+	 * @param tc Target test case
 	 * @param cfg Configuration
 	 */
-	public async generate( testCase: DataTestCase, cfg: DataGenConfig ): Promise< any > {
+	public async generate( tc: DataTestCase, cfg: DataGenConfig ): Promise< any > {
 
-		if ( ! this._dataTestCaseVsValueType.isCompatible( cfg.valueType, testCase ) ) {
+		if ( ! this._dataTestCaseVsValueType.isCompatible( cfg.valueType, tc ) ) {
 			return null;
 		}
 
-		switch ( testCase ) {
+		switch ( tc ) {
 
 			// VALUE or LENGTH
 
@@ -242,8 +242,7 @@ export class DataGenerator {
 			}			
 
 			// COMPUTATION
-
-			// to-do
+			// TO-DO: computation
 
 			default: return null;
 		}

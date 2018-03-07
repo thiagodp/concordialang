@@ -30,6 +30,8 @@ export class QueryReferenceAnalyzer {
 
     public readonly FEATURE_SEPARATOR: string = ':';
 
+    private readonly _queryParser = new QueryParser();
+
     /**
      * Check queries WITHOUT executing them. That is, it checks for referenced
      * databases, tables, constants, and ui elements.
@@ -122,10 +124,9 @@ export class QueryReferenceAnalyzer {
     ): LocatedException[] {
 
         let errors: LocatedException[] = [];
-        const parser: QueryParser = new QueryParser();
 
         // NAMES        
-        const queryNames: string[] = Array.from( new Set( parser.parseAnyNames( query ) ) );
+        const queryNames: string[] = Array.from( new Set( this._queryParser.parseAnyNames( query ) ) );
         if ( queryNames.length > 0 ) {
             const nonFeatureNames: string[] = spec.nonFeatureNames();
             const inexisting: string[] = queryNames.filter( v => nonFeatureNames.indexOf( v ) < 0 );
@@ -137,7 +138,7 @@ export class QueryReferenceAnalyzer {
         }
         
         // VARIABLES
-        const queryVariables: string[] = Array.from( new Set( parser.parseAnyVariables( query ) ) );
+        const queryVariables: string[] = Array.from( new Set( this._queryParser.parseAnyVariables( query ) ) );
         if ( queryVariables.length > 0 ) {
             // UI Elements
             for ( let qv of queryVariables ) {
