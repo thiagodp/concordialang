@@ -27,6 +27,7 @@ import { deepcopy } from 'deepcopy';
  */
 export class VariantDocumentGenerator extends EventEmitter {
 
+    private readonly NEW_DOCUMENT_EVENT: string = 'concordia:testCase:newDocument';    
     private readonly _docUtil = new DocumentUtil();
 
     constructor(
@@ -65,7 +66,7 @@ export class VariantDocumentGenerator extends EventEmitter {
 
             // # Announce the new document
             // This allows the listener to generate the corresponding file, for example.
-            this.emit( 'concordia:testCase:newDocument', newDoc );
+            this.emit( this.NEW_DOCUMENT_EVENT, newDoc );
         }
 
         // # Add the generated documents to the graph
