@@ -17,7 +17,7 @@ export class Options {
     public directory: string = '.'; // directory to search
     public recursive: boolean = true; // recursive search
     public encoding: string = this.defaults.ENCODING; // change default encoding
-    public extensions: string[] = this.defaults.EXTENSIONS; // extensions to search
+    public extensions: string[] = this.defaults.EXTENSIONS; // extensions to search // TO-DO: make it a method the returns extensionFeature and extensionTestCase
     public ignore: string[] = []; // files to ignore, from the given directory
     public files: string[] = []; // files to consider, instead of the given directory
 
@@ -43,6 +43,8 @@ export class Options {
     public dirExample: string = this.directory; // examples' output directory (test cases)
     public dirScript: string = this.defaults.DIR_SCRIPT; // output directory of test scripts
     public dirResult: string = this.defaults.DIR_SCRIPT_RESULT; // output directory of test script results
+    public extensionFeature: string = this.defaults.EXTENSION_FEATURE; // extension for feature files // TO-DO: convert from meow
+    public extensionTestCase: string = this.defaults.EXTENSION_TEST_CASE; // extension for test case files // TO-DO: convert from meow
 
     // Code generation
     public caseUi: string = this.defaults.CASE_UI; // string case used for UI Elements' ids when an id is not defined

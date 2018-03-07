@@ -9,7 +9,6 @@ import { PluginData } from '../plugin/PluginData';
 import { PluginManager } from '../plugin/PluginManager';
 import { Plugin } from '../plugin/Plugin';
 import { TestScriptExecutionOptions } from '../testscript/TestScriptExecution';
-import { TestCaseGenerationOptions } from '../testcase/TestCaseOptions';
 import { CliScriptExecutionReporter } from './CliScriptExecutionReporter';
 
 /**

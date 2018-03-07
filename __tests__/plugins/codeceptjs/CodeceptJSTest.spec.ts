@@ -1,6 +1,5 @@
 import { spawn, exec } from 'child_process';
 import { TestScriptGenerationOptions } from '../../../modules/testscript/TestScriptGeneration';
-import { TestCaseGenerationOptions } from '../../../modules/testcase/TestCaseOptions';
 import { AbstractTestScript } from '../../../modules/testscript/AbstractTestScript';
 import { TestScriptExecutionOptions } from '../../../modules/testscript/TestScriptExecution';
 import { CodeceptJS } from "../../../plugins/codeceptjs/CodeceptJS";

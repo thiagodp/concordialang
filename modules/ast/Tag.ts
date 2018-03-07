@@ -34,3 +34,14 @@ export interface Tag extends Node, HasName, HasContent {
 export interface MayHaveTags {
     tags?: Tag[];
 }
+
+
+/**
+ * Returns true if the one of the given tags has the given name.
+ * 
+ * @param name Tag name
+ * @param tags Tags where to find
+ */
+export function hasTagNamed( name: string, tags: Tag[] ): boolean {
+    return !! tags.find( tag => tag.name === name );
+}

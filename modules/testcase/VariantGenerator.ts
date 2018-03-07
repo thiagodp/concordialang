@@ -3,11 +3,9 @@ import { UIElement, UIProperty } from '../ast/UIElement';
 import { Variant, Template } from "../ast/Variant";
 import { Spec } from "../ast/Spec";
 import { LocatedException } from "../req/LocatedException";
-import { KeywordDictionary } from "../dict/KeywordDictionary";
 import { DataTestCase } from "../testdata/DataTestCase";
 import { Symbols } from "../req/Symbols";
 import { Step } from "../ast/Step";
-import { DataTestCaseNames } from "../testdata/DataTestCaseNames";
 import { Document } from "../ast/Document";
 import { Entities } from "../nlp/Entities";
 import { Constant } from "../ast/Constant";
@@ -17,34 +15,26 @@ import { convertCase } from '../util/CaseConversor';
 import { ReservedTags } from '../req/ReservedTags';
 import { ValueType, ALL_VALUE_TYPES } from '../util/ValueTypeDetector';
 import { isDefined } from '../util/TypeChecking';
+import { UIElementUtil } from '../util/UIElementUtil';
+import { LanguageContent } from '../dict/LanguageContent';
 import * as deepcopy from 'deepcopy';
 import { lower } from 'case';
-import { UIElementUtil } from '../util/UIElementUtil';
-
 
 /**
  * Generates Variants from Templates.
  * 
  * @author Thiago Delgado Pinto
  */
-export class TestCaseGenerator {
+export class VariantGenerator {
 
-    /**
-     * Generates Variants from a Template.
-     * 
-     * @param template Template
-     * @param spec Entire specification
-     * @param keywords Keyword dictionary
-     */
-    public generate = async (
+    public async generate(
         template: Template,
         doc: Document,
         spec: Spec,
         testCases: DataTestCase[],
-        keywords: KeywordDictionary,
-        testCaseNames: DataTestCaseNames,
-        caseOption: CaseType | string
-    ): Promise< VariantGenerationResult[] > => {
+        languageContent: LanguageContent,
+        uiLiteralCaseOption: CaseType | string
+    ): Promise< VariantGenerationResult[] > {
 
         const uiElements: UIElement[] = this.uiElementsOf( doc );
 
@@ -53,18 +43,24 @@ export class TestCaseGenerator {
             template,
             uiElements,
             spec,
-            caseOption
+            uiLiteralCaseOption
         );
 
         let all: VariantGenerationResult[] = [];
 
-        const variantKeyword: string = keywords.variant[ 0 ] || 'Variant';
-        const withKeyword: string = keywords.with[ 0 ] || 'with';
+        const variantKeyword: string = languageContent.keywords.variant[ 0 ] || 'Variant';
+        const withKeyword: string = languageContent.keywords.with[ 0 ] || 'with';
 
+        // Generate Variants for each test case
         for ( let tc of testCases ) {
 
-            const testCaseName: string = testCaseNames[ tc ] || lower( tc );   
+            // Use the test case name from the translation document if available.
+            // Otherwise, it uses the original test case name in lower case, e.g., 'SOME_TEST' -> 'some test'.
+            // This is not the case of using a CaseType, because CaseType is intended to produce method-line 
+            // names and the Variant name should be more natural language-like.
+            const testCaseName: string = languageContent.testCaseNames[ tc ] || lower( tc );
             
+            // Produces the sentences as text
             let sentences: string[] = [];
             this.addTags( sentences, tpl );
             this.addName( sentences, tpl, variantKeyword, testCaseName );
@@ -74,8 +70,7 @@ export class TestCaseGenerator {
         }
 
         return all;
-    };
-
+    }
 
     /**
      * Add tags to the variant

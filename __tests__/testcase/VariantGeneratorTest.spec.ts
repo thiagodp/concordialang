@@ -1,6 +1,6 @@
 import { LanguageContentLoader, JsonLanguageContentLoader } from '../../modules/dict/LanguageContentLoader';
 import { Options } from '../../modules/app/Options';
-import { TestCaseGenerator } from "../../modules/testcase/TestCaseGenerator";
+import { VariantGenerator } from "../../modules/testcase/VariantGenerator";
 import { Template } from "../../modules/ast/Variant";
 import { DataTestCase } from "../../modules/testdata/DataTestCase";
 import { SingleDocumentProcessor } from "../../modules/app/SingleDocumentProcessor";
@@ -16,9 +16,9 @@ import { CaseType } from '../../modules/app/CaseType';
 import { Tag } from '../../modules/ast/Tag';
 import { UIElementUtil } from '../../modules/util/UIElementUtil';
 
-describe( 'TestCaseGeneratorTest', () => {
+describe( 'VariantGeneratorTest', () => {
 
-    let gen: TestCaseGenerator = new TestCaseGenerator(); // under test
+    let gen: VariantGenerator = new VariantGenerator(); // under test
 
     const options: Options = new Options( resolve( process.cwd(), 'dist/' ) );
 

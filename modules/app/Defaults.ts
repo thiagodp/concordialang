@@ -5,7 +5,11 @@ export class Defaults {
 
     readonly LANGUAGE: string = 'en';
     readonly ENCODING: string = 'utf8';
-    readonly EXTENSIONS: string[] = [ '.feature', '.example' ];
+
+    readonly EXTENSION_FEATURE = '.feature'; // Extension for feature files
+    readonly EXTENSION_TEST_CASE = '.variant'; // Extension for test case files
+
+    readonly EXTENSIONS: string[] = [ this.EXTENSION_FEATURE, this.EXTENSION_TEST_CASE ];
 
     readonly DIR_PLUGIN: string = 'plugins/';
     readonly DIR_LANGUAGE: string = 'data/';

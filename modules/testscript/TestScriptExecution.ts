@@ -1,4 +1,3 @@
-import { SpecFilter } from "../testcase/SpecFilter";
 import { Location } from "../ast/Location";
 
 /**
@@ -17,7 +16,16 @@ export class TestScriptExecutionOptions {
  *
  * @author Thiago Delgado Pinto
  */
-export class TestScriptExecutionFilter extends SpecFilter {
+export class TestScriptExecutionFilter {
+
+    public minFeatureImportance: number = 1;  // 1..9
+    public maxFeatureImportance: number = 9;  // 1..9
+
+    public minScenarioImportance: number = 1;  // 1..9
+    public maxScenarioImportance: number = 9;  // 1..9
+
+    public featureName: string = null; // null == don't filter
+    public scenarioName: string = null; // null == don't filter    
 }
 
 /**
