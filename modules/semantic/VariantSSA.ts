@@ -16,7 +16,10 @@ import * as path from 'path';
  * Executes semantic analysis of Variants in a specification.
  * 
  * Checkings:
- *  - If variants have a feature
+ *  - If variants have a feature:
+ *    - A Variant from a document without a Feature should:
+ *      - Import a single file with a Feature OR
+ *      - Import multiple files BUT have a @tag with the Feature name
  *  - Duplicated variant names
  * 
  * @author Thiago Delgado Pinto
