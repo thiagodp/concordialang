@@ -22,7 +22,7 @@
         "ignoreTag": [ "ignore" ],
         
     
-        "language": [ "linguagem", "idioma", "língua",  "language" ],
+        "language": [ "language" ],
     
         "feature": [ "funcionalidade", "característica", "feature" ],
         "background": [ "contexto", "cenário de fundo", "fundo", "background" ],
