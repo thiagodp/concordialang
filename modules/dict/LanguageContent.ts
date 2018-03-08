@@ -1,5 +1,5 @@
 import { KeywordDictionary } from "./KeywordDictionary";
-import { NLPIntentExample } from "../nlp/NLPTrainingData";
+import { NLPTrainingIntentExample } from "../nlp/NLPTrainingData";
 import { DataTestCaseNames } from "../testdata/DataTestCaseNames";
 
 /**
@@ -12,7 +12,7 @@ export class LanguageContent {
     constructor(
         public keywords: KeywordDictionary = null,
         public nlp: object = null,
-        public training: NLPIntentExample[] = [],
+        public training: NLPTrainingIntentExample[] = [],
         public testCaseNames: DataTestCaseNames = null
     ) {
     }

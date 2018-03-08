@@ -1,4 +1,4 @@
-import { NLPIntentExample, NLPTrainingData } from "./NLPTrainingData";
+import { NLPTrainingIntentExample, NLPTrainingData } from "./NLPTrainingData";
 import { NLPTrainingDataConversor } from "./NLPTrainingDataConversor";
 import { NLP } from "./NLP";
 import { LanguageContentLoader } from "../dict/LanguageContentLoader";
