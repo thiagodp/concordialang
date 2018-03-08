@@ -24,6 +24,7 @@ export class SingleDocumentProcessor {
      * @param parser Parser
      * @param nlpRec NLP sentence recognizer
      * @param defaultLanguage Default language
+     * @param ignoreSemanticAnalysis If it is desired to ignore semantic analysis (defaults to false).
      * 
      * @returns true if had errors.
      */
@@ -32,7 +33,8 @@ export class SingleDocumentProcessor {
         lexer: Lexer,
         parser: Parser,
         nlpRec: NLPBasedSentenceRecognizer,
-        defaultLanguage: string
+        defaultLanguage: string,
+        ignoreSemanticAnalysis: boolean = false
     ): boolean {
 
         // Get the lexed nodes
@@ -70,9 +72,11 @@ export class SingleDocumentProcessor {
             doc, language, doc.fileErrors, doc.fileWarnings );
 
         // Single-document Semantic Analysis
-        let semanticErrors: SemanticException[] = [];
-        this._batchDocumentAnalyzer.analyze( doc, semanticErrors );
-        this.addErrorsToDoc( semanticErrors, doc );
+        if ( ! ignoreSemanticAnalysis ) {
+            let semanticErrors: SemanticException[] = [];
+            this._batchDocumentAnalyzer.analyze( doc, semanticErrors );
+            this.addErrorsToDoc( semanticErrors, doc );
+        }
 
         return doc.fileErrors.length > 0;
     }

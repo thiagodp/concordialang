@@ -8,6 +8,7 @@ export abstract class Symbols {
     // prefixes
 
     static COMMENT_PREFIX = '#';
+    static IMPORT_PREFIX = '"';
     static TAG_PREFIX = '@';
     static LANGUAGE_PREFIX = '#';
     static PY_STRING_PREFIX = '"""';
@@ -18,6 +19,7 @@ export abstract class Symbols {
     static CONSTANT_PREFIX = '[';
 
     // sufixes
+    static IMPORT_SUFFIX = '"';
     static UI_LITERAL_SUFFIX = '>';
     static UI_ELEMENT_SUFFIX = '}';
     static CONSTANT_SUFFIX = ']';

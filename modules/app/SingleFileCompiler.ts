@@ -12,15 +12,21 @@ export class SingleFileCompiler implements SingleFileProcessor {
         private _lexer: Lexer,
         private _parser: Parser,
         private _nlpRec: NLPBasedSentenceRecognizer,
-        private _defaultLanguage: string
+        private _defaultLanguage: string,
+        private _ignoreSemanticAnalysis: boolean = false
     ) {
     }
 
     /**
      * MUST NEVER THROW
+     * 
      * @param data 
+     * @param lineBreaker Characters used to separate lines. Defaults to Node's `os.EOL`.
      */
-    public process = async ( data: FileData ): Promise< ProcessedFileData > => {
+    public process = async (
+        data: FileData,
+        lineBreaker: string = os.EOL
+    ): Promise< ProcessedFileData > => {
 
         return new Promise< ProcessedFileData >( ( resolve, reject ) => {
 
@@ -40,7 +46,7 @@ export class SingleFileCompiler implements SingleFileProcessor {
 
             const startTime = Date.now();
 
-            const lines: string[] = data.content.split( os.EOL );
+            const lines: string[] = data.content.split( lineBreaker );
             lines.map( ( line, index ) => this._lexer.addNodeFromLine( line, index + 1 ) );
 
             let doc: Document = {
@@ -51,7 +57,14 @@ export class SingleFileCompiler implements SingleFileProcessor {
             };
 
             let sdp = new SingleDocumentProcessor();
-            sdp.analyzeNodes( doc, this._lexer, this._parser, this._nlpRec, this._defaultLanguage );
+            sdp.analyzeNodes(
+                doc,
+                this._lexer,
+                this._parser,
+                this._nlpRec,
+                this._defaultLanguage,
+                this._ignoreSemanticAnalysis
+            );
 
             const durationMs = Date.now() - startTime;
 
