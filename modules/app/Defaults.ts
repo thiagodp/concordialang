@@ -22,6 +22,8 @@ export class Defaults {
 
     readonly IMPORTANCE: number = 5; // 0..9
 
+    readonly LINE_BREAKER: string = "\n";
+
     /**
      * Returns available encodings.
      * 

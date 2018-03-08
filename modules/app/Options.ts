@@ -45,6 +45,7 @@ export class Options {
     public dirResult: string = this.defaults.DIR_SCRIPT_RESULT; // output directory of test script results
     public extensionFeature: string = this.defaults.EXTENSION_FEATURE; // extension for feature files // TO-DO: convert from meow
     public extensionTestCase: string = this.defaults.EXTENSION_TEST_CASE; // extension for test case files // TO-DO: convert from meow
+    public lineBreaker: string = this.defaults.LINE_BREAKER; // TO-DO: convert from meow
 
     // Code generation
     public caseUi: string = this.defaults.CASE_UI; // string case used for UI Elements' ids when an id is not defined

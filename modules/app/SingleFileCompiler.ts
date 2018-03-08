@@ -1,10 +1,10 @@
 import { SingleFileProcessor, FileData, ProcessedFileData } from "./SingleFileProcessor";
 import { Lexer } from "../lexer/Lexer";
-import * as os from 'os';
 import { Document } from "../ast/Document";
 import { SingleDocumentProcessor } from "./SingleDocumentProcessor";
 import { Parser } from "../parser/Parser";
 import { NLPBasedSentenceRecognizer } from "../nlp/NLPBasedSentenceRecognizer";
+import { Defaults } from "./Defaults";
 
 export class SingleFileCompiler implements SingleFileProcessor {
 
@@ -21,12 +21,12 @@ export class SingleFileCompiler implements SingleFileProcessor {
      * MUST NEVER THROW
      * 
      * @param data 
-     * @param lineBreaker Characters used to separate lines. Defaults to Node's `os.EOL`.
+     * @param lineBreaker Characters used to separate lines. Defaults to `\n`.
      */
-    public process = async (
+    public async process(
         data: FileData,
-        lineBreaker: string = os.EOL
-    ): Promise< ProcessedFileData > => {
+        lineBreaker: string = "\n"
+    ): Promise< ProcessedFileData > {
 
         return new Promise< ProcessedFileData >( ( resolve, reject ) => {
 
@@ -79,6 +79,6 @@ export class SingleFileCompiler implements SingleFileProcessor {
             resolve( processedData );
         } );
         
-    };
+    }
 
 }
