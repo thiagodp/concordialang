@@ -1,4 +1,4 @@
-import Graph from 'graph.js';
+import { FilterCriterion } from './FilterCriterion';
 import { ReservedTags } from '../req/ReservedTags';
 import { Document } from '../ast/Document';
 import { isDefined, isString } from '../util/TypeChecking';
@@ -6,27 +6,13 @@ import { Tag } from '../ast/Tag';
 import { isNumber } from '../util/TypeChecking';
 import { Feature } from '../ast/Feature';
 import { Defaults } from '../app/Defaults';
+import Graph from 'graph.js';
 
-export enum FilterCriterion {
-
-    // GTE = Greater Than or Equal to
-    // LTE = Less Than or Equal to
-    // EQ  = Equal to
-    // NEQ = Not Equal to
-
-    IMPORTANCE_GTE = 'importance_gte',
-    IMPORTANCE_LTE = 'importance_lte',
-    IMPORTANCE_EQ = 'importance_eq',
-
-    TAG_EQ = 'tag_eq',
-    TAG_NEQ = 'tag_neq',
-
-    NAME_EQ = 'name_eq',
-    NAME_STARTING_WITH = 'name_starting_with',
-    NAME_ENDING_WITH = 'name_ending_with',
-    NAME_CONTAINING = 'name_containing'
-}
-
+/**
+ * Feature-based graph filter.
+ * 
+ * @author Thiago Delgado Pinto
+ */
 export class FeatureBasedGraphFilter {
 
     private readonly _defaultImportance: number = ( new Defaults() ).IMPORTANCE;
@@ -40,8 +26,6 @@ export class FeatureBasedGraphFilter {
     /**
      * Creates a new graph containing the documents whose features match 
      * the given criteria. Features' dependencies are also included.
-     * 
-     * Features with "@ignore" are ignored by default.
      * 
      * @param graph Original specification graph.
      * @param criteria Criteria used to filter the graph.
@@ -121,24 +105,22 @@ export class FeatureBasedGraphFilter {
     /**
      * Returns true whether the given criteria are match.
      * 
+     * TO-DO: Refactor this method to another class, since it can be used to
+     *        filter other nodes, such as scenarios or variants.
+     * 
      * @param criteria Criteria to be applied.
      * @param tags Node tags.
-     * @param name Node name.
+     * @param nodeName Node name, e.g., feature name, scenario name, variant name, etc.
      */
     matchCriteria(
         criteria: Map< FilterCriterion, string | number >,
         tags: Tag[],
-        name: string
+        nodeName: string
     ): boolean {
 
         // No filter ? Matches.
         if ( 0 === criteria.size ) {
             return true;
-        }
-
-        // Has @ignore tag ? Do NOT match.
-        if ( this.containsIgnoreTag( tags ) ) {
-            return false;
         }
 
         let tagImportanceValue: number | null = this.importanceValue( tags );
@@ -150,7 +132,7 @@ export class FeatureBasedGraphFilter {
         for ( let [ criterion, value ] of criteria ) {
 
             // Importance
-            const isAboutImportance: boolean = 0 === criterion.toString().indexOf( 'importance' );
+            const isAboutImportance: boolean = criterion.toString().startsWith( 'importance' );
             if ( isAboutImportance ) {
                 const val: number = isString( value ) ? parseInt( value.toString() ) : Number( value );
                 if ( FilterCriterion.IMPORTANCE_GTE === criterion ) {
@@ -164,7 +146,7 @@ export class FeatureBasedGraphFilter {
                 }
             }
 
-            // Tag
+            // Tag keyword
             if ( FilterCriterion.TAG_EQ === criterion ) {
                 return this.tagsWithKeyword( tags, [ value.toString() ] ).length > 0;
             }
@@ -172,18 +154,18 @@ export class FeatureBasedGraphFilter {
                 return 0 === this.tagsWithKeyword( tags, [ value.toString() ] ).length;
             }
 
-            // Name
+            // Node name
             if ( FilterCriterion.NAME_EQ === criterion ) {
-                return name.toLowerCase() === value.toString().toLowerCase();
+                return nodeName.toLowerCase() === value.toString().toLowerCase();
             }
             if ( FilterCriterion.NAME_STARTING_WITH === criterion ) {
-                return name.toLowerCase().startsWith( value.toString().toLowerCase() );
+                return nodeName.toLowerCase().startsWith( value.toString().toLowerCase() );
             }
             if ( FilterCriterion.NAME_ENDING_WITH === criterion ) {
-                return name.toLowerCase().endsWith( value.toString().toLowerCase() );
+                return nodeName.toLowerCase().endsWith( value.toString().toLowerCase() );
             }
             if ( FilterCriterion.NAME_CONTAINING === criterion ) {
-                return name.toLowerCase().indexOf( value.toString().toLowerCase() ) >= 0;
+                return nodeName.toLowerCase().indexOf( value.toString().toLowerCase() ) >= 0;
             }            
         }
 
@@ -196,10 +178,6 @@ export class FeatureBasedGraphFilter {
 
     tagsWithKeyword( tags: Tag[], keywords: string[] ) {
         return tags.filter( ( t: Tag ) => this.hasTagAKeyword( t, keywords ) );
-    }
-
-    containsIgnoreTag( tags: Tag[] ): boolean {
-        return this.tagsWithKeyword( tags, this._ignoreKeywords ).length > 0;
     }
 
     importanceValue( tags: Tag[] ): number | null {
