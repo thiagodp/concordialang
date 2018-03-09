@@ -1,5 +1,4 @@
 import { ImportBasedGraphBuilder } from "./ImportBasedGraphBuilder";
-import { FeatureBasedGraphFilter } from "./FeatureBasedGraphFilter";
 import { FilterCriterion } from "./FilterCriterion";
 import { GraphFilter } from "./GraphFilter";
 import { Spec } from "../ast/Spec";
@@ -14,31 +13,32 @@ import Graph from 'graph.js';
 export class SpecFilter {
 
     private readonly _graphFilter = new GraphFilter();
+    private _graph: Graph = null;
 
-    /**
-     * Returns a graph with all the documents that fullfil the given filters.
-     * Filters are processed in order.
-     * 
-     * @param spec Specification
-     * @param filters Filters
-     */
-    makeFilteredGraph(
-        spec: Spec,
-        filters: Array< ( doc: Document, graph: Graph ) => boolean > = []
-    ): Graph {
+    constructor( private _spec: Spec ) {
+        this.buildGraph();
+    }
 
+    filter( fn: ( doc: Document, graph: Graph ) => boolean ): SpecFilter {
+        this._graph = this._graphFilter.filter( this._graph, fn );
+        return this;
+    }
+
+    get graph(): Graph {
+        return this._graph;
+    }
+
+
+    reset(): SpecFilter {
+        this.buildGraph();
+        return this;
+    }
+
+    private buildGraph() {
         // Build a graph from the documents and its Imports, since it is expected
         // that references to another document's declarations need Imports.
         // Cyclic references are validated previosly, by the ImportSSA.
-        let graph: Graph = ( new ImportBasedGraphBuilder() ).buildFrom( spec );
-
-        // Apply filters
-        for ( let filter of filters ) {
-            graph = this._graphFilter.filter( graph, filter );
-        }
-        
-        return graph;
+        this._graph = ( new ImportBasedGraphBuilder() ).buildFrom( this._spec );
     }
-
 
 }
