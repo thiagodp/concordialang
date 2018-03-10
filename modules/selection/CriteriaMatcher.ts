@@ -17,12 +17,12 @@ export class CriteriaMatcher {
      * Returns true whether the given criteria are match.
      * 
      * @param criteria Criteria to be applied.
-     * @param tags Node tags.
+     * @param nodeTags Node tags.
      * @param nodeName Node name, e.g., feature name, scenario name, variant name, etc.
      */
     matches(
-        criteria: Map< FilterCriterion, string | number >,
-        tags: Tag[],
+        criteria: Map< FilterCriterion, string | number | string[] >,
+        nodeTags: Tag[],
         nodeName: string
     ): boolean {
 
@@ -31,13 +31,20 @@ export class CriteriaMatcher {
             return true;
         }
 
-        const hasTags: boolean = tags.length > 0;
+        const hasTags: boolean = nodeTags.length > 0;
 
         // An Importance value is considered even if the node has no Importance tag defined.
         // The node assumes a default Importance value.
         let tagImportanceValue: number | null = hasTags
-            ? this.importanceValue( tags ) || this._defaultImportanceValue
+            ? this.importanceValue( nodeTags ) || this._defaultImportanceValue
             : this._defaultImportanceValue;
+
+        // Whether the criterion is established, ignore those with @ignore
+        if ( hasTags 
+            && criteria.has( FilterCriterion.IGNORE_TAG_NOT_DECLARED )
+            && this.hasIgnoreTag( nodeTags ) ) {
+            return false; // Does not match, i.e., has ignore tag
+        }
 
         for ( let [ criterion, value ] of criteria ) {
 
@@ -45,40 +52,38 @@ export class CriteriaMatcher {
             const criterionIsAboutImportance: boolean = criterion.toString().startsWith( 'importance' );
             if ( criterionIsAboutImportance ) {
                 const val: number = isString( value ) ? parseInt( value.toString() ) : Number( value );
-                if ( FilterCriterion.IMPORTANCE_GTE === criterion ) {
-                    return tagImportanceValue >= val;
-                }
-                if ( FilterCriterion.IMPORTANCE_LTE === criterion ) {
-                    return tagImportanceValue <= val;
-                }
-                if ( FilterCriterion.IMPORTANCE_EQ === criterion ) {
-                    return tagImportanceValue === val;
+                switch ( criterion ) {
+                    case FilterCriterion.IMPORTANCE_GTE: return tagImportanceValue >= val;
+                    case FilterCriterion.IMPORTANCE_LTE: return tagImportanceValue <= val;
+                    case FilterCriterion.IMPORTANCE_EQ: return tagImportanceValue == val;
                 }
             }
 
             if ( hasTags ) {
                 // Tag keyword
-                if ( FilterCriterion.TAG_EQ === criterion ) {
-                    return this.tagsWithKeyword( tags, [ value.toString() ] ).length > 0;
-                }
-                if ( FilterCriterion.TAG_NEQ === criterion ) {
-                    return 0 === this.tagsWithKeyword( tags, [ value.toString() ] ).length;
+                switch ( criterion ) {
+                    case FilterCriterion.TAG_EQ: 
+                        return this.tagsWithKeyword( nodeTags, [ value.toString() ] ).length > 0;
+                    case FilterCriterion.TAG_NEQ:
+                        return 0 === this.tagsWithKeyword( nodeTags, [ value.toString() ] ).length;
+                    case FilterCriterion.TAG_IN:
+                        return this.tagsWithKeyword( nodeTags, value as string[] ).length > 0;
+                    case FilterCriterion.TAG_NOT_IN:
+                        return this.tagsWithKeyword( nodeTags, value as string[] ).length < 1;                        
                 }
             }
 
             // Node name
-            if ( FilterCriterion.NAME_EQ === criterion ) {
-                return nodeName.toLowerCase() === value.toString().toLowerCase();
+            switch ( criterion ) {
+                case FilterCriterion.NAME_EQ:
+                    return nodeName.toLowerCase() === value.toString().toLowerCase();
+                case FilterCriterion.NAME_STARTING_WITH:
+                    return nodeName.toLowerCase().startsWith( value.toString().toLowerCase() );
+                case FilterCriterion.NAME_ENDING_WITH:
+                    return nodeName.toLowerCase().endsWith( value.toString().toLowerCase() );
+                case FilterCriterion.NAME_CONTAINING:
+                    return nodeName.toLowerCase().indexOf( value.toString().toLowerCase() ) >= 0;
             }
-            if ( FilterCriterion.NAME_STARTING_WITH === criterion ) {
-                return nodeName.toLowerCase().startsWith( value.toString().toLowerCase() );
-            }
-            if ( FilterCriterion.NAME_ENDING_WITH === criterion ) {
-                return nodeName.toLowerCase().endsWith( value.toString().toLowerCase() );
-            }
-            if ( FilterCriterion.NAME_CONTAINING === criterion ) {
-                return nodeName.toLowerCase().indexOf( value.toString().toLowerCase() ) >= 0;
-            }            
         }
 
         return false;
@@ -93,7 +98,12 @@ export class CriteriaMatcher {
     }
 
     importanceValue( tags: Tag[] ): number | null {
-        let filtered = this.tagsWithKeyword( tags, this._importanceKeywords );
+        const filtered = this.tagsWithKeyword( tags, this._importanceKeywords );
         return ( filtered.length > 0 ) ? parseInt( filtered[ 0 ].content ) : null;
-    }    
+    }
+
+    hasIgnoreTag( tags: Tag[] ): boolean {
+        const filtered = this.tagsWithKeyword( tags, this._ignoreKeywords );
+        return filtered.length > 0;
+    }
 }

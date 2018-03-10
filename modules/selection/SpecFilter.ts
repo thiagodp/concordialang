@@ -28,7 +28,6 @@ export class SpecFilter {
         return this._graph;
     }
 
-
     reset(): SpecFilter {
         this.buildGraph();
         return this;

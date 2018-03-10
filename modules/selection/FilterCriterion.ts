@@ -20,8 +20,12 @@ export enum FilterCriterion {
     IMPORTANCE_LTE = 'importance_lte',
     IMPORTANCE_EQ = 'importance_eq',
 
+    IGNORE_TAG_NOT_DECLARED = 'ignore_tag_not_declared',
+
     TAG_EQ = 'tag_eq',
     TAG_NEQ = 'tag_neq',
+    TAG_IN = 'tag_in',
+    TAG_NOT_IN = 'tag_not_in',
 
     NAME_EQ = 'name_eq',
     NAME_STARTING_WITH = 'name_starting_with',

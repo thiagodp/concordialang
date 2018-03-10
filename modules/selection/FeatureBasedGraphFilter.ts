@@ -15,7 +15,7 @@ import Graph from 'graph.js';
 export class FeatureBasedGraphFilter {
 
     constructor(
-        private _criteria: Map< FilterCriterion, string | number >,
+        private _criteria: Map< FilterCriterion, string | number | string[] >,
         private _matcher: CriteriaMatcher
     ) {
     }
