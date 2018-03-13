@@ -6,7 +6,7 @@ import Bravey = require('../../lib/bravey'); // .js file
 
 /**
  * Natural Language Processor
- * 
+ *
  * @author Thiago Delgado Pinto
  */
 export class NLP {
@@ -29,8 +29,8 @@ export class NLP {
 
         // Add an entity named "ui_element_literal" and its recognizer
         this._additionalEntities.push( Entities.UI_LITERAL );
-        this._additionalRecognizers.push( erMaker.makeUILiteral( Entities.UI_LITERAL ) );        
-        
+        this._additionalRecognizers.push( erMaker.makeUILiteral( Entities.UI_LITERAL ) );
+
         // Add an entity named "number" and its recognizer
         this._additionalEntities.push( Entities.NUMBER );
         this._additionalRecognizers.push( erMaker.makeNumber( Entities.NUMBER ) );
@@ -46,11 +46,15 @@ export class NLP {
         // Add an entity named "value_list" and its recognizer
         this._additionalEntities.push( Entities.VALUE_LIST );
         this._additionalRecognizers.push( erMaker.makeValueList( Entities.VALUE_LIST ) );
+
+        // Add an entity named "state" and its recognizer
+        this._additionalEntities.push( Entities.STATE );
+        this._additionalRecognizers.push( erMaker.makeValueList( Entities.STATE ) );
     }
 
     /**
      * Train the recognizer.
-     * 
+     *
      * @param language Target language.
      * @param data Data to be used in the training.
      * @param intentNameFilter Filter for training only using certain intent. Optional. Default undefined.
@@ -78,7 +82,7 @@ export class NLP {
             // Add the intent with its entities
             nlp.addIntent( intent.name, entities );
 
-            // Add entity recognizers with matches. Each match have sample values, that 
+            // Add entity recognizers with matches. Each match have sample values, that
             // are added to the recognizer.
             for ( let e of intent.entities ) {
                 let entityRec = new Bravey.StringEntityRecognizer( e.name );
@@ -105,7 +109,7 @@ export class NLP {
 
     /**
      * Returns true if the NLP is trained for a certain language.
-     * 
+     *
      * @param language Language
      */
     public isTrained( language: string ): boolean {
@@ -117,7 +121,7 @@ export class NLP {
 
     /**
      * Recognizes a sentece.
-     * 
+     *
      * @param language Language to be used in the recognition.
      * @param sentence Sentence to be recognized.
      * @param entityFilter Filters the entity to be recognized. Defaults to '*' which means "all" .
@@ -134,7 +138,7 @@ export class NLP {
     }
 
     private createNLP(): any {
-        return this._useFuzzyProcessor ? new Bravey.Nlp.Fuzzy() : new Bravey.Nlp.Sequential()        
+        return this._useFuzzyProcessor ? new Bravey.Nlp.Fuzzy() : new Bravey.Nlp.Sequential()
     }
 
     private documentTrainingOptions(): Object {
@@ -143,7 +147,7 @@ export class NLP {
 
     /**
      * Adds default entities to the given entities array.
-     * 
+     *
      * @param entities Entities in which the default entities will be added.
      */
     private addDefaultEntitiesTo( entities: Object[] ): void {
@@ -166,7 +170,7 @@ export class NLP {
 
 /**
  * Mapped NLP
- * 
+ *
  * @author Thiago Delgado Pinto
  */
 interface MappedNLP {
@@ -177,17 +181,17 @@ interface MappedNLP {
 
 /**
  * EntityRecognizer maker
- * 
+ *
  * @author Thiago Delgado Pinto
  */
 class EntityRecognizerMaker {
 
     /**
      * Creates a recognizer for values between quotes.
-     * 
+     *
      * Example: I fill "name" with "Bob"
      * --> The words "name" and "Bob" are recognized (without quotes).
-     * 
+     *
      * @param entityName Entity name.
      * @return Bravey.EntityRecognizer
      */
@@ -208,10 +212,10 @@ class EntityRecognizerMaker {
 
     /**
      * Creates a recognizer for values between { and }.
-     * 
+     *
      * Example: I fill {Name} with "Bob"
      * --> The word "Name" is recognized (without quotes).
-     * 
+     *
      * @param entityName Entity name.
      * @return Bravey.EntityRecognizer
      */
@@ -231,18 +235,18 @@ class EntityRecognizerMaker {
 
     /**
      * Creates a recognizer for values between < and >, with restrictions.
-     * 
+     *
      * Example: I fill <username> with "Bob"
      * --> The word "username" is recognized (without quotes).
-     * 
+     *
      * Supported formats: <id>, <#id>, <@name>, <//xpath>, <~mobilename>.
-     * 
+     *
      * @param entityName Entity name.
      * @return Bravey.EntityRecognizer
      */
     public makeUILiteral( entityName: string ): any {
         var valueRec = new Bravey.RegexEntityRecognizer( entityName, 10 );
-        const regex = /(?:\<)((?:#|@|\/\/|~|[a-zA-ZÀ-ÖØ-öø-ÿ])[^<\r\n]*[^\>])(?:\>)/g;
+        const regex = /(?:\<)((?:#|@|\/\/|~|[a-zA-ZÀ-ÖØ-öø-ÿ])[^<\r\n\>]*)(?:\>)/g;
         valueRec.addMatch(
             regex,
             function( match ) {
@@ -252,14 +256,14 @@ class EntityRecognizerMaker {
             100 // priority
         );
         return valueRec;
-    }    
+    }
 
     /**
      * Creates a recognizer for a number.
-     * 
+     *
      * Example: I fill {Name} with -10.33
      * --> The value -10.33 is recognized.
-     * 
+     *
      * @param entityName Entity name.
      * @return Bravey.EntityRecognizer
      */
@@ -279,10 +283,10 @@ class EntityRecognizerMaker {
 
     /**
      * Creates a recognizer for values that start with select.
-     * 
+     *
      * Example: - value comes from the query "SELECT * FROM users"
      * --> The value "SELECT * FROM users" (without quotes) is recognized.
-     * 
+     *
      * @param entityName Entity name.
      * @returns Bravey.EntityRecognizer
      */
@@ -307,10 +311,10 @@ class EntityRecognizerMaker {
      * - have a dollar sign, e.g., [Foo$] is invalid.
      * - have spaces around, e.g., [ Foo ] is invalid.
      * - have quotes, e.g., [Foo"] is invalid.
-     * 
+     *
      * @param entityName Entity name.
      * @returns Bravey.EntityRecognizer
-     */    
+     */
     public makeConstant( entityName: string ): any {
         var valueRec = new Bravey.RegexEntityRecognizer( entityName, 10 );
         const regex = /\[[a-zA-ZÀ-ÖØ-öø-ÿ_][a-zA-ZÀ-ÖØ-öø-ÿ0-9 _-]+\]/g;
@@ -327,7 +331,7 @@ class EntityRecognizerMaker {
 
     /**
      * Creates a recognizer for a list of values, in the format [ 1, "hello", 2, "hi \"Jane\"!" ]
-     * 
+     *
      * @param entityName Entity name.
      * @returns Bravey.EntityRecognizer
      */
@@ -341,6 +345,32 @@ class EntityRecognizerMaker {
                 return match[ 0 ].toString().trim();
             },
             1000 // priority
+        );
+        return valueRec;
+    }
+
+
+    /**
+     * Creates a recognizer for State references in the format ~name~.
+     * A State name should not:
+     * - be a number, e.g., [1] is invalid.
+     * - have a dollar sign, e.g., [Foo$] is invalid.
+     * - have spaces around, e.g., [ Foo ] is invalid.
+     * - have quotes, e.g., [Foo"] is invalid.
+     *
+     * @param entityName Entity name.
+     * @returns Bravey.EntityRecognizer
+     */
+    public makeState( entityName: string ): any {
+        var valueRec = new Bravey.RegexEntityRecognizer( entityName, 10 );
+        const regex = /\~[a-zA-ZÀ-ÖØ-öø-ÿ_][a-zA-ZÀ-ÖØ-öø-ÿ0-9 _-]+\~/g;
+        valueRec.addMatch(
+            regex,
+            function( match ) {
+                const value = match[ 0 ].toString();
+                return value.substring( 1, value.length - 1 ); // exclude '~' and '~'
+            },
+            10 // priority
         );
         return valueRec;
     }
