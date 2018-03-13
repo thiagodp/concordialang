@@ -221,7 +221,7 @@ class EntityRecognizerMaker {
      */
     public makeUIElement( entityName: string ): any {
         var valueRec = new Bravey.RegexEntityRecognizer( entityName, 10 );
-        const regex = new RegExp( '\{[^<\r\n]*\}', "gi" );
+        const regex = new RegExp( '\{[a-zA-ZÀ-ÖØ-öø-ÿ][^<\r\n\>]*\}', "gi" );
         valueRec.addMatch(
             regex,
             function( match ) {

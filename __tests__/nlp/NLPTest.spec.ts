@@ -134,12 +134,32 @@ describe( 'NLPTest', () => {
 
             describe( 'recognizes', () => {
 
+                it( 'single character', () => {
+                    recogElement( ' {a} ', 'a' );
+                } );
+
                 it( 'single word', () => {
                     recogElement( ' {foo} ', 'foo' );
                 } );
 
                 it( 'words', () => {
                     recogElement( ' {foo bar} ', 'foo bar' );
+                } );
+
+                it( 'word with number', () => {
+                    recogElement( ' {x1} ', 'x1' );
+                } );
+
+            } );
+
+            describe( 'does not recognize', () => {
+
+                it( 'number', () => {
+                    recogElement( ' {1} ', null );
+                } );
+
+                it( 'starting with a number', () => {
+                    recogElement( ' {1a} ', null );
                 } );
 
             } );
@@ -181,6 +201,19 @@ describe( 'NLPTest', () => {
 
                 it( 'mobile name notation', () => {
                     recogElement( ' <~foo> ', '~foo' );
+                } );
+
+            } );
+
+
+            describe( 'does not recognize', () => {
+
+                it( 'number', () => {
+                    recogElement( ' <1> ', null );
+                } );
+
+                it( 'starting with a number', () => {
+                    recogElement( ' <1a> ', null );
                 } );
 
             } );
