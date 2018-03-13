@@ -239,14 +239,14 @@ class EntityRecognizerMaker {
      * Example: I fill <username> with "Bob"
      * --> The word "username" is recognized (without quotes).
      *
-     * Supported formats: <id>, <#id>, <@name>, <//xpath>, <~mobilename>.
+     * Supported formats: <id>, <#id>, <@name>, <.css>, <//xpath>, and <~mobilename>.
      *
      * @param entityName Entity name.
      * @return Bravey.EntityRecognizer
      */
     public makeUILiteral( entityName: string ): any {
         var valueRec = new Bravey.RegexEntityRecognizer( entityName, 10 );
-        const regex = /(?:\<)((?:#|@|\/\/|~|[a-zA-ZÀ-ÖØ-öø-ÿ])[^<\r\n\>]*)(?:\>)/g;
+        const regex = /(?:\<)((?:#|@|\.|\/\/|~|[a-zA-ZÀ-ÖØ-öø-ÿ])[^<\r\n\>]*)(?:\>)/g;
         valueRec.addMatch(
             regex,
             function( match ) {

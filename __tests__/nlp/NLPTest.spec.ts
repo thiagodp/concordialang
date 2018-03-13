@@ -195,6 +195,10 @@ describe( 'NLPTest', () => {
                     recogElement( ' <@foo> ', '@foo' );
                 } );
 
+                it( 'css notation', () => {
+                    recogElement( ' <.foo> ', '.foo' );
+                } );
+
                 it( 'xpath notation', () => {
                     recogElement( ' <//foo> ', '//foo' );
                 } );
