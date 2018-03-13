@@ -10,7 +10,7 @@
         "template": [ "modelo", "template" ],
         "uiElement": [ "elemento da iu", "elemento de iu", "ui element" ],
         "database": [ "banco de dados", "database" ],
-    
+
         "beforeAll": [ "antes de todos", "antes de tudo", "before all" ],
         "afterAll": [ "depois de todos", "após todos", "depois de tudo", "após tudo", "after all" ],
         "beforeFeature": [ "antes da funcionalidade", "antes da característica", "antes da feature", "before feature" ],
@@ -20,20 +20,20 @@
 
         "importanceTag": [ "importance" ],
         "ignoreTag": [ "ignore" ],
-        
-    
+
+
         "language": [ "language" ],
-    
+
         "feature": [ "funcionalidade", "característica", "feature" ],
         "background": [ "contexto", "cenário de fundo", "fundo", "background" ],
         "scenario": [ "cenário", "scenario" ],
-    
+
         "stepGiven": [ "dado", "given" ],
         "stepWhen": [ "quando", "when" ],
         "stepThen": [ "então", "then" ],
         "stepAnd": [ "e", "mas", "and", "but" ],
         "stepOtherwise": [ "caso contrário", "senão", "quando inválido", "se inválido" ],
-    
+
         "table": [ "tabela", "table" ]
     },
 
@@ -85,19 +85,20 @@
         "COMPUTATION_WRONG": "COMPUTATION_WRONG"
     },
 
-    
+
 
     "nlp": {
         "testcase": {
-    
+
             "ui_action_modifier": {
-                "not": [ "nao" ]
+                "not": [ "nao", "does not", "doesn't" ]
             },
-    
+
             "ui_action": {
-                "append": [ "adiciono", "acrescento", "insiro", "coloco" ],
+                "amIn": [ "estou" ],
+                "append": [ "adiciono", "acrescento", "insiro" ],
                 "attachFile": [ "anexo o arquivo", "adiciono o arquivo", "sobrescrevo o arquivo" ],
-                "check": [ "marco", "checo" ],
+                "check": [ "marco" ],
                 "clear": [ "limpo", "apago" ],
                 "click": [ "clico", "ativo", "aciono" ],
                 "close": [ "fecho", "saio" ],
@@ -107,10 +108,12 @@
                 "fill": [ "preencho", "informo", "digito", "forneco", "entro" ],
                 "hide": [ "escondo", "oculto" ],
                 "move": [ "movo", "posiciono" ],
-                "open": [ "abro", "navego para" ],
+                "mouseOut": [ "retiro o mouse" ],
+                "mouseOver": [ "coloco o mouse", "ponho o mouse", "passo o mouse" ],
+                "open": [ "abro", "navego para", "vou para" ],
                 "press": [ "pressiono", "seguro", "teclo" ],
                 "refresh": [ "atualizo", "recarrego" ],
-                "resize": [ "redimensiono", "modifico o tamanho" ],            
+                "resize": [ "redimensiono", "modifico o tamanho" ],
                 "rightClick": [ "clico com o botao direito", "aciono o botao direito" ],
                 "saveScreenshot": [ "salvo a tela", "bato uma foto da tela", "tiro uma foto da tela", "tiro um print da tela" ],
                 "scrollTo": [ "rolo" ],
@@ -120,63 +123,73 @@
                 "swipe": [ "deslizo" ],
                 "switch": [ "troco", "mudo para" ],
                 "tap": [ "toco" ],
+                "uncheck": [ "desmarco" ],
                 "wait": [ "aguardo", "espero" ]
             },
-    
+
             "ui_element_type": {
-                "button": [ "botao" ],
+                "button": [ "botao", "button" ],
                 "checkbox": [ "caixa de marcacao", "checkbox", "check" ],
                 "cookie": [ "cookie" ],
-                "currentTab": [ "aba atual" ],
+                "currentPage": [ "pagina atual", "current page" ],
+                "currentTab": [ "aba atual", "current tab" ],
+                "div": [ "div" ],
                 "file": [ "arquivo", "anexo" ],
-                "keyboard": [ "teclado" ],
-                "label": [ "rotulo" ],
-                "otherTabs": [ "outras abas" ],
+                "image": [ "imagem", "figura", "foto", "image" ],
+                "keyboard": [ "teclado", "keyboard" ],
+                "label": [ "rotulo", "label" ],
+                "li": [ "item de lista", "item da lista", "li" ],
+                "link": [ "link" ],
+                "otherTabs": [ "outras abas", "other tabs" ],
+                "paragraph": [ "paragrafo", "paragraph" ],
                 "mouse": [ "mouse", "cursor" ],
                 "native": [ "nativo" ],
-                "newTab": [ "nova aba" ],
-                "screen": [ "tela" ],
+                "newTab": [ "nova aba", "new tab" ],
+                "radio": [ "radio" ],
+                "screen": [ "tela", "screen" ],
                 "select": [ "caixa de selecao", "select", "combo", "combobox" ],
-                "text": [ "texto" ],
+                "span": [ "span" ],
+                "table": [ "tabela", "table" ],
+                "text": [ "texto", "text" ],
                 "textbox": [ "caixa de texto", "textbox", "input" ],
-                "textarea": [ "area de texto" ],
+                "textarea": [ "area de texto", "textarea" ],
                 "web": [ "web" ],
-                "window": [ "janela" ],
+                "window": [ "janela", "window" ],
+                "ul": [ "ul" ],
                 "url": [ "url", "pagina", "endereco", "dominio", "ip", "local", "sitio" ]
             },
 
             "ui_property": {
-                "backgroundColor": [ "cor de fundo", "background color" ],                
+                "backgroundColor": [ "cor de fundo", "background color" ],
                 "color": [ "cor", "cor de frente", "color" ],
                 "height": [ "altura", "height" ],
                 "title": [ "título" ],
                 "width": [ "largura", "width" ]
             },
-    
+
             "ui_action_option": {
-                "inside": [ "dentro de" ],
-                "with": [ "com" ],
-                "up": [ "para cima", "acima" ],
-                "down": [ "para baixo", "abaixo" ],
-                "left": [ "para a esquerda", "a direita" ],
-                "right": [ "para a direita", "a esquerda" ],
-                "mobileName": [ "nome mobile" ]
+                "inside": [ "dentro de", "inside" ],
+                "with": [ "com", "with", "contem", "contains" ],
+                "up": [ "para cima", "acima", "up" ],
+                "down": [ "para baixo", "abaixo", "down" ],
+                "left": [ "para a esquerda", "a esquerda", "left" ],
+                "right": [ "para a direita", "a direita", "right" ],
+                "mobileName": [ "nome mobile", "mobile name" ],
+                "enabled": [ "esta habilitado", "is enabled" ],
+                "disabled": [ "esta desabilitado", "nao esta habilitado", "is disabled", "is not enabled" ],
+                "second": [ "segundo" ],
+                "millisecond": [ "milissegundo" ],
+                "slowly": [ "lentamente", "vagarosamente", "devagar" ]
             },
 
             "exec_action": {
-                "execute": [ "executo", "rodo", "chamo", "invoco" ]
-            },
-
-            "exec_target": {
-                "feature": [ "feature", "característica", "funcionalidade" ],
-                "scenario": [ "scenario", "cenário" ],
-                "variant": [ "variant", "variante", "variação" ]
+                "execute": [ "preciso", "necessito", "requeiro", "executo", "rodo", "chamo", "invoco" ]
             }
         },
-    
-    
+
+
         "ui": {
-    
+
             "ui_property": {
                 "id": [ "id", "identificacao" ],
                 "type": [ "tipo" ],
@@ -189,19 +202,19 @@
                 "format": [ "formato" ],
                 "required": [ "obrigatório", "requerido", "required" ],
                 "computedBy": [ "calculado como", "computado como", "computed by" ],
-    
+
                 "backgroundColor": [ "cor de fundo", "background color" ],
                 "color": [ "cor", "cor de frente", "color" ],
                 "height": [ "altura", "height" ],
                 "width": [ "largura", "width" ]
             },
-    
+
             "ui_connector": {
                 "is": [ "e", "é" ],
                 "in": [ "em", "esta em" , "incluso em", "incluido em", "dentro de", "vem de" ],
                 "same": [ "o mesmo que", "igual a", "semelhante a", "similar a" ]
             },
-    
+
             "ui_data_type": {
                 "string": [ "texto", "cadeia", "string" ],
                 "integer": [ "inteiro", "integer", "int" ],
@@ -211,10 +224,10 @@
                 "datetime": [ "datahora", "datetime", "timestamp" ]
             }
         },
-    
-    
+
+
         "database": {
-    
+
             "db_property": {
                 "type": [ "tipo", "type" ],
                 "path": [ "caminho", "nome", "path", "name" ],
@@ -225,7 +238,7 @@
                 "charset": [ "conjunto de caracteres", "codificação", "charset", "encoding" ],
                 "options": [ "opções", "options" ]
             }
-    
+
         }
     },
 
@@ -245,36 +258,40 @@
                 "{ui_action} {ui_element} {number}",
                 "{ui_action} {ui_element} {constant}",
                 "{ui_action} {ui_element} {ui_action_option}",
+                "{ui_action} {ui_element} {ui_action_option} {ui_element}",
+                "{ui_action} {ui_element} {ui_action_option} {ui_literal}",
                 "{ui_action} {value} {ui_element}",
                 "{ui_action} {number} {ui_element}",
-                "{ui_action} {constant} {ui_element}",     
+                "{ui_action} {constant} {ui_element}",
                 "{ui_action} {ui_literal} {value}",
                 "{ui_action} {ui_literal} {number}",
                 "{ui_action} {ui_literal} {constant}",
                 "{ui_action} {ui_literal} {ui_action_option}",
+                "{ui_action} {ui_literal} {ui_action_option} {ui_element}",
+                "{ui_action} {ui_literal} {ui_action_option} {ui_literal}",
                 "{ui_action} {value} {ui_literal}",
                 "{ui_action} {number} {ui_literal}",
-                "{ui_action} {constant} {ui_literal}",                
+                "{ui_action} {constant} {ui_literal}",
                 "{ui_action} {ui_element_type} {value}",
                 "{ui_action} {ui_element_type} {number}",
                 "{ui_action} {ui_element_type} {constant}",
                 "{ui_action} {value} {ui_element_type}",
                 "{ui_action} {number} {ui_element_type}",
-                "{ui_action} {constant} {ui_element_type}",                
+                "{ui_action} {constant} {ui_element_type}",
                 "{ui_action} {ui_element_type} {ui_element}",
                 "{ui_action} {ui_element_type} {ui_element} {value}",
                 "{ui_action} {ui_element_type} {ui_element} {number}",
                 "{ui_action} {ui_element_type} {ui_element} {constant}",
                 "{ui_action} {value} {ui_element_type} {ui_element}",
                 "{ui_action} {number} {ui_element_type} {ui_element}",
-                "{ui_action} {constant} {ui_element_type} {ui_element}",                
+                "{ui_action} {constant} {ui_element_type} {ui_element}",
                 "{ui_action} {ui_element_type} {ui_literal}",
                 "{ui_action} {ui_element_type} {ui_literal} {value}",
                 "{ui_action} {ui_element_type} {ui_literal} {number}",
                 "{ui_action} {ui_element_type} {ui_literal} {constant}",
                 "{ui_action} {value} {ui_element_type} {ui_literal}",
                 "{ui_action} {number} {ui_element_type} {ui_literal}",
-                "{ui_action} {constant} {ui_element_type} {ui_literal}",                
+                "{ui_action} {constant} {ui_element_type} {ui_literal}",
                 "{ui_action_modifier} {ui_action} {ui_element}",
                 "{ui_action_modifier} {ui_action} {ui_element} {value}",
                 "{ui_action_modifier} {ui_action} {ui_element} {number}",
@@ -293,15 +310,19 @@
                 "{ui_action_modifier} {ui_action} {ui_element_type} {value}",
                 "{ui_action_modifier} {ui_action} {ui_element_type} {number}",
                 "{ui_action_modifier} {ui_action} {ui_element_type} {constant}",
-                "{exec_action} {exec_target} {value}",
-                "{exec_action} {exec_target} {value} {exec_target} {value}",
-                                
+                "{exec_action} {state}",
 
-                "eu {exec_action} o {exec_target} {value}",
-                "eu {exec_action} o {exec_target} {value} do {exec_target} {value}"                
+
+                "eu {exec_action} o {state}",
+                "eu {ui_action} em {ui_element}",
+                "eu {ui_action} em {ui_literal}",
+                "eu vejo {ui_element} dentro de {ui_element}",
+                "eu vejo {ui_element} dentro de {ui_literal}",
+                "eu vejo {ui_literal} dentro de {ui_element}",
+                "eu vejo {ui_literal} dentro de {ui_literal}"
             ]
         },
-    
+
         {
             "intent": "ui",
             "sentences": [
@@ -319,7 +340,7 @@
                 "valor vem da consulta {query}"
             ]
         },
-    
+
         {
             "intent": "ui_item_query",
             "sentences": [
@@ -330,8 +351,8 @@
                 "{ui_property} está contido em {query}",
                 "{ui_property} está presente em {query}"
             ]
-        },    
-    
+        },
+
         {
             "intent": "database",
             "sentences": [
@@ -343,7 +364,7 @@
                 "porta é {number}"
             ]
         }
-    
+
     ]
 
 }

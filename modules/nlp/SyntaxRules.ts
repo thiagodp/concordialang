@@ -2,7 +2,7 @@
 
 /**
  * Default syntax rule for UI Actions.
- * 
+ *
  * @author Thiago Delgado Pinto
  */
 export const DEFAULT_UI_ACTION_SYNTAX_RULE = {
@@ -27,14 +27,15 @@ export const DEFAULT_UI_ACTION_SYNTAX_RULE = {
     value: { min: 1, max: 999 },
     number: { min: 1, max: 999 },
     constant: { min: 1, max: 999 },
+    state: { min: 1, max: 1 },
 
     // Other action or actions that must be used together.
-    mustBeUsedWith: []    
+    mustBeUsedWith: []
 };
 
 /**
  * Syntax rules for the supported UI Actions. Every rule overwrites DEFAULT_UI_ACTION_SYNTAX_RULE.
- * 
+ *
  * @author Thiago Delgado Pinto
  */
 export const UI_ACTION_SYNTAX_RULES = [
@@ -66,11 +67,11 @@ export const UI_ACTION_SYNTAX_RULES = [
 
 /**
  * Default syntax rule for UI Properties.
- * 
+ *
  * @author Thiago Delgado Pinto
  */
 export const DEFAULT_UI_PROPERTY_SYNTAX_RULE = {
-    
+
     // Minimal number of targets it accepts (has precedence over all min values).
     minTargets: 1,
     // Maximal number of targets it accepts (has precedence over all max values).
@@ -88,21 +89,25 @@ export const DEFAULT_UI_PROPERTY_SYNTAX_RULE = {
     //     - max > maxTargets
     value: { min: 1, max: 1 },
 
-    ui_property: { min: 1, max: 1 },
+    value_list: { min: 1, max: 1 },
 
-    number: { min: 1, max: 1 },    
+    number: { min: 1, max: 1 },
+
+    constant: { min: 1, max: 1 },
 
     query: { min: 1, max: 1 },
+
+    ui_property: { min: 1, max: 1 },
 
     ui_data_type: { min: 1, max: 1 },
 
     // Other action or actions that must be used together.
-    mustBeUsedWith: []    
+    mustBeUsedWith: []
 };
 
 /**
  * Syntax rules for the supported UI Properties. Every rule overwrites DEFAULT_UI_PROPERTY_SYNTAX_RULE.
- * 
+ *
  * @author Thiago Delgado Pinto
  */
 export const UI_PROPERTY_SYNTAX_RULES = [
@@ -125,11 +130,11 @@ export const UI_PROPERTY_SYNTAX_RULES = [
 
 /**
  * Default syntax rule for Database Properties.
- * 
+ *
  * @author Thiago Delgado Pinto
  */
 export const DEFAULT_DATABASE_PROPERTY_SYNTAX_RULE = {
-    
+
     // Minimal number of targets it accepts (has precedence over all min values).
     minTargets: 1,
     // Maximal number of targets it accepts (has precedence over all max values).
@@ -150,16 +155,16 @@ export const DEFAULT_DATABASE_PROPERTY_SYNTAX_RULE = {
     number: { min: 1, max: 1 },
 
     // Other action or actions that must be used together.
-    mustBeUsedWith: []    
+    mustBeUsedWith: []
 };
 
 /**
  * Syntax rules for the supported Database Properties. Every rule overwrites DEFAULT_DATABASE_PROPERTY_SYNTAX_RULE.
- * 
+ *
  * @author Thiago Delgado Pinto
  */
 export const DATABASE_PROPERTY_SYNTAX_RULES = [
-    { name: "type", targets: [ "value" ] },    
+    { name: "type", targets: [ "value" ] },
     { name: "path", targets: [ "value" ] },
     { name: "name", targets: [ "value" ] },
     { name: "host", targets: [ "value" ] },
