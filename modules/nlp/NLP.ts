@@ -49,7 +49,7 @@ export class NLP {
 
         // Add an entity named "state" and its recognizer
         this._additionalEntities.push( Entities.STATE );
-        this._additionalRecognizers.push( erMaker.makeValueList( Entities.STATE ) );
+        this._additionalRecognizers.push( erMaker.makeState( Entities.STATE ) );
     }
 
     /**
