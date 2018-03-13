@@ -37,8 +37,8 @@ Language constructions:
 - [Regular Expressions](#regularexpressions)
 - [Table](#table)
 - [Database](#database)
-- [Template](#template)
 - [Variant](#variant)
+- [Test Case](#testcase)
 - [Test Events](#testevents)
 
 
@@ -49,7 +49,7 @@ Language constructions:
 - Value: `"value"`
 - Number: `5`
 - List: `[ "val1", "val2", ... ]` or `[ 12, 53, ... ]` or `[ "hello", 90, ... ]`
-- UI Element: `<id>` or `<#id>` or `<@name>` or `<//xpath>` or `<~mobile_name>`
+- UI Element: `<id>` or `<#id>` or `<@name>` or `<.css>` or `<//xpath>` or `<~mobile_name>`
 - Query: `"SELECT * FROM tbl WHERE fld = 'hello'"` or `"select ..."`
 
 Notes:
@@ -315,7 +315,7 @@ Notes about queries (inside a constraint of a UI Element):
 
 4. May reference a [Table](#table), a [Database](#database), or a [Constant](#constant)
    using the format `[some name]`, where the content does not contain a dollar sign, `$`.
-   A dollar sign may be use to reference valid Excel table names, instead of referencing 
+   A dollar sign may be use to reference valid Excel table names, instead of referencing
    names declared in Concordia.
 
    Example 1: references a declared table and a declared constant.
@@ -327,14 +327,14 @@ Notes about queries (inside a constraint of a UI Element):
    ```sql
    SELECT nome FROM [My DB].`table` WHERE name = [Some Const Name]
    ```
-   
+
    Example 2: NOT A REFERENCE name (e.g. excel table)
    ```sql
    SELECT nome FROM [Some Excel Table$] WHERE name = [Some Const Name]
    ```
 
-5. May reference UI Elements using the format `{feature name:ui element name}`, in which 
-   `feature name:` is optional. The lack of the feature name should make the tool assuming 
+5. May reference UI Elements using the format `{feature name:ui element name}`, in which
+   `feature name:` is optional. The lack of the feature name should make the tool assuming
    that the UI element belongs to the feature.
    Example:
    ```sql
@@ -354,7 +354,7 @@ Notes about queries (inside a constraint of a UI Element):
 UI Element: Login Page
   - type is url
   - value is "/login"
-	
+
 UI Element: Username
   - type is textbox
   - id is "username"
@@ -364,17 +364,17 @@ UI Element: Username
   - maximum length is 30
   - value is queried by "SELECT username FROM {{my db}}.users",
     otherwise I must see {{invalid_username_password}}
-	
+
 UI Element: Password
   - type is textbox
-  - id is "password"  
+  - id is "password"
   - minimal length is 6,
     otherwise I must see the message "Password is too short."
 	    and I must see the color be changed to "red"
 	    and I must see the color of Username be changed to "red"
   - value is queried by "SELECT password FROM `real db name`.users WHERE username = ${Username} AND profile = 'administrator' ",
     otherwise I must see {{invalid_username_password}}
-	
+
 UI Element: Enter
   - type is button
   - id is "enter"
@@ -495,132 +495,85 @@ Database my excel db
 ```
 
 
-## Template
+## Variant
 
-*Declares a template for scenario's variants*
+*Declares a variant of a scenario. A variant is a template for test cases.*
 
 Notes:
 - Local declaration.
 - Belongs to a Scenario.
 - Should be declared after a Scenario.
 
-Example 1: Template of a scenario's variant.
+Example 1:
 ```
-Template: Usual login
+Variant: Usual login
   Given that I am on the Login Page
   When I fill Username
     And I fill Password
     And I click on Enter
-  Then I have the state "logged in"
-    And I see the text ${welcomeText}
-    And I see a button "Logout"
+  Then I have the state ~logged in~
+    And I see the text [welcomeText]
+    And I see {Logout}
 ```
 
+## TestCase
 
-
-## Variant
-
-*Declares a scenario's variant*
+*Test case for a Variant*
 
 Notes:
 - Local declaration.
-- Belongs to a Scenario.
-- Can be declared in a different file (e.g. ".var")
+- Belongs to a Variant.
+- Can be declared in a different file, `.testcase`
 
 Can be generated automatically using:
-1. [template](#template);
-2. [user interface](#userinterface);
-3. [constraints](#constraint);
-4. [states](#state).
+1. [variant](#variant)
+2. [ui element](#uielement)
+3. [constant](#constant)
+4. [state](#state)
 
-A generated variant will:
-- Receive all the annotations from the source variant;
+A generated test case will:
 - Receive the tag `@generated`;
-- Have tags `@invalid` added, if the goal is exploit some constraint;
+- Receive the tag `@variant` to refer to its source variant;
+- Receive the tag `@invalid`, if the goal is exploit some constraint;
 - Have its name defined according to the testing goal;
-- Replace the variant's postconditions, i.e., `Then` clauses, with postconditions of the exploited constraint;
+- Replace variant's postconditions, i.e., `Then` clauses, with postconditions of the exploited constraint;
+- Replace variant's states with the corresponding variants that produce them;
 - Replace all the involved constants by their corresponding values;
-- Replace all the involved references to user interface elements by their identifiers;
+- Replace all the involved references to user interface elements by their literals;
 - Keep informed user interface elements' literals;
-- Keep informed states; <<< Really?
 - Keep informed values;
 
 Additional notes:
 - When a reference to a user interface element is informed **without a value**, values will be produced for the generated test cases, **according to the test goal**;
 
 
-Example 1: Variant produced from the previous template. Valid input.
+Example 1: Test case produced from the previous template. Valid input.
 ```
 @generated
-@scenario( Successful Login ) # needed only if declared in a external file
-@template( Usual login )
-Variant 1: Valid input 1
+@scenario( Successful Login ) # needed only if declared in a external file ?
+@variant( Usual login )
+Test Case: Valid input 1
   Given that I am on the page "/login"
-  When I fill "#username" with "Bob"
-    And I fill "#password" with "bobp4ss"
+  When I fill <#username> with "Bob"
+    And I fill <#password> with "bobp4ss"
     And I click on "Enter"
-  Then I have the state "logged in"    
-    And I see the text "Welcome"
-    And I see a button "Logout"
+  Then I see the text "Welcome"
+    And I see a button <logout>
 ```
 
 Example 2: Another variant produced from previous template. Invalid input.
 ```
 @generated
-@scenario( Successful Login ) # needed only if declared in a external file
-@template( Usual login )
+@scenario( Successful Login ) # needed only if declared in a external file ?
+@variant( Usual login )
 @invalid( Username, minimum length )
-Variant 2: Invalid input - Username length is too short
+Test Case: Invalid input - Username length is too short
   Given that I am on the page "/login"
-  When I fill "#username" with ""
-    And I fill "#password" with "bobp4ss"
+  When I fill <#username> with ""
+    And I fill <#password> with "bobp4ss"
     And I click on "Enter"
   Then I see "Username must have at least 2 characters."
 ```
-
-
-Actions:
-
-- I [ dont ] see "text"
-- I [ dont ] see element with { text | id | name | xpath | css } "value"
-    - default is `name`
-- I [ dont ] see in current url "/path"
-- I see in field with { text | id | name | xpath | css } "value"
-- I [ dont ] see that "name" is checked 
-- I wait [ 1 second ] [ for { element | enabled | invisible | visible | staleness } "name" ]
-- I wait [ 1 second ] for text "text"
-- I fill field "name" with "value"
-- I append field "name" with "value"
-- I select option "name" with "value"
-- I check option "name"
-- I clear field "name"
-- I press key "key" [, "key2", "key3", ...]
-- I move cursor to "name" [ position "x,y" ]
-
-Browser-only actions:
-- I am on page "url"
-- I clear cookie [ "name" ]
-- I set cookie "name" with "value"
-- I [ dont ] see cookie "name"
-- I see in title "value"
-- I resize window to "800x600" `<< width x height `
-- I attach file "path" to "name"
-
-Mobile-only actions:
-- I tap "text"
-- I { show | hide } device keyboard
-- I swipe { up | down | left | right } "name"
-- I switch to web
-- I switch to native
-
-Element filters, when used without the `with` keyword :
-  - `#element` = id
-  - `element` = name
-  - `.element` = css
-  - `//element` = xpath
-  - `~element` = mobile name `<< MOBILE ONLY`
-
-
 
 ## TestEvents
 
@@ -641,4 +594,4 @@ Before Each Scenario:
   I run in console 'cls'
   And I run the command 'DELETE FROM users'
   And I run the command 'INSERT INTO users ( username, password ) VALUES ( "Clark", "Kent" ), ( "Bruce", "Wayne" )'
-``` 
+```
