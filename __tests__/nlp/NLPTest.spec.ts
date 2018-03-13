@@ -13,9 +13,9 @@ describe( 'NLPTest', () => {
 
     function fakeTrainingData(): NLPTrainingData {
         let conversor: NLPTrainingDataConversor = new NLPTrainingDataConversor();
-        let data: NLPTrainingData = conversor.convert( {}, [] );        
+        let data: NLPTrainingData = conversor.convert( {}, [] );
         return data;
-    } 
+    }
 
     function recog( text: string, expected: any, expectedEntity: Entities ): NLPResult | null {
         let r: NLPResult = nlp.recognize( 'en', text );
@@ -65,14 +65,14 @@ describe( 'NLPTest', () => {
 
         beforeEach( () => {
             nlp.train( 'en', fakeTrainingData() );
-        } );        
+        } );
 
 
         describe( 'value', () => {
 
             function recogValue( text: string, expected: string | null ): NLPResult | null {
                 return recog( text, expected, Entities.VALUE );
-            }             
+            }
 
             it( 'between quotes', () => {
                 recogValue( ' "foo" ', 'foo' );
@@ -105,7 +105,7 @@ describe( 'NLPTest', () => {
 
             function recogNumber( text: string, expected: string | null ): NLPResult | null {
                 return recog( text, expected, Entities.NUMBER );
-            }            
+            }
 
             it( 'positive integer number', () => {
                 recogNumber( ' 3 ', '3' );
@@ -116,7 +116,7 @@ describe( 'NLPTest', () => {
             } );
 
             it( 'negative integer number', () => {
-                recogNumber( ' -3 ', '-3' );                
+                recogNumber( ' -3 ', '-3' );
             } );
 
             it( 'negative double number', () => {
@@ -140,7 +140,48 @@ describe( 'NLPTest', () => {
 
                 it( 'words', () => {
                     recogElement( ' {foo bar} ', 'foo bar' );
-                } );                
+                } );
+
+            } );
+
+        } );
+
+
+        describe( 'ui_literal', () => {
+
+            function recogElement( text: string, expected: string | null ): NLPResult | null {
+                return recog( text, expected, Entities.UI_LITERAL );
+            }
+
+            describe( 'recognizes', () => {
+
+                it( 'single character', () => {
+                    recogElement( ' <x> ', 'x' );
+                } );
+
+                it( 'single word', () => {
+                    recogElement( ' <foo> ', 'foo' );
+                } );
+
+                it( 'words', () => {
+                    recogElement( ' <foo bar> ', 'foo bar' );
+                } );
+
+                it( 'id notation', () => {
+                    recogElement( ' <#foo> ', '#foo' );
+                } );
+
+                it( 'name notation', () => {
+                    recogElement( ' <@foo> ', '@foo' );
+                } );
+
+                it( 'xpath notation', () => {
+                    recogElement( ' <//foo> ', '//foo' );
+                } );
+
+                it( 'mobile name notation', () => {
+                    recogElement( ' <~foo> ', '~foo' );
+                } );
 
             } );
 
@@ -151,8 +192,8 @@ describe( 'NLPTest', () => {
 
             function recogQuery( text: string, expected: string | null ): NLPResult | null {
                 return recog( text, expected, Entities.QUERY );
-            }             
-        
+            }
+
             it( 'in uppercase', () => {
                 recogQuery( ' "SELECT foo FROM bar" ', 'SELECT foo FROM bar' );
             } );
@@ -163,22 +204,22 @@ describe( 'NLPTest', () => {
 
             it( 'with spaces before select', () => {
                 recogQuery( ' "  SELECT foo FROM bar" ', 'SELECT foo FROM bar' );
-            } );            
+            } );
 
         } );
 
-        
+
         describe( 'constant', () => {
 
             function recogConstant( text: string, expected: string | null ): NLPResult | null {
                 return recog( text, expected, Entities.CONSTANT );
-            }          
+            }
 
             describe( 'recognizes', () => {
 
                 it( 'a single word', () => {
                     recogConstant( ' [foo] ', 'foo' );
-                } );                
+                } );
 
                 it( 'words', () => {
                     recogConstant( ' [foo bar] ', 'foo bar' );
@@ -186,7 +227,7 @@ describe( 'NLPTest', () => {
 
                 it( 'words with numbers', () => {
                     recogConstant( ' [foo 1 bar 2] ', 'foo 1 bar 2' );
-                } );                
+                } );
 
             } );
 
@@ -199,12 +240,12 @@ describe( 'NLPTest', () => {
                 it( 'a number', () => {
                     recogConstant( ' [1] ', null );
                 } );
-                
+
                 it( 'words with spaces around', () => {
                     recogConstant( ' [  foo bar  ] ', null );
-                } );                
+                } );
 
-            } );  
+            } );
 
         } );
 
@@ -213,8 +254,8 @@ describe( 'NLPTest', () => {
 
             function recogValueList( text: string, expected: string | null ): NLPResult | null {
                 return recog( text, expected, Entities.VALUE_LIST );
-            }             
-        
+            }
+
             it( 'does not recognize an empty list', () => {
                 let r: NLPResult = nlp.recognize( 'en', ' [] ' );
                 expect( r.entities ).toHaveLength( 0 );
@@ -222,7 +263,7 @@ describe( 'NLPTest', () => {
 
             it( 'single number', () => {
                 recogValueList( ' [1] ', '[1]' );
-            } );        
+            } );
 
             it( 'numbers', () => {
                 recogValueList( ' [1, 2] ', '[1, 2]' );
@@ -240,7 +281,7 @@ describe( 'NLPTest', () => {
             } );
 
             it( 'strings and numbers mixed', () => {
-                
+
                 recogValueList(
                     ' [ "alice", 1, "bob", 2 ] ',
                     '[ "alice", 1, "bob", 2 ]'
@@ -251,7 +292,7 @@ describe( 'NLPTest', () => {
                     '[ 1, "alice", 2, "bob", 3, 4, "bob", "joe" ]'
                 );
 
-            } );        
+            } );
 
         } );
 
