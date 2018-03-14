@@ -13,7 +13,7 @@ import { TestCaseSSA } from '../../modules/semantic/TestCaseSSA';
 /**
  * @author Thiago Delgado Pinto
  */
-describe( 'VariantSSATest', () => {
+describe( 'TestCaseSSATest', () => {
 
     const analyzer = new TestCaseSSA(); // under test
 
@@ -79,7 +79,7 @@ describe( 'VariantSSATest', () => {
             ],
             testCases: [
                 {
-                    name: "My variant 1",
+                    name: "My test case 1",
                     location: {},
                     tags: [
                         {
@@ -106,7 +106,7 @@ describe( 'VariantSSATest', () => {
             ],
             testCases: [
                 {
-                    name: "My variant 1",
+                    name: "My test case 1",
                     location: {},
                     tags: [
                         {
@@ -128,7 +128,7 @@ describe( 'VariantSSATest', () => {
                 location: {},
                 testCases: [
                     {
-                        name: "My F variant 1",
+                        name: "My F test case 1",
                         location: {}
                     } as Variant
                 ]
@@ -142,7 +142,7 @@ describe( 'VariantSSATest', () => {
                 location: {},
                 testCases: [
                     {
-                        name: "My G variant 1",
+                        name: "My G test case 1",
                         location: {},
                         tags: [
                             {
@@ -162,7 +162,7 @@ describe( 'VariantSSATest', () => {
     } );
 
 
-    it( 'criticizes a variant without a feature and an import', () => {
+    it( 'criticizes the lack of a feature and an import', () => {
         docC.imports = []; // empty
         let errors: Error[] = [];
         analyzer.analyzeDocument( spec, docC, errors );
@@ -186,7 +186,7 @@ describe( 'VariantSSATest', () => {
         expect( errors[ 0 ].message ).toMatch( /tag/ui );
     } );
 
-    it( 'copies variants to the referenced feature', () => {
+    it( 'copies test cases to the referenced feature', () => {
         let errors: Error[] = [];
         analyzer.analyzeDocument( spec, docC, errors );
         expect( errors ).toHaveLength( 0 );
@@ -213,10 +213,10 @@ describe( 'VariantSSATest', () => {
         expect( errors[ 0 ].message ).toMatch( /tag/ui );
     } );
 
-    it( 'criticizes duplicated variant names', () => {
+    it( 'criticizes duplicated names', () => {
         docF.feature.testCases.push(
             {
-                name: "My F variant 1",
+                name: "My F test case 1",
                 location: {}
             } as Variant
         );
