@@ -8,12 +8,23 @@ import { NamedNode } from "../ast/Node";
  */
 export class DuplicationChecker {
 
+    /**
+     * Returns true whether the given items have the given property duplicated.
+     *
+     * @param items Items to check
+     * @param propertyToCompare Property to compare
+     */
     public hasDuplication( items: Object[], propertyToCompare: string ): boolean {
         let size = // size of a set containing only the values of the property to compare
             ( new Set( items.map( ( item ) => { return item[ propertyToCompare ]; } ) ) ).size;
         return items.length > size;
     }
 
+    /**
+     * Returns the duplicated items.
+     *
+     * @param items Items to check
+     */
     public duplicates( items: any[] ): any[] {
         let flags = {};
         let dup = [];
@@ -27,6 +38,12 @@ export class DuplicationChecker {
         return dup;
     }
 
+    /**
+     * Returns the items with the given duplicated property.
+     *
+     * @param items Items to check
+     * @param propertyToCompare Property to compare
+     */
     public withDuplicatedProperty( items: any[], propertyToCompare: string ): any[] {
         let flags = {};
         let dup: any[] = [];
@@ -46,8 +63,12 @@ export class DuplicationChecker {
 
 
     /**
-     * Returns a map containg the property to compare as a key and
+     * Returns a map containg the value of the property to compare as a key and
      * the duplicated items as an array.
+     *
+     * Example: `[ { id: 1, name: 'foo' }, { id: 2, name: 'foo' } ], { id: 3, name: 'bar' } ]`
+     *
+     * will return `{ 'foo': [ { id: 1, name: 'foo' }, { id: 2, name: 'foo' } ] }`.
      *
      * @param items Items to compare
      * @param propertyToCompare Property to compare
@@ -79,40 +100,23 @@ export class DuplicationChecker {
 
 
     /**
-     * Checks for duplicated names.
-     *
-     * @param items Items to check
-     * @param errors Errors found
-     * @param itemName Item name
-     */
-    public checkDuplicatedNames(
-        items: ItemToCheck[],
-        errors: SemanticException[],
-        itemName: string
-    ): void {
-        const map = this.mapDuplicates( items, 'name' );
-        for ( let prop in map ) {
-            let duplications = map[ prop ];
-            let msg = 'Duplicated ' + itemName +  ' "' + prop + '" in: ' +
-                duplications.map( item => "\n  " + item.locationStr + item.file ).join( ', ' );
-            let err = new SemanticException( msg );
-            errors.push( err );
-        }
-    }
-
-
-    /**
-     * Check duplicated nodes name.
+     * Check nodes with duplicated names, adding exceptions to the given array when
+     * they are found.
      *
      * @param nodes Nodes to check.
      * @param errors Errors found.
-     * @param nodeName Node name.
+     * @param nodeName Node name to compose the exception message.
+     * @returns A object map in the format returned by `mapDuplicates()`
      */
     public checkDuplicatedNamedNodes(
         nodes: NamedNode[],
         errors: SemanticException[],
         nodeName: string
-    ): void {
+    ): object {
+
+        if ( nodes.length < 1 ) {
+            return;
+        }
 
         let makeNodeLocationStr = function( node ) {
             return "\n  (" + node.location.line + ',' + node.location.column + ') ' +
@@ -127,14 +131,7 @@ export class DuplicationChecker {
             let err = new SemanticException( msg );
             errors.push( err );
         }
+        return map;
     }
 
-
-}
-
-
-export interface ItemToCheck {
-    file: string;
-    name: string;
-    locationStr: string;
 }

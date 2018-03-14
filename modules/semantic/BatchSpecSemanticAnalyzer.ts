@@ -7,6 +7,7 @@ import { Spec } from "../ast/Spec";
 import { TestCaseSSA } from './TestCaseSSA';
 import { SemanticException } from './SemanticException';
 import { ConstantSSA } from './ConstantSSA';
+import { UIElementSSA } from './UIElementSSA';
 
 /**
  * Executes many semantic analyzers to a specification in batch.
@@ -24,6 +25,7 @@ export class BatchSpecSemanticAnalyzer {
             new ConstantSSA(),
             new DatabaseSSA(),
             new TableSSA(),
+            new UIElementSSA(),
             new TestCaseSSA()
         ];
     }

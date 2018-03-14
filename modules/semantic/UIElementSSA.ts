@@ -14,7 +14,7 @@ export class UIElementSSA extends SpecSemanticAnalyzer {
 
     /** @inheritDoc */
    public async analyze( spec: Spec, errors: SemanticException[] ): Promise< void > {
-       this._checker.checkDuplicatedNamedNodes( spec.globalUiElements(), errors, 'UI Element' );
+       this._checker.checkDuplicatedNamedNodes( spec.globalUiElements(), errors, 'global UI Element' );
    }
 
 }

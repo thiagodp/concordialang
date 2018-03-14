@@ -6,10 +6,11 @@ import { ImportDA } from './ImportDA';
 import { SemanticException } from '../SemanticException';
 import { Import } from '../../ast/Import';
 import { Document } from '../../ast/Document';
+import { UIElementDA } from './UIElementDA';
 
 /**
  * Executes semantic analysers to a single document in batch.
- * 
+ *
  * @author Thiago Delgado Pinto
  */
 export class BatchDocSemanticAnalyzer {
@@ -20,7 +21,8 @@ export class BatchDocSemanticAnalyzer {
         this._analyzers = [
             new ImportDA(),
             new ScenarioDA(),
-            new DatabaseDA()
+            new DatabaseDA(),
+            new UIElementDA
         ];
     }
 
