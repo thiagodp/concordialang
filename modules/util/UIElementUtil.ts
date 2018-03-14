@@ -49,33 +49,52 @@ export class UIElementUtil {
     }
 
     /**
-     * Retrieves a feature name from a string in the format 'feature:variable' or 'variable'.
-     * Whether a variable does not have a feature, it returns null.
+     * Retrieves a feature name from a variable or null if not found.
+     *
+     * Accepted formats:
+     * - feature:variable
+     * - variable
+     * - {feature:variable}
+     * - {variable}
      *
      * @param variable Variable
      */
     public extractFeatureNameOf( variable: string ): string | null {
-        const index = variable.indexOf( Symbols.FEATURE_TO_UI_ELEMENT_SEPARATOR );
+        const v = variable
+            .replace( Symbols.UI_ELEMENT_PREFIX, '' )
+            .replace( Symbols.UI_ELEMENT_SUFFIX, '' )
+            .trim();
+        const index =  v.indexOf( Symbols.FEATURE_TO_UI_ELEMENT_SEPARATOR );
         if ( index < 0 ) {
             return null;
         }
-        return variable.substring( 0, index );
+        return v.substring( 0, index );
     }
 
     /**
-     * Retrieves a variable name from a string in the format 'feature:variable' or 'variable'.
+     * Retrieves a ui element name from a variable or null if not found.
+     *
+     * Accepted formats:
+     * - feature:variable
+     * - variable
+     * - {feature:variable}
+     * - {variable}
      *
      * @param variable Variable
      */
     public extractVariableNameOf( variable: string ): string {
-        const index = variable.indexOf( Symbols.FEATURE_TO_UI_ELEMENT_SEPARATOR );
+        const v = variable
+            .replace( Symbols.UI_ELEMENT_PREFIX, '' )
+            .replace( Symbols.UI_ELEMENT_SUFFIX, '' )
+            .trim();
+        const index = v.indexOf( Symbols.FEATURE_TO_UI_ELEMENT_SEPARATOR );
         if ( index < 0 ) {
-            return variable;
+            return v;
         }
-        if ( 1 === variable.length ) {
-            return '';
+        if ( 1 === v.length ) { // separator only, e.g., {:}
+            return null;
         }
-        return variable.split( Symbols.FEATURE_TO_UI_ELEMENT_SEPARATOR )[ 1 ];
+        return v.split( Symbols.FEATURE_TO_UI_ELEMENT_SEPARATOR )[ 1 ];
     }
 
     /**
@@ -85,8 +104,9 @@ export class UIElementUtil {
      * @param uiElementName UI Element name
      */
     public makeVariableName( featureName: string | null, uiElementName: string ): string {
-        return Symbols.UI_ELEMENT_PREFIX + ( featureName || '' ) +
-            Symbols.FEATURE_TO_UI_ELEMENT_SEPARATOR + uiElementName + Symbols.UI_ELEMENT_SUFFIX;
+        return Symbols.UI_ELEMENT_PREFIX +
+            ( isDefined( featureName ) ? featureName + Symbols.FEATURE_TO_UI_ELEMENT_SEPARATOR : '' ) +
+            uiElementName + Symbols.UI_ELEMENT_SUFFIX;
     }
 
 }
