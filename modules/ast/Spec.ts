@@ -12,7 +12,7 @@ import { join } from 'path';
 
 /**
  * Specification
- * 
+ *
  * @author Thiago Delgado Pinto
  */
 export class Spec {
@@ -27,7 +27,7 @@ export class Spec {
     private _constantCache: Constant[] = null;
     private _tableCache: Table[] = null;
     private _featureCache: Feature[] = null;
-    // private _uiElementCache: UIElement[] = null; // global UI Elements
+    private _uiElementCache: UIElement[] = null; // global UI Elements
     private _nonFeatureNamesCache: string[] = null;
 
     private _constantNameToValueMap: Map< string, string | number > = new Map< string, string | number >();
@@ -40,11 +40,11 @@ export class Spec {
 
     /**
      * Returns a document with the given path or null if not found.
-     * 
-     * Both the given path and the path of available documents are 
+     *
+     * Both the given path and the path of available documents are
      * normalized with relation to the base path, if the latter exists,
      * in order to increase the chances of matching.
-     * 
+     *
      * @param filePath File path.
      */
     public docWithPath( filePath: string, clearCache: boolean = false ): Document | null {
@@ -61,10 +61,10 @@ export class Spec {
                     : doc.fileInfo.path;
 
                 this._relPathToDocumentCache.set( relDocPath, doc );
-            }            
-        }       
+            }
+        }
 
-        const relFilePath = isDefined( this.basePath ) ? join( this.basePath, filePath ) : filePath; 
+        const relFilePath = isDefined( this.basePath ) ? join( this.basePath, filePath ) : filePath;
         return this._relPathToDocumentCache.get( relFilePath )|| null;
     }
 
@@ -109,12 +109,12 @@ export class Spec {
 
     /**
      * Return all constants. Results are cached.
-     */    
+     */
     public constants = ( clearCache: boolean = false ): Constant[] => {
         if ( this.isConstantCacheFilled() && ! clearCache ) {
             return this._constantCache;
         }
-        return this.fillConstantsCache();       
+        return this.fillConstantsCache();
     };
 
     private fillConstantsCache(): Constant[] {
@@ -142,7 +142,7 @@ export class Spec {
         if ( ! this.isConstantCacheFilled() ) {
             this.fillConstantsCache();
         }
-        return this._constantNameToValueMap;        
+        return this._constantNameToValueMap;
     }
 
     public constantNames(): string[] {
@@ -156,7 +156,7 @@ export class Spec {
 
     /**
      * Return all tables. Results are cached.
-     */      
+     */
     public tables = ( clearCache: boolean = false ): Table[] => {
         if ( isDefined( this._tableCache ) && ! clearCache ) {
             return this._tableCache;
@@ -176,8 +176,8 @@ export class Spec {
                 this._tableCache.push( tbl );
             }
         }
-        return this._tableCache;        
-    };    
+        return this._tableCache;
+    };
 
     public tableNames = (): string[] => {
         return this.tables().map( c => c.name );
@@ -186,7 +186,7 @@ export class Spec {
 
     /**
      * Return all features. Results are cached.
-     */     
+     */
     public features = ( clearCache: boolean = false ): Feature[] => {
         if ( isDefined( this._featureCache ) && ! clearCache ) {
             return this._featureCache;
@@ -221,7 +221,7 @@ export class Spec {
             const equal: boolean = ignoreCase
                 ? name.toLowerCase() === f.name.toLowerCase()
                 : name === f.name;
-                
+
             if ( equal ) {
                 return f;
             }
@@ -241,17 +241,19 @@ export class Spec {
         return this._nonFeatureNamesCache;
     }
 
-    // public uiElements = ( clearCache: boolean = false ): UIElement[] => {
-    //     if ( this._uiElementCache !== null && ! clearCache ) {
-    //         return this._uiElementCache;
-    //     }
-    //     this._uiElementCache = [];
-    //     for ( let doc of this.docs ) {
-    //         const elements = this.globalUIElementsOf( doc );
-    //         this._uiElementCache.push.apply( this._uiElementCache, elements );
-    //     }
-    //     return this._uiElementCache;        
-    // };
+    public globalUiElements( clearCache: boolean = false ): UIElement[] {
+        if ( this._uiElementCache !== null && ! clearCache ) {
+            return this._uiElementCache;
+        }
+        this._uiElementCache = [];
+        for ( let doc of this.docs ) {
+            if ( ! doc.uiElements || doc.uiElements.length < 1 ) {
+                continue;
+            }
+            this._uiElementCache.push.apply( this._uiElementCache, doc.uiElements );
+        }
+        return this._uiElementCache;
+    }
 
     // public uiElementNames = (): string[] => {
     //     return this.uiElements().map( e => e.name );

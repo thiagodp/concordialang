@@ -1,6 +1,9 @@
+import { SemanticException } from "../semantic/SemanticException";
+import { NamedNode } from "../ast/Node";
+
 /**
  * Duplication checker.
- * 
+ *
  * @author Thiago Delgado Pinto
  */
 export class DuplicationChecker {
@@ -43,9 +46,9 @@ export class DuplicationChecker {
 
 
     /**
-     * Returns a map containg the property to compare as a key and 
+     * Returns a map containg the property to compare as a key and
      * the duplicated items as an array.
-     * 
+     *
      * @param items Items to compare
      * @param propertyToCompare Property to compare
      * @return map
@@ -72,6 +75,66 @@ export class DuplicationChecker {
         }
 
         return map;
-    }    
+    }
 
+
+    /**
+     * Checks for duplicated names.
+     *
+     * @param items Items to check
+     * @param errors Errors found
+     * @param itemName Item name
+     */
+    public checkDuplicatedNames(
+        items: ItemToCheck[],
+        errors: SemanticException[],
+        itemName: string
+    ): void {
+        const map = this.mapDuplicates( items, 'name' );
+        for ( let prop in map ) {
+            let duplications = map[ prop ];
+            let msg = 'Duplicated ' + itemName +  ' "' + prop + '" in: ' +
+                duplications.map( item => "\n  " + item.locationStr + item.file ).join( ', ' );
+            let err = new SemanticException( msg );
+            errors.push( err );
+        }
+    }
+
+
+    /**
+     * Check duplicated nodes name.
+     *
+     * @param nodes Nodes to check.
+     * @param errors Errors found.
+     * @param nodeName Node name.
+     */
+    public checkDuplicatedNamedNodes(
+        nodes: NamedNode[],
+        errors: SemanticException[],
+        nodeName: string
+    ): void {
+
+        let makeNodeLocationStr = function( node ) {
+            return "\n  (" + node.location.line + ',' + node.location.column + ') ' +
+                node.location.filePath || '';
+        };
+
+        const map = this.mapDuplicates( nodes, 'name' );
+        for ( let prop in map ) {
+            let duplicatedNodes: NamedNode[] = map[ prop ];
+            let msg = 'Duplicated ' + nodeName +  ' "' + prop + '" in: ' +
+                duplicatedNodes.map( node => makeNodeLocationStr( node ) ).join( ', ' );
+            let err = new SemanticException( msg );
+            errors.push( err );
+        }
+    }
+
+
+}
+
+
+export interface ItemToCheck {
+    file: string;
+    name: string;
+    locationStr: string;
 }

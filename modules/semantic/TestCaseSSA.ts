@@ -88,7 +88,7 @@ export class TestCaseSSA extends SpecSemanticAnalyzer {
             return; // nothing to do
         }
 
-        this.checkDuplicatedNamedNodes( doc.feature.testCases, errors, 'Test Case' );
+        this._checker.checkDuplicatedNamedNodes( doc.feature.testCases, errors, 'Test Case' );
     }
 
 

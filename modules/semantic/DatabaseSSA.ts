@@ -1,6 +1,6 @@
 import { Database } from '../ast/Database';
 import { Document } from '../ast/Document';
-import { ItemToCheck, SpecSemanticAnalyzer } from './SpecSemanticAnalyzer';
+import { SpecSemanticAnalyzer } from './SpecSemanticAnalyzer';
 import { Spec } from "../ast/Spec";
 import { DuplicationChecker } from '../util/DuplicationChecker';
 import { SemanticException } from './SemanticException';
@@ -10,18 +10,18 @@ import { ConnectionCheckResult } from '../req/ConnectionResult';
 
 /**
  * Executes semantic analysis of Databases in a specification.
- * 
+ *
  * Checkings:
  * - duplicated names
  * - connection to the defined databases <<< NEDDED HERE ???
- * 
+ *
  * @author Thiago Delgado Pinto
  */
 export class DatabaseSSA extends SpecSemanticAnalyzer {
 
     /** @inheritDoc */
     public async analyze( spec: Spec, errors: SemanticException[] ): Promise< void > {
-        this.checkDuplicatedNamedNodes( spec.databases(), errors, 'database' );
+        this._checker.checkDuplicatedNamedNodes( spec.databases(), errors, 'database' );
         await this.checkConnections( spec, errors );
     }
 

@@ -1,6 +1,6 @@
 import { Database } from '../ast/Database';
 import { Document } from '../ast/Document';
-import { ItemToCheck, SpecSemanticAnalyzer } from './SpecSemanticAnalyzer';
+import { SpecSemanticAnalyzer } from './SpecSemanticAnalyzer';
 import { Spec } from "../ast/Spec";
 import { DuplicationChecker } from '../util/DuplicationChecker';
 import { SemanticException } from './SemanticException';
@@ -13,13 +13,13 @@ import { QueryParser } from '../db/QueryParser';
 
 /**
  * Executes semantic analysis of Queries in a specification.
- * 
+ *
  * Checkings - and updates, if configured so:
  * - referenced databases
  * - referenced tables
  * - referenced UI elements and features
  * - referenced constants
- * 
+ *
  * @author Thiago Delgado Pinto
  */
 export class QuerySSA extends SpecSemanticAnalyzer {
@@ -63,7 +63,7 @@ export class QuerySSA extends SpecSemanticAnalyzer {
 
     /**
      * Analyze queries of the given UI elements.
-     * 
+     *
      * @param uiElements UI elements to check.
      * @param spec Specification.
      * @param currentFeature Current feature.
@@ -101,7 +101,7 @@ export class QuerySSA extends SpecSemanticAnalyzer {
 
     /**
      * Analyze references of a given query.
-     * 
+     *
      * @param query Query to check.
      * @param queryOwner UI property of a UI element that contains the query.
      * @param spec Specification to check.
@@ -116,6 +116,6 @@ export class QuerySSA extends SpecSemanticAnalyzer {
         errors: SemanticException[]
     ): void {
 
-    } 
+    }
 
 }
