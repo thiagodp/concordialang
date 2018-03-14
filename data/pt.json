@@ -7,7 +7,7 @@
         "with": [ "com", "with" ],
         "state": [ "estado", "state" ],
         "variant": [ "variante", "variação", "variant" ],
-        "template": [ "modelo", "template" ],
+        "testCase": [ "caso de teste", "test case" ],
         "uiElement": [ "elemento da iu", "elemento de iu", "ui element" ],
         "database": [ "banco de dados", "database" ],
 
@@ -18,9 +18,13 @@
         "beforeEachScenario": [ "antes de cada cenário", "before each scenario" ],
         "afterEachScenario": [ "depois de cada cenário", "após cada cenário", "after each scenario" ],
 
-        "importanceTag": [ "importance" ],
-        "ignoreTag": [ "ignore" ],
-
+        "tagGlobal": [ "global" ],
+        "tagFeature": [ "feature" ],
+        "tagScenario": [ "scenario" ],
+        "tagVariant": [ "variant" ],
+        "tagImportance": [ "importance" ],
+        "tagIgnore": [ "ignore" ],
+        "tagGenerated": [ "generated" ],
 
         "language": [ "language" ],
 

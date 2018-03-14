@@ -1,4 +1,3 @@
-import { TemplateParser } from './TemplateParser';
 import { ListItemParser } from './ListItemParser';
 import { TableRowParser } from './TableRowParser';
 import { TableRow } from '../ast/Table';
@@ -15,6 +14,7 @@ import { ParsingContext } from "./ParsingContext";
 import { BackgroundParser } from './BackgroundParser';
 import { ScenarioParser } from './ScenarioParser';
 import { VariantParser } from './VariantParser';
+import { TestCaseParser } from './TestCaseParser';
 import { ImportParser } from "./ImportParser";
 import { StateParser } from "./StateParser";
 import { StepWhenParser } from './StepWhenParser';
@@ -30,7 +30,7 @@ import { DatabaseParser } from './DatabaseParser';
  * Builds an AST from the nodes detected by the lexer. It checks syntatic properties
  * of the model (e.g. the order of appearance), but it does not check semantic properties
  * (e.g. check if a import file exists).
- * 
+ *
  * @author Thiago Delgado Pinto
  */
 export class Parser {
@@ -56,18 +56,18 @@ export class Parser {
         this._parsersMap[ NodeTypes.REGEX ] = new ListItemParser();
         this._parsersMap[ NodeTypes.STATE ] = new StateParser();
         this._parsersMap[ NodeTypes.TABLE ] = new TableParser();
-        this._parsersMap[ NodeTypes.TABLE_ROW ] = new TableRowParser();        
+        this._parsersMap[ NodeTypes.TABLE_ROW ] = new TableRowParser();
         this._parsersMap[ NodeTypes.UI_ELEMENT ] = new UIElementParser();
         this._parsersMap[ NodeTypes.UI_PROPERTY ] = new ListItemParser();
         this._parsersMap[ NodeTypes.DATABASE ] = new DatabaseParser();
         this._parsersMap[ NodeTypes.DATABASE_PROPERTY ] = new ListItemParser();
         this._parsersMap[ NodeTypes.VARIANT ] = new VariantParser();
-        this._parsersMap[ NodeTypes.TEMPLATE ] = new TemplateParser();
+        this._parsersMap[ NodeTypes.TEST_CASE ] = new TestCaseParser();
     }
 
     public reset(): void {
         this._errors = [];
-    }    
+    }
 
     public stopOnFirstError( stop?: boolean ): boolean {
         if ( stop !== undefined ) {
@@ -78,16 +78,16 @@ export class Parser {
 
     public hasErrors(): boolean {
         return this._errors.length > 0;
-    }    
+    }
 
     public errors(): Error[] {
         return this._errors;
-    }    
+    }
 
     /**
-     * Analyze the given nodes and fill the document with the AST. Returns 
+     * Analyze the given nodes and fill the document with the AST. Returns
      * ignored TokenTypes, that were not parsed because of the lack of parsers.
-     * 
+     *
      * @param nodes Nodes to be analyzed.
      * @param doc Document where to put the AST.
      */
@@ -113,13 +113,13 @@ export class Parser {
                 ignoredTokenTypes.push( node.nodeType );
                 continue;
             }
-            // Parses the current node            
+            // Parses the current node
             nodeParser.analyze( node, context, it, errors );
 
             // Stop if needed
             if ( this._stopOnFirstError && errors.length > 0 ) {
                 break;
-            }            
+            }
         }
 
         // Add the "errors" array to "_errors"

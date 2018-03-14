@@ -5,43 +5,41 @@ import { SyntaticException } from '../req/SyntaticException';
 import { NodeIterator } from './NodeIterator';
 import { NodeParser } from './NodeParser';
 import { ParsingContext } from "./ParsingContext";
-import { Variant } from '../ast/Variant';
+import { TestCase } from "../ast/Variant";
 import { TagCollector } from "./TagCollector";
 
 /**
- * Variant parser
+ * TestCase parser
  *
  * @author Thiago Delgado Pinto
  */
-export class VariantParser implements NodeParser< Variant > {
+export class TestCaseParser implements NodeParser< TestCase > {
 
     /** @inheritDoc */
-    public analyze( node: Variant, context: ParsingContext, it: NodeIterator, errors: Error[] ): boolean {
+    public analyze( node: TestCase, context: ParsingContext, it: NodeIterator, errors: Error[] ): boolean {
 
-        // Checks if a scenario has been declared
+        // Has no feature and has no imports?
         if ( ! context.doc.feature
-            || ! context.doc.feature.scenarios
-            || context.doc.feature.scenarios.length < 1
-        ) {
+            && ( ! context.doc.imports || context.doc.imports.length < 1 ) ) {
             let e = new SyntaticException(
-                'A variant must be declared after a scenario.', node.location );
+                'A Test Case must be declared after a Feature. Please declare or import a Feature and then declare the Test Case.', node.location );
             errors.push( e );
             return false;
         }
 
-        // Prepares the scenario to receive the variant
-        let scenario = context.doc.feature.scenarios[ context.doc.feature.scenarios.length - 1 ];
-        if ( ! scenario.variants ) {
-            scenario.variants = [];
+        // Prepares the owner to receive the testCase
+        let owner = context.doc.feature ? context.doc.feature : context.doc;
+        if ( ! owner.testCases ) {
+            owner.testCases = [];
         }
 
-        // Adds it to the scenario
-        scenario.variants.push( node );
+        // Adds it to the feature
+        owner.testCases.push( node );
 
         // Adjusts the context
         context.resetInValues();
-        context.inVariant = true;
-        context.currentVariant = node;
+        context.inTestCase = true;
+        context.currentTestCase = node;
 
         // Adds backward tags
         if ( ! node.tags ) {

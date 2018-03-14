@@ -2,7 +2,7 @@ import { Spec } from "../ast/Spec";
 import { ImportBasedGraphBuilder } from "../selection/ImportBasedGraphBuilder";
 import { Document } from "../ast/Document";
 import { LocatedException } from "../req/LocatedException";
-import { Variant } from "../ast/Variant";
+import { Variant, TestCase } from "../ast/Variant";
 import { isDefined } from "../util/TypeChecking";
 import { ReservedTags } from "../req/ReservedTags";
 import { Symbols } from "../req/Symbols";
@@ -15,19 +15,28 @@ import { Language } from "../ast/Language";
 import { DocumentUtil } from "../util/DocumentUtil";
 import { NodeTypes } from "../req/NodeTypes";
 import Graph from 'graph.js';
-import { join, basename, extname, dirname, relative } from 'path';
+import { join, basename, extname, dirname, relative, parse } from 'path';
 import { EventEmitter } from 'events';
 import { deepcopy } from 'deepcopy';
+import { Scenario } from "../ast/Scenario";
+
+/**
+ * Events related to the generation of Documents with Variants.
+ *
+ * @author Thiago Delgado Pinto
+ */
+export enum DocumentGenerationEvents {
+    NEW_DOCUMENT = 'concordia:testCase:newDocument'
+}
 
 
 /**
- * Generates a Document with Variants without touching the file system.
- * 
- * @author Thiago Delgado Pinto 
+ * Generates a Document with Test Cases without touching the file system.
+ *
+ * @author Thiago Delgado Pinto
  */
-export class VariantDocumentGenerator extends EventEmitter {
+export class TestCaseDocumentGenerator extends EventEmitter {
 
-    private readonly NEW_DOCUMENT_EVENT: string = 'concordia:testCase:newDocument';    
     private readonly _docUtil = new DocumentUtil();
 
     constructor(
@@ -40,11 +49,11 @@ export class VariantDocumentGenerator extends EventEmitter {
     generateVariantDocuments(
         graph: Graph,
         spec: Spec,
-        variantOutputDirectory: string,
+        outputDirectory: string,
         startLine: number
     ): Graph {
 
-        const outputDir = join( spec.basePath, variantOutputDirectory );
+        const outputDir = join( spec.basePath, outputDirectory );
 
         let documentsMap: Map< Document, Document > = new Map< Document, Document >();
         const docUtil = new DocumentUtil();
@@ -54,7 +63,7 @@ export class VariantDocumentGenerator extends EventEmitter {
 
             const doc: Document = value;
             const newDoc: Document | null = this.newVariantDocumentFrom( doc, spec, outputDir, startLine );
-            if ( ! newDoc ) { // Probably because the original doc has no templates
+            if ( ! newDoc ) { // Probably because the original doc has no variants
                 continue;
             }
 
@@ -66,7 +75,7 @@ export class VariantDocumentGenerator extends EventEmitter {
 
             // # Announce the new document
             // This allows the listener to generate the corresponding file, for example.
-            this.emit( this.NEW_DOCUMENT_EVENT, newDoc );
+            this.emit( DocumentGenerationEvents.NEW_DOCUMENT, newDoc );
         }
 
         // # Add the generated documents to the graph
@@ -89,9 +98,9 @@ export class VariantDocumentGenerator extends EventEmitter {
         startLine: number
     ): Document | null {
 
-        // # Check whether the document has templates
-        const templates: Variant[] = this._docUtil.templateVariantsOf( doc );
-        if ( templates.length < 1 ) {
+        // # Check whether the document has variants
+        const variantsMap: Map< Variant, Scenario > = this._docUtil.mapVariantsOf( doc );
+        if ( variantsMap.size < 1 ) {
             return null;
         }
 
@@ -99,42 +108,47 @@ export class VariantDocumentGenerator extends EventEmitter {
         let newDoc: Document = {
             fileInfo: {
                 hash: null,
-                path: this.createVariantFileNameBasedOn( doc.fileInfo.path, outputDir )
+                path: this.createTestCaseFileNameBasedOn( doc.fileInfo.path, outputDir )
             } as FileInfo,
             imports: [],
-            variants: []
+            testCases: []
         } as Document;
+
+        // # Generate language if nedded
+        newDoc.language = this.createLanguageIfNeeded( doc, ++startLine );
 
         // # Generate the nedded imports
         newDoc.imports = this.createImports( doc, outputDir, ++startLine );
         startLine += newDoc.imports.length;
 
-        // # Generate language if nedded
-        newDoc.language = this.createLanguageIfNeeded( doc, ++startLine );
+        // # Generate test objects from variants
+        let testCases: TestCase[]  = this.generateTestCasesFromVariants(
+            variantsMap, doc, spec, ++startLine );
 
-        // # Generate variant objects from templates.
-        let variants: Variant[]  = this.generateVariantsFromTemplates(
-            templates, doc, spec, ++startLine );
-
-        if ( variants.length < 1 ) {
+        if ( testCases.length < 1 ) {
             return null; // throw away the content generated until here
         }
-        newDoc.variants = variants;
-        
+        newDoc.testCases = testCases;
+
         return newDoc;
     }
 
 
-    createVariantFileNameBasedOn( path: string, outputDir: string ): string {
-
-        // Extract the received file name and add a proper extension
-        let fileName = basename( path );
-        fileName = fileName.substr( 0, fileName.lastIndexOf( '.' ) ) + this._options.extensionTestCase;
-
-        // Directory relative to where the doc file is
-        const fileDir = relative( dirname( path ), outputDir );
-
+    createTestCaseFileNameBasedOn( path: string, outputDir: string ): string {
+        const props = parse( path );
+        const fileName = props.name + this._options.extensionTestCase;
+        const fileDir = relative( props.dir, outputDir ); // Relative to where the doc is
         return join( fileDir, fileName );
+    }
+
+
+    createLanguageIfNeeded( doc: Document, startLine: number ): Language | undefined {
+        if ( ! doc.language || doc.language.value === this._options.language ) {
+            return undefined;
+        }
+        let lang: Language = deepcopy( doc.language ) as Language;
+        lang.location.line = startLine;
+        return lang;
     }
 
 
@@ -159,44 +173,36 @@ export class VariantDocumentGenerator extends EventEmitter {
 
         imports.push( docImport );
 
+        // NOT NEEDED: the VariantSSA will add the Variants to their Feature! ------
         // Add the imports from the given document
-        if ( doc.imports ) {
-            for ( let imp of doc.imports ) {
-                // Clone the existing import
-                let newImport: Import = deepcopy( imp ) as Import;
-                // Adjust its line number
-                newImport.location.line = ++startLine;
-                // Resolve its path
-                const relPath = join(
-                    relative( dirname( newImport.value ), outputDir ),
-                    basename( newImport.value )
-                );
-                newImport.value = relPath;
-                // Add it to the list
-                imports.push( newImport );
-            }
-        }
+        // if ( doc.imports ) {
+        //     for ( let imp of doc.imports ) {
+        //         // Clone the existing import
+        //         let newImport: Import = deepcopy( imp ) as Import;
+        //         // Adjust its line number
+        //         newImport.location.line = ++startLine;
+        //         // Resolve its path
+        //         const relPath = join(
+        //             relative( dirname( newImport.value ), outputDir ),
+        //             basename( newImport.value )
+        //         );
+        //         newImport.value = relPath;
+        //         // Add it to the list
+        //         imports.push( newImport );
+        //     }
+        // }
+        // -------------------------------------------------------------------------
 
         return imports;
     }
 
 
-    createLanguageIfNeeded( doc: Document, startLine: number ): Language | undefined {
-        if ( ! doc.language || doc.language.value === this._options.language ) {
-            return undefined;
-        }
-        let lang: Language = deepcopy( doc.language ) as Language;
-        lang.location.line = startLine;
-        return lang;
-    }
-
-
-    generateVariantsFromTemplates(
-        templates: Variant[],
+    generateTestCasesFromVariants(
+        variantsMap: Map< Variant, Scenario >,
         doc: Document,
         spec: Spec,
         startLine: number
-    ): Variant[] {
+    ): TestCase[] {
 
         // TO-DO: use VariantGenerator
 

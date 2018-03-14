@@ -8,14 +8,14 @@ import { Variant } from '../../modules/ast/Variant';
 import { Feature } from '../../modules/ast/Feature';
 import { Document } from '../../modules/ast/Document';
 import { Spec } from '../../modules/ast/Spec';
-import { VariantSSA } from '../../modules/semantic/VariantSSA';
+import { TestCaseSSA } from '../../modules/semantic/TestCaseSSA';
 
 /**
  * @author Thiago Delgado Pinto
  */
 describe( 'VariantSSATest', () => {
 
-    const analyzer = new VariantSSA(); // under test
+    const analyzer = new TestCaseSSA(); // under test
 
     let spec: Spec;
     let docA: Document;
@@ -39,7 +39,7 @@ describe( 'VariantSSATest', () => {
         */
 
         spec = new Spec( '.' );
-        
+
         docA = {
             fileInfo: { path: "./A.feature" } as FileInfo,
             feature: {
@@ -54,7 +54,7 @@ describe( 'VariantSSATest', () => {
                 name: "My feature B",
                 location: {}
             } as Feature
-        };        
+        };
 
         docE1 = {
             fileInfo: { path: "./E1.feature" } as FileInfo
@@ -62,8 +62,8 @@ describe( 'VariantSSATest', () => {
 
         docE2 = {
             fileInfo: { path: "./E2.feature" } as FileInfo
-        };         
-    
+        };
+
         docC = {
             fileInfo: { path: "./C.feature" } as FileInfo,
             imports: [
@@ -72,12 +72,12 @@ describe( 'VariantSSATest', () => {
                 } as Import,
                 {
                     value: "./B.feature"
-                } as Import,                
+                } as Import,
                 {
                     value: "./E1.feature"
-                } as Import                
+                } as Import
             ],
-            variants: [
+            testCases: [
                 {
                     name: "My variant 1",
                     location: {},
@@ -102,9 +102,9 @@ describe( 'VariantSSATest', () => {
                 } as Import,
                 {
                     value: "./E2.feature"
-                } as Import                
+                } as Import
             ],
-            variants: [
+            testCases: [
                 {
                     name: "My variant 1",
                     location: {},
@@ -118,7 +118,7 @@ describe( 'VariantSSATest', () => {
                         } as Tag
                     ]
                 } as Variant
-            ]            
+            ]
         };
 
         docF = {
@@ -126,13 +126,13 @@ describe( 'VariantSSATest', () => {
             feature: {
                 name: "My feature F",
                 location: {},
-                variants: [
+                testCases: [
                     {
                         name: "My F variant 1",
                         location: {}
                     } as Variant
-                ]                 
-            } as Feature            
+                ]
+            } as Feature
         };
 
         docG = {
@@ -140,7 +140,7 @@ describe( 'VariantSSATest', () => {
             feature: {
                 name: "My feature G",
                 location: {},
-                variants: [
+                testCases: [
                     {
                         name: "My G variant 1",
                         location: {},
@@ -154,12 +154,12 @@ describe( 'VariantSSATest', () => {
                             } as Tag
                         ]
                     } as Variant
-                ]                
+                ]
             } as Feature
-        };        
-    
+        };
+
         spec.docs.push( docA, docB, docC, docD, docE1, docE2, docF, docG );
-    } );   
+    } );
 
 
     it( 'criticizes a variant without a feature and an import', () => {
@@ -167,11 +167,11 @@ describe( 'VariantSSATest', () => {
         let errors: Error[] = [];
         analyzer.analyzeDocument( spec, docC, errors );
         expect( errors ).toHaveLength( 1 );
-        expect( errors[ 0 ].message ).toMatch( /import/ui );      
+        expect( errors[ 0 ].message ).toMatch( /import/ui );
     } );
 
     it( 'does not criticizes the lack of tags if its imports have a single feature', () => {
-        docC.variants[ 0 ].tags = []; // empty
+        docC.testCases[ 0 ].tags = []; // empty
         docC.imports.splice( 1 ); // remove the B, in order to have just one feature
         let errors: Error[] = [];
         analyzer.analyzeDocument( spec, docC, errors );
@@ -179,10 +179,10 @@ describe( 'VariantSSATest', () => {
     } );
 
     it( 'criticizes the lack of tags if its imports have more than one feature', () => {
-        docC.variants[ 0 ].tags = []; // empty
+        docC.testCases[ 0 ].tags = []; // empty
         let errors: Error[] = [];
         analyzer.analyzeDocument( spec, docC, errors );
-        expect( errors ).toHaveLength( 1 );        
+        expect( errors ).toHaveLength( 1 );
         expect( errors[ 0 ].message ).toMatch( /tag/ui );
     } );
 
@@ -190,7 +190,7 @@ describe( 'VariantSSATest', () => {
         let errors: Error[] = [];
         analyzer.analyzeDocument( spec, docC, errors );
         expect( errors ).toHaveLength( 0 );
-        expect( docA.feature.variants ).toHaveLength( 1 );
+        expect( docA.feature.testCases ).toHaveLength( 1 );
     } );
 
     it( 'does not criticize the lack of feature if the file has a feature', () => {
@@ -200,11 +200,11 @@ describe( 'VariantSSATest', () => {
     } );
 
     it( 'does not criticize a referenced feature that is the file\'s feature', () => {
-        docG.feature.variants[ 0 ].tags[ 0 ].content = docG.feature.name;
+        docG.feature.testCases[ 0 ].tags[ 0 ].content = docG.feature.name;
         let errors: Error[] = [];
         analyzer.analyzeDocument( spec, docG, errors );
         expect( errors ).toHaveLength( 0 );
-    } );    
+    } );
 
     it( 'criticizes a referenced feature not imported', () => {
         let errors: Error[] = [];
@@ -214,7 +214,7 @@ describe( 'VariantSSATest', () => {
     } );
 
     it( 'criticizes duplicated variant names', () => {
-        docF.feature.variants.push(
+        docF.feature.testCases.push(
             {
                 name: "My F variant 1",
                 location: {}

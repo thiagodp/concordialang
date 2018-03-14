@@ -7,7 +7,7 @@ import { ParsingContext } from "./ParsingContext";
 
 /**
  * Step Given node parser.
- * 
+ *
  * @author Thiago Delgado Pinto
  */
 export class StepGivenParser implements NodeParser< StepGiven > {
@@ -19,30 +19,30 @@ export class StepGivenParser implements NodeParser< StepGiven > {
         const allowedPriorNodes = [
             NodeTypes.BACKGROUND,
             NodeTypes.SCENARIO,
-            NodeTypes.TEMPLATE,
             NodeTypes.VARIANT,
+            NodeTypes.TEST_CASE,
             NodeTypes.STEP_GIVEN
         ];
 
         if ( ! it.hasPrior() || allowedPriorNodes.indexOf( it.spyPrior().nodeType ) < 0 ) {
             let e = new SyntaticException(
-                'The "' + node.nodeType + '" clause must be declared after a Background, Scenario, Template, Variant, or Given.',
+                'The "' + node.nodeType + '" clause must be declared after a Background, Scenario, Variant, Test Case or Given.',
                 node.location
                 );
             errors.push( e );
-            return false;                
+            return false;
         }
 
         // Prepare the owner to receive the given node
         let owner = null;
-        
+
         if ( context.inBackground ) owner = context.currentBackground;
         else if ( context.inScenario ) owner = context.currentScenario;
         else if ( context.inVariant ) owner = context.currentVariant;
-        else if ( context.inTemplate ) owner = context.currentTemplate;
+        else if ( context.inTestCase ) owner = context.currentTestCase;
         else {
             let e = new SyntaticException(
-                'The "' + node.nodeType + '" clause must be declared after a Background, Scenario, Template or Variant.',
+                'The "' + node.nodeType + '" clause must be declared after a Background, Scenario, Variant or Test Case.',
                 node.location
                 );
             errors.push( e );
@@ -56,7 +56,7 @@ export class StepGivenParser implements NodeParser< StepGiven > {
                 );
             errors.push( e );
             return false;
-        }        
+        }
 
         if ( ! owner.sentences ) {
             owner.sentences = [];

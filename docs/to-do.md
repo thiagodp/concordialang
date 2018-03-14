@@ -13,15 +13,15 @@
   - [X] When
   - [X] Then
   - [X] And, But
-- [X] State  
+- [X] State
 - [X] Regular Expressions Block
 - [X] Regular Expressions
 - [X] Constants Block
 - [X] Contants
 - [X] Variant
 - [X] Variant Sentences
-- [X] Template
-- [X] Template Sentences
+- [X] Test Case
+- [X] Test Case Sentences
 - [X] UI Element
 - [X] UI Element Items
 - [X] Table
@@ -43,8 +43,8 @@
 - [X] Scenario Sentences
 - [X] Variant
 - [X] Variant Sentences
-- [X] Template
-- [X] Template Sentences
+- [X] Test Case
+- [X] Test Case Sentences
 - [X] State
 - [X] Regular Expressions Block
 - [X] Regular Expressions
@@ -63,7 +63,7 @@
 ## NLP Processor
 
 - [/] Variant Sentences
-- [/] Template Sentences
+- [/] Test Case Sentences
 - [/] UI Element Sentences
 
 ## Semantic Analyzer

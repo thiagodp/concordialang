@@ -7,7 +7,7 @@ import { ParsingContext } from "./ParsingContext";
 
 /**
  * Step Then node parser.
- * 
+ *
  * @author Thiago Delgado Pinto
  */
 export class StepThenParser implements NodeParser< StepThen > {
@@ -28,19 +28,19 @@ export class StepThenParser implements NodeParser< StepThen > {
                 node.location
                 );
             errors.push( e );
-            return false;                
+            return false;
         }
 
         // Prepare the owner to receive the given node
         let owner = null;
-        
+
         if ( context.inBackground ) owner = context.currentBackground;
         else if ( context.inScenario ) owner = context.currentScenario;
         else if ( context.inVariant ) owner = context.currentVariant;
-        else if ( context.inTemplate ) owner = context.currentTemplate;
+        else if ( context.inTestCase ) owner = context.currentTestCase;
         else {
             let e = new SyntaticException(
-                'The "' + node.nodeType + '" clause must be declared after a Background, Scenario, Template or Variant.',
+                'The "' + node.nodeType + '" clause must be declared after a Background, Scenario, Variant or Test Case.',
                 node.location
                 );
             errors.push( e );
@@ -54,7 +54,7 @@ export class StepThenParser implements NodeParser< StepThen > {
                 );
             errors.push( e );
             return false;
-        }        
+        }
 
         if ( ! owner.sentences ) {
             owner.sentences = [];

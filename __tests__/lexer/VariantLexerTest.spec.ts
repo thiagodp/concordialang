@@ -9,13 +9,13 @@ import { Variant } from "../../modules/ast/Variant";
 describe( 'VariantLexerTest', () => {
 
     // IMPORTANT: This lexer inherits from NamedNodeLexerTest and
-    // since it does not add behavior, few additional tests are necessary. 
+    // since it does not add behavior, few additional tests are necessary.
 
     let keyword = 'variant';
     let wordInsensitive = 'Variant';
     let word = 'variant';
-    let words = [ word ];    
-    
+    let words = [ word ];
+
     let lexer = new VariantLexer( words ); // under test
 
     it( 'detects in a line', () => {
@@ -47,6 +47,6 @@ describe( 'VariantLexerTest', () => {
         expect( r.nodes ).toHaveLength( 1 );
         expect( r.nodes[ 0 ].nodeType ).toBe( NodeTypes.VARIANT );
         expect( r.nodes[ 0 ].name ).toBe( 'foo bar' );
-    } );    
+    } );
 
 } );

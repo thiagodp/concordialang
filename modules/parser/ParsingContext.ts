@@ -6,12 +6,12 @@ import { RegexBlock } from '../ast/RegexBlock';
 import { Document } from '../ast/Document';
 import { Feature } from "../ast/Feature";
 import { Scenario } from "../ast/Scenario";
-import { Template, Variant } from '../ast/Variant';
+import { Variant, TestCase } from '../ast/Variant';
 import { Background } from '../ast/Background';
 
 /**
  * Parsing context.
- * 
+ *
  * @author Thiago Delgado Pinto
  */
 export class ParsingContext {
@@ -21,19 +21,19 @@ export class ParsingContext {
     inFeature: boolean = false;
     inBackground: boolean = false;
     inScenario: boolean = false;
-    inTemplate: boolean = false;
     inVariant: boolean = false;
+    inTestCase: boolean = false;
     inConstantBlock: boolean = false;
     inConstant: boolean = false;
     inRegexBlock: boolean = false;
-    inRegex: boolean = false;    
+    inRegex: boolean = false;
     inUIProperty: boolean = false;
     inTable: boolean = false;
 
     currentBackground: Background = null;
     currentScenario: Scenario = null;
-    currentTemplate: Template = null;
     currentVariant: Variant = null;
+    currentTestCase: TestCase = null;
     currentUIElement: UIElement = null;
     currentUIProperty: UIProperty = null;
     currentConstantBlock: ConstantBlock = null;
@@ -51,12 +51,12 @@ export class ParsingContext {
         this.inFeature = false;
         this.inBackground = false;
         this.inScenario = false;
-        this.inTemplate = false;
         this.inVariant = false;
+        this.inTestCase = false;
         this.inConstantBlock = false;
         this.inConstant = false;
         this.inRegexBlock = false;
-        this.inRegex = false;        
+        this.inRegex = false;
         this.inUIProperty = false;
         this.inTable = false;
     }

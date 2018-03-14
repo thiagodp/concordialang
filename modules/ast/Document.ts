@@ -1,4 +1,4 @@
-import { Variant } from './Variant';
+import { TestCase } from './Variant';
 import { Database } from './Database';
 import { Table } from './Table';
 import { ConstantBlock } from './ConstantBlock';
@@ -14,7 +14,7 @@ import { State } from "./State";
 
 /**
  * Document
- * 
+ *
  * @author Thiago Delgado Pinto
  */
 export interface Document {
@@ -22,12 +22,12 @@ export interface Document {
     fileInfo?: FileInfo;
     fileErrors?: Error[];
     fileWarnings?: Error[];
-    
+
     language?: Language; // local
     imports?: Import[]; // local
 
     feature?: Feature; // global
-    variants?: Variant[]; // local, belongs to a feature declared or imported
+    testCases?: TestCase[]; // local, belongs to a feature declared or imported
 
     states?: State[]; // global
     regexBlock?: RegexBlock; // global

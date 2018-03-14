@@ -13,6 +13,6 @@ Should **not** have:
 
 Should **not** have:
 - [X] Duplicated Scenario names.
-- [ ] Duplicated Template names.
 - [ ] Duplicated Variant names.
+- [ ] Duplicated Test Case names.
 - [ ] Duplicated UI element names.

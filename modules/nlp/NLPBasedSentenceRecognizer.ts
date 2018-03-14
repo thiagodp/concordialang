@@ -11,7 +11,7 @@ import { NLP } from './NLP';
 
 /**
  * NLP-based sentence recognizer.
- * 
+ *
  * @author Thiago Delgado Pinto
  */
 export class NLPBasedSentenceRecognizer {
@@ -68,7 +68,7 @@ export class NLPBasedSentenceRecognizer {
         // Databases
         if ( doc.databases ) {
             for ( let db of doc.databases ) {
-                this._dbPropertyRec.recognizeSentences( language, db.items, errors, warnings );                
+                this._dbPropertyRec.recognizeSentences( language, db.items, errors, warnings );
             }
         }
 
@@ -79,27 +79,30 @@ export class NLPBasedSentenceRecognizer {
         if ( ! doc.feature ) {
             return;
         }
-        
-        // UI Elements inside features
+
+        // UI Elements inside Features
         for ( let uiElement of doc.feature.uiElements ) {
-            this._uiPropertyRec.recognizeSentences( language, uiElement.items, errors, warnings );
+            this._uiPropertyRec.recognizeSentences(
+                language, uiElement.items, errors, warnings );
         }
 
-        // Templates inside scenarios
+        // Variants inside Scenarios
         if ( doc.feature.scenarios ) {
             for ( let scenario of doc.feature.scenarios ) {
-                if ( ! scenario.templates ) {
+                if ( ! scenario.variants ) {
                     continue;
                 }
-                for ( let template of scenario.templates ) {
-                    this._variantSentenceRec.recognizeSentences( language, template.sentences, errors, warnings, 'Template' );
+                for ( let variant of scenario.variants ) {
+                    this._variantSentenceRec.recognizeSentences(
+                        language, variant.sentences, errors, warnings );
                 }
             }
         }
 
-        // Variants inside features
-        for ( let variant of doc.feature.variants ) {
-            this._variantSentenceRec.recognizeSentences( language, variant.sentences, errors, warnings );
+        // Test Cases inside Features
+        for ( let testCase of doc.feature.testCases ) {
+            this._variantSentenceRec.recognizeSentences(
+                language, testCase.sentences, errors, warnings, 'Test Case' );
         }
 
     }

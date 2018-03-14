@@ -2,7 +2,7 @@ import { KeywordDictionary } from './KeywordDictionary';
 
 /**
  * English keyword dictionary as the base dictionary.
- * 
+ *
  * @author  Thiago Delgado Pinto
  */
 export class EnglishKeywordDictionary implements KeywordDictionary {
@@ -11,15 +11,15 @@ export class EnglishKeywordDictionary implements KeywordDictionary {
     //       please do it in the parent interface.
 
     // Not available in Gherkin
-    
+
     import: string[] = [ 'import' ];
     regexBlock: string[] = [ 'regexes', 'regular expressions' ];
     constantBlock: string[] = [ 'constants' ];
     is: string[] = [ 'is' ];
     with: string[] = [ "with" ];
-    state: string[] = [ 'state' ];    
+    state: string[] = [ 'state' ];
     variant: string[] = [ 'variant' ];
-    template: string[] = [ 'template' ];
+    testCase: string[] = [ 'test case' ];
     uiElement: string[] = [ 'ui element' ];
     database: string[] = [ 'database' ];
 
@@ -30,8 +30,13 @@ export class EnglishKeywordDictionary implements KeywordDictionary {
     beforeEachScenario: string[] = [ 'before each scenario' ];
     afterEachScenario: string[] = [ 'after each scenario' ];
 
-    importanceTag: string[] = [ 'importance' ];
-    ignoreTag: string[] = [ 'ignore' ];
+    tagGlobal: string[] = [ 'global' ];
+    tagFeature: string[] = [ 'feature' ];
+    tagScenario: string[] = [ 'scenario' ];
+    tagVariant: string[] = [ 'variant' ];
+    tagImportance: string[] = [ 'importance' ];
+    tagIgnore: string[] = [ 'ignore' ];
+    tagGenerated: string[] = [ 'generated' ];
 
     // Also available in Gherkin
 
@@ -47,6 +52,6 @@ export class EnglishKeywordDictionary implements KeywordDictionary {
     stepAnd: string[] = [ 'and', 'but' ];
     stepOtherwise: string[] = [ 'otherwise', 'when invalid', 'if invalid' ];
 
-    table: string[] = [ 'table' ];    
+    table: string[] = [ 'table' ];
 
 }

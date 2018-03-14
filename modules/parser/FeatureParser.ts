@@ -9,7 +9,7 @@ import { ParsingContext } from "./ParsingContext";
 
 /**
  * Feature parser
- * 
+ *
  * @author Thiago Delgado Pinto
  */
 export class FeatureParser implements NodeParser< Feature > {
@@ -28,11 +28,11 @@ export class FeatureParser implements NodeParser< Feature > {
         context.doc.feature = node;
 
         // Checks the structure
-        node.tags = node.tags || [];        
-        node.sentences = node.sentences || [];        
+        node.tags = node.tags || [];
+        node.sentences = node.sentences || [];
         node.scenarios = node.scenarios || [];
         node.uiElements = node.uiElements || [];
-        node.variants = node.variants || [];
+        node.testCases = node.testCases || [];
 
         // Adjust the context
         context.resetInValues();

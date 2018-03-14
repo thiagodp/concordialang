@@ -1,19 +1,19 @@
 /**
  * Keywords to identify nodes.
- * 
+ *
  * @author Thiago Delgado Pinto
  */
 export abstract class Keywords {
 
     // Not available in Gherkin
-  
+
     static IMPORT: string = 'import';
     static REGEX_BLOCK: string = 'regexBlock';
     static CONSTANT_BLOCK: string = 'constantBlock';
     static IS: string = 'is';
-    static STATE: string = 'state';    
+    static STATE: string = 'state';
     static VARIANT: string = 'variant';
-    static TEMPLATE: string = 'template';
+    static TEST_CASE: string = 'testCase';
     static UI_ELEMENT: string = 'uiElement';
     static DATABASE: string = 'database';
 
@@ -24,9 +24,14 @@ export abstract class Keywords {
     static BEFORE_EACH_SCENARIO: string = 'beforeEachScenario';
     static AFTER_EACH_SCENARIO: string = 'afterEachScenario';
 
-    static IMPORTANCE_TAG = 'importanceTag';
-    static IGNORE_TAG = 'ignoreTag';
-    
+    static TAG_GLOBAL = 'tagGlobal';
+    static TAG_FEATURE = 'tagFeature';
+    static TAG_SCENARIO = 'tagScenario';
+    static TAG_VARIANT = 'tagVariant';
+    static TAG_IMPORTANCE = 'tagImportance';
+    static TAG_IGNORE = 'tagIgnore';
+    static TAG_GENERATED = 'tagGenerated';
+
     // Also available in Gherkin
 
     static LANGUAGE: string = 'language';
@@ -41,7 +46,7 @@ export abstract class Keywords {
     static STEP_AND: string = 'stepAnd';
     static STEP_OTHERWISE: string = 'stepOtherwise';
 
-    static TABLE: string = 'table';    
+    static TABLE: string = 'table';
 
     // Utilities
 

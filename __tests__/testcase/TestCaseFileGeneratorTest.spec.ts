@@ -1,4 +1,4 @@
-import { VariantFileGenerator } from "../../modules/testcase/VariantFileGenerator";
+import { TestCaseFileGenerator } from "../../modules/testcase/TestCaseFileGenerator";
 import { JsonLanguageContentLoader, LanguageContentLoader } from "../../modules/dict/LanguageContentLoader";
 import { LanguageContent } from "../../modules/dict/LanguageContent";
 import { Document } from '../../modules/ast/Document';
@@ -14,11 +14,11 @@ import { FileData, FileMeta } from "../../modules/app/SingleFileProcessor";
 /**
  * @author Thiago Delgado Pinto
  */
-describe( 'VariantFileGeneratorTest', () => {
+describe( 'TestCaseFileGeneratorTest', () => {
 
     const LANGUAGE = 'en';
     const options: Options = new Options( resolve( process.cwd(), 'dist/' ) );
-    const langLoader: LanguageContentLoader = 
+    const langLoader: LanguageContentLoader =
         new JsonLanguageContentLoader( options.languageDir, {}, options.encoding );
 
     let sfc = new SingleFileCompiler(
@@ -38,7 +38,7 @@ describe( 'VariantFileGeneratorTest', () => {
 
         let result = await sfc.process(
             new FileData(
-                new FileMeta( './fake.variant', 100, 'fake-hash' ),
+                new FileMeta( './fake.testcase', 100, 'fake-hash' ),
                 input.join( "\n" )
             ),
             "\n"
@@ -48,11 +48,11 @@ describe( 'VariantFileGeneratorTest', () => {
         let errors = result.errors;
         let doc: Document = result.content as Document;
 
-        const gen = new VariantFileGenerator( langLoader, language ); // under test        
+        const gen = new TestCaseFileGenerator( langLoader, language ); // under test
         const output: string[] = gen.createLinesFromDoc( doc, errors, true );
         expect( output ).toEqual( expected || input );
     }
-    
+
     // ENGLISH
 
     it( 'generates basic lines in english', async () => {
@@ -60,18 +60,18 @@ describe( 'VariantFileGeneratorTest', () => {
         const input: string[] = [
             'import "fake.feature"',
             '',
-            'variant: foo'
+            'test case: foo'
         ];
 
         await check( input, 'en' );
     } );
 
-    it( 'generates with a single variant', async () => {
+    it( 'generates with a single test case', async () => {
 
         const input: string[] = [
             'import "fake.feature"',
             '',
-            'variant: foo',
+            'test case: foo',
             '  given that I see the url "http://localhost/foo"',
             '  when I click <register>',
             '  then I see "Register"',
@@ -82,18 +82,18 @@ describe( 'VariantFileGeneratorTest', () => {
     } );
 
 
-    it( 'generates with variants', async () => {
+    it( 'generates with more than one test case', async () => {
 
         const input: string[] = [
             'import "fake.feature"',
             '',
-            'variant: foo',
+            'test case: foo',
             '  given that I see the url "http://localhost/foo"',
             '  when I click <register>',
             '  then I see "Register"',
             '    and I see the url "http://localhost/foo/register"',
             '',
-            'variant: bar',
+            'test case: bar',
             '  given that I see the url "http://localhost/bar"',
             '    and I see "Bar"',
             '    and I don\'t see "Foo"',
@@ -104,7 +104,7 @@ describe( 'VariantFileGeneratorTest', () => {
         ];
 
         await check( input, 'en' );
-    } );    
+    } );
 
 
     // PORTUGUESE
@@ -115,27 +115,27 @@ describe( 'VariantFileGeneratorTest', () => {
         const input: string[] = [
             'import "fake.feature"',
             '',
-            'variant: foo'
+            'test case: foo'
         ];
 
         const expected: string[] = [
             'importe "fake.feature"',
             '',
-            'variante: foo'            
+            'caso de teste: foo'
         ];
 
         await check( input, 'pt', expected );
     } );
 
 
-    it( 'generates with a single variant in portuguese', async () => {
+    it( 'generates with a single test case in portuguese', async () => {
 
         const input: string[] = [
             '#language:pt',
             '',
             'importe "fake.feature"',
             '',
-            'variante: foo',
+            'caso de teste: foo',
             '  dado que eu vejo a url "http://localhost/foo"',
             '  quando click em <register>',
             '  então eu vejo "Register"',
@@ -146,30 +146,30 @@ describe( 'VariantFileGeneratorTest', () => {
     } );
 
 
-    it( 'generates with variants in portuguese', async () => {
+    it( 'generates with more than one test case in portuguese', async () => {
 
         const input: string[] = [
             '#language:pt',
             '',
             'importe "fake.feature"',
             '',
-            'variante: foo',
+            'caso de teste: foo',
             '  dado que eu vejo a url "http://localhost/foo"',
             '  quando click em <register>',
             '  então eu vejo "Register"',
             '    e eu vejo a url "http://localhost/foo/register"',
             '',
-            'variante: bar',
+            'caso de teste: bar',
             '  dado que eu vejo a url "http://localhost/bar"',
             '    e eu vejo "Bar"',
             '    e eu não vejo "Foo"',
             '  quando eu clico em <menu>',
             '    e eu clico em <login>',
             '  então eu vejo "Login"',
-            '    e eu vejo a url "http://localhost/foo/login"'            
+            '    e eu vejo a url "http://localhost/foo/login"'
         ];
 
         await check( input, 'pt' );
-    } );      
+    } );
 
 } );

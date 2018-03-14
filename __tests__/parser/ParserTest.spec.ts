@@ -12,7 +12,7 @@ import { resolve } from 'path';
  */
 describe( 'ParserTest', () => {
 
-    let parser = new Parser(); // under test    
+    let parser = new Parser(); // under test
 
     const options: Options = new Options( resolve( process.cwd(), 'dist/' ) );
     let lexer: Lexer = ( new LexerBuilder() ).build( options, 'en' );
@@ -39,7 +39,7 @@ describe( 'ParserTest', () => {
 
 
     it( 'detect a feature with tags', () => {
-        
+
         [
             '#language:en',
             '',
@@ -93,9 +93,9 @@ describe( 'ParserTest', () => {
 
         expect( doc.feature.background ).toBeDefined();
         expect( doc.feature.background.sentences ).toHaveLength( 7 );
-    } );    
+    } );
 
-    
+
     it( 'detects a scenario without tags', () => {
 
         [
@@ -134,8 +134,8 @@ describe( 'ParserTest', () => {
     } );
 
 
-    it( 'detects variants with tags and sentences', () => {
-        
+    it( 'detects test cases with tags and sentences', () => {
+
         [
             '#language:en',
             '',
@@ -145,10 +145,10 @@ describe( 'ParserTest', () => {
             '',
             '@feature( my feature )',
             '@scenario( hello )',
-            'Variant: hello',
+            'Test Case: hello',
             '  Given that I see in the url "/login"',
-            '  When I fill "#username" with ""',
-            '    And I fill "#password" with "bobp4ss"',
+            '  When I fill <#username> with ""',
+            '    And I fill <#password> with "bobp4ss"',
             '    And I click "Enter"',
             '  Then I see "Username must have at least 2 characters."'
         ].forEach( ( val, index ) => lexer.addNodeFromLine( val, index + 1 ) );
@@ -158,17 +158,17 @@ describe( 'ParserTest', () => {
 
         expect( parser.errors() ).toEqual( [] );
 
-        expect( doc.feature.variants ).toBeDefined();
-        expect( doc.feature.variants ).toHaveLength( 1 );
+        expect( doc.feature.testCases ).toBeDefined();
+        expect( doc.feature.testCases ).toHaveLength( 1 );
 
-        let variant = doc.feature.variants[ 0 ];
-        expect( variant.name ).toBe( "hello" );
+        let testCase = doc.feature.testCases[ 0 ];
+        expect( testCase.name ).toBe( "hello" );
 
-        let tagNames = variant.tags.map( v => v.name );
+        let tagNames = testCase.tags.map( v => v.name );
         expect( tagNames ).toEqual( [ "feature", "scenario" ] );
 
-        expect( variant.sentences ).toBeDefined();
-        expect( variant.sentences ).toHaveLength( 5 );
+        expect( testCase.sentences ).toBeDefined();
+        expect( testCase.sentences ).toHaveLength( 5 );
     } );
 
 
@@ -227,7 +227,7 @@ describe( 'ParserTest', () => {
         expect( doc.constantBlock.items[ 1 ].nodeType ).toBe( NodeTypes.CONSTANT );
     } );
 
-    
+
     it( 'detects a database with its properties', () => {
         [
             '#language:en',
@@ -291,7 +291,7 @@ describe( 'ParserTest', () => {
             '#language:en',
             '',
             'Feature: foo',
-            '',            
+            '',
             '@global',
             'UI Element: Full Name',
             '  - id is "#fullname"',
@@ -325,16 +325,16 @@ describe( 'ParserTest', () => {
             '#language:en',
             '',
             'Feature: foo',
-            '',            
+            '',
             'Database: My DB',
             '  - type is "mysql"',
-            '',            
+            '',
             '@global',
             'UI Element: Full Name',
             '  - id is "#fullname"',
             '',
             'UI Element: Birth Date',
-            '  - id is "#birth"',            
+            '  - id is "#birth"',
 
         ].forEach( ( val, index ) => lexer.addNodeFromLine( val, index + 1 ) );
 
@@ -351,7 +351,7 @@ describe( 'ParserTest', () => {
         expect( db.items[ 0 ].nodeType ).toBe( NodeTypes.DATABASE_PROPERTY );
 
         // Global UI Element
-        expect( doc.uiElements ).toHaveLength( 1 );        
+        expect( doc.uiElements ).toHaveLength( 1 );
         let uie = doc.uiElements[ 0 ];
         expect( uie.name ).toBe( 'Full Name' );
         expect( uie.items ).toHaveLength( 1 );
@@ -363,6 +363,6 @@ describe( 'ParserTest', () => {
         expect( featureUIE.name ).toBe( 'Birth Date' );
         expect( featureUIE.items ).toHaveLength( 1 );
         expect( featureUIE.items[ 0 ].nodeType ).toBe( NodeTypes.UI_PROPERTY );
-    } );    
+    } );
 
 } );

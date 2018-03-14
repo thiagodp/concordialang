@@ -11,3 +11,13 @@ export function isNumber( val: any ): boolean {
 export function isDefined( val: any ): boolean {
     return val !== undefined && val !== null;
 }
+
+export function areDefined( ...val ): boolean {
+    for ( let v of val ) {
+        if ( ! isDefined( v ) ) {
+            return false;
+        }
+    }
+    return true;
+}
+

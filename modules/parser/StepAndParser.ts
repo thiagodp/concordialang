@@ -7,7 +7,7 @@ import { ParsingContext } from "./ParsingContext";
 
 /**
  * Step And node parser.
- * 
+ *
  * @author Thiago Delgado Pinto
  */
 export class StepAndParser implements NodeParser< StepAnd > {
@@ -30,7 +30,7 @@ export class StepAndParser implements NodeParser< StepAnd > {
                 node.location
                 );
             errors.push( e );
-            return false;                
+            return false;
         }
 
         if ( context.inUIProperty ) {
@@ -47,10 +47,10 @@ export class StepAndParser implements NodeParser< StepAnd > {
             if ( context.inBackground ) owner = context.currentBackground;
             else if ( context.inScenario ) owner = context.currentScenario;
             else if ( context.inVariant ) owner = context.currentVariant;
-            else if ( context.inTemplate ) owner = context.currentTemplate;
+            else if ( context.inTestCase ) owner = context.currentTestCase;
             else {
                 let e = new SyntaticException(
-                    'The "' + node.nodeType + '" clause must be declared after a Background, Scenario, Template, Variant, or UI Element Property.',
+                    'The "' + node.nodeType + '" clause must be declared after a Background, Scenario, Variant, Test Case or UI Element Property.',
                     node.location
                     );
                 errors.push( e );

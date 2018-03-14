@@ -8,17 +8,27 @@ import { Symbols } from "../req/Symbols";
 import { NodeTypes } from "../req/NodeTypes";
 
 /**
- * Generates files for Documents with Variants.
- * 
- * @author Thiago Delgado Pinto 
+ * Events related to the generation of files for Documents with Test Cases.
+ *
+ * @author Thiago Delgado Pinto
  */
-export class VariantFileGenerator extends EventEmitter {
+export enum TestCaseFileGeneratorEvents {
+    NEW_FILE = 'concordia:testCase:newFile'
+}
+
+
+/**
+ * Generates files for Documents with Test Cases.
+ *
+ * @author Thiago Delgado Pinto
+ */
+export class TestCaseFileGenerator extends EventEmitter {
 
     public readonly fileHeader: string[] = [
         '# Generated with ❤ by Concordia',
         '#',
         '# THIS IS A GENERATED FILE - MODIFICATIONS CAN BE OVERWRITTEN !',
-        ''       
+        ''
     ];
 
     private _dict: KeywordDictionary;
@@ -36,7 +46,7 @@ export class VariantFileGenerator extends EventEmitter {
 
     /**
      * Generates lines from a document.
-     * 
+     *
      * @param doc Document
      * @param errors Errors found, probably because of language loading.
      * @param ignoreHeader If true, does not include the header.
@@ -51,7 +61,7 @@ export class VariantFileGenerator extends EventEmitter {
 
         let dict = this._dict;
         let lines: string[] = [];
-        
+
         // Add header lines
         if ( ! ignoreHeader ) {
             lines.push.apply( lines, this.fileHeader );
@@ -69,20 +79,21 @@ export class VariantFileGenerator extends EventEmitter {
             lines.push( this.generateImportLine( imp.value, dict ) );
         }
 
-        // Variants
-        for ( let variant of doc.variants || [] ) {
+        // Test Cases
+        for ( let testCase of doc.testCases || [] ) {
 
             lines.push( '' ); // empty line
 
             // Tags
-            for ( let tag of variant.tags || [] ) {
+            for ( let tag of testCase.tags || [] ) {
                 lines.push( this.generateTagLine( tag.name, tag.content ) );
             }
+
             // Name
-            lines.push( this.generateVariantName( variant.name, dict ) );
+            lines.push( this.generateTestCaseName( testCase.name, dict ) );
 
             // Sentences
-            for ( let sentence of variant.sentences || [] ) {
+            for ( let sentence of testCase.sentences || [] ) {
                 let ind = indentation;
                 if ( NodeTypes.STEP_AND === sentence.nodeType ) {
                     ind += indentation;
@@ -95,10 +106,15 @@ export class VariantFileGenerator extends EventEmitter {
     }
 
 
-    async createFile( path: string, lines: string[], fs: any ): Promise< void > {
+    async createFile(
+        fs: any,
+        path: string,
+        lines: string[],
+        lineBreaker: string = "\n"
+    ): Promise< void > {
         const writeFileAsync = promisify( fs.writeFile );
-        await writeFileAsync( path, lines.join( "\n" ) );
-        this.emit( 'concordia:testCase:fileCreated', path );
+        await writeFileAsync( path, lines.join( lineBreaker ) );
+        this.emit( TestCaseFileGeneratorEvents.NEW_FILE, path );
     }
 
 
@@ -111,13 +127,13 @@ export class VariantFileGenerator extends EventEmitter {
         }
     }
 
-    generateLanguageLine( language: string, dict: KeywordDictionary ): string {        
+    generateLanguageLine( language: string, dict: KeywordDictionary ): string {
         return Symbols.COMMENT_PREFIX + ( dict.language[ 0 ] || 'language' ) +
             Symbols.LANGUAGE_SEPARATOR + language;
     }
 
     generateImportLine( path: string, dict: KeywordDictionary ): string  {
-        return ( dict.import[ 0 ] || 'import' ) + ' ' + 
+        return ( dict.import[ 0 ] || 'import' ) + ' ' +
             Symbols.IMPORT_PREFIX + path + Symbols.IMPORT_SUFFIX;
     }
 
@@ -126,8 +142,8 @@ export class VariantFileGenerator extends EventEmitter {
             ( content && content.length > 0 ? '(' + content + ')' : '' );
     }
 
-    generateVariantName( name: string, dict: KeywordDictionary ): string  {
-        return ( dict.variant[ 0 ] || 'Variant' ) +
+    generateTestCaseName( name: string, dict: KeywordDictionary ): string  {
+        return ( dict.testCase[ 0 ] || 'Test Case' ) +
             Symbols.TITLE_SEPARATOR + ' ' + name;
     }
 

@@ -7,7 +7,7 @@ export class Defaults {
     readonly ENCODING: string = 'utf8';
 
     readonly EXTENSION_FEATURE = '.feature'; // Extension for feature files
-    readonly EXTENSION_TEST_CASE = '.variant'; // Extension for test case files
+    readonly EXTENSION_TEST_CASE = '.testcase'; // Extension for test case files
 
     readonly EXTENSIONS: string[] = [ this.EXTENSION_FEATURE, this.EXTENSION_TEST_CASE ];
 
@@ -26,7 +26,7 @@ export class Defaults {
 
     /**
      * Returns available encodings.
-     * 
+     *
      * @see https://github.com/nodejs/node/blob/master/lib/buffer.js
      */
     availableEncodings(): string[] {

@@ -7,24 +7,30 @@ import { DuplicationChecker } from "../util/DuplicationChecker";
 import { SemanticException } from "./SemanticException";
 import { Feature } from '../ast/Feature';
 import { Tag } from '../ast/Tag';
-import { Variant } from '../ast/Variant';
+import { Variant, TestCase } from '../ast/Variant';
 import { SpecSemanticAnalyzer } from './SpecSemanticAnalyzer';
 import * as path from 'path';
 
 
 /**
- * Executes semantic analysis of Variants in a specification.
- * 
+ * Executes semantic analysis of Test Cases in a specification.
+ *
  * Checkings:
- *  - If variants have a feature:
- *    - A Variant from a document without a Feature should:
+ *  - If Test Cases have a Feature:
+ *    - A Test Case from a document without a Feature should:
  *      - Import a single file with a Feature OR
  *      - Import multiple files BUT have a @tag with the Feature name
- *  - Duplicated variant names
- * 
+ *  - Duplicated Test Case names
+ *
  * @author Thiago Delgado Pinto
  */
-export class VariantSSA extends SpecSemanticAnalyzer {
+export class TestCaseSSA extends SpecSemanticAnalyzer {
+
+    constructor(
+        private  _tagFeatureKeywords: string[] = [ ReservedTags.FEATURE ]
+    ) {
+        super();
+    }
 
     /** @inheritDoc */
     public async analyze(
@@ -39,16 +45,16 @@ export class VariantSSA extends SpecSemanticAnalyzer {
     public analyzeDocument( spec: Spec, doc: Document, errors: SemanticException[] ) {
 
         // Check if variants have a feature
-        if ( doc.variants && doc.variants.length > 0 ) {            
+        if ( doc.testCases && doc.testCases.length > 0 ) {
 
             const importsCount = doc.imports ? doc.imports.length : 0;
 
             // No imported files -> error
             if ( importsCount < 1 ) {
-                let firstVariant = doc.variants[ 0 ];
-                let msg = 'No imports or feature declared before the variant.';
+                let firstVariant = doc.testCases[ 0 ];
+                let msg = 'No imports or feature declared before the test case.';
                 let err = new SemanticException( msg, firstVariant.location );
-                errors.push( err );            
+                errors.push( err );
 
             // Single import -> Let's check its feature
             } else if ( 1 == importsCount ) {
@@ -64,11 +70,11 @@ export class VariantSSA extends SpecSemanticAnalyzer {
             let availableFeatures: Feature[] = [ doc.feature ];
             let availableFeatureNames: string[] = [ doc.feature.name.toLowerCase() ];
             let availableFeaturePaths: string[] = [ doc.fileInfo.path ];
-            for ( let variant of doc.feature.variants ) {
+            for ( let testCase of doc.feature.testCases ) {
                 this.checkTags(
                     spec,
                     doc,
-                    variant,
+                    testCase,
                     availableFeatures,
                     availableFeatureNames,
                     availableFeaturePaths,
@@ -78,23 +84,11 @@ export class VariantSSA extends SpecSemanticAnalyzer {
         }
 
         // Checking the document structure
-        if ( ! doc.feature || ! doc.feature.variants || doc.feature.variants.length < 1 ) {
+        if ( ! doc.feature || ! doc.feature.testCases || doc.feature.testCases.length < 1 ) {
             return; // nothing to do
         }
 
-        this.checkForDuplicatedVariants( doc, errors );
-    }
-
-    private checkForDuplicatedVariants( doc: Document, errors: SemanticException[] ) {
-
-        let duplicated: Variant[] = ( new DuplicationChecker() )
-            .withDuplicatedProperty( doc.feature.variants, 'name' );
-
-        for ( let dup of duplicated ) {
-            let msg = 'Duplicated variant "' + dup.name + '".';
-            let err = new SemanticException( msg, dup.location );
-            errors.push( err );
-        }        
+        this.checkDuplicatedNamedNodes( doc.feature.testCases, errors, 'Test Case' );
     }
 
 
@@ -109,13 +103,13 @@ export class VariantSSA extends SpecSemanticAnalyzer {
             return false;
         }
 
-        this.copyVariantsToFeature( doc.variants, feature, docImport.value );
+        this.copyTestCasesToFeature( doc.testCases, feature, docImport.value );
         return true;
     }
 
 
     private featureFromImport( spec: Spec, docImport: Import, errors: Error[] ): Feature {
-        
+
         // Gets the imported document
         const filePath = docImport.value;
         const importedDoc: Document = spec.docWithPath( filePath );
@@ -155,14 +149,14 @@ export class VariantSSA extends SpecSemanticAnalyzer {
         if ( 0 === availableFeatures.length ) {
             let msg = 'None of the imported files has features.';
             let err = new SemanticException( msg, doc.imports[ 0 ].location );
-            errors.push( err );            
+            errors.push( err );
             return false;
         }
 
         // Each variant must have a tag that references a feature
         // and the feature must exist in the imported files
 
-        for ( let variant of doc.variants ) {
+        for ( let variant of doc.testCases ) {
             this.checkTags(
                 spec,
                 doc,
@@ -172,29 +166,29 @@ export class VariantSSA extends SpecSemanticAnalyzer {
                 availableFeaturePaths,
                 errors
             );
-        }    
+        }
 
         return true;
     }
 
 
-    private copyVariantsToFeature( variants: Variant[], feature: Feature, filePath: string ) {
+    private copyTestCasesToFeature( testCases: TestCase[], feature: Feature, filePath: string ) {
 
         // Sanity checking
-        if ( ! variants || variants.length < 1 ) {
+        if ( ! testCases || testCases.length < 1 ) {
             return;
         }
 
-        if ( ! feature.variants ) {
-            feature.variants = [];
+        if ( ! feature.testCases ) {
+            feature.testCases = [];
         }
 
-        let variantsClone = variants.slice( 0 );
-        for ( let variant of variantsClone ) {
-            // Sets the variant's file Path
-            variant.location.filePath = filePath; // <<< External file path!
-            // Add it to the feature
-            feature.variants.push( variant );
+        let testCasesClone = testCases.slice( 0 );
+        for ( let testCase of testCasesClone ) {
+            // Sets the file Path
+            testCase.location.filePath = filePath; // <<< External file path!
+            // Adds to the feature
+            feature.testCases.push( testCase );
         }
     }
 
@@ -202,28 +196,28 @@ export class VariantSSA extends SpecSemanticAnalyzer {
     private checkTags(
         spec: Spec,
         doc: Document,
-        variant: Variant,
+        testCases: TestCase,
         availableFeatures: Feature[],
         availableFeatureNames: string[],
         availableFeaturePaths: string[],
         errors: Error[]
     ) {
         // Sanity checking
-        if ( ! variant.tags ) {
-            variant.tags = [];
+        if ( ! testCases.tags ) {
+            testCases.tags = [];
         }
 
         const singleFeature: boolean = 1 === availableFeatures.length;
 
-        // A variant must have a reference to a feature (since no feature is declared in the file).
-        // The referenced feature must exist in a imported file.
+        // A Test Case must have a reference to a Feature, since no feature is declared in the file.
+        // The referenced Feature must exist in a imported file.
 
         let featureName: string = null;
         let featureTag: Tag = null;
 
-        for ( let tag of variant.tags ) {
+        for ( let tag of testCases.tags ) {
             // Found a tag @feature ? -> get the feature name
-            if ( tag.name === ReservedTags.FEATURE ) {
+            if ( this.isFeatureTag( tag.name ) ) {
                 featureTag = tag;
                 featureName = tag.content;
                 break;
@@ -238,8 +232,8 @@ export class VariantSSA extends SpecSemanticAnalyzer {
             // continue to check the feature
         } else { // multiple features
             if ( ! featureName ) {
-                let msg = 'Variant has no tag referencing a feature.';
-                let err = new SemanticException( msg, variant.location );
+                let msg = 'Test case has no tag that refers to its feature.';
+                let err = new SemanticException( msg, testCases.location );
                 errors.push( err );
                 return false;
             }
@@ -250,7 +244,7 @@ export class VariantSSA extends SpecSemanticAnalyzer {
         // Not available -> error
         const featureIndex = availableFeatureNames.indexOf( featureName );
         if ( featureIndex < 0 ) {
-            let msg = 'Variant tag references a non existing feature.';
+            let msg = 'Tag refers to a non existing feature.';
             let err = new SemanticException( msg, featureTag.location );
             errors.push( err );
             return false;
@@ -264,10 +258,15 @@ export class VariantSSA extends SpecSemanticAnalyzer {
             featureFilePath = path.join( spec.basePath, featureFilePath );
         }
 
-        // Copy variants from the document to the feature and sets the filePath of each one.        
-        this.copyVariantsToFeature( doc.variants, feature, featureFilePath );         
+        // Copy test cases from the document to the feature and sets the filePath of each one.
+        this.copyTestCasesToFeature( doc.testCases, feature, featureFilePath );
 
         return true;
+    }
+
+
+    isFeatureTag( name: string ): boolean {
+        return this._tagFeatureKeywords.indexOf( name.toLowerCase().trim() ) >= 0;
     }
 
 }

@@ -3,15 +3,15 @@ import { NodeIterator } from '../../modules/parser/NodeIterator';
 import { ParsingContext } from '../../modules/parser/ParsingContext';
 import { NodeTypes } from '../../modules/req/NodeTypes';
 import { Feature } from '../../modules/ast/Feature';
-import { VariantParser } from "../../modules/parser/VariantParser";
-import { Variant } from "../../modules/ast/Variant";
+import { TestCaseParser } from "../../modules/parser/TestCaseParser";
+import { TestCase } from "../../modules/ast/Variant";
 
 /**
  * @author Thiago Delgado Pinto
  */
-describe( 'VariantParserTest', () => {
+describe( 'TestCaseParserTest', () => {
 
-    let parser = new VariantParser(); // under test
+    let parser = new TestCaseParser(); // under test
 
     let context: ParsingContext = null;
     let nodes: Node[] = [];
@@ -24,10 +24,10 @@ describe( 'VariantParserTest', () => {
         name: "My feature"
     };
 
-    let variantNode: Variant = {
-        nodeType: NodeTypes.VARIANT,
+    let testCaseNode: TestCase = {
+        nodeType: NodeTypes.TEST_CASE,
         location: { column: 1, line: 2 },
-        name: "My variant",
+        name: "My testCase",
         sentences: []
     };
 
@@ -38,24 +38,24 @@ describe( 'VariantParserTest', () => {
         context = new ParsingContext();
     } );
 
-    it( 'generates an error when a variant is added without a feature', () => {
+    it( 'generates an error when a test case is added without a feature', () => {
         expect( context.doc.feature ).not.toBeDefined();
-        parser.analyze( variantNode, context, nodeIt, errors );
-        expect( errors ).toHaveLength( 1 );     
+        parser.analyze( testCaseNode, context, nodeIt, errors );
+        expect( errors ).toHaveLength( 1 );
     } );
 
-    it( 'adds a variant to a feature whether a feature exists', () => {
+    it( 'adds a test case to a feature when a feature exists', () => {
         context.doc.feature = featureNode;
-        parser.analyze( variantNode, context, nodeIt, errors );
+        parser.analyze( testCaseNode, context, nodeIt, errors );
         expect( errors ).toHaveLength( 0 );
-        expect( context.doc.feature.variants ).toHaveLength( 1 );
-    } );    
+        expect( context.doc.feature.testCases ).toHaveLength( 1 );
+    } );
 
-    it( 'indicates that it is in a variant when a variant is detected', () => {
+    it( 'context indicates the presence of a test case', () => {
         context.doc.feature = featureNode;
-        expect( context.inVariant ).toBeFalsy();
-        parser.analyze( variantNode, context, nodeIt, errors );
-        expect( context.inVariant ).toBeTruthy();
+        expect( context.inTestCase ).toBeFalsy();
+        parser.analyze( testCaseNode, context, nodeIt, errors );
+        expect( context.inTestCase ).toBeTruthy();
     } );
 
 } );

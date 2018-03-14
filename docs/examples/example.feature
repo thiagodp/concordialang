@@ -6,7 +6,7 @@ Feature: Login
 Scenario: Successful login
   ...
 
-Template: Usual login
+Variant: Usual login
   Given that I am on the Login Page
   When I fill Username
     And I fill Password
@@ -18,7 +18,7 @@ Template: Usual login
 
 Scenario: ...
 
-...    
+...
 
 
 # "Low-level" declarations
@@ -35,7 +35,7 @@ Constants:
 UI Element: Login Page
   - type is url
   - value is "/login"
-	
+
 UI Element: Username
   - type is textbox
   - id is "username"
@@ -43,19 +43,19 @@ UI Element: Username
   - minimal length is 2,
     otherwise I must see the message ${msg_min_len}
   - maximum length is 30
-  - value is queried by 'SELECT username FROM users',  
+  - value is queried by 'SELECT username FROM users',
     otherwise I must see ${invalid_username_password}
-	
+
 UI Element: Password
   - type is textbox
-  - id is "password"  
+  - id is "password"
   - minimal length is 6,
     otherwise I must see the message "Password is too short."
 	    and I must see the color be changed to "red"
 	    and I must see the color of Username be changed to "red"
   - value is queried by 'SELECT password FROM users WHERE username = ${Username}',
     otherwise I must see ${invalid_username_password}
-	
+
 UI Element: Enter
   - type is button
   - id is "enter"

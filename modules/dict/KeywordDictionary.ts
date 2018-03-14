@@ -1,14 +1,14 @@
 /**
  * Keyword dictionary
- * 
+ *
  * @see Keywords
- * 
+ *
  * @author Thiago Delgado Pinto
  */
 export interface KeywordDictionary { // properties should exist in Keywords
 
     // Not available in Gherkin
-    
+
     import: string[];
     regexBlock: string[];
     constantBlock: string[];
@@ -16,7 +16,7 @@ export interface KeywordDictionary { // properties should exist in Keywords
     with: string[];
     state: string[];
     variant: string[];
-    template: string[];
+    testCase: string[];
     uiElement: string[];
     database: string[];
 
@@ -27,8 +27,13 @@ export interface KeywordDictionary { // properties should exist in Keywords
     beforeEachScenario: string[];
     afterEachScenario: string[];
 
-    importanceTag: string[];
-    ignoreTag: string[];
+    tagGlobal: string[];
+    tagFeature: string[];
+    tagScenario: string[];
+    tagVariant: string[];
+    tagImportance: string[];
+    tagIgnore: string[];
+    tagGenerated: string[];
 
     // Also available in Gherkin
 
@@ -44,6 +49,6 @@ export interface KeywordDictionary { // properties should exist in Keywords
     stepAnd: string[];
     stepOtherwise: string[];
 
-    table: string[];    
+    table: string[];
 
 }

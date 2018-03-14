@@ -130,7 +130,7 @@ Example 2 (*more than one per line*):
 
 Reserved tags:
 - `@scenario( <name> )`: references a [scenario](#scenario).
-- `@template( <name> )`: references a [template](#template).
+- `@variant( <name> )`: references a [variant](#variant).
 - `@invalid( <ui_element>, <constraint> )`: indicates that a test case has an invalid value for a certain user interface element. The `constraint` is the exploited rule, such as "minimum length", "maximum value", etc.
 - `@importance( <number> )`: indicates the importance. The importance is as higher as its number.
 - `@critical`: indicates a very high importance.
@@ -547,7 +547,7 @@ Additional notes:
 - When a reference to a user interface element is informed **without a value**, values will be produced for the generated test cases, **according to the test goal**;
 
 
-Example 1: Test case produced from the previous template. Valid input.
+Example 1: Test case produced from the previous variant. Valid input.
 ```
 @generated
 @scenario( Successful Login ) # needed only if declared in a external file ?
@@ -561,7 +561,7 @@ Test Case: Valid input 1
     And I see a button <logout>
 ```
 
-Example 2: Another variant produced from previous template. Invalid input.
+Example 2: Another variant produced from previous variant. Invalid input.
 ```
 @generated
 @scenario( Successful Login ) # needed only if declared in a external file ?

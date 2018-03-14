@@ -1,4 +1,4 @@
-import { TemplateLexer } from './TemplateLexer';
+import { VariantLexer } from './VariantLexer';
 import { BeforeAllLexer, AfterAllLexer, BeforeFeatureLexer, AfterFeatureLexer, BeforeScenariosLexer, AfterScenariosLexer } from './TestEventLexer';
 import { DatabasePropertyLexer } from './DatabasePropertyLexer';
 import { DatabaseLexer } from './DatabaseLexer';
@@ -8,7 +8,7 @@ import { ConstantBlock } from '../ast/ConstantBlock';
 import { KeywordBasedLexer } from './KeywordBasedLexer';
 import { Language } from '../ast/Language';
 import { NodeTypes } from '../req/NodeTypes';
-import { VariantLexer } from './VariantLexer';
+import { TestCaseLexer } from './TestCaseLexer';
 import { Node } from '../ast/Node';
 import { DocumentProcessor } from '../req/DocumentProcessor';
 import { NodeLexer, LexicalAnalysisResult } from './NodeLexer';
@@ -38,7 +38,7 @@ import { LanguageContent } from '../dict/LanguageContent';
 
 /**
  * Lexer
- * 
+ *
  * @author Thiago Delgado Pinto
  */
 export class Lexer {
@@ -47,7 +47,7 @@ export class Lexer {
     private _errors: Error[] = [];
 
     private _lexers: Array< NodeLexer< Node > > = [];
-    private _lexersMap: Map< string, NodeLexer< any > > = 
+    private _lexersMap: Map< string, NodeLexer< any > > =
         new Map< string, NodeLexer< any > >(); // iterable in insertion order
     private _lastLexer: NodeLexer< any > = null;
 
@@ -56,11 +56,11 @@ export class Lexer {
 
     /**
      * Constructs the lexer.
-     * 
+     *
      * @param _defaultLanguage Default language (e.g.: "en")
      * @param _languageContentLoader Language content loader.
      * @param _stopOnFirstError True for stopping on the first error found.
-     * 
+     *
      * @throws Error if the given default language could not be found.
      */
     constructor(
@@ -87,7 +87,7 @@ export class Lexer {
             , new StepAndLexer( dictionary.stepAnd )
             , new StepOtherwiseLexer( dictionary.stepOtherwise )
             , new VariantLexer( dictionary.variant )
-            , new TemplateLexer( dictionary.template )
+            , new TestCaseLexer( dictionary.testCase )
             , new ConstantBlockLexer( dictionary.constantBlock )
             , new ConstantLexer( dictionary.is ) // "name" is "value"
             , new RegexBlockLexer( dictionary.regexBlock )
@@ -176,7 +176,7 @@ export class Lexer {
 
     /**
      * Tries to add a node from the given line. Returns true if added.
-     * 
+     *
      * @param line Line to be analyzed
      * @param lineNumber Line number
      */
@@ -189,7 +189,7 @@ export class Lexer {
         if ( 0 === line.trim().length ) { // Ignore empty lines
             return false;
         }
-        
+
         let result: LexicalAnalysisResult< Node >;
         let node: Node;
 
@@ -215,7 +215,7 @@ export class Lexer {
                 this._lastLexer = lexer;
                 // Add the node and errors
                 this.dealWithResult( result );
-                return true; // found a node in the line                
+                return true; // found a node in the line
             }
         }
 
@@ -227,7 +227,7 @@ export class Lexer {
             }
             // Stores the last valid lexer
             this._lastLexer = lexer;
-            // Add the node and errors      
+            // Add the node and errors
             this.dealWithResult( result );
             return true; // found a node in the line
         }
@@ -240,7 +240,7 @@ export class Lexer {
         // Whether a Long String node was detected, indicates it.
         if ( result.nodes.length > 0 && NodeTypes.LONG_STRING === result.nodes[ 0 ].nodeType ) {
             this.longStringDetected();
-        // Else whether recognition is disabled, change node type to TEXT            
+        // Else whether recognition is disabled, change node type to TEXT
         } else if ( this.mustRecognizeAsText() ) {
             this.changeResultToRecognizedAsText( result );
         }
@@ -265,16 +265,16 @@ export class Lexer {
             this._errors.push.apply( this._errors, result.errors );
         }
     }
-    
+
     /**
      * Tries to add an error message. Returns true if added.
-     * 
+     *
      * @param message Error message to be added
      */
     public addErrorMessage( message: string ): boolean {
         if ( this.shouldStop() ) {
             return false;
-        }        
+        }
         this._errors.push( new Error( message ) );
         return true;
     }
@@ -282,7 +282,7 @@ export class Lexer {
     /**
      * Change the language (of the internal lexers) iff it could be loaded.
      * This will *not* change the default lexer language.
-     * 
+     *
      * @param language Language
      * @return The loaded keyword dictionary.
      * @throws Error In case of the language is not available.
@@ -304,7 +304,7 @@ export class Lexer {
 
     /**
      * Loads a dictionary
-     * 
+     *
      * @param language Language
      * @throws Error
      */

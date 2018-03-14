@@ -4,7 +4,7 @@ import { Step } from './Step';
 
 /**
  * Variant
- * 
+ *
  * @author Thiago Delgado Pinto
  */
 export interface Variant extends NamedNode, MayHaveTags {
@@ -12,9 +12,9 @@ export interface Variant extends NamedNode, MayHaveTags {
 }
 
 /**
- * Template
- * 
+ * Test Case
+ *
  * @author Thiago Delgado Pinto
  */
-export interface Template extends Variant {
+export interface TestCase extends Variant {
 }

@@ -1,23 +1,26 @@
-import { isDefined } from "./TypeChecking";
+import { isDefined, areDefined } from "./TypeChecking";
 import { Document } from '../ast/Document';
 import { hasTagNamed } from "../ast/Tag";
 import { ReservedTags } from "../req/ReservedTags";
 import { Variant } from "../ast/Variant";
+import { Scenario } from "../ast/Scenario";
 
 export class DocumentUtil {
 
-    templateVariantsOf( doc: Document ): Variant[] {
-        if ( ! isDefined( doc.variants ) || doc.variants.length < 1 ) {
-            return [];
+    mapVariantsOf( doc: Document ): Map< Variant, Scenario > {
+
+        let map = new Map< Variant, Scenario >();
+
+        if ( ! areDefined( doc.feature, doc.feature.scenarios ) ) {
+            return map;
         }
 
-        let templates: Variant[];
-        for ( let v of doc.variants ) {
-            if ( hasTagNamed( ReservedTags.TEMPLATE, v.tags ) ) {
-                templates.push( v );
+        for ( let sc of doc.feature.scenarios ) {
+            for ( let v of sc.variants || [] ) {
+                map.set( v, sc );
             }
         }
-        return templates;
+        return map;
     }
-    
+
 }
