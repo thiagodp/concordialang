@@ -1,6 +1,6 @@
 /**
  * Language symbols.
- * 
+ *
  * @author Thiago Delgado Pinto
  */
 export abstract class Symbols {
@@ -33,6 +33,8 @@ export abstract class Symbols {
     static REGEX_SEPARATOR = ':';
     static TAG_VALUE_SEPARATOR = ',';
     static VALUE_SEPARATOR = ',';
+
+    static FEATURE_TO_UI_ELEMENT_SEPARATOR = ':';
 
     // wrappers
 

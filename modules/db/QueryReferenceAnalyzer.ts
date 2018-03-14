@@ -8,10 +8,11 @@ import { UIElement, UIProperty, UIValueReferenceType } from '../ast/UIElement';
 import { Spec } from "../ast/Spec";
 import { Constant } from '../ast/Constant';
 import { Table } from '../ast/Table';
+import { NameUtil } from '../util/NameUtil';
 
 /**
  * Analyzes queries' references.
- * 
+ *
  * Notes:
  * - doc.uiElements           => Global UI elements
  * - doc.feature.uiElements   => Local UI elements
@@ -19,27 +20,26 @@ import { Table } from '../ast/Table';
  *   - UI elements from the same (current) feature.
  *   - UI elements from other features.
  *   - Global UI elements.
- * 
+ *
  * >> The current version DOES NOT SUPPORT queries that reference global UI elements.
- * 
+ *
  * TO-DO: check references to global UI elements.
- *  
+ *
  * @author Thiago Delgado Pinto
  */
 export class QueryReferenceAnalyzer {
 
-    public readonly FEATURE_SEPARATOR: string = ':';
-
     private readonly _queryParser = new QueryParser();
+    private readonly _nameUtil = new NameUtil();
 
     /**
      * Check queries WITHOUT executing them. That is, it checks for referenced
      * databases, tables, constants, and ui elements.
-     * 
+     *
      * @returns SemanticException[]
      */
     public check( spec: Spec ): SemanticException[] {
-        
+
         const allErrors: SemanticException[] = [];
         for ( let doc of spec.docs ) {
 
@@ -53,9 +53,9 @@ export class QueryReferenceAnalyzer {
             }
 
             // Checks queries of UI elements from the currrent feature
-            const localErrors: SemanticException[] = 
+            const localErrors: SemanticException[] =
                 this.checkQueriesOfUIElements( doc.feature.uiElements, spec, doc.feature );
-                
+
             allErrors.push.apply( allErrors, localErrors );
         }
         return allErrors;
@@ -64,7 +64,7 @@ export class QueryReferenceAnalyzer {
 
     /**
      * Checks references from the given UI elements' queries.
-     * 
+     *
      * @param uiElements UI elements
      * @param spec Specification
      * @param currentFeature Current feature
@@ -98,7 +98,7 @@ export class QueryReferenceAnalyzer {
                     // Checks the query
                     const itemErrors: SemanticException[] =
                         this.checkQuery( e.value, item, spec, currentFeature );
-                        
+
                     // Adds errors found
                     errors.push.apply( errors, itemErrors );
                 }
@@ -110,11 +110,11 @@ export class QueryReferenceAnalyzer {
 
     /**
      * Checks references of a single query and returns errors found.
-     * 
+     *
      * @param query Query to check
      * @param queryOwner UI property of a UI element that contains the query
      * @param spec Specification to check
-     * @param currentFeature Current feature 
+     * @param currentFeature Current feature
      */
     public checkQuery(
         query: string,
@@ -125,7 +125,7 @@ export class QueryReferenceAnalyzer {
 
         let errors: LocatedException[] = [];
 
-        // NAMES        
+        // NAMES
         const queryNames: string[] = Array.from( new Set( this._queryParser.parseAnyNames( query ) ) );
         if ( queryNames.length > 0 ) {
             const nonFeatureNames: string[] = spec.nonFeatureNames();
@@ -136,7 +136,7 @@ export class QueryReferenceAnalyzer {
                 errors.push( e );
             }
         }
-        
+
         // VARIABLES
         const queryVariables: string[] = Array.from( new Set( this._queryParser.parseAnyVariables( query ) ) );
         if ( queryVariables.length > 0 ) {
@@ -157,7 +157,7 @@ export class QueryReferenceAnalyzer {
 
     /**
      * Searches for a UI element and returns the search result.
-     * 
+     *
      * @param variable Variable in the format 'feature:variable' or 'variable'.
      * @param spec Specification where to find.
      * @param currentFeature Current feature.
@@ -172,7 +172,7 @@ export class QueryReferenceAnalyzer {
 
         // Checking feature
 
-        let featureName: string | null = this.extractFeatureNameOf( variable );
+        let featureName: string | null = this._nameUtil.extractFeatureNameOf( variable );
         let featureToCheck: Feature = null;
 
         if ( ! featureName ) { // No feature in the variable, then look in the current feature
@@ -187,18 +187,18 @@ export class QueryReferenceAnalyzer {
                 const msg = 'Query is referencing a non-existent feature: ' + featureName;
                 r.errorMessages.push( msg );
                 return r; // exit !
-            }                        
+            }
         }
         r.feature = featureToCheck;
 
         // Name to check
 
-        const uieNameToCheck = this.extractVariableNameOf( variable );
+        const uieNameToCheck = this._nameUtil.extractVariableNameOf( variable );
         if ( uieNameToCheck.length < 1 ) {
             const msg = 'Query is referencing an empty UI element.';
             r.errorMessages.push( msg );
             return r;
-        }                
+        }
 
         // Checking UI element of the feature
 
@@ -225,36 +225,6 @@ export class QueryReferenceAnalyzer {
         return r;
     }
 
-    /**
-     * Retrieves a feature name from a string in the format 'feature:variable' or 'variable'.
-     * Whether a variable does not have a feature, it returns null.
-     * 
-     * @param variable Variable
-     */
-    public extractFeatureNameOf( variable: string ): string | null {
-        const index = variable.indexOf( this.FEATURE_SEPARATOR );
-        if ( index < 0 ) {
-            return null;
-        }
-        return variable.substring( 0, index );
-    }
-
-    /**
-     * Retrieves a variable name from a string in the format 'feature:variable' or 'variable'.
-     * 
-     * @param variable Variable
-     */    
-    public extractVariableNameOf( variable: string ): string {
-        const index = variable.indexOf( this.FEATURE_SEPARATOR );
-        if ( index < 0 ) {
-            return variable;
-        }
-        if ( 1 === variable.length ) {
-            return '';
-        }
-        return variable.split( this.FEATURE_SEPARATOR )[ 1 ];
-    }    
-    
 }
 
 
