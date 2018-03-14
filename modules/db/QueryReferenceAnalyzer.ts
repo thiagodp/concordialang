@@ -8,7 +8,7 @@ import { UIElement, UIProperty, UIValueReferenceType } from '../ast/UIElement';
 import { Spec } from "../ast/Spec";
 import { Constant } from '../ast/Constant';
 import { Table } from '../ast/Table';
-import { NameUtil } from '../util/NameUtil';
+import { UIElementUtil } from '../util/UIElementUtil';
 
 /**
  * Analyzes queries' references.
@@ -30,7 +30,7 @@ import { NameUtil } from '../util/NameUtil';
 export class QueryReferenceAnalyzer {
 
     private readonly _queryParser = new QueryParser();
-    private readonly _nameUtil = new NameUtil();
+    private readonly _uieUtil = new UIElementUtil();
 
     /**
      * Check queries WITHOUT executing them. That is, it checks for referenced
@@ -172,7 +172,7 @@ export class QueryReferenceAnalyzer {
 
         // Checking feature
 
-        let featureName: string | null = this._nameUtil.extractFeatureNameOf( variable );
+        let featureName: string | null = this._uieUtil.extractFeatureNameOf( variable );
         let featureToCheck: Feature = null;
 
         if ( ! featureName ) { // No feature in the variable, then look in the current feature
@@ -193,7 +193,7 @@ export class QueryReferenceAnalyzer {
 
         // Name to check
 
-        const uieNameToCheck = this._nameUtil.extractVariableNameOf( variable );
+        const uieNameToCheck = this._uieUtil.extractVariableNameOf( variable );
         if ( uieNameToCheck.length < 1 ) {
             const msg = 'Query is referencing an empty UI element.';
             r.errorMessages.push( msg );

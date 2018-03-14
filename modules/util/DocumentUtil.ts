@@ -4,6 +4,8 @@ import { hasTagNamed } from "../ast/Tag";
 import { ReservedTags } from "../req/ReservedTags";
 import { Variant } from "../ast/Variant";
 import { Scenario } from "../ast/Scenario";
+import { UIElement } from "../ast/UIElement";
+import { UIElementUtil } from "./UIElementUtil";
 
 export class DocumentUtil {
 
@@ -21,6 +23,31 @@ export class DocumentUtil {
             }
         }
         return map;
+    }
+
+    /**
+     * Returns a UI Element with the given name. The given name can be in the format {Name} or {Feature name|Name}.
+     *
+     * @param name UI Element name
+     * @param doc Document
+     */
+    findUIElementWithName( name: string, doc: Document ): UIElement | null {
+        const util = new UIElementUtil();
+        const featureName: string | null = util.extractFeatureNameOf( name );
+        const uieName: string | null = util.extractVariableNameOf( name );
+
+        // Returns null if features have different names
+        if ( areDefined( featureName, doc.feature ) && featureName != doc.feature.name ) {
+            return null;
+        }
+
+
+        if ( isDefined( featureName ) ) {
+
+            doc.uiElements
+        }
+
+        return null;
     }
 
 }
