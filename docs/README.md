@@ -1,16 +1,21 @@
 # Concordia Documentation
 
+*Expected behavior and known limitations*
+
+- [Data generation](#datageneration)
+- [Test case generation](#TestCaseGeneration)
+- [Known limitations](./limitations.md)
 
 
-### Data generation
+## Data generation
 
-#### Queries
+### Queries
 
 1. Always return rows from the *first* column.
 
 - E.g., `"SELECT name, email FROM user"` will always return data from the `"name"` column.
 
-#### Regular Expressions
+### Regular Expressions
 
 1. They will *not* check UI Elements' data type.
 
@@ -22,7 +27,7 @@ UI Element: salary
   - format is "US\$[0-9]{1,7}\.[0-9]{2}"
 ```
 
-#### Computation
+### Computation
 
 (future)
 
@@ -41,19 +46,6 @@ $uielement[ 'username' ].value = $uielement[ 'name' ].value.split( ' ' )[ 0 ];
 ```
 
 
+## Test Case Generation
 
-### Known Limitations
-
-#### Queries
-
-1. Must be declared in a single line.
-
-```concordia
-UI Element: profession
-  - value comes from "SELECT name FROM [MyDB].profession"
-
-UI Element: salary
-  - min value comes from "SELECT salary FROM [MyDB].profession WHERE name = {profession}"
-```
-
-2. References to *global* UI elements is still not supported.
+...
