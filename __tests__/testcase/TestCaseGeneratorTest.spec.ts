@@ -12,7 +12,7 @@ import { NLPBasedSentenceRecognizer } from '../../modules/nlp/NLPBasedSentenceRe
 import { Spec } from '../../modules/ast/Spec';
 import { CaseType } from '../../modules/app/CaseType';
 import { Tag } from '../../modules/ast/Tag';
-import { UIElementUtil } from '../../modules/util/UIElementUtil';
+import { UIElementPropertyExtractor } from '../../modules/util/UIElementPropertyExtractor';
 import { LocatedException } from '../../modules/req/LocatedException';
 import { Warning } from '../../modules/req/Warning';
 import { Variant } from '../../modules/ast/Variant';
@@ -107,7 +107,7 @@ describe( 'TestCaseGeneratorTest', () => {
                 'Feature: Feature 2',
                 'Scenario: Foo',
                 'Variant: Foo',
-                '  Dado que eu estou escrevendo um Variant',
+                '  Dado que espero ter ~foo~',
                 '  Quando eu preencho <a> com [ipsum]',
                 '    E eu preencho <b> com [pi]'
             ] );
@@ -115,14 +115,14 @@ describe( 'TestCaseGeneratorTest', () => {
         expect( doc1.fileErrors ).toEqual( [] );
         expect( doc2.fileErrors ).toEqual( [] );
 
-        let Variant = doc2.feature.scenarios[ 0 ].variants[ 0 ];
+        let variant = doc2.feature.scenarios[ 0 ].variants[ 0 ];
         let errors: LocatedException[] = [];
         let warnings: Warning[] = [];
 
         let newVariant = gen.replaceReferences(
-            Variant,
-            doc2.feature.uiElements,
+            variant,
             spec,
+            doc2,
             CaseType.CAMEL,
             errors,
             warnings
@@ -144,7 +144,7 @@ describe( 'TestCaseGeneratorTest', () => {
                 'Feature: Feature 2',
                 'Scenario: Foo',
                 'Variant: Foo',
-                '  Dado que eu estou escrevendo um Variant',
+                '  Dado que espero ter ~foo~',
                 '  Quando eu preencho {A} com "ipsum lorem"',
                 '    E eu preencho {B} com 3.1416',
                 'UI Element: A',
@@ -155,14 +155,14 @@ describe( 'TestCaseGeneratorTest', () => {
 
         expect( doc.fileErrors ).toEqual( [] );
 
-        let Variant = doc.feature.scenarios[ 0 ].variants[ 0 ];
+        let variant = doc.feature.scenarios[ 0 ].variants[ 0 ];
         let errors: LocatedException[] = [];
         let warnings: Warning[] = [];
 
         let newVariant = gen.replaceReferences(
-            Variant,
-            doc.feature.uiElements,
+            variant,
             spec,
+            doc,
             CaseType.CAMEL,
             errors,
             warnings
@@ -182,7 +182,7 @@ describe( 'TestCaseGeneratorTest', () => {
             let doc: Document = addToSpec( spec, lines );
             expect( doc.fileErrors ).toEqual( [] );
 
-            let Variant = doc.feature.scenarios[ 0 ].variants[ 0 ];
+            let variant = doc.feature.scenarios[ 0 ].variants[ 0 ];
             let errors: LocatedException[] = [];
             let warnings: Warning[] = [];
 
@@ -194,9 +194,9 @@ describe( 'TestCaseGeneratorTest', () => {
 
             it( 'same name', () => {
                 let newVariant = gen.replaceReferences(
-                    Variant,
-                    doc.feature.uiElements,
+                    variant,
                     spec,
+                    doc,
                     CaseType.NONE,
                     errors,
                     warnings
@@ -207,9 +207,9 @@ describe( 'TestCaseGeneratorTest', () => {
 
             it( 'in camel case', () => {
                 let newVariant = gen.replaceReferences(
-                    Variant,
-                    doc.feature.uiElements,
+                    variant,
                     spec,
+                    doc,
                     CaseType.CAMEL,
                     errors,
                     warnings
@@ -220,9 +220,9 @@ describe( 'TestCaseGeneratorTest', () => {
 
             it( 'in pascal case', () => {
                 let newVariant = gen.replaceReferences(
-                    Variant,
-                    doc.feature.uiElements,
+                    variant,
                     spec,
+                    doc,
                     CaseType.PASCAL,
                     errors,
                     warnings
@@ -233,9 +233,9 @@ describe( 'TestCaseGeneratorTest', () => {
 
             it( 'in kebab (aka dashed) case', () => {
                 let newVariant = gen.replaceReferences(
-                    Variant,
-                    doc.feature.uiElements,
+                    variant,
                     spec,
+                    doc,
                     CaseType.KEBAB,
                     errors,
                     warnings
@@ -246,9 +246,9 @@ describe( 'TestCaseGeneratorTest', () => {
 
             it( 'in snake case', () => {
                 let newVariant = gen.replaceReferences(
-                    Variant,
-                    doc.feature.uiElements,
+                    variant,
                     spec,
+                    doc,
                     CaseType.SNAKE,
                     errors,
                     warnings
@@ -267,7 +267,7 @@ describe( 'TestCaseGeneratorTest', () => {
             'Feature: Feature 2',
             'Scenario: Foo',
             'Variant: Foo',
-            '  Dado que eu estou escrevendo um Variant',
+            '  Dado que espero ter ~foo~',
             '  Quando eu preencho {Primeiro Campo} com "ipsum lorem"',
             '    E eu preencho {Segundo Campo} com 3.1416',
             'UI Element: Primeiro Campo',
@@ -282,7 +282,7 @@ describe( 'TestCaseGeneratorTest', () => {
             'Feature: Feature 2',
             'Scenario: Foo',
             'Variant: Foo',
-            '  Dado que eu estou escrevendo um Variant',
+            '  Dado que espero ter ~foo~',
             '  Quando eu preencho {Primeiro Campo} com "ipsum lorem"',
             '    E eu preencho {Segundo Campo} com 3.1416'
             // NO UIElements !!!
@@ -310,7 +310,7 @@ describe( 'TestCaseGeneratorTest', () => {
                 'Feature: Feature 2',
                 'Scenario: Foo',
                 'Variant: Foo',
-                '  Dado que eu estou escrevendo um Variant',
+                '  Dado que espero ter ~foo~',
                 '  Quando eu preencho {A} com [ipsum]',
                 '    E eu preencho {B} com [pi]',
                 'UI Element: A',
@@ -322,14 +322,14 @@ describe( 'TestCaseGeneratorTest', () => {
         expect( doc1.fileErrors ).toEqual( [] );
         expect( doc2.fileErrors ).toEqual( [] );
 
-        let Variant = doc2.feature.scenarios[ 0 ].variants[ 0 ];
+        let variant = doc2.feature.scenarios[ 0 ].variants[ 0 ];
         let errors: LocatedException[] = [];
         let warnings: Warning[] = [];
 
         let newVariant = gen.replaceReferences(
-            Variant,
-            doc2.feature.uiElements,
+            variant,
             spec,
+            doc2,
             CaseType.CAMEL,
             errors,
             warnings

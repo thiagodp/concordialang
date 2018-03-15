@@ -6,10 +6,11 @@ import { NLP } from "./NLP";
 import { NLPResult } from '../../modules/nlp/NLPResult';
 import { LocatedException } from "../req/LocatedException";
 import { NLPException } from "./NLPException";
+import { Warning } from '../req/Warning';
 
 /**
  * NLP result processor
- * 
+ *
  * @author Thiago Delgado Pinto
  */
 export type NLPResultProcessor = (
@@ -21,7 +22,7 @@ export type NLPResultProcessor = (
 
 /**
  * Node sentence recognizer
- * 
+ *
  * @author Thiago Delgado Pinto
  */
 export class NodeSentenceRecognizer {
@@ -31,7 +32,7 @@ export class NodeSentenceRecognizer {
 
     /**
      * Tries to recognize the sentences of the given nodes.
-     * 
+     *
      * @param language Language to be used in the recognition.
      * @param nodes Nodes with content to be analyzed.
      * @param targetIntents Target intents, to be used by the NLP.
@@ -40,7 +41,7 @@ export class NodeSentenceRecognizer {
      * @param warnings Output warnings.
      * @param resultProcessor Function to process each result.
      * @returns True in case of no errors are found, false otherwise.
-     * 
+     *
      * @throws Error If the NLP is not trained.
      */
     public recognize(
@@ -61,7 +62,7 @@ export class NodeSentenceRecognizer {
         if ( ! this._nlp.isTrained( language ) ) {
             let msg = 'The NLP is not trained in ' + language;
             errors.push( new NLPException( msg, { line: 1, column: 1 } as Location ) );
-            return false;            
+            return false;
         }
 
         for ( let node of nodes ) {
@@ -111,7 +112,7 @@ export class NodeSentenceRecognizer {
     public validate(
         node: ContentNode,
         recognizedEntityNames: string[],
-        syntaxRules: any[],        
+        syntaxRules: any[],
         property: string,
         errors: LocatedException[],
         warnings: LocatedException[]
@@ -121,7 +122,7 @@ export class NodeSentenceRecognizer {
         const propertyRuleIndex: number = syntaxRules.map( sr => sr.name ).indexOf( property );
         if ( propertyRuleIndex < 0 ) {
             const msg = 'The sentence "' + node.content + '" could not be validated due to an inexistent rule for property "' + property + '"';
-            warnings.push( new NLPException( msg, node.location ) );
+            warnings.push( new Warning( msg, node.location ) );
             return false;
         }
 
@@ -149,7 +150,7 @@ export class NodeSentenceRecognizer {
             // Inexistent rule for the target
             if ( ! rule[ target ] ) {
                 const msg = 'The sentence "' + node.content + '" could not be validated due to an inexistent rule for the target "' + target + '" of the property "' + property + '"';
-                warnings.push( new NLPException( msg, node.location ) );    
+                warnings.push( new NLPException( msg, node.location ) );
                 return false;
             }
             const targetRule = rule[ target ];

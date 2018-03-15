@@ -1,6 +1,6 @@
 import { QueryParser } from '../db/QueryParser';
 import { escapeId, escape } from 'sqlstring';
-import { isNumber } from './TypeChecking';
+import { isNumber, isDefined } from './TypeChecking';
 import { Entities } from '../nlp/Entities';
 import { LocatedException } from '../req/LocatedException';
 import { Warning } from '../req/Warning';
@@ -9,11 +9,14 @@ import { convertCase } from './CaseConversor';
 import { Symbols } from '../req/Symbols';
 import { NLPResult } from '../nlp/NLPResult';
 import { ValueTypeDetector } from './ValueTypeDetector';
+import { UIElementInfo } from './DocumentUtil';
+import { Spec } from '../ast/Spec';
+import { Document } from '../ast/Document';
 
 /**
  * Replaces references to Concordia constructions - such as named databases,
  * named tables, ui element names, and constants - with their corresponding values.
- * 
+ *
  * @author Thiago Delgado Pinto
  */
 export class ReferenceReplacer {
@@ -30,20 +33,20 @@ export class ReferenceReplacer {
     // }
 
     /**
-     * Replace references in a test case sentence.
-     * 
+     * Replace references of a test case sentence.
+     *
      * @param sentence Sentence to replace.
      * @param nlpResult Result of the NLP.
-     * @param uiElementNameToLiteralMap Map from UI_ELEMENT names to UI_LITERAL ids
+     * @param uiElementVariableMap Map from UI_ELEMENT names to UIElementInfo objects.
      * @param constantNameToValueMap Map from CONSTANT to their VALUEs
-     * @param caseOption String case option to use a UI_ELEMENT name as a UI_LITERAL id when the former is not found in the map.
+     * @param uiLiteralCaseOption String case option to use a UI_ELEMENT name as a UI_LITERAL id when the former is not found in the map.
      */
     public replaceTestCaseSentence(
         sentence: string,
         nlpResult: NLPResult,
-        uiElementNameToLiteralMap: Map< string, string >,
-        constantNameToValueMap: Map< string, string | number >,
-        caseOption: CaseType | string
+        spec: Spec,
+        doc: Document,
+        uiLiteralCaseOption: CaseType
     ): string {
 
         let newSentence: string = sentence;
@@ -52,13 +55,11 @@ export class ReferenceReplacer {
 
             // Replace UI_ELEMENT with UI_LITERAL
             if ( Entities.UI_ELEMENT === e.entity ) {
-
                 // Get the UI_LITERAL name by the UI_ELEMENT name
-                let literalName: string = uiElementNameToLiteralMap.get( e.value );
-                // Uses the UI_ELEMENT name as the literal name, when it is not found.
-                if ( ! literalName ) {
-                    literalName = convertCase( e.value, caseOption );
-                }
+                const info = spec.findUIElementVariable( e.value, doc, uiLiteralCaseOption )
+                let literalName: string = isDefined( info )
+                    ? info.uiLiteral
+                    : convertCase( e.value, uiLiteralCaseOption ); // Uses the UI_ELEMENT name as the literal name, when it is not found.
 
                 // Replace
                 newSentence = this.replaceAtPosition(
@@ -68,10 +69,10 @@ export class ReferenceReplacer {
                     Symbols.UI_LITERAL_PREFIX + literalName + Symbols.UI_LITERAL_SUFFIX // e.g., <foo>
                 );
 
-            // Replace CONSTANT with VALUE                
+            // Replace CONSTANT with VALUE
             } else if ( Entities.CONSTANT === e.entity ) {
 
-                const valueContent: string | number = constantNameToValueMap.get( e.value ) || '';
+                const valueContent: string | number = spec.constantNameToValueMap().get( e.value ) || '';
 
                 const value: string = ( new ValueTypeDetector() ).isNumber( valueContent )
                     ? valueContent.toString() // e.g., 5
@@ -116,7 +117,7 @@ export class ReferenceReplacer {
         //     'pos  :', pos, "\n",
         //     "from :", from, "\n",
         //     "to   :", to, "\n",
-        //     'befor:', '|' + before + '|', "\n",            
+        //     'befor:', '|' + before + '|', "\n",
         //     'after:', '|' + after + '|', "\n",
         //     'resul:', before + to + after
         // );
@@ -127,11 +128,11 @@ export class ReferenceReplacer {
 
     /**
      * Replaces references in a query.
-     * 
+     *
      * @param query Query.
-     * @param databaseNameToNameMap 
-     * @param tableNameToNameMap 
-     * @param uiElementNameToValueMap 
+     * @param databaseNameToNameMap
+     * @param tableNameToNameMap
+     * @param uiElementNameToValueMap
      * @param constantNameToValueMap
      * @returns A query with all the replacements.
      */
@@ -148,14 +149,14 @@ export class ReferenceReplacer {
         // Wrap UI_ELEMENT names
         for ( let [ key, value ] of uiElementNameToValueMap ) {
             varMap[ key ] = this.wrapValue( value );
-        }        
+        }
 
         let constMap = {};
 
         // Wrap DATABASE names
         for ( let [ key, value ] of databaseNameToNameMap ) {
             constMap[ key ] = this.wrapName( value );
-        }              
+        }
 
         // Wrap TABLE names
         for ( let [ key, value ] of tableNameToNameMap ) {
@@ -201,6 +202,6 @@ export class ReferenceReplacer {
 
     private makeNameRegex( name: string ): RegExp {
         return ( new QueryParser() ).makeNameRegex( name );
-    }    
+    }
 
 }

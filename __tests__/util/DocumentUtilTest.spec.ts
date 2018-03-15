@@ -1,4 +1,4 @@
-import { DocumentUtil } from "../../modules/util/DocumentUtil";
+import { DocumentUtil, UIElementInfo } from "../../modules/util/DocumentUtil";
 import { Feature } from "../../modules/ast/Feature";
 import { Document } from "../../modules/ast/Document";
 import { UIElement } from "../../modules/ast/UIElement";
@@ -23,9 +23,10 @@ describe( 'DocumentUtilTest', () => {
             } as Feature
         } as Document;
 
-        const map = util.mapUIElementsVariablesOf( doc );
+        let map = new Map< string, UIElementInfo >();
+        util.addUIElementsVariablesOf( doc, map );
         expect( map.size ).toEqual( 1 );
-        expect( map.get( '{Feature A:foo}' ) ).toHaveProperty( 'name', 'foo' );
+        expect( map.get( 'Feature A:foo' ) || null ).not.toBeNull();
     } );
 
 
@@ -44,7 +45,7 @@ describe( 'DocumentUtilTest', () => {
             } as Feature
         } as Document;
 
-        const uie = util.findUIElementWithName( '{Feature A:foo}', doc );
+        const uie = util.findUIElementInTheDocument( '{Feature A:foo}', doc );
         expect( uie ).not.toBeNull();
     } );
 
@@ -70,7 +71,7 @@ describe( 'DocumentUtilTest', () => {
             ]
         } as Document;
 
-        const uie = util.findUIElementWithName( '{bar}', doc );
+        const uie = util.findUIElementInTheDocument( '{bar}', doc );
         expect( uie ).not.toBeNull();
     } );
 
@@ -97,7 +98,7 @@ describe( 'DocumentUtilTest', () => {
             ]
         } as Document;
 
-        const uie = util.findUIElementWithName( '{foo}', doc );
+        const uie = util.findUIElementInTheDocument( '{foo}', doc );
         expect( uie ).not.toBeNull();
     } );
 
@@ -123,7 +124,7 @@ describe( 'DocumentUtilTest', () => {
             ]
         } as Document;
 
-        const uie = util.findUIElementWithName( '{zoo}', doc );
+        const uie = util.findUIElementInTheDocument( '{zoo}', doc );
         expect( uie ).toBeNull();
     } );
 

@@ -5,11 +5,16 @@ import { ReservedTags } from "../req/ReservedTags";
 import { Variant } from "../ast/Variant";
 import { Scenario } from "../ast/Scenario";
 import { UIElement } from "../ast/UIElement";
-import { UIElementUtil } from "./UIElementUtil";
+import { Feature } from "../ast/Feature";
+import { CaseType } from "../app/CaseType";
+import { UIElementNameHandler } from "./UIElementNameHandler";
+import { UIElementPropertyExtractor } from "./UIElementPropertyExtractor";
 
 export class DocumentUtil {
 
-    private readonly _uieUtil = new UIElementUtil();
+    private readonly _uieNameHandler = new UIElementNameHandler();
+    private readonly _uiePropExtractor = new UIElementPropertyExtractor();
+
 
     mapVariantsOf( doc: Document ): Map< Variant, Scenario > {
 
@@ -28,60 +33,116 @@ export class DocumentUtil {
     }
 
     /**
-     * Returns a UI Element with the given name. The given name can be in the format {Name} or {Feature name|Name}.
+     * Finds a UI Element variable in the given document.
      *
-     * @param name UI Element name
+     * The given name can have one of the following formats:
+     * - feature:variable
+     * - variable
+     * - {feature:variable}
+     * - {variable}
+     *
+     * @param variable UI Element variable name
      * @param doc Document
      */
-    findUIElementWithName( name: string, doc: Document ): UIElement | null {
+    findUIElementInTheDocument( variable: string, doc: Document ): UIElement | null {
 
-        const featureName: string | null = this._uieUtil.extractFeatureNameOf( name );
+        const [ featureName, uiElementName ] = this._uieNameHandler.extractNamesOf( variable );
 
-        // Returns null if features are defined and have different names
-        if ( areDefined( featureName, doc.feature )
-            && featureName.toLowerCase() !== doc.feature.name.toLowerCase() ) {
-            return null;
+        if ( isDefined( featureName ) )  {
+
+            if ( ! isDefined( doc.feature ) ) {
+                return null; // not in this document
+            }
+
+            if ( featureName.toLowerCase() !== doc.feature.name.toLowerCase() ) {
+                return null; // feature names are different
+            }
+
+        }
+        // Document has feature with ui elements ?
+        if ( areDefined( doc.feature, doc.feature.uiElements ) ) {
+            // Let's search it in the feature
+            for ( let uie of doc.feature.uiElements ) {
+                if ( uie.name.toLowerCase() === uiElementName.toLowerCase() ) {
+                    return uie;
+                }
+            }
         }
 
-        const map = this.mapUIElementsVariablesOf( doc );
-
-        // Finds the variable in the document's feature. If not found, finds it in the document.
-        if ( ! isDefined( featureName ) && isDefined( doc.feature ) ) {
-            const uieName: string | null = this._uieUtil.extractVariableNameOf( name );
-            const fullName = this._uieUtil.makeVariableName( doc.feature.name, uieName );
-            return map.get( fullName ) // In the feature
-                || map.get( name ) // Global declaration in the document
-                || null; // Null in case of not found
+        // Finally let's search it in the document
+        for ( let uie of doc.uiElements || [] ) {
+            if ( uie.name.toLowerCase() === uiElementName.toLowerCase() ) {
+                return uie;
+            }
         }
 
-        return map.get( name ) || null; // Global declaration in the document
+        return null; // not found
+    }
+
+
+    findUIElementInfoInTheDocument( variable: string, doc: Document, caseOption: CaseType | string = CaseType.CAMEL  ): UIElementInfo | null {
+        const uie = this.findUIElementInTheDocument( variable, doc );
+        if ( isDefined( uie ) ) {
+            return new UIElementInfo( doc, uie, this._uiePropExtractor.extractId( uie, caseOption ), doc.feature || null );
+        }
+        return null;
     }
 
     /**
-     * Creates variables from UIElements of the given document.
-     * - Global UI Elements will have the format {Element name}.
-     * - Feature's UI Elements will have the format {Feature name:Element name}.
+     * Adds all the UI Element variables of the given document to the given map.
+     *
+     * Formats:
+     * - {Element} for Global UI Elements and Feature's UI Elements if `keepItLocal` is true.
+     * - {Feature:Element} for Feature's UI Elements if `keepItLocal` is false.
      *
      * @param doc Document
+     * @param map Map
+     * @param keepItLocal Whether UI Element variables should be created without the feature name.
+     * @param caseOption Case option to generate ui literals
      */
-    mapUIElementsVariablesOf( doc: Document ): Map< string, UIElement > {
-        let all = new Map< string, UIElement >();
+    addUIElementsVariablesOf(
+        doc: Document,
+        map: Map< string, UIElementInfo >,
+        keepItLocal: boolean = false,
+        caseOption: CaseType | string = CaseType.CAMEL
+    ): void {
+        // Start with global ui elements
         for ( let uie of doc.uiElements || [] ) {
-            all.set(
-                this._uieUtil.makeVariableName( null, uie.name ),
-                uie
+            const uiLiteral: string = this._uiePropExtractor.extractId( uie, caseOption );
+            map.set(
+                this._uieNameHandler.makeVariableName( null, uie.name ),
+                new UIElementInfo( doc, uie, uiLiteral, null )
             );
         }
         if ( ! isDefined( doc.feature ) ) {
-            return all;
+            return;
         }
+        // Then fill it with local ui elements
         for ( let uie of doc.feature.uiElements ) {
-            all.set(
-                this._uieUtil.makeVariableName( doc.feature.name, uie.name ),
-                uie
+            const uiLiteral: string = this._uiePropExtractor.extractId( uie, caseOption );
+            // When null, a feature name may overwrite a name defined globallly
+            const featureName: string | null = ! keepItLocal ? doc.feature.name : null;
+            map.set(
+                this._uieNameHandler.makeVariableName( featureName, uie.name ),
+                new UIElementInfo( doc, uie, uiLiteral, doc.feature )
             );
         }
-        return all;
     }
 
+}
+
+
+export class UIElementInfo {
+
+    constructor(
+        public document: Document = null,
+        public uiElement: UIElement = null,
+        public uiLiteral: string = null,
+        public feature: Feature = null
+    ) {
+    }
+
+    isGlobal(): boolean {
+        return ! this.feature;
+    }
 }

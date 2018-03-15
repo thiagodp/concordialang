@@ -56,4 +56,8 @@ export class NLPUtil {
         return nlpResult.entities.find( e => name === e.entity ) || null;
     }
 
+    valuesOfEntitiesNamed( name: string, nlpResult: NLPResult ): string[] {
+        return nlpResult.entities.filter( e => name === e.entity ).map( e => e.value );
+    }
+
 }

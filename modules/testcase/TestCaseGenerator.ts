@@ -2,11 +2,11 @@ import { NLPResult, NLPEntity, NLPUtil } from '../nlp/NLPResult';
 import { UIElement, UIProperty } from '../ast/UIElement';
 import { Variant, TestCase } from "../ast/Variant";
 import { Spec } from "../ast/Spec";
+import { Document } from "../ast/Document";
 import { LocatedException } from "../req/LocatedException";
 import { DataTestCase } from "../testdata/DataTestCase";
 import { Symbols } from "../req/Symbols";
 import { Step } from "../ast/Step";
-import { Document } from "../ast/Document";
 import { Entities } from "../nlp/Entities";
 import { Constant } from "../ast/Constant";
 import { ReferenceReplacer } from "../util/ReferenceReplacer";
@@ -15,7 +15,6 @@ import { convertCase } from '../util/CaseConversor';
 import { ReservedTags } from '../req/ReservedTags';
 import { ValueType, ALL_VALUE_TYPES } from '../util/ValueTypeDetector';
 import { isDefined, areDefined } from '../util/TypeChecking';
-import { UIElementUtil } from '../util/UIElementUtil';
 import { LanguageContent } from '../dict/LanguageContent';
 import { Warning } from '../req/Warning';
 import { VariantSentenceRecognizer } from '../nlp/VariantSentenceRecognizer';
@@ -23,6 +22,8 @@ import { NLP } from '../nlp/NLP';
 import { NodeTypes } from '../req/NodeTypes';
 import { Tag } from '../ast/Tag';
 import { KeywordDictionary } from '../dict/KeywordDictionary';
+import { UIElementInfo } from '../util/DocumentUtil';
+import { DataTestCaseAnalyzer } from '../testdata/DataTestCaseAnalyzer';
 import * as deepcopy from 'deepcopy';
 import { lower } from 'case';
 
@@ -33,8 +34,13 @@ import { lower } from 'case';
  */
 export class TestCaseGenerator {
 
+    /// Used to recognize test case sentences after creating them.
+    /// This recognition is important to generate test scripts later.
     private readonly _variantSentenceRec: VariantSentenceRecognizer;
+
     private readonly _nlpUtil = new NLPUtil();
+
+    private readonly _dtcAnalyzer = new DataTestCaseAnalyzer();
 
     constructor(
         private _language: string = 'en',
@@ -50,25 +56,55 @@ export class TestCaseGenerator {
         doc: Document,
         spec: Spec,
         startLine: number,
-        uiLiteralCaseOption: CaseType | string,
-
-        dataTestCases: DataTestCase[],
+        uiLiteralCaseOption: CaseType,
         languageContent: LanguageContent
 
     ): Promise< TestCaseGenerationResult > {
 
-        const keywords: KeywordDictionary = languageContent.keywords;
-
         let errors: Error[] = [];
-        let warnings: Warning[] = [];
 
-        const uiElements: UIElement[] = this.uiElementsOf( doc );
+        // Let's start extracting the UI Elements referenced by the Variant.
+        // We'll generate Test Cases according to the DataTestCases supported by every referenced UI Element.
+        // If no UI Elements are referenced, at least one Test Case with random values should be generated.
+        let uieVariableToDataTestCaseMap = new Map< string, DataTestCase[] >();
+        for ( let s of variant.sentences || [] ) {
+            // Extracts referenced UI Element variable
+            const variables: string[] = this._nlpUtil.valuesOfEntitiesNamed( Entities.UI_ELEMENT, s.nlpResult );
+            // Maps compatible data test cases
+            for ( let v of variables ) {
+                uieVariableToDataTestCaseMap.set(
+                    v,
+                    this._dtcAnalyzer.compatibleDataTestCases( v, doc, spec, errors )
+                );
+            }
+        }
+
+        // No tests, because of there are no referenced UI Elements.
+        // Let's add a null variable with random tests
+        if ( uieVariableToDataTestCaseMap.size < 1 ) {
+
+            uieVariableToDataTestCaseMap.set(
+                null,
+                [
+                    DataTestCase.LENGTH_RANDOM_BETWEEN_MIN_MAX
+                ]
+            );
+
+        }
+
+
+        // --
+
+
+
+        const keywords: KeywordDictionary = languageContent.keywords;
+        let warnings: Warning[] = [];
 
         // Copy the original variant and replaces its references
         const newVariant: Variant = this.replaceReferences(
             variant,
-            uiElements,
             spec,
+            doc,
             uiLiteralCaseOption,
             errors,
             warnings
@@ -79,34 +115,44 @@ export class TestCaseGenerator {
 
         // Generate TestCases for each data test case (?)
         let all: TestCase[] = [];
-        for ( let dataTestCase of dataTestCases ) {
+        for ( let [ uiVariableName, dataTestCases ] of uieVariableToDataTestCaseMap ) {
 
-            // Uses the test name from the translation document if available.
-            // Otherwise, it uses the original test case name in lower case, e.g., 'SOME_TEST' -> 'some test'.
-            // This is not the case of using a CaseType, because CaseType is intended to produce method-line
-            // names and the TestCase name should be more natural language-like.
-            const testName: string = languageContent.testCaseNames[ dataTestCase ] || lower( dataTestCase );
-            const testCaseName: string = newVariant.name + ' - ' + testName;
+            const isUIVariableDefined = isDefined( uiVariableName );
 
-            let testCase: TestCase = {
-                nodeType: NodeTypes.TEST_CASE,
-                name: testCaseName,
-                location: {
-                    column: 1,
-                    line: ++startLine
-                },
-                tags: [],
-                sentences: []
-            } as TestCase;
+            for ( let dataTestCase of dataTestCases ) {
 
-            testCase.tags = this.createTags( newVariant, startLine, keywords.tagVariant, keywords.tagGenerated );
-            startLine += testCase.tags.length;
+                // Uses the test name from the translation document if available.
+                // Otherwise, it uses the original test case name in lower case, e.g., 'SOME_TEST' -> 'some test'.
+                // This is not the case of using a CaseType, because CaseType is intended to produce method-line
+                // names and the TestCase name should be more natural language-like.
+                const testName: string = languageContent.testCaseNames[ dataTestCase ] || lower( dataTestCase );
+                const testCaseName: string = newVariant.name + ' - ' + testName;
 
-            testCase.sentences = this.createSentences(
-                newVariant, startLine, uiElements, spec, dataTestCase, withKeyword );
-            startLine += testCase.sentences.length;
+                let testCase: TestCase = {
+                    nodeType: NodeTypes.TEST_CASE,
+                    name: testCaseName,
+                    location: {
+                        column: 1,
+                        line: ++startLine
+                    },
+                    tags: [],
+                    sentences: []
+                } as TestCase;
 
-            all.push( testCase );
+                //
+                // TODO:    add tag about the explored ui element and data test case
+                //          it could be necessary evaluate if the test will fail or not!
+                //
+
+                testCase.tags = this.createTags( newVariant, startLine, keywords.tagVariant, keywords.tagGenerated );
+                startLine += testCase.tags.length;
+
+                testCase.sentences = this.createSentences(
+                    newVariant, startLine, spec, dataTestCase, withKeyword );
+                startLine += testCase.sentences.length;
+
+                all.push( testCase );
+            }
         }
 
         return new TestCaseGenerationResult( all, errors, warnings );
@@ -158,7 +204,6 @@ export class TestCaseGenerator {
     public createSentences(
         variant,
         startLine,
-        uiElements,
         spec,
         dataTestCase,
         withKeyword
@@ -188,7 +233,7 @@ export class TestCaseGenerator {
             }
 
             // Adds the value
-            step.content += ' ' + withKeyword + ' ' + this.generateValue( s, uiElements, spec, dataTestCase );
+            step.content += ' ' + withKeyword + ' ' + this.generateValue( s, spec, dataTestCase );
         }
         return steps;
     }
@@ -196,20 +241,12 @@ export class TestCaseGenerator {
 
     public replaceReferences(
         variant: Variant,
-        uiElements: UIElement[],
         spec: Spec,
-        caseOption: CaseType | string,
+        doc: Document,
+        uiLiteralCaseOption: CaseType,
         errors: LocatedException[],
         warnings: Warning[]
     ): Variant {
-
-        // Generate the literals
-        const uiElementNameToLiteralMap: Map< string, string > =
-            ( new UIElementUtil() ).generateIds( uiElements, caseOption );
-
-        // Get constant values
-        const constantNameToValueMap: Map< string, string | number > =
-            spec.constantNameToValueMap();
 
         // Copy the original variant
         let newVariant: Variant = deepcopy( variant ); // <<< must be here in this function
@@ -220,9 +257,9 @@ export class TestCaseGenerator {
             s.content = replacer.replaceTestCaseSentence(
                 s.content,
                 s.nlpResult,
-                uiElementNameToLiteralMap,
-                constantNameToValueMap,
-                caseOption
+                spec,
+                doc,
+                uiLiteralCaseOption
             );
         }
 
@@ -241,31 +278,10 @@ export class TestCaseGenerator {
     }
 
 
-    public generateValue( s: Step, uiElements: UIElement[], spec: Spec, tc: DataTestCase ): string {
+    public generateValue( s: Step, spec: Spec, tc: DataTestCase ): string {
 
-        // Retrieve the value type of the referenced element (default string), in order
-        // to generate the test value with the right type
-        let dataType: ValueType = ValueType.STRING;
-        if ( s.targets && s.targets.length > 0 ) {
-            // Find the element by name
-            const uie = uiElements.find( uie => uie.name === s.targets[ 0 ] );
-            if ( areDefined( uie, uie.items ) ) {
-                // Find the value type, if defined. Property is "datatype" and entity is "ui_data_type".
-                const item = uie.items.find( item => 'datatype' === item.property );
-                if ( isDefined( item ) ) {
-                    const entity = this._nlpUtil.find( Entities.UI_DATA_TYPE, item.nlpResult );
-                    if ( isDefined( entity ) ) {
-                        // Only accepts one of the available data types
-                        const dataTypeIndex = ALL_VALUE_TYPES.indexOf( entity.value.trim().toLowerCase() );
-                        if ( dataTypeIndex >= 0 ) {
-                            dataType = ALL_VALUE_TYPES[ dataTypeIndex ];
-                        }
-                    }
-                }
-            }
-        }
-        //console.log( 'Data type is', dataType );
 
+        let dataType: string = 'string'; // ...
         let value = '';
 
         // TO-DO
@@ -279,18 +295,6 @@ export class TestCaseGenerator {
         }
 
         return value;
-    }
-
-
-    private uiElementsOf( doc: Document ): UIElement[] {
-        let uiElements: UIElement[] = [];
-        if ( isDefined( doc.uiElements ) ) {
-            uiElements.push.apply( uiElements, doc.uiElements );
-        }
-        if ( isDefined( doc.feature.uiElements ) ) {
-            uiElements.push.apply( uiElements, doc.feature.uiElements );
-        }
-        return uiElements;
     }
 
 }

@@ -9,6 +9,9 @@ import { Database, DatabaseProperties } from './Database';
 import { Document } from './Document';
 import { isDefined } from '../util/TypeChecking';
 import { join } from 'path';
+import { UIElementPropertyExtractor } from '../util/UIElementPropertyExtractor';
+import { DocumentUtil, UIElementInfo } from '../util/DocumentUtil';
+import { CaseType } from '../app/CaseType';
 
 /**
  * Specification
@@ -31,7 +34,7 @@ export class Spec {
     private _nonFeatureNamesCache: string[] = null;
 
     private _constantNameToValueMap: Map< string, string | number > = new Map< string, string | number >();
-
+    private _uiElementVariableMap: Map< string, UIElementInfo > = new Map< string, UIElementInfo >(); // global UI Elements
 
 
     constructor( basePath?: string ) {
@@ -99,7 +102,8 @@ export class Spec {
     };
 
     public databaseWithName( name: string, clearCache: boolean = false ): Database | null {
-        return this.databases( clearCache ).find( db => db.name.toLowerCase() === name.toLowerCase() );
+        return this.databases( clearCache )
+            .find( db => db.name.toLowerCase() === name.toLowerCase() ) || null;
     }
 
 
@@ -241,18 +245,62 @@ export class Spec {
         return this._nonFeatureNamesCache;
     }
 
-    public globalUIElements( clearCache: boolean = false ): UIElement[] {
+    public uiElements(
+        clearCache: boolean = false,
+        uiLiteralCaseOption: CaseType = CaseType.CAMEL
+    ): UIElement[] {
         if ( this._uiElementCache !== null && ! clearCache ) {
             return this._uiElementCache;
         }
         this._uiElementCache = [];
+        this._uiElementVariableMap.clear();
+        const docUtil = new DocumentUtil();
         for ( let doc of this.docs ) {
             if ( ! doc.uiElements || doc.uiElements.length < 1 ) {
                 continue;
             }
+            // -- add all the variables of the document to the map
+            docUtil.addUIElementsVariablesOf( doc, this._uiElementVariableMap, false, uiLiteralCaseOption );
+            // --
             this._uiElementCache.push.apply( this._uiElementCache, doc.uiElements );
         }
         return this._uiElementCache;
+    }
+
+
+    /**
+     * Returns a map with all the UI Elements of the specification. Global UI Elements have
+     * no feature name, e.g., `globalName`, while non-global UI Elements have, e.g.,
+     * `My Feature:My Element`.
+     *
+     * @param clearCache
+     */
+    public uiElementsVariableMap(
+        clearCache: boolean = false,
+        uiLiteralCaseOption: CaseType = CaseType.CAMEL
+    ): Map< string, UIElementInfo > {
+        if ( this._uiElementCache !== null && ! clearCache ) {
+            this._uiElementVariableMap;
+        }
+        this.uiElements( clearCache, uiLiteralCaseOption );
+        return this._uiElementVariableMap;
+    }
+
+
+
+    public findUIElementVariable(
+        variable: string,
+        doc: Document = null,
+        uiLiteralCaseOption: CaseType = CaseType.CAMEL
+    ): UIElementInfo | null {
+        if ( isDefined( doc ) ) {
+            const docUtil = new DocumentUtil();
+            const info = docUtil.findUIElementInfoInTheDocument( variable, doc, uiLiteralCaseOption );
+            if ( isDefined( info ) ) {
+                return info;
+            }
+        }
+        return this.uiElementsVariableMap( false, uiLiteralCaseOption ).get( variable ) || null;
     }
 
     // public uiElementNames = (): string[] => {
