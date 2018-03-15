@@ -197,6 +197,7 @@
             "ui_property": {
                 "id": [ "id", "identificacao" ],
                 "type": [ "tipo" ],
+                "editable": [ "editavel" ],
                 "datatype": [ "tipo de dado" ],
                 "value": [ "valor" ],
                 "minlength": [ "comprimento mínimo" ],
@@ -226,6 +227,11 @@
                 "date": [ "data", "date" ],
                 "time": [ "hora", "time" ],
                 "datetime": [ "datahora", "datetime", "timestamp" ]
+            },
+
+            "bool_value": {
+                "true": [ "verdadeiro", "true", "sim" ],
+                "false": [ "falso", "false", "não" ]
             }
         },
 
