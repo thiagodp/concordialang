@@ -157,7 +157,7 @@ export class Spec {
     /**
      * Return all tables. Results are cached.
      */
-    public tables = ( clearCache: boolean = false ): Table[] => {
+    public tables( clearCache: boolean = false ): Table[] {
         if ( isDefined( this._tableCache ) && ! clearCache ) {
             return this._tableCache;
         }
@@ -177,17 +177,17 @@ export class Spec {
             }
         }
         return this._tableCache;
-    };
+    }
 
-    public tableNames = (): string[] => {
+    public tableNames(): string[] {
         return this.tables().map( c => c.name );
-    };
+    }
 
 
     /**
      * Return all features. Results are cached.
      */
-    public features = ( clearCache: boolean = false ): Feature[] => {
+    public features( clearCache: boolean = false ): Feature[] {
         if ( isDefined( this._featureCache ) && ! clearCache ) {
             return this._featureCache;
         }
@@ -205,11 +205,11 @@ export class Spec {
             this._featureCache.push( doc.feature );
         }
         return this._featureCache;
-    };
+    }
 
-    public featureNames = (): string[] => {
+    public featureNames(): string[] {
         return this.features().map( v => v.name );
-    };
+    }
 
     public featureWithName( name: string, ignoreCase: boolean = false ): Feature | null {
         if ( ! name ) {
@@ -241,7 +241,7 @@ export class Spec {
         return this._nonFeatureNamesCache;
     }
 
-    public globalUiElements( clearCache: boolean = false ): UIElement[] {
+    public globalUIElements( clearCache: boolean = false ): UIElement[] {
         if ( this._uiElementCache !== null && ! clearCache ) {
             return this._uiElementCache;
         }
