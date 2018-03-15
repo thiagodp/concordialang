@@ -14,7 +14,7 @@ import { FileInfo } from "../ast/FileInfo";
 import { Language } from "../ast/Language";
 import { DocumentUtil } from "../util/DocumentUtil";
 import { NodeTypes } from "../req/NodeTypes";
-import Graph from 'graph.js';
+import Graph = require( 'graph.js/dist/graph.full.js' );
 import { join, basename, extname, dirname, relative, parse } from 'path';
 import { EventEmitter } from 'events';
 import { deepcopy } from 'deepcopy';

@@ -3,12 +3,12 @@ import { FilterCriterion } from "./FilterCriterion";
 import { GraphFilter } from "./GraphFilter";
 import { Spec } from "../ast/Spec";
 import { Document } from "../ast/Document";
-import Graph from 'graph.js';
+import Graph = require( 'graph.js/dist/graph.full.js' );
 
 /**
  * Specification filter
- * 
- * @author Thiago Delgado Pinto 
+ *
+ * @author Thiago Delgado Pinto
  */
 export class SpecFilter {
 

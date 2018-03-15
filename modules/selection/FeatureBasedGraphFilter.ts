@@ -4,12 +4,12 @@ import { Feature } from '../ast/Feature';
 import { Document } from '../ast/Document';
 import { Tag } from '../ast/Tag';
 import { isDefined } from '../util/TypeChecking';
-import Graph from 'graph.js';
+import Graph = require( 'graph.js/dist/graph.full.js' );
 
 
 /**
  * Feature-based graph filter.
- * 
+ *
  * @author Thiago Delgado Pinto
  */
 export class FeatureBasedGraphFilter {
@@ -24,13 +24,13 @@ export class FeatureBasedGraphFilter {
      * Determines whether a Document should be included in the filtering results,
      * based on whether it has a Feature that matches the criteria or whether it
      * has no Feature but it imports a Feature that should be included.
-     * 
+     *
      * @param doc Document to evaluate.
      * @param graph Graph with all the documents.
      * @returns boolean
      */
     shouldBeIncluded(
-        doc: Document,        
+        doc: Document,
         graph: Graph
     ): boolean {
 

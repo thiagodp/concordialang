@@ -9,8 +9,9 @@ import { Feature } from '../ast/Feature';
 import { Tag } from '../ast/Tag';
 import { Variant, TestCase } from '../ast/Variant';
 import { SpecSemanticAnalyzer } from './SpecSemanticAnalyzer';
+import { Location } from '../ast/Location';
 import * as path from 'path';
-
+import * as deepcopy from 'deepcopy';
 
 /**
  * Executes semantic analysis of Test Cases in a specification.
@@ -52,8 +53,9 @@ export class TestCaseSSA extends SpecSemanticAnalyzer {
             // No imported files -> error
             if ( importsCount < 1 ) {
                 let firstVariant = doc.testCases[ 0 ];
-                let msg = 'No imports or feature declared before the test case.';
-                let err = new SemanticException( msg, firstVariant.location );
+                const msg = 'No imports or feature declared before the test case.';
+                const err = new SemanticException( msg,
+                    this.makeLocationWithPath( firstVariant.location, doc.fileInfo.path ) );
                 errors.push( err );
 
             // Single import -> Let's check its feature
@@ -94,11 +96,12 @@ export class TestCaseSSA extends SpecSemanticAnalyzer {
 
     private processSingleImport( spec: Spec, doc: Document, docImport: Import, errors: Error[] ): boolean {
 
-        let feature = this.featureFromImport( spec, docImport, errors );
+        let feature = this.featureFromImport( spec, doc, docImport, errors );
         // It must have a feature
         if ( ! feature ) {
-            let msg = 'Imported document does not have a feature.';
-            let err = new SemanticException( msg, docImport.location );
+            const msg = 'Imported document does not have a feature.';
+            const err = new SemanticException( msg,
+                this.makeLocationWithPath( docImport.location, doc.fileInfo.path ) );
             errors.push( err );
             return false;
         }
@@ -108,15 +111,16 @@ export class TestCaseSSA extends SpecSemanticAnalyzer {
     }
 
 
-    private featureFromImport( spec: Spec, docImport: Import, errors: Error[] ): Feature {
+    private featureFromImport( spec: Spec, doc: Document, docImport: Import, errors: Error[] ): Feature {
 
         // Gets the imported document
         const filePath = docImport.value;
-        const importedDoc: Document = spec.docWithPath( filePath );
+        const importedDoc: Document = spec.docWithPath( filePath, doc.fileInfo.path );
 
         if ( ! importedDoc ) {
-            let msg = 'Imported document path not resolved: "' + filePath + '".';
-            let err = new SemanticException( msg, docImport.location );
+            const msg = 'Imported document path not resolved: "' + filePath + '".';
+            const err = new SemanticException( msg,
+                this.makeLocationWithPath( docImport.location, doc.fileInfo.path ) );
             errors.push( err );
             return null;
         }
@@ -137,7 +141,7 @@ export class TestCaseSSA extends SpecSemanticAnalyzer {
         let availableFeatureNames: string[] = [];
         let availableFeaturePaths: string[] = [];
         for ( let docImport of doc.imports ) {
-            let feature = this.featureFromImport( spec, docImport, errors );
+            let feature = this.featureFromImport( spec, doc, docImport, errors );
             if ( feature ) {
                 availableFeatures.push( feature );
                 availableFeatureNames.push( feature.name.toLowerCase() ); // Lower case
@@ -147,8 +151,9 @@ export class TestCaseSSA extends SpecSemanticAnalyzer {
 
         // Checks the number of available features
         if ( 0 === availableFeatures.length ) {
-            let msg = 'None of the imported files has features.';
-            let err = new SemanticException( msg, doc.imports[ 0 ].location );
+            const msg = 'None of the imported files has features.';
+            const err = new SemanticException( msg,
+                this.makeLocationWithPath( doc.imports[ 0 ].location, doc.fileInfo.path ) );
             errors.push( err );
             return false;
         }
@@ -232,8 +237,9 @@ export class TestCaseSSA extends SpecSemanticAnalyzer {
             // continue to check the feature
         } else { // multiple features
             if ( ! featureName ) {
-                let msg = 'Test case has no tag that refers to its feature.';
-                let err = new SemanticException( msg, testCases.location );
+                const msg = 'Test case has no tag that refers to its feature.';
+                const err = new SemanticException( msg,
+                    this.makeLocationWithPath( testCases.location, doc.fileInfo.path ) );
                 errors.push( err );
                 return false;
             }
@@ -244,8 +250,9 @@ export class TestCaseSSA extends SpecSemanticAnalyzer {
         // Not available -> error
         const featureIndex = availableFeatureNames.indexOf( featureName );
         if ( featureIndex < 0 ) {
-            let msg = 'Tag refers to a non existing feature.';
-            let err = new SemanticException( msg, featureTag.location );
+            const msg = 'Tag refers to a non existing feature.';
+            const err = new SemanticException( msg,
+                this.makeLocationWithPath( featureTag.location, doc.fileInfo.path ) );
             errors.push( err );
             return false;
         }
@@ -267,6 +274,12 @@ export class TestCaseSSA extends SpecSemanticAnalyzer {
 
     isFeatureTag( name: string ): boolean {
         return this._tagFeatureKeywords.indexOf( name.toLowerCase().trim() ) >= 0;
+    }
+
+    private makeLocationWithPath( location: Location, path: string ): Location {
+        let loc = deepcopy( location ) as Location;
+        loc.filePath = path;
+        return loc;
     }
 
 }

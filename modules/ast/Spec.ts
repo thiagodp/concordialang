@@ -8,7 +8,7 @@ import { Constant } from './Constant';
 import { Database, DatabaseProperties } from './Database';
 import { Document } from './Document';
 import { isDefined } from '../util/TypeChecking';
-import { join } from 'path';
+import { join, resolve, dirname } from 'path';
 import { UIElementPropertyExtractor } from '../util/UIElementPropertyExtractor';
 import { DocumentUtil, UIElementInfo } from '../util/DocumentUtil';
 import { CaseType } from '../app/CaseType';
@@ -50,7 +50,12 @@ export class Spec {
      *
      * @param filePath File path.
      */
-    public docWithPath( filePath: string, clearCache: boolean = false ): Document | null {
+    public docWithPath( filePath: string, referencePath: string = null, clearCache: boolean = false ): Document | null {
+
+        let aPath = filePath;
+        if ( isDefined( referencePath ) ) {
+            aPath = resolve( dirname( referencePath ), filePath );
+        }
 
         if ( ! isDefined( this._relPathToDocumentCache ) || clearCache ) {
 
@@ -60,15 +65,16 @@ export class Spec {
             for ( let doc of this.docs ) {
 
                 const relDocPath = isDefined( this.basePath )
-                    ? join( this.basePath, doc.fileInfo.path )
+                    ? resolve( this.basePath, doc.fileInfo.path )
                     : doc.fileInfo.path;
 
                 this._relPathToDocumentCache.set( relDocPath, doc );
             }
         }
 
-        const relFilePath = isDefined( this.basePath ) ? join( this.basePath, filePath ) : filePath;
-        return this._relPathToDocumentCache.get( relFilePath )|| null;
+        //console.log( 'checked:', filePath, 'ref:', referencePath, 'aPath:', aPath, '\nall:', this._relPathToDocumentCache.keys() );
+        const relFilePath = isDefined( this.basePath ) ? resolve( this.basePath, aPath ) : aPath;
+        return this._relPathToDocumentCache.get( relFilePath ) || null;
     }
 
     /**
