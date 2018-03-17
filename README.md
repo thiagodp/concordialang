@@ -28,17 +28,6 @@ concordia /dir/with/your/spec/files --plugin plugin-name
 > *Tip*: Install the [plug-in for CodeceptJS](#) to generate JavaScript tests for web or mobile web applications.
 
 
-## How it works:
-
-1. Concordia reads your `.feature` and `.testcase` files like a compiler, and uses a [lexer](https://en.wikipedia.org/wiki/Lexical_analysis) and a [parser](https://en.wikipedia.org/wiki/Parsing#Computer_languages) to identify and check documents' strucuture.
-2. Concordia uses basic [Natural Language Processing](https://en.wikipedia.org/wiki/Natural-language_processing) (NLP) to identify sentences' [intent](http://mrbot.ai/blog/natural-language-processing/understanding-intent-classification/). This increases the chances of recognizing sentences written in different styles.
-3. Concordia performs [semantic analysis](https://en.wikipedia.org/wiki/Semantic_analysis_(compilers)) to check recognized declarations.
-4. Concordia uses the specification to infer the most suitable *test cases*, *test data*, and *test oracles*, and then generates `.testcase` files in Natural Language. Yes, you can also write additional test cases in Natural Language!
-5. Concordia transforms all the test cases into test scripts (that is, source code) using a plug-in.
-6. Concordia executes the test scripts through the same plug-in. These test scripts will check your application's behavior through its user interface.
-7. Concordia reads and presents execution results. They relate failing tests to the specification, in order to help you understanding the possible reasons of a failure.
-
-
 ## How to use it
 
 1. Write or update your requirements specification with the *Concordia Language*;
@@ -48,6 +37,12 @@ concordia /dir/with/your/spec/files --plugin plugin-name
     1. You still haven't implemented the corresponding behavior in your application. In this case, just implement it and run the tests again.
     2. Your application is behaving differently from the specification. In this case, it may have bugs or you haven't implemented the behavior exactly like described in the specification. Whether it has a bug, just fix it and run the tests again. Otherwise, you can decide between **changing your application** to behave exactly like the specification describes, or **changing the specification** to match your application behavior. In the latter case, we recommend you to back to step `2` and validate the changes with stakeholders. Whatever you choose, run the tests again.
 5. If the tests have **passed**, *great job!* Now you can write new requirements or add more test cases, so just back to step `1`.
+
+## Regardings
+
+1. Concordia separates *high-level*, **business language** declarations from *medium-low-level*, **computing language** declarations. This let you separate things better and don't compromise your **communication** with business people.
+2. Concordia lets you describe complex business rules related to user interface elements, and it will use them to generate test cases for you, automatically. So, the more you detail their behavior the more you will get test cases that cover them.
+3. Concordia lets you relate user interface element's rules with databases, tables and files, so that it can retrieve test data from them. Currently it supports JSON, CSV, INI, Excel, MSAccess, SQLite, MySQL, PostgreSQL and Firebase.
 
 ## A short example:
 
@@ -85,6 +80,16 @@ And it will also run the tests:
 ...
 [SUCCESS]
 ```
+
+## How it works:
+
+1. Concordia reads your `.feature` and `.testcase` files like a compiler, and uses a [lexer](https://en.wikipedia.org/wiki/Lexical_analysis) and a [parser](https://en.wikipedia.org/wiki/Parsing#Computer_languages) to identify and check documents' strucuture.
+2. Concordia uses basic [Natural Language Processing](https://en.wikipedia.org/wiki/Natural-language_processing) (NLP) to identify sentences' [intent](http://mrbot.ai/blog/natural-language-processing/understanding-intent-classification/). This increases the chances of recognizing sentences written in different styles.
+3. Concordia performs [semantic analysis](https://en.wikipedia.org/wiki/Semantic_analysis_(compilers)) to check recognized declarations.
+4. Concordia uses the specification to infer the most suitable *test cases*, *test data*, and *test oracles*, and then generates `.testcase` files in Natural Language. Yes, you can also write additional test cases in Natural Language!
+5. Concordia transforms all the test cases into test scripts (that is, source code) using a plug-in.
+6. Concordia executes the test scripts through the same plug-in. These test scripts will check your application's behavior through its user interface.
+7. Concordia reads and presents execution results. They relate failing tests to the specification, in order to help you understanding the possible reasons of a failure.
 
 
 ## Generated test cases:
@@ -126,28 +131,32 @@ Some details:
 1. A scenario shall include all the steps of called scenarios.
 2. A called scenario will receive valid values, in order to complete successfully, unless it is designed to not complete successfully.
 
-## Tutorial
+## Documentation
+
+*Full documentation* [here](doc/README.md)
+
+### Tutorial
 
 - [Writing your first feature](docs/tutorial/first-feature.md)
 - [Improving your specification](docs/tutorial/improving-spec.md)
 - [Generating UI tests](docs/tutorial/gen-ui-tests.md)
 
-## Language Specification
+### Language Specification
 
 - [English](docs/language/en.md)
 - [Português](docs/language/pt.md)
 
-## Join Us
+## Help us
 
-*Wanna help us?*
-
-- [Report]() a bug
-- [Suggest]() a feature or change
-- [Develop](docs/development.md) Concordia with us
-- [Donate](docs/donate.md) to help keeping the project
+- [How to contribute](contributing.md)
+- [Improve the documentation]()
+- [Report a bug]()
+- [Suggest a feature or change]()
+- [Develop it with us](docs/development.md)
+- [Donate](docs/donate.md)
 
 ## License
 
-![AGPL](http://www.gnu.org/graphics/agplv3-88x31.png) © Thiago Delgado Pinto
+![AGPL](http://www.gnu.org/graphics/agplv3-88x31.png) © [Thiago Delgado Pinto](https://github.com/thiagodp)
 
 [GNU Affero General Public License version 3](LICENSE.txt)
