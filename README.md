@@ -1,30 +1,53 @@
 # Concordia
 
-*Write your features using Concordia and generate functional test cases from them, automatically.*
+> Write your specification using Concordia and generate **complete** [functional test cases](https://en.wikipedia.org/wiki/Functional_testing), automatically.
 
-An [Agile Software](https://en.wikipedia.org/wiki/Agile_software_development) Requirements Specification (Meta)language inspired by [Gherkin](https://github.com/cucumber/cucumber/wiki/Gherkin). Concordia is available in [more than one spoken language]().
+## About
 
-## In short:
-
-1. Simple, easy-to-read, fast-to-write documentation.
-2. Use your favorite text editor (UTF-8) and version control system.
-3. Generate UI tests from the specification, automatically.
+Concordia is an [Agile](https://en.wikipedia.org/wiki/Agile_software_development) requirements specification (*meta*)language inspired in [Gherkin](https://github.com/cucumber/cucumber/wiki/Gherkin) :
+1. [Business-readable](https://martinfowler.com/bliki/BusinessReadableDSL.html), easy-to-learn, fast-to-write documentation.
+2. Generate dozens of complete UI test cases for you, automatically. *Enough of just test skeletons!*
+3. Also allows you to write test cases manually using Natural Language.
+4. It's plain text based, so use your favorite UTF-8 text editor and version control system (*hello, Git*).
+5. Available in [more than one spoken language]().
+6. Supports [plug-ins]() for different testing frameworks.
+7. Can be used with Gherkin tools, so you don't have to throw away your existing tests.
 
 ## Install
 
-```console
+```bash
 npm install -g concordialang
 ```
 
-We also recommend you to install the [Concordia plug-in for CodeceptJS](#) whether you want to generate JavaScript tests for web applications.
+## Run
+
+```bash
+concordia /dir/with/your/spec/files --plugin plugin-name
+```
+
+> *Tip*: Install the [plug-in for CodeceptJS](#) to generate JavaScript tests for web or mobile web applications.
 
 
 ## How it works:
 
-1. **Write or update your requirements** specification with the Concordia Language (and validate it with users and stakeholders);
-2. **Use the tool** to generate test cases from the specified functional requirements and to run them;
-3. **If the tests failed**: adjust your software to meet the specified requirements (most frequent), or back to the step 1 (adjust your requirements).
-4. **If the tests didn't fail**: *Great job!* Now you can write new requirements or add more test cases.
+1. Concordia reads your `.feature` and `.testcase` files like a compiler, and uses a [lexer](https://en.wikipedia.org/wiki/Lexical_analysis) and a [parser](https://en.wikipedia.org/wiki/Parsing#Computer_languages) to identify and check documents' strucuture.
+2. Concordia uses basic [Natural Language Processing](https://en.wikipedia.org/wiki/Natural-language_processing) (NLP) to identify sentences' [intent](http://mrbot.ai/blog/natural-language-processing/understanding-intent-classification/). This increases the chances of recognizing sentences written in different styles.
+3. Concordia performs [semantic analysis](https://en.wikipedia.org/wiki/Semantic_analysis_(compilers)) to check recognized declarations.
+4. Concordia uses the specification to infer the most suitable *test cases*, *test data*, and *test oracles*, and then generates `.testcase` files in Natural Language. Yes, you can also write additional test cases in Natural Language!
+5. Concordia transforms all the test cases into test scripts (that is, source code) using a plug-in.
+6. Concordia executes the test scripts through the same plug-in. These test scripts will check your application's behavior through its user interface.
+7. Concordia reads and presents execution results. They relate failing tests to the specification, in order to help you understanding the possible reasons of a failure.
+
+
+## How to use it
+
+1. Write or update your requirements specification with the *Concordia Language*;
+2. Validate it with users and stakeholders;
+3. Use Concordia to generate tests from the specification and to run them;
+4. If the tests have **failed**, there are some possibilities:
+    1. You still haven't implemented the corresponding behavior in your application. In this case, just implement it and run the tests again.
+    2. Your application is behaving differently from the specification. In this case, it may have bugs or you haven't implemented the behavior exactly like described in the specification. Whether it has a bug, just fix it and run the tests again. Otherwise, you can decide between **changing your application** to behave exactly like the specification describes, or **changing the specification** to match your application behavior. In the latter case, we recommend you to back to step `2` and validate the changes with stakeholders. Whatever you choose, run the tests again.
+5. If the tests have **passed**, *great job!* Now you can write new requirements or add more test cases, so just back to step `1`.
 
 ## A short example:
 
@@ -81,7 +104,7 @@ Each input data will receive values according to these rules:
 | minimum length boundaries | yes    | N/A  | value, value + 1   | value - 1      |
 | maximum length boundaries | yes    | N/A  | value, value - 1   | value + 1      |
 | minimum value boundaries  | yes    | N/A  | value, next value  | prior value    |
-| maximum value boundaries  | yes    | N/A  | value, prior value | next value     |  
+| maximum value boundaries  | yes    | N/A  | value, prior value | next value     |
 | first last                | N/A    | yes  | yes                | N/A            |
 | last value                | N/A    | yes  | yes                | N/A            |
 | middle length             | yes    | N/A  | yes                | N/A            |
@@ -97,7 +120,7 @@ Each input data will receive values according to these rules:
 ### Covered rules for scenarios:
 
 1. Each scenario will be covered at least once, unless in case of the test case generation to be filtered.
-2. 
+2.
 
 Some details:
 1. A scenario shall include all the steps of called scenarios.
@@ -125,6 +148,6 @@ Some details:
 
 ## License
 
-Copyright (c) Thiago Delgado Pinto
+![AGPL](http://www.gnu.org/graphics/agplv3-88x31.png) © Thiago Delgado Pinto
 
-![AGPL](http://www.gnu.org/graphics/agplv3-88x31.png) This software is [licensed](LICENSE.txt) under the GNU Affero General Public License.
+[GNU Affero General Public License version 3](LICENSE.txt)
