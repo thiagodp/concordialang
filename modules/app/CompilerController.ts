@@ -10,19 +10,23 @@ import { LocatedException } from "../req/LocatedException";
 import { Parser } from "../parser/Parser";
 import { NLPTrainer } from "../nlp/NLPTrainer";
 import { NLPBasedSentenceRecognizer } from "../nlp/NLPBasedSentenceRecognizer";
-import { BatchSpecSemanticAnalyzer } from "../semantic/BatchSpecSemanticAnalyzer";
+import { BatchSpecificationAnalyzer } from "../semantic/BatchSpecificationAnalyzer";
 import { Compiler } from "./Compiler";
 import { LanguageManager } from "./LanguageManager";
 import { LexerBuilder } from "../lexer/LexerBuilder";
 import { LanguageContentLoader, JsonLanguageContentLoader } from "../dict/LanguageContentLoader";
 
-
+/**
+ * Compiler controller
+ *
+ * @author Thiago Delgado Pinto
+ */
 export class CompilerController {
 
-    public compile = async ( options: Options, cli: CLI ): Promise< Spec > => {
+    public async compile( options: Options, cli: CLI ): Promise< Spec > {
 
         const langLoader: LanguageContentLoader =
-            new JsonLanguageContentLoader( options.languageDir, {}, options.encoding );        
+            new JsonLanguageContentLoader( options.languageDir, {}, options.encoding );
 
         let lexer: Lexer = ( new LexerBuilder( langLoader ) ).build( options );
         let parser: Parser = new Parser();
@@ -30,8 +34,8 @@ export class CompilerController {
         let nlpTrainer: NLPTrainer = new NLPTrainer( langLoader );
         let nlpBasedSentenceRecognizer: NLPBasedSentenceRecognizer = new NLPBasedSentenceRecognizer( nlpTrainer );
 
-        let specAnalyzer: BatchSpecSemanticAnalyzer = new BatchSpecSemanticAnalyzer();
-        
+        let specAnalyzer: BatchSpecificationAnalyzer = new BatchSpecificationAnalyzer();
+
         const lm = new LanguageManager( options.languageDir );
         const availableLanguages: string[] = await lm.availableLanguages();
         if ( availableLanguages.indexOf( options.language ) < 0 ) { // not found
@@ -50,7 +54,7 @@ export class CompilerController {
             options.language
         );
 
-        let mfp = new MultiFileProcessor( singleFileCompiler, listener, listener, listener, listener );        
+        let mfp = new MultiFileProcessor( singleFileCompiler, listener, listener, listener, listener );
 
         let compiler = new Compiler(
             mfp,
@@ -58,6 +62,6 @@ export class CompilerController {
         );
 
         return await compiler.compile( options, listener );
-    };
+    }
 
 }

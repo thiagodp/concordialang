@@ -3,29 +3,29 @@ import { Parser } from '../parser/Parser';
 import { Lexer } from "../lexer/Lexer";
 import { Node } from '../ast/Node';
 import { Document } from '../ast/Document';
-import { BatchDocSemanticAnalyzer } from '../semantic/single/BatchDocSemanticAnalyzer';
+import { BatchDocumentAnalyzer } from '../semantic/single/BatchDocumentAnalyzer';
 import { SemanticException } from '../semantic/SemanticException';
 
 /**
  * Single document processor.
- * 
+ *
  * @author Thiago Delgado Pinto
  */
 export class SingleDocumentProcessor {
 
-    private _batchDocumentAnalyzer = new BatchDocSemanticAnalyzer();
+    private _documentAnalyzer = new BatchDocumentAnalyzer();
 
     /**
      * Analyzes lexer's nodes of a single document.
      * Errors and warnings are put in the given document.
-     * 
+     *
      * @param doc Document to change
      * @param lexer Lexer
      * @param parser Parser
      * @param nlpRec NLP sentence recognizer
      * @param defaultLanguage Default language
      * @param ignoreSemanticAnalysis If it is desired to ignore semantic analysis (defaults to false).
-     * 
+     *
      * @returns true if had errors.
      */
     analyzeNodes(
@@ -60,7 +60,7 @@ export class SingleDocumentProcessor {
                 let errors = [
                     new Error( 'The NLP cannot be trained in the language "' + language + '".' )
                 ];
-                this.addErrorsToDoc( errors, doc );                    
+                this.addErrorsToDoc( errors, doc );
             }
         }
 
@@ -74,7 +74,7 @@ export class SingleDocumentProcessor {
         // Single-document Semantic Analysis
         if ( ! ignoreSemanticAnalysis ) {
             let semanticErrors: SemanticException[] = [];
-            this._batchDocumentAnalyzer.analyze( doc, semanticErrors );
+            this._documentAnalyzer.analyze( doc, semanticErrors );
             this.addErrorsToDoc( semanticErrors, doc );
         }
 
@@ -86,6 +86,6 @@ export class SingleDocumentProcessor {
         if ( ! doc.fileErrors ) {
             doc.fileErrors = [];
         }
-        doc.fileErrors.push.apply( doc.fileErrors, errors );        
-    }    
+        doc.fileErrors.push.apply( doc.fileErrors, errors );
+    }
 }

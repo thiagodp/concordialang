@@ -1,5 +1,4 @@
 import { Spec } from "../ast/Spec";
-import { ImportBasedGraphBuilder } from "../selection/ImportBasedGraphBuilder";
 import { Document } from "../ast/Document";
 import { LocatedException } from "../req/LocatedException";
 import { Variant, TestCase } from "../ast/Variant";

@@ -1,5 +1,5 @@
 import { DatabaseDA } from './DatabaseDA';
-import { DocAnalyzer } from './DocAnalyzer';
+import { DocumentAnalyzer } from './DocumentAnalyzer';
 import { ScenarioDA } from './ScenarioDA';
 import { LocatedException } from '../../req/LocatedException';
 import { ImportDA } from './ImportDA';
@@ -9,20 +9,20 @@ import { Document } from '../../ast/Document';
 import { UIElementDA } from './UIElementDA';
 
 /**
- * Executes semantic analysers to a single document in batch.
+ * Executes a series of semantic analyzers to a document.
  *
  * @author Thiago Delgado Pinto
  */
-export class BatchDocSemanticAnalyzer {
+export class BatchDocumentAnalyzer {
 
-    private readonly _analyzers: DocAnalyzer[];
+    private readonly _analyzers: DocumentAnalyzer[];
 
     constructor() {
         this._analyzers = [
             new ImportDA(),
             new ScenarioDA(),
             new DatabaseDA(),
-            new UIElementDA
+            new UIElementDA()
         ];
     }
 

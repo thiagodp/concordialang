@@ -52,10 +52,10 @@ describe( 'UIPropertyRecognizerTest', () => {
 
             expect( node.property ).toBe( property );
             expect( node.values ).toHaveLength( 1 );
-            expect( node.values[ 0 ].content[ 0 ] ).toBe( expectedValue );
-        }       
+            expect( node.values[ 0 ].value ).toBe( expectedValue );
+        }
 
-        
+
         it( 'recognizes an id with a value', () => {
             shouldRecognize( '- id é "foo"', 'id', 'foo' );
         } );

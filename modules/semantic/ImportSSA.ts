@@ -1,34 +1,37 @@
 import { Location } from '../ast/Location';
 import { SemanticException } from './SemanticException';
-import { SpecSemanticAnalyzer } from './SpecSemanticAnalyzer';
+import { SpecificationAnalyzer } from './SpecificationAnalyzer';
 import { Spec } from "../ast/Spec";
 import { Document } from "../ast/Document";
 import { ImportBasedGraphBuilder } from '../selection/ImportBasedGraphBuilder';
+import Graph = require( 'graph.js/dist/graph.full.js' );
 import { basename } from 'path';
 
 /**
  * Executes semantic analysis of Imports in a specification.
- * 
+ *
  * Checkings:
  * - cyclic references
- * 
+ *
  * @author Thiago Delgado Pinto
  */
-export class ImportSSA extends SpecSemanticAnalyzer {
+export class ImportSSA extends SpecificationAnalyzer {
 
     /** @inheritDoc */
-    public async analyze( spec: Spec, errors: SemanticException[] ): Promise< void > {
-        this.findCyclicReferences( spec, errors );
+    public async analyze(
+        graph: Graph,
+        spec: Spec,
+        errors: SemanticException[]
+    ): Promise< void > {
+        this.findCyclicReferences( graph, spec, errors );
     }
 
-    private findCyclicReferences( spec: Spec, errors: SemanticException[] ) {
-
-        let graph = ( new ImportBasedGraphBuilder() ).buildFrom( spec );
+    private findCyclicReferences( graph: Graph, spec: Spec, errors: SemanticException[] ) {
 
         // Let's find cyclic references and report them as errors
         for ( let it = graph.cycles(), kv; ! ( kv = it.next() ).done; ) {
             let cycle = kv.value;
-        
+
             let filePath = cycle[ 0 ]; // first file
 
             let fullCycle = cycle.join( '" => "' ) + '" => "' + filePath;
@@ -52,7 +55,7 @@ export class ImportSSA extends SpecSemanticAnalyzer {
                 if ( ! doc.fileErrors ) {
                     doc.fileErrors = [];
                 }
-                doc.fileErrors.push( err );                
+                doc.fileErrors.push( err );
             } else {
                 // This should not happen, since all the imported files are checked before,
                 // by the "import single document analyzer" (class ImportSDA).

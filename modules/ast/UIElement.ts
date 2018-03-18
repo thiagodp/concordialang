@@ -1,4 +1,4 @@
-import { NLPResult } from '../nlp/NLPResult';
+import { NLPResult, NLPEntity } from '../nlp/NLPResult';
 import { HasItems, NamedNode } from './Node';
 import { Step } from './Step';
 import { MayHaveTags } from './Tag';
@@ -6,10 +6,11 @@ import { ListItem } from './ListItem';
 import { Table } from './Table';
 import { Constant } from './Constant';
 import { Database } from './Database';
+import { Entities } from '../nlp/Entities';
 
 /**
  * UI element node.
- * 
+ *
  * @author Thiago Delgado Pinto
  */
 export interface UIElement extends NamedNode, MayHaveTags {
@@ -18,7 +19,7 @@ export interface UIElement extends NamedNode, MayHaveTags {
 
 /**
  * UI property node.
- * 
+ *
  * @author Thiago Delgado Pinto
  */
 export interface UIProperty extends ListItem {
@@ -33,48 +34,37 @@ export interface UIProperty extends ListItem {
 
     property: string; // UI Property, e.g., min value comes from "SELECT ..." --> minvalue
 
-    valueTarget: UIValueTarget; // Target, e.g., min value comes from "SELECT ..." --> query
+    //valueTarget: UIValueTarget; // Target, e.g., min value comes from "SELECT ..." --> query
 
-    values: UIValue[];
+    values: EntityValue[];
 }
 
-/**
- * UI value target.
- * 
- *     UIValueTarget   | expected value type | values' length
- *     ----------------|---------------------|---------------
- *     VALUE           | string | number     | 1
- *     VALUE_LIST      | any[]               | 1+
- *     UI_ELEMENT_REF  | string              | 1
- *     REGEX           | string              | 1
- *     QUERY           | string              | 1+
- *     COMPUTATION     | string              | 1+  
- * 
- * @author Thiago Delgado Pinto
- */
-export enum UIValueTarget {
-    VALUE = 'value',
-    VALUE_LIST = 'value_list',
-    UI_ELEMENT_REF = 'ui_element', // Refers to another UI element
-    REGEX = 'regex',
-    QUERY = 'query',
-    COMPUTATION = 'computation'	
-}
+export class EntityValue {
 
-export enum UIValueReferenceType {
-    NONE = 'none',
-    DATABASE = 'database',
-    TABLE = 'table',
-    DATABASE_AND_TABLE = 'database_and_table',
-    UI_ELEMENT = 'ui_element',
-    CONSTANT = 'constant'
-}
-
-export class UIValue {
+    /**
+     *
+     * @param entity Entity
+     * @param value Recognized value, e.g., "SELECT * FROM [MyDB].[Foo]"
+     * @param references References found in the value, e.g., the database [MyDB] and the table [Foo].
+     */
     constructor(
-        public content: any[] = [],
-        public refType: UIValueReferenceType = UIValueReferenceType.NONE,
-        public ref?: Database | Table | UIElement | Constant
+        public entity: Entities,
+        public value: null | string | number | boolean | any[],
+        public references: EntityRef[] = [],
+    ) {
+    }
+}
+
+export class EntityRef {
+
+    /**
+     *
+     * @param entity Entity, e.g., database
+     * @param node Referenced node, that can have references to other objects.
+     */
+    constructor(
+        public entity: Entities, // e.g. Database
+        public node: null | UIElement | Database | Constant | Table = null
     ) {
     }
 }

@@ -1,4 +1,4 @@
-import { DocAnalyzer } from './DocAnalyzer';
+import { DocumentAnalyzer } from './DocumentAnalyzer';
 import { Scenario } from '../../ast/Scenario';
 import { Document } from '../../ast/Document';
 import { DuplicationChecker } from "../../util/DuplicationChecker";
@@ -6,13 +6,13 @@ import { SemanticException } from "../SemanticException";
 
 /**
  * Scenario analyzer for a single document.
- * 
+ *
  * Checkings:
  *  - Duplicated scenario names
- * 
+ *
  * @author Thiago Delgado Pinto
  */
-export class ScenarioDA implements DocAnalyzer {
+export class ScenarioDA implements DocumentAnalyzer {
 
     /** @inheritDoc */
     public analyze( doc: Document, errors: SemanticException[] ) {
@@ -35,8 +35,8 @@ export class ScenarioDA implements DocAnalyzer {
         for ( let dup of duplicated ) {
             let msg = 'Duplicated scenario "' + dup.name + '".';
             let err = new SemanticException( msg, dup.location );
-            errors.push( err );             
-        }        
+            errors.push( err );
+        }
     }
 
 }

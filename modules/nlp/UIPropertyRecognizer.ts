@@ -2,7 +2,7 @@ import { RuleBuilder } from './RuleBuilder';
 import { UI_PROPERTY_SYNTAX_RULES, DEFAULT_UI_PROPERTY_SYNTAX_RULE } from './SyntaxRules';
 import { Intents } from './Intents';
 import { NodeSentenceRecognizer, NLPResultProcessor } from "./NodeSentenceRecognizer";
-import { UIProperty, UIValue, UIValueReferenceType } from "../ast/UIElement";
+import { UIProperty, EntityValue } from "../ast/UIElement";
 import { LocatedException } from "../req/LocatedException";
 import { ContentNode } from "../ast/Node";
 import { NLP } from "./NLP";
@@ -18,13 +18,13 @@ import { isDefined } from '../util/TypeChecking';
 
 /**
  * UI element property sentence recognizer.
- * 
+ *
  * @author Thiago Delgado Pinto
  */
 export class UIPropertyRecognizer {
 
     private _syntaxRules: any[];
-    private _valueTypeDetector: ValueTypeDetector = new ValueTypeDetector();
+    private readonly _valueTypeDetector: ValueTypeDetector = new ValueTypeDetector();
 
     constructor( private _nlp: NLP ) {
         this._syntaxRules = this.buildSyntaxRules();
@@ -41,31 +41,28 @@ export class UIPropertyRecognizer {
     trainMe( trainer: NLPTrainer, language: string ) {
         return trainer.trainNLP( this._nlp, language, Intents.UI )
             && trainer.trainNLP( this._nlp, language, Intents.UI_ITEM_QUERY );
-    }    
+    }
 
     /**
      * Recognize sentences of UI Elements using NLP.
-     * 
+     *
      * @param language Language to be used in the recognition.
      * @param nodes Nodes to be recognized.
      * @param errors Output errors.
      * @param warnings Output warnings.
-     * 
+     *
      * @throws Error If the NLP is not trained.
      */
     recognizeSentences(
         language: string,
         nodes: UIProperty[],
         errors: LocatedException[],
-        warnings: LocatedException[]        
+        warnings: LocatedException[]
     ) {
         const recognizer = new NodeSentenceRecognizer( this._nlp );
         const syntaxRules = this._syntaxRules;
 
-        let adjust = this.adjustValueToTheRightType;
-        adjust.bind( this );
-        let makeList = this.makeValueList;
-        makeList.bind( this );
+        let _this = this;
 
         let processor: NLPResultProcessor = function(
             node: ContentNode,
@@ -92,18 +89,23 @@ export class UIPropertyRecognizer {
             item.property = property;
             if ( ! item.values ) {
                 item.values = [];
-            }            
+            }
             for ( let e of r.entities ) {
-                // UIValue is created *without* reference
-                let uiv: UIValue;
+                //
+                // References should be analyzed later, post NLP, in a global Semantic Analysis.
+                //
+                let uiv: EntityValue;
                 switch ( e.entity ) {
-                    case Entities.VALUE     : ; // go to next
-                    case Entities.NUMBER    : uiv = new UIValue( [ adjust( e.value ) ], UIValueReferenceType.NONE );     break;
-                    case Entities.VALUE_LIST: uiv = new UIValue( makeList( e.value ), UIValueReferenceType.NONE );       break;
-                    case Entities.QUERY     : uiv = new UIValue( [ e.value ], UIValueReferenceType.DATABASE_AND_TABLE ); break;
-                    case Entities.UI_ELEMENT   : uiv = new UIValue( [ e.value ], UIValueReferenceType.UI_ELEMENT );            break;
-                    case Entities.CONSTANT  : uiv = new UIValue( [ e.value ], UIValueReferenceType.CONSTANT );           break;
-                    default                 : uiv = null;
+                    case Entities.VALUE         : ; // go to next
+                    case Entities.NUMBER        : uiv = new EntityValue( e.entity, _this.adjustValueToTheRightType( e.value ) ); break;
+                    case Entities.VALUE_LIST    : uiv = new EntityValue( e.entity, _this.makeValueList( e.value ) ); break;
+                    case Entities.QUERY         : uiv = new EntityValue( e.entity, e.value ); break;
+                    case Entities.UI_ELEMENT    : uiv = new EntityValue( e.entity, e.value ); break;
+                    case Entities.UI_LITERAL    : uiv = new EntityValue( e.entity, e.value ); break;
+                    case Entities.CONSTANT      : uiv = new EntityValue( e.entity, e.value ); break;
+                    case Entities.UI_DATA_TYPE  : uiv = new EntityValue( e.entity, e.value ); break;
+                    case Entities.BOOL_VALUE    : uiv = new EntityValue( e.entity, 'true' === e.value ); break;
+                    default                     : uiv = null;
                 }
                 if ( isDefined( uiv ) ) {
                     item.values.push( uiv );
@@ -127,17 +129,16 @@ export class UIPropertyRecognizer {
         return ( new RuleBuilder() ).build( UI_PROPERTY_SYNTAX_RULES, DEFAULT_UI_PROPERTY_SYNTAX_RULE );
     }
 
-    public makeValueList = ( content: string ): any[] => {
+    public makeValueList( content: string ): any[] {
         let adjust = this.adjustValueToTheRightType;
         adjust.bind( this );
         return content.trim()
             .substring( 1, content.length - 1 ) // removes '[' and ']'
             .split( Symbols.VALUE_SEPARATOR )   // split values
             .map( v => adjust( v ) ); // convert type if needed
-    };
+    }
 
-    // Really needed?
-    public adjustValueToTheRightType = ( v: string ): any => {
+    public adjustValueToTheRightType( v: string ): any {
         const vType: ValueType = this._valueTypeDetector.detect( v.trim() );
         let valueAfter: any;
         switch ( vType ) {
@@ -146,9 +147,13 @@ export class UIPropertyRecognizer {
             case ValueType.DATE     : valueAfter = LocalDate.parse( v ) || LocalDate.now(); break;
             case ValueType.TIME     : valueAfter = LocalTime.parse( v ) || LocalTime.now(); break;
             case ValueType.DATETIME : valueAfter = LocalDateTime.parse( v ) || LocalDateTime.now(); break;
+            // Boolean should not be handle here, because there is an NLP entity for it.
+            // Anyway, we will provide a basic case.
+            case ValueType.BOOLEAN  : valueAfter = [ 'true', 'yes' ].indexOf( v.toLowerCase() ) >= 0; break;
+
             default                 : valueAfter = v;
         }
         return valueAfter;
-    };
+    }
 
 }

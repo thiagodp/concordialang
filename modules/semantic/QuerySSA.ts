@@ -1,6 +1,6 @@
 import { Database } from '../ast/Database';
 import { Document } from '../ast/Document';
-import { SpecSemanticAnalyzer } from './SpecSemanticAnalyzer';
+import { SpecificationAnalyzer } from './SpecificationAnalyzer';
 import { Spec } from "../ast/Spec";
 import { DuplicationChecker } from '../util/DuplicationChecker';
 import { SemanticException } from './SemanticException';
@@ -10,6 +10,7 @@ import { UIElement, UIProperty } from '../ast/UIElement';
 import { Feature } from '../ast/Feature';
 import { Entities } from '../nlp/Entities';
 import { QueryParser } from '../db/QueryParser';
+import Graph = require( 'graph.js/dist/graph.full.js' );
 
 /**
  * Executes semantic analysis of Queries in a specification.
@@ -22,7 +23,7 @@ import { QueryParser } from '../db/QueryParser';
  *
  * @author Thiago Delgado Pinto
  */
-export class QuerySSA extends SpecSemanticAnalyzer {
+export class QuerySSA extends SpecificationAnalyzer {
 
     private readonly _queryParser = new QueryParser();
 
@@ -38,9 +39,16 @@ export class QuerySSA extends SpecSemanticAnalyzer {
     }
 
     /** @inheritDoc */
-    public async analyze( spec: Spec, errors: SemanticException[] ): Promise< void > {
+    public async analyze(
+        graph: Graph,
+        spec: Spec,
+        errors: SemanticException[]
+    ): Promise< void > {
 
-        for ( let doc of spec.docs ) {
+        // Iterates the original graph in topological order
+        for ( let [ key, value ] of graph.vertices_topologically() ) {
+
+            let doc: Document = value as Document;
 
             // TO-DO: (future) check global UI elements, i.e., doc.uiElements,
             // and references to them.

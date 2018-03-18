@@ -66,7 +66,7 @@ describe( 'TestCaseGeneratorTest', () => {
             sentences: []
         } as Variant;
 
-        const tags: Tag[] = gen.createTags( variant, 1, [], [] );
+        const tags: Tag[] = gen.createTags( variant, 1, true, [], [] );
         const names: string[] = tags.map( t => t.name );
         const contents: string[] = tags.map( t => t.content );
         const lines: number[] = tags.map( t => t.location.line );

@@ -66,34 +66,34 @@ export class TestCaseGenerator {
         // Let's start extracting the UI Elements referenced by the Variant.
         // We'll generate Test Cases according to the DataTestCases supported by every referenced UI Element.
         // If no UI Elements are referenced, at least one Test Case with random values should be generated.
-        let uieVariableToDataTestCaseMap = new Map< string, DataTestCase[] >();
+
+        // This maps a UI Variable to a DataTestCase and its indication whether it is considered valid or not.
+        let uieVariableToDataTestCaseMap = new Map< string, Map< DataTestCase, boolean > >();
+        let testCaseCount: number = 0;
         for ( let s of variant.sentences || [] ) {
             // Extracts referenced UI Element variable
             const variables: string[] = this._nlpUtil.valuesOfEntitiesNamed( Entities.UI_ELEMENT, s.nlpResult );
             // Maps compatible data test cases
             for ( let v of variables ) {
-                uieVariableToDataTestCaseMap.set(
-                    v,
-                    this._dtcAnalyzer.compatibleDataTestCases( v, doc, spec, errors )
-                );
+                const dataTestCasesMap = this._dtcAnalyzer.compatibleDataTestCases( v, doc, spec, errors );
+                testCaseCount += dataTestCasesMap.size;
+                uieVariableToDataTestCaseMap.set( v, dataTestCasesMap );
             }
         }
 
-        // No tests, because of there are no referenced UI Elements.
-        // Let's add a null variable with random tests
-        if ( uieVariableToDataTestCaseMap.size < 1 ) {
+        // No tests? Let's add a fake (null) variable with random tests.
+        if ( testCaseCount < 1 ) {
 
             uieVariableToDataTestCaseMap.set(
                 null,
-                [
-                    DataTestCase.LENGTH_RANDOM_BETWEEN_MIN_MAX
-                ]
+                new Map< DataTestCase, boolean >(
+                    [ [ DataTestCase.LENGTH_RANDOM_BETWEEN_MIN_MAX, true ] ]
+                )
             );
-
         }
 
 
-        // --
+        // ---
 
 
 
@@ -115,11 +115,11 @@ export class TestCaseGenerator {
 
         // Generate TestCases for each data test case (?)
         let all: TestCase[] = [];
-        for ( let [ uiVariableName, dataTestCases ] of uieVariableToDataTestCaseMap ) {
+        for ( let [ uiVariableName, dataTestCaseMap ] of uieVariableToDataTestCaseMap ) {
 
             const isUIVariableDefined = isDefined( uiVariableName );
 
-            for ( let dataTestCase of dataTestCases ) {
+            for ( let [ dataTestCase, isValid ] of dataTestCaseMap ) {
 
                 // Uses the test name from the translation document if available.
                 // Otherwise, it uses the original test case name in lower case, e.g., 'SOME_TEST' -> 'some test'.
@@ -144,11 +144,11 @@ export class TestCaseGenerator {
                 //          it could be necessary evaluate if the test will fail or not!
                 //
 
-                testCase.tags = this.createTags( newVariant, startLine, keywords.tagVariant, keywords.tagGenerated );
+                testCase.tags = this.createTags( newVariant, startLine, isValid, keywords.tagVariant, keywords.tagGenerated );
                 startLine += testCase.tags.length;
 
                 testCase.sentences = this.createSentences(
-                    newVariant, startLine, spec, dataTestCase, withKeyword );
+                    newVariant, startLine, isValid, spec, dataTestCase, withKeyword );
                 startLine += testCase.sentences.length;
 
                 all.push( testCase );
@@ -162,6 +162,7 @@ export class TestCaseGenerator {
     public createTags(
         newVariant: Variant,
         startLine: number,
+        isValid: boolean,
         tagGeneratedKeywords: string[],
         tagVariantKeywords: string[]
     ): Tag[] {
@@ -197,16 +198,19 @@ export class TestCaseGenerator {
         } as Tag;
         tags.push( refTag );
 
+        // Add a tag @invalid
+
         return tags;
     }
 
 
     public createSentences(
-        variant,
-        startLine,
-        spec,
-        dataTestCase,
-        withKeyword
+        variant: Variant,
+        startLine: number,
+        isValid: boolean,
+        spec: Spec,
+        dataTestCase: DataTestCase,
+        withKeyword: string
     ): Step[] {
         let steps: Step[] = [];
         for ( let s of variant.sentences || [] ) {

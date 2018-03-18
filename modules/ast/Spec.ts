@@ -41,6 +41,20 @@ export class Spec {
         this.basePath = basePath;
     }
 
+    clearCache() {
+        this._relPathToDocumentCache = null;
+        this._databaseCache = null;
+        this._constantCache = null;
+        this._tableCache = null;
+        this._featureCache = null;
+        this._uiElementCache = null;
+        this._nonFeatureNamesCache = null;
+
+        this._constantNameToValueMap.clear();
+        this._uiElementVariableMap.clear();
+    }
+
+
     /**
      * Returns a document with the given path or null if not found.
      *

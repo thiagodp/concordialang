@@ -49,7 +49,7 @@ describe( 'DataGeneratorTest', () => {
                 const val = await gen.generate( tc, cfg );
                 // expect( val ).toBeGreaterThan( cfg.max );
                 expect( comparator( val, cfg.max ) ).toEqual( 1 );
-            }            
+            }
 
             it( 'VALUE_LOWEST', async () => {
                 await checkLessThanMin( DataTestCase.VALUE_LOWEST );
@@ -70,7 +70,7 @@ describe( 'DataGeneratorTest', () => {
                 // expect( val ).toEqual( cfg.min );
                 expect( comparator( val, cfg.min ) ).toEqual( 0 );
             } );
-            
+
             it( 'VALUE_JUST_ABOVE_MIN', async () => {
                 let cfg = new DataGenConfig( vt );
                 cfg.min = min;
@@ -114,7 +114,7 @@ describe( 'DataGeneratorTest', () => {
                 // expect( val ).toBeLessThan( cfg.max );
                 expect( comparator( val, cfg.max ) ).toEqual( -1 );
             } );
-            
+
             it( 'VALUE_MAX', async () => {
                 let cfg = new DataGenConfig( vt );
                 cfg.max = max;
@@ -130,10 +130,10 @@ describe( 'DataGeneratorTest', () => {
             it( 'VALUE_RANDOM_ABOVE_MAX', async () => {
                 await checkGreaterThanMax( DataTestCase.VALUE_RANDOM_ABOVE_MAX );
             } );
-            
+
             it( 'VALUE_GREATEST', async () => {
                 await checkGreaterThanMax( DataTestCase.VALUE_GREATEST );
-            } );            
+            } );
 
         };
     }
@@ -155,7 +155,7 @@ describe( 'DataGeneratorTest', () => {
                 cfg.max = max;
                 const val = await gen.generate( tc, cfg );
                 expect( val.length ).toBeGreaterThan( cfg.max );
-            }            
+            }
 
             it( 'LENGTH_LOWEST', async () => {
                 await checkLessThanMin( DataTestCase.LENGTH_LOWEST );
@@ -175,7 +175,7 @@ describe( 'DataGeneratorTest', () => {
                 const val = await gen.generate( DataTestCase.LENGTH_MIN, cfg );
                 expect( val.length ).toEqual( cfg.min );
             } );
-            
+
             it( 'LENGTH_JUST_ABOVE_MIN', async () => {
                 let cfg = new DataGenConfig( vt );
                 cfg.min = min;
@@ -206,7 +206,7 @@ describe( 'DataGeneratorTest', () => {
                 const val = await gen.generate( DataTestCase.LENGTH_JUST_BELOW_MAX, cfg );
                 expect( val.length ).toBeLessThan( cfg.max );
             } );
-            
+
             it( 'LENGTH_MAX', async () => {
                 let cfg = new DataGenConfig( vt );
                 cfg.max = max;
@@ -221,10 +221,10 @@ describe( 'DataGeneratorTest', () => {
             it( 'LENGTH_RANDOM_ABOVE_MAX', async () => {
                 await checkGreaterThanMax( DataTestCase.LENGTH_RANDOM_ABOVE_MAX );
             } );
-            
+
             it( 'LENGTH_GREATEST', async () => {
                 await checkGreaterThanMax( DataTestCase.LENGTH_GREATEST );
-            } );            
+            } );
 
         };
     }
@@ -281,9 +281,9 @@ describe( 'DataGeneratorTest', () => {
 
 
     describe( 'value', () => {
-             
+
         describe( 'integer', checkTestCasesOfTheGroupValue( ValueType.INTEGER, 10, 20, 15, 0, numberComparator ) );
-        
+
         describe( 'double', checkTestCasesOfTheGroupValue( ValueType.DOUBLE, 10, 20, 15, 0, numberComparator ) );
 
         describe( 'date', checkTestCasesOfTheGroupValue( ValueType.DATE,
@@ -308,7 +308,7 @@ describe( 'DataGeneratorTest', () => {
             LocalDateTime.of( 2018, 1, 15, 12, 30,  0 ),
             DateTimeLimits.MIN,
             dateTimeComparator
-        ) );        
+        ) );
 
     } );
 
@@ -346,16 +346,16 @@ describe( 'DataGeneratorTest', () => {
 
             it( 'FORMAT_VALID', async () => {
                 let cfg = new DataGenConfig( ValueType.STRING );
-                cfg.regex = '[a-z]{2,10}';
+                cfg.format = '[a-z]{2,10}';
                 const val = await gen.generate( DataTestCase.FORMAT_VALID, cfg );
-                expect( val ).toMatch( new RegExp( cfg.regex ) );
+                expect( val ).toMatch( new RegExp( cfg.format ) );
             } );
 
             it( 'FORMAT_INVALID', async () => {
                 let cfg = new DataGenConfig( ValueType.STRING );
-                cfg.regex = '^[a-z]{2,10}$';
+                cfg.format = '^[a-z]{2,10}$';
                 const val = await gen.generate( DataTestCase.FORMAT_INVALID, cfg );
-                expect( val ).not.toMatch( new RegExp( cfg.regex ) );
+                expect( val ).not.toMatch( new RegExp( cfg.format ) );
             } );
 
         } );

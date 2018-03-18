@@ -1,4 +1,4 @@
-import { DocAnalyzer } from "./DocAnalyzer";
+import { DocumentAnalyzer } from "./DocumentAnalyzer";
 import { Document } from '../../ast/Document';
 import { SemanticException } from "../SemanticException";
 import { DuplicationChecker } from "../../util/DuplicationChecker";
@@ -15,7 +15,7 @@ import { isDefined } from "../../util/TypeChecking";
  *
  * @author Thiago Delgado Pinto
  */
-export class UIElementDA implements DocAnalyzer {
+export class UIElementDA implements DocumentAnalyzer {
 
     analyze( doc: Document, errors: SemanticException[] ) {
 

@@ -8,8 +8,9 @@ import { SemanticException } from "./SemanticException";
 import { Feature } from '../ast/Feature';
 import { Tag } from '../ast/Tag';
 import { Variant, TestCase } from '../ast/Variant';
-import { SpecSemanticAnalyzer } from './SpecSemanticAnalyzer';
+import { SpecificationAnalyzer } from './SpecificationAnalyzer';
 import { Location } from '../ast/Location';
+import Graph = require( 'graph.js/dist/graph.full.js' );
 import * as path from 'path';
 import * as deepcopy from 'deepcopy';
 
@@ -25,7 +26,7 @@ import * as deepcopy from 'deepcopy';
  *
  * @author Thiago Delgado Pinto
  */
-export class TestCaseSSA extends SpecSemanticAnalyzer {
+export class TestCaseSSA extends SpecificationAnalyzer {
 
     constructor(
         private  _tagFeatureKeywords: string[] = [ ReservedTags.FEATURE ]
@@ -35,6 +36,7 @@ export class TestCaseSSA extends SpecSemanticAnalyzer {
 
     /** @inheritDoc */
     public async analyze(
+        graph: Graph,
         spec: Spec,
         errors: SemanticException[]
     ): Promise< void > {

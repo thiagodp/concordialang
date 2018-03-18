@@ -1,4 +1,4 @@
-import { DocAnalyzer } from './DocAnalyzer';
+import { DocumentAnalyzer } from './DocumentAnalyzer';
 import { Import } from '../../ast/Import';
 import { DuplicationChecker } from '../../util/DuplicationChecker';
 import { SemanticException } from "../SemanticException";
@@ -8,15 +8,15 @@ import { dirname, join } from 'path';
 
 /**
  * Import analyzer for a single document.
- * 
+ *
  * Checkings:
  *  - Duplicated imports
  *  - Self references
  *  - Files existence
- * 
+ *
  * @author Thiago Delgado Pinto
  */
-export class ImportDA implements DocAnalyzer {
+export class ImportDA implements DocumentAnalyzer {
 
     constructor(
         private _fs: any = fs
@@ -38,10 +38,10 @@ export class ImportDA implements DocAnalyzer {
         for ( let dup of duplicated ) {
             let msg = 'Duplicated imported to file "' + dup.value + '".';
             let err = new SemanticException( msg, dup.location );
-            errors.push( err );            
+            errors.push( err );
         }
-        
-        
+
+
         for ( let imp of doc.imports ) {
 
             let importPath = imp.value;
@@ -54,7 +54,7 @@ export class ImportDA implements DocAnalyzer {
             if ( doc.fileInfo.path === resolvedPath ) {
                 let msg = 'Imported file is a self reference: "' + importPath + '".';
                 let err = new SemanticException( msg, imp.location );
-                errors.push( err );                
+                errors.push( err );
             }
 
             // Check if the imported file exist

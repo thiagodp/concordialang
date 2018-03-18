@@ -1,17 +1,17 @@
-import { DocAnalyzer } from './DocAnalyzer';
+import { DocumentAnalyzer } from './DocumentAnalyzer';
 import { Document } from '../../ast/Document';
 import { Database, DatabaseProperties } from '../../ast/Database';
 import { SemanticException } from '../SemanticException';
 
 /**
  * Database analyzer for a single document.
- * 
+ *
  * Checkings:
  * - Mandatory properties
- * 
+ *
  * @author Thiago Delgado Pinto
  */
-export class DatabaseDA implements DocAnalyzer {
+export class DatabaseDA implements DocumentAnalyzer {
 
     /** @inheritDoc */
     public analyze( doc: Document, errors: SemanticException[] ): void {
@@ -33,7 +33,7 @@ export class DatabaseDA implements DocAnalyzer {
         if ( ! db.items || db.items.length < 1 ) {
             let msg = 'Database "' + db.name + '" has no properties.';
             let err = new SemanticException( msg, db.location );
-            errors.push( err ); 
+            errors.push( err );
             return;
         }
 
@@ -43,15 +43,15 @@ export class DatabaseDA implements DocAnalyzer {
         if ( properties.indexOf( DatabaseProperties.TYPE ) < 0 ) {
             let msg = 'Database "' + db.name + '" should have a type.';
             let err = new SemanticException( msg, db.location );
-            errors.push( err ); 
+            errors.push( err );
         }
-        
+
         // Has no path?
         if ( ! db.name && properties.indexOf( DatabaseProperties.PATH ) < 0 ) {
             let msg = 'Database should have a name or a path.';
             let err = new SemanticException( msg, db.location );
-            errors.push( err ); 
+            errors.push( err );
         }
     }
-    
+
 }

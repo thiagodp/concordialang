@@ -1,12 +1,17 @@
 import { Document } from "../ast/Document";
 import Graph = require( 'graph.js/dist/graph.full.js' );
+import { EventEmitter } from "events";
+
+export enum GraphFilterEvent {
+    DOCUMENT_NOT_INCLUDED = 'concordia:documentNotIncluded'
+}
 
 /**
  * Graph filter.
  *
  * @author Thiago Delgado Pinto
  */
-export class GraphFilter {
+export class GraphFilter extends EventEmitter {
 
     /**
      * Creates a new graph containing the documents that match the evaluation function.
@@ -28,6 +33,7 @@ export class GraphFilter {
 
             const doc: Document = value as Document;
             if ( ! shouldBeIncluded( doc, graph ) ) {
+                this.emit( GraphFilterEvent.DOCUMENT_NOT_INCLUDED, doc );
                 continue;
             }
 

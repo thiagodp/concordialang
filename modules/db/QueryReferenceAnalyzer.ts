@@ -4,7 +4,7 @@ import { QueryParser } from './QueryParser';
 import { Database } from '../ast/Database';
 import { SemanticException } from '../semantic/SemanticException';
 import { Entities } from '../nlp/Entities';
-import { UIElement, UIProperty, UIValueReferenceType } from '../ast/UIElement';
+import { UIElement, UIProperty } from '../ast/UIElement';
 import { Spec } from "../ast/Spec";
 import { Constant } from '../ast/Constant';
 import { Table } from '../ast/Table';
@@ -233,25 +233,4 @@ class UIElementSearchResult {
     errorMessages: string[] = [];
     feature: Feature = null;
     uiElement: UIElement = null;
-}
-
-
-class QueryCheckResult {
-    constructor(
-        public ownerUIElement: UIElement = null,
-        public ownerUIProperty: UIProperty = null,
-        public query: string = '',
-        public references: QueryReference[] = []
-    ) {
-    }
-}
-
-class QueryReference {
-    constructor(
-        public name: string = '',
-        public refType: UIValueReferenceType = UIValueReferenceType.NONE,
-        public owner: Feature | Database | null = null,
-        public ref: UIElement | Constant | Table | null = null
-    ) {
-    }
 }

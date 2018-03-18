@@ -89,7 +89,12 @@ export class UIElementPropertyExtractor {
     }
 
 
-
+    isPropertyDefined( uie: UIElement, prop: string | UIPropertyTypes  ): boolean {
+        return isDefined( this.extractProperty(
+            uie,
+            typeof prop === 'string' ? prop : prop.toString()
+        ) );
+    }
 
 
     isPropertyConsideredTrue( uie: UIElement, property: string ): boolean {

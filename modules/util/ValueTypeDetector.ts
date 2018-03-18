@@ -2,13 +2,13 @@ import * as moment from 'moment';
 
 /**
  * Value type.
- * 
+ *
  * @author Thiago Delgado Pinto
  */
 export enum ValueType {
-    STRING = 'string',    
+    STRING = 'string',
     INTEGER = 'integer',
-    DOUBLE = 'double',    
+    DOUBLE = 'double',
     DATE = 'date',
     TIME = 'time',
     DATETIME = 'datetime',
@@ -27,7 +27,7 @@ export const ALL_VALUE_TYPES: ValueType[] = [
 
 /**
  * Value type detector.
- * 
+ *
  * @author Thiago Delgado Pinto
  */
 export class ValueTypeDetector {
@@ -38,15 +38,15 @@ export class ValueTypeDetector {
 
     isFalse( val: any ): boolean {
         return false === val || 'false' === val.toString().toLowerCase();
-    }    
+    }
 
     isBoolean( val: any ): boolean {
         return this.isTrue( val ) || this.isFalse( val );
-    }    
+    }
 
     isNumber( val: any ): boolean {
         return this.isDouble( val );
-    }    
+    }
 
     isInteger( val: any ): boolean {
         const t = typeof val;
@@ -62,7 +62,7 @@ export class ValueTypeDetector {
         if ( 'string' === t  ) {
             return ( new RegExp( '^(-?[0-9]+(?:.[0-9]+)?)$' ) ).test( val );
         }
-        return false;        
+        return false;
     }
 
     isDate( val: any ): boolean {
@@ -88,7 +88,7 @@ export class ValueTypeDetector {
         }
         return false;
     }
-    
+
     isDateTime( val: any ): boolean {
         const t = typeof val;
         if ( 'object' === t && val instanceof Date ) { return true };

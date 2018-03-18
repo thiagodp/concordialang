@@ -1,12 +1,13 @@
 import { Database } from '../ast/Database';
 import { Document } from '../ast/Document';
-import { SpecSemanticAnalyzer } from './SpecSemanticAnalyzer';
+import { SpecificationAnalyzer } from './SpecificationAnalyzer';
 import { Spec } from "../ast/Spec";
 import { DuplicationChecker } from '../util/DuplicationChecker';
 import { SemanticException } from './SemanticException';
 import { Warning } from '../req/Warning';
 import { ConnectionChecker } from '../db/ConnectionChecker';
 import { ConnectionCheckResult } from '../req/ConnectionResult';
+import Graph = require( 'graph.js/dist/graph.full.js' );
 
 /**
  * Executes semantic analysis of Databases in a specification.
@@ -17,10 +18,14 @@ import { ConnectionCheckResult } from '../req/ConnectionResult';
  *
  * @author Thiago Delgado Pinto
  */
-export class DatabaseSSA extends SpecSemanticAnalyzer {
+export class DatabaseSSA extends SpecificationAnalyzer {
 
     /** @inheritDoc */
-    public async analyze( spec: Spec, errors: SemanticException[] ): Promise< void > {
+    public async analyze(
+        graph: Graph,
+        spec: Spec,
+        errors: SemanticException[]
+    ): Promise< void > {
         this._checker.checkDuplicatedNamedNodes( spec.databases(), errors, 'database' );
         await this.checkConnections( spec, errors );
     }

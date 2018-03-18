@@ -1,7 +1,8 @@
-import { SpecSemanticAnalyzer } from './SpecSemanticAnalyzer';
+import { SpecificationAnalyzer } from './SpecificationAnalyzer';
 import { Spec } from "../ast/Spec";
 import { DuplicationChecker } from '../util/DuplicationChecker';
 import { SemanticException } from './SemanticException';
+import Graph = require( 'graph.js/dist/graph.full.js' );
 
 /**
  * Executes semantic analysis of Constants in a specification.
@@ -11,10 +12,14 @@ import { SemanticException } from './SemanticException';
  *
  * @author Thiago Delgado Pinto
  */
-export class ConstantSSA extends SpecSemanticAnalyzer {
+export class ConstantSSA extends SpecificationAnalyzer {
 
     /** @inheritDoc */
-    public async analyze( spec: Spec, errors: SemanticException[] ): Promise< void > {
+    public async analyze(
+        graph: Graph,
+        spec: Spec,
+        errors: SemanticException[]
+    ): Promise< void > {
         this._checker.checkDuplicatedNamedNodes( spec.constants(), errors, 'constant' );
     }
 

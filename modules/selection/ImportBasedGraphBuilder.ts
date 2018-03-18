@@ -24,7 +24,7 @@ export class ImportBasedGraphBuilder {
         for ( let doc of spec.docs ) {
 
             // Use the file path as the key
-            let fromKey = doc.fileInfo.path;
+            let fromKey = ! doc.fileInfo ? '' : doc.fileInfo.path || '';
 
             // Add the document as a vertex. If the key already exists, the value is overwriten.
             graph.addVertex( fromKey, doc ); // key, value

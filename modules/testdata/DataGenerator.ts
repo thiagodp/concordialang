@@ -24,7 +24,7 @@ import { RandomDateTime } from './random/RandomDateTime';
 
 /**
  * Indicates the result of a test case.
- * 
+ *
  * @author Thiago Delgado Pinto
  */
 export enum DataAnalysisResult {
@@ -36,20 +36,25 @@ export enum DataAnalysisResult {
 
 /**
  * Configuration (restrictions) used for generating test data.
- * 
+ *
  * @author Thiago Delgado Pinto
  */
 export class DataGenConfig {
 
+	public required: boolean = false;
+
 	public min: any = null; // mininum value or length
 	public max: any = null; // mininum value or length
 
-	public regex: string = null; // format regex
+	public format: string = null; // regex
 
 	public query: string = null;
 	public queryable: Queryable = null; // queriable to use to query the value - db or memory
 
-	public listOfValues: any[] = null; // for list-based generation
+	public inValues: any[] = null; // for list-based generation
+	public notInValues: any[] = null; // for list-based generation
+
+	public computedBy: string = null; // expression
 
 	constructor(
 		public valueType: ValueType = ValueType.STRING
@@ -61,14 +66,14 @@ export class DataGenConfig {
 
 /**
  * Data generator
- * 
+ *
  * @author Thiago Delgado Pinto
  */
 export class DataGenerator {
 
 	private readonly _randomLong: RandomLong;
-	private readonly _randomDouble: RandomDouble;		
-	private readonly _randomString: RandomString;	
+	private readonly _randomDouble: RandomDouble;
+	private readonly _randomString: RandomString;
 
 	private readonly _dataTestCaseVsValueType: DataTestCaseVsValueType =
 		new DataTestCaseVsValueType();
@@ -84,7 +89,7 @@ export class DataGenerator {
 
 	/**
 	 * Analyzes whether a data can be considered valid or invalid according to the given test case.
-	 * 
+	 *
 	 * @param testCase Test case to analyze
 	 */
 	public analyze( testCase: DataTestCase ): DataAnalysisResult {
@@ -110,7 +115,7 @@ export class DataGenerator {
 
 	/**
 	 * Generates a value, according to the given test case and configuration.
-	 * 
+	 *
 	 * @param tc Target test case
 	 * @param cfg Configuration
 	 */
@@ -129,15 +134,15 @@ export class DataGenerator {
 				return this.rawGeneratorFor( cfg ).lowest();
 
 			case DataTestCase.VALUE_RANDOM_BELOW_MIN:
-			case DataTestCase.LENGTH_RANDOM_BELOW_MIN:			
+			case DataTestCase.LENGTH_RANDOM_BELOW_MIN:
 				return this.rawGeneratorFor( cfg ).randomBelowMin();
 
 			case DataTestCase.VALUE_JUST_BELOW_MIN:
-			case DataTestCase.LENGTH_JUST_BELOW_MIN:			
+			case DataTestCase.LENGTH_JUST_BELOW_MIN:
 				return this.rawGeneratorFor( cfg ).justBelowMin();
 
 			case DataTestCase.VALUE_MIN:
-			case DataTestCase.LENGTH_MIN:			
+			case DataTestCase.LENGTH_MIN:
 				return this.rawGeneratorFor( cfg ).min();
 
 			case DataTestCase.VALUE_JUST_ABOVE_MIN:
@@ -151,23 +156,23 @@ export class DataGenerator {
 			case DataTestCase.VALUE_MEDIAN:
 			case DataTestCase.LENGTH_MEDIAN:
 				return this.rawGeneratorFor( cfg ).median();
-			
+
 			case DataTestCase.VALUE_RANDOM_BETWEEN_MIN_MAX:
 			case DataTestCase.LENGTH_RANDOM_BETWEEN_MIN_MAX:
 				return this.rawGeneratorFor( cfg ).randomBetweenMinAndMax();
-			
+
 			case DataTestCase.VALUE_JUST_BELOW_MAX:
 			case DataTestCase.LENGTH_JUST_BELOW_MAX:
 				return this.rawGeneratorFor( cfg ).justBelowMax();
-			
+
 			case DataTestCase.VALUE_MAX:
 			case DataTestCase.LENGTH_MAX:
 				return this.rawGeneratorFor( cfg ).max();
-			
+
 			case DataTestCase.VALUE_JUST_ABOVE_MAX:
 			case DataTestCase.LENGTH_JUST_ABOVE_MAX:
 				return this.rawGeneratorFor( cfg ).justAboveMax();
-			
+
 			case DataTestCase.VALUE_RANDOM_ABOVE_MAX:
 			case DataTestCase.LENGTH_RANDOM_ABOVE_MAX:
 				return this.rawGeneratorFor( cfg ).randomAboveMax();
@@ -182,7 +187,7 @@ export class DataGenerator {
 				return this.regexGeneratorFor( cfg ).valid();
 
 			case DataTestCase.FORMAT_INVALID:
-				return this.regexGeneratorFor( cfg ).invalid();				
+				return this.regexGeneratorFor( cfg ).invalid();
 
 			// SET
 
@@ -205,7 +210,7 @@ export class DataGenerator {
 					return await this.queryGeneratorFor( cfg ).randomElement();
 				}
 				return this.listGeneratorFor( cfg ).randomElement();
-			}			
+			}
 
 			case DataTestCase.SET_PENULTIMATE_ELEMENT: {
 				if ( isDefined( cfg.query ) ) {
@@ -213,25 +218,25 @@ export class DataGenerator {
 				}
 				return this.listGeneratorFor( cfg ).penultimateElement();
 			}
-			
+
 			case DataTestCase.SET_LAST_ELEMENT: {
 				if ( isDefined( cfg.query ) ) {
 					return await this.queryGeneratorFor( cfg ).lastElement();
 				}
 				return this.listGeneratorFor( cfg ).lastElement();
 			}
-			
+
 			case DataTestCase.SET_NOT_IN_SET: {
 				if ( isDefined( cfg.query ) ) {
 					return await this.queryGeneratorFor( cfg ).notInSet();
 				}
 				return this.listGeneratorFor( cfg ).notInSet();
-			}			
+			}
 
 			// REQUIRED
 
 			case DataTestCase.REQUIRED_FILLED: {
-				if ( isDefined( cfg.query ) || isDefined( cfg.listOfValues ) ) {
+				if ( isDefined( cfg.query ) || isDefined( cfg.inValues ) ) {
 					return await this.generate( DataTestCase.SET_RANDOM_ELEMENT, cfg );
 				}
 				return this.rawGeneratorFor( cfg ).randomBetweenMinAndMax();
@@ -239,7 +244,7 @@ export class DataGenerator {
 
 			case DataTestCase.REQUIRED_NOT_FILLED: {
 				return ''; // empty value
-			}			
+			}
 
 			// COMPUTATION
 			// TO-DO: computation
@@ -265,10 +270,10 @@ export class DataGenerator {
 		return new RegexBasedDataGenerator(
 			this._randomLong,
 			this._randomString,
-			cfg.regex
+			cfg.format
 		);
 	}
-	
+
 	private queryGeneratorFor( cfg: DataGenConfig ): QueryBasedDataGenerator< any > {
 		return new QueryBasedDataGenerator(
 			this._randomLong,
@@ -283,9 +288,9 @@ export class DataGenerator {
 		return new ListBasedDataGenerator(
 			this._randomLong,
 			this.rawGeneratorFor( cfg ),
-			cfg.listOfValues
+			cfg.inValues
 		);
 	}
-	
+
 
 }

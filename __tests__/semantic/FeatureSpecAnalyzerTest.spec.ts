@@ -7,6 +7,7 @@ import { Spec } from '../../modules/ast/Spec';
 import { Options } from '../../modules/app/Options';
 import { LexerBuilder } from '../../modules/lexer/LexerBuilder';
 import { resolve } from 'path';
+import { SpecFilter } from '../../modules/selection/SpecFilter';
 
 /**
  * @author Thiago Delgado Pinto
@@ -19,12 +20,12 @@ describe( 'FeatureSpecAnalyzerTest', () => {
     const options: Options = new Options( resolve( process.cwd(), 'dist/' ) );
     let lexer: Lexer = ( new LexerBuilder() ).build( options, 'en' );
 
-    let doc1: Document;    
+    let doc1: Document;
 
 
     beforeEach( () => {
         lexer.reset();
-    } );    
+    } );
 
     it( 'does not critize when it is all right', () => {
         [
@@ -40,13 +41,14 @@ describe( 'FeatureSpecAnalyzerTest', () => {
         ].forEach( ( val, index ) => lexer.addNodeFromLine( val, index + 1 ) );
         let doc2: Document = {};
         parser.analyze( lexer.nodes(), doc2 );
-        
 
-        let spec = new Spec( '.' );        
+
+        let spec = new Spec( '.' );
         spec.docs.push( doc1, doc2 );
+        const graph = ( new SpecFilter( spec ) ).graph();
 
         let errors = [];
-        analyzer.analyze( spec, errors );
+        analyzer.analyze( graph, spec, errors );
         expect( errors ).toHaveLength( 0 );
     } );
 
@@ -65,15 +67,16 @@ describe( 'FeatureSpecAnalyzerTest', () => {
         ].forEach( ( val, index ) => lexer.addNodeFromLine( val, index + 1 ) );
         let doc2: Document = {};
         parser.analyze( lexer.nodes(), doc2 );
-        
 
-        let spec = new Spec( '.' );        
+
+        let spec = new Spec( '.' );
         spec.docs.push( doc1, doc2 );
+        const graph = ( new SpecFilter( spec ) ).graph();
 
         let errors = [];
-        analyzer.analyze( spec, errors );
+        analyzer.analyze( graph, spec, errors );
         expect( errors ).toHaveLength( 1 );
         expect( errors[ 0 ].message ).toMatch( /duplicated/ui );
-    } );    
+    } );
 
 } );

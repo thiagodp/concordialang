@@ -3,7 +3,7 @@ import { DataTestCase, DataTestCaseGroup, DataTestCaseGroupDef } from "./DataTes
 
 /**
  * Compatibility between data test cases and value types.
- * 
+ *
  * @author Thiago Delgado Pinto
  */
 export class DataTestCaseVsValueType {
@@ -19,7 +19,7 @@ export class DataTestCaseVsValueType {
         this.addDateTimeDefs();
         this.addBooleanDefs();
     }
-    
+
     all(): DataTestCaseVsValueTypeDef[] {
         return this._defs;
     }
@@ -27,6 +27,10 @@ export class DataTestCaseVsValueType {
     isCompatible( valueType: ValueType, tc: DataTestCase ): boolean {
         let def = this._defs.find( ( v ) => v.val === valueType && v.tc === tc );
         return def ? def.compatible : false;
+    }
+
+    compatibleWith( valueType: ValueType ): DataTestCase[] {
+        return this._defs.filter( v => v.compatible && v.val === valueType ).map( v => v.tc );
     }
 
 	private addStringDefs(): void {
@@ -38,7 +42,7 @@ export class DataTestCaseVsValueType {
         this.addForGroup( valueType, true, DataTestCaseGroup.REQUIRED );
         this.addForGroup( valueType, true, DataTestCaseGroup.COMPUTATION );
     }
-    
+
     private addIntegerDefs(): void {
         this.addValueDef( ValueType.INTEGER );
     }
@@ -54,11 +58,11 @@ export class DataTestCaseVsValueType {
     private addTimeDefs(): void {
         this.addValueDef( ValueType.TIME );
     }
-    
+
     private addDateTimeDefs(): void {
         this.addValueDef( ValueType.DATETIME );
     }
-    
+
     private addBooleanDefs(): void {
         const valueType = ValueType.BOOLEAN;
         this.addForGroup( valueType, false, DataTestCaseGroup.VALUE );
@@ -81,7 +85,7 @@ export class DataTestCaseVsValueType {
 	private with( valueType: ValueType, compatible: boolean, tc: DataTestCase ): DataTestCaseVsValueTypeDef {
 		return { val: valueType, compatible: compatible, tc: tc } as DataTestCaseVsValueTypeDef;
     }
-    
+
     private addForGroup( valueType: ValueType, compatible: boolean, group: DataTestCaseGroup ): void {
         const groupsDef: DataTestCaseGroupDef = new DataTestCaseGroupDef();
         const testcases: DataTestCase[] = groupsDef.ofGroup( group );
@@ -95,7 +99,7 @@ export class DataTestCaseVsValueType {
 
 /**
  * Structure to hold the compatibility between a test case and a value type.
- * 
+ *
  * @author Thiago Delgado Pinto
  */
 interface DataTestCaseVsValueTypeDef {
