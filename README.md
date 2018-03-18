@@ -41,8 +41,8 @@ concordia /dir/with/your/spec/files --plugin plugin-name
 ## Regardings
 
 1. Concordia separates *high-level*, **business language** declarations from *medium-low-level*, **computing language** declarations. This let you separate things better and don't compromise your **communication** with business people.
-2. Concordia lets you describe complex business rules related to user interface elements, and it will use them to generate test cases for you, automatically. So, the more you detail their behavior the more you will get test cases that cover them.
-3. Concordia lets you relate user interface element's rules with databases, tables and files, so that it can retrieve test data from them. Currently it supports JSON, CSV, INI, Excel, MSAccess, SQLite, MySQL, PostgreSQL and Firebase.
+2. Concordia lets you describe **complex business rules** related to user interface elements, and it will use them to generate test cases for you, automatically. The more you detail their behavior, the more you will get test cases to cover them.
+3. Concordia lets you relate user interface element's rules with **databases, tables and files**, so that it can retrieve test data from them. Currently it supports JSON, CSV, INI, Excel, MSAccess, SQLite, MySQL, PostgreSQL and Firebase. See [here]() how to connect with them.
 
 ## A short example:
 
