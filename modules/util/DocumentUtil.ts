@@ -1,10 +1,10 @@
-import { isDefined, areDefined } from "./TypeChecking";
+import { isDefined } from "./TypeChecking";
 import { Document } from '../ast/Document';
 import { hasTagNamed } from "../ast/Tag";
 import { ReservedTags } from "../req/ReservedTags";
 import { Variant } from "../ast/Variant";
 import { Scenario } from "../ast/Scenario";
-import { UIElement } from "../ast/UIElement";
+import { UIElement, UIElementInfo } from "../ast/UIElement";
 import { Feature } from "../ast/Feature";
 import { CaseType } from "../app/CaseType";
 import { UIElementNameHandler } from "./UIElementNameHandler";
@@ -20,7 +20,7 @@ export class DocumentUtil {
 
         let map = new Map< Variant, Scenario >();
 
-        if ( ! areDefined( doc.feature, doc.feature.scenarios ) ) {
+        if ( ! isDefined( doc.feature ) ) {
             return map;
         }
 
@@ -59,11 +59,14 @@ export class DocumentUtil {
             }
 
         }
+
+        const lowerCasedUIElementName = uiElementName.toLowerCase();
+
         // Document has feature with ui elements ?
-        if ( areDefined( doc.feature, doc.feature.uiElements ) ) {
+        if ( isDefined( doc.feature ) ) {
             // Let's search it in the feature
-            for ( let uie of doc.feature.uiElements ) {
-                if ( uie.name.toLowerCase() === uiElementName.toLowerCase() ) {
+            for ( let uie of doc.feature.uiElements || [] ) {
+                if ( uie.name.toLowerCase() === lowerCasedUIElementName ) {
                     return uie;
                 }
             }
@@ -71,7 +74,7 @@ export class DocumentUtil {
 
         // Finally let's search it in the document
         for ( let uie of doc.uiElements || [] ) {
-            if ( uie.name.toLowerCase() === uiElementName.toLowerCase() ) {
+            if ( uie.name.toLowerCase() === lowerCasedUIElementName ) {
                 return uie;
             }
         }
@@ -80,16 +83,9 @@ export class DocumentUtil {
     }
 
 
-    findUIElementInfoInTheDocument( variable: string, doc: Document, caseOption: CaseType | string = CaseType.CAMEL  ): UIElementInfo | null {
-        const uie = this.findUIElementInTheDocument( variable, doc );
-        if ( isDefined( uie ) ) {
-            return new UIElementInfo( doc, uie, this._uiePropExtractor.extractId( uie, caseOption ), doc.feature || null );
-        }
-        return null;
-    }
-
     /**
-     * Adds all the UI Element variables of the given document to the given map.
+     * Adds all the UI Element variables of the given document to the given map. Every
+     * UI Element found receives an UIElementInfo if not defined.
      *
      * Formats:
      * - {Element} for Global UI Elements and Feature's UI Elements if `keepItLocal` is true.
@@ -100,49 +96,52 @@ export class DocumentUtil {
      * @param keepItLocal Whether UI Element variables should be created without the feature name.
      * @param caseOption Case option to generate ui literals
      */
-    addUIElementsVariablesOf(
+    mapUIElementVariables(
         doc: Document,
-        map: Map< string, UIElementInfo >,
+        map: Map< string, UIElement >,
         keepItLocal: boolean = false,
         caseOption: CaseType | string = CaseType.CAMEL
     ): void {
+
         // Start with global ui elements
         for ( let uie of doc.uiElements || [] ) {
+            // Generates the UI Literal
             const uiLiteral: string = this._uiePropExtractor.extractId( uie, caseOption );
+            // Creates the info if not defined
+            if ( ! uie.info ) {
+                uie.info = new UIElementInfo( doc, uiLiteral, null );
+            }
+            // Maps the element
             map.set(
                 this._uieNameHandler.makeVariableName( null, uie.name ),
-                new UIElementInfo( doc, uie, uiLiteral, null )
+                uie
             );
         }
+
         if ( ! isDefined( doc.feature ) ) {
             return;
         }
+
         // Then fill it with local ui elements
-        for ( let uie of doc.feature.uiElements ) {
+        for ( let uie of doc.feature.uiElements || [] ) {
+
+            // Generates the UI Literal
             const uiLiteral: string = this._uiePropExtractor.extractId( uie, caseOption );
+
             // When null, a feature name may overwrite a name defined globallly
             const featureName: string | null = ! keepItLocal ? doc.feature.name : null;
+
+            // Creates the info if not defined
+            if ( ! uie.info ) {
+                uie.info = new UIElementInfo( doc, uiLiteral, doc.feature );
+            }
+
+            // Maps the element
             map.set(
                 this._uieNameHandler.makeVariableName( featureName, uie.name ),
-                new UIElementInfo( doc, uie, uiLiteral, doc.feature )
+                uie
             );
         }
     }
 
-}
-
-
-export class UIElementInfo {
-
-    constructor(
-        public document: Document = null,
-        public uiElement: UIElement = null,
-        public uiLiteral: string = null,
-        public feature: Feature = null
-    ) {
-    }
-
-    isGlobal(): boolean {
-        return ! this.feature;
-    }
 }

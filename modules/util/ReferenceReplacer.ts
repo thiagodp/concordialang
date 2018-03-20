@@ -9,7 +9,6 @@ import { convertCase } from './CaseConversor';
 import { Symbols } from '../req/Symbols';
 import { NLPResult } from '../nlp/NLPResult';
 import { ValueTypeDetector } from './ValueTypeDetector';
-import { UIElementInfo } from './DocumentUtil';
 import { Spec } from '../ast/Spec';
 import { Document } from '../ast/Document';
 
@@ -51,14 +50,16 @@ export class ReferenceReplacer {
 
         let newSentence: string = sentence;
 
-        for ( let e of nlpResult.entities ) {
+        for ( let e of nlpResult.entities || [] ) {
 
             // Replace UI_ELEMENT with UI_LITERAL
             if ( Entities.UI_ELEMENT === e.entity ) {
+
                 // Get the UI_LITERAL name by the UI_ELEMENT name
-                const info = spec.findUIElementVariable( e.value, doc, uiLiteralCaseOption )
-                let literalName: string = isDefined( info )
-                    ? info.uiLiteral
+                const ui = spec.uiElementByVariable( e.value, doc );
+
+                let literalName: string = isDefined( ui ) && isDefined( ui.info )
+                    ? ui.info.uiLiteral
                     : convertCase( e.value, uiLiteralCaseOption ); // Uses the UI_ELEMENT name as the literal name, when it is not found.
 
                 // Replace

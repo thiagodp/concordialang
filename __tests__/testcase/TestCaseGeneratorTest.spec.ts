@@ -17,6 +17,8 @@ import { LocatedException } from '../../modules/req/LocatedException';
 import { Warning } from '../../modules/req/Warning';
 import { Variant } from '../../modules/ast/Variant';
 import { resolve } from 'path';
+import { SpecFilter } from '../../modules/selection/SpecFilter';
+import { BatchSpecificationAnalyzer } from '../../modules/semantic/BatchSpecificationAnalyzer';
 
 
 describe( 'TestCaseGeneratorTest', () => {
@@ -134,7 +136,7 @@ describe( 'TestCaseGeneratorTest', () => {
 
 
 
-    it( 'replaces references to ui elements', () => {
+    it( 'replaces references to ui elements', async () => {
 
         let spec = new Spec( '.' );
 
@@ -153,10 +155,16 @@ describe( 'TestCaseGeneratorTest', () => {
                 ' - id é "bx"'
             ] );
 
+        const specFilter = new SpecFilter( spec );
+        const batchSpecAnalyzer = new BatchSpecificationAnalyzer();
+        let errors: LocatedException[] = [];
+
+        await batchSpecAnalyzer.analyze( specFilter.graph(), spec, errors );
+
         expect( doc.fileErrors ).toEqual( [] );
+        expect( errors ).toEqual( [] );
 
         let variant = doc.feature.scenarios[ 0 ].variants[ 0 ];
-        let errors: LocatedException[] = [];
         let warnings: Warning[] = [];
 
         let newVariant = gen.replaceReferences(
@@ -291,7 +299,7 @@ describe( 'TestCaseGeneratorTest', () => {
 
 
 
-    it( 'replaces both references to ui elements and constants', () => {
+    it( 'replaces both references to ui elements and constants', async () => {
 
         let spec = new Spec( '.' );
 
@@ -319,11 +327,20 @@ describe( 'TestCaseGeneratorTest', () => {
                 ' - id é "bx"'
             ] );
 
+        const specFilter = new SpecFilter( spec );
+        const batchSpecAnalyzer = new BatchSpecificationAnalyzer();
+        let errors: LocatedException[] = [];
+
+        await batchSpecAnalyzer.analyze( specFilter.graph(), spec, errors );
+
         expect( doc1.fileErrors ).toEqual( [] );
         expect( doc2.fileErrors ).toEqual( [] );
+        expect( errors ).toEqual( [] );
+
+        expect( spec.uiElementByVariable( 'A', doc2 ) ).toBeDefined();
+        expect( spec.uiElementByVariable( 'B', doc2 ) ).toBeDefined();
 
         let variant = doc2.feature.scenarios[ 0 ].variants[ 0 ];
-        let errors: LocatedException[] = [];
         let warnings: Warning[] = [];
 
         let newVariant = gen.replaceReferences(
@@ -335,6 +352,7 @@ describe( 'TestCaseGeneratorTest', () => {
             warnings
         );
 
+        expect( newVariant.sentences ).toHaveLength( 3 );
         expect( newVariant.sentences[ 1 ].content ).toEqual( 'Quando eu preencho <ax> com "ipsum lorem"' );
         expect( newVariant.sentences[ 2 ].content ).toEqual( 'E eu preencho <bx> com 3.1416' );
     } );

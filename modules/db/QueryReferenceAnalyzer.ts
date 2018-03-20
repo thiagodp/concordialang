@@ -4,11 +4,12 @@ import { QueryParser } from './QueryParser';
 import { Database } from '../ast/Database';
 import { SemanticException } from '../semantic/SemanticException';
 import { Entities } from '../nlp/Entities';
-import { UIElement, UIProperty } from '../ast/UIElement';
+import { UIElement } from '../ast/UIElement';
 import { Spec } from "../ast/Spec";
 import { Constant } from '../ast/Constant';
 import { Table } from '../ast/Table';
 import { UIElementNameHandler } from '../util/UIElementNameHandler';
+import { Node } from '../ast/Node';
 
 /**
  * Analyzes queries' references.
@@ -112,13 +113,13 @@ export class QueryReferenceAnalyzer {
      * Checks references of a single query and returns errors found.
      *
      * @param query Query to check
-     * @param queryOwner UI property of a UI element that contains the query
+     * @param queryOwner Owner of the query
      * @param spec Specification to check
      * @param currentFeature Current feature
      */
     public checkQuery(
         query: string,
-        queryOwner: UIProperty,
+        queryOwner: Node,
         spec: Spec,
         currentFeature: Feature
     ): LocatedException[] {

@@ -1,13 +1,13 @@
 import { Document } from "../ast/Document";
 import { Spec } from "../ast/Spec";
 import { DataTestCase } from "./DataTestCase";
-import { DocumentUtil, UIElementInfo } from "../util/DocumentUtil";
+import { DocumentUtil } from "../util/DocumentUtil";
 import { UIElement } from "../ast/UIElement";
 import { NLPUtil, NLPEntity } from "../nlp/NLPResult";
 import { UIElementPropertyExtractor } from "../util/UIElementPropertyExtractor";
 import { DataTestCaseVsValueType } from "./DataTestCaseVsValueType";
 import { ValueType } from "../util/ValueTypeDetector";
-import * as enumUtil from 'enum-util';
+import { toEnumValue } from "../util/ToEnumValue";
 import { UIPropertyTypes } from "../util/UIPropertyTypes";
 import { isDefined } from "../util/TypeChecking";
 
@@ -34,23 +34,13 @@ export class DataTestCaseAnalyzer {
     ): Map< DataTestCase, boolean > {
 
         let map = new Map< DataTestCase, boolean >();
-        let info: UIElementInfo | null = null;
 
-        // Finds the UI Element in the document
-        let uie: UIElement | null = this._docUtil.findUIElementInTheDocument( uiElementVariable, doc );
-
-        // If not found, finds in the spec
+        // Finds the UI Element
+        let uie = spec.uiElementByVariable( uiElementVariable, doc );
         if ( ! uie ) {
-            info = spec.uiElementsVariableMap().get( uiElementVariable );
-            // Not found in the spec, register an error
-            if ( ! info ) {
-                const msg = `UI Element not found in the specification: ${uiElementVariable}`;
-                errors.push( new Error( msg ) );
-                return map; // empty
-            }
-            uie = info.uiElement;
-        } else {
-            info = new UIElementInfo( doc, uie, null, doc.feature || null );
+            const msg = `UI Element not found in the specification: ${uiElementVariable}`;
+            errors.push( new Error( msg ) );
+            return map; // empty
         }
 
         // Returns if it is a non editable UI Element
@@ -61,8 +51,7 @@ export class DataTestCaseAnalyzer {
         // Let's analyze the data type of the UI Element
         const dataType: string = this._uiePropExtractor.extractDataType( uie );
         // Converts to a system value type
-        const valType: ValueType = enumUtil.getValues( ValueType ).find( v => v === dataType )
-            || ValueType.STRING;
+        const valType: ValueType = toEnumValue( dataType, ValueType ) || ValueType.STRING;
         // Gets the compatible data test cases
         const dataTestCases: DataTestCase[] = this._vsType.compatibleWith( valType );
 

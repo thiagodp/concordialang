@@ -73,7 +73,7 @@ export class TestCaseSSA extends SpecificationAnalyzer {
         } else if ( doc.feature ) {
             let availableFeatures: Feature[] = [ doc.feature ];
             let availableFeatureNames: string[] = [ doc.feature.name.toLowerCase() ];
-            let availableFeaturePaths: string[] = [ doc.fileInfo.path ];
+            let availableFeaturePaths: string[] = doc.fileInfo ? [ doc.fileInfo.path || '' ] : [ '' ];
             for ( let testCase of doc.feature.testCases ) {
                 this.checkTags(
                     spec,

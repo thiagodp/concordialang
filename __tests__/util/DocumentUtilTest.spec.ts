@@ -1,4 +1,4 @@
-import { DocumentUtil, UIElementInfo } from "../../modules/util/DocumentUtil";
+import { DocumentUtil } from "../../modules/util/DocumentUtil";
 import { Feature } from "../../modules/ast/Feature";
 import { Document } from "../../modules/ast/Document";
 import { UIElement } from "../../modules/ast/UIElement";
@@ -23,8 +23,8 @@ describe( 'DocumentUtilTest', () => {
             } as Feature
         } as Document;
 
-        let map = new Map< string, UIElementInfo >();
-        util.addUIElementsVariablesOf( doc, map );
+        let map = new Map< string, UIElement >();
+        util.mapUIElementVariables( doc, map );
         expect( map.size ).toEqual( 1 );
         expect( map.get( 'Feature A:foo' ) || null ).not.toBeNull();
     } );
