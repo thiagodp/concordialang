@@ -44,7 +44,7 @@ describe( 'UIElementSSATest', () => {
                 'Elemento de IU: bar',
                 ' - comprimento mínimo é [x]',
                 ' - comprimento máximo é [pi]',
-                ' - valor vem de "SELECT * FROM [mydb].[ipsum] WHERE name = {foo}"',
+                ' - valor vem de "SELECT * FROM [mydb].[ipsum] WHERE name = {foo} OR name = {Feature 1:zoo}"',
                 'Constantes:',
                 ' - "x" é 2',
             ],
@@ -76,6 +76,7 @@ describe( 'UIElementSSATest', () => {
         expect( bar.items[ 2 ].values[ 0 ].references[ 0 ] ).toEqual( mydb );
         expect( bar.items[ 2 ].values[ 0 ].references[ 1 ] ).toEqual( ipsum );
         expect( bar.items[ 2 ].values[ 0 ].references[ 2 ] ).toEqual( foo );
+        expect( bar.items[ 2 ].values[ 0 ].references[ 3 ] ).toEqual( zoo );
     } );
 
 } );
