@@ -1,16 +1,19 @@
-import { Options } from "../modules/app/Options";
-import { LanguageContentLoader, JsonLanguageContentLoader } from "../modules/dict/LanguageContentLoader";
-import { LexerBuilder } from "../modules/lexer/LexerBuilder";
-import { Lexer } from "../modules/lexer/Lexer";
-import { Parser } from "../modules/parser/Parser";
-import { Document } from '../modules/ast/Document';
-import { NLPTrainer } from "../modules/nlp/NLPTrainer";
-import { NLPBasedSentenceRecognizer } from "../modules/nlp/NLPBasedSentenceRecognizer";
-import { SingleDocumentProcessor } from "../modules/app/SingleDocumentProcessor";
-import { Spec } from "../modules/ast/Spec";
+import { Options } from "../app/Options";
+import { LanguageContentLoader, JsonLanguageContentLoader } from "../dict/LanguageContentLoader";
+import { LexerBuilder } from "../lexer/LexerBuilder";
+import { Lexer } from "../lexer/Lexer";
+import { Parser } from "../parser/Parser";
+import { Document } from '../ast/Document';
+import { NLPTrainer } from "../nlp/NLPTrainer";
+import { NLPBasedSentenceRecognizer } from "../nlp/NLPBasedSentenceRecognizer";
+import { SingleDocumentProcessor } from "../app/SingleDocumentProcessor";
+import { Spec } from "../ast/Spec";
 import { resolve } from 'path';
+import { FileInfo } from "../ast/FileInfo";
 
-
+/**
+ * Useful for testing purposes.
+ */
 export class SimpleCompiler {
 
     constructor( public language = 'pt' ) {
@@ -30,9 +33,10 @@ export class SimpleCompiler {
 
     singleDocProcessor: SingleDocumentProcessor = new SingleDocumentProcessor();
 
-    addToSpec( spec: Spec, lines: string[] ): Document {
+    addToSpec( spec: Spec, lines: string[], fileInfo?: FileInfo ): Document {
         lines.forEach( ( val, index ) => this.lexer.addNodeFromLine( val, index + 1 ) );
         let doc: Document = {} as Document;
+        doc.fileInfo = fileInfo;
         this.singleDocProcessor.analyzeNodes( doc, this.lexer, this.parser, this.nlpRec, this.language );
         spec.docs.push( doc );
         return doc;

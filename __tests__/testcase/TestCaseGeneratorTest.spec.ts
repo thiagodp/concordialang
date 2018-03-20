@@ -1,5 +1,5 @@
 import { TestCaseGenerator } from '../../modules/testcase/TestCaseGenerator';
-import { SimpleCompiler } from '../SimpleCompiler';
+import { SimpleCompiler } from '../../modules/util/SimpleCompiler';
 import { SpecFilter } from '../../modules/selection/SpecFilter';
 import { BatchSpecificationAnalyzer } from '../../modules/semantic/BatchSpecificationAnalyzer';
 import { Variant } from '../../modules/ast/Variant';

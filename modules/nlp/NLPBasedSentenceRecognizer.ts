@@ -58,18 +58,15 @@ export class NLPBasedSentenceRecognizer {
         // GLOBAL
         //
 
+
         // UI Elements
-        if ( doc.uiElements ) {
-            for ( let uiElement of doc.uiElements ) {
-                this._uiPropertyRec.recognizeSentences( language, uiElement.items, errors, warnings );
-            }
+        for ( let uiElement of doc.uiElements || [] ) {
+            this._uiPropertyRec.recognizeSentences( language, uiElement.items, errors, warnings );
         }
 
         // Databases
-        if ( doc.databases ) {
-            for ( let db of doc.databases ) {
-                this._dbPropertyRec.recognizeSentences( language, db.items, errors, warnings );
-            }
+        for ( let db of doc.databases || [] ) {
+            this._dbPropertyRec.recognizeSentences( language, db.items, errors, warnings );
         }
 
         //
@@ -81,26 +78,21 @@ export class NLPBasedSentenceRecognizer {
         }
 
         // UI Elements inside Features
-        for ( let uiElement of doc.feature.uiElements ) {
+        for ( let uiElement of doc.feature.uiElements || [] ) {
             this._uiPropertyRec.recognizeSentences(
                 language, uiElement.items, errors, warnings );
         }
 
         // Variants inside Scenarios
-        if ( doc.feature.scenarios ) {
-            for ( let scenario of doc.feature.scenarios ) {
-                if ( ! scenario.variants ) {
-                    continue;
-                }
-                for ( let variant of scenario.variants ) {
-                    this._variantSentenceRec.recognizeSentences(
-                        language, variant.sentences, errors, warnings );
-                }
+        for ( let scenario of doc.feature.scenarios || [] ) {
+            for ( let variant of scenario.variants || [] ) {
+                this._variantSentenceRec.recognizeSentences(
+                    language, variant.sentences, errors, warnings );
             }
         }
 
         // Test Cases inside Features
-        for ( let testCase of doc.feature.testCases ) {
+        for ( let testCase of doc.feature.testCases || [] ) {
             this._variantSentenceRec.recognizeSentences(
                 language, testCase.sentences, errors, warnings, 'Test Case' );
         }

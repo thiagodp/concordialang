@@ -82,10 +82,12 @@ export class Spec {
         }
 
         for ( let db of doc.databases ) {
+
             // Adjust filePath if not defined
             if ( ! db.location.filePath && doc.fileInfo ) {
                 db.location.filePath = doc.fileInfo.path || '';
             }
+
             this._databaseCache.push( db );
         }
     }
@@ -248,7 +250,7 @@ export class Spec {
 
 
     private findByName< T extends NamedNode >( name: string, nodes: T[] ): T | null {
-        const lowerCasedName = name.toLowerCase();
+        const lowerCasedName: string = name.toLowerCase();
         return nodes.find( n => n.name.toLowerCase() === lowerCasedName ) || null;
     }
 
@@ -263,19 +265,16 @@ export class Spec {
     /**
      * Return all databases. Results are cached.
      */
-    public databases = ( rebuildCache: boolean = false ): Database[] => {
+    public databases( rebuildCache: boolean = false ): Database[] {
         if ( isDefined( this._databaseCache ) && ! rebuildCache ) {
             return this._databaseCache;
         }
         this._databaseCache = [];
         for ( let doc of this.docs ) {
-            if ( ! doc.databases ) {
-                continue;
-            }
             this.mapDocumentDatabases( doc );
         }
         return this._databaseCache;
-    };
+    }
 
 
     public databaseNames = ( rebuildCache: boolean = false ): string[] => {

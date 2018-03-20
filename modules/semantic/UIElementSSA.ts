@@ -9,7 +9,7 @@ import { Location } from "../ast/Location";
 import { Node } from "../ast/Node";
 import { QueryParser } from "../db/QueryParser";
 import Graph = require( 'graph.js/dist/graph.full.js' );
-import { deepcopy } from 'deepcopy';
+import * as deepcopy from 'deepcopy';
 
 /**
  * Executes semantic analysis of UI Elements in a specification.
