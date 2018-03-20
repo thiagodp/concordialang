@@ -1,52 +1,21 @@
-import { LanguageContentLoader, JsonLanguageContentLoader } from '../../modules/dict/LanguageContentLoader';
-import { Options } from '../../modules/app/Options';
-import { TestCaseGenerator } from "../../modules/testcase/TestCaseGenerator";
-import { DataTestCase } from "../../modules/testdata/DataTestCase";
-import { SingleDocumentProcessor } from "../../modules/app/SingleDocumentProcessor";
-import { Document } from '../../modules/ast/Document';
-import { Lexer } from '../../modules/lexer/Lexer';
-import { LexerBuilder } from '../../modules/lexer/LexerBuilder';
-import { Parser } from '../../modules/parser/Parser';
-import { NLPTrainer } from '../../modules/nlp/NLPTrainer';
-import { NLPBasedSentenceRecognizer } from '../../modules/nlp/NLPBasedSentenceRecognizer';
-import { Spec } from '../../modules/ast/Spec';
-import { CaseType } from '../../modules/app/CaseType';
-import { Tag } from '../../modules/ast/Tag';
-import { UIElementPropertyExtractor } from '../../modules/util/UIElementPropertyExtractor';
-import { LocatedException } from '../../modules/req/LocatedException';
-import { Warning } from '../../modules/req/Warning';
-import { Variant } from '../../modules/ast/Variant';
-import { resolve } from 'path';
+import { TestCaseGenerator } from '../../modules/testcase/TestCaseGenerator';
+import { SimpleCompiler } from '../SimpleCompiler';
 import { SpecFilter } from '../../modules/selection/SpecFilter';
 import { BatchSpecificationAnalyzer } from '../../modules/semantic/BatchSpecificationAnalyzer';
+import { Variant } from '../../modules/ast/Variant';
+import { Tag } from '../../modules/ast/Tag';
+import { Document } from '../../modules/ast/Document';
+import { Spec } from '../../modules/ast/Spec';
+import { LocatedException } from '../../modules/req/LocatedException';
+import { Warning } from '../../modules/req/Warning';
+import { CaseType } from '../../modules/app/CaseType';
 
 
 describe( 'TestCaseGeneratorTest', () => {
 
     let gen: TestCaseGenerator = new TestCaseGenerator(); // under test
 
-    const options: Options = new Options( resolve( process.cwd(), 'dist/' ) );
-
-    const langLoader: LanguageContentLoader =
-        new JsonLanguageContentLoader( options.languageDir, {}, options.encoding );
-
-    const LANGUAGE = 'pt';
-    const lexer: Lexer = ( new LexerBuilder( langLoader ) ).build( options, LANGUAGE );
-
-    const parser = new Parser();
-
-    const nlpTrainer = new NLPTrainer( langLoader );
-    const nlpRec: NLPBasedSentenceRecognizer = new NLPBasedSentenceRecognizer( nlpTrainer );
-
-    const singleDocProcessor: SingleDocumentProcessor = new SingleDocumentProcessor();
-
-    function addToSpec( spec: Spec, lines: string[] ): Document {
-        lines.forEach( ( val, index ) => lexer.addNodeFromLine( val, index + 1 ) );
-        let doc: Document = {} as Document;
-        singleDocProcessor.analyzeNodes( doc, lexer, parser, nlpRec, LANGUAGE );
-        spec.docs.push( doc );
-        return doc;
-    }
+    let cp = new SimpleCompiler();
 
     //
     // TESTS
@@ -94,7 +63,7 @@ describe( 'TestCaseGeneratorTest', () => {
 
         let spec = new Spec( '.' );
 
-        let doc1: Document = addToSpec( spec,
+        let doc1: Document = cp.addToSpec( spec,
             [
                 '#language:pt',
                 'Feature: Feature 1',
@@ -103,7 +72,7 @@ describe( 'TestCaseGeneratorTest', () => {
                 ' - "pi" é 3.1416'
             ] );
 
-        let doc2: Document = addToSpec( spec,
+        let doc2: Document = cp.addToSpec( spec,
             [
                 '#language:pt',
                 'Feature: Feature 2',
@@ -140,7 +109,7 @@ describe( 'TestCaseGeneratorTest', () => {
 
         let spec = new Spec( '.' );
 
-        let doc: Document = addToSpec( spec,
+        let doc: Document = cp.addToSpec( spec,
             [
                 '#language:pt',
                 'Feature: Feature 2',
@@ -187,7 +156,7 @@ describe( 'TestCaseGeneratorTest', () => {
         return () => {
 
             let spec = new Spec( '.' );
-            let doc: Document = addToSpec( spec, lines );
+            let doc: Document = cp.addToSpec( spec, lines );
             expect( doc.fileErrors ).toEqual( [] );
 
             let variant = doc.feature.scenarios[ 0 ].variants[ 0 ];
@@ -303,7 +272,7 @@ describe( 'TestCaseGeneratorTest', () => {
 
         let spec = new Spec( '.' );
 
-        let doc1: Document = addToSpec( spec,
+        let doc1: Document = cp.addToSpec( spec,
             [
                 '#language:pt',
                 'Feature: Feature 1',
@@ -312,7 +281,7 @@ describe( 'TestCaseGeneratorTest', () => {
                 ' - "pi" é 3.1416'
             ] );
 
-        let doc2: Document = addToSpec( spec,
+        let doc2: Document = cp.addToSpec( spec,
             [
                 '#language:pt',
                 'Feature: Feature 2',
