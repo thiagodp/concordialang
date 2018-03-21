@@ -71,12 +71,12 @@ describe( 'UIElementSSATest', () => {
         const foo = doc2.feature.uiElements[ 0 ];
         const bar = doc2.feature.uiElements[ 1 ];
 
-        expect( bar.items[ 0 ].values[ 0 ].references[ 0 ] ).toEqual( x );
-        expect( bar.items[ 1 ].values[ 0 ].references[ 0 ] ).toEqual( pi );
-        expect( bar.items[ 2 ].values[ 0 ].references[ 0 ] ).toEqual( mydb );
-        expect( bar.items[ 2 ].values[ 0 ].references[ 1 ] ).toEqual( ipsum );
-        expect( bar.items[ 2 ].values[ 0 ].references[ 2 ] ).toEqual( foo );
-        expect( bar.items[ 2 ].values[ 0 ].references[ 3 ] ).toEqual( zoo );
+        expect( bar.items[ 0 ].value.references[ 0 ] ).toEqual( x );
+        expect( bar.items[ 1 ].value.references[ 0 ] ).toEqual( pi );
+        expect( bar.items[ 2 ].value.references[ 0 ] ).toEqual( mydb );
+        expect( bar.items[ 2 ].value.references[ 1 ] ).toEqual( ipsum );
+        expect( bar.items[ 2 ].value.references[ 2 ] ).toEqual( foo );
+        expect( bar.items[ 2 ].value.references[ 3 ] ).toEqual( zoo );
     } );
 
 } );

@@ -80,30 +80,32 @@ export class UIElementSSA extends SpecificationAnalyzer {
 
         for ( let uiProperty of uie.items || [] ) {
 
-            for ( let propValue of uiProperty.values || [] ) {
+            const propValue = uiProperty.value;
+            if ( ! propValue ) {
+                continue;
+            }
 
-                const content = propValue.value.toString();
+            const content = propValue.value.toString();
 
-                // We will just deal with references to declarations!
-                switch ( propValue.entity ) {
+            // We will just deal with references to declarations!
+            switch ( propValue.entity ) {
 
-                    case Entities.CONSTANT: {
-                        this.analyzeConstant( content, uiProperty, doc, spec, propValue.references, errors );
-                        break;
-                    }
-
-                    case Entities.UI_ELEMENT: {
-                        this.analyzeUIElement( content, uiProperty, doc, spec, propValue.references, errors );
-                        break;
-                    }
-
-                    case Entities.QUERY: {
-                        this.analyzeQuery( content, uiProperty, doc, spec, propValue.references, errors );
-                        break;
-                    }
-
-                    // No default!
+                case Entities.CONSTANT: {
+                    this.analyzeConstant( content, uiProperty, doc, spec, propValue.references, errors );
+                    break;
                 }
+
+                case Entities.UI_ELEMENT: {
+                    this.analyzeUIElement( content, uiProperty, doc, spec, propValue.references, errors );
+                    break;
+                }
+
+                case Entities.QUERY: {
+                    this.analyzeQuery( content, uiProperty, doc, spec, propValue.references, errors );
+                    break;
+                }
+
+                // No default!
             }
         }
     }

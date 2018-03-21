@@ -43,7 +43,7 @@ export class DataTestCaseAnalyzer {
             return map; // empty
         }
 
-        // Returns if it is a non editable UI Element
+        // Returns if not editable
         if ( ! this._uiePropExtractor.extractIsEditable( uie ) ) {
             return map; // empty
         }
@@ -69,9 +69,9 @@ export class DataTestCaseAnalyzer {
 
         const isRequiredDefined: boolean = this._uiePropExtractor.extractIsRequired( uie );
 
-        // const minLength = this._uiePropExtractor.extractMinLength( uie );
-        // const maxLength = this._uiePropExtractor.extractMaxLength( uie );
-        // const minValue = this._uiePropExtractor.extractMinValue( uie );
+        // const minLength = this._uiePropExtractor.extractProperty( uie, UIPropertyTypes.MIN_LENGTH );
+        // const maxLength = this._uiePropExtractor.extractProperty( uie, UIPropertyTypes.MAX_LENGTH );
+        // const minValue = this._uiePropExtractor.extractProperty( uie, UIPropertyTypes.MIN_VALUE );
         // const maxValue = this._uiePropExtractor.extractMaxValue( uie );
         // const format = this._uiePropExtractor.extractFormat( uie );
         const format = null; // <<< TO-DO
@@ -94,6 +94,7 @@ export class DataTestCaseAnalyzer {
             case DataTestCase.VALUE_RANDOM_ABOVE_MAX        : return ! analyzer.hasValuesAboveMax();
             case DataTestCase.VALUE_GREATEST                : return ! analyzer.hasValuesAboveMax();
             // length
+            // TODO: <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
             // format
             case DataTestCase.FORMAT_VALID                  : return true;
             case DataTestCase.FORMAT_INVALID                : return isDefined( format );

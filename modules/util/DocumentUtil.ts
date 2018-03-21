@@ -111,11 +111,12 @@ export class DocumentUtil {
             if ( ! uie.info ) {
                 uie.info = new UIElementInfo( doc, uiLiteral, null );
             }
+
+            const variableName = this._uieNameHandler.makeVariableName( null, uie.name );
+            uie.info.fullVariableName = variableName;
+
             // Maps the element
-            map.set(
-                this._uieNameHandler.makeVariableName( null, uie.name ),
-                uie
-            );
+            map.set( variableName, uie );
         }
 
         if ( ! isDefined( doc.feature ) ) {
@@ -136,11 +137,11 @@ export class DocumentUtil {
                 uie.info = new UIElementInfo( doc, uiLiteral, doc.feature );
             }
 
+            const variableName = this._uieNameHandler.makeVariableName( featureName, uie.name );
+            uie.info.fullVariableName = variableName;
+
             // Maps the element
-            map.set(
-                this._uieNameHandler.makeVariableName( featureName, uie.name ),
-                uie
-            );
+            map.set( variableName, uie );
         }
     }
 

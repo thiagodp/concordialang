@@ -5,7 +5,9 @@ import { Entities } from "../nlp/Entities";
 import { NLPEntity } from "../nlp/NLPResult";
 import { convertCase } from "./CaseConversor";
 import { UIPropertyTypes } from "./UIPropertyTypes";
-import { ALL_VALUE_TYPES } from "./ValueTypeDetector";
+import { ALL_VALUE_TYPES, ValueType } from "./ValueTypeDetector";
+import { Spec } from "../ast/Spec";
+import { LocatedException } from "../req/LocatedException";
 
 /**
  * Extract properties from UI Elements.
@@ -44,7 +46,7 @@ export class UIElementPropertyExtractor {
     }
 
     extractDataType( uie: UIElement ): string {
-        const defaultDataType = 'string'; // TODO: refactor
+        const defaultDataType = ValueType.STRING.toString();
 
         const nlpEntity = this.extractPropertyValueAsEntity( this.extractProperty( uie, UIPropertyTypes.DATA_TYPE ) );
         if ( ! isDefined( nlpEntity ) ) {
@@ -87,6 +89,7 @@ export class UIElementPropertyExtractor {
     extractIsRequired( uie: UIElement ): boolean {
         return this.isPropertyConsideredTrue( uie, UIPropertyTypes.REQUIRED );
     }
+
 
 
     isPropertyDefined( uie: UIElement, prop: string | UIPropertyTypes  ): boolean {

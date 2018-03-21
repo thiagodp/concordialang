@@ -51,8 +51,8 @@ describe( 'UIPropertyRecognizerTest', () => {
             expect( warnings ).toHaveLength( 0 );
 
             expect( node.property ).toBe( property );
-            expect( node.values ).toHaveLength( 1 );
-            expect( node.values[ 0 ].value ).toBe( expectedValue );
+            expect( node.value ).toBeDefined();
+            expect( node.value.value ).toBe( expectedValue );
         }
 
 

@@ -41,7 +41,8 @@ export interface UIProperty extends ListItem {
 
     //valueTarget: UIValueTarget; // Target, e.g., min value comes from "SELECT ..." --> query
 
-    values: EntityValue[];
+    // Each UIProperty is in the format <property> ... <entity>, so just one value is expected.
+    value: EntityValue;
 }
 
 
@@ -61,7 +62,8 @@ export class UIElementInfo {
     constructor(
         public document: Document = null,
         public uiLiteral: string = null,
-        public feature: Feature = null
+        public feature: Feature = null,
+        public fullVariableName: string = null
     ) {
     }
 

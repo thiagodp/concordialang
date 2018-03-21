@@ -12,7 +12,7 @@ import { Entities } from "./Entities";
 import { Warning } from "../req/Warning";
 import { NLPTrainer } from './NLPTrainer';
 import { Symbols } from '../req/Symbols';
-import { ValueTypeDetector, ValueType } from '../util/ValueTypeDetector';
+import { ValueTypeDetector, ValueType, adjustValueToTheRightType } from '../util/ValueTypeDetector';
 import { LocalDate, LocalTime, LocalDateTime } from 'js-joda';
 import { isDefined } from '../util/TypeChecking';
 
@@ -87,9 +87,6 @@ export class UIPropertyRecognizer {
             // Getting the values
             let item: UIProperty = node as UIProperty;
             item.property = property;
-            if ( ! item.values ) {
-                item.values = [];
-            }
             for ( let e of r.entities ) {
                 //
                 // References should be analyzed later, post NLP, in a global Semantic Analysis.
@@ -97,7 +94,7 @@ export class UIPropertyRecognizer {
                 let uiv: EntityValue;
                 switch ( e.entity ) {
                     case Entities.VALUE         : ; // go to next
-                    case Entities.NUMBER        : uiv = new EntityValue( e.entity, _this.adjustValueToTheRightType( e.value ) ); break;
+                    case Entities.NUMBER        : uiv = new EntityValue( e.entity, adjustValueToTheRightType( e.value ) ); break;
                     case Entities.VALUE_LIST    : uiv = new EntityValue( e.entity, _this.makeValueList( e.value ) ); break;
                     case Entities.QUERY         : uiv = new EntityValue( e.entity, e.value ); break;
                     case Entities.UI_ELEMENT    : uiv = new EntityValue( e.entity, e.value ); break;
@@ -108,7 +105,8 @@ export class UIPropertyRecognizer {
                     default                     : uiv = null;
                 }
                 if ( isDefined( uiv ) ) {
-                    item.values.push( uiv );
+                    item.value = uiv;
+                    break;
                 }
             }
         };
@@ -130,30 +128,10 @@ export class UIPropertyRecognizer {
     }
 
     public makeValueList( content: string ): any[] {
-        let adjust = this.adjustValueToTheRightType;
-        adjust.bind( this );
         return content.trim()
             .substring( 1, content.length - 1 ) // removes '[' and ']'
             .split( Symbols.VALUE_SEPARATOR )   // split values
-            .map( v => adjust( v ) ); // convert type if needed
-    }
-
-    public adjustValueToTheRightType( v: string ): any {
-        const vType: ValueType = this._valueTypeDetector.detect( v.trim() );
-        let valueAfter: any;
-        switch ( vType ) {
-            case ValueType.INTEGER  : ; // continue
-            case ValueType.DOUBLE   : valueAfter = Number( v ) || 0; break;
-            case ValueType.DATE     : valueAfter = LocalDate.parse( v ) || LocalDate.now(); break;
-            case ValueType.TIME     : valueAfter = LocalTime.parse( v ) || LocalTime.now(); break;
-            case ValueType.DATETIME : valueAfter = LocalDateTime.parse( v ) || LocalDateTime.now(); break;
-            // Boolean should not be handle here, because there is an NLP entity for it.
-            // Anyway, we will provide a basic case.
-            case ValueType.BOOLEAN  : valueAfter = [ 'true', 'yes' ].indexOf( v.toLowerCase() ) >= 0; break;
-
-            default                 : valueAfter = v;
-        }
-        return valueAfter;
+            .map( v => adjustValueToTheRightType( v ) ); // convert type if needed
     }
 
 }

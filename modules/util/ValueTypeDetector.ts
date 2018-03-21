@@ -1,4 +1,5 @@
 import * as moment from 'moment';
+import { LocalDate, LocalTime, LocalDateTime } from 'js-joda';
 
 /**
  * Value type.
@@ -130,4 +131,23 @@ export class ValueTypeDetector {
         return values.map( v => this.detect( v ) );
     }
 
+}
+
+
+export function adjustValueToTheRightType( v: string ): any {
+    const vType: ValueType = ( new ValueTypeDetector() ).detect( v.trim() );
+    let valueAfter: any;
+    switch ( vType ) {
+        case ValueType.INTEGER  : ; // continue
+        case ValueType.DOUBLE   : valueAfter = Number( v ) || 0; break;
+        case ValueType.DATE     : valueAfter = LocalDate.parse( v ) || LocalDate.now(); break;
+        case ValueType.TIME     : valueAfter = LocalTime.parse( v ) || LocalTime.now(); break;
+        case ValueType.DATETIME : valueAfter = LocalDateTime.parse( v ) || LocalDateTime.now(); break;
+        // Boolean should not be handle here, because there is an NLP entity for it.
+        // Anyway, we will provide a basic case.
+        case ValueType.BOOLEAN  : valueAfter = [ 'true', 'yes' ].indexOf( v.toLowerCase() ) >= 0; break;
+
+        default                 : valueAfter = v;
+    }
+    return valueAfter;
 }
