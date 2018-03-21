@@ -25,7 +25,7 @@ export class Compiler {
 
     public compile = async ( options: Options, listener: CompilerListener ): Promise< Spec > => {
 
-        listener.displayOptions( options );
+        listener.compilerStarted( options );
 
         let startTime: number = Date.now();
 

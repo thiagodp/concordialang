@@ -14,7 +14,7 @@ export class ProcessingInfo {
 
 export interface CompilerListener {
 
-    displayOptions( options: Options );
+    compilerStarted( options: Options );
 
     semanticAnalysisStarted();
     semanticAnalysisFinished( info: ProcessingInfo );

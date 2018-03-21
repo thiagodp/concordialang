@@ -36,12 +36,12 @@ export class SimpleAppEventsListener implements
             'Ignoring file',
             this._cli.colorHighlight( path )
         );
-    };    
+    };
 
     /** @inherited */
     fileReadChunk = ( path: string, chunkSize: number ): void => {
         // nothing
-    };    
+    };
 
     /** @inherited */
     fileReadError = ( path: string, error: Error ): void => {
@@ -63,10 +63,10 @@ export class SimpleAppEventsListener implements
         this._cli.newLine( this._cli.symbolInfo, 'Reading directory',
             this._cli.colorHighlight( directory ) );
 
-        const sameExtensionsAsTheDefaultOnes: boolean = 
+        const sameExtensionsAsTheDefaultOnes: boolean =
             JSON.stringify( targets.sort().map( e => e.toLowerCase() ) ) ===
             JSON.stringify( ( new Defaults() ).EXTENSIONS.sort() );
-        
+
         if ( ! sameExtensionsAsTheDefaultOnes ) {
             this._cli.newLine(
                 this._cli.symbolInfo,
@@ -92,25 +92,25 @@ export class SimpleAppEventsListener implements
                     this._cli.symbolError,
                     this._cli.colorError( 'File read errors:' ),
                     data.fileErrorCount
-                );                
-            }            
+                );
+            }
         }
 
         this._cli.newLine( this._cli.symbolInfo,
-            data.dirCount, 'directories analyzed,',            
+            data.dirCount, 'directories analyzed,',
             this._cli.colorHighlight( data.filesCount + ' files found,' ),
             prettyBytes( data.filesSize ),
             this.formatDuration( data.durationMs )
-            );        
+            );
     };
 
 
 
     /** @inherited */
-    processStarted( meta: FileMeta ): void {        
+    processStarted( meta: FileMeta ): void {
         // nothing
     }
-    
+
     /** @inherited */
     processFinished( data: ProcessedFileData ): void {
         this.showProcessingInfo(
@@ -157,7 +157,7 @@ export class SimpleAppEventsListener implements
             } else {
                 this._cli.newLine( this._cli.symbolWarning, this._cli.colorWarning( e.message ) );
             }
-        }        
+        }
     }
 
 
@@ -169,14 +169,14 @@ export class SimpleAppEventsListener implements
     /** @inherited */
     multiProcessFinished( filesCount: number, durationMs: number ) {
         // empty
-    }    
-    
+    }
+
     //
     // CompilerListener
     //
 
     /** @inheritDoc */
-    public displayOptions = ( options: Options ): void => {
+    public compilerStarted = ( options: Options ): void => {
 
         // Language
         if ( new Defaults().LANGUAGE !== options.language ) {
@@ -193,10 +193,10 @@ export class SimpleAppEventsListener implements
                 this._cli.symbolInfo,
                 'Directory recursion',
                 this._cli.colorHighlight( 'disabled' )
-            );            
+            );
         }
 
-    };    
+    };
 
     /** @inheritDoc */
     semanticAnalysisStarted() {
@@ -216,5 +216,5 @@ export class SimpleAppEventsListener implements
     private formatDuration( durationMs: number ): string {
         return this._cli.colorInfo( '(' + durationMs.toString() + 'ms)' );
     }
-    
+
 }

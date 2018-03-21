@@ -37,7 +37,7 @@ export class VerboseAppEventsListener implements
     /** @inherited */
     fileReadChunk = ( path: string, chunkSize: number ): void => {
         // nothing
-    };    
+    };
 
     /** @inherited */
     fileReadError = ( path: string, error: Error ): void => {
@@ -58,7 +58,7 @@ export class VerboseAppEventsListener implements
 
         this._cli.newLine( this._cli.symbolInfo, 'Reading directory',
             this._cli.colorHighlight( directory ) );
-        
+
         this._cli.newLine(
             this._cli.symbolInfo,
             'Looking for',
@@ -69,9 +69,9 @@ export class VerboseAppEventsListener implements
 
     /** @inherited */
     directoryReadFinished = ( data: DirectoryReadResult ): void => {
-        
+
         this._cli.newLine( this._cli.symbolInfo,
-            data.dirCount, 'directories analyzed,',            
+            data.dirCount, 'directories analyzed,',
             this._cli.colorHighlight( data.filesCount ), 'files found,',
             prettyBytes( data.filesSize ),
             this.formatDuration( data.durationMs )
@@ -86,11 +86,11 @@ export class VerboseAppEventsListener implements
 
 
     /** @inherited */
-    processStarted( meta: FileMeta ): void {        
+    processStarted( meta: FileMeta ): void {
         this._cli.newLine( this._cli.symbolInfo, 'Compiling',
             this._cli.colorHighlight( meta.fullPath ), '...' );
     }
-    
+
     /** @inherited */
     processFinished( data: ProcessedFileData ): void {
         this.showProcessingInfo(
@@ -129,7 +129,7 @@ export class VerboseAppEventsListener implements
     //
 
     /** @inheritDoc */
-    public displayOptions = ( options: Options ): void => {
+    public compilerStarted = ( options: Options ): void => {
 
         // Language
         this._cli.newLine(
@@ -176,7 +176,7 @@ export class VerboseAppEventsListener implements
             return;
         }
         const sortedWarnings = sortErrorsByLocation( info.warnings );
-        const sortedErrors = sortErrorsByLocation( info.errors );        
+        const sortedErrors = sortErrorsByLocation( info.errors );
 
         if ( meta ) {
             this._cli.newLine(
@@ -203,8 +203,8 @@ export class VerboseAppEventsListener implements
             } else {
                 this._cli.newLine( this._cli.symbolWarning, this._cli.colorWarning( e.message ) );
             }
-        }        
-    }    
+        }
+    }
 
     private formatHash( hash: string ): string {
         return this._cli.colorInfo( hash.substr( 0, 8 ) );
@@ -212,7 +212,7 @@ export class VerboseAppEventsListener implements
 
     private formatDuration( durationMs: number ): string {
         return this._cli.colorInfo( '(' + durationMs.toString() + 'ms)' );
-    }    
-    
+    }
+
 
 }
