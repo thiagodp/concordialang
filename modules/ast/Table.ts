@@ -2,7 +2,7 @@ import { Node, NamedNode } from './Node';
 
 /**
  * Table node.
- * 
+ *
  * @author Thiago Delgado Pinto
  */
 export interface Table extends NamedNode {
@@ -11,7 +11,7 @@ export interface Table extends NamedNode {
 
 /**
  * Table row node.
- * 
+ *
  * @author Thiago Delgado Pinto
  */
 export interface TableRow extends Node {

@@ -1,8 +1,8 @@
+import { InMemoryTableWrapper } from '../../modules/db/InMemoryTableWrapper';
 import { Table } from '../../modules/ast/Table';
 import { Parser } from '../../modules/parser/Parser';
 import { Lexer } from '../../modules/lexer/Lexer';
 import { Document } from '../../modules/ast/Document';
-import { InMemoryTableCreator } from '../../modules/db/InMemoryTableCreator';
 import { Options } from '../../modules/app/Options';
 import { LexerBuilder } from '../../modules/lexer/LexerBuilder';
 import { resolve } from 'path';
@@ -10,9 +10,9 @@ import { resolve } from 'path';
 /**
  * @author Thiago Delgado Pinto
  */
-describe( 'InMemoryTableCreatorTest', () => {
+describe( 'InMemoryTableWrapperTest', () => {
 
-    let creator = new InMemoryTableCreator(); // under test
+    let wrapper = new InMemoryTableWrapper(); // under test
 
     let parser = new Parser();
     const options: Options = new Options( resolve( process.cwd(), 'dist/' ) );
@@ -32,9 +32,9 @@ describe( 'InMemoryTableCreatorTest', () => {
         parser.analyze( lexer.nodes(), doc );
         const table: Table = doc.tables[ 0 ];
 
-        const inMemoryTable = await creator.createFromNode( table );        
+        await wrapper.connect( table );
 
-        const data = await inMemoryTable.query( 'SELECT * FROM foo WHERE b <= 3.01', {} as any );
+        const data = await wrapper.query( 'SELECT * FROM foo WHERE b <= 3.01', {} as any );
 
         expect( data[ 0 ].a ).toBe( 1 );
         expect( data[ 0 ].b ).toBe( 2.01 );

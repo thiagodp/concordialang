@@ -13,7 +13,7 @@ import { QueryBasedDataGenerator } from './QueryBasedDataGenerator';
 import { QueryCache } from '../db/QueryCache';
 import { ListBasedDataGenerator } from './ListBasedDataGenerator';
 import { Random } from './random/Random';
-import { Queryable } from '../db/Queryable';
+import { Queryable } from '../req/Queryable';
 import { isDefined } from '../util/TypeChecking';
 import { DateGenerator } from './raw/DateGenerator';
 import { RandomDate } from './random/RandomDate';

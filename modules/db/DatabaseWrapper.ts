@@ -1,4 +1,4 @@
-import { DatabaseInterface } from './DatabaseInterface';
+import { DatabaseInterface } from '../req/DatabaseInterface';
 import { Database, DatabaseProperties } from '../ast/Database';
 // import { DBWrapper } from 'node-dbi';
 //import * as dbjs from 'database-js2';

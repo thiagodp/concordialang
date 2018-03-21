@@ -5,7 +5,7 @@ import { Spec } from "../ast/Spec";
 import { DuplicationChecker } from '../util/DuplicationChecker';
 import { SemanticException } from './SemanticException';
 import { Warning } from '../req/Warning';
-import { ConnectionChecker } from '../db/ConnectionChecker';
+import { DatabaseConnectionChecker } from '../db/DatabaseConnectionChecker';
 import { ConnectionCheckResult } from '../req/ConnectionResult';
 import Graph = require( 'graph.js/dist/graph.full.js' );
 
@@ -31,7 +31,7 @@ export class DatabaseSSA extends SpecificationAnalyzer {
     }
 
     private checkConnections = async ( spec: Spec, errors: SemanticException[] ): Promise< boolean > => {
-        let checker = new ConnectionChecker();
+        let checker = new DatabaseConnectionChecker();
         // Important: errors and warnings are also added to the corresponding doc
         let r = await checker.check( spec, errors );
         return r.success;

@@ -4,7 +4,7 @@ import { Random } from "../../modules/testdata/random/Random";
 import { StringGenerator } from "../../modules/testdata/raw/StringGenerator";
 import { RandomString } from "../../modules/testdata/random/RandomString";
 import { QueryCache } from "../../modules/db/QueryCache";
-import { Queryable } from "../../modules/db/Queryable";
+import { Queryable } from "../../modules/req/Queryable";
 
 /**
  * @author Thiago Delgado Pinto

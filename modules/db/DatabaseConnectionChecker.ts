@@ -1,5 +1,5 @@
 import { Database } from '../ast/Database';
-import { DatabaseInterface } from './DatabaseInterface';
+import { DatabaseInterface } from '../req/DatabaseInterface';
 import { RuntimeException } from '../req/RuntimeException';
 import { DatabaseWrapper } from './DatabaseWrapper';
 import { LocatedException } from '../req/LocatedException';
@@ -8,10 +8,10 @@ import { ConnectionCheckResult, ConnectionResult } from '../req/ConnectionResult
 
 /**
  * Checks all the connections of a specification.
- * 
+ *
  * @author Thiago Delgado Pinto
  */
-export class ConnectionChecker {
+export class DatabaseConnectionChecker {
 
     async check(
         spec: Spec,
