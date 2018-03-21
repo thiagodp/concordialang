@@ -22,43 +22,46 @@ export class SimpleAppEventsListener implements
     }
 
     //
-    //
+    // FileReadListener
     //
 
-    /** @inherited */
-    fileReadStarted = ( path: string, size: number ): void => {
+    /** @inheritDoc */
+    fileReadStarted( path: string, size: number ): void {
         //this._cli.newLine( ... this._cli.infoArgs( 'Reading', path, ' ', prettyBytes( size ) ) );
-    };
+    }
 
-    fileReadIgnored = ( path: string ): void => {
+    fileReadIgnored( path: string ): void {
         this._cli.newLine(
             this._cli.symbolWarning,
             'Ignoring file',
             this._cli.colorHighlight( path )
         );
-    };
+    }
 
-    /** @inherited */
-    fileReadChunk = ( path: string, chunkSize: number ): void => {
-        // nothing
-    };
+    /** @inheritDoc */
+    fileReadChunk( path: string, chunkSize: number ): void {
+        // empty
+    }
 
-    /** @inherited */
-    fileReadError = ( path: string, error: Error ): void => {
+    /** @inheritDoc */
+    fileReadError( path: string, error: Error ): void {
         this._cli.sameLine( this._cli.symbolError, 'Error reading', path, ': ', error.message );
-    };
+    }
 
-    /** @inherited */
-    fileReadFinished = ( path: string ): void => {
+    /** @inheritDoc */
+    fileReadFinished( path: string ): void {
         // if ( ! this._verbose ) {
         //     return;
         // }
         // this._cli.newLine( this._cli.symbolSuccess, path );
-    };
+    }
 
+    //
+    // DirectoryReadListener
+    //
 
-    /** @inherited */
-    directoryReadStarted = ( directory: string, targets: string[], targetsAreFiles: boolean ): void => {
+    /** @inheritDoc */
+    directoryReadStarted( directory: string, targets: string[], targetsAreFiles: boolean ): void {
 
         this._cli.newLine( this._cli.symbolInfo, 'Reading directory',
             this._cli.colorHighlight( directory ) );
@@ -75,10 +78,10 @@ export class SimpleAppEventsListener implements
                 targetsAreFiles ? '...' : 'files...'
             );
         }
-    };
+    }
 
-    /** @inherited */
-    directoryReadFinished = ( data: DirectoryReadResult ): void => {
+    /** @inheritDoc */
+    directoryReadFinished( data: DirectoryReadResult ): void {
 
         if ( data.fileErrorCount > 0 ) {
             if ( -1 == data.dirCount ) {
@@ -102,16 +105,18 @@ export class SimpleAppEventsListener implements
             prettyBytes( data.filesSize ),
             this.formatDuration( data.durationMs )
             );
-    };
+    }
 
+    //
+    // SingleFileProcessorListener
+    //
 
-
-    /** @inherited */
+    /** @inheritDoc */
     processStarted( meta: FileMeta ): void {
         // nothing
     }
 
-    /** @inherited */
+    /** @inheritDoc */
     processFinished( data: ProcessedFileData ): void {
         this.showProcessingInfo(
             new ProcessingInfo( data.durationMs, data.errors, data.warnings ),
@@ -160,13 +165,16 @@ export class SimpleAppEventsListener implements
         }
     }
 
+    //
+    // MultiFileProcessListener
+    //
 
-    /** @inherited */
+    /** @inheritDoc */
     multiProcessStarted() {
         // empty
     }
 
-    /** @inherited */
+    /** @inheritDoc */
     multiProcessFinished( filesCount: number, durationMs: number ) {
         // empty
     }
@@ -176,7 +184,7 @@ export class SimpleAppEventsListener implements
     //
 
     /** @inheritDoc */
-    public compilerStarted = ( options: Options ): void => {
+    public compilerStarted( options: Options ): void {
 
         // Language
         if ( new Defaults().LANGUAGE !== options.language ) {
@@ -196,7 +204,7 @@ export class SimpleAppEventsListener implements
             );
         }
 
-    };
+    }
 
     /** @inheritDoc */
     semanticAnalysisStarted() {

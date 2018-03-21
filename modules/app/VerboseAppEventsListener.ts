@@ -21,40 +21,45 @@ export class VerboseAppEventsListener implements
     ) {
     }
 
-    /** @inherited */
-    fileReadStarted = ( path: string, size: number ): void => {
-        //this._cli.newLine( ... this._cli.infoArgs( 'Reading', path, ' ', prettyBytes( size ) ) );
-    };
+    //
+    // FileReadListener
+    //
 
-    fileReadIgnored = ( path: string ): void => {
+    /** @inheritDoc */
+    fileReadStarted( path: string, size: number ): void {
+        //this._cli.newLine( ... this._cli.infoArgs( 'Reading', path, ' ', prettyBytes( size ) ) );
+    }
+
+    /** @inheritDoc */
+    fileReadIgnored( path: string ): void {
         this._cli.newLine(
             this._cli.symbolWarning,
             'Ignoring file',
             this._cli.colorHighlight( path )
         );
-    };
+    }
 
-    /** @inherited */
-    fileReadChunk = ( path: string, chunkSize: number ): void => {
-        // nothing
-    };
+    /** @inheritDoc */
+    fileReadChunk( path: string, chunkSize: number ): void {
+        // empty
+    }
 
-    /** @inherited */
-    fileReadError = ( path: string, error: Error ): void => {
+    /** @inheritDoc */
+    fileReadError( path: string, error: Error ): void {
         this._cli.sameLine( this._cli.symbolError, 'Error reading', path, ': ', error.message );
-    };
+    }
 
-    /** @inherited */
-    fileReadFinished = ( path: string ): void => {
-        // if ( ! this._verbose ) {
-        //     return;
-        // }
-        // this._cli.newLine( this._cli.symbolSuccess, path );
-    };
+    /** @inheritDoc */
+    fileReadFinished( path: string ): void {
+        // empty
+    }
 
+    //
+    // DirectoryReadListener
+    //
 
-    /** @inherited */
-    directoryReadStarted = ( directory: string, targets: string[], targetsAreFiles: boolean ): void => {
+    /** @inheritDoc */
+    directoryReadStarted( directory: string, targets: string[], targetsAreFiles: boolean ): void {
 
         this._cli.newLine( this._cli.symbolInfo, 'Reading directory',
             this._cli.colorHighlight( directory ) );
@@ -65,10 +70,10 @@ export class VerboseAppEventsListener implements
             ( targets.map( e => this._cli.colorHighlight( e ) ).join( ', ' ) ),
             targetsAreFiles ? '...' : 'files...'
         );
-    };
+    }
 
-    /** @inherited */
-    directoryReadFinished = ( data: DirectoryReadResult ): void => {
+    /** @inheritDoc */
+    directoryReadFinished( data: DirectoryReadResult ): void {
 
         this._cli.newLine( this._cli.symbolInfo,
             data.dirCount, 'directories analyzed,',
@@ -81,17 +86,19 @@ export class VerboseAppEventsListener implements
             const msg2 = this._cli.colorError( 'Read errors: ' ) + data.fileErrorCount;
             this._cli.newLine( this._cli.symbolItem, msg2 );
         }
-    };
+    }
 
+    //
+    // SingleFileProcessorListener
+    //
 
-
-    /** @inherited */
+    /** @inheritDoc */
     processStarted( meta: FileMeta ): void {
         this._cli.newLine( this._cli.symbolInfo, 'Compiling',
             this._cli.colorHighlight( meta.fullPath ), '...' );
     }
 
-    /** @inherited */
+    /** @inheritDoc */
     processFinished( data: ProcessedFileData ): void {
         this.showProcessingInfo(
             new ProcessingInfo( data.durationMs, data.errors, data.warnings ),
@@ -99,13 +106,16 @@ export class VerboseAppEventsListener implements
         );
     }
 
+    //
+    // MultiFileProcessListener
+    //
 
-    /** @inherited */
+    /** @inheritDoc */
     multiProcessStarted() {
         this._cli.newLine( this._cli.symbolInfo, 'Invidual compilation started...' );
     }
 
-    /** @inherited */
+    /** @inheritDoc */
     multiProcessFinished( filesCount: number, durationMs: number ) {
 
         if ( filesCount < 1 ) {
@@ -123,13 +133,12 @@ export class VerboseAppEventsListener implements
         );
     }
 
-
     //
     // CompilerListener
     //
 
     /** @inheritDoc */
-    public compilerStarted = ( options: Options ): void => {
+    public compilerStarted( options: Options ): void {
 
         // Language
         this._cli.newLine(
@@ -149,7 +158,7 @@ export class VerboseAppEventsListener implements
 
     /** @inheritDoc */
     semanticAnalysisStarted() {
-        //...
+        // empty
     }
 
     /** @inheritDoc */
@@ -213,6 +222,5 @@ export class VerboseAppEventsListener implements
     private formatDuration( durationMs: number ): string {
         return this._cli.colorInfo( '(' + durationMs.toString() + 'ms)' );
     }
-
 
 }

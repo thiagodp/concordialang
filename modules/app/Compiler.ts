@@ -27,7 +27,7 @@ export class Compiler {
 
         listener.compilerStarted( options );
 
-        let startTime: number = Date.now();
+        const startTime: number = Date.now();
 
         const r: MultiFileProcessedData = await this._mfp.process( options );
         const compiledFilesCount = r.compiledFiles.length;
@@ -54,15 +54,20 @@ export class Compiler {
             listener.semanticAnalysisStarted();
 
             // Perform semantic analysis
-            startTime = Date.now();
+            const semanticAnalysisStartTime = Date.now();
             let semanticErrors: LocatedException[] = [];
             await this._specificationAnalyzer.analyze( graph, spec, semanticErrors );
+            const durationMs = Date.now() - semanticAnalysisStartTime;
 
-            listener.semanticAnalysisFinished( new ProcessingInfo( Date.now() - startTime, semanticErrors, [] ) );
+            listener.semanticAnalysisFinished( new ProcessingInfo( durationMs, semanticErrors, [] ) );
         }
 
         // Perform logic analysis
         // TO-DO
+
+        // Announce it finished
+        // const durationMs = Date.now() - startTime;
+        // listener.compilerFinished( durationMs );
 
         return spec;
     };
