@@ -24,7 +24,6 @@ import { StepThenLexer } from "./StepThenLexer";
 import { StepAndLexer } from "./StepAndLexer";
 import { StepOtherwiseLexer } from './StepOtherwiseLexer';
 import { TextLexer } from "./TextLexer";
-import { StateLexer } from "./StateLexer";
 import { RegexBlockLexer } from './RegexBlockLexer';
 import { RegexLexer } from './RegexLexer';
 import { ConstantBlockLexer } from './ConstantBlockLexer';
@@ -92,7 +91,6 @@ export class Lexer {
             , new ConstantLexer( dictionary.is ) // "name" is "value"
             , new RegexBlockLexer( dictionary.regexBlock )
             , new RegexLexer( dictionary.is ) // "name" is "value"
-            , new StateLexer( dictionary.state )
             , new TableLexer( dictionary.table )
             , new TableRowLexer()
             , new UIElementLexer( dictionary.uiElement )

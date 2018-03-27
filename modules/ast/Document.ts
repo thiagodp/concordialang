@@ -10,7 +10,6 @@ import { Tag } from "./Tag";
 import { Import } from "./Import";
 import { Language } from "./Language";
 import { RegexBlock } from "./RegexBlock";
-import { State } from "./State";
 
 /**
  * Document
@@ -29,7 +28,6 @@ export interface Document {
     feature?: Feature; // global
     testCases?: TestCase[]; // local, belongs to a feature declared or imported
 
-    states?: State[]; // global
     regexBlock?: RegexBlock; // global
     constantBlock?: ConstantBlock; // global
     uiElements?: UIElement[]; // global, but a feature may have them too

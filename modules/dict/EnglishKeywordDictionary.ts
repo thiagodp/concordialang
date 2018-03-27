@@ -17,7 +17,6 @@ export class EnglishKeywordDictionary implements KeywordDictionary {
     constantBlock: string[] = [ 'constants' ];
     is: string[] = [ 'is' ];
     with: string[] = [ "with" ];
-    state: string[] = [ 'state' ];
     variant: string[] = [ 'variant' ];
     testCase: string[] = [ 'test case' ];
     uiElement: string[] = [ 'ui element' ];

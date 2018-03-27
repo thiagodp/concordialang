@@ -16,7 +16,6 @@ import { ScenarioParser } from './ScenarioParser';
 import { VariantParser } from './VariantParser';
 import { TestCaseParser } from './TestCaseParser';
 import { ImportParser } from "./ImportParser";
-import { StateParser } from "./StateParser";
 import { StepWhenParser } from './StepWhenParser';
 import { StepGivenParser } from './StepGivenParser';
 import { StepThenParser } from './StepThenParser';
@@ -54,7 +53,6 @@ export class Parser {
         this._parsersMap[ NodeTypes.CONSTANT ] = new ListItemParser();
         this._parsersMap[ NodeTypes.REGEX_BLOCK ] = new RegexBlockParser();
         this._parsersMap[ NodeTypes.REGEX ] = new ListItemParser();
-        this._parsersMap[ NodeTypes.STATE ] = new StateParser();
         this._parsersMap[ NodeTypes.TABLE ] = new TableParser();
         this._parsersMap[ NodeTypes.TABLE_ROW ] = new TableRowParser();
         this._parsersMap[ NodeTypes.UI_ELEMENT ] = new UIElementParser();
