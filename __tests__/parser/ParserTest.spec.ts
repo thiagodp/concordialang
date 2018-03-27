@@ -172,22 +172,6 @@ describe( 'ParserTest', () => {
     } );
 
 
-    it( 'detects states', () => {
-        [
-            '#language:en',
-            '',
-            'State: Some State'
-        ].forEach( ( val, index ) => lexer.addNodeFromLine( val, index + 1 ) );
-
-        let doc: Document = {};
-        parser.analyze( lexer.nodes(), doc );
-
-        expect( parser.errors() ).toEqual( [] );
-        expect( doc.states ).toHaveLength( 1 );
-        expect( doc.states[ 0 ].name ).toBe( 'Some State' );
-    } );
-
-
     it( 'detects a regex block and its regexes', () => {
         [
             '#language:en',
