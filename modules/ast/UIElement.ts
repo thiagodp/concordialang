@@ -72,6 +72,7 @@ export class UIElementInfo {
     }
 }
 
+export type EntityValueType = null | string | number | boolean | any[];
 
 /**
  * Recognized value of an entity.
@@ -88,7 +89,7 @@ export class EntityValue {
      */
     constructor(
         public entity: Entities,
-        public value: null | string | number | boolean | any[],
+        public value: EntityValueType,
         public references: Node[] = []
     ) {
     }
