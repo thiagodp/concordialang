@@ -5,7 +5,6 @@
         "constantBlock": [ "constantes", "constants" ],
         "is": [ "é", "is" ],
         "with": [ "com", "with" ],
-        "state": [ "estado", "state" ],
         "variant": [ "variante", "variação", "variant" ],
         "testCase": [ "caso de teste", "test case" ],
         "uiElement": [ "elemento da iu", "elemento de iu", "ui element" ],
