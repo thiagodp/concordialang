@@ -16,7 +16,6 @@ type TargetInMemoryDB = alasql.Database;
  */
 export class InMemoryTableWrapper implements InMemoryTableInterface {
 
-    private _hasColumnRow: boolean = false;
     private readonly _db: TargetInMemoryDB;
 
     private readonly _valueTypeDetector: ValueTypeDetector = new ValueTypeDetector();
@@ -31,13 +30,18 @@ export class InMemoryTableWrapper implements InMemoryTableInterface {
     }
 
     /** @inheritDoc */
+    async isConnected(): Promise< boolean > {
+        return true; // currently always true
+    }
+
+    /** @inheritDoc */
     async connect( table: Table ): Promise< void > {
         await this.createFromNode( table );
     }
 
     /** @inheritDoc */
     async disconnect(): Promise< void > {
-        // Currently do nothing
+        // Currently does nothing
     }
 
     /** @inheritDoc */
@@ -73,7 +77,7 @@ export class InMemoryTableWrapper implements InMemoryTableInterface {
         const valTypes: ValueType[] = this._valueTypeDetector.detectAll( firstDataRow.cells );
         const sqlTypes = valTypes.map( v => this._sqlHelper.convertToSQLType( v ) );
         const sqlColumns = this._sqlHelper.generateSqlColumns( columnRow.cells, sqlTypes );
-        const createCommand = this._sqlHelper.generateCreateWithTypes( table.name, sqlColumns );
+        const createCommand = this._sqlHelper.generateCreateWithTypes( table.internalName, sqlColumns );
         try {
             this._db.exec( createCommand ); // Creates the table if it does not exist
         } catch ( e ) {
@@ -84,7 +88,7 @@ export class InMemoryTableWrapper implements InMemoryTableInterface {
         // Prepares a parameterized insert
 
         const insertCommand = this._sqlHelper.generateParameterizedInsert(
-            table.name, columnRow.cells );
+            table.internalName, columnRow.cells );
         // @ts-ignore
         let insert = alasql.compile( insertCommand );
         if ( ! isDefined( insert ) ) {
