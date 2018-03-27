@@ -6,6 +6,10 @@ import { Node, NamedNode } from './Node';
  * @author Thiago Delgado Pinto
  */
 export interface Table extends NamedNode {
+
+    /** Name converted to snake_case, generated when parsed */
+    internalName: string;
+
     rows: TableRow[];
 }
 
