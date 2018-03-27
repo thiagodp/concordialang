@@ -7,10 +7,11 @@ import dbjs = require( 'database-js' );
 //var Connection = dbjs.Connection;
 //var ConnectionObject = dbjs.ConnectionObject;
 import * as path from 'path';
+import { stringToDatabaseTypeString, isPathBasedDatabaseType } from './DatabaseTypes';
 
 /**
  * A simple database wrapper.
- * 
+ *
  * @author Thiago Delgado Pinto
  */
 export class DatabaseWrapper implements DatabaseInterface {
@@ -20,27 +21,28 @@ export class DatabaseWrapper implements DatabaseInterface {
 
     /** @inheritDoc */
     public hasFileBasedDriver = ( databaseType: string ): boolean => {
-        const driverType = this.databaseTypeToDriverType( databaseType );
-        return [ 'json', 'csv', 'xls', 'xml', 'ini', 'yml', 'dbase', 'firebird', 'interbase' ]
-            .indexOf( driverType ) >= 0;
+        // const driverType = this.databaseTypeToDriverType( databaseType );
+        // return [ 'json', 'csv', 'xls', 'xml', 'ini', 'yml', 'dbase', 'firebird', 'interbase' ]
+        //     .indexOf( driverType ) >= 0;
+        return isPathBasedDatabaseType( databaseType );
     };
 
     /** @inheritDoc */
-    public isConnected = async (): Promise< boolean > => {
+    public async isConnected(): Promise< boolean > {
         return !! this._dbi;
-    };
+    }
 
 
     /** @inheritDoc */
-    public connect = async ( db: Database, basePath?: string ): Promise< boolean > => {
+    public async connect( db: Database, basePath?: string ): Promise< boolean > {
         this._db = db;
         this._dbi = this.createConnectionFromNode( db, basePath ); // may throw an Error
         return true;
-    };
+    }
 
 
-    /** @inheritDoc */     
-    public disconnect = async (): Promise< boolean > => {
+    /** @inheritDoc */
+    public async disconnect(): Promise< boolean > {
         if ( ! this._dbi ) {
             throw this.dbiError();
         }
@@ -48,11 +50,11 @@ export class DatabaseWrapper implements DatabaseInterface {
             return await this._dbi.close();
         }
         return true;
-    };
+    }
 
 
     /** @inheritDoc */
-    public reconnect = async (): Promise< boolean > => {
+    public async reconnect(): Promise< boolean > {
         if ( ! this._dbi ) {
             throw this.dbiError();
         }
@@ -60,30 +62,30 @@ export class DatabaseWrapper implements DatabaseInterface {
             await this.disconnect();
         }
         return await this.connect( this._db );
-    };
+    }
 
 
-    /** @inheritDoc */    
-    public exec = async ( cmd: string, params?: any[] ): Promise< any[] > => {
+    /** @inheritDoc */
+    public async exec( cmd: string, params?: any[] ): Promise< any[] > {
         return this._dbi.prepareStatement( cmd ).execute( ... params );
-    };
+    }
 
-    /** @inheritDoc */    
-    public query = async ( cmd: string, params?: any[] ): Promise< any[] > => {
+    /** @inheritDoc */
+    public async query( cmd: string, params?: any[] ): Promise< any[] > {
         return this._dbi.prepareStatement( cmd ).query( ... params );
-    };
-    
+    }
+
     //
     // private
     //
 
     /**
      * Returns a database connection from the given database node.
-     * 
+     *
      * @param db Database node.
      * @param basePath Base path, in case of the database is file-based.
      */
-    private createConnectionFromNode = ( db: Database, basePath?: string ): dbjs.Connection => {
+    private createConnectionFromNode( db: Database, basePath?: string ): dbjs.Connection {
 
         let dbItems = {};
 
@@ -98,7 +100,7 @@ export class DatabaseWrapper implements DatabaseInterface {
             dbItems[ DatabaseProperties.PATH ] = db.name;
         }
 
-        const driverType = this.databaseTypeToDriverType( dbItems[ DatabaseProperties.TYPE ] );
+        const driverType = stringToDatabaseTypeString( dbItems[ DatabaseProperties.TYPE ] );
 
         if ( this.hasFileBasedDriver( driverType ) ) {
             dbItems[ DatabaseProperties.PATH ] =
@@ -109,16 +111,16 @@ export class DatabaseWrapper implements DatabaseInterface {
         }
 
         return this.makeConnection( driverType, dbItems );
-    };
+    }
 
 
     /**
      * Returns a database connection from the given parameters.
-     * 
+     *
      * @param driverType Database driver type
      * @param dbItems Concordia's database configuration items.
      */
-    private makeConnection = ( driverType: string, dbItems: object ): dbjs.Connection => {
+    private makeConnection( driverType: string, dbItems: object ): dbjs.Connection {
 
         /*
         const driver = undefined; // not needed
@@ -144,35 +146,16 @@ export class DatabaseWrapper implements DatabaseInterface {
             database: dbItems[ DatabaseProperties.PATH ],
             parameters: dbItems[ DatabaseProperties.OPTIONS ]
         };
-       
+
         return new dbjs.Connection( connObj );
-    };
-
-
-    /**
-     * Returns a driver type according to the given database type.
-     * 
-     * @param dbType 
-     */
-    private databaseTypeToDriverType = ( dbType: string ): string => {
-        if ( ! dbType ) {
-            return 'unknown';
-        }
-        const t = dbType.toLowerCase();
-        switch ( t ) {
-            case 'postgres': return 'postgresql';
-            case 'ado': return 'adodb';
-            case 'xls': return 'xlsx';
-            default: return t;
-        }
-    };
+    }
 
     /**
      * Return an error about DBI is not instantied.
      */
-    private dbiError = () => {
+    private dbiError() {
         return new Error( 'Internal database interface not instantied.' );
-    };
+    }
 
 }
 
@@ -189,7 +172,7 @@ export class DatabaseWrapper implements DatabaseInterface {
 //             if ( ! this._dbi ) {
 //                 resolve( false ); // not connected yet
 //                 return;
-//             }            
+//             }
 //             try {
 //                 resolve( this._dbi.isConnected() );
 //             } catch ( e ) {
@@ -220,11 +203,11 @@ export class DatabaseWrapper implements DatabaseInterface {
 //             } catch ( e ) {
 //                 return reject( e );
 //             }
-//         } );        
+//         } );
 //     };
 
 
-//     /** @inheritDoc */     
+//     /** @inheritDoc */
 //     disconnect = (): Promise< boolean > => {
 //         return new Promise( ( resolve, reject ) => {
 //             if ( ! this._dbi ) {
@@ -237,7 +220,7 @@ export class DatabaseWrapper implements DatabaseInterface {
 //                     resolve( true );
 //                 }
 //             } );
-//         } );         
+//         } );
 //     };
 
 
@@ -254,18 +237,18 @@ export class DatabaseWrapper implements DatabaseInterface {
 //                     resolve( true );
 //                 }
 //             } );
-//         } );         
+//         } );
 //     };
 
 
-//     /** @inheritDoc */    
+//     /** @inheritDoc */
 //     exec = ( cmd: string, params?: any ): Promise< any[] > => {
 //         return new Promise( ( resolve, reject ) => {
 //             return reject( new Error( 'Not yet implemented' ) );
-//         } );        
+//         } );
 //     };
 
-//     /** @inheritDoc */    
+//     /** @inheritDoc */
 //     query = ( cmd: string, params?: any ): Promise< any[] > => {
 //         return new Promise( ( resolve, reject ) => {
 //             if ( ! this._dbi ) {
@@ -277,9 +260,9 @@ export class DatabaseWrapper implements DatabaseInterface {
 //                 }
 //                 return resolve( result );
 //             } );
-//         } );        
+//         } );
 //     };
-    
+
 
 //     // private
 
@@ -318,18 +301,18 @@ export class DatabaseWrapper implements DatabaseInterface {
 //             charset     : dbItems[ DatabaseProperties.CHARSET ],
 //             options     : dbItems[ DatabaseProperties.OPTIONS ]
 //         };
-        
+
 //         return new DBWrapper( driverType, connConfig );
 //     };
 
 
 //     /**
 //      * Returns a driver type according to the given database type.
-//      * 
-//      * @param dbType 
+//      *
+//      * @param dbType
 //      */
 //     private databaseTypeToDriverType = ( dbType: string ): string => {
-        
+
 //         if ( ! dbType ) {
 //             return 'unknown';
 //         }
