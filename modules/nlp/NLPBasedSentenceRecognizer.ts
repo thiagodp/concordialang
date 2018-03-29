@@ -8,6 +8,7 @@ import { Warning } from '../req/Warning';
 import { LocatedException } from '../req/LocatedException';
 import { Document } from '../ast/Document';
 import { NLP } from './NLP';
+import { isDefined } from '../util/TypeChecking';
 
 /**
  * NLP-based sentence recognizer.
@@ -58,7 +59,6 @@ export class NLPBasedSentenceRecognizer {
         // GLOBAL
         //
 
-
         // UI Elements
         for ( let uiElement of doc.uiElements || [] ) {
             this._uiPropertyRec.recognizeSentences( language, uiElement.items, errors, warnings );
@@ -77,14 +77,30 @@ export class NLPBasedSentenceRecognizer {
             return;
         }
 
+        // Variant Background
+        if ( isDefined( doc.feature.variantBackground ) ) {
+            let vb = doc.feature.variantBackground;
+            this._variantSentenceRec.recognizeSentences(
+                language, vb.sentences, errors, warnings );
+        }
+
         // UI Elements inside Features
         for ( let uiElement of doc.feature.uiElements || [] ) {
             this._uiPropertyRec.recognizeSentences(
                 language, uiElement.items, errors, warnings );
         }
 
-        // Variants inside Scenarios
+        // Variants and Variant Background inside Scenarios
         for ( let scenario of doc.feature.scenarios || [] ) {
+
+            // Variant Background
+            if ( isDefined( scenario.variantBackground ) ) {
+                let vb = scenario.variantBackground;
+                this._variantSentenceRec.recognizeSentences(
+                    language, vb.sentences, errors, warnings, 'Variant Background' );
+            }
+
+            // Variants
             for ( let variant of scenario.variants || [] ) {
                 this._variantSentenceRec.recognizeSentences(
                     language, variant.sentences, errors, warnings );
