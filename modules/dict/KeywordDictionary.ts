@@ -15,6 +15,7 @@ export interface KeywordDictionary { // properties should exist in Keywords
     is: string[];
     with: string[];
     variant: string[];
+    variantBackground: string[];
     testCase: string[];
     uiElement: string[];
     database: string[];

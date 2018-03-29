@@ -34,6 +34,7 @@ import { TableRowLexer } from './TableRowLexer';
 import { LongStringLexer } from './LongStringLexer';
 import { LanguageContentLoader } from '../dict/LanguageContentLoader';
 import { LanguageContent } from '../dict/LanguageContent';
+import { VariantBackgroundLexer } from './VariantBackgroundLexer';
 
 /**
  * Lexer
@@ -79,6 +80,7 @@ export class Lexer {
             , new ImportLexer( dictionary.import )
             , new FeatureLexer( dictionary.feature )
             , new BackgroundLexer( dictionary.background )
+            , new VariantBackgroundLexer( dictionary.variantBackground )
             , new ScenarioLexer( dictionary.scenario )
             , new StepGivenLexer( dictionary.stepGiven )
             , new StepWhenLexer( dictionary.stepWhen )

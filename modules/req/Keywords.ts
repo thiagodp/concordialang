@@ -11,6 +11,7 @@ export abstract class Keywords {
     static REGEX_BLOCK: string = 'regexBlock';
     static CONSTANT_BLOCK: string = 'constantBlock';
     static IS: string = 'is';
+    static VARIANT_BACKGROUND = 'variantBackground';
     static VARIANT: string = 'variant';
     static TEST_CASE: string = 'testCase';
     static UI_ELEMENT: string = 'uiElement';

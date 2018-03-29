@@ -31,6 +31,15 @@ export class StepThenParser implements NodeParser< StepThen > {
             return false;
         }
 
+        if ( context.inVariantBackground || context.inScenarioVariantBackground ) {
+            let e = new SyntaticException(
+                'The "' + node.nodeType + '" clause cannot be declared for a Variant Background.',
+                node.location
+                );
+            errors.push( e );
+            return false;
+        }
+
         // Prepare the owner to receive the given node
         let owner = null;
 

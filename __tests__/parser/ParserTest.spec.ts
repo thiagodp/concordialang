@@ -96,6 +96,34 @@ describe( 'ParserTest', () => {
     } );
 
 
+    it( 'detects a variant background of a feature', () => {
+
+        [
+            '#language:en',
+            '',
+            'feature: my feature',
+            ' \t',
+            'variant background:',
+            '  given something',
+            '    and another thing',
+            '  when anything happens',
+            '    and other thing happens',
+            '    but other thing does not happen',
+        ].forEach( ( val, index ) => lexer.addNodeFromLine( val, index + 1 ) );
+
+        let doc: Document = {};
+        parser.analyze( lexer.nodes(), doc );
+
+        expect( parser.errors() ).toEqual( [] );
+
+        expect( doc.feature ).toBeDefined();
+        expect( doc.feature.name ).toBe( "my feature" );
+
+        expect( doc.feature.variantBackground ).toBeDefined();
+        expect( doc.feature.variantBackground.sentences ).toHaveLength( 5 );
+    } );
+
+
     it( 'detects a scenario without tags', () => {
 
         [
@@ -170,6 +198,38 @@ describe( 'ParserTest', () => {
         expect( testCase.sentences ).toBeDefined();
         expect( testCase.sentences ).toHaveLength( 5 );
     } );
+
+
+    it( 'detects a variant background of a scenario', () => {
+
+        [
+            '#language:en',
+            '',
+            'feature: my feature',
+            '',
+            'Scenario: hello',
+            '',
+            'Variant Background:',
+            '  given something',
+            '    and another thing',
+            '  when anything happens',
+            '    and other thing happens',
+            '    but other thing does not happen',
+        ].forEach( ( val, index ) => lexer.addNodeFromLine( val, index + 1 ) );
+
+        let doc: Document = {};
+        parser.analyze( lexer.nodes(), doc );
+
+        expect( parser.errors() ).toEqual( [] );
+
+        expect( doc.feature ).toBeDefined();
+        expect( doc.feature.name ).toBe( "my feature" );
+
+        expect( doc.feature.scenarios ).toHaveLength( 1 );
+        expect( doc.feature.scenarios[ 0 ].variantBackground ).toBeDefined();
+        expect( doc.feature.scenarios[ 0 ].variantBackground.sentences ).toHaveLength( 5 );
+    } );
+
 
 
     it( 'detects a regex block and its regexes', () => {

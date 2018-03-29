@@ -8,7 +8,7 @@ import { Background } from "../ast/Background";
 
 /**
  * Background parser
- * 
+ *
  * @author Thiago Delgado Pinto
  */
 export class BackgroundParser implements NodeParser< Background > {
@@ -30,17 +30,17 @@ export class BackgroundParser implements NodeParser< Background > {
             let e = new SyntaticException(
                 'A feature cannot have more than one background.', node.location );
             errors.push( e );
-            return false;            
+            return false;
         }
 
         if ( feature.scenarios && feature.scenarios.length > 0 ) {
             let e = new SyntaticException(
                 'A background must be declared before a scenario.', node.location );
             errors.push( e );
-            return false;            
+            return false;
         }
 
-        // Sets the feature
+        // Sets the node
         feature.background = node;
 
         // Adjust the context

@@ -5,6 +5,7 @@ import { Scenario } from './Scenario';
 import { TestCase } from './Variant';
 import { UIElement } from './UIElement';
 import { Background } from './Background';
+import { VariantBackground } from './VariantBackground';
 
 /**
  * Feature node.
@@ -16,6 +17,7 @@ export interface Feature extends NamedNode, MayHaveTags {
     description?: string;
     sentences?: Text[];
     background?: Background;
+    variantBackground?: VariantBackground;
     scenarios?: Scenario[];
     uiElements?: UIElement[];
     testCases?: TestCase[];

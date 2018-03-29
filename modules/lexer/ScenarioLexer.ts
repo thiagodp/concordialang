@@ -4,7 +4,7 @@ import { Scenario } from "../ast/Scenario";
 
 /**
  * Detects a Scenario.
- * 
+ *
  * @author Thiago Delgado Pinto
  */
 export class ScenarioLexer extends NamedNodeLexer< Scenario > {
@@ -15,7 +15,7 @@ export class ScenarioLexer extends NamedNodeLexer< Scenario > {
 
     /** @inheritDoc */
     suggestedNextNodeTypes(): string[] {
-        return [ NodeTypes.STEP_GIVEN, NodeTypes.SCENARIO ];
-    }    
+        return [ NodeTypes.STEP_GIVEN, NodeTypes.SCENARIO, NodeTypes.VARIANT_BACKGROUND, NodeTypes.VARIANT ];
+    }
 
 }

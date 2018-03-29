@@ -24,6 +24,7 @@ import { StepOtherwiseParser } from './StepOtherwiseParser';
 import { UIElementParser } from './UIElementParser';
 import { TableParser } from './TableParser';
 import { DatabaseParser } from './DatabaseParser';
+import { VariantBackgroundParser } from './VariantBackgroundParser';
 
 /**
  * Builds an AST from the nodes detected by the lexer. It checks syntatic properties
@@ -43,6 +44,7 @@ export class Parser {
         this._parsersMap[ NodeTypes.IMPORT ] = new ImportParser();
         this._parsersMap[ NodeTypes.FEATURE ] = new FeatureParser();
         this._parsersMap[ NodeTypes.BACKGROUND ] = new BackgroundParser();
+        this._parsersMap[ NodeTypes.VARIANT_BACKGROUND ] = new VariantBackgroundParser();
         this._parsersMap[ NodeTypes.SCENARIO ] = new ScenarioParser();
         this._parsersMap[ NodeTypes.STEP_GIVEN ] = new StepGivenParser();
         this._parsersMap[ NodeTypes.STEP_WHEN ] = new StepWhenParser();

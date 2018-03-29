@@ -45,12 +45,14 @@ export class StepAndParser implements NodeParser< StepAnd > {
             let owner = null;
 
             if ( context.inBackground ) owner = context.currentBackground;
+            else if ( context.inVariantBackground ) owner = context.currentVariantBackground;
             else if ( context.inScenario ) owner = context.currentScenario;
+            else if ( context.inScenarioVariantBackground ) owner = context.currentScenarioVariantBackground;
             else if ( context.inVariant ) owner = context.currentVariant;
             else if ( context.inTestCase ) owner = context.currentTestCase;
             else {
                 let e = new SyntaticException(
-                    'The "' + node.nodeType + '" clause must be declared after a Background, Scenario, Variant, Test Case or UI Element Property.',
+                    'The "' + node.nodeType + '" clause must be declared after a Background, Scenario, Variant Background, Variant, Test Case or UI Element Property.',
                     node.location
                     );
                 errors.push( e );

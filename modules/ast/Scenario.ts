@@ -1,6 +1,7 @@
 import { Variant } from './Variant';
 import { NamedNode } from './Node';
 import { Step } from './Step';
+import { VariantBackground } from './VariantBackground';
 
 /**
  * Scenario node.
@@ -9,6 +10,7 @@ import { Step } from './Step';
  */
 export interface Scenario extends NamedNode {
     description?: string;
-    sentences: Array< Step >;
-    variants?: Array< Variant >;
+    sentences: Step[];
+    variantBackground?: VariantBackground;
+    variants?: Variant[];
 }

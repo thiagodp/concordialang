@@ -19,6 +19,7 @@ export class StepWhenParser implements NodeParser< StepWhen > {
         const allowedPriorNodes = [
             NodeTypes.BACKGROUND,
             NodeTypes.SCENARIO,
+            NodeTypes.VARIANT_BACKGROUND,
             NodeTypes.VARIANT,
             NodeTypes.TEST_CASE,
             NodeTypes.STEP_GIVEN,
@@ -28,7 +29,7 @@ export class StepWhenParser implements NodeParser< StepWhen > {
 
         if ( ! it.hasPrior() || allowedPriorNodes.indexOf( it.spyPrior().nodeType ) < 0 ) {
             let e = new SyntaticException(
-                'The "' + node.nodeType + '" clause must be declared after a Background, Scenario, Variant, Test Case, When, or And.',
+                'The "' + node.nodeType + '" clause must be declared after a Background, Scenario, Variant Background, Variant, Test Case, When, or And.',
                 node.location
                 );
             errors.push( e );
@@ -39,12 +40,14 @@ export class StepWhenParser implements NodeParser< StepWhen > {
         let owner = null;
 
         if ( context.inBackground ) owner = context.currentBackground;
+        else if ( context.inVariantBackground ) owner = context.currentVariantBackground;
         else if ( context.inScenario ) owner = context.currentScenario;
+        else if ( context.inScenarioVariantBackground ) owner = context.currentScenarioVariantBackground;
         else if ( context.inVariant ) owner = context.currentVariant;
         else if ( context.inTestCase ) owner = context.currentTestCase;
         else {
             let e = new SyntaticException(
-                'The "' + node.nodeType + '" clause must be declared after a Background, Scenario, Variant or Test Case.',
+                'The "' + node.nodeType + '" clause must be declared after a Background, Scenario, Variant Background, Variant or Test Case.',
                 node.location
                 );
             errors.push( e );

@@ -18,6 +18,7 @@ export class EnglishKeywordDictionary implements KeywordDictionary {
     is: string[] = [ 'is' ];
     with: string[] = [ "with" ];
     variant: string[] = [ 'variant' ];
+    variantBackground: string[] = [ 'variant background' ];
     testCase: string[] = [ 'test case' ];
     uiElement: string[] = [ 'ui element' ];
     database: string[] = [ 'database' ];

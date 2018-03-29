@@ -8,6 +8,7 @@ import { Feature } from "../ast/Feature";
 import { Scenario } from "../ast/Scenario";
 import { Variant, TestCase } from '../ast/Variant';
 import { Background } from '../ast/Background';
+import { VariantBackground } from '../ast/VariantBackground';
 
 /**
  * Parsing context.
@@ -20,7 +21,9 @@ export class ParsingContext {
 
     inFeature: boolean = false;
     inBackground: boolean = false;
+    inVariantBackground: boolean = false;
     inScenario: boolean = false;
+    inScenarioVariantBackground: boolean = false;
     inVariant: boolean = false;
     inTestCase: boolean = false;
     inConstantBlock: boolean = false;
@@ -31,7 +34,9 @@ export class ParsingContext {
     inTable: boolean = false;
 
     currentBackground: Background = null;
+    currentVariantBackground: VariantBackground = null;
     currentScenario: Scenario = null;
+    currentScenarioVariantBackground: VariantBackground = null;
     currentVariant: Variant = null;
     currentTestCase: TestCase = null;
     currentUIElement: UIElement = null;
@@ -50,7 +55,9 @@ export class ParsingContext {
     public resetInValues(): void {
         this.inFeature = false;
         this.inBackground = false;
+        this.inVariantBackground = false;
         this.inScenario = false;
+        this.inScenarioVariantBackground = false;
         this.inVariant = false;
         this.inTestCase = false;
         this.inConstantBlock = false;
