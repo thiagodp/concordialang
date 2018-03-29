@@ -6,6 +6,7 @@
         "is": [ "é", "is" ],
         "with": [ "com", "with" ],
         "variant": [ "variante", "variação", "variant" ],
+        "variantBackground": [ "contexto de variante", "contexto de variação", "cenário de variação", "variant background" ],
         "testCase": [ "caso de teste", "test case" ],
         "uiElement": [ "elemento da iu", "elemento de iu", "ui element" ],
         "database": [ "banco de dados", "database" ],
