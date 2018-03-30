@@ -3,8 +3,11 @@ import { ReservedTags } from '../req/ReservedTags';
 import { Defaults } from '../app/Defaults';
 import { Tag } from '../ast/Tag';
 import { isDefined, isString } from '../util/TypeChecking';
+import { TagUtil } from '../util/TagUtil';
 
 export class CriteriaMatcher {
+
+    private readonly _tagUtil = new TagUtil();
 
     constructor(
         private _ignoreKeywords: string[] = [ ReservedTags.IGNORE ],
@@ -15,7 +18,7 @@ export class CriteriaMatcher {
 
     /**
      * Returns true whether the given criteria are match.
-     * 
+     *
      * @param criteria Criteria to be applied.
      * @param nodeTags Node tags.
      * @param nodeName Node name, e.g., feature name, scenario name, variant name, etc.
@@ -40,16 +43,18 @@ export class CriteriaMatcher {
             : this._defaultImportanceValue;
 
         // Whether the criterion is established, ignore those with @ignore
-        if ( hasTags 
+        if ( hasTags
             && criteria.has( FilterCriterion.IGNORE_TAG_NOT_DECLARED )
             && this.hasIgnoreTag( nodeTags ) ) {
             return false; // Does not match, i.e., has ignore tag
         }
 
+        const importanceCriterionPrefix = 'importance';
+
         for ( let [ criterion, value ] of criteria ) {
 
             // Importance
-            const criterionIsAboutImportance: boolean = criterion.toString().startsWith( 'importance' );
+            const criterionIsAboutImportance: boolean = criterion.toString().startsWith( importanceCriterionPrefix );
             if ( criterionIsAboutImportance ) {
                 const val: number = isString( value ) ? parseInt( value.toString() ) : Number( value );
                 switch ( criterion ) {
@@ -62,14 +67,14 @@ export class CriteriaMatcher {
             if ( hasTags ) {
                 // Tag keyword
                 switch ( criterion ) {
-                    case FilterCriterion.TAG_EQ: 
-                        return this.tagsWithKeyword( nodeTags, [ value.toString() ] ).length > 0;
+                    case FilterCriterion.TAG_EQ:
+                        return this._tagUtil.tagsWithNameInKeywords( nodeTags, [ value.toString() ] ).length > 0;
                     case FilterCriterion.TAG_NEQ:
-                        return 0 === this.tagsWithKeyword( nodeTags, [ value.toString() ] ).length;
+                        return 0 === this._tagUtil.tagsWithNameInKeywords( nodeTags, [ value.toString() ] ).length;
                     case FilterCriterion.TAG_IN:
-                        return this.tagsWithKeyword( nodeTags, value as string[] ).length > 0;
+                        return this._tagUtil.tagsWithNameInKeywords( nodeTags, value as string[] ).length > 0;
                     case FilterCriterion.TAG_NOT_IN:
-                        return this.tagsWithKeyword( nodeTags, value as string[] ).length < 1;                        
+                        return this._tagUtil.tagsWithNameInKeywords( nodeTags, value as string[] ).length < 1;
                 }
             }
 
@@ -89,21 +94,14 @@ export class CriteriaMatcher {
         return false;
     }
 
-    hasTagAKeyword( tag: Tag, keywords: string[] ): boolean {
-        return keywords.indexOf( tag.name.toLowerCase() ) >= 0;
-    }    
-
-    tagsWithKeyword( tags: Tag[], keywords: string[] ) {
-        return tags.filter( ( t: Tag ) => this.hasTagAKeyword( t, keywords ) );
-    }
-
     importanceValue( tags: Tag[] ): number | null {
-        const filtered = this.tagsWithKeyword( tags, this._importanceKeywords );
-        return ( filtered.length > 0 ) ? parseInt( filtered[ 0 ].content ) : null;
+        return this._tagUtil.firstNumericContentOf(
+            this._tagUtil.tagsWithNameInKeywords( tags, this._importanceKeywords )
+        );
     }
 
     hasIgnoreTag( tags: Tag[] ): boolean {
-        const filtered = this.tagsWithKeyword( tags, this._ignoreKeywords );
+        const filtered = this._tagUtil.tagsWithNameInKeywords( tags, this._ignoreKeywords );
         return filtered.length > 0;
     }
 }
