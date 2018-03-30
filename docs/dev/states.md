@@ -7,3 +7,7 @@
 - A step with a **State Call** is replaced by the steps from the Variant that produces the referred state, but the precondition steps of that Variant are *not* included.
 
 - A step with a **Postcondition** is removed.
+
+## State Checking
+
+Preconditions and State Calls are checked against Postconditions produced by Variants of different Features. Just the imported Features are analyzed.
