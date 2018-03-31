@@ -7,6 +7,7 @@ import { SemanticException } from '../SemanticException';
 import { Import } from '../../ast/Import';
 import { Document } from '../../ast/Document';
 import { UIElementDA } from './UIElementDA';
+import { VariantGivenStepDA } from './VariantGivenStepDA';
 
 /**
  * Executes a series of semantic analyzers to a document.
@@ -22,7 +23,8 @@ export class BatchDocumentAnalyzer {
             new ImportDA(),
             new ScenarioDA(),
             new DatabaseDA(),
-            new UIElementDA()
+            new UIElementDA(),
+            new VariantGivenStepDA()
         ];
     }
 
