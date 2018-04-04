@@ -32,7 +32,7 @@
         "background": [ "contexto", "cenário de fundo", "fundo", "background" ],
         "scenario": [ "cenário", "scenario" ],
 
-        "stepGiven": [ "dado", "given" ],
+        "stepGiven": [ "dado que", "dado", "given" ],
         "stepWhen": [ "quando", "when" ],
         "stepThen": [ "então", "then" ],
         "stepAnd": [ "e", "mas", "and", "but" ],

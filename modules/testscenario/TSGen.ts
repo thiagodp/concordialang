@@ -15,9 +15,9 @@ import { LanguageContentLoader } from "../dict/LanguageContentLoader";
 import { NodeTypes } from "../req/NodeTypes";
 import * as deepcopy from 'deepcopy';
 import { LanguageContent } from "../dict/LanguageContent";
-import { convertCase } from "../util/CaseConversor";
-import { CaseType } from "../app/CaseType";
 import { KeywordDictionary } from "../dict/KeywordDictionary";
+import { NLPUtil } from "../nlp/NLPResult";
+import { Entities } from "../nlp/Entities";
 
 export class TSGen {
 
@@ -190,7 +190,7 @@ export class TSGen {
     makeTestScenarioFromVariant( variant: Variant, docLanguage: string | undefined ): TestScenario {
         let ts = new TestScenario();
 
-        const sentencesCount = variant.sentences.length;
+        let sentencesCount = variant.sentences.length;
         if ( sentencesCount < 1 ) {
             return ts;
         }
@@ -204,6 +204,9 @@ export class TSGen {
         ts.steps = deepcopy( variant.sentences ) as Step[]; // variant.sentences.slice( 0 ); // make another array with the same items
 
         // Remove postconditions from steps
+        const stepAndKeyword: string = ( keywords.stepAnd || [ 'and' ] )[ 0 ];
+        const stepThenKeyword: string = ( keywords.stepThen || [ 'then' ] )[ 0 ];
+        const stepAndRegex = new RegExp( stepAndKeyword, 'i' );
         for ( let postc of variant.postconditions ) {
 
             // Make the next step to become a THEN instead of an AND, if needed
@@ -213,23 +216,45 @@ export class TSGen {
                     // Change the node type
                     nextStep.nodeType = NodeTypes.STEP_THEN;
                     // Change the sentence content!
-                    const stepAndKeyword: string = ( keywords.stepAnd || [ 'and' ] )[ 0 ];
-                    const stepThenKeyword: string = ( keywords.stepThen || [ 'then' ] )[ 0 ];
-                    const regex = new RegExp( stepAndKeyword, 'i' );
-                    nextStep.content = nextStep.content.replace( regex, convertCase( stepThenKeyword, CaseType.PASCAL ) ); // Then ...
+                    nextStep.content = nextStep.content.replace( stepAndRegex, this.upperFirst( stepThenKeyword ) ); // Then ...
                 }
             }
 
             ts.steps.splice( postc.stepIndex, 1 );
         }
 
+        sentencesCount = ts.steps.length;
+
         // Step after Precondition
         const lastPreconditionIndex = variant.preconditions.length - 1;
         if ( lastPreconditionIndex >= 0 && lastPreconditionIndex + 1 < sentencesCount ) {
-            ts.stepAfterPreconditions = variant.sentences[ lastPreconditionIndex + 1 ];
+            ts.stepAfterPreconditions = ts.steps[ lastPreconditionIndex + 1 ];
         } else {
-            ts.stepAfterPreconditions = variant.sentences[ 0 ];
+            ts.stepAfterPreconditions = ts.steps[ 0 ];
         }
+
+        // Prepare eventual GIVEN AND steps that are *not* Preconditions to become GIVEN steps,
+        // since they will be replaced later
+        const nlpUtil = new NLPUtil();
+        const stepGivenKeyword: string = ( keywords.stepGiven || [ 'given' ] )[ 0 ];
+        for ( let index = 0; index < sentencesCount; ++index ) {
+            let step = ts.steps[ index ];
+            if ( ts.stepAfterPreconditions === step ) {
+                break;
+            }
+            let nextStep = index + 1 < sentencesCount ? ts.steps[ index + 1 ] : null;
+            if ( null === nextStep ) {
+                break;
+            }
+            if ( nextStep.nodeType === NodeTypes.STEP_AND
+                && ! nlpUtil.hasEntityNamed( Entities.STATE, nextStep.nlpResult ) ) {
+                // Change node type
+                nextStep.nodeType = NodeTypes.STEP_GIVEN;
+                // Change node sentence
+                nextStep.content = nextStep.content.replace( stepAndRegex, this.upperFirst( stepGivenKeyword ) ); // Given ...
+            }
+        }
+
 
         ts.ignoreForTestCaseGeneration = this.containsIgnoreTag( variant.tags, ( keywords.tagIgnore || [ 'ignore' ] ) );
 
@@ -250,6 +275,13 @@ export class TSGen {
     ) {
         const stepsToReplace: Step[] = isPrecondition ? tsToReplaceStep.steps : tsToReplaceStep.stepsWithoutPreconditions();
         ts.steps.splice( stepIndex, 1, ... stepsToReplace );
+    }
+
+    upperFirst( text: string ): string {
+        if ( !! text[ 0 ] ) {
+            return text[ 0 ].toUpperCase() + text.substr( 1 );
+        }
+        return text;
     }
 
 }
