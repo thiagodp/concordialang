@@ -44,7 +44,6 @@ describe( 'TSGenTest', () => {
 
     it( 'generates for a single Variant without preconditions', async () => {
 
-
         let spec = new Spec( '.' );
 
         let doc1: Document = cp.addToSpec( spec,
@@ -136,6 +135,37 @@ describe( 'TSGenTest', () => {
 
         const stepsContent: string[] = ts2[ 0 ].steps.map( s => s.content );
         expect( stepsContent ).toEqual( expectedSteps );
+    } );
+
+
+
+    it( 'gets an error when precondition requires a state not declared', async () => {
+
+        let spec = new Spec( '.' );
+
+        let doc2: Document = cp.addToSpec( spec,
+            [
+                '#language:pt',
+                'Feature: Feature 2',
+                'Scenario: Bar',
+                'Variant: Bar',
+                '  Dado que eu tenho ~foo~',
+                '  Quando eu preencho <c> com "c"',
+                '    E eu preencho <d> com "d"'
+            ],
+            { path: 'doc2.feature', hash: 'doc2' } as FileInfo
+        );
+
+        const specFilter = new SpecFilter( spec );
+        const batchSpecAnalyzer = new BatchSpecificationAnalyzer();
+        let errors: LocatedException[] = [];
+
+        await batchSpecAnalyzer.analyze( specFilter.graph(), spec, errors );
+
+        let variant2: Variant = doc2.feature.scenarios[ 0 ].variants[ 0 ];
+        let ts2 = gen.generate( LANGUAGE, variant2, errors );
+        expect( errors ).toHaveLength( 1 );
+        expect( ts2 ).toHaveLength( 0 );
     } );
 
 
