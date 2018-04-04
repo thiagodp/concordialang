@@ -15,9 +15,9 @@ import { LanguageContent } from "../dict/LanguageContent";
 import { KeywordDictionary } from "../dict/KeywordDictionary";
 import { NLPUtil } from "../nlp/NLPResult";
 import { Entities } from "../nlp/Entities";
+import { StatePairCombinator } from "./StatePairCombinator";
 import { Pair } from "ts-pair";
 import * as deepcopy from 'deepcopy';
-import * as cartesian from 'cartesian';
 
 /**
  * Test Scenario generator
@@ -34,6 +34,7 @@ export class TSGen {
         private _langContentLoader: LanguageContentLoader,
         private _defaultLanguage: string,
         private _variantSelectionStrategy: VariantSelectionStrategy,
+        private _statePairCombinator: StatePairCombinator,
         private _variantToTestScenarioMap: Map< Variant, TestScenario[] >,
         private _postconditionNameToVariantsMap: Map< string, Variant[] >,
         seed: string
@@ -110,7 +111,8 @@ export class TSGen {
             //
 
             // console.log( 'pairMap', pairMap );
-            let product = cartesian( pairMap ); // TO-DO replace cartesian with strategy
+            // let product = cartesian( pairMap ); // TO-DO replace cartesian with strategy
+            let product = this._statePairCombinator.combine( pairMap );
             // console.log( 'Product', product );
             let testScenariosToCombineByState: any[] = product;
 

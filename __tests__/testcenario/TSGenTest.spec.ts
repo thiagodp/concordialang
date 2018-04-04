@@ -8,6 +8,7 @@ import { LocatedException } from "../../modules/req/LocatedException";
 import { BatchSpecificationAnalyzer } from "../../modules/semantic/BatchSpecificationAnalyzer";
 import { SpecFilter } from "../../modules/selection/SpecFilter";
 import { FileInfo } from "../../modules/ast/FileInfo";
+import { AllPairsCombinator } from "../../modules/testscenario/StatePairCombinator";
 
 describe( 'TSGenTest', () => {
 
@@ -28,6 +29,7 @@ describe( 'TSGenTest', () => {
             cp.langLoader,
             cp.language,
             new AllVariantsSelectionStrategy(),
+            new AllPairsCombinator(),
             variantToTestScenariosMap,
             postconditionNameToVariantsMap,
             'myseed'
