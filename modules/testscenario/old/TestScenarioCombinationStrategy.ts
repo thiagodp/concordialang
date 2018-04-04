@@ -1,5 +1,5 @@
 import { TestScenario } from "./TestScenario";
-import { State } from "../ast/VariantLike";
+import { State } from "../../ast/VariantLike";
 import { TestScenariosToCombine } from "./TestScenariosToCombine";
 import { ImmutablePair } from "ts-pair";
 import * as cartesian from 'cartesian';

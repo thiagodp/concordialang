@@ -1,10 +1,10 @@
-import { Document } from "../ast/Document";
-import { Feature } from "../ast/Feature";
-import { Scenario } from "../ast/Scenario";
-import { Variant } from "../ast/Variant";
-import { Spec } from "../ast/Spec";
-import { State } from "../ast/VariantLike";
-import { Import } from "../ast/Import";
+import { Document } from "../../ast/Document";
+import { Feature } from "../../ast/Feature";
+import { Scenario } from "../../ast/Scenario";
+import { Variant } from "../../ast/Variant";
+import { Spec } from "../../ast/Spec";
+import { State } from "../../ast/VariantLike";
+import { Import } from "../../ast/Import";
 import { TestScenario } from "./TestScenario";
 import { VariantRefWithTestScenarios } from "./VariantRefWithTestScenarios";
 

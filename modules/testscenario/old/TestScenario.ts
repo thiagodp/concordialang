@@ -1,4 +1,4 @@
-import { Step } from "../ast/Step";
+import { Step } from "../../ast/Step";
 import { VariantRef } from "./VariantRef";
 
 export class TestScenario {

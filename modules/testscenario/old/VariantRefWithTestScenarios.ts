@@ -1,6 +1,6 @@
 import { VariantRef } from "./VariantRef";
 import { TestScenario } from "./TestScenario";
-import { State } from "../ast/VariantLike";
+import { State } from "../../ast/VariantLike";
 
 export class VariantRefWithTestScenarios extends VariantRef {
 

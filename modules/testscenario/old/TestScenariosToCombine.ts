@@ -1,4 +1,4 @@
-import { State } from "../ast/VariantLike";
+import { State } from "../../ast/VariantLike";
 import { TestScenario } from "./TestScenario";
 import { ImmutablePair } from 'ts-pair';
 
