@@ -20,7 +20,7 @@ import { Node, HasName, HasContent } from './Node';
 
 /**
  * Tag node.
- * 
+ *
  * @author Thiago Delgado Pinto
  */
 export interface Tag extends Node, HasName, HasContent {
@@ -28,7 +28,7 @@ export interface Tag extends Node, HasName, HasContent {
 
 /**
  * Allows to define something that may have tags.
- * 
+ *
  * @author Thiago Delgado Pinto
  */
 export interface MayHaveTags {
@@ -38,10 +38,15 @@ export interface MayHaveTags {
 
 /**
  * Returns true if the one of the given tags has the given name.
- * 
+ *
  * @param name Tag name
  * @param tags Tags where to find
  */
 export function hasTagNamed( name: string, tags: Tag[] ): boolean {
     return !! tags.find( tag => tag.name === name );
+}
+
+
+export function tagsWithAnyOfTheNames( tags: Tag[], names: string[] ): Tag[] {
+    return tags.filter( t => names.indexOf( t.name.toLowerCase() ) >= 0 );
 }

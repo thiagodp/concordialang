@@ -23,8 +23,3 @@ export interface Variant extends VariantLike, NamedNode, MayHaveTags {
  */
 export interface TestCase extends Variant {
 }
-
-
-export function instanceOfVariant( obj: any ): obj is Variant {
-    return 'postconditions' in obj;
-}

@@ -13,7 +13,7 @@
   ],
   "license": "AGPL-3.0",
   "readme": "README.md",
-  "homepage": "https://site.org",
+  "homepage": "https://concordialang.org",
   "repository": {
     "type": "git",
     "url": "git://gitlab.com/thiagodp/concordialang.git"
@@ -23,8 +23,7 @@
   },
   "author": {
     "name": "Thiago Delgado Pinto",
-    "email": "email@site.org",
-    "url": "https://site.org"
+    "email": "thiago-dp@bol.com.br"
   },
   "main": "./dist/main.js",
   "bin": {
@@ -39,6 +38,8 @@
   },
   "dependencies": {
     "alasql": "^0.4.5",
+    "array-move": "^1.0.0",
+    "cartesian": "^1.0.1",
     "case": "^1.5.4",
     "chalk": "^2.3.0",
     "cli-truncate": "^1.0.0",
@@ -67,6 +68,7 @@
     "seedrandom": "^2.4.3",
     "sprintf-js": "^1.1.1",
     "sqlstring": "^2.3.0",
+    "ts-pair": "^1.1.1",
     "xregexp": "^3.2.0"
   },
   "devDependencies": {

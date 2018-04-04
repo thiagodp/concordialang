@@ -51,7 +51,7 @@ export class VariantGivenStepDA implements DocumentAnalyzer {
 
             if ( NodeTypes.STEP_GIVEN === step.nodeType ) {
 
-                // Check if it appears after other step type
+                // Check if the Given step appears after other step type
                 if ( false === lastWasGiven ) {
                     const msg = 'A Given step cannot be declared after other step than Given.';
                     const err = new SemanticException( msg, step.location );
