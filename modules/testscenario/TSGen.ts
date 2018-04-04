@@ -301,7 +301,15 @@ export class TSGen {
         tsToReplaceStep: TestScenario,
         isPrecondition: boolean
     ) {
-        const stepsToReplace: Step[] = isPrecondition ? tsToReplaceStep.steps : tsToReplaceStep.stepsWithoutPreconditions();
+        let stepsToReplace: Step[] = deepcopy(
+            isPrecondition ? tsToReplaceStep.steps : tsToReplaceStep.stepsWithoutPreconditions()
+        );
+
+        // Set the flag "external"
+        for ( let step of stepsToReplace ) {
+            step.external = true;
+        }
+
         ts.steps.splice( stepIndex, 1, ... stepsToReplace );
     }
 

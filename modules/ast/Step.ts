@@ -12,6 +12,11 @@ export interface Step extends ContentNode {
     targetType?: string;
     values?: string[] | number[];
     invalid?: boolean;
+
+    /**
+     * Whether the step belongs to a external Variant, which is relevant to Test Case generation.
+     */
+    external?: boolean;
 }
 
 export interface StepGiven extends Step {
