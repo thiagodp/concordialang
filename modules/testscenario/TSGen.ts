@@ -242,26 +242,45 @@ export class TSGen {
             ts.stepAfterPreconditions = ts.steps[ 0 ];
         }
 
-        // Prepare eventual GIVEN AND steps that are *not* Preconditions to become GIVEN steps,
+        // Prepare eventual GIVEN AND steps that *do not have* States to become GIVEN steps,
+        //     and eventual WHEN AND  steps that *do not have* States to become WHEN  steps,
         // since they will be replaced later
         const nlpUtil = new NLPUtil();
+        const stepWhenKeyword: string = ( keywords.stepWhen || [ 'when' ] )[ 0 ];
         const stepGivenKeyword: string = ( keywords.stepGiven || [ 'given' ] )[ 0 ];
-        for ( let index = 0; index < sentencesCount; ++index ) {
-            let step = ts.steps[ index ];
-            if ( ts.stepAfterPreconditions === step ) {
-                break;
+        let index = 0, priorWasGiven = false, priorWasWhen = false, priorHasState = false;
+        for ( let step of ts.steps ) {
+
+            if ( step.nodeType === NodeTypes.STEP_GIVEN ) {
+                priorWasGiven = true;
+                priorWasWhen = false;
+                priorHasState = nlpUtil.hasEntityNamed( Entities.STATE, step.nlpResult );
+
+            } else if ( step.nodeType === NodeTypes.STEP_WHEN ) {
+                priorWasGiven = false;
+                priorWasWhen = true;
+                priorHasState = nlpUtil.hasEntityNamed( Entities.STATE, step.nlpResult );
+
+            } else if ( step.nodeType === NodeTypes.STEP_AND
+                && priorHasState && ( priorWasGiven || priorWasWhen )
+                && ! nlpUtil.hasEntityNamed( Entities.STATE, step.nlpResult ) ) { // current does not have state
+
+                if ( priorWasGiven ) {
+                    // Change node type
+                    step.nodeType = NodeTypes.STEP_GIVEN;
+                    // Change node sentence
+                    step.content = step.content.replace( stepAndRegex, this.upperFirst( stepGivenKeyword ) ); // Given ...
+                } else {
+                    // Change node type
+                    step.nodeType = NodeTypes.STEP_WHEN;
+                    // Change node sentence
+                    step.content = step.content.replace( stepAndRegex, this.upperFirst( stepWhenKeyword ) ); // When ...
+                }
+
+                priorHasState = false; // important
             }
-            let nextStep = index + 1 < sentencesCount ? ts.steps[ index + 1 ] : null;
-            if ( null === nextStep ) {
-                break;
-            }
-            if ( nextStep.nodeType === NodeTypes.STEP_AND
-                && ! nlpUtil.hasEntityNamed( Entities.STATE, nextStep.nlpResult ) ) {
-                // Change node type
-                nextStep.nodeType = NodeTypes.STEP_GIVEN;
-                // Change node sentence
-                nextStep.content = nextStep.content.replace( stepAndRegex, this.upperFirst( stepGivenKeyword ) ); // Given ...
-            }
+
+            ++index;
         }
 
 

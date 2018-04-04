@@ -32,7 +32,11 @@ export class State {
         return name;
     }
 
-    equals( state: State | string ): boolean {
-        return state.toString().toLowerCase() == this.toString().toLowerCase();
+    equals( state: State ): boolean {
+        return this.nameEquals( state.name );
+    }
+
+    nameEquals( name: string ): boolean {
+        return this.name.toLowerCase() === name.toLowerCase();
     }
 }

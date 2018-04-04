@@ -10,7 +10,7 @@ export class VariantRefWithTestScenarios extends VariantRef {
         if ( ! this.variant.preconditions || this.variant.preconditions.length < 1 ) {
             return false;
         }
-        return ( this.variant.postconditions.find( p => p.equals( name ) ) || null ) !== null;
+        return ( this.variant.postconditions.find( p => p.nameEquals( name ) ) || null ) !== null;
     }
 
 }
