@@ -3,8 +3,6 @@ import { RuntimeException } from "../req/RuntimeException";
 import { VariantStateDetector } from "./VariantStateDetector";
 import { State } from "../ast/VariantLike";
 import { isDefined } from "../util/TypeChecking";
-import { Pair } from "ts-pair";
-import * as cartesian from 'cartesian';
 import { VariantSelectionStrategy } from "./VariantSelectionStrategy";
 import { RandomLong } from "../testdata/random/RandomLong";
 import { Random } from "../testdata/random/Random";
@@ -13,12 +11,21 @@ import { TagUtil } from "../util/TagUtil";
 import { Tag, tagsWithAnyOfTheNames } from "../ast/Tag";
 import { LanguageContentLoader } from "../dict/LanguageContentLoader";
 import { NodeTypes } from "../req/NodeTypes";
-import * as deepcopy from 'deepcopy';
 import { LanguageContent } from "../dict/LanguageContent";
 import { KeywordDictionary } from "../dict/KeywordDictionary";
 import { NLPUtil } from "../nlp/NLPResult";
 import { Entities } from "../nlp/Entities";
+import { Pair } from "ts-pair";
+import * as deepcopy from 'deepcopy';
+import * as cartesian from 'cartesian';
 
+/**
+ * Test Scenario generator
+ *
+ * > It still does not take Variant Backgrounds into account.
+ *
+ * @author Thiago Delgado Pinto
+ */
 export class TSGen {
 
     private readonly _randomLong: RandomLong;
@@ -287,7 +294,11 @@ export class TSGen {
 }
 
 
-
+/**
+ * Test Scenario
+ *
+ * @author Thiago Delgado Pinto
+ */
 export class TestScenario {
 
     /**
