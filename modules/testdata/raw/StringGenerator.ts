@@ -2,26 +2,27 @@ import { RawDataGenerator } from "./RawDataGenerator";
 import { RandomString } from "../random/RandomString";
 import { MinMaxChecker } from "../util/MinMaxChecker";
 import { StringLimits } from "../limits/StringLimits";
+import { RangeAnalyzer } from "./RangeAnalyzer";
 
 /**
  * String generator.
- * 
+ *
  * @author Thiago Delgado Pinto
  */
-export class StringGenerator implements RawDataGenerator< string > {
+export class StringGenerator implements RawDataGenerator< string >, RangeAnalyzer {
 
     private readonly _minLength: number;
     private readonly _maxLength: number;
 
 	/**
 	 * Constructor.
-	 * 
+	 *
 	 * @param _random   Random generator
 	 * @param minLength Minimum length. Optional. Assumes the minimum string length if undefined.
 	 * @param maxLength Maximum length. Optional. Assumes the usual maximum string length if undefined.
-	 * 
+	 *
 	 * @throws Error In case of invalid values.
-	 */    
+	 */
     constructor(
         private readonly _randomString: RandomString,
         minLength?: number,
@@ -35,7 +36,7 @@ export class StringGenerator implements RawDataGenerator< string > {
         }
         if ( maxLength && maxLength > StringLimits.MAX ) {
             throw Error( 'Maximum string length is ' + StringLimits.MAX );
-        }        
+        }
 
         this._minLength = minLength ? minLength : StringLimits.MIN; // 0
         this._maxLength = maxLength ? maxLength : StringLimits.MAX_USUAL; // 255
@@ -47,7 +48,7 @@ export class StringGenerator implements RawDataGenerator< string > {
 
     public maxLength(): number {
         return this._maxLength;
-    }    
+    }
 
     public lengthDiff(): number {
         return this._maxLength - this._minLength;
@@ -55,19 +56,29 @@ export class StringGenerator implements RawDataGenerator< string > {
 
     public medianLength(): number {
         return this._minLength + ( this.lengthDiff() / 2 );
-    }    
+    }
 
-    public hasSpaceBetweenLengths(): boolean {
+    // RANGE ANALYSIS
+
+    /** @inheritDoc */
+    public hasValuesBetweenMinAndMax(): boolean {
         return this.lengthDiff() > 0;
     }
-    
-    public hasSpaceBelowMin(): boolean {
+
+    /** @inheritDoc */
+    public hasValuesBelowMin(): boolean {
         return this._minLength > StringLimits.MIN;
     }
 
-    public hasSpaceAboveMax(): boolean {
+    /** @inheritDoc */
+    public hasValuesAboveMax(): boolean {
         return this._maxLength < StringLimits.MAX;
     }
+
+	/** @inheritDoc */
+	public isZeroBetweenMinAndMax(): boolean {
+		return this._minLength <= 0 && 0 <= this._maxLength;
+	}
 
     // DATA GENERATION
 
@@ -78,28 +89,28 @@ export class StringGenerator implements RawDataGenerator< string > {
 
     /** @inheritDoc */
     public randomBelowMin(): string {
-        if ( ! this.hasSpaceBelowMin() ) {
+        if ( ! this.hasValuesBelowMin() ) {
             return this.lowest();
-        }        
+        }
         return this._randomString.between( StringLimits.MIN, this._minLength - 1 );
-    }    
+    }
 
     /** @inheritDoc */
     public justBelowMin(): string {
-        if ( ! this.hasSpaceBelowMin() ) {
+        if ( ! this.hasValuesBelowMin() ) {
             return this.lowest();
         }
         return this._randomString.exactly( this._minLength - 1 );
-    }    
+    }
 
     /** @inheritDoc */
 	public min(): string {
 		return this._randomString.exactly( this._minLength );
 	}
-    
+
     /** @inheritDoc */
     public justAboveMin(): string {
-        return this.hasSpaceBetweenLengths()
+        return this.hasValuesBetweenMinAndMax()
             ? this._randomString.exactly( this._minLength + 1 )
             : this.min();
     }
@@ -108,22 +119,22 @@ export class StringGenerator implements RawDataGenerator< string > {
     public zero(): string {
         return '';
     }
-    
-    /** @inheritDoc */    
-	public median(): string {		
+
+    /** @inheritDoc */
+	public median(): string {
 		return this._randomString.exactly( this.medianLength() );
     }
 
     /** @inheritDoc */
     public randomBetweenMinAndMax(): string {
-        return this.hasSpaceBetweenLengths()
+        return this.hasValuesBetweenMinAndMax()
             ? this._randomString.between( this._minLength + 1, this._maxLength - 1 )
             : this.min();
-    }    
+    }
 
     /** @inheritDoc */
     public justBelowMax(): string {
-        return this.hasSpaceBetweenLengths()
+        return this.hasValuesBetweenMinAndMax()
             ? this._randomString.exactly( this._maxLength - 1 )
             : this.max();
     }
@@ -133,23 +144,23 @@ export class StringGenerator implements RawDataGenerator< string > {
 		return this._randomString.exactly( this._maxLength );
     }
 
-    /** @inheritDoc */    
+    /** @inheritDoc */
     public justAboveMax(): string {
-        if ( ! this.hasSpaceAboveMax() ) {
+        if ( ! this.hasValuesAboveMax() ) {
             return this.max();
-        }        
+        }
         return this._randomString.exactly( this._maxLength + 1 );
     }
 
-    /** @inheritDoc */    
+    /** @inheritDoc */
     public randomAboveMax(): string {
-        if ( ! this.hasSpaceAboveMax() ) {
+        if ( ! this.hasValuesAboveMax() ) {
             return this.max();
-        }        
+        }
         return this._randomString.between( this._maxLength + 1, StringLimits.MAX );
     }
 
-    /** @inheritDoc */    
+    /** @inheritDoc */
     public greatest() {
         return this._randomString.exactly( StringLimits.MAX );
     }

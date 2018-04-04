@@ -1,6 +1,6 @@
 /**
  * Raw data generator
- * 
+ *
  * @author Thiago Delgado Pinto
  */
 export interface RawDataGenerator< T > {

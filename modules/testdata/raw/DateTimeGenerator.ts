@@ -11,40 +11,52 @@ export class DateTimeGenerator implements RawDataGenerator< LocalDateTime > {
 
 	/**
 	 * Constructor.
-	 * 
+	 *
 	 * @param _randomDateTimeGen Random generator.
 	 * @param min Minimum value. Optional. Assumes the minimum datetime if not defined.
 	 * @param max Maximum value. Optional. Assumes the maximum datetime if not defined.
-	 * 
+	 *
 	 * @throws Error In case of invalid values.
 	 */
     constructor(
 		private _randomDateTimeGen: RandomDateTime,
 		min?: LocalDateTime,
 		max?: LocalDateTime
-	) {		
+	) {
 		if ( isDefined( min ) && isDefined( max ) && min.isAfter( max ) ) {
             throw new Error( 'min datetime should not be greater than max' );
         }
         this._min = isDefined( min ) ? min: DateTimeLimits.MIN;
-		this._max = isDefined( max ) ? max: DateTimeLimits.MAX;	
+		this._max = isDefined( max ) ? max: DateTimeLimits.MAX;
     }
 
 	public diffInSeconds(): number {
         return this._min.until( this._max, ChronoUnit.SECONDS );
 	}
 
+	// RANGE ANALYSIS
+
+	/** @inheritDoc */
 	public hasValuesBetweenMinAndMax(): boolean {
 		return this.diffInSeconds() > 0;
 	}
 
+	/** @inheritDoc */
 	public hasValuesBelowMin(): boolean {
 		return this._min.isAfter( DateTimeLimits.MIN );
 	}
 
+	/** @inheritDoc */
 	public hasValuesAboveMax(): boolean {
         return this._max.isBefore( DateTimeLimits.MAX );
-	}    
+	}
+
+	/** @inheritDoc */
+	public isZeroBetweenMinAndMax(): boolean {
+		const ZERO = DateTimeLimits.MIN;
+		return ( this._min.isBefore( ZERO ) || this._min.isEqual( ZERO ) )
+			&& ( this._max.isAfter( ZERO ) || this._max.isEqual( ZERO ) );
+	}
 
 	// DATA GENERATION
 
@@ -59,26 +71,26 @@ export class DateTimeGenerator implements RawDataGenerator< LocalDateTime > {
 			? this._randomDateTimeGen.before( this._min )
 			: this.lowest();
     }
-    
+
     /** @inheritDoc */
 	public justBelowMin(): LocalDateTime {
 		return ( this.hasValuesBelowMin() )
 			? this._min.minusSeconds( 1 )
 			: this.lowest();
     }
-    
+
     /** @inheritDoc */
 	public min(): LocalDateTime {
 		return this._min;
     }
-    
+
     /** @inheritDoc */
 	public justAboveMin(): LocalDateTime {
 		return ( this.hasValuesBetweenMinAndMax() )
 			? this._min.plusSeconds( 1 )
 			: this._min;
     }
-    
+
     /** @inheritDoc */
     public zero(): LocalDateTime {
         return this.lowest();
@@ -86,7 +98,7 @@ export class DateTimeGenerator implements RawDataGenerator< LocalDateTime > {
 
     /** @inheritDoc */
 	public median(): LocalDateTime {
-       
+
         const diffInDaysOfDates = Period.between( this._min.toLocalDate(), this._max.toLocalDate() ).days();
 
         const minTime = this._min.toLocalTime();
@@ -102,32 +114,32 @@ export class DateTimeGenerator implements RawDataGenerator< LocalDateTime > {
         }
         return r.minusMonths( seconds );
     }
-    
+
     /** @inheritDoc */
 	public randomBetweenMinAndMax(): LocalDateTime {
         return this.hasValuesBetweenMinAndMax()
             ? this._randomDateTimeGen.between( this._min.plusSeconds( 1 ), this._max.minusSeconds( 1 ) )
             : this._min;
     }
-    
+
     /** @inheritDoc */
     public justBelowMax(): LocalDateTime {
         return this.hasValuesBetweenMinAndMax()
             ? this._max.minusSeconds( 1 )
             : this._max;
     }
-    
+
     /** @inheritDoc */
 	public max(): LocalDateTime {
 		return this._max;
     }
-    
+
     /** @inheritDoc */
     public justAboveMax(): LocalDateTime {
         return this.hasValuesAboveMax()
             ? this._max.plusSeconds( 1 )
             : this.greatest();
-	}	
+	}
 
     /** @inheritDoc */
 	public randomAboveMax(): LocalDateTime {
@@ -139,6 +151,6 @@ export class DateTimeGenerator implements RawDataGenerator< LocalDateTime > {
 	/** @inheritDoc */
 	public greatest(): LocalDateTime {
 		return DateTimeLimits.MAX;
-	}    
-        
+	}
+
 }
