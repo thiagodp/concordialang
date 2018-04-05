@@ -2,16 +2,19 @@ import { DocumentAnalyzer } from "./DocumentAnalyzer";
 import { Document } from '../../ast/Document';
 import { SemanticException } from "../SemanticException";
 import { DuplicationChecker } from "../../util/DuplicationChecker";
-import { UIElement } from "../../ast/UIElement";
+import { UIElement, UIProperty } from "../../ast/UIElement";
 import { isDefined } from "../../util/TypeChecking";
+import { UIElementPropertyExtractor } from "../../util/UIElementPropertyExtractor";
 
 /**
- * Scenario analyzer for a single document.
+ * UI Element analyzer for a single document.
  *
  * Checkings:
- *  - Duplicated names in a Feature.
- *  - Duplicated names in the Document.
- *  - Duplicated names between a Feature and a Document
+ *  - Duplicated local names.
+ *  - Duplicated global names.
+ *  - Duplicated non-repeatable properties.
+ *  - Triplicated non-triplicatable properties.
+ *  - Incompatible properties.
  *
  * @author Thiago Delgado Pinto
  */
@@ -21,18 +24,65 @@ export class UIElementDA implements DocumentAnalyzer {
 
         const checker = new DuplicationChecker();
 
-        // In the Document
-        const global: UIElement[] = doc.uiElements || [];
-        // checker.checkDuplicatedNamedNodes( global, errors, 'global UI Element' );
+        // In the Document (global)
+        const globalOnes: UIElement[] = doc.uiElements || [];
+        checker.checkDuplicatedNamedNodes( globalOnes, errors, 'global UI Element' );
 
-        // In the Feature
-        const fromFeature: UIElement[] = isDefined( doc.feature )
-            ? doc.feature.uiElements || []
-            : [];
-        // checker.checkDuplicatedNamedNodes( fromFeature, errors, 'UI Element' );
+        // In the Feature (local)
+        const localOnes: UIElement[] = isDefined( doc.feature ) ? doc.feature.uiElements || [] : [];
+        checker.checkDuplicatedNamedNodes( localOnes, errors, 'UI Element' );
 
         // Between both
-        const all: UIElement[] = [ ...global, ...fromFeature ];
-        checker.checkDuplicatedNamedNodes( all, errors, 'UI Element' );
+        // const all: UIElement[] = [ ...global, ...fromFeature ];
+        // checker.checkDuplicatedNamedNodes( all, errors, 'UI Element' );
+
+        this.analyzeUIPropertiesOfEvery( globalOnes, doc, errors );
+        this.analyzeUIPropertiesOfEvery( localOnes, doc, errors );
     }
+
+
+    analyzeUIPropertiesOfEvery( uiElements: UIElement[], doc: Document, errors: SemanticException[] ) {
+
+        const uipExtractor = new UIElementPropertyExtractor();
+
+        const baseNonRepeatableMsg = 'Non-repeatable properties found:';
+        const baseNonTriplicableMsg = 'Three instances of the same property found:';
+        const baseIncompatibleMsg = 'Incompatible properties found:';
+
+        let makeMsg = ( msg: string, properties: UIProperty[] ): string => {
+            let fullMsg = msg;
+            for ( let p of properties ) {
+                fullMsg += "\n  (" + p.location.line + ',' + p.location.column + ') ' + p.content;
+            }
+            return fullMsg;
+        };
+
+        for ( let uie of uiElements ) {
+
+            const propertiesMap = uipExtractor.mapProperties( uie );
+
+            const nonRepeatable = uipExtractor.nonRepeatableProperties( propertiesMap );
+            for ( let nr of nonRepeatable ) {
+                const msg = makeMsg( baseNonRepeatableMsg, nr );
+                const err = new SemanticException( msg, uie.location );
+                errors.push( err );
+            }
+
+            const nonTriplicable = uipExtractor.nonTriplicatableProperties( propertiesMap );
+            for ( let nt of nonTriplicable ) {
+                const msg = makeMsg( baseNonTriplicableMsg, nt );
+                const err = new SemanticException( msg, uie.location );
+                errors.push( err );
+            }
+
+            const incompatibles = uipExtractor.incompatibleProperties( propertiesMap );
+            for ( let inc of incompatibles ) {
+                const msg = makeMsg( baseIncompatibleMsg, inc );
+                const err = new SemanticException( msg, uie.location );
+                errors.push( err );
+            }
+
+        }
+    }
+
 }

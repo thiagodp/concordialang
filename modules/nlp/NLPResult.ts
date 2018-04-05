@@ -52,7 +52,11 @@ export class NLPUtil {
         return this.entitiesNamed( name, nlpResult ).length > 0;
     }
 
-    find( name: string, nlpResult: NLPResult ): NLPEntity | null {
+    hasEntitiesNamed( names: string[], nlpResult: NLPResult ): boolean {
+        return names.every( name => this.hasEntityNamed( name, nlpResult ) );
+    }
+
+    entityNamed( name: string, nlpResult: NLPResult ): NLPEntity | null {
         return nlpResult.entities.find( e => name === e.entity ) || null;
     }
 

@@ -1,13 +1,13 @@
-export class UIPropertyTypes {
-    static ID = 'id';
-    static TYPE = 'type';
-    static EDITABLE = 'editable';
-    static DATA_TYPE = 'datatype';
-    static VALUE = 'value';
-    static MIN_LENGTH = 'minlength';
-    static MAX_LENGTH = 'maxlength';
-    static MIN_VALUE = 'minvalue';
-    static MAX_VALUE = 'maxvalue';
-    static FORMAT = 'format';
-    static REQUIRED = 'required';
+export enum UIPropertyTypes {
+    ID = 'id',
+    TYPE = 'type',
+    EDITABLE = 'editable',
+    DATA_TYPE = 'datatype',
+    VALUE = 'value',
+    MIN_LENGTH = 'minlength',
+    MAX_LENGTH = 'maxlength',
+    MIN_VALUE = 'minvalue',
+    MAX_VALUE = 'maxvalue',
+    FORMAT = 'format',
+    REQUIRED = 'required'
 }
