@@ -37,6 +37,22 @@ format       | no    | yes       | yes       | yes        | yes        | -      
 ```
 Required is compatible with all properties.
 
-**Note**: Since users do not enter other properties but those related to value,
+**Note**: Since users do not enter other properties but those related to *value*,
           properties such as `color`, `width`, etc. **are not considered** but
           they can be used in Given/When/Then/Otherwise clausules as oracles.
+
+## All properties:
+- `id`
+- `type`, defaults to `textbox`
+- `editable`, defaults to `true` when editable `type`s are used (see [Editable Types](#EditableTypes)).
+- `data type`, defaults to `string`
+- `value`
+- `min_length`
+- `max_length`
+- `min_value`
+- `max_value`
+- `format`
+- `required`, defaults to `false`
+
+## Editable Types:
+- `textbox`
