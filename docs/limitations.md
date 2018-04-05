@@ -21,7 +21,7 @@
   - *E.g.*, `Otherwise I should see "${name} must have at least ${minlength} characters."` would receive the corresponding properties of the UI Element
 - Queries must be declared in a single line
   - *E.g.*, `- value comes from "SELECT name FROM [MyDB].profession"`
-
+- Operator `computedBy` is not supported yet
 
 #### Test Case Sentences
 - Support to match tables - Issue #16

@@ -4,35 +4,37 @@
 
 Operator precedence:
 
-1. `is`, `is not`
-2. `in`, `not in`
+1. `equalTo`, `not` + `equalTo`
+2. `in`, `not` + `in`
+3. `computedBy`
 
 Operator incompatibility:
 ```
-Operator | is  | is not | in  | not in |
----------|-----|--------|-----|--------|
-is       | -   | no     | no  | no     |
-is not   | no  | -      | no  | no     |
-in       | no  | no     | -   | yes    |
-not in   | no  | no     | yes | -      |
+Operator     | equalTo | not equalTo | in  | not in | computedBy |
+-------------|---------|-------------|-----|--------|------------|
+equalTo      | -       | no          | no  | no     | no         |
+not equalTo  | no      | -           | no  | no     | no         |
+in           | no      | no          | -   | yes    | no         |
+not in       | no      | no          | yes | -      | no         |
+computedBy   | no      | no          | no  | no     | -          |
 ```
 
 Value-related properties precedence:
 
 1. `value`
-2. `min value`, `max value`, `min length`, `max length`
+2. `min_value`, `max_value`, `min_length`, `max_length`
 3. `format`
 4. `required`
 
 Value-related properties incompatibility:
 ```
-Property     | value | min value | max value | min length | max length | format |
+Property     | value | min_value | max_value | min_length | max_length | format |
 -------------|-------|-----------|-----------|------------|------------|--------|
 value        | -     | no        | no        | no         | no         | no     |
-min value    | no    | -         | yes       | no         | no         | yes    |
-max value    | no    | yes       | -         | no         | no         | yes    |
-min length   | no    | no        | no        | -          | yes        | yes    |
-max length   | no    | no        | no        | yes        | -          | yes    |
+min_value    | no    | -         | yes       | no         | no         | yes    |
+max_value    | no    | yes       | -         | no         | no         | yes    |
+min_length   | no    | no        | no        | -          | yes        | yes    |
+max_length   | no    | no        | no        | yes        | -          | yes    |
 format       | no    | yes       | yes       | yes        | yes        | -      |
 ```
 Required is compatible with all properties.
@@ -55,4 +57,9 @@ Required is compatible with all properties.
 - `required`, defaults to `false`
 
 ## Editable Types:
+- `checkbox`
+- `fileInput`
+- `select`
+- `table`
 - `textbox`
+- `textarea`
