@@ -209,9 +209,8 @@
             },
 
             "ui_connector": {
-                "is": [ "e", "é" ],
-                "in": [ "em", "esta em" , "incluso em", "incluido em", "dentro de", "vem de" ],
-                "same": [ "o mesmo que", "igual a", "semelhante a", "similar a" ],
+                "in": [ "em", "está em" , "incluso em", "incluido em", "dentro de", "vem de" ],
+                "equalTo": [ "é", "igual a", "é o mesmo que", "semelhante a", "similar a" ],
                 "computedBy": [ "calculado como", "computado como", "computed by" ]
             },
 
