@@ -8,6 +8,8 @@ import { UIPropertyTypes } from "./UIPropertyTypes";
 import { ALL_VALUE_TYPES, ValueType } from "./ValueTypeDetector";
 import { Spec } from "../ast/Spec";
 import { LocatedException } from "../req/LocatedException";
+import { EditableUIElementTypes } from "./UIElementTypes";
+import * as enumUtil from 'enum-util';
 
 /**
  * Extract properties from UI Elements.
@@ -69,6 +71,12 @@ export class UIElementPropertyExtractor {
             return this.isEntityConsideredTrue( nlpEntity );
         }
 
+        // Or if its `type` is an editable one
+        const typeNlpEntity = this.extractPropertyValueAsEntity( this.extractProperty( uie, UIPropertyTypes.TYPE ) );
+        if ( isDefined( typeNlpEntity ) ) {
+            return enumUtil.isValue( EditableUIElementTypes, typeNlpEntity.value );
+        }
+
         // Or does not have the property 'editable' but have one of the following properties defined:
         const consideredAsEditable: string[] = [
             UIPropertyTypes.DATA_TYPE,
@@ -122,6 +130,18 @@ export class UIElementPropertyExtractor {
             return null;
         }
         return uie.items.find( item => property === item.property ) || null;
+    }
+
+    extractProperties( uie: UIElement, property: string ): UIProperty[] {
+        if ( ! isDefined( uie.items ) ) {
+            return [];
+        }
+        return uie.items.filter( item => property === item.property );
+    }
+
+    hasEntities( uip: UIProperty, entities: string[] ): boolean {
+        const uipEntities: string[] = uip.nlpResult.entities.map( e => e.entity );
+        return entities.every( e => uipEntities.indexOf( e ) >= 0 );
     }
 
     /**
