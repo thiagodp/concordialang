@@ -205,19 +205,18 @@
                 "minvalue": [ "valor mínimo" ],
                 "maxvalue": [ "valor máximo" ],
                 "format": [ "formato" ],
-                "required": [ "obrigatório", "requerido", "required" ],
-                "computedBy": [ "calculado como", "computado como", "computed by" ],
-
-                "backgroundColor": [ "cor de fundo", "background color" ],
-                "color": [ "cor", "cor de frente", "color" ],
-                "height": [ "altura", "height" ],
-                "width": [ "largura", "width" ]
+                "required": [ "obrigatório", "requerido", "required" ]
             },
 
             "ui_connector": {
                 "is": [ "e", "é" ],
                 "in": [ "em", "esta em" , "incluso em", "incluido em", "dentro de", "vem de" ],
-                "same": [ "o mesmo que", "igual a", "semelhante a", "similar a" ]
+                "same": [ "o mesmo que", "igual a", "semelhante a", "similar a" ],
+                "computedBy": [ "calculado como", "computado como", "computed by" ]
+            },
+
+            "ui_connector_modifier": {
+                "not": [ "não" ]
             },
 
             "ui_data_type": {
