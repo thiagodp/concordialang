@@ -15,6 +15,7 @@ import { UIElementPropertyExtractor } from "../../util/UIElementPropertyExtracto
  *  - Duplicated non-repeatable properties.
  *  - Triplicated non-triplicatable properties.
  *  - Incompatible properties.
+ *  - Incompatible properties' operators.
  *
  * @author Thiago Delgado Pinto
  */
