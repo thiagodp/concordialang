@@ -2,7 +2,7 @@ import { UIElement, UIProperty } from "../ast/UIElement";
 import { CaseType } from "../app/CaseType";
 import { isDefined } from "./TypeChecking";
 import { Entities } from "../nlp/Entities";
-import { NLPEntity } from "../nlp/NLPResult";
+import { NLPEntity, NLPUtil } from "../nlp/NLPResult";
 import { convertCase } from "./CaseConversor";
 import { UIPropertyTypes } from "./UIPropertyTypes";
 import { ALL_VALUE_TYPES, ValueType } from "./ValueTypeDetector";
@@ -237,14 +237,9 @@ export class UIElementPropertyExtractor {
         return nonTriplicatable;
     }
 
-    /**
-     * Returns incompatible properties found.
-     *
-     * @param propertiesMap
-     */
-    incompatibleProperties( propertiesMap: Map< UIPropertyTypes, UIProperty[] > ): UIProperty[][] {
 
-        const valueBasedPropertyTypes: UIPropertyTypes[] = [
+    private valueBasedPropertyTypes(): UIPropertyTypes[] {
+        return  [
             UIPropertyTypes.VALUE,
             UIPropertyTypes.MIN_LENGTH,
             UIPropertyTypes.MAX_LENGTH,
@@ -252,6 +247,16 @@ export class UIElementPropertyExtractor {
             UIPropertyTypes.MAX_VALUE,
             UIPropertyTypes.FORMAT
         ];
+    }
+
+    /**
+     * Returns incompatible properties found.
+     *
+     * @param propertiesMap
+     */
+    incompatibleProperties( propertiesMap: Map< UIPropertyTypes, UIProperty[] > ): UIProperty[][] {
+
+        const valueBasedPropertyTypes = this.valueBasedPropertyTypes();
 
         // All value-related properties
         let declaredPropertyTypes: UIPropertyTypes[] = [];
@@ -290,6 +295,41 @@ export class UIElementPropertyExtractor {
 
         return incompatible;
     }
+
+
+    incompatibleOperators( propertiesMap: Map< UIPropertyTypes, UIProperty[] > ): UIProperty[][] {
+        let incompatible: UIProperty[][] = [];
+        const valueBasedPropertyTypes = this.valueBasedPropertyTypes();
+        const nlpUtil = new NLPUtil();
+
+        for ( let propType of valueBasedPropertyTypes ) {
+            let properties = propertiesMap.get( propType );
+            if ( ! properties || properties.length < 2 ) { // << 2 because 1 has no conflict
+                continue;
+            }
+            // Operators are not compatible, so if there are more than one operator
+            // in the properties, there is a problem.
+            const operatorSet = new Set( properties
+                .map( p => nlpUtil.entityNamed( Entities.UI_CONNECTOR, p.nlpResult ) )
+                .map( entity => entity.entity )
+            );
+            if ( operatorSet.size > 1 ) {
+                incompatible.push( properties );
+                continue;
+            }
+            // Same operator without modifier -> problem
+            const modifiers = properties
+                .map( p => nlpUtil.entityNamed( Entities.UI_CONNECTOR_MODIFIER, p.nlpResult ) )
+                .map( entity => entity.entity );
+            if ( modifiers.length != 1 ) { // e.g., 0 or 2
+                incompatible.push( properties );
+            }
+        }
+
+        return incompatible;
+    }
+
+
 
     areIncompatible( a: UIPropertyTypes, b: UIPropertyTypes ): boolean {
         return ( this.incompatiblePropertyTypes().get( a ) || [] ).indexOf( b ) >= 0;
