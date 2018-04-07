@@ -7,6 +7,9 @@ import { RawDataGenerator } from "./raw/RawDataGenerator";
 import { RegexBasedDataGenerator } from "./RegexBasedDataGenerator";
 import { QueryBasedDataGenerator } from "./QueryBasedDataGenerator";
 import { ListBasedDataGenerator } from "./ListBasedDataGenerator";
+import { EntityValueType } from "../ast/UIElement";
+import { InvertedLogicQueryBasedDataGenerator } from "./InvertedLogicQueryBasedDataGenerator";
+import { InvertedLogicListBasedDataGenerator } from "./InvertedLogicListBasedDataGenerator";
 
 /**
  * Configuration (restrictions) used for generating test data.
@@ -25,7 +28,8 @@ export class DataGenConfig {
 	public query: string = null;
 	public queryable: Queryable = null; // queriable to use to query the value - db or memory
 
-	public value: any[] = null; // for list-based generation
+	public value: EntityValueType = null; // for value and list-based generation
+	public invertedLogic: boolean = false; // for list-based generation, when operator "not in" is used
 
 	public computedBy: string = null; // expression
 
@@ -180,12 +184,18 @@ export class DataGenerator {
 		return this._builder.regex( cfg.valueType, cfg.format );
 	}
 
-	private queryGeneratorFor( cfg: DataGenConfig ): QueryBasedDataGenerator< any > {
+	private queryGeneratorFor( cfg: DataGenConfig ): QueryBasedDataGenerator< any > | InvertedLogicQueryBasedDataGenerator< any > {
+		if ( true === cfg.invertedLogic ) {
+			return this._builder.invertedLogicQuery( cfg.valueType, cfg.query, cfg.queryable );
+		}
 		return this._builder.query( cfg.valueType, cfg.query, cfg.queryable );
 	}
 
-	private listGeneratorFor( cfg: DataGenConfig ): ListBasedDataGenerator< any > {
-		return this._builder.list( cfg.valueType, cfg.value );
+	private listGeneratorFor( cfg: DataGenConfig ): ListBasedDataGenerator< any > | InvertedLogicListBasedDataGenerator< any > {
+		if ( true === cfg.invertedLogic ) {
+			return this._builder.invertedLogicList( cfg.valueType, Array.isArray( cfg.value ) ? cfg.value : [ cfg.value ] );
+		}
+		return this._builder.list( cfg.valueType, Array.isArray( cfg.value ) ? cfg.value : [ cfg.value ] );
 	}
 
 
