@@ -186,6 +186,18 @@ export class UIElementPropertyExtractor {
         return map;
     }
 
+    mapFirstProperty( uie: UIElement ): Map< UIPropertyTypes, UIProperty > {
+        let map = new Map< UIPropertyTypes, UIProperty >();
+        const allPropertyTypes = enumUtil.getValues( UIPropertyTypes );
+        for ( let propType of allPropertyTypes ) {
+            let property = this.extractProperty( uie, propType );
+            if ( property !== null ) {
+                map.set( propType, property );
+            }
+        }
+        return map;
+    }
+
     /**
      * Return non-repeatable properties that are repeated.
      *
@@ -238,7 +250,7 @@ export class UIElementPropertyExtractor {
     }
 
 
-    private valueBasedPropertyTypes(): UIPropertyTypes[] {
+    valueBasedPropertyTypes(): UIPropertyTypes[] {
         return  [
             UIPropertyTypes.VALUE,
             UIPropertyTypes.MIN_LENGTH,

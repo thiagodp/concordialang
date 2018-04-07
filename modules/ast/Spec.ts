@@ -14,6 +14,8 @@ import { DocumentUtil } from '../util/DocumentUtil';
 import { CaseType } from '../app/CaseType';
 import { NamedNode } from './Node';
 import { toEnumValue } from '../util/ToEnumValue';
+import { DatabaseInterface } from '../req/DatabaseInterface';
+import { InMemoryTableInterface } from '../req/InMemoryTableInterface';
 
 /**
  * Specification
@@ -37,6 +39,9 @@ export class Spec {
 
     private _constantNameToValueMap: Map< string, string | number > = new Map< string, string | number >();
     private _uiElementVariableMap: Map< string, UIElement > = new Map< string, UIElement >(); // *all* UI Elements
+
+    private _databaseNameToInterfaceMap = new Map< string, DatabaseInterface | null >(); // Null means it could not connect
+    private _tableNameToInterfaceMap = new Map< string, InMemoryTableInterface | null >(); // Null means it could not connect
 
     private _uiLiteralCaseOption: CaseType = CaseType.CAMEL; // defined by setter
 
@@ -66,6 +71,21 @@ export class Spec {
 
         this._constantNameToValueMap.clear();
         this._uiElementVariableMap.clear();
+
+        this._databaseNameToInterfaceMap.clear();
+        this._tableNameToInterfaceMap.clear();
+    }
+
+    //
+    // CACHE FOR CONNECTIONS
+    //
+
+    databaseNameToInterfaceMap(): Map< string, DatabaseInterface | null > {
+        return this._databaseNameToInterfaceMap;
+    }
+
+    tableNameToInterfaceMap(): Map< string, InMemoryTableInterface | null > {
+        return this._tableNameToInterfaceMap;
     }
 
     //

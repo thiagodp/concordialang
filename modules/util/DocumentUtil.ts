@@ -145,4 +145,15 @@ export class DocumentUtil {
         }
     }
 
+
+    // /**
+    //  * Returns the language to use in the given document.
+    //  *
+    //  * @param doc Document
+    //  * @param defaultLanguage Default language
+    //  */
+    // languageToUse( doc: Document, defaultLanguage: string ): string {
+    //     return ! doc.language ? defaultLanguage : doc.language.value;
+    // }
+
 }

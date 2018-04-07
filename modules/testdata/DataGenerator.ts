@@ -1,38 +1,12 @@
-import { DataTestCase, DataTestCaseGroupDef, DataTestCaseGroup } from './DataTestCase';
-import { ValueType } from '../util/ValueTypeDetector';
-import { DataTestCaseVsValueType } from './DataTestCaseVsValueType';
-import { StringGenerator } from './raw/StringGenerator';
-import { RandomString } from './random/RandomString';
-import { RandomLong } from './random/RandomLong';
-import { RandomDouble } from './random/RandomDouble';
-import { LongGenerator } from './raw/LongGenerator';
-import { RawDataGenerator } from './raw/RawDataGenerator';
-import { DoubleGenerator } from './raw/DoubleGenerator';
-import { RegexBasedDataGenerator } from './RegexBasedDataGenerator';
-import { QueryBasedDataGenerator } from './QueryBasedDataGenerator';
-import { QueryCache } from '../db/QueryCache';
-import { ListBasedDataGenerator } from './ListBasedDataGenerator';
-import { Random } from './random/Random';
-import { Queryable } from '../req/Queryable';
-import { isDefined } from '../util/TypeChecking';
-import { DateGenerator } from './raw/DateGenerator';
-import { RandomDate } from './random/RandomDate';
-import { TimeGenerator } from './raw/TimeGenerator';
-import { RandomTime } from './random/RandomTime';
-import { DateTimeGenerator } from './raw/DateTimeGenerator';
-import { RandomDateTime } from './random/RandomDateTime';
-
-/**
- * Indicates the result of a test case.
- *
- * @author Thiago Delgado Pinto
- */
-export enum DataAnalysisResult {
-	NOT_AVAILABLE,
-	VALID,
-	INVALID
-}
-
+import { Queryable } from "../req/Queryable";
+import { ValueType } from "../util/ValueTypeDetector";
+import { DataGeneratorBuilder } from "./DataGeneratorBuilder";
+import { DataTestCase } from "./DataTestCase";
+import { isDefined } from "../util/TypeChecking";
+import { RawDataGenerator } from "./raw/RawDataGenerator";
+import { RegexBasedDataGenerator } from "./RegexBasedDataGenerator";
+import { QueryBasedDataGenerator } from "./QueryBasedDataGenerator";
+import { ListBasedDataGenerator } from "./ListBasedDataGenerator";
 
 /**
  * Configuration (restrictions) used for generating test data.
@@ -51,8 +25,7 @@ export class DataGenConfig {
 	public query: string = null;
 	public queryable: Queryable = null; // queriable to use to query the value - db or memory
 
-	public inValues: any[] = null; // for list-based generation
-	public notInValues: any[] = null; // for list-based generation
+	public value: any[] = null; // for list-based generation
 
 	public computedBy: string = null; // expression
 
@@ -71,47 +44,10 @@ export class DataGenConfig {
  */
 export class DataGenerator {
 
-	private readonly _randomLong: RandomLong;
-	private readonly _randomDouble: RandomDouble;
-	private readonly _randomString: RandomString;
-
-	private readonly _dataTestCaseVsValueType: DataTestCaseVsValueType =
-		new DataTestCaseVsValueType();
-
-	private readonly _queryCache: QueryCache = new QueryCache();
-
-
-	constructor( private _random: Random ) {
-		this._randomLong = new RandomLong( _random );
-		this._randomDouble = new RandomDouble( _random );
-		this._randomString = new RandomString( _random );
+	constructor(
+		private readonly _builder: DataGeneratorBuilder
+	) {
 	}
-
-	/**
-	 * Analyzes whether a data can be considered valid or invalid according to the given test case.
-	 *
-	 * @param testCase Test case to analyze
-	 */
-	public analyze( testCase: DataTestCase ): DataAnalysisResult {
-
-		if ( ( new DataTestCaseGroupDef() ).groupOf( testCase ) !== DataTestCaseGroup.VALUE ) {
-			return DataAnalysisResult.NOT_AVAILABLE;
-		}
-
-		// TO-DO
-
-		// const lowerThanMin = this.isTestCaseLowerThanMin( testCase );
-		// const greaterThanMax = this.isTestCaseGreaterThanMax( testCase );
-
-		// if ( lowerThanMin || greaterThanMax ) {
-		// 	return DataAnalysisResult.INVALID;
-		// } else if ( ! lowerThanMin && ! greaterThanMax ) {
-		// 	return DataAnalysisResult.VALID;
-		// } else {
-		// 	return DataAnalysisResult.NOT_AVAILABLE;
-		// }
-	}
-
 
 	/**
 	 * Generates a value, according to the given test case and configuration.
@@ -120,10 +56,6 @@ export class DataGenerator {
 	 * @param cfg Configuration
 	 */
 	public async generate( tc: DataTestCase, cfg: DataGenConfig ): Promise< any > {
-
-		if ( ! this._dataTestCaseVsValueType.isCompatible( cfg.valueType, tc ) ) {
-			return null;
-		}
 
 		switch ( tc ) {
 
@@ -198,25 +130,11 @@ export class DataGenerator {
 				return this.listGeneratorFor( cfg ).firstElement();
 			}
 
-			case DataTestCase.SET_SECOND_ELEMENT: {
-				if ( isDefined( cfg.query ) ) {
-					return await this.queryGeneratorFor( cfg ).secondElement();
-				}
-				return this.listGeneratorFor( cfg ).secondElement();
-			}
-
 			case DataTestCase.SET_RANDOM_ELEMENT: {
 				if ( isDefined( cfg.query ) ) {
 					return await this.queryGeneratorFor( cfg ).randomElement();
 				}
 				return this.listGeneratorFor( cfg ).randomElement();
-			}
-
-			case DataTestCase.SET_PENULTIMATE_ELEMENT: {
-				if ( isDefined( cfg.query ) ) {
-					return await this.queryGeneratorFor( cfg ).penultimateElement();
-				}
-				return this.listGeneratorFor( cfg ).penultimateElement();
 			}
 
 			case DataTestCase.SET_LAST_ELEMENT: {
@@ -236,7 +154,7 @@ export class DataGenerator {
 			// REQUIRED
 
 			case DataTestCase.REQUIRED_FILLED: {
-				if ( isDefined( cfg.query ) || isDefined( cfg.inValues ) ) {
+				if ( isDefined( cfg.query ) || isDefined( cfg.value ) ) {
 					return await this.generate( DataTestCase.SET_RANDOM_ELEMENT, cfg );
 				}
 				return this.rawGeneratorFor( cfg ).randomBetweenMinAndMax();
@@ -255,41 +173,19 @@ export class DataGenerator {
 
 
 	private rawGeneratorFor( cfg: DataGenConfig ): RawDataGenerator< any > {
-		switch ( cfg.valueType ) {
-			case ValueType.STRING: return new StringGenerator( this._randomString, cfg.min, cfg.max );
-			case ValueType.INTEGER: return new LongGenerator( this._randomLong, cfg.min, cfg.max );
-			case ValueType.DOUBLE: return new DoubleGenerator( this._randomDouble, cfg.min, cfg.max );
-			case ValueType.DATE: return new DateGenerator( new RandomDate( this._randomLong ), cfg.min, cfg.max );
-			case ValueType.TIME: return new TimeGenerator( new RandomTime( this._randomLong ), cfg.min, cfg.max );
-			case ValueType.DATETIME: return new DateTimeGenerator( new RandomDateTime( this._randomLong ), cfg.min, cfg.max );
-			default: throw Error( 'Generator not available fot the type ' + cfg.valueType );
-		}
+		return this._builder.raw( cfg.valueType, cfg.min, cfg.max );
 	}
 
 	private regexGeneratorFor( cfg: DataGenConfig ): RegexBasedDataGenerator {
-		return new RegexBasedDataGenerator(
-			this._randomLong,
-			this._randomString,
-			cfg.format
-		);
+		return this._builder.regex( cfg.valueType, cfg.format );
 	}
 
 	private queryGeneratorFor( cfg: DataGenConfig ): QueryBasedDataGenerator< any > {
-		return new QueryBasedDataGenerator(
-			this._randomLong,
-			this.rawGeneratorFor( cfg ),
-			cfg.queryable,
-			this._queryCache,
-			cfg.query
-		);
+		return this._builder.query( cfg.valueType, cfg.query, cfg.queryable );
 	}
 
 	private listGeneratorFor( cfg: DataGenConfig ): ListBasedDataGenerator< any > {
-		return new ListBasedDataGenerator(
-			this._randomLong,
-			this.rawGeneratorFor( cfg ),
-			cfg.inValues
-		);
+		return this._builder.list( cfg.valueType, cfg.value );
 	}
 
 

@@ -134,8 +134,14 @@ export class ValueTypeDetector {
 }
 
 
-export function adjustValueToTheRightType( v: string ): any {
-    const vType: ValueType = ( new ValueTypeDetector() ).detect( v.trim() );
+/**
+ * Adjust the value according to the given or detected value type.
+ *
+ * @param v Value to adjust.
+ * @param valueType Desired value type. Optional. If not informed, the type is detected.
+ */
+export function adjustValueToTheRightType( v: string, valueType?: ValueType ): any {
+    const vType: ValueType = valueType || ( new ValueTypeDetector() ).detect( v.trim() );
     let valueAfter: any;
     switch ( vType ) {
         case ValueType.INTEGER  : ; // continue

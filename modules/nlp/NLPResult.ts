@@ -52,6 +52,12 @@ export class NLPUtil {
         return this.entitiesNamed( name, nlpResult ).length > 0;
     }
 
+    /**
+     * Returns true if the NLPResult has all the informed entity names.
+     *
+     * @param names
+     * @param nlpResult
+     */
     hasEntitiesNamed( names: string[], nlpResult: NLPResult ): boolean {
         return names.every( name => this.hasEntityNamed( name, nlpResult ) );
     }

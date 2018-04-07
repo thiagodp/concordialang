@@ -36,9 +36,7 @@
         "FORMAT_INVALID": "FORMAT_INVALID",
 
         "SET_FIRST_ELEMENT": "SET_FIRST_ELEMENT",
-        "SET_SECOND_ELEMENT": "SET_SECOND_ELEMENT",
         "SET_RANDOM_ELEMENT": "SET_RANDOM_ELEMENT",
-        "SET_PENULTIMATE_ELEMENT": "SET_PENULTIMATE_ELEMENT",
         "SET_LAST_ELEMENT": "SET_LAST_ELEMENT",
         "SET_NOT_IN_SET": "SET_NOT_IN_SET",
 
@@ -47,20 +45,20 @@
 
         "COMPUTATION_RIGHT": "COMPUTATION_RIGHT",
         "COMPUTATION_WRONG": "COMPUTATION_WRONG"
-    },    
+    },
 
-    
-    
+
+
     "nlp": {
         "testcase": {
             "ui_action": {
                 "click": [ "click", "activate" ]
             }
         },
-    
-    
+
+
         "database": {
-            
+
             "db_property": {
                 "type": [ "type" ],
                 "path": [ "path", "name" ],
@@ -71,7 +69,7 @@
                 "charset": [ "charset", "encoding" ],
                 "options": [ "options" ]
             }
-    
+
         }
     },
 
@@ -93,7 +91,7 @@
 
                 "I {ui_action} in the option {value}",
                 "I click in the option {value}",
-                
+
                 "I {ui_action} {value} with {value}",
                 "I fill {value} with {value}",
 

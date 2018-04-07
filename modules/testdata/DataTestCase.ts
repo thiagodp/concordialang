@@ -1,6 +1,6 @@
 /**
  * Data test cases.
- * 
+ *
  * @author Thiago Delgado Pinto
  */
 export enum DataTestCase {
@@ -40,9 +40,7 @@ export enum DataTestCase {
 
 	// set
 	SET_FIRST_ELEMENT = 'SET_FIRST_ELEMENT',
-	SET_SECOND_ELEMENT = 'SET_SECOND_ELEMENT',
 	SET_RANDOM_ELEMENT = 'SET_RANDOM_ELEMENT',
-	SET_PENULTIMATE_ELEMENT = 'SET_PENULTIMATE_ELEMENT',
 	SET_LAST_ELEMENT = 'SET_LAST_ELEMENT',
 	SET_NOT_IN_SET = 'SET_NOT_IN_SET',
 
@@ -53,12 +51,12 @@ export enum DataTestCase {
 	// computation
 	COMPUTATION_RIGHT = 'COMPUTATION_RIGHT',
 	COMPUTATION_WRONG = 'COMPUTATION_WRONG'
-		
+
 }
 
 /**
  * Data test case group.
- * 
+ *
  * @author Thiago Delgado Pinto
  */
 export enum DataTestCaseGroup {
@@ -72,7 +70,7 @@ export enum DataTestCaseGroup {
 
 /**
  * Data test cases of each group.
- * 
+ *
  * @author Thiago Delgado Pinto
  */
 export class DataTestCaseGroupDef {
@@ -90,7 +88,7 @@ export class DataTestCaseGroupDef {
 		DataTestCase.VALUE_MAX,
 		DataTestCase.VALUE_JUST_ABOVE_MAX,
 		DataTestCase.VALUE_RANDOM_ABOVE_MAX,
-		DataTestCase.VALUE_GREATEST		
+		DataTestCase.VALUE_GREATEST
 	];
 
 	readonly length: DataTestCase[] = [
@@ -115,9 +113,7 @@ export class DataTestCaseGroupDef {
 
 	readonly set: DataTestCase[] = [
 		DataTestCase.SET_FIRST_ELEMENT,
-		DataTestCase.SET_SECOND_ELEMENT,
 		DataTestCase.SET_RANDOM_ELEMENT,
-		DataTestCase.SET_PENULTIMATE_ELEMENT,
 		DataTestCase.SET_LAST_ELEMENT,
 		DataTestCase.SET_NOT_IN_SET
 	];
@@ -129,12 +125,12 @@ export class DataTestCaseGroupDef {
 
 	readonly computation: DataTestCase[] = [
 		DataTestCase.COMPUTATION_RIGHT,
-		DataTestCase.COMPUTATION_WRONG		
+		DataTestCase.COMPUTATION_WRONG
 	];
 
 	/**
 	 * Returns the test cases of the given group.
-	 * 
+	 *
 	 * @param group Test case group.
 	 */
 	ofGroup( group: DataTestCaseGroup ): DataTestCase[] {
@@ -148,10 +144,10 @@ export class DataTestCaseGroupDef {
 			default: throw new Error( 'Unexpected group' );
 		}
     }
-	
+
 	/**
 	 * Returns the group of the given test case.
-	 * 
+	 *
 	 * @param testCase Test case
 	 */
     groupOf( testCase: DataTestCase ): DataTestCaseGroup {

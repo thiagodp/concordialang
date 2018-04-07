@@ -22,7 +22,16 @@
 - Queries must be declared in a single line
   - *E.g.*, `- value comes from "SELECT name FROM [MyDB].profession"`
 - Operator `computedBy` is not supported yet
+- Cannot declare more than one property of each type (REALLY NEEDED/VALID ???), *e.g.*:
+  - `- value is equal to {SomeElement}`
+  - `- value is not equal to {OtherElement}`
 
 #### Test Case Sentences
 - Support to match tables - Issue #16
   - *E.g.*, `Then I see {My Table} as [Some Table]` would allow to assert whether the UI Element `My Table` has the same lines and columns as a declared table `Some Table`.
+
+### Generated Data Test Cases from Data Analysis
+
+- Since we are simulating min value and max value when they come from a QUERY or a UI_ELEMENT, in order to not generate their values, the data test VALUE_ZERO will be considered:
+  - INVALID when min is defined and greater than 0 OR when max is defined and less than 0
+  - INCOMPATIBLE in any other case when min or max needs to be faked
