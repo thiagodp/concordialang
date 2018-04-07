@@ -19,6 +19,8 @@ import { ListBasedDataGenerator } from "./ListBasedDataGenerator";
 import { QueryBasedDataGenerator } from "./QueryBasedDataGenerator";
 import { Queryable } from "../req/Queryable";
 import { QueryCache } from "../db/QueryCache";
+import { InvertedLogicListBasedDataGenerator } from "./InvertedLogicListBasedDataGenerator";
+import { InvertedLogicQueryBasedDataGenerator } from "./InvertedLogicQueryBasedDataGenerator";
 
 /**
  * Data generator builder
@@ -75,12 +77,24 @@ export class DataGeneratorBuilder {
         return new ListBasedDataGenerator( this._randomLong, this.raw( valueType ), listValues, this._randomTriesToInvalidValues );
     }
 
+    invertedLogicList( valueType: ValueType, listValues: any[] ): InvertedLogicListBasedDataGenerator< any > {
+        return new InvertedLogicListBasedDataGenerator( this.list( valueType, listValues ) );
+    }
+
     query(
         valueType: ValueType,
         query: string,
         queriable: Queryable
     ): QueryBasedDataGenerator< any > {
         return new QueryBasedDataGenerator( this._randomLong, this.raw( valueType ), queriable, this.queryCache, query, this._randomTriesToInvalidValues );
+    }
+
+    invertedLogicQuery(
+        valueType: ValueType,
+        query: string,
+        queriable: Queryable
+    ): InvertedLogicQueryBasedDataGenerator< any > {
+        return new InvertedLogicQueryBasedDataGenerator( this.query( valueType, query, queriable ) );
     }
 
     get queryCache() {
