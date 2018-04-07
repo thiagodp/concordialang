@@ -5,22 +5,22 @@ import { Queryable } from "../req/Queryable";
 
 /**
  * Query-based data generator.
- * 
+ *
  * Known limitations:
  * - It always generates values from the first column returned by the query.
- * 
+ *
  * @author Thiago Delgado Pinto
  */
 export class QueryBasedDataGenerator< T > {
 
     /**
      * Constructor
-     * 
+     *
      * @param _random Random number generator.
      * @param _rawDataGenerator Raw data generator
      * @param _queriable Queriable
      * @param _queryCache Query cache
-     * @param _query SQL query 
+     * @param _query SQL query
      * @param _maxTries Max tries to generate an element which does not belong to the set
      */
     constructor(
@@ -35,21 +35,21 @@ export class QueryBasedDataGenerator< T > {
 
     // DATA GENERATION
 
-    public firstElement = async (): Promise< T | null > => {
+    public async firstElement(): Promise< T | null > {
         const values: any[] = await this.queryValues();
         return values.length > 0
             ? this.valueOfTheFirstColumn( values[ 0 ] )
             : null;
-    };
+    }
 
-    public secondElement = async (): Promise< T | null > => {
+    public async secondElement(): Promise< T | null > {
         const values: any[] = await this.queryValues();
         return values.length > 1
             ? this.valueOfTheFirstColumn( values[ 1 ] )
             : null;
-    };
+    }
 
-    public randomElement = async (): Promise< T | null > => {
+    public async randomElement(): Promise< T | null > {
         /// TO-DO: use LIMIT and OFFSET to generate the random number
         // e.g.: LIMIT 1 OFFSET random( 1, COUNT( * ) )
         const values: any[] = await this.queryValues();
@@ -58,25 +58,25 @@ export class QueryBasedDataGenerator< T > {
         }
         const index: number = this._random.between( 0, values.length - 1 );
         return this.valueOfTheFirstColumn( values[ index ] );
-    };
+    }
 
-    public penultimateElement = async (): Promise< T | null > => {
+    public async penultimateElement(): Promise< T | null > {
         const values: any[] = await this.queryValues();
         const len: number = values.length;
         return len > 1
             ? this.valueOfTheFirstColumn( values[ len - 2 ] )
             : null;
-    };
+    }
 
-    public lastElement = async (): Promise< T | null > => {
+    public async lastElement(): Promise< T | null > {
         const values: any[] = await this.queryValues();
         const len: number = values.length;
         return len > 0
             ? this.valueOfTheFirstColumn( values[ len - 1 ] )
             : null;
-    };
+    }
 
-    public notInSet = async (): Promise< T | null > => {
+    public async notInSet(): Promise< T | null > {
         for ( let i = 0; i < this._maxTries; ++i ) {
             const val: T = this._rawDataGenerator.randomBetweenMinAndMax();
             const found: boolean = await this.hasValue( val );
@@ -85,11 +85,11 @@ export class QueryBasedDataGenerator< T > {
             }
         }
         return null;
-    };
+    }
 
     // UTIL
 
-    private valueOfTheFirstColumn = ( row: any[] ): T | null => {
+    private valueOfTheFirstColumn( row: any[] ): T | null {
         if ( ! row ) {
             return null;
         }
@@ -97,19 +97,19 @@ export class QueryBasedDataGenerator< T > {
             return row[ key ];
         }
         return null;
-    };
+    }
 
-    private queryValues = async (): Promise< any[] > => {
+    private async queryValues(): Promise< any[] > {
         if ( this._queryCache.has( this._query ) ) {
             return this._queryCache.get( this._query );
         }
         const result = await this._queriable.query( this._query );
         this._queryCache.put( this._query, result );
         return result;
-    };
+    }
 
 
-    private hasValue = async ( value: T ): Promise< boolean > => {
+    private async hasValue( value: T ): Promise< boolean > {
         const values: any[] = await this.queryValues();
         for ( let row of values ) {
             const val = this.valueOfTheFirstColumn( row );
@@ -118,6 +118,6 @@ export class QueryBasedDataGenerator< T > {
             }
         }
         return false;
-    };
+    }
 
 }
