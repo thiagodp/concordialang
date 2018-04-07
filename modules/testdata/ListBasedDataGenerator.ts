@@ -3,14 +3,14 @@ import { RawDataGenerator } from "./raw/RawDataGenerator";
 
 /**
  * List-based data generator
- * 
+ *
  * @author Thiago Delgado Pinto
  */
 export class ListBasedDataGenerator< T > {
 
     /**
      * Constructor
-     * 
+     *
      * @param _random Random number generator.
      * @param _rawDataGenerator Raw data generator.
      * @param _values Values.
@@ -48,14 +48,14 @@ export class ListBasedDataGenerator< T > {
 
     public penultimateElement(): T | null {
         const len: number = this._values.length;
-        return len > 1 ? this._values[ len - 2 ] : null; 
+        return len > 1 ? this._values[ len - 2 ] : null;
     }
 
     public lastElement(): T | null {
         if ( this.isEmpty() ) {
             return null;
         }
-        return this._values[ this._values.length - 1 ];        
+        return this._values[ this._values.length - 1 ];
     }
 
     public notInSet(): T | null {
