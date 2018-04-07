@@ -167,12 +167,14 @@ export class DataTestCaseAnalyzer {
                     return DTCAnalysisResult.INCOMPATIBLE;
                 }
 
+                const hasNegation = this.hasNegation( pValue ); // e.g., "value NOT IN ..."
+
                 // Diminush the number of applicable test cases if it is a value or a constant
                 if ( hasValue || hasConstant ) {
                     if (  DataTestCase.SET_FIRST_ELEMENT === dtc ) {
-                        return DTCAnalysisResult.VALID;
+                        return hasNegation ? DTCAnalysisResult.INVALID : DTCAnalysisResult.VALID;
                     } else if ( DataTestCase.SET_NOT_IN_SET === dtc ) {
-                        return DTCAnalysisResult.INVALID;
+                        return hasNegation ? DTCAnalysisResult.VALID : DTCAnalysisResult.INVALID;
                     }
                     return DTCAnalysisResult.INCOMPATIBLE;
                 }
@@ -180,9 +182,9 @@ export class DataTestCaseAnalyzer {
                 switch ( dtc ) {
                     case DataTestCase.SET_FIRST_ELEMENT  : ; // next
                     case DataTestCase.SET_LAST_ELEMENT   : ; // next
-                    case DataTestCase.SET_RANDOM_ELEMENT : return DTCAnalysisResult.VALID;
+                    case DataTestCase.SET_RANDOM_ELEMENT : return hasNegation ? DTCAnalysisResult.INVALID : DTCAnalysisResult.VALID;
 
-                    case DataTestCase.SET_NOT_IN_SET     : return DTCAnalysisResult.INVALID;
+                    case DataTestCase.SET_NOT_IN_SET     : return hasNegation ? DTCAnalysisResult.VALID : DTCAnalysisResult.INVALID;
                 }
 
                 return DTCAnalysisResult.INCOMPATIBLE;
@@ -368,6 +370,10 @@ export class DataTestCaseAnalyzer {
 
             default: return [ uip.value.value, false ];
         }
+    }
+
+    hasNegation( uip: UIProperty ): boolean {
+        return this._nlpUtil.hasEntityNamed( Entities.UI_CONNECTOR_MODIFIER, uip.nlpResult );
     }
 
 }
