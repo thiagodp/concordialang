@@ -47,7 +47,7 @@ export class VariantGivenStepDA implements DocumentAnalyzer {
     analyzeGivenSteps( steps: Step[], errors: SemanticException[] ) {
         let lastWasGiven: boolean | null = null;
         let index = 0, preconditionsCount = 0;
-        for ( let step of steps ) {
+        for ( let step of steps || [] ) {
 
             if ( NodeTypes.STEP_GIVEN === step.nodeType ) {
 
