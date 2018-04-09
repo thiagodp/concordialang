@@ -10,3 +10,10 @@ export function convertCase( text: string, type: CaseType | string ): string {
         default: return text; // do nothing
     }
 }
+
+export function upperFirst( text: string ): string {
+    if ( !! text[ 0 ] ) {
+        return text[ 0 ].toUpperCase() + text.substr( 1 );
+    }
+    return text;
+}

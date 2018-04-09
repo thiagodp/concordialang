@@ -15,6 +15,7 @@ export class EnglishKeywordDictionary implements KeywordDictionary {
     import: string[] = [ 'import' ];
     regexBlock: string[] = [ 'regexes', 'regular expressions' ];
     constantBlock: string[] = [ 'constants' ];
+    i: string[] = [ 'i' ];
     is: string[] = [ 'is' ];
     with: string[] = [ "with" ];
     variant: string[] = [ 'variant' ];
@@ -46,7 +47,7 @@ export class EnglishKeywordDictionary implements KeywordDictionary {
     background: string[] = [ 'background' ];
     scenario: string[] = [ 'scenario' ];
 
-    stepGiven: string[] = [ 'given' ];
+    stepGiven: string[] = [ 'given that', 'given' ];
     stepWhen: string[] = [ 'when' ];
     stepThen: string[] = [ 'then' ];
     stepAnd: string[] = [ 'and', 'but' ];

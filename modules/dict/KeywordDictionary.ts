@@ -12,6 +12,7 @@ export interface KeywordDictionary { // properties should exist in Keywords
     import: string[];
     regexBlock: string[];
     constantBlock: string[];
+    i: string[];
     is: string[];
     with: string[];
     variant: string[];

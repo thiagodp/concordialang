@@ -1,3 +1,4 @@
+import { TestScenario } from "./TestScenario";
 import { Variant } from "../ast/Variant";
 import { RuntimeException } from "../req/RuntimeException";
 import { VariantStateDetector } from "./VariantStateDetector";
@@ -18,6 +19,7 @@ import { Entities } from "../nlp/Entities";
 import { StatePairCombinator } from "./StatePairCombinator";
 import { Pair } from "ts-pair";
 import * as deepcopy from 'deepcopy';
+import { upperFirst } from "../util/CaseConversor";
 
 /**
  * Test Scenario generator
@@ -225,7 +227,7 @@ export class TSGen {
                     // Change the node type
                     nextStep.nodeType = NodeTypes.STEP_THEN;
                     // Change the sentence content!
-                    nextStep.content = nextStep.content.replace( stepAndRegex, this.upperFirst( stepThenKeyword ) ); // Then ...
+                    nextStep.content = nextStep.content.replace( stepAndRegex, upperFirst( stepThenKeyword ) ); // Then ...
                 }
             }
 
@@ -269,12 +271,12 @@ export class TSGen {
                     // Change node type
                     step.nodeType = NodeTypes.STEP_GIVEN;
                     // Change node sentence
-                    step.content = step.content.replace( stepAndRegex, this.upperFirst( stepGivenKeyword ) ); // Given ...
+                    step.content = step.content.replace( stepAndRegex, upperFirst( stepGivenKeyword ) ); // Given ...
                 } else {
                     // Change node type
                     step.nodeType = NodeTypes.STEP_WHEN;
                     // Change node sentence
-                    step.content = step.content.replace( stepAndRegex, this.upperFirst( stepWhenKeyword ) ); // When ...
+                    step.content = step.content.replace( stepAndRegex, upperFirst( stepWhenKeyword ) ); // When ...
                 }
 
                 priorHasState = false; // important
@@ -311,66 +313,6 @@ export class TSGen {
         }
 
         ts.steps.splice( stepIndex, 1, ... stepsToReplace );
-    }
-
-    upperFirst( text: string ): string {
-        if ( !! text[ 0 ] ) {
-            return text[ 0 ].toUpperCase() + text.substr( 1 );
-        }
-        return text;
-    }
-
-}
-
-
-/**
- * Test Scenario
- *
- * @author Thiago Delgado Pinto
- */
-export class TestScenario {
-
-    /**
-     * When the respective Feature or Variant has a tag `ignore`,
-     * the Test Scenario must be ignored for Test Case generation.
-     **/
-    ignoreForTestCaseGeneration: boolean = false;
-
-    /**
-     * Step after state preconditions. Precondition steps must be
-     * the first ones in a Variant. So this makes a reference to
-     * the step after all preconditions, in order to allow ignoring
-     * them, which is needed for State Calls.
-     */
-    stepAfterPreconditions: Step = null;
-
-
-    steps: Step[] = [];
-
-
-    clone(): TestScenario {
-        let ts = new TestScenario();
-        ts.steps = this.steps.slice( 0 );
-        ts.ignoreForTestCaseGeneration = this.ignoreForTestCaseGeneration;
-        ts.stepAfterPreconditions = this.stepAfterPreconditions;
-        return ts;
-    }
-
-    stepsWithoutPreconditions(): Step[] {
-        if ( null === this.stepAfterPreconditions ) {
-            return this.steps;
-        }
-        let subset: Step[] = [];
-        let canAdd: boolean = false;
-        for ( let step of this.steps ) {
-            if ( ! canAdd && step === this.stepAfterPreconditions ) {
-                canAdd = true;
-            }
-            if ( canAdd ) {
-                subset.push( step );
-            }
-        }
-        return subset;
     }
 
 }

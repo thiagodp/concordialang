@@ -3,6 +3,7 @@
         "import": [ "importe", "importar", "import" ],
         "regexBlock": [ "expressões", "expressões regulares", "regexes" ],
         "constantBlock": [ "constantes", "constants" ],
+        "i": [ "eu" ],
         "is": [ "é", "is" ],
         "with": [ "com", "with" ],
         "variant": [ "variante", "variação", "variant" ],
