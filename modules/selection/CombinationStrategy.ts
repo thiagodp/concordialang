@@ -1,43 +1,47 @@
+import { Random } from '../testdata/random/Random';
 import * as cartesian from 'cartesian';
 import * as oneWise from 'one-wise';
 import * as suffleObjArrays from 'shuffle-obj-arrays';
-import { Random } from '../testdata/random/Random';
 
 /**
- * State pair combinator
+ * Combination strategy
  *
  * @author Thiago Delgado Pinto
  */
-export interface StatePairCombinator {
+export interface CombinationStrategy {
 
     /**
+     * Performs the combination
      *
-     * @param pairMap Maps a state to an array of pairs, that is: { string => Array< Pair< State, TestScenario > > > }
-     * @returns Array of maps. Each maps a state to a pair, that is: Array< { string => Pair< State, TestScenario > } >
+     * @param map Maps a string to an array of items, that is: { string => any[] }
+     * @returns Array of maps. Each maps a state to a pair, that is: [ { string => any }, ... ]
      */
-    combine( pairMap: object ): object[];
+    combine( map: object ): object[];
 
 }
+
 
 /**
  * Performs a cartezian product of the elements.
  *
  * @author Thiago Delgado Pinto
  */
-export class AllPairsCombinator implements StatePairCombinator {
+export class CartesianProductStrategy implements CombinationStrategy {
 
-    combine( pairMap: object ): object[] {
-        return cartesian( pairMap );
+    /** @inheritDoc */
+    combine( map: object ): object[] {
+        return cartesian( map );
     }
 
 }
+
 
 /**
  * Performs a 1-wise combination of the elements.
  *
  * @author Thiago Delgado Pinto
  */
-export class OneWisePairCombinator implements StatePairCombinator {
+export class OneWiseStrategy implements CombinationStrategy {
 
     private readonly _random: Random;
 
@@ -45,9 +49,10 @@ export class OneWisePairCombinator implements StatePairCombinator {
         this._random = new Random( seed );
     }
 
-    combine( pairMap: object ): object[] {
+    /** @inheritDoc */
+    combine( map: object ): object[] {
         const rng = () => this._random.generate();
-        return oneWise( pairMap, rng );
+        return oneWise( map, rng );
     }
 
 }
@@ -57,7 +62,7 @@ export class OneWisePairCombinator implements StatePairCombinator {
  *
  * @author Thiago Delgado Pinto
  */
-export class ShuffledOneWisePairCombinator implements StatePairCombinator {
+export class ShuffledOneWiseStrategy implements CombinationStrategy {
 
     private readonly _random: Random;
 
@@ -65,10 +70,11 @@ export class ShuffledOneWisePairCombinator implements StatePairCombinator {
         this._random = new Random( seed );
     }
 
-    combine( pairMap: object ): object[] {
+    /** @inheritDoc */
+    combine( map: object ): object[] {
         const rng = () => this._random.generate();
         const options = { copy: true, rng: rng };
-        return oneWise( suffleObjArrays( pairMap, options ), rng );
+        return oneWise( suffleObjArrays( map, options ), rng );
     }
 
 }

@@ -4,7 +4,7 @@ import { RuntimeException } from "../req/RuntimeException";
 import { VariantStateDetector } from "./VariantStateDetector";
 import { State } from "../ast/VariantLike";
 import { isDefined } from "../util/TypeChecking";
-import { VariantSelectionStrategy } from "./VariantSelectionStrategy";
+import { VariantSelectionStrategy } from "../selection/VariantSelectionStrategy";
 import { RandomLong } from "../testdata/random/RandomLong";
 import { Random } from "../testdata/random/Random";
 import { Step } from "../ast/Step";
@@ -16,7 +16,7 @@ import { LanguageContent } from "../dict/LanguageContent";
 import { KeywordDictionary } from "../dict/KeywordDictionary";
 import { NLPUtil } from "../nlp/NLPResult";
 import { Entities } from "../nlp/Entities";
-import { StatePairCombinator } from "./StatePairCombinator";
+import { CombinationStrategy } from "../selection/CombinationStrategy";
 import { Pair } from "ts-pair";
 import * as deepcopy from 'deepcopy';
 import { upperFirst } from "../util/CaseConversor";
@@ -36,7 +36,7 @@ export class TSGen {
         private _langContentLoader: LanguageContentLoader,
         private _defaultLanguage: string,
         private _variantSelectionStrategy: VariantSelectionStrategy,
-        private _statePairCombinator: StatePairCombinator,
+        private _statePairCombinationStrategy: CombinationStrategy,
         private _variantToTestScenarioMap: Map< Variant, TestScenario[] >,
         private _postconditionNameToVariantsMap: Map< string, Variant[] >,
         seed: string
@@ -114,7 +114,7 @@ export class TSGen {
 
             // console.log( 'pairMap', pairMap );
             // let product = cartesian( pairMap ); // TO-DO replace cartesian with strategy
-            let product = this._statePairCombinator.combine( pairMap );
+            let product = this._statePairCombinationStrategy.combine( pairMap );
             // console.log( 'Product', product );
             let testScenariosToCombineByState: any[] = product;
 

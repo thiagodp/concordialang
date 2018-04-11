@@ -1,7 +1,8 @@
+
 import { TSGen } from "../../modules/testscenario/TSGen";
 import { TestScenario } from "../../modules/testscenario/TestScenario";
 import { SimpleCompiler } from "../../modules/util/SimpleCompiler";
-import { AllVariantsSelectionStrategy } from "../../modules/testscenario/VariantSelectionStrategy";
+import { AllVariantsSelectionStrategy } from "../../modules/selection/VariantSelectionStrategy";
 import { Variant } from "../../modules/ast/Variant";
 import { Spec } from "../../modules/ast/Spec";
 import { Document } from "../../modules/ast/Document";
@@ -9,7 +10,7 @@ import { LocatedException } from "../../modules/req/LocatedException";
 import { BatchSpecificationAnalyzer } from "../../modules/semantic/BatchSpecificationAnalyzer";
 import { SpecFilter } from "../../modules/selection/SpecFilter";
 import { FileInfo } from "../../modules/ast/FileInfo";
-import { AllPairsCombinator } from "../../modules/testscenario/StatePairCombinator";
+import { CartesianProductStrategy } from "../../modules/selection/CombinationStrategy";
 
 
 describe( 'TSGenTest', () => {
@@ -31,7 +32,7 @@ describe( 'TSGenTest', () => {
             cp.langLoader,
             cp.language,
             new AllVariantsSelectionStrategy(),
-            new AllPairsCombinator(),
+            new CartesianProductStrategy(),
             variantToTestScenariosMap,
             postconditionNameToVariantsMap,
             'myseed'
