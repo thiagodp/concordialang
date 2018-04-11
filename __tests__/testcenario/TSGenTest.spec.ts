@@ -1,4 +1,5 @@
-import { TSGen, TestScenario } from "../../modules/testscenario/TSGen";
+import { TSGen } from "../../modules/testscenario/TSGen";
+import { TestScenario } from "../../modules/testscenario/TestScenario";
 import { SimpleCompiler } from "../../modules/util/SimpleCompiler";
 import { AllVariantsSelectionStrategy } from "../../modules/testscenario/VariantSelectionStrategy";
 import { Variant } from "../../modules/ast/Variant";
@@ -9,6 +10,7 @@ import { BatchSpecificationAnalyzer } from "../../modules/semantic/BatchSpecific
 import { SpecFilter } from "../../modules/selection/SpecFilter";
 import { FileInfo } from "../../modules/ast/FileInfo";
 import { AllPairsCombinator } from "../../modules/testscenario/StatePairCombinator";
+
 
 describe( 'TSGenTest', () => {
 
