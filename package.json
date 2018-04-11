@@ -68,6 +68,7 @@
     "pretty-bytes": "^4.0.2",
     "randexp": "^0.4.5",
     "seedrandom": "^2.4.3",
+    "shuffle-obj-arrays": "^1.0.0",
     "sprintf-js": "^1.1.1",
     "sqlstring": "^2.3.0",
     "ts-pair": "^1.1.1",
