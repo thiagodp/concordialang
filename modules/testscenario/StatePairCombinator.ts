@@ -1,5 +1,7 @@
 import * as cartesian from 'cartesian';
 import * as oneWise from 'one-wise';
+import * as suffleObjArrays from 'shuffle-obj-arrays';
+import { Random } from '../testdata/random/Random';
 
 /**
  * State pair combinator
@@ -37,8 +39,36 @@ export class AllPairsCombinator implements StatePairCombinator {
  */
 export class OneWisePairCombinator implements StatePairCombinator {
 
+    private readonly _random: Random;
+
+    constructor( seed: string ) {
+        this._random = new Random( seed );
+    }
+
     combine( pairMap: object ): object[] {
-        return oneWise( pairMap );
+        const rng = () => this._random.generate();
+        return oneWise( pairMap, rng );
+    }
+
+}
+
+/**
+ * Performs a shuffled 1-wise combination of the elements.
+ *
+ * @author Thiago Delgado Pinto
+ */
+export class ShuffledOneWisePairCombinator implements StatePairCombinator {
+
+    private readonly _random: Random;
+
+    constructor( seed: string ) {
+        this._random = new Random( seed );
+    }
+
+    combine( pairMap: object ): object[] {
+        const rng = () => this._random.generate();
+        const options = { copy: true, rng: rng };
+        return oneWise( suffleObjArrays( pairMap, options ), rng );
     }
 
 }
