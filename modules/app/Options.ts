@@ -5,7 +5,7 @@ import { isString, isNumber, isDefined } from '../util/TypeChecking';
 
 /**
  * Application options
- * 
+ *
  * @author Thiago Delgado Pinto
  */
 export class Options {
@@ -33,15 +33,15 @@ export class Options {
     public pluginUninstall: boolean = false; // uninstall an available plug-in
 
     // Processing
-    public verbose: boolean = false; // verbose output    
+    public verbose: boolean = false; // verbose output
     public stopOnTheFirstError: boolean = false; // stop on the first error
     public compileSpecification: boolean = true;
-    public generateExamples: boolean = true; // generate examples (test cases)
+    public generateTestCases: boolean = true; // generate test cases
     public generateScripts: boolean = true; // generate test scripts through a plugin
     public executeScripts: boolean = true; // execute test scripts through a plugin
     public analyzeResults: boolean = true; // analyze execution results through a plugin
-    public dirExample: string = this.directory; // examples' output directory (test cases)
-    public dirScript: string = this.defaults.DIR_SCRIPT; // output directory of test scripts
+    public dirTestCases: string = this.directory; // output directory for test cases
+    public dirScripts: string = this.defaults.DIR_SCRIPT; // output directory for test scripts
     public dirResult: string = this.defaults.DIR_SCRIPT_RESULT; // output directory of test script results
     public extensionFeature: string = this.defaults.EXTENSION_FEATURE; // extension for feature files // TO-DO: convert from meow
     public extensionTestCase: string = this.defaults.EXTENSION_TEST_CASE; // extension for test case files // TO-DO: convert from meow
@@ -52,7 +52,7 @@ export class Options {
     public caseMethod: string = this.defaults.CASE_METHOD; // string case used for test scripts' methods
 
     // Randomic generation
-    public randonSeed: string = null; // random seed to use
+    public seed: string = null; // random seed to use (null will make the tool to generate a seed)
     public randomValid: number = 1; // number of test cases with valid random values
     public randomInvalid: number = 1; // number of test cases with invalid random values
 
@@ -91,7 +91,7 @@ export class Options {
         this.languageDir = resolve( appPath, this.defaults.DIR_LANGUAGE );
 
         // User directories
-        this.dirScript = resolve( processPath, this.defaults.DIR_SCRIPT );
+        this.dirScripts = resolve( processPath, this.defaults.DIR_SCRIPT );
         this.dirResult = resolve( processPath, this.defaults.DIR_SCRIPT_RESULT );
     }
 
@@ -105,11 +105,11 @@ export class Options {
         ! this.seeAbout
             || ! ( this.someInfoOption() )
             || ( this.seeHelp
-                // or do not want to do anything            
+                // or do not want to do anything
                 ||
                 ( ! this.somePluginOption()
                 && ! this.wantToCompile
-                && ! this.wantToGenerateExamples
+                && ! this.wantToGenerateTestCases
                 && ! this.wantToGenerateScripts
                 && ! this.wantToExecuteScripts
                 && ! this.wantToReadResults )
@@ -144,7 +144,7 @@ export class Options {
      * Set attributes from a meow object.
      */
     fromMeow = ( obj: any ): void => {
-        
+
         const CURRENT_DIRECTORY = '.';
         const PARAM_SEPARATOR: string = ',';
 
@@ -158,7 +158,7 @@ export class Options {
             : ( isDefined( input ) && 1 === input.length )
                 ? input[ 0 ]
                 : CURRENT_DIRECTORY;
-                    
+
         this.recursive = flags.recursive !== false;
 
         if ( isString( flags.encoding ) ) {
@@ -196,11 +196,11 @@ export class Options {
         }
         if ( isString( flags.pluginInstall ) ) {
             this.plugin = flags.pluginInstall.trim().toLowerCase();
-            this.pluginInstall = true;            
+            this.pluginInstall = true;
         }
         if ( isString( flags.pluginUninstall ) ) {
             this.plugin = flags.pluginUninstall.trim().toLowerCase();
-            this.pluginUninstall = true;            
+            this.pluginUninstall = true;
         }
 
         // PROCESSING
@@ -209,33 +209,33 @@ export class Options {
         this.stopOnTheFirstError = isDefined( flags.failFast );
 
         const justSpec: boolean = isDefined( flags.justSpec ) || isDefined( flags.justSpecification );
-        const justExample: boolean = isDefined( flags.justExample ) || isDefined( flags.justExamples );
-        const justScript: boolean = isDefined( flags.justScript ) || isDefined( flags.justScripts );
+        const justTestCases: boolean = isDefined( flags.justTestCases ) || isDefined( flags.justTestCase );
+        const justScripts: boolean = isDefined( flags.justScripts ) || isDefined( flags.justScript );
         const justRun: boolean = isDefined( flags.justRun );
-        const justResult: boolean = isDefined( flags.justResult ) || isDefined( flags.justResults );
+        const justResults: boolean = isDefined( flags.justResults ) || isDefined( flags.justResult );
 
         // compare to false is important because meow transforms no-xxx to xxx === false
         const noSpec: boolean = false === flags.spec || false === flags.specification;
-        const noExample: boolean = false === flags.example || false === flags.examples;
-        const noScript: boolean = false === flags.script || false === flags.scripts;
+        const noTestCases: boolean = false === flags.testCase || false === flags.testCases;
+        const noScripts: boolean = false === flags.scripts || false === flags.script;
         const noRun: boolean = false === flags.run;
-        const noResult: boolean = false === flags.result || false === flags.results;
+        const noResults: boolean = false === flags.results || false === flags.result;
 
-        this.compileSpecification = ! noSpec || justSpec || justExample || justScript;
-        this.generateExamples = ! noExample || justExample;
-        this.generateScripts = ! noScript || justScript;
+        this.compileSpecification = ! noSpec || justSpec || justTestCases || justScripts;
+        this.generateTestCases = ! noTestCases || justTestCases;
+        this.generateScripts = ! noScripts || justScripts;
         this.executeScripts = ! noRun || justRun;
-        this.analyzeResults = ! noResult || justResult;
+        this.analyzeResults = ! noResults || justResults;
 
         if ( isString( flags.dirExample ) ) {
-            this.dirExample = flags.dirExample.trim().toLowerCase();
+            this.dirTestCases = flags.dirExample.trim().toLowerCase();
         } else if ( isString( flags.dirExamples ) ) {
-            this.dirExample = flags.dirExamples.trim().toLowerCase();
+            this.dirTestCases = flags.dirExamples.trim().toLowerCase();
         }
         if ( isString( flags.dirScript ) ) {
-            this.dirScript = flags.dirScript.trim().toLowerCase();
+            this.dirScripts = flags.dirScript.trim().toLowerCase();
         } else if ( isString( flags.dirScripts ) ) {
-            this.dirScript = flags.dirScripts.trim().toLowerCase();
+            this.dirScripts = flags.dirScripts.trim().toLowerCase();
         }
         if ( isString( flags.dirResult ) ) {
             this.dirResult = flags.dirResult.trim().toLowerCase();
@@ -253,8 +253,8 @@ export class Options {
 
         // RANDOMIC GENERATION
 
-        if ( isString( flags.randomSeed ) ) {
-            this.randonSeed = flags.randomSeed;
+        if ( isString( flags.seed ) ) {
+            this.seed = flags.seed;
         }
         if ( isNumber( flags.randomValid ) ) {
             this.randomValid = parseInt( flags.randomValid );
@@ -300,7 +300,7 @@ export class Options {
         }
 
         // INFO
-        this.help = isDefined( flags.help );        
+        this.help = isDefined( flags.help );
         this.about = isDefined( flags.about );
         this.version = isDefined( flags.version );
         this.newer = isDefined( flags.newer );
@@ -316,7 +316,7 @@ export class Options {
     fixInconsistences(): void {
 
         // FILES
-        // (nothing)        
+        // (nothing)
 
         // LANGUAGE
         this.languageList = this.languageList && ! this.help; // Help flag takes precedence over other flags
@@ -389,6 +389,6 @@ export class Options {
 
         return errors;
     }
-    */   
-    
+    */
+
 }
