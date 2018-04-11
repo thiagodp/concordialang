@@ -65,7 +65,7 @@ export class Options {
 
     // Combination strategies
     public selVariant: string = this.defaults.SEL_VARIANT; // random|first|fmi|all
-    public selState: string = this.defaults.SEL_STATE; // onewise|all
+    public selState: string = this.defaults.SEL_STATE; // sow|onewise|all
 
     // Test script filtering
     public runMinFeature: number = 0; // minimum feature importance

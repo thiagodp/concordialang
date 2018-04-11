@@ -78,8 +78,9 @@ export class CliHelp {
                                          fmi = the first most important variant
                                          all = all variants
 
-  --sel-state onewise|all                State selection strategy to combine scenarios. ${NIY}
-                                         onewise = one-wise combination (default)
+  --sel-state sow|onewise|all            State selection strategy to combine scenarios. ${NIY}
+                                         sow = shuffled one-wise combination (default)
+                                         onewise = one-wise combination
                                          all = all states
 
   ${chalk.gray('Test script execution filtering (depends on the used plugin)')}
