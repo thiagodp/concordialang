@@ -13,6 +13,7 @@ describe( 'TCGenTest', () => {
     let compiler: SimpleCompiler;
     const LANGUAGE = 'pt';
     const SEED = 'concordia';
+    const validComment =  ' # valid: random';
 
     beforeEach( () => {
         compiler = new SimpleCompiler( LANGUAGE );
@@ -42,7 +43,7 @@ describe( 'TCGenTest', () => {
         const randomString = new RandomString( new Random( gen.seed ) );
         const randomValue = randomString.between( gen.minRandomStringSize, gen.maxRandomStringSize );
 
-        expect( steps[ 0 ].content ).toEqual( 'Quando eu preencho <foo> com "' + randomValue + '"' );
+        expect( steps[ 0 ].content ).toEqual( 'Quando eu preencho <foo> com "' + randomValue + '"' + validComment );
     } );
 
 
@@ -67,9 +68,9 @@ describe( 'TCGenTest', () => {
         const randomValue2 = randomString.between( gen.minRandomStringSize, gen.maxRandomStringSize );
         const randomValue3 = randomString.between( gen.minRandomStringSize, gen.maxRandomStringSize );
 
-        expect( steps[ 0 ].content ).toEqual( 'Quando eu preencho <foo> com "' + randomValue1 + '"' );
-        expect( steps[ 1 ].content ).toEqual( 'E eu preencho <bar> com "' + randomValue2 + '"' );
-        expect( steps[ 2 ].content ).toEqual( 'E eu preencho <baz> com "' + randomValue3 + '"' );
+        expect( steps[ 0 ].content ).toEqual( 'Quando eu preencho <foo> com "' + randomValue1 + '"' + validComment);
+        expect( steps[ 1 ].content ).toEqual( 'E eu preencho <bar> com "' + randomValue2 + '"' + validComment );
+        expect( steps[ 2 ].content ).toEqual( 'E eu preencho <baz> com "' + randomValue3 + '"' + validComment );
     } );
 
 
@@ -113,9 +114,9 @@ describe( 'TCGenTest', () => {
         const randomValue1 = randomString.between( gen.minRandomStringSize, gen.maxRandomStringSize );
         const randomValue2 = randomString.between( gen.minRandomStringSize, gen.maxRandomStringSize );
 
-        expect( steps[ 0 ].content ).toEqual( 'Quando eu preencho <foo> com "' + randomValue1 + '"' );
+        expect( steps[ 0 ].content ).toEqual( 'Quando eu preencho <foo> com "' + randomValue1 + '"' + validComment );
         expect( steps[ 1 ].content ).toEqual( 'E eu preencho {bar}' );
-        expect( steps[ 2 ].content ).toEqual( 'E eu preencho <baz> com "' + randomValue2 + '"' );
+        expect( steps[ 2 ].content ).toEqual( 'E eu preencho <baz> com "' + randomValue2 + '"' + validComment );
         expect( steps[ 3 ].content ).toEqual( 'E eu preencho {zoo}' );
     } );
 
