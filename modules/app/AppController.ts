@@ -13,7 +13,7 @@ import { CliScriptExecutionReporter } from './CliScriptExecutionReporter';
 
 /**
  * Application controller
- * 
+ *
  * @author Thiago Delgado Pinto
  */
 export class AppController {
@@ -21,7 +21,7 @@ export class AppController {
     start = async ( appPath: string, processPath: string ): Promise< boolean > => {
 
         //console.log( appPath );
-        //console.log( processPath );        
+        //console.log( processPath );
 
         let options: Options = new Options( appPath, processPath );
         let cli = new CLI();
@@ -34,7 +34,7 @@ export class AppController {
             ui.showHelp();
             return true;
         }
-    
+
         if ( options.about ) {
             ui.showAbout();
             return true;
@@ -80,7 +80,7 @@ export class AppController {
             if ( ! plugin ) { // needed?
                 cli.newLine( cli.symbolError, 'Could not load the plugin:', options.plugin );
                 return false;
-            }            
+            }
 
             // can continue
         }
@@ -92,16 +92,16 @@ export class AppController {
             } catch ( err ) {
                 cli.newLine( cli.symbolError, err.message );
                 return false;
-            }            
-            return true;            
+            }
+            return true;
         }
-        
+
         let hasErrors: boolean = false;
         let spec: Spec = null;
         if ( options.compileSpecification ) {
             let compilerController: CompilerController = new CompilerController();
             try {
-                spec = await compilerController.compile( options, cli ); 
+                spec = await compilerController.compile( options, cli );
             } catch ( err ) {
                 hasErrors = true;
                 cli.newLine( cli.symbolError, err.message );
@@ -113,7 +113,7 @@ export class AppController {
         //cli.newLine( '-=[ SPEC ]=-', "\n\n" );
         //cli.newLine( spec );
 
-        if ( options.generateExamples ) {
+        if ( options.generateTestCases ) {
             // TO-DO
         } else {
             cli.newLine( cli.symbolInfo, 'Example generation disabled.' );
@@ -152,7 +152,7 @@ export class AppController {
         }
 
         if ( ! options.compileSpecification
-            && ! options.generateExamples
+            && ! options.generateTestCases
             && ! options.generateScripts
             && ! options.executeScripts
             && ! options.analyzeResults

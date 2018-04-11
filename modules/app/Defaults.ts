@@ -24,6 +24,9 @@ export class Defaults {
 
     readonly LINE_BREAKER: string = "\n";
 
+    readonly SEL_VARIANT: string = 'random'; // random|first|fmi|all
+    readonly SEL_STATE: string = 'onewise'; // onewise|all
+
     /**
      * Returns available encodings.
      *

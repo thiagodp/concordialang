@@ -63,6 +63,10 @@ export class Options {
     public selMaxScenario: number = 0; // maximum scenario importance
     public selFilter: string = ''; // filter by tags @see https://github.com/telefonicaid/tartare#tags-and-filters
 
+    // Combination strategies
+    public selVariant: string = this.defaults.SEL_VARIANT; // random|first|fmi|all
+    public selState: string = this.defaults.SEL_STATE; // onewise|all
+
     // Test script filtering
     public runMinFeature: number = 0; // minimum feature importance
     public runMaxFeature: number = 0; // maximum feature importance
@@ -279,6 +283,14 @@ export class Options {
         }
         if ( isString( flags.selFilter ) ) {
             this.selFilter = flags.selFilter;
+        }
+
+        // COMBINATION STRATEGIES
+        if ( isString( flags.selVariant ) ) {
+            this.selVariant = flags.selVariant;
+        }
+        if ( isString( flags.selState ) ) {
+            this.selState = flags.selState;
         }
 
         // TEST SCRIPT FILTERING

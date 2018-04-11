@@ -69,6 +69,19 @@ export class CliHelp {
   --sel-max-scenario <number>            Maximum scenario importance. ${NIY}
   --sel-filter <filter>                  Filter by tag. ${NIY}
 
+  ${chalk.gray('Combination strategies')}
+
+  --sel-variant random|first|fmi|all     Variant selection strategy to combine scenarios,
+                                         according to their states. ${NIY}
+                                         random = a random variant (default)
+                                         first = the first variant
+                                         fmi = the first most important variant
+                                         all = all variants
+
+  --sel-state onewise|all                State selection strategy to combine scenarios. ${NIY}
+                                         onewise = one-wise combination (default)
+                                         all = all states
+
   ${chalk.gray('Test script execution filtering (depends on the used plugin)')}
 
   --run-min-feature <number>             Minimum feature importance. ${NIY}
@@ -146,6 +159,10 @@ export class CliHelp {
                 sns: 'sel-min-scenario',
                 sxs: 'sel-max-scenario',
                 sf: 'sel-filter',
+
+                // COMBINATION STRATEGIES
+                sv: 'sel-variant',
+                ss: 'sel-state',
 
                 // TEST SCRIPT FILTERING
                 rnf: 'run-min-feature',
