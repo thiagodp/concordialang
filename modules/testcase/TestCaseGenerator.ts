@@ -1,6 +1,7 @@
 import { NLPResult, NLPEntity, NLPUtil } from '../nlp/NLPResult';
 import { UIElement, UIProperty } from '../ast/UIElement';
-import { Variant, TestCase } from "../ast/Variant";
+import { Variant } from "../ast/Variant";
+import { TestCase } from "../ast/TestCase";
 import { Spec } from "../ast/Spec";
 import { Document } from "../ast/Document";
 import { LocatedException } from "../req/LocatedException";
@@ -25,6 +26,7 @@ import { KeywordDictionary } from '../dict/KeywordDictionary';
 import { DataTestCaseAnalyzer } from '../testdata/DataTestCaseAnalyzer';
 import * as deepcopy from 'deepcopy';
 import { lower } from 'case';
+import { RuntimeException } from '../req/RuntimeException';
 
 /**
  * Generates Test Cases from Variants.
@@ -39,12 +41,14 @@ export class TestCaseGenerator {
 
     private readonly _nlpUtil = new NLPUtil();
 
-    private readonly _dtcAnalyzer = new DataTestCaseAnalyzer();
+    private readonly _dtcAnalyzer: DataTestCaseAnalyzer;
 
     constructor(
         private _language: string = 'en',
+        seed: string,
         useFuzzyProcessor?: boolean
     ) {
+        this._dtcAnalyzer = new DataTestCaseAnalyzer( seed );
         this._variantSentenceRec = new VariantSentenceRecognizer( new NLP( useFuzzyProcessor ) );
     }
 
@@ -74,7 +78,15 @@ export class TestCaseGenerator {
             const variables: string[] = this._nlpUtil.valuesOfEntitiesNamed( Entities.UI_ELEMENT, s.nlpResult );
             // Maps compatible data test cases
             for ( let v of variables ) {
-                const dataTestCasesMap = this._dtcAnalyzer.compatibleDataTestCases( v, doc, spec, errors );
+
+                let uie = spec.uiElementByVariable( v, doc );
+                if ( ! uie ) {
+                    const msg = 'Could not find UI Element by the variable "' + v + '"';
+                    const err = new RuntimeException( msg, variant.location );
+                    errors.push( err );
+                }
+
+                const dataTestCasesMap = this._dtcAnalyzer.analyzeUIElement( uie, errors );
                 testCaseCount += dataTestCasesMap.size;
                 uieVariableToDataTestCaseMap.set( v, dataTestCasesMap );
             }

@@ -1,5 +1,5 @@
 import { NodeTypes } from "../req/NodeTypes";
-import { TestCase } from "../ast/Variant";
+import { TestCase } from "../ast/TestCase";
 import { NamedNodeLexer } from "./NamedNodeLexer";
 
 /**

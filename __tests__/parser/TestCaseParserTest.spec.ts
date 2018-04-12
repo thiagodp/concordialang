@@ -4,7 +4,7 @@ import { ParsingContext } from '../../modules/parser/ParsingContext';
 import { NodeTypes } from '../../modules/req/NodeTypes';
 import { Feature } from '../../modules/ast/Feature';
 import { TestCaseParser } from "../../modules/parser/TestCaseParser";
-import { TestCase } from "../../modules/ast/Variant";
+import { TestCase } from "../../modules/ast/TestCase";
 
 /**
  * @author Thiago Delgado Pinto

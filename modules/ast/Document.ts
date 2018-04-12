@@ -1,4 +1,4 @@
-import { TestCase } from './Variant';
+import { TestCase } from './TestCase';
 import { Database } from './Database';
 import { Table } from './Table';
 import { ConstantBlock } from './ConstantBlock';

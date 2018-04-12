@@ -15,11 +15,3 @@ export interface Variant extends VariantLike, NamedNode, MayHaveTags {
     // Detected during test scenario generation:
     postconditions?: State[];
 }
-
-/**
- * Test Case
- *
- * @author Thiago Delgado Pinto
- */
-export interface TestCase extends Variant {
-}

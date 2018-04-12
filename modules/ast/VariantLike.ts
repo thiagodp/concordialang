@@ -10,6 +10,7 @@ export interface VariantLike {
     sentences: Step[];
 
     // Detected during test scenario generation:
+
     preconditions?: State[];
     stateCalls?: State[];
 }

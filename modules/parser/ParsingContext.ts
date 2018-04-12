@@ -6,7 +6,8 @@ import { RegexBlock } from '../ast/RegexBlock';
 import { Document } from '../ast/Document';
 import { Feature } from "../ast/Feature";
 import { Scenario } from "../ast/Scenario";
-import { Variant, TestCase } from '../ast/Variant';
+import { Variant } from '../ast/Variant';
+import { TestCase } from '../ast/TestCase';
 import { Background } from '../ast/Background';
 import { VariantBackground } from '../ast/VariantBackground';
 

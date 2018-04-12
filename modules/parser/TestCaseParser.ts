@@ -5,7 +5,7 @@ import { SyntaticException } from '../req/SyntaticException';
 import { NodeIterator } from './NodeIterator';
 import { NodeParser } from './NodeParser';
 import { ParsingContext } from "./ParsingContext";
-import { TestCase } from "../ast/Variant";
+import { TestCase } from "../ast/TestCase";
 import { TagCollector } from "./TagCollector";
 
 /**

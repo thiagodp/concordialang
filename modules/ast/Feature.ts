@@ -2,7 +2,7 @@ import { NamedNode } from './Node';
 import { MayHaveTags } from './Tag';
 import { Text } from '../ast/Text';
 import { Scenario } from './Scenario';
-import { TestCase } from './Variant';
+import { TestCase } from './TestCase';
 import { UIElement } from './UIElement';
 import { Background } from './Background';
 import { VariantBackground } from './VariantBackground';

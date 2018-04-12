@@ -1,7 +1,8 @@
 import { Spec } from "../ast/Spec";
 import { Document } from "../ast/Document";
 import { LocatedException } from "../req/LocatedException";
-import { Variant, TestCase } from "../ast/Variant";
+import { Variant } from "../ast/Variant";
+import { TestCase } from "../ast/TestCase";
 import { isDefined } from "../util/TypeChecking";
 import { ReservedTags } from "../req/ReservedTags";
 import { Symbols } from "../req/Symbols";
