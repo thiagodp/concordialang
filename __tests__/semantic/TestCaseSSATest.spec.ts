@@ -15,7 +15,7 @@ import { TestCase } from '../../modules/ast/TestCase';
  */
 describe( 'TestCaseSSATest', () => {
 
-    const analyzer = new TestCaseSSA(); // under test
+    let analyzer: TestCaseSSA; // under test
 
     let spec: Spec;
     let docA: Document;
@@ -28,6 +28,8 @@ describe( 'TestCaseSSATest', () => {
     let docG: Document;
 
     beforeEach( () => {
+
+        analyzer = new TestCaseSSA();
 
         /*
             - C imports A, B, and E
@@ -159,6 +161,11 @@ describe( 'TestCaseSSATest', () => {
         };
 
         spec.docs.push( docA, docB, docC, docD, docE1, docE2, docF, docG );
+    } );
+
+
+    afterEach( () => {
+        analyzer = null;
     } );
 
 

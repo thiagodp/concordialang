@@ -9,7 +9,11 @@ import { Step } from "./Step";
  */
 export interface TestCase extends NamedNode, MayHaveTags {
 
-    /** Indicates that it is a generated test case (not declared manually). */
+    /**
+     * Indicates that it is a generated test case, i.e., not declared manually.
+     *
+     * Tags @generated may change this flag.
+     */
     generated?: boolean;
 
     /**
