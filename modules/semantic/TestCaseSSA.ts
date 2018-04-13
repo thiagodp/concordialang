@@ -11,6 +11,8 @@ import { Variant } from '../ast/Variant';
 import { TestCase } from '../ast/TestCase';
 import { SpecificationAnalyzer } from './SpecificationAnalyzer';
 import { Location } from '../ast/Location';
+import { LocatedException } from '../req/LocatedException';
+import { ValueTypeDetector } from '../util/ValueTypeDetector';
 import Graph = require( 'graph.js/dist/graph.full.js' );
 import * as path from 'path';
 import * as deepcopy from 'deepcopy';
@@ -19,18 +21,29 @@ import * as deepcopy from 'deepcopy';
  * Executes semantic analysis of Test Cases in a specification.
  *
  * Checkings:
- *  - If Test Cases have a Feature:
- *    - A Test Case from a document without a Feature should:
- *      - Import a single file with a Feature OR
- *      - Import multiple files BUT have a @tag with the Feature name
+ *  - A Test Case from a document without a Feature should:
+ *    - Import a single file with a Feature OR
+ *    - Import multiple files BUT have a tag @feature( <name> )
  *  - Duplicated Test Case names
+ *  - Tag @variant without a tag @scenario
+ *  - Tag content of @scenarios must be number, greater than zero,
+ *    and less than the number of scenarios in the feature.
+ *  - Tag content of @variant must be number, greater than zero,
+ *    and less than the number of variant in the scenario.
+ *
+ * Changes:
+ *  - Tag @scenario( <index> ) makes it to point to that scenario
+ *  - Tag @variant( <index> ) makes it to point to that variant
  *
  * @author Thiago Delgado Pinto
  */
 export class TestCaseSSA extends SpecificationAnalyzer {
 
+    // TODO: change it to receive a dictionary loader, according to the analyzed doc
     constructor(
-        private  _tagFeatureKeywords: string[] = [ ReservedTags.FEATURE ]
+        private  _tagFeatureKeywords: string[] = [ ReservedTags.FEATURE ],
+        private  _tagScenarioKeywords: string[] = [ ReservedTags.SCENARIO ],
+        private  _tagVariantKeywords: string[] = [ ReservedTags.VARIANT ]
     ) {
         super();
     }
@@ -76,7 +89,7 @@ export class TestCaseSSA extends SpecificationAnalyzer {
             let availableFeatureNames: string[] = [ doc.feature.name.toLowerCase() ];
             let availableFeaturePaths: string[] = doc.fileInfo ? [ doc.fileInfo.path || '' ] : [ '' ];
             for ( let testCase of doc.feature.testCases ) {
-                this.checkTags(
+                this.checkFeatureTags(
                     spec,
                     doc,
                     testCase,
@@ -93,7 +106,11 @@ export class TestCaseSSA extends SpecificationAnalyzer {
             return; // nothing to do
         }
 
+        // Duplicated test case names
         this._checker.checkDuplicatedNamedNodes( doc.feature.testCases, errors, 'Test Case' );
+
+        // @variant without @scenario, tag values
+        this.checkTagVariantWithoutTagScenario( doc, doc.feature.testCases, errors );
     }
 
 
@@ -165,7 +182,7 @@ export class TestCaseSSA extends SpecificationAnalyzer {
         // and the feature must exist in the imported files
 
         for ( let variant of doc.testCases ) {
-            this.checkTags(
+            this.checkFeatureTags(
                 spec,
                 doc,
                 variant,
@@ -201,14 +218,14 @@ export class TestCaseSSA extends SpecificationAnalyzer {
     }
 
 
-    private checkTags(
+    private checkFeatureTags(
         spec: Spec,
         doc: Document,
         testCases: TestCase,
         availableFeatures: Feature[],
         availableFeatureNames: string[],
         availableFeaturePaths: string[],
-        errors: Error[]
+        errors: LocatedException[]
     ) {
         // Sanity checking
         if ( ! testCases.tags ) {
@@ -283,6 +300,87 @@ export class TestCaseSSA extends SpecificationAnalyzer {
         let loc = deepcopy( location ) as Location;
         loc.filePath = path;
         return loc;
+    }
+
+
+
+
+    checkTagVariantWithoutTagScenario( doc: Document, testCases: TestCase[], errors: LocatedException[] ) {
+
+        const msgNoScenarioTag = 'Test Case has tag @variant but it does not have a tag @scenario. Please declare it.';
+        const msgInvalidScenarioIndex = '';
+        const msgInvalidVariantIndex = '';
+
+        for ( let tc of testCases || [] ) {
+
+            let hasVariantTag: boolean = false;
+            let hasScenarioTag: boolean = false;
+            for ( let tag of tc.tags || [] ) {
+
+                if ( ! hasVariantTag && this.isVariantTag( tag.name ) ) {
+                    hasVariantTag = true;
+
+                    // Change the test case!
+                    tc.declaredVariantIndex = this.detectTagContentAsIndex( tag, errors ); // 1+ or null
+                }
+
+                if ( ! hasScenarioTag && this.isScenarioTag( tag.name ) ) {
+                    hasVariantTag = true;
+
+                    // Change the test case!
+                    tc.declaredVariantIndex = this.detectTagContentAsIndex( tag, errors ); // 1+ or null
+                }
+            }
+
+
+            // It has @variant but doesn't have @scenario
+            if ( hasVariantTag && ! hasScenarioTag ) {
+                errors.push( new SemanticException( msgNoScenarioTag, tc.location ) )
+
+            // Checking indexes values
+            } else if ( hasVariantTag ) {
+
+                // Scenario index correct ?
+                if ( tc.declaredScenarioIndex > ( doc.feature.scenarios || [] ).length ) {
+
+                    errors.push( new SemanticException( msgInvalidScenarioIndex, tc.location ) );
+
+                } else {
+                    const scenario = doc.feature.scenarios[ tc.declaredScenarioIndex - 1 ];
+
+                    // Variant index correct ?
+                    if ( !! scenario && tc.declaredVariantIndex > ( scenario.variants || [] ).length ) {
+
+                        errors.push( new SemanticException( msgInvalidVariantIndex, tc.location ) );
+
+                    }
+                }
+            }
+        }
+    }
+
+    isScenarioTag( name: string ): boolean {
+        return this._tagScenarioKeywords.indexOf( name.toLowerCase().trim() ) >= 0;
+    }
+
+    isVariantTag( name: string ): boolean {
+        return this._tagVariantKeywords.indexOf( name.toLowerCase().trim() ) >= 0;
+    }
+
+    detectTagContentAsIndex( tag: Tag, errors: LocatedException[] ): number | null {
+        const typeDetector = new ValueTypeDetector();
+
+        if ( ! typeDetector.isInteger( tag.content ) ) {
+            const msg = 'The tag content must be a number.'
+            errors.push( new SemanticException( msg, tag.location ) );
+        } else if ( Number( tag.content ) <= 0 ) {
+            const msg = 'The tag content must be a number greater than zero.'
+            errors.push( new SemanticException( msg, tag.location ) );
+        } else {
+            return Number( tag.content );
+        }
+
+        return null;
     }
 
 }

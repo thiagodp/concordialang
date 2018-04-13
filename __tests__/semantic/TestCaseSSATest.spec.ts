@@ -4,11 +4,11 @@ import { Location } from '../../modules/ast/Location';
 import { NodeTypes } from '../../modules/req/NodeTypes';
 import { ReservedTags } from '../../modules/req/ReservedTags';
 import { Tag } from '../../modules/ast/Tag';
-import { Variant } from '../../modules/ast/Variant';
 import { Feature } from '../../modules/ast/Feature';
 import { Document } from '../../modules/ast/Document';
 import { Spec } from '../../modules/ast/Spec';
 import { TestCaseSSA } from '../../modules/semantic/TestCaseSSA';
+import { TestCase } from '../../modules/ast/TestCase';
 
 /**
  * @author Thiago Delgado Pinto
@@ -90,7 +90,7 @@ describe( 'TestCaseSSATest', () => {
                             } as Location
                         } as Tag
                     ]
-                } as Variant
+                } as TestCase
             ]
         };
 
@@ -117,7 +117,7 @@ describe( 'TestCaseSSATest', () => {
                             } as Location
                         } as Tag
                     ]
-                } as Variant
+                } as TestCase
             ]
         };
 
@@ -130,7 +130,7 @@ describe( 'TestCaseSSATest', () => {
                     {
                         name: "My F test case 1",
                         location: {}
-                    } as Variant
+                    } as TestCase
                 ]
             } as Feature
         };
@@ -153,7 +153,7 @@ describe( 'TestCaseSSATest', () => {
                                 } as Location
                             } as Tag
                         ]
-                    } as Variant
+                    } as TestCase
                 ]
             } as Feature
         };
@@ -218,7 +218,7 @@ describe( 'TestCaseSSATest', () => {
             {
                 name: "My F test case 1",
                 location: {}
-            } as Variant
+            } as TestCase
         );
 
         let errors: Error[] = [];
