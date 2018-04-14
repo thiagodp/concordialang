@@ -8,6 +8,7 @@ import { DTCAnalysisResult } from "../../modules/testdata/DataTestCaseAnalyzer";
 import { EntityValueType } from "../../modules/ast/UIElement";
 import { BatchSpecificationAnalyzer } from "../../modules/semantic/BatchSpecificationAnalyzer";
 import { SpecFilter } from "../../modules/selection/SpecFilter";
+import { join } from "path";
 
 describe( 'UIElementValueGeneratorTest', () => {
 
@@ -325,7 +326,7 @@ describe( 'UIElementValueGeneratorTest', () => {
 
     describe( 'query table', () => {
 
-            describe( 'value', () => {
+        describe( 'value', () => {
 
             describe( 'integer column', () => {
 
@@ -404,6 +405,97 @@ describe( 'UIElementValueGeneratorTest', () => {
 
                     expect( errors ).toEqual( [] );
                     expect( [ 10, 20, 30 ] ).not.toContain( value );
+                } );
+
+            } );
+
+        } );
+
+    } );
+
+
+
+    describe( 'database', () => {
+
+        const dbPath = join( __dirname, '../db/users.json' );
+
+        describe( 'value', () => {
+
+            describe( 'string column', () => {
+
+                let doc1;
+
+                beforeEach( async () => {
+                    doc1 = cp.addToSpec(
+                        spec,
+                        [
+                            'Feature: A',
+                            'UI Element: foo',
+                            ' - valor em "SELECT name FROM [Users]"',
+                            'Database: Users',
+                            ' - type is "json"',
+                            ' - path is "' + dbPath + '"'
+                        ],
+                        { } as FileInfo
+                    );
+
+                    await bsa.analyze( new SpecFilter( spec ).graph(), spec, errors );
+                } );
+
+                it( 'first', async () => {
+
+                    let plans = new Map( [
+                        [ 'foo', new UIETestPlan( DataTestCase.SET_FIRST_ELEMENT, DTCAnalysisResult.VALID, [] ) ]
+                    ] );
+
+                    let values = new Map< string, EntityValueType >();
+                    let context = new ValueGenContext( plans, values );
+                    const value = await gen.generate( 'foo', context, doc1, spec, errors );
+
+                    expect( errors ).toEqual( [] );
+                    expect( value ).toEqual( 'Alice' );
+                } );
+
+                it( 'last', async () => {
+
+                    let plans = new Map( [
+                        [ 'foo', new UIETestPlan( DataTestCase.SET_LAST_ELEMENT, DTCAnalysisResult.VALID, [] ) ]
+                    ] );
+
+                    let values = new Map< string, EntityValueType >();
+                    let context = new ValueGenContext( plans, values );
+                    const value = await gen.generate( 'foo', context, doc1, spec, errors );
+
+                    expect( errors ).toEqual( [] );
+                    expect( value ).toEqual( 'Jack' );
+                } );
+
+                it( 'random', async () => {
+
+                    let plans = new Map( [
+                        [ 'foo', new UIETestPlan( DataTestCase.SET_RANDOM_ELEMENT, DTCAnalysisResult.INVALID, [] ) ]
+                    ] );
+
+                    let values = new Map< string, EntityValueType >();
+                    let context = new ValueGenContext( plans, values );
+                    const value = await gen.generate( 'foo', context, doc1, spec, errors );
+
+                    expect( errors ).toEqual( [] );
+                    expect( [ 'Alice', 'Bob', 'Jack' ] ).toContain( value );
+                } );
+
+                it( 'not in', async () => {
+
+                    let plans = new Map( [
+                        [ 'foo', new UIETestPlan( DataTestCase.SET_NOT_IN_SET, DTCAnalysisResult.INVALID, [] ) ]
+                    ] );
+
+                    let values = new Map< string, EntityValueType >();
+                    let context = new ValueGenContext( plans, values );
+                    const value = await gen.generate( 'foo', context, doc1, spec, errors );
+
+                    expect( errors ).toEqual( [] );
+                    expect( [ 'Alice', 'Bob', 'Jack' ] ).not.toContain( value );
                 } );
 
             } );

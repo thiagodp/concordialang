@@ -19,8 +19,12 @@ export class QueryReferenceReplacer {
     }
 
     replaceDatabaseInQuery( query: string, variable: string ): string {
-        const regex = this.makeNameRegex( variable );
-        return query.replace( regex, '' ); // just removes the database reference
+        // Removes "FROM"
+        const fromRegex = / from /gi;
+        let newQuery = query.replace( fromRegex, '' );
+        // Removes the Database variable
+        const dbNameRegex = this.makeNameRegex( variable );
+        return newQuery.replace( dbNameRegex, '' );
     }
 
     replaceTableInQuery( query: string, variable: string, internalName: string ): string {

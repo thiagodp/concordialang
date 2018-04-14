@@ -67,11 +67,17 @@ export class DatabaseWrapper implements DatabaseInterface {
 
     /** @inheritDoc */
     public async exec( cmd: string, params?: any[] ): Promise< any[] > {
+        if ( ! params ) {
+            return this._dbi.prepareStatement( cmd ).execute();
+        }
         return this._dbi.prepareStatement( cmd ).execute( ... params );
     }
 
     /** @inheritDoc */
     public async query( cmd: string, params?: any[] ): Promise< any[] > {
+        if ( ! params ) {
+            return this._dbi.prepareStatement( cmd ).query();
+        }
         return this._dbi.prepareStatement( cmd ).query( ... params );
     }
 
