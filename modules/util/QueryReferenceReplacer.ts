@@ -23,9 +23,9 @@ export class QueryReferenceReplacer {
         return query.replace( regex, '' ); // just removes the database reference
     }
 
-    replaceTableInQuery( query: string, variable: string ): string {
+    replaceTableInQuery( query: string, variable: string, internalName: string ): string {
         const regex = this.makeNameRegex( variable );
-        return query.replace( regex, '' ); // just removes the database reference
+        return query.replace( regex, internalName );
     }
 
     wrapValue( content: string | number | boolean ): string {

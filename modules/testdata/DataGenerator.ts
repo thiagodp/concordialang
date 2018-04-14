@@ -1,5 +1,5 @@
 import { Queryable } from "../req/Queryable";
-import { ValueType } from "../util/ValueTypeDetector";
+import { ValueType, ValueTypeDetector } from "../util/ValueTypeDetector";
 import { DataGeneratorBuilder } from "./DataGeneratorBuilder";
 import { DataTestCase } from "./DataTestCase";
 import { isDefined } from "../util/TypeChecking";
@@ -20,13 +20,16 @@ export class DataGenConfig {
 
 	public required: boolean = false;
 
-	public min: any = null; // mininum value or length
-	public max: any = null; // mininum value or length
+	public minValue: any = null;
+	public maxValue: any = null;
+
+	public minLength: number = null;
+	public maxLength: number = null;
 
 	public format: string = null; // regex
 
-	public query: string = null;
-	public queryable: Queryable = null; // queriable to use to query the value - db or memory
+	// public query: string = null;
+	// public queryable: Queryable = null; // queriable to use to query the value - db or memory
 
 	public value: EntityValueType = null; // for value and list-based generation
 	public invertedLogic: boolean = false; // for list-based generation, when operator "not in" is used
@@ -34,8 +37,45 @@ export class DataGenConfig {
 	public computedBy: string = null; // expression
 
 	constructor(
-		public valueType: ValueType = ValueType.STRING
+		private _valueType: ValueType = ValueType.STRING
 	) {
+	}
+
+	// mininum value or length
+	get min() {
+		return isDefined( this.minValue ) ? this.minValue : this.minLength;
+	}
+
+	// maximum value or length
+	get max() {
+		return isDefined( this.maxValue ) ? this.maxValue : this.maxLength;
+	}
+
+	set valueType( valType: ValueType ) {
+		this._valueType = valType;
+	}
+
+	get valueType() {
+
+		if ( isDefined( this.minValue ) ) {
+			return ( new ValueTypeDetector() ).detect( this.minValue );
+		}
+
+		if ( isDefined( this.maxValue ) ) {
+			return ( new ValueTypeDetector() ).detect( this.maxValue );
+		}
+
+		if ( isDefined( this.value ) ) {
+			const detector = new ValueTypeDetector();
+			if ( ! Array.isArray( this.value ) ) {
+				return detector.detect( this.value.toString() );
+			}
+			if ( this.value.length > 0 ) {
+				return detector.detect( this.value[ 0 ] );
+			}
+		}
+
+		return this._valueType;
 	}
 
 }
@@ -128,38 +168,46 @@ export class DataGenerator {
 			// SET
 
 			case DataTestCase.SET_FIRST_ELEMENT: {
-				if ( isDefined( cfg.query ) ) {
-					return await this.queryGeneratorFor( cfg ).firstElement();
-				}
+				// if ( isDefined( cfg.query ) ) {
+				// 	return await this.queryGeneratorFor( cfg ).firstElement();
+				// }
 				return this.listGeneratorFor( cfg ).firstElement();
 			}
 
 			case DataTestCase.SET_RANDOM_ELEMENT: {
-				if ( isDefined( cfg.query ) ) {
-					return await this.queryGeneratorFor( cfg ).randomElement();
-				}
+				// if ( isDefined( cfg.query ) ) {
+				// 	return await this.queryGeneratorFor( cfg ).randomElement();
+				// }
 				return this.listGeneratorFor( cfg ).randomElement();
 			}
 
 			case DataTestCase.SET_LAST_ELEMENT: {
-				if ( isDefined( cfg.query ) ) {
-					return await this.queryGeneratorFor( cfg ).lastElement();
-				}
+				// if ( isDefined( cfg.query ) ) {
+				// 	return await this.queryGeneratorFor( cfg ).lastElement();
+				// }
 				return this.listGeneratorFor( cfg ).lastElement();
 			}
 
 			case DataTestCase.SET_NOT_IN_SET: {
-				if ( isDefined( cfg.query ) ) {
-					return await this.queryGeneratorFor( cfg ).notInSet();
-				}
+				// if ( isDefined( cfg.query ) ) {
+				// 	return await this.queryGeneratorFor( cfg ).notInSet();
+				// }
 				return this.listGeneratorFor( cfg ).notInSet();
 			}
 
 			// REQUIRED
 
 			case DataTestCase.REQUIRED_FILLED: {
-				if ( isDefined( cfg.query ) || isDefined( cfg.value ) ) {
-					return await this.generate( DataTestCase.SET_RANDOM_ELEMENT, cfg );
+				// if ( isDefined( cfg.query ) || ( isDefined( cfg.value ) && Array.isArray( cfg.value ) ) ) {
+				// 	return await this.generate( DataTestCase.SET_RANDOM_ELEMENT, cfg );
+				// } else if ( isDefined( cfg.value ) && ! Array.isArray( cfg.value ) ) {
+				// 	return await this.generate( DataTestCase.SET_FIRST_ELEMENT, cfg );
+				// }
+				// return this.rawGeneratorFor( cfg ).randomBetweenMinAndMax();
+
+				if ( isDefined( cfg.value ) ) {
+					const dtc = Array.isArray( cfg.value ) ? DataTestCase.SET_RANDOM_ELEMENT : DataTestCase.SET_FIRST_ELEMENT;
+					return await this.generate( dtc, cfg );
 				}
 				return this.rawGeneratorFor( cfg ).randomBetweenMinAndMax();
 			}
@@ -184,12 +232,12 @@ export class DataGenerator {
 		return this._builder.regex( cfg.valueType, cfg.format );
 	}
 
-	private queryGeneratorFor( cfg: DataGenConfig ): QueryBasedDataGenerator< any > | InvertedLogicQueryBasedDataGenerator< any > {
-		if ( true === cfg.invertedLogic ) {
-			return this._builder.invertedLogicQuery( cfg.valueType, cfg.query, cfg.queryable );
-		}
-		return this._builder.query( cfg.valueType, cfg.query, cfg.queryable );
-	}
+	// private queryGeneratorFor( cfg: DataGenConfig ): QueryBasedDataGenerator< any > | InvertedLogicQueryBasedDataGenerator< any > {
+	// 	if ( true === cfg.invertedLogic ) {
+	// 		return this._builder.invertedLogicQuery( cfg.valueType, cfg.query, cfg.queryable );
+	// 	}
+	// 	return this._builder.query( cfg.valueType, cfg.query, cfg.queryable );
+	// }
 
 	private listGeneratorFor( cfg: DataGenConfig ): ListBasedDataGenerator< any > | InvertedLogicListBasedDataGenerator< any > {
 		if ( true === cfg.invertedLogic ) {

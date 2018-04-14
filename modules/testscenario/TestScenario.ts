@@ -10,7 +10,9 @@ export class TestScenario {
     /**
      * When the respective Feature or Variant has a tag `ignore`,
      * the Test Scenario must be ignored for Test Case generation.
-     **/
+     * Even though, it can be used to replace preconditions' states
+     * and state calls.
+     */
     ignoreForTestCaseGeneration: boolean = false;
 
     /**
@@ -27,7 +29,7 @@ export class TestScenario {
 
     clone(): TestScenario {
         let ts = new TestScenario();
-        ts.steps = this.steps.slice( 0 );
+        ts.steps = this.steps.slice( 0 ); // copy the array, but do not clone the steps
         ts.ignoreForTestCaseGeneration = this.ignoreForTestCaseGeneration;
         ts.stepAfterPreconditions = this.stepAfterPreconditions;
         return ts;

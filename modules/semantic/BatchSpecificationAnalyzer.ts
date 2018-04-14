@@ -31,7 +31,7 @@ export class BatchSpecificationAnalyzer extends SpecificationAnalyzer {
             new ConstantSSA(),
             new DatabaseSSA(),
             new TableSSA(),
-            new TestCaseSSA()
+            new TestCaseSSA() // TODO: change the SSA to receive a dictionary loader, according to the analyzed doc
         ];
     }
 

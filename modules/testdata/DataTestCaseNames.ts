@@ -35,9 +35,9 @@ export interface DataTestCaseNames {
 
 	// set
 	SET_FIRST_ELEMENT: string;
-	SET_SECOND_ELEMENT: string;
+	// SET_SECOND_ELEMENT: string;
 	SET_RANDOM_ELEMENT: string;
-	SET_PENULTIMATE_ELEMENT: string;
+	// SET_PENULTIMATE_ELEMENT: string;
 	SET_LAST_ELEMENT: string;
 	SET_NOT_IN_SET: string;
 

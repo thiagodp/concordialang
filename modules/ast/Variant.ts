@@ -2,6 +2,7 @@ import { NamedNode } from './Node';
 import { MayHaveTags } from './Tag';
 import { Step } from './Step';
 import { VariantLike, State } from './VariantLike';
+import { TestCase } from './TestCase';
 
 /**
  * Variant
@@ -12,6 +13,6 @@ import { VariantLike, State } from './VariantLike';
  */
 export interface Variant extends VariantLike, NamedNode, MayHaveTags {
 
-    // Detected during test scenario generation:
+    /** Postconditions, usually detected during test scenario generation */
     postconditions?: State[];
 }

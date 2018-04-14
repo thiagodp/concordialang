@@ -21,7 +21,7 @@ import { LocatedException } from "../../req/LocatedException";
 import { TestScenarioCombinationStrategy } from "./TestScenarioCombinationStrategy";
 import { TestScenarioCombinator } from "./TestScenarioCombinator";
 import { isDefined } from "../../util/TypeChecking";
-import { VariantSelectionStrategy } from "../VariantSelectionStrategy";
+import { VariantSelectionStrategy } from "../../selection/VariantSelectionStrategy";
 import { VariantRefWithTestScenarios } from "./VariantRefWithTestScenarios";
 import { StepUtil } from "../StepUtil";
 

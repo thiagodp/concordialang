@@ -10,6 +10,19 @@ import { Step } from "./Step";
 export interface TestCase extends NamedNode, MayHaveTags {
 
     /**
+     * A test should fail when all these conditions apply:
+     *   - The Variant has one or more Then sentences that do not produce states
+     *   - The DataTestCase explores a constraint (rule) of a UI Element property
+     *   - The referred UI Element property has no Otherwise sentences
+     *
+     * That is, the Variant's postconditions will not be replaced by
+     * Otherwise statements and it is expected that the system will behave
+     * differently from its postconditions declare, making the test fail.
+     * So, since it is expected that the test will fail, it should pass.
+     */
+    shoudFail?: boolean;
+
+    /**
      * Indicates that it is a generated test case, i.e., not declared manually.
      *
      * Tags @generated may change this flag.

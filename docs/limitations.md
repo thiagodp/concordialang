@@ -25,6 +25,7 @@
 - Cannot declare more than one property of each type (REALLY NEEDED/VALID ???), *e.g.*:
   - `- value is equal to {SomeElement}`
   - `- value is not equal to {OtherElement}`
+- Negation is only allowed for the property `value`
 
 #### Test Case Sentences
 - Support to match tables - Issue #16

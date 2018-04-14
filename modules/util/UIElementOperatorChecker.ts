@@ -13,28 +13,28 @@ export class UIElementOperatorChecker {
     private readonly nlpUtil = new NLPUtil();
 
     isEqualTo( uip: UIProperty ): boolean {
-        return this.hasOperator( uip, UIElementOperator.EQUAL_TO );
+        return this.hasOperator( uip, UIElementOperator.EQUAL_TO ) && ! this.hasNot( uip );
     }
 
     isNotEqualTo( uip: UIProperty ): boolean {
-        return this.isEqualTo( uip ) && this.hasNot( uip );
+        return this.hasOperator( uip, UIElementOperator.EQUAL_TO ) && this.hasNot( uip );
     }
 
     isIn( uip: UIProperty ): boolean {
-        return this.hasOperator( uip, UIElementOperator.IN );
+        return this.hasOperator( uip, UIElementOperator.IN ) && ! this.hasNot( uip );
     }
 
     isNotIn( uip: UIProperty ): boolean {
-        return this.isIn( uip ) && this.hasNot( uip );
+        return this.hasOperator( uip, UIElementOperator.IN ) && this.hasNot( uip );
     }
 
     isComputedBy( uip: UIProperty ): boolean {
-        return this.hasOperator( uip, UIElementOperator.COMPUTED_BY );
+        return this.hasOperator( uip, UIElementOperator.COMPUTED_BY ) && ! this.hasNot( uip );
     }
 
     // Not accepted, but useful for validation
     isNotComputedBy( uip: UIProperty ): boolean {
-        return this.isComputedBy( uip ) && this.hasNot( uip );
+        return this.hasOperator( uip, UIElementOperator.COMPUTED_BY ) && this.hasNot( uip );
     }
 
     private hasOperator( uip: UIProperty, operator: string ): boolean {

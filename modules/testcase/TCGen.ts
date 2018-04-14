@@ -1,7 +1,8 @@
-import { Variant, TestCase } from "../ast/Variant";
+import { Variant } from "../ast/Variant";
+import { TestCase } from "../ast/TestCase";
 import { TestScenario } from "../testscenario/TestScenario";
 import { Step } from "../ast/Step";
-import { NLPUtil, NLPEntity } from "../nlp/NLPResult";
+import { NLPUtil, NLPEntity, NLPResult } from "../nlp/NLPResult";
 import { Entities } from "../nlp/Entities";
 import { KeywordDictionary } from "../dict/KeywordDictionary";
 import { NodeTypes } from "../req/NodeTypes";
@@ -25,6 +26,46 @@ import { DataGeneratorBuilder } from "../testdata/DataGeneratorBuilder";
 import { DataTestCase } from "../testdata/DataTestCase";
 import { RandomLong } from "../testdata/random/RandomLong";
 import { UIPropertyTypes } from "../util/UIPropertyTypes";
+import { CombinationStrategy } from "../selection/CombinationStrategy";
+import { Pair } from "ts-pair";
+import { TestPlan } from "./TestPlan";
+import * as objectToArray from 'object-to-array';
+
+
+/**
+ * Data test cases to apply in a UI Element
+ */
+class UIEDataTestCases {
+
+    /**
+     *
+     * @param valid Valid data test cases
+     * @param invalidMap Invalid data test cases and the corresponding Otherwise steps
+     */
+    constructor(
+        public valid: DataTestCase[] = [],
+        public invalidMap: Map< DataTestCase, Step[] > = new Map< DataTestCase, Step[] >()
+    ) {
+    }
+}
+
+/**
+ * Separates valid and invalid test cases, registering Otherwise steps for the invalid ones.
+ *
+ * @param map Map with data test cases and their results
+ */
+function separateDataTestCases( map: Map< DataTestCase, Pair< DTCAnalysisResult, Step[] > > ): UIEDataTestCases {
+    let uieDTC = new UIEDataTestCases();
+    for ( let [ dtc, result ] of map ) {
+        if ( DTCAnalysisResult.VALID === result.first ) {
+            uieDTC.valid.push( dtc );
+        } else if ( DTCAnalysisResult.INVALID === result.first ) {
+            uieDTC.invalidMap.set( dtc, result.second );
+        }
+    }
+    return uieDTC;
+}
+
 
 export class TCGen {
 
@@ -53,7 +94,128 @@ export class TCGen {
         this._dataGen = new DataGenerator( new DataGeneratorBuilder( seed, randomTriesToInvalidValues ) );
     }
 
+
+    makeSingleScenario(
+        spec: Spec,
+        doc: Document,
+        variant: Variant,
+        ts: TestScenario,
+        errors: LocatedException[]
+    ) {
+        // TODO: fill UI Literals from internal and external steps with random value
+        // TODO: fill UI Elements from external steps with valid values
+        //
+        // TODO: Improvement -> make a map <string, string> to cache the replacement
+        //       of these steps in other scenarios.
+
+        const preconditionsWithoutStates = this.postconditionsWithoutStates( variant );
+
+
+        // Make an analysis of compatible Data Test Cases for every internal UI Element
+        let uieAnalysisMap = new Map< string, UIEDataTestCases >();
+        const uiElementNames: string[] = this.nonExternalUIElementNamesOf( ts );
+        for ( let name of uiElementNames ) {
+            let uie = spec.uiElementByVariable( name, doc );
+            if ( ! uie ) {
+                const msg = 'Variant references a UI Element that could not be found: ' + name;
+                const err = new RuntimeException( msg, variant.location );
+                errors.push( err );
+                continue;
+            }
+            // Analyze Data Test Case compatibility
+            let map = this._dtcAnalyzer.analyzeUIElement( uie, errors );
+            // Separate invalid and valid cases
+            let uieDTC = separateDataTestCases( map );
+            // Set them to the current UI Element
+            uieAnalysisMap.set( name, uieDTC );
+        }
+
+        // Produces a matrix with all the data test cases that will be applied to the test scenario
+        let dtcMatrix: object[][] = [];
+
+
+
+    }
+
+    postconditionsWithoutStates( variant: Variant ): Step[] {
+        let steps: Step[] = [];
+        let lastThen = null;
+        for ( let step of variant.sentences || [] ) {
+            if ( step.nodeType === NodeTypes.STEP_THEN
+                || ( lastThen !== null && step.nodeType === NodeTypes.STEP_AND ) ) {
+                lastThen = step;
+            } else if ( null === lastThen ) {
+                continue;
+            } else {
+                lastThen = null;
+            }
+
+            const hasState = this._nlpUtil.hasEntityNamed( Entities.STATE, step.nlpResult );
+            if ( ! hasState ) {
+                steps.push( step );
+            }
+        }
+        return steps;
+    }
+
+    // Default strategy: 'shuffled-one-wise'
+    combineOnlyValidDataTestCases( map: Map< string, UIEDataTestCases >, strategy: CombinationStrategy ): TestPlan[] {
+        let objMap = {};
+        for ( let [ uieName, uieDTC ] of map ) {
+            objMap[ uieName ] = uieDTC.valid;
+        }
+        const combinations = strategy.combine( objMap ); // array of objects
+        let plans: TestPlan[] = [];
+        for ( let comb of combinations ) {
+            let plan = new TestPlan();
+            plan.dataTestCases = new Map( objectToArray( comb ) );
+        }
+        return plans;
+    }
+
+    // Default strategy: 'shuffled-one-wise'
+    // Oracles must be produced from postconditions, according to the Data Test Case. No postconditions -> mark it to fail.
+    combineOnlyInvalidDataTestCases( map: Map< string, UIEDataTestCases >, strategy: CombinationStrategy ): object[] {
+        let objMap = {};
+        for ( let [ uieName, uieDTC ] of map ) {
+            objMap[ uieName ] = uieDTC.invalidMap.keys();
+        }
+        return strategy.combine( objMap ); // array of objects
+    }
+
+    // Default strategy: 'shuffled-one-wise'
+    generateOneInvalidAndTheOthersValidForUIE(
+        targetUIEName: string,
+        map: Map< string, UIEDataTestCases >,
+        strategy: CombinationStrategy
+    ): object[] {
+        let objMap = {};
+        for ( let [ uieName, uieDTC ] of map ) {
+            if ( uieName === targetUIEName ) {
+                objMap[ uieName ] = uieDTC.invalid;
+            } else {
+                objMap[ uieName ] = uieDTC.valid;
+            }
+        }
+        return strategy.combine( objMap ); // array of objects
+    }
+
+    generateOneInvalidForEveryUIE(
+        map: Map< string, UIEDataTestCases >,
+        strategy: CombinationStrategy
+    ): object[][] {
+        let all: object[][] = [];
+        for ( let name of map.keys() ) {
+            let arr = this.generateOneInvalidAndTheOthersValidForUIE( name, map, strategy );
+            all.push( arr );
+        }
+        return all;
+    }
+
+
+
     generate(
+        doc: Document,
         variant: Variant,
         testScenarios: TestScenario[]
     ): TestCase[] {
@@ -74,8 +236,14 @@ export class TCGen {
 
         // Question: gerar valores para UI Elements de Variants externas ao gerar o cenário de teste?
 
+        // ---
+
+
+
+
         return testCases;
     }
+
 
 
     /**
@@ -157,6 +325,24 @@ export class TCGen {
         return steps;
     }
 
+    /**
+     * Extract non external UI Element names from the given Test Scenario.
+     *
+     * @param ts Test Scenario
+     */
+    nonExternalUIElementNamesOf( ts: TestScenario ): string[] {
+        let uniqueNames = new Set< string >();
+        for ( let step of ts.steps ) {
+            if ( true === step.external ) {
+                continue;
+            }
+            let entities: NLPEntity[] = this._nlpUtil.entitiesNamed( Entities.UI_ELEMENT, step.nlpResult );
+            for ( let e of entities ) {
+                uniqueNames.add( e.value );
+            }
+        }
+        return Array.from( uniqueNames );
+    }
 
 
     /**

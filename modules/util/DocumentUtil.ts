@@ -62,17 +62,30 @@ export class DocumentUtil {
 
         const lowerCasedUIElementName = uiElementName.toLowerCase();
 
-        // Document has feature with ui elements ?
+        // Local UI element
         if ( isDefined( doc.feature ) ) {
             // Let's search it in the feature
             for ( let uie of doc.feature.uiElements || [] ) {
                 if ( uie.name.toLowerCase() === lowerCasedUIElementName ) {
+
+                    // Adds variable name if is does not have
+                    if ( ! uie.info ) {
+                        uie.info = {} as UIElementInfo;
+                    }
+                    if ( ! uie.info.fullVariableName ) {
+                        uie.info.fullVariableName = this._uieNameHandler.makeVariableName(
+                            doc.feature.name,
+                            uiElementName,
+                            false
+                        );
+                    }
+
                     return uie;
                 }
             }
         }
 
-        // Finally let's search it in the document
+        // Global UI element
         for ( let uie of doc.uiElements || [] ) {
             if ( uie.name.toLowerCase() === lowerCasedUIElementName ) {
                 return uie;

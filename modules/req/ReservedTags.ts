@@ -7,9 +7,9 @@ export enum ReservedTags {
 
     GENERATED = 'generated', //     example: @generated
 
-    FEATURE = 'feature', //         example: @feature( login ) << NEEDED?
-    SCENARIO = 'scenario', //       example: @scenario( sucessful login ) << NEEDED?
-    VARIANT = 'variant', //         example: @variant( successful login )
+    FEATURE = 'feature', //         example: @feature( <name> )
+    SCENARIO = 'scenario', //       example: @scenario( <index> )
+    VARIANT = 'variant', //         example: @variant( <index> )
 
     GLOBAL = 'global', //           example: @global
     IGNORE = 'ignore', //           example: @ignore

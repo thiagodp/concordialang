@@ -17,6 +17,8 @@ import { Constant } from "../ast/Constant";
 import { DataGeneratorBuilder } from "./DataGeneratorBuilder";
 import * as arrayDiff from 'arr-diff';
 import * as enumUtil from 'enum-util';
+import { Pair } from "ts-pair";
+import { Step } from "../ast/Step";
 
 
 /**
@@ -51,29 +53,23 @@ export class DataTestCaseAnalyzer {
     }
 
     /**
-     * Returns the compatible test cases and whether they are considered valid or not.
+     * Analysis a UI Element and returns a map with the available data test cases and
+     * their analysis result.
      *
-     * @param uiElementVariable
-     * @param doc
-     * @param spec
-     * @param errors
+     * @param uie UI Element (input).
+     * @param errors Errors found during the analysis (output).
+     *
+     * @returns A map for every DataTestCase with its result and an array of Otherwise steps,
+     *          if applicable. Only when the analysis result is INVALID and the property
+     *          explored by the DataTestCase has Otherwise steps, these steps are included.
+     *          In all other cases, they receive an empty list.
      */
-    compatibleDataTestCases(
-        uiElementVariable: string,
-        doc: Document,
-        spec: Spec,
+    analyzeUIElement(
+        uie: UIElement,
         errors: Error[]
-    ): Map< DataTestCase, DTCAnalysisResult > {
+    ): Map< DataTestCase, Pair< DTCAnalysisResult, Step[] > > {
 
-        let map = new Map< DataTestCase, DTCAnalysisResult >();
-
-        // Finds the UI Element
-        let uie = spec.uiElementByVariable( uiElementVariable, doc );
-        if ( ! uie ) {
-            const msg = `UI Element not found in the specification: ${uiElementVariable}`;
-            errors.push( new Error( msg ) );
-            return map; // empty
-        }
+        let map = new Map< DataTestCase, Pair< DTCAnalysisResult, Step[] > >();
 
         // Returns if not editable
         if ( ! this._uiePropExtractor.extractIsEditable( uie ) ) {
@@ -95,8 +91,9 @@ export class DataTestCaseAnalyzer {
 
         // Sets incompatible ones
         const incompatibles: DataTestCase[] = arrayDiff( compatibles, enumUtil.getValues( DataTestCase ) );
+        const incompatiblePair = new Pair( DTCAnalysisResult.INCOMPATIBLE, [] );
         for ( let dtc of incompatibles ) {
-            map.set( dtc, DTCAnalysisResult.INCOMPATIBLE );
+            map.set( dtc, incompatiblePair );
         }
 
         return map;
@@ -110,7 +107,12 @@ export class DataTestCaseAnalyzer {
      * @param dtc
      * @param uie
      */
-    analyzeProperties( valueType: ValueType, dtc: DataTestCase, uie: UIElement , errors: RuntimeException[] ): DTCAnalysisResult {
+    analyzeProperties(
+        valueType: ValueType,
+        dtc: DataTestCase,
+        uie: UIElement,
+        errors: RuntimeException[]
+    ): Pair< DTCAnalysisResult, Step[] > {
 
         // Note: assumes that properties were validated previously, and conflicting properties were already solved.
 
@@ -120,6 +122,7 @@ export class DataTestCaseAnalyzer {
         const propertiesMap = this._uiePropExtractor.mapFirstProperty( uie );
 
         // Properties
+        const pRequired = propertiesMap.get( UIPropertyTypes.REQUIRED ) || null;
         const pValue = propertiesMap.get( UIPropertyTypes.VALUE ) || null;
         const pMinLength = propertiesMap.get(  UIPropertyTypes.MIN_LENGTH ) || null;
         const pMaxLength = propertiesMap.get( UIPropertyTypes.MAX_LENGTH ) || null;
@@ -127,33 +130,41 @@ export class DataTestCaseAnalyzer {
         const pMaxValue = propertiesMap.get( UIPropertyTypes.MAX_VALUE ) || null;
         const pFormat = propertiesMap.get( UIPropertyTypes.FORMAT ) || null;
 
+        const validPair = new Pair( DTCAnalysisResult.VALID, [] );
+        const incompatiblePair = new Pair( DTCAnalysisResult.INCOMPATIBLE, [] );
+
         switch ( group ) {
 
-            case DataTestCaseGroup.FORMAT: {
+            case DataTestCaseGroup.FORMAT: { // negation is not valid here
                 if ( ! pFormat ) {
-                    return DTCAnalysisResult.INCOMPATIBLE;
+                    return incompatiblePair;
                 }
+
                 switch ( dtc ) {
-                    case DataTestCase.FORMAT_VALID: return DTCAnalysisResult.VALID;
-                    case DataTestCase.FORMAT_INVALID: return DTCAnalysisResult.INVALID;
+                    case DataTestCase.FORMAT_VALID   : return validPair;
+                    case DataTestCase.FORMAT_INVALID : return new Pair( DTCAnalysisResult.INVALID, pFormat.otherwiseSentences || [] );
                 }
-                return DTCAnalysisResult.INCOMPATIBLE;
+                return incompatiblePair;
             }
 
-            case DataTestCaseGroup.REQUIRED: {
+
+            case DataTestCaseGroup.REQUIRED: { // negation is not valid here
                 const isRequired: boolean = this._uiePropExtractor.extractIsRequired( uie );
                 switch ( dtc ) {
-                    case DataTestCase.REQUIRED_FILLED: return DTCAnalysisResult.VALID;
+                    case DataTestCase.REQUIRED_FILLED: return validPair;
                     case DataTestCase.REQUIRED_NOT_FILLED:
-                        return isRequired ? DTCAnalysisResult.INVALID : DTCAnalysisResult.VALID;
+                        return isRequired
+                            ? new Pair( DTCAnalysisResult.INVALID, pRequired.otherwiseSentences || [] )
+                            : validPair;
                 }
-                return DTCAnalysisResult.INCOMPATIBLE;
+                return incompatiblePair;
             }
+
 
             case DataTestCaseGroup.SET: {
 
                 if ( ! pValue ) {
-                    return DTCAnalysisResult.INCOMPATIBLE;
+                    return incompatiblePair;
                 }
 
                 const hasValue = this._nlpUtil.hasEntityNamed( Entities.VALUE, pValue.nlpResult );
@@ -164,30 +175,31 @@ export class DataTestCaseAnalyzer {
                     && ! this._nlpUtil.hasEntityNamed( Entities.QUERY, pValue.nlpResult )
                     && ! this._nlpUtil.hasEntityNamed( Entities.VALUE_LIST, pValue.nlpResult )
                 ) {
-                    return DTCAnalysisResult.INCOMPATIBLE;
+                    return incompatiblePair;
                 }
 
                 const hasNegation = this.hasNegation( pValue ); // e.g., "value NOT IN ..."
 
+                const invalidPair = new Pair( DTCAnalysisResult.INVALID, pValue.otherwiseSentences || [] );
+
                 // Diminush the number of applicable test cases if it is a value or a constant
                 if ( hasValue || hasConstant ) {
                     if (  DataTestCase.SET_FIRST_ELEMENT === dtc ) {
-                        return hasNegation ? DTCAnalysisResult.INVALID : DTCAnalysisResult.VALID;
+                        return hasNegation ? invalidPair : validPair;
                     } else if ( DataTestCase.SET_NOT_IN_SET === dtc ) {
-                        return hasNegation ? DTCAnalysisResult.VALID : DTCAnalysisResult.INVALID;
+                        return hasNegation ? validPair : invalidPair;
                     }
-                    return DTCAnalysisResult.INCOMPATIBLE;
+                    return incompatiblePair;
                 }
 
                 switch ( dtc ) {
                     case DataTestCase.SET_FIRST_ELEMENT  : ; // next
                     case DataTestCase.SET_LAST_ELEMENT   : ; // next
-                    case DataTestCase.SET_RANDOM_ELEMENT : return hasNegation ? DTCAnalysisResult.INVALID : DTCAnalysisResult.VALID;
-
-                    case DataTestCase.SET_NOT_IN_SET     : return hasNegation ? DTCAnalysisResult.VALID : DTCAnalysisResult.INVALID;
+                    case DataTestCase.SET_RANDOM_ELEMENT : return hasNegation ? invalidPair : validPair;
+                    case DataTestCase.SET_NOT_IN_SET     : return hasNegation ? validPair : invalidPair;
                 }
 
-                return DTCAnalysisResult.INCOMPATIBLE;
+                return incompatiblePair;
             }
 
 
@@ -196,9 +208,9 @@ export class DataTestCaseAnalyzer {
                 const hasMinValue = isDefined( pMinValue );
                 const hasMaxValue = isDefined( pMaxValue );
 
-                // if ( ! hasMinValue && ! hasMaxValue ) { // free value
-                //     return DataAnalysisResult.INCOMPATIBLE; // ???
-                // }
+                if ( ! hasMinValue && ! hasMaxValue ) {
+                    return incompatiblePair;
+                }
 
                 let [ minValue, isToFakeMinValue ] = hasMinValue
                     ? this.resolvePropertyValue( UIPropertyTypes.MIN_VALUE, pMinValue, valueType )
@@ -208,17 +220,26 @@ export class DataTestCaseAnalyzer {
                     ? this.resolvePropertyValue( UIPropertyTypes.MAX_VALUE, pMaxValue, valueType )
                     : [ null, false ];
 
+
+                const invalidMinPair = new Pair( DTCAnalysisResult.INVALID, hasMinValue ? pMinValue.otherwiseSentences || [] : [] );
+                const invalidMaxPair = new Pair( DTCAnalysisResult.INVALID, hasMaxValue ? pMaxValue.otherwiseSentences || [] : [] );
+
                 // Since we are simulating min value and max value when they come from a QUERY or a UI_ELEMENT,
                 // the data test VALUE_ZERO may be invalid or incompatible in some cases
                 if ( DataTestCase.VALUE_ZERO === dtc ) {
 
                     // VALUE_ZERO considered INVALID when min > 0 || max < 0
                     if ( isDefined( maxValue ) && maxValue < 0 || isDefined( minValue ) && minValue > 0 ) {
-                        return DTCAnalysisResult.INVALID;
+
+                        if ( isDefined( maxValue ) ) {
+                            return invalidMaxPair;
+                        }
+
+                        return invalidMinPair;
 
                     // VALUE_ZERO not generated when min_value comes from a QUERY or a UI_ELEMENT
                     } else if ( isToFakeMinValue || isToFakeMaxValue ) {
-                        return DTCAnalysisResult.INCOMPATIBLE;
+                        return incompatiblePair;
                     }
                 }
 
@@ -246,28 +267,31 @@ export class DataTestCaseAnalyzer {
                     case DataTestCase.VALUE_LOWEST                  : ; // next
                     case DataTestCase.VALUE_RANDOM_BELOW_MIN        : ; // next
                     case DataTestCase.VALUE_JUST_BELOW_MIN          :
-                        return analyzer.hasValuesBelowMin() ? DTCAnalysisResult.INVALID : DTCAnalysisResult.VALID;
+                        return analyzer.hasValuesBelowMin() ? invalidMinPair : validPair;
 
                     case DataTestCase.VALUE_MIN                     : ; // next
                     case DataTestCase.VALUE_MEDIAN                  : ; // next
-                    case DataTestCase.VALUE_MAX                     :
-                        return DTCAnalysisResult.VALID;
+                    case DataTestCase.VALUE_MAX                     : return validPair;
 
                     case DataTestCase.VALUE_JUST_ABOVE_MIN          : ; // next
                     case DataTestCase.VALUE_RANDOM_BETWEEN_MIN_MAX  : ; // next
                     case DataTestCase.VALUE_JUST_BELOW_MAX          :
-                        return analyzer.hasValuesBetweenMinAndMax() ? DTCAnalysisResult.VALID : DTCAnalysisResult.INVALID;
+                        return analyzer.hasValuesBetweenMinAndMax()
+                            ? validPair
+                            : hasMinValue ? invalidMinPair : invalidMaxPair;
 
                     case DataTestCase.VALUE_ZERO                    :
-                        return analyzer.isZeroBetweenMinAndMax() ? DTCAnalysisResult.VALID : DTCAnalysisResult.INVALID;
+                        return analyzer.isZeroBetweenMinAndMax()
+                            ? validPair
+                            : hasMinValue ? invalidMinPair : invalidMaxPair;
 
                     case DataTestCase.VALUE_JUST_ABOVE_MAX          : ; // next
                     case DataTestCase.VALUE_RANDOM_ABOVE_MAX        : ; // next
                     case DataTestCase.VALUE_GREATEST                :
-                        return analyzer.hasValuesAboveMax() ? DTCAnalysisResult.INVALID : DTCAnalysisResult.VALID;
+                        return analyzer.hasValuesAboveMax() ? invalidMaxPair : validPair;
                 }
 
-                return DTCAnalysisResult.INCOMPATIBLE;
+                return incompatiblePair;
             }
 
 
@@ -276,9 +300,9 @@ export class DataTestCaseAnalyzer {
                 const hasMinLength = isDefined( pMinLength );
                 const hasMaxLength = isDefined( pMaxLength );
 
-                // if ( ! hasMinLength && ! hasMaxLength ) { // free length
-                //     return DataAnalysisResult.INCOMPATIBLE; // ???
-                // }
+                if ( ! hasMinLength && ! hasMaxLength ) {
+                    return incompatiblePair;
+                }
 
                 // We are simulating min length and max length when they come from a QUERY or a UI_ELEMENT
 
@@ -300,6 +324,9 @@ export class DataTestCaseAnalyzer {
 
                 let analyzer = this._dataGenBuilder.buildRawAnalyzer( valueType, minLength, maxLength );
 
+                const invalidMinPair = new Pair( DTCAnalysisResult.INVALID, hasMinLength ? pMinLength.otherwiseSentences || [] : [] );
+                const invalidMaxPair = new Pair( DTCAnalysisResult.INVALID, hasMaxLength ? pMaxLength.otherwiseSentences || [] : [] );
+
                 // When there is no min/max restriction, any value equal to or less/greater is considered valid.
 
                 switch ( dtc ) {
@@ -307,33 +334,35 @@ export class DataTestCaseAnalyzer {
                     case DataTestCase.LENGTH_LOWEST                  : ; // next
                     case DataTestCase.LENGTH_RANDOM_BELOW_MIN        : ; // next
                     case DataTestCase.LENGTH_JUST_BELOW_MIN          :
-                        return analyzer.hasValuesBelowMin() ? DTCAnalysisResult.INVALID : DTCAnalysisResult.VALID;
+                        return analyzer.hasValuesBelowMin() ? invalidMinPair : validPair;
 
                     case DataTestCase.LENGTH_MIN                     : ; // next
                     case DataTestCase.LENGTH_MEDIAN                  : ; // next
                     case DataTestCase.LENGTH_MAX                     :
-                        return DTCAnalysisResult.VALID;
+                        return validPair;
 
                     case DataTestCase.LENGTH_JUST_ABOVE_MIN          : ; // next
                     case DataTestCase.LENGTH_RANDOM_BETWEEN_MIN_MAX  : ; // next
                     case DataTestCase.LENGTH_JUST_BELOW_MAX          :
-                        return analyzer.hasValuesBetweenMinAndMax() ? DTCAnalysisResult.VALID : DTCAnalysisResult.INVALID;
+                        return analyzer.hasValuesBetweenMinAndMax()
+                            ? validPair
+                            : hasMinLength ? invalidMinPair : invalidMaxPair;
 
                     case DataTestCase.LENGTH_JUST_ABOVE_MAX          : ; // next
                     case DataTestCase.LENGTH_RANDOM_ABOVE_MAX        : ; // next
                     case DataTestCase.LENGTH_GREATEST                :
-                        return analyzer.hasValuesAboveMax() ? DTCAnalysisResult.INVALID : DTCAnalysisResult.VALID;
+                        return analyzer.hasValuesAboveMax() ? invalidMaxPair : validPair;
                 }
 
-                return DTCAnalysisResult.INCOMPATIBLE;
+                return incompatiblePair;
             }
 
 
             case DataTestCaseGroup.COMPUTATION: { // not supported yet
-                return DTCAnalysisResult.INCOMPATIBLE;
+                return incompatiblePair;
             }
 
-            default: return DTCAnalysisResult.INCOMPATIBLE;
+            default: return incompatiblePair;
         }
     }
 

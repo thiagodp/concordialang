@@ -86,7 +86,7 @@ export class TSGen {
                 // Make pairs State => Test Scenario to combine later
                 let pairs: Pair< State, TestScenario >[] = [];
                 for ( let otherVariant of producerVariants ) {
-                    let testScenario = this.selectSingleValidTestScenarioOf( otherVariant, errors );
+                    let testScenario = this.selectSingleValidTestScenarioOf( otherVariant, errors ); // randomly
                     if ( null === testScenario ) {
                         continue; // Ignore
                     }
