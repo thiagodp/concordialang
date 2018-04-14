@@ -8,7 +8,7 @@ import { Constant } from './Constant';
 import { Database, DatabaseProperties } from './Database';
 import { Document } from './Document';
 import { isDefined } from '../util/TypeChecking';
-import { join, resolve, dirname } from 'path';
+import { join, resolve, dirname, relative, isAbsolute } from 'path';
 import { UIElementPropertyExtractor } from '../util/UIElementPropertyExtractor';
 import { DocumentUtil } from '../util/DocumentUtil';
 import { CaseType } from '../app/CaseType';
@@ -16,6 +16,7 @@ import { NamedNode } from './Node';
 import { toEnumValue } from '../util/ToEnumValue';
 import { DatabaseInterface } from '../req/DatabaseInterface';
 import { InMemoryTableInterface } from '../req/InMemoryTableInterface';
+import { UIElementNameHandler } from '../util/UIElementNameHandler';
 
 /**
  * Specification
@@ -47,7 +48,7 @@ export class Spec {
 
 
     constructor( basePath?: string ) {
-        this.basePath = basePath;
+        this.basePath = basePath || process.cwd();
     }
 
 
@@ -209,32 +210,69 @@ export class Spec {
      * in order to increase the chances of matching.
      *
      * @param filePath File path.
+     *
+     * @param referencePath Reference path is the path from where the file was read,
+     *                      e.g., the one stored in doc.fileInfo.path. Since a file
+     *                      can be imported from different places, the path from where
+     *                      is was read is important to resolve its relative path.
+     *
+     * @param rebuildCache Whether it is desired to erase the cache and rebuild it. Defaults to false.
      */
     docWithPath( filePath: string, referencePath: string = null, rebuildCache: boolean = false ): Document | null {
 
-        let aPath = filePath;
-        if ( isDefined( referencePath ) ) {
-            aPath = resolve( dirname( referencePath ), filePath );
-        }
+        // let aPath = filePath;
+        // if ( isDefined( referencePath ) ) {
+        //     aPath = resolve( dirname( referencePath ), filePath );
+        // }
 
+        // if ( ! isDefined( this._relPathToDocumentCache ) || rebuildCache ) {
+
+        //     this._relPathToDocumentCache = new Map< string, Document >();
+
+        //     // Fill cache
+        //     for ( let doc of this.docs ) {
+
+        //         const relDocPath = isDefined( this.basePath )
+        //             ? resolve( this.basePath, doc.fileInfo.path )
+        //             : doc.fileInfo.path;
+
+        //         this._relPathToDocumentCache.set( relDocPath, doc );
+        //     }
+        // }
+
+        // console.log( 'checked:', filePath, 'ref:', referencePath, 'aPath:', aPath, '\nall:', this._relPathToDocumentCache.keys() );
+        // const relFilePath = isDefined( this.basePath ) ? resolve( this.basePath, aPath ) : aPath;
+        // return this._relPathToDocumentCache.get( relFilePath ) || null;
+
+        // Rebuild cache ?
         if ( ! isDefined( this._relPathToDocumentCache ) || rebuildCache ) {
-
             this._relPathToDocumentCache = new Map< string, Document >();
-
-            // Fill cache
             for ( let doc of this.docs ) {
-
-                const relDocPath = isDefined( this.basePath )
-                    ? resolve( this.basePath, doc.fileInfo.path )
-                    : doc.fileInfo.path;
-
-                this._relPathToDocumentCache.set( relDocPath, doc );
+                const pathRelToBase = resolve( this.basePath, doc.fileInfo.path );
+                this._relPathToDocumentCache.set( pathRelToBase, doc );
             }
         }
 
-        //console.log( 'checked:', filePath, 'ref:', referencePath, 'aPath:', aPath, '\nall:', this._relPathToDocumentCache.keys() );
-        const relFilePath = isDefined( this.basePath ) ? resolve( this.basePath, aPath ) : aPath;
-        return this._relPathToDocumentCache.get( relFilePath ) || null;
+        if ( ! isAbsolute( filePath ) ) {
+
+            // First make the given path relative to the reference path
+            let filePathRelToRefPath = relative( dirname( referencePath ), filePath );
+
+            // Now resolve it in relation to the basePath
+            let filePathRelToBasePath = resolve( this.basePath, filePathRelToRefPath );
+
+            // console.log(
+            //     'given', filePath,
+            //     '\nreferencePath', referencePath,
+            //     '\nfilePathRelToRefPath:', filePathRelToRefPath,
+            //     '\nfilePathRelToBasePath:', filePathRelToBasePath,
+            //     '\ncache:', this._relPathToDocumentCache.keys()
+            // );
+
+            return this._relPathToDocumentCache.get( filePathRelToBasePath ) || null;
+        }
+
+        return this._relPathToDocumentCache.get( filePath ) || null;
     }
 
 
@@ -264,6 +302,7 @@ export class Spec {
             if ( isDefined( ui ) ) {
                 return ui;
             }
+            return this.findUIElementInDocumentImports( variable, doc );
         }
         return this.uiElementsVariableMap( false ).get( variable ) || null;
     }
@@ -410,6 +449,35 @@ export class Spec {
         }
         this.uiElements( rebuildCache );
         return this._uiElementVariableMap;
+    }
+
+
+    /**
+     * Find a UI Element in the imported files and returns it. Returns null if not found.
+     *
+     * @param variable Variable to find.
+     * @param doc Document with the imports.
+     */
+    findUIElementInDocumentImports( variable: string, doc: Document ): UIElement | null {
+        const uieNameHandler = new UIElementNameHandler()
+        const [ featureName, uiElementName ] = uieNameHandler.extractNamesOf( variable );
+        if ( ! isDefined( featureName ) ) {
+            return null;
+        }
+        const docUtil = new DocumentUtil();
+        for ( let impDoc of doc.imports || [] ) {
+            let otherDoc = this.docWithPath( impDoc.value, doc.fileInfo.path );
+            if ( ! otherDoc ) {
+                console.log( 'WARN: Imported document not found:', impDoc.value ) // TODO: remove this
+                console.log( 'Base path is', this.basePath || '.' );
+                continue;
+            }
+            let uie = docUtil.findUIElementInTheDocument( variable, otherDoc );
+            if ( isDefined( uie ) ) {
+                return uie;
+            }
+        }
+        return null;
     }
 
 }
