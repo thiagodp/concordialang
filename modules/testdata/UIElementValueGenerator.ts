@@ -67,8 +67,14 @@ export class UIElementValueGenerator {
         errors: LocatedException[]
     ): Promise< EntityValueType > {
 
+        const uieNameHandler = new UIElementNameHandler();
+        const featureName = isDefined( doc ) && isDefined( doc.feature ) ? doc.feature.name : null;
+        const fullVariableName = featureName !== null && null === uieNameHandler.extractFeatureNameOf( uieName )
+            ? uieNameHandler.makeVariableName( featureName, uieName )
+            : uieName;
+
         // Is in cache ? -> returns it
-        const cachedValue = context.uieVariableToValueMap.get( uieName ) || null;
+        const cachedValue = context.uieVariableToValueMap.get( fullVariableName ) || null;
         if ( isDefined( cachedValue ) ) {
             return cachedValue;
         }
@@ -81,9 +87,9 @@ export class UIElementValueGenerator {
             return null;
         }
 
-        const plan = context.plans.get( uieName );
+        const plan = context.plans.get( fullVariableName );
         if ( ! plan ) {
-            const msg = 'Could not find Plan for the UI Element: ' + uieName;
+            const msg = 'Could not find Plan for the UI Element: ' + fullVariableName;
             const err = new RuntimeException( msg );
             errors.push( err );
             return null;
@@ -105,9 +111,6 @@ export class UIElementValueGenerator {
         const pMinValue = propertiesMap.get( UIPropertyTypes.MIN_VALUE ) || null;
         const pMaxValue = propertiesMap.get( UIPropertyTypes.MAX_VALUE ) || null;
         const pFormat = propertiesMap.get( UIPropertyTypes.FORMAT ) || null;
-
-
-        const featureName = isDefined( doc ) && isDefined( doc.feature ) ? doc.feature.name : null;
 
         let cfg = new DataGenConfig();
 

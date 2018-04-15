@@ -52,7 +52,7 @@ describe( 'UIElementValueGeneratorTest', () => {
             );
 
             let plans = new Map( [
-                [ 'foo', new UIETestPlan( DataTestCase.VALUE_MIN, DTCAnalysisResult.VALID, [] ) ]
+                [ 'A:foo', new UIETestPlan( DataTestCase.VALUE_MIN, DTCAnalysisResult.VALID, [] ) ]
             ] );
 
             let values = new Map< string, EntityValueType >();
@@ -76,7 +76,7 @@ describe( 'UIElementValueGeneratorTest', () => {
             );
 
             let plans = new Map( [
-                [ 'foo', new UIETestPlan( DataTestCase.VALUE_MAX, DTCAnalysisResult.VALID, [] ) ]
+                [ 'A:foo', new UIETestPlan( DataTestCase.VALUE_MAX, DTCAnalysisResult.VALID, [] ) ]
             ] );
 
             let values = new Map< string, EntityValueType >();
@@ -100,7 +100,7 @@ describe( 'UIElementValueGeneratorTest', () => {
             );
 
             let plans = new Map( [
-                [ 'foo', new UIETestPlan( DataTestCase.LENGTH_MIN, DTCAnalysisResult.VALID, [] ) ]
+                [ 'A:foo', new UIETestPlan( DataTestCase.LENGTH_MIN, DTCAnalysisResult.VALID, [] ) ]
             ] );
 
             let values = new Map< string, EntityValueType >();
@@ -124,7 +124,7 @@ describe( 'UIElementValueGeneratorTest', () => {
             );
 
             let plans = new Map( [
-                [ 'foo', new UIETestPlan( DataTestCase.LENGTH_MAX, DTCAnalysisResult.VALID, [] ) ]
+                [ 'A:foo', new UIETestPlan( DataTestCase.LENGTH_MAX, DTCAnalysisResult.VALID, [] ) ]
             ] );
 
             let values = new Map< string, EntityValueType >();
@@ -150,7 +150,7 @@ describe( 'UIElementValueGeneratorTest', () => {
             );
 
             let plans = new Map( [
-                [ 'foo', new UIETestPlan( DataTestCase.LENGTH_MEDIAN, DTCAnalysisResult.VALID, [] ) ]
+                [ 'A:foo', new UIETestPlan( DataTestCase.LENGTH_MEDIAN, DTCAnalysisResult.VALID, [] ) ]
             ] );
 
             let values = new Map< string, EntityValueType >();
@@ -175,7 +175,7 @@ describe( 'UIElementValueGeneratorTest', () => {
             );
 
             let plans = new Map( [
-                [ 'foo', new UIETestPlan( DataTestCase.FORMAT_VALID, DTCAnalysisResult.VALID, [] ) ]
+                [ 'A:foo', new UIETestPlan( DataTestCase.FORMAT_VALID, DTCAnalysisResult.VALID, [] ) ]
             ] );
 
             let values = new Map< string, EntityValueType >();
@@ -200,7 +200,7 @@ describe( 'UIElementValueGeneratorTest', () => {
             );
 
             let plans = new Map( [
-                [ 'foo', new UIETestPlan( DataTestCase.SET_FIRST_ELEMENT, DTCAnalysisResult.VALID, [] ) ]
+                [ 'A:foo', new UIETestPlan( DataTestCase.SET_FIRST_ELEMENT, DTCAnalysisResult.VALID, [] ) ]
             ] );
 
             let values = new Map< string, EntityValueType >();
@@ -233,7 +233,7 @@ describe( 'UIElementValueGeneratorTest', () => {
                     );
 
                     let plans = new Map( [
-                        [ 'foo', new UIETestPlan( DataTestCase.SET_FIRST_ELEMENT, DTCAnalysisResult.VALID, [] ) ]
+                        [ 'A:foo', new UIETestPlan( DataTestCase.SET_FIRST_ELEMENT, DTCAnalysisResult.VALID, [] ) ]
                     ] );
 
                     let values = new Map< string, EntityValueType >();
@@ -257,7 +257,7 @@ describe( 'UIElementValueGeneratorTest', () => {
                     );
 
                     let plans = new Map( [
-                        [ 'foo', new UIETestPlan( DataTestCase.SET_RANDOM_ELEMENT, DTCAnalysisResult.VALID, [] ) ]
+                        [ 'A:foo', new UIETestPlan( DataTestCase.SET_RANDOM_ELEMENT, DTCAnalysisResult.VALID, [] ) ]
                     ] );
 
                     let values = new Map< string, EntityValueType >();
@@ -281,7 +281,7 @@ describe( 'UIElementValueGeneratorTest', () => {
                     );
 
                     let plans = new Map( [
-                        [ 'foo', new UIETestPlan( DataTestCase.SET_LAST_ELEMENT, DTCAnalysisResult.VALID, [] ) ]
+                        [ 'A:foo', new UIETestPlan( DataTestCase.SET_LAST_ELEMENT, DTCAnalysisResult.VALID, [] ) ]
                     ] );
 
                     let values = new Map< string, EntityValueType >();
@@ -306,7 +306,7 @@ describe( 'UIElementValueGeneratorTest', () => {
                     );
 
                     let plans = new Map( [
-                        [ 'foo', new UIETestPlan( DataTestCase.SET_NOT_IN_SET, DTCAnalysisResult.INVALID, [] ) ]
+                        [ 'A:foo', new UIETestPlan( DataTestCase.SET_NOT_IN_SET, DTCAnalysisResult.INVALID, [] ) ]
                     ] );
 
                     let values = new Map< string, EntityValueType >();
@@ -354,7 +354,7 @@ describe( 'UIElementValueGeneratorTest', () => {
                 it( 'first', async () => {
 
                     let plans = new Map( [
-                        [ 'foo', new UIETestPlan( DataTestCase.SET_FIRST_ELEMENT, DTCAnalysisResult.VALID, [] ) ]
+                        [ 'A:foo', new UIETestPlan( DataTestCase.SET_FIRST_ELEMENT, DTCAnalysisResult.VALID, [] ) ]
                     ] );
 
                     let values = new Map< string, EntityValueType >();
@@ -368,7 +368,7 @@ describe( 'UIElementValueGeneratorTest', () => {
                 it( 'last', async () => {
 
                     let plans = new Map( [
-                        [ 'foo', new UIETestPlan( DataTestCase.SET_LAST_ELEMENT, DTCAnalysisResult.VALID, [] ) ]
+                        [ 'A:foo', new UIETestPlan( DataTestCase.SET_LAST_ELEMENT, DTCAnalysisResult.VALID, [] ) ]
                     ] );
 
                     let values = new Map< string, EntityValueType >();
@@ -382,7 +382,7 @@ describe( 'UIElementValueGeneratorTest', () => {
                 it( 'random', async () => {
 
                     let plans = new Map( [
-                        [ 'foo', new UIETestPlan( DataTestCase.SET_RANDOM_ELEMENT, DTCAnalysisResult.INVALID, [] ) ]
+                        [ 'A:foo', new UIETestPlan( DataTestCase.SET_RANDOM_ELEMENT, DTCAnalysisResult.INVALID, [] ) ]
                     ] );
 
                     let values = new Map< string, EntityValueType >();
@@ -396,7 +396,7 @@ describe( 'UIElementValueGeneratorTest', () => {
                 it( 'not in', async () => {
 
                     let plans = new Map( [
-                        [ 'foo', new UIETestPlan( DataTestCase.SET_NOT_IN_SET, DTCAnalysisResult.INVALID, [] ) ]
+                        [ 'A:foo', new UIETestPlan( DataTestCase.SET_NOT_IN_SET, DTCAnalysisResult.INVALID, [] ) ]
                     ] );
 
                     let values = new Map< string, EntityValueType >();
@@ -445,7 +445,7 @@ describe( 'UIElementValueGeneratorTest', () => {
                 it( 'first', async () => {
 
                     let plans = new Map( [
-                        [ 'foo', new UIETestPlan( DataTestCase.SET_FIRST_ELEMENT, DTCAnalysisResult.VALID, [] ) ]
+                        [ 'A:foo', new UIETestPlan( DataTestCase.SET_FIRST_ELEMENT, DTCAnalysisResult.VALID, [] ) ]
                     ] );
 
                     let values = new Map< string, EntityValueType >();
@@ -459,7 +459,7 @@ describe( 'UIElementValueGeneratorTest', () => {
                 it( 'last', async () => {
 
                     let plans = new Map( [
-                        [ 'foo', new UIETestPlan( DataTestCase.SET_LAST_ELEMENT, DTCAnalysisResult.VALID, [] ) ]
+                        [ 'A:foo', new UIETestPlan( DataTestCase.SET_LAST_ELEMENT, DTCAnalysisResult.VALID, [] ) ]
                     ] );
 
                     let values = new Map< string, EntityValueType >();
@@ -473,7 +473,7 @@ describe( 'UIElementValueGeneratorTest', () => {
                 it( 'random', async () => {
 
                     let plans = new Map( [
-                        [ 'foo', new UIETestPlan( DataTestCase.SET_RANDOM_ELEMENT, DTCAnalysisResult.INVALID, [] ) ]
+                        [ 'A:foo', new UIETestPlan( DataTestCase.SET_RANDOM_ELEMENT, DTCAnalysisResult.INVALID, [] ) ]
                     ] );
 
                     let values = new Map< string, EntityValueType >();
@@ -487,7 +487,7 @@ describe( 'UIElementValueGeneratorTest', () => {
                 it( 'not in', async () => {
 
                     let plans = new Map( [
-                        [ 'foo', new UIETestPlan( DataTestCase.SET_NOT_IN_SET, DTCAnalysisResult.INVALID, [] ) ]
+                        [ 'A:foo', new UIETestPlan( DataTestCase.SET_NOT_IN_SET, DTCAnalysisResult.INVALID, [] ) ]
                     ] );
 
                     let values = new Map< string, EntityValueType >();
@@ -496,6 +496,87 @@ describe( 'UIElementValueGeneratorTest', () => {
 
                     expect( errors ).toEqual( [] );
                     expect( [ 'Alice', 'Bob', 'Jack' ] ).not.toContain( value );
+                } );
+
+            } );
+
+
+            describe( 'with constant', () => {
+
+                let doc1;
+
+                beforeEach( async () => {
+                    doc1 = cp.addToSpec(
+                        spec,
+                        [
+                            'Feature: A',
+                            'UI Element: foo',
+                            ' - valor em "SELECT name FROM [Users] WHERE age = [age]"',
+                            'Constants:',
+                            ' - "age" é 16',
+                            'Database: Users',
+                            ' - type é "json"',
+                            ' - path é "' + dbPath + '"'
+                        ],
+                        { } as FileInfo
+                    );
+
+                    await bsa.analyze( new SpecFilter( spec ).graph(), spec, errors );
+                } );
+
+                it( 'first', async () => {
+
+                    let plans = new Map( [
+                        [ 'A:foo', new UIETestPlan( DataTestCase.SET_FIRST_ELEMENT, DTCAnalysisResult.VALID, [] ) ]
+                    ] );
+
+                    let values = new Map< string, EntityValueType >();
+                    let context = new ValueGenContext( plans, values );
+                    const value = await gen.generate( 'foo', context, doc1, spec, errors );
+
+                    expect( errors ).toEqual( [] );
+                    expect( value ).toEqual( 'Jack' ); // jack has age 16
+                } );
+
+            } );
+
+
+            describe( 'with ui element', () => {
+
+                let doc1;
+
+                beforeEach( async () => {
+                    doc1 = cp.addToSpec(
+                        spec,
+                        [
+                            'Feature: A',
+                            'UI Element: foo',
+                            ' - valor em "SELECT name FROM [Users] WHERE age = {bar}"',
+                            'UI Element: bar',
+                            ' - valor é 16',
+                            'Database: Users',
+                            ' - type é "json"',
+                            ' - path é "' + dbPath + '"'
+                        ],
+                        { } as FileInfo
+                    );
+
+                    await bsa.analyze( new SpecFilter( spec ).graph(), spec, errors );
+                } );
+
+                it( 'first', async () => {
+
+                    let plans = new Map( [
+                        [ 'A:foo', new UIETestPlan( DataTestCase.SET_FIRST_ELEMENT, DTCAnalysisResult.VALID, [] ) ],
+                        [ 'A:bar', new UIETestPlan( DataTestCase.SET_FIRST_ELEMENT, DTCAnalysisResult.VALID, [] ) ]
+                    ] );
+
+                    let values = new Map< string, EntityValueType >();
+                    let context = new ValueGenContext( plans, values );
+                    const value = await gen.generate( 'foo', context, doc1, spec, errors );
+
+                    expect( errors ).toEqual( [] );
+                    expect( value ).toEqual( 'Jack' ); // jack has age 16
                 } );
 
             } );
@@ -522,7 +603,7 @@ describe( 'UIElementValueGeneratorTest', () => {
                 await bsa.analyze( new SpecFilter( spec ).graph(), spec, errors );
 
                 let plans = new Map( [
-                    [ 'foo', new UIETestPlan( DataTestCase.LENGTH_MIN, DTCAnalysisResult.VALID, [] ) ]
+                    [ 'A:foo', new UIETestPlan( DataTestCase.LENGTH_MIN, DTCAnalysisResult.VALID, [] ) ]
                 ] );
 
                 let values = new Map< string, EntityValueType >();
@@ -552,7 +633,7 @@ describe( 'UIElementValueGeneratorTest', () => {
                 await bsa.analyze( new SpecFilter( spec ).graph(), spec, errors );
 
                 let plans = new Map( [
-                    [ 'foo', new UIETestPlan( DataTestCase.LENGTH_MAX, DTCAnalysisResult.VALID, [] ) ]
+                    [ 'A:foo', new UIETestPlan( DataTestCase.LENGTH_MAX, DTCAnalysisResult.VALID, [] ) ]
                 ] );
 
                 let values = new Map< string, EntityValueType >();
