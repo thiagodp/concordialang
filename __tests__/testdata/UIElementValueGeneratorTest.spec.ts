@@ -731,6 +731,71 @@ describe( 'UIElementValueGeneratorTest', () => {
 
         } );
 
+
+        describe( 'min/max value', () => {
+
+            it( 'min value', async () => {
+
+                let doc1 = cp.addToSpec(
+                    spec,
+                    [
+                        'Feature: A',
+                        'UI Element: foo',
+                        ' - valor mínimo é "SELECT age FROM [Users] WHERE name = \'Jack\'"',
+                        'Database: Users',
+                        ' - type is "json"',
+                        ' - path is "' + dbPath + '"'
+                    ],
+                    { } as FileInfo
+                );
+
+                await bsa.analyze( new SpecFilter( spec ).graph(), spec, errors );
+
+                let plans = new Map( [
+                    [ 'A:foo', new UIETestPlan( DataTestCase.VALUE_MIN, DTCAnalysisResult.VALID, [] ) ]
+                ] );
+
+                let values = new Map< string, EntityValueType >();
+                let context = new ValueGenContext( plans, values );
+                const value = await gen.generate( 'foo', context, doc1, spec, errors );
+
+                expect( errors ).toEqual( [] );
+                expect( value ).toBe( 16 );
+            } );
+
+
+            it( 'max value', async () => {
+
+                let doc1 = cp.addToSpec(
+                    spec,
+                    [
+                        'Feature: A',
+                        'UI Element: foo',
+                        ' - valor máximo é "SELECT age FROM [Users] WHERE name = \'Jack\'"',
+                        'Database: Users',
+                        ' - type is "json"',
+                        ' - path is "' + dbPath + '"'
+                    ],
+                    { } as FileInfo
+                );
+
+                await bsa.analyze( new SpecFilter( spec ).graph(), spec, errors );
+
+                let plans = new Map( [
+                    [ 'A:foo', new UIETestPlan( DataTestCase.VALUE_MAX, DTCAnalysisResult.VALID, [] ) ]
+                ] );
+
+                let values = new Map< string, EntityValueType >();
+                let context = new ValueGenContext( plans, values );
+                const value = await gen.generate( 'foo', context, doc1, spec, errors );
+
+                expect( errors ).toEqual( [] );
+                expect( value ).toBe( 16 );
+            } );
+
+        } );
+
+
     } );
 
 
