@@ -398,13 +398,6 @@ export class UIElementValueGenerator {
             let value = context.uieVariableToValueMap.get( fullVariableName ) || null;
 
             if ( null === value ) {
-                // // Makes an error
-                // const err = new RuntimeException( 'Query refers to a UI Element whose value was not found: ' + variable, owner.location );
-                // errors.push( err );
-
-                // // Keep going with an empty value
-                // value = ''; // or generate it ???
-
                 value = await this.generate( fullVariableName, context, doc, spec, errors );
             }
 

@@ -411,6 +411,91 @@ describe( 'UIElementValueGeneratorTest', () => {
 
         } );
 
+
+        describe( 'constant in the query', () => {
+
+            let doc1;
+
+            beforeEach( async () => {
+                doc1 = cp.addToSpec(
+                    spec,
+                    [
+                        'Feature: A',
+                        'UI Element: foo',
+                        ' - valor em "SELECT x FROM [Minha Tabela] WHERE y = [myY]"',
+                        'Constants:',
+                        ' - "myY" é "twenty"',
+                        'Tabela: Minha Tabela',
+                        '| x   | y      |',
+                        '| 10  | ten    |',
+                        '| 20  | twenty |',
+                        '| 30  | thirty |',
+                    ],
+                    { } as FileInfo
+                );
+
+                await bsa.analyze( new SpecFilter( spec ).graph(), spec, errors );
+            } );
+
+            it( 'first', async () => {
+
+                let plans = new Map( [
+                    [ 'A:foo', new UIETestPlan( DataTestCase.SET_FIRST_ELEMENT, DTCAnalysisResult.VALID, [] ) ]
+                ] );
+
+                let values = new Map< string, EntityValueType >();
+                let context = new ValueGenContext( plans, values );
+                const value = await gen.generate( 'foo', context, doc1, spec, errors );
+
+                expect( errors ).toEqual( [] );
+                expect( value ).toEqual( 20 );
+            } );
+
+        } );
+
+
+        describe( 'ui element in the query', () => {
+
+            let doc1;
+
+            beforeEach( async () => {
+                doc1 = cp.addToSpec(
+                    spec,
+                    [
+                        'Feature: A',
+                        'UI Element: foo',
+                        ' - valor em "SELECT x FROM [Minha Tabela] WHERE y = {bar}"',
+                        'UI Element: bar',
+                        ' - valor é "twenty"',
+                        'Tabela: Minha Tabela',
+                        '| x   | y      |',
+                        '| 10  | ten    |',
+                        '| 20  | twenty |',
+                        '| 30  | thirty |',
+                    ],
+                    { } as FileInfo
+                );
+
+                await bsa.analyze( new SpecFilter( spec ).graph(), spec, errors );
+            } );
+
+            it( 'first', async () => {
+
+                let plans = new Map( [
+                    [ 'A:foo', new UIETestPlan( DataTestCase.SET_FIRST_ELEMENT, DTCAnalysisResult.VALID, [] ) ],
+                    [ 'A:bar', new UIETestPlan( DataTestCase.SET_FIRST_ELEMENT, DTCAnalysisResult.VALID, [] ) ]
+                ] );
+
+                let values = new Map< string, EntityValueType >();
+                let context = new ValueGenContext( plans, values );
+                const value = await gen.generate( 'foo', context, doc1, spec, errors );
+
+                expect( errors ).toEqual( [] );
+                expect( value ).toEqual( 20 );
+            } );
+
+        } );
+
     } );
 
 
@@ -433,8 +518,8 @@ describe( 'UIElementValueGeneratorTest', () => {
                             'UI Element: foo',
                             ' - valor em "SELECT name FROM [Users]"',
                             'Database: Users',
-                            ' - type is "json"',
-                            ' - path is "' + dbPath + '"'
+                            ' - type é "json"',
+                            ' - path é "' + dbPath + '"'
                         ],
                         { } as FileInfo
                     );
@@ -501,7 +586,7 @@ describe( 'UIElementValueGeneratorTest', () => {
             } );
 
 
-            describe( 'with constant', () => {
+            describe( 'constant in the query', () => {
 
                 let doc1;
 
@@ -541,7 +626,7 @@ describe( 'UIElementValueGeneratorTest', () => {
             } );
 
 
-            describe( 'with ui element', () => {
+            describe( 'ui element in the query', () => {
 
                 let doc1;
 
