@@ -296,8 +296,9 @@ class EntityRecognizerMaker {
         valueRec.addMatch(
             regex,
             function( match ) {
-                //console.log( 'match: ', match );
-                return match.toString().replace( /['"]+/g, '' ).trim();
+                // return match.toString().replace( /["]+/g, '' ).trim();
+                const content = match.toString();
+                return content.substring( 1, content.length - 1 );
             },
             200 // priority
         );
