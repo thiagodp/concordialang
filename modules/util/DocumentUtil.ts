@@ -169,4 +169,48 @@ export class DocumentUtil {
     //     return ! doc.language ? defaultLanguage : doc.language.value;
     // }
 
+    extractDocumentVariables( doc: Document, includeGlobals: boolean = false ): string[] {
+        let variables: string[] = [];
+
+        // Globals
+        if ( includeGlobals && ( doc.uiElements || [] ).length > 0 ) {
+            for ( let uie of doc.uiElements ) {
+                variables.push( uie.name );
+            }
+        }
+
+        // Locals
+        const featureName = ! doc.feature ? null : doc.feature.name;
+        if ( null === featureName ) {
+            return variables;
+        }
+
+        for ( let uie of doc.feature.uiElements || [] ) {
+            variables.push( this._uieNameHandler.makeVariableName( featureName, uie.name ) );
+        }
+
+        return variables;
+    }
+
+
+    extractUIElements( doc: Document, includeGlobals: boolean = false ): UIElement[] {
+        let elements: UIElement[] = [];
+
+        // Globals
+        if ( includeGlobals && ( doc.uiElements || [] ).length > 0 ) {
+            for ( let uie of doc.uiElements ) {
+                elements.push( uie );
+            }
+        }
+
+        // Locals
+        if ( ! doc.feature ) {
+            return elements;
+        }
+        for ( let uie of doc.feature.uiElements || [] ) {
+            elements.push( uie );
+        }
+        return elements;
+    }
+
 }

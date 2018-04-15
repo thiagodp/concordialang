@@ -46,6 +46,8 @@ export class Spec {
 
     private _uiLiteralCaseOption: CaseType = CaseType.CAMEL; // defined by setter
 
+    private _docToAcessibleUIElementsCache = new Map< Document, UIElement[] >();
+
 
     constructor( basePath?: string ) {
         this.basePath = basePath || process.cwd();
@@ -468,8 +470,8 @@ export class Spec {
         for ( let impDoc of doc.imports || [] ) {
             let otherDoc = this.docWithPath( impDoc.value, doc.fileInfo.path );
             if ( ! otherDoc ) {
-                console.log( 'WARN: Imported document not found:', impDoc.value ) // TODO: remove this
-                console.log( 'Base path is', this.basePath || '.' );
+                // console.log( 'WARN: Imported document not found:', impDoc.value );
+                // console.log( 'Base path is', this.basePath || '.' );
                 continue;
             }
             let uie = docUtil.findUIElementInTheDocument( variable, otherDoc );
@@ -478,6 +480,51 @@ export class Spec {
             }
         }
         return null;
+    }
+
+
+    /**
+     * Extract variables from a document and its imports.
+     *
+     * @param doc Document
+     * @param includeGlobals Whether globals should be included
+     */
+    extractVariablesFromDocumentAndImports( doc: Document, includeGlobals: boolean = false ): string[] {
+        const docUtil = new DocumentUtil();
+        let variables: string[] = [];
+        variables.push.apply( variables, docUtil.extractDocumentVariables( doc, includeGlobals ) );
+        for ( let impDoc of doc.imports || [] ) {
+            let otherDoc = this.docWithPath( impDoc.value, doc.fileInfo.path );
+            if ( ! otherDoc ) {
+                continue;
+            }
+            variables.push.apply( variables, docUtil.extractDocumentVariables( otherDoc, includeGlobals ) );
+        }
+        return variables;
+    }
+
+    /**
+     * Extract UI elements from a document and its imports.
+     *
+     * @param doc Document
+     * @param includeGlobals Whether globals should be included
+     */
+    extractUIElementsFromDocumentAndImports( doc: Document, includeGlobals: boolean = false ): UIElement[] {
+        let elements: UIElement[] = this._docToAcessibleUIElementsCache.get( doc ) || null;
+        if ( isDefined( elements ) ) {
+            return elements;
+        }
+        const docUtil = new DocumentUtil();
+        elements = [];
+        elements.push.apply( elements, docUtil.extractUIElements( doc, includeGlobals ) );
+        for ( let impDoc of doc.imports || [] ) {
+            let otherDoc = this.docWithPath( impDoc.value, doc.fileInfo.path );
+            if ( ! otherDoc ) {
+                continue;
+            }
+            elements.push.apply( elements, docUtil.extractUIElements( otherDoc, includeGlobals ) );
+        }
+        return elements;
     }
 
 }

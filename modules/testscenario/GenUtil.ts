@@ -89,8 +89,9 @@ export class GenUtil {
             newSteps.push.apply( newSteps, resultingSteps );
         }
 
-        // # Extract UI Elements from steps
-        let uiElements: UIElement[] = this.extractUIElementsFromSteps( newSteps, doc, spec, errors );
+        // # Extract UI Elements
+        // let uiElements: UIElement[] = this.extractUIElementsFromSteps( newSteps, doc, spec, errors );
+        let uiElements: UIElement[] = spec.extractUIElementsFromDocumentAndImports( doc );
 
         // # Analyze DataTestCases for every UI Element
         //   Non-editable UI Elements are not included
@@ -121,36 +122,36 @@ export class GenUtil {
     }
 
 
-    extractUIElementsFromSteps(
-        steps: Step[],
-        doc: Document,
-        spec: Spec,
-        errors: LocatedException[]
-    ): UIElement[] {
-        let all: UIElement[] = [];
-        const uieNames = this.extractUIElementNamesFromSteps( steps );
-        const baseMsg = 'Referenced UI Element not found: ';
-        for ( let name of uieNames ) {
-            let uie = spec.uiElementByVariable( name, doc );
-            if ( ! uie ) {
-                errors.push( new RuntimeException( baseMsg + name ) );
-                continue;
-            }
-            all.push( uie );
-        }
-        return all;
-    }
+    // extractUIElementsFromSteps(
+    //     steps: Step[],
+    //     doc: Document,
+    //     spec: Spec,
+    //     errors: LocatedException[]
+    // ): UIElement[] {
+    //     let all: UIElement[] = [];
+    //     const uieNames = this.extractUIElementNamesFromSteps( steps );
+    //     const baseMsg = 'Referenced UI Element not found: ';
+    //     for ( let name of uieNames ) {
+    //         let uie = spec.uiElementByVariable( name, doc );
+    //         if ( ! uie ) {
+    //             errors.push( new RuntimeException( baseMsg + name ) );
+    //             continue;
+    //         }
+    //         all.push( uie );
+    //     }
+    //     return all;
+    // }
 
-    extractUIElementNamesFromSteps( steps: Step[] ): string[] {
-        let uniqueNames = new Set< string >();
-        for ( let step of steps ) {
-            let entities: NLPEntity[] = this._nlpUtil.entitiesNamed( Entities.UI_ELEMENT, step.nlpResult );
-            for ( let e of entities ) {
-                uniqueNames.add( e.value );
-            }
-        }
-        return Array.from( uniqueNames );
-    }
+    // extractUIElementNamesFromSteps( steps: Step[] ): string[] {
+    //     let uniqueNames = new Set< string >();
+    //     for ( let step of steps ) {
+    //         let entities: NLPEntity[] = this._nlpUtil.entitiesNamed( Entities.UI_ELEMENT, step.nlpResult );
+    //         for ( let e of entities ) {
+    //             uniqueNames.add( e.value );
+    //         }
+    //     }
+    //     return Array.from( uniqueNames );
+    // }
 
 
 
