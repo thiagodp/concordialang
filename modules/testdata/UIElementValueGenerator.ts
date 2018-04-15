@@ -25,6 +25,7 @@ import { DatabaseWrapper } from '../db/DatabaseWrapper';
 import { InMemoryTableWrapper } from '../db/InMemoryTableWrapper';
 import { Queryable } from '../req/Queryable';
 import { UIETestPlan } from '../testcase/UIETestPlan';
+import { UIElementNameHandler } from '../util/UIElementNameHandler';
 
 // value is equal to          <number>|<value>|<constant>|<ui_element>
 // value is not equal to      <number>|<value>|<constant>|<ui_element>
@@ -381,13 +382,15 @@ export class UIElementValueGenerator {
         //     .filter( node => node.nodeType === NodeTypes.UI_ELEMENT )
         //     .map( node => node as UIElement );
 
+        const uieNameHandler = new UIElementNameHandler();
+
         let newQuery = query;
         for ( let variable of variables ) {
 
-            // Make full variable name if needed
-            const fullVariableName = variable.indexOf( Symbols.FEATURE_TO_UI_ELEMENT_SEPARATOR ) < 0
-                ? variable.charAt( 0 ) + currentFeatureName + Symbols.FEATURE_TO_UI_ELEMENT_SEPARATOR + variable.substr( 1 )
-                : variable;
+            let fullVariableName = variable;
+            if ( null === uieNameHandler.extractFeatureNameOf( variable ) ) {
+                fullVariableName = uieNameHandler.makeVariableName( currentFeatureName, variable );
+            }
 
             let value = context.uieVariableToValueMap.get( fullVariableName ) || null;
 
