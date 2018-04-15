@@ -286,8 +286,6 @@ export class UIElementValueGenerator {
                 //   - More than one Table entity in the same query is not supported.
                 //
 
-                // console.log( 'REFERENCES', propertyValue.references );
-
                 const databases: Node[] = propertyValue.references.filter( node => node.nodeType === NodeTypes.DATABASE );
                 const tables: Node[] = propertyValue.references.filter( node => node.nodeType === NodeTypes.TABLE );
 
@@ -514,20 +512,31 @@ export class UIElementValueGenerator {
     //     return null;
     // }
 
-    firstColumnOf( data: any[] ): any[] | null {
-        if ( ! data ) {
-            return null;
-        }
-        const rowCount = data.length;
-        if ( rowCount < 1 ) {
-            return null;
-        }
-        let values: any[] = [], row;
-        for ( let i = 0; i < rowCount; ++i ) {
-            row = data[ i ];
-            for ( let key in row ) {
-                values.push( row[ key ] );
-                break;
+    // firstColumnOf( data: any[] ): any[] | null {
+    //     if ( ! data ) {
+    //         return null;
+    //     }
+    //     const rowCount = data.length;
+    //     if ( rowCount < 1 ) {
+    //         return null;
+    //     }
+    //     let values: any[] = [], row;
+    //     for ( let i = 0; i < rowCount; ++i ) {
+    //         row = data[ i ];
+    //         for ( let key in row ) {
+    //             values.push( row[ key ] );
+    //             break;
+    //         }
+    //     }
+    //     return values;
+    // }
+
+    firstColumnOf( data: any[] ): any[] {
+        let values: any[] = [];
+        for ( let obj of data || [] ) {
+            for ( let column in obj || {} ) {
+                values.push( obj[ column ] );
+                break; // first column only !
             }
         }
         return values;
