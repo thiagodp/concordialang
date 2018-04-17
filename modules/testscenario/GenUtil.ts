@@ -23,7 +23,8 @@ import { DataTestCase } from "../testdata/DataTestCase";
 import { Pair } from "ts-pair";
 import { TestPlanMaker, TestGoal } from "../testcase/TestPlanMaker";
 import { TestPlan } from "../testcase/TestPlan";
-
+import { UIElementValueGenerator, ValueGenContext } from "../testdata/UIElementValueGenerator";
+import * as arrayDiff from 'arr-diff';
 
     // /** Test cases produced from the Variant */
     // testCases: TestCase[];
@@ -36,7 +37,7 @@ import { TestPlan } from "../testcase/TestPlan";
 
 
 // Fill UI Literals with random values
-// Extract UI Elements from steps
+// Extract UI Elements to generate value
 // Analyze DataTestCases for every UI Element
 // Generate values for UI Element according to the goal
 
@@ -51,7 +52,7 @@ export class GenUtil {
     private readonly _randomString: RandomString;
     private readonly _randomLong: RandomLong;
     private readonly _dtcAnalyzer: DataTestCaseAnalyzer;
-    private readonly _dataGen: DataGenerator;
+    private readonly _uieValueGen: UIElementValueGenerator;
 
     constructor(
         private readonly _langContentLoader: LanguageContentLoader,
@@ -65,7 +66,7 @@ export class GenUtil {
         this._randomString = new RandomString( random );
         this._randomLong = new RandomLong( random );
         this._dtcAnalyzer = new DataTestCaseAnalyzer( seed );
-        this._dataGen = new DataGenerator( new DataGeneratorBuilder( seed, randomTriesToInvalidValues ) );
+        this._uieValueGen = new UIElementValueGenerator( seed, randomTriesToInvalidValues );
     }
 
 
@@ -75,7 +76,7 @@ export class GenUtil {
         spec: Spec,
         errors: LocatedException[],
         testPlanMakers: TestPlanMaker[]
-    ): Step[] {
+    ): Map< TestPlanMaker, Step[] > {
 
         // Determine the language to use
         const language = ! doc.language ? this.defaultLanguage : doc.language.value;
@@ -89,32 +90,66 @@ export class GenUtil {
             newSteps.push.apply( newSteps, resultingSteps );
         }
 
-        // # Extract UI Elements
-        // let uiElements: UIElement[] = this.extractUIElementsFromSteps( newSteps, doc, spec, errors );
-        let uiElements: UIElement[] = spec.extractUIElementsFromDocumentAndImports( doc );
+        // # Extract UI Elements to generate value
+        //
+        //  The extraction is from all UI Elements involved with the document.
+        //  However, since the given steps may not include some UI Elements, we
+        //  can only generate plans with INVALID values for those directly involved.
+        //  That is, UI Elements not directly involved, i.e., not included in the steps,
+        //  should always receive values, in order to make the VALUE GENERATION of other
+        //  UI Elements to work properly.
+        //
+        //  Thus, the group of UI Elements not involved in the steps must always
+        //  receive VALID values, while the involved ones may vary according to the
+        //  desired mix strategy.
+        //
+
+        const stepUIElements: UIElement[] = this.extractUIElementsFromSteps( newSteps, doc, spec, errors );
+        const stepUIEVariables: string[] = stepUIElements.map( uie => uie.info ? uie.info.fullVariableName : uie.name );
+
+        const allAvailableUIElements: UIElement[] = spec.extractUIElementsFromDocumentAndImports( doc );
+        const allAvailableVariables: string[] = allAvailableUIElements.map( uie => uie.info ? uie.info.fullVariableName : uie.name );
+
+        const alwaysValidUIEVariables: string[] = arrayDiff( allAvailableVariables, stepUIElements ); // order matters
+
 
         // # Analyze DataTestCases for every UI Element
         //   Non-editable UI Elements are not included
         //   { Full variable name => { DTC => { Result, Otherwise steps }} }
         let uieVariableToDTCMap = new Map< string, Map< DataTestCase, Pair< DTCAnalysisResult, Step[] > > >();
-        for ( let uie of uiElements ) {
+        for ( let uie of allAvailableUIElements ) {
             let map = this._dtcAnalyzer.analyzeUIElement( uie, errors );
             uieVariableToDTCMap.set( uie.info.fullVariableName, map );
         }
 
-        // # Generate DataTestCases for all the UI Elements found, according to the goal
-        //   The goal and the combination strategy are embedded in a TestPlanMaker
-        let testPlans: TestPlan[] = [];
+        // # Generate DataTestCases for the UI Elements, according to
+        //   the goal and the combination strategy. Both are embedded
+        //   in a TestPlanMaker.
+        let allTestPlans: TestPlan[] = [];
         for ( let maker of testPlanMakers ) {
-            testPlans.push.apply( testPlans, maker.make( uieVariableToDTCMap ) );
+            allTestPlans.push.apply( allTestPlans, maker.make( uieVariableToDTCMap, alwaysValidUIEVariables ) );
         }
 
         // # Generate values for all the UI Elements, according to the DataTestCase
+        for ( let plan of allTestPlans ) { // Each plan maps string => UIETestPlan
 
-        // Maps for reusing values
-        let uieVariableToValueMapArray: Map< string, EntityValueType >[] = [];
-        for ( let plan of testPlans ) {
-            // TODO
+            let uieVariableToValueMap = new Map< string, EntityValueType >();
+            let context = new ValueGenContext( plan.dataTestCases, uieVariableToValueMap );
+            for ( let [ uieVar, uieTestPlan ] of plan.dataTestCases ) {
+                this._uieValueGen.generate( uieVar, context, doc, spec, errors )
+            }
+
+            // << in this point, we can replace steps
+
+            // ?
+            // let completeSteps: Step[] = [];
+            // for ( let step of newSteps ) {
+            //     let resultingSteps = this.fillUIEWithoutValueWithUILWithValue(
+            //         step, langContent.keywords, uieVariableToValueMap, doc, spec, errors );
+            //     completeSteps.push.apply( completeSteps, resultingSteps );
+            // }
+
+
         }
 
 
@@ -122,36 +157,36 @@ export class GenUtil {
     }
 
 
-    // extractUIElementsFromSteps(
-    //     steps: Step[],
-    //     doc: Document,
-    //     spec: Spec,
-    //     errors: LocatedException[]
-    // ): UIElement[] {
-    //     let all: UIElement[] = [];
-    //     const uieNames = this.extractUIElementNamesFromSteps( steps );
-    //     const baseMsg = 'Referenced UI Element not found: ';
-    //     for ( let name of uieNames ) {
-    //         let uie = spec.uiElementByVariable( name, doc );
-    //         if ( ! uie ) {
-    //             errors.push( new RuntimeException( baseMsg + name ) );
-    //             continue;
-    //         }
-    //         all.push( uie );
-    //     }
-    //     return all;
-    // }
+    extractUIElementsFromSteps(
+        steps: Step[],
+        doc: Document,
+        spec: Spec,
+        errors: LocatedException[]
+    ): UIElement[] {
+        let all: UIElement[] = [];
+        const uieNames = this.extractUIElementNamesFromSteps( steps );
+        const baseMsg = 'Referenced UI Element not found: ';
+        for ( let name of uieNames ) {
+            let uie = spec.uiElementByVariable( name, doc );
+            if ( ! uie ) {
+                errors.push( new RuntimeException( baseMsg + name ) );
+                continue;
+            }
+            all.push( uie );
+        }
+        return all;
+    }
 
-    // extractUIElementNamesFromSteps( steps: Step[] ): string[] {
-    //     let uniqueNames = new Set< string >();
-    //     for ( let step of steps ) {
-    //         let entities: NLPEntity[] = this._nlpUtil.entitiesNamed( Entities.UI_ELEMENT, step.nlpResult );
-    //         for ( let e of entities ) {
-    //             uniqueNames.add( e.value );
-    //         }
-    //     }
-    //     return Array.from( uniqueNames );
-    // }
+    extractUIElementNamesFromSteps( steps: Step[] ): string[] {
+        let uniqueNames = new Set< string >();
+        for ( let step of steps ) {
+            let entities: NLPEntity[] = this._nlpUtil.entitiesNamed( Entities.UI_ELEMENT, step.nlpResult );
+            for ( let e of entities ) {
+                uniqueNames.add( e.value );
+            }
+        }
+        return Array.from( uniqueNames );
+    }
 
 
 

@@ -1,56 +1,46 @@
-import { DataTestCase } from "../testdata/DataTestCase";
-import { DTCAnalysisResult } from "../testdata/DataTestCaseAnalyzer";
-import { Step } from "../ast/Step";
-import { Pair } from "ts-pair";
-import { TestPlan } from "../testcase/TestPlan";
-import { CombinationStrategy } from "../selection/CombinationStrategy";
-import { UIETestPlan } from "./UIETestPlan";
+import { DataTestCaseMix, TestAnalysisMap } from './DataTestCaseMix';
+import { CombinationStrategy } from '../selection/CombinationStrategy';
 import * as objectToArray from 'object-to-array';
+import { TestPlan } from './TestPlan';
 
-
-export enum TestGoal {
-    ALL_VALID,
-    ONE_INVALID_OTHERS_VALID,
-    ALL_INVALID
-}
-
-//                     { Full variable name => { DTC => { Result, Otherwise steps }} }
-type TestAnalysisMap = Map< string, Map< DataTestCase, Pair< DTCAnalysisResult, Step[] > > >;
-
-
-
+/**
+ * Uses the given mixing strategy to select the DataTestCases that will be included
+ * for every UI Element and then combine these DataTestCases to form TestPlans.
+ *
+ * @author Thiago Delgado Pinto
+ */
 export class TestPlanMaker {
 
     constructor(
-        public readonly goal: TestGoal,
+        public readonly mixingStrategy: DataTestCaseMix,
         public readonly combinationStrategy: CombinationStrategy
     ) {
     }
 
+    /**
+     * Produces test plans, i.e., maps from UI Elements variables to UIETestPlan, in which
+     * the expected result and oracles are embedded.
+     *
+     * @param map   A map from UI Element Variables to anoher map containing all
+     *              available DataTestCases and their respective expected result
+     *              (valid, invalid or incompatible) and Oracle steps (if applicable).
+     *
+     * @param alwaysValidVariables  UI Element Variables that should always be valid.
+     */
     make(
-        map: TestAnalysisMap
+        map: TestAnalysisMap,
+        alwaysValidVariables: string[]
     ): TestPlan[] {
 
         let plans: TestPlan[] = [];
 
-        let objects = [];
-        switch ( this.goal ) {
-            case TestGoal.ALL_INVALID: {
-                objects.push( this.allUIEWithInvalidDataTestCases( map ) );
-                break;
-            }
-            case TestGoal.ONE_INVALID_OTHERS_VALID: {
-                objects.push.apply( objects, this.arrayOfOneUIEWithInvalidDataTestCasesAndTheOthersWithValid( map ) );
-                break;
-            }
-            default: {
-                objects.push( this.allUIEWithValidDataTestCases( map ) );
-            }
-        }
+        let objects = this.mixingStrategy.select( map, alwaysValidVariables );
 
         // Each object is a map with an array of UIEPlans
         for ( let obj of objects ) {
+
             let combinations = this.combinationStrategy.combine( obj );
+
             // Each combination now is a map uieName => UIEPlan
             // Thet will be transformed in a TestPlan
             for ( let comb of combinations ) {
@@ -65,60 +55,4 @@ export class TestPlanMaker {
         return plans;
     }
 
-    // Returns Map< uieName => UIEPlan[] > as object
-    allUIEWithValidDataTestCases( map: TestAnalysisMap ): object {
-        let obj = {};
-        for ( let [ uieName, dtcMap ] of map ) {
-            obj[ uieName ] = [];
-            for ( let [ dtc, pair ] of dtcMap ) {
-                if ( DTCAnalysisResult.VALID === pair.first ) {
-                    obj[ uieName ].push( new UIETestPlan( dtc, pair.first, pair.second ) );
-                }
-            }
-        }
-        return obj;
-    }
-
-    // Returns Map< uieName => UIEPlan[] > as object
-    oneUIEWithInvalidDataTestCasesAndTheOthersWithValid( map: TestAnalysisMap, targetUIEName: string ): object {
-        let obj = {};
-        for ( let [ uieName, dtcMap ] of map ) {
-            obj[ uieName ] = [];
-            let sameUIE = uieName === targetUIEName;
-            for ( let [ dtc, pair ] of dtcMap ) {
-                if ( sameUIE ) {
-                    if ( DTCAnalysisResult.INVALID === pair.first ) {
-                        obj[ uieName ].push( new UIETestPlan( dtc, pair.first, pair.second ) );
-                    }
-                } else if ( DTCAnalysisResult.VALID === pair.first ) {
-                    obj[ uieName ].push( new UIETestPlan( dtc, pair.first, pair.second ) );
-                }
-            }
-        }
-        return obj;
-    }
-
-    // Returns Array< Map< uieName => UIEPlan[] > > as object[]
-    arrayOfOneUIEWithInvalidDataTestCasesAndTheOthersWithValid( map: TestAnalysisMap ): object[] {
-        let all = [];
-        for ( let [ uieName, dtcMap ] of map ) {
-            let obj = this.oneUIEWithInvalidDataTestCasesAndTheOthersWithValid( map, uieName );
-            all.push( obj );
-        }
-        return all;
-    }
-
-    // Returns Map< uieName => UIEPlan[] > as object
-    allUIEWithInvalidDataTestCases( map: TestAnalysisMap ): object {
-        let obj = {};
-        for ( let [ uieName, dtcMap ] of map ) {
-            obj[ uieName ] = [];
-            for ( let [ dtc, pair ] of dtcMap ) {
-                if ( DTCAnalysisResult.INVALID === pair.first ) {
-                    obj[ uieName ].push( new UIETestPlan( dtc, pair.first, pair.second ) );
-                }
-            }
-        }
-        return obj;
-    }
 }
