@@ -33,10 +33,14 @@ export class PreTestCase {
         return this.firstThenStep() !== null;
     }
 
+    hasOracles(): boolean {
+        return ! this.oracles && this.oracles.length > 0;
+    }
+
     shouldFail(): boolean {
         return this.hasThenStep()
             && this.hasAnyInvalidValue()
-            && this.oracles.length < 1;
+            && ! this.hasOracles();
     }
 
 
