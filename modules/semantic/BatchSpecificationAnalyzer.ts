@@ -40,6 +40,11 @@ export class BatchSpecificationAnalyzer extends SpecificationAnalyzer {
         spec: Spec,
         errors: SemanticException[]
     ): Promise< void > {
+
+        // Important to guarantee that all documents are mapped
+        spec.clearCache();
+        spec.mapAllDocuments();
+
         for ( let analyzer of this._analyzers ) {
             await analyzer.analyze( graph, spec, errors );
         }

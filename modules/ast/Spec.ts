@@ -18,6 +18,14 @@ import { DatabaseInterface } from '../req/DatabaseInterface';
 import { InMemoryTableInterface } from '../req/InMemoryTableInterface';
 import { UIElementNameHandler } from '../util/UIElementNameHandler';
 
+class MappedContent {
+    feature: boolean = false;
+    database: boolean = false;
+    constant: boolean = false;
+    uiElement: boolean = false;
+    table: boolean = false;
+}
+
 /**
  * Specification
  *
@@ -28,6 +36,8 @@ export class Spec {
     basePath: string = null;
 
     docs: Document[] = [];
+
+    private _docFullyMapped = new Map< Document, MappedContent >() ;
 
     private _relPathToDocumentCache: Map< string, Document > = null;
 
@@ -77,6 +87,25 @@ export class Spec {
 
         this._databaseNameToInterfaceMap.clear();
         this._tableNameToInterfaceMap.clear();
+
+        this._docFullyMapped.clear();
+    }
+
+    mapAllDocuments() {
+        for ( let doc of this.docs ) {
+            this.mapEverythingFromDocument( doc );
+        }
+    }
+
+
+
+    private assureDoc( doc: Document ): MappedContent {
+        let mc = this._docFullyMapped.get( doc ) || null;
+        if ( ! mc ) {
+            mc = new MappedContent();
+            this._docFullyMapped.set( doc, mc );
+        }
+        return mc;
     }
 
     //
@@ -96,7 +125,12 @@ export class Spec {
     //
 
     mapDocumentDatabases( doc: Document ): void {
-        if ( ! doc || ! doc.databases || doc.databases.length < 1 ) {
+        if ( ! doc || this.assureDoc( doc ).database ) {
+            return;
+        }
+
+        if ( ! doc.databases ) {
+            this.assureDoc( doc ).database = true;
             return;
         }
 
@@ -113,10 +147,17 @@ export class Spec {
 
             this._databaseCache.push( db );
         }
+
+        this.assureDoc( doc ).database = true;
     }
 
     mapDocumentConstants( doc: Document ): void {
-        if ( ! doc || ! doc.constantBlock || ! doc.constantBlock.items || doc.constantBlock.items.length < 1 ) {
+        if ( ! doc || this.assureDoc( doc ).constant ) {
+            return;
+        }
+
+        if ( ! doc.constantBlock || ! doc.constantBlock.items ) {
+            this.assureDoc( doc ).constant = true;
             return;
         }
 
@@ -134,10 +175,17 @@ export class Spec {
             this._constantCache.push( ct );
             this._constantNameToValueMap.set( ct.name, ct.value );
         }
+
+        this.assureDoc( doc ).constant = true;
     }
 
     mapDocumentTables( doc: Document ): void {
-        if ( ! doc || ! doc.tables || doc.tables.length < 1 ) {
+        if ( ! doc ||  this.assureDoc( doc ).table ) {
+            return;
+        }
+
+        if ( ! doc.tables ) {
+            this.assureDoc( doc ).table = true;
             return;
         }
 
@@ -154,10 +202,17 @@ export class Spec {
 
             this._tableCache.push( tbl );
         }
+
+        this.assureDoc( doc ).table = true;
     }
 
     mapDocumentFeatures( doc: Document ): void {
-        if ( ! doc || ! doc.feature ) {
+        if ( ! doc || this.assureDoc( doc ).feature ) {
+            return;
+        }
+
+        if ( ! doc.feature ) {
+            this.assureDoc( doc ).feature = true;
             return;
         }
 
@@ -171,11 +226,13 @@ export class Spec {
         }
 
         this._featureCache.push( doc.feature );
+
+        this.assureDoc( doc ).feature = true;
     }
 
     mapDocumentUIElementVariables( doc: Document ): void {
 
-        if ( ! doc ) {
+        if ( ! doc || this.assureDoc( doc ).uiElement ) {
             return;
         }
 
@@ -184,6 +241,7 @@ export class Spec {
 
         // Adds global UI elements to the UI elements cache, if defined
         if ( ! doc.uiElements || doc.uiElements.length < 1 ) {
+            this.assureDoc( doc ).uiElement = true;
             return;
         }
 
@@ -192,6 +250,8 @@ export class Spec {
         }
 
         this._uiElementCache.push.apply( this._uiElementCache, doc.uiElements );
+
+        this.assureDoc( doc ).uiElement = true;
     }
 
 
@@ -227,7 +287,7 @@ export class Spec {
      *
      * @param rebuildCache Whether it is desired to erase the cache and rebuild it. Defaults to false.
      */
-    docWithPath( filePath: string, referencePath: string = null, rebuildCache: boolean = false ): Document | null {
+    docWithPath( filePath: string, referencePath: string = '.', rebuildCache: boolean = false ): Document | null {
 
         // let aPath = filePath;
         // if ( isDefined( referencePath ) ) {
