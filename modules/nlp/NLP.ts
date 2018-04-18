@@ -298,7 +298,7 @@ class EntityRecognizerMaker {
             function( match ) {
                 // return match.toString().replace( /["]+/g, '' ).trim();
                 const content = match.toString();
-                return content.substring( 1, content.length - 1 );
+                return content.substring( 1, content.length - 1 ).trim();
             },
             200 // priority
         );
