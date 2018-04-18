@@ -10,21 +10,32 @@ import { NodeTypes } from "../req/NodeTypes";
 import { Tag } from "../ast/Tag";
 import { ReservedTags } from "../req/ReservedTags";
 
-export class NewTCGen {
+/**
+ * Generates Test Cases from Test Scenarios and parameters.
+ *
+ * @author Thiago Delgado Pinto
+ */
+export class TCGen {
 
     constructor(
-        private _genUtil: GenUtil,
-        private _testPlanMakers: TestPlanMaker[]
+        private _genUtil: GenUtil
     ) {
     }
 
-    generate( ts: TestScenario, ctx: GenContext ): TestCase[] {
+    /**
+     * Produces TestCases from the given Test Scenario, generation context, and Test Plan Makers.
+     *
+     * @param ts Test scenario
+     * @param ctx Generation context
+     * @param testPlanMakers Test plan makers
+     */
+    generate( ts: TestScenario, ctx: GenContext, testPlanMakers: TestPlanMaker[] ): TestCase[] {
 
         if ( ts.ignoreForTestCaseGeneration ) {
             return [];
         }
 
-        let all: PreTestCase[] = this._genUtil.generate( ts.steps, ctx, this._testPlanMakers );
+        let all: PreTestCase[] = this._genUtil.generate( ts.steps, ctx, testPlanMakers );
 
         let testCases: TestCase[] = [];
         for ( let preTestCase of all ) {
