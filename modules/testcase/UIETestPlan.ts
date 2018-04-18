@@ -15,8 +15,12 @@ export class UIETestPlan {
         return ( this.otherwiseSteps || [] ).length > 0;
     }
 
+    isResultInvalid(): boolean {
+        return DTCAnalysisResult.INVALID === this.result;
+    }
+
     /** Remember: still have to analyse whether the steps have Then without states */
     shouldFail(): boolean {
-        return DTCAnalysisResult.INVALID === this.result && ! this.hasOtherwiseSteps();
+        return this.isResultInvalid() && ! this.hasOtherwiseSteps();
     }
 }

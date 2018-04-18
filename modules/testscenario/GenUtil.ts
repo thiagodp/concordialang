@@ -34,6 +34,7 @@ import { ReferenceReplacer } from "../util/ReferenceReplacer";
 import { VariantSentenceRecognizer } from "../nlp/VariantSentenceRecognizer";
 import { Keywords } from "../req/Keywords";
 import { CaseType } from "../app/CaseType";
+import { PreTestCase } from "./PreTestCase";
 
     // /** Test cases produced from the Variant */
     // testCases: TestCase[];
@@ -129,10 +130,10 @@ export class GenUtil {
         steps: Step[],
         ctx: GenContext,
         testPlanMakers: TestPlanMaker[]
-    ): Array< Pair< Step[], Step[] > > { // Array< Pair< Steps with values, Oracles > >
+    ): PreTestCase[] { // Array< Pair< Steps with values, Oracles > >
 
         if ( ! steps || steps.length < 1 ) {
-            return [ new Pair( [], [] ) ];
+            return [];
         }
 
         // Determine the language to use
@@ -188,7 +189,7 @@ export class GenUtil {
         }
 
         // # Generate values for all the UI Elements, according to the DataTestCase
-        let all: Array< Pair< Step[], Step[] > > = [];
+        let all: PreTestCase[] = [];
         for ( let plan of allTestPlans ) { // Each plan maps string => UIETestPlan
 
             let uieVariableToValueMap = new Map< string, EntityValueType >();
@@ -213,7 +214,7 @@ export class GenUtil {
                 }
             }
 
-            all.push( new Pair( completeSteps, stepOracles ) );
+            all.push( new PreTestCase( plan, completeSteps, stepOracles ) );
         }
 
         return all;

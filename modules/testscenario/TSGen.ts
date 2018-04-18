@@ -72,7 +72,14 @@ export class TSGen {
         this.detectVariantStates( variant, errors );
 
         const docLanguage = this._genUtil.docLanguage( ctx.doc );
+
+        // Also removes Then steps with postconditions
         let baseScenario: TestScenario = this.makeTestScenarioFromVariant( variant, docLanguage );
+
+        // No steps -> No test scenarios
+        if ( ! baseScenario.steps || baseScenario.steps.length < 1 ) {
+            return [];
+        }
 
         let pairMap = {}; // Maps string => Array< Pair< State, TestScenario > >
 
@@ -153,10 +160,11 @@ export class TSGen {
                         ctx,
                         [ this._validValuePlanMaker ]
                     );
-                    let [ newSteps, oracles ] = all[ 0 ].toArray();
+
+                    const preTestCase = all[ 0 ];
 
                     // Replace TestScenario steps with the new ones
-                    tsToUse.steps = newSteps;
+                    tsToUse.steps = preTestCase.steps;
                     tsToUse.stepAfterPreconditions = null;
 
                     // Adjust the stepAfterPreconditions
@@ -256,10 +264,11 @@ export class TSGen {
         // Steps
         ts.steps = deepcopy( variant.sentences ) as Step[]; // variant.sentences.slice( 0 ); // make another array with the same items
 
-        // Remove postconditions from steps
+        // Remove Then steps with postconditions
         const stepAndKeyword: string = ( keywords.stepAnd || [ 'and' ] )[ 0 ];
         const stepThenKeyword: string = ( keywords.stepThen || [ 'then' ] )[ 0 ];
         const stepAndRegex = new RegExp( stepAndKeyword, 'i' );
+
         for ( let postc of variant.postconditions ) {
 
             // Make the next step to become a THEN instead of an AND, if needed
