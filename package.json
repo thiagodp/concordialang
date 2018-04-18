@@ -36,6 +36,17 @@
     "start": "node bin/concordia",
     "postversion": "git push && git push --tags"
   },
+  "jest": {
+    "transform": {
+      ".(ts|tsx)": "./node_modules/ts-jest/preprocessor.js"
+    },
+    "testRegex": "(/__tests__/.*|(\\.|/)(test|spec))\\.(tsx?)$",
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js"
+    ]
+  },
   "dependencies": {
     "alasql": "^0.4.5",
     "arr-diff": "^4.0.0",
@@ -88,16 +99,5 @@
     "memfs": "^2.8.0",
     "ts-jest": "^21.2.4",
     "typescript": "^2.4.1"
-  },
-  "jest": {
-    "transform": {
-      ".(ts|tsx)": "./node_modules/ts-jest/preprocessor.js"
-    },
-    "testRegex": "(/__tests__/.*|(\\.|/)(test|spec))\\.(tsx?)$",
-    "moduleFileExtensions": [
-      "ts",
-      "tsx",
-      "js"
-    ]
   }
 }
