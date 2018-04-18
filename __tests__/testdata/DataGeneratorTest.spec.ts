@@ -7,13 +7,14 @@ import { LocalDate, LocalTime, LocalDateTime } from "js-joda";
 import { DateLimits } from "../../modules/testdata/limits/DateLimits";
 import { TimeLimits } from "../../modules/testdata/limits/TimeLimits";
 import { DateTimeLimits } from "../../modules/testdata/limits/DateTimeLimits";
+import { DataGeneratorBuilder } from "../../modules/testdata/DataGeneratorBuilder";
 
 describe( 'DataGeneratorTest', () => {
 
-    let gen: DataGenerator;
+    let gen: DataGenerator; // under test
 
     beforeEach( () => {
-        gen = new DataGenerator( new Random( '123' ) );
+        gen = new DataGenerator( new DataGeneratorBuilder( 'concordia' ));
     } );
 
     afterEach( () => {
@@ -37,18 +38,18 @@ describe( 'DataGeneratorTest', () => {
 
             async function checkLessThanMin( tc: DataTestCase ) {
                 let cfg = new DataGenConfig( vt );
-                cfg.min = min;
+                cfg.minValue = min;
                 const val = await gen.generate( tc, cfg );
                 // expect( val ).toBeLessThan( cfg.min );
-                expect( comparator( val, cfg.min ) ).toEqual( -1 );
+                expect( comparator( val, cfg.min ) ).toEqual( -1 ); // -1 means that the first is lower
             }
 
             async function checkGreaterThanMax( tc: DataTestCase ) {
                 let cfg = new DataGenConfig( vt );
-                cfg.max = max;
+                cfg.maxValue = max;
                 const val = await gen.generate( tc, cfg );
                 // expect( val ).toBeGreaterThan( cfg.max );
-                expect( comparator( val, cfg.max ) ).toEqual( 1 );
+                expect( comparator( val, cfg.max ) ).toEqual( 1 ); // 1 means that the first is greater
             }
 
             it( 'VALUE_LOWEST', async () => {
@@ -65,7 +66,7 @@ describe( 'DataGeneratorTest', () => {
 
             it( 'VALUE_MIN', async () => {
                 let cfg = new DataGenConfig( vt );
-                cfg.min = min;
+                cfg.minValue = min;
                 const val = await gen.generate( DataTestCase.VALUE_MIN, cfg );
                 // expect( val ).toEqual( cfg.min );
                 expect( comparator( val, cfg.min ) ).toEqual( 0 );
@@ -73,7 +74,7 @@ describe( 'DataGeneratorTest', () => {
 
             it( 'VALUE_JUST_ABOVE_MIN', async () => {
                 let cfg = new DataGenConfig( vt );
-                cfg.min = min;
+                cfg.minValue = min;
                 const val = await gen.generate( DataTestCase.VALUE_JUST_ABOVE_MIN, cfg );
                 // expect( val ).toBeGreaterThan( cfg.min );
                 expect( comparator( val, cfg.min ) ).toEqual( 1 );
@@ -81,7 +82,7 @@ describe( 'DataGeneratorTest', () => {
 
             it( 'VALUE_ZERO', async () => {
                 let cfg = new DataGenConfig( vt );
-                cfg.min = max;
+                cfg.minValue = max;
                 const val = await gen.generate( DataTestCase.VALUE_ZERO, cfg );
                 // expect( val ).toEqual( zero );
                 expect( comparator( val, zero ) ).toEqual( 0 );
@@ -89,8 +90,8 @@ describe( 'DataGeneratorTest', () => {
 
             it( 'VALUE_MEDIAN', async () => {
                 let cfg = new DataGenConfig( vt );
-                cfg.min = min;
-                cfg.max = max;
+                cfg.minValue = min;
+                cfg.maxValue = max;
                 const val = await gen.generate( DataTestCase.VALUE_MEDIAN, cfg );
                 // expect( val ).toEqual( median );
                 expect( comparator( val, median ) ).toEqual( 0 );
@@ -98,8 +99,8 @@ describe( 'DataGeneratorTest', () => {
 
             it( 'VALUE_RANDOM_BETWEEN_MIN_MAX', async () => {
                 let cfg = new DataGenConfig( vt );
-                cfg.min = min;
-                cfg.max = max;
+                cfg.minValue = min;
+                cfg.maxValue = max;
                 const val = await gen.generate( DataTestCase.VALUE_RANDOM_BETWEEN_MIN_MAX, cfg );
                 // expect( val ).toBeGreaterThanOrEqual( cfg.min );
                 // expect( val ).toBeLessThanOrEqual( cfg.max );
@@ -109,7 +110,7 @@ describe( 'DataGeneratorTest', () => {
 
             it( 'VALUE_JUST_BELOW_MAX', async () => {
                 let cfg = new DataGenConfig( vt );
-                cfg.max = max;
+                cfg.maxValue = max;
                 const val = await gen.generate( DataTestCase.VALUE_JUST_BELOW_MAX, cfg );
                 // expect( val ).toBeLessThan( cfg.max );
                 expect( comparator( val, cfg.max ) ).toEqual( -1 );
@@ -117,7 +118,7 @@ describe( 'DataGeneratorTest', () => {
 
             it( 'VALUE_MAX', async () => {
                 let cfg = new DataGenConfig( vt );
-                cfg.max = max;
+                cfg.maxValue = max;
                 const val = await gen.generate( DataTestCase.VALUE_MAX, cfg );
                 // expect( val ).toEqual( cfg.max );
                 expect( comparator( val, cfg.max ) ).toEqual( 0 );
@@ -145,14 +146,14 @@ describe( 'DataGeneratorTest', () => {
 
             async function checkLessThanMin( tc: DataTestCase ) {
                 let cfg = new DataGenConfig( vt );
-                cfg.min = min;
+                cfg.minLength = min;
                 const val = await gen.generate( tc, cfg );
                 expect( val.length ).toBeLessThan( cfg.min );
             }
 
             async function checkGreaterThanMax( tc: DataTestCase ) {
                 let cfg = new DataGenConfig( vt );
-                cfg.max = max;
+                cfg.maxLength = max;
                 const val = await gen.generate( tc, cfg );
                 expect( val.length ).toBeGreaterThan( cfg.max );
             }
@@ -171,30 +172,30 @@ describe( 'DataGeneratorTest', () => {
 
             it( 'LENGTH_MIN', async () => {
                 let cfg = new DataGenConfig( vt );
-                cfg.min = min;
+                cfg.minLength = min;
                 const val = await gen.generate( DataTestCase.LENGTH_MIN, cfg );
                 expect( val.length ).toEqual( cfg.min );
             } );
 
             it( 'LENGTH_JUST_ABOVE_MIN', async () => {
                 let cfg = new DataGenConfig( vt );
-                cfg.min = min;
+                cfg.minLength = min;
                 const val = await gen.generate( DataTestCase.LENGTH_JUST_ABOVE_MIN, cfg );
                 expect( val.length ).toBeGreaterThan( cfg.min );
             } );
 
             it( 'LENGTH_MEDIAN', async () => {
                 let cfg = new DataGenConfig( vt );
-                cfg.min = min;
-                cfg.max = max;
+                cfg.minLength = min;
+                cfg.maxLength = max;
                 const val = await gen.generate( DataTestCase.LENGTH_MEDIAN, cfg );
                 expect( val.length ).toEqual( median );
             } );
 
             it( 'LENGTH_RANDOM_BETWEEN_MIN_MAX', async () => {
                 let cfg = new DataGenConfig( vt );
-                cfg.min = min;
-                cfg.max = max;
+                cfg.minLength = min;
+                cfg.maxLength = max;
                 const val = await gen.generate( DataTestCase.LENGTH_RANDOM_BETWEEN_MIN_MAX, cfg );
                 expect( val.length ).toBeGreaterThanOrEqual( cfg.min );
                 expect( val.length ).toBeLessThanOrEqual( cfg.max );
@@ -202,14 +203,14 @@ describe( 'DataGeneratorTest', () => {
 
             it( 'LENGTH_JUST_BELOW_MAX', async () => {
                 let cfg = new DataGenConfig( vt );
-                cfg.max = max;
+                cfg.maxLength = max;
                 const val = await gen.generate( DataTestCase.LENGTH_JUST_BELOW_MAX, cfg );
                 expect( val.length ).toBeLessThan( cfg.max );
             } );
 
             it( 'LENGTH_MAX', async () => {
                 let cfg = new DataGenConfig( vt );
-                cfg.max = max;
+                cfg.maxLength = max;
                 const val = await gen.generate( DataTestCase.LENGTH_MAX, cfg );
                 expect( val.length ).toEqual( cfg.max );
             } );
@@ -236,8 +237,8 @@ describe( 'DataGeneratorTest', () => {
 
             async function checkIsNull( tc: DataTestCase ) {
                 let cfg = new DataGenConfig( vt );
-                cfg.min = min;
-                cfg.max = max;
+                cfg.minLength = min;
+                cfg.maxLength = max;
                 const val = await gen.generate( tc, cfg );
                 expect( val ).toBeNull();
             }
@@ -317,26 +318,26 @@ describe( 'DataGeneratorTest', () => {
 
         describe( 'string', checkTestCasesOfTheGroupLength( ValueType.STRING, 10, 20, 15 ) );
 
-        describe( 'integer', checkTestCasesOfTheGroupLengthReturnNullWhenTypeIsNotString( ValueType.INTEGER, 10, 20 ) );
-        describe( 'double', checkTestCasesOfTheGroupLengthReturnNullWhenTypeIsNotString( ValueType.DOUBLE, 10, 20 ) );
+        // describe( 'integer', checkTestCasesOfTheGroupLengthReturnNullWhenTypeIsNotString( ValueType.INTEGER, 10, 20 ) );
+        // describe( 'double', checkTestCasesOfTheGroupLengthReturnNullWhenTypeIsNotString( ValueType.DOUBLE, 10, 20 ) );
 
-        describe( 'date', checkTestCasesOfTheGroupLengthReturnNullWhenTypeIsNotString(
-            ValueType.DATE,
-            LocalDate.of( 2018, 1, 1 ),
-            LocalDate.of( 2018, 12, 31 )
-        ) );
+        // describe( 'date', checkTestCasesOfTheGroupLengthReturnNullWhenTypeIsNotString(
+        //     ValueType.DATE,
+        //     LocalDate.of( 2018, 1, 1 ),
+        //     LocalDate.of( 2018, 12, 31 )
+        // ) );
 
-        describe( 'time', checkTestCasesOfTheGroupLengthReturnNullWhenTypeIsNotString(
-            ValueType.TIME,
-            LocalTime.of( 6, 0, 0 ),
-            LocalTime.of( 12, 0, 0 )
-        ) );
+        // describe( 'time', checkTestCasesOfTheGroupLengthReturnNullWhenTypeIsNotString(
+        //     ValueType.TIME,
+        //     LocalTime.of( 6, 0, 0 ),
+        //     LocalTime.of( 12, 0, 0 )
+        // ) );
 
-        describe( 'datetime', checkTestCasesOfTheGroupLengthReturnNullWhenTypeIsNotString(
-            ValueType.DATETIME,
-            LocalDateTime.of( LocalDate.of( 2018, 1, 1 ), LocalTime.of( 6, 0, 0 ) ),
-            LocalDateTime.of( LocalDate.of( 2018, 12, 31 ), LocalTime.of( 12, 0, 0 ) )
-        ) );
+        // describe( 'datetime', checkTestCasesOfTheGroupLengthReturnNullWhenTypeIsNotString(
+        //     ValueType.DATETIME,
+        //     LocalDateTime.of( LocalDate.of( 2018, 1, 1 ), LocalTime.of( 6, 0, 0 ) ),
+        //     LocalDateTime.of( LocalDate.of( 2018, 12, 31 ), LocalTime.of( 12, 0, 0 ) )
+        // ) );
     } );
 
 
