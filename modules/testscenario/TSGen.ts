@@ -20,7 +20,7 @@ import { CombinationStrategy, SingleRandomOfEachStrategy } from "../selection/Co
 import { Pair } from "ts-pair";
 import * as deepcopy from 'deepcopy';
 import { upperFirst } from "../util/CaseConversor";
-import { GenUtil, GenContext } from "./GenUtil";
+import { PreTestCaseGenerator, GenContext } from "./PreTestCaseGenerator";
 import { TestPlanMaker } from "../testcase/TestPlanMaker";
 import { AllValidMix } from "../testcase/DataTestCaseMix";
 
@@ -41,15 +41,15 @@ export class TSGen {
     private readonly _validValuePlanMaker: TestPlanMaker;
 
     constructor(
-        private _genUtil: GenUtil,
+        private _preTestCaseGenerator: PreTestCaseGenerator,
         private _variantSelectionStrategy: VariantSelectionStrategy,
         private _statePairCombinationStrategy: CombinationStrategy,
         private _variantToTestScenarioMap: Map< Variant, TestScenario[] >,
         private _postconditionNameToVariantsMap: Map< string, Variant[] >
     ) {
-        this._langContentLoader = this._genUtil.langContentLoader;
-        this._defaultLanguage = this._genUtil.defaultLanguage;
-        this.seed = this._genUtil.seed;
+        this._langContentLoader = this._preTestCaseGenerator.langContentLoader;
+        this._defaultLanguage = this._preTestCaseGenerator.defaultLanguage;
+        this.seed = this._preTestCaseGenerator.seed;
         this._randomLong = new RandomLong( new Random( this.seed ) );
 
         // Makes a PlanMaker to create valid values for Precondition scenarios
@@ -70,7 +70,7 @@ export class TSGen {
         // Detect Preconditions, State Calls, and Postconditions of the Variant
         this.detectVariantStates( variant, ctx.errors );
 
-        const docLanguage = this._genUtil.docLanguage( ctx.doc );
+        const docLanguage = this._preTestCaseGenerator.docLanguage( ctx.doc );
 
         // Also removes Then steps with postconditions
         let baseScenario: TestScenario = this.makeTestScenarioFromVariant( variant, docLanguage );
@@ -154,7 +154,7 @@ export class TSGen {
                     let tsToUse: TestScenario = tsToReplaceStep.clone();
 
                     // Make all substitutions and generate valid values using GenUtil
-                    let all = this._genUtil.generate(
+                    let all = this._preTestCaseGenerator.generate(
                         tsToReplaceStep.steps,
                         ctx,
                         [ this._validValuePlanMaker ]

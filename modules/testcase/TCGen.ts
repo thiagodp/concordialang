@@ -1,4 +1,4 @@
-import { GenUtil, GenContext } from "../testscenario/GenUtil";
+import { PreTestCaseGenerator, GenContext } from "../testscenario/PreTestCaseGenerator";
 import { TestScenario } from "../testscenario/TestScenario";
 import { TestCase } from "../ast/TestCase";
 import { TestPlanMaker } from "./TestPlanMaker";
@@ -18,7 +18,7 @@ import { ReservedTags } from "../req/ReservedTags";
 export class TCGen {
 
     constructor(
-        private _genUtil: GenUtil
+        private _preTestCaseGenerator: PreTestCaseGenerator
     ) {
     }
 
@@ -35,7 +35,7 @@ export class TCGen {
             return [];
         }
 
-        let all: PreTestCase[] = this._genUtil.generate( ts.steps, ctx, testPlanMakers );
+        let all: PreTestCase[] = this._preTestCaseGenerator.generate( ts.steps, ctx, testPlanMakers );
 
         let testCases: TestCase[] = [];
         for ( let preTestCase of all ) {

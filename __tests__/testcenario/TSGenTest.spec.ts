@@ -11,14 +11,14 @@ import { BatchSpecificationAnalyzer } from "../../modules/semantic/BatchSpecific
 import { SpecFilter } from "../../modules/selection/SpecFilter";
 import { FileInfo } from "../../modules/ast/FileInfo";
 import { CartesianProductStrategy } from "../../modules/selection/CombinationStrategy";
-import { GenUtil, GenContext } from "../../modules/testscenario/GenUtil";
+import { PreTestCaseGenerator, GenContext } from "../../modules/testscenario/PreTestCaseGenerator";
 
 
 describe( 'TSGenTest', () => {
 
     let gen: TSGen = null; // under test
 
-    let genUtil: GenUtil;
+    let ptcGen: PreTestCaseGenerator;
     const LANGUAGE: string = 'pt';
 
     let cp: SimpleCompiler;
@@ -30,7 +30,7 @@ describe( 'TSGenTest', () => {
         variantToTestScenariosMap = new Map< Variant, TestScenario[] >();
         postconditionNameToVariantsMap = new Map< string, Variant[] >();
 
-        genUtil = new GenUtil(
+        ptcGen = new PreTestCaseGenerator(
             cp.langLoader,
             cp.language,
             'myseed',
@@ -38,7 +38,7 @@ describe( 'TSGenTest', () => {
         );
 
         gen = new TSGen(
-            genUtil,
+            ptcGen,
             new AllVariantsSelectionStrategy(),
             new CartesianProductStrategy(),
             variantToTestScenariosMap,
@@ -49,7 +49,7 @@ describe( 'TSGenTest', () => {
     afterEach( () => {
         variantToTestScenariosMap = null;
         postconditionNameToVariantsMap = null;
-        genUtil = null;
+        ptcGen = null;
         cp = null;
         gen = null;
     } );

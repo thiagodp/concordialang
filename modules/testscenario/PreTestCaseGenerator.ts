@@ -36,21 +36,6 @@ import { Keywords } from "../req/Keywords";
 import { CaseType } from "../app/CaseType";
 import { PreTestCase } from "./PreTestCase";
 
-    // /** Test cases produced from the Variant */
-    // testCases: TestCase[];
-
-    // /**
-    //  * Maps a postcondition to previously generated test cases.
-    //  * It makes easier to locate test cases that produces a certain postcondition.
-    //  */
-    // postconditionToTestCasesMap: Map< State, TestCase[] >;
-
-
-// Fill UI Literals with random values
-// Extract UI Elements to generate value
-// Analyze DataTestCases for every UI Element
-// Generate values for UI Element according to the goal
-
 
 export class GenContext {
     constructor(
@@ -62,7 +47,12 @@ export class GenContext {
     }
 }
 
-export class GenUtil {
+/**
+ * Generates `PreTestCase`s.
+ *
+ * @author Thiago Delgado Pinto
+ */
+export class PreTestCaseGenerator {
 
     public validKeyword: string = 'valid'; //       TODO: i18n
     public invalidKeyword: string = 'invalid'; //   TODO: i18n
