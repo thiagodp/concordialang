@@ -34,7 +34,7 @@ export class PreTestCase {
     }
 
     hasOracles(): boolean {
-        return ! this.oracles && this.oracles.length > 0;
+        return ( this.oracles || [] ).length > 0;
     }
 
     shouldFail(): boolean {
