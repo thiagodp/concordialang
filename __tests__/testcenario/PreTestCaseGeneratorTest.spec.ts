@@ -12,7 +12,6 @@ import { AllValidMix } from "../../modules/testcase/DataTestCaseMix";
 import { SingleRandomOfEachStrategy } from "../../modules/selection/CombinationStrategy";
 import { RandomString } from "../../modules/testdata/random/RandomString";
 import { Random } from "../../modules/testdata/random/Random";
-import { escapeString } from "../../modules/util/escape";
 
 describe( 'PreTestCaseGeneratorTest', () => {
 
@@ -260,8 +259,8 @@ describe( 'PreTestCaseGeneratorTest', () => {
         const lines = preTC.steps.map( s => s.content + ( ! s.comment ? '' : ' #' + s.comment ) );
 
         const rand = new RandomString( new Random( SEED ) );
-        const value1 = escapeString( rand.between( gen.minRandomStringSize, gen.maxRandomStringSize ) );
-        const value2 = escapeString( rand.between( gen.minRandomStringSize, gen.maxRandomStringSize ) );
+        const value1 = rand.between( gen.minRandomStringSize, gen.maxRandomStringSize );
+        const value2 = rand.between( gen.minRandomStringSize, gen.maxRandomStringSize );
 
         expect( lines ).toEqual(
             [

@@ -35,7 +35,6 @@ import { VariantSentenceRecognizer } from "../nlp/VariantSentenceRecognizer";
 import { Keywords } from "../req/Keywords";
 import { CaseType } from "../app/CaseType";
 import { PreTestCase } from "./PreTestCase";
-import { escapeString } from "../util/escape";
 
 export class GenContext {
     constructor(
@@ -626,9 +625,7 @@ export class PreTestCaseGenerator {
     }
 
     randomString(): string {
-        let value = this._randomString.between( this.minRandomStringSize, this.maxRandomStringSize );
-        value = escapeString( value );
-        return value;
+        return this._randomString.between( this.minRandomStringSize, this.maxRandomStringSize );
     }
 
 
