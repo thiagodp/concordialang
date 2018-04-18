@@ -87,7 +87,7 @@ describe( 'TSGenTest', () => {
 
         let ctx1 = new GenContext( spec, doc1, errors, warnings );
         let variant1: Variant = doc1.feature.scenarios[ 0 ].variants[ 0 ];
-        let ts1 = gen.generate( ctx1, variant1, errors );
+        let ts1 = gen.generate( ctx1, variant1 );
         expect( errors ).toHaveLength( 0 );
         expect( ts1 ).toHaveLength( 1 );
     } );
@@ -139,13 +139,13 @@ describe( 'TSGenTest', () => {
 
         let ctx1 = new GenContext( spec, doc1, errors, warnings );
         let variant1: Variant = doc1.feature.scenarios[ 0 ].variants[ 0 ];
-        let ts1 = gen.generate( ctx1, variant1, errors );
+        let ts1 = gen.generate( ctx1, variant1 );
         expect( errors ).toHaveLength( 0 );
         expect( ts1 ).toHaveLength( 1 );
 
         let ctx2 = new GenContext( spec, doc2, errors, warnings );
         let variant2: Variant = doc2.feature.scenarios[ 0 ].variants[ 0 ];
-        let ts2 = gen.generate( ctx2, variant2, errors );
+        let ts2 = gen.generate( ctx2, variant2 );
         expect( errors ).toHaveLength( 0 );
         expect( ts2 ).toHaveLength( 1 );
 
@@ -188,7 +188,7 @@ describe( 'TSGenTest', () => {
         let ctx = new GenContext( spec, doc, errors, warnings );
 
         let variant: Variant = doc.feature.scenarios[ 0 ].variants[ 0 ];
-        let ts = gen.generate( ctx, variant, errors );
+        let ts = gen.generate( ctx, variant );
         expect( errors ).toHaveLength( 1 );
         expect( ts ).toHaveLength( 0 );
     } );
@@ -240,13 +240,13 @@ describe( 'TSGenTest', () => {
         // expect( doc2.fileErrors ).toEqual( [] );
         let ctx1 = new GenContext( spec, doc1, errors, warnings );
         let variant1: Variant = doc1.feature.scenarios[ 0 ].variants[ 0 ];
-        let ts1 = gen.generate( ctx1, variant1, errors );
+        let ts1 = gen.generate( ctx1, variant1 );
         expect( errors ).toHaveLength( 0 );
         expect( ts1 ).toHaveLength( 1 );
 
         let ctx2 = new GenContext( spec, doc2, errors, warnings );
         let variant2: Variant = doc2.feature.scenarios[ 0 ].variants[ 0 ];
-        let ts2 = gen.generate( ctx2, variant2, errors );
+        let ts2 = gen.generate( ctx2, variant2 );
         expect( errors ).toHaveLength( 0 );
         expect( ts2 ).toHaveLength( 1 );
 
@@ -311,13 +311,13 @@ describe( 'TSGenTest', () => {
 
         let ctx1 = new GenContext( spec, doc1, errors, warnings );
         let variant1: Variant = doc1.feature.scenarios[ 0 ].variants[ 0 ];
-        let ts1 = gen.generate( ctx1, variant1, errors );
+        let ts1 = gen.generate( ctx1, variant1 );
         expect( errors ).toHaveLength( 0 );
         expect( ts1 ).toHaveLength( 1 );
 
         let ctx2 = new GenContext( spec, doc2, errors, warnings );
         let variant2: Variant = doc2.feature.scenarios[ 0 ].variants[ 0 ];
-        let ts2 = gen.generate( ctx2, variant2, errors );
+        let ts2 = gen.generate( ctx2, variant2 );
         expect( errors ).toHaveLength( 0 );
         expect( ts2 ).toHaveLength( 1 );
 
@@ -383,13 +383,13 @@ describe( 'TSGenTest', () => {
 
         let ctx1 = new GenContext( spec, doc1, errors, warnings );
         let variant1: Variant = doc1.feature.scenarios[ 0 ].variants[ 0 ];
-        let ts1 = gen.generate( ctx1, variant1, errors );
+        let ts1 = gen.generate( ctx1, variant1 );
         expect( errors ).toHaveLength( 0 );
         expect( ts1 ).toHaveLength( 1 );
 
         let ctx2 = new GenContext( spec, doc2, errors, warnings );
         let variant2: Variant = doc2.feature.scenarios[ 0 ].variants[ 0 ];
-        let ts2 = gen.generate( ctx2, variant2, errors );
+        let ts2 = gen.generate( ctx2, variant2 );
         expect( errors ).toHaveLength( 0 );
         expect( ts2 ).toHaveLength( 1 );
 
@@ -472,19 +472,19 @@ describe( 'TSGenTest', () => {
 
         let ctx1 = new GenContext( spec, doc1, errors, warnings );
         let variant1: Variant = doc1.feature.scenarios[ 0 ].variants[ 0 ];
-        let ts1 = gen.generate( ctx1, variant1, errors );
+        let ts1 = gen.generate( ctx1, variant1 );
         expect( errors ).toHaveLength( 0 );
         expect( ts1 ).toHaveLength( 1 );
 
         let ctx2 = new GenContext( spec, doc2, errors, warnings );
         let variant2: Variant = doc2.feature.scenarios[ 0 ].variants[ 0 ];
-        let ts2 = gen.generate( ctx2, variant2, errors );
+        let ts2 = gen.generate( ctx2, variant2 );
         expect( errors ).toHaveLength( 0 );
         expect( ts2 ).toHaveLength( 1 );
 
         let ctx3 = new GenContext( spec, doc3, errors, warnings );
         let variant3: Variant = doc3.feature.scenarios[ 0 ].variants[ 0 ];
-        let ts3 = gen.generate( ctx3, variant3, errors );
+        let ts3 = gen.generate( ctx3, variant3 );
         expect( errors ).toHaveLength( 0 );
         expect( ts3 ).toHaveLength( 1 );
 
@@ -571,19 +571,19 @@ describe( 'TSGenTest', () => {
 
         let ctx1 = new GenContext( spec, doc1, errors, warnings );
         let variant1: Variant = doc1.feature.scenarios[ 0 ].variants[ 0 ];
-        let ts1 = gen.generate( ctx1, variant1, errors );
+        let ts1 = gen.generate( ctx1, variant1 );
         expect( errors ).toHaveLength( 0 );
         expect( ts1 ).toHaveLength( 1 );
 
         let ctx2 = new GenContext( spec, doc2, errors, warnings );
         let variant2: Variant = doc2.feature.scenarios[ 0 ].variants[ 0 ];
-        let ts2 = gen.generate( ctx2, variant2, errors );
+        let ts2 = gen.generate( ctx2, variant2 );
         expect( errors ).toHaveLength( 0 );
         expect( ts2 ).toHaveLength( 1 );
 
         let ctx3 = new GenContext( spec, doc3, errors, warnings );
         let variant3: Variant = doc3.feature.scenarios[ 0 ].variants[ 0 ];
-        let ts3 = gen.generate( ctx3, variant3, errors );
+        let ts3 = gen.generate( ctx3, variant3 );
         expect( errors ).toHaveLength( 0 );
         expect( ts3 ).toHaveLength( 1 );
 

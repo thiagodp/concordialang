@@ -62,14 +62,13 @@ export class TSGen {
 
     generate(
         ctx: GenContext,
-        variant: Variant,
-        errors: RuntimeException[]
+        variant: Variant
     ): TestScenario[] {
 
         let testScenarios: TestScenario[] = [];
 
         // Detect Preconditions, State Calls, and Postconditions of the Variant
-        this.detectVariantStates( variant, errors );
+        this.detectVariantStates( variant, ctx.errors );
 
         const docLanguage = this._genUtil.docLanguage( ctx.doc );
 
@@ -99,7 +98,7 @@ export class TSGen {
                 if ( producerVariants.length < 1 ) {
                     const msg = 'A producer of the state "' + state.name + '" was not found.';
                     const err = new RuntimeException( msg, variant.sentences[ state.stepIndex ].location );
-                    errors.push( err );
+                    ctx.errors.push( err );
                     continue;
                 }
 
@@ -109,7 +108,7 @@ export class TSGen {
                 // Make pairs State => Test Scenario to combine later
                 let pairs: Pair< State, TestScenario >[] = [];
                 for ( let otherVariant of producerVariants ) {
-                    let testScenario = this.selectSingleValidTestScenarioOf( otherVariant, errors ); // randomly
+                    let testScenario = this.selectSingleValidTestScenarioOf( otherVariant, ctx.errors ); // randomly
                     if ( null === testScenario ) {
                         continue; // Ignore
                     }
