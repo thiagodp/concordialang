@@ -68,7 +68,7 @@ export class ValueTypeDetector {
 
     isDate( val: any ): boolean {
         const t = typeof val;
-        if ( 'object' === t && val instanceof Date ) { return true };
+        if ( 'object' === t && ( val instanceof Date || val instanceof LocalDate ) ) { return true };
         if ( 'string' === t  ) {
             return moment( val, 'YYYY-MM-DD', true ).isValid()
                 || moment( val, 'YYYY/MM/DD', true ).isValid()
@@ -80,7 +80,7 @@ export class ValueTypeDetector {
 
     isTime( val: any ): boolean {
         const t = typeof val;
-        if ( 'object' === t && val instanceof Date ) { return true };
+        if ( 'object' === t && ( val instanceof Date || val instanceof LocalTime ) ) { return true };
         if ( 'string' === t  ) {
             return moment( val, 'HH:mm', true ).isValid()
                 || moment( val, 'HH:mm:ss', true ).isValid()
@@ -92,7 +92,7 @@ export class ValueTypeDetector {
 
     isDateTime( val: any ): boolean {
         const t = typeof val;
-        if ( 'object' === t && val instanceof Date ) { return true };
+        if ( 'object' === t && ( val instanceof Date || val instanceof LocalDateTime ) ) { return true };
         if ( 'string' === t  ) {
             const v = val.toString().trim();
             if ( ! v.indexOf( ' ' ) ) {
