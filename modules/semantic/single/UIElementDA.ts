@@ -48,7 +48,7 @@ export class UIElementDA implements DocumentAnalyzer {
 
         const baseNonRepeatableMsg = 'Non-repeatable properties found:';
         const baseNonTriplicableMsg = 'Three instances of the same property found:';
-        const baseIncompatibleMsg = 'Incompatible properties found:';
+        const baseIncompatiblePropertiesMsg = 'Incompatible properties found:';
         const baseIncompatibleOperatorsMsg = 'Incompatible operators found:';
 
         let makeMsg = ( msg: string, properties: UIProperty[] ): string => {
@@ -77,15 +77,15 @@ export class UIElementDA implements DocumentAnalyzer {
                 errors.push( err );
             }
 
-            const incompatibles = uipExtractor.incompatibleProperties( propertiesMap );
-            for ( let inc of incompatibles ) {
-                const msg = makeMsg( baseIncompatibleMsg, inc );
+            const incompatiblesProperties = uipExtractor.incompatibleProperties( propertiesMap );
+            for ( let inc of incompatiblesProperties ) {
+                const msg = makeMsg( baseIncompatiblePropertiesMsg, inc );
                 const err = new SemanticException( msg, uie.location );
                 errors.push( err );
             }
 
             const incompatibleOperators = uipExtractor.incompatibleOperators( propertiesMap );
-            for ( let inc of incompatibles ) {
+            for ( let inc of incompatibleOperators ) {
                 const msg = makeMsg( baseIncompatibleOperatorsMsg, inc );
                 const err = new SemanticException( msg, uie.location );
                 errors.push( err );

@@ -274,8 +274,9 @@ export class UIElementPropertyExtractor {
         let declaredPropertyTypes: UIPropertyTypes[] = [];
         let declaredPropertyMap = new Map< UIPropertyTypes, UIProperty >(); // Just the first of each kind
         for ( let propType of valueBasedPropertyTypes ) {
+
             let properties = propertiesMap.get( propType );
-            if ( ! properties || properties.length < 1 ) {
+            if ( ! properties || properties.length < 2 ) { // << 2 because 1 has no conflit
                 continue;
             }
             let uiProperty = properties[ 0 ];
