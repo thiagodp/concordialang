@@ -135,7 +135,7 @@ export class PreTestCaseGenerator {
         // # Replace CONSTANTS with VALUES
         this.replaceConstantsWithTheirValues( clonedSteps, language, ctx );
 
-        let newSteps: Step[] = this.fillUILiteralsWithValueInSteps(
+        let newSteps: Step[] = this.fillUILiteralsWithoutValueInSteps(
             clonedSteps, language, langContent.keywords, ctx
         );
 
@@ -159,8 +159,7 @@ export class PreTestCaseGenerator {
         const allAvailableUIElements: UIElement[] = ctx.spec.extractUIElementsFromDocumentAndImports( ctx.doc );
         const allAvailableVariables: string[] = allAvailableUIElements.map( uie => uie.info ? uie.info.fullVariableName : uie.name );
 
-        const alwaysValidUIEVariables: string[] = arrayDiff( allAvailableVariables, stepUIElements ); // order matters
-
+        const alwaysValidUIEVariables: string[] = arrayDiff( allAvailableVariables, stepUIEVariables ); // order matters
 
         // # Analyze DataTestCases for every UI Element
         //   Non-editable UI Elements are not included
@@ -194,7 +193,7 @@ export class PreTestCaseGenerator {
             let completeSteps: Step[] = [], stepOracles: Step[] = [];
             for ( let step of newSteps ) {
 
-                // Resulting oracles are already processed
+                // Resulting oracles are also processed
                 let [ resultingSteps, resultingOracles ] = this.fillUIElementWithValueAndReplaceByUILiteralInStep(
                     step, langContent, plan.dataTestCases, uieVariableToValueMap, language, ctx );
 
@@ -245,8 +244,10 @@ export class PreTestCaseGenerator {
 
             // Replace content
             step.content = newContent;
-            // Add comment
-            step.comment = ( step.comment || '' ) + ' ' + comment;
+            // Add comment if non empty
+            if ( comment.length > 0 ) {
+                step.comment = ( step.comment || '' ) + ' ' + comment;
+            }
 
             if ( before != newContent ) {
                 // Update NLP !
@@ -259,7 +260,7 @@ export class PreTestCaseGenerator {
     // UI LITERALS
     //
 
-    fillUILiteralsWithValueInSteps(
+    fillUILiteralsWithoutValueInSteps(
         steps: Step[],
         language: string,
         keywords: KeywordDictionary,
@@ -269,7 +270,7 @@ export class PreTestCaseGenerator {
         for ( let step of steps || [] ) {
 
             // # Fill UI Literals with random values
-            let resultingSteps = this.fillUILiteralsWithValueInSingleStep( step, keywords );
+            let resultingSteps = this.fillUILiteralsWithoutValueInSingleStep( step, keywords );
 
             if ( resultingSteps.length > 1 || resultingSteps[ 0 ].content != step.content ) {
                 // Update NLP !
@@ -291,7 +292,7 @@ export class PreTestCaseGenerator {
      * @param step Step to analyze
      * @param keywords Keywords dictionary
      */
-    fillUILiteralsWithValueInSingleStep( step: Step, keywords: KeywordDictionary ): Step[] {
+    fillUILiteralsWithoutValueInSingleStep( step: Step, keywords: KeywordDictionary ): Step[] {
 
         const fillEntity = this.extractFillEntity( step );
 
@@ -326,6 +327,7 @@ export class PreTestCaseGenerator {
             entities = uiLiterals;
         }
 
+        // Create a Step for every entity
         for ( let entity of entities ) {
 
             // Change to "AND" when more than one UI Literal is available
@@ -334,19 +336,21 @@ export class PreTestCaseGenerator {
             }
 
             let sentence = prefix + ' ' + keywordI + ' ' + fillEntity.string + ' ';
+            let comment = null;
+
             if ( Entities.UI_LITERAL === entity.entity ) {
                 sentence += Symbols.UI_LITERAL_PREFIX + entity.string + Symbols.UI_LITERAL_SUFFIX +
                     ' ' + keywordWith + ' ' +
                     Symbols.VALUE_WRAPPER + this.randomString() + Symbols.VALUE_WRAPPER;
 
-                // Add comment
-                sentence += ' ' + Symbols.COMMENT_PREFIX + ' ' + this.validKeyword + Symbols.TITLE_SEPARATOR + ' ' + this.randomKeyword;
+                comment = ' ' + this.validKeyword + Symbols.TITLE_SEPARATOR + ' ' + this.randomKeyword;
             } else {
                 sentence += entity.string; // UI Element currently doesn't need prefix/sufix
             }
 
             let newStep = {
                 content: sentence,
+                comment: comment,
                 type: step.nodeType,
                 location: {
                     column: step.location.column,
@@ -397,20 +401,23 @@ export class PreTestCaseGenerator {
     }
 
 
-    replaceUIElementsWithUILiteralsInNonFillSteps(
+    replaceUIElementsWithUILiterals(
         steps: Step[],
         language: string,
         keywords: KeywordDictionary,
-        ctx: GenContext
+        ctx: GenContext,
+        onlyFillSteps: boolean = true
     ): void {
         const refReplacer = new ReferenceReplacer();
 
         for ( let step of steps ) {
 
-            // Ignore steps with 'fill' entity
-            const fillEntity = this.extractFillEntity( step );
-            if ( isDefined( fillEntity ) ) {
-                continue;
+            if ( onlyFillSteps ) {
+                // Ignore steps with 'fill' entity
+                const fillEntity = this.extractFillEntity( step );
+                if ( isDefined( fillEntity ) ) {
+                    continue;
+                }
             }
 
             let before = step.content;
@@ -420,8 +427,10 @@ export class PreTestCaseGenerator {
 
             // Replace content
             step.content = newContent;
-            // Add comment
-            step.comment = ( step.comment || '' ) + ' ' + comment;
+            // Add comment if non empty
+            if ( comment.length > 0 ) {
+                step.comment = ' ' + comment + ( step.comment || '' );
+            }
 
             if ( before != newContent ) {
                 // Update NLP !
@@ -440,10 +449,14 @@ export class PreTestCaseGenerator {
         ctx: GenContext
     ): [ Step[], Step[] ] {  // [ steps, oracles ]
 
-        const fillEntity = this.extractFillEntity( step );
 
+        const fillEntity = this.extractFillEntity( step );
         if ( null === fillEntity || this.hasValue( step ) || this.hasNumber( step ) ) {
-            return [ [ step ], [] ];
+
+            let steps = [ step ];
+            this.replaceUIElementsWithUILiterals( steps, language, langContent.keywords, ctx, false );
+
+            return [ steps, [] ];
         }
 
         let uiElements = this._nlpUtil.entitiesNamed( Entities.UI_ELEMENT, step.nlpResult );
@@ -571,13 +584,13 @@ export class PreTestCaseGenerator {
 
         // UI LITERALS
 
-        stepsClone = this.fillUILiteralsWithValueInSteps(
+        stepsClone = this.fillUILiteralsWithoutValueInSteps(
             stepsClone, language, keywords, ctx );
 
         // UI ELEMENTS
 
-        this.replaceUIElementsWithUILiteralsInNonFillSteps(
-            stepsClone, language, keywords, ctx );
+        this.replaceUIElementsWithUILiterals(
+            stepsClone, language, keywords, ctx, true );
 
         // Note: Oracle steps cannot have 'fill' steps
 

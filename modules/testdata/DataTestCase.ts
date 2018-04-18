@@ -156,8 +156,9 @@ export class DataTestCaseGroupDef {
         if ( this.format.indexOf( testCase ) >= 0 ) return DataTestCaseGroup.FORMAT;
         if ( this.set.indexOf( testCase ) >= 0 ) return DataTestCaseGroup.SET;
         if ( this.required.indexOf( testCase ) >= 0 ) return DataTestCaseGroup.REQUIRED;
-        if ( this.computation.indexOf( testCase ) >= 0 ) return DataTestCaseGroup.COMPUTATION;
-        throw new Error( 'Test case not found in any available group' );
+		if ( this.computation.indexOf( testCase ) >= 0 ) return DataTestCaseGroup.COMPUTATION;
+		// default
+        return DataTestCaseGroup.REQUIRED
     }
 
 }

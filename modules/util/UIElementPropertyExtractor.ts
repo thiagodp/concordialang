@@ -65,6 +65,11 @@ export class UIElementPropertyExtractor {
 
     extractIsEditable( uie: UIElement ): boolean {
 
+        // Default is editable when no property is found
+        if ( ! uie.items || uie.items.length < 0 ) {
+            return true;
+        }
+
         // Editable if it has the property 'editable' set to true
         const nlpEntity = this.extractPropertyValueAsEntity( this.extractProperty( uie, UIPropertyTypes.EDITABLE ) );
         if ( isDefined( nlpEntity ) ) {

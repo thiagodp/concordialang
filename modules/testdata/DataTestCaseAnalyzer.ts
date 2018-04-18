@@ -81,7 +81,11 @@ export class DataTestCaseAnalyzer {
         // Converts to a system value type
         const valType: ValueType = toEnumValue( dataType, ValueType ) || ValueType.STRING;
         // Gets compatible data test cases
-        const compatibles: DataTestCase[] = this._vsType.compatibleWith( valType );
+        let compatibles: DataTestCase[] = this._vsType.compatibleWith( valType );
+
+        if ( compatibles.length < 1 ) { // Empty ?
+            compatibles.push( DataTestCase.REQUIRED_FILLED ); // Should produce a random value
+        }
 
         // Analyzes compatible rules (valid/invalid)
         for ( let dtc of compatibles ) {
