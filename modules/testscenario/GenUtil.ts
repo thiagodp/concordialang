@@ -9,7 +9,7 @@ import { UIElementPropertyExtractor } from "../util/UIElementPropertyExtractor";
 import { DataTestCaseAnalyzer, DTCAnalysisResult } from "../testdata/DataTestCaseAnalyzer";
 import { DataGenerator } from "../testdata/DataGenerator";
 import { DataGeneratorBuilder } from "../testdata/DataGeneratorBuilder";
-import { upperFirst } from "../util/CaseConversor";
+import { upperFirst, convertCase } from "../util/CaseConversor";
 import { KeywordDictionary } from "../dict/KeywordDictionary";
 import { Symbols } from "../req/Symbols";
 import { NodeTypes } from "../req/NodeTypes";
@@ -21,10 +21,19 @@ import { LocatedException } from "../req/LocatedException";
 import { RuntimeException } from "../req/RuntimeException";
 import { DataTestCase } from "../testdata/DataTestCase";
 import { Pair } from "ts-pair";
-import { TestPlanMaker, TestGoal } from "../testcase/TestPlanMaker";
+import { TestPlanMaker } from "../testcase/TestPlanMaker";
 import { TestPlan } from "../testcase/TestPlan";
 import { UIElementValueGenerator, ValueGenContext } from "../testdata/UIElementValueGenerator";
+import { isDefined } from "../util/TypeChecking";
+import { UIETestPlan } from "../testcase/UIETestPlan";
+import { LanguageContent } from "../dict/LanguageContent";
+import { EnglishKeywordDictionary } from "../dict/EnglishKeywordDictionary";
 import * as arrayDiff from 'arr-diff';
+import * as deepcopy from 'deepcopy';
+import { ReferenceReplacer } from "../util/ReferenceReplacer";
+import { VariantSentenceRecognizer } from "../nlp/VariantSentenceRecognizer";
+import { Keywords } from "../req/Keywords";
+import { CaseType } from "../app/CaseType";
 
     // /** Test cases produced from the Variant */
     // testCases: TestCase[];
@@ -41,10 +50,22 @@ import * as arrayDiff from 'arr-diff';
 // Analyze DataTestCases for every UI Element
 // Generate values for UI Element according to the goal
 
+
+class GenContext {
+    constructor(
+        public doc: Document,
+        public spec: Spec,
+        public errors: LocatedException[],
+        public warnings: LocatedException[]
+    ) {
+    }
+}
+
 export class GenUtil {
 
-    public validKeyword: string = 'valid';
-    public randomKeyword: string = 'random';
+    public validKeyword: string = 'valid'; //       TODO: i18n
+    public invalidKeyword: string = 'invalid'; //   TODO: i18n
+    public randomKeyword: string = 'random'; //     TODO: i18n
 
     private readonly _nlpUtil = new NLPUtil();
     private readonly _uiePropExtractor = new UIElementPropertyExtractor();
@@ -53,11 +74,13 @@ export class GenUtil {
     private readonly _randomLong: RandomLong;
     private readonly _dtcAnalyzer: DataTestCaseAnalyzer;
     private readonly _uieValueGen: UIElementValueGenerator;
+    private readonly _variantSentenceRec: VariantSentenceRecognizer;
 
     constructor(
         private readonly _langContentLoader: LanguageContentLoader,
         public readonly seed: string,
         public readonly defaultLanguage: string,
+        public readonly uiLiteralCaseOption: CaseType,
         public readonly minRandomStringSize = 0,
         public readonly maxRandomStringSize = 100,
         public readonly randomTriesToInvalidValues = 5
@@ -70,25 +93,56 @@ export class GenUtil {
     }
 
 
-    a(
+    /**
+     * Change steps and produce oracles, according to the given test plans.
+     *
+     * The process is the following:
+     *
+     * 1.   Replace CONSTANTs with their values.
+     *
+     * 2.   Whether a Step has a 'fill' action with UI Literals or UI Elements,
+     *      it will be break into steps, so that each step has only a single
+     *      UI Literal or UI Element.
+     *
+     * 3.   Every UI Literal with a 'fill' action will receive random values.
+     *
+     * 4.   Every UI Element WITHOUT a 'fill' action will be replaced by a UI Literal.
+     *
+     * 5.   Every UI Element with a 'fill' action will be replaced by a UI Literal and
+     *      it will receive a value, according to the DataTestCase and its business
+     *      rules (constraints).
+     *
+     * 6.   Oracles related to each UI Element will be extracted.
+     *
+     * 7.   Oracle steps will be submitted to steps 1..4 from process above.
+     *
+     *
+     *
+     * @param steps             Steps to use as basis, e.g., the steps of a TestScenario.
+     *
+     * @param ctx               Context
+     *
+     * @param testPlanMakers    Plan makers to apply. Each of them holds a `DataTestCaseMix`
+     *                          and a `CombinationStrategy` to be applied to the steps.
+     */
+    generate(
         steps: Step[],
-        doc: Document,
-        spec: Spec,
-        errors: LocatedException[],
+        ctx: GenContext,
         testPlanMakers: TestPlanMaker[]
-    ): Map< TestPlanMaker, Step[] > {
+    ): Array< Pair< Step[], Step[] > > { // Array< Pair< Steps with values, Oracles > >
 
         // Determine the language to use
-        const language = ! doc.language ? this.defaultLanguage : doc.language.value;
+        const language = ! ctx.doc.language ? this.defaultLanguage : ctx.doc.language.value;
         const langContent = this._langContentLoader.load( language );
 
-        let newSteps: Step[] = [];
-        for ( let step of steps ) {
-            // # Fill UI Literals with random values
-            let resultingSteps = this.fillEventualUILiteralsWithoutValueWithRandomValue( step, langContent.keywords );
-            // Add all resulting steps
-            newSteps.push.apply( newSteps, resultingSteps );
-        }
+        let clonedSteps = deepcopy( steps );
+
+        // # Replace CONSTANTS with VALUES
+        this.replaceConstantsWithTheirValues( clonedSteps, language, ctx );
+
+        let newSteps: Step[] = this.fillUILiteralsWithValueInSteps(
+            clonedSteps, language, langContent.keywords, ctx
+        );
 
         // # Extract UI Elements to generate value
         //
@@ -104,10 +158,10 @@ export class GenUtil {
         //  desired mix strategy.
         //
 
-        const stepUIElements: UIElement[] = this.extractUIElementsFromSteps( newSteps, doc, spec, errors );
+        const stepUIElements: UIElement[] = this.extractUIElementsFromSteps( newSteps, ctx );
         const stepUIEVariables: string[] = stepUIElements.map( uie => uie.info ? uie.info.fullVariableName : uie.name );
 
-        const allAvailableUIElements: UIElement[] = spec.extractUIElementsFromDocumentAndImports( doc );
+        const allAvailableUIElements: UIElement[] = ctx.spec.extractUIElementsFromDocumentAndImports( ctx.doc );
         const allAvailableVariables: string[] = allAvailableUIElements.map( uie => uie.info ? uie.info.fullVariableName : uie.name );
 
         const alwaysValidUIEVariables: string[] = arrayDiff( allAvailableVariables, stepUIElements ); // order matters
@@ -118,76 +172,103 @@ export class GenUtil {
         //   { Full variable name => { DTC => { Result, Otherwise steps }} }
         let uieVariableToDTCMap = new Map< string, Map< DataTestCase, Pair< DTCAnalysisResult, Step[] > > >();
         for ( let uie of allAvailableUIElements ) {
-            let map = this._dtcAnalyzer.analyzeUIElement( uie, errors );
+            let map = this._dtcAnalyzer.analyzeUIElement( uie, ctx.errors );
             uieVariableToDTCMap.set( uie.info.fullVariableName, map );
         }
 
-        // # Generate DataTestCases for the UI Elements, according to
-        //   the goal and the combination strategy. Both are embedded
-        //   in a TestPlanMaker.
+        // # Generate DataTestCases for the UI Elements, according to the goal and the combination strategy.
+        //   Both are embedded in a TestPlanMaker.
         let allTestPlans: TestPlan[] = [];
         for ( let maker of testPlanMakers ) {
             allTestPlans.push.apply( allTestPlans, maker.make( uieVariableToDTCMap, alwaysValidUIEVariables ) );
         }
 
         // # Generate values for all the UI Elements, according to the DataTestCase
+        let all: Array< Pair< Step[], Step[] > > = [];
         for ( let plan of allTestPlans ) { // Each plan maps string => UIETestPlan
 
             let uieVariableToValueMap = new Map< string, EntityValueType >();
             let context = new ValueGenContext( plan.dataTestCases, uieVariableToValueMap );
+
             for ( let [ uieVar, uieTestPlan ] of plan.dataTestCases ) {
-                this._uieValueGen.generate( uieVar, context, doc, spec, errors )
+                this._uieValueGen.generate( uieVar, context, ctx.doc, ctx.spec, ctx.errors );
             }
 
-            // << in this point, we can replace steps
+            // Steps & Oracles
 
-            // ?
-            // let completeSteps: Step[] = [];
-            // for ( let step of newSteps ) {
-            //     let resultingSteps = this.fillUIEWithoutValueWithUILWithValue(
-            //         step, langContent.keywords, uieVariableToValueMap, doc, spec, errors );
-            //     completeSteps.push.apply( completeSteps, resultingSteps );
-            // }
+            let completeSteps: Step[] = [], stepOracles: Step[] = [];
+            for ( let step of newSteps ) {
 
+                // Resulting oracles are already processed
+                let [ resultingSteps, resultingOracles ] = this.fillUIElementWithValueAndReplaceByUILiteralInStep(
+                    step, langContent, plan.dataTestCases, uieVariableToValueMap, language, ctx );
 
-        }
-
-
-        return newSteps;
-    }
-
-
-    extractUIElementsFromSteps(
-        steps: Step[],
-        doc: Document,
-        spec: Spec,
-        errors: LocatedException[]
-    ): UIElement[] {
-        let all: UIElement[] = [];
-        const uieNames = this.extractUIElementNamesFromSteps( steps );
-        const baseMsg = 'Referenced UI Element not found: ';
-        for ( let name of uieNames ) {
-            let uie = spec.uiElementByVariable( name, doc );
-            if ( ! uie ) {
-                errors.push( new RuntimeException( baseMsg + name ) );
-                continue;
+                completeSteps.push.apply( completeSteps, resultingSteps );
+                if ( resultingOracles.length > 0 ) {
+                    stepOracles.push.apply( resultingOracles );
+                }
             }
-            all.push( uie );
+
+            all.push( new Pair( completeSteps, stepOracles ) );
         }
+
         return all;
     }
 
-    extractUIElementNamesFromSteps( steps: Step[] ): string[] {
-        let uniqueNames = new Set< string >();
+
+    //
+    // CONSTANTS
+    //
+
+    replaceConstantsWithTheirValues(
+        steps: Step[],
+        language: string,
+        ctx: GenContext
+    ): void {
+        const refReplacer = new ReferenceReplacer();
+
+        // # Replace CONSTANTS with VALUES
         for ( let step of steps ) {
-            let entities: NLPEntity[] = this._nlpUtil.entitiesNamed( Entities.UI_ELEMENT, step.nlpResult );
-            for ( let e of entities ) {
-                uniqueNames.add( e.value );
+
+            let before = step.content;
+
+            // Replace content
+            step.content = refReplacer.replaceConstantsWithTheirValues( step.content, step.nlpResult, ctx.spec );
+
+            if ( before != step.content ) {
+                // Update NLP !
+                this._variantSentenceRec.recognizeSentences( language, [ step ], ctx.errors, ctx.warnings );
             }
         }
-        return Array.from( uniqueNames );
     }
 
+    //
+    // UI LITERALS
+    //
+
+    fillUILiteralsWithValueInSteps(
+        steps: Step[],
+        language: string,
+        keywords: KeywordDictionary,
+        ctx: GenContext
+    ): Step[] {
+        let newSteps: Step[] = [];
+        for ( let step of steps ) {
+
+            // # Fill UI Literals with random values
+            let resultingSteps = this.fillUILiteralsWithValueInSingleStep( step, keywords );
+
+            if ( resultingSteps.length > 1 || resultingSteps[ 0 ].content != step.content ) {
+                // Update NLP !
+                this._variantSentenceRec.recognizeSentences( language, resultingSteps, ctx.errors, ctx.warnings );
+            }
+
+            // Add all resulting steps
+            newSteps.push.apply( newSteps, resultingSteps );
+        }
+
+        return newSteps;
+    }
 
 
     /**
@@ -197,7 +278,7 @@ export class GenUtil {
      * @param step Step to analyze
      * @param keywords Keywords dictionary
      */
-    fillEventualUILiteralsWithoutValueWithRandomValue( step: Step, keywords: KeywordDictionary ): Step[] {
+    fillUILiteralsWithValueInSingleStep( step: Step, keywords: KeywordDictionary ): Step[] {
 
         const fillEntity = this.extractFillEntity( step );
 
@@ -269,8 +350,224 @@ export class GenUtil {
         return steps;
     }
 
+    //
+    // UI ELEMENTS
+    //
+
+    extractUIElementsFromSteps(
+        steps: Step[],
+        ctx: GenContext
+    ): UIElement[] {
+        let all: UIElement[] = [];
+        const uieNames = this.extractUIElementNamesFromSteps( steps );
+        const baseMsg = 'Referenced UI Element not found: ';
+        for ( let name of uieNames ) {
+            let uie = ctx.spec.uiElementByVariable( name, ctx.doc );
+            if ( ! uie ) {
+                ctx.errors.push( new RuntimeException( baseMsg + name ) );
+                continue;
+            }
+            all.push( uie );
+        }
+        return all;
+    }
+
+    extractUIElementNamesFromSteps( steps: Step[] ): string[] {
+        let uniqueNames = new Set< string >();
+        for ( let step of steps ) {
+            let entities: NLPEntity[] = this._nlpUtil.entitiesNamed( Entities.UI_ELEMENT, step.nlpResult );
+            for ( let e of entities ) {
+                uniqueNames.add( e.value );
+            }
+        }
+        return Array.from( uniqueNames );
+    }
 
 
+    replaceUIElementsWithUILiteralsInNonFillSteps(
+        steps: Step[],
+        language: string,
+        keywords: KeywordDictionary,
+        ctx: GenContext
+    ): void {
+        const refReplacer = new ReferenceReplacer();
+
+        for ( let step of steps ) {
+
+            // Ignore steps with 'fill' entity
+            const fillEntity = this.extractFillEntity( step );
+            if ( isDefined( fillEntity ) ) {
+                continue;
+            }
+
+            let before = step.content;
+
+            // Replace content
+            step.content = refReplacer.replaceUIElementsWithUILiterals(
+                step.content, step.nlpResult, ctx.doc, ctx.spec, this.uiLiteralCaseOption );
+
+            if ( before != step.content ) {
+                // Update NLP !
+                this._variantSentenceRec.recognizeSentences( language, [ step ], ctx.errors, ctx.warnings );
+            }
+        }
+    }
+
+
+    fillUIElementWithValueAndReplaceByUILiteralInStep(
+        step: Step,
+        langContent: LanguageContent,
+        uieVariableToUIETestPlanMap: Map< string, UIETestPlan >,
+        uieVariableToValueMap: Map< string, EntityValueType >,
+        language: string,
+        ctx: GenContext
+    ): [ Step[], Step[] ] {  // [ steps, oracles ]
+
+        const fillEntity = this.extractFillEntity( step );
+
+        if ( null === fillEntity || this.hasValue( step ) || this.hasNumber( step ) ) {
+            return [ [ step ], [] ];
+        }
+
+        let uiElements = this._nlpUtil.entitiesNamed( Entities.UI_ELEMENT, step.nlpResult );
+        const uiElementsCount = uiElements.length;
+        if ( uiElementsCount < 1 ) {
+            return [ [ step ], [] ]; // nothing to do
+        }
+
+        const keywords = langContent.keywords || new EnglishKeywordDictionary();
+
+        const prefixAnd = upperFirst( keywords.stepAnd[ 0 ] || 'And' );
+        let prefix = this.prefixFor( step, keywords );
+        const keywordI = keywords.i[ 0 ] || 'I';
+        const keywordWith = keywords.with[ 0 ] || 'with';
+
+        let steps: Step[] = [],
+            oracles: Step[] = [],
+            line = step.location.line,
+            count = 0;
+
+        for ( let entity of uiElements ) {
+
+            // Change to "AND" when more than one entity is available
+            if ( count > 0 ) {
+                prefix = prefixAnd;
+            }
+
+            const uieName = entity.value;
+            const uie = ctx.spec.uiElementByVariable( uieName, ctx.doc );
+
+            const variable = ! uie ? uieName : ( ! uie.info ? uieName : uie.info.fullVariableName );
+            let value = uieVariableToValueMap.get( variable ) || null;
+            if ( null === value ) {
+                const msg = 'Could not retrieve value from the UI Element "' + variable + '". It will receive an empty value.';
+                ctx.warnings.push( new RuntimeException( msg, step.location ) );
+                value = '';
+            }
+
+            let uieLiteral = isDefined( uie ) && isDefined( uie.info ) ? uie.info.uiLiteral : null;
+            if ( null === uieLiteral ) { // Should never happer since Spec defines Literals for mapped UI Elements
+                uieLiteral = convertCase( variable, this.uiLiteralCaseOption );
+                const msg = 'Could not retrieve a literal from the UI Element "' + variable + '". Generating one: "' + uieLiteral + '"';
+                ctx.warnings.push( new RuntimeException( msg, step.location ) );
+            }
+
+            // Generate the sentence
+            let sentence = prefix + ' ' + keywordI + ' ' + fillEntity.string + ' ' +
+                Symbols.UI_LITERAL_PREFIX + uieLiteral + Symbols.UI_LITERAL_SUFFIX +
+                ' ' + keywordWith + ' ' +
+                Symbols.VALUE_WRAPPER + value + Symbols.VALUE_WRAPPER;
+
+            // Add comment
+            const uieTestPlan = uieVariableToUIETestPlanMap.get( variable ) || null;
+            let expectedResult, dtc;
+            if ( null === uieTestPlan ) { // not expected
+                expectedResult = this.validKeyword  + ' ???';
+                dtc = '';
+            } else {
+
+                if ( DTCAnalysisResult.INVALID === uieTestPlan.result ) {
+                    expectedResult = this.invalidKeyword;
+
+                    // Process ORACLES as steps
+
+                    let oraclesClone = this.processOracles(
+                        uieTestPlan.otherwiseSteps, language, keywords, ctx );
+
+                    // Add oracles
+                    oracles.push.apply( oraclesClone );
+
+                } else {
+                    expectedResult = this.validKeyword;
+                }
+
+                expectedResult = uieTestPlan.result === DTCAnalysisResult.VALID ? this.validKeyword : this.invalidKeyword;
+
+                if ( isDefined( langContent.testCaseNames ) ) {
+                    dtc = langContent.testCaseNames[ uieTestPlan.dtc ] || '';
+                } else {
+                    dtc = '';
+                }
+            }
+            sentence += ' ' + Symbols.COMMENT_PREFIX + ' ' + expectedResult + Symbols.TITLE_SEPARATOR + ' ' + dtc;
+
+            // Make the step
+            let newStep = {
+                content: sentence,
+                type: step.nodeType,
+                location: {
+                    column: step.location.column,
+                    line: line++,
+                    filePath: step.location.filePath
+                } as Location
+            } as Step;
+
+            steps.push( newStep );
+
+            ++count;
+        }
+
+        return [ steps, oracles ];
+    }
+
+
+    processOracles(
+        steps: Step[],
+        language: string,
+        keywords: KeywordDictionary,
+        ctx: GenContext
+    ): Step[] {
+
+        if ( steps.length < 1 ) {
+            return steps;
+        }
+
+        let stepsClone = deepcopy( steps );
+
+        // CONSTANTS
+
+        this.replaceConstantsWithTheirValues(
+            stepsClone, language, ctx );
+
+        // UI LITERALS
+
+        stepsClone = this.fillUILiteralsWithValueInSteps(
+            stepsClone, language, keywords, ctx );
+
+        // UI ELEMENTS
+
+        this.replaceUIElementsWithUILiteralsInNonFillSteps(
+            stepsClone, language, keywords, ctx );
+
+        // Note: Oracle steps cannot have 'fill' steps
+
+        return stepsClone;
+    }
+
+
+    //
+    // OTHER
+    //
 
     extractFillEntity( step: Step ): NLPEntity | null {
         return step.nlpResult.entities

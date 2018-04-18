@@ -114,4 +114,18 @@ export class NLPBasedSentenceRecognizer {
         }
 
     }
+
+
+    get uiPropertyRec() {
+        return this._uiPropertyRec;
+    }
+
+    get variantSentenceRec() {
+        return this._variantSentenceRec;
+    }
+
+    get dbPropertyRec() {
+        return this._dbPropertyRec;
+    }
+
 }

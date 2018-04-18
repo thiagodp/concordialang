@@ -31,6 +31,71 @@ export class ReferenceReplacer {
     //     return null;
     // }
 
+
+    replaceConstantsWithTheirValues(
+        sentence: string,
+        nlpResult: NLPResult,
+        spec: Spec
+    ): string {
+        let newSentence: string = sentence;
+        const valueTypeDetector = new ValueTypeDetector();
+        for ( let e of nlpResult.entities || [] ) {
+
+            if ( Entities.CONSTANT === e.entity ) {
+
+                const valueContent: string | number = spec.constantNameToValueMap().get( e.value ) || '';
+
+                const value: string = valueTypeDetector.isNumber( valueContent )
+                    ? valueContent.toString() // e.g., 5
+                    : Symbols.VALUE_WRAPPER + valueContent + Symbols.VALUE_WRAPPER; // e.g., "bar"
+
+                // Replace
+                newSentence = this.replaceAtPosition(
+                    newSentence,
+                    e.position,
+                    Symbols.CONSTANT_PREFIX + e.value + Symbols.CONSTANT_SUFFIX,  // e.g., [bar]
+                    value // e.g., "bar"
+                );
+            }
+        }
+        return newSentence;
+    }
+
+
+    replaceUIElementsWithUILiterals(
+        sentence: string,
+        nlpResult: NLPResult,
+        doc: Document,
+        spec: Spec,
+        uiLiteralCaseOption: CaseType
+    ): string {
+        let newSentence: string = sentence;
+        for ( let e of nlpResult.entities || [] ) {
+
+            if ( Entities.UI_ELEMENT === e.entity ) {
+
+                // Get the UI_LITERAL name by the UI_ELEMENT name
+                const ui = spec.uiElementByVariable( e.value, doc );
+
+                let literalName: string = isDefined( ui ) && isDefined( ui.info )
+                    ? ui.info.uiLiteral
+                    : convertCase( e.value, uiLiteralCaseOption ); // Uses the UI_ELEMENT name as the literal name, when it is not found.
+
+                // Replace
+                newSentence = this.replaceAtPosition(
+                    newSentence,
+                    e.position,
+                    Symbols.UI_ELEMENT_PREFIX + e.value + Symbols.UI_ELEMENT_SUFFIX, // e.g., {Foo}
+                    Symbols.UI_LITERAL_PREFIX + literalName + Symbols.UI_LITERAL_SUFFIX // e.g., <foo>
+                );
+            }
+        }
+        return newSentence;
+    }
+
+
+
+
     /**
      * Replace references of a test case sentence.
      *
