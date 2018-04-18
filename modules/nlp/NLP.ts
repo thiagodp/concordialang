@@ -201,7 +201,6 @@ class EntityRecognizerMaker {
         valueRec.addMatch(
             regex,
             function( match ) {
-                //console.log( 'match: ', match );
                 const value = match[ 0 ] || '';
                 return value.substring( 1, value.length - 1 ); // exclude quotes
             },
@@ -269,7 +268,7 @@ class EntityRecognizerMaker {
      */
     public makeNumber( entityName: string ): any {
         var valueRec = new Bravey.RegexEntityRecognizer( entityName, 10 );
-        const regex = new RegExp( '(-?[0-9]+(?:.[0-9]+)?)', "gi" );
+        const regex = new RegExp( '(?: )(-?[0-9]+(?:.[0-9]+)?)', "gi" );
         valueRec.addMatch(
             regex,
             function( match ) {
