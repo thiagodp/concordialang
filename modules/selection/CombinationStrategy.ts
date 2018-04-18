@@ -2,6 +2,7 @@ import { Random } from '../testdata/random/Random';
 import * as cartesian from 'cartesian';
 import * as oneWise from 'one-wise';
 import * as suffleObjArrays from 'shuffle-obj-arrays';
+import { RandomLong } from '../testdata/random/RandomLong';
 
 /**
  * Combination strategy
@@ -75,6 +76,36 @@ export class ShuffledOneWiseStrategy implements CombinationStrategy {
         const rng = () => this._random.generate();
         const options = { copy: true, rng: rng };
         return oneWise( suffleObjArrays( map, options ), rng );
+    }
+
+}
+
+
+/**
+ * Selects a single, random element from each.
+ *
+ * @author Thiago Delgado Pinto
+ */
+export class SingleRandomOfEachStrategy implements CombinationStrategy {
+
+    private readonly _randomLong: RandomLong;
+
+    constructor( seed: string ) {
+        this._randomLong = new RandomLong( new Random( seed ) )
+    }
+
+    /** @inheritDoc */
+    combine( map: object ): object[] {
+        let obj = {};
+        for ( let key in map ) {
+            let elements = map[ key ];
+            if ( Array.isArray( elements ) ) {
+                const size = elements.length;
+                const index = size > 1 ? this._randomLong.between( 0, size - 1 ) : 0;
+                obj[ key ] = elements[ index ];
+            }
+        }
+        return [ obj ];
     }
 
 }

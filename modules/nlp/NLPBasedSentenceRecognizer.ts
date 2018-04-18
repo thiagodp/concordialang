@@ -30,6 +30,19 @@ export class NLPBasedSentenceRecognizer {
         this._dbPropertyRec = new DatabasePropertyRecognizer( new NLP( _useFuzzyProcessor ) );
     }
 
+    get uiPropertyRec() {
+        return this._uiPropertyRec;
+    }
+
+    get variantSentenceRec() {
+        return this._variantSentenceRec;
+    }
+
+    get dbPropertyRec() {
+        return this._dbPropertyRec;
+    }
+
+
     public isTrained( language: string ): boolean {
         const t1: boolean = this._uiPropertyRec.isTrained( language );
         const t2: boolean = this._variantSentenceRec.isTrained( language );
@@ -113,19 +126,6 @@ export class NLPBasedSentenceRecognizer {
                 language, testCase.sentences, errors, warnings, 'Test Case' );
         }
 
-    }
-
-
-    get uiPropertyRec() {
-        return this._uiPropertyRec;
-    }
-
-    get variantSentenceRec() {
-        return this._variantSentenceRec;
-    }
-
-    get dbPropertyRec() {
-        return this._dbPropertyRec;
     }
 
 }
