@@ -8,6 +8,11 @@ export interface Step extends ContentNode {
 
     nlpResult?: NLPResult;
 
+    /**
+     * May hold some information valuable to the user.
+     */
+    comment?: string;
+
     //
     // # The following attributes are used for Test Scenario generation
     //

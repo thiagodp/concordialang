@@ -32,13 +32,24 @@ export class ReferenceReplacer {
     // }
 
 
+    /**
+     * Returns an array containing the replaced sentence and a comment.
+     *
+     * The comment has all the constant names (with their symbols), separated
+     * by comma and space (", ").
+     *
+     * @param sentence
+     * @param nlpResult
+     * @param spec
+     */
     replaceConstantsWithTheirValues(
         sentence: string,
         nlpResult: NLPResult,
         spec: Spec
-    ): string {
+    ): [ string, string ] {
         let newSentence: string = sentence;
         const valueTypeDetector = new ValueTypeDetector();
+        let constants: string[] = [];
         for ( let e of nlpResult.entities || [] ) {
 
             if ( Entities.CONSTANT === e.entity ) {
@@ -56,20 +67,35 @@ export class ReferenceReplacer {
                     Symbols.CONSTANT_PREFIX + e.value + Symbols.CONSTANT_SUFFIX,  // e.g., [bar]
                     value // e.g., "bar"
                 );
+
+                constants.push( Symbols.CONSTANT_PREFIX + e.value + Symbols.CONSTANT_SUFFIX );
             }
         }
-        return newSentence;
+
+        return [ newSentence, constants.join( ', ' ) ];
     }
 
-
+    /**
+     * Returns an array containing the replaced sentence and a comment.
+     *
+     * The comment has all the UI Element variables (with their symbols),
+     * separated by comma and space (", ").
+     *
+     * @param sentence
+     * @param nlpResult
+     * @param doc
+     * @param spec
+     * @param uiLiteralCaseOption
+     */
     replaceUIElementsWithUILiterals(
         sentence: string,
         nlpResult: NLPResult,
         doc: Document,
         spec: Spec,
         uiLiteralCaseOption: CaseType
-    ): string {
+    ): [ string, string ] {
         let newSentence: string = sentence;
+        let uiElements: string[] = [];
         for ( let e of nlpResult.entities || [] ) {
 
             if ( Entities.UI_ELEMENT === e.entity ) {
@@ -88,9 +114,11 @@ export class ReferenceReplacer {
                     Symbols.UI_ELEMENT_PREFIX + e.value + Symbols.UI_ELEMENT_SUFFIX, // e.g., {Foo}
                     Symbols.UI_LITERAL_PREFIX + literalName + Symbols.UI_LITERAL_SUFFIX // e.g., <foo>
                 );
+
+                uiElements.push( Symbols.UI_ELEMENT_PREFIX + e.value + Symbols.UI_ELEMENT_SUFFIX );
             }
         }
-        return newSentence;
+        return [ newSentence, uiElements.join( ', ' ) ];
     }
 
 

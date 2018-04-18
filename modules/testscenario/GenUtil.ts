@@ -250,10 +250,14 @@ export class GenUtil {
 
             let before = step.content;
 
-            // Replace content
-            step.content = refReplacer.replaceConstantsWithTheirValues( step.content, step.nlpResult, ctx.spec );
+            let [ newContent, comment ] = refReplacer.replaceConstantsWithTheirValues( step.content, step.nlpResult, ctx.spec );
 
-            if ( before != step.content ) {
+            // Replace content
+            step.content = newContent;
+            // Add comment
+            step.comment = ( step.comment || '' ) + ' ' + comment;
+
+            if ( before != newContent ) {
                 // Update NLP !
                 this._variantSentenceRec.recognizeSentences( language, [ step ], ctx.errors, ctx.warnings );
             }
@@ -420,11 +424,15 @@ export class GenUtil {
 
             let before = step.content;
 
-            // Replace content
-            step.content = refReplacer.replaceUIElementsWithUILiterals(
+            let [ newContent, comment ] = refReplacer.replaceUIElementsWithUILiterals(
                 step.content, step.nlpResult, ctx.doc, ctx.spec, this.uiLiteralCaseOption );
 
-            if ( before != step.content ) {
+            // Replace content
+            step.content = newContent;
+            // Add comment
+            step.comment = ( step.comment || '' ) + ' ' + comment;
+
+            if ( before != newContent ) {
                 // Update NLP !
                 this._variantSentenceRec.recognizeSentences( language, [ step ], ctx.errors, ctx.warnings );
             }
