@@ -96,7 +96,7 @@ export class Spec {
     //
 
     mapDocumentDatabases( doc: Document ): void {
-        if ( ! doc.databases || doc.databases.length < 1 ) {
+        if ( ! doc || ! doc.databases || doc.databases.length < 1 ) {
             return;
         }
 
@@ -116,7 +116,7 @@ export class Spec {
     }
 
     mapDocumentConstants( doc: Document ): void {
-        if ( ! doc.constantBlock || ! doc.constantBlock.items || doc.constantBlock.items.length < 1 ) {
+        if ( ! doc || ! doc.constantBlock || ! doc.constantBlock.items || doc.constantBlock.items.length < 1 ) {
             return;
         }
 
@@ -137,7 +137,7 @@ export class Spec {
     }
 
     mapDocumentTables( doc: Document ): void {
-        if ( ! doc.tables || doc.tables.length < 1 ) {
+        if ( ! doc || ! doc.tables || doc.tables.length < 1 ) {
             return;
         }
 
@@ -157,7 +157,7 @@ export class Spec {
     }
 
     mapDocumentFeatures( doc: Document ): void {
-        if ( ! doc.feature ) {
+        if ( ! doc || ! doc.feature ) {
             return;
         }
 
@@ -174,6 +174,10 @@ export class Spec {
     }
 
     mapDocumentUIElementVariables( doc: Document ): void {
+
+        if ( ! doc ) {
+            return;
+        }
 
         // Maps local and global UI elements to the variables cache
         ( new DocumentUtil() ).mapUIElementVariables( doc, this._uiElementVariableMap, false, this._uiLiteralCaseOption );
@@ -192,6 +196,9 @@ export class Spec {
 
 
     mapEverythingFromDocument( doc: Document ): void {
+        if ( ! doc ) {
+            return;
+        }
         this.mapDocumentFeatures( doc );
         this.mapDocumentConstants( doc );
         this.mapDocumentDatabases( doc );

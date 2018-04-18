@@ -62,6 +62,10 @@ export class UIElementSSA extends SpecificationAnalyzer {
 
     analyzePropertiesReferences( doc: Document, spec: Spec, errors: SemanticException[] ): void {
 
+        if ( ! doc ) {
+            return;
+        }
+
         // Analyze those UI elements of the Feature, if it is declared
         if ( isDefined( doc.feature ) ) {
             for ( let uie of doc.feature.uiElements || [] ) {

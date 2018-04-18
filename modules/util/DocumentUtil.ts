@@ -116,6 +116,10 @@ export class DocumentUtil {
         caseOption: CaseType | string = CaseType.CAMEL
     ): void {
 
+        if ( ! doc ) {
+            return;
+        }
+
         // Start with global ui elements
         for ( let uie of doc.uiElements || [] ) {
             // Generates the UI Literal
@@ -132,7 +136,7 @@ export class DocumentUtil {
             map.set( variableName, uie );
         }
 
-        if ( ! isDefined( doc.feature ) ) {
+        if ( ! doc.feature ) {
             return;
         }
 
