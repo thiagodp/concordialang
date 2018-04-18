@@ -16,10 +16,13 @@ import { LanguageContent } from "../dict/LanguageContent";
 import { KeywordDictionary } from "../dict/KeywordDictionary";
 import { NLPUtil } from "../nlp/NLPResult";
 import { Entities } from "../nlp/Entities";
-import { CombinationStrategy } from "../selection/CombinationStrategy";
+import { CombinationStrategy, SingleRandomOfEachStrategy } from "../selection/CombinationStrategy";
 import { Pair } from "ts-pair";
 import * as deepcopy from 'deepcopy';
 import { upperFirst } from "../util/CaseConversor";
+import { GenUtil, GenContext } from "./GenUtil";
+import { TestPlanMaker } from "../testcase/TestPlanMaker";
+import { AllValidMix } from "../testcase/DataTestCaseMix";
 
 /**
  * Test Scenario generator
@@ -31,22 +34,34 @@ import { upperFirst } from "../util/CaseConversor";
 export class TSGen {
 
     private readonly _randomLong: RandomLong;
+    private readonly _langContentLoader: LanguageContentLoader;
+    private readonly _defaultLanguage: string;
+    public readonly seed: string;
+
+    private readonly _validValuePlanMaker: TestPlanMaker;
 
     constructor(
-        private _langContentLoader: LanguageContentLoader,
-        private _defaultLanguage: string,
+        private _genUtil: GenUtil,
         private _variantSelectionStrategy: VariantSelectionStrategy,
         private _statePairCombinationStrategy: CombinationStrategy,
         private _variantToTestScenarioMap: Map< Variant, TestScenario[] >,
-        private _postconditionNameToVariantsMap: Map< string, Variant[] >,
-        seed: string
+        private _postconditionNameToVariantsMap: Map< string, Variant[] >
     ) {
-        this._randomLong = new RandomLong( new Random( seed ) );
+        this._langContentLoader = this._genUtil.langContentLoader;
+        this._defaultLanguage = this._genUtil.defaultLanguage;
+        this.seed = this._genUtil.seed;
+        this._randomLong = new RandomLong( new Random( this.seed ) );
+
+        // Makes a PlanMaker to create valid values for Precondition scenarios
+        this._validValuePlanMaker = new TestPlanMaker(
+            new AllValidMix(),
+            new SingleRandomOfEachStrategy( this.seed )
+        );
     }
 
 
     generate(
-        docLanguage: string | undefined,
+        ctx: GenContext,
         variant: Variant,
         errors: RuntimeException[]
     ): TestScenario[] {
@@ -56,6 +71,7 @@ export class TSGen {
         // Detect Preconditions, State Calls, and Postconditions of the Variant
         this.detectVariantStates( variant, errors );
 
+        const docLanguage = this._genUtil.docLanguage( ctx.doc );
         let baseScenario: TestScenario = this.makeTestScenarioFromVariant( variant, docLanguage );
 
         let pairMap = {}; // Maps string => Array< Pair< State, TestScenario > >
@@ -122,9 +138,35 @@ export class TSGen {
                 let ts = baseScenario.clone();
                 for ( let stateName in obj ) {
                     const pair = obj[ stateName ];
-                    const [ state, tsToReplaceStep ] = pair.toArray();
+                    let [ state, tsToReplaceStep ] = pair.toArray();
                     const isPrecondition = variant.preconditions.indexOf( state ) >= 0;
-                    this.replaceStepWithTestScenario( ts, state.stepIndex, tsToReplaceStep, isPrecondition );
+
+                    // ---
+                    // Use GenUtil to replace references and fill values of the TestScenario
+
+                    // Clone the current TestScenario
+                    let tsToUse: TestScenario = tsToReplaceStep.clone();
+
+                    // Make all substitutions and generate valid values using GenUtil
+                    let all = this._genUtil.generate(
+                        tsToReplaceStep.steps,
+                        ctx,
+                        [ this._validValuePlanMaker ]
+                    );
+                    let [ newSteps, oracles ] = all[ 0 ].toArray();
+
+                    // Replace TestScenario steps with the new ones
+                    tsToUse.steps = newSteps;
+                    tsToUse.stepAfterPreconditions = null;
+
+                    // Adjust the stepAfterPreconditions
+                    let oldIndex = tsToReplaceStep.steps.indexOf( tsToReplaceStep.stepAfterPreconditions );
+                    if ( oldIndex >= 0 ) {
+                        tsToUse.stepAfterPreconditions = tsToUse.steps[ oldIndex ];
+                    }
+                    // ---
+
+                    this.replaceStepWithTestScenario( ts, state.stepIndex, tsToUse, isPrecondition );
                 }
                 testScenarios.push( ts );
             }

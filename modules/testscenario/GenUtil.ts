@@ -51,10 +51,10 @@ import { CaseType } from "../app/CaseType";
 // Generate values for UI Element according to the goal
 
 
-class GenContext {
+export class GenContext {
     constructor(
-        public doc: Document,
         public spec: Spec,
+        public doc: Document,
         public errors: LocatedException[],
         public warnings: LocatedException[]
     ) {
@@ -74,13 +74,13 @@ export class GenUtil {
     private readonly _randomLong: RandomLong;
     private readonly _dtcAnalyzer: DataTestCaseAnalyzer;
     private readonly _uieValueGen: UIElementValueGenerator;
-    private readonly _variantSentenceRec: VariantSentenceRecognizer;
 
     constructor(
-        private readonly _langContentLoader: LanguageContentLoader,
-        public readonly seed: string,
+        public readonly langContentLoader: LanguageContentLoader,
         public readonly defaultLanguage: string,
-        public readonly uiLiteralCaseOption: CaseType,
+        public readonly seed: string,
+        private readonly _variantSentenceRec: VariantSentenceRecognizer,
+        public readonly uiLiteralCaseOption: CaseType = CaseType.CAMEL,
         public readonly minRandomStringSize = 0,
         public readonly maxRandomStringSize = 100,
         public readonly randomTriesToInvalidValues = 5
@@ -131,11 +131,15 @@ export class GenUtil {
         testPlanMakers: TestPlanMaker[]
     ): Array< Pair< Step[], Step[] > > { // Array< Pair< Steps with values, Oracles > >
 
-        // Determine the language to use
-        const language = ! ctx.doc.language ? this.defaultLanguage : ctx.doc.language.value;
-        const langContent = this._langContentLoader.load( language );
+        if ( ! steps || steps.length < 1 ) {
+            return [ new Pair( [], [] ) ];
+        }
 
-        let clonedSteps = deepcopy( steps );
+        // Determine the language to use
+        const language = this.docLanguage( ctx.doc );
+        const langContent = this.langContentLoader.load( language );
+
+        let clonedSteps: Step[] = this.cloneSteps( steps );
 
         // # Replace CONSTANTS with VALUES
         this.replaceConstantsWithTheirValues( clonedSteps, language, ctx );
@@ -216,6 +220,20 @@ export class GenUtil {
     }
 
 
+    docLanguage( doc: Document ): string {
+        return ! doc.language ? this.defaultLanguage : doc.language.value;
+    }
+
+    private cloneSteps( steps: Step[] ): Step[] {
+        // return deepcopy( steps );
+        let newSteps: Step[] = [];
+        for ( let step of steps ) {
+            newSteps.push( deepcopy( step ) as Step );
+        }
+        return newSteps;
+    }
+
+
     //
     // CONSTANTS
     //
@@ -253,7 +271,7 @@ export class GenUtil {
         ctx: GenContext
     ): Step[] {
         let newSteps: Step[] = [];
-        for ( let step of steps ) {
+        for ( let step of steps || [] ) {
 
             // # Fill UI Literals with random values
             let resultingSteps = this.fillUILiteralsWithValueInSingleStep( step, keywords );

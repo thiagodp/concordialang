@@ -11,12 +11,14 @@ import { BatchSpecificationAnalyzer } from "../../modules/semantic/BatchSpecific
 import { SpecFilter } from "../../modules/selection/SpecFilter";
 import { FileInfo } from "../../modules/ast/FileInfo";
 import { CartesianProductStrategy } from "../../modules/selection/CombinationStrategy";
+import { GenUtil, GenContext } from "../../modules/testscenario/GenUtil";
 
 
 describe( 'TSGenTest', () => {
 
     let gen: TSGen = null; // under test
 
+    let genUtil: GenUtil;
     const LANGUAGE: string = 'pt';
 
     let cp: SimpleCompiler;
@@ -28,22 +30,28 @@ describe( 'TSGenTest', () => {
         variantToTestScenariosMap = new Map< Variant, TestScenario[] >();
         postconditionNameToVariantsMap = new Map< string, Variant[] >();
 
-        gen = new TSGen(
+        genUtil = new GenUtil(
             cp.langLoader,
             cp.language,
+            'myseed',
+            cp.nlpRec.variantSentenceRec
+        );
+
+        gen = new TSGen(
+            genUtil,
             new AllVariantsSelectionStrategy(),
             new CartesianProductStrategy(),
             variantToTestScenariosMap,
-            postconditionNameToVariantsMap,
-            'myseed'
+            postconditionNameToVariantsMap
         );
     } );
 
     afterEach( () => {
-        gen = null;
-        cp = null;
         variantToTestScenariosMap = null;
         postconditionNameToVariantsMap = null;
+        genUtil = null;
+        cp = null;
+        gen = null;
     } );
 
 
@@ -59,7 +67,10 @@ describe( 'TSGenTest', () => {
                 'Variant: Foo',
                 '  Quando eu preencho <a> com [ipsum]',
                 '    E eu preencho <b> com [pi]',
-                ' Então eu tenho ~foo~'
+                ' Então eu tenho ~foo~',
+                'Constantes:',
+                ' - "ipsum" é "ip!"',
+                ' - "pi" é 3.14'
             ],
             { path: 'doc1.feature', hash: 'doc1' } as FileInfo
         );
@@ -67,14 +78,16 @@ describe( 'TSGenTest', () => {
         const specFilter = new SpecFilter( spec );
         const batchSpecAnalyzer = new BatchSpecificationAnalyzer();
         let errors: LocatedException[] = [];
+        let warnings: LocatedException[] = [];
 
         await batchSpecAnalyzer.analyze( specFilter.graph(), spec, errors );
 
         // expect( doc1.fileErrors ).toEqual( [] );
         // expect( doc2.fileErrors ).toEqual( [] );
 
+        let ctx1 = new GenContext( spec, doc1, errors, warnings );
         let variant1: Variant = doc1.feature.scenarios[ 0 ].variants[ 0 ];
-        let ts1 = gen.generate( LANGUAGE, variant1, errors );
+        let ts1 = gen.generate( ctx1, variant1, errors );
         expect( errors ).toHaveLength( 0 );
         expect( ts1 ).toHaveLength( 1 );
     } );
@@ -93,7 +106,10 @@ describe( 'TSGenTest', () => {
                 'Variant: Foo',
                 '  Quando eu preencho <a> com [ipsum]',
                 '    E eu preencho <b> com [pi]',
-                ' Então eu tenho ~foo~'
+                ' Então eu tenho ~foo~',
+                'Constantes:',
+                ' - "ipsum" é "ip!"',
+                ' - "pi" é 3.14'
             ],
             { path: 'doc1.feature', hash: 'doc1' } as FileInfo
         );
@@ -114,26 +130,28 @@ describe( 'TSGenTest', () => {
 
         const specFilter = new SpecFilter( spec );
         const batchSpecAnalyzer = new BatchSpecificationAnalyzer();
-        let errors: LocatedException[] = [];
+        let errors: LocatedException[] = [], warnings: LocatedException[] = [];
 
         await batchSpecAnalyzer.analyze( specFilter.graph(), spec, errors );
 
         // expect( doc1.fileErrors ).toEqual( [] );
         // expect( doc2.fileErrors ).toEqual( [] );
 
+        let ctx1 = new GenContext( spec, doc1, errors, warnings );
         let variant1: Variant = doc1.feature.scenarios[ 0 ].variants[ 0 ];
-        let ts1 = gen.generate( LANGUAGE, variant1, errors );
+        let ts1 = gen.generate( ctx1, variant1, errors );
         expect( errors ).toHaveLength( 0 );
         expect( ts1 ).toHaveLength( 1 );
 
+        let ctx2 = new GenContext( spec, doc2, errors, warnings );
         let variant2: Variant = doc2.feature.scenarios[ 0 ].variants[ 0 ];
-        let ts2 = gen.generate( LANGUAGE, variant2, errors );
+        let ts2 = gen.generate( ctx2, variant2, errors );
         expect( errors ).toHaveLength( 0 );
         expect( ts2 ).toHaveLength( 1 );
 
         const expectedSteps: string[] = [
-            'Quando eu preencho <a> com [ipsum]',
-            'E eu preencho <b> com [pi]',
+            'Quando eu preencho <a> com "ip!"',
+            'E eu preencho <b> com 3.14',
             'Quando eu preencho <c> com "c"',
             'E eu preencho <d> com "d"'
         ];
@@ -148,7 +166,7 @@ describe( 'TSGenTest', () => {
 
         let spec = new Spec( '.' );
 
-        let doc2: Document = cp.addToSpec( spec,
+        let doc: Document = cp.addToSpec( spec,
             [
                 '#language:pt',
                 'Feature: Feature 2',
@@ -163,14 +181,16 @@ describe( 'TSGenTest', () => {
 
         const specFilter = new SpecFilter( spec );
         const batchSpecAnalyzer = new BatchSpecificationAnalyzer();
-        let errors: LocatedException[] = [];
+        let errors: LocatedException[] = [], warnings = [];
 
         await batchSpecAnalyzer.analyze( specFilter.graph(), spec, errors );
 
-        let variant2: Variant = doc2.feature.scenarios[ 0 ].variants[ 0 ];
-        let ts2 = gen.generate( LANGUAGE, variant2, errors );
+        let ctx = new GenContext( spec, doc, errors, warnings );
+
+        let variant: Variant = doc.feature.scenarios[ 0 ].variants[ 0 ];
+        let ts = gen.generate( ctx, variant, errors );
         expect( errors ).toHaveLength( 1 );
-        expect( ts2 ).toHaveLength( 0 );
+        expect( ts ).toHaveLength( 0 );
     } );
 
 
@@ -188,7 +208,10 @@ describe( 'TSGenTest', () => {
                 '  Quando eu preencho <a> com [ipsum]',
                 '    E eu preencho <b> com [pi]',
                 ' Então eu tenho ~foo~',
-                '   e eu vejo "foo"' // <<<<<<<<<<<<<<<<<<<<<<<<<
+                '   e eu vejo "foo"', // <<<<<<<<<<<<<<<<<<<<<<<<<
+                'Constantes:',
+                ' - "ipsum" é "ip!"',
+                ' - "pi" é 3.14'
             ],
             { path: 'doc1.feature', hash: 'doc1' } as FileInfo
         );
@@ -209,26 +232,27 @@ describe( 'TSGenTest', () => {
 
         const specFilter = new SpecFilter( spec );
         const batchSpecAnalyzer = new BatchSpecificationAnalyzer();
-        let errors: LocatedException[] = [];
+        let errors: LocatedException[] = [], warnings = [];
 
         await batchSpecAnalyzer.analyze( specFilter.graph(), spec, errors );
 
         // expect( doc1.fileErrors ).toEqual( [] );
         // expect( doc2.fileErrors ).toEqual( [] );
-
+        let ctx1 = new GenContext( spec, doc1, errors, warnings );
         let variant1: Variant = doc1.feature.scenarios[ 0 ].variants[ 0 ];
-        let ts1 = gen.generate( LANGUAGE, variant1, errors );
+        let ts1 = gen.generate( ctx1, variant1, errors );
         expect( errors ).toHaveLength( 0 );
         expect( ts1 ).toHaveLength( 1 );
 
+        let ctx2 = new GenContext( spec, doc2, errors, warnings );
         let variant2: Variant = doc2.feature.scenarios[ 0 ].variants[ 0 ];
-        let ts2 = gen.generate( LANGUAGE, variant2, errors );
+        let ts2 = gen.generate( ctx2, variant2, errors );
         expect( errors ).toHaveLength( 0 );
         expect( ts2 ).toHaveLength( 1 );
 
         const expectedSteps: string[] = [
-            'Quando eu preencho <a> com [ipsum]',
-            'E eu preencho <b> com [pi]',
+            'Quando eu preencho <a> com "ip!"',
+            'E eu preencho <b> com 3.14',
             'Então eu vejo "foo"', // <<<<<<<<<<<<<<<<<<<<<<<<<
             'Quando eu preencho <c> com "c"',
             'E eu preencho <d> com "d"'
@@ -252,7 +276,10 @@ describe( 'TSGenTest', () => {
                 'Variant: Foo',
                 '  Quando eu preencho <a> com [ipsum]',
                 '    E eu preencho <b> com [pi]',
-                ' Então eu tenho ~foo~'
+                ' Então eu tenho ~foo~',
+                'Constantes:',
+                ' - "ipsum" é "ip!"',
+                ' - "pi" é 3.14'
             ],
             { path: 'doc1.feature', hash: 'doc1' } as FileInfo
         );
@@ -275,26 +302,28 @@ describe( 'TSGenTest', () => {
 
         const specFilter = new SpecFilter( spec );
         const batchSpecAnalyzer = new BatchSpecificationAnalyzer();
-        let errors: LocatedException[] = [];
+        let errors: LocatedException[] = [], warnings = [];
 
         await batchSpecAnalyzer.analyze( specFilter.graph(), spec, errors );
 
         // expect( doc1.fileErrors ).toEqual( [] );
         // expect( doc2.fileErrors ).toEqual( [] );
 
+        let ctx1 = new GenContext( spec, doc1, errors, warnings );
         let variant1: Variant = doc1.feature.scenarios[ 0 ].variants[ 0 ];
-        let ts1 = gen.generate( LANGUAGE, variant1, errors );
+        let ts1 = gen.generate( ctx1, variant1, errors );
         expect( errors ).toHaveLength( 0 );
         expect( ts1 ).toHaveLength( 1 );
 
+        let ctx2 = new GenContext( spec, doc2, errors, warnings );
         let variant2: Variant = doc2.feature.scenarios[ 0 ].variants[ 0 ];
-        let ts2 = gen.generate( LANGUAGE, variant2, errors );
+        let ts2 = gen.generate( ctx2, variant2, errors );
         expect( errors ).toHaveLength( 0 );
         expect( ts2 ).toHaveLength( 1 );
 
         const expectedSteps: string[] = [
-            'Quando eu preencho <a> com [ipsum]',
-            'E eu preencho <b> com [pi]',
+            'Quando eu preencho <a> com "ip!"',
+            'E eu preencho <b> com 3.14',
             'Dado que eu vejo "bar"', // <<<<<<<<<<<<<<<<<<
             'Quando eu preencho <c> com "c"',
             'E eu preencho <d> com "d"',
@@ -319,7 +348,10 @@ describe( 'TSGenTest', () => {
                 'Variant: Foo',
                 '  Quando eu preencho <a> com [ipsum]',
                 '    E eu preencho <b> com [pi]',
-                ' Então eu tenho ~foo~'
+                ' Então eu tenho ~foo~',
+                'Constantes:',
+                ' - "ipsum" é "ip!"',
+                ' - "pi" é 3.14'
             ],
             { path: 'doc1.feature', hash: 'doc1' } as FileInfo
         );
@@ -342,20 +374,22 @@ describe( 'TSGenTest', () => {
 
         const specFilter = new SpecFilter( spec );
         const batchSpecAnalyzer = new BatchSpecificationAnalyzer();
-        let errors: LocatedException[] = [];
+        let errors: LocatedException[] = [], warnings = [];
 
         await batchSpecAnalyzer.analyze( specFilter.graph(), spec, errors );
 
         // expect( doc1.fileErrors ).toEqual( [] );
         // expect( doc2.fileErrors ).toEqual( [] );
 
+        let ctx1 = new GenContext( spec, doc1, errors, warnings );
         let variant1: Variant = doc1.feature.scenarios[ 0 ].variants[ 0 ];
-        let ts1 = gen.generate( LANGUAGE, variant1, errors );
+        let ts1 = gen.generate( ctx1, variant1, errors );
         expect( errors ).toHaveLength( 0 );
         expect( ts1 ).toHaveLength( 1 );
 
+        let ctx2 = new GenContext( spec, doc2, errors, warnings );
         let variant2: Variant = doc2.feature.scenarios[ 0 ].variants[ 0 ];
-        let ts2 = gen.generate( LANGUAGE, variant2, errors );
+        let ts2 = gen.generate( ctx2, variant2, errors );
         expect( errors ).toHaveLength( 0 );
         expect( ts2 ).toHaveLength( 1 );
 
@@ -363,8 +397,8 @@ describe( 'TSGenTest', () => {
             'Dado que eu vejo "bar"',
             'Quando eu preencho <c> com "c"',
             'E eu preencho <d> com "d"',
-            'Quando eu preencho <a> com [ipsum]',
-            'E eu preencho <b> com [pi]',
+            'Quando eu preencho <a> com "ip!"',
+            'E eu preencho <b> com 3.14',
             'Então eu vejo "baz"'
         ];
 
@@ -386,7 +420,10 @@ describe( 'TSGenTest', () => {
                 'Variant: Foo',
                 '  Quando eu preencho <a> com [ipsum]',
                 '    E eu preencho <b> com [pi]',
-                ' Então eu tenho ~foo~'
+                ' Então eu tenho ~foo~',
+                'Constantes:',
+                ' - "ipsum" é "ip!"',
+                ' - "pi" é 3.14'
             ],
             { path: 'doc1.feature', hash: 'doc1' } as FileInfo
         );
@@ -426,31 +463,34 @@ describe( 'TSGenTest', () => {
 
         const specFilter = new SpecFilter( spec );
         const batchSpecAnalyzer = new BatchSpecificationAnalyzer();
-        let errors: LocatedException[] = [];
+        let errors: LocatedException[] = [], warnings = [];
 
         await batchSpecAnalyzer.analyze( specFilter.graph(), spec, errors );
 
         // expect( doc1.fileErrors ).toEqual( [] );
         // expect( doc2.fileErrors ).toEqual( [] );
 
+        let ctx1 = new GenContext( spec, doc1, errors, warnings );
         let variant1: Variant = doc1.feature.scenarios[ 0 ].variants[ 0 ];
-        let ts1 = gen.generate( LANGUAGE, variant1, errors );
+        let ts1 = gen.generate( ctx1, variant1, errors );
         expect( errors ).toHaveLength( 0 );
         expect( ts1 ).toHaveLength( 1 );
 
+        let ctx2 = new GenContext( spec, doc2, errors, warnings );
         let variant2: Variant = doc2.feature.scenarios[ 0 ].variants[ 0 ];
-        let ts2 = gen.generate( LANGUAGE, variant2, errors );
+        let ts2 = gen.generate( ctx2, variant2, errors );
         expect( errors ).toHaveLength( 0 );
         expect( ts2 ).toHaveLength( 1 );
 
+        let ctx3 = new GenContext( spec, doc3, errors, warnings );
         let variant3: Variant = doc3.feature.scenarios[ 0 ].variants[ 0 ];
-        let ts3 = gen.generate( LANGUAGE, variant3, errors );
+        let ts3 = gen.generate( ctx3, variant3, errors );
         expect( errors ).toHaveLength( 0 );
         expect( ts3 ).toHaveLength( 1 );
 
         const expectedSteps: string[] = [
-            'Quando eu preencho <a> com [ipsum]',
-            'E eu preencho <b> com [pi]',
+            'Quando eu preencho <a> com "ip!"',
+            'E eu preencho <b> com 3.14',
             'Dado que eu vejo "bar"',
             'Quando eu preencho <c> com "c"',
             'E eu preencho <d> com "d"',
@@ -479,7 +519,10 @@ describe( 'TSGenTest', () => {
                 'Variant: Foo',
                 '  Quando eu preencho <a> com [ipsum]',
                 '    E eu preencho <b> com [pi]',
-                ' Então eu tenho ~foo~'
+                ' Então eu tenho ~foo~',
+                'Constantes:',
+                ' - "ipsum" é "ip!"',
+                ' - "pi" é 3.14'
             ],
             { path: 'doc1.feature', hash: 'doc1' } as FileInfo
         );
@@ -519,25 +562,28 @@ describe( 'TSGenTest', () => {
 
         const specFilter = new SpecFilter( spec );
         const batchSpecAnalyzer = new BatchSpecificationAnalyzer();
-        let errors: LocatedException[] = [];
+        let errors: LocatedException[] = [], warnings = [];
 
         await batchSpecAnalyzer.analyze( specFilter.graph(), spec, errors );
 
         // expect( doc1.fileErrors ).toEqual( [] );
         // expect( doc2.fileErrors ).toEqual( [] );
 
+        let ctx1 = new GenContext( spec, doc1, errors, warnings );
         let variant1: Variant = doc1.feature.scenarios[ 0 ].variants[ 0 ];
-        let ts1 = gen.generate( LANGUAGE, variant1, errors );
+        let ts1 = gen.generate( ctx1, variant1, errors );
         expect( errors ).toHaveLength( 0 );
         expect( ts1 ).toHaveLength( 1 );
 
+        let ctx2 = new GenContext( spec, doc2, errors, warnings );
         let variant2: Variant = doc2.feature.scenarios[ 0 ].variants[ 0 ];
-        let ts2 = gen.generate( LANGUAGE, variant2, errors );
+        let ts2 = gen.generate( ctx2, variant2, errors );
         expect( errors ).toHaveLength( 0 );
         expect( ts2 ).toHaveLength( 1 );
 
+        let ctx3 = new GenContext( spec, doc3, errors, warnings );
         let variant3: Variant = doc3.feature.scenarios[ 0 ].variants[ 0 ];
-        let ts3 = gen.generate( LANGUAGE, variant3, errors );
+        let ts3 = gen.generate( ctx3, variant3, errors );
         expect( errors ).toHaveLength( 0 );
         expect( ts3 ).toHaveLength( 1 );
 
