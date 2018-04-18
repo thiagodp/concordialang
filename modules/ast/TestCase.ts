@@ -38,19 +38,16 @@ export interface TestCase extends NamedNode, MayHaveTags {
      */
     notRead?: boolean;
 
+    /** Steps */
+    sentences: Step[];
+
+
+    // The following attributes are retrieved from the Tags during Semantic Analysis:
+
     /** Declared scenario index, with @scenario( <index> ). Real index is always declared - 1. */
     declaredScenarioIndex?: number;
 
     /** Declared variant index, with @variant( <index> ). Real index is always declared - 1. */
     declaredVariantIndex?: number;
-
-    /** Steps */
-    sentences: Step[];
-
-    /**
-     * First step after preconditions. Useful for state calls, because they
-     * need to start after preconditions.
-     */
-    stepAfterPreconditions: Step;
 
 }

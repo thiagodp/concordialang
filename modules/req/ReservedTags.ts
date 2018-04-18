@@ -6,6 +6,7 @@
 export enum ReservedTags {
 
     GENERATED = 'generated', //     example: @generated
+    SHOULD_FAIL = 'fail', //        example: @fail
 
     FEATURE = 'feature', //         example: @feature( <name> )
     SCENARIO = 'scenario', //       example: @scenario( <index> )

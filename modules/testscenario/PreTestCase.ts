@@ -33,6 +33,21 @@ export class PreTestCase {
         return this.firstThenStep() !== null;
     }
 
+    stepsBeforeTheFirstThenStep(): Step[] {
+        let firstThen = this.firstThenStep();
+        if ( null === firstThen ) {
+            return this.steps;
+        }
+        let stepsBeforeThen: Step[] = [];
+        for ( let step of this.steps ) {
+            if ( step === firstThen ) {
+                break;
+            }
+            stepsBeforeThen.push( step );
+        }
+        return stepsBeforeThen;
+    }
+
     hasOracles(): boolean {
         return ( this.oracles || [] ).length > 0;
     }
