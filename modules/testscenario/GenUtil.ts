@@ -504,9 +504,10 @@ export class GenUtil {
                 ' ' + keywordWith + ' ' +
                 Symbols.VALUE_WRAPPER + value + Symbols.VALUE_WRAPPER;
 
-            // Add comment
             const uieTestPlan = uieVariableToUIETestPlanMap.get( variable ) || null;
             let expectedResult, dtc;
+
+            // Evaluate the test plan and oracles
             if ( null === uieTestPlan ) { // not expected
                 expectedResult = this.validKeyword  + ' ???';
                 dtc = '';
@@ -516,7 +517,6 @@ export class GenUtil {
                     expectedResult = this.invalidKeyword;
 
                     // Process ORACLES as steps
-
                     let oraclesClone = this.processOracles(
                         uieTestPlan.otherwiseSteps, language, keywords, ctx );
 
@@ -535,11 +535,14 @@ export class GenUtil {
                     dtc = '';
                 }
             }
-            sentence += ' ' + Symbols.COMMENT_PREFIX + ' ' + expectedResult + Symbols.TITLE_SEPARATOR + ' ' + dtc;
+
+            // Make comment
+            const comment = ' ' + expectedResult + Symbols.TITLE_SEPARATOR + ' ' + dtc;
 
             // Make the step
             let newStep = {
                 content: sentence,
+                comment: ( step.comment || '' ) + comment,
                 type: step.nodeType,
                 location: {
                     column: step.location.column,
