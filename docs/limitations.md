@@ -27,6 +27,10 @@
   - `- value is not equal to {OtherElement}`
 - Negation is only allowed for the property `value`
 
+#### Variants
+
+- Variants cannot have `Then` sentences with `fill` action. (TODO: check them)
+
 #### Test Case Sentences
 - Support to match tables - Issue #16
   - *E.g.*, `Then I see {My Table} as [Some Table]` would allow to assert whether the UI Element `My Table` has the same lines and columns as a declared table `Some Table`.
