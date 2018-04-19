@@ -48,19 +48,19 @@ export class UIElementPropertyExtractor {
     }
 
     extractDataType( uie: UIElement ): string {
+
         const defaultDataType = ValueType.STRING.toString();
 
         const nlpEntity = this.extractPropertyValueAsEntity( this.extractProperty( uie, UIPropertyTypes.DATA_TYPE ) );
-        if ( ! isDefined( nlpEntity ) ) {
-            return defaultDataType;
+        if ( isDefined( nlpEntity ) ) {
+            // Assumes 'string' if the type is not expected
+            const dataType: string = nlpEntity.value.toString().toLowerCase();
+            if ( ALL_VALUE_TYPES.map( t => t.toString() ).indexOf( dataType ) < 0 ) {
+                return defaultDataType;
+            }
         }
 
-        // Assumes 'string' if the type is not expected
-        const dataType: string = nlpEntity.value.toString().toLowerCase();
-        if ( ALL_VALUE_TYPES.map( t => t.toString() ).indexOf( dataType ) < 0 ) {
-            return defaultDataType;
-        }
-        return dataType;
+        return defaultDataType;
     }
 
     extractIsEditable( uie: UIElement ): boolean {

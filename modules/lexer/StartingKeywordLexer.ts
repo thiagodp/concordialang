@@ -8,7 +8,7 @@ import { KeywordBasedLexer } from "./KeywordBasedLexer";
 
 /**
  * Detects a node in the format "keyword anything".
- * 
+ *
  * @author Thiago Delgado Pinto
  */
 export class StartingKeywordLexer< T extends ContentNode > implements NodeLexer< T >, KeywordBasedLexer {
@@ -22,11 +22,11 @@ export class StartingKeywordLexer< T extends ContentNode > implements NodeLexer<
     public nodeType(): string {
         return this._nodeType;
     }
-    
+
     /** @inheritDoc */
     suggestedNextNodeTypes(): string[] {
         return [];
-    }    
+    }
 
     /** @inheritDoc */
     public affectedKeyword(): string {
@@ -35,13 +35,13 @@ export class StartingKeywordLexer< T extends ContentNode > implements NodeLexer<
 
     /** @inheritDoc */
     public updateWords( words: string[] ) {
-        this._words = words;   
-    }    
+        this._words = words;
+    }
 
     protected makeRegexForTheWords( words: string[] ): string {
         return '^' + Expressions.OPTIONAL_SPACES_OR_TABS
             + '(?:' + words.join( '|' ) + ')'
-            + Expressions.AT_LEAST_ONE_SPACE_OR_TAB
+            + Expressions.AT_LEAST_ONE_SPACE_OR_TAB_OR_COMMA
             + '(' + Expressions.ANYTHING + ')';
     }
 
@@ -58,7 +58,7 @@ export class StartingKeywordLexer< T extends ContentNode > implements NodeLexer<
         let content = this.removeComment( line.trim() );
 
         let pos = this._lineChecker.countLeftSpacesAndTabs( line );
-        
+
         let node = {
             nodeType: this._nodeType,
             location: { line: lineNumber || 0, column: pos + 1 },
@@ -80,11 +80,11 @@ export class StartingKeywordLexer< T extends ContentNode > implements NodeLexer<
 
 
     private removeComment( content: string ): string {
-        let commentPos = content.indexOf( Symbols.COMMENT_PREFIX );        
+        let commentPos = content.indexOf( Symbols.COMMENT_PREFIX );
         if ( commentPos >= 0 ) {
             return content.substring( 0, commentPos ).trim();
         }
-        return content;        
+        return content;
     }
 
 }

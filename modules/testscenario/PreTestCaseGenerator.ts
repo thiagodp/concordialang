@@ -202,9 +202,11 @@ export class PreTestCaseGenerator {
                 let [ resultingSteps, resultingOracles ] = this.fillUIElementWithValueAndReplaceByUILiteralInStep(
                     step, langContent, plan.dataTestCases, uieVariableToValueMap, language, ctx );
 
+                // console.log( 'ORACLES', '>'.repeat(10), resultingOracles );
+
                 completeSteps.push.apply( completeSteps, resultingSteps );
                 if ( resultingOracles.length > 0 ) {
-                    stepOracles.push.apply( resultingOracles );
+                    stepOracles.push.apply( stepOracles, resultingOracles );
                 }
             }
 
@@ -242,6 +244,13 @@ export class PreTestCaseGenerator {
 
         // # Replace CONSTANTS with VALUES
         for ( let step of steps ) {
+
+            if ( ! step.nlpResult ) {
+                // console.log( 'step without NLPResult', step.content );
+                // Update NLP !
+                this._variantSentenceRec.recognizeSentences( language, [ step ], ctx.errors, ctx.warnings );
+                // console.log( 'after', step.nlpResult );
+            }
 
             let before = step.content;
 
@@ -528,6 +537,8 @@ export class PreTestCaseGenerator {
             const uieTestPlan = uieVariableToUIETestPlanMap.get( variable ) || null;
             let expectedResult, dtc;
 
+            // console.log( 'uieTestPlan', uieTestPlan );
+
             // Evaluate the test plan and oracles
             if ( null === uieTestPlan ) { // not expected
                 expectedResult = keywordValid;
@@ -542,7 +553,7 @@ export class PreTestCaseGenerator {
                         uieTestPlan.otherwiseSteps, language, keywords, ctx );
 
                     // Add oracles
-                    oracles.push.apply( oraclesClone );
+                    oracles.push.apply( oracles, oraclesClone );
 
                 } else {
                     expectedResult = keywordValid
@@ -569,6 +580,9 @@ export class PreTestCaseGenerator {
                     filePath: step.location.filePath
                 } as Location
             } as Step;
+
+            // Update NLP !
+            this._variantSentenceRec.recognizeSentences( language, [ newStep ], ctx.errors, ctx.warnings );
 
             steps.push( newStep );
 

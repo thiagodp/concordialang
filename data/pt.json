@@ -50,7 +50,7 @@
 
     "testCaseNames": {
 
-        "VALUE_LOWEST": "VALUE_LOWEST",
+        "VALUE_LOWEST": "menor valor aplicável",
         "VALUE_RANDOM_BELOW_MIN": "VALUE_RANDOM_BELOW_MIN",
         "VALUE_JUST_BELOW_MIN": "VALUE_JUST_BELOW_MIN",
         "VALUE_MIN": "VALUE_MIN",
@@ -124,7 +124,7 @@
                 "rightClick": [ "clico com o botao direito", "aciono o botao direito" ],
                 "saveScreenshot": [ "salvo a tela", "bato uma foto da tela", "tiro uma foto da tela", "tiro um print da tela" ],
                 "scrollTo": [ "rolo" ],
-                "see": [ "vejo", "enxergo", "consigo ver" ],
+                "see": [ "vejo", "enxergo", "consigo ver", "devo ver", "ver" ],
                 "select": [ "seleciono" ],
                 "show": [ "mostro", "apresento", "exibo" ],
                 "swipe": [ "deslizo" ],

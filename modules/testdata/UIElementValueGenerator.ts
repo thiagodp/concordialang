@@ -87,6 +87,7 @@ export class UIElementValueGenerator {
             return null;
         }
 
+        // console.log( '>'.repeat( 10 ), context.uieVariableToPlanMap );
         const plan: UIETestPlan = context.uieVariableToPlanMap.get( fullVariableName );
         if ( ! plan ) {
             const msg = 'Could not find Plan for the UI Element: ' + fullVariableName;
@@ -217,6 +218,119 @@ export class UIElementValueGenerator {
     }
 
 
+    // async createDataGenConfigFrom(
+    //     uie: UIElement,
+    //     dtc: DataTestCase,
+    //     context: ValueGenContext,
+    //     doc: Document | null,
+    //     spec: Spec,
+    //     errors: LocatedException[]
+    // ): Promise< DataGenConfig > {
+
+    //     let cfg = new DataGenConfig();
+
+    //     const groupDef = new DataTestCaseGroupDef();
+    //     const group = groupDef.groupOf( dtc );
+    //     const propertiesMap = this._uiePropExtractor.mapFirstProperty( uie );
+
+    //     // The switch prepares `cfg` to be used after it
+    //     switch ( group ) {
+
+    //         //
+    //         // format is <number>|<value>|<constant>|<ui_element>
+    //         //
+    //         case DataTestCaseGroup.FORMAT: { // negation is not valid here
+
+    //             const pFormat = propertiesMap.get( UIPropertyTypes.FORMAT ) || null;
+
+    //             if ( isDefined( pFormat ) ) {
+    //                 cfg.format = ( await this.resolvePropertyValue( UIPropertyTypes.FORMAT, pFormat, pFormat.value, context, doc, spec, errors ) )
+    //                     .toString();
+    //             }
+
+    //             break;
+    //         }
+
+    //         //
+    //         // required is true|false
+    //         //
+    //         case DataTestCaseGroup.REQUIRED: { // negation is not valid here
+
+    //             cfg.required = this._uiePropExtractor.extractIsRequired( uie );
+
+    //             break;
+    //         }
+
+    //         //
+    //         // value is equal to          <number>|<value>|<constant>|<ui_element>
+    //         // value is not equal to      <number>|<value>|<constant>|<ui_element>
+    //         // value in                   <value_list>|<query>
+    //         // value not in               <value_list>|<query>
+    //         //
+    //         case DataTestCaseGroup.SET: { // negation allowed
+
+    //             const pValue = propertiesMap.get( UIPropertyTypes.VALUE ) || null;
+
+    //             if ( isDefined( pValue ) ) {
+    //                 // It has inverted logic if it has the NOT operator
+    //                 cfg.invertedLogic = this._opChecker.isNotEqualTo( pValue ) || this._opChecker.isNotIn( pValue );
+    //                 cfg.value = await this.resolvePropertyValue( UIPropertyTypes.VALUE, pValue, pValue.value, context, doc, spec, errors );
+    //             }
+
+    //             break;
+    //         }
+
+    //         //
+    //         // min/max value is equal to      <number>|<value>|<constant>|<ui_element>
+    //         // min/max value in               <value_list>|<query>
+    //         //
+    //         case DataTestCaseGroup.VALUE: {  // negation is not valid here
+
+    //             const pMinValue = propertiesMap.get( UIPropertyTypes.MIN_VALUE ) || null;
+    //             const pMaxValue = propertiesMap.get( UIPropertyTypes.MAX_VALUE ) || null;
+
+    //             if ( isDefined( pMinValue ) ) {
+    //                 cfg.minValue = await this.resolvePropertyValue( UIPropertyTypes.MIN_VALUE, pMinValue, pMinValue.value, context, doc, spec, errors );
+    //             }
+
+    //             if ( isDefined( pMaxValue ) ) {
+    //                 cfg.maxValue = await this.resolvePropertyValue( UIPropertyTypes.MAX_VALUE, pMaxValue, pMaxValue.value, context, doc, spec, errors );
+    //             }
+
+    //             break;
+    //         }
+
+    //         //
+    //         // min/max length is equal to      <number>|<value>|<constant>|<ui_element>
+    //         // min/max length in               <value_list>|<query>
+    //         //
+    //         case DataTestCaseGroup.LENGTH: {
+
+    //             const pMinLength = propertiesMap.get(  UIPropertyTypes.MIN_LENGTH ) || null;
+    //             const pMaxLength = propertiesMap.get( UIPropertyTypes.MAX_LENGTH ) || null;
+
+    //             if ( isDefined( pMinLength ) ) {
+    //                 cfg.minLength = Number(
+    //                     await this.resolvePropertyValue( UIPropertyTypes.MIN_LENGTH, pMinLength, pMinLength.value, context, doc, spec, errors )
+    //                 );
+    //             }
+
+    //             if ( isDefined( pMaxLength ) ) {
+    //                 cfg.maxLength = Number(
+    //                     await this.resolvePropertyValue( UIPropertyTypes.MAX_LENGTH, pMaxLength, pMaxLength.value, context, doc, spec, errors )
+    //                 );
+    //             }
+
+    //             break;
+    //         }
+
+    //         case DataTestCaseGroup.COMPUTATION: { // not supported yet
+    //             break;
+    //         }
+    //     }
+
+    //     return cfg;
+    // }
 
 
     async resolvePropertyValue(

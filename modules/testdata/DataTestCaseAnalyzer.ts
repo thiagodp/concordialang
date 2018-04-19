@@ -77,21 +77,24 @@ export class DataTestCaseAnalyzer {
             return map; // empty
         }
 
-        // Let's analyze the data type of the UI Element
-        const dataType: string = this._uiePropExtractor.extractDataType( uie );
-        // Converts to a system value type
-        const valType: ValueType = toEnumValue( dataType, ValueType ) || ValueType.STRING;
-        // Gets compatible data test cases
-        let compatibles: DataTestCase[] = this._vsType.compatibleWith( valType );
+        // // Let's analyze the data type of the UI Element
+        // const dataType: string = this._uiePropExtractor.extractDataType( uie );
+        // // Converts to a system value type
+        // const valType: ValueType = toEnumValue( dataType, ValueType ) || ValueType.STRING;
+        // // Gets compatible data test cases
+        // let compatibles: DataTestCase[] = this._vsType.compatibleWith( valType );
 
-        if ( compatibles.length < 1 ) { // Empty ?
-            // console.log( 'NO COMPATIBLES:', uie.name );
-            compatibles.push( DataTestCase.REQUIRED_FILLED ); // Should produce a random value
-        }
+        // if ( compatibles.length < 1 ) { // Empty ?
+        //     // console.log( 'NO COMPATIBLES:', uie.name );
+        //     compatibles.push( DataTestCase.REQUIRED_FILLED ); // Should produce a random value
+        // }
+
+        let compatibles: DataTestCase[] = enumUtil.getValues( DataTestCase );
 
         // Analyzes compatible rules (valid/invalid)
         for ( let dtc of compatibles ) {
-            const result: Pair< DTCAnalysisResult, Step[] > = this.analyzeProperties( valType, dtc, uie, errors );
+            // Result, Otherwise steps
+            const result: Pair< DTCAnalysisResult, Step[] > = this.analyzeProperties( dtc, uie, errors );
             // console.log( 'Analysis', dtc, result.getFirst() );
             map.set( dtc, result );
         }
@@ -110,12 +113,11 @@ export class DataTestCaseAnalyzer {
     /**
      * Analyzes the various properties to decide for the result of the given data test case.
      *
-     * @param valueType
      * @param dtc
      * @param uie
+     * @param errors
      */
     analyzeProperties(
-        valueType: ValueType,
         dtc: DataTestCase,
         uie: UIElement,
         errors: RuntimeException[]
@@ -137,6 +139,25 @@ export class DataTestCaseAnalyzer {
         const pMinValue = propertiesMap.get( UIPropertyTypes.MIN_VALUE ) || null;
         const pMaxValue = propertiesMap.get( UIPropertyTypes.MAX_VALUE ) || null;
         const pFormat = propertiesMap.get( UIPropertyTypes.FORMAT ) || null;
+
+        // console.log( 'pMinValue', pMinValue );
+
+        let valueType = ValueType.STRING;
+        if ( propertiesMap.has( UIPropertyTypes.DATA_TYPE ) ) {
+            let str = this._uiePropExtractor.extractDataType( uie );
+            if ( enumUtil.isValue( ValueType, str ) ) {
+                valueType = str;
+            }
+        } else {
+            //
+            // Assumes INTEGER if it has some of the following properties, aiming at to
+            // be compatible with some data test cases. The right type is maybe not important
+            // since the test cases of the group VALUE will fit.
+            //
+            if ( isDefined( pValue ) || isDefined( pMinValue ) || isDefined( pMaxValue ) ) {
+                valueType = ValueType.INTEGER;
+            }
+        }
 
         const validPair = new Pair( DTCAnalysisResult.VALID, [] );
         const incompatiblePair = new Pair( DTCAnalysisResult.INCOMPATIBLE, [] );
