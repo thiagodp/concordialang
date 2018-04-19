@@ -16,12 +16,23 @@ import { NodeTypes } from "../req/NodeTypes";
  */
 export class TCDocGen {
 
+    /**
+     * Constructor
+     *
+     * @param _extensionTestCase Extension to use in the file. Fullfils Document's `fileInfo`.
+     */
     constructor(
-        private readonly _extensionTestCase: string  // to fullfil fileInfo
+        private readonly _extensionTestCase: string
     ) {
-
     }
 
+    /**
+     * Generates a new Document with the given test cases.
+     *
+     * @param fromDoc Owner document
+     * @param testCases Test cases
+     * @param outputDir Output directory. If not defined, assumes the same directory as the owner document.
+     */
     generate(
         fromDoc: Document,
         testCases: TestCase[],
@@ -59,10 +70,15 @@ export class TCDocGen {
     }
 
 
+    /**
+     * Creates a file name for the new document.
+     *
+     * @param docPath Current document path
+     * @param outputDir Output directory. Assumes the same directory as the `docPath` if not defined.
+     */
+    createTestCaseFileNameBasedOn( docPath: string, outputDir?: string ): string {
 
-    createTestCaseFileNameBasedOn( path: string, outputDir?: string ): string {
-
-        const props = parse( path );
+        const props = parse( docPath );
         const fileName = props.name + this._extensionTestCase;
 
         const outDir = outputDir || props.dir;
@@ -71,26 +87,38 @@ export class TCDocGen {
         return join( fileDir, fileName );
     }
 
-
-    createLanguage( doc: Document, startLine: number ): Language | undefined {
-        if ( ! doc.language ) {
+    /**
+     * Create a language node.
+     *
+     * @param fromDoc Owner document
+     * @param startLine Start line
+     */
+    createLanguage( fromDoc: Document, startLine: number ): Language | undefined {
+        if ( ! fromDoc.language ) {
             return;
         }
-        let lang: Language = deepcopy( doc.language ) as Language;
+        let lang: Language = deepcopy( fromDoc.language ) as Language;
         lang.location.line = startLine;
         return lang;
     }
 
 
-    createImports( doc: Document, startLine: number, outputDir?: string ): Import[] {
+    /**
+     * Create import nodes.
+     *
+     * @param fromDoc Owner document
+     * @param startLine Start line
+     * @param outputDir Output directory. Assumes the same directory as the `docPath` if not defined.
+     */
+    createImports( fromDoc: Document, startLine: number, outputDir?: string ): Import[] {
         let imports: Import[] = [];
 
         // Path relative to where the doc file is
-        const docDir = dirname( doc.fileInfo.path );
+        const docDir = dirname( fromDoc.fileInfo.path );
         const outDir = outputDir || docDir;
         const filePath = join(
             relative( docDir, outDir ),
-            basename( doc.fileInfo.path )
+            basename( fromDoc.fileInfo.path )
         );
 
         // Generate the import to the given document
@@ -108,7 +136,12 @@ export class TCDocGen {
         return imports;
     }
 
-
+    /**
+     * Update the lines of the given test cases.
+     *
+     * @param testCases Test cases to be updated
+     * @param startLine Start line
+     */
     updateLinesFromTestCases( testCases: TestCase[], startLine: number ): number {
         let line = startLine;
         for ( let tc of testCases ) {
@@ -117,6 +150,12 @@ export class TCDocGen {
         return line;
     }
 
+    /**
+     * Update the lines of the given test case.
+     *
+     * @param tc Test case
+     * @param startLine Start line
+     */
     updateLinesOfTestCase( tc: TestCase, startLine: number ): number {
         let line = 1 + startLine;
 
