@@ -9,6 +9,7 @@ import { TestCaseDocumentGenerator } from "./TestCaseDocumentGenerator";
 import { NodeTypes } from "../req/NodeTypes";
 import { Tag } from "../ast/Tag";
 import { ReservedTags } from "../req/ReservedTags";
+import { isDefined } from "../util/TypeChecking";
 
 /**
  * Generates Test Cases from Test Scenarios and parameters.
@@ -45,6 +46,36 @@ export class TCGen {
     }
 
     /**
+     * Add reference tags to the given test case.
+     *
+     * @param tc Test Case
+     * @param scenarioIndex Scenario index, starting at 1.
+     * @param variantIndex Variant index, staring at 1.
+     */
+    addReferenceTagsTo( tc: TestCase, scenarioIndex: number, variantIndex: number ): void {
+
+        if ( ! tc.tags ) {
+            tc.tags = [];
+        }
+
+        let hasScenarioTag = false, hasVariantTag = false;
+        for ( let tag of tc.tags ) {
+            if ( ReservedTags.SCENARIO === tag.name ) hasScenarioTag = true;
+            else if ( ReservedTags.VARIANT === tag.name ) hasVariantTag = true;
+        }
+
+        if ( ! hasScenarioTag ) {
+            tc.tags.push( this.makeTag( ReservedTags.SCENARIO, scenarioIndex ) );
+        }
+
+        if ( ! hasVariantTag ) {
+            tc.tags.push( this.makeTag( ReservedTags.VARIANT, variantIndex ) );
+        }
+    }
+
+
+
+    /**
      * Returns a TestCase produced from a PreTestCase.
      *
      * The TestCase does not have the following attributes:
@@ -57,7 +88,7 @@ export class TCGen {
      *
      * @param preTestCase
      */
-    produceTestCase( preTestCase: PreTestCase ): TestCase {
+    private produceTestCase( preTestCase: PreTestCase ): TestCase {
 
         let tc: TestCase = {
             nodeType: NodeTypes.TEST_CASE,
@@ -86,30 +117,35 @@ export class TCGen {
      *
      * @param tc Test Case
      */
-    makeTags( tc: TestCase ): Tag[] {
+    private makeTags( tc: TestCase ): Tag[] {
         let tags: Tag[] = [];
 
         if ( tc.generated ) {
-            tags.push(
-                {
-                    nodeType: NodeTypes.TAG,
-                    location: { column: 0, line: 0 },
-                    name: ReservedTags.GENERATED
-                } as Tag
-            );
+            tags.push( this.makeTag( ReservedTags.GENERATED ) );
         }
 
         if ( tc.shoudFail ) {
-            tags.push(
-                {
-                    nodeType: NodeTypes.TAG,
-                    location: { column: 0, line: 0 },
-                    name: ReservedTags.SHOULD_FAIL
-                } as Tag
-            );
+            tags.push( this.makeTag( ReservedTags.SHOULD_FAIL ) );
         }
 
         return tags;
+    }
+
+
+    /**
+     * Create a Tag
+     *
+     * @param name
+     * @param content
+     * @param line
+     */
+    private makeTag( name: string, content?: string | number, line: number = 0 ): Tag {
+        return {
+            nodeType: NodeTypes.TAG,
+            location: { column: 0, line: line },
+            name: name,
+            content: content
+        } as Tag
     }
 
 }
