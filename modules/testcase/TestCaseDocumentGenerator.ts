@@ -46,7 +46,7 @@ export class TestCaseDocumentGenerator extends EventEmitter {
     }
 
 
-    generateVariantDocuments(
+    generateDocuments(
         graph: Graph,
         spec: Spec,
         outputDirectory: string,

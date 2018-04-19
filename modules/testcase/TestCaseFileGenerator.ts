@@ -27,7 +27,7 @@ export class TestCaseFileGenerator extends EventEmitter {
     public readonly fileHeader: string[] = [
         '# Generated with ❤ by Concordia',
         '#',
-        '# THIS IS A GENERATED FILE - MODIFICATIONS CAN BE OVERWRITTEN !',
+        '# THIS IS A GENERATED FILE - MODIFICATIONS CAN BE LOST !',
         ''
     ];
 
