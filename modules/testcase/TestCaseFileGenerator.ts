@@ -6,6 +6,7 @@ import { promisify } from 'util';
 import { EventEmitter } from "events";
 import { Symbols } from "../req/Symbols";
 import { NodeTypes } from "../req/NodeTypes";
+import { upperFirst } from "../util/CaseConversor";
 
 /**
  * Events related to the generation of files for Documents with Test Cases.
@@ -143,7 +144,7 @@ export class TestCaseFileGenerator extends EventEmitter {
     }
 
     generateTestCaseHeader( name: string, dict: KeywordDictionary ): string  {
-        return ( dict.testCase[ 0 ] || 'Test Case' ) +
+        return upperFirst( dict.testCase[ 0 ] || 'Test Case' ) +
             Symbols.TITLE_SEPARATOR + ' ' + name;
     }
 
