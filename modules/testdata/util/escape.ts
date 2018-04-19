@@ -22,6 +22,6 @@ function escapeChar( char ) {
     return char;
 }
 
-export function escapeString( str ) {
+export function escapeString( str ): string {
     return str.replace( /[\0\x08\x09\x1a\n\r"'\\\%]/g, escapeChar );
 }

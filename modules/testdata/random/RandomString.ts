@@ -42,7 +42,7 @@ export class RandomString {
         }
         // console.log( 'original', tmp );
         // console.log( 'escaped ', escapeString( tmp ) );
-        return ! this.escaped ? tmp : escapeString( tmp );
+        return ! this.escaped ? tmp : escapeString( tmp ).substr( 0, length );
     }
 
     public between( minimum: number, maximum: number ): string {
