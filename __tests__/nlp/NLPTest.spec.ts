@@ -110,20 +110,48 @@ describe( 'NLPTest', () => {
                 return recog( text, expected, Entities.NUMBER, debug );
             }
 
-            it( 'positive integer number', () => {
+            it( 'positive integer', () => {
                 recogNumber( ' 3 ', '3' );
             } );
 
-            it( 'positive double number', () => {
+            it( 'positive double', () => {
                 recogNumber( ' 3.14159 ', '3.14159' );
             } );
 
-            it( 'negative integer number', () => {
+            it( 'negative integer', () => {
                 recogNumber( ' -3 ', '-3' );
             } );
 
-            it( 'negative double number', () => {
+            it( 'negative double', () => {
                 recogNumber( ' -3.14159 ', '-3.14159' );
+            } );
+
+            describe( 'does not recognize inside a string', () => {
+
+                it( 'positive integer', () => {
+                    recogNumber( ' "3" ', null );
+                } );
+
+                it( 'positive integer with spaces around', () => {
+                    recogNumber( ' " 3 " ', null );
+                } );
+
+                it( 'positive double', () => {
+                    recogNumber( ' "3.14159" ', null );
+                } );
+
+                it( 'positive double with spaces around', () => {
+                    recogNumber( ' " 3.14159 " ', null );
+                } );
+
+                it( 'negative integer', () => {
+                    recogNumber( ' "-3" ', null );
+                } );
+
+                it( 'negative double', () => {
+                    recogNumber( ' "-3.14159" ', null );
+                } );
+
             } );
 
         } );
