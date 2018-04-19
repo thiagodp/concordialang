@@ -1,123 +1,112 @@
 import { TCGen } from "../../modules/testcase/TCGen";
-import { EnglishKeywordDictionary } from "../../modules/dict/EnglishKeywordDictionary";
 import { SimpleCompiler } from "../../modules/util/SimpleCompiler";
 import { Compiler } from "../../modules/app/Compiler";
 import { Spec } from "../../modules/ast/Spec";
+import { Document } from "../../modules/ast/Document";
 import { RandomString } from "../../modules/testdata/random/RandomString";
 import { Random } from "../../modules/testdata/random/Random";
+import { PreTestCaseGenerator, GenContext } from "../../modules/testscenario/PreTestCaseGenerator";
+import { FileInfo } from "../../modules/ast/FileInfo";
+import { SpecFilter } from "../../modules/selection/SpecFilter";
+import { BatchSpecificationAnalyzer } from "../../modules/semantic/BatchSpecificationAnalyzer";
+import { LocatedException } from "../../modules/req/LocatedException";
+import { TestPlanMaker } from "../../modules/testcase/TestPlanMaker";
+import { JustOneInvalidMix } from "../../modules/testcase/DataTestCaseMix";
+import { IndexOfEachStrategy } from "../../modules/selection/CombinationStrategy";
+import { Variant } from "../../modules/ast/Variant";
+import { TestScenario } from "../../modules/testscenario/TestScenario";
+import { LongLimits } from "../../modules/testdata/limits/LongLimits";
 
 describe( 'TCGenTest', () => {
 
     let gen: TCGen; // under test
 
-    let compiler: SimpleCompiler;
     const LANGUAGE = 'pt';
     const SEED = 'concordia';
-    const validComment =  ' # valid: random';
+    let preTCGen: PreTestCaseGenerator;
+    let cp: SimpleCompiler;
+
 
     beforeEach( () => {
-        compiler = new SimpleCompiler( LANGUAGE );
-        gen = new TCGen( SEED );
+        cp = new SimpleCompiler( LANGUAGE );
+
+        preTCGen = new PreTestCaseGenerator(
+            cp.langLoader,
+            cp.language,
+            SEED,
+            cp.nlpRec.variantSentenceRec
+        );
+
+        gen = new TCGen( preTCGen );
     } );
 
     afterEach( () => {
+        cp = null;
+        preTCGen = null;
         gen = null;
     } );
 
-    it( 'fills a single UI literal with random value', () => {
 
-        let spec = new Spec();
-        let doc = compiler.addToSpec( spec, [
-            'Feature: foo',
-            'Scenario: foo',
-            'Variant: foo',
-            'Test Case: foo',
-            '  Quando eu preencho <foo>'
-        ] );
+    it( 'generates invalid values and oracles based on UI Element properties', async () => {
 
-        let steps = gen.fillEventualUILiteralsWithoutValueWithRandomValue(
-            doc.feature.testCases[ 0 ].sentences[ 0 ],
-            compiler.langLoader.load( LANGUAGE ).keywords
+        let spec = new Spec( '.' );
+
+        let doc1: Document = cp.addToSpec( spec,
+            [
+                '#language:pt',
+                'Feature: Feature 1',
+                'Scenario: Foo',
+                'Variant: Foo',
+                '  Quando eu preencho {A}',
+                '    E eu preencho <b> com "foo"',
+                ' Então eu devo ver "x"',
+                'Elemento de IU: A',
+                ' - valor mínimo é 5',
+                '   Caso contrário, eu devo ver a mensagem "bar"' // <<< oracle
+            ],
+            { path: 'doc1.feature', hash: 'doc1' } as FileInfo
         );
 
-        const randomString = new RandomString( new Random( gen.seed ) );
-        const randomValue = randomString.between( gen.minRandomStringSize, gen.maxRandomStringSize );
+        const specFilter = new SpecFilter( spec );
+        const batchSpecAnalyzer = new BatchSpecificationAnalyzer();
+        let errors: LocatedException[] = [],
+        warnings: LocatedException[] = [];
 
-        expect( steps[ 0 ].content ).toEqual( 'Quando eu preencho <foo> com "' + randomValue + '"' + validComment );
-    } );
+        await batchSpecAnalyzer.analyze( specFilter.graph(), spec, errors );
 
+        // expect( doc1.fileErrors ).toEqual( [] );
+        // expect( doc2.fileErrors ).toEqual( [] );
 
-    it( 'fills more than one UI literal with random value', () => {
+        const testPlanMakers: TestPlanMaker[] = [
+            // new TestPlanMaker( new AllValidMix(), new SingleRandomOfEachStrategy( SEED ) )
+            new TestPlanMaker( new JustOneInvalidMix(), new IndexOfEachStrategy( 0 ) )
+        ];
 
-        let spec = new Spec();
-        let doc = compiler.addToSpec( spec, [
-            'Feature: foo',
-            'Scenario: foo',
-            'Variant: foo',
-            'Test Case: foo',
-            '  Quando eu preencho <foo>, <bar>, and <baz>'
-        ] );
+        const ctx1 = new GenContext( spec, doc1, errors, warnings );
+        const variant1: Variant = doc1.feature.scenarios[ 0 ].variants[ 0 ];
 
-        let steps = gen.fillEventualUILiteralsWithoutValueWithRandomValue(
-            doc.feature.testCases[ 0 ].sentences[ 0 ],
-            compiler.langLoader.load( LANGUAGE ).keywords
+        let ts = new TestScenario();
+        ts.steps = variant1.sentences;
+
+        const testCases = await gen.generate( ts, ctx1, testPlanMakers );
+        expect( errors ).toHaveLength( 0 );
+        expect( testCases ).toHaveLength( 1 );
+
+        const tc = testCases[ 0 ];
+
+        // Content + Comment
+        const lines = tc.sentences.map( s => s.content + ( ! s.comment ? '' : ' #' + s.comment ) );
+        const value1 = LongLimits.MIN;
+        const comment = '# inválido: menor valor aplicável';
+
+        expect( lines ).toEqual(
+            [
+                'Quando eu preencho <a> com "' + value1 + '" ' + comment,
+                'E eu preencho <b> com "foo"',
+                'Então, eu devo ver a mensagem "bar"' // << Then replaced with the oracle
+            ]
         );
 
-        const randomString = new RandomString( new Random( gen.seed ) );
-        const randomValue1 = randomString.between( gen.minRandomStringSize, gen.maxRandomStringSize );
-        const randomValue2 = randomString.between( gen.minRandomStringSize, gen.maxRandomStringSize );
-        const randomValue3 = randomString.between( gen.minRandomStringSize, gen.maxRandomStringSize );
-
-        expect( steps[ 0 ].content ).toEqual( 'Quando eu preencho <foo> com "' + randomValue1 + '"' + validComment);
-        expect( steps[ 1 ].content ).toEqual( 'E eu preencho <bar> com "' + randomValue2 + '"' + validComment );
-        expect( steps[ 2 ].content ).toEqual( 'E eu preencho <baz> com "' + randomValue3 + '"' + validComment );
-    } );
-
-
-    it( 'keep UI literal as is when it has value', () => {
-
-        let spec = new Spec();
-        let doc = compiler.addToSpec( spec, [
-            'Feature: foo',
-            'Scenario: foo',
-            'Variant: foo',
-            'Test Case: foo',
-            '  Quando eu preencho <foo> com "xoxo"'
-        ] );
-
-        let steps = gen.fillEventualUILiteralsWithoutValueWithRandomValue(
-            doc.feature.testCases[ 0 ].sentences[ 0 ],
-            compiler.langLoader.load( LANGUAGE ).keywords
-        );
-
-        expect( steps[ 0 ].content ).toEqual( 'Quando eu preencho <foo> com "xoxo"' );
-    } );
-
-
-    it( 'separates UI literals from UI Elements', () => {
-
-        let spec = new Spec();
-        let doc = compiler.addToSpec( spec, [
-            'Feature: foo',
-            'Scenario: foo',
-            'Variant: foo',
-            'Test Case: foo',
-            '  Quando eu preencho <foo>, {bar}, <baz>, and {zoo}'
-        ] );
-
-        let steps = gen.fillEventualUILiteralsWithoutValueWithRandomValue(
-            doc.feature.testCases[ 0 ].sentences[ 0 ],
-            compiler.langLoader.load( LANGUAGE ).keywords
-        );
-
-        const randomString = new RandomString( new Random( gen.seed ) );
-        const randomValue1 = randomString.between( gen.minRandomStringSize, gen.maxRandomStringSize );
-        const randomValue2 = randomString.between( gen.minRandomStringSize, gen.maxRandomStringSize );
-
-        expect( steps[ 0 ].content ).toEqual( 'Quando eu preencho <foo> com "' + randomValue1 + '"' + validComment );
-        expect( steps[ 1 ].content ).toEqual( 'E eu preencho {bar}' );
-        expect( steps[ 2 ].content ).toEqual( 'E eu preencho <baz> com "' + randomValue2 + '"' + validComment );
-        expect( steps[ 3 ].content ).toEqual( 'E eu preencho {zoo}' );
     } );
 
 } );

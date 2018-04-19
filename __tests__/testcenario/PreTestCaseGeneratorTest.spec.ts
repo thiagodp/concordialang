@@ -419,7 +419,7 @@ describe( 'PreTestCaseGeneratorTest', () => {
                 ' Então eu devo ver "x"',
                 'Elemento de IU: A',
                 ' - valor mínimo é 5',
-                '   Caso contrário, eu devo ver a mensagem "bar"'
+                '   Caso contrário, eu devo ver a mensagem "bar"' // <<< oracle
             ],
             { path: 'doc1.feature', hash: 'doc1' } as FileInfo
         );
