@@ -17,8 +17,11 @@ describe( 'NLPTest', () => {
         return data;
     }
 
-    function recog( text: string, expected: any, expectedEntity: Entities ): NLPResult | null {
+    function recog( text: string, expected: any, expectedEntity: Entities, debug: boolean = false ): NLPResult | null {
         let r: NLPResult = nlp.recognize( 'en', text );
+        if ( debug ) {
+            console.log( 'text:', '"' + text + '"', '\nexpected:', '"' + expected + '"', '\nresult:', r );
+        }
         if ( null === expected ) {
             expect(
                 // not recognized
@@ -70,8 +73,8 @@ describe( 'NLPTest', () => {
 
         describe( 'value', () => {
 
-            function recogValue( text: string, expected: string | null ): NLPResult | null {
-                return recog( text, expected, Entities.VALUE );
+            function recogValue( text: string, expected: string | null, debug: boolean = false  ): NLPResult | null {
+                return recog( text, expected, Entities.VALUE, debug );
             }
 
             it( 'between quotes', () => {
@@ -103,8 +106,8 @@ describe( 'NLPTest', () => {
 
         describe( 'number', () => {
 
-            function recogNumber( text: string, expected: string | null ): NLPResult | null {
-                return recog( text, expected, Entities.NUMBER );
+            function recogNumber( text: string, expected: string | null, debug: boolean = false ): NLPResult | null {
+                return recog( text, expected, Entities.NUMBER, debug );
             }
 
             it( 'positive integer number', () => {
@@ -128,8 +131,8 @@ describe( 'NLPTest', () => {
 
         describe( 'ui_element', () => {
 
-            function recogElement( text: string, expected: string | null ): NLPResult | null {
-                return recog( text, expected, Entities.UI_ELEMENT );
+            function recogElement( text: string, expected: string | null, debug: boolean = false  ): NLPResult | null {
+                return recog( text, expected, Entities.UI_ELEMENT, debug );
             }
 
             describe( 'recognizes', () => {
@@ -169,42 +172,42 @@ describe( 'NLPTest', () => {
 
         describe( 'ui_literal', () => {
 
-            function recogElement( text: string, expected: string | null ): NLPResult | null {
-                return recog( text, expected, Entities.UI_LITERAL );
+            function recogLiteral( text: string, expected: string | null, debug: boolean = false ): NLPResult | null {
+                return recog( text, expected, Entities.UI_LITERAL, debug );
             }
 
             describe( 'recognizes', () => {
 
                 it( 'single character', () => {
-                    recogElement( ' <x> ', 'x' );
+                    recogLiteral( ' <x> ', 'x' );
                 } );
 
                 it( 'single word', () => {
-                    recogElement( ' <foo> ', 'foo' );
+                    recogLiteral( ' <foo> ', 'foo' );
                 } );
 
                 it( 'words', () => {
-                    recogElement( ' <foo bar> ', 'foo bar' );
+                    recogLiteral( ' <foo bar> ', 'foo bar' );
                 } );
 
                 it( 'id notation', () => {
-                    recogElement( ' <#foo> ', '#foo' );
+                    recogLiteral( ' <#foo> ', '#foo' );
                 } );
 
                 it( 'name notation', () => {
-                    recogElement( ' <@foo> ', '@foo' );
+                    recogLiteral( ' <@foo> ', '@foo' );
                 } );
 
                 it( 'css notation', () => {
-                    recogElement( ' <.foo> ', '.foo' );
+                    recogLiteral( ' <.foo> ', '.foo' );
                 } );
 
                 it( 'xpath notation', () => {
-                    recogElement( ' <//foo> ', '//foo' );
+                    recogLiteral( ' <//foo> ', '//foo' );
                 } );
 
                 it( 'mobile name notation', () => {
-                    recogElement( ' <~foo> ', '~foo' );
+                    recogLiteral( ' <~foo> ', '~foo' );
                 } );
 
             } );
@@ -213,11 +216,11 @@ describe( 'NLPTest', () => {
             describe( 'does not recognize', () => {
 
                 it( 'number', () => {
-                    recogElement( ' <1> ', null );
+                    recogLiteral( ' <1> ', null );
                 } );
 
                 it( 'starting with a number', () => {
-                    recogElement( ' <1a> ', null );
+                    recogLiteral( ' <1a> ', null );
                 } );
 
             } );
@@ -227,8 +230,8 @@ describe( 'NLPTest', () => {
 
         describe( 'query', () => {
 
-            function recogQuery( text: string, expected: string | null ): NLPResult | null {
-                return recog( text, expected, Entities.QUERY );
+            function recogQuery( text: string, expected: string | null, debug: boolean = false ): NLPResult | null {
+                return recog( text, expected, Entities.QUERY, debug );
             }
 
             it( 'in uppercase', () => {
@@ -248,8 +251,8 @@ describe( 'NLPTest', () => {
 
         describe( 'constant', () => {
 
-            function recogConstant( text: string, expected: string | null ): NLPResult | null {
-                return recog( text, expected, Entities.CONSTANT );
+            function recogConstant( text: string, expected: string | null, debug: boolean = false ): NLPResult | null {
+                return recog( text, expected, Entities.CONSTANT, debug );
             }
 
             describe( 'recognizes', () => {
@@ -289,8 +292,8 @@ describe( 'NLPTest', () => {
 
         describe( 'value list', () => {
 
-            function recogValueList( text: string, expected: string | null ): NLPResult | null {
-                return recog( text, expected, Entities.VALUE_LIST );
+            function recogValueList( text: string, expected: string | null, debug: boolean = false ): NLPResult | null {
+                return recog( text, expected, Entities.VALUE_LIST, debug );
             }
 
             it( 'does not recognize an empty list', () => {

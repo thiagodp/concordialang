@@ -268,11 +268,11 @@ class EntityRecognizerMaker {
      */
     public makeNumber( entityName: string ): any {
         var valueRec = new Bravey.RegexEntityRecognizer( entityName, 10 );
-        const regex = new RegExp( '(?: )(-?[0-9]+(?:.[0-9]+)?)', "gi" );
+        const regex = /(-?[0-9]+(?:\.[0-9]+)?)/g;
         valueRec.addMatch(
             regex,
             function( match ) {
-                //console.log( 'match: ', match );
+                // console.log( 'match ', match );
                 return match[ 0 ].toString().trim();
             },
             10 // priority
