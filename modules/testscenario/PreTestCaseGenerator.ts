@@ -53,10 +53,6 @@ export class GenContext {
  */
 export class PreTestCaseGenerator {
 
-    public validKeyword: string = 'valid'; //       TODO: i18n
-    public invalidKeyword: string = 'invalid'; //   TODO: i18n
-    public randomKeyword: string = 'random'; //     TODO: i18n
-
     private readonly _nlpUtil = new NLPUtil();
     private readonly _uiePropExtractor = new UIElementPropertyExtractor();
 
@@ -115,11 +111,11 @@ export class PreTestCaseGenerator {
      * @param testPlanMakers    Plan makers to apply. Each of them holds a `DataTestCaseMix`
      *                          and a `CombinationStrategy` to be applied to the steps.
      */
-    generate(
+    async generate(
         steps: Step[],
         ctx: GenContext,
         testPlanMakers: TestPlanMaker[]
-    ): PreTestCase[] { // Array< Pair< Steps with values, Oracles > >
+    ): Promise< PreTestCase[] > { // Array< Pair< Steps with values, Oracles > >
 
         if ( ! steps || steps.length < 1 ) {
             return [];
@@ -168,24 +164,34 @@ export class PreTestCaseGenerator {
             let map = this._dtcAnalyzer.analyzeUIElement( uie, ctx.errors );
             uieVariableToDTCMap.set( uie.info.fullVariableName, map );
         }
+        // console.log( uieVariableToDTCMap );
 
         // # Generate DataTestCases for the UI Elements, according to the goal and the combination strategy.
         //   Both are embedded in a TestPlanMaker.
         let allTestPlans: TestPlan[] = [];
         for ( let maker of testPlanMakers ) {
-            allTestPlans.push.apply( allTestPlans, maker.make( uieVariableToDTCMap, alwaysValidUIEVariables ) );
+            let testPlans = maker.make( uieVariableToDTCMap, alwaysValidUIEVariables );
+            // console.log( 'maker did these plans', testPlans );
+            allTestPlans.push.apply( allTestPlans, testPlans );
         }
+        // console.log( 'allTestPlans', allTestPlans );
 
         // # Generate values for all the UI Elements, according to the DataTestCase
         let all: PreTestCase[] = [];
         for ( let plan of allTestPlans ) { // Each plan maps string => UIETestPlan
 
+            // console.log( 'CURRENT plan', plan );
+
             let uieVariableToValueMap = new Map< string, EntityValueType >();
             let context = new ValueGenContext( plan.dataTestCases, uieVariableToValueMap );
 
             for ( let [ uieVar, uieTestPlan ] of plan.dataTestCases ) {
-                this._uieValueGen.generate( uieVar, context, ctx.doc, ctx.spec, ctx.errors );
+                // console.log( 'uieVar', uieVar, '\nuieTestPlan', uieTestPlan, "\n" );
+                let generatedValue = await this._uieValueGen.generate( uieVar, context, ctx.doc, ctx.spec, ctx.errors );
+                // console.log( 'GENERATED', generatedValue, '<'.repeat( 10 ) );
+                uieVariableToValueMap.set( uieVar, generatedValue );
             }
+            // console.log( 'uieVariableToValueMap', uieVariableToValueMap );
 
             // Steps & Oracles
 
@@ -311,8 +317,10 @@ export class PreTestCaseGenerator {
 
         const prefixAnd = upperFirst( keywords.stepAnd[ 0 ] || 'And' );
         let prefix = this.prefixFor( step, keywords );
-        const keywordI = keywords.i[ 0 ] || 'I';
-        const keywordWith = keywords.with[ 0 ] || 'with';
+        const keywordI = ! keywords.i ? 'I' : ( keywords.i[ 0 ] || 'I' );
+        const keywordWith = ! keywords.with ? 'with' : ( keywords.with[ 0 ] || 'with' );
+        const keywordValid = ! keywords.valid ? 'valid' : ( keywords.valid[ 0 ] || 'valid' );
+        const keywordRandom = ! keywords.random ? 'random' : ( keywords.random[ 0 ] || 'random' );
 
         let steps: Step[] = [];
         let line = step.location.line, count = 0;
@@ -342,7 +350,7 @@ export class PreTestCaseGenerator {
                     ' ' + keywordWith + ' ' +
                     Symbols.VALUE_WRAPPER + this.randomString() + Symbols.VALUE_WRAPPER;
 
-                comment = ' ' + this.validKeyword + Symbols.TITLE_SEPARATOR + ' ' + this.randomKeyword;
+                comment = ' ' + keywordValid + Symbols.TITLE_SEPARATOR + ' ' + keywordRandom;
             } else {
                 sentence += entity.string; // UI Element currently doesn't need prefix/sufix
             }
@@ -468,8 +476,11 @@ export class PreTestCaseGenerator {
 
         const prefixAnd = upperFirst( keywords.stepAnd[ 0 ] || 'And' );
         let prefix = this.prefixFor( step, keywords );
-        const keywordI = keywords.i[ 0 ] || 'I';
-        const keywordWith = keywords.with[ 0 ] || 'with';
+        const keywordI = ! keywords.i ? 'I' : ( keywords.i[ 0 ] || 'I' );
+        const keywordWith = ! keywords.with ? 'with' : ( keywords.with[ 0 ] || 'with' );
+        const keywordValid = ! keywords.valid ? 'valid' : ( keywords.valid[ 0 ] || 'valid' );
+        const keywordInvalid = ! keywords.invalid ? 'invalid' : ( keywords.invalid[ 0 ] || 'invalid' );
+        // const keywordRandom = ! keywords.random ? 'random' : ( keywords.random[ 0 ] || 'random' );
 
         let steps: Step[] = [],
             oracles: Step[] = [],
@@ -512,12 +523,12 @@ export class PreTestCaseGenerator {
 
             // Evaluate the test plan and oracles
             if ( null === uieTestPlan ) { // not expected
-                expectedResult = this.validKeyword  + ' ???';
-                dtc = '';
+                expectedResult = keywordValid;
+                dtc = '??? (no test plan)';
             } else {
 
                 if ( DTCAnalysisResult.INVALID === uieTestPlan.result ) {
-                    expectedResult = this.invalidKeyword;
+                    expectedResult = keywordInvalid;
 
                     // Process ORACLES as steps
                     let oraclesClone = this.processOracles(
@@ -527,15 +538,13 @@ export class PreTestCaseGenerator {
                     oracles.push.apply( oraclesClone );
 
                 } else {
-                    expectedResult = this.validKeyword;
+                    expectedResult = keywordValid
                 }
 
-                expectedResult = uieTestPlan.result === DTCAnalysisResult.VALID ? this.validKeyword : this.invalidKeyword;
-
                 if ( isDefined( langContent.testCaseNames ) ) {
-                    dtc = langContent.testCaseNames[ uieTestPlan.dtc ] || '';
+                    dtc = langContent.testCaseNames[ uieTestPlan.dtc ] || ( uieTestPlan.dtc || '??? (no data test case)' ).toString();
                 } else {
-                    dtc = '';
+                    dtc = ( uieTestPlan.dtc || '??? (no translation and data test case)' ).toString();
                 }
             }
 

@@ -87,7 +87,7 @@ export class UIElementValueGenerator {
             return null;
         }
 
-        const plan = context.plans.get( fullVariableName );
+        const plan: UIETestPlan = context.uieVariableToPlanMap.get( fullVariableName );
         if ( ! plan ) {
             const msg = 'Could not find Plan for the UI Element: ' + fullVariableName;
             const err = new RuntimeException( msg );
@@ -95,22 +95,14 @@ export class UIElementValueGenerator {
             return null;
         }
 
+        // console.log( 'plan ->', plan );
         const dtc = plan.dtc;
 
         // Note: assumes that properties were validated previously, and conflicting properties were already solved.
 
         const groupDef = new DataTestCaseGroupDef();
         const group = groupDef.groupOf( dtc );
-
         const propertiesMap = this._uiePropExtractor.mapFirstProperty( uie );
-
-        // Properties
-        const pValue = propertiesMap.get( UIPropertyTypes.VALUE ) || null;
-        const pMinLength = propertiesMap.get(  UIPropertyTypes.MIN_LENGTH ) || null;
-        const pMaxLength = propertiesMap.get( UIPropertyTypes.MAX_LENGTH ) || null;
-        const pMinValue = propertiesMap.get( UIPropertyTypes.MIN_VALUE ) || null;
-        const pMaxValue = propertiesMap.get( UIPropertyTypes.MAX_VALUE ) || null;
-        const pFormat = propertiesMap.get( UIPropertyTypes.FORMAT ) || null;
 
         let cfg = new DataGenConfig();
 
@@ -122,6 +114,7 @@ export class UIElementValueGenerator {
             //
             case DataTestCaseGroup.FORMAT: { // negation is not valid here
 
+                const pFormat = propertiesMap.get( UIPropertyTypes.FORMAT ) || null;
                 if ( ! pFormat ) {
                     return null;
                 }
@@ -150,6 +143,7 @@ export class UIElementValueGenerator {
             //
             case DataTestCaseGroup.SET: { // negation allowed
 
+                const pValue = propertiesMap.get( UIPropertyTypes.VALUE ) || null;
                 if ( ! pValue ) {
                     return null;
                 }
@@ -165,6 +159,9 @@ export class UIElementValueGenerator {
             // min/max value in               <value_list>|<query>
             //
             case DataTestCaseGroup.VALUE: {  // negation is not valid here
+
+                const pMinValue = propertiesMap.get( UIPropertyTypes.MIN_VALUE ) || null;
+                const pMaxValue = propertiesMap.get( UIPropertyTypes.MAX_VALUE ) || null;
 
                 if ( isDefined( pMinValue ) ) {
                     cfg.minValue = await this.resolvePropertyValue( UIPropertyTypes.MIN_VALUE, pMinValue, pMinValue.value, context, doc, spec, errors );
@@ -182,6 +179,9 @@ export class UIElementValueGenerator {
             // min/max length in               <value_list>|<query>
             //
             case DataTestCaseGroup.LENGTH: {
+
+                const pMinLength = propertiesMap.get(  UIPropertyTypes.MIN_LENGTH ) || null;
+                const pMaxLength = propertiesMap.get( UIPropertyTypes.MAX_LENGTH ) || null;
 
                 if ( isDefined( pMinLength ) ) {
                     cfg.minLength = Number(
@@ -207,6 +207,8 @@ export class UIElementValueGenerator {
 
         // Generate value
         let value = await this._dataGen.generate( dtc, cfg );
+
+        // console.log( '--------------> ', value );
 
         // Save in the map
         context.uieVariableToValueMap.set( uie.info.fullVariableName, value );
@@ -556,11 +558,11 @@ export class ValueGenContext {
 
     /**
      *
-     * @param plans Maps a UI Element Variable to a UIETestPlan
+     * @param uieVariableToPlanMap Maps a UI Element Variable to a UIETestPlan
      * @param uieVariableToValueMap Maps a UI Element Variable to a value
      */
     constructor(
-        public plans = new Map< string, UIETestPlan >(),
+        public uieVariableToPlanMap = new Map< string, UIETestPlan >(),
         public uieVariableToValueMap = new Map< string, EntityValueType >()
     ) {
     }

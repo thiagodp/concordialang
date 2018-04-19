@@ -9,7 +9,7 @@ import { LocatedException } from "../../modules/req/LocatedException";
 import { Variant } from "../../modules/ast/Variant";
 import { TestPlanMaker } from "../../modules/testcase/TestPlanMaker";
 import { AllValidMix } from "../../modules/testcase/DataTestCaseMix";
-import { SingleRandomOfEachStrategy } from "../../modules/selection/CombinationStrategy";
+import { SingleRandomOfEachStrategy, IndexOfEachStrategy } from "../../modules/selection/CombinationStrategy";
 import { RandomString } from "../../modules/testdata/random/RandomString";
 import { Random } from "../../modules/testdata/random/Random";
 
@@ -75,7 +75,7 @@ describe( 'PreTestCaseGeneratorTest', () => {
 
         const ctx1 = new GenContext( spec, doc1, errors, warnings );
         const variant1: Variant = doc1.feature.scenarios[ 0 ].variants[ 0 ];
-        const preTestCases = gen.generate( variant1.sentences, ctx1, testPlanMakers );
+        const preTestCases = await gen.generate( variant1.sentences, ctx1, testPlanMakers );
         expect( errors ).toHaveLength( 0 );
         expect( preTestCases ).toHaveLength( 1 );
 
@@ -132,7 +132,7 @@ describe( 'PreTestCaseGeneratorTest', () => {
 
         const ctx1 = new GenContext( spec, doc1, errors, warnings );
         const variant1: Variant = doc1.feature.scenarios[ 0 ].variants[ 0 ];
-        const preTestCases = gen.generate( variant1.sentences, ctx1, testPlanMakers );
+        const preTestCases = await gen.generate( variant1.sentences, ctx1, testPlanMakers );
         expect( errors ).toHaveLength( 0 );
         expect( warnings ).toHaveLength( 0 );
         expect( preTestCases ).toHaveLength( 1 );
@@ -194,7 +194,7 @@ describe( 'PreTestCaseGeneratorTest', () => {
 
         const ctx1 = new GenContext( spec, doc1, errors, warnings );
         const variant1: Variant = doc1.feature.scenarios[ 0 ].variants[ 0 ];
-        const preTestCases = gen.generate( variant1.sentences, ctx1, testPlanMakers );
+        const preTestCases = await gen.generate( variant1.sentences, ctx1, testPlanMakers );
         expect( errors ).toHaveLength( 0 );
         expect( warnings ).toHaveLength( 0 );
         expect( preTestCases ).toHaveLength( 1 );
@@ -249,7 +249,7 @@ describe( 'PreTestCaseGeneratorTest', () => {
 
         const ctx1 = new GenContext( spec, doc1, errors, warnings );
         const variant1: Variant = doc1.feature.scenarios[ 0 ].variants[ 0 ];
-        const preTestCases = gen.generate( variant1.sentences, ctx1, testPlanMakers );
+        const preTestCases = await gen.generate( variant1.sentences, ctx1, testPlanMakers );
         expect( errors ).toHaveLength( 0 );
         expect( preTestCases ).toHaveLength( 1 );
 
@@ -261,12 +261,75 @@ describe( 'PreTestCaseGeneratorTest', () => {
         const rand = new RandomString( new Random( SEED ) );
         const value1 = rand.between( gen.minRandomStringSize, gen.maxRandomStringSize );
         const value2 = rand.between( gen.minRandomStringSize, gen.maxRandomStringSize );
+        const comment = '# válido: aleatório';
 
         expect( lines ).toEqual(
             [
-                'Quando eu preencho <a> com "' + value1 + '" # valid: random',
+                'Quando eu preencho <a> com "' + value1 + '" ' + comment,
                 'E eu preencho <b> com "foo"',
-                'E eu preencho <c> com "' + value2 + '" # valid: random',
+                'E eu preencho <c> com "' + value2 + '" ' + comment,
+                'Então eu tenho ~foo~'
+            ]
+        );
+
+    } );
+
+
+
+    it( 'fills UI Elements without value with generated value', async () => {
+
+        let spec = new Spec( '.' );
+
+        let doc1: Document = cp.addToSpec( spec,
+            [
+                '#language:pt',
+                'Feature: Feature 1',
+                'Scenario: Foo',
+                'Variant: Foo',
+                '  Quando eu preencho {A}',
+                '    E eu preencho <b> com "foo"',
+                '    E eu preencho {C}',
+                ' Então eu tenho ~foo~',
+                'Elemento de IU: A',
+                'Elemento de IU: C'
+            ],
+            { path: 'doc1.feature', hash: 'doc1' } as FileInfo
+        );
+
+        const specFilter = new SpecFilter( spec );
+        const batchSpecAnalyzer = new BatchSpecificationAnalyzer();
+        let errors: LocatedException[] = [],
+        warnings: LocatedException[] = [];
+
+        await batchSpecAnalyzer.analyze( specFilter.graph(), spec, errors );
+
+        // expect( doc1.fileErrors ).toEqual( [] );
+        // expect( doc2.fileErrors ).toEqual( [] );
+
+        const testPlanMakers: TestPlanMaker[] = [
+            // new TestPlanMaker( new AllValidMix(), new SingleRandomOfEachStrategy( SEED ) )
+            new TestPlanMaker( new AllValidMix(), new IndexOfEachStrategy( 1 ) )
+        ];
+
+        const ctx1 = new GenContext( spec, doc1, errors, warnings );
+        const variant1: Variant = doc1.feature.scenarios[ 0 ].variants[ 0 ];
+        const preTestCases = await gen.generate( variant1.sentences, ctx1, testPlanMakers );
+        expect( errors ).toHaveLength( 0 );
+        expect( preTestCases ).toHaveLength( 1 );
+
+        const preTC = preTestCases[ 0 ];
+
+        // Content + Comment
+        const lines = preTC.steps.map( s => s.content + ( ! s.comment ? '' : ' #' + s.comment ) );
+        const value1 = '';
+        const value2 = '';
+        const comment = '# válido: obrigatório não preenchido';
+
+        expect( lines ).toEqual(
+            [
+                'Quando eu preencho <a> com "' + value1 + '" ' + comment,
+                'E eu preencho <b> com "foo"',
+                'E eu preencho <c> com "' + value2 + '" ' + comment,
                 'Então eu tenho ~foo~'
             ]
         );

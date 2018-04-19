@@ -35,18 +35,21 @@ export class TestPlanMaker {
         let plans: TestPlan[] = [];
 
         let objects = this.mixingStrategy.select( map, alwaysValidVariables );
+        // console.log( 'INPUT map      ', map );
+        // console.log( 'SELECTED by mix', objects );
 
         // Each object is a map with an array of UIEPlans
         for ( let obj of objects ) {
 
             let combinations = this.combinationStrategy.combine( obj );
+            // console.log( 'combinations ', combinations );
 
             // Each combination now is a map uieName => UIEPlan
             // Thet will be transformed in a TestPlan
-            for ( let comb of combinations ) {
+            for ( let combObj of combinations ) {
 
                 let plan = new TestPlan();
-                plan.dataTestCases = new Map( objectToArray( obj ) );
+                plan.dataTestCases = new Map( objectToArray( combObj ) );
 
                 plans.push( plan );
             }

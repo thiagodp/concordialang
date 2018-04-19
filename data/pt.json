@@ -3,9 +3,6 @@
         "import": [ "importe", "importar", "import" ],
         "regexBlock": [ "expressões", "expressões regulares", "regexes" ],
         "constantBlock": [ "constantes", "constants" ],
-        "i": [ "eu" ],
-        "is": [ "é", "is" ],
-        "with": [ "com", "with" ],
         "variant": [ "variante", "variação", "variant" ],
         "variantBackground": [ "contexto de variante", "contexto de variação", "cenário de variação", "variant background" ],
         "testCase": [ "caso de teste", "test case" ],
@@ -18,6 +15,13 @@
         "afterFeature": [ "depois da funcionalidade", "depois da característica", "depois da feature", "após a funcionalidade", "após a característica", "após a feature", "after feature" ],
         "beforeEachScenario": [ "antes de cada cenário", "before each scenario" ],
         "afterEachScenario": [ "depois de cada cenário", "após cada cenário", "after each scenario" ],
+
+        "i": [ "eu" ],
+        "is": [ "é", "is" ],
+        "with": [ "com" ],
+        "valid": [ "válido" ],
+        "invalid": [ "inválido" ],
+        "random": [ "aleatório" ],
 
         "tagGlobal": [ "global" ],
         "tagFeature": [ "feature" ],
@@ -81,8 +85,8 @@
         "SET_LAST_ELEMENT": "SET_LAST_ELEMENT",
         "SET_NOT_IN_SET": "SET_NOT_IN_SET",
 
-        "REQUIRED_FILLED": "REQUIRED_FILLED",
-        "REQUIRED_NOT_FILLED": "REQUIRED_NOT_FILLED",
+        "REQUIRED_FILLED": "obrigatório preenchido",
+        "REQUIRED_NOT_FILLED": "obrigatório não preenchido",
 
         "COMPUTATION_RIGHT": "COMPUTATION_RIGHT",
         "COMPUTATION_WRONG": "COMPUTATION_WRONG"

@@ -29,13 +29,13 @@ export class TCGen {
      * @param ctx Generation context
      * @param testPlanMakers Test plan makers
      */
-    generate( ts: TestScenario, ctx: GenContext, testPlanMakers: TestPlanMaker[] ): TestCase[] {
+    async generate( ts: TestScenario, ctx: GenContext, testPlanMakers: TestPlanMaker[] ): Promise< TestCase[] > {
 
         if ( ts.ignoreForTestCaseGeneration ) {
             return [];
         }
 
-        let all: PreTestCase[] = this._preTestCaseGenerator.generate( ts.steps, ctx, testPlanMakers );
+        let all: PreTestCase[] = await this._preTestCaseGenerator.generate( ts.steps, ctx, testPlanMakers );
 
         let testCases: TestCase[] = [];
         for ( let preTestCase of all ) {

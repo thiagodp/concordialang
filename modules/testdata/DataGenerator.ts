@@ -101,6 +101,8 @@ export class DataGenerator {
 	 */
 	public async generate( tc: DataTestCase, cfg: DataGenConfig ): Promise< any > {
 
+		// console.log( '-> tc is', tc, 'cfg', cfg );
+
 		switch ( tc ) {
 
 			// VALUE or LENGTH

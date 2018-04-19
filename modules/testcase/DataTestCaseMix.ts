@@ -68,8 +68,8 @@ export class AllValidMix implements DataTestCaseMix {
         for ( let [ uieName, dtcMap ] of map ) {
             obj[ uieName ] = [];
             for ( let [ dtc, pair ] of dtcMap ) {
-                if ( DTCAnalysisResult.VALID === pair.first ) {
-                    obj[ uieName ].push( new UIETestPlan( dtc, pair.first, pair.second ) );
+                if ( DTCAnalysisResult.VALID === pair.getFirst() ) {
+                    obj[ uieName ].push( new UIETestPlan( dtc, pair.getFirst(), pair.getSecond() ) );
                 }
             }
         }
@@ -114,17 +114,19 @@ export class JustOneInvalidMix implements DataTestCaseMix {
 
             for ( let [ dtc, pair ] of dtcMap ) {
 
-                if ( DTCAnalysisResult.INCOMPATIBLE === pair.first ) {
+                let [ first, second ] = pair.toArray();
+
+                if ( DTCAnalysisResult.INCOMPATIBLE === first ) {
                     continue;
                 }
 
-                if ( DTCAnalysisResult.VALID === pair.first ) {
+                if ( DTCAnalysisResult.VALID === first ) {
                     if ( mustAlwaysBeValid || ! isTheTargetUIE ) {
-                        obj[ uieName ].push( new UIETestPlan( dtc, pair.first, pair.second ) );
+                        obj[ uieName ].push( new UIETestPlan( dtc, first, second ) );
                     }
                 } else { // INVALID
                     if ( isTheTargetUIE && ! mustAlwaysBeValid ) {
-                        obj[ uieName ].push( new UIETestPlan( dtc, pair.first, pair.second ) );
+                        obj[ uieName ].push( new UIETestPlan( dtc, first, second ) );
                     }
                 }
             }
@@ -156,10 +158,11 @@ export class AllInvalidMix implements DataTestCaseMix {
             obj[ uieName ] = [];
             let mustAlwaysBeValid = alwaysValidVariables.indexOf( uieName ) >= 0;
             for ( let [ dtc, pair ] of dtcMap ) {
-                if ( DTCAnalysisResult.INVALID === pair.first && ! mustAlwaysBeValid ) {
-                    obj[ uieName ].push( new UIETestPlan( dtc, pair.first, pair.second ) );
-                } else if ( DTCAnalysisResult.VALID === pair.first && mustAlwaysBeValid ) {
-                    obj[ uieName ].push( new UIETestPlan( dtc, pair.first, pair.second ) );
+                let [ first, second ] = pair.toArray();
+                if ( DTCAnalysisResult.INVALID === first && ! mustAlwaysBeValid ) {
+                    obj[ uieName ].push( new UIETestPlan( dtc, first, second ) );
+                } else if ( DTCAnalysisResult.VALID === first && mustAlwaysBeValid ) {
+                    obj[ uieName ].push( new UIETestPlan( dtc, first, second ) );
                 }
             }
         }

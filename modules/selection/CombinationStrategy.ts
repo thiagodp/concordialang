@@ -109,3 +109,34 @@ export class SingleRandomOfEachStrategy implements CombinationStrategy {
     }
 
 }
+
+
+/**
+ * Selects the given index of each element.
+ *
+ * Whether the index does not exist for a certain element, it selects the last element.
+ *
+ * This is useful for test purposes.
+ *
+ * @author Thiago Delgado Pinto
+ */
+export class IndexOfEachStrategy implements CombinationStrategy {
+
+    constructor( private _index: number ) {
+    }
+
+    /** @inheritDoc */
+    combine( map: object ): object[] {
+        let obj = {};
+        for ( let key in map ) {
+            let elements = map[ key ];
+            if ( Array.isArray( elements ) ) {
+                const size = elements.length;
+                const index = ( this._index >= size || this._index < 0 ) ? size - 1 : this._index;
+                obj[ key ] = elements[ index ];
+            }
+        }
+        return [ obj ];
+    }
+
+}

@@ -60,10 +60,10 @@ export class TSGen {
     }
 
 
-    generate(
+    async generate(
         ctx: GenContext,
         variant: Variant
-    ): TestScenario[] {
+    ): Promise< TestScenario[] > {
 
         let testScenarios: TestScenario[] = [];
 
@@ -154,7 +154,7 @@ export class TSGen {
                     let tsToUse: TestScenario = tsToReplaceStep.clone();
 
                     // Make all substitutions and generate valid values using GenUtil
-                    let all = this._preTestCaseGenerator.generate(
+                    let all = await this._preTestCaseGenerator.generate(
                         tsToReplaceStep.steps,
                         ctx,
                         [ this._validValuePlanMaker ]

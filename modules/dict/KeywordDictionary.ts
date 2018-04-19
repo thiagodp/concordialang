@@ -12,9 +12,6 @@ export interface KeywordDictionary { // properties should exist in Keywords
     import: string[];
     regexBlock: string[];
     constantBlock: string[];
-    i: string[];
-    is: string[];
-    with: string[];
     variant: string[];
     variantBackground: string[];
     testCase: string[];
@@ -27,6 +24,13 @@ export interface KeywordDictionary { // properties should exist in Keywords
     afterFeature: string[];
     beforeEachScenario: string[];
     afterEachScenario: string[];
+
+    i: string[];
+    is: string[];
+    with: string[];
+    valid: string[];
+    invalid: string[];
+    random: string[];
 
     tagGlobal: string[];
     tagFeature: string[];

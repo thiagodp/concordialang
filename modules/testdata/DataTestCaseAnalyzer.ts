@@ -27,9 +27,9 @@ import { Step } from "../ast/Step";
  * @author Thiago Delgado Pinto
  */
 export enum DTCAnalysisResult {
-    INCOMPATIBLE,
-    INVALID,
-    VALID
+    INCOMPATIBLE = 'incompatible',
+    INVALID = 'invalid',
+    VALID = 'valid'
 }
 
 /**
@@ -73,6 +73,7 @@ export class DataTestCaseAnalyzer {
 
         // Returns if not editable
         if ( ! this._uiePropExtractor.extractIsEditable( uie ) ) {
+            // console.log( 'NOT EDITABLE:', uie.name);
             return map; // empty
         }
 
@@ -84,12 +85,14 @@ export class DataTestCaseAnalyzer {
         let compatibles: DataTestCase[] = this._vsType.compatibleWith( valType );
 
         if ( compatibles.length < 1 ) { // Empty ?
+            // console.log( 'NO COMPATIBLES:', uie.name );
             compatibles.push( DataTestCase.REQUIRED_FILLED ); // Should produce a random value
         }
 
         // Analyzes compatible rules (valid/invalid)
         for ( let dtc of compatibles ) {
-            const result = this.analyzeProperties( valType, dtc, uie, errors );
+            const result: Pair< DTCAnalysisResult, Step[] > = this.analyzeProperties( valType, dtc, uie, errors );
+            // console.log( 'Analysis', dtc, result.getFirst() );
             map.set( dtc, result );
         }
 
@@ -124,6 +127,7 @@ export class DataTestCaseAnalyzer {
         const group = groupDef.groupOf( dtc );
 
         const propertiesMap = this._uiePropExtractor.mapFirstProperty( uie );
+        // console.log( 'group', group, 'propertiesMap', propertiesMap );
 
         // Properties
         const pRequired = propertiesMap.get( UIPropertyTypes.REQUIRED ) || null;
