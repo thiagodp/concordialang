@@ -210,6 +210,8 @@ export class PreTestCaseGenerator {
                 }
             }
 
+            this.normalizeOracleSentences( stepOracles, langContent.keywords );
+
             all.push( new PreTestCase( plan, completeSteps, stepOracles ) );
         }
 
@@ -626,6 +628,62 @@ export class PreTestCaseGenerator {
         return stepsClone;
     }
 
+
+    normalizeOracleSentences( steps: Step[], keywords: KeywordDictionary ): void {
+
+        if ( steps.length < 1 ) {
+            return;
+        }
+
+        const otherwiseKeywords = ( ! keywords.stepOtherwise || keywords.stepOtherwise.length < 1 )
+            ? [ 'otherwise' ] : keywords.stepOtherwise;
+
+        // const andKeywords = ( ! keywords.stepAnd || keywords.stepAnd.length < 1 )
+        //     ? [ 'and' ] : keywords.stepAnd;
+
+        const prefixAnd = this.stepPrefixNodeType( NodeTypes.STEP_AND, keywords );
+        const prefixThen = this.stepPrefixNodeType( NodeTypes.STEP_THEN, keywords );
+
+        // const keywordRandom = ! keywords.random ? 'random' : ( keywords.random[ 0 ] || 'random' );
+
+        let oracles: Step[] = [],
+            line = steps[ 0 ].location.line,
+            count = 0;
+
+        for ( let step of steps ) {
+
+            if ( isDefined( step.location ) ) {
+                step.location.line = line;
+            }
+
+            if ( step.nodeType === NodeTypes.STEP_OTHERWISE ) {
+
+                let nodeType = NodeTypes.STEP_AND;
+                let prefix = prefixAnd;
+
+                if ( count <= 0 ) {
+                    nodeType = NodeTypes.STEP_THEN;
+                    prefix = prefixThen;
+                }
+
+                // Change nodeType
+                step.nodeType = nodeType;
+
+                // Try to change the content with the new prefix
+                let index = -1;
+                for ( let keyword of otherwiseKeywords ) {
+                    index = step.content.toLowerCase().indexOf( keyword );
+                    if ( index >= 0 ) {
+                        step.content = prefix + step.content.substr( keyword.length );
+                        break;
+                    }
+                }
+            }
+
+            ++line;
+            ++count;
+        }
+    }
 
     //
     // OTHER

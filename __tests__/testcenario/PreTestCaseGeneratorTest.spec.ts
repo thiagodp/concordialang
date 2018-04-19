@@ -404,7 +404,7 @@ describe( 'PreTestCaseGeneratorTest', () => {
 
 
 
-    it( 'generates invalid values based on UI Element properties', async () => {
+    it( 'generates invalid values and oracles based on UI Element properties', async () => {
 
         let spec = new Spec( '.' );
 
@@ -463,7 +463,7 @@ describe( 'PreTestCaseGeneratorTest', () => {
         // Content + Comment
         const oracleLines = preTC.oracles.map( s => s.content + ( ! s.comment ? '' : ' #' + s.comment ) );
         expect( oracleLines ).toEqual( [
-            'Caso contrário, eu devo ver a mensagem "bar"'
+            'Então, eu devo ver a mensagem "bar"' // << Otherwise is replaced by Then
         ] );
 
     } );
