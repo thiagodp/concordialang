@@ -89,8 +89,8 @@ export class TestCaseFileGenerator extends EventEmitter {
                 lines.push( this.generateTagLine( tag.name, tag.content ) );
             }
 
-            // Name
-            lines.push( this.generateTestCaseName( testCase.name, dict ) );
+            // Header
+            lines.push( this.generateTestCaseHeader( testCase.name, dict ) );
 
             // Sentences
             for ( let sentence of testCase.sentences || [] ) {
@@ -142,7 +142,7 @@ export class TestCaseFileGenerator extends EventEmitter {
             ( content && content.length > 0 ? '(' + content + ')' : '' );
     }
 
-    generateTestCaseName( name: string, dict: KeywordDictionary ): string  {
+    generateTestCaseHeader( name: string, dict: KeywordDictionary ): string  {
         return ( dict.testCase[ 0 ] || 'Test Case' ) +
             Symbols.TITLE_SEPARATOR + ' ' + name;
     }
