@@ -315,8 +315,11 @@ export class PreTestCaseGenerator {
 
         // Create a step with 'fill' step for every UI_LITERAL
 
-        const prefixAnd = upperFirst( keywords.stepAnd[ 0 ] || 'And' );
-        let prefix = this.prefixFor( step, keywords );
+        // console.log( step.nodeType, '<'.repeat( 20 ) );
+        let nodeType = step.nodeType;
+        let prefix = this.stepPrefixNodeType( nodeType, keywords );
+
+        const prefixAnd = upperFirst( ! keywords.stepAnd ? 'And' : ( keywords.stepAnd[ 0 ] || 'And' ) );
         const keywordI = ! keywords.i ? 'I' : ( keywords.i[ 0 ] || 'I' );
         const keywordWith = ! keywords.with ? 'with' : ( keywords.with[ 0 ] || 'with' );
         const keywordValid = ! keywords.valid ? 'valid' : ( keywords.valid[ 0 ] || 'valid' );
@@ -339,6 +342,7 @@ export class PreTestCaseGenerator {
 
             // Change to "AND" when more than one UI Literal is available
             if ( count > 0 ) {
+                nodeType = NodeTypes.STEP_AND;
                 prefix = prefixAnd;
             }
 
@@ -356,9 +360,9 @@ export class PreTestCaseGenerator {
             }
 
             let newStep = {
+                nodeType: nodeType,
                 content: sentence,
                 comment: comment,
-                type: step.nodeType,
                 location: {
                     column: step.location.column,
                     line: line++,
@@ -474,8 +478,10 @@ export class PreTestCaseGenerator {
 
         const keywords = langContent.keywords || new EnglishKeywordDictionary();
 
-        const prefixAnd = upperFirst( keywords.stepAnd[ 0 ] || 'And' );
-        let prefix = this.prefixFor( step, keywords );
+        let nodeType = step.nodeType;
+        let prefix = this.stepPrefixNodeType( nodeType, keywords );
+
+        const prefixAnd = upperFirst( ! keywords ? 'And' : ( keywords.stepAnd[ 0 ] || 'And' ) );
         const keywordI = ! keywords.i ? 'I' : ( keywords.i[ 0 ] || 'I' );
         const keywordWith = ! keywords.with ? 'with' : ( keywords.with[ 0 ] || 'with' );
         const keywordValid = ! keywords.valid ? 'valid' : ( keywords.valid[ 0 ] || 'valid' );
@@ -491,6 +497,7 @@ export class PreTestCaseGenerator {
 
             // Change to "AND" when more than one entity is available
             if ( count > 0 ) {
+                nodeType = NodeTypes.STEP_AND;
                 prefix = prefixAnd;
             }
 
@@ -553,9 +560,9 @@ export class PreTestCaseGenerator {
 
             // Make the step
             let newStep = {
+                nodeType: nodeType,
                 content: sentence,
                 comment: ( step.comment || '' ) + comment,
-                type: step.nodeType,
                 location: {
                     column: step.location.column,
                     line: line++,
@@ -638,14 +645,26 @@ export class PreTestCaseGenerator {
     }
 
 
-    prefixFor( step: Step, keywords: KeywordDictionary ): string {
+    stepPrefixNodeType( nodeType: NodeTypes, keywords: KeywordDictionary ): string {
         let prefix;
-        switch ( step.nodeType ) {
-            case NodeTypes.STEP_GIVEN: prefix = keywords.stepGiven[ 0 ] || 'Given that'; break;
-            case NodeTypes.STEP_WHEN: prefix = keywords.stepWhen[ 0 ] || 'When'; break;
-            case NodeTypes.STEP_THEN: prefix = keywords.stepThen[ 0 ] || 'Then'; break;
-            case NodeTypes.STEP_AND: prefix = keywords.stepAnd[ 0 ] || 'And'; break;
-            default: prefix = keywords.stepOtherwise[ 0 ] || 'Otherwise'; break;
+        switch ( nodeType ) {
+            case NodeTypes.STEP_GIVEN:
+                prefix = ! keywords ? 'Given that' : ( keywords.stepGiven[ 0 ] || 'Given that' );
+                break;
+            case NodeTypes.STEP_WHEN:
+                prefix = ! keywords ? 'When' : ( keywords.stepWhen[ 0 ] || 'When' );
+                break;
+            case NodeTypes.STEP_THEN:
+                prefix = ! keywords ? 'Then' : ( keywords.stepThen[ 0 ] || 'Then' );
+                break;
+            case NodeTypes.STEP_AND:
+                prefix = ! keywords ? 'And' : ( keywords.stepAnd[ 0 ] || 'And' );
+                break;
+            case NodeTypes.STEP_OTHERWISE:
+                prefix = ! keywords ? 'Otherwise' : ( keywords.stepOtherwise[ 0 ] || 'Otherwise' );
+                break;
+            default:
+                prefix = ! nodeType ? '???' : nodeType.toString();
         }
         return upperFirst( prefix );
     }
