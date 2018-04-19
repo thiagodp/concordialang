@@ -35,6 +35,7 @@ import { VariantSentenceRecognizer } from "../nlp/VariantSentenceRecognizer";
 import { Keywords } from "../req/Keywords";
 import { CaseType } from "../app/CaseType";
 import { PreTestCase } from "./PreTestCase";
+import { ValueTypeDetector } from "../util/ValueTypeDetector";
 
 export class GenContext {
     constructor(
@@ -499,6 +500,8 @@ export class PreTestCaseGenerator {
         const keywordInvalid = ! keywords.invalid ? 'invalid' : ( keywords.invalid[ 0 ] || 'invalid' );
         // const keywordRandom = ! keywords.random ? 'random' : ( keywords.random[ 0 ] || 'random' );
 
+        const valTypeDetector = new ValueTypeDetector();
+
         let steps: Step[] = [],
             oracles: Step[] = [],
             line = step.location.line,
@@ -534,7 +537,9 @@ export class PreTestCaseGenerator {
             let sentence = prefix + ' ' + keywordI + ' ' + fillEntity.string + ' ' +
                 Symbols.UI_LITERAL_PREFIX + uieLiteral + Symbols.UI_LITERAL_SUFFIX +
                 ' ' + keywordWith + ' ' +
-                Symbols.VALUE_WRAPPER + value + Symbols.VALUE_WRAPPER;
+                ( valTypeDetector.isNumber( value )
+                    ? value
+                    : Symbols.VALUE_WRAPPER + value + Symbols.VALUE_WRAPPER );
 
             const uieTestPlan = uieVariableToUIETestPlanMap.get( variable ) || null;
             let expectedResult, dtc;

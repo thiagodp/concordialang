@@ -17,6 +17,8 @@ import { Variant } from "../../modules/ast/Variant";
 import { TestScenario } from "../../modules/testscenario/TestScenario";
 import { LongLimits } from "../../modules/testdata/limits/LongLimits";
 import { TestCase } from "../../modules/ast/TestCase";
+// import { TCDocGen } from "../../modules/testcase/TCDocGen";
+// import { TestCaseFileGenerator } from "../../modules/testcase/TestCaseFileGenerator";
 
 describe( 'TCGenTest', () => {
 
@@ -102,7 +104,7 @@ describe( 'TCGenTest', () => {
 
         expect( lines ).toEqual(
             [
-                'Quando eu preencho <a> com "' + value1 + '" ' + comment,
+                'Quando eu preencho <a> com ' + value1 + ' ' + comment,
                 'E eu preencho <b> com "foo"',
                 'Então, eu devo ver a mensagem "bar"' // << Then replaced with the oracle
             ]
@@ -167,13 +169,21 @@ describe( 'TCGenTest', () => {
 
         expect( lines ).toEqual(
             [
-                'Quando eu preencho <a> com "' + value1 + '" ' + comment,
+                'Quando eu preencho <a> com ' + value1 + ' ' + comment,
                 'E eu preencho <b> com "foo"',
                 'Então eu devo ver "x"' // << same Then statement
             ]
         );
 
         expect( tc.shoudFail ).toBeTruthy();
+
+        // ---
+
+        // let docGen = new TCDocGen( '.testcase' );
+        // let newDoc = docGen.generate( doc1, testCases );
+        // let linesGen = new TestCaseFileGenerator( cp.langLoader, cp.language );
+        // let fileLines = linesGen.createLinesFromDoc( newDoc, errors );
+        // console.log( fileLines );
 
     } );
 

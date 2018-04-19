@@ -454,7 +454,7 @@ describe( 'PreTestCaseGeneratorTest', () => {
 
         expect( lines ).toEqual(
             [
-                'Quando eu preencho <a> com "' + value1 + '" ' + comment,
+                'Quando eu preencho <a> com ' + value1 + ' ' + comment,
                 'E eu preencho <b> com "foo"',
                 'Então eu devo ver "x"'
             ]
