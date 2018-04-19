@@ -65,38 +65,43 @@ export class UIElementPropertyExtractor {
 
     extractIsEditable( uie: UIElement ): boolean {
 
-        // Default is editable when no property is found
-        if ( ! uie.items || uie.items.length < 0 ) {
+        // true if no property is found
+        if ( ! uie.items || uie.items.length < 1 ) {
             return true;
         }
+        // console.log( uie.items.length, 'items', uie.items[ 0 ].content );
 
-        // Editable if it has the property 'editable' set to true
+        // Evaluate property 'editable' if defined
         const nlpEntity = this.extractPropertyValueAsEntity( this.extractProperty( uie, UIPropertyTypes.EDITABLE ) );
         if ( isDefined( nlpEntity ) ) {
             return this.isEntityConsideredTrue( nlpEntity );
         }
 
-        // Or if its `type` is an editable one
+        // Evaluate property 'type' (widget) if defined
         const typeNlpEntity = this.extractPropertyValueAsEntity( this.extractProperty( uie, UIPropertyTypes.TYPE ) );
         if ( isDefined( typeNlpEntity ) ) {
             return enumUtil.isValue( EditableUIElementTypes, typeNlpEntity.value );
         }
 
-        // Or does not have the property 'editable' but have one of the following properties defined:
-        const consideredAsEditable: string[] = [
-            UIPropertyTypes.DATA_TYPE,
-            UIPropertyTypes.MIN_LENGTH,
-            UIPropertyTypes.MAX_LENGTH,
-            UIPropertyTypes.MIN_VALUE,
-            UIPropertyTypes.MAX_VALUE
-        ];
+        // // Or does not have the property 'editable' but have one of the following properties defined:
+        // const consideredAsEditable: string[] = [
+        //     UIPropertyTypes.DATA_TYPE,
+        //     UIPropertyTypes.MIN_LENGTH,
+        //     UIPropertyTypes.MAX_LENGTH,
+        //     UIPropertyTypes.MIN_VALUE,
+        //     UIPropertyTypes.MAX_VALUE
+        // ];
 
-        for ( let property of consideredAsEditable ) {
-            if ( isDefined( this.extractProperty( uie, property ) ) ) {
-                return true;
-            }
-        }
-        return false;
+        // for ( let property of consideredAsEditable ) {
+        //     if ( isDefined( this.extractProperty( uie, property ) ) ) {
+        //         return true;
+        //     }
+        // }
+
+        // return false;
+
+        // Otherwise is true
+        return true;
     }
 
     extractIsRequired( uie: UIElement ): boolean {
