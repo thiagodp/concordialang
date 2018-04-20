@@ -136,7 +136,7 @@ export class TCGenController {
 
                             tcGen.addReferenceTagsTo( tc, scenarioIndex + 1, variantIndex + 1 );
 
-                            tc.name = variant.name + ' - ' + tcIndex;
+                            tc.name = ( variant.name || scenario.name ) + ' - ' + tcIndex;
 
                             ++tcIndex;
                         }
@@ -321,6 +321,8 @@ export class TCGenController {
         const dataCombinationOption = desired === random
             ? CombinationOptions.SHUFFLED_ONE_WISE
             : options.typedDataCombination();
+
+        console.log( 'options.invalid', options.invalid, 'desired', desired, 'dataCombinationOption', dataCombinationOption );
 
         let combinationStrategy = this.combinationStrategyFrom(
             dataCombinationOption,
