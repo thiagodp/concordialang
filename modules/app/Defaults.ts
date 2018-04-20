@@ -142,7 +142,7 @@ export class Defaults {
      *
      * @see InvalidSpecialOptions
      */
-    readonly INVALID_DATA_TEST_CASES_AT_A_TIME: number | string = 1;
+    readonly INVALID_DATA_TEST_CASES_AT_A_TIME: number | string = InvalidSpecialOptions.DEFAULT;
 
     /** @see DataTestCaseCombinationOptions */
     readonly DATA_TEST_CASE_COMBINATION: string = CombinationOptions.SHUFFLED_ONE_WISE.toString();
