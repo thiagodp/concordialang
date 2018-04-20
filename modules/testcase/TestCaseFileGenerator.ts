@@ -88,7 +88,7 @@ export class TestCaseFileGenerator {
                 }
 
                 let line = ind + sentence.content +
-                    ( ! sentence.comment ? '' : ' ' + Symbols.COMMENT_PREFIX + sentence.comment );
+                    ( ! sentence.comment ? '' : '  ' + Symbols.COMMENT_PREFIX + sentence.comment );
 
                 lines.push( line );
             }

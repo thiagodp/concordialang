@@ -31,7 +31,7 @@ export class TCGen {
      */
     async generate( ts: TestScenario, ctx: GenContext, testPlanMakers: TestPlanMaker[] ): Promise< TestCase[] > {
 
-        if ( ts.ignoreForTestCaseGeneration ) {
+        if ( true === ts.ignoreForTestCaseGeneration ) {
             return [];
         }
 
