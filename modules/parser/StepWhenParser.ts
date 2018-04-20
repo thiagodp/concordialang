@@ -24,7 +24,8 @@ export class StepWhenParser implements NodeParser< StepWhen > {
             NodeTypes.TEST_CASE,
             NodeTypes.STEP_GIVEN,
             NodeTypes.STEP_WHEN,
-            NodeTypes.STEP_AND
+            NodeTypes.STEP_AND,
+            NodeTypes.STEP_THEN // because of the scenario combination
         ];
 
         if ( ! it.hasPrior() || allowedPriorNodes.indexOf( it.spyPrior().nodeType ) < 0 ) {
