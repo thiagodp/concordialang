@@ -51,7 +51,7 @@
     "testCaseNames": {
 
         "VALUE_LOWEST": "menor valor aplicável",
-        "VALUE_RANDOM_BELOW_MIN": "aleatório abaixo do mínimo",
+        "VALUE_RANDOM_BELOW_MIN": "valor aleatório abaixo do mínimo",
         "VALUE_JUST_BELOW_MIN": "valor logo abaixo do mínimo",
         "VALUE_MIN": "valor mínimo",
         "VALUE_JUST_ABOVE_MIN": "valor logo acima do mínimo",
@@ -64,32 +64,32 @@
         "VALUE_RANDOM_ABOVE_MAX": "valor aleatório acima do máximo",
         "VALUE_GREATEST": "maior valor aplicável",
 
-        "LENGTH_LOWEST": "LENGTH_LOWEST",
-        "LENGTH_RANDOM_BELOW_MIN": "LENGTH_RANDOM_BELOW_MIN",
-        "LENGTH_JUST_BELOW_MIN": "LENGTH_JUST_BELOW_MIN",
-        "LENGTH_MIN": "LENGTH_MIN",
-        "LENGTH_JUST_ABOVE_MIN": "LENGTH_JUST_ABOVE_MIN",
-        "LENGTH_MEDIAN": "LENGTH_MEDIAN",
-        "LENGTH_RANDOM_BETWEEN_MIN_MAX": "LENGTH_RANDOM_BETWEEN_MIN_MAX",
-        "LENGTH_JUST_BELOW_MAX": "LENGTH_JUST_BELOW_MAX",
-        "LENGTH_MAX": "LENGTH_MAX",
-        "LENGTH_JUST_ABOVE_MAX": "LENGTH_JUST_ABOVE_MAX",
-        "LENGTH_RANDOM_ABOVE_MAX": "LENGTH_RANDOM_ABOVE_MAX",
-        "LENGTH_GREATEST": "LENGTH_GREATEST",
+        "LENGTH_LOWEST": "menor comprimento aplicável",
+        "LENGTH_RANDOM_BELOW_MIN": "comprimento aleatório abaixo do mínimo",
+        "LENGTH_JUST_BELOW_MIN": "comprimento logo abaixo do mínimo",
+        "LENGTH_MIN": "comprimento mínimo",
+        "LENGTH_JUST_ABOVE_MIN": "comprimento logo acima do mínimo",
+        "LENGTH_MEDIAN": "comprimento médio",
+        "LENGTH_RANDOM_BETWEEN_MIN_MAX": "comprimento aleatório entre o mínimo e o máximo",
+        "LENGTH_JUST_BELOW_MAX": "comprimento logo abaixo do máximo",
+        "LENGTH_MAX": "comprimento máximo",
+        "LENGTH_JUST_ABOVE_MAX": "comprimento logo acima do máximo",
+        "LENGTH_RANDOM_ABOVE_MAX": "comprimento aleatório acima do máximo",
+        "LENGTH_GREATEST": "maior comprimento aplicável",
 
-        "FORMAT_VALID": "FORMAT_VALID",
-        "FORMAT_INVALID": "FORMAT_INVALID",
+        "FORMAT_VALID": "formato válido",
+        "FORMAT_INVALID": "formato inválido",
 
-        "SET_FIRST_ELEMENT": "SET_FIRST_ELEMENT",
-        "SET_RANDOM_ELEMENT": "SET_RANDOM_ELEMENT",
-        "SET_LAST_ELEMENT": "SET_LAST_ELEMENT",
-        "SET_NOT_IN_SET": "SET_NOT_IN_SET",
+        "SET_FIRST_ELEMENT": "primeiro elemento",
+        "SET_RANDOM_ELEMENT": "elemento aleatório",
+        "SET_LAST_ELEMENT": "último elemento",
+        "SET_NOT_IN_SET": "elemento não existente",
 
         "REQUIRED_FILLED": "preenchido",
         "REQUIRED_NOT_FILLED": "não preenchido",
 
-        "COMPUTATION_RIGHT": "COMPUTATION_RIGHT",
-        "COMPUTATION_WRONG": "COMPUTATION_WRONG"
+        "COMPUTATION_RIGHT": "cálculo correto",
+        "COMPUTATION_WRONG": "cálculo incorreto"
     },
 
 
