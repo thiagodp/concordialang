@@ -65,8 +65,6 @@ export class CompilerController {
 
         let [ spec, graph ] = await compiler.compile( options, listener );
 
-        console.log( 'Generate?', ! options.generateTestCases ? 'no': 'yes' );
-
         if ( ! options.generateTestCases ) {
             return [ spec, graph ];
         }

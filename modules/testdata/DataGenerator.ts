@@ -57,6 +57,8 @@ export class DataGenConfig {
 
 	get valueType() {
 
+		// console.log( '  internal type', this._valueType, 'minValue', this.minValue, 'maxValue', this.maxValue, 'value', this.value );
+
 		if ( isDefined( this.minValue ) ) {
 			return ( new ValueTypeDetector() ).detect( this.minValue );
 		}
@@ -227,6 +229,7 @@ export class DataGenerator {
 
 
 	private rawGeneratorFor( cfg: DataGenConfig ): RawDataGenerator< any > {
+		// console.log( cfg.valueType, cfg.min, cfg.max );
 		return this._builder.raw( cfg.valueType, cfg.min, cfg.max );
 	}
 

@@ -130,7 +130,6 @@ export class DataTestCaseAnalyzer {
         const group = groupDef.groupOf( dtc );
 
         const propertiesMap = this._uiePropExtractor.mapFirstProperty( uie );
-        // console.log( 'group', group, 'propertiesMap', propertiesMap );
 
         // Properties
         const pRequired = propertiesMap.get( UIPropertyTypes.REQUIRED ) || null;
@@ -141,14 +140,9 @@ export class DataTestCaseAnalyzer {
         const pMaxValue = propertiesMap.get( UIPropertyTypes.MAX_VALUE ) || null;
         const pFormat = propertiesMap.get( UIPropertyTypes.FORMAT ) || null;
 
-        // console.log( 'pMinValue', pMinValue );
-
         let valueType = ValueType.STRING;
         if ( propertiesMap.has( UIPropertyTypes.DATA_TYPE ) ) {
-            let str = this._uiePropExtractor.extractDataType( uie );
-            if ( enumUtil.isValue( ValueType, str ) ) {
-                valueType = str;
-            }
+            valueType = this._uiePropExtractor.extractDataType( uie );
         } else {
             //
             // Assumes INTEGER if it has some of the following properties, aiming at to
@@ -159,6 +153,7 @@ export class DataTestCaseAnalyzer {
                 valueType = ValueType.INTEGER;
             }
         }
+        // console.log( 'group', group, 'valueType', valueType, 'propertiesMap', propertiesMap.keys() );
 
         const validPair = new Pair( DTCAnalysisResult.VALID, [] );
         const incompatiblePair = new Pair( DTCAnalysisResult.INCOMPATIBLE, [] );

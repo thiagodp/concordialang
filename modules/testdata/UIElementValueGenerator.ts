@@ -17,7 +17,7 @@ import { Node } from '../ast/Node';
 import { Database } from '../ast/Database';
 import { Table } from '../ast/Table';
 import { QueryReferenceReplacer } from '../util/QueryReferenceReplacer';
-import { adjustValueToTheRightType } from '../util/ValueTypeDetector';
+import { adjustValueToTheRightType, ValueType } from '../util/ValueTypeDetector';
 import { Constant } from '../ast/Constant';
 import { Symbols } from '../req/Symbols';
 import { QueryParser } from '../db/QueryParser';
@@ -111,6 +111,10 @@ export class UIElementValueGenerator {
 
         // console.log( 'BEFORE cfg >>>>>>>>>>', cfg );
         // console.log( 'properties', propertiesMap.keys() );
+
+        // DATA TYPE
+
+        cfg.valueType = this._uiePropExtractor.extractDataType( uie ) || ValueType.STRING;
 
         // FORMAT
 

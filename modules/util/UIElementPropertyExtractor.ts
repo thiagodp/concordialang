@@ -5,7 +5,7 @@ import { Entities } from "../nlp/Entities";
 import { NLPEntity, NLPUtil } from "../nlp/NLPResult";
 import { convertCase } from "./CaseConversor";
 import { UIPropertyTypes } from "./UIPropertyTypes";
-import { ALL_VALUE_TYPES, ValueType } from "./ValueTypeDetector";
+import { ValueType } from "./ValueTypeDetector";
 import { Spec } from "../ast/Spec";
 import { LocatedException } from "../req/LocatedException";
 import { EditableUIElementTypes } from "./UIElementTypes";
@@ -47,20 +47,15 @@ export class UIElementPropertyExtractor {
         return nlpEntity.value;
     }
 
-    extractDataType( uie: UIElement ): string {
-
-        const defaultDataType = ValueType.STRING.toString();
-
+    extractDataType( uie: UIElement ): ValueType | null {
         const nlpEntity = this.extractPropertyValueAsEntity( this.extractProperty( uie, UIPropertyTypes.DATA_TYPE ) );
         if ( isDefined( nlpEntity ) ) {
-            // Assumes 'string' if the type is not expected
             const dataType: string = nlpEntity.value.toString().toLowerCase();
-            if ( ALL_VALUE_TYPES.map( t => t.toString() ).indexOf( dataType ) < 0 ) {
-                return defaultDataType;
+            if ( enumUtil.isValue( ValueType, dataType ) ) {
+                return dataType;
             }
         }
-
-        return defaultDataType;
+        return null;
     }
 
     extractIsEditable( uie: UIElement ): boolean {
