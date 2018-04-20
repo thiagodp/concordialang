@@ -387,17 +387,19 @@ export class TestCaseSSA extends SpecificationAnalyzer {
 
     detectTagContentAsIndex( tag: Tag, errors: LocatedException[] ): number | null {
 
-        let value = parseInt( tag.content.trim() );
-        if ( isNaN( value ) ) {
-            const msg = 'This tag must have a number.'
-            errors.push( new SemanticException( msg, tag.location ) );
-        } else if ( value <= 0 ) {
-            const msg = 'The tag content must be a number greater than zero.'
-            errors.push( new SemanticException( msg, tag.location ) );
-        } else {
+        let value = Array.isArray( tag.content ) ? tag.content[ 0 ] : tag.content;
+        if ( ! value ) {
             return value;
         }
-        return null;
+        value = parseInt( value.trim() );
+        if ( isNaN( value ) ) {
+            const msg = 'This tag must have a number.';
+            errors.push( new SemanticException( msg, tag.location ) );
+        } else if ( value <= 0 ) {
+            const msg = 'The tag content must be a number greater than zero.';
+            errors.push( new SemanticException( msg, tag.location ) );
+        }
+        return value;
     }
 
 }
