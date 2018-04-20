@@ -34,10 +34,10 @@ describe( 'TCGenTest', () => {
         cp = new SimpleCompiler( LANGUAGE );
 
         preTCGen = new PreTestCaseGenerator(
+            cp.nlpRec.variantSentenceRec,
             cp.langLoader,
             cp.language,
-            SEED,
-            cp.nlpRec.variantSentenceRec
+            SEED
         );
 
         gen = new TCGen( preTCGen );

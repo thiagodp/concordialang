@@ -20,6 +20,7 @@ describe( 'TSGenTest', () => {
 
     let ptcGen: PreTestCaseGenerator;
     const LANGUAGE: string = 'pt';
+    const SEED = 'concordia';
 
     let cp: SimpleCompiler;
     let variantToTestScenariosMap: Map< Variant, TestScenario[] >;
@@ -31,10 +32,10 @@ describe( 'TSGenTest', () => {
         postconditionNameToVariantsMap = new Map< string, Variant[] >();
 
         ptcGen = new PreTestCaseGenerator(
+            cp.nlpRec.variantSentenceRec,
             cp.langLoader,
             cp.language,
-            'myseed',
-            cp.nlpRec.variantSentenceRec
+            SEED,
         );
 
         gen = new TSGen(

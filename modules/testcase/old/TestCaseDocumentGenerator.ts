@@ -1,24 +1,24 @@
-import { Spec } from "../ast/Spec";
-import { Document } from "../ast/Document";
-import { LocatedException } from "../req/LocatedException";
-import { Variant } from "../ast/Variant";
-import { TestCase } from "../ast/TestCase";
-import { isDefined } from "../util/TypeChecking";
-import { ReservedTags } from "../req/ReservedTags";
-import { Symbols } from "../req/Symbols";
-import { Options } from "../app/Options";
-import { Node, ContentNode } from "../ast/Node";
-import { Location } from "../ast/Location";
-import { Import } from "../ast/Import";
-import { FileInfo } from "../ast/FileInfo";
-import { Language } from "../ast/Language";
-import { DocumentUtil } from "../util/DocumentUtil";
-import { NodeTypes } from "../req/NodeTypes";
+import { Spec } from "../../ast/Spec";
+import { Document } from "../../ast/Document";
+import { LocatedException } from "../../req/LocatedException";
+import { Variant } from "../../ast/Variant";
+import { TestCase } from "../../ast/TestCase";
+import { isDefined } from "../../util/TypeChecking";
+import { ReservedTags } from "../../req/ReservedTags";
+import { Symbols } from "../../req/Symbols";
+import { Options } from "../../app/Options";
+import { Node, ContentNode } from "../../ast/Node";
+import { Location } from "../../ast/Location";
+import { Import } from "../../ast/Import";
+import { FileInfo } from "../../ast/FileInfo";
+import { Language } from "../../ast/Language";
+import { DocumentUtil } from "../../util/DocumentUtil";
+import { NodeTypes } from "../../req/NodeTypes";
 import Graph = require( 'graph.js/dist/graph.full.js' );
 import { join, basename, extname, dirname, relative, parse } from 'path';
 import { EventEmitter } from 'events';
 import { deepcopy } from 'deepcopy';
-import { Scenario } from "../ast/Scenario";
+import { Scenario } from "../../ast/Scenario";
 
 /**
  * Events related to the generation of Documents with Variants.

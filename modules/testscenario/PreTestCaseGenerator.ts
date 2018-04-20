@@ -63,10 +63,10 @@ export class PreTestCaseGenerator {
     private readonly _uieValueGen: UIElementValueGenerator;
 
     constructor(
+        private readonly _variantSentenceRec: VariantSentenceRecognizer,
         public readonly langContentLoader: LanguageContentLoader,
         public readonly defaultLanguage: string,
         public readonly seed: string,
-        private readonly _variantSentenceRec: VariantSentenceRecognizer,
         public readonly uiLiteralCaseOption: CaseType = CaseType.CAMEL,
         public readonly minRandomStringSize = 0,
         public readonly maxRandomStringSize = 100,

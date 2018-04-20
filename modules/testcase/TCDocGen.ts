@@ -2,7 +2,6 @@ import { Document } from "../ast/Document";
 import { TestCase } from "../ast/TestCase";
 import { parse, relative, join, dirname, basename } from "path";
 import { FileInfo } from "../ast/FileInfo";
-import { TestCaseDocumentGenerator } from "./TestCaseDocumentGenerator";
 import { Language } from "../ast/Language";
 import * as deepcopy from 'deepcopy';
 import { Import } from "../ast/Import";

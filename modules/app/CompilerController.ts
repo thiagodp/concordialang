@@ -15,6 +15,8 @@ import { Compiler } from "./Compiler";
 import { LanguageManager } from "./LanguageManager";
 import { LexerBuilder } from "../lexer/LexerBuilder";
 import { LanguageContentLoader, JsonLanguageContentLoader } from "../dict/LanguageContentLoader";
+import Graph = require( 'graph.js/dist/graph.full.js' );
+import { TCGenController } from "./TCGenController";
 
 /**
  * Compiler controller
@@ -23,7 +25,7 @@ import { LanguageContentLoader, JsonLanguageContentLoader } from "../dict/Langua
  */
 export class CompilerController {
 
-    public async compile( options: Options, cli: CLI ): Promise< Spec > {
+    public async compile( options: Options, cli: CLI ): Promise< [ Spec, Graph ] > {
 
         const langLoader: LanguageContentLoader =
             new JsonLanguageContentLoader( options.languageDir, {}, options.encoding );
@@ -61,7 +63,23 @@ export class CompilerController {
             specAnalyzer
         );
 
-        return await compiler.compile( options, listener );
+        let [ spec, graph ] = await compiler.compile( options, listener );
+
+        console.log( 'Generate?', ! options.generateTestCases ? 'no': 'yes' );
+
+        if ( ! options.generateTestCases ) {
+            return [ spec, graph ];
+        }
+
+        const tcGenCtrl = new TCGenController();
+
+        return await tcGenCtrl.execute(
+            nlpBasedSentenceRecognizer.variantSentenceRec,
+            langLoader,
+            options,
+            spec,
+            graph
+        );
     }
 
 }

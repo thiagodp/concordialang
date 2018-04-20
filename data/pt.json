@@ -51,18 +51,18 @@
     "testCaseNames": {
 
         "VALUE_LOWEST": "menor valor aplicável",
-        "VALUE_RANDOM_BELOW_MIN": "VALUE_RANDOM_BELOW_MIN",
-        "VALUE_JUST_BELOW_MIN": "VALUE_JUST_BELOW_MIN",
-        "VALUE_MIN": "VALUE_MIN",
-        "VALUE_JUST_ABOVE_MIN": "VALUE_JUST_ABOVE_MIN",
-        "VALUE_ZERO": "VALUE_ZERO",
-        "VALUE_MEDIAN": "VALUE_MEDIAN",
-        "VALUE_RANDOM_BETWEEN_MIN_MAX": "VALUE_RANDOM_BETWEEN_MIN_MAX",
-        "VALUE_JUST_BELOW_MAX": "VALUE_JUST_BELOW_MAX",
-        "VALUE_MAX": "VALUE_MAX",
-        "VALUE_JUST_ABOVE_MAX": "VALUE_JUST_ABOVE_MAX",
-        "VALUE_RANDOM_ABOVE_MAX": "VALUE_RANDOM_ABOVE_MAX",
-        "VALUE_GREATEST": "VALUE_GREATEST",
+        "VALUE_RANDOM_BELOW_MIN": "aleatório abaixo do mínimo",
+        "VALUE_JUST_BELOW_MIN": "valor logo abaixo do mínimo",
+        "VALUE_MIN": "valor mínimo",
+        "VALUE_JUST_ABOVE_MIN": "valor logo acima do mínimo",
+        "VALUE_ZERO": "valor zero",
+        "VALUE_MEDIAN": "valor médio",
+        "VALUE_RANDOM_BETWEEN_MIN_MAX": "valor aleatório entre o mínimo e o máximo",
+        "VALUE_JUST_BELOW_MAX": "valor logo abaixo do máximo",
+        "VALUE_MAX": "valor máximo",
+        "VALUE_JUST_ABOVE_MAX": "valor logo acima do máximo",
+        "VALUE_RANDOM_ABOVE_MAX": "valor aleatório acima do máximo",
+        "VALUE_GREATEST": "maior valor aplicável",
 
         "LENGTH_LOWEST": "LENGTH_LOWEST",
         "LENGTH_RANDOM_BELOW_MIN": "LENGTH_RANDOM_BELOW_MIN",
@@ -85,8 +85,8 @@
         "SET_LAST_ELEMENT": "SET_LAST_ELEMENT",
         "SET_NOT_IN_SET": "SET_NOT_IN_SET",
 
-        "REQUIRED_FILLED": "obrigatório preenchido",
-        "REQUIRED_NOT_FILLED": "obrigatório não preenchido",
+        "REQUIRED_FILLED": "preenchido",
+        "REQUIRED_NOT_FILLED": "não preenchido",
 
         "COMPUTATION_RIGHT": "COMPUTATION_RIGHT",
         "COMPUTATION_WRONG": "COMPUTATION_WRONG"

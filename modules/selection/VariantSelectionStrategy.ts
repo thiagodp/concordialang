@@ -38,11 +38,11 @@ export class FirstVariantSelectionStrategy implements VariantSelectionStrategy {
 }
 
 /**
- * Variant selection strategy in which a variant is randomly selected
+ * Variant selection strategy in which a single variant is randomly selected
  *
  * @author Thiago Delgado Pinto
  */
-export class RandomVariantSelectionStrategy implements VariantSelectionStrategy {
+export class SingleRandomVariantSelectionStrategy implements VariantSelectionStrategy {
 
     constructor( private _seed: string ) {
     }

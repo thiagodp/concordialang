@@ -8,7 +8,7 @@ import { BatchSpecificationAnalyzer } from "../../modules/semantic/BatchSpecific
 import { LocatedException } from "../../modules/req/LocatedException";
 import { Variant } from "../../modules/ast/Variant";
 import { TestPlanMaker } from "../../modules/testcase/TestPlanMaker";
-import { AllValidMix, JustOneInvalidMix } from "../../modules/testcase/DataTestCaseMix";
+import { OnlyValidMix, JustOneInvalidMix } from "../../modules/testcase/DataTestCaseMix";
 import { SingleRandomOfEachStrategy, IndexOfEachStrategy } from "../../modules/selection/CombinationStrategy";
 import { RandomString } from "../../modules/testdata/random/RandomString";
 import { Random } from "../../modules/testdata/random/Random";
@@ -27,10 +27,10 @@ describe( 'PreTestCaseGeneratorTest', () => {
         cp = new SimpleCompiler( LANGUAGE );
 
         gen = new PreTestCaseGenerator(
+            cp.nlpRec.variantSentenceRec,
             cp.langLoader,
             cp.language,
-            SEED,
-            cp.nlpRec.variantSentenceRec
+            SEED
         );
     } );
 
@@ -71,7 +71,7 @@ describe( 'PreTestCaseGeneratorTest', () => {
         // expect( doc2.fileErrors ).toEqual( [] );
 
         const testPlanMakers: TestPlanMaker[] = [
-            new TestPlanMaker( new AllValidMix(), new SingleRandomOfEachStrategy( SEED ) )
+            new TestPlanMaker( new OnlyValidMix(), new SingleRandomOfEachStrategy( SEED ) )
         ];
 
         const ctx1 = new GenContext( spec, doc1, errors, warnings );
@@ -128,7 +128,7 @@ describe( 'PreTestCaseGeneratorTest', () => {
         // expect( doc2.fileErrors ).toEqual( [] );
 
         const testPlanMakers: TestPlanMaker[] = [
-            new TestPlanMaker( new AllValidMix(), new SingleRandomOfEachStrategy( SEED ) )
+            new TestPlanMaker( new OnlyValidMix(), new SingleRandomOfEachStrategy( SEED ) )
         ];
 
         const ctx1 = new GenContext( spec, doc1, errors, warnings );
@@ -190,7 +190,7 @@ describe( 'PreTestCaseGeneratorTest', () => {
         // expect( doc2.fileErrors ).toEqual( [] );
 
         const testPlanMakers: TestPlanMaker[] = [
-            new TestPlanMaker( new AllValidMix(), new SingleRandomOfEachStrategy( SEED ) )
+            new TestPlanMaker( new OnlyValidMix(), new SingleRandomOfEachStrategy( SEED ) )
         ];
 
         const ctx1 = new GenContext( spec, doc1, errors, warnings );
@@ -245,7 +245,7 @@ describe( 'PreTestCaseGeneratorTest', () => {
         // expect( doc2.fileErrors ).toEqual( [] );
 
         const testPlanMakers: TestPlanMaker[] = [
-            new TestPlanMaker( new AllValidMix(), new SingleRandomOfEachStrategy( SEED ) )
+            new TestPlanMaker( new OnlyValidMix(), new SingleRandomOfEachStrategy( SEED ) )
         ];
 
         const ctx1 = new GenContext( spec, doc1, errors, warnings );
@@ -309,7 +309,7 @@ describe( 'PreTestCaseGeneratorTest', () => {
 
         const testPlanMakers: TestPlanMaker[] = [
             // new TestPlanMaker( new AllValidMix(), new SingleRandomOfEachStrategy( SEED ) )
-            new TestPlanMaker( new AllValidMix(), new IndexOfEachStrategy( 1 ) )
+            new TestPlanMaker( new OnlyValidMix(), new IndexOfEachStrategy( 1 ) )
         ];
 
         const ctx1 = new GenContext( spec, doc1, errors, warnings );
@@ -369,7 +369,7 @@ describe( 'PreTestCaseGeneratorTest', () => {
 
         const testPlanMakers: TestPlanMaker[] = [
             // new TestPlanMaker( new AllValidMix(), new SingleRandomOfEachStrategy( SEED ) )
-            new TestPlanMaker( new AllValidMix(), new IndexOfEachStrategy( 1 ) )
+            new TestPlanMaker( new OnlyValidMix(), new IndexOfEachStrategy( 1 ) )
         ];
 
         const ctx1 = new GenContext( spec, doc1, errors, warnings );

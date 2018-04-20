@@ -10,6 +10,8 @@ import { PluginManager } from '../plugin/PluginManager';
 import { Plugin } from '../plugin/Plugin';
 import { TestScriptExecutionOptions } from '../testscript/TestScriptExecution';
 import { CliScriptExecutionReporter } from './CliScriptExecutionReporter';
+import { TCGenController } from './TCGenController';
+import Graph = require( 'graph.js/dist/graph.full.js' );
 
 /**
  * Application controller
@@ -98,10 +100,14 @@ export class AppController {
 
         let hasErrors: boolean = false;
         let spec: Spec = null;
+        let graph: Graph = null;
         if ( options.compileSpecification ) {
+            if ( ! options.generateTestCases ) {
+                cli.newLine( cli.symbolInfo, 'Test Case generation disabled.' );
+            }
             let compilerController: CompilerController = new CompilerController();
             try {
-                spec = await compilerController.compile( options, cli );
+                [ spec, graph ] = await compilerController.compile( options, cli );
             } catch ( err ) {
                 hasErrors = true;
                 cli.newLine( cli.symbolError, err.message );
@@ -113,21 +119,35 @@ export class AppController {
         //cli.newLine( '-=[ SPEC ]=-', "\n\n" );
         //cli.newLine( spec );
 
-        if ( options.generateTestCases ) {
-            // TO-DO
-        } else {
-            cli.newLine( cli.symbolInfo, 'Example generation disabled.' );
-        }
-
         if ( ! plugin && ( options.generateScripts || options.executeScripts || options.analyzeResults ) ) {
             cli.newLine( cli.symbolWarning, 'A plugin must be defined.' );
             return true;
         }
 
-        if ( options.generateScripts ) { // Requires a plugin
-            // TO-DO
-        } else {
-            cli.newLine( cli.symbolInfo, 'Script generation disabled.' );
+        if ( spec !== null ) {
+            if ( options.generateScripts ) { // Requires a plugin
+
+                // TO-DO
+
+                // Spec may have a method which returns the all the available test cases
+                //
+                // Then there could be a ScriptGeneratorController that does this:
+                //
+                // let availableTC = spec.availableTestCases();
+                // let filteredTC = ( new TCFilter() ).filter( availableTC, options );
+                // let abstractTS = ( new TCToATS() ).convertToAbstractTestScripts( filteredTC );
+                //
+                //
+                // So we could call it here this way:
+                //
+                // let scriptGenCtrl = new ScriptGeneratorController();
+                // let abstractTestScripts = await scriptGen.generateAbstractTestScripts( spec, options, cli );
+                // await plugin.generateScriptsFrom( abstractTestScripts );
+                //
+
+            } else {
+                cli.newLine( cli.symbolInfo, 'Script generation disabled.' );
+            }
         }
 
         if ( options.executeScripts ) { // Requires a plugin

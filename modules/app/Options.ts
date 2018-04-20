@@ -1,7 +1,8 @@
 import { resolve } from 'path';
-import { Defaults } from './Defaults';
+import { Defaults, VariantSelectionOptions, StateCombinationOptions, CombinationOptions } from './Defaults';
 import { CaseType } from './CaseType';
 import { isString, isNumber, isDefined } from '../util/TypeChecking';
+import * as enumUtil from 'enum-util';
 
 /**
  * Application options
@@ -32,40 +33,104 @@ export class Options {
     public pluginInstall: boolean = false; // install an available plug-in
     public pluginUninstall: boolean = false; // uninstall an available plug-in
 
-    // Processing
-    public verbose: boolean = false; // verbose output
-    public stopOnTheFirstError: boolean = false; // stop on the first error
+    // PROCESSING
+
+    /** Verbose output */
+    public verbose: boolean = false;
+    /** Stop on the first error */
+    public stopOnTheFirstError: boolean = false;
+    /** Whether it is desired to compile the specification */
     public compileSpecification: boolean = true;
-    public generateTestCases: boolean = true; // generate test cases
-    public generateScripts: boolean = true; // generate test scripts through a plugin
-    public executeScripts: boolean = true; // execute test scripts through a plugin
-    public analyzeResults: boolean = true; // analyze execution results through a plugin
-    public dirTestCases: string = this.directory; // output directory for test cases
-    public dirScripts: string = this.defaults.DIR_SCRIPT; // output directory for test scripts
-    public dirResult: string = this.defaults.DIR_SCRIPT_RESULT; // output directory of test script results
-    public extensionFeature: string = this.defaults.EXTENSION_FEATURE; // extension for feature files // TO-DO: convert from meow
-    public extensionTestCase: string = this.defaults.EXTENSION_TEST_CASE; // extension for test case files // TO-DO: convert from meow
-    public lineBreaker: string = this.defaults.LINE_BREAKER; // TO-DO: convert from meow
+    /** Whether it is desired to generate test case files */
+    public generateTestCases: boolean = true;
+    /** Whether it is desired to generate test script files */
+    public generateScripts: boolean = true;
+    /** Whether it is desired to execute test script files */
+    public executeScripts: boolean = true;
+    /** Whether it is desired to analyze test script results */
+    public analyzeResults: boolean = true;
+    /** Output directory for test case files */
+    public dirTestCases: string | null = this.defaults.DIR_TEST_CASE;
+    /** Output directory for test script files */
+    public dirScripts: string = this.defaults.DIR_SCRIPT;
+    /** Output directory of test script results */
+    public dirResult: string = this.defaults.DIR_SCRIPT_RESULT;
+    /** Extension for feature files */
+    public extensionFeature: string = this.defaults.EXTENSION_FEATURE; // TO-DO: convert from meow
+    /** Extension for test case files */
+    public extensionTestCase: string = this.defaults.EXTENSION_TEST_CASE; // TO-DO: convert from meow
+    /** Characters used to break lines in text files */
+    public lineBreaker: string = this.defaults.LINE_BREAKER;
 
-    // Code generation
-    public caseUi: string = this.defaults.CASE_UI; // string case used for UI Elements' ids when an id is not defined
-    public caseMethod: string = this.defaults.CASE_METHOD; // string case used for test scripts' methods
 
-    // Randomic generation
-    public seed: string = null; // random seed to use (null will make the tool to generate a seed)
-    public randomValid: number = 1; // number of test cases with valid random values
-    public randomInvalid: number = 1; // number of test cases with invalid random values
+    // CONTENT GENERATION
 
-    // Specification selection
-    public selMinFeature: number = 0; // minimum feature importance
-    public selMaxFeature: number = 0; // maximum feature importance
-    public selMinScenario: number = 0; // minimum scenario importance
-    public selMaxScenario: number = 0; // maximum scenario importance
-    public selFilter: string = ''; // filter by tags @see https://github.com/telefonicaid/tartare#tags-and-filters
+    /**
+     * String case used for UI Elements' ids when an id is not defined.
+     *
+     * @see CaseType
+     */
+    public caseUi: string = this.defaults.CASE_UI;
 
-    // Combination strategies
-    public selVariant: string = this.defaults.SEL_VARIANT; // random|first|fmi|all
-    public selState: string = this.defaults.SEL_STATE; // sow|onewise|all
+    /**
+     * String case used for test scripts' methods.
+     *
+     * @see CaseType
+     */
+    public caseMethod: string = this.defaults.CASE_METHOD;
+
+    /** Whether it is desired to suppress header comments in test case files */
+    public tcSuppressHeader: boolean = false;
+
+    /** Character used as indenter for test case files */
+    public tcIndenter: string = this.defaults.TC_INDENTER;
+
+
+    // RANDOMIC GENERATION
+
+    /** Random seed to use (null will make the tool to generate a seed) */
+    public seed: string = null;
+    /** Number of test cases with valid random values */
+    public randomValid: number = 1;
+    /** Number of test cases with invalid random values */
+    public randomInvalid: number = 1;
+    /** Minimum size for random strings */
+    public randomStringMinSize: number = this.defaults.RANDOM_STRING_MIN_SIZE;
+    /** Maximum size for random strings */
+    public randomStringMaxSize: number = this.defaults.RANDOM_STRING_MAX_SIZE;
+    /** How many tries it will make to generate random values that are not in a set */
+    public randomTriesToInvalidValues: number = this.defaults.RANDOM_TRIES_TO_INVALID_VALUES;
+
+    // SPECIFICATION SELECTION
+
+    /** Default importance value */
+    public importance: number = this.defaults.IMPORTANCE;
+    /** Minimum feature importance */
+    public selMinFeature: number = 0;
+    /** Maximum feature importance */
+    public selMaxFeature: number = 0;
+    /** Minimum scenario importance */
+    public selMinScenario: number = 0;
+    /** Maximum scenario importance */
+    public selMaxScenario: number = 0;
+    /** Filter by tags
+     * @see https://github.com/telefonicaid/tartare#tags-and-filters */
+    public selFilter: string = '';
+
+    // TEST SCENARIO SELECTION AND COMBINATION STRATEGIES
+
+    /** @see VariantSelectionOptions */
+    public variantSelection: string = this.defaults.VARIANT_SELECTION;
+
+    /** @see StateCombinationOptions */
+    public stateCombination: string = this.defaults.STATE_COMBINATION;
+
+    // SELECTION AND COMBINATION STRATEGIES FOR DATA TEST CASES
+
+    /** @see Defaults */
+    public invalid: number | string = this.defaults.INVALID_DATA_TEST_CASES_AT_A_TIME;
+    /** @see DataTestCaseCombinationOptions */
+    public dataCombination: string = this.defaults.DATA_TEST_CASE_COMBINATION;
 
     // Test script filtering
     public runMinFeature: number = 0; // minimum feature importance
@@ -142,6 +207,44 @@ export class Options {
 
     public hasPluginName(): boolean {
         return this.plugin !== null && this.plugin !== undefined;
+    }
+
+    public typedCaseUI(): CaseType {
+        if ( enumUtil.isValue( CaseType, this.caseUi ) ) {
+            return this.caseUi;
+        }
+        if ( enumUtil.isValue( CaseType, this.defaults.CASE_UI ) ) {
+            return this.defaults.CASE_UI;
+        }
+        return CaseType.CAMEL;
+    }
+
+    public typedVariantSelection(): VariantSelectionOptions {
+        if ( enumUtil.isValue( VariantSelectionOptions, this.variantSelection ) ) {
+            return this.variantSelection;
+        }
+        if ( enumUtil.isValue( VariantSelectionOptions, this.defaults.VARIANT_SELECTION ) ) {
+            return this.defaults.VARIANT_SELECTION;
+        }
+        return VariantSelectionOptions.SINGLE_RANDOM;
+    }
+
+    public typedStateCombination(): CombinationOptions {
+        return this.typedCombinationFor( this.stateCombination, this.defaults.STATE_COMBINATION );
+    }
+
+    public typedDataCombination(): CombinationOptions {
+        return this.typedCombinationFor( this.dataCombination, this.defaults.DATA_TEST_CASE_COMBINATION );
+    }
+
+    private typedCombinationFor( value: string, defaultValue: string ): CombinationOptions {
+        if ( enumUtil.isValue( CombinationOptions, value ) ) {
+            return value;
+        }
+        if ( enumUtil.isValue( CombinationOptions, defaultValue ) ) {
+            return defaultValue;
+        }
+        return CombinationOptions.SHUFFLED_ONE_WISE;
     }
 
     /**
@@ -247,12 +350,23 @@ export class Options {
             this.dirResult = flags.dirResults.trim().toLowerCase();
         }
 
-        // CODE GENERATION
+        if ( isString( flags.lineBreaker ) ) {
+            this.lineBreaker = flags.lineBreaker;
+        }
+
+        // CONTENT GENERATION
+
         if ( isString( flags.caseUi ) ) {
             this.caseUi = flags.caseUi;
         }
         if ( isString( flags.caseMethod ) ) {
             this.caseMethod = flags.caseMethod;
+        }
+
+        this.tcSuppressHeader = isDefined( flags.tcSuppressHeader );
+
+        if ( isString( flags.tcIndenter ) ) {
+            this.tcIndenter = flags.tcIndenter;
         }
 
         // RANDOMIC GENERATION
@@ -267,8 +381,19 @@ export class Options {
             this.randomInvalid = parseInt( flags.randomInvalid );
         }
 
+        if ( isNumber( flags.randomStringMinSize ) ) {
+            this.randomStringMinSize = parseInt( flags.randomStringMinSize );
+        }
+
+        if ( isNumber( flags.randomStringMaxSize ) ) {
+            this.randomStringMaxSize = parseInt( flags.randomStringMaxSize );
+        }
+
         // SPECIFICATION SELECTION
 
+        if ( isNumber( flags.importance ) ) {
+            this.importance = parseInt( flags.importance );
+        }
         if ( isNumber( flags.selMinFeature ) ) {
             this.selMinFeature = parseInt( flags.selMinFeature );
         }
@@ -285,12 +410,28 @@ export class Options {
             this.selFilter = flags.selFilter;
         }
 
-        // COMBINATION STRATEGIES
-        if ( isString( flags.selVariant ) ) {
-            this.selVariant = flags.selVariant;
+        // TEST SCENARIO SELECTION AND COMBINATION STRATEGIES
+
+        if ( isString( flags.variantSelection )
+            && enumUtil.isValue( VariantSelectionOptions, flags.variantSelection ) ) {
+            this.variantSelection = flags.variantSelection;
         }
-        if ( isString( flags.selState ) ) {
-            this.selState = flags.selState;
+        if ( isString( flags.stateCombination )
+            && enumUtil.isValue( CombinationOptions, flags.stateCombination ) ) {
+            this.stateCombination = flags.stateCombination;
+        }
+
+        // SELECTION AND COMBINATION STRATEGIES FOR DATA TEST CASES
+
+        if ( isNumber( flags.invalid ) && Number( flags.invalid ) >= 0 ) {
+            this.invalid = parseInt( flags.invalid );
+        } else if ( isString( flags.invalid ) ) {
+
+        }
+
+        if ( isString( flags.dataCombination )
+            && enumUtil.isValue( CombinationOptions, flags.dataCombination ) ) {
+            this.dataCombination = flags.dataCombination;
         }
 
         // TEST SCRIPT FILTERING
@@ -312,6 +453,7 @@ export class Options {
         }
 
         // INFO
+
         this.help = isDefined( flags.help );
         this.about = isDefined( flags.about );
         this.version = isDefined( flags.version );
@@ -384,23 +526,5 @@ export class Options {
         this.version = this.version && ! this.help;
         this.newer = this.newer && ! this.help;
     }
-
-    /*
-    validate(): string[] {
-
-        let errors: string[] = [];
-        let def = new Defaults();
-
-        if ( def.availableLanguages().indexOf( this.language ) < 0 ) {
-            errors.push( 'Language ' + this.language + ' not available.' );
-        }
-
-        if ( def.availableEncodings().indexOf( this.encoding ) < 0 ) {
-            errors.push( 'Encoding ' + this.encoding + ' not available.' );
-        }
-
-        return errors;
-    }
-    */
 
 }

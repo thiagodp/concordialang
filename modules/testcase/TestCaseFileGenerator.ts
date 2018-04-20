@@ -2,28 +2,16 @@ import { Document } from "../ast/Document";
 import { LanguageContentLoader } from "../dict/LanguageContentLoader";
 import { KeywordDictionary } from "../dict/KeywordDictionary";
 import { EnglishKeywordDictionary } from "../dict/EnglishKeywordDictionary";
-import { promisify } from 'util';
-import { EventEmitter } from "events";
 import { Symbols } from "../req/Symbols";
 import { NodeTypes } from "../req/NodeTypes";
 import { upperFirst } from "../util/CaseConversor";
-
-/**
- * Events related to the generation of files for Documents with Test Cases.
- *
- * @author Thiago Delgado Pinto
- */
-export enum TestCaseFileGeneratorEvents {
-    NEW_FILE = 'concordia:testCase:newFile'
-}
-
 
 /**
  * Generates files for Documents with Test Cases.
  *
  * @author Thiago Delgado Pinto
  */
-export class TestCaseFileGenerator extends EventEmitter {
+export class TestCaseFileGenerator {
 
     public readonly fileHeader: string[] = [
         '# Generated with ❤ by Concordia',
@@ -38,7 +26,6 @@ export class TestCaseFileGenerator extends EventEmitter {
         private _languageContentLoader: LanguageContentLoader,
         private language: string
     ) {
-        super();
         // Loads/gets the dictionary according to the current language
         let langContent = _languageContentLoader.load( language );
         this._dict = langContent.keywords || new EnglishKeywordDictionary();
@@ -99,23 +86,15 @@ export class TestCaseFileGenerator extends EventEmitter {
                 if ( NodeTypes.STEP_AND === sentence.nodeType ) {
                     ind += indentation;
                 }
-                lines.push( ind + sentence.content );
+
+                let line = ind + sentence.content +
+                    ( ! sentence.comment ? '' : ' ' + Symbols.COMMENT_PREFIX + sentence.comment );
+
+                lines.push( line );
             }
         }
 
         return lines;
-    }
-
-
-    async createFile(
-        fs: any,
-        path: string,
-        lines: string[],
-        lineBreaker: string = "\n"
-    ): Promise< void > {
-        const writeFileAsync = promisify( fs.writeFile );
-        await writeFileAsync( path, lines.join( lineBreaker ) );
-        this.emit( TestCaseFileGeneratorEvents.NEW_FILE, path );
     }
 
 
@@ -129,22 +108,22 @@ export class TestCaseFileGenerator extends EventEmitter {
     }
 
     generateLanguageLine( language: string, dict: KeywordDictionary ): string {
-        return Symbols.COMMENT_PREFIX + ( dict.language[ 0 ] || 'language' ) +
+        return Symbols.COMMENT_PREFIX +
+            ( ! dict.language ? 'language' : dict.language[ 0 ] || 'language' ) +
             Symbols.LANGUAGE_SEPARATOR + language;
     }
 
     generateImportLine( path: string, dict: KeywordDictionary ): string  {
-        return ( dict.import[ 0 ] || 'import' ) + ' ' +
+        return ( ! dict.import ? 'import' : dict.import[ 0 ] || 'import' ) + ' ' +
             Symbols.IMPORT_PREFIX + path + Symbols.IMPORT_SUFFIX;
     }
 
     generateTagLine( name: string, content: string ): string {
-        return Symbols.TAG_PREFIX + name +
-            ( content && content.length > 0 ? '(' + content + ')' : '' );
+        return Symbols.TAG_PREFIX + name + ( ! content ? '' : '(' + content + ')' );
     }
 
     generateTestCaseHeader( name: string, dict: KeywordDictionary ): string  {
-        return upperFirst( dict.testCase[ 0 ] || 'Test Case' ) +
+        return upperFirst( ! dict ? 'Test Case' : dict.testCase[ 0 ] || 'Test Case' ) +
             Symbols.TITLE_SEPARATOR + ' ' + name;
     }
 

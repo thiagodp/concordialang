@@ -5,7 +5,6 @@ import { TestPlanMaker } from "./TestPlanMaker";
 import { Pair } from "ts-pair";
 import { Step } from "../ast/Step";
 import { PreTestCase } from "../testscenario/PreTestCase";
-import { TestCaseDocumentGenerator } from "./TestCaseDocumentGenerator";
 import { NodeTypes } from "../req/NodeTypes";
 import { Tag } from "../ast/Tag";
 import { ReservedTags } from "../req/ReservedTags";

@@ -22,7 +22,7 @@ import * as deepcopy from 'deepcopy';
 import { upperFirst } from "../util/CaseConversor";
 import { PreTestCaseGenerator, GenContext } from "./PreTestCaseGenerator";
 import { TestPlanMaker } from "../testcase/TestPlanMaker";
-import { AllValidMix } from "../testcase/DataTestCaseMix";
+import { OnlyValidMix } from "../testcase/DataTestCaseMix";
 
 /**
  * Test Scenario generator
@@ -54,7 +54,7 @@ export class TSGen {
 
         // Makes a PlanMaker to create valid values for Precondition scenarios
         this._validValuePlanMaker = new TestPlanMaker(
-            new AllValidMix(),
+            new OnlyValidMix(),
             new SingleRandomOfEachStrategy( this.seed )
         );
     }

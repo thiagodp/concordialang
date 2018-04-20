@@ -60,7 +60,7 @@ export interface DataTestCaseMix {
  *
  * @author Thiago Delgado Pinto
  */
-export class AllValidMix implements DataTestCaseMix {
+export class OnlyValidMix implements DataTestCaseMix {
 
     /** @inheritDoc */
     select( map: TestAnalysisMap, alwaysValidVariables: string[] ): object[] {
@@ -143,13 +143,13 @@ export class JustOneInvalidMix implements DataTestCaseMix {
 // TODO: UntouchedMix - all the DataTestCases will be combined.
 
 /**
- * All UI Elements will contain VALID DataTestCases only.
+ * All UI Elements will contain INVALID DataTestCases only.
  *
  * Useful testing all the exceptional conditions simultaneously.
  *
  * @author Thiago Delgado Pinto
  */
-export class AllInvalidMix implements DataTestCaseMix {
+export class OnlyInvalidMix implements DataTestCaseMix {
 
     /** @inheritDoc */
     select( map: TestAnalysisMap, alwaysValidVariables: string[] ): object[] {
@@ -167,6 +167,32 @@ export class AllInvalidMix implements DataTestCaseMix {
             }
         }
         return [ obj ];
+    }
+
+}
+
+
+/**
+ * Does not filter the available elements.
+ *
+ * @author Thiago Delgado Pinto
+ */
+export class UnfilteredMix implements DataTestCaseMix {
+
+    /** @inheritDoc */
+    select( map: TestAnalysisMap, alwaysValidVariables: string[] ): object[] {
+        let all = [];
+        for ( let [ uieName, dtcMap ] of map ) {
+            let obj = {};
+            for ( let [ uieName, dtcMap ] of map ) {
+                obj[ uieName ] = [];
+                for ( let [ dtc, pair ] of dtcMap ) {
+                    obj[ uieName ].push( new UIETestPlan( dtc, pair.getFirst(), pair.getSecond() ) );
+                }
+            }
+            all.push( obj );
+        }
+        return all;
     }
 
 }

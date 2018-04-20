@@ -9,6 +9,7 @@ import { CompilerListener, ProcessingInfo } from "./CompilerListener";
 import { Warning } from "../req/Warning";
 import { SpecFilter } from "../selection/SpecFilter";
 import { isDefined } from "../util/TypeChecking";
+import Graph = require( 'graph.js/dist/graph.full.js' );
 
 /**
  * Compiler
@@ -23,7 +24,7 @@ export class Compiler {
     ) {
     }
 
-    public compile = async ( options: Options, listener: CompilerListener ): Promise< Spec > => {
+    public compile = async ( options: Options, listener: CompilerListener ): Promise< [ Spec, Graph ] > => {
 
         listener.compilerStarted( options );
 
@@ -69,7 +70,7 @@ export class Compiler {
         // const durationMs = Date.now() - startTime;
         // listener.compilerFinished( durationMs );
 
-        return spec;
+        return [ spec, graph ];
     };
 
 }

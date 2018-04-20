@@ -11,6 +11,12 @@ import { TestPlan } from './TestPlan';
  */
 export class TestPlanMaker {
 
+    /**
+     * Constructor
+     *
+     * @param mixingStrategy How many UI Elements will receive invalid data at a time.
+     * @param combinationStrategy How the DataTestCases of each UI Element will be combined.
+     */
     constructor(
         public readonly mixingStrategy: DataTestCaseMix,
         public readonly combinationStrategy: CombinationStrategy
