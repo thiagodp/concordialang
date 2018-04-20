@@ -58,6 +58,16 @@ export interface DataTestCaseMix {
  * Useful mainly for producing combinations for Preconditions or State Calls, in which
  * the called Test Cases must produce the required State.
  *
+ * Example:
+ * ```
+ * [
+ *  {
+ *      "a": [ VALUE_MIN => valid, VALUE_MAX => valid ]
+ *      "b": [ LENGTH_MIN => valid, LENGTH_MAX => valid ]
+ *      "c": [ FORMAT_VALID => valid ]
+ *  },
+ * ```
+ *
  * @author Thiago Delgado Pinto
  */
 export class OnlyValidMix implements DataTestCaseMix {
@@ -68,8 +78,9 @@ export class OnlyValidMix implements DataTestCaseMix {
         for ( let [ uieName, dtcMap ] of map ) {
             obj[ uieName ] = [];
             for ( let [ dtc, pair ] of dtcMap ) {
-                if ( DTCAnalysisResult.VALID === pair.getFirst() ) {
-                    obj[ uieName ].push( new UIETestPlan( dtc, pair.getFirst(), pair.getSecond() ) );
+                let [ result, oracles ] = pair.toArray();
+                if ( DTCAnalysisResult.VALID === result ) {
+                    obj[ uieName ].push( new UIETestPlan( dtc, result, oracles ) );
                 }
             }
         }
@@ -84,6 +95,28 @@ export class OnlyValidMix implements DataTestCaseMix {
  * the other ones will contain only VALID DataTestCases.
  *
  * Useful for testing a single UI Element at a time.
+ *
+ * Example:
+ * ```
+ * [
+ *  {
+ *      "a": [ VALUE_BELOW_MIN => invalid, VALUE_ABOVE_MAX => invalid ] << first with invalids
+ *      "b": [ LENGTH_MIN => valid, LENGTH_MAX => valid ]
+ *      "c": [ FORMAT_VALID => valid ]
+ *  },
+ *  {
+ *      "a": [ VALUE_MIN => valid, VALUE_MAX => valid ]
+ *      "b": [ LENGTH_BELOW_MIN => invalid, LENGTH_ABOVE_MAX => invalid ] << second with invalids
+ *      "c": [ FORMAT_VALID => valid ]
+ *  },
+  *  {
+ *      "a": [ VALUE_MIN => valid, VALUE_MAX => valid ]
+ *      "b": [ LENGTH_MIN => invalid, LENGTH_MAX => valid ]
+ *      "c": [ FORMAT_INVALID => valid ] << third with invalids
+ *  },*
+ * ]
+ * ```
+ *
  *
  * @author Thiago Delgado Pinto
  */
@@ -110,23 +143,19 @@ export class JustOneInvalidMix implements DataTestCaseMix {
 
             obj[ uieName ] = [];
             let isTheTargetUIE = uieName === targetUIEName;
-            let mustAlwaysBeValid = alwaysValidVariables.indexOf( uieName ) >= 0;
+            let currentMustBeValid = alwaysValidVariables.indexOf( uieName ) >= 0;
 
             for ( let [ dtc, pair ] of dtcMap ) {
 
-                let [ first, second ] = pair.toArray();
+                let [ result, oracles ] = pair.toArray();
 
-                if ( DTCAnalysisResult.INCOMPATIBLE === first ) {
-                    continue;
-                }
-
-                if ( DTCAnalysisResult.VALID === first ) {
-                    if ( mustAlwaysBeValid || ! isTheTargetUIE ) {
-                        obj[ uieName ].push( new UIETestPlan( dtc, first, second ) );
+                if ( DTCAnalysisResult.VALID === result ) {
+                    if ( ! isTheTargetUIE || currentMustBeValid ) {
+                        obj[ uieName ].push( new UIETestPlan( dtc, result, oracles ) );
                     }
-                } else { // INVALID
-                    if ( isTheTargetUIE && ! mustAlwaysBeValid ) {
-                        obj[ uieName ].push( new UIETestPlan( dtc, first, second ) );
+                } else if ( DTCAnalysisResult.INVALID === result ) {
+                    if ( isTheTargetUIE && ! currentMustBeValid ) {
+                        obj[ uieName ].push( new UIETestPlan( dtc, result, oracles ) );
                     }
                 }
             }
@@ -147,6 +176,16 @@ export class JustOneInvalidMix implements DataTestCaseMix {
  *
  * Useful testing all the exceptional conditions simultaneously.
  *
+ * Example:
+ * ```
+ * [
+ *  {
+ *      "a": [ VALUE_BELOW_MIN => invalid, VALUE_ABOVE_MAX => invalid ]
+ *      "b": [ LENGTH_BELOW_MIN => invalid, LENGTH_ABOVE_MAX => invalid ]
+ *      "c": [ FORMAT_INVALID => valid ]
+ *  }
+ * ]
+ *
  * @author Thiago Delgado Pinto
  */
 export class OnlyInvalidMix implements DataTestCaseMix {
@@ -156,13 +195,13 @@ export class OnlyInvalidMix implements DataTestCaseMix {
         let obj = {};
         for ( let [ uieName, dtcMap ] of map ) {
             obj[ uieName ] = [];
-            let mustAlwaysBeValid = alwaysValidVariables.indexOf( uieName ) >= 0;
+            let currentMustBeValid = alwaysValidVariables.indexOf( uieName ) >= 0;
             for ( let [ dtc, pair ] of dtcMap ) {
-                let [ first, second ] = pair.toArray();
-                if ( DTCAnalysisResult.INVALID === first && ! mustAlwaysBeValid ) {
-                    obj[ uieName ].push( new UIETestPlan( dtc, first, second ) );
-                } else if ( DTCAnalysisResult.VALID === first && mustAlwaysBeValid ) {
-                    obj[ uieName ].push( new UIETestPlan( dtc, first, second ) );
+                let [ result, oracles ] = pair.toArray();
+                if ( DTCAnalysisResult.INVALID === result && ! currentMustBeValid ) {
+                    obj[ uieName ].push( new UIETestPlan( dtc, result, oracles ) );
+                } else if ( DTCAnalysisResult.VALID === result && currentMustBeValid ) {
+                    obj[ uieName ].push( new UIETestPlan( dtc, result, oracles ) );
                 }
             }
         }
@@ -171,9 +210,8 @@ export class OnlyInvalidMix implements DataTestCaseMix {
 
 }
 
-
 /**
- * Does not filter the available elements.
+ * Does not filter the available elements, but the imcompatible ones.
  *
  * @author Thiago Delgado Pinto
  */
@@ -187,7 +225,11 @@ export class UnfilteredMix implements DataTestCaseMix {
             for ( let [ uieName, dtcMap ] of map ) {
                 obj[ uieName ] = [];
                 for ( let [ dtc, pair ] of dtcMap ) {
-                    obj[ uieName ].push( new UIETestPlan( dtc, pair.getFirst(), pair.getSecond() ) );
+                    let [ result, oracles ] = pair.toArray();
+                    if ( DTCAnalysisResult.INCOMPATIBLE === result ) {
+                        continue;
+                    }
+                    obj[ uieName ].push( new UIETestPlan( dtc, result, oracles ) );
                 }
             }
             all.push( obj );
