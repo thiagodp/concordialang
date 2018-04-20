@@ -19,6 +19,7 @@ import * as arrayDiff from 'arr-diff';
 import * as enumUtil from 'enum-util';
 import { Pair } from "ts-pair";
 import { Step } from "../ast/Step";
+import { RangeAnalyzer } from "./raw/RangeAnalyzer";
 
 
 /**
@@ -249,28 +250,8 @@ export class DataTestCaseAnalyzer {
                     ? this.resolvePropertyValue( UIPropertyTypes.MAX_VALUE, pMaxValue, valueType )
                     : [ null, false ];
 
-
                 const invalidMinPair = new Pair( DTCAnalysisResult.INVALID, hasMinValue ? pMinValue.otherwiseSentences || [] : [] );
                 const invalidMaxPair = new Pair( DTCAnalysisResult.INVALID, hasMaxValue ? pMaxValue.otherwiseSentences || [] : [] );
-
-                // Since we are simulating min value and max value when they come from a QUERY or a UI_ELEMENT,
-                // the data test VALUE_ZERO may be invalid or incompatible in some cases
-                if ( DataTestCase.VALUE_ZERO === dtc ) {
-
-                    // VALUE_ZERO considered INVALID when min > 0 || max < 0
-                    if ( isDefined( maxValue ) && maxValue < 0 || isDefined( minValue ) && minValue > 0 ) {
-
-                        if ( isDefined( maxValue ) ) {
-                            return invalidMaxPair;
-                        }
-
-                        return invalidMinPair;
-
-                    // VALUE_ZERO not generated when min_value comes from a QUERY or a UI_ELEMENT
-                    } else if ( isToFakeMinValue || isToFakeMaxValue ) {
-                        return incompatiblePair;
-                    }
-                }
 
                 if ( isToFakeMinValue ) {
                     if ( isToFakeMaxValue ) {
@@ -287,37 +268,62 @@ export class DataTestCaseAnalyzer {
                     maxValue = this._dataGenBuilder.raw( valueType, minValue ).randomBetweenMinAndMax();
                 }
 
-                let analyzer = this._dataGenBuilder.rawAnalyzer( valueType, minValue, maxValue );
-
-                // When there is no min/max restriction, any value equal to or less/greater is considered valid.
+                let analyzer: RangeAnalyzer = this._dataGenBuilder.rawAnalyzer( valueType, minValue, maxValue );
 
                 switch ( dtc ) {
 
-                    case DataTestCase.VALUE_LOWEST                  : ; // next
-                    case DataTestCase.VALUE_RANDOM_BELOW_MIN        : ; // next
-                    case DataTestCase.VALUE_JUST_BELOW_MIN          :
-                        return analyzer.hasValuesBelowMin() ? invalidMinPair : validPair;
+                    case DataTestCase.VALUE_LOWEST: ; // next
+                    case DataTestCase.VALUE_RANDOM_BELOW_MIN: ; // next
+                    case DataTestCase.VALUE_JUST_BELOW_MIN: {
+                        if ( hasMinValue || isToFakeMinValue ) {
+                            return analyzer.hasValuesBelowMin() ? invalidMinPair : validPair;
+                        }
+                        return incompatiblePair;
+                    }
 
-                    case DataTestCase.VALUE_MIN                     : ; // next
-                    case DataTestCase.VALUE_MEDIAN                  : ; // next
-                    case DataTestCase.VALUE_MAX                     : return validPair;
+                    case DataTestCase.VALUE_JUST_ABOVE_MIN: ; // next
+                    case DataTestCase.VALUE_MIN: {
+                        if ( hasMinValue || isToFakeMinValue ) {
+                            return validPair;
+                        }
+                        return incompatiblePair;
+                    }
 
-                    case DataTestCase.VALUE_JUST_ABOVE_MIN          : ; // next
-                    case DataTestCase.VALUE_RANDOM_BETWEEN_MIN_MAX  : ; // next
-                    case DataTestCase.VALUE_JUST_BELOW_MAX          :
-                        return analyzer.hasValuesBetweenMinAndMax()
-                            ? validPair
-                            : hasMinValue ? invalidMinPair : invalidMaxPair;
+                    case DataTestCase.VALUE_RANDOM_BETWEEN_MIN_MAX: ; // next
+                    case DataTestCase.VALUE_MEDIAN: {
+                        if ( ( hasMinValue || isToFakeMinValue ) && ( hasMaxValue || isToFakeMaxValue ) ) {
+                            return validPair;
+                        }
+                        return incompatiblePair;
+                    }
 
-                    case DataTestCase.VALUE_ZERO                    :
-                        return analyzer.isZeroBetweenMinAndMax()
-                            ? validPair
-                            : hasMinValue ? invalidMinPair : invalidMaxPair;
+                    case DataTestCase.VALUE_JUST_BELOW_MAX: ; // next
+                    case DataTestCase.VALUE_MAX: {
+                        if ( hasMaxValue || isToFakeMaxValue ) {
+                            return validPair;
+                        }
+                        return incompatiblePair;
+                    }
 
-                    case DataTestCase.VALUE_JUST_ABOVE_MAX          : ; // next
-                    case DataTestCase.VALUE_RANDOM_ABOVE_MAX        : ; // next
-                    case DataTestCase.VALUE_GREATEST                :
-                        return analyzer.hasValuesAboveMax() ? invalidMaxPair : validPair;
+                    case DataTestCase.VALUE_ZERO: {
+                        if ( ( hasMinValue || isToFakeMinValue ) && ( hasMaxValue || isToFakeMaxValue ) ) {
+                            if ( analyzer.isZeroBetweenMinAndMax()  ) {
+                                return validPair;
+                            }
+                            return analyzer.isZeroBelowMin() ? invalidMinPair : invalidMaxPair;
+                        }
+                        return incompatiblePair;
+                    }
+
+                    case DataTestCase.VALUE_JUST_ABOVE_MAX: ; // next
+                    case DataTestCase.VALUE_RANDOM_ABOVE_MAX: ; // next
+                    case DataTestCase.VALUE_GREATEST: {
+                        if ( hasMaxValue || isToFakeMaxValue ) {
+                            return analyzer.hasValuesAboveMax() ? invalidMaxPair : validPair;
+                        }
+                        return incompatiblePair;
+                    }
+
                 }
 
                 return incompatiblePair;
@@ -351,36 +357,56 @@ export class DataTestCaseAnalyzer {
                     maxLength = 60; // fake with fixed value - does not matter, since it is to evaluate data test case
                 }
 
-                let analyzer = this._dataGenBuilder.buildRawAnalyzer( valueType, minLength, maxLength );
+                let analyzer: RangeAnalyzer = this._dataGenBuilder.buildRawAnalyzer( valueType, minLength, maxLength );
 
                 const invalidMinPair = new Pair( DTCAnalysisResult.INVALID, hasMinLength ? pMinLength.otherwiseSentences || [] : [] );
                 const invalidMaxPair = new Pair( DTCAnalysisResult.INVALID, hasMaxLength ? pMaxLength.otherwiseSentences || [] : [] );
 
-                // When there is no min/max restriction, any value equal to or less/greater is considered valid.
 
                 switch ( dtc ) {
 
-                    case DataTestCase.LENGTH_LOWEST                  : ; // next
-                    case DataTestCase.LENGTH_RANDOM_BELOW_MIN        : ; // next
-                    case DataTestCase.LENGTH_JUST_BELOW_MIN          :
-                        return analyzer.hasValuesBelowMin() ? invalidMinPair : validPair;
+                    case DataTestCase.LENGTH_LOWEST: ; // next
+                    case DataTestCase.LENGTH_RANDOM_BELOW_MIN: ; // next
+                    case DataTestCase.LENGTH_JUST_BELOW_MIN: {
+                        if ( hasMinLength || isToFakeMinLength ) {
+                            return analyzer.hasValuesBelowMin() ? invalidMinPair : validPair;
+                        }
+                        return incompatiblePair;
+                    }
 
-                    case DataTestCase.LENGTH_MIN                     : ; // next
-                    case DataTestCase.LENGTH_MEDIAN                  : ; // next
-                    case DataTestCase.LENGTH_MAX                     :
-                        return validPair;
+                    case DataTestCase.LENGTH_JUST_ABOVE_MIN: ; // next
+                    case DataTestCase.LENGTH_MIN: {
+                        if ( hasMinLength || isToFakeMinLength ) {
+                            return validPair;
+                        }
+                        return incompatiblePair;
+                    }
 
-                    case DataTestCase.LENGTH_JUST_ABOVE_MIN          : ; // next
-                    case DataTestCase.LENGTH_RANDOM_BETWEEN_MIN_MAX  : ; // next
-                    case DataTestCase.LENGTH_JUST_BELOW_MAX          :
-                        return analyzer.hasValuesBetweenMinAndMax()
-                            ? validPair
-                            : hasMinLength ? invalidMinPair : invalidMaxPair;
+                    case DataTestCase.LENGTH_RANDOM_BETWEEN_MIN_MAX: ; // next
+                    case DataTestCase.LENGTH_MEDIAN: {
+                        if ( ( hasMinLength || isToFakeMinLength ) && ( hasMaxLength || isToFakeMaxLength ) ) {
+                            return validPair;
+                        }
+                        return incompatiblePair;
+                    }
 
-                    case DataTestCase.LENGTH_JUST_ABOVE_MAX          : ; // next
-                    case DataTestCase.LENGTH_RANDOM_ABOVE_MAX        : ; // next
-                    case DataTestCase.LENGTH_GREATEST                :
-                        return analyzer.hasValuesAboveMax() ? invalidMaxPair : validPair;
+                    case DataTestCase.LENGTH_JUST_BELOW_MAX: ; // next
+                    case DataTestCase.LENGTH_MAX: {
+                        if ( hasMaxLength || isToFakeMaxLength ) {
+                            return validPair;
+                        }
+                        return incompatiblePair;
+                    }
+
+                    case DataTestCase.LENGTH_JUST_ABOVE_MAX: ; // next
+                    case DataTestCase.LENGTH_RANDOM_ABOVE_MAX: ; // next
+                    case DataTestCase.LENGTH_GREATEST: {
+                        if ( hasMaxLength || isToFakeMaxLength ) {
+                            return analyzer.hasValuesAboveMax() ? invalidMaxPair : validPair;
+                        }
+                        return incompatiblePair;
+                    }
+
                 }
 
                 return incompatiblePair;
