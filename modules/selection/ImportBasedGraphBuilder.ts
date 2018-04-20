@@ -29,21 +29,19 @@ export class ImportBasedGraphBuilder {
             // Add the document as a vertex. If the key already exists, the value is overwriten.
             graph.addVertex( fromKey, doc ); // key, value
 
-            // Import as a dependency vertex
-            if ( doc.imports && doc.imports.length > 0 ) {
+            // Make each imported file a vertex, but not overwrite the value if it already exists.
+            for ( let imp of doc.imports || [] ) {
 
-                // Make each imported file a vertex, but not overwrite the value if it already exists.
-                for ( let imp of doc.imports ) {
+                let toKey = imp.resolvedPath; // key
+                graph.ensureVertex( toKey ); // no value
 
-                    let toKey = imp.resolvedPath; // key
-                    graph.ensureVertex( toKey ); // no value
-
-                    // Make an edge from the doc to the imported file.
-                    // If the edge already exists, do nothing.
-                    graph.ensureEdge( fromKey, toKey );
-                }
+                // Make an edge from the doc to the imported file.
+                // If the edge already exists, do nothing.
+                graph.ensureEdge( toKey, fromKey, ); // to, from !!!
             }
+
         }
+
         return graph;
     }
 

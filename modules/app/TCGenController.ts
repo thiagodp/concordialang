@@ -94,6 +94,7 @@ export class TCGenController {
             if ( ! doc.feature || ! doc.feature.scenarios ) {
                 continue;
             }
+            // console.log( 'doc is', doc.fileInfo.path);
 
             let ctx = new GenContext( spec, doc, errors, warnings );
 
@@ -160,7 +161,7 @@ export class TCGenController {
             const from = newDoc.fileInfo.path;
             const to = doc.fileInfo.path;
             graph.addVertex( from, newDoc );
-            graph.addEdge( from, to );
+            graph.addEdge( to, from ); // order is this way...
 
             // console.log( 'Criando', from );
 
