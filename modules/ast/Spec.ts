@@ -289,59 +289,16 @@ export class Spec {
      */
     docWithPath( filePath: string, referencePath: string = '.', rebuildCache: boolean = false ): Document | null {
 
-        // let aPath = filePath;
-        // if ( isDefined( referencePath ) ) {
-        //     aPath = resolve( dirname( referencePath ), filePath );
-        // }
-
-        // if ( ! isDefined( this._relPathToDocumentCache ) || rebuildCache ) {
-
-        //     this._relPathToDocumentCache = new Map< string, Document >();
-
-        //     // Fill cache
-        //     for ( let doc of this.docs ) {
-
-        //         const relDocPath = isDefined( this.basePath )
-        //             ? resolve( this.basePath, doc.fileInfo.path )
-        //             : doc.fileInfo.path;
-
-        //         this._relPathToDocumentCache.set( relDocPath, doc );
-        //     }
-        // }
-
-        // console.log( 'checked:', filePath, 'ref:', referencePath, 'aPath:', aPath, '\nall:', this._relPathToDocumentCache.keys() );
-        // const relFilePath = isDefined( this.basePath ) ? resolve( this.basePath, aPath ) : aPath;
-        // return this._relPathToDocumentCache.get( relFilePath ) || null;
-
         // Rebuild cache ?
         if ( ! isDefined( this._relPathToDocumentCache ) || rebuildCache ) {
             this._relPathToDocumentCache = new Map< string, Document >();
             for ( let doc of this.docs ) {
-                const pathRelToBase = resolve( this.basePath, doc.fileInfo.path );
-                this._relPathToDocumentCache.set( pathRelToBase, doc );
+                this._relPathToDocumentCache.set( doc.fileInfo.path, doc );
             }
         }
 
-        if ( ! isAbsolute( filePath ) ) {
-
-            // First make the given path relative to the reference path
-            let filePathRelToRefPath = relative( dirname( referencePath ), filePath );
-
-            // Now resolve it in relation to the basePath
-            let filePathRelToBasePath = resolve( this.basePath, filePathRelToRefPath );
-
-            // console.log(
-            //     'given', filePath,
-            //     '\nreferencePath', referencePath,
-            //     '\nfilePathRelToRefPath:', filePathRelToRefPath,
-            //     '\nfilePathRelToBasePath:', filePathRelToBasePath,
-            //     '\ncache:', this._relPathToDocumentCache.keys()
-            // );
-
-            return this._relPathToDocumentCache.get( filePathRelToBasePath ) || null;
-        }
-
-        return this._relPathToDocumentCache.get( filePath ) || null;
+        const targetFile = resolve( dirname( referencePath ), filePath );
+        return this._relPathToDocumentCache.get( targetFile ) || null;
     }
 
 
