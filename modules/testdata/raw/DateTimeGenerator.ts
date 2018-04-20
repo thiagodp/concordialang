@@ -6,6 +6,8 @@ import { LocalDateTime, Period, ChronoUnit } from "js-joda";
 
 export class DateTimeGenerator implements RawDataGenerator< LocalDateTime > {
 
+	public readonly ZERO = DateTimeLimits.MIN;
+
     private readonly _min: LocalDateTime;
     private readonly _max: LocalDateTime;
 
@@ -53,9 +55,18 @@ export class DateTimeGenerator implements RawDataGenerator< LocalDateTime > {
 
 	/** @inheritDoc */
 	public isZeroBetweenMinAndMax(): boolean {
-		const ZERO = DateTimeLimits.MIN;
-		return ( this._min.isBefore( ZERO ) || this._min.isEqual( ZERO ) )
-			&& ( this._max.isAfter( ZERO ) || this._max.isEqual( ZERO ) );
+		return ( this._min.isBefore( this.ZERO ) || this._min.isEqual( this.ZERO ) )
+			&& ( this._max.isAfter( this.ZERO ) || this._max.isEqual( this.ZERO ) );
+	}
+
+	/** @inheritDoc */
+    public isZeroBelowMin(): boolean {
+		return this._min.isAfter( this.ZERO );
+	}
+
+	/** @inheritDoc */
+    public isZeroAboveMax(): boolean {
+		return this._max.isBefore( this.ZERO );
 	}
 
 	// DATA GENERATION

@@ -7,6 +7,8 @@ import { RangeAnalyzer } from "./RangeAnalyzer";
 
 export class TimeGenerator implements RawDataGenerator< LocalTime >, RangeAnalyzer {
 
+	public readonly ZERO = TimeLimits.MIN;
+
     private readonly _min: LocalTime;
     private readonly _max: LocalTime;
 
@@ -55,9 +57,18 @@ export class TimeGenerator implements RawDataGenerator< LocalTime >, RangeAnalyz
 
 	/** @inheritDoc */
 	public isZeroBetweenMinAndMax(): boolean {
-		const ZERO = TimeLimits.MIN;
-		return ( this._min.isBefore( ZERO ) || this._min.equals( ZERO ) )
-			&& ( this._max.isAfter( ZERO ) || this._max.equals( ZERO ) );
+		return ( this._min.isBefore( this.ZERO ) || this._min.equals( this.ZERO ) )
+			&& ( this._max.isAfter( this.ZERO ) || this._max.equals( this.ZERO ) );
+	}
+
+	/** @inheritDoc */
+    public isZeroBelowMin(): boolean {
+		return this._min.isAfter( this.ZERO );
+	}
+
+	/** @inheritDoc */
+    public isZeroAboveMax(): boolean {
+		return this._max.isBefore( this.ZERO );
 	}
 
 	// DATA GENERATION

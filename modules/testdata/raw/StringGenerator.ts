@@ -78,6 +78,16 @@ export class StringGenerator implements RawDataGenerator< string >, RangeAnalyze
 	/** @inheritDoc */
 	public isZeroBetweenMinAndMax(): boolean {
 		return this._minLength <= 0 && 0 <= this._maxLength;
+    }
+
+	/** @inheritDoc */
+    public isZeroBelowMin(): boolean {
+		return 0 < this._minLength;
+	}
+
+	/** @inheritDoc */
+    public isZeroAboveMax(): boolean {
+		return 0 > this._maxLength;
 	}
 
     // DATA GENERATION

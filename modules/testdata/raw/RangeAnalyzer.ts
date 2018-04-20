@@ -13,4 +13,8 @@ export interface RangeAnalyzer {
 
     isZeroBetweenMinAndMax(): boolean;
 
+    isZeroBelowMin(): boolean;
+
+    isZeroAboveMax(): boolean;
+
 }

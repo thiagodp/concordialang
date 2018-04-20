@@ -62,6 +62,16 @@ export class LongGenerator implements RawDataGenerator< number >, RangeAnalyzer 
 		return this._min <= 0 && 0 <= this._max;
 	}
 
+	/** @inheritDoc */
+    public isZeroBelowMin(): boolean {
+		return 0 < this._min;
+	}
+
+	/** @inheritDoc */
+    public isZeroAboveMax(): boolean {
+		return 0 > this._max;
+	}
+
 	// DATA GENERATION
 
 	/** @inheritDoc */

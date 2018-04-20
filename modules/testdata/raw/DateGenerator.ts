@@ -7,8 +7,10 @@ import { RangeAnalyzer } from "./RangeAnalyzer";
 
 export class DateGenerator implements RawDataGenerator< LocalDate >, RangeAnalyzer {
 
+	public readonly ZERO = DateLimits.MIN;
+
     private readonly _min: LocalDate;
-    private readonly _max: LocalDate;
+	private readonly _max: LocalDate;
 
 	/**
 	 * Constructor.
@@ -55,9 +57,18 @@ export class DateGenerator implements RawDataGenerator< LocalDate >, RangeAnalyz
 
 	/** @inheritDoc */
 	public isZeroBetweenMinAndMax(): boolean {
-		const ZERO = DateLimits.MIN;
-		return ( this._min.isBefore( ZERO ) || this._min.isEqual( ZERO ) )
-			&& ( this._max.isAfter( ZERO ) || this._max.isEqual( ZERO ) );
+		return ( this._min.isBefore( this.ZERO ) || this._min.isEqual( this.ZERO ) )
+			&& ( this._max.isAfter( this.ZERO ) || this._max.isEqual( this.ZERO ) );
+	}
+
+	/** @inheritDoc */
+    public isZeroBelowMin(): boolean {
+		return this._min.isAfter( this.ZERO );
+	}
+
+	/** @inheritDoc */
+    public isZeroAboveMax(): boolean {
+		return this._max.isBefore( this.ZERO );
 	}
 
 	// DATA GENERATION
