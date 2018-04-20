@@ -36,6 +36,7 @@ import { Keywords } from "../req/Keywords";
 import { CaseType } from "../app/CaseType";
 import { PreTestCase } from "./PreTestCase";
 import { ValueTypeDetector } from "../util/ValueTypeDetector";
+import { LocalTime, DateTimeFormatter, LocalDate, LocalDateTime } from "js-joda";
 
 export class GenContext {
     constructor(
@@ -533,13 +534,23 @@ export class PreTestCaseGenerator {
                 ctx.warnings.push( new RuntimeException( msg, step.location ) );
             }
 
+            // TODO: l10n / i18n
+            let formattedValue = value;
+            if ( value instanceof LocalTime ) {
+                formattedValue = value.format( DateTimeFormatter.ofPattern( 'HH:mm' ) ).toString();
+            } else if ( value instanceof LocalDate ) {
+                formattedValue = value.format( DateTimeFormatter.ofPattern( 'dd/MM/yyyy' ) ).toString();
+            } else if ( value instanceof LocalDateTime ) {
+                formattedValue = value.format( DateTimeFormatter.ofPattern( 'dd/MM/yyyy HH:mm' ) ).toString();
+            }
+
             // Generate the sentence
             let sentence = prefix + ' ' + keywordI + ' ' + fillEntity.string + ' ' +
                 Symbols.UI_LITERAL_PREFIX + uieLiteral + Symbols.UI_LITERAL_SUFFIX +
                 ' ' + keywordWith + ' ' +
-                ( valTypeDetector.isNumber( value )
-                    ? value
-                    : Symbols.VALUE_WRAPPER + value + Symbols.VALUE_WRAPPER );
+                ( 'number' === typeof formattedValue
+                    ? formattedValue
+                    : Symbols.VALUE_WRAPPER + formattedValue + Symbols.VALUE_WRAPPER );
 
             const uieTestPlan = uieVariableToUIETestPlanMap.get( variable ) || null;
             let expectedResult, dtc;
