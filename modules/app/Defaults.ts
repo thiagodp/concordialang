@@ -55,6 +55,8 @@ export type StateCombinationOptions = CombinationOptions;
  *     invalid=all          -> elements will only receive invalid values
  *
  *     invalid=random       -> a random number of elements will receive invalid values (shuffled-one-wise?)
+ *
+ *     invalid=default      -> leave as is
  */
 export enum InvalidSpecialOptions {
 
@@ -68,7 +70,12 @@ export enum InvalidSpecialOptions {
      *
      * !!! THIS OPTION CHANGES THE COMBINATION OF DataTestCases THAT WAS CHOSEN BY THE USER !!!
      */
-    RANDOM = 'random'
+    RANDOM = 'random',
+
+    /**
+     * Leave the mix untouched (i.e., does not filter the DataTestCases of each UI Element ).
+     */
+    DEFAULT = 'default'
 }
 
 /**

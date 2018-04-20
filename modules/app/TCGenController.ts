@@ -58,9 +58,10 @@ export class TCGenController {
             this.stateCombinationStrategyFromOptions( options, warnings );
 
         let variantToTestScenariosMap = new Map< Variant, TestScenario[] >();
+
         let postconditionNameToVariantsMap = new Map< string, Variant[] >();
 
-        const tsGen = new TSGen(
+        let tsGen = new TSGen(
             preTCGen,
             variantSelectionStrategy,
             stateCombinationStrategy,
@@ -130,8 +131,14 @@ export class TCGenController {
                             continue;
                         }
 
+                        let tcIndex = 1;
                         for ( let tc of generatedTC ) {
+
                             tcGen.addReferenceTagsTo( tc, scenarioIndex + 1, variantIndex + 1 );
+
+                            tc.name = variant.name + ' - ' + tcIndex;
+
+                            ++tcIndex;
                         }
 
                         testCases.push.apply( testCases, generatedTC );
@@ -274,6 +281,7 @@ export class TCGenController {
         const none = InvalidSpecialOptions.NONE.toString();
         const all = InvalidSpecialOptions.ALL.toString();
         const random = InvalidSpecialOptions.RANDOM.toString();
+        const default_ = InvalidSpecialOptions.DEFAULT.toString();
 
         let mixStrategy: DataTestCaseMix;
 
@@ -293,7 +301,8 @@ export class TCGenController {
                 mixStrategy = new OnlyInvalidMix();
                 break;
 
-            case random:
+            case random: ; // next
+            case default_:
                 mixStrategy = new UnfilteredMix();
                 break;
 
@@ -309,8 +318,12 @@ export class TCGenController {
 
         // DATA TEST CASE COMBINATION
 
+        const dataCombinationOption = desired === random
+            ? CombinationOptions.SHUFFLED_ONE_WISE
+            : options.typedDataCombination();
+
         let combinationStrategy = this.combinationStrategyFrom(
-            options.typedDataCombination(),
+            dataCombinationOption,
             'Data',
             options,
             warnings

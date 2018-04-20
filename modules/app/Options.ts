@@ -371,8 +371,8 @@ export class Options {
 
         // RANDOMIC GENERATION
 
-        if ( isString( flags.seed ) ) {
-            this.seed = flags.seed;
+        if ( isString( flags.seed ) || isNumber( flags.seed ) ) {
+            this.seed = String( flags.seed );
         }
         if ( isNumber( flags.randomValid ) ) {
             this.randomValid = parseInt( flags.randomValid );
