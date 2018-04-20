@@ -73,7 +73,7 @@ export class TCGenController {
 
         const testPlanMakers: TestPlanMaker[] = this.testPlanMakersFromOptions( options, warnings );
 
-        const tcDocGen = new TCDocGen( options.extensionTestCase );
+        const tcDocGen = new TCDocGen( options.extensionTestCase, options.directory );
 
         const tcDocFileGen = new TestCaseFileGenerator( langLoader, options.language );
 
@@ -162,7 +162,7 @@ export class TCGenController {
             graph.addVertex( from, newDoc );
             graph.addEdge( from, to );
 
-            console.log( 'Criando', from );
+            // console.log( 'Criando', from );
 
             // Generating file content
             const lines = tcDocFileGen.createLinesFromDoc(
@@ -322,7 +322,7 @@ export class TCGenController {
             ? CombinationOptions.SHUFFLED_ONE_WISE
             : options.typedDataCombination();
 
-        console.log( 'options.invalid', options.invalid, 'desired', desired, 'dataCombinationOption', dataCombinationOption );
+        // console.log( 'options.invalid', options.invalid, 'desired', desired, 'dataCombinationOption', dataCombinationOption );
 
         let combinationStrategy = this.combinationStrategyFrom(
             dataCombinationOption,

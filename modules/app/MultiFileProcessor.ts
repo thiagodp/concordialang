@@ -51,7 +51,7 @@ export class MultiFileProcessor {
                 attemptTimeout: 1000,
                 matchRegExp: matchRegExp,
                 recursive: recursive
-            };            
+            };
 
             let fwalker = filewalker( dir, filewalkerOptions );
 
@@ -59,9 +59,9 @@ export class MultiFileProcessor {
                 // .on( 'dir', ( p ) => {
                 //      console.log('dir:  %s', p);
                 // } )
-                .on( 'file', ( p, s ) => {              
+                .on( 'file', ( p, s ) => {
                     this._fileReadListener.fileReadStarted( p, s.size );
-                } )        
+                } )
                 .on( 'stream', ( rs, p, s, fullPath ) => {
 
                     if ( hasFilesToIgnore ) {
@@ -86,10 +86,11 @@ export class MultiFileProcessor {
                             .update( fileContent )
                             .digest( 'hex' );
 
-                        this._fileReadListener.fileReadFinished( p );                            
+                        this._fileReadListener.fileReadFinished( p );
 
                         const fileStartTime = Date.now();
-                        const fileMeta = new FileMeta( p, s.size, hashStr );
+
+                        const fileMeta = new FileMeta( fullPath, s.size, hashStr );
                         let hasErrors: boolean = false;
                         try {
                             const fileData = new FileData( fileMeta, fileContent );
@@ -108,7 +109,7 @@ export class MultiFileProcessor {
                         } catch ( err ) {
                             // should not happen, since errors are catched internally by the processor
                             const processDurationMs = Date.now() - fileStartTime;
-                            this._fileProcessorListener.processFinished( 
+                            this._fileProcessorListener.processFinished(
                                 new ProcessedFileData( fileMeta, {}, processDurationMs, [ err ], [] )
                                 );
                         }
@@ -125,16 +126,16 @@ export class MultiFileProcessor {
                     // TO-DO: Remove the comparison and use fwalker.dirs when its Issue 20 is fixed.
                     // https://github.com/oleics/node-filewalker/issues/20
                     const dirCount = recursive ? fwalker.dirs : 1;
-                    
+
                     const data = new DirectoryReadResult(
                         dirCount,
                         fwalker.files,
                         fwalker.bytes,
                         durationMs,
                         errors.length
-                        );                    
+                        );
 
-                    this._directoryReadListener.directoryReadFinished( data );                    
+                    this._directoryReadListener.directoryReadFinished( data );
 
                     await Promise.all( filePromises );
 
@@ -158,7 +159,7 @@ export class MultiFileProcessor {
     private filesToIgnoreToRegExp = ( files: string[] ): RegExp => {
         const exp = '(' + files.map( f => f.replace( '\\', '/' ) ).join( '|' ) + ')';
         return new RegExp( exp, 'ui' );
-    };    
+    };
 
     private extensionsToRegExp = ( extensions: string[] ): RegExp => {
         const exp = '(' + extensions.map( e => e.indexOf( '.' ) >= 0 ? '\\' + e : '\\.' + e ).join( '|' ) + ')';
@@ -167,7 +168,7 @@ export class MultiFileProcessor {
 
     private prettyExtensions = ( extensions: string[] ): string[] => {
         return extensions.map( e => e.indexOf( '.' ) >= 0 ? e : '.' + e );
-    };    
+    };
 }
 
 
@@ -179,7 +180,7 @@ export class MultiFileProcessedData {
         public readErrors: Error[]
     ) {
     }
-    
+
 }
 
 

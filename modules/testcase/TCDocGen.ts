@@ -6,6 +6,7 @@ import { Language } from "../ast/Language";
 import * as deepcopy from 'deepcopy';
 import { Import } from "../ast/Import";
 import { NodeTypes } from "../req/NodeTypes";
+import { resolve } from "url";
 
 
 /**
@@ -21,7 +22,8 @@ export class TCDocGen {
      * @param _extensionTestCase Extension to use in the file. Fullfils Document's `fileInfo`.
      */
     constructor(
-        private readonly _extensionTestCase: string
+        private readonly _extensionTestCase: string,
+        private readonly _basePath: string
     ) {
     }
 
@@ -76,14 +78,11 @@ export class TCDocGen {
      * @param outputDir Output directory. Assumes the same directory as the `docPath` if not defined.
      */
     createTestCaseFileNameBasedOn( docPath: string, outputDir?: string ): string {
-
         const props = parse( docPath );
         const fileName = props.name + this._extensionTestCase;
-
-        const outDir = outputDir || props.dir;
-        const fileDir = relative( props.dir, outDir ); // Relative to where the doc is
-
-        return join( fileDir, fileName );
+        const outDir = ! outputDir ? props.dir : relative( props.dir, outputDir );
+        const fullPath = resolve( this._basePath, join( outDir, fileName ) );
+        return fullPath;
     }
 
     /**
