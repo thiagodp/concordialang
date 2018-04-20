@@ -12,7 +12,6 @@ import { TestCase } from '../ast/TestCase';
 import { SpecificationAnalyzer } from './SpecificationAnalyzer';
 import { Location } from '../ast/Location';
 import { LocatedException } from '../req/LocatedException';
-import { ValueTypeDetector } from '../util/ValueTypeDetector';
 import Graph = require( 'graph.js/dist/graph.full.js' );
 import * as path from 'path';
 import * as deepcopy from 'deepcopy';
@@ -52,8 +51,6 @@ import { EnglishKeywordDictionary } from '../dict/EnglishKeywordDictionary';
  * @author Thiago Delgado Pinto
  */
 export class TestCaseSSA extends SpecificationAnalyzer {
-
-    private readonly _typeDetector = new ValueTypeDetector();
 
     // TODO: change it to receive a dictionary loader, according to the analyzed doc
     constructor(
@@ -333,7 +330,7 @@ export class TestCaseSSA extends SpecificationAnalyzer {
                     tc.declaredVariantIndex = this.detectTagContentAsIndex( tag, errors ); // 1+ or null
 
                 } else  if ( ! hasScenarioTag && this.isScenarioTag( tag.name ) ) {
-                    hasVariantTag = true;
+                    hasScenarioTag = true;
 
                     // Change the test case!
                     tc.declaredVariantIndex = this.detectTagContentAsIndex( tag, errors ); // 1+ or null
@@ -390,16 +387,16 @@ export class TestCaseSSA extends SpecificationAnalyzer {
 
     detectTagContentAsIndex( tag: Tag, errors: LocatedException[] ): number | null {
 
-        if ( ! this._typeDetector.isInteger( tag.content ) ) {
-            const msg = 'The tag content must be a number.'
+        let value = parseInt( tag.content.trim() );
+        if ( isNaN( value ) ) {
+            const msg = 'This tag must have a number.'
             errors.push( new SemanticException( msg, tag.location ) );
-        } else if ( Number( tag.content ) <= 0 ) {
+        } else if ( value <= 0 ) {
             const msg = 'The tag content must be a number greater than zero.'
             errors.push( new SemanticException( msg, tag.location ) );
         } else {
-            return Number( tag.content );
+            return value;
         }
-
         return null;
     }
 
