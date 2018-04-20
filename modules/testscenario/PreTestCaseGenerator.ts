@@ -675,11 +675,15 @@ export class PreTestCaseGenerator {
                 step.nodeType = nodeType;
 
                 // Try to change the content with the new prefix
-                let index = -1;
+                let index = -1, start = -1;
                 for ( let keyword of otherwiseKeywords ) {
                     index = step.content.toLowerCase().indexOf( keyword );
                     if ( index >= 0 ) {
-                        step.content = prefix + step.content.substr( keyword.length );
+                        start = keyword.length;
+                        if ( start === step.content.indexOf( ',' ) ) {
+                            ++start;
+                        }
+                        step.content = prefix + step.content.substr( start );
                         break;
                     }
                 }
