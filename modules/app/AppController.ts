@@ -12,6 +12,8 @@ import { TestScriptExecutionOptions } from '../testscript/TestScriptExecution';
 import { CliScriptExecutionReporter } from './CliScriptExecutionReporter';
 import { TCGenController } from './TCGenController';
 import Graph = require( 'graph.js/dist/graph.full.js' );
+import * as crypto from 'crypto';
+import { LocalDateTime, DateTimeFormatter } from 'js-joda';
 
 /**
  * Application controller
@@ -31,6 +33,9 @@ export class AppController {
         ui.updateOptions( options ); // read from console
 
         //console.log( options );
+
+        // Seed
+        this.updateSeed( options, cli );
 
         if ( options.help ) {
             ui.showHelp();
@@ -120,7 +125,7 @@ export class AppController {
         //cli.newLine( spec );
 
         if ( ! plugin && ( options.generateScripts || options.executeScripts || options.analyzeResults ) ) {
-            cli.newLine( cli.symbolWarning, 'A plugin must be defined.' );
+            cli.newLine( cli.symbolWarning, 'A plugin was not defined.' );
             return true;
         }
 
@@ -186,6 +191,28 @@ export class AppController {
 
     private formattedStackOf( err: Error ): string {
         return "\n  DETAILS: " + err.stack.substring( err.stack.indexOf( "\n" ) );
+    }
+
+    private updateSeed( options: Options, cli: CLI ): void {
+
+        if ( ! options.seed ) {
+            options.seed =
+                LocalDateTime.now().format( DateTimeFormatter.ofPattern( 'yyyy-MM-dd HH:mm' ) ).toString();
+        }
+        options.seedBackup = options.seed; // Save a backup
+
+        cli.newLine( cli.symbolInfo, 'Seed', cli.colorHighlight( options.seed ) );
+        // Now make the real seed - sha 512, if current seed size is less than it
+        const BYTES_OF_SHA_512 = 64; // 512 / 8
+        if ( options.seed.toString().length < BYTES_OF_SHA_512 ) {
+            options.seed = crypto
+                .createHash( 'sha512' )
+                .update( options.seed )
+                .digest( 'hex' );
+        }
+        if ( options.debug ) {
+            cli.newLine( cli.symbolInfo, 'Real seed', cli.colorHighlight( options.seed ) );
+        }
     }
 
 }

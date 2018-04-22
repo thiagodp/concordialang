@@ -88,8 +88,17 @@ export class Options {
 
     // RANDOMIC GENERATION
 
-    /** Random seed to use (null will make the tool to generate a seed) */
+    /**
+     * Seed. If not defined by the user, the tool will generate one.
+     * It will be transformed in a SHA-512 hash if less than 64 characters.
+     */
     public seed: string = null;
+    /**
+     * Backup of the original seed, maybe the user-defined one.
+     * Saved for debugging purposes.
+     */
+    public seedBackup: string = null;
+
     /** Number of test cases with valid random values */
     public randomValid: number = 1;
     /** Number of test cases with invalid random values */
