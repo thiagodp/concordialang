@@ -35,7 +35,6 @@ import { VariantSentenceRecognizer } from "../nlp/VariantSentenceRecognizer";
 import { Keywords } from "../req/Keywords";
 import { CaseType } from "../app/CaseType";
 import { PreTestCase } from "./PreTestCase";
-import { ValueTypeDetector } from "../util/ValueTypeDetector";
 import { LocalTime, DateTimeFormatter, LocalDate, LocalDateTime } from "js-joda";
 
 export class GenContext {
@@ -132,6 +131,7 @@ export class PreTestCaseGenerator {
         // # Replace CONSTANTS with VALUES
         this.replaceConstantsWithTheirValues( clonedSteps, language, ctx );
 
+        // # Replace UI LITERALS without VALUES with VALUES
         let newSteps: Step[] = this.fillUILiteralsWithoutValueInSteps(
             clonedSteps, language, langContent.keywords, ctx
         );
@@ -151,6 +151,13 @@ export class PreTestCaseGenerator {
         //
 
         const stepUIElements: UIElement[] = this.extractUIElementsFromSteps( newSteps, ctx );
+
+        // NO UI ELEMENTS --> No values to generate and no oracles to add
+        if ( stepUIElements.length < 1 ) {
+            let preTC = new PreTestCase( new TestPlan(), newSteps, [] );
+            return [ preTC ];
+        }
+
         const stepUIEVariables: string[] = stepUIElements.map( uie => uie.info ? uie.info.fullVariableName : uie.name );
 
         const allAvailableUIElements: UIElement[] = ctx.spec.extractUIElementsFromDocumentAndImports( ctx.doc );
@@ -166,6 +173,9 @@ export class PreTestCaseGenerator {
             let map = this._dtcAnalyzer.analyzeUIElement( uie, ctx.errors );
             uieVariableToDTCMap.set( uie.info.fullVariableName, map );
         }
+        // console.log( 'doc', ctx.doc.fileInfo.path );
+        // console.log( 'UIE', stepUIElements.map( uie => uie.name ) );
+        // console.log( 'alwaysValid', alwaysValidUIEVariables );
         // console.log( uieVariableToDTCMap );
 
         // # Generate DataTestCases for the UI Elements, according to the goal and the combination strategy.
@@ -501,13 +511,11 @@ export class PreTestCaseGenerator {
         const keywordInvalid = ! keywords.invalid ? 'invalid' : ( keywords.invalid[ 0 ] || 'invalid' );
         // const keywordRandom = ! keywords.random ? 'random' : ( keywords.random[ 0 ] || 'random' );
 
-        const valTypeDetector = new ValueTypeDetector();
-
         let steps: Step[] = [],
             oracles: Step[] = [],
             line = step.location.line,
             count = 0;
-
+        // console.log( 'step', step.content );
         for ( let entity of uiElements ) {
 
             // Change to "AND" when more than one entity is available
@@ -528,6 +536,8 @@ export class PreTestCaseGenerator {
             }
 
             let uieLiteral = isDefined( uie ) && isDefined( uie.info ) ? uie.info.uiLiteral : null;
+            // console.log( 'uieName', uieName, 'uieLiteral', uieLiteral, 'variable', variable, 'doc', ctx.doc.fileInfo.path );
+
             if ( null === uieLiteral ) { // Should never happer since Spec defines Literals for mapped UI Elements
                 uieLiteral = convertCase( variable, this.uiLiteralCaseOption );
                 const msg = 'Could not retrieve a literal from the UI Element "' + variable + '". Generating one: "' + uieLiteral + '"';
@@ -560,7 +570,7 @@ export class PreTestCaseGenerator {
             // Evaluate the test plan and oracles
             if ( null === uieTestPlan ) { // not expected
                 expectedResult = keywordValid;
-                dtc = '??? (no test plan)';
+                dtc = '??? (no test plan for variable ' + variable + ')';
             } else {
 
                 if ( DTCAnalysisResult.INVALID === uieTestPlan.result ) {
