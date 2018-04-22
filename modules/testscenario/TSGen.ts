@@ -69,11 +69,14 @@ export class TSGen {
 
         // Detect Preconditions, State Calls, and Postconditions of the Variant
         this.detectVariantStates( variant, ctx.errors );
+        // console.log( 'pre', variant.preconditions );
+        // console.log( 'post', variant.postconditions );
 
         const docLanguage = this._preTestCaseGenerator.docLanguage( ctx.doc );
 
         // Also removes Then steps with postconditions
         let baseScenario: TestScenario = this.makeTestScenarioFromVariant( variant, docLanguage );
+        // console.log( '>>>', baseScenario.steps.map( s => s.content ) );
 
         // No steps -> No test scenarios
         if ( ! baseScenario.steps || baseScenario.steps.length < 1 ) {
@@ -83,8 +86,9 @@ export class TSGen {
         let pairMap = {}; // Maps string => Array< Pair< State, TestScenario > >
 
         let allStatesToReplace = variant.preconditions.concat( variant.stateCalls );
+        // console.log( 'States to replace', allStatesToReplace.map( s=> s.name ) );
 
-        if ( allStatesToReplace.length > 0 ) {
+        if ( allStatesToReplace.length > 0 ) { // Preconditions + State Calls
 
             for ( let state of allStatesToReplace ) {
 
@@ -153,7 +157,7 @@ export class TSGen {
                     // Clone the current TestScenario
                     let tsToUse: TestScenario = tsToReplaceStep.clone();
 
-                    // Make all substitutions and generate valid values using GenUtil
+                    // Make all substitutions and generate valid values
                     let all = await this._preTestCaseGenerator.generate(
                         tsToReplaceStep.steps,
                         ctx,
@@ -178,12 +182,66 @@ export class TSGen {
                 testScenarios.push( ts );
             }
 
+            // console.log( 'GENERATED', testScenarios.length, 'scenarios for states', allStatesToReplace.map( s => s.name ) );
+
         } else {
+
+            // console.log( 'steps', baseScenario.steps.map( s => s.content ) );
+
+            // // Make all substitutions and generate valid values
+            // let all = await this._preTestCaseGenerator.generate(
+            //     baseScenario.steps,
+            //     ctx,
+            //     [ this._validValuePlanMaker ]
+            // );
+
+            // let oldIndex = baseScenario.steps.indexOf( baseScenario.stepAfterPreconditions );
+            // baseScenario.steps = all[ 0 ].steps;
+            // if ( oldIndex >= 0 ) {
+            //     baseScenario.stepAfterPreconditions = baseScenario.steps[ oldIndex ];
+            // }
+
             testScenarios.push( baseScenario );
         }
 
-        // Let's add to the map, to serve for other variants
-        this._variantToTestScenarioMap.set( variant, testScenarios );
+        if ( isDefined( variant.postconditions ) && variant.postconditions.length > 0 ) {
+
+            let newTestScenarios: TestScenario[] = [];
+            for ( let ts of testScenarios ) {
+
+                //
+                // Let's generate valid values to the variant steps in order to reuse it later
+                // in preconditions or state calls
+                //
+
+                // Make all substitutions and generate valid values
+                let all = await this._preTestCaseGenerator.generate(
+                    ts.steps,
+                    ctx,
+                    [ this._validValuePlanMaker ]
+                );
+
+                const preTestCase = all[ 0 ];
+
+                // Replace TestScenario steps with the new ones
+                let newTS = ts.clone();
+                newTS.steps = preTestCase.steps;
+                newTS.stepAfterPreconditions = null;
+
+                // Adjust the stepAfterPreconditions
+                let oldIndex = ts.steps.indexOf( ts.stepAfterPreconditions );
+                if ( oldIndex >= 0 ) {
+                    newTS.stepAfterPreconditions = newTS.steps[ oldIndex ];
+                }
+
+                newTestScenarios.push( newTS );
+            }
+
+            // Let's add to the map, to serve for other variants
+            this._variantToTestScenarioMap.set( variant, newTestScenarios );
+
+            // console.log( 'GENERATED', newTestScenarios.length, 'scenarios for reusing' );
+        }
 
         // Add the variant to the postconditions map
         for ( let postc of variant.postconditions ) {
