@@ -68,9 +68,19 @@ export class TestCaseFileGenerator {
         }
 
         // Test Cases
+        let lastTagsContent: string = '';
         for ( let testCase of doc.testCases || [] ) {
 
             lines.push( '' ); // empty line
+
+            let newTagsContent = testCase.tags.map( t => ( t.content || '' ) ).join( '' );
+            if ( lastTagsContent != newTagsContent ) {
+                if ( lastTagsContent !== '' ) {
+                    lines.push( Symbols.COMMENT_PREFIX + ' ' + '-'.repeat( 80 - 2 ) );
+                    lines.push( '' ); // empty line
+                }
+                lastTagsContent = newTagsContent;
+            }
 
             // Tags
             for ( let tag of testCase.tags || [] ) {
