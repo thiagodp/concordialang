@@ -31,6 +31,7 @@ export interface KeywordDictionary { // properties should exist in Keywords
     valid: string[];
     invalid: string[];
     random: string[];
+    from: string[];
 
     tagGlobal: string[];
     tagFeature: string[];

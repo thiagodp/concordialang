@@ -34,6 +34,7 @@ export class EnglishKeywordDictionary implements KeywordDictionary {
     valid: string[] = [ "valid" ];
     invalid: string[] = [ "invalid" ];
     random: string[] = [ "random" ];
+    from: string[] = [ "from" ];
 
     tagGlobal: string[] = [ 'global' ];
     tagFeature: string[] = [ 'feature' ];

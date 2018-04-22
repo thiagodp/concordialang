@@ -116,7 +116,7 @@ export class PreTestCaseGenerator {
         steps: Step[],
         ctx: GenContext,
         testPlanMakers: TestPlanMaker[]
-    ): Promise< PreTestCase[] > { // Array< Pair< Steps with values, Oracles > >
+    ): Promise< PreTestCase[] > {
 
         if ( ! steps || steps.length < 1 ) {
             return [];
@@ -510,6 +510,7 @@ export class PreTestCaseGenerator {
         const keywordValid = ! keywords.valid ? 'valid' : ( keywords.valid[ 0 ] || 'valid' );
         const keywordInvalid = ! keywords.invalid ? 'invalid' : ( keywords.invalid[ 0 ] || 'invalid' );
         // const keywordRandom = ! keywords.random ? 'random' : ( keywords.random[ 0 ] || 'random' );
+        const keywordFrom = ! keywords.from ? 'from' : ( keywords.from[ 0 ] || 'from' );
 
         let steps: Step[] = [],
             oracles: Step[] = [],
@@ -580,11 +581,17 @@ export class PreTestCaseGenerator {
                     let oraclesClone = this.processOracles(
                         uieTestPlan.otherwiseSteps, language, keywords, ctx );
 
+                    // Add comments in them
+                    for ( let o of oraclesClone ) {
+                        o.comment = ( o.comment || '' ) + ' ' + keywordFrom + ' ' +
+                            Symbols.UI_LITERAL_PREFIX + uieLiteral + Symbols.UI_LITERAL_SUFFIX;
+                    }
+
                     // Add oracles
                     oracles.push.apply( oracles, oraclesClone );
 
                 } else {
-                    expectedResult = keywordValid
+                    expectedResult = keywordValid;
                 }
 
                 if ( isDefined( langContent.testCaseNames ) ) {

@@ -22,6 +22,7 @@
         "valid": [ "válido" ],
         "invalid": [ "inválido" ],
         "random": [ "aleatório" ],
+        "from": [ "de" ],
 
         "tagGlobal": [ "global" ],
         "tagFeature": [ "feature" ],
