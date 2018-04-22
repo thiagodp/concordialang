@@ -186,6 +186,7 @@ export class PreTestCaseGenerator {
             // console.log( 'maker did these plans', testPlans );
             allTestPlans.push.apply( allTestPlans, testPlans );
         }
+        // console.log( 'allTestPlans length', allTestPlans.length );
         // console.log( 'allTestPlans', allTestPlans );
 
         // # Generate values for all the UI Elements, according to the DataTestCase

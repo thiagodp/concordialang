@@ -211,7 +211,8 @@ export class OnlyInvalidMix implements DataTestCaseMix {
 }
 
 /**
- * Does not filter the available elements, but the imcompatible ones.
+ * Does not filter the available elements, except for the incompatible ones
+ * and the alwaysValidVariables.
  *
  * @author Thiago Delgado Pinto
  */
@@ -219,22 +220,21 @@ export class UnfilteredMix implements DataTestCaseMix {
 
     /** @inheritDoc */
     select( map: TestAnalysisMap, alwaysValidVariables: string[] ): object[] {
-        let all = [];
+        let obj = {};
         for ( let [ uieName, dtcMap ] of map ) {
-            let obj = {};
-            for ( let [ uieName, dtcMap ] of map ) {
-                obj[ uieName ] = [];
-                for ( let [ dtc, pair ] of dtcMap ) {
-                    let [ result, oracles ] = pair.toArray();
-                    if ( DTCAnalysisResult.INCOMPATIBLE === result ) {
-                        continue;
-                    }
-                    obj[ uieName ].push( new UIETestPlan( dtc, result, oracles ) );
+            obj[ uieName ] = [];
+            let currentMustBeValid = alwaysValidVariables.indexOf( uieName ) >= 0;
+            for ( let [ dtc, pair ] of dtcMap ) {
+                let [ result, oracles ] = pair.toArray();
+                if ( DTCAnalysisResult.INCOMPATIBLE === result
+                    || ( currentMustBeValid && DTCAnalysisResult.INVALID === result ) ) {
+                    continue;
                 }
+                obj[ uieName ].push( new UIETestPlan( dtc, result, oracles ) );
             }
-            all.push( obj );
+
         }
-        return all;
+        return [ obj ];
     }
 
 }

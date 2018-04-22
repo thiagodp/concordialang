@@ -333,7 +333,7 @@ export class TCGenController {
         );
 
         return [
-            new TestPlanMaker( mixStrategy, combinationStrategy )
+            new TestPlanMaker( mixStrategy, combinationStrategy, options.seed )
         ];
     }
 

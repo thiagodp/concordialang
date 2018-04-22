@@ -82,7 +82,7 @@ describe( 'TCGenTest', () => {
 
         const testPlanMakers: TestPlanMaker[] = [
             // new TestPlanMaker( new AllValidMix(), new SingleRandomOfEachStrategy( SEED ) )
-            new TestPlanMaker( new JustOneInvalidMix(), new IndexOfEachStrategy( 0 ) )
+            new TestPlanMaker( new JustOneInvalidMix(), new IndexOfEachStrategy( 0 ), SEED )
         ];
 
         const ctx1 = new GenContext( spec, doc1, errors, warnings );
@@ -147,7 +147,7 @@ describe( 'TCGenTest', () => {
 
         const testPlanMakers: TestPlanMaker[] = [
             // new TestPlanMaker( new AllValidMix(), new SingleRandomOfEachStrategy( SEED ) )
-            new TestPlanMaker( new JustOneInvalidMix(), new IndexOfEachStrategy( 0 ) )
+            new TestPlanMaker( new JustOneInvalidMix(), new IndexOfEachStrategy( 0 ), SEED )
         ];
 
         const ctx1 = new GenContext( spec, doc1, errors, warnings );

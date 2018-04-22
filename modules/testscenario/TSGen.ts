@@ -55,7 +55,8 @@ export class TSGen {
         // Makes a PlanMaker to create valid values for Precondition scenarios
         this._validValuePlanMaker = new TestPlanMaker(
             new OnlyValidMix(),
-            new SingleRandomOfEachStrategy( this.seed )
+            new SingleRandomOfEachStrategy( this.seed ),
+            this.seed
         );
     }
 

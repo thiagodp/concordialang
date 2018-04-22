@@ -11,6 +11,22 @@ Cenário: foo
     Então vejo "y"
       E tenho ~foo state~
 
+  Variante: my foo 2
+    Dado que eu vejo "j"
+    Quando preencho {A}
+      E eu preencho {B}
+    Então vejo "k"
+      E tenho ~foo state~
+
+Cenário: loo
+
+  Variante: my loo
+    Dado que eu vejo "x"
+    Quando preencho {A}
+    Então vejo "r"
+      E tenho ~foo state~
+
+
 Elemento de IU: A
   - tipo de dado é inteiro
   - valor mínimo é 5
