@@ -58,6 +58,7 @@ export const UI_ACTION_SYNTAX_RULES = [
     { name: "open" },
     { name: "press", targets: [ "value" ], maxTargets: 5 },
     { name: "refresh" },
+    { name: "see", targets: [ "ui_element", "ui_literal", "value" ], maxTargets: 1 },
     //...
 ];
 
