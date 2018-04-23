@@ -160,7 +160,7 @@ export class TCGenController {
             // > This shall allow the test script generator to include all the needed test cases.
             const from = newDoc.fileInfo.path;
             const to = doc.fileInfo.path;
-            graph.addVertex( from, newDoc );
+            graph.addVertex( from, newDoc ); // Overwrites if exist!
             graph.addEdge( to, from ); // order is this way...
 
             // console.log( 'Criando', from );
@@ -183,10 +183,25 @@ export class TCGenController {
 
         }
 
-        // Adding generated documents to the specification
+        // console.log( 'BEFORE');
+        // for ( let d of spec.docs ) {
+        //     console.log( ' DOC', d.fileInfo.path );
+        // }
+
+        // Adds or replaces generated documents to the specification
         for ( let newDoc of newTestCaseDocuments ) {
-            spec.docs.push( newDoc );
+            // console.log( 'NEW is', newDoc.fileInfo.path );
+            let index = spec.docs.findIndex( doc => doc.fileInfo.path.toLowerCase() === newDoc.fileInfo.path.toLowerCase() );
+            if ( index < 0 ) {
+                // console.log( ' ADD', newDoc.fileInfo.path );
+                spec.docs.push( newDoc );
+            } else {
+                // console.log( ' REPLACE', newDoc.fileInfo.path );
+                spec.docs.splice( index, 1, newDoc ); // Replace
+            }
         }
+
+
 
         return [ spec, graph ];
     }
