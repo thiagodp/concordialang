@@ -26,7 +26,7 @@ export class GraphFilter extends EventEmitter {
     ): Graph {
 
         // Creates a new graph
-        let filteredGraph = new Graph();
+        let newGraph = new Graph();
 
         // Iterates the original graph in topological order
         for ( let [ key, value ] of graph.vertices_topologically() ) {
@@ -37,20 +37,19 @@ export class GraphFilter extends EventEmitter {
                 continue;
             }
 
-            // Add the document as a vertex, using it file path as the key.
-            // If the key already exists, the value is overwriten.
+            // Add a vertex for the document (overwrites if already exist)
             const fromKey = doc.fileInfo.path;
-            filteredGraph.addVertex( fromKey, doc ); // key, value
+            newGraph.addVertex( fromKey, doc ); // key, value
 
             // Add edges that leaves the document.
             // This iterates over all outgoing edges of the `from` vertex.
             for ( let [ toKey, vertexValue ] of graph.verticesFrom( fromKey ) ) {
-                filteredGraph.ensureVertex( toKey, vertexValue );
-                filteredGraph.ensureEdge( fromKey, toKey );
+                newGraph.ensureVertex( toKey, vertexValue );
+                newGraph.ensureEdge( fromKey, toKey );
             }
         }
 
-        return filteredGraph;
+        return newGraph;
     }
 
 }

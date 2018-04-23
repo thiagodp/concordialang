@@ -4,32 +4,38 @@ import { GraphFilter, GraphFilterEvent } from "./GraphFilter";
 import { Spec } from "../ast/Spec";
 import { Document } from "../ast/Document";
 import Graph = require( 'graph.js/dist/graph.full.js' );
+import { EventEmitter } from "events";
 
 /**
  * Specification filter
  *
  * @author Thiago Delgado Pinto
  */
-export class SpecFilter {
+export class SpecFilter extends EventEmitter {
 
     private readonly _graphFilter = new GraphFilter();
     private _graph: Graph = null;
 
     constructor( private _spec: Spec ) {
+        super();
     }
+
 
     filter( fn: ( doc: Document, graph: Graph ) => boolean ): SpecFilter {
 
         // Adds a listener for excluded documents, in order to remove them from the specification
         this._graphFilter.addListener(
             GraphFilterEvent.DOCUMENT_NOT_INCLUDED,
-            this.removeDocumentFromSpecification
+            ( doc ) => {
+                this.emit( GraphFilterEvent.DOCUMENT_NOT_INCLUDED );
+                this.removeDocumentFromSpecification( doc );
+            }
         );
 
         // Overwrites the current graph with the filtered one
         this._graph = this._graphFilter.filter( this.graph(), fn );
 
-        // Removes listeners
+        // Removes listeners from the graph filter
         this._graphFilter.removeAllListeners();
 
         // Clear specification cache
@@ -46,6 +52,7 @@ export class SpecFilter {
     }
 
     reset(): SpecFilter {
+        this.removeAllListeners();
         this._graph = this.createGraph();
         return this;
     }

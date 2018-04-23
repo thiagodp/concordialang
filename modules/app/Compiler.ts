@@ -44,9 +44,19 @@ export class Compiler {
 
         // Then filter the specification
         const specFilter = new SpecFilter( spec );
-        // if ( isDefined( options.runMinFeature ) ) {
-        //     //...
-        //     specFilter.filter( ... );
+        // if ( options.hasAnySpecificationFilter() ) {
+
+        //     specFilter.on( )
+
+        //     if ( options.hasFeatureFilter() ) {
+        //         // ...
+        //     }
+        //     if ( options.hasScenarioFilter() ) {
+        //         // ...
+        //     }
+        //     if ( options.hasTagFilter() ) {
+        //         // ...
+        //     }
         // }
         let graph = specFilter.graph();
 
