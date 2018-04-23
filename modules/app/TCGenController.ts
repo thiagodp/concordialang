@@ -286,7 +286,7 @@ export class TCGenController {
 
         let mixStrategy: DataTestCaseMix;
 
-        const desired = String( options.invalid );
+        const desired = String( options.combInvalid );
         switch ( desired ) {
 
             case '0': ; // next

@@ -10,9 +10,9 @@ import { CaseType } from './CaseType';
  * @see VariantSelectionStrategy
  */
 export enum VariantSelectionOptions {
-    SINGLE_RANDOM = 'single-random',
+    SINGLE_RANDOM = 'random',
     FIRST = 'first',
-    FIRST_MOST_IMPORTANT = 'first-most-important',
+    FIRST_MOST_IMPORTANT = 'fmi',
     ALL = 'all'
 }
 
@@ -22,9 +22,9 @@ export enum VariantSelectionOptions {
  * @see CombinationStrategy
  */
 export enum CombinationOptions {
-    SINGLE_RANDOM_OF_EACH = 'single-random-of-each',
-    SHUFFLED_ONE_WISE = 'shuffled-one-wise',
-    ONE_WISE = 'one-wise',
+    SINGLE_RANDOM_OF_EACH = 'sre',
+    SHUFFLED_ONE_WISE = 'sow',
+    ONE_WISE = 'ow',
     ALL = 'all'
 }
 
@@ -75,7 +75,7 @@ export enum InvalidSpecialOptions {
     /**
      * Leave the mix untouched (i.e., does not filter the DataTestCases of each UI Element ).
      */
-    DEFAULT = 'default'
+    DEFAULT = 'smart'
 }
 
 /**

@@ -34,9 +34,6 @@ export class AppController {
 
         //console.log( options );
 
-        // Seed
-        this.updateSeed( options, cli );
-
         if ( options.help ) {
             ui.showHelp();
             return true;
@@ -102,6 +99,9 @@ export class AppController {
             }
             return true;
         }
+
+        // Seed
+        this.updateSeed( options, cli );
 
         let hasErrors: boolean = false;
         let spec: Spec = null;

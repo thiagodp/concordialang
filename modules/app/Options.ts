@@ -94,15 +94,15 @@ export class Options {
      */
     public seed: string = null;
     /**
-     * Backup of the original seed, maybe the user-defined one.
+     * Backup of the original seed, maybe that given by the user.
      * Saved for debugging purposes.
      */
     public seedBackup: string = null;
 
-    /** Number of test cases with valid random values */
-    public randomValid: number = 1;
-    /** Number of test cases with invalid random values */
-    public randomInvalid: number = 1;
+    // /** Number of test cases with valid random values */
+    // public randomValid: number = 1;
+    // /** Number of test cases with invalid random values */
+    // public randomInvalid: number = 1;
     /** Minimum size for random strings */
     public randomStringMinSize: number = this.defaults.RANDOM_STRING_MIN_SIZE;
     /** Maximum size for random strings */
@@ -129,17 +129,17 @@ export class Options {
     // TEST SCENARIO SELECTION AND COMBINATION STRATEGIES
 
     /** @see VariantSelectionOptions */
-    public variantSelection: string = this.defaults.VARIANT_SELECTION;
+    public combVariant: string = this.defaults.VARIANT_SELECTION;
 
     /** @see StateCombinationOptions */
-    public stateCombination: string = this.defaults.STATE_COMBINATION;
+    public combState: string = this.defaults.STATE_COMBINATION;
 
     // SELECTION AND COMBINATION STRATEGIES FOR DATA TEST CASES
 
     /** @see Defaults */
-    public invalid: number | string = this.defaults.INVALID_DATA_TEST_CASES_AT_A_TIME;
+    public combInvalid: number | string = this.defaults.INVALID_DATA_TEST_CASES_AT_A_TIME;
     /** @see DataTestCaseCombinationOptions */
-    public dataCombination: string = this.defaults.DATA_TEST_CASE_COMBINATION;
+    public combData: string = this.defaults.DATA_TEST_CASE_COMBINATION;
 
     // Test script filtering
     public runMinFeature: number = 0; // minimum feature importance
@@ -229,8 +229,8 @@ export class Options {
     }
 
     public typedVariantSelection(): VariantSelectionOptions {
-        if ( enumUtil.isValue( VariantSelectionOptions, this.variantSelection ) ) {
-            return this.variantSelection;
+        if ( enumUtil.isValue( VariantSelectionOptions, this.combVariant ) ) {
+            return this.combVariant;
         }
         if ( enumUtil.isValue( VariantSelectionOptions, this.defaults.VARIANT_SELECTION ) ) {
             return this.defaults.VARIANT_SELECTION;
@@ -239,11 +239,11 @@ export class Options {
     }
 
     public typedStateCombination(): CombinationOptions {
-        return this.typedCombinationFor( this.stateCombination, this.defaults.STATE_COMBINATION );
+        return this.typedCombinationFor( this.combState, this.defaults.STATE_COMBINATION );
     }
 
     public typedDataCombination(): CombinationOptions {
-        return this.typedCombinationFor( this.dataCombination, this.defaults.DATA_TEST_CASE_COMBINATION );
+        return this.typedCombinationFor( this.combData, this.defaults.DATA_TEST_CASE_COMBINATION );
     }
 
     private typedCombinationFor( value: string, defaultValue: string ): CombinationOptions {
@@ -343,24 +343,38 @@ export class Options {
         this.executeScripts = ! noRun || justRun;
         this.analyzeResults = ! noResults || justResults;
 
-        if ( isString( flags.dirExample ) ) {
-            this.dirTestCases = flags.dirExample.trim().toLowerCase();
-        } else if ( isString( flags.dirExamples ) ) {
-            this.dirTestCases = flags.dirExamples.trim().toLowerCase();
+        if ( isString( flags.dirTestCase ) ) { // singular
+            this.dirTestCases = flags.dirTestCase.trim().toLowerCase();
+        } else if ( isString( flags.dirTestCases ) ) { // plural
+            this.dirTestCases = flags.dirTestCases.trim().toLowerCase();
         }
-        if ( isString( flags.dirScript ) ) {
+        if ( isString( flags.dirScript ) ) { // singular
             this.dirScripts = flags.dirScript.trim().toLowerCase();
-        } else if ( isString( flags.dirScripts ) ) {
+        } else if ( isString( flags.dirScripts ) ) { // plural
             this.dirScripts = flags.dirScripts.trim().toLowerCase();
         }
-        if ( isString( flags.dirResult ) ) {
+        if ( isString( flags.dirResult ) ) { // singular
             this.dirResult = flags.dirResult.trim().toLowerCase();
-        } else if ( isString( flags.dirResults ) ) {
+        } else if ( isString( flags.dirResults ) ) { // plural
             this.dirResult = flags.dirResults.trim().toLowerCase();
+        }
+
+        if ( isString( flags.extensionFeature ) ) {
+            this.extensionFeature = flags.extensionFeature;
+        } else if ( isString( flags.extFeature ) ) { // similar
+            this.extensionFeature = flags.extFeature;
+        }
+
+        if ( isString( flags.extensionTestCase ) ) {
+            this.extensionTestCase = flags.extensionTestCase;
+        } else if ( isString( flags.extTestCase ) ) { // similar
+            this.extensionTestCase = flags.extTestCase;
         }
 
         if ( isString( flags.lineBreaker ) ) {
             this.lineBreaker = flags.lineBreaker;
+        } else if ( isString( flags.lineBreak ) ) { // similar
+            this.lineBreaker = flags.lineBreak;
         }
 
         // CONTENT GENERATION
@@ -383,12 +397,13 @@ export class Options {
         if ( isString( flags.seed ) || isNumber( flags.seed ) ) {
             this.seed = String( flags.seed );
         }
-        if ( isNumber( flags.randomValid ) ) {
-            this.randomValid = parseInt( flags.randomValid );
-        }
-        if ( isNumber( flags.randomInvalid ) ) {
-            this.randomInvalid = parseInt( flags.randomInvalid );
-        }
+
+        // if ( isNumber( flags.randomValid ) ) {
+        //     this.randomValid = parseInt( flags.randomValid );
+        // }
+        // if ( isNumber( flags.randomInvalid ) ) {
+        //     this.randomInvalid = parseInt( flags.randomInvalid );
+        // }
 
         if ( isNumber( flags.randomStringMinSize ) ) {
             this.randomStringMinSize = parseInt( flags.randomStringMinSize );
@@ -396,6 +411,10 @@ export class Options {
 
         if ( isNumber( flags.randomStringMaxSize ) ) {
             this.randomStringMaxSize = parseInt( flags.randomStringMaxSize );
+        }
+
+        if ( isNumber( flags.randomTries ) ) {
+            this.randomTriesToInvalidValues = flags.randomTries;
         }
 
         // SPECIFICATION SELECTION
@@ -421,26 +440,26 @@ export class Options {
 
         // TEST SCENARIO SELECTION AND COMBINATION STRATEGIES
 
-        if ( isString( flags.variantSelection )
-            && enumUtil.isValue( VariantSelectionOptions, flags.variantSelection ) ) {
-            this.variantSelection = flags.variantSelection;
+        if ( isString( flags.combVariant )
+            && enumUtil.isValue( VariantSelectionOptions, flags.combVariant ) ) {
+            this.combVariant = flags.combVariant;
         }
-        if ( isString( flags.stateCombination )
-            && enumUtil.isValue( CombinationOptions, flags.stateCombination ) ) {
-            this.stateCombination = flags.stateCombination;
+        if ( isString( flags.combState )
+            && enumUtil.isValue( CombinationOptions, flags.combState ) ) {
+            this.combState = flags.combState;
         }
 
         // SELECTION AND COMBINATION STRATEGIES FOR DATA TEST CASES
 
-        if ( isNumber( flags.invalid ) && Number( flags.invalid ) >= 0 ) {
-            this.invalid = parseInt( flags.invalid );
-        } else if ( isString( flags.invalid ) ) {
-
+        if ( isNumber( flags.combInvalid ) && Number( flags.combInvalid ) >= 0 ) {
+            this.combInvalid = parseInt( flags.combInvalid );
+        } else if ( isString( flags.combInvalid ) ) {
+            this.combInvalid = flags.combInvalid;
         }
 
-        if ( isString( flags.dataCombination )
-            && enumUtil.isValue( CombinationOptions, flags.dataCombination ) ) {
-            this.dataCombination = flags.dataCombination;
+        if ( isString( flags.combData )
+            && enumUtil.isValue( CombinationOptions, flags.combData ) ) {
+            this.combData = flags.combData;
         }
 
         // TEST SCRIPT FILTERING
@@ -494,12 +513,12 @@ export class Options {
         // (nothing)
 
         // RANDOMIC GENERATION
-        if ( this.randomValid < 0 ) {
-            this.randomValid = 0;
-        }
-        if ( this.randomInvalid < 0 ) {
-            this.randomInvalid = 0;
-        }
+        // if ( this.randomValid < 0 ) {
+        //     this.randomValid = 0;
+        // }
+        // if ( this.randomInvalid < 0 ) {
+        //     this.randomInvalid = 0;
+        // }
 
         // SPECIFICATION SELECTION
         if ( this.selMinFeature < 0 ) {

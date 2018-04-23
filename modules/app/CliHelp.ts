@@ -9,7 +9,7 @@ export class CliHelp {
         const NIY: string = chalk.red( 'NIY' );
 
         return `
-  ${chalk.yellowBright('Usage:')} ${exeName} [ <dir> | --files="file1.feature,path/to/file2.feature,..." ] [options]
+  ${chalk.yellowBright('Usage:')} ${exeName} [<dir>] [options]
 
   where ${chalk.yellow('<dir>')} is the directory that contains your specification files.
 
@@ -25,11 +25,11 @@ export class CliHelp {
   -f,  --files <"file1,file2,...">       Files to consider, instead of <dir>.
 
   -l,  --language <code>                 Default language. Default is "en" (english).
-  -ll, --language-list                   List available languages. ${NIY}
+  -ll, --language-list                   List available languages.
 
   ${chalk.gray('Plug-in')}
 
-  -p,  --plugin <name>                   Plug-in to use. ${NIY}
+  -p,  --plugin <name>                   Plug-in to use.
   -pl, --plugin-list                     List available plug-ins.
   -pa, --plugin-about <name>             About a plug-in.
   -pi, --plugin-install <name>           Install a plug-in.
@@ -38,31 +38,52 @@ export class CliHelp {
   ${chalk.gray('Processing and output')}
 
   -b,  --verbose                         Verbose output.
-  -ff, --fail-fast                       Stop on the first error. ${NIY}
 
-  -ns, --no-spec                         Do not process specification files. ${NIY}
-  -nt, --no-test-cases                   Do not generate test cases. ${NIY}
-  -nc, --no-scripts                      Do not generate test scripts. ${NIY}
-  -nx, --no-run                          Do not run test scripts. ${NIY}
-  -nu, --no-results                      Do not process execution results. ${NIY}
+  -ns, --no-spec                         Do not process specification files.
+  -nt, --no-test-cases                   Do not generate test cases.
+  -nc, --no-scripts                      Do not generate test scripts.
+  -nx, --no-run                          Do not run test scripts.
+  -nu, --no-results                      Do not process execution results.
 
-  -js, --just-spec                       Just process specification files. ${NIY}
-  -jt, --just-test-cases                 Just generate test cases. ${NIY}
-  -jc, --just-scripts                    Just generate test scripts. ${NIY}
-  -jx, --just-run                        Just execute test scripts. ${NIY}
+  -js, --just-spec                       Just process specification files.
+  -jt, --just-test-cases                 Just generate test cases.
+  -jc, --just-scripts                    Just generate test scripts.
+  -jx, --just-run                        Just execute test scripts.
 
-  -dt, --dir-test-cases                  Output directory for test cases. ${NIY}
-  -dc, --dir-scripts                     Output directory for test scripts. ${NIY}
-  -du, --dir-results                     Output directory for result files. ${NIY}
+  -dt, --dir-test-cases                  Output directory for test cases.
+  -ds, --dir-scripts                     Output directory for test scripts.
+  -du, --dir-results                     Output directory for result files.
+
+  -ef, --ext-feature                     File extension for Feature files.
+                                         Default is .feature.
+  -et, --ext-test-cases                  File extension for Test Case files.
+                                         Default is .testcase.
+  -lb, --line-breaker                    Character used for breaking lines.
+
+  ${chalk.gray('Content generation')}
+
+  --case-ui (camel|pascal|snake|kebab|none)
+                                         String case to use for UI Element names
+                                         when they are not defined (default is camel).
+  --case-method (camel|pascal|snake|kebab|none)
+                                         String case to use for test script methods
+                                         (default is snake).
+  --tc-suppress-header                   Suppress header in generated Test Case files.
+  --tc-indenter <value>                  String used as indenter in generated Test Case
+                                         files (default is double spaces).
 
   ${chalk.gray('Randomic value generation')}
 
-  --seed <string>                        Use the given random seed. ${NIY}
-  --random-valid <0-9999>                Number of test cases with valid random values. ${NIY}
-  --random-invalid <0-9999>              Number of test cases with invalid random values. ${NIY}
+  --seed <value>                         Use the given random seed. Default is current
+                                         date and time.
+  --random-string-min-size <number>      Minimum random string size. Default is 0.
+  --random-string-max-size <number>      Minimum random string size. Default is 500.
+  --random-tries <number>                Random tries to generate invalid values.
+                                         Default is 5.
 
   ${chalk.gray('Specification filtering')}
 
+  --importance <number>                  Sets the default importance value.
   --sel-min-feature <number>             Minimum feature importance. ${NIY}
   --sel-max-feature <number>             Maximum feature importance. ${NIY}
   --sel-min-scenario <number>            Minimum scenario importance. ${NIY}
@@ -71,17 +92,35 @@ export class CliHelp {
 
   ${chalk.gray('Combination strategies')}
 
-  --sel-variant random|first|fmi|all     Variant selection strategy to combine scenarios,
-                                         according to their states. ${NIY}
-                                         random = a random variant (default)
-                                         first = the first variant
-                                         fmi = the first most important variant
-                                         all = all variants
+  --comb-variant (random|first|fmi|all)  Strategy to select variants to combine,
+                                         by their states.
+        random  = random variant that has the state (default)
+        first   = first variant that has the state
+        fmi     = first most important variant that has the state
+        all     = all variants that have the state
 
-  --sel-state sow|onewise|all            State selection strategy to combine scenarios. ${NIY}
-                                         sow = shuffled one-wise combination (default)
-                                         onewise = one-wise combination
-                                         all = all states
+  --comb-state (sre|sow|onewise|all)     Strategy to combine states of a
+                                         same variant.
+        sre     = single random of each (default)
+        sow     = shuffled one-wise
+        ow      = one-wise
+        all     = all
+
+  --comb-invalid (node|0|1|smart|random|all)
+                                         How many input data will be invalid
+                                         in each test case.
+        0,none  = no invalid data
+        1       = one invalid data per test case
+        smart   = use algorithm to decide (default)
+        random  = random invalid data per test case
+        all     = all invalid
+
+  --comb-data (sre|sow|onewise|all)     Strategy to combine data test cases
+                                        of a variant.
+        sre     = single random of each (default)
+        sow     = shuffled one-wise
+        ow      = one-wise
+        all     = all
 
   ${chalk.gray('Test script execution filtering (depends on the used plugin)')}
 
@@ -146,8 +185,13 @@ export class CliHelp {
                 jx: 'just-run',
 
                 dt: 'dir-test-cases',
-                dc: 'dir-scripts',
+                ds: 'dir-scripts',
                 du: 'dir-results',
+
+                lb: 'line-breaker',
+
+                // CONTENT GENERATION
+                // (no shortcuts)
 
                 // RANDOMIC GENERATION
                 s: 'seed',
