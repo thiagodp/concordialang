@@ -1,6 +1,6 @@
 import { Document } from "../ast/Document";
 import { TestCase } from "../ast/TestCase";
-import { parse, relative, join, dirname, basename } from "path";
+import { parse, relative, join, dirname, basename, normalize } from "path";
 import { FileInfo } from "../ast/FileInfo";
 import { Language } from "../ast/Language";
 import * as deepcopy from 'deepcopy';
@@ -81,7 +81,7 @@ export class TCDocGen {
         const props = parse( docPath );
         const fileName = props.name + this._extensionTestCase;
         const outDir = ! outputDir ? props.dir : relative( props.dir, outputDir );
-        const fullPath = resolve( this._basePath, join( outDir, fileName ) );
+        const fullPath = normalize( resolve( this._basePath, join( outDir, fileName ) ) );
         return fullPath;
     }
 
