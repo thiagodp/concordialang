@@ -84,8 +84,8 @@ export class CliHelp {
   ${chalk.gray('Specification filtering')}
 
   --importance <number>                  Sets the default importance value.
-  --sel-min-feature <number>             Minimum feature importance. ${NIY}
-  --sel-max-feature <number>             Maximum feature importance. ${NIY}
+  --sel-min-feature <number>             Minimum feature importance.  ${NIY}
+  --sel-max-feature <number>             Maximum feature importance.  ${NIY}
   --sel-min-scenario <number>            Minimum scenario importance. ${NIY}
   --sel-max-scenario <number>            Maximum scenario importance. ${NIY}
   --sel-filter <filter>                  Filter by tag. ${NIY}

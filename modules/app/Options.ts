@@ -202,6 +202,24 @@ export class Options {
             */
     }
 
+    public hasAnySpecificationFilter(): boolean {
+        return this.hasFeatureFilter()
+            || this.hasScenarioFilter()
+            || this.hasTagFilter();
+    }
+
+    public hasFeatureFilter(): boolean {
+        return this.selMinFeature > 0 || this.selMaxFeature > 0;
+    }
+
+    public hasScenarioFilter(): boolean {
+        return this.selMinScenario > 0 || this.selMaxScenario > 0;
+    }
+
+    public hasTagFilter(): boolean {
+        return this.selFilter != '';
+    }
+
     public someInfoOption(): boolean {
         return this.help || this.about || this.version;
     }
