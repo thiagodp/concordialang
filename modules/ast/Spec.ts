@@ -293,11 +293,11 @@ export class Spec {
         if ( ! isDefined( this._relPathToDocumentCache ) || rebuildCache ) {
             this._relPathToDocumentCache = new Map< string, Document >();
             for ( let doc of this.docs ) {
-                this._relPathToDocumentCache.set( doc.fileInfo.path, doc );
+                this._relPathToDocumentCache.set( doc.fileInfo.path.toLowerCase(), doc );
             }
         }
 
-        const targetFile = resolve( dirname( referencePath ), filePath );
+        const targetFile = resolve( dirname( referencePath ), filePath ).toLowerCase();
         return this._relPathToDocumentCache.get( targetFile ) || null;
     }
 

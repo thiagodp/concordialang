@@ -19,8 +19,8 @@ export class SingleFileCompiler implements SingleFileProcessor {
 
     /**
      * MUST NEVER THROW
-     * 
-     * @param data 
+     *
+     * @param data
      * @param lineBreaker Characters used to separate lines. Defaults to `\n`.
      */
     public async process(
@@ -34,7 +34,7 @@ export class SingleFileCompiler implements SingleFileProcessor {
             const startTime = Date.now();
             let errors: Error[] = [];
             let warnings: Error[] = [];
-    
+
             // simulate with a timer
             let time = Math.random() * 10000;
 
@@ -55,6 +55,7 @@ export class SingleFileCompiler implements SingleFileProcessor {
                 fileInfo: { hash: data.meta.hash, path: data.meta.fullPath }
                 //, meta: data.meta
             };
+            // console.log( 'NEW', doc.fileInfo.path );
 
             let sdp = new SingleDocumentProcessor();
             sdp.analyzeNodes(
@@ -75,10 +76,10 @@ export class SingleFileCompiler implements SingleFileProcessor {
                 doc.fileErrors,
                 doc.fileWarnings
             );
-            
+
             resolve( processedData );
         } );
-        
+
     }
 
 }
