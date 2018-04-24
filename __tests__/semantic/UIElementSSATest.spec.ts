@@ -12,6 +12,7 @@ describe( 'UIElementSSATest', () => {
 
     let sa: UIElementSSA; // under test
 
+    const path = __dirname;
     let cp: SimpleCompiler;
 
 
@@ -28,7 +29,7 @@ describe( 'UIElementSSATest', () => {
 
     it( 'detect all references', async () => {
 
-        let spec = new Spec( './' );
+        let spec = new Spec( path );
 
         const mydbPath = join( __dirname, '../db/users.json' );
 
@@ -44,13 +45,13 @@ describe( 'UIElementSSATest', () => {
                 ' - tipo é "json"',
                 ' - caminho é "' + mydbPath + '"'
             ],
-            { path: 'feature1.feature' } as FileInfo
+            { path: join( path, 'feature1.feature' ) } as FileInfo
         );
 
         let doc2: Document = cp.addToSpec( spec,
             [
                 '#language:pt',
-                'Import "feature1.feature"',
+                'import "feature1.feature"',
                 '',
                 'Feature: Feature 2',
                 'Cenário: Cenário 1',
@@ -62,7 +63,7 @@ describe( 'UIElementSSATest', () => {
                 'Constantes:',
                 ' - "x" é 2',
             ],
-            { path: 'feature2.feature' } as FileInfo
+            { path: join( path, 'feature2.feature' ) } as FileInfo
         );
 
         // console.log( spec.constantNames() );
