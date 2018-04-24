@@ -106,7 +106,7 @@ describe( 'TCGenTest', () => {
             [
                 'Quando eu preencho <a> com ' + value1 + ' ' + comment,
                 'E eu preencho <b> com "foo"',
-                'Então eu devo ver a mensagem "bar"' // << Then replaced with the oracle
+                'Então eu devo ver a mensagem "bar" # de <a>' // << Then replaced with the oracle
             ]
         );
 
