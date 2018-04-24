@@ -7,13 +7,12 @@ import { UIElement } from './UIElement';
 import { Constant } from './Constant';
 import { Database, DatabaseProperties } from './Database';
 import { Document } from './Document';
-import { isDefined } from '../util/TypeChecking';
+import { isDefined, valueOrNull } from '../util/TypeChecking';
 import { join, resolve, dirname, relative, isAbsolute } from 'path';
 import { UIElementPropertyExtractor } from '../util/UIElementPropertyExtractor';
 import { DocumentUtil } from '../util/DocumentUtil';
 import { CaseType } from '../app/CaseType';
 import { NamedNode } from './Node';
-import { toEnumValue } from '../util/ToEnumValue';
 import { DatabaseInterface } from '../req/DatabaseInterface';
 import { InMemoryTableInterface } from '../req/InMemoryTableInterface';
 import { UIElementNameHandler } from '../util/UIElementNameHandler';
@@ -100,8 +99,8 @@ export class Spec {
 
 
     private assureDoc( doc: Document ): MappedContent {
-        let mc = this._docFullyMapped.get( doc ) || null;
-        if ( ! mc ) {
+        let mc = this._docFullyMapped.get( doc );
+        if ( ! isDefined( mc ) ) {
             mc = new MappedContent();
             this._docFullyMapped.set( doc, mc );
         }
@@ -298,7 +297,8 @@ export class Spec {
         }
 
         const targetFile = resolve( dirname( referencePath ), filePath ).toLowerCase();
-        return this._relPathToDocumentCache.get( targetFile ) || null;
+        let doc = this._relPathToDocumentCache.get( targetFile );
+        return undefined === doc ? null : doc;
     }
 
 
@@ -336,7 +336,7 @@ export class Spec {
 
     private findByName< T extends NamedNode >( name: string, nodes: T[] ): T | null {
         const lowerCasedName: string = name.toLowerCase();
-        return nodes.find( n => n.name.toLowerCase() === lowerCasedName ) || null;
+        return valueOrNull( nodes.find( n => n.name.toLowerCase() === lowerCasedName ) );
     }
 
     //
@@ -344,7 +344,7 @@ export class Spec {
     //
 
     constantValue( name: string ): string | number | null {
-        return this.constantNameToValueMap().get( name ) || null;
+        return valueOrNull( this.constantNameToValueMap().get( name ) );
     }
 
     /**

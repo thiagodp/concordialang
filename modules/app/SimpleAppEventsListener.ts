@@ -2,18 +2,24 @@ import { FileReadListener, DirectoryReadListener, DirectoryReadResult } from './
 import { SingleFileProcessorListener, FileMeta, ProcessedFileData } from './SingleFileProcessor';
 import { MultiFileProcessListener } from './MultiFileProcessor';
 import { CLI } from './CLI';
-import { CompilerListener, ProcessingInfo } from './CompilerListener';
+import { CompilerListener } from './CompilerListener';
 import * as prettyBytes from 'pretty-bytes';
 import { Defaults } from './Defaults';
 import { Options } from './Options';
 import { sortErrorsByLocation } from '../util/ErrorSorting';
+import { ProcessingInfo } from './ProcessingInfo';
+import { TCGenListener } from './TCGenListener';
+import { LocatedException } from '../req/LocatedException';
+import { Warning } from '../req/Warning';
+import { isDefined } from '../util/TypeChecking';
 
 export class SimpleAppEventsListener implements
     FileReadListener,
     SingleFileProcessorListener,
     DirectoryReadListener,
     MultiFileProcessListener,
-    CompilerListener
+    CompilerListener,
+    TCGenListener
 {
 
     constructor(
@@ -124,47 +130,6 @@ export class SimpleAppEventsListener implements
         );
     }
 
-    private showProcessingInfo( info: ProcessingInfo, meta?: FileMeta ) {
-
-        const hasErrors = info.errors.length > 0;
-        const hasWarnings = info.warnings.length > 0;
-        const color = this._cli.properColor( hasErrors, hasWarnings );
-        const symbol = this._cli.properSymbol( hasErrors, hasWarnings );
-
-        if ( ! hasErrors && ! hasWarnings ) {
-            return;
-        }
-        const sortedWarnings = sortErrorsByLocation( info.warnings );
-        const sortedErrors = sortErrorsByLocation( info.errors );
-
-        if ( meta ) {
-            this._cli.newLine(
-                color( symbol ),
-                color( meta.fullPath ),
-                //this.formatHash( meta.hash ),
-                this.formatDuration( info.durationMs )
-            );
-        }
-
-        const spaces = ' ';
-
-        for ( let e of sortedErrors ) {
-            if ( meta ) {
-                this._cli.newLine( spaces, this._cli.symbolError, e.message );
-            } else {
-                this._cli.newLine( this._cli.symbolError, this._cli.colorError( e.message ) );
-            }
-        }
-
-        for ( let e of sortedWarnings ) {
-            if ( meta ) {
-                this._cli.newLine( spaces, this._cli.symbolWarning, e.message );
-            } else {
-                this._cli.newLine( this._cli.symbolWarning, this._cli.colorWarning( e.message ) );
-            }
-        }
-    }
-
     //
     // MultiFileProcessListener
     //
@@ -217,11 +182,98 @@ export class SimpleAppEventsListener implements
     }
 
 
+    //
+    // TCGenListener
+    //
+
+    /** @inheritDoc */
+    testCaseGenerationStarted( warnings: Warning[] ) {
+        this._cli.newLine(
+            this._cli.symbolInfo,
+            'Test case generation started'
+        );
+        this.showErrors( warnings, this._cli.symbolWarning, true );
+    }
+
+    /** @inheritDoc */
+    testCaseProduced( path: string, errors: LocatedException[], warnings: Warning[] ) {
+
+        const hasErrors = errors.length > 0;
+        const hasWarnings = warnings.length > 0;
+        const color = this._cli.properColor( hasErrors, hasWarnings );
+        const symbol = this._cli.properSymbol( hasErrors, hasWarnings );
+
+        this._cli.newLine(
+            color( symbol ),
+            'Generated',
+            this._cli.colorHighlight( path )
+        );
+
+        this.showErrors( errors, this._cli.symbolError, true );
+        this.showErrors( warnings, this._cli.symbolWarning, true );
+    }
+
+    /** @inheritDoc */
+    testCaseGenerationFinished( durationMs ) {
+        this._cli.newLine(
+            this._cli.symbolInfo,
+            'Test case generation finished',
+            this.formatDuration( durationMs )
+        );
+    }
+
+    // OTHER
+
+    private showProcessingInfo( info: ProcessingInfo, meta?: FileMeta ) {
+
+        const hasErrors = info.errors.length > 0;
+        const hasWarnings = info.warnings.length > 0;
+        if ( ! hasErrors && ! hasWarnings ) {
+            return;
+        }
+
+        if ( meta ) {
+            const color = this._cli.properColor( hasErrors, hasWarnings );
+            const symbol = this._cli.properSymbol( hasErrors, hasWarnings );
+
+            this._cli.newLine(
+                color( symbol ),
+                color( meta.fullPath ),
+                //this.formatHash( meta.hash ),
+                this.formatDuration( info.durationMs )
+            );
+        }
+
+        const showSpaces = isDefined( meta );
+
+        this.showErrors( info.errors, this._cli.symbolError, showSpaces );
+
+        this.showErrors( info.warnings, this._cli.symbolWarning, showSpaces );
+    }
+
+    private showErrors( errors: LocatedException[], symbol: string, showSpaces: boolean ) {
+        if ( errors.length < 1 ) {
+            return;
+        }
+        const sortedErrors = sortErrorsByLocation( errors );
+        const spaces = ' ';
+        for ( let e of sortedErrors ) {
+            if ( showSpaces ) {
+                this._cli.newLine( spaces, symbol, e.message );
+            } else {
+                this._cli.newLine( symbol, e.message );
+            }
+        }
+    }
+
     private formatHash( hash: string ): string {
         return this._cli.colorInfo( hash.substr( 0, 8 ) );
     }
 
     private formatDuration( durationMs: number ): string {
+        if ( durationMs < 0 ) {
+            return '';
+        }
         return this._cli.colorInfo( '(' + durationMs.toString() + 'ms)' );
     }
 

@@ -23,6 +23,7 @@ import { upperFirst } from "../util/CaseConversor";
 import { PreTestCaseGenerator, GenContext } from "./PreTestCaseGenerator";
 import { TestPlanMaker } from "../testcase/TestPlanMaker";
 import { OnlyValidMix } from "../testcase/DataTestCaseMix";
+import { Location } from '../ast/Location';
 
 /**
  * Test Scenario generator
@@ -102,7 +103,8 @@ export class TSGen {
                 // No producers ? -> Error
                 if ( producerVariants.length < 1 ) {
                     const msg = 'A producer of the state "' + state.name + '" was not found.';
-                    const err = new RuntimeException( msg, variant.sentences[ state.stepIndex ].location );
+                    const loc = variant.sentences[ state.stepIndex ].location;
+                    const err = new RuntimeException( msg, loc );
                     ctx.errors.push( err );
                     continue;
                 }

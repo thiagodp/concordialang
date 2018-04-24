@@ -24,8 +24,7 @@ export class AppController {
 
     start = async ( appPath: string, processPath: string ): Promise< boolean > => {
 
-        //console.log( appPath );
-        //console.log( processPath );
+        //console.log( appPath, processPath );
 
         let options: Options = new Options( appPath, processPath );
         let cli = new CLI();
@@ -210,7 +209,7 @@ export class AppController {
                 .update( options.seed )
                 .digest( 'hex' );
         }
-        if ( options.debug ) {
+        if ( options.debug || options.verbose ) {
             cli.newLine( cli.symbolInfo, 'Real seed', cli.colorHighlight( options.seed ) );
         }
     }

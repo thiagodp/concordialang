@@ -69,7 +69,7 @@ export class CompilerController {
             return [ spec, graph ];
         }
 
-        const tcGenCtrl = new TCGenController();
+        const tcGenCtrl = new TCGenController( listener );
 
         return await tcGenCtrl.execute(
             nlpBasedSentenceRecognizer.variantSentenceRec,

@@ -10,7 +10,7 @@ import { Spec } from '../ast/Spec';
 import { RuntimeException } from '../req/RuntimeException';
 import { LocatedException } from '../req/LocatedException';
 import { Document } from '../ast/Document';
-import { isDefined } from '../util/TypeChecking';
+import { isDefined, valueOrNull } from '../util/TypeChecking';
 import { DataTestCase, DataTestCaseGroupDef, DataTestCaseGroup } from './DataTestCase';
 import { NodeTypes } from '../req/NodeTypes';
 import { Node } from '../ast/Node';
@@ -74,7 +74,7 @@ export class UIElementValueGenerator {
             : uieName;
 
         // Is in cache ? -> returns it
-        const cachedValue = context.uieVariableToValueMap.get( fullVariableName ) || null;
+        const cachedValue = valueOrNull( context.uieVariableToValueMap.get( fullVariableName ) );
         if ( isDefined( cachedValue ) ) {
             return cachedValue;
         }
@@ -256,7 +256,13 @@ export class UIElementValueGenerator {
         }
 
         // Generate value
-        let value = await this._dataGen.generate( dtc, cfg );
+        let value;
+        try {
+            value = await this._dataGen.generate( dtc, cfg );
+        } catch ( e ) {
+            const msg = doc.fileInfo.path + ': Error generating value for "' + uieName + '".';
+            errors.push( new RuntimeException( msg ) );
+        }
 
         // console.log( '--------------> ', value );
 
@@ -265,121 +271,6 @@ export class UIElementValueGenerator {
 
         return value;
     }
-
-
-    // async createDataGenConfigFrom(
-    //     uie: UIElement,
-    //     dtc: DataTestCase,
-    //     context: ValueGenContext,
-    //     doc: Document | null,
-    //     spec: Spec,
-    //     errors: LocatedException[]
-    // ): Promise< DataGenConfig > {
-
-    //     let cfg = new DataGenConfig();
-
-    //     const groupDef = new DataTestCaseGroupDef();
-    //     const group = groupDef.groupOf( dtc );
-    //     const propertiesMap = this._uiePropExtractor.mapFirstProperty( uie );
-
-    //     // The switch prepares `cfg` to be used after it
-    //     switch ( group ) {
-
-    //         //
-    //         // format is <number>|<value>|<constant>|<ui_element>
-    //         //
-    //         case DataTestCaseGroup.FORMAT: { // negation is not valid here
-
-    //             const pFormat = propertiesMap.get( UIPropertyTypes.FORMAT ) || null;
-
-    //             if ( isDefined( pFormat ) ) {
-    //                 cfg.format = ( await this.resolvePropertyValue( UIPropertyTypes.FORMAT, pFormat, pFormat.value, context, doc, spec, errors ) )
-    //                     .toString();
-    //             }
-
-    //             break;
-    //         }
-
-    //         //
-    //         // required is true|false
-    //         //
-    //         case DataTestCaseGroup.REQUIRED: { // negation is not valid here
-
-    //             cfg.required = this._uiePropExtractor.extractIsRequired( uie );
-
-    //             break;
-    //         }
-
-    //         //
-    //         // value is equal to          <number>|<value>|<constant>|<ui_element>
-    //         // value is not equal to      <number>|<value>|<constant>|<ui_element>
-    //         // value in                   <value_list>|<query>
-    //         // value not in               <value_list>|<query>
-    //         //
-    //         case DataTestCaseGroup.SET: { // negation allowed
-
-    //             const pValue = propertiesMap.get( UIPropertyTypes.VALUE ) || null;
-
-    //             if ( isDefined( pValue ) ) {
-    //                 // It has inverted logic if it has the NOT operator
-    //                 cfg.invertedLogic = this._opChecker.isNotEqualTo( pValue ) || this._opChecker.isNotIn( pValue );
-    //                 cfg.value = await this.resolvePropertyValue( UIPropertyTypes.VALUE, pValue, pValue.value, context, doc, spec, errors );
-    //             }
-
-    //             break;
-    //         }
-
-    //         //
-    //         // min/max value is equal to      <number>|<value>|<constant>|<ui_element>
-    //         // min/max value in               <value_list>|<query>
-    //         //
-    //         case DataTestCaseGroup.VALUE: {  // negation is not valid here
-
-    //             const pMinValue = propertiesMap.get( UIPropertyTypes.MIN_VALUE ) || null;
-    //             const pMaxValue = propertiesMap.get( UIPropertyTypes.MAX_VALUE ) || null;
-
-    //             if ( isDefined( pMinValue ) ) {
-    //                 cfg.minValue = await this.resolvePropertyValue( UIPropertyTypes.MIN_VALUE, pMinValue, pMinValue.value, context, doc, spec, errors );
-    //             }
-
-    //             if ( isDefined( pMaxValue ) ) {
-    //                 cfg.maxValue = await this.resolvePropertyValue( UIPropertyTypes.MAX_VALUE, pMaxValue, pMaxValue.value, context, doc, spec, errors );
-    //             }
-
-    //             break;
-    //         }
-
-    //         //
-    //         // min/max length is equal to      <number>|<value>|<constant>|<ui_element>
-    //         // min/max length in               <value_list>|<query>
-    //         //
-    //         case DataTestCaseGroup.LENGTH: {
-
-    //             const pMinLength = propertiesMap.get(  UIPropertyTypes.MIN_LENGTH ) || null;
-    //             const pMaxLength = propertiesMap.get( UIPropertyTypes.MAX_LENGTH ) || null;
-
-    //             if ( isDefined( pMinLength ) ) {
-    //                 cfg.minLength = Number(
-    //                     await this.resolvePropertyValue( UIPropertyTypes.MIN_LENGTH, pMinLength, pMinLength.value, context, doc, spec, errors )
-    //                 );
-    //             }
-
-    //             if ( isDefined( pMaxLength ) ) {
-    //                 cfg.maxLength = Number(
-    //                     await this.resolvePropertyValue( UIPropertyTypes.MAX_LENGTH, pMaxLength, pMaxLength.value, context, doc, spec, errors )
-    //                 );
-    //             }
-
-    //             break;
-    //         }
-
-    //         case DataTestCaseGroup.COMPUTATION: { // not supported yet
-    //             break;
-    //         }
-    //     }
-
-    //     return cfg;
-    // }
 
 
     async resolvePropertyValue(
@@ -416,10 +307,11 @@ export class UIElementValueGenerator {
                 if ( isDefined( uie ) && isDefined( uie.info ) && isDefined( uie.info.fullVariableName ) ) {
 
                     // In cache?
-                    let value = context.uieVariableToValueMap.get( uie.info.fullVariableName ) || null;
+                    let value = valueOrNull( context.uieVariableToValueMap.get( uie.info.fullVariableName ) );
 
                     // Generate if not in cache
                     if ( ! isDefined( value ) ) {
+                        console.log( 'UI Element Value');
                         value = await this.generate( uie.info.fullVariableName, context, doc, spec, errors );
                     }
 
@@ -470,18 +362,28 @@ export class UIElementValueGenerator {
                         msg = 'Query cannot have more than one Database reference.';
                     } else {
                         let query = propertyValue.value.toString();
-                        query = this.resolveConstantsInQuery( query, propertyValue.references );
-                        query = await this.resolveUIElementsInQuery( query, featureName, owner, context, doc, spec, errors );
-                        return await this.resolveDatabaseReferenceInQuery( propType, query, databases[ 0 ] as Database, spec, errors );
+                        try {
+                            query = this.resolveConstantsInQuery( query, propertyValue.references );
+                            query = await this.resolveUIElementsInQuery( query, featureName, owner, context, doc, spec, errors );
+                            return await this.resolveDatabaseReferenceInQuery( propType, query, databases[ 0 ] as Database, spec, errors );
+                        } catch ( e ) {
+                            const msg = doc.fileInfo.path + ': Error trying to process a database query. ' + e.message;
+                            return null;
+                        }
                     }
                 } else if ( hasTable ) {
                     if ( tables.length > 1 ) {
                         msg = 'Query cannot have more than one Table reference.';
                     } else {
                         let query = propertyValue.value.toString();
-                        query = this.resolveConstantsInQuery( query, propertyValue.references );
-                        query = await this.resolveUIElementsInQuery( query, featureName, owner, context, doc, spec, errors );
-                        return await this.resolveTableReferenceInQuery( propType, query, tables[ 0 ] as Table, spec, errors );
+                        try {
+                            query = this.resolveConstantsInQuery( query, propertyValue.references );
+                            query = await this.resolveUIElementsInQuery( query, featureName, owner, context, doc, spec, errors );
+                            return await this.resolveTableReferenceInQuery( propType, query, tables[ 0 ] as Table, spec, errors );
+                        } catch ( e ) {
+                            const msg = doc.fileInfo.path + ': Error trying to process a database query. ' + e.message;
+                            return null;
+                        }
                     }
                 } else { // none
                     msg = 'Query must have a Database reference or a Table reference.';
@@ -560,7 +462,7 @@ export class UIElementValueGenerator {
                 fullVariableName = uieNameHandler.makeVariableName( currentFeatureName, variable );
             }
 
-            let value = context.uieVariableToValueMap.get( fullVariableName ) || null;
+            let value = valueOrNull( context.uieVariableToValueMap.get( fullVariableName ) );
 
             if ( null === value ) {
                 value = await this.generate( fullVariableName, context, doc, spec, errors );

@@ -26,7 +26,7 @@ describe( 'DocumentUtilTest', () => {
         let map = new Map< string, UIElement >();
         util.mapUIElementVariables( doc, map );
         expect( map.size ).toEqual( 1 );
-        expect( map.get( 'Feature A:foo' ) || null ).not.toBeNull();
+        expect( map.get( 'Feature A:foo' ) ).toBeDefined();
     } );
 
 

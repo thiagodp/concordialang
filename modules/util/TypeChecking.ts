@@ -11,3 +11,7 @@ export function isNumber( val: any ): boolean {
 export function isDefined( val: any ): boolean {
     return typeof val != 'undefined' && val !== null;
 }
+
+export function valueOrNull< T >( val: T ): T | null {
+    return isDefined( val ) ? val : null;
+}

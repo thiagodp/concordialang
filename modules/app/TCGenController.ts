@@ -23,8 +23,14 @@ import { VariantSelectionOptions, StateCombinationOptions, CombinationOptions, I
 import { ReservedTags } from "../req/ReservedTags";
 import { Warning } from "../req/Warning";
 import { DataTestCaseMix, OnlyValidMix, JustOneInvalidMix, OnlyInvalidMix, UnfilteredMix } from "../testcase/DataTestCaseMix";
+import { CLI } from "./CLI";
+import { TCGenListener } from "./TCGenListener";
+import { ProcessingInfo } from "./ProcessingInfo";
 
 export class TCGenController {
+
+    constructor( private _listener: TCGenListener ) {
+    }
 
     async execute(
         variantSentenceRec: VariantSentenceRecognizer,
@@ -33,6 +39,8 @@ export class TCGenController {
         spec: Spec,
         graph: Graph,
     ): Promise< [ Spec, Graph ] > {
+
+        const startTime = Date.now();
 
         //
         // setup
@@ -49,13 +57,13 @@ export class TCGenController {
             options.randomTriesToInvalidValues
         );
 
-        let warnings: LocatedException[] = []
+        let strategyWarnings: LocatedException[] = [];
 
         const variantSelectionStrategy: VariantSelectionStrategy =
-            this.variantSelectionStrategyFromOptions( options, warnings );
+            this.variantSelectionStrategyFromOptions( options, strategyWarnings );
 
         const stateCombinationStrategy: CombinationStrategy =
-            this.stateCombinationStrategyFromOptions( options, warnings );
+            this.stateCombinationStrategyFromOptions( options, strategyWarnings );
 
         let variantToTestScenariosMap = new Map< Variant, TestScenario[] >();
 
@@ -71,7 +79,7 @@ export class TCGenController {
 
         const tcGen = new TCGen( preTCGen );
 
-        const testPlanMakers: TestPlanMaker[] = this.testPlanMakersFromOptions( options, warnings );
+        const testPlanMakers: TestPlanMaker[] = this.testPlanMakersFromOptions( options, strategyWarnings );
 
         const tcDocGen = new TCDocGen( options.extensionTestCase, options.directory );
 
@@ -83,8 +91,9 @@ export class TCGenController {
         // generation
         //
 
+        this._listener.testCaseGenerationStarted( strategyWarnings );
+
         let vertices = graph.vertices_topologically();
-        let errors: LocatedException[] = [];
 
         let newTestCaseDocuments: Document[] = [];
 
@@ -95,6 +104,9 @@ export class TCGenController {
                 continue;
             }
             // console.log( 'doc is', doc.fileInfo.path);
+
+            let errors: LocatedException[] = [];
+            let warnings: LocatedException[] = [];
 
             let ctx = new GenContext( spec, doc, errors, warnings );
 
@@ -163,8 +175,6 @@ export class TCGenController {
             graph.addVertex( from, newDoc ); // Overwrites if exist!
             graph.addEdge( to, from ); // order is this way...
 
-            // console.log( 'Criando', from );
-
             // Generating file content
             const lines = tcDocFileGen.createLinesFromDoc(
                 newDoc,
@@ -172,6 +182,9 @@ export class TCGenController {
                 options.tcSuppressHeader,
                 options.tcIndenter
             );
+
+            // Announce produced
+            this._listener.testCaseProduced( from, errors, warnings );
 
             // Generating file
             try {
@@ -201,7 +214,9 @@ export class TCGenController {
             }
         }
 
-
+        // Show errors and warnings if they exist
+        const durationMs = Date.now() - startTime;
+        this._listener.testCaseGenerationFinished( durationMs );
 
         return [ spec, graph ];
     }

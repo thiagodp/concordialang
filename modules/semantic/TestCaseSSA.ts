@@ -303,7 +303,7 @@ export class TestCaseSSA extends SpecificationAnalyzer {
     }
 
     private makeLocationWithPath( location: Location, path: string ): Location {
-        let loc = deepcopy( location ) as Location;
+        let loc = ! location ? { } as Location : deepcopy( location ) as Location;
         loc.filePath = path;
         return loc;
     }

@@ -51,14 +51,24 @@ export const UI_ACTION_SYNTAX_RULES = [
     { name: "fill", maxTargets: 999, minTargets: 0, value: { min: 0, max: 1 }, number: { min: 0, max: 1 } },
     { name: "hide", maxTargets: 999 },
     { name: "move", minTargets: 1, maxTargets: 3,
-        targets: [ "ui_element", "ui_literal", "number" ],
+        targets: [ "ui_element", "ui_literal", "value", "number", "constant" ],
         ui_element: { min: 1, max: 1 },
         ui_literal: { min: 1, max: 1 },
-        number: { min: 0, max: 2 } },
+        value: { min: 1, max: 1 },
+        number: { min: 1, max: 1 },
+        constant: { min: 1, max: 1 }
+    },
     { name: "open" },
     { name: "press", targets: [ "value" ], maxTargets: 5 },
     { name: "refresh" },
-    { name: "see", targets: [ "ui_element", "ui_literal", "value" ], maxTargets: 1 },
+    { name: "see",  maxTargets: 2,
+        targets: [ "ui_element", "ui_literal", "value", "number", "constant" ],
+        ui_element: { min: 0, max: 1 },
+        ui_literal: { min: 0, max: 1 },
+        value: { min: 0, max: 1 },
+        number: { min: 0, max: 1 },
+        constant: { min: 0, max: 1 }
+    },
     //...
 ];
 

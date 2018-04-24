@@ -530,9 +530,15 @@ export class PreTestCaseGenerator {
             const uie = ctx.spec.uiElementByVariable( uieName, ctx.doc );
 
             const variable = ! uie ? uieName : ( ! uie.info ? uieName : uie.info.fullVariableName );
-            let value = uieVariableToValueMap.get( variable ) || null;
-            if ( null === value ) {
-                const msg = 'Could not retrieve value from the UI Element "' + variable + '". It will receive an empty value.';
+
+            let value = uieVariableToValueMap.get( variable );
+            if ( ! isDefined( value ) ) {
+                const msg = 'Could not retrieve value from ' +
+                    Symbols.UI_ELEMENT_PREFIX + variable + Symbols.UI_ELEMENT_SUFFIX +
+                    '. It will receive an empty value.';
+
+                // console.log( uieVariableToValueMap );
+                // console.log( variable, '<'.repeat( 10 ) );
                 ctx.warnings.push( new RuntimeException( msg, step.location ) );
                 value = '';
             }
@@ -542,7 +548,9 @@ export class PreTestCaseGenerator {
 
             if ( null === uieLiteral ) { // Should never happer since Spec defines Literals for mapped UI Elements
                 uieLiteral = convertCase( variable, this.uiLiteralCaseOption );
-                const msg = 'Could not retrieve a literal from the UI Element "' + variable + '". Generating one: "' + uieLiteral + '"';
+                const msg = 'Could not retrieve a literal from ' +
+                Symbols.UI_ELEMENT_PREFIX + variable + Symbols.UI_ELEMENT_SUFFIX +
+                '. Generating one: "' + uieLiteral + '"';
                 ctx.warnings.push( new RuntimeException( msg, step.location ) );
             }
 

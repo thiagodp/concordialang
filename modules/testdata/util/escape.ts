@@ -23,5 +23,29 @@ function escapeChar( char ) {
 }
 
 export function escapeString( str ): string {
-    return str.replace( /[\0\x08\x09\x1a\n\r"'\\\%]/g, escapeChar );
+    //return str.replace( /[\0\x08\x09\x1a\n\r"'\\\%]/g, escapeChar );
+    let newStr = str.replace( /[\0\x08\x09\x1a\n\r"'\\]/g, escapeChar );
+    // Replace unbalanced backslash
+    newStr = newStr.replace( /[^\\](\\\\\\)[^\\]/g, '\\\\' );
+    // Check unbalanced escaped quotes
+    const isQuoteCountEven = countMatches( /\\"/g, newStr ) % 2 == 0;
+    if ( ! isQuoteCountEven ) {
+        newStr = newStr.replace( /\\"/, '' ); // just the first one
+    }
+    // Check unbalanced escaped single quotes
+    const isEscapedSingleQuoteCountEven = countMatches( /\\'/g, newStr ) % 2 == 0;
+    if ( ! isEscapedSingleQuoteCountEven ) {
+        newStr = newStr.replace( /\\'/, '' ); // just the first one
+    }
+    // Check unbalanced single quotes
+    const isSingleQuoteCountEven = countMatches( /'/g, newStr ) % 2 == 0;
+    if ( ! isSingleQuoteCountEven ) {
+        newStr = newStr.replace( /'/, '' ); // just the first one
+    }
+    return newStr;
+}
+
+
+export function countMatches( regex: RegExp, text: string ): number {
+    return ( ( text || '' ).match( regex ) || [] ).length;
 }

@@ -5,11 +5,12 @@ import { BatchSpecificationAnalyzer } from "../semantic/BatchSpecificationAnalyz
 import { Spec } from "../ast/Spec";
 import { Document } from "../ast/Document";
 import { LocatedException } from "../req/LocatedException";
-import { CompilerListener, ProcessingInfo } from "./CompilerListener";
+import { CompilerListener } from "./CompilerListener";
 import { Warning } from "../req/Warning";
 import { SpecFilter } from "../selection/SpecFilter";
 import { isDefined } from "../util/TypeChecking";
 import Graph = require( 'graph.js/dist/graph.full.js' );
+import { ProcessingInfo } from "./ProcessingInfo";
 
 /**
  * Compiler

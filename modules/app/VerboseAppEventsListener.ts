@@ -2,18 +2,24 @@ import { FileReadListener, DirectoryReadListener, DirectoryReadResult } from './
 import { SingleFileProcessorListener, FileMeta, ProcessedFileData } from './SingleFileProcessor';
 import { MultiFileProcessListener } from './MultiFileProcessor';
 import { CLI } from './CLI';
-import { ProcessingInfo, CompilerListener } from './CompilerListener';
+import { CompilerListener } from './CompilerListener';
 import * as prettyBytes from 'pretty-bytes';
 import { Options } from './Options';
 import { sortErrorsByLocation } from '../util/ErrorSorting';
-
+import { ProcessingInfo } from './ProcessingInfo';
+import { TCGenListener } from './TCGenListener';
+import { LocatedException } from '../req/LocatedException';
+import { Warning } from '../req/Warning';
+import { isDefined } from '../util/TypeChecking';
 
 export class VerboseAppEventsListener implements
     FileReadListener,
     SingleFileProcessorListener,
     DirectoryReadListener,
     MultiFileProcessListener,
-    CompilerListener
+    CompilerListener,
+    TCGenListener
+
 {
 
     constructor(
@@ -173,6 +179,49 @@ export class VerboseAppEventsListener implements
         this.showProcessingInfo( info );
     }
 
+    //
+    // TCGenListener
+    //
+
+    /** @inheritDoc */
+    testCaseGenerationStarted( warnings: Warning[] ) {
+        this._cli.newLine(
+            this._cli.symbolInfo,
+            'Test case generation started'
+        );
+        this.showErrors( warnings, this._cli.symbolWarning, true );
+    }
+
+    /** @inheritDoc */
+    testCaseProduced( path: string, errors: LocatedException[], warnings: Warning[] ) {
+
+        const hasErrors = errors.length > 0;
+        const hasWarnings = warnings.length > 0;
+        const color = this._cli.properColor( hasErrors, hasWarnings );
+        const symbol = this._cli.properSymbol( hasErrors, hasWarnings );
+
+        this._cli.newLine(
+            color( symbol ),
+            'Generated',
+            this._cli.colorHighlight( path )
+        );
+
+        this.showErrors( errors, this._cli.symbolError, true );
+        this.showErrors( warnings, this._cli.symbolWarning, true );
+    }
+
+
+    /** @inheritDoc */
+    testCaseGenerationFinished( durationMs: number ) {
+        this._cli.newLine(
+            this._cli.symbolInfo,
+            'Test case generation finished',
+            this.formatDuration( durationMs )
+        );
+    }
+
+    // OTHER
+
 
     private showProcessingInfo( info: ProcessingInfo, meta?: FileMeta ) {
 
@@ -196,21 +245,24 @@ export class VerboseAppEventsListener implements
             );
         }
 
-        const spaces = ' ';
+        const showSpaces = isDefined( meta );
 
-        for ( let e of sortedErrors ) {
-            if ( meta ) {
-                this._cli.newLine( spaces, this._cli.symbolError, e.message );
-            } else {
-                this._cli.newLine( this._cli.symbolError, this._cli.colorError( e.message ) );
-            }
+        this.showErrors( sortedErrors, this._cli.symbolError, showSpaces );
+
+        this.showErrors( sortedWarnings, this._cli.symbolWarning, showSpaces );
+    }
+
+    private showErrors( errors: LocatedException[], symbol: string, showSpaces: boolean ) {
+        if ( errors.length < 1 ) {
+            return;
         }
-
-        for ( let e of sortedWarnings ) {
-            if ( meta ) {
-                this._cli.newLine( spaces, this._cli.symbolWarning, e.message );
+        const sortedErrors = sortErrorsByLocation( errors );
+        const spaces = ' ';
+        for ( let e of sortedErrors ) {
+            if ( showSpaces ) {
+                this._cli.newLine( spaces, symbol, e.message );
             } else {
-                this._cli.newLine( this._cli.symbolWarning, this._cli.colorWarning( e.message ) );
+                this._cli.newLine( symbol, e.message );
             }
         }
     }

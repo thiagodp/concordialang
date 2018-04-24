@@ -7,7 +7,6 @@ import { NLPUtil, NLPEntity } from "../nlp/NLPResult";
 import { UIElementPropertyExtractor } from "../util/UIElementPropertyExtractor";
 import { DataTestCaseVsValueType } from "./DataTestCaseVsValueType";
 import { ValueType, ValueTypeDetector, adjustValueToTheRightType } from "../util/ValueTypeDetector";
-import { toEnumValue } from "../util/ToEnumValue";
 import { UIPropertyTypes } from "../util/UIPropertyTypes";
 import { isDefined } from "../util/TypeChecking";
 import { Entities } from "../nlp/Entities";

@@ -1,5 +1,5 @@
-import { toEnumValue } from "../util/ToEnumValue";
 import { isDefined } from "../util/TypeChecking";
+import { isValue } from "enum-util";
 
 /**
  * Currently supported database types, through `database-js`.
@@ -35,11 +35,9 @@ export function stringToDatabaseTypeString( dbType: string ): string {
         return 'unknown';
     }
     const lowerCasedType = dbType.toLowerCase();
-
     // Check DatabaseType
-    const val = toEnumValue( lowerCasedType, DatabaseType );
-    if ( isDefined( val ) ) {
-        return val;
+    if ( isValue( DatabaseType, lowerCasedType ) ) {
+        return lowerCasedType;
     }
 
     // Check similar values
