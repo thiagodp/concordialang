@@ -40,9 +40,18 @@ export class RandomString {
         for ( let i = 0; i < length; ++i ) {
             tmp += this.randomCharCode();
         }
-        // console.log( 'original', tmp );
-        // console.log( 'escaped ', escapeString( tmp ) );
-        return ! this.escaped ? tmp : escapeString( tmp ).substr( 0, length );
+
+        if ( ! this.escaped ) {
+            return tmp;
+        }
+
+        // Guarantee the minimum size
+        while ( ( tmp = escapeString( tmp ) ).length < length ) {
+            tmp += this.randomCharCode();
+        }
+
+        // Guarantee the maximum size
+        return tmp.substr( 0, length );
     }
 
     public between( minimum: number, maximum: number ): string {
