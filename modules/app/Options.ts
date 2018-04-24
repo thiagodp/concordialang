@@ -1,4 +1,4 @@
-import { resolve } from 'path';
+import { resolve, join } from 'path';
 import { Defaults, VariantSelectionOptions, StateCombinationOptions, CombinationOptions } from './Defaults';
 import { CaseType } from './CaseType';
 import { isString, isNumber, isDefined } from '../util/TypeChecking';
@@ -161,12 +161,15 @@ export class Options {
 
 
     constructor(
-        public appPath: string = process.cwd(),
+        public appPath: string = __dirname,
         public processPath: string = process.cwd()
     ) {
+        // console.log( appPath, processPath );
         // Concordia directories
-        this.pluginDir = resolve( appPath, this.defaults.DIR_PLUGIN );
-        this.languageDir = resolve( appPath, this.defaults.DIR_LANGUAGE );
+        // this.pluginDir = resolve( appPath, this.defaults.DIR_PLUGIN );
+        // this.languageDir = resolve( appPath, this.defaults.DIR_LANGUAGE );
+        this.pluginDir = resolve( processPath, this.defaults.DIR_PLUGIN );
+        this.languageDir = resolve( processPath, this.defaults.DIR_LANGUAGE );
 
         // User directories
         this.dirScripts = resolve( processPath, this.defaults.DIR_SCRIPT );
