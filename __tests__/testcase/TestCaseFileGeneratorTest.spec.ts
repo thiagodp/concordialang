@@ -49,8 +49,13 @@ describe( 'TestCaseFileGeneratorTest', () => {
         let doc: Document = result.content as Document;
 
         const gen = new TestCaseFileGenerator( langLoader, language ); // under test
-        const output: string[] = gen.createLinesFromDoc( doc, errors, true );
-        expect( output ).toEqual( expected || input );
+
+        const output: string[] = gen.createLinesFromDoc( doc, errors, true )
+                .map( s => s.toLowerCase() );
+
+        const wanted: string[] = ( expected || input ).map( s => s.toLowerCase() );
+
+        expect( output ).toEqual( wanted );
     }
 
     // ENGLISH
