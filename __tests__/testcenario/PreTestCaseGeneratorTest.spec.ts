@@ -324,7 +324,7 @@ describe( 'PreTestCaseGeneratorTest', () => {
         const lines = preTC.steps.map( s => s.content + ( ! s.comment ? '' : ' #' + s.comment ) );
         const value1 = '';
         const value2 = '';
-        const comment = '# válido: obrigatório não preenchido';
+        const comment = '# válido: não preenchido';
 
         expect( lines ).toEqual(
             [
@@ -384,7 +384,7 @@ describe( 'PreTestCaseGeneratorTest', () => {
         const lines = preTC.steps.map( s => s.content + ( ! s.comment ? '' : ' #' + s.comment ) );
         const value1 = '';
         const value2 = '';
-        const commentValue = '# válido: obrigatório não preenchido';
+        const commentValue = '# válido: não preenchido';
         const randStr = new RandomString( new Random( SEED ) );
         const random1 = randStr.between( gen.minRandomStringSize, gen.maxRandomStringSize );
         const random2 = randStr.between( gen.minRandomStringSize, gen.maxRandomStringSize );
@@ -463,7 +463,7 @@ describe( 'PreTestCaseGeneratorTest', () => {
         // Content + Comment
         const oracleLines = preTC.oracles.map( s => s.content + ( ! s.comment ? '' : ' #' + s.comment ) );
         expect( oracleLines ).toEqual( [
-            'Então, eu devo ver a mensagem "bar"' // << Otherwise is replaced by Then
+            'Então eu devo ver a mensagem "bar" # de <a>' // << Otherwise is replaced by Then
         ] );
 
     } );
