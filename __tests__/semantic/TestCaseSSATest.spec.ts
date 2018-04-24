@@ -9,6 +9,7 @@ import { Document } from '../../modules/ast/Document';
 import { Spec } from '../../modules/ast/Spec';
 import { TestCaseSSA } from '../../modules/semantic/TestCaseSSA';
 import { TestCase } from '../../modules/ast/TestCase';
+import { join } from 'path';
 
 /**
  * @author Thiago Delgado Pinto
@@ -16,6 +17,8 @@ import { TestCase } from '../../modules/ast/TestCase';
 describe( 'TestCaseSSATest', () => {
 
     let analyzer: TestCaseSSA; // under test
+
+    const path = process.cwd();
 
     let spec: Spec;
     let docA: Document;
@@ -40,10 +43,10 @@ describe( 'TestCaseSSATest', () => {
             - G has a feature, no imports, and the tag references another feature
         */
 
-        spec = new Spec( '.' );
+        spec = new Spec( path );
 
         docA = {
-            fileInfo: { path: "./A.feature" } as FileInfo,
+            fileInfo: { path: join( path, "A.feature" ) } as FileInfo,
             feature: {
                 name: "My feature A",
                 location: {}
@@ -51,7 +54,7 @@ describe( 'TestCaseSSATest', () => {
         };
 
         docB = {
-            fileInfo: { path: "./B.feature" } as FileInfo,
+            fileInfo: { path: join( path, "B.feature" ) } as FileInfo,
             feature: {
                 name: "My feature B",
                 location: {}
@@ -59,24 +62,24 @@ describe( 'TestCaseSSATest', () => {
         };
 
         docE1 = {
-            fileInfo: { path: "./E1.feature" } as FileInfo
+            fileInfo: { path: join( path, "E1.feature" ) } as FileInfo
         };
 
         docE2 = {
-            fileInfo: { path: "./E2.feature" } as FileInfo
+            fileInfo: { path: join( path, "E2.feature" ) } as FileInfo
         };
 
         docC = {
-            fileInfo: { path: "./C.feature" } as FileInfo,
+            fileInfo: { path: join( path, "C.feature" ) } as FileInfo,
             imports: [
                 {
-                    value: "./A.feature"
+                    value: "A.feature"
                 } as Import,
                 {
-                    value: "./B.feature"
+                    value: "B.feature"
                 } as Import,
                 {
-                    value: "./E1.feature"
+                    value: "E1.feature"
                 } as Import
             ],
             testCases: [
@@ -97,13 +100,13 @@ describe( 'TestCaseSSATest', () => {
         };
 
         docD = {
-            fileInfo: { path: "./D.feature" } as FileInfo,
+            fileInfo: { path: join( path, "D.feature" ) } as FileInfo,
             imports: [
                 {
-                    value: "./E1.feature"
+                    value: "E1.feature"
                 } as Import,
                 {
-                    value: "./E2.feature"
+                    value: "E2.feature"
                 } as Import
             ],
             testCases: [
@@ -124,7 +127,7 @@ describe( 'TestCaseSSATest', () => {
         };
 
         docF = {
-            fileInfo: { path: "./F.feature" } as FileInfo,
+            fileInfo: { path: join( path, "F.feature" ) } as FileInfo,
             feature: {
                 name: "My feature F",
                 location: {},
@@ -138,7 +141,7 @@ describe( 'TestCaseSSATest', () => {
         };
 
         docG = {
-            fileInfo: { path: "./G.feature" } as FileInfo,
+            fileInfo: { path: join( path, "G.feature" ) } as FileInfo,
             feature: {
                 name: "My feature G",
                 location: {},
