@@ -45,7 +45,7 @@ export class DataTestCaseAnalyzer {
     private readonly _nlpUtil = new NLPUtil();
     private readonly _vsType = new DataTestCaseVsValueType();
     private readonly _opChecker = new UIElementOperatorChecker();
-    private readonly _dataGenBuilder;
+    private readonly _dataGenBuilder: DataGeneratorBuilder;
 
     constructor(
         seed: string
@@ -352,7 +352,7 @@ export class DataTestCaseAnalyzer {
                     maxLength = 60; // fake with fixed value - does not matter, since it is to evaluate data test case
                 }
 
-                let analyzer: RangeAnalyzer = this._dataGenBuilder.buildRawAnalyzer( valueType, minLength, maxLength );
+                let analyzer: RangeAnalyzer = this._dataGenBuilder.rawAnalyzer( valueType, minLength, maxLength );
 
                 const invalidMinPair = new Pair( DTCAnalysisResult.INVALID, hasMinLength ? pMinLength.otherwiseSentences || [] : [] );
                 const invalidMaxPair = new Pair( DTCAnalysisResult.INVALID, hasMaxLength ? pMaxLength.otherwiseSentences || [] : [] );
