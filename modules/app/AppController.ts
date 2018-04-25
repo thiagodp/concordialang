@@ -138,7 +138,7 @@ export class AppController {
 
                 if ( abstractTestScripts.length > 0 ) {
 
-                    cli.newLine( cli.symbolInfo, 'Generated', abstractTestScripts.length, 'abstract test scripts' );
+                    // cli.newLine( cli.symbolInfo, 'Generated', abstractTestScripts.length, 'abstract test scripts' );
 
                     let errors: Error[] = [];
                     let files: string[] = [];

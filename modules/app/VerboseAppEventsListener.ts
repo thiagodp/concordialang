@@ -202,7 +202,7 @@ export class VerboseAppEventsListener implements
 
         this._cli.newLine(
             color( symbol ),
-            'Generated',
+            'Generated test case',
             this._cli.colorHighlight( path )
         );
 
@@ -239,7 +239,7 @@ export class VerboseAppEventsListener implements
         if ( meta ) {
             this._cli.newLine(
                 color( symbol ),
-                color( meta.fullPath ),
+                this._cli.colorHighlight( meta.fullPath ),
                 //this.formatHash( meta.hash ),
                 this.formatDuration( info.durationMs )
             );

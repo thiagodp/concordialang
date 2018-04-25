@@ -19,7 +19,10 @@ export class TestScriptGenerator {
     constructor() {
         this.template =
         dedent
-        `/** Generated with <3 by Concordia. Run the following tests using CodeceptJS. */
+        `// Generated with ❤ by Concordia
+        // source: {{{sourceFile}}}
+        //
+        // THIS IS A GENERATED FILE - MODIFICATIONS CAN BE LOST !
 
         Feature("{{feature.name}}");
 
@@ -34,7 +37,9 @@ export class TestScriptGenerator {
         this.mapper = new ActionMapper();
     }
 
-    public generate = ( ats: AbstractTestScript ): string => {
+    public generate( ats: AbstractTestScript ): string {
+
+        // console.log( 'FROM', ats.sourceFile );
 
         let obj: any = { ... ats }; // spread to do a deep clone
 

@@ -26,6 +26,8 @@ export class AbstractTestScriptGenerator {
             return null;
         }
 
+        // console.log( 'Doc is', doc.fileInfo.path );
+
         // Get from the document
         let feature = ! doc.feature ? null : doc.feature;
 
@@ -51,8 +53,8 @@ export class AbstractTestScriptGenerator {
         let ats = new AbstractTestScript();
 
         // feature, location, sourceFile
+        ats.sourceFile = doc.fileInfo.path;
         ats.feature = new NamedATSElement( location, featureName );
-        ats.sourceFile = location.filePath;
 
         // scenarios
         let scenarioNames: string[] = [];
@@ -86,6 +88,7 @@ export class AbstractTestScriptGenerator {
                 cmd.targetTypes = sentence.targetTypes;
                 cmd.values = sentence.values;
                 cmd.invalid = sentence.isInvalidValue;
+                cmd.comment = sentence.comment;
 
                 absTC.commands.push( cmd );
             }

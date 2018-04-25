@@ -2,7 +2,7 @@
     "isFake": false,
     "name": "codeceptjs",
     "description": "Generates test scripts for CodeceptJS",
-    "version": "0.1",
+    "version": "0.2",
     "targets": [ "CodeceptJS" ],
     "authors": [
         "Matheus Eller Fagundes (matheusefagundes@gmail.com)",

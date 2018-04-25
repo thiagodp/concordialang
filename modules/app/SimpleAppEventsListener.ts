@@ -188,10 +188,10 @@ export class SimpleAppEventsListener implements
 
     /** @inheritDoc */
     testCaseGenerationStarted( warnings: Warning[] ) {
-        this._cli.newLine(
-            this._cli.symbolInfo,
-            'Test case generation started'
-        );
+        // this._cli.newLine(
+        //     this._cli.symbolInfo,
+        //     'Test case generation started'
+        // );
         this.showErrors( warnings, this._cli.symbolWarning, true );
     }
 
@@ -215,11 +215,11 @@ export class SimpleAppEventsListener implements
 
     /** @inheritDoc */
     testCaseGenerationFinished( durationMs ) {
-        this._cli.newLine(
-            this._cli.symbolInfo,
-            'Test case generation finished',
-            this.formatDuration( durationMs )
-        );
+        // this._cli.newLine(
+        //     this._cli.symbolInfo,
+        //     'Test case generation finished',
+        //     this.formatDuration( durationMs )
+        // );
     }
 
     // OTHER
@@ -238,7 +238,7 @@ export class SimpleAppEventsListener implements
 
             this._cli.newLine(
                 color( symbol ),
-                color( meta.fullPath ),
+                this._cli.colorHighlight( meta.fullPath ),
                 //this.formatHash( meta.hash ),
                 this.formatDuration( info.durationMs )
             );

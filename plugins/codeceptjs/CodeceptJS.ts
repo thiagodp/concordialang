@@ -76,14 +76,12 @@ export class CodeceptJS implements Plugin {
         await this.ensureDir( targetDir );
 
         // Prepare file path
-        const fileName: string = this.makeFileNameFromFeature( ats.feature.name );
+        const parsed = path.parse( ats.sourceFile );
+        const fileName: string = parsed.name + '.js';
         const filePath: string = path.join( targetDir, fileName );
 
         // Generate content
         const code: string = this._scriptGenerator.generate( ats );
-
-        // console.log( 'code is', "\n", code );
-        // console.log( 'Will write', filePath );
 
         // Write content
         await this.writeFile( filePath, code );
@@ -101,10 +99,6 @@ export class CodeceptJS implements Plugin {
     private async writeFile( path: string, content: string ): Promise< void > {
         const write = promisify( this._fs.writeFile || fs.writeFile );
         await write( path, content, this._encoding );
-    }
-
-    private makeFileNameFromFeature( featureName: string ): string {
-        return featureName.toLowerCase().replace( /( )/g, '-' ) + '.js';
     }
 
     /** @inheritDoc */

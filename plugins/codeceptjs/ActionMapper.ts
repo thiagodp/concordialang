@@ -66,7 +66,7 @@ export class ActionMapper {
      */
     public map( command: ATSCommand ): Array<string> {
 
-        // console.log( 'command', command );
+        // console.log( 'command', command.action, command.values );
 
         let commands: Array<string> = [];
 
@@ -89,13 +89,16 @@ export class ActionMapper {
 
         let cmd;
         if ( ! entry ) {
+            // console.log( 'NOT FOUND', command );
             cmd = this.generateNotAvailableMessage( command );
         } else {
             cmd = render(
-                entry.template,
+                entry.template + ' // ({{{location.line}}},{{{location.column}}}){{#comment}} {{{comment}}}{{/comment}}',
                 {
-                    target: this.parseTarget( command.targets[ 0 ] ),
-                    value: command.values ?  this.parseValue( command.values ) : ''
+                    target   : this.parseTarget( command.targets[ 0 ] ),
+                    value    : ! command.values ? '' : this.parseValue( command.values ),
+                    location : command.location,
+                    comment  : command.comment
                 }
             );
         }
@@ -127,12 +130,14 @@ export class ActionMapper {
 
     private parseValue( value: any ): string | number | Array<string | number> {
         if ( ! Array.isArray( value ) ) {
-            return typeof value == 'string' ? `"${value}"`: value;
+            return typeof value === 'string' ? `"${value}"`: value;
         }
         if ( 1 === value.length ) {
-            return typeof value[0] == 'string' ? `"${value[0]}"`: value[0];
+            return typeof value[ 0 ] === 'string' ? `"${value[0]}"`: value[0];
         }
-        return `[${value.map((v: any) => typeof v == 'string' ? `"${v}"` : v).join(', ')}]`;
+        const joint = value.map( v => typeof v === 'string' ? `"${v}"` : v ).join( ', ' );
+
+        return '[' + joint + ']';
     }
 
     private generateNotAvailableMessage( command: ATSCommand ): string {

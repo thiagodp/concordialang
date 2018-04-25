@@ -63,6 +63,7 @@ export class ATSCommand extends ATSElement {
     targets: ATSTarget[] | string[] = [];
     targetTypes?: string[]; // optional for some targets
     values?: string[] | number[] // optional for some actions
+    comment?: string;
 }
 
 /**
