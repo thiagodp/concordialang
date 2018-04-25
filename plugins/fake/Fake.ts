@@ -1,20 +1,21 @@
 import { Plugin } from '../../modules/plugin/Plugin';
 import { AbstractTestScript } from '../../modules/testscript/AbstractTestScript';
-import { TestScriptGenerationOptions } from '../../modules/testscript/TestScriptGeneration';
+import { TestScriptGenerationOptions } from '../../modules/testscript/TestScriptOptions';
 import { TestScriptExecutionOptions, TestScriptExecutionResult } from '../../modules/testscript/TestScriptExecution';
 
 /**
  * Fake plugin.
- * 
+ *
  * @author Thiago Delgado Pinto
  */
 export class Fake implements Plugin {
 
     /** @inheritDoc */
-    public generateCode(
+    public async generateCode(
         abstractTestScripts: AbstractTestScript[],
-        options: TestScriptGenerationOptions
-    ): Promise< string >[] {
+        options: TestScriptGenerationOptions,
+        errors: Error[]
+    ): Promise< string[] > {
         return []; // No files
     };
 

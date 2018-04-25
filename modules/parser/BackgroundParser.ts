@@ -5,6 +5,7 @@ import { NodeIterator } from './NodeIterator';
 import { NodeParser } from './NodeParser';
 import { ParsingContext } from "./ParsingContext";
 import { Background } from "../ast/Background";
+import { isDefined } from '../util/TypeChecking';
 
 /**
  * Background parser
@@ -33,7 +34,7 @@ export class BackgroundParser implements NodeParser< Background > {
             return false;
         }
 
-        if ( feature.scenarios && feature.scenarios.length > 0 ) {
+        if ( isDefined( feature.scenarios ) && feature.scenarios.length > 0 ) {
             let e = new SyntaticException(
                 'A background must be declared before a scenario.', node.location );
             errors.push( e );

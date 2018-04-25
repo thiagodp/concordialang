@@ -15,13 +15,13 @@ import { filter } from 'minimatch';
 
 /**
  * Variant sentence recognizer.
- * 
+ *
  * @author Thiago Delgado Pinto
  */
 export class VariantSentenceRecognizer {
 
     private _syntaxRules: any[];
-    
+
     constructor( private _nlp: NLP ) {
         this._syntaxRules = this.buildSyntaxRules();
     }
@@ -32,20 +32,20 @@ export class VariantSentenceRecognizer {
 
     isTrained( language: string ): boolean {
         return this._nlp.isTrained( language );
-    }    
-    
+    }
+
     trainMe( trainer: NLPTrainer, language: string ) {
         return trainer.trainNLP( this._nlp, language, Intents.TEST_CASE );
     }
 
     /**
      * Recognize sentences using NLP.
-     * 
+     *
      * @param language Language to be used in the recognition.
      * @param nodes Nodes to be recognized.
      * @param errors Output errors.
      * @param warnings Output warnings.
-     * 
+     *
      * @throws Error If the NLP is not trained.
      */
     recognizeSentences(
@@ -85,11 +85,25 @@ export class VariantSentenceRecognizer {
             recognizer.validate( node, recognizedEntityNames, syntaxRules, action, errors, warnings );
 
             let item: Step = node as Step;
+
+            // Action
             item.action = action;
 
-            // ELEMENTS (optional)
-            item.targets = r.entities.filter( e => e.entity === Entities.UI_ELEMENT ).map( e => e.value );
-            
+            // Action modifier (optional)
+            const modifiers = r.entities.filter( e => e.entity === Entities.UI_ACTION_MODIFIER ).map( e => e.value );
+            if ( modifiers.length > 0 ) {
+                item.actionModifier = modifiers[ 0 ];
+            }
+
+            // Action option (optional)
+            const options = r.entities.filter( e => e.entity === Entities.UI_ACTION_OPTION ).map( e => e.value );
+            if ( options.length > 0 ) {
+                item.actionOptions = options;
+            }
+
+            // UI LITERALS (optional)
+            item.targets = r.entities.filter( e => e.entity === Entities.UI_LITERAL ).map( e => e.value );
+
             // VALUES (optional)
             item.values = r.entities
                 .filter( e => e.entity === Entities.VALUE || e.entity === Entities.NUMBER )
@@ -111,6 +125,6 @@ export class VariantSentenceRecognizer {
 
     public buildSyntaxRules(): object[] {
         return ( new RuleBuilder() ).build( UI_ACTION_SYNTAX_RULES, DEFAULT_UI_ACTION_SYNTAX_RULE );
-    }    
+    }
 
 }

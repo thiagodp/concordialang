@@ -3,12 +3,15 @@ import { TestScriptGenerator } from './TestScriptGenerator';
 import { ReportConverter } from './ReportConverter';
 import { Plugin } from '../../modules/plugin/Plugin';
 import { AbstractTestScript } from '../../modules/testscript/AbstractTestScript';
-import { TestScriptGenerationOptions } from '../../modules/testscript/TestScriptGeneration';
+import { TestScriptGenerationOptions } from '../../modules/testscript/TestScriptOptions';
 import { TestScriptExecutionOptions, TestScriptExecutionResult } from '../../modules/testscript/TestScriptExecution';
 import { CmdRunner } from "./CmdRunner";
 
 import * as fs from 'fs';
 import * as path from 'path';
+import * as fse from 'node-fs-extra';
+
+import { promisify } from 'util';
 
 
 /**
@@ -19,34 +22,43 @@ import * as path from 'path';
  */
 export class CodeceptJS implements Plugin {
 
+    private readonly _fs: any;
     private _scriptGenerator: TestScriptGenerator;
     private _scriptExecutor: TestScriptExecutor;
     private _reportConverter: ReportConverter;
 
     private readonly PLUGIN_CONFIG_PATH: string = path.join( __dirname, '../', 'codeceptjs.json' );
 
-    constructor( private _fs?: any, private _encoding: string = 'utf8' ) {
-
-        _fs = _fs || fs; // assumes the Node's fs as the default
+    constructor(
+        fsToUse?: any,
+        private _encoding: string = 'utf8'
+    ) {
+        this._fs = ! fsToUse ? fs : fsToUse;
 
         this._scriptGenerator = new TestScriptGenerator();
         this._scriptExecutor = new TestScriptExecutor(
             new CmdRunner()
         );
-        this._reportConverter = new ReportConverter( _fs );
+        this._reportConverter = new ReportConverter( this._fs );
     }
 
     /** @inheritDoc */
-    public generateCode(
+    public async generateCode(
         abstractTestScripts: AbstractTestScript[],
-        options: TestScriptGenerationOptions
-    ): Promise< string >[] {
-        //return abstractTestScripts.map( this.processTestScript );
-        let promises: Promise< string >[] = [];
-        for ( let ats of abstractTestScripts ) {
-            promises.push( this.processTestScript( ats, options.sourceCodeDir ) );
+        options: TestScriptGenerationOptions,
+        errors: Error[]
+    ): Promise< string[] > {
+        let files: string[] = [];
+        for ( let ats of abstractTestScripts || [] ) {
+            try {
+                let file = await this.processTestScript( ats, options.sourceCodeDir );
+                files.push( file );
+            } catch ( e ) {
+                const msg = 'Error generating script for "' + ats.sourceFile + '": ' + e.message;
+                errors.push( new Error( msg ) );
+            }
         }
-        return promises;
+        return files;
     }
 
     /**
@@ -59,22 +71,37 @@ export class CodeceptJS implements Plugin {
      * @param targetDir Directory where to put the source code.
      * @returns A promise with the file name as the data.
      */
-    private processTestScript = ( ats: AbstractTestScript, targetDir: string ): Promise< string > => {
+    private async processTestScript( ats: AbstractTestScript, targetDir: string ): Promise< string > {
 
-        return new Promise( ( resolve, reject ) => {
-            const fileName: string = this.makeFileNameFromFeature( ats.feature.name );
-            const filePath: string = path.join( targetDir, fileName );
-            const code: string = this._scriptGenerator.generate( ats );
-            this._fs.writeFile( filePath, code, this._encoding, ( err ) => {
-                if ( err ) {
-                    reject( err );
-                } else {
-                    resolve( fileName );
-                }
-            } );
-        } );
+        await this.ensureDir( targetDir );
 
-    };
+        // Prepare file path
+        const fileName: string = this.makeFileNameFromFeature( ats.feature.name );
+        const filePath: string = path.join( targetDir, fileName );
+
+        // Generate content
+        const code: string = this._scriptGenerator.generate( ats );
+
+        // console.log( 'code is', "\n", code );
+        // console.log( 'Will write', filePath );
+
+        // Write content
+        await this.writeFile( filePath, code );
+
+        return filePath;
+    }
+
+    private async ensureDir( dir: string ): Promise< void > {
+        if ( this._fs != fs ) {
+            return;
+        }
+        await fse.mkdirs( dir );
+    }
+
+    private async writeFile( path: string, content: string ): Promise< void > {
+        const write = promisify( this._fs.writeFile || fs.writeFile );
+        await write( path, content, this._encoding );
+    }
 
     private makeFileNameFromFeature( featureName: string ): string {
         return featureName.toLowerCase().replace( /( )/g, '-' ) + '.js';

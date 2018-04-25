@@ -14,6 +14,8 @@ import { TCGenController } from './TCGenController';
 import Graph = require( 'graph.js/dist/graph.full.js' );
 import * as crypto from 'crypto';
 import { LocalDateTime, DateTimeFormatter } from 'js-joda';
+import { ATSGenController } from './ATSGenController';
+import { TestScriptGenerationOptions } from '../testscript/TestScriptOptions';
 
 /**
  * Application controller
@@ -131,23 +133,40 @@ export class AppController {
         if ( spec !== null ) {
             if ( options.generateScripts ) { // Requires a plugin
 
-                // TO-DO
+                const atsCtrl = new ATSGenController();
+                let abstractTestScripts = atsCtrl.generate( spec );
 
-                // Spec may have a method which returns the all the available test cases
-                //
-                // Then there could be a ScriptGeneratorController that does this:
-                //
-                // let availableTC = spec.availableTestCases();
-                // let filteredTC = ( new TCFilter() ).filter( availableTC, options );
-                // let abstractTS = ( new TCToATS() ).convertToAbstractTestScripts( filteredTC );
-                //
-                //
-                // So we could call it here this way:
-                //
-                // let scriptGenCtrl = new ScriptGeneratorController();
-                // let abstractTestScripts = await scriptGen.generateAbstractTestScripts( spec, options, cli );
-                // await plugin.generateScriptsFrom( abstractTestScripts );
-                //
+                if ( abstractTestScripts.length > 0 ) {
+
+                    cli.newLine( cli.symbolInfo, 'Generated', abstractTestScripts.length, 'abstract test scripts' );
+
+                    let errors: Error[] = [];
+                    let files: string[] = [];
+                    try {
+                        files = await plugin.generateCode(
+                            abstractTestScripts,
+                            new TestScriptGenerationOptions(
+                                options.dirScripts,
+                                options.dirResult
+                            ),
+                            errors
+                        );
+                    } catch ( err ) {
+                        hasErrors = true;
+                        cli.newLine( cli.symbolError, err.message, err.stack );
+                    }
+
+                    for ( let file of files ) {
+                        cli.newLine( cli.symbolSuccess, 'Generated script', cli.colorHighlight( file ) );
+                    }
+
+                    for ( let err of errors ) {
+                        cli.newLine( cli.symbolError, err.message );
+                    }
+
+                } else {
+                    cli.newLine( cli.symbolInfo, 'No generated abstract test scripts.' );
+                }
 
             } else {
                 cli.newLine( cli.symbolInfo, 'Script generation disabled.' );

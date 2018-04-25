@@ -3,7 +3,7 @@ import { render } from "mustache";
 
 /**
  * Translates abstract test commands to CodeceptJS commands.
- * 
+ *
  * @author Matheus Eller Fagundes
  */
 export class ActionMapper {
@@ -43,7 +43,7 @@ export class ActionMapper {
         { action: 'see',  targetType: 'select', template: 'I.seeElement({{{target}}});' },
         { action: 'see',  targetType: 'textbox', template: 'I.seeElement({{{target}}});' },
         { action: 'see',  targetType: 'textarea', template: 'I.seeElement({{{target}}});' },
-        { action: 'see',  default: true, template: 'I.see({{{target}}});' },
+        { action: 'see',  default: true, template: 'I.see({{{value}}});' },
 
         //Select
         { action: 'select', default: true, template: 'I.selectOption({{{target}}}, {{{value}}});' },
@@ -58,60 +58,91 @@ export class ActionMapper {
         { action: 'wait',  targetType: 'text', template: 'I.waitForText({{{target}}}, {{{value}}});' },
         { action: 'wait', default: true, template: 'I.wait({{{value}}});' }
     ];
-    
+
     /**
-     * Translates an abstract command to one or more CodeceptJS commands. Returns an array of commands,
-     * since an abstract command can generate multiple lines of test code.
+     * Translates an abstract command to one or more CodeceptJS commands.
+     * Returns an array of commands, since an abstract command can generate
+     * multiple lines of test code.
      */
     public map( command: ATSCommand ): Array<string> {
+
+        // console.log( 'command', command );
+
         let commands: Array<string> = [];
 
-        let entry: { action: string, template: string } = this.commandMap.filter( mapEntry => {
-            let isActionEquals = mapEntry.action === command.action;
-            let isTargetTypeEquals = mapEntry.targetType === command.targetType || mapEntry.default;
-            return isActionEquals && isTargetTypeEquals;
-        })[0];
+        let entry: { action: string, template: string } =
+            this.commandMap.filter( obj =>
+                {
+                    const sameAction = obj.action === command.action;
+                    const isDefault = true === obj.default;
 
-        commands.push( entry ? render( entry.template, {
-            target: this.parseTarget(command.targets[0]),
-            value: command.values ?  this.parseValue(command.values) : ''
-        } ) : this.generateNotAvailableMessage( command ) );
+                    if ( ! isDefault ) {
+                        const sameTargetType = Array.isArray( command.targetTypes )
+                            && command.targetTypes.indexOf( obj.targetType ) >= 0;
+
+                        return sameAction && sameTargetType;
+                    }
+
+                    return sameAction && isDefault;
+                }
+            )[0];
+
+        let cmd;
+        if ( ! entry ) {
+            cmd = this.generateNotAvailableMessage( command );
+        } else {
+            cmd = render(
+                entry.template,
+                {
+                    target: this.parseTarget( command.targets[ 0 ] ),
+                    value: command.values ?  this.parseValue( command.values ) : ''
+                }
+            );
+        }
+
+        commands.push( cmd );
+
         return commands;
     }
 
     private parseTarget( target: any ): string {
-        if ( target == null )
+        if ( ! target ) {
             return '';
-        if ( typeof target === 'string' )
+        }
+        if ( typeof target === 'string' ) {
             return `${this.parseTargetBySelector( target )}`;
+        }
         let properties: Array<string> = Object.getOwnPropertyNames( target );
-        if ( properties.length === 1 )
+        if ( 1 === properties.length ) {
             return `${this.parseTargetBySelector( target[properties[0]] )}`;
-        return '{' + properties.map(element =>{
+        }
+        return '{' + properties.map( element => {
             return `${element}: ${this.parseTargetBySelector( target[element] )}`;
-        }).join( ', ' ) + '}';
+        } ).join( ', ' ) + '}';
     }
 
     private parseTargetBySelector( targetSelector: string ): string {
-        return targetSelector.charAt(0) === '@' ? `{name: '${targetSelector.substr(1)}'}` : `'${targetSelector}'`;
+        return targetSelector.charAt(0) === '@' ? `{name: "${targetSelector.substr(1)}"}` : `"${targetSelector}"`;
     }
 
     private parseValue( value: any ): string | number | Array<string | number> {
-        if ( !Array.isArray(value) )
-            return typeof value == 'string' ? `'${value}'`: value;
-        if (value.length == 1)
-            return typeof value[0] == 'string' ? `'${value[0]}'`: value[0];
-        return `[${value.map((v: any) => typeof v == 'string' ? `'${v}'` : v).join(', ')}]`;
+        if ( ! Array.isArray( value ) ) {
+            return typeof value == 'string' ? `"${value}"`: value;
+        }
+        if ( 1 === value.length ) {
+            return typeof value[0] == 'string' ? `"${value[0]}"`: value[0];
+        }
+        return `[${value.map((v: any) => typeof v == 'string' ? `"${v}"` : v).join(', ')}]`;
     }
 
     private generateNotAvailableMessage( command: ATSCommand ): string {
         let message: string = '// Command not available. ';
-        message += `Action: ${ command.action ? command.action : 'none' }. `;
-        message += `Modifier: ${ command.modifier ? command.modifier : 'none' }. `;
-        message += `Option: ${ command.options ? command.options : 'none' }. `;
-        message += `Targets: ${ command.targets ? command.targets : 'none' }. `;
-        message += `Target type: ${ command.targetType ? command.targetType : 'none' }. `;
-        message += `Values: ${ command.values ? command.values : 'none' }. `;
+        message += `Action: ${ ! command.action ? 'none' : command.action }. `;
+        message += `Modifier: ${ ! command.modifier ? 'none' : command.modifier }. `;
+        message += `Option: ${ ! command.options ? 'none' : command.options }. `;
+        message += `Targets: ${ ! command.targets ? 'none' : command.targets }. `;
+        message += `Target type: ${ ! command.targetTypes ? 'none' : command.targetTypes }. `;
+        message += `Values: ${ ! command.values ? 'none' : command.values }. `;
         return message;
     }
 

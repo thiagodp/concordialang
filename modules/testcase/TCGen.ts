@@ -53,6 +53,9 @@ export class TCGen {
      */
     addReferenceTagsTo( tc: TestCase, scenarioIndex: number, variantIndex: number ): void {
 
+        tc.declaredScenarioIndex = scenarioIndex;
+        tc.declaredVariantIndex = variantIndex;
+
         if ( ! tc.tags ) {
             tc.tags = [];
         }

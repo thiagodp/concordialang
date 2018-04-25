@@ -2,12 +2,12 @@ import { Location } from '../ast/Location';
 
 /**
  * Abstract test script (ATS).
- * 
+ *
  * @author Thiago Delgado Pinto
  */
 export class AbstractTestScript {
 
-    schemaVersion: string;
+    schemaVersion: string = '1.0.0';
     sourceFile: string;
 
     feature: NamedATSElement;
@@ -17,54 +17,60 @@ export class AbstractTestScript {
 
 /**
  * ATS element.
- * 
+ *
  * @author Thiago Delgado Pinto
  */
-export interface ATSElement {
-    location?: Location;
+export class ATSElement {
+    constructor( public location?: Location ) {
+    }
 }
 
 /**
  * Named ATS element.
- * 
+ *
  * @author Thiago Delgado Pinto
  */
-export interface NamedATSElement extends ATSElement {
-    name: string;
+export class NamedATSElement extends ATSElement {
+    constructor(
+        public location?: Location,
+        public name?: string
+    ) {
+        super( location );
+    }
 }
 
 /**
  * ATS test case.
- * 
+ *
  * @author Thiago Delgado Pinto
  */
-export interface ATSTestCase extends NamedATSElement {
-    invalid: boolean | undefined; // when true, it is expected that the test case will fail
-    scenario: string | undefined;
-    commands: ATSCommand[];
+export class ATSTestCase extends NamedATSElement {
+    invalid?: boolean = false; // when true, it is expected that the test case will fail
+    scenario?: string;
+    commands: ATSCommand[] = [];
 }
 
 /**
  * ATS command
- * 
+ *
  * @author Thiago Delgado Pinto
  */
-export interface ATSCommand extends ATSElement {
-    invalid?: boolean; // when true, it is expected that the command will make the test to fail    
+export class ATSCommand extends ATSElement {
+    invalid?: boolean; // when true, it is expected that the command will make the test to fail
     action: string;
     modifier?: string; // modifies the action (e.g. "not")
     options?: string[]; // options for the action (e.g. [ "left" ])
-    targets: ATSTarget[] | string[];
-    targetType?: string; // optional for some targets
-    values?: string[] | number[]; // optional for some actions
+    targets: ATSTarget[] | string[] = [];
+    targetTypes?: string[]; // optional for some targets
+    values?: string[] | number[] // optional for some actions
 }
 
 /**
  * ATS target.
- * 
+ *
  * @author Thiago Delgado Pinto
  */
-export interface ATSTarget {
+export class ATSTarget {
     web?: string;
     android?: string;
     ios?: string;

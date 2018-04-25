@@ -122,70 +122,6 @@ export class ReferenceReplacer {
     }
 
 
-
-
-    /**
-     * Replace references of a test case sentence.
-     *
-     * @param sentence Sentence to replace.
-     * @param nlpResult Result of the NLP.
-     * @param uiElementVariableMap Map from UI_ELEMENT names to UIElementInfo objects.
-     * @param constantNameToValueMap Map from CONSTANT to their VALUEs
-     * @param uiLiteralCaseOption String case option to use a UI_ELEMENT name as a UI_LITERAL id when the former is not found in the map.
-     */
-    public replaceTestCaseSentence(
-        sentence: string,
-        nlpResult: NLPResult,
-        spec: Spec,
-        doc: Document,
-        uiLiteralCaseOption: CaseType
-    ): string {
-
-        let newSentence: string = sentence;
-
-        for ( let e of nlpResult.entities || [] ) {
-
-            // Replace UI_ELEMENT with UI_LITERAL
-            if ( Entities.UI_ELEMENT === e.entity ) {
-
-                // Get the UI_LITERAL name by the UI_ELEMENT name
-                const ui = spec.uiElementByVariable( e.value, doc );
-
-                let literalName: string = isDefined( ui ) && isDefined( ui.info )
-                    ? ui.info.uiLiteral
-                    : convertCase( e.value, uiLiteralCaseOption ); // Uses the UI_ELEMENT name as the literal name, when it is not found.
-
-                // Replace
-                newSentence = this.replaceAtPosition(
-                    newSentence,
-                    e.position,
-                    Symbols.UI_ELEMENT_PREFIX + e.value + Symbols.UI_ELEMENT_SUFFIX, // e.g., {Foo}
-                    Symbols.UI_LITERAL_PREFIX + literalName + Symbols.UI_LITERAL_SUFFIX // e.g., <foo>
-                );
-
-            // Replace CONSTANT with VALUE
-            } else if ( Entities.CONSTANT === e.entity ) {
-
-                const valueContent: string | number = spec.constantNameToValueMap().get( e.value ) || '';
-
-                const value: string = ( new ValueTypeDetector() ).isNumber( valueContent )
-                    ? valueContent.toString() // e.g., 5
-                    : Symbols.VALUE_WRAPPER + valueContent + Symbols.VALUE_WRAPPER; // e.g., "text"
-
-                // Replace
-                newSentence = this.replaceAtPosition(
-                    newSentence,
-                    e.position,
-                    Symbols.CONSTANT_PREFIX + e.value + Symbols.CONSTANT_SUFFIX,  // e.g., [bar]
-                    value
-                );
-            }
-        }
-
-        return newSentence;
-    }
-
-
     private replaceAtPosition(
         sentence: string,
         position: number,
@@ -217,7 +153,6 @@ export class ReferenceReplacer {
         // );
         return before + to + after;
     }
-
 
 
     /**

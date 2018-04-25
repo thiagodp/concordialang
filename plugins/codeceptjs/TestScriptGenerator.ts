@@ -7,7 +7,7 @@ const dedent = require('dedent-js');
 /**
  * Generate test scripts for CodeceptJS.
  * Uses [Mustache](https://github.com/janl/mustache.js/) for this purpose.
- * 
+ *
  * @author Matheus Eller Fagundes
  * @author Thiago Delgado Pinto
  */
@@ -21,25 +21,26 @@ export class TestScriptGenerator {
         dedent
         `/** Generated with <3 by Concordia. Run the following tests using CodeceptJS. */
 
-        Feature('{{feature.name}}');
-        
+        Feature("{{feature.name}}");
+
         {{#testcases}}
-        Scenario('{{scenario}} | {{name}}', (I) => {
+        Scenario("{{scenario}} | {{name}}", (I) => {
             {{#convertedCommands}}
             {{{.}}}
             {{/convertedCommands}}
         });
-        
+
         {{/testcases}}`;
         this.mapper = new ActionMapper();
     }
-    
+
     public generate = ( ats: AbstractTestScript ): string => {
 
         let obj: any = { ... ats }; // spread to do a deep clone
-        for ( let test of obj.testcases ) {
+
+        for ( let test of obj.testcases || [] ) {
             test.convertedCommands = [];
-            for ( let cmd of test.commands ) {
+            for ( let cmd of test.commands || [] ) {
                 test.convertedCommands.push( this.mapper.map( cmd ) );
             }
         }

@@ -96,7 +96,7 @@ export class ReportConverter {
      * @param result The Concordia's result to fill.
      */
     private async fillResults( source: any, result: TestScriptExecutionResult ): Promise< void > {
-        
+
         if ( ! result.results ) {
             result.results = [];
         }
@@ -114,7 +114,7 @@ export class ReportConverter {
                 const scriptLocation: Location = this.extractScriptLocationFromStackTrace( method.err.stack );
 
                 let specLocation: Location;
-                if ( scriptLocation ) {
+                if ( !! scriptLocation ) {
                     specLocation = await this.extractSpecLocationFromScriptLocation( scriptLocation );
                 }
 
@@ -124,7 +124,7 @@ export class ReportConverter {
                     stackTrace: method.err.stack,
 
                     scriptLocation: scriptLocation,
-                    specLocation: specLocation                    
+                    specLocation: specLocation
                 };
             }
 
@@ -136,7 +136,7 @@ export class ReportConverter {
 
     /**
      * Pushes a Test Method Result to a Test Script Execution Result.
-     * 
+     *
      * @param result The Concordia's result to fill.
      * @param testMethodResult TestMethodResult to be pushed.
      * @param suiteName Test Suite Result name.
@@ -144,7 +144,7 @@ export class ReportConverter {
     private pushTestMethodResult( result: TestScriptExecutionResult, testMethodResult: TestMethodResult, suiteName: string ): void {
 
         // Finds the correspondent test suite.
-        let testSuiteResult: TestSuiteResult = 
+        let testSuiteResult: TestSuiteResult =
             result.results.find( ( suite: TestSuiteResult ) => suite.suite === suiteName );
 
         // If the test suite doesn't exists, creates a new one.
@@ -169,12 +169,12 @@ export class ReportConverter {
 
     /**
      * Extract script location from a stack trace.
-     * 
+     *
      * @param stackTrace Stack trace.
      */
     public extractScriptLocationFromStackTrace( stackTrace: string ): Location | null {
 
-        // Extract file name and line, e.g., 'path/to/file.js:15:7'        
+        // Extract file name and line, e.g., 'path/to/file.js:15:7'
         const regex = /((\w:| |\w|\/|\\|\.\/)+\.js):(\d+):(\d+)/umi;
         const r = regex.exec( stackTrace );
         if ( ! r || ! r[ 1 ] ) {
@@ -191,7 +191,7 @@ export class ReportConverter {
 
     /**
      * Extract specification location from a script file.
-     * 
+     *
      * @param scriptFile Script file.
      */
     private async extractSpecLocationFromScriptLocation( scriptLoc: Location ): Promise< Location > {

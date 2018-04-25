@@ -8,7 +8,7 @@ import { UIPropertyTypes } from "./UIPropertyTypes";
 import { ValueType } from "./ValueTypeDetector";
 import { Spec } from "../ast/Spec";
 import { LocatedException } from "../req/LocatedException";
-import { EditableUIElementTypes } from "./UIElementTypes";
+import { EditableActionTargets } from "./ActionTargets";
 import * as enumUtil from 'enum-util';
 
 /**
@@ -75,7 +75,7 @@ export class UIElementPropertyExtractor {
         // Evaluate property 'type' (widget) if defined
         const typeNlpEntity = this.extractPropertyValueAsEntity( this.extractProperty( uie, UIPropertyTypes.TYPE ) );
         if ( isDefined( typeNlpEntity ) ) {
-            return enumUtil.isValue( EditableUIElementTypes, typeNlpEntity.value );
+            return enumUtil.isValue( EditableActionTargets, typeNlpEntity.value );
         }
 
         // // Or does not have the property 'editable' but have one of the following properties defined:

@@ -120,7 +120,7 @@ export class TestCaseSSA extends SpecificationAnalyzer {
         this._checker.checkDuplicatedNamedNodes( doc.testCases, errors, 'Test Case' );
 
         // @variant without @scenario, tag values, @generated
-        this.checkOtherTags( doc, doc.testCases, errors );
+        this.checkOtherTags( doc.testCases, spec, doc, errors );
     }
 
 
@@ -285,62 +285,126 @@ export class TestCaseSSA extends SpecificationAnalyzer {
 
 
 
-    checkOtherTags( doc: Document, testCases: TestCase[], errors: LocatedException[] ) {
+    checkOtherTags( testCases: TestCase[], spec: Spec, doc: Document, errors: LocatedException[] ) {
 
+        const msgNoFeature = 'Feature found.';
+        const msgNoScenarios = 'The referenced Feature does not have Scenarios';
         const msgNoScenarioTag = 'Test Case has tag @variant but it does not have a tag @scenario. Please declare it.';
-        const msgInvalidScenarioIndex = 'The index informed in @scenario is greater than the number of scenarios.';
-        const msgInvalidVariantIndex = 'The index informed in @variant is greater than the number of variants in the scenario.';
+        const msgMinScenarioIndex = 'The index informed in @scenario is less than 1.';
+        const msgMaxScenarioIndex = 'The index informed in @scenario is greater than the number of scenarios.';
+        const msgNoScenario = 'No Scenario with the informed index.';
+        const msgNoVariants = 'No Variants in the referenced Scenario.'
+        const msgMinVariantIndex = 'The index informed in @variant is less than 1.';
+        const msgMaxVariantIndex = 'The index informed in @variant is greater than the number of variants in the scenario.';
 
         for ( let tc of testCases || [] ) {
 
-            let hasVariantTag: boolean = false;
+            let hasFeatureTag: boolean = false;
             let hasScenarioTag: boolean = false;
+            let hasVariantTag: boolean = false;
+
             for ( let tag of tc.tags || [] ) {
+
+                if ( ! hasFeatureTag && this.isFeatureTag( tag.name ) ) {
+                    hasFeatureTag = true;
+                    tc.declaredFeatureName = tag.content;
+                }
+
+                if ( ! hasScenarioTag && this.isScenarioTag( tag.name ) ) {
+                    hasScenarioTag = true;
+                    // Change the test case!
+                    tc.declaredScenarioIndex = this.detectTagContentAsIndex( tag, errors ); // 1+ or null
+                }
 
                 if ( ! hasVariantTag && this.isVariantTag( tag.name ) ) {
                     hasVariantTag = true;
-
                     // Change the test case!
                     tc.declaredVariantIndex = this.detectTagContentAsIndex( tag, errors ); // 1+ or null
+                }
 
-                } else  if ( ! hasScenarioTag && this.isScenarioTag( tag.name ) ) {
-                    hasScenarioTag = true;
-
-                    // Change the test case!
-                    tc.declaredVariantIndex = this.detectTagContentAsIndex( tag, errors ); // 1+ or null
-
-                } if ( this.isGeneratedTag( tag.name ) ) {
-
+                if ( this.isGeneratedTag( tag.name ) ) {
                     // Change the test case!
                     tc.generated = true;
                 }
             }
 
+            // console.log( 'doc -> ', doc.fileInfo.path );
+            // console.log( 'feature -> ', tc.declaredFeatureName );
+            // console.log( 'scenario -> ', tc.declaredScenarioIndex );
+            // console.log( 'variant -> ', tc.declaredVariantIndex );
 
-            // It has @variant but doesn't have @scenario
-            if ( hasVariantTag && ! hasScenarioTag ) {
-                errors.push( new SemanticException( msgNoScenarioTag, tc.location ) )
+            let feature = doc.feature;
+            if ( ! feature ) {
+                let docs: Document[];
 
-            // Checking indexes values
-            } else if ( hasVariantTag ) {
-
-                // Scenario index correct ?
-                if ( tc.declaredScenarioIndex > ( doc.feature.scenarios || [] ).length ) {
-
-                    errors.push( new SemanticException( msgInvalidScenarioIndex, tc.location ) );
-
+                if ( hasFeatureTag ) {
+                    docs = docs = spec.importedDocumentsOf( doc )
+                        .filter( impDoc => isDefined( impDoc.feature )
+                            && impDoc.feature.name.toLowerCase() == tc.declaredFeatureName.toLowerCase() );
                 } else {
-                    const scenario = doc.feature.scenarios[ tc.declaredScenarioIndex - 1 ];
+                    docs = spec.importedDocumentsOf( doc )
+                        .filter( impDoc => isDefined( impDoc.feature ) );
+                }
 
-                    // Variant index correct ?
-                    if ( !! scenario && tc.declaredVariantIndex > ( scenario.variants || [] ).length ) {
+                // No feature
+                if ( docs.length < 1 ) {
+                    errors.push( new SemanticException( msgNoFeature, tc.location ) );
+                    continue;
+                }
 
-                        errors.push( new SemanticException( msgInvalidVariantIndex, tc.location ) );
+                feature = docs[ 0 ].feature;
+            }
 
-                    }
+            if ( hasScenarioTag ) {
+                const size = ( feature.scenarios || [] ).length;
+                // No scenarios
+                if ( size < 1 ) {
+                    errors.push( new SemanticException( msgNoScenarios, tc.location ) );
+                    continue;
+                }
+                // Index > size
+                if ( tc.declaredScenarioIndex > size ) {
+                    errors.push( new SemanticException( msgMaxScenarioIndex, tc.location ) );
+                    continue;
+                }
+                // Index < 1
+                if ( tc.declaredScenarioIndex < 1 ) {
+                    errors.push( new SemanticException( msgMinScenarioIndex, tc.location ) );
+                    continue;
                 }
             }
-        }
+
+            if ( hasVariantTag && ! hasScenarioTag ) {
+                errors.push( new SemanticException( msgNoScenarioTag, tc.location ) );
+                continue;
+            }
+
+            if ( hasVariantTag ) {
+                const scenario = feature.scenarios[ tc.declaredScenarioIndex - 1 ];
+                if ( ! scenario ) { // should not happen since there are prior validations
+                    errors.push( new SemanticException( msgNoScenario, tc.location ) );
+                    continue;
+                }
+                const size = ( scenario.variants || [] ).length;
+                // No variants
+                if ( size < 1 ) {
+                    errors.push( new SemanticException( msgNoVariants, tc.location ) );
+                    continue;
+                }
+                // Index > size
+                if ( tc.declaredVariantIndex > size ) {
+                    errors.push( new SemanticException( msgMaxVariantIndex, tc.location ) );
+                    continue;
+                }
+                // Index < 1
+                if ( tc.declaredVariantIndex < 1 ) {
+                    errors.push( new SemanticException( msgMinVariantIndex, tc.location ) );
+                    continue;
+                }
+            }
+
+        } // test cases
+
     }
 
     isFeatureTag( name: string ): boolean {
@@ -360,9 +424,8 @@ export class TestCaseSSA extends SpecificationAnalyzer {
     }
 
     detectTagContentAsIndex( tag: Tag, errors: LocatedException[] ): number | null {
-
         let value = Array.isArray( tag.content ) ? tag.content[ 0 ] : tag.content;
-        if ( ! value ) {
+        if ( ! isDefined( value ) ) {
             return value;
         }
         value = parseInt( value.trim() );

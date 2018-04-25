@@ -13,8 +13,8 @@ describe( 'TestScriptGeneratorTest', () => {
 
     function uglify(string: string): string{
         return string.replace(/(\r\n|\n|\r|[ \t])/gm, '');
-    }    
-    
+    }
+
     beforeEach(() => {
         gen = new TestScriptGenerator();
     });
@@ -28,7 +28,7 @@ describe( 'TestScriptGeneratorTest', () => {
                 "location": { "column": 1, "line": 1 },
                 "name": "login"
             },
-            "scenarios": [],  
+            "scenarios": [],
             "testcases": []
         } as AbstractTestScript;
 
@@ -39,10 +39,10 @@ describe( 'TestScriptGeneratorTest', () => {
 
         expect( uglify( gen.generate( testCase ) ) ).toBe( uglify( expected ) );
     } );
-    
+
 
     it( 'generates code for test cases of two different scenarios, even without commands', () => {
-        
+
         let testCase = {
             "schemaVersion": "1.0",
             "sourceFile": "path/to/somefile.testcase",
@@ -59,7 +59,7 @@ describe( 'TestScriptGeneratorTest', () => {
                     "location": { "column": 1, "line": 3 },
                     "name": "unsuccessful login"
                 }
-            ],  
+            ],
             "testcases": [
                 {
                     "location": { "column": 1, "line": 40 },
@@ -73,7 +73,7 @@ describe( 'TestScriptGeneratorTest', () => {
                     "name": "finishes unsuccessfully invalid values",
                     invalid: true,
                     "commands": []
-                }                
+                }
             ]
         } as AbstractTestScript;
 
@@ -102,39 +102,39 @@ describe( 'TestScriptGeneratorTest', () => {
                     "location": { "column": 1, "line": 3 },
                     "name": "successful login"
                 }
-            ],  
+            ],
             "testcases": [
                 {
                     "location": { "column": 1, "line": 40 },
                     "scenario": "successful login",
                     "name": "finishes successfully with valid values",
-        
+
                     "commands": [
                         {
                             "location": { "column": 1, "line": 41 },
                             "action": "see",
                             "targets": [ "Login" ],
-                            "targetType": "text"
+                            "targetTypes": [ "text" ]
                         },
                         {
                             "location": { "column": 1, "line": 42 },
                             "action": "fill",
                             "targets": [ "#username" ],
-                            "targetType": "textbox",
+                            "targetTypes": [ "textbox" ],
                             "values": [ "bob" ]
                         },
                         {
                             "location": { "column": 1, "line": 43 },
                             "action": "fill",
                             "targets": [ "#password" ],
-                            "targetType": "textbox",
+                            "targetTypes": [ "textbox" ],
                             "values": [ "b0bp4s$" ]
                         },
                         {
                             "location": { "column": 1, "line": 43 },
                             "action": "click",
                             "targets": [ "#enter" ],
-                            "targetType": "button"
+                            "targetTypes": [ "button" ]
                         }
                     ]
                 }
@@ -143,7 +143,7 @@ describe( 'TestScriptGeneratorTest', () => {
 
         let expected = `
             ${comment}
-            
+
             Feature('login');
 
             Scenario('successful login | finishes successfully with valid values', (I) => {
@@ -172,39 +172,39 @@ describe( 'TestScriptGeneratorTest', () => {
                     "location": { "column": 1, "line": 3 },
                     "name": "successful login"
                 }
-            ],  
+            ],
             "testcases": [
                 {
                     "location": { "column": 1, "line": 40 },
                     "scenario": "successful login",
                     "name": "finishes successfully with valid values",
-        
+
                     "commands": [
                         {
                             "location": { "column": 1, "line": 41 },
                             "action": "see",
                             "targets": [ "Login" ],
-                            "targetType": "text"
+                            "targetTypes": [ "text" ]
                         },
                         {
                             "location": { "column": 1, "line": 42 },
                             "action": "fill",
                             "targets": [ "#username" ],
-                            "targetType": "textbox",
+                            "targetTypes": [ "textbox" ],
                             "values": [ "bob" ]
                         },
                         {
                             "location": { "column": 1, "line": 43 },
                             "action": "fill",
                             "targets": [ "#password" ],
-                            "targetType": "textbox",
+                            "targetTypes": [ "textbox" ],
                             "values": [ "b0bp4s$" ]
                         },
                         {
                             "location": { "column": 1, "line": 43 },
                             "action": "click",
                             "targets": [ "#enter" ],
-                            "targetType": "button"
+                            "targetTypes": [ "button" ]
                         }
                     ]
                 },
@@ -215,19 +215,19 @@ describe( 'TestScriptGeneratorTest', () => {
                     "scenario": "unsuccessful login",
                     "name": "finishes unsuccessfully with invalid values",
                     "invalid": true,
-        
+
                     "commands": [
                         {
                             "location": { "column": 1, "line": 41 },
                             "action": "see",
                             "targets": [ "Login" ],
-                            "targetType": "text"
+                            "targetTypes": [ "text" ]
                         },
                         {
                             "location": { "column": 1, "line": 42 },
                             "action": "fill",
                             "targets": [ "#username" ],
-                            "targetType": "textbox",
+                            "targetTypes": [ "textbox" ],
                             "values": [ "kdsldhçs dwd" ],
                             "invalid": true
                         },
@@ -235,15 +235,15 @@ describe( 'TestScriptGeneratorTest', () => {
                             "location": { "column": 1, "line": 43 },
                             "action": "fill",
                             "targets": [ "#password" ],
-                            "targetType": "textbox",
+                            "targetTypes": [ "textbox" ],
                             "values": [ "d0d s98 23923 2 32$" ],
                             "invalid": true
-                        },                        
+                        },
                         {
                             "location": { "column": 1, "line": 43 },
                             "action": "click",
                             "targets": [ "#enter" ],
-                            "targetType": "button"
+                            "targetTypes": [ "button" ]
                         }
                     ]
                 }
@@ -252,7 +252,7 @@ describe( 'TestScriptGeneratorTest', () => {
 
         let expected = `
             ${comment}
-            
+
             Feature('login');
 
             Scenario('successful login | finishes successfully with valid values', (I) => {
@@ -267,10 +267,10 @@ describe( 'TestScriptGeneratorTest', () => {
                 I.fillField('#username', 'kdsldhçs dwd');
                 I.fillField('#password', 'd0d s98 23923 2 32$');
                 I.click('#enter');
-            });            
+            });
         `;
 
         expect( uglify( gen.generate( testCase ) ) ).toBe( uglify( expected ) );
-    } );    
-    
+    } );
+
 } );

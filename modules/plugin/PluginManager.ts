@@ -7,7 +7,7 @@ import * as childProcess from 'child_process';
 
 /**
  * Plug-in manager
- * 
+ *
  * @author Thiago Delgado Pinto
  */
 export class PluginManager {
@@ -20,7 +20,7 @@ export class PluginManager {
         const all = await finder.find();
         return this.sortByName( all );
     };
-    
+
     public pluginWithName = async ( name: string ): Promise< PluginData | null > => {
         const all: PluginData[] = await this.findAll();
         const withName: PluginData[] = all.filter( v => v.name.toLowerCase() === name.toLowerCase() );
@@ -50,7 +50,7 @@ export class PluginManager {
 
     /**
      * Tries to load a plug-in and to return its instance.
-     * 
+     *
      * @param pluginData Plug-in data
      */
     public load = async ( pluginData: PluginData ): Promise< Plugin > => {
@@ -63,14 +63,14 @@ export class PluginManager {
         // Create an instance of the class
         const obj = this.createInstance( pluginClassFileContext, pluginData.class, [] );
 
-        return obj as Plugin;        
+        return obj as Plugin;
     };
 
 
     private runCommand = ( command: string, drawer: PluginDrawer ): void => {
 
         const child = childProcess.exec( command );
-        
+
         child.stdout.on( 'data', ( chunk ) => {
             drawer.showPluginExecutionOutput( chunk.toString() );
         } );
@@ -81,7 +81,7 @@ export class PluginManager {
 
         child.on( 'exit', ( code ) => {
             drawer.showPluginExecutionFinished( code );
-        } );        
+        } );
     };
 
 
@@ -93,14 +93,14 @@ export class PluginManager {
 
     /**
      * Returns an instance of a given class name.
-     * 
+     *
      * @param context Object used as context.
      * @param className Class to be instantied.
      * @param args Constructor arguments.
      * @return An instance of the given class.
      */
-    private createInstance = ( context: any, className: string, ...args: any[] ): any => {
+    private createInstance = ( context: any, className: string, args: any[] ): any => {
         return new context[ className ]( ... args );
     };
-        
+
 }

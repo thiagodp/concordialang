@@ -36,6 +36,9 @@ import { Keywords } from "../req/Keywords";
 import { CaseType } from "../app/CaseType";
 import { PreTestCase } from "./PreTestCase";
 import { LocalTime, DateTimeFormatter, LocalDate, LocalDateTime } from "js-joda";
+import { ACTION_TARGET_MAP } from "../util/ActionMap";
+import { Actions } from "../util/Actions";
+import { ActionTargets } from "../util/ActionTargets";
 
 export class GenContext {
     constructor(
@@ -391,7 +394,10 @@ export class PreTestCaseGenerator {
                     column: step.location.column,
                     line: line++,
                     filePath: step.location.filePath
-                } as Location
+                } as Location,
+
+                isInvalidValue: false
+
             } as Step;
 
             steps.push( newStep );
@@ -467,11 +473,50 @@ export class PreTestCaseGenerator {
                 step.comment = ' ' + comment + ( step.comment || '' );
             }
 
+            // Add target types
+            step.targetTypes = this.extractTargetTypes( step, ctx.doc, ctx.spec );
+
             if ( before != newContent ) {
                 // Update NLP !
                 this._variantSentenceRec.recognizeSentences( language, [ step ], ctx.errors, ctx.warnings );
             }
         }
+    }
+
+    extractTargetTypes( step: Step, doc: Document, spec: Spec ): string[] {
+        if ( ! step.nlpResult ) {
+            return [];
+        }
+        let action = step.action || null;
+        let targetTypes: string[] = [];
+        for ( let e of step.nlpResult.entities || [] ) {
+            switch ( e.entity ) {
+                case Entities.UI_ACTION: {
+                    if ( null === action ) {
+                        action = e.value;
+                    }
+                    break;
+                }
+                case Entities.UI_ELEMENT: {
+                    const uie = spec.uiElementByVariable( e.value, doc );
+                    if ( isDefined( uie ) ) {
+                        const uieType = this._uiePropExtractor.extractType( uie );
+                        targetTypes.push( uieType );
+                        break;
+                    }
+                    // continue as UI_LITERAL
+                }
+                case Entities.UI_LITERAL: {
+                    if ( isDefined( action ) ) {
+                        targetTypes.push(
+                            ACTION_TARGET_MAP.get( action ) || ActionTargets.NONE
+                        );
+                    }
+                    break;
+                }
+            }
+        }
+        return targetTypes;
     }
 
 
@@ -494,6 +539,10 @@ export class PreTestCaseGenerator {
             return [ steps, [] ];
         }
 
+        // Add target types
+        step.targetTypes = this.extractTargetTypes( step, ctx.doc, ctx.spec );
+
+        // Check UI Elements
         let uiElements = this._nlpUtil.entitiesNamed( Entities.UI_ELEMENT, step.nlpResult );
         const uiElementsCount = uiElements.length;
         if ( uiElementsCount < 1 ) {
@@ -622,7 +671,10 @@ export class PreTestCaseGenerator {
                     column: step.location.column,
                     line: line++,
                     filePath: step.location.filePath
-                } as Location
+                } as Location,
+
+                isInvalidValue: ( isDefined( uieTestPlan ) && uieTestPlan.result === DTCAnalysisResult.INVALID )
+
             } as Step;
 
             // Update NLP !

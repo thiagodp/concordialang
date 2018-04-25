@@ -7,7 +7,7 @@ import { ActionMapper } from "../../../plugins/codeceptjs/ActionMapper";
 describe( 'ActionMapperTest', () => {
 
     let mapper: ActionMapper; // under test
-    
+
     beforeEach(() => {
         mapper = new ActionMapper();
     });
@@ -51,7 +51,7 @@ describe( 'ActionMapperTest', () => {
         let command: ATSCommand = {
             action: 'clear',
             targets: [],
-            targetType: 'cookie'
+            targetTypes: [ 'cookie' ]
         };
         expect(mapper.map(command)).toContainEqual("I.clearCookie();");
     } );
@@ -60,7 +60,7 @@ describe( 'ActionMapperTest', () => {
         let command: ATSCommand = {
             action: 'clear',
             targets: ['preferences'],
-            targetType: 'cookie'
+            targetTypes: [ 'cookie' ]
         };
         expect(mapper.map(command)).toContainEqual("I.clearCookie('preferences');");
     } );
@@ -77,11 +77,11 @@ describe( 'ActionMapperTest', () => {
         let command: ATSCommand = {
             action: 'clear',
             targets: ['#login'],
-            targetType: 'textbox'
+            targetTypes: [ 'textbox' ]
         };
         expect(mapper.map(command)).toContainEqual("I.clearField('#login');");
     } );
-    
+
     it( 'should translate click command', () => {
         let command: ATSCommand = {
             action: 'click',
@@ -94,7 +94,7 @@ describe( 'ActionMapperTest', () => {
         let command: ATSCommand = {
             action: 'click',
             targets: [{
-                web:'#enter' 
+                web:'#enter'
             }],
         };
         expect(mapper.map(command)).toContainEqual("I.click('#enter');");
@@ -159,7 +159,7 @@ describe( 'ActionMapperTest', () => {
         let command: ATSCommand = {
             action: 'see',
             targets: ['preferences'],
-            targetType: 'cookie'
+            targetTypes: [ 'cookie' ]
         };
         expect(mapper.map(command)).toContainEqual("I.seeCookie('preferences');");
     });
@@ -168,7 +168,7 @@ describe( 'ActionMapperTest', () => {
         let command: ATSCommand = {
             action: 'see',
             targets: ['http://www.mysite.com/login'],
-            targetType: 'url'
+            targetTypes: [ 'url' ]
         };
         expect(mapper.map(command)).toContainEqual("I.seeCurrentUrlEquals('http://www.mysite.com/login');");
     });
@@ -177,7 +177,7 @@ describe( 'ActionMapperTest', () => {
         let command: ATSCommand = {
             action: 'see',
             targets: ['#login'],
-            targetType: 'button'
+            targetTypes: [ 'button' ]
         };
         expect(mapper.map(command)).toContainEqual("I.seeElement('#login');");
     });
@@ -213,7 +213,7 @@ describe( 'ActionMapperTest', () => {
         let command: ATSCommand = {
             action: 'wait',
             targets: ['#login'],
-            targetType: 'button',
+            targetTypes: [ 'button' ],
             values: [5]
         };
         expect(mapper.map(command)).toContainEqual("I.waitForElement('#login', 5);");
@@ -223,10 +223,10 @@ describe( 'ActionMapperTest', () => {
         let command: ATSCommand = {
             action: 'wait',
             targets: ['#welcome_message'],
-            targetType: 'text',
+            targetTypes: [ 'text' ],
             values: [5]
         };
         expect(mapper.map(command)).toContainEqual("I.waitForText('#welcome_message', 5);");
     });
-    
+
 } );

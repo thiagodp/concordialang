@@ -506,6 +506,18 @@ export class Spec {
         return null;
     }
 
+    importedDocumentsOf( doc: Document ): Document[] {
+        let docs: Document[] = [];
+        for ( let impDoc of doc.imports || [] ) {
+            let otherDoc = this.docWithPath( impDoc.value, doc.fileInfo.path );
+            if ( ! otherDoc ) {
+                continue;
+            }
+            docs.push( otherDoc );
+        }
+        return docs;
+    }
+
 
     /**
      * Extract variables from a document and its imports.

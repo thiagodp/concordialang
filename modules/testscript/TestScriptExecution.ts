@@ -6,9 +6,21 @@ import { Location } from "../ast/Location";
  * @author Thiago Delgado Pinto
  */
 export class TestScriptExecutionOptions {
-    public filter: TestScriptExecutionFilter = new TestScriptExecutionFilter();
-    public sourceCodeDir: string = null; // where the script files are
-    public executionResultDir: string = null; // where to place the file with the execution results
+
+    /**
+     * Constructor
+     *
+     * @param sourceCodeDir Directory for script files
+     * @param executionResultDir Directory for execution result files
+     * @param filter Filter
+     */
+    constructor(
+        public sourceCodeDir: string = null,
+        public executionResultDir: string = null, // where to place the file with the execution results
+        public filter: TestScriptExecutionFilter = new TestScriptExecutionFilter()
+    ) {
+
+    }
 }
 
 /**
@@ -25,21 +37,7 @@ export class TestScriptExecutionFilter {
     public maxScenarioImportance: number = 9;  // 1..9
 
     public featureName: string = null; // null == don't filter
-    public scenarioName: string = null; // null == don't filter    
-}
-
-/**
- * External tool execution result.
- *
- * @author Thiago Delgado Pinto
- */
-export class ExternalToolExecutionResult {
-
-    success: boolean;
-    details: string; // mainly in case of success is false
-
-    // Undefined if success is false
-    scriptExecutionResult: TestScriptExecutionResult | undefined;
+    public scenarioName: string = null; // null == don't filter
 }
 
 /**
@@ -65,13 +63,13 @@ export class TestScriptExecutionResult {
     durationMs: number; // milliseconds
 
     total: TotalExecutionResult = new TotalExecutionResult();
-    
+
     results: TestSuiteResult[];
 }
 
 /**
  * Total execution result
- * 
+ *
  * @author Thiago Delgado Pinto
  */
 export class TotalExecutionResult {
@@ -80,7 +78,7 @@ export class TotalExecutionResult {
     skipped: number = 0;
     failed: number = 0;
     error: number = 0;
-    unknown: number = 0;    
+    unknown: number = 0;
 }
 
 /**
@@ -114,7 +112,7 @@ export class TestMethodResult {
 
 /**
  * Test method exception.
- * 
+ *
  * @author Thiago Delgado Pinto
  */
 export class TestMethodException {

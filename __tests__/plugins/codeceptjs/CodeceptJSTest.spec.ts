@@ -1,5 +1,5 @@
 import { spawn, exec } from 'child_process';
-import { TestScriptGenerationOptions } from '../../../modules/testscript/TestScriptGeneration';
+import { TestScriptGenerationOptions } from '../../../modules/testscript/TestScriptOptions';
 import { AbstractTestScript } from '../../../modules/testscript/AbstractTestScript';
 import { TestScriptExecutionOptions } from '../../../modules/testscript/TestScriptExecution';
 import { CodeceptJS } from "../../../plugins/codeceptjs/CodeceptJS";
@@ -18,8 +18,7 @@ describe( 'CodeceptJSTest', () => {
         vol.reset(); // erase in-memory files
     } );
 
-    // @see https://facebook.github.io/jest/docs/en/asynchronous.html#promises
-    it( 'generate files with the right file names', () => {
+    it( 'generate files with the right file names', async () => {
 
         let expectedFileNames: string[] = [
             'add-product-to-the-shopping-cart.js',
@@ -50,18 +49,17 @@ describe( 'CodeceptJSTest', () => {
                     { name: 'Scenario 1' }
                 ],
                 testcases: []
-            } as AbstractTestScript,            
+            } as AbstractTestScript,
         ];
 
         let options: TestScriptGenerationOptions = new TestScriptGenerationOptions();
         options.sourceCodeDir = outputDir;
 
-        let promises: Promise< string >[] = plugin.generateCode( scripts, options );
-        return Promise.all( promises )
-            .then( ( fileNames: string[] ) => {
-                expect( fileNames ).toEqual( expectedFileNames );
-            } );
+        let errors: Error[] = [];
+        let fileNames = await plugin.generateCode( scripts, options, errors );
+        expect( errors ).toEqual( [] );
+        expect( fileNames ).toEqual( expectedFileNames );
     } );
 
-    
+
 } );

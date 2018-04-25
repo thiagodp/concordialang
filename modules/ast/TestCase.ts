@@ -44,6 +44,9 @@ export interface TestCase extends NamedNode, MayHaveTags {
 
     // The following attributes are retrieved from the Tags during Semantic Analysis:
 
+    /** Declared feature name, with @feature( <name> ). Needed only when there are more than one import. */
+    declaredFeatureName?: string;
+
     /** Declared scenario index, with @scenario( <index> ). Real index is always declared - 1. */
     declaredScenarioIndex?: number;
 
