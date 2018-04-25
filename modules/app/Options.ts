@@ -104,9 +104,9 @@ export class Options {
     // /** Number of test cases with invalid random values */
     // public randomInvalid: number = 1;
     /** Minimum size for random strings */
-    public randomStringMinSize: number = this.defaults.RANDOM_STRING_MIN_SIZE;
+    public randomMinStringSize: number = this.defaults.RANDOM_MIN_STRING_SIZE;
     /** Maximum size for random strings */
-    public randomStringMaxSize: number = this.defaults.RANDOM_STRING_MAX_SIZE;
+    public randomMaxStringSize: number = this.defaults.RANDOM_MAX_STRING_SIZE;
     /** How many tries it will make to generate random values that are not in a set */
     public randomTriesToInvalidValues: number = this.defaults.RANDOM_TRIES_TO_INVALID_VALUES;
 
@@ -426,12 +426,12 @@ export class Options {
         //     this.randomInvalid = parseInt( flags.randomInvalid );
         // }
 
-        if ( isNumber( flags.randomStringMinSize ) ) {
-            this.randomStringMinSize = parseInt( flags.randomStringMinSize );
+        if ( isNumber( flags.randomMinStringSize ) ) {
+            this.randomMinStringSize = parseInt( flags.randomMinStringSize );
         }
 
-        if ( isNumber( flags.randomStringMaxSize ) ) {
-            this.randomStringMaxSize = parseInt( flags.randomStringMaxSize );
+        if ( isNumber( flags.randomMaxStringSize ) ) {
+            this.randomMaxStringSize = parseInt( flags.randomMaxStringSize );
         }
 
         if ( isNumber( flags.randomTries ) ) {

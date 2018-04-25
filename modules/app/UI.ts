@@ -13,7 +13,8 @@ export class UI {
     }
 
     updateOptions( options: Options ): void {
-        this._meowInput = meow( this._cliHelp.content(), this._cliHelp.meowOptions() ); 
+        this._meowInput = meow( this._cliHelp.content(), this._cliHelp.meowOptions() );
+        // this._meowInput = meow( this._cliHelp.content(), this._cliHelp.meowNewOptions() );
         options.fromMeow( this._meowInput );
     }
 
@@ -30,7 +31,7 @@ export class UI {
         const site = m.pkg.homepage || 'https://concordialang.org';
 
         this._cli.newLine( desc + ' v' + version  );
-        this._cli.newLine( 'Copyright (c) 2017 ' + name );
+        this._cli.newLine( 'Copyright (c) 2018 ' + name );
         this._cli.newLine( site );
     }
 

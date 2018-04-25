@@ -65,7 +65,7 @@ export class CompilerController {
 
         let [ spec, graph ] = await compiler.compile( options, listener );
 
-        if ( ! options.generateTestCases ) {
+        if ( ! options.generateTestCases || ! spec.docs || spec.docs.length < 1 ) {
             return [ spec, graph ];
         }
 

@@ -52,8 +52,8 @@ export class TCGenController {
             options.language,
             options.seed,
             options.typedCaseUI(),
-            options.randomStringMinSize,
-            options.randomStringMaxSize,
+            options.randomMinStringSize,
+            options.randomMaxStringSize,
             options.randomTriesToInvalidValues
         );
 

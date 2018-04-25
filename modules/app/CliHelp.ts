@@ -30,24 +30,24 @@ export class CliHelp {
   ${chalk.gray('Plug-in')}
 
   -p,  --plugin <name>                   Plug-in to use.
-  -pl, --plugin-list                     List available plug-ins.
   -pa, --plugin-about <name>             About a plug-in.
   -pi, --plugin-install <name>           Install a plug-in.
   -pu, --plugin-uninstall <name>         Uninstall a plug-in.
+  -pl, --plugin-list                     List available plug-ins.
 
   ${chalk.gray('Processing and output')}
 
   -b,  --verbose                         Verbose output.
 
-  -ns, --no-spec                         Do not process specification files.
+  -np, --no-spec                         Do not process specification files.
   -nt, --no-test-cases                   Do not generate test cases.
-  -nc, --no-scripts                      Do not generate test scripts.
+  -ns, --no-scripts                      Do not generate test scripts.
   -nx, --no-run                          Do not run test scripts.
   -nu, --no-results                      Do not process execution results.
 
-  -js, --just-spec                       Just process specification files.
+  -jp, --just-spec                       Just process specification files.
   -jt, --just-test-cases                 Just generate test cases.
-  -jc, --just-scripts                    Just generate test scripts.
+  -js, --just-scripts                    Just generate test scripts.
   -jx, --just-run                        Just execute test scripts.
 
   -dt, --dir-test-cases                  Output directory for test cases.
@@ -76,8 +76,8 @@ export class CliHelp {
 
   --seed <value>                         Use the given random seed. Default is current
                                          date and time.
-  --random-string-min-size <number>      Minimum random string size. Default is 0.
-  --random-string-max-size <number>      Minimum random string size. Default is 500.
+  --random-min-string-size <number>      Minimum random string size. Default is 0.
+  --random-max-string-size <number>      Minimum random string size. Default is 500.
   --random-tries <number>                Random tries to generate invalid values.
                                          Default is 5.
 
@@ -145,6 +145,102 @@ export class CliHelp {
 `;
     }
 
+    // meowNewOptions(): object {
+    //     return {
+
+    //         flags: {
+
+    //             // INPUT DIRECTORIES AND FILES
+
+    //             directory: { type: 'string', alias: 'd' },
+    //             noRecursive: { type: 'boolean', alias: 'nr' },
+    //             encoding: { type: 'string', alias: 'e' },
+    //             extensions: { type: 'string', alias: 'x' },
+    //             ignore: { type: 'string', alias: 'i' },
+    //             files: { type: 'string', alias: 'f' },
+
+    //             language: { type: 'string', alias: 'l' },
+    //             languageList: { type: 'boolean', alias: 'll' },
+
+    //             // PLUG-IN
+
+    //             plugin: { type: 'string', alias: 'p' },
+    //             pluginAbout: { type: 'string', alias: 'pa' },
+    //             pluginInstall: { type: 'string', alias: 'pi' },
+    //             pluginUninstall: { type: 'string', alias: 'pu' },
+    //             pluginList: { type: 'boolean', alias: 'pl' },
+
+    //             // PROCESSING AND OUTPUT
+
+    //             verbose: { type: 'boolean', alias: 'b' },
+
+    //             noSpec: { type: 'boolean', alias: 'np' },
+    //             noTestCases: { type: 'boolean', alias: 'nt' },
+    //             noScripts: { type: 'boolean', alias: 'ns' },
+    //             noRun: { type: 'boolean', alias: 'nr' },
+    //             noResults: { type: 'boolean', alias: 'nu' },
+
+    //             justSpec: { type: 'boolean', alias: 'jp' },
+    //             justTestCases: { type: 'boolean', alias: 'jt' },
+    //             justScripts: { type: 'boolean', alias: 'js' },
+    //             justRun: { type: 'boolean', alias: 'jx' },
+
+    //             dirTestCases: { type: 'string', alias: 'dt' },
+    //             dirScripts: { type: 'string', alias: 'ds' },
+    //             dirResults: { type: 'string', alias: 'du' },
+
+    //             extFeature: { type: 'string', alias: 'ef' },
+    //             extTestCases: { type: 'string', alias: 'et' },
+    //             lineBreaker: { type: 'string', alias: 'lb' },
+
+    //             // CONTENT GENERATION
+
+    //             caseUi: { type: 'string' },
+    //             caseMethod: { type: 'string' },
+    //             tcSuppressHeader: { type: 'boolean' },
+    //             tcIndenter: { type: 'string' },
+
+    //             // RANDOMIC GENERATION
+
+    //             seed: { type: 'string' },
+    //             randomMinStringSize: { type: 'integer' },
+    //             randomMaxStringSize: { type: 'integer' },
+    //             randomTries: { type: 'integer' },
+
+    //             // SPECIFICATION FILTERING
+
+    //             importance: { type: 'integer' },
+    //             selMinFeature: { type: 'integer' },
+    //             selMaxFeature: { type: 'integer' },
+    //             selMinScenario: { type: 'integer' },
+    //             selMaxScenario: { type: 'integer' },
+    //             selFilter: { type: 'string' },
+
+    //             // COMBINATION STRATEGIES
+
+    //             combVariant: { type: 'string' },
+    //             combState: { type: 'string' },
+    //             combInvalid: { type: 'string' },
+    //             combData: { type: 'string' },
+
+    //             // TEST SCRIPT FILTERING
+
+    //             runMinFeature: { type: 'integer' },
+    //             runMaxFeature: { type: 'integer' },
+    //             runMinScenario: { type: 'integer' },
+    //             runMaxScenario: { type: 'integer' },
+    //             runFilter: { type: 'string' },
+
+    //             // INFO
+
+    //             help: { alias: 'h', type: 'boolean' },
+    //             about: { alias: 'a', type: 'boolean' },
+    //             version: { alias: 'v', type: 'boolean' },
+    //             newer: { alias: 'n', type: 'boolean' },
+    //         }
+    //     };
+    // }
+
 
     meowOptions(): object {
         return {
@@ -164,24 +260,24 @@ export class CliHelp {
 
                 // PLUGIN
                 p: 'plugin',
-                pl: 'plugin-list',
                 pa: 'plugin-about',
                 pi: 'plugin-install',
                 pu: 'plugin-uninstall',
+                pl: 'plugin-list',
 
                 // PROCESSING
                 b: 'verbose',
                 ff: 'fail-fast',
 
-                ns: 'no-spec',
+                np: 'no-spec',
                 nt: 'no-test-cases',
-                nc: 'no-scripts',
+                ns: 'no-scripts',
                 nx: 'no-run',
                 nu: 'no-results',
 
-                js: 'just-spec',
+                jp: 'just-spec',
                 jt: 'just-test-cases',
-                jc: 'just-scripts',
+                js: 'just-scripts',
                 jx: 'just-run',
 
                 dt: 'dir-test-cases',
@@ -194,36 +290,22 @@ export class CliHelp {
                 // (no shortcuts)
 
                 // RANDOMIC GENERATION
-                s: 'seed',
-                rv: 'random-valid',
-                ri: 'random-invalid',
+                // (no shortcuts)
 
                 // SPECIFICATION SELECTION
-                snf: 'sel-min-feature',
-                sxf: 'sel-max-feature',
-                sns: 'sel-min-scenario',
-                sxs: 'sel-max-scenario',
-                sf: 'sel-filter',
+                // (no shortcuts)
 
                 // COMBINATION STRATEGIES
-                sv: 'sel-variant',
-                ss: 'sel-state',
+                // (no shortcuts)
 
                 // TEST SCRIPT FILTERING
-                rnf: 'run-min-feature',
-                rxf: 'run-max-feature',
-                rns: 'run-min-scenario',
-                rxs: 'run-max-scenario',
-                rf: 'run-filter',
+                // (no shortcuts)
 
                 // INFO
                 h: 'help',
                 a: 'about',
                 v: 'version',
-                n: 'newer',
-
-                // CONFIG
-                in: 'init'
+                n: 'newer'
             }
         };
     }
