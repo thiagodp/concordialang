@@ -17,6 +17,7 @@ import * as path from 'path';
 import * as deepcopy from 'deepcopy';
 import { KeywordDictionary } from '../dict/KeywordDictionary';
 import { EnglishKeywordDictionary } from '../dict/EnglishKeywordDictionary';
+import { isDefined } from '../util/TypeChecking';
 
 /**
  * Executes semantic analysis of Test Cases in a specification.
@@ -31,10 +32,10 @@ import { EnglishKeywordDictionary } from '../dict/EnglishKeywordDictionary';
  *
  *  - Tag @variant without a tag @scenario
  *
- *  - Tag content of @scenarios must be number, greater than zero,
+ *  - Content of the tag @scenarios must be number greater than zero,
  *    and less than the number of scenarios in the feature.
  *
- *  - Tag content of @variant must be number, greater than zero,
+ *  - Content of the tag @variant must be number greater than zero,
  *    and less than the number of variant in the scenario.
  *
  * Changes:
@@ -72,34 +73,29 @@ export class TestCaseSSA extends SpecificationAnalyzer {
 
     public analyzeDocument( spec: Spec, doc: Document, errors: SemanticException[] ) {
 
-        // Check if variants have a feature
-        if ( doc.testCases && doc.testCases.length > 0 ) {
+        // No Test Cases -> exit
+        if ( ! doc.testCases || doc.testCases.length < 1 ) {
+            return;
+        }
 
-            const importsCount = doc.imports ? doc.imports.length : 0;
+        const hasFeature = isDefined( doc.feature );
+        const hasImport = isDefined( doc.imports ) && doc.imports.length > 0;
 
-            // No imported files -> error
-            if ( importsCount < 1 ) {
-                let firstVariant = doc.testCases[ 0 ];
-                const msg = 'No imports or feature declared before the test case.';
-                const err = new SemanticException( msg,
-                    this.makeLocationWithPath( firstVariant.location, doc.fileInfo.path ) );
-                errors.push( err );
+        // No Feature or Imports declared
+        if ( ! hasFeature && ! hasImport ) {
+            let firstTestCase = doc.testCases[ 0 ];
+            const msg = 'No imports or feature declared before the test case.';
+            const err = new SemanticException( msg,
+                this.makeLocationWithPath( firstTestCase.location, doc.fileInfo.path ) );
+            errors.push( err );
+            return;
+        } else if ( hasFeature ) {
 
-            // Single import -> Let's check its feature
-            } else if ( 1 == importsCount ) {
-                const singleImport = doc.imports[ 0 ];
-                this.processSingleImport( spec, doc, singleImport, errors );
-
-            // Multiple imports -> Let's check referenced features
-            } else {
-                this.processMultipleImports( spec, doc, errors );
-            }
-
-        } else if ( doc.feature ) {
             let availableFeatures: Feature[] = [ doc.feature ];
             let availableFeatureNames: string[] = [ doc.feature.name.toLowerCase() ];
             let availableFeaturePaths: string[] = doc.fileInfo ? [ doc.fileInfo.path || '' ] : [ '' ];
-            for ( let testCase of doc.feature.testCases ) {
+
+            for ( let testCase of doc.testCases ) {
                 this.checkFeatureTags(
                     spec,
                     doc,
@@ -110,18 +106,21 @@ export class TestCaseSSA extends SpecificationAnalyzer {
                     errors
                 );
             }
-        }
 
-        // Checking the document structure
-        if ( ! doc.feature || ! doc.feature.testCases || doc.feature.testCases.length < 1 ) {
-            return; // nothing to do
+        } else if ( hasImport ) {
+            if ( 1 == doc.imports.length ) {
+                const singleImport = doc.imports[ 0 ];
+                this.processSingleImport( spec, doc, singleImport, errors );
+            } else {
+                this.processMultipleImports( spec, doc, errors );
+            }
         }
 
         // Duplicated test case names
-        this._checker.checkDuplicatedNamedNodes( doc.feature.testCases, errors, 'Test Case' );
+        this._checker.checkDuplicatedNamedNodes( doc.testCases, errors, 'Test Case' );
 
         // @variant without @scenario, tag values, @generated
-        this.checkOtherTags( doc, doc.feature.testCases, errors );
+        this.checkOtherTags( doc, doc.testCases, errors );
     }
 
 
@@ -137,7 +136,6 @@ export class TestCaseSSA extends SpecificationAnalyzer {
             return false;
         }
 
-        this.copyTestCasesToFeature( doc.testCases, feature, docImport.value );
         return true;
     }
 
@@ -208,27 +206,6 @@ export class TestCaseSSA extends SpecificationAnalyzer {
     }
 
 
-    private copyTestCasesToFeature( testCases: TestCase[], feature: Feature, filePath: string ) {
-
-        // Sanity checking
-        if ( ! testCases || testCases.length < 1 ) {
-            return;
-        }
-
-        if ( ! feature.testCases ) {
-            feature.testCases = [];
-        }
-
-        let testCasesClone = testCases.slice( 0 );
-        for ( let testCase of testCasesClone ) {
-            // Sets the file Path
-            testCase.location.filePath = filePath; // <<< External file path!
-            // Adds to the feature
-            feature.testCases.push( testCase );
-        }
-    }
-
-
     private checkFeatureTags(
         spec: Spec,
         doc: Document,
@@ -295,9 +272,6 @@ export class TestCaseSSA extends SpecificationAnalyzer {
             // Normalizes the path, according to the base path
             featureFilePath = path.join( spec.basePath, featureFilePath );
         }
-
-        // Copy test cases from the document to the feature and sets the filePath of each one.
-        this.copyTestCasesToFeature( doc.testCases, feature, featureFilePath );
 
         return true;
     }

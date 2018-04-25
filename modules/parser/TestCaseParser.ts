@@ -28,7 +28,7 @@ export class TestCaseParser implements NodeParser< TestCase > {
         }
 
         // Prepares the owner to receive the testCase
-        let owner = context.doc.feature ? context.doc.feature : context.doc;
+        let owner = context.doc;
         if ( ! owner.testCases ) {
             owner.testCases = [];
         }

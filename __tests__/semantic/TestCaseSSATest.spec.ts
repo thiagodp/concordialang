@@ -130,14 +130,14 @@ describe( 'TestCaseSSATest', () => {
             fileInfo: { path: join( path, "F.feature" ) } as FileInfo,
             feature: {
                 name: "My feature F",
-                location: {},
-                testCases: [
-                    {
-                        name: "My F test case 1",
-                        location: {}
-                    } as TestCase
-                ]
-            } as Feature
+                location: {}
+            } as Feature,
+            testCases: [
+                {
+                    name: "My F test case 1",
+                    location: {}
+                } as TestCase
+            ]
         };
 
         docG = {
@@ -145,22 +145,22 @@ describe( 'TestCaseSSATest', () => {
             feature: {
                 name: "My feature G",
                 location: {},
-                testCases: [
-                    {
-                        name: "My G test case 1",
-                        location: {},
-                        tags: [
-                            {
-                                name: ReservedTags.FEATURE,
-                                content: "My feature A",
-                                nodeType: NodeTypes.TAG,
-                                location: {
-                                } as Location
-                            } as Tag
-                        ]
-                    } as TestCase
-                ]
-            } as Feature
+            } as Feature,
+            testCases: [
+                {
+                    name: "My G test case 1",
+                    location: {},
+                    tags: [
+                        {
+                            name: ReservedTags.FEATURE,
+                            content: "My feature A",
+                            nodeType: NodeTypes.TAG,
+                            location: {
+                            } as Location
+                        } as Tag
+                    ]
+                } as TestCase
+            ]
         };
 
         spec.docs.push( docA, docB, docC, docD, docE1, docE2, docF, docG );
@@ -196,13 +196,6 @@ describe( 'TestCaseSSATest', () => {
         expect( errors[ 0 ].message ).toMatch( /tag/ui );
     } );
 
-    it( 'copies test cases to the referenced feature', () => {
-        let errors: Error[] = [];
-        analyzer.analyzeDocument( spec, docC, errors );
-        expect( errors ).toHaveLength( 0 );
-        expect( docA.feature.testCases ).toHaveLength( 1 );
-    } );
-
     it( 'does not criticize the lack of feature if the file has a feature', () => {
         let errors: Error[] = [];
         analyzer.analyzeDocument( spec, docF, errors );
@@ -210,7 +203,7 @@ describe( 'TestCaseSSATest', () => {
     } );
 
     it( 'does not criticize a referenced feature that is the file\'s feature', () => {
-        docG.feature.testCases[ 0 ].tags[ 0 ].content = docG.feature.name;
+        docG.testCases[ 0 ].tags[ 0 ].content = docG.feature.name;
         let errors: Error[] = [];
         analyzer.analyzeDocument( spec, docG, errors );
         expect( errors ).toHaveLength( 0 );
@@ -224,7 +217,7 @@ describe( 'TestCaseSSATest', () => {
     } );
 
     it( 'criticizes duplicated names', () => {
-        docF.feature.testCases.push(
+        docF.testCases.push(
             {
                 name: "My F test case 1",
                 location: {}

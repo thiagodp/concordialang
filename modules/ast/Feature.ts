@@ -20,6 +20,4 @@ export interface Feature extends NamedNode, MayHaveTags {
     variantBackground?: VariantBackground;
     scenarios?: Scenario[];
     uiElements?: UIElement[];
-    testCases?: TestCase[];
-
 }

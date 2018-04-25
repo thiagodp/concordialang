@@ -133,12 +133,6 @@ export class NLPBasedSentenceRecognizer {
             }
         }
 
-        // Test Cases inside Features
-        for ( let testCase of doc.feature.testCases || [] ) {
-            this._variantSentenceRec.recognizeSentences(
-                language, testCase.sentences, errors, warnings, 'Test Case' );
-        }
-
     }
 
 }

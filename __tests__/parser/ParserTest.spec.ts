@@ -186,10 +186,10 @@ describe( 'ParserTest', () => {
 
         expect( parser.errors() ).toEqual( [] );
 
-        expect( doc.feature.testCases ).toBeDefined();
-        expect( doc.feature.testCases ).toHaveLength( 1 );
+        expect( doc.testCases ).toBeDefined();
+        expect( doc.testCases ).toHaveLength( 1 );
 
-        let testCase = doc.feature.testCases[ 0 ];
+        let testCase = doc.testCases[ 0 ];
         expect( testCase.name ).toBe( "hello" );
 
         let tagNames = testCase.tags.map( v => v.name );

@@ -48,7 +48,7 @@ describe( 'TestCaseParserTest', () => {
         context.doc.feature = featureNode;
         parser.analyze( testCaseNode, context, nodeIt, errors );
         expect( errors ).toHaveLength( 0 );
-        expect( context.doc.feature.testCases ).toHaveLength( 1 );
+        expect( context.doc.testCases ).toHaveLength( 1 );
     } );
 
     it( 'context indicates the presence of a test case', () => {

@@ -32,7 +32,6 @@ export class FeatureParser implements NodeParser< Feature > {
         node.sentences = node.sentences || [];
         node.scenarios = node.scenarios || [];
         node.uiElements = node.uiElements || [];
-        node.testCases = node.testCases || [];
 
         // Adjust the context
         context.resetInValues();
