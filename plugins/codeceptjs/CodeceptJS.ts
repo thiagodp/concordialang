@@ -23,10 +23,6 @@ import { promisify } from 'util';
 export class CodeceptJS implements Plugin {
 
     private readonly _fs: any;
-    private _scriptGenerator: TestScriptGenerator;
-    private _scriptExecutor: TestScriptExecutor;
-    private _reportConverter: ReportConverter;
-
     private readonly PLUGIN_CONFIG_PATH: string = path.join( __dirname, '../', 'codeceptjs.json' );
 
     constructor(
@@ -34,12 +30,6 @@ export class CodeceptJS implements Plugin {
         private _encoding: string = 'utf8'
     ) {
         this._fs = ! fsToUse ? fs : fsToUse;
-
-        this._scriptGenerator = new TestScriptGenerator();
-        this._scriptExecutor = new TestScriptExecutor(
-            new CmdRunner()
-        );
-        this._reportConverter = new ReportConverter( this._fs );
     }
 
     /** @inheritDoc */
@@ -81,7 +71,8 @@ export class CodeceptJS implements Plugin {
         const filePath: string = path.join( targetDir, fileName );
 
         // Generate content
-        const code: string = this._scriptGenerator.generate( ats );
+        const scriptGenerator = new TestScriptGenerator();
+        const code: string = scriptGenerator.generate( ats );
 
         // Write content
         await this.writeFile( filePath, code );
@@ -102,14 +93,18 @@ export class CodeceptJS implements Plugin {
     }
 
     /** @inheritDoc */
-    public executeCode = async ( options: TestScriptExecutionOptions ): Promise< TestScriptExecutionResult > => {
-        return this._scriptExecutor.execute( options )
-            .then( this.convertReportFile );
-    };
+    public async executeCode( options: TestScriptExecutionOptions ): Promise< TestScriptExecutionResult > {
+        const scriptExecutor = new TestScriptExecutor(
+            new CmdRunner()
+        );
+        const path = await scriptExecutor.execute( options );
+        return await this.convertReportFile( path );
+    }
 
     /** @inheritDoc */
-    public convertReportFile = async ( filePath: string ): Promise< TestScriptExecutionResult > => {
-        return this._reportConverter.convertFrom( filePath, this.PLUGIN_CONFIG_PATH );
-    };
+    public async convertReportFile( filePath: string ): Promise< TestScriptExecutionResult > {
+        const reportConverter = new ReportConverter( this._fs );
+        return await reportConverter.convertFrom( filePath, this.PLUGIN_CONFIG_PATH );
+    }
 
 }

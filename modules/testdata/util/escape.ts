@@ -3,7 +3,6 @@
 //
 // Adapted for Concordia needs.
 //
-
 function escapeChar( char ) {
     switch ( char ) {
         // special
@@ -48,4 +47,8 @@ export function escapeString( str ): string {
 
 export function countMatches( regex: RegExp, text: string ): number {
     return ( ( text || '' ).match( regex ) || [] ).length;
+}
+
+export function escapeJson( json: string ): string {
+    return JSON.stringify( { _: json} ).slice( 6, -2 );
 }

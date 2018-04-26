@@ -174,8 +174,10 @@ export class AppController {
         }
 
         if ( options.executeScripts ) { // Requires a plugin
-            // TO-DO
-            let tseo: TestScriptExecutionOptions = new TestScriptExecutionOptions();
+            let tseo: TestScriptExecutionOptions = new TestScriptExecutionOptions(
+                options.dirScripts,
+                options.dirResult
+            );
             try {
                 let r = await plugin.executeCode( tseo );
                 ( new CliScriptExecutionReporter( cli ) ).scriptExecuted( r );

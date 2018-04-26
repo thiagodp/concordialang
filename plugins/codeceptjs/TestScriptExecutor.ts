@@ -22,7 +22,7 @@ export class TestScriptExecutor {
     public async execute( options: TestScriptExecutionOptions ): Promise< any > {
 
         if ( !! options.sourceCodeDir ) {
-            fse.ensureDir( options.sourceCodeDir );
+            fse.mkdirs( options.sourceCodeDir );
         }
         // It's only possible to run CodeceptJS if there is a 'codecept.json' file in the folder.
         const filePath: string = path.join( options.sourceCodeDir || '.', 'codecept.json' );
@@ -53,8 +53,12 @@ export class TestScriptExecutor {
         const commandOptions: object = new CodeceptJSOptionsBuilder()
             .withOutputFile( outputFile )
             .value(); //TODO: Accept CodeceptJS options.
-        const optionsStr: string = JSON.stringify( commandOptions );
-        return `codeceptjs run --reporter mocha-multi --override '${optionsStr}' -c ${ options.sourceCodeDir }`;
+        const optionsStr: string = this.escapeJson( JSON.stringify( commandOptions ) );
+        return `codeceptjs run --reporter mocha-multi --override "${optionsStr}" -c ${ options.sourceCodeDir }`;
+    }
+
+    private escapeJson( json: string ): string {
+        return JSON.stringify( { _: json} ).slice( 6, -2 );
     }
 
 }
