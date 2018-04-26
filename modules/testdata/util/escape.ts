@@ -15,8 +15,8 @@ function escapeChar( char ) {
         case '\r':      return '\\r';
         // symbols
         case '\"': ;    // continue
-        // case '\'': ; // <-- do not escape single quote
-        // case '%': ;  // continue
+        case '\'': ;    // escape single quotes because of database values
+        case '\%': ;    // escape percent because of database values
         case '\\':      return '\\' + char;
     }
     return char;
