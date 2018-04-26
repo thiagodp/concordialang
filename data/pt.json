@@ -162,6 +162,7 @@
                 "text": [ "texto", "text" ],
                 "textbox": [ "caixa de texto", "textbox", "input" ],
                 "textarea": [ "area de texto", "textarea" ],
+                "title": [ "titulo", "title" ],
                 "web": [ "web" ],
                 "window": [ "janela", "window" ],
                 "ul": [ "ul" ],
@@ -177,18 +178,20 @@
             },
 
             "ui_action_option": {
-                "inside": [ "dentro de", "inside" ],
-                "with": [ "com", "with", "contem", "contains" ],
-                "up": [ "para cima", "acima", "up" ],
-                "down": [ "para baixo", "abaixo", "down" ],
-                "left": [ "para a esquerda", "a esquerda", "left" ],
-                "right": [ "para a direita", "a direita", "right" ],
-                "mobileName": [ "nome mobile", "mobile name" ],
-                "enabled": [ "esta habilitado", "is enabled" ],
+                "cookie": [ "cookie" ],
                 "disabled": [ "esta desabilitado", "nao esta habilitado", "is disabled", "is not enabled" ],
-                "second": [ "segundo" ],
+                "down": [ "para baixo", "abaixo", "down" ],
+                "enabled": [ "esta habilitado", "is enabled" ],
+                "inside": [ "dentro de", "inside" ],
+                "left": [ "para a esquerda", "a esquerda", "left" ],
                 "millisecond": [ "milissegundo" ],
-                "slowly": [ "lentamente", "vagarosamente", "devagar" ]
+                "mobileName": [ "nome mobile", "mobile name" ],
+                "right": [ "para a direita", "a direita", "right" ],
+                "second": [ "segundo" ],
+                "slowly": [ "lentamente", "vagarosamente", "devagar" ],
+                "up": [ "para cima", "acima", "up" ],
+                "url": [ "url", "pagina", "endereco", "dominio", "ip", "local", "sitio" ],
+                "with": [ "com", "with", "contem", "contains" ]
             },
 
             "exec_action": {
