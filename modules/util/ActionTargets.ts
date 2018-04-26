@@ -35,6 +35,7 @@ export enum ActionTargets {
     TEXT         = "text"        , // web, mobile web
     TEXTBOX      = "textbox"     , // web, mobile web, mobile native, desktop
     TEXTAREA     = "textarea"    , // web, mobile web, mobile native, desktop
+    TITLE        = "title"       , // web, desktop
     WEB          = "web"         , // mobile web, mobile native
     WINDOW       = "window"      , // web, mobile web, desktop
     UL           = "ul"          , // web, mobile web
