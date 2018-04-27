@@ -235,19 +235,19 @@ describe( 'NLPInPortugueseTest', () => {
 
             it( '{ui_action} {ui_element_type} {value}', () => {
                 let results = [];
-                results.push( recognizeInTestCase( 'eu vejo o título da janela com "Documento 1"' ) );
+                results.push( recognizeInTestCase( 'eu vejo o título com "Documento 1"' ) );
                 shouldHaveTestCaseEntities( results, [ UI_ACTION, UI_ELEMENT_TYPE, VALUE ] );
             } );
 
             it( '{ui_action} {ui_element_type} {number}', () => {
                 let results = [];
-                results.push( recognizeInTestCase( 'eu vejo o título da janela com 100' ) );
+                results.push( recognizeInTestCase( 'eu vejo o título com 100' ) );
                 shouldHaveTestCaseEntities( results, [ UI_ACTION, UI_ELEMENT_TYPE, NUMBER ] );
             } );
 
             it( '{ui_action} {ui_element_type} {constant}', () => {
                 let results = [];
-                results.push( recognizeInTestCase( 'eu vejo o título da janela com [Título Padrão]' ) );
+                results.push( recognizeInTestCase( 'eu vejo o título com [Título Padrão]' ) );
                 shouldHaveTestCaseEntities( results, [ UI_ACTION, UI_ELEMENT_TYPE, CONSTANT ] );
             } );
 

@@ -8,7 +8,7 @@ import { LanguageController } from './LanguageController';
 import { PluginData } from '../plugin/PluginData';
 import { PluginManager } from '../plugin/PluginManager';
 import { Plugin } from '../plugin/Plugin';
-import { TestScriptExecutionOptions } from '../testscript/TestScriptExecution';
+import { TestScriptExecutionOptions, TestScriptExecutionResult } from '../testscript/TestScriptExecution';
 import { CliScriptExecutionReporter } from './CliScriptExecutionReporter';
 import { TCGenController } from './TCGenController';
 import Graph = require( 'graph.js/dist/graph.full.js' );
@@ -59,7 +59,7 @@ export class AppController {
             try {
                 await pluginController.process( options );
             } catch ( err ) {
-                cli.newLine( cli.symbolError, err.message );
+                this.showException( err, options, cli );
                 return false;
             }
             return true;
@@ -73,9 +73,7 @@ export class AppController {
                 }
                 plugin = await pluginManager.load( pluginData );
             } catch ( err ) {
-                options.debug
-                    ? cli.newLine( cli.symbolError, err.message, this.formattedStackOf( err ) )
-                    : cli.newLine( cli.symbolError, err.message );
+                this.showException( err, options, cli );
                 return false;
             }
             if ( ! pluginData ) { // needed?
@@ -95,7 +93,7 @@ export class AppController {
             try {
                 await langController.process( options );
             } catch ( err ) {
-                cli.newLine( cli.symbolError, err.message );
+                this.showException( err, options, cli );
                 return false;
             }
             return true;
@@ -116,7 +114,7 @@ export class AppController {
                 [ spec, graph ] = await compilerController.compile( options, cli );
             } catch ( err ) {
                 hasErrors = true;
-                cli.newLine( cli.symbolError, err.message );
+                this.showException( err, options, cli );
             }
         } else {
             cli.newLine( cli.symbolInfo, 'Specification compilation disabled.' );
@@ -153,7 +151,7 @@ export class AppController {
                         );
                     } catch ( err ) {
                         hasErrors = true;
-                        cli.newLine( cli.symbolError, err.message, err.stack );
+                        this.showException( err, options, cli );
                     }
 
                     for ( let file of files ) {
@@ -173,25 +171,38 @@ export class AppController {
             }
         }
 
+        let executionResult: TestScriptExecutionResult = null;
         if ( options.executeScripts ) { // Requires a plugin
             let tseo: TestScriptExecutionOptions = new TestScriptExecutionOptions(
                 options.dirScripts,
                 options.dirResult
             );
+            cli.newLine( cli.symbolInfo, 'Executing test scripts...' );
+            const LINE_SIZE = 80;
+            const SEPARATION_LINE = '_'.repeat( LINE_SIZE );
+            cli.newLine( SEPARATION_LINE );
             try {
-                let r = await plugin.executeCode( tseo );
-                ( new CliScriptExecutionReporter( cli ) ).scriptExecuted( r );
+                executionResult = await plugin.executeCode( tseo );
             } catch ( err ) {
-                options.debug
-                    ? cli.newLine( cli.symbolError, err.message, this.formattedStackOf( err ) )
-                    : cli.newLine( cli.symbolError, err.message );
+                hasErrors = true;
+                this.showException( err, options, cli );
             }
         } else {
             cli.newLine( cli.symbolInfo, 'Script execution disabled.' );
         }
 
         if ( options.analyzeResults ) { // Requires a plugin
-            // TO-DO
+            if ( ! executionResult  ) {
+                cli.newLine( cli.symbolError, 'Could not retrieve execution results.' );
+                return false;
+            }
+            try {
+                executionResult = await plugin.convertReportFile( executionResult.sourceFile );
+                ( new CliScriptExecutionReporter( cli ) ).scriptExecuted( executionResult );
+            } catch ( err ) {
+                hasErrors = true;
+                this.showException( err, options, cli );
+            }
         } else {
             cli.newLine( cli.symbolInfo, 'Results\' analysis disabled.' );
         }
@@ -208,6 +219,12 @@ export class AppController {
         return ! hasErrors;
     };
 
+
+    private showException( err: Error, options: Options, cli: CLI ): void {
+        options.debug
+            ? cli.newLine( cli.symbolError, err.message, this.formattedStackOf( err ) )
+            : cli.newLine( cli.symbolError, err.message );
+    }
 
     private formattedStackOf( err: Error ): string {
         return "\n  DETAILS: " + err.stack.substring( err.stack.indexOf( "\n" ) );

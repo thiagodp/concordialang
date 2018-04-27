@@ -24,12 +24,13 @@ describe( 'ReportConverterTest', () => {
     const stackTrace = `expected web page to include "vai falhar"
 
         Scenario Steps:
-        
+
         - I.see( "vai falhar" ) at Test.Scenario (${scriptFilePath}:${scriptFileLine}:${scriptFileColumn})
         - I.amOnPage( "/" ) at Test.Scenario (${scriptFilePath}:${scriptFileLine}:${scriptFileColumn - 1})`;
 
     const specFilePath = 'path/to/login.feature';
     const specFileLine = 50;
+    const specKeyword = 'source';
 
     const report: any = {
         "stats": {
@@ -123,23 +124,23 @@ describe( 'ReportConverterTest', () => {
     };
 
     const scriptFileLines: string[] = [
-        `// spec: ${specFilePath}`,
+        `// ${specKeyword}: ${specFilePath}`,
         '',
         'describe( "foo", () => {',
         '   it( "bar", () => {',
-        `       fake(); // line: ${specFileLine}`, // << this is the line number 5 in the script file
+        `       fake(); // (${specFileLine},1)`, // << this is the line number 5 in the script file
         '   } );',
         '} );'
     ];
 
     let createFiles = () => {
-        
+
         // Synchronize the current path (IMPORTANT!)
         vol.mkdirpSync( dir );
-        
+
         memfs.writeFileSync( reportFilePath, JSON.stringify( report ) );
         memfs.writeFileSync( pluginConfigPath, JSON.stringify( pluginConfig ) );
-        memfs.writeFileSync( scriptFilePath, scriptFileLines.join( "\n" ) );        
+        memfs.writeFileSync( scriptFilePath, scriptFileLines.join( "\n" ) );
     };
 
     let eraseFiles = () => {
@@ -166,7 +167,7 @@ describe( 'ReportConverterTest', () => {
         expectedMethod2.durationMs = 1655;
         expectedMethod2.name = 'unsuccessful login';
         expectedMethod2.status = 'failed';
-        expectedMethod2.exception = {         
+        expectedMethod2.exception = {
             message: 'expected web page to include "vai falhar"',
             stackTrace: stackTrace,
             type: 'to include',
@@ -176,12 +177,12 @@ describe( 'ReportConverterTest', () => {
                 line: scriptFileLine, // << important to retrieve spec line from the script file
                 column: scriptFileColumn
             },
-            
+
             specLocation: {
                 filePath: specFilePath,
                 line: specFileLine,
                 column: 1
-            }            
+            }
         };
 
         let expectedSuite: TestSuiteResult = new TestSuiteResult();

@@ -7,7 +7,9 @@ type CmdObj = {
     options?: string[],
     targetType?: string,
     default? :boolean,
-    template: string
+    template: string,
+    valueAsNonArray?: boolean, // only when length > 1
+    firstValueShouldBeInteger?: boolean
 };
 
 
@@ -19,9 +21,13 @@ type CmdObj = {
  */
 export class ActionMapper {
 
-    private readonly ANY_TARGET: string = 'any';
+    private readonly ANY_TYPE: string = 'any';
+    private readonly NONE_TYPE: string = '---'; // cannot be empty
 
+    // Evaluation order matters!
     private commandMap: Array< CmdObj > = [
+
+        // @see https://github.com/Codeception/CodeceptJS/tree/master/docs/webapi
 
         // AM_IN
         { action: 'amIn', targetType: 'url', template: 'I.amOnPage({{{target}}});' },
@@ -34,7 +40,7 @@ export class ActionMapper {
         { action: 'attachFile', default: true,  template: 'I.attachFile({{{target}}}, {{{value}}});' },
 
         // CHECK
-        { action: 'check', targetType: this.ANY_TARGET, template: 'I.checkOption({{{target}}});' },
+        { action: 'check', targetType: this.ANY_TYPE, template: 'I.checkOption({{{target}}});' },
         { action: 'check', default: true, template: 'I.checkOption({{{value}}});' },
 
         // CLEAR
@@ -42,14 +48,14 @@ export class ActionMapper {
         { action: 'clear', default: true, template: 'I.clearField({{{target}}});' },
 
         // CLICK
-        { action: 'click', targetType: this.ANY_TARGET, template: 'I.click({{{target}}});' },
+        { action: 'click', targetType: this.ANY_TYPE, template: 'I.click({{{target}}});' },
         { action: 'click', default: true, template: 'I.click({{{value}}});' },
 
         // CLOSE
         // { action: 'close', default: true, template: 'I.click({{{target}}});' },
 
         // DOUBLE_CLICK
-        { action: 'doubleClick', targetType: this.ANY_TARGET, template: 'I.doubleClick({{{target}}});' },
+        { action: 'doubleClick', targetType: this.ANY_TYPE, template: 'I.doubleClick({{{target}}});' },
         { action: 'doubleClick', default: true, template: 'I.doubleClick({{{value}}});' },
 
         // FILL
@@ -62,13 +68,13 @@ export class ActionMapper {
         { action: 'see',  targetType: 'textbox', template: 'I.seeInField({{{target}}}, {{{value}}});' },
         { action: 'see',  targetType: 'textarea', template: 'I.seeInField({{{target}}}, {{{value}}});' },
         { action: 'see',  targetType: 'cookie', template: 'I.seeCookie({{{target}}});' },
-        { action: 'see',  targetType: this.ANY_TARGET, options: [ 'cookie' ], template: 'I.seeCookie({{{target}}});' },
+        { action: 'see',  targetType: this.ANY_TYPE, options: [ 'cookie' ], template: 'I.seeCookie({{{target}}});' },
         { action: 'see',  targetType: 'title', template: 'I.seeInTitle({{{target}}});' },
-        { action: 'see',  targetType: this.ANY_TARGET, options: [ 'title' ], template: 'I.seeInTitle({{{target}}});' },
+        { action: 'see',  targetType: this.ANY_TYPE, options: [ 'title' ], template: 'I.seeInTitle({{{target}}});' },
         { action: 'see',  targetType: 'url', template: 'I.seeCurrentUrlEquals({{{target}}});' },
-        { action: 'see',  targetType: this.ANY_TARGET, options: [ 'url' ], template: 'I.seeCurrentUrlEquals({{{target}}});' },
-        { action: 'see',  targetType: this.ANY_TARGET, template: 'I.seeElement({{{target}}});' },
-        { action: 'see',  targetType: this.ANY_TARGET, modifier: 'not', template: 'I.dontSeeElement({{{target}}});' },
+        { action: 'see',  targetType: this.ANY_TYPE, options: [ 'url' ], template: 'I.seeCurrentUrlEquals({{{target}}});' },
+        { action: 'see',  targetType: this.ANY_TYPE, template: 'I.seeElement({{{target}}});' },
+        { action: 'see',  targetType: this.ANY_TYPE, modifier: 'not', template: 'I.dontSeeElement({{{target}}});' },
         { action: 'see',  default: true, modifier: 'not', template: 'I.dontSee({{{value}}});' },
         { action: 'see',  default: true, template: 'I.see({{{value}}});' },
 
@@ -76,30 +82,16 @@ export class ActionMapper {
         { action: 'select', default: true, template: 'I.selectOption({{{target}}}, {{{value}}});' },
 
         // TAP
-        { action: 'tap', targetType: this.ANY_TARGET, template: 'I.tap({{{target}}});' },
+        { action: 'tap', targetType: this.ANY_TYPE, template: 'I.tap({{{target}}});' },
         { action: 'tap', default: true, template: 'I.tap({{{value}}});' },
 
         // WAIT
-        { action: 'wait',  targetType: 'text', template: 'I.waitForText({{{target}}}, {{{value}}});' },
-        { action: 'wait',  targetType: this.ANY_TARGET, template: 'I.waitForElement({{{target}}}, {{{value}}});' },
-        { action: 'wait', default: true, template: 'I.wait({{{value}}});' }
+        { action: 'wait', targetType: 'text', template: 'I.waitForText({{{target}}}, {{{value}}});' },
+        { action: 'wait', targetType: this.NONE_TYPE, firstValueShouldBeInteger: true, template: 'I.wait({{{value}}});' },
+        { action: 'wait', targetType: this.NONE_TYPE, template: 'I.waitForText({{{value}}});', valueAsNonArray: true },
+        { action: 'wait', targetType: this.ANY_TYPE, template: 'I.waitForElement({{{target}}}, {{{value}}});' },
     ];
 
-
-    private sameValues( a: string[], b: string[] ): boolean {
-        if ( a === b || ( ! a && ! b ) ) {
-            return true;
-        }
-        if ( ( ! a && !! b ) || ( !! a && ! b ) ) {
-            return false;
-        }
-        let aa = Array.isArray( a ) ? a.sort() : [];
-        let bb = Array.isArray( b ) ? b.sort() : [];
-        if ( 0 === aa.length && 0 === b.length ) {
-            return true;
-        }
-        return a.join('').toLowerCase() === b.join('').toLowerCase();
-    }
 
     /**
      * Translates an abstract command to one or more CodeceptJS commands.
@@ -114,10 +106,13 @@ export class ActionMapper {
 
         let compareMapObj = obj =>
         {
+
             const sameAction = obj.action === command.action;
             if ( ! sameAction ) {
                 return false;
             }
+
+            // console.log( "\t", obj );
 
             const sameModifier = obj.modifier == command.modifier;
 
@@ -125,7 +120,19 @@ export class ActionMapper {
                 return sameModifier;
             }
 
-            const acceptsAny = this.ANY_TARGET === obj.targetType
+            const onlyForValues = ( this.NONE_TYPE === obj.targetType
+                && ( ! command.targets || command.targets.length < 1 ) );
+
+            if ( onlyForValues ) {
+                if ( true === obj.firstValueShouldBeInteger ) {
+                    return ! command.values
+                        ? false
+                        : command.values.length > 0 && 'number' === typeof command.values[ 0 ];
+                }
+                return true;
+            }
+
+            const acceptsAny = this.ANY_TYPE === obj.targetType
                 && Array.isArray( command.targets )
                 && command.targets.length > 0;
 
@@ -140,7 +147,9 @@ export class ActionMapper {
             return sameTargetType && sameModifier && sameOptions;
         };
 
+        // console.log( 'COMMAND', command );
         let entry: CmdObj = this.commandMap.filter( compareMapObj )[0];
+        // console.log( 'SELECTED', entry );
 
         let cmd;
         if ( ! entry ) {
@@ -150,12 +159,12 @@ export class ActionMapper {
             cmd = render(
                 entry.template + ' // ({{{location.line}}},{{{location.column}}}){{#comment}} {{{comment}}}{{/comment}}',
                 {
-                    target   : this.parseTarget( command.targets[ 0 ] ),
-                    value    : ! command.values ? '' : this.parseValue( command.values ),
+                    target   : ! command.targets ? '' : this.convertTargets( command.targets ),
+                    value    : ! command.values ? '' : this.convertValues( command.values, entry.valueAsNonArray ),
                     location : command.location,
                     comment  : command.comment,
                     modifier : command.modifier,
-                    options  : command.options
+                    options  : command.options,
                 }
             );
         }
@@ -165,36 +174,68 @@ export class ActionMapper {
         return commands;
     }
 
-    private parseTarget( target: any ): string {
-        if ( ! target ) {
+    private convertTargets( targets: string[] | any[] ): string {
+
+        if ( 0 === targets.length ) {
             return '';
         }
-        if ( typeof target === 'string' ) {
-            return `${this.parseTargetBySelector( target )}`;
+
+        const areStrings = 'string' === typeof targets[ 0 ];
+        if ( areStrings ) {
+            let strTargets: string[] = targets as string[];
+            if ( 1 === targets.length ) {
+                return this.convertSingleTarget( strTargets[ 0 ] );
+            }
+            return strTargets.map( this.convertSingleTarget ).join( ', ' );
         }
-        let properties: Array<string> = Object.getOwnPropertyNames( target );
-        if ( 1 === properties.length ) {
-            return `${this.parseTargetBySelector( target[properties[0]] )}`;
+
+        function valueReplacer( key, value ) {
+            if ( typeof value === 'string' && value.charAt( 0 ) === '@' ) {
+                return { name: value.substr( 1 ) };
+            }
+            return value;
         }
-        return '{' + properties.map( element => {
-            return `${element}: ${this.parseTargetBySelector( target[element] )}`;
-        } ).join( ', ' ) + '}';
+
+        const content = JSON.stringify( targets, valueReplacer );
+        // remove [ and ]
+        return content.substring( 1, content.length - 1 );
     }
 
-    private parseTargetBySelector( targetSelector: string ): string {
-        return targetSelector.charAt(0) === '@' ? `{name: "${targetSelector.substr(1)}"}` : `"${targetSelector}"`;
+    private convertSingleTarget( target: string ): string {
+        return target.charAt( 0 ) === '@' ? `{name: "${target.substr(1)}"}` : `"${target}"`;
     }
 
-    private parseValue( value: any ): string | number | Array<string | number> {
-        if ( ! Array.isArray( value ) ) {
-            return typeof value === 'string' ? `"${value}"`: value;
+    private convertValues( values: any[], valueAsNonArrayWhenGreaterThanOne: boolean = false ): string {
+        if ( 0 === values.length ) {
+            return '';
         }
-        if ( 1 === value.length ) {
-            return typeof value[ 0 ] === 'string' ? `"${value[0]}"`: value[0];
+        if ( 1 === values.length ) {
+            return this.convertSingleValue( values[ 0 ] );
         }
-        const joint = value.map( v => typeof v === 'string' ? `"${v}"` : v ).join( ', ' );
+        const joint = values.map( this.convertSingleValue ).join( ', ' );
+        if ( ! valueAsNonArrayWhenGreaterThanOne ) {
+            return '[' + joint + ']';
+        }
+        return joint;
+    }
 
-        return '[' + joint + ']';
+    private convertSingleValue( value: any ) {
+        return typeof value === 'string' ? `"${value}"`: value;
+    }
+
+    private sameValues( a: string[], b: string[] ): boolean {
+        if ( a === b || ( ! a && ! b ) ) {
+            return true;
+        }
+        if ( ( ! a && !! b ) || ( !! a && ! b ) ) {
+            return false;
+        }
+        let aa = Array.isArray( a ) ? a.sort() : [];
+        let bb = Array.isArray( b ) ? b.sort() : [];
+        if ( 0 === aa.length && 0 === b.length ) {
+            return true;
+        }
+        return a.join('').toLowerCase() === b.join('').toLowerCase();
     }
 
     private generateNotAvailableMessage( command: ATSCommand ): string {

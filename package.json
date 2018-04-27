@@ -89,6 +89,7 @@
   "devDependencies": {
     "@types/chalk": "^0.4.31",
     "@types/core-js": "^0.9.46",
+    "@types/figures": "^2.0.0",
     "@types/glob": "^5.0.32",
     "@types/jest": "^21.1.10",
     "@types/meow": "^4.0.0",

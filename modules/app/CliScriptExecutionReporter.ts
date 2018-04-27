@@ -4,44 +4,82 @@ import { CLI } from "./CLI";
 
 /**
  * CLI script execution reporter
- * 
+ *
  * @author Thiago Delgado Pinto
  */
 export class CliScriptExecutionReporter implements ScriptExecutionReporter {
 
     constructor( private _cli: CLI ) {
     }
-    
+
     /** @inheritDoc */
     scriptExecuted( r: TestScriptExecutionResult ): void {
+
+        const LINE_SIZE = 80;
+        const SEPARATION_LINE = '_'.repeat( LINE_SIZE );
+
+        this._cli.newLine(
+            SEPARATION_LINE,
+            "\n\n",
+            this._cli.symbolInfo, 'Test execution results:',
+            "\n"
+        );
+
         let t = r.total;
         if ( ! t.tests ) {
-            this._cli.newLine( this._cli.symbolInfo, 'No tests executed.' );
+            this._cli.newLine(
+                this._cli.symbolInfo, 'No tests executed.'
+            );
             return;
         }
-        const passedStr = t.passed ? this._cli.colorSuccess( t.passed + ' passed' ) : '';
-        const failedStr = t.failed ? this._cli.colorWarning( t.failed + ' failed' ) : '';
-        const errorStr = t.error ? this._cli.colorError( t.error + ' with error' ) : '';
+        const passedStr = t.passed ? this._cli.bgSuccess( t.passed + ' passed' ) : '';
+        const failedStr = t.failed ? this._cli.bgWarning( t.failed + ' failed' ) : '';
+        const errorStr = t.error ? this._cli.bgError( t.error + ' with error' ) : '';
         const skippedStr = t.skipped ? t.skipped + ' skipped' : '';
         const totalStr = ( t.tests || '0' ) + ' total';
 
         this._cli.newLine(
-            this._cli.symbolInfo,
-            'Tests:',
+            '  ',
             [ passedStr, failedStr, errorStr, skippedStr, totalStr ].filter( s => s.length > 0 ).join( ', ' ),
-            this._cli.colorInfo( '(' + r.durationMs + 'ms)' )
+            this._cli.colorInfo( 'in ' + r.durationMs + 'ms' ),
+            "\n"
             );
 
-        /*
-        // To show only the suite name in green if all the tests passed,
-        // all the suite methods if one of them not passed, in their proper colors
+        if ( 0 == t.failed && 0 == t.error ) {
+            return;
+        }
+
+        const msgReason   = this._cli.colorInfo( '       reason:' );
+        const msgScript   = this._cli.colorInfo( '       script:' );
+        const msgDuration = this._cli.colorInfo( '     duration:' );
+        const msgTestCase = this._cli.colorInfo( '    test case:' );
+
         for ( let tsr of r.results ) {
             for ( let m of tsr.methods ) {
-                
-                this._cli.newLine( tsr.suite );
+                let e = m.exception;
+                if ( ! e ) {
+                    continue;
+                }
+
+                let color = this.cliColorForStatus( m.status );
+                let sLoc = e.scriptLocation;
+                let tcLoc = e.specLocation;
+
+                this._cli.newLine(
+                    '  ', this._cli.figures.line, ' '.repeat( 9 - m.status.length ) + color( m.status + ':' ),
+                    this._cli.colorHighlight( tsr.suite ), this._cli.figures.pointerSmall, this._cli.colorHighlight( m.name ),
+                    "\n",
+                    msgReason, e.message,
+                    "\n",
+                    msgScript, this._cli.colorHighlight( sLoc.filePath ), '(' + sLoc.line + ',' + sLoc.column + ')',
+                    "\n",
+                    msgDuration, this._cli.colorInfo( m.durationMs + 'ms' ),
+                    "\n",
+                    msgTestCase, this._cli.colorInfo( tcLoc.filePath, '(' + tcLoc.line + ',' + tcLoc.column + ')' ),
+                    "\n"
+                );
             }
         }
-        */
     }
 
     private cliColorForStatus( status: string ): any {
@@ -52,5 +90,5 @@ export class CliScriptExecutionReporter implements ScriptExecutionReporter {
             default: return this._cli.colorText;
         }
     }
-    
+
 }

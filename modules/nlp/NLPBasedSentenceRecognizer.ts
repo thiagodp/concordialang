@@ -92,6 +92,12 @@ export class NLPBasedSentenceRecognizer {
         // LOCAL
         //
 
+        // Test Cases
+        for ( let tc of doc.testCases || [] ) {
+            this._variantSentenceRec.recognizeSentences(
+                language, tc.sentences, errors, warnings, 'Test Case' );
+        }
+
         if ( ! doc.feature ) {
             return;
         }

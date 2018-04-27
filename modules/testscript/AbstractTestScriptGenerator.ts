@@ -22,11 +22,12 @@ export class AbstractTestScriptGenerator {
      */
     generateFromDocument( doc: Document, spec: Spec ): AbstractTestScript | null {
 
+        // console.log( 'DOC is', doc.fileInfo.path );
+        // console.log( 'Test cases', doc.testCases );
+
         if ( ! doc.testCases || doc.testCases.length < 1 ) {
             return null;
         }
-
-        // console.log( 'Doc is', doc.fileInfo.path );
 
         // Get from the document
         let feature = ! doc.feature ? null : doc.feature;
@@ -41,6 +42,8 @@ export class AbstractTestScriptGenerator {
                 feature = docsWithFeature[ 0 ].feature;
             }
         }
+
+        // console.log( 'Feature', feature.name );
 
         // Not found -> assumes a name and location
         const location: Location = ! feature
@@ -72,7 +75,6 @@ export class AbstractTestScriptGenerator {
         for ( let tc of doc.testCases ) {
 
             let absTC = new ATSTestCase( tc.location, tc.name );
-            // console.log( 'doc', doc.fileInfo.path, 'index is', tc.declaredScenarioIndex, 'names', scenarioNames  );
 
             absTC.scenario = scenarioNames[ ( tc.declaredScenarioIndex || 1 ) - 1 ] || 'Unknown scenario';
             absTC.invalid = tc.shoudFail;
@@ -92,6 +94,8 @@ export class AbstractTestScriptGenerator {
 
                 absTC.commands.push( cmd );
             }
+
+            // console.log( absTC );
 
             ats.testcases.push( absTC );
         }

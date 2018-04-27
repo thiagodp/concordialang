@@ -1,9 +1,10 @@
 import { TestMethodResult, TestScriptExecutionResult, TestSuiteResult } from '../../modules/testscript/TestScriptExecution';
-import { FileInstrumentator, DefaultInstrumentator } from '../../modules/plugin/Instrumentator';
+import { DefaultInstrumentationReader } from '../../modules/plugin/InstrumentationReader';
 import { Location } from '../../modules/ast/Location';
 import * as fs from 'fs';
 import * as readline from 'readline';
 import { promisify } from 'util';
+import { FileInstrumentationReader } from '../../modules/plugin/FileInstrumentationReader';
 
 /**
  * Converts a CodeceptJS execution result to Concordia's format.
@@ -13,10 +14,11 @@ import { promisify } from 'util';
  */
 export class ReportConverter {
 
-    private readonly _instrumentator: FileInstrumentator;
+    private readonly _instrumentator: FileInstrumentationReader;
 
     constructor( private _fs: any = fs, private _encoding = 'utf-8' ) {
-        this._instrumentator = new FileInstrumentator( new DefaultInstrumentator(), _fs, _encoding );
+        this._instrumentator = new FileInstrumentationReader(
+            new DefaultInstrumentationReader(), _fs, _encoding );
     }
 
     /**
@@ -102,7 +104,7 @@ export class ReportConverter {
         }
 
         // Creates a TestMethodResult for each CodeceptJS' test method report.
-        for ( let method of source.tests ) {
+        for ( let method of source.tests || [] ) {
 
             let testMethodResult: TestMethodResult = new TestMethodResult();
             testMethodResult.name = method.title;
@@ -119,7 +121,7 @@ export class ReportConverter {
                 }
 
                 testMethodResult.exception = {
-                    type: method.err.params.type,
+                    type: ! method.err.params ? undefined : method.err.params.type,
                     message: method.err.message,
                     stackTrace: method.err.stack,
 
@@ -200,7 +202,8 @@ export class ReportConverter {
 
     private async readJsonFile( path: string ): Promise< any > {
         const readFileAsync = promisify( this._fs.readFile );
-        return JSON.parse( ( await readFileAsync( path, this._encoding ) ).toString() );
+        const content = await readFileAsync( path, this._encoding );
+        return JSON.parse( content.toString() );
     }
 
 }

@@ -83,7 +83,7 @@ export class VerboseAppEventsListener implements
 
         this._cli.newLine( this._cli.symbolInfo,
             data.dirCount, 'directories analyzed,',
-            this._cli.colorHighlight( data.filesCount ), 'files found,',
+            this._cli.colorHighlight( String( data.filesCount ) ), 'files found,',
             prettyBytes( data.filesSize ),
             this.formatDuration( data.durationMs )
             );

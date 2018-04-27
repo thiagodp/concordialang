@@ -9,10 +9,17 @@ describe( 'TestScriptGeneratorTest', () => {
 
     let gen: TestScriptGenerator; // under test
 
-    const comment = '/** Generated with <3 by Concordia. Run the following tests using CodeceptJS. */';
+    const LINES_TO_IGNORE = 5;
 
     function uglify(string: string): string{
         return string.replace(/(\r\n|\n|\r|[ \t])/gm, '');
+    }
+
+    function compare( testCase: AbstractTestScript, expected: string ) {
+        const original = gen.generate( testCase );
+        const lines = original.split( "\n" ).splice( LINES_TO_IGNORE - 1 );
+        const adjusted = lines.join( "\n" );
+        expect( uglify( adjusted ) ).toBe( uglify( expected ) );
     }
 
     beforeEach(() => {
@@ -33,11 +40,10 @@ describe( 'TestScriptGeneratorTest', () => {
         } as AbstractTestScript;
 
         let expected = `
-            ${comment}
-            Feature('login');
+            Feature("login");
         `;
 
-        expect( uglify( gen.generate( testCase ) ) ).toBe( uglify( expected ) );
+        compare( testCase, expected );
     } );
 
 
@@ -78,13 +84,12 @@ describe( 'TestScriptGeneratorTest', () => {
         } as AbstractTestScript;
 
         let expected = `
-            ${comment}
-            Feature('login');
-            Scenario('successful login | finishes successfully valid values', (I) => {});
-            Scenario('unsuccessful login | finishes unsuccessfully invalid values', (I) => {});
+            Feature("login");
+            Scenario("successful login | finishes successfully valid values", (I) => {});
+            Scenario("unsuccessful login | finishes unsuccessfully invalid values", (I) => {});
         `;
 
-        expect( uglify( gen.generate( testCase ) ) ).toBe( uglify( expected ) );
+        compare( testCase, expected );
     } );
 
 
@@ -105,26 +110,25 @@ describe( 'TestScriptGeneratorTest', () => {
             ],
             "testcases": [
                 {
-                    "location": { "column": 1, "line": 40 },
+                    "location": { "column": 1, "line": 39 },
                     "scenario": "successful login",
                     "name": "finishes successfully with valid values",
 
                     "commands": [
                         {
-                            "location": { "column": 1, "line": 41 },
+                            "location": { "column": 1, "line": 40 },
                             "action": "see",
-                            "targets": [ "Login" ],
-                            "targetTypes": [ "text" ]
+                            "values": [ "Login" ],
                         },
                         {
-                            "location": { "column": 1, "line": 42 },
+                            "location": { "column": 1, "line": 41 },
                             "action": "fill",
                             "targets": [ "#username" ],
                             "targetTypes": [ "textbox" ],
                             "values": [ "bob" ]
                         },
                         {
-                            "location": { "column": 1, "line": 43 },
+                            "location": { "column": 1, "line": 42 },
                             "action": "fill",
                             "targets": [ "#password" ],
                             "targetTypes": [ "textbox" ],
@@ -142,19 +146,17 @@ describe( 'TestScriptGeneratorTest', () => {
         } as AbstractTestScript;
 
         let expected = `
-            ${comment}
+            Feature("login");
 
-            Feature('login');
-
-            Scenario('successful login | finishes successfully with valid values', (I) => {
-                I.see('Login');
-                I.fillField('#username', 'bob');
-                I.fillField('#password', 'b0bp4s$');
-                I.click('#enter');
+            Scenario("successful login | finishes successfully with valid values", (I) => {
+                I.see("Login"); // (40,1)
+                I.fillField("#username", "bob"); // (41,1)
+                I.fillField("#password", "b0bp4s$"); // (42,1)
+                I.click("#enter"); // (43,1)
             });
         `;
 
-        expect( uglify( gen.generate( testCase ) ) ).toBe( uglify( expected ) );
+        compare( testCase, expected );
     } );
 
 
@@ -183,8 +185,7 @@ describe( 'TestScriptGeneratorTest', () => {
                         {
                             "location": { "column": 1, "line": 41 },
                             "action": "see",
-                            "targets": [ "Login" ],
-                            "targetTypes": [ "text" ]
+                            "values": [ "Login" ]
                         },
                         {
                             "location": { "column": 1, "line": 42 },
@@ -201,7 +202,7 @@ describe( 'TestScriptGeneratorTest', () => {
                             "values": [ "b0bp4s$" ]
                         },
                         {
-                            "location": { "column": 1, "line": 43 },
+                            "location": { "column": 1, "line": 44 },
                             "action": "click",
                             "targets": [ "#enter" ],
                             "targetTypes": [ "button" ]
@@ -220,8 +221,7 @@ describe( 'TestScriptGeneratorTest', () => {
                         {
                             "location": { "column": 1, "line": 41 },
                             "action": "see",
-                            "targets": [ "Login" ],
-                            "targetTypes": [ "text" ]
+                            "values": [ "Login" ]
                         },
                         {
                             "location": { "column": 1, "line": 42 },
@@ -240,7 +240,7 @@ describe( 'TestScriptGeneratorTest', () => {
                             "invalid": true
                         },
                         {
-                            "location": { "column": 1, "line": 43 },
+                            "location": { "column": 1, "line": 44 },
                             "action": "click",
                             "targets": [ "#enter" ],
                             "targetTypes": [ "button" ]
@@ -251,26 +251,24 @@ describe( 'TestScriptGeneratorTest', () => {
         } as AbstractTestScript;
 
         let expected = `
-            ${comment}
+            Feature("login");
 
-            Feature('login');
-
-            Scenario('successful login | finishes successfully with valid values', (I) => {
-                I.see('Login');
-                I.fillField('#username', 'bob');
-                I.fillField('#password', 'b0bp4s$');
-                I.click('#enter');
+            Scenario("successful login | finishes successfully with valid values", (I) => {
+                I.see("Login"); // (41,1)
+                I.fillField("#username", "bob"); // (42,1)
+                I.fillField("#password", "b0bp4s$"); // (43,1)
+                I.click("#enter"); // (44,1)
             });
 
-            Scenario('unsuccessful login | finishes unsuccessfully with invalid values', (I) => {
-                I.see('Login');
-                I.fillField('#username', 'kdsldhçs dwd');
-                I.fillField('#password', 'd0d s98 23923 2 32$');
-                I.click('#enter');
+            Scenario("unsuccessful login | finishes unsuccessfully with invalid values", (I) => {
+                I.see("Login"); // (41,1)
+                I.fillField("#username", "kdsldhçs dwd"); // (42,1)
+                I.fillField("#password", "d0d s98 23923 2 32$"); // (43,1)
+                I.click("#enter"); // (44,1)
             });
         `;
 
-        expect( uglify( gen.generate( testCase ) ) ).toBe( uglify( expected ) );
+        compare( testCase, expected );
     } );
 
 } );

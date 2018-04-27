@@ -173,7 +173,6 @@
                 "backgroundColor": [ "cor de fundo", "background color" ],
                 "color": [ "cor", "cor de frente", "color" ],
                 "height": [ "altura", "height" ],
-                "title": [ "título" ],
                 "width": [ "largura", "width" ]
             },
 
@@ -337,7 +336,10 @@
                 "eu vejo {ui_element} dentro de {ui_element}",
                 "eu vejo {ui_element} dentro de {ui_literal}",
                 "eu vejo {ui_literal} dentro de {ui_element}",
-                "eu vejo {ui_literal} dentro de {ui_literal}"
+                "eu vejo {ui_literal} dentro de {ui_literal}",
+                "eu vejo {ui_literal} com {value}",
+                "eu vejo {ui_literal} com {number}",
+                "eu vejo {ui_literal} com {constant}"
             ]
         },
 

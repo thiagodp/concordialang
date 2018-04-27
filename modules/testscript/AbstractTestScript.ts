@@ -60,9 +60,9 @@ export class ATSCommand extends ATSElement {
     action: string;
     modifier?: string; // modifies the action (e.g. "not")
     options?: string[]; // options for the action (e.g. [ "left" ])
-    targets: ATSTarget[] | string[] = [];
+    targets?: ATSTarget[] | string[];
     targetTypes?: string[]; // optional for some targets
-    values?: string[] | number[] // optional for some actions
+    values?: any[]; // optional for some actions
     comment?: string;
 }
 

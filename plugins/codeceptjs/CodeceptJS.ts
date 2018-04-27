@@ -5,7 +5,6 @@ import { Plugin } from '../../modules/plugin/Plugin';
 import { AbstractTestScript } from '../../modules/testscript/AbstractTestScript';
 import { TestScriptGenerationOptions } from '../../modules/testscript/TestScriptOptions';
 import { TestScriptExecutionOptions, TestScriptExecutionResult } from '../../modules/testscript/TestScriptExecution';
-import { CmdRunner } from "./CmdRunner";
 
 import * as fs from 'fs';
 import * as path from 'path';
@@ -94,16 +93,14 @@ export class CodeceptJS implements Plugin {
 
     /** @inheritDoc */
     public async executeCode( options: TestScriptExecutionOptions ): Promise< TestScriptExecutionResult > {
-        const scriptExecutor = new TestScriptExecutor(
-            new CmdRunner()
-        );
+        const scriptExecutor = new TestScriptExecutor();
         const path = await scriptExecutor.execute( options );
         return await this.convertReportFile( path );
     }
 
     /** @inheritDoc */
     public async convertReportFile( filePath: string ): Promise< TestScriptExecutionResult > {
-        const reportConverter = new ReportConverter( this._fs );
+        const reportConverter = new ReportConverter( this._fs, this._encoding );
         return await reportConverter.convertFrom( filePath, this.PLUGIN_CONFIG_PATH );
     }
 

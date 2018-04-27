@@ -358,26 +358,39 @@ export class Options {
         const noRun: boolean = false === flags.run;
         const noResults: boolean = false === flags.results || false === flags.result;
 
-        this.compileSpecification = ! noSpec || justSpec || justTestCases || justScripts;
-        this.generateTestCases = ! noTestCases || justTestCases;
-        this.generateScripts = ! noScripts || justScripts;
-        this.executeScripts = ! noRun || justRun;
-        this.analyzeResults = ! noResults || justResults;
+        // Adjust flags
+
+        this.compileSpecification = ( justSpec || justTestCases || ( justScripts || ! noScripts ) )
+            && ( ! noSpec || ! justRun || ! justResults );
+
+        this.generateTestCases = ( ! noTestCases || justTestCases )
+            && ( ! justRun || ! justResults );
+
+        this.generateScripts = ( ! noScripts || justScripts )
+            && ( ! justRun || ! justResults );
+
+        this.executeScripts = ( ! noRun || justRun )
+            && ( ! justResults );
+
+        this.analyzeResults = ( ! noResults || justResults )
+            && ( ! justRun );
+
+        // Directories
 
         if ( isString( flags.dirTestCase ) ) { // singular
-            this.dirTestCases = flags.dirTestCase.trim().toLowerCase();
+            this.dirTestCases = flags.dirTestCase;
         } else if ( isString( flags.dirTestCases ) ) { // plural
-            this.dirTestCases = flags.dirTestCases.trim().toLowerCase();
+            this.dirTestCases = flags.dirTestCases;
         }
         if ( isString( flags.dirScript ) ) { // singular
-            this.dirScripts = flags.dirScript.trim().toLowerCase();
+            this.dirScripts = flags.dirScript;
         } else if ( isString( flags.dirScripts ) ) { // plural
-            this.dirScripts = flags.dirScripts.trim().toLowerCase();
+            this.dirScripts = flags.dirScripts;
         }
         if ( isString( flags.dirResult ) ) { // singular
-            this.dirResult = flags.dirResult.trim().toLowerCase();
+            this.dirResult = flags.dirResult;
         } else if ( isString( flags.dirResults ) ) { // plural
-            this.dirResult = flags.dirResults.trim().toLowerCase();
+            this.dirResult = flags.dirResults;
         }
 
         if ( isString( flags.extensionFeature ) ) {
