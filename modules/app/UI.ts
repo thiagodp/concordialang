@@ -41,7 +41,7 @@ export class UI {
         const site = m.pkg.homepage || 'https://concordialang.org';
 
         this._cli.newLine( desc + ' v' + version  );
-        this._cli.newLine( 'Copyright (c) 2018 ' + name );
+        this._cli.newLine( 'Copyright (c) ' + name );
         this._cli.newLine( site );
     }
 
