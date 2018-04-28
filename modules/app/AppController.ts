@@ -31,7 +31,7 @@ export class AppController {
         let options: Options = new Options( appPath, processPath );
         let cli = new CLI();
         let ui: UI = new UI( cli );
-        ui.updateOptions( options ); // read from console
+        await ui.updateOptions( options ); // read from config file and console
 
         //console.log( options );
 

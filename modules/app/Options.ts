@@ -278,85 +278,80 @@ export class Options {
     }
 
     /**
-     * Set attributes from a meow object.
+     * Set attributes from a object.
+     *
+     * @param obj Object
      */
-    fromMeow = ( obj: any ): void => {
+    fromObject( obj: any ): void {
 
         const CURRENT_DIRECTORY = '.';
         const PARAM_SEPARATOR: string = ',';
 
-        const flags = obj.flags;
-        const input = obj.input;
-
         // FILES
 
-        this.directory = isDefined( flags.directory )
-            ? flags.directory
-            : ( isDefined( input ) && 1 === input.length )
-                ? input[ 0 ]
-                : CURRENT_DIRECTORY;
+        this.directory = obj.directory || CURRENT_DIRECTORY;
 
-        this.recursive = flags.recursive !== false;
+        this.recursive = obj.recursive !== false;
 
-        if ( isString( flags.encoding ) ) {
-            this.encoding = flags.encoding.trim().toLowerCase();
+        if ( isString( obj.encoding ) ) {
+            this.encoding = obj.encoding.trim().toLowerCase();
         }
-        if ( isString( flags.extensions ) ) {
-            this.extensions = flags.extensions.trim().split( PARAM_SEPARATOR );
+        if ( isString( obj.extensions ) ) {
+            this.extensions = obj.extensions.trim().split( PARAM_SEPARATOR );
         }
-        if ( isString( flags.ignore ) ) {
-            this.ignore = flags.ignore.trim().split( PARAM_SEPARATOR );
+        if ( isString( obj.ignore ) ) {
+            this.ignore = obj.ignore.trim().split( PARAM_SEPARATOR );
         }
-        if ( isString( flags.files ) ) {
-            this.files = flags.files.trim().split( PARAM_SEPARATOR );
+        if ( isString( obj.files ) ) {
+            this.files = obj.files.trim().split( PARAM_SEPARATOR );
         }
 
         // LANGUAGE
 
-        if ( isString( flags.language ) ) {
-            this.language = flags.language.trim().toLowerCase();
+        if ( isString( obj.language ) ) {
+            this.language = obj.language.trim().toLowerCase();
         }
 
-        this.languageList = isDefined( flags.languageList );
+        this.languageList = isDefined( obj.languageList );
 
         // PLUG-IN
 
-        if ( isString( flags.plugin ) ) {
-            this.plugin = flags.plugin.trim().toLowerCase();
+        if ( isString( obj.plugin ) ) {
+            this.plugin = obj.plugin.trim().toLowerCase();
         }
 
-        this.pluginList = isDefined( flags.pluginList );
+        this.pluginList = isDefined( obj.pluginList );
 
-        if ( isString( flags.pluginAbout ) ) {
-            this.plugin = flags.pluginAbout.trim().toLowerCase();
+        if ( isString( obj.pluginAbout ) ) {
+            this.plugin = obj.pluginAbout.trim().toLowerCase();
             this.pluginAbout = true;
         }
-        if ( isString( flags.pluginInstall ) ) {
-            this.plugin = flags.pluginInstall.trim().toLowerCase();
+        if ( isString( obj.pluginInstall ) ) {
+            this.plugin = obj.pluginInstall.trim().toLowerCase();
             this.pluginInstall = true;
         }
-        if ( isString( flags.pluginUninstall ) ) {
-            this.plugin = flags.pluginUninstall.trim().toLowerCase();
+        if ( isString( obj.pluginUninstall ) ) {
+            this.plugin = obj.pluginUninstall.trim().toLowerCase();
             this.pluginUninstall = true;
         }
 
         // PROCESSING
 
-        this.verbose = isDefined( flags.verbose );
-        this.stopOnTheFirstError = isDefined( flags.failFast );
+        this.verbose = isDefined( obj.verbose );
+        this.stopOnTheFirstError = isDefined( obj.failFast );
 
-        const justSpec: boolean = isDefined( flags.justSpec ) || isDefined( flags.justSpecification );
-        const justTestCases: boolean = isDefined( flags.justTestCases ) || isDefined( flags.justTestCase );
-        const justScripts: boolean = isDefined( flags.justScripts ) || isDefined( flags.justScript );
-        const justRun: boolean = isDefined( flags.justRun );
-        const justResults: boolean = isDefined( flags.justResults ) || isDefined( flags.justResult );
+        const justSpec: boolean = isDefined( obj.justSpec ) || isDefined( obj.justSpecification );
+        const justTestCases: boolean = isDefined( obj.justTestCases ) || isDefined( obj.justTestCase );
+        const justScripts: boolean = isDefined( obj.justScripts ) || isDefined( obj.justScript );
+        const justRun: boolean = isDefined( obj.justRun );
+        const justResults: boolean = isDefined( obj.justResults ) || isDefined( obj.justResult );
 
         // compare to false is important because meow transforms no-xxx to xxx === false
-        const noSpec: boolean = false === flags.spec || false === flags.specification;
-        const noTestCases: boolean = false === flags.testCase || false === flags.testCases;
-        const noScripts: boolean = false === flags.scripts || false === flags.script;
-        const noRun: boolean = false === flags.run;
-        const noResults: boolean = false === flags.results || false === flags.result;
+        const noSpec: boolean = false === obj.spec || false === obj.specification;
+        const noTestCases: boolean = false === obj.testCase || false === obj.testCases;
+        const noScripts: boolean = false === obj.scripts || false === obj.script;
+        const noRun: boolean = false === obj.run;
+        const noResults: boolean = false === obj.results || false === obj.result;
 
         // Adjust flags
 
@@ -377,59 +372,59 @@ export class Options {
 
         // Directories
 
-        if ( isString( flags.dirTestCase ) ) { // singular
-            this.dirTestCases = flags.dirTestCase;
-        } else if ( isString( flags.dirTestCases ) ) { // plural
-            this.dirTestCases = flags.dirTestCases;
+        if ( isString( obj.dirTestCase ) ) { // singular
+            this.dirTestCases = obj.dirTestCase;
+        } else if ( isString( obj.dirTestCases ) ) { // plural
+            this.dirTestCases = obj.dirTestCases;
         }
-        if ( isString( flags.dirScript ) ) { // singular
-            this.dirScripts = flags.dirScript;
-        } else if ( isString( flags.dirScripts ) ) { // plural
-            this.dirScripts = flags.dirScripts;
+        if ( isString( obj.dirScript ) ) { // singular
+            this.dirScripts = obj.dirScript;
+        } else if ( isString( obj.dirScripts ) ) { // plural
+            this.dirScripts = obj.dirScripts;
         }
-        if ( isString( flags.dirResult ) ) { // singular
-            this.dirResult = flags.dirResult;
-        } else if ( isString( flags.dirResults ) ) { // plural
-            this.dirResult = flags.dirResults;
-        }
-
-        if ( isString( flags.extensionFeature ) ) {
-            this.extensionFeature = flags.extensionFeature;
-        } else if ( isString( flags.extFeature ) ) { // similar
-            this.extensionFeature = flags.extFeature;
+        if ( isString( obj.dirResult ) ) { // singular
+            this.dirResult = obj.dirResult;
+        } else if ( isString( obj.dirResults ) ) { // plural
+            this.dirResult = obj.dirResults;
         }
 
-        if ( isString( flags.extensionTestCase ) ) {
-            this.extensionTestCase = flags.extensionTestCase;
-        } else if ( isString( flags.extTestCase ) ) { // similar
-            this.extensionTestCase = flags.extTestCase;
+        if ( isString( obj.extensionFeature ) ) {
+            this.extensionFeature = obj.extensionFeature;
+        } else if ( isString( obj.extFeature ) ) { // similar
+            this.extensionFeature = obj.extFeature;
         }
 
-        if ( isString( flags.lineBreaker ) ) {
-            this.lineBreaker = flags.lineBreaker;
-        } else if ( isString( flags.lineBreak ) ) { // similar
-            this.lineBreaker = flags.lineBreak;
+        if ( isString( obj.extensionTestCase ) ) {
+            this.extensionTestCase = obj.extensionTestCase;
+        } else if ( isString( obj.extTestCase ) ) { // similar
+            this.extensionTestCase = obj.extTestCase;
+        }
+
+        if ( isString( obj.lineBreaker ) ) {
+            this.lineBreaker = obj.lineBreaker;
+        } else if ( isString( obj.lineBreak ) ) { // similar
+            this.lineBreaker = obj.lineBreak;
         }
 
         // CONTENT GENERATION
 
-        if ( isString( flags.caseUi ) ) {
-            this.caseUi = flags.caseUi;
+        if ( isString( obj.caseUi ) ) {
+            this.caseUi = obj.caseUi;
         }
-        if ( isString( flags.caseMethod ) ) {
-            this.caseMethod = flags.caseMethod;
+        if ( isString( obj.caseMethod ) ) {
+            this.caseMethod = obj.caseMethod;
         }
 
-        this.tcSuppressHeader = isDefined( flags.tcSuppressHeader );
+        this.tcSuppressHeader = isDefined( obj.tcSuppressHeader );
 
-        if ( isString( flags.tcIndenter ) ) {
-            this.tcIndenter = flags.tcIndenter;
+        if ( isString( obj.tcIndenter ) ) {
+            this.tcIndenter = obj.tcIndenter;
         }
 
         // RANDOMIC GENERATION
 
-        if ( isString( flags.seed ) || isNumber( flags.seed ) ) {
-            this.seed = String( flags.seed );
+        if ( isString( obj.seed ) || isNumber( obj.seed ) ) {
+            this.seed = String( obj.seed );
         }
 
         // if ( isNumber( flags.randomValid ) ) {
@@ -439,91 +434,91 @@ export class Options {
         //     this.randomInvalid = parseInt( flags.randomInvalid );
         // }
 
-        if ( isNumber( flags.randomMinStringSize ) ) {
-            this.randomMinStringSize = parseInt( flags.randomMinStringSize );
+        if ( isNumber( obj.randomMinStringSize ) ) {
+            this.randomMinStringSize = parseInt( obj.randomMinStringSize );
         }
 
-        if ( isNumber( flags.randomMaxStringSize ) ) {
-            this.randomMaxStringSize = parseInt( flags.randomMaxStringSize );
+        if ( isNumber( obj.randomMaxStringSize ) ) {
+            this.randomMaxStringSize = parseInt( obj.randomMaxStringSize );
         }
 
-        if ( isNumber( flags.randomTries ) ) {
-            this.randomTriesToInvalidValues = flags.randomTries;
+        if ( isNumber( obj.randomTries ) ) {
+            this.randomTriesToInvalidValues = obj.randomTries;
         }
 
         // SPECIFICATION SELECTION
 
-        if ( isNumber( flags.importance ) ) {
-            this.importance = parseInt( flags.importance );
+        if ( isNumber( obj.importance ) ) {
+            this.importance = parseInt( obj.importance );
         }
-        if ( isNumber( flags.selMinFeature ) ) {
-            this.selMinFeature = parseInt( flags.selMinFeature );
+        if ( isNumber( obj.selMinFeature ) ) {
+            this.selMinFeature = parseInt( obj.selMinFeature );
         }
-        if ( isNumber( flags.selMaxFeature ) ) {
-            this.selMaxFeature = parseInt( flags.selMaxFeature );
+        if ( isNumber( obj.selMaxFeature ) ) {
+            this.selMaxFeature = parseInt( obj.selMaxFeature );
         }
-        if ( isNumber( flags.selMinScenario ) ) {
-            this.selMinScenario = parseInt( flags.selMinScenario );
+        if ( isNumber( obj.selMinScenario ) ) {
+            this.selMinScenario = parseInt( obj.selMinScenario );
         }
-        if ( isNumber( flags.selMaxScenario ) ) {
-            this.selMaxScenario = parseInt( flags.selMaxScenario );
+        if ( isNumber( obj.selMaxScenario ) ) {
+            this.selMaxScenario = parseInt( obj.selMaxScenario );
         }
-        if ( isString( flags.selFilter ) ) {
-            this.selFilter = flags.selFilter;
+        if ( isString( obj.selFilter ) ) {
+            this.selFilter = obj.selFilter;
         }
 
         // TEST SCENARIO SELECTION AND COMBINATION STRATEGIES
 
-        if ( isString( flags.combVariant )
-            && enumUtil.isValue( VariantSelectionOptions, flags.combVariant ) ) {
-            this.combVariant = flags.combVariant;
+        if ( isString( obj.combVariant )
+            && enumUtil.isValue( VariantSelectionOptions, obj.combVariant ) ) {
+            this.combVariant = obj.combVariant;
         }
-        if ( isString( flags.combState )
-            && enumUtil.isValue( CombinationOptions, flags.combState ) ) {
-            this.combState = flags.combState;
+        if ( isString( obj.combState )
+            && enumUtil.isValue( CombinationOptions, obj.combState ) ) {
+            this.combState = obj.combState;
         }
 
         // SELECTION AND COMBINATION STRATEGIES FOR DATA TEST CASES
 
-        if ( isNumber( flags.combInvalid ) && Number( flags.combInvalid ) >= 0 ) {
-            this.combInvalid = parseInt( flags.combInvalid );
-        } else if ( isString( flags.combInvalid ) ) {
-            this.combInvalid = flags.combInvalid;
+        if ( isNumber( obj.combInvalid ) && Number( obj.combInvalid ) >= 0 ) {
+            this.combInvalid = parseInt( obj.combInvalid );
+        } else if ( isString( obj.combInvalid ) ) {
+            this.combInvalid = obj.combInvalid;
         }
 
-        if ( isString( flags.combData )
-            && enumUtil.isValue( CombinationOptions, flags.combData ) ) {
-            this.combData = flags.combData;
+        if ( isString( obj.combData )
+            && enumUtil.isValue( CombinationOptions, obj.combData ) ) {
+            this.combData = obj.combData;
         }
 
         // TEST SCRIPT FILTERING
 
-        if ( isNumber( flags.runMinFeature ) ) {
-            this.runMinFeature = parseInt( flags.runMinFeature );
+        if ( isNumber( obj.runMinFeature ) ) {
+            this.runMinFeature = parseInt( obj.runMinFeature );
         }
-        if ( isNumber( flags.runMaxFeature ) ) {
-            this.runMaxFeature = parseInt( flags.runMaxFeature );
+        if ( isNumber( obj.runMaxFeature ) ) {
+            this.runMaxFeature = parseInt( obj.runMaxFeature );
         }
-        if ( isNumber( flags.runMinScenario ) ) {
-            this.runMinScenario = parseInt( flags.runMinScenario );
+        if ( isNumber( obj.runMinScenario ) ) {
+            this.runMinScenario = parseInt( obj.runMinScenario );
         }
-        if ( isNumber( flags.runMaxScenario ) ) {
-            this.runMaxScenario = parseInt( flags.runMaxScenario );
+        if ( isNumber( obj.runMaxScenario ) ) {
+            this.runMaxScenario = parseInt( obj.runMaxScenario );
         }
-        if ( isString( flags.runFilter ) ) {
-            this.runFilter = flags.runFilter;
+        if ( isString( obj.runFilter ) ) {
+            this.runFilter = obj.runFilter;
         }
 
         // INFO
 
-        this.help = isDefined( flags.help );
-        this.about = isDefined( flags.about );
-        this.version = isDefined( flags.version );
-        this.newer = isDefined( flags.newer );
-        this.debug = isDefined( flags.debug );
+        this.help = isDefined( obj.help );
+        this.about = isDefined( obj.about );
+        this.version = isDefined( obj.version );
+        this.newer = isDefined( obj.newer );
+        this.debug = isDefined( obj.debug );
 
         this.fixInconsistences();
-    };
+    }
 
 
     /**

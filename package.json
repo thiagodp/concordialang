@@ -55,6 +55,7 @@
     "case": "^1.5.4",
     "chalk": "^2.3.0",
     "cli-truncate": "^1.0.0",
+    "cosmiconfig": "^4.0.0",
     "database-js": "^3.0.2",
     "database-js-json": "^1.2.0",
     "dedent-js": "^1.0.1",
