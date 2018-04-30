@@ -207,6 +207,15 @@ export class Options {
         public processPath: string = process.cwd()
     ) {
         // console.log( 'App path (main.js)', appPath, 'Process path', processPath );
+
+        // @see https://github.com/zeit/pkg#assets
+        // const isSnapshot = 0 === appPath.indexOf( '/snapshot' )
+        //     || 0 === appPath.indexOf( 'C:\\snapshot' );
+
+        // if ( isSnapshot ) {
+        //     appPath = processPath; // Both plugins and languages are loaded dynamically
+        // }
+
         // Concordia directories
         this.pluginDir = resolve( appPath, this.defaults.DIR_PLUGIN );
         this.languageDir = resolve( appPath, this.defaults.DIR_LANGUAGE );
