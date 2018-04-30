@@ -54,7 +54,7 @@ export class TCGenController {
             options.typedCaseUI(),
             options.randomMinStringSize,
             options.randomMaxStringSize,
-            options.randomTriesToInvalidValues
+            options.randomTriesToInvalidValue
         );
 
         let strategyWarnings: LocatedException[] = [];
@@ -164,7 +164,7 @@ export class TCGenController {
             }
 
             // Generating Documents with the Test Cases
-            const newDoc: Document = tcDocGen.generate( doc, testCases, options.dirTestCases );
+            const newDoc: Document = tcDocGen.generate( doc, testCases, options.dirTestCase );
 
             newTestCaseDocuments.push( newDoc );
 

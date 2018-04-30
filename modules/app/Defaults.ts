@@ -116,7 +116,7 @@ export class Defaults {
 
     readonly RANDOM_MIN_STRING_SIZE: number = 0;
     readonly RANDOM_MAX_STRING_SIZE: number = 500;
-    readonly RANDOM_TRIES_TO_INVALID_VALUES: number = 5; // How many tries it will make to generate random values that are not in a set
+    readonly RANDOM_TRIES_TO_INVALID_VALUE: number = 5; // How many tries it will make to generate random values that are not in a set
 
     readonly IMPORTANCE: number = 5; // 0..9
 

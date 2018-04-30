@@ -123,7 +123,7 @@ export class AppController {
         let spec: Spec = null;
         let graph: Graph = null;
         if ( options.compileSpecification ) {
-            if ( ! options.generateTestCases ) {
+            if ( ! options.generateTestCase ) {
                 cli.newLine( cli.symbolInfo, 'Test Case generation disabled.' );
             }
             let compilerController: CompilerController = new CompilerController();
@@ -140,13 +140,13 @@ export class AppController {
         //cli.newLine( '-=[ SPEC ]=-', "\n\n" );
         //cli.newLine( spec );
 
-        if ( ! plugin && ( options.generateScripts || options.executeScripts || options.analyzeResults ) ) {
+        if ( ! plugin && ( options.generateScript || options.executeScript || options.analyzeResult ) ) {
             cli.newLine( cli.symbolWarning, 'A plugin was not defined.' );
             return true;
         }
 
         if ( spec !== null ) {
-            if ( options.generateScripts ) { // Requires a plugin
+            if ( options.generateScript ) { // Requires a plugin
 
                 const atsCtrl = new ATSGenController();
                 let abstractTestScripts = atsCtrl.generate( spec );
@@ -161,7 +161,7 @@ export class AppController {
                         files = await plugin.generateCode(
                             abstractTestScripts,
                             new TestScriptGenerationOptions(
-                                options.dirScripts,
+                                options.dirScript,
                                 options.dirResult
                             ),
                             errors
@@ -189,9 +189,9 @@ export class AppController {
         }
 
         let executionResult: TestScriptExecutionResult = null;
-        if ( options.executeScripts ) { // Requires a plugin
+        if ( options.executeScript ) { // Requires a plugin
             let tseo: TestScriptExecutionOptions = new TestScriptExecutionOptions(
-                options.dirScripts,
+                options.dirScript,
                 options.dirResult
             );
             cli.newLine( cli.symbolInfo, 'Executing test scripts...' );
@@ -208,7 +208,7 @@ export class AppController {
             cli.newLine( cli.symbolInfo, 'Script execution disabled.' );
         }
 
-        if ( options.analyzeResults ) { // Requires a plugin
+        if ( options.analyzeResult ) { // Requires a plugin
             if ( ! executionResult  ) {
                 cli.newLine( cli.symbolError, 'Could not retrieve execution results.' );
                 return false;
@@ -225,10 +225,10 @@ export class AppController {
         }
 
         if ( ! options.compileSpecification
-            && ! options.generateTestCases
-            && ! options.generateScripts
-            && ! options.executeScripts
-            && ! options.analyzeResults
+            && ! options.generateTestCase
+            && ! options.generateScript
+            && ! options.executeScript
+            && ! options.analyzeResult
         ) {
             cli.newLine( cli.symbolWarning, 'Well, you have disabled all the interesting behavior. :)' );
         }

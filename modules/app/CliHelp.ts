@@ -37,26 +37,29 @@ export class CliHelp {
 
   ${chalk.gray('Processing and output')}
 
+  --save-config                          Save/overwrite a configuration file
+                                         with the other command line options.
+
   -b,  --verbose                         Verbose output.
 
   -np, --no-spec                         Do not process specification files.
-  -nt, --no-test-cases                   Do not generate test cases.
-  -ns, --no-scripts                      Do not generate test scripts.
+  -nt, --no-test-case                    Do not generate test cases.
+  -ns, --no-script                       Do not generate test scripts.
   -nx, --no-run                          Do not run test scripts.
-  -nu, --no-results                      Do not process execution results.
+  -nu, --no-result                       Do not process execution results.
 
   -jp, --just-spec                       Just process specification files.
-  -jt, --just-test-cases                 Just generate test cases.
-  -js, --just-scripts                    Just generate test scripts.
+  -jt, --just-test-case                  Just generate test cases.
+  -js, --just-script                     Just generate test scripts.
   -jx, --just-run                        Just execute test scripts.
 
-  -dt, --dir-test-cases                  Output directory for test cases.
-  -ds, --dir-scripts                     Output directory for test scripts.
-  -du, --dir-results                     Output directory for result files.
+  -dt, --dir-test-case                   Output directory for test cases.
+  -ds, --dir-script                      Output directory for test scripts.
+  -du, --dir-result                      Output directory for result files.
 
   -ef, --ext-feature                     File extension for Feature files.
                                          Default is .feature.
-  -et, --ext-test-cases                  File extension for Test Case files.
+  -et, --ext-test-case                   File extension for Test Case files.
                                          Default is .testcase.
   -lb, --line-breaker                    Character used for breaking lines.
 
@@ -139,8 +142,8 @@ export class CliHelp {
 
   ${chalk.yellowBright('Examples')}
 
-   $ ${exeName} . --plugin some-plugin
-   $ ${exeName} path/to/dir --no-test --no-script -p some-plugin
+   $ ${exeName} --plugin some-plugin
+   $ ${exeName} path/to/dir --no-test-case --no-script -p some-plugin
    $ ${exeName} --files "file1.feature,path/to/file2.feature" -p some-plugin -l pt
 `;
     }
@@ -270,36 +273,21 @@ export class CliHelp {
                 ff: 'fail-fast',
 
                 np: 'no-spec',
-                nt: 'no-test-cases',
-                ns: 'no-scripts',
+                nt: 'no-test-case',
+                ns: 'no-script',
                 nx: 'no-run',
-                nu: 'no-results',
+                nu: 'no-result',
 
                 jp: 'just-spec',
-                jt: 'just-test-cases',
-                js: 'just-scripts',
+                jt: 'just-test-case',
+                js: 'just-script',
                 jx: 'just-run',
 
-                dt: 'dir-test-cases',
-                ds: 'dir-scripts',
-                du: 'dir-results',
+                dt: 'dir-test-case',
+                ds: 'dir-script',
+                du: 'dir-result',
 
                 lb: 'line-breaker',
-
-                // CONTENT GENERATION
-                // (no shortcuts)
-
-                // RANDOMIC GENERATION
-                // (no shortcuts)
-
-                // SPECIFICATION SELECTION
-                // (no shortcuts)
-
-                // COMBINATION STRATEGIES
-                // (no shortcuts)
-
-                // TEST SCRIPT FILTERING
-                // (no shortcuts)
 
                 // INFO
                 h: 'help',

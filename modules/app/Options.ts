@@ -83,17 +83,17 @@ export class Options {
     /** Whether it is desired to compile the specification */
     public compileSpecification: boolean = true;
     /** Whether it is desired to generate test case files */
-    public generateTestCases: boolean = true;
+    public generateTestCase: boolean = true;
     /** Whether it is desired to generate test script files */
-    public generateScripts: boolean = true;
+    public generateScript: boolean = true;
     /** Whether it is desired to execute test script files */
-    public executeScripts: boolean = true;
+    public executeScript: boolean = true;
     /** Whether it is desired to analyze test script results */
-    public analyzeResults: boolean = true;
+    public analyzeResult: boolean = true;
     /** Output directory for test case files */
-    public dirTestCases: string | null = this.defaults.DIR_TEST_CASE;
+    public dirTestCase: string | null = this.defaults.DIR_TEST_CASE;
     /** Output directory for test script files */
-    public dirScripts: string = this.defaults.DIR_SCRIPT;
+    public dirScript: string = this.defaults.DIR_SCRIPT;
     /** Output directory of test script results */
     public dirResult: string = this.defaults.DIR_SCRIPT_RESULT;
     /** Extension for feature files */
@@ -150,7 +150,7 @@ export class Options {
     /** Maximum size for random strings */
     public randomMaxStringSize: number = this.defaults.RANDOM_MAX_STRING_SIZE;
     /** How many tries it will make to generate random values that are not in a set */
-    public randomTriesToInvalidValues: number = this.defaults.RANDOM_TRIES_TO_INVALID_VALUES;
+    public randomTriesToInvalidValue: number = this.defaults.RANDOM_TRIES_TO_INVALID_VALUE;
 
     // SPECIFICATION SELECTION
 
@@ -212,7 +212,7 @@ export class Options {
         this.languageDir = resolve( appPath, this.defaults.DIR_LANGUAGE );
 
         // User directories
-        this.dirScripts = resolve( processPath, this.defaults.DIR_SCRIPT );
+        this.dirScript = resolve( processPath, this.defaults.DIR_SCRIPT );
         this.dirResult = resolve( processPath, this.defaults.DIR_SCRIPT_RESULT );
     }
 
@@ -272,7 +272,7 @@ export class Options {
     }
 
     public someOptionThatRequiresAPlugin(): boolean {
-        return this.generateScripts || this.executeScripts || this.analyzeResults;
+        return this.generateScript || this.executeScript || this.analyzeResult;
     }
 
     public hasPluginName(): boolean {
@@ -382,45 +382,45 @@ export class Options {
         this.stopOnTheFirstError = isDefined( obj.failFast );
 
         const justSpec: boolean = isDefined( obj.justSpec ) || isDefined( obj.justSpecification );
-        const justTestCases: boolean = isDefined( obj.justTestCases ) || isDefined( obj.justTestCase );
-        const justScripts: boolean = isDefined( obj.justScripts ) || isDefined( obj.justScript );
+        const justTestCase: boolean = isDefined( obj.justTestCase ) || isDefined( obj.justTestCases );
+        const justScript: boolean = isDefined( obj.justScript ) || isDefined( obj.justScripts );
         const justRun: boolean = isDefined( obj.justRun );
-        const justResults: boolean = isDefined( obj.justResults ) || isDefined( obj.justResult );
+        const justResult: boolean = isDefined( obj.justResult ) || isDefined( obj.justResults );
 
         // compare to false is important because meow transforms no-xxx to xxx === false
         const noSpec: boolean = false === obj.spec || false === obj.specification;
-        const noTestCases: boolean = false === obj.testCase || false === obj.testCases;
-        const noScripts: boolean = false === obj.scripts || false === obj.script;
+        const noTestCase: boolean = false === obj.testCase || false === obj.testCases;
+        const noScript: boolean = false === obj.script || false === obj.scripts;
         const noRun: boolean = false === obj.run;
-        const noResults: boolean = false === obj.results || false === obj.result;
+        const noResult: boolean = false === obj.result || false === obj.results;
 
         // Adjust flags
 
-        this.generateTestCases = ( ! noTestCases || justTestCases )
-            && ( ! justScripts && ! justRun && ! justResults );
+        this.generateTestCase = ( ! noTestCase || justTestCase )
+            && ( ! justScript && ! justRun && ! justResult );
 
-        this.generateScripts = ( ! noScripts || justScripts )
-            && ( ! justRun && ! justResults );
+        this.generateScript = ( ! noScript || justScript )
+            && ( ! justRun && ! justResult );
 
-        this.executeScripts = ( ! noRun || justRun )
-            && ( ! justResults );
+        this.executeScript = ( ! noRun || justRun )
+            && ( ! justResult );
 
-        this.analyzeResults = ( ! noResults || justResults )
+        this.analyzeResult = ( ! noResult || justResult )
             && ( ! justRun );
 
-        this.compileSpecification = this.generateTestCases || this.generateScripts;
+        this.compileSpecification = this.generateTestCase || this.generateScript;
 
         // Directories
 
         if ( isString( obj.dirTestCase ) ) { // singular
-            this.dirTestCases = obj.dirTestCase;
+            this.dirTestCase = obj.dirTestCase;
         } else if ( isString( obj.dirTestCases ) ) { // plural
-            this.dirTestCases = obj.dirTestCases;
+            this.dirTestCase = obj.dirTestCases;
         }
         if ( isString( obj.dirScript ) ) { // singular
-            this.dirScripts = obj.dirScript;
+            this.dirScript = obj.dirScript;
         } else if ( isString( obj.dirScripts ) ) { // plural
-            this.dirScripts = obj.dirScripts;
+            this.dirScript = obj.dirScripts;
         }
         if ( isString( obj.dirResult ) ) { // singular
             this.dirResult = obj.dirResult;
@@ -483,7 +483,7 @@ export class Options {
         }
 
         if ( isNumber( obj.randomTries ) ) {
-            this.randomTriesToInvalidValues = obj.randomTries;
+            this.randomTriesToInvalidValue = obj.randomTries;
         }
 
         // SPECIFICATION SELECTION
