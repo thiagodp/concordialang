@@ -25,7 +25,7 @@ import { OptionsHandler } from './OptionsHandler';
  */
 export class AppController {
 
-    start = async ( appPath: string, processPath: string ): Promise< boolean > => {
+    async start( appPath: string, processPath: string ): Promise< boolean > {
 
         const cli = new CLI();
         const cliHelp: CliHelp = new CliHelp();
@@ -234,7 +234,7 @@ export class AppController {
         }
 
         return ! hasErrors;
-    };
+    }
 
 
     private showException( err: Error, options: Options, cli: CLI ): void {
