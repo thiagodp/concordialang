@@ -85,7 +85,9 @@ export enum InvalidSpecialOptions {
  */
 export type DataTestCaseCombinationOptions = CombinationOptions;
 
-
+/**
+ * Default values
+ */
 export class Defaults {
 
     readonly LANGUAGE: string = 'en';
@@ -95,6 +97,8 @@ export class Defaults {
     readonly EXTENSION_TEST_CASE = '.testcase'; // Extension for test case files
 
     readonly EXTENSIONS: string[] = [ this.EXTENSION_FEATURE, this.EXTENSION_TEST_CASE ];
+
+    readonly CFG_FILE_NAME = '.concordiarc'; // Name for configuration files
 
     readonly DIR_PLUGIN: string = 'plugins/';
     readonly DIR_LANGUAGE: string = 'data/';

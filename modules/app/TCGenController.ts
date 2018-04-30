@@ -50,7 +50,7 @@ export class TCGenController {
             variantSentenceRec,
             langLoader,
             options.language,
-            options.seed,
+            options.realSeed,
             options.typedCaseUI(),
             options.randomMinStringSize,
             options.randomMaxStringSize,
@@ -232,7 +232,7 @@ export class TCGenController {
         switch ( desired ) {
 
             case VariantSelectionOptions.SINGLE_RANDOM:
-                return new SingleRandomVariantSelectionStrategy( options.seed );
+                return new SingleRandomVariantSelectionStrategy( options.realSeed );
 
             case VariantSelectionOptions.FIRST:
                 return new FirstVariantSelectionStrategy();
@@ -252,7 +252,7 @@ export class TCGenController {
                     '. It will be used "' + used + '" instead.';
                 warnings.push( new Warning( msg ) );
 
-                return new SingleRandomVariantSelectionStrategy( options.seed );
+                return new SingleRandomVariantSelectionStrategy( options.realSeed );
             }
         }
     }
@@ -281,13 +281,13 @@ export class TCGenController {
         switch ( desired ) {
 
             case CombinationOptions.SHUFFLED_ONE_WISE:
-                return new ShuffledOneWiseStrategy( options.seed );
+                return new ShuffledOneWiseStrategy( options.realSeed );
 
             case CombinationOptions.ONE_WISE:
-                return new OneWiseStrategy( options.seed );
+                return new OneWiseStrategy( options.realSeed );
 
             case CombinationOptions.SINGLE_RANDOM_OF_EACH:
-                return new SingleRandomOfEachStrategy( options.seed );
+                return new SingleRandomOfEachStrategy( options.realSeed );
 
             case CombinationOptions.ALL:
                 return new CartesianProductStrategy();
@@ -298,7 +298,7 @@ export class TCGenController {
                     '. It will be used "' + used + '" instead.';
                 warnings.push( new Warning( msg ) );
 
-                return new ShuffledOneWiseStrategy( options.seed );
+                return new ShuffledOneWiseStrategy( options.realSeed );
             }
         }
 
@@ -363,7 +363,7 @@ export class TCGenController {
         );
 
         return [
-            new TestPlanMaker( mixStrategy, combinationStrategy, options.seed )
+            new TestPlanMaker( mixStrategy, combinationStrategy, options.realSeed )
         ];
     }
 

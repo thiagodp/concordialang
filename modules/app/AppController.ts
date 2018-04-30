@@ -12,10 +12,11 @@ import { TestScriptExecutionOptions, TestScriptExecutionResult } from '../testsc
 import { CliScriptExecutionReporter } from './CliScriptExecutionReporter';
 import { TCGenController } from './TCGenController';
 import Graph = require( 'graph.js/dist/graph.full.js' );
-import * as crypto from 'crypto';
-import { LocalDateTime, DateTimeFormatter } from 'js-joda';
 import { ATSGenController } from './ATSGenController';
 import { TestScriptGenerationOptions } from '../testscript/TestScriptOptions';
+import { CliHelp } from './CliHelp';
+import * as meow from 'meow';
+import { OptionsHandler } from './OptionsHandler';
 
 /**
  * Application controller
@@ -26,12 +27,31 @@ export class AppController {
 
     start = async ( appPath: string, processPath: string ): Promise< boolean > => {
 
-        //console.log( appPath, processPath );
+        const cli = new CLI();
+        const cliHelp: CliHelp = new CliHelp();
+        const meowInstance = meow( cliHelp.content(), cliHelp.meowOptions() );
 
-        let options: Options = new Options( appPath, processPath );
-        let cli = new CLI();
-        let ui: UI = new UI( cli );
-        await ui.updateOptions( options ); // read from config file and console
+        const optionsHandler = new OptionsHandler( appPath, processPath, cli, meowInstance );
+        let options: Options;
+        // Load options
+        try {
+            options = await optionsHandler.load();
+        } catch ( err ) {
+            this.showException( err, options, cli );
+            return false; // exit
+        }
+        // Save config ?
+        if ( options.saveConfig ) {
+            try {
+                await optionsHandler.save();
+            } catch ( err ) {
+                this.showException( err, options, cli );
+                // continue!
+            }
+        }
+
+
+        let ui: UI = new UI( cli, meowInstance );
 
         //console.log( options );
 
@@ -98,9 +118,6 @@ export class AppController {
             }
             return true;
         }
-
-        // Seed
-        this.updateSeed( options, cli );
 
         let hasErrors: boolean = false;
         let spec: Spec = null;
@@ -221,35 +238,13 @@ export class AppController {
 
 
     private showException( err: Error, options: Options, cli: CLI ): void {
-        options.debug
+        ( ! options ? true : options.debug )
             ? cli.newLine( cli.symbolError, err.message, this.formattedStackOf( err ) )
             : cli.newLine( cli.symbolError, err.message );
     }
 
     private formattedStackOf( err: Error ): string {
         return "\n  DETAILS: " + err.stack.substring( err.stack.indexOf( "\n" ) );
-    }
-
-    private updateSeed( options: Options, cli: CLI ): void {
-
-        if ( ! options.seed ) {
-            options.seed =
-                LocalDateTime.now().format( DateTimeFormatter.ofPattern( 'yyyy-MM-dd HH:mm' ) ).toString();
-        }
-        options.seedBackup = options.seed; // Save a backup
-
-        cli.newLine( cli.symbolInfo, 'Seed', cli.colorHighlight( options.seed ) );
-        // Now make the real seed - sha 512, if current seed size is less than it
-        const BYTES_OF_SHA_512 = 64; // 512 / 8
-        if ( options.seed.toString().length < BYTES_OF_SHA_512 ) {
-            options.seed = crypto
-                .createHash( 'sha512' )
-                .update( options.seed )
-                .digest( 'hex' );
-        }
-        if ( options.debug || options.verbose ) {
-            cli.newLine( cli.symbolInfo, 'Real seed', cli.colorHighlight( options.seed ) );
-        }
     }
 
 }
