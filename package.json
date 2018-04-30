@@ -1,9 +1,11 @@
 {
-  "name": "concordia",
+  "name": "concordialang",
   "version": "0.73.0",
   "description": "Concordia Language Compiler",
   "keywords": [
     "concordia",
+    "concordialang",
+    "concordia-lang",
     "agile",
     "requirement",
     "spec",
@@ -59,9 +61,8 @@
   },
   "main": "./dist/main.js",
   "bin": {
-    "concordia": "./dist/main.js"
+    "concordia": "./bin/concordia.js"
   },
-  "allow-scripts": true,
   "scripts": {
     "build": "node copy.js && tsc",
     "test": "node copy.js && jest --all",
