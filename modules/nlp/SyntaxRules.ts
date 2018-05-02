@@ -39,6 +39,7 @@ export const DEFAULT_UI_ACTION_SYNTAX_RULE = {
  * @author Thiago Delgado Pinto
  */
 export const UI_ACTION_SYNTAX_RULES = [
+    { name: "amIn", targets: [ "ui_element", "ui_literal", "value", "number", "constant" ] },
     { name: "append" },
     { name: "attachFile" },
     { name: "check", maxTargets: 999 },
