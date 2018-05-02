@@ -12,11 +12,11 @@ describe( 'ValueTypeDetectorTest', () => {
         expect( d.isBoolean( true ) ).toBeTruthy();
         expect( d.isBoolean( false ) ).toBeTruthy();
         expect( d.isBoolean( 'true' ) ).toBeTruthy();
-        expect( d.isBoolean( 'false' ) ).toBeTruthy();        
+        expect( d.isBoolean( 'false' ) ).toBeTruthy();
         expect( d.isBoolean( 1 ) ).toBeFalsy();
         expect( d.isBoolean( 0 ) ).toBeFalsy();
         expect( d.isBoolean( '1' ) ).toBeFalsy();
-        expect( d.isBoolean( '0' ) ).toBeFalsy();        
+        expect( d.isBoolean( '0' ) ).toBeFalsy();
     } );
 
 
@@ -34,8 +34,9 @@ describe( 'ValueTypeDetectorTest', () => {
         expect( d.isInteger( -1.0 ) ).toBeTruthy(); // any .0 value is converted to integer
         expect( d.isInteger( -1.01 ) ).toBeFalsy();
         expect( d.isInteger( 'a' ) ).toBeFalsy();
+        expect( d.isInteger( '4l1c3pass' ) ).toBeFalsy();
     } );
-    
+
 
     it( 'detects double values', () => {
         expect( d.isDouble( 1 ) ).toBeTruthy();
@@ -69,9 +70,9 @@ describe( 'ValueTypeDetectorTest', () => {
         // invalid dates
         expect( d.isDate( '2017-02-30' ) ).toBeFalsy();
         expect( d.isDate( '2017-13-01' ) ).toBeFalsy();
-    } ); 
-    
-    
+    } );
+
+
     it( 'detects time values', () => {
         // hh:mm or hh:mm:ss or hh:mm:ss.SSS are OK
         expect( d.isTime( '23:59' ) ).toBeTruthy();
@@ -80,7 +81,7 @@ describe( 'ValueTypeDetectorTest', () => {
         expect( d.isTime( '00:00:00' ) ).toBeTruthy();
         expect( d.isTime( '00:00:00.000' ) ).toBeTruthy();
 
-        expect( d.isTime( '23?59' ) ).toBeFalsy(); // invalid separator    
+        expect( d.isTime( '23?59' ) ).toBeFalsy(); // invalid separator
         expect( d.isTime( '2017-12-31 12:01' ) ).toBeFalsy(); // date and time
 
         // invalid times
@@ -104,5 +105,5 @@ describe( 'ValueTypeDetectorTest', () => {
         expect( d.isDateTime( '2017-12-32 23:59:59.999' ) ).toBeFalsy(); // invalid date
         expect( d.isDateTime( '2017-12-31 24:59:59.999' ) ).toBeFalsy(); // invalid time
     } );
-    
+
 } );

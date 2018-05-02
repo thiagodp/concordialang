@@ -54,6 +54,10 @@ export class InMemoryTableWrapper implements InMemoryTableInterface {
                     params,
                     ( data ) => resolve( data )
                 );
+                // // @ts-ignore
+                // let select = alasql.compile( cmd );
+                // let data = select( params );
+                // resolve( data );
             } catch ( e ) {
                 reject( e );
             }
@@ -73,8 +77,10 @@ export class InMemoryTableWrapper implements InMemoryTableInterface {
         // Detect value types in the first data row, to create the table
 
         const columnRow = table.rows[ 0 ];
-        const firstDataRow = table.rows[ 1 ];
-        const valTypes: ValueType[] = this._valueTypeDetector.detectAll( firstDataRow.cells );
+        // const firstDataRow = table.rows[ 1 ];
+        // const valTypes: ValueType[] = this._valueTypeDetector.detectAll( firstDataRow.cells );
+        const valTypes = this.detectTableColumnTypes( table );
+
         const sqlTypes = valTypes.map( v => this._sqlHelper.convertToSQLType( v ) );
         const sqlColumns = this._sqlHelper.generateSqlColumns( columnRow.cells, sqlTypes );
         const createCommand = this._sqlHelper.generateCreateWithTypes( table.internalName, sqlColumns );
@@ -101,14 +107,41 @@ export class InMemoryTableWrapper implements InMemoryTableInterface {
         for ( let i = 1; i < rowCount; ++i ) { // starts at the second row
             const row = table.rows[ i ];
             try {
-                insert( this.normalizeValues( row.cells, valTypes ) );
+                // console.log( 'row', row );
+                let params = this.normalizeValues( row.cells, valTypes );
+                // console.log( 'params', params );
+                insert( params );
             } catch ( e ) {
                 const msg = `Error inserting values in the table "${table.name}": ${e.message}`;
                 throw new RuntimeException( msg, table.location );
             }
         }
 
-        //console.log( createCommand, "\n", insertCommand );
+        // console.log( createCommand, "\n", insertCommand );
+    }
+
+    detectTableColumnTypes( table: Table ): ValueType[] {
+        let valTypes: ValueType[] = [];
+        const rowCount = table.rows.length;
+        for ( let i = 1; i < rowCount; ++i ) {
+            let row = table.rows[ i ];
+            let currentTypes = this._valueTypeDetector.detectAll( valTypes );
+            if ( valTypes.length < 1 ) {
+                valTypes = currentTypes;
+                continue;
+            }
+            // Compare
+            for ( let j = 0; j < currentTypes.length; ++j ) {
+                if ( currentTypes[ j ] === valTypes[ j ] ) {
+                    continue;
+                }
+                // Different -> string prevails
+                if ( currentTypes[ j ] === ValueType.STRING ) {
+                    valTypes[ j ] = currentTypes[ j ];
+                }
+            }
+        }
+        return valTypes;
     }
 
 
@@ -128,7 +161,9 @@ export class InMemoryTableWrapper implements InMemoryTableInterface {
 
 
     normalizeValue( value: any, type: ValueType ): any {
-        switch ( type ) {
+        let detectedType = this._valueTypeDetector.detect( value );
+        // switch ( type ) {
+        switch ( detectedType ) {
             case ValueType.BOOLEAN: return this._valueTypeDetector.isTrue( value );
             case ValueType.INTEGER: return parseInt( value );
             case ValueType.DOUBLE: return parseFloat( value );
