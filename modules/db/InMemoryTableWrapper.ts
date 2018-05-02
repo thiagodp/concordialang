@@ -125,7 +125,7 @@ export class InMemoryTableWrapper implements InMemoryTableInterface {
         const rowCount = table.rows.length;
         for ( let i = 1; i < rowCount; ++i ) {
             let row = table.rows[ i ];
-            let currentTypes = this._valueTypeDetector.detectAll( valTypes );
+            let currentTypes = this._valueTypeDetector.detectAll( row.cells );
             if ( valTypes.length < 1 ) {
                 valTypes = currentTypes;
                 continue;
