@@ -1,17 +1,21 @@
 # Concordia
 
-> Write your specification using Concordia and generate **complete** [functional test cases](https://en.wikipedia.org/wiki/Functional_testing), automatically.
+> Generate functional tests automatically from your Agile specification.
 
 ## About
 
-Concordia is an [Agile](https://en.wikipedia.org/wiki/Agile_software_development) requirements specification (*meta*)language inspired in [Gherkin](https://github.com/cucumber/cucumber/wiki/Gherkin) :
-1. [Business-readable](https://martinfowler.com/bliki/BusinessReadableDSL.html), easy-to-learn, fast-to-write documentation.
-2. Generate dozens of complete UI test cases for you, automatically. *Enough of just test skeletons!*
-3. Also allows you to write test cases manually using Natural Language.
-4. It's plain text based, so use your favorite UTF-8 text editor and version control system (*hello, Git*).
-5. Available in [more than one spoken language]().
-6. Supports [plug-ins]() for different testing frameworks.
-7. Can be used with Gherkin tools, so you don't have to throw away your existing tests.
+Concordia is an [Agile](https://en.wikipedia.org/wiki/Agile_software_development) requirements specification metalanguage inspired in [Gherkin](https://github.com/cucumber/cucumber/wiki/Gherkin). It allows you to:
+1. Write [business-readable](https://martinfowler.com/bliki/BusinessReadableDSL.html) specifications.
+
+2. Generate and execute [functional test cases](https://en.wikipedia.org/wiki/Functional_testing) automatically. *No just test script skeletons!* It generates complete test cases and test scripts with *test data*. You don't even need to know how to write code!
+
+3. Generate test scripts for different testing frameworks, such as [CodeceptJS](https://codecept.io/), through [plug-ins]().
+
+4. Write aditional test cases when needed, using *restricted natural language* - currently available in **English** (`en`) and **Portuguese** (`pt`). These test cases are converted to test scripts using plugins.
+
+5. Use your favorite UTF-8 text editor (*e.g.*, [VS Code](https://code.visualstudio.com/), [Sublime Text](http://www.sublimetext.com/), [Atom](https://atom.io/), vim, emacs) to write specification files (`.feature`) and test cases (`.testcase`) and your favorite [version control system](https://en.wikipedia.org/wiki/Version_control) software (*e.g.*, [Git](), [Subversion](https://subversion.apache.org/), [Mercurial](https://www.mercurial-scm.org/)) to manage their changes.
+
+6. Use it with [Gherkin](https://github.com/cucumber/cucumber/wiki/Gherkin)-based tools, like [Cucumber](https://cucumber.io/), so that you can keep using your current `.feature` files and test scripts.
 
 ## Install
 
@@ -22,40 +26,72 @@ npm install -g concordialang
 ## Run
 
 ```bash
-concordia /dir/with/your/spec/files --plugin plugin-name
+concordia path/to/your/spec/files --plugin <plugin>
 ```
 
 > *Tip*: Install the [plug-in for CodeceptJS](#) to generate JavaScript tests for web or mobile web applications.
 
 
-## How to use it
-
-1. Write or update your requirements specification with the *Concordia Language*;
-2. Validate it with users and stakeholders;
-3. Use Concordia to generate tests from the specification and to run them;
-4. If the tests have **failed**, there are some possibilities:
-    1. You still haven't implemented the corresponding behavior in your application. In this case, just implement it and run the tests again.
-    2. Your application is behaving differently from the specification. In this case, it may have bugs or you haven't implemented the behavior exactly like described in the specification. Whether it has a bug, just fix it and run the tests again. Otherwise, you can decide between **changing your application** to behave exactly like the specification describes, or **changing the specification** to match your application behavior. In the latter case, we recommend you to back to step `2` and validate the changes with stakeholders. Whatever you choose, run the tests again.
-5. If the tests have **passed**, *great job!* Now you can write new requirements or add more test cases, so just back to step `1`.
-
-## Regardings
-
-1. Concordia separates *high-level*, **business language** declarations from *medium-low-level*, **computing language** declarations. This let you separate things better and don't compromise your **communication** with business people.
-2. Concordia lets you describe **complex business rules** related to user interface elements, and it will use them to generate test cases for you, automatically. The more you detail their behavior, the more you will get test cases to cover them.
-3. Concordia lets you relate user interface element's rules with **databases, tables and files**, so that it can retrieve test data from them. Currently it supports JSON, CSV, INI, Excel, MSAccess, SQLite, MySQL, PostgreSQL and Firebase. See [here]() how to connect with them.
-
 ## A short example:
 
-### 1. Write the feature
+### 1. Write the feature using Concordia language
+
+Create a file `login.feature`:
+
 ```concordia
-...
+Feature: Login
+  As a user
+  I would like to authenticate myself
+  In order to access the application
+
+Scenario: Successful login
+  Given that I can see the login screen
+  When I enter valid credentials
+  Then I can access the main application screen
+
+  # A Variant is a low-level description or variation of a Scenario
+  Variant: Successful login with valid credentials
+    Given that I am in the [Login Screen]
+    When I fill {Username}
+      And I fill {Password}
+      And I click on {OK}
+    Then I see "Welcome"
+
+Constants:
+  - "Login Screen" is "http://localhost/login"
+
+Table: Users
+  | username | password  |
+  | bob      | 123456    |
+  | alice    | 4l1c3pass |
+
+UI Element: Username
+  - value comes from "SELECT username FROM [Users]"
+
+UI Element: Password
+  - value comes from "SELECT password FROM [Users] WHERE username = {Username}"
+
+UI Element: OK
+  - type is button
 ```
 
 ### 2. Use the tool
 
+Go to the directory where you saved `login.feature` and run:
+
 ```console
-$ concordia --plugin=codeceptjs
+$ concordia --seed="Hello world" --plugin=codeceptjs
 ```
+
+This will generate two files: `login.testcase` and `scripts\login.js`.
+
+The first file has **test cases**:
+
+```concordia
+```
+
+The second file was generated because we used the plugin `codeceptjs`, that
+generates JavaScript test scripts for the framework CodeceptJS.
 
 This will generate tests for CodeceptJS, including this one:
 
@@ -80,6 +116,30 @@ And it will also run the tests:
 ...
 [SUCCESS]
 ```
+
+
+## General Use
+
+1. Write or update your requirements specification with the *Concordia Language*;
+
+2. Validate it with users and stakeholders;
+
+3. Use Concordia to generate tests from the specification and to run them;
+
+4. If the tests have **failed**, there are some possibilities:
+    1. You still haven't implemented the corresponding behavior in your application. In this case, just implement it and run the tests again.
+    2. Your application is behaving differently from the specification. In this case, it may have bugs or you haven't implemented the behavior exactly like described in the specification. Whether it has a bug, just fix it and run the tests again. Otherwise, you can decide between **changing your application** to behave exactly like the specification describes, or **changing the specification** to match your application behavior. In the latter case, we recommend you to back to step `2` and validate the changes with stakeholders. Whatever you choose, run the tests again.
+
+5. If the tests have **passed**, *great job!* Now you can write new requirements or add more test cases, so just back to step `1`.
+
+## Regardings
+
+1. Concordia separates *high-level*, **business language** declarations from *medium-low-level*, **computing language** declarations. This let you separate things better and don't compromise your **communication** with business people.
+
+2. Concordia lets you describe **complex business rules** related to user interface elements, and it will use them to generate test cases for you, automatically. The more you detail their behavior, the more you will get test cases to cover them.
+
+3. Concordia lets you relate user interface element's rules with **databases, tables and files**, so that it can retrieve test data from them. Currently it supports JSON, CSV, INI, Excel, MSAccess, SQLite, MySQL, PostgreSQL and Firebase. See [here]() how to connect with them.
+
 
 ## How it works:
 
