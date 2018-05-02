@@ -311,7 +311,6 @@ export class UIElementValueGenerator {
 
                     // Generate if not in cache
                     if ( ! isDefined( value ) ) {
-                        console.log( 'UI Element Value');
                         value = await this.generate( uie.info.fullVariableName, context, doc, spec, errors );
                     }
 
@@ -599,6 +598,7 @@ export class UIElementValueGenerator {
 
     firstColumnOf( data: any[] ): any[] {
         let values: any[] = [];
+        // console.log( data );
         for ( let obj of data || [] ) {
             for ( let column in obj || {} ) {
                 values.push( obj[ column ] );
