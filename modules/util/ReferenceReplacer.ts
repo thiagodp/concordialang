@@ -54,14 +54,17 @@ export class ReferenceReplacer {
 
             if ( Entities.CONSTANT === e.entity ) {
 
-                const valueContent: string | number = spec.constantNameToValueMap().get( e.value ) || '';
+                let valueContent: string | number = spec.constantNameToValueMap().get( e.value );
+                if ( undefined === valueContent ) {
+                    valueContent = '';
+                }
 
                 const value: string = valueTypeDetector.isNumber( valueContent )
                     ? valueContent.toString() // e.g., 5
                     : Symbols.VALUE_WRAPPER + valueContent + Symbols.VALUE_WRAPPER; // e.g., "bar"
 
                 // Replace
-                newSentence = this.replaceAtPosition(
+                newSentence = this.replaceConstantAtPosition(
                     newSentence,
                     e.position,
                     Symbols.CONSTANT_PREFIX + e.value + Symbols.CONSTANT_SUFFIX,  // e.g., [bar]
@@ -121,14 +124,14 @@ export class ReferenceReplacer {
         return [ newSentence, uiElements.join( ', ' ) ];
     }
 
-
-    private replaceAtPosition(
+    private replaceConstantAtPosition(
         sentence: string,
         position: number,
         from: string,
         to: string
     ): string {
         let pos = position;
+
         // --- Solves a Bravey problem on recognizing something with "["
         if ( sentence.charAt( pos ) !== Symbols.CONSTANT_PREFIX ) {
             if ( Symbols.CONSTANT_PREFIX === sentence.charAt( pos + 1 ) ) {
@@ -139,12 +142,25 @@ export class ReferenceReplacer {
         }
         // ---
 
-        const before: string = sentence.substring( 0, pos );
-        const after: string = sentence.substring( pos + from.length );
+        if ( sentence.charAt( pos ) !== Symbols.CONSTANT_PREFIX ) {
+            pos = sentence.indexOf( Symbols.CONSTANT_PREFIX, pos ); // find starting at pos
+        }
+
+        return this.replaceAtPosition( sentence, pos, from, to );
+    }
+
+
+    private replaceAtPosition(
+        sentence: string,
+        position: number,
+        from: string,
+        to: string
+    ): string {
+        const before: string = sentence.substring( 0, position );
+        const after: string = sentence.substring( position + from.length );
         // console.log(
         //     'sent :', sentence, "\n",
         //     'posit:', position, "\n",
-        //     'pos  :', pos, "\n",
         //     "from :", from, "\n",
         //     "to   :", to, "\n",
         //     'befor:', '|' + before + '|', "\n",
