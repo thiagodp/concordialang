@@ -1,6 +1,6 @@
 {
   "name": "concordialang",
-  "version": "0.73.1",
+  "version": "0.73.2",
   "description": "Concordia Language Compiler",
   "keywords": [
     "concordia",
@@ -66,7 +66,7 @@
   "scripts": {
     "build": "node copy.js && tsc",
     "test": "node copy.js && jest --all",
-    "start": "node bin/concordia",
+    "start": "node bin/concordia.js",
     "postversion": "git push && git push --tags"
   },
   "jest": {
