@@ -15,7 +15,7 @@ Concordia is an [Agile](https://en.wikipedia.org/wiki/Agile_software_development
 
 5. Use your favorite UTF-8 text editor (*e.g.*, [VS Code](https://code.visualstudio.com/), [Sublime Text](http://www.sublimetext.com/), [Atom](https://atom.io/), vim, emacs) to write specification files (`.feature`) and test cases (`.testcase`) and your favorite [version control system](https://en.wikipedia.org/wiki/Version_control) software (*e.g.*, [Git](), [Subversion](https://subversion.apache.org/), [Mercurial](https://www.mercurial-scm.org/)) to manage their changes.
 
-6. Use it with [Gherkin](https://github.com/cucumber/cucumber/wiki/Gherkin)-based tools, like [Cucumber](https://cucumber.io/), so that you can keep using your current `.feature` files and test scripts.
+6. Use it with [Gherkin](https://github.com/cucumber/cucumber/wiki/Gherkin)-based tools, like [Cucumber](https://cucumber.io/), for creating different tests such as [non-functional tests](https://en.wikipedia.org/wiki/Non-functional_testing) or taking advantage of existing `.feature` files.
 
 ## Install
 
