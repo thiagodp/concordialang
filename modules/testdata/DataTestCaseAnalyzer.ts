@@ -176,10 +176,18 @@ export class DataTestCaseAnalyzer {
                 const isRequired: boolean = this._uiePropExtractor.extractIsRequired( uie );
                 switch ( dtc ) {
                     case DataTestCase.REQUIRED_FILLED: return validPair;
-                    case DataTestCase.REQUIRED_NOT_FILLED:
+                    case DataTestCase.REQUIRED_NOT_FILLED: {
+
+                        // // Incompatible if value comes from a query
+                        // if ( isDefined( pValue )
+                        //     && this._nlpUtil.hasEntityNamed( Entities.QUERY, pValue.nlpResult ) ) {
+                        //     return incompatiblePair;
+                        // }
+
                         return isRequired
                             ? new Pair( DTCAnalysisResult.INVALID, pRequired.otherwiseSentences || [] )
                             : validPair;
+                    }
                 }
                 return incompatiblePair;
             }
