@@ -270,62 +270,89 @@
                 "{ui_action} {number}",
                 "{ui_action} {constant}",
                 "{ui_action} {state}",
+
                 "{ui_action} {ui_element} {value}",
                 "{ui_action} {ui_element} {number}",
                 "{ui_action} {ui_element} {constant}",
                 "{ui_action} {ui_element} {ui_action_option}",
                 "{ui_action} {ui_element} {ui_action_option} {ui_element}",
                 "{ui_action} {ui_element} {ui_action_option} {ui_literal}",
+
                 "{ui_action} {value} {ui_element}",
                 "{ui_action} {number} {ui_element}",
                 "{ui_action} {constant} {ui_element}",
+
                 "{ui_action} {ui_literal} {value}",
                 "{ui_action} {ui_literal} {number}",
                 "{ui_action} {ui_literal} {constant}",
                 "{ui_action} {ui_literal} {ui_action_option}",
                 "{ui_action} {ui_literal} {ui_action_option} {ui_element}",
                 "{ui_action} {ui_literal} {ui_action_option} {ui_literal}",
+
                 "{ui_action} {value} {ui_literal}",
                 "{ui_action} {number} {ui_literal}",
                 "{ui_action} {constant} {ui_literal}",
+
                 "{ui_action} {ui_element_type} {value}",
                 "{ui_action} {ui_element_type} {number}",
                 "{ui_action} {ui_element_type} {constant}",
+
+                "{ui_action} {ui_element_type} {ui_property} {value}",
+                "{ui_action} {ui_element_type} {ui_property} {number}",
+                "{ui_action} {ui_element_type} {ui_property} {constant}",
+
                 "{ui_action} {value} {ui_element_type}",
                 "{ui_action} {number} {ui_element_type}",
                 "{ui_action} {constant} {ui_element_type}",
+
                 "{ui_action} {ui_element_type} {ui_element}",
                 "{ui_action} {ui_element_type} {ui_element} {value}",
                 "{ui_action} {ui_element_type} {ui_element} {number}",
                 "{ui_action} {ui_element_type} {ui_element} {constant}",
+
                 "{ui_action} {value} {ui_element_type} {ui_element}",
                 "{ui_action} {number} {ui_element_type} {ui_element}",
                 "{ui_action} {constant} {ui_element_type} {ui_element}",
+
                 "{ui_action} {ui_element_type} {ui_literal}",
                 "{ui_action} {ui_element_type} {ui_literal} {value}",
                 "{ui_action} {ui_element_type} {ui_literal} {number}",
                 "{ui_action} {ui_element_type} {ui_literal} {constant}",
+
                 "{ui_action} {value} {ui_element_type} {ui_literal}",
                 "{ui_action} {number} {ui_element_type} {ui_literal}",
                 "{ui_action} {constant} {ui_element_type} {ui_literal}",
+
                 "{ui_action_modifier} {ui_action} {ui_element}",
                 "{ui_action_modifier} {ui_action} {ui_element} {value}",
                 "{ui_action_modifier} {ui_action} {ui_element} {number}",
                 "{ui_action_modifier} {ui_action} {ui_element} {constant}",
+
                 "{ui_action_modifier} {ui_action} {value} {ui_element}",
                 "{ui_action_modifier} {ui_action} {number} {ui_element}",
                 "{ui_action_modifier} {ui_action} {constant} {ui_element}",
+
                 "{ui_action_modifier} {ui_action} {ui_literal}",
                 "{ui_action_modifier} {ui_action} {ui_literal} {value}",
                 "{ui_action_modifier} {ui_action} {ui_literal} {number}",
                 "{ui_action_modifier} {ui_action} {ui_literal} {constant}",
+
                 "{ui_action_modifier} {ui_action} {value} {ui_literal}",
                 "{ui_action_modifier} {ui_action} {number} {ui_literal}",
                 "{ui_action_modifier} {ui_action} {constant} {ui_literal}",
+
                 "{ui_action_modifier} {ui_action} {ui_element_type}",
                 "{ui_action_modifier} {ui_action} {ui_element_type} {value}",
                 "{ui_action_modifier} {ui_action} {ui_element_type} {number}",
                 "{ui_action_modifier} {ui_action} {ui_element_type} {constant}",
+
+                "{ui_action_modifier} {ui_action} {value} {ui_element_type}",
+                "{ui_action_modifier} {ui_action} {number} {ui_element_type}",
+                "{ui_action_modifier} {ui_action} {constant} {ui_element_type}",
+                "{ui_action_modifier} {ui_action} {ui_element_type} {ui_property} {value}",
+                "{ui_action_modifier} {ui_action} {ui_element_type} {ui_property} {number}",
+                "{ui_action_modifier} {ui_action} {ui_element_type} {ui_property} {constant}",
+
                 "{exec_action} {state}",
 
 
