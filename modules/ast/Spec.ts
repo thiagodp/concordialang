@@ -485,13 +485,19 @@ export class Spec {
      * @param doc Document with the imports.
      */
     findUIElementInDocumentImports( variable: string, doc: Document ): UIElement | null {
-        const uieNameHandler = new UIElementNameHandler()
-        const [ featureName, uiElementName ] = uieNameHandler.extractNamesOf( variable );
-        if ( ! isDefined( featureName ) ) {
+
+        if ( ! doc.imports || doc.imports.length < 1 ) {
             return null;
         }
+
+        const uieNameHandler = new UIElementNameHandler()
+        const [ featureName, uiElementName ] = uieNameHandler.extractNamesOf( variable );
+        if ( ! isDefined( featureName ) && doc.imports.length > 1 ) {
+            return null;
+        }
+
         const docUtil = new DocumentUtil();
-        for ( let impDoc of doc.imports || [] ) {
+        for ( let impDoc of doc.imports ) {
             let otherDoc = this.docWithPath( impDoc.value, doc.fileInfo.path );
             if ( ! otherDoc ) {
                 // console.log( 'WARN: Imported document not found:', impDoc.value );

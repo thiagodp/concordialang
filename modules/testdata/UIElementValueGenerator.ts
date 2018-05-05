@@ -437,41 +437,36 @@ export class UIElementValueGenerator {
         }
 
         const featureName = isDefined( currentFeatureName )
-            ? currentFeatureName + Symbols.FEATURE_TO_UI_ELEMENT_SEPARATOR
+            ? currentFeatureName
             : '';
-
-        // Map full variable names
-        let variableToFullVariableMap = new Map< string, string >();
-        for ( let variable of variables ) {
-            if ( variable.indexOf( Symbols.FEATURE_TO_UI_ELEMENT_SEPARATOR ) < 0 ) {
-                const fullVariable = variable.charAt( 0 ) + featureName + variable.substr( 1 );
-                variableToFullVariableMap.set( variable, fullVariable );
-            } else {
-                variableToFullVariableMap.set( variable, variable );
-            }
-        }
-
-        // const uiElements: UIElement[] = nodes
-        //     .filter( node => node.nodeType === NodeTypes.UI_ELEMENT )
-        //     .map( node => node as UIElement );
 
         const uieNameHandler = new UIElementNameHandler();
 
         let newQuery = query;
         for ( let variable of variables ) {
-
+            // console.log( 'variable', variable );
             let fullVariableName = variable;
             if ( null === uieNameHandler.extractFeatureNameOf( variable ) ) {
-                fullVariableName = uieNameHandler.makeVariableName( currentFeatureName, variable );
+                let uie = spec.uiElementByVariable( variable, doc );
+                // console.log( 'uie', ! uie ? 'null' : uie.name );
+                if ( ! uie ) {
+                    fullVariableName = uieNameHandler.makeVariableName( currentFeatureName, variable );
+                } else {
+                    fullVariableName = uie.info.fullVariableName;
+                }
             }
+            // console.log( '>'.repeat( 10 ), fullVariableName );
 
             let value = valueOrNull( context.uieVariableToValueMap.get( fullVariableName ) );
-
             if ( null === value ) {
                 value = await this.generate( fullVariableName, context, doc, spec, errors );
             }
 
-            newQuery = this._queryRefReplacer.replaceUIElementInQuery( newQuery, variable, Array.isArray( value ) ? value[ 0 ] : value );
+            newQuery = this._queryRefReplacer.replaceUIElementInQuery(
+                newQuery,
+                variable,
+                Array.isArray( value ) ? value[ 0 ] : value
+            );
         }
         return newQuery;
     }
