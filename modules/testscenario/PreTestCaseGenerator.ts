@@ -40,6 +40,7 @@ import { ACTION_TARGET_MAP } from "../util/ActionMap";
 import { Actions } from "../util/Actions";
 import { ActionTargets } from "../util/ActionTargets";
 import { UIElementNameHandler } from "../util/UIElementNameHandler";
+import { basename } from "path";
 
 export class GenContext {
     constructor(
@@ -596,13 +597,14 @@ export class PreTestCaseGenerator {
 
             let value = uieVariableToValueMap.get( variable );
             if ( ! isDefined( value ) ) {
-                const msg = 'Could not retrieve value from ' +
+                const fileName = basename( ctx.doc.fileInfo.path );
+                const locStr = '(' + step.location.line + ',' + step.location.column + ')';
+                const msg = 'Could not retrieve a value from ' +
                     Symbols.UI_ELEMENT_PREFIX + variable + Symbols.UI_ELEMENT_SUFFIX +
-                    '. It will receive an empty value.';
-
+                    ' of ' + fileName + ' ' + locStr + '. It will receive an empty value.';
                 // console.log( uieVariableToValueMap );
                 // console.log( variable, '<'.repeat( 10 ) );
-                ctx.warnings.push( new RuntimeException( msg, step.location ) );
+                ctx.warnings.push( new RuntimeException( msg ) );
                 value = '';
             }
 
