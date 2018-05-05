@@ -35,11 +35,16 @@ export class TCGen {
             return [];
         }
 
+        // console.log( "\n\nScenario steps\n\n", ts.steps.map( s => s.content ) );
         let all: PreTestCase[] = await this._preTestCaseGenerator.generate( ts.steps, ctx, testPlanMakers );
 
         let testCases: TestCase[] = [];
         for ( let preTestCase of all ) {
-            testCases.push( this.produceTestCase( preTestCase ) );
+            // console.log( "\n\nPreTestCase\n\n", preTestCase.steps.map( s => s.content ) );
+            // console.log( "\n\nOracles\n\n", preTestCase.oracles.map( s => s.content ) );
+            let tc = this.produceTestCase( preTestCase );
+            // console.log( "\n\nTestCase\n\n", tc.sentences.map( s => s.content ) );
+            testCases.push( tc );
         }
         return testCases;
     }
@@ -103,8 +108,11 @@ export class TCGen {
 
         tc.tags = this.makeTags( tc );
 
+        // console.log( "\nPRETESTCASE\nsteps", preTestCase.steps.map( s => s.content ) );
+        // console.log( "\noracles\n", preTestCase.oracles.map( s => s.content ) );
+
         if ( preTestCase.hasOracles() ) {
-            tc.sentences = preTestCase.stepsBeforeTheFirstThenStep().concat( preTestCase.oracles );
+            tc.sentences = preTestCase.stepsBeforeTheLastThenStep().concat( preTestCase.oracles );
         } else {
             tc.sentences = preTestCase.steps.slice( 0 ); // copy array
         }

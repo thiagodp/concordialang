@@ -143,12 +143,14 @@ export class TSGen {
 
             // console.log( 'pairMap', pairMap );
             // let product = cartesian( pairMap ); // TO-DO replace cartesian with strategy
-            let product = this._statePairCombinationStrategy.combine( pairMap );
+            let result = this._statePairCombinationStrategy.combine( pairMap );
             // console.log( 'Product', product );
-            let testScenariosToCombineByState: any[] = product;
+            let testScenariosToCombineByState: any[] = result;
 
             for ( let obj of testScenariosToCombineByState ) {
                 let ts = baseScenario.clone();
+                // console.log( "\nTS is\n", ts.steps.map( s => s.content ) );
+
                 for ( let stateName in obj ) {
                     const pair = obj[ stateName ];
                     let [ state, tsToReplaceStep ] = pair.toArray();
@@ -169,6 +171,8 @@ export class TSGen {
 
                     const preTestCase = all[ 0 ];
 
+                    // console.log( "\nPreTestCase\n", preTestCase.steps.map( s => s.content ) );
+
                     // Replace TestScenario steps with the new ones
                     tsToUse.steps = preTestCase.steps;
                     tsToUse.stepAfterPreconditions = null;
@@ -182,6 +186,7 @@ export class TSGen {
 
                     this.replaceStepWithTestScenario( ts, state.stepIndex, tsToUse, isPrecondition );
                 }
+                // console.log( "\nTS modified is\n", ts.steps.map( s => s.content ) );
                 testScenarios.push( ts );
             }
 
@@ -225,6 +230,8 @@ export class TSGen {
                 );
 
                 const preTestCase = all[ 0 ];
+
+                // console.log( "\nVALUED PreTestCase\n", preTestCase.steps.map( s => s.content ) );
 
                 // Replace TestScenario steps with the new ones
                 let newTS = ts.clone();
@@ -423,7 +430,10 @@ export class TSGen {
             step.external = true;
         }
 
+        // console.log( "\nBEFORE\n\n", ts.steps.map( s => s.content ).join( "\n" ) );
+        // console.log( "\nSTEPS to replace index", stepIndex, "\n\n", stepsToReplace.map( s => s.content ).join( "\n" ) );
         ts.steps.splice( stepIndex, 1, ... stepsToReplace );
+        // console.log( "\nAFTER\n\n", ts.steps.map( s => s.content ).join( "\n" ) );
     }
 
 }

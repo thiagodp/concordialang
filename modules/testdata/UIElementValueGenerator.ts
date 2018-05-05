@@ -458,8 +458,10 @@ export class UIElementValueGenerator {
             // console.log( '>'.repeat( 10 ), fullVariableName );
 
             let value = valueOrNull( context.uieVariableToValueMap.get( fullVariableName ) );
+            // console.log( 'Value from cache', isDefined( value ) ? value : 'null' );
             if ( null === value ) {
                 value = await this.generate( fullVariableName, context, doc, spec, errors );
+                // console.log( 'Generated value', isDefined( value ) ? value : 'null' );
             }
 
             newQuery = this._queryRefReplacer.replaceUIElementInQuery(
@@ -467,6 +469,8 @@ export class UIElementValueGenerator {
                 variable,
                 Array.isArray( value ) ? value[ 0 ] : value
             );
+
+            // console.log( 'newQuery', newQuery );
         }
         return newQuery;
     }
@@ -483,6 +487,7 @@ export class UIElementValueGenerator {
         const newQuery = this._queryRefReplacer.replaceDatabaseInQuery( query, database.name );
 
         if ( this._dbQueryCache.has( newQuery ) ) {
+            // console.log( 'query', newQuery, 'dbQueryCache', this._dbQueryCache.get( newQuery ) );
             return this.properDataFor( propType, this._dbQueryCache.get( newQuery ) );
         }
 
@@ -502,6 +507,7 @@ export class UIElementValueGenerator {
         }
 
         const returnedData = await this.queryResult( newQuery, intf, errors );
+        // console.log( 'returnedData', returnedData );
         const firstColumnData = this.firstColumnOf( returnedData );
         if ( isDefined( firstColumnData ) ) {
             this._dbQueryCache.set( newQuery, firstColumnData );

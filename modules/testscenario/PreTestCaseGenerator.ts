@@ -39,6 +39,7 @@ import { LocalTime, DateTimeFormatter, LocalDate, LocalDateTime } from "js-joda"
 import { ACTION_TARGET_MAP } from "../util/ActionMap";
 import { Actions } from "../util/Actions";
 import { ActionTargets } from "../util/ActionTargets";
+import { UIElementNameHandler } from "../util/UIElementNameHandler";
 
 export class GenContext {
     constructor(
@@ -230,6 +231,8 @@ export class PreTestCaseGenerator {
 
             all.push( new PreTestCase( plan, completeSteps, stepOracles ) );
         }
+
+        // console.log( all.map( ptc => ptc.steps.map( s => s.content ) ) );
 
         return all;
     }
@@ -567,6 +570,9 @@ export class PreTestCaseGenerator {
             line = step.location.line,
             count = 0;
         // console.log( 'step', step.content );
+
+        const uieNameHandler = new UIElementNameHandler();
+
         for ( let entity of uiElements ) {
 
             // Change to "AND" when more than one entity is available
@@ -576,9 +582,17 @@ export class PreTestCaseGenerator {
             }
 
             const uieName = entity.value;
-            const uie = ctx.spec.uiElementByVariable( uieName, ctx.doc );
 
-            const variable = ! uie ? uieName : ( ! uie.info ? uieName : uie.info.fullVariableName );
+            let [ featureName, uieNameWithoutFeature ] = uieNameHandler.extractNamesOf( uieName );
+            let variable: string;
+            let uie;
+            if ( isDefined( featureName ) ) {
+                variable = uieName;
+                uie = ctx.spec.uiElementByVariable( uieName );
+            } else {
+                uie = ctx.spec.uiElementByVariable( uieName, ctx.doc );
+                variable = ! uie ? uieName : ( ! uie.info ? uieName : uie.info.fullVariableName );
+            }
 
             let value = uieVariableToValueMap.get( variable );
             if ( ! isDefined( value ) ) {

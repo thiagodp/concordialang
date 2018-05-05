@@ -20,8 +20,10 @@ export class PreTestCase {
         return this.testPlan.hasAnyInvalidResult();
     }
 
-    firstThenStep(): Step | null {
-        for ( let step of this.steps || [] ) {
+    lastThenStep(): Step | null {
+        const len = ( this.steps || [] ).length;
+        for ( let i = len - 1; i >= 0; --i ) {
+            let step = this.steps[ i ];
             if ( NodeTypes.STEP_THEN === step.nodeType ) {
                 return step;
             }
@@ -30,17 +32,17 @@ export class PreTestCase {
     }
 
     hasThenStep(): boolean {
-        return this.firstThenStep() !== null;
+        return this.lastThenStep() !== null;
     }
 
-    stepsBeforeTheFirstThenStep(): Step[] {
-        let firstThen = this.firstThenStep();
-        if ( null === firstThen ) {
+    stepsBeforeTheLastThenStep(): Step[] {
+        let lastThen = this.lastThenStep();
+        if ( null === lastThen ) {
             return this.steps;
         }
         let stepsBeforeThen: Step[] = [];
         for ( let step of this.steps ) {
-            if ( step === firstThen ) {
+            if ( step === lastThen ) {
                 break;
             }
             stepsBeforeThen.push( step );
