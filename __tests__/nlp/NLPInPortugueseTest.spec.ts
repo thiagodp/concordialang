@@ -257,7 +257,20 @@ describe( 'NLPInPortugueseTest', () => {
             //     shouldHaveTestCaseEntities( results, [ UI_ACTION, UI_ELEMENT_TYPE, UI_PROPERTY, CONSTANT ] );
             // } );
 
-            // ---
+            // ...
+
+            it( '{exec_action} {state}', () => {
+                let results = [];
+                results.push( recognizeInTestCase( 'eu tenho ~foo~' ) );
+                shouldHaveTestCaseEntities( results, [ EXEC_ACTION, STATE ] );
+            } );
+
+            it( 'given {exec_action} {state}', () => {
+                let results = [];
+                results.push( recognizeInTestCase( 'dado que eu tenho ~foo~' ) );
+                shouldHaveTestCaseEntities( results, [ EXEC_ACTION, STATE ] );
+            } );
+
         } );
 
 
