@@ -64,7 +64,6 @@ export class UIElementPropertyExtractor {
         if ( ! uie.items || uie.items.length < 1 ) {
             return true;
         }
-        // console.log( uie.items.length, 'items', uie.items[ 0 ].content );
 
         // Evaluate property 'editable' if defined
         const nlpEntity = this.extractPropertyValueAsEntity( this.extractProperty( uie, UIPropertyTypes.EDITABLE ) );
@@ -93,10 +92,7 @@ export class UIElementPropertyExtractor {
         //     }
         // }
 
-        // return false;
-
-        // Otherwise is true
-        return true;
+        return true; // don't change this
     }
 
     extractIsRequired( uie: UIElement ): boolean {
