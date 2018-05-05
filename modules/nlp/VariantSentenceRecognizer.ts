@@ -64,8 +64,8 @@ export class VariantSentenceRecognizer {
             errors: LocatedException[],
             warnings: LocatedException[]
         ) {
-            if ( r.entities.length < 1 ) {
-                const msg = 'Unrecognized: ' + node.content;
+            if ( ! r.entities || r.entities.length < 1 ) {
+                const msg = 'Unrecognized entities in: ' + node.content;
                 warnings.push( new NLPException( msg, node.location ) );
                 return;
             }
@@ -73,16 +73,23 @@ export class VariantSentenceRecognizer {
 
             const recognizedEntityNames: string[] = r.entities.map( e => e.entity );
 
-            // ACTION (mandatory?, what about a state?)
+            // ACTION or EXEC ACTION
             const actionIndex: number = recognizedEntityNames.indexOf( Entities.UI_ACTION );
-            if ( actionIndex < 0 ) {
-                const msg = 'Unrecognized: ' + node.content;
+            const execActionIndex: number = recognizedEntityNames.indexOf( Entities.EXEC_ACTION );
+            if ( actionIndex < 0 && execActionIndex < 0 ) {
+                const msg = 'Unrecognized action in: ' + node.content;
                 warnings.push( new NLPException( msg, node.location ) );
                 return;
             }
-            const action: string = r.entities[ actionIndex ].value;
-            // validate the action
-            recognizer.validate( node, recognizedEntityNames, syntaxRules, action, errors, warnings );
+
+            let action: string;
+            if ( actionIndex >= 0 ) {
+                action = r.entities[ actionIndex ].value;
+                // validate the action
+                recognizer.validate( node, recognizedEntityNames, syntaxRules, action, errors, warnings );
+            } else if ( execActionIndex > 0 ) {
+                action = r.entities[ execActionIndex ].value;
+            }
 
             let item: Step = node as Step;
 

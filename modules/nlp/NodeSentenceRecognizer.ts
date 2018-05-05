@@ -7,6 +7,7 @@ import { NLPResult } from '../../modules/nlp/NLPResult';
 import { LocatedException } from "../req/LocatedException";
 import { NLPException } from "./NLPException";
 import { Warning } from '../req/Warning';
+import { isDefined } from '../util/TypeChecking';
 
 /**
  * NLP result processor
@@ -71,22 +72,18 @@ export class NodeSentenceRecognizer {
             //console.log( language, ', ', node.content, ', ', targetIntent );
 
             let r: NLPResult = this._nlp.recognize( language, node.content );
-            /*
-            let r: NLPResult = null;
-            for ( let ti of targetIntents ) {
-                r = this._nlp.recognize( language, node.content, ti );
-                if ( !! r ) {
-                    break;
-                }
-            }
-            */
 
-            //console.log( r );
-            //console.log( 'Node after: ', node );
+            // let r: NLPResult = null;
+            // for ( let ti of targetIntents ) {
+            //     r = this._nlp.recognize( language, node.content, ti );
+            //     if ( isDefined( r ) ) {
+            //         break;
+            //     }
+            // }
 
             // Not recognized?
-            if ( undefined === r || null === r ) {
-                let msg = 'Unrecognized: "' + node.content + '".';
+            if ( ! r ) {
+                let msg = 'Unrecognized: "' + node.content + '". Intents: ' + targetIntents.join( ',' );
                 warnings.push( new NLPException( msg, node.location ) );
                 continue;
             }
@@ -95,9 +92,9 @@ export class NodeSentenceRecognizer {
             node[ 'nlpResult' ] = r;
 
             // Different intent?
-            if ( targetIntents.indexOf( r.intent ) < 0 ) {
+            if ( isDefined( r ) && isDefined( r.intent ) && targetIntents.indexOf( r.intent ) < 0 ) {
                 //let msg = 'Unrecognized as part of a ' + targetDisplayName + ': ' + node.content;
-                let msg = 'Unrecognized: ' + node.content;
+                let msg = 'Different intent recognized for: ' + node.content + '. Intent: ' + r.intent;
                 warnings.push( new NLPException( msg, node.location ) );
                 continue;
             }
