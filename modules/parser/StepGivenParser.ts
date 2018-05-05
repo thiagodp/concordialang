@@ -22,7 +22,8 @@ export class StepGivenParser implements NodeParser< StepGiven > {
             NodeTypes.VARIANT_BACKGROUND,
             NodeTypes.VARIANT,
             NodeTypes.TEST_CASE,
-            NodeTypes.STEP_GIVEN
+            NodeTypes.STEP_GIVEN,
+            NodeTypes.STEP_THEN // Because of joint scenarios
         ];
 
         if ( ! it.hasPrior() || allowedPriorNodes.indexOf( it.spyPrior().nodeType ) < 0 ) {
