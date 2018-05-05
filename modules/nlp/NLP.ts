@@ -220,7 +220,7 @@ class EntityRecognizerMaker {
      */
     public makeUIElement( entityName: string ): any {
         var valueRec = new Bravey.RegexEntityRecognizer( entityName, 10 );
-        const regex = new RegExp( '\{[a-zA-ZÀ-ÖØ-öø-ÿ][^<\r\n\>\}]*\}', "gi" );
+        const regex = new RegExp( '\{[a-zA-ZÀ-ÖØ-öø-ÿ][^<\r\n\>\}]*\}', "g" );
         valueRec.addMatch(
             regex,
             function( match ) {
@@ -337,7 +337,7 @@ class EntityRecognizerMaker {
      */
     public makeValueList( entityName: string ): any {
         var valueRec = new Bravey.RegexEntityRecognizer( entityName, 10 );
-        const regex = /\[(?: )*((?:,) ?|([0-9]+(\.[0-9]+)?|\"(.*[^\\])\"))+(?: )*\]/g
+        const regex = /\[(?: )*((?:,) ?|([0-9]+(\.[0-9]+)?|\"(.*[^\\])\"))+(?: )*\]/g;
         valueRec.addMatch(
             regex,
             function( match ) {
