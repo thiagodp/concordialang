@@ -331,6 +331,7 @@
 
                 "eu {exec_action} o {state}",
                 "eu tenho {state}",
+                "tenho {state}",
                 "eu {ui_action} em {ui_element}",
                 "eu {ui_action} em {ui_literal}",
                 "eu vejo {ui_element} dentro de {ui_element}",
