@@ -87,6 +87,11 @@ export class UIElementValueGenerator {
             return null;
         }
 
+        const isEditable = this._uiePropExtractor.extractIsEditable( uie );
+        if ( ! isEditable ) {
+            return null;
+        }
+
         // console.log( '>'.repeat( 10 ), context.uieVariableToPlanMap );
         const plan: UIETestPlan = context.uieVariableToPlanMap.get( fullVariableName );
         if ( ! plan ) {
@@ -104,7 +109,6 @@ export class UIElementValueGenerator {
         const groupDef = new DataTestCaseGroupDef();
         const group = groupDef.groupOf( dtc );
         const propertiesMap = this._uiePropExtractor.mapFirstProperty( uie );
-
         const msgPropertyValueError = 'Could not resolve the value of the following property: ';
 
         let cfg = new DataGenConfig();
