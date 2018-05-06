@@ -35,9 +35,13 @@ describe( 'NLPInPortugueseTest', () => {
     const UI_DATA_TYPE: string = Entities.UI_DATA_TYPE;
     const EXEC_ACTION: string = Entities.EXEC_ACTION;
 
-    beforeAll( () => { // once
+    beforeEach( () => {
         nlp = new NLP();
         ( new NLPTrainer( langLoader ) ).trainNLP( nlp, LANGUAGE );
+    } );
+
+    afterEach( () => {
+        nlp = null;
     } );
 
     function recognize( sentence: string ) {
@@ -74,11 +78,11 @@ describe( 'NLPInPortugueseTest', () => {
     }
 
     function shouldHaveTestCaseEntities( results: any[], expectedEntitiesNames: string[], debug: boolean = false ) {
-        shouldHaveEntities( results, expectedEntitiesNames, 'testcase', debug );
+        shouldHaveEntities( results, expectedEntitiesNames, Intents.TEST_CASE, debug );
     }
 
     function shouldHaveUIEntities( results: any[], expectedEntitiesNames: string[], debug: boolean = false ) {
-        shouldHaveEntities( results, expectedEntitiesNames, 'ui', debug );
+        shouldHaveEntities( results, expectedEntitiesNames, Intents.UI, debug );
     }
 
 

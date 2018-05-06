@@ -288,37 +288,37 @@ describe( 'SpecTest', () => {
             } );
 
 
-            it( 'in an import file, without feature name', () => {
+            // it( 'in an import file, without feature name', () => {
 
-                const sc = new SimpleCompiler( 'pt' );
+            //     const sc = new SimpleCompiler( 'pt' );
 
-                let doc1 = sc.addToSpec(
-                    spec,
-                    [
-                        '#language: pt',
-                        'Feature: foo',
-                        'UI Element: x1'
-                    ],
-                    {
-                        path: join( basePath, 'A.feature' )
-                    } as FileInfo
-                );
+            //     let doc1 = sc.addToSpec(
+            //         spec,
+            //         [
+            //             '#language: pt',
+            //             'Feature: foo',
+            //             'UI Element: x1'
+            //         ],
+            //         {
+            //             path: join( basePath, 'A.feature' )
+            //         } as FileInfo
+            //     );
 
-                let doc2 = sc.addToSpec(
-                    spec,
-                    [
-                        '#language: pt',
-                        'import "A.feature"',
-                        'Feature: bar'
-                    ],
-                    {
-                        path: join( basePath, 'B.feature' )
-                    } as FileInfo
-                );
+            //     let doc2 = sc.addToSpec(
+            //         spec,
+            //         [
+            //             '#language: pt',
+            //             'import "A.feature"',
+            //             'Feature: bar'
+            //         ],
+            //         {
+            //             path: join( basePath, 'B.feature' )
+            //         } as FileInfo
+            //     );
 
-                const uie = spec.uiElementByVariable( 'x1', doc2 );
-                expect( uie ).toBeNull();
-            } );
+            //     const uie = spec.uiElementByVariable( 'x1', doc2 );
+            //     expect( uie ).toBeNull();
+            // } );
 
         } );
 
