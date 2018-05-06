@@ -23,14 +23,25 @@ Concordia is an [Agile](https://en.wikipedia.org/wiki/Agile_software_development
 npm install -g concordialang
 ```
 
+## Installing a plugin
+
+First of all, *list the available plugins*:
+
+```bash
+concordia --plugin-list
+```
+
+Then install the desired one. For instance:
+
+```bash
+concordia --plugin-install codeceptjs
+```
+
 ## Run
 
 ```bash
 concordia path/to/your/spec/files --plugin <plugin>
 ```
-
-> *Tip*: Install the [plug-in for CodeceptJS](#) to generate JavaScript tests for web or mobile web applications.
-
 
 ## A short example:
 
@@ -80,7 +91,7 @@ UI Element: OK
 Go to the directory where you saved `login.feature` and run:
 
 ```console
-$ concordia --seed="Hello world" --plugin=codeceptjs
+$ concordia --seed="hello world" --plugin=codeceptjs
 ```
 
 This will generate two files: `login.testcase` and `scripts\login.js`.

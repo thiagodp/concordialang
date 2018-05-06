@@ -17,21 +17,115 @@ Concordia é uma metalinguagem para especificação [Ágil](https://pt.wikipedia
 
 6. Ser usada em conjunto com ferramentas baseadas em [Gherkin](https://github.com/cucumber/cucumber/wiki/Gherkin), como [Cucumber](https://cucumber.io/), para criar [testes não funcionais](https://en.wikipedia.org/wiki/Non-functional_testing) ou outros tipos de teste, além de poder aproveitar eventuais arquivos `.feature` existentes.
 
-## Install
+## Instalação
 
 ```bash
 npm install -g concordialang
 ```
 
-## Run
+### Instalando um plugin
+
+Primeiramente, *liste os plugins disponíveis*:
 
 ```bash
-concordia caminho/ate/suas/features --plugin <plugin>
+concordia --plugin-list
 ```
 
-> *Dica*: Instale o [plug-in para CodeceptJS](#) para gerar scripts de teste em JavaScript visando testar aplicações web ou mobile.
+Então instale o plugin desejado:
+
+```bash
+concordia --plugin-install <nome-do-plugin>
+```
+
+Por exemplo:
+```bash
+concordia --plugin-install codeceptjs
+```
+
+## Executando
+
+### Iniciando um servidor de testes
+
+Quando executamos testes para a interface de usuário, pode haver um servidor
+de testes que controlará a execução. Por exemplo, o `codeceptjs` pode usar
+o `selenium` para controlar um navegador durante a execução de testes para
+aplicações web. **Sem um servidor, é possível que os testes não possam ser
+executados**.
+
+Para iniciar o servidor relacionado ao plugin, basta executar:
+
+```bash
+concordia --plugin-serve <nome-do-plugin>
+```
+Com o servidor iniciado, você pode executar testes com Concordia. Geralmente
+isso será feito em outro console.
+
+### Executando Concordia
+
+```bash
+concordia caminho/ate/suas/features --plugin <nome-do-plugin>
+```
+
+Se você já estiver no diretório onde estão suas features, basta informar o plugin.
+
+Exemplo:
+
+```bash
+concordia --plugin codeceptjs
+```
+
+### Parando um servidor de testes
+
+É provável que o servidor de testes continue aberto após você executar os
+testes.
+
+Tecle `Ctrl + C` para finalizá-lo.
 
 
 ## Um exemplo curto:
 
 ### 1. Escreva a funcionalidade usando a linguagem Concordia
+
+```concordia
+#language: pt
+
+Funcionalidade: Login
+  Como um usuário
+  Eu desejo me autenticar
+  Para acessar a aplicação
+
+Cenário: Login com sucesso
+  Dado que eu vejo a tela de login
+  Quando eu informo minhas credenciais
+  Então eu consigo acessar a tela principal da aplicação
+
+  # Uma Variante é uma descrição de baixo-nível de um Cenário
+  Variante: Login com sucesso para credenciais válidas
+    Dado que eu estou na [Tela de Login]
+    Quando eu preencho {Usuario}
+      E preencho {Senha}
+      E clico em {OK}
+    Então eu vejo "Bem-vindo"
+      E tenho ~usuario logado~
+
+Constantes:
+  - "Tela de Login" é "http://localhost/login"
+
+Tabela: Usuarios
+  | login  | senha     |
+  | bob    | 123456    |
+  | alice  | 4l1c3pass |
+
+Elemento de IU: Usuario
+  - valor vem da consulta "SELECT login FROM [Usuarios]"
+    Caso contrário, eu devo ver "Usuário inválido"
+  - obrigatório é true
+
+Elemento de IU: Senha
+  - valor vem da consulta "SELECT senha FROM [Usuarios] WHERE login = {Usuario}"
+    Caso contrário, eu devo ver "Senha inválida"
+  - obrigatório é true
+
+Elemento de IU: OK
+  - tipo é botão
+```
