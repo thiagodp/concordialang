@@ -10,5 +10,6 @@
     "file": "fake/Fake.js",
     "class": "Fake",
     "install": "npm --version",
-    "uninstall": "node --version"
+    "uninstall": "node --version",
+    "serve": "node --version"
 }

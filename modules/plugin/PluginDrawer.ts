@@ -5,19 +5,19 @@ import { sprintf } from 'sprintf-js';
 
 export class PluginDrawer {
 
-    constructor( private _cli: CLI ) {        
+    constructor( private _cli: CLI ) {
     }
 
-    public drawPluginList = ( plugins: PluginData[] ): void => {
+    public drawPluginList( plugins: PluginData[] ): void {
         const highlight = this._cli.colorHighlight;
         const format = "%-20s %-8s %-22s"; // util.format does not support padding :(
         this.write( highlight( sprintf( format, 'Name', 'Version', 'Description' ) ) );
         for ( let p of plugins ) {
             this.write( sprintf( format, p.name, p.version, p.description ) );
         }
-    };
+    }
 
-    public drawSinglePlugin = ( p: PluginData ): void => {
+    public drawSinglePlugin( p: PluginData ): void {
         const highlight = this._cli.colorHighlight;
         const format = "  - %-12s: %s"; // util.format does not support padding :(
         const authors = p.authors.map( ( a, idx ) => 0 === idx ? a : sprintf( '%-17s %s', '', a ) );
@@ -29,48 +29,48 @@ export class PluginDrawer {
         this.write( sprintf( format, 'fake', p.isFake ? 'yes': 'no' ) );
         this.write( sprintf( format, 'file', p.file ) );
         this.write( sprintf( format, 'class', p.class ) );
-    };
+    }
 
-    public showMessageOnNoPluginFound = ( name: string ): void => {
+    public showMessageOnNoPluginFound( name: string ): void {
         const highlight = this._cli.colorHighlight;
-        this.write( 'No plugins found with the name "' + highlight( name ) + '".'
+        this.write( this._cli.symbolError, 'No plugins found with the name "' + highlight( name ) + '".'
             + '\nTry ' + highlight( '--plugin-list' ) + ' to see the available plugins.' );
-    };
+    }
 
-    public showPluginInstallStart = ( name: string ): void => {
+    public showPluginInstallStart( name: string ): void {
         const highlight = this._cli.colorHighlight;
-        this.write( 'Installing the plugin ' + highlight( name ) + '...' );
-        this.write( '---' );
-    };
+        this.write( this._cli.symbolInfo, 'Installing the plugin ' + highlight( name ) + '...' );
+    }
 
-    public showPluginUninstallStart = ( name: string ): void => {
+    public showPluginUninstallStart( name: string ): void {
         const highlight = this._cli.colorHighlight;
-        this.write( 'Uninstalling the plugin ' + highlight( name ) + '...' );
-        this.write( '---' );
-    };    
-    
-    public showPluginExecutionOutput = ( ... args ): void => {
-        this.write( ... args );
-    };
+        this.write( this._cli.symbolInfo, 'Uninstalling the plugin ' + highlight( name ) + '...' );
+    }
 
-    public showPluginExecutionError = ( ... args ): void => {
-        this.write( ... args );
-    };
+    public showPluginServeStart( name: string ): void {
+        const highlight = this._cli.colorHighlight;
+        this.write( this._cli.symbolInfo, 'Serving ' + highlight( name ) + '...' );
+    }
 
-    public showPluginExecutionFinished = ( code ): void => {
-        const successColor = this._cli.colorSuccess;
-        const errorColor = this._cli.colorError;
-        this.write( '---' );
-        this.write( ( 0 == code ? successColor( 'Success' ) : errorColor( 'Errors were found.' ) ) );        
-    };    
+    public showCommand( command: string ): void {
+        this.write( '  Running', this._cli.colorHighlight( command ) );
+    }
 
-    public showError = ( e: Error ): void => {
-        this.write( e.message );
-    };
-    
-    public write = ( ... args ): void => {
+    public showCommandCode( code: number ): void {
+        if ( 0 === code ) {
+            this.write( this._cli.symbolSuccess, 'Success' );
+        } else {
+            this.write( this._cli.symbolError, 'Error during command execution.' );
+        }
+    }
+
+    public showError( e: Error ): void {
+        this.write( this._cli.symbolError, e.message );
+    }
+
+    public write( ... args ): void {
         //this._write( ... args );
         this._cli.newLine( ... args );
-    };
-        
+    }
+
 }

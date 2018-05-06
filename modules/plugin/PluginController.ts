@@ -5,7 +5,7 @@ import { CLI } from "../app/CLI";
 
 /**
  * Plugin controller
- * 
+ *
  * @author Thiago Delgado Pinto
  */
 export class PluginController {
@@ -17,7 +17,7 @@ export class PluginController {
     }
 
     public process = async ( options: Options ): Promise< boolean > => {
-        
+
         const pm = new PluginManager( options.pluginDir );
 
         if ( options.pluginList ) {
@@ -37,7 +37,7 @@ export class PluginController {
         }
 
         const pluginData = await pm.pluginWithName( options.plugin );
-        // plugin name not available?        
+        // plugin name not available?
         if ( ! pluginData ) {
             this._drawer.showMessageOnNoPluginFound( options.plugin );
             return false;
@@ -46,7 +46,7 @@ export class PluginController {
         if ( options.pluginAbout ) {
             this._drawer.drawSinglePlugin( pluginData );
             return true;
-        }  
+        }
 
         if ( options.pluginInstall ) {
             try {
@@ -60,6 +60,15 @@ export class PluginController {
         if ( options.pluginUninstall ) {
             try {
                 await pm.uninstall( pluginData, this._drawer );
+            } catch ( e ) {
+                this._drawer.showError( e );
+            }
+            return true;
+        }
+
+        if ( options.pluginServe ) {
+            try {
+                await pm.serve( pluginData, this._drawer );
             } catch ( e ) {
                 this._drawer.showError( e );
             }

@@ -10,6 +10,7 @@
     ],
     "file": "codeceptjs/CodeceptJS.js",
     "class": "CodeceptJS",
-    "install": "npm install mocha mocha-multi codeceptjs selenium-standalone -g",
-    "uninstall": "npm uninstall mocha mocha-multi codeceptjs selenium-standalone -g"
+    "install": "npm install mocha mocha-multi codeceptjs selenium-standalone -g && selenium-standalone install",
+    "uninstall": "npm uninstall mocha mocha-multi codeceptjs selenium-standalone -g",
+    "serve": "selenium-standalone start"
 }

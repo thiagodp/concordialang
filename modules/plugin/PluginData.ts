@@ -1,6 +1,6 @@
 /**
  * Test script plugin data.
- * 
+ *
  * @author Thiago Delgado Pinto
  */
 export interface PluginData {
@@ -33,5 +33,8 @@ export interface PluginData {
     install: string;
 
     /** uninstall command */
-    uninstall: string;    
+    uninstall: string;
+
+    /** serve command, usually to start a server */
+    serve: string;
 }

@@ -33,6 +33,7 @@ export class CliHelp {
   -pa, --plugin-about <name>             About a plug-in.
   -pi, --plugin-install <name>           Install a plug-in.
   -pu, --plugin-uninstall <name>         Uninstall a plug-in.
+  -ps, --plugin-serve <name>             Starts a test server with a plugin.
   -pl, --plugin-list                     List available plug-ins.
 
   ${chalk.gray('Processing and output')}
@@ -266,6 +267,7 @@ export class CliHelp {
                 pa: 'plugin-about',
                 pi: 'plugin-install',
                 pu: 'plugin-uninstall',
+                ps: 'plugin-serve',
                 pl: 'plugin-list',
 
                 // PROCESSING

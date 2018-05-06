@@ -33,6 +33,7 @@ export class Options {
         'pluginAbout',
         'pluginInstall',
         'pluginUninstall',
+        'pluginServe',
 
         // Processing
         'saveConfig',
@@ -71,6 +72,7 @@ export class Options {
     public pluginAbout: boolean = false; // show information about a plug-in
     public pluginInstall: boolean = false; // install an available plug-in
     public pluginUninstall: boolean = false; // uninstall an available plug-in
+    public pluginServe: boolean = false; // start the test server of a plug-in
 
     // PROCESSING
 
@@ -277,7 +279,7 @@ export class Options {
     }
 
     public somePluginOption(): boolean {
-        return this.pluginList || this.pluginAbout || this.pluginInstall || this.pluginUninstall;
+        return this.pluginList || this.pluginAbout || this.pluginInstall || this.pluginUninstall || this.pluginServe;
     }
 
     public someOptionThatRequiresAPlugin(): boolean {
@@ -382,6 +384,10 @@ export class Options {
         if ( isString( obj.pluginUninstall ) ) {
             this.plugin = obj.pluginUninstall.trim().toLowerCase();
             this.pluginUninstall = true;
+        }
+        if ( isString( obj.pluginServe ) ) {
+            this.plugin = obj.pluginServe.trim().toLowerCase();
+            this.pluginServe = true;
         }
 
         // PROCESSING
@@ -582,7 +588,8 @@ export class Options {
         this.pluginList = this.pluginList && ! this.help; // Help flag takes precedence over other flags
         this.pluginAbout = this.pluginAbout && ! this.pluginList;
         this.pluginInstall = this.pluginInstall && ! this.pluginAbout && ! this.pluginList;
-        this.pluginUninstall = this.pluginUninstall && ! this.pluginInstall && ! this.pluginAbout && ! this.pluginList;
+        this.pluginUninstall = this.pluginUninstall && ! this.pluginAbout && ! this.pluginList;
+        this.pluginServe = this.pluginServe && ! this.pluginAbout && ! this.pluginList;
 
         // RANDOMIC GENERATION
         // if ( this.randomValid < 0 ) {
