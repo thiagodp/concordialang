@@ -385,7 +385,9 @@
 
                 "id é {value}",
                 "comprimento máximo é {number}",
-                "valor vem da consulta {query}"
+                "valor vem da consulta {query}",
+                "tipo é {ui_element_type}",
+                "tipo é botão"
             ]
         },
 

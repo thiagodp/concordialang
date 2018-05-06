@@ -338,7 +338,9 @@
 
                 "id is {value}",
                 "maximum length is {number}",
-                "value comes from the query {query}"
+                "value comes from the query {query}",
+                "type is {ui_element_type}",
+                "type is button"
             ]
         },
 
