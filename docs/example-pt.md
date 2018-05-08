@@ -52,9 +52,6 @@ Elemento de IU: OK
   - tipo é botão
 ```
 
-Uma [descrição da sintaxe]() é apresentada adiante.
-
-
 ## 2. Gere e execute testes
 
 Concordia gera [Casos de Teste](https://pt.wikipedia.org/wiki/Caso_de_teste) e Scripts de Teste (código-fonte).

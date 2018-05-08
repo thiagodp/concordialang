@@ -18,6 +18,7 @@ Scenario: Successful login
       And I fill {Password}
       And I click on {OK}
     Then I see "Welcome"
+      And I have ~user is logged in~
 
 Constants:
   - "Login Screen" is "http://localhost/login"
@@ -29,15 +30,19 @@ Table: Users
 
 UI Element: Username
   - value comes from "SELECT username FROM [Users]"
+    Otherwise I must see "Invalid username"
+  - required is true
 
 UI Element: Password
   - value comes from "SELECT password FROM [Users] WHERE username = {Username}"
+    Otherwise I must see "Invalid password"
+  - required is true
 
 UI Element: OK
   - type is button
 ```
 
-### 2. Use the tool
+### 2. Generate and execute tests
 
 Go to the directory where you saved `login.feature` and run:
 
@@ -45,7 +50,7 @@ Go to the directory where you saved `login.feature` and run:
 $ concordia --seed="hello world" --plugin=codeceptjs
 ```
 
-This will generate two files: `login.testcase` and `scripts\login.js`.
+This will generate two files: `login.testcase` and `test/login.js`.
 
 The first file has **test cases**:
 
@@ -58,15 +63,4 @@ generates JavaScript test scripts for the framework CodeceptJS.
 This will generate tests for CodeceptJS, including this one:
 
 ```javascript
-Feature( 'Login', () => {
-    Scenario(
-        'Completes the login successfully when entering valid credentials',
-        ( I ) => {
-        I.amOnPage( '/login' );
-        I.fillField( '#username', 'alice' );
-        I.fillField( '#password', 'd3ar4lice' );
-        I.click( '#enter' );
-        I.waitForText( 'Welcome' );
-    } );
-} );
 ```
