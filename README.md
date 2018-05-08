@@ -2,20 +2,47 @@
 
 > Generate functional tests automatically from your Agile specification.
 
-## About
+*Concordia* is a tool that allows you to generate functional tests from a requirements specification writen in *Concordia Language*.  You can use them for:
 
-Concordia is an [Agile](https://en.wikipedia.org/wiki/Agile_software_development) requirements specification metalanguage inspired in [Gherkin](https://github.com/cucumber/cucumber/wiki/Gherkin). It allows you to:
-1. Write [business-readable](https://martinfowler.com/bliki/BusinessReadableDSL.html) specifications.
+1. Writing [business-readable](https://martinfowler.com/bliki/BusinessReadableDSL.html) specifications.
 
-2. Generate and execute [functional test cases](https://en.wikipedia.org/wiki/Functional_testing) automatically. *No just test script skeletons!* It generates complete test cases and test scripts with *test data*. You don't even need to know how to write code!
+2. Generating and executing [functional test cases](https://en.wikipedia.org/wiki/Functional_testing) automatically. *No just test script skeletons!* It generates complete test cases and test scripts with *test data*. You don't even need to know how to write code!
 
-3. Generate test scripts for different testing frameworks, such as [CodeceptJS](https://codecept.io/), through [plug-ins]().
+3. Generating test scripts for different testing frameworks, such as [CodeceptJS](https://codecept.io/), through [plug-ins]().
 
-4. Write aditional test cases when needed, using *restricted natural language* - currently available in **English** (`en`) and **Portuguese** (`pt`). These test cases are converted to test scripts using plugins.
+4. Write aditional test cases when needed, using *Concordia Language* - currently available in **English** (`en`) and **Portuguese** (`pt`). These test cases are converted to test scripts using plugins.
 
-5. Use your favorite UTF-8 text editor (*e.g.*, [VS Code](https://code.visualstudio.com/), [Sublime Text](http://www.sublimetext.com/), [Atom](https://atom.io/), vim, emacs) to write specification files (`.feature`) and test cases (`.testcase`) and your favorite [version control system](https://en.wikipedia.org/wiki/Version_control) software (*e.g.*, [Git](), [Subversion](https://subversion.apache.org/), [Mercurial](https://www.mercurial-scm.org/)) to manage their changes.
+5. Analyze test results to help evaluating failures.
 
-6. Use it with [Gherkin](https://github.com/cucumber/cucumber/wiki/Gherkin)-based tools, like [Cucumber](https://cucumber.io/), for creating different tests such as [non-functional tests](https://en.wikipedia.org/wiki/Non-functional_testing) or taking advantage of existing `.feature` files.
+*Concordia Language* is an [Agile](https://en.wikipedia.org/wiki/Agile_software_development) requirements specification metalanguage inspired in [Gherkin](https://github.com/cucumber/cucumber/wiki/Gherkin). It uses *restricted natural language*
+
+
+## Why Concordia ?
+
+- Simple syntax
+
+- No need to write code
+
+- Separate high-level, **business language** declarations from medium-low-level, **computing language** declarations
+
+- Have complete and relavant tests in few seconds
+
+- High coverage of business rules at a small declaration effort
+
+- Let you describe complex business rules, including those related to data from databases
+
+- Have test cases declared in a high-level language
+
+- Create additional test cases without coding
+
+- Available in more than one spoken language (currently `en` and `pt`)
+
+- No special text editor required - use your favorite UTF-8 editor
+
+- Use your favorite [version control system](https://en.wikipedia.org/wiki/Version_control) to manage changes
+
+- Batteries included (install and use)
+
 
 ## Install
 
@@ -23,9 +50,9 @@ Concordia is an [Agile](https://en.wikipedia.org/wiki/Agile_software_development
 npm install -g concordialang
 ```
 
-## Installing a plugin
+### Installing a plugin
 
-First of all, *list the available plugins*:
+List the available plugins:
 
 ```bash
 concordia --plugin-list
@@ -43,116 +70,28 @@ concordia --plugin-install codeceptjs
 concordia path/to/your/spec/files --plugin <plugin>
 ```
 
-## A short example:
+## A short example
 
-### 1. Write the feature using Concordia language
-
-Create a file `login.feature`:
-
-```concordia
-Feature: Login
-  As a user
-  I would like to authenticate myself
-  In order to access the application
-
-Scenario: Successful login
-  Given that I can see the login screen
-  When I enter valid credentials
-  Then I can access the main application screen
-
-  # A Variant is a low-level description or variation of a Scenario
-  Variant: Successful login with valid credentials
-    Given that I am in the [Login Screen]
-    When I fill {Username}
-      And I fill {Password}
-      And I click on {OK}
-    Then I see "Welcome"
-
-Constants:
-  - "Login Screen" is "http://localhost/login"
-
-Table: Users
-  | username | password  |
-  | bob      | 123456    |
-  | alice    | 4l1c3pass |
-
-UI Element: Username
-  - value comes from "SELECT username FROM [Users]"
-
-UI Element: Password
-  - value comes from "SELECT password FROM [Users] WHERE username = {Username}"
-
-UI Element: OK
-  - type is button
-```
-
-### 2. Use the tool
-
-Go to the directory where you saved `login.feature` and run:
-
-```console
-$ concordia --seed="hello world" --plugin=codeceptjs
-```
-
-This will generate two files: `login.testcase` and `scripts\login.js`.
-
-The first file has **test cases**:
-
-```concordia
-```
-
-The second file was generated because we used the plugin `codeceptjs`, that
-generates JavaScript test scripts for the framework CodeceptJS.
-
-This will generate tests for CodeceptJS, including this one:
-
-```javascript
-Feature( 'Login', () => {
-    Scenario(
-        'Completes the login successfully when entering valid credentials',
-        ( I ) => {
-        I.amOnPage( '/login' );
-        I.fillField( '#username', 'alice' );
-        I.fillField( '#password', 'd3ar4lice' );
-        I.click( '#enter' );
-        I.waitForText( 'Welcome' );
-    } );
-} );
-```
-
-And it will also run the tests:
-
-```console
-[SUCCESS]
-...
-[SUCCESS]
-```
+See [this short example](docs/example.md) to get an overview of the usage.
 
 
-## General Use
+## Usage cycle
 
-1. Write or update your requirements specification with the *Concordia Language*;
+1. Write or update your requirements specification with the *Concordia Language* and validate it with users or stakeholders;
 
-2. Validate it with users and stakeholders;
+2. Use *Concordia* to generate tests from the specification and to run them;
 
-3. Use Concordia to generate tests from the specification and to run them;
-
-4. If the tests have **failed**, there are some possibilities:
+3. If the tests have **failed**, there are some possibilities:
     1. You still haven't implemented the corresponding behavior in your application. In this case, just implement it and run the tests again.
-    2. Your application is behaving differently from the specification. In this case, it may have bugs or you haven't implemented the behavior exactly like described in the specification. Whether it has a bug, just fix it and run the tests again. Otherwise, you can decide between **changing your application** to behave exactly like the specification describes, or **changing the specification** to match your application behavior. In the latter case, we recommend you to back to step `2` and validate the changes with stakeholders. Whatever you choose, run the tests again.
+    2. Your application is behaving differently from the specification. In this case, it may have bugs or you haven't implemented the behavior exactly like described in the specification. Whether it has a bug, just fix it and run the tests again. Otherwise, you can decide between **changing your application** to behave exactly like the specification describes, or **changing the specification** to match your application behavior. In the latter case, we recommend you to validate the changes with stakeholders. Whatever you choose, run the tests again.
 
-5. If the tests have **passed**, *great job!* Now you can write new requirements or add more test cases, so just back to step `1`.
-
-## Regardings
-
-1. Concordia separates *high-level*, **business language** declarations from *medium-low-level*, **computing language** declarations. This let you separate things better and don't compromise your **communication** with business people.
-
-2. Concordia lets you describe **complex business rules** related to user interface elements, and it will use them to generate test cases for you, automatically. The more you detail their behavior, the more you will get test cases to cover them.
-
-3. Concordia lets you relate user interface element's rules with **databases, tables and files**, so that it can retrieve test data from them. Currently it supports JSON, CSV, INI, Excel, MSAccess, SQLite, MySQL, PostgreSQL and Firebase. See [here]() how to connect with them.
+4. If the tests have **passed**, *great job!* Now you can write new requirements or add more test cases, so just back to step `1`.
 
 
-## How it works:
+
+## How it works
+
+[[Image:media/process.png|center|Process]]
 
 1. Concordia reads your `.feature` and `.testcase` files like a compiler, and uses a [lexer](https://en.wikipedia.org/wiki/Lexical_analysis) and a [parser](https://en.wikipedia.org/wiki/Parsing#Computer_languages) to identify and check documents' strucuture.
 2. Concordia uses basic [Natural Language Processing](https://en.wikipedia.org/wiki/Natural-language_processing) (NLP) to identify sentences' [intent](http://mrbot.ai/blog/natural-language-processing/understanding-intent-classification/). This increases the chances of recognizing sentences written in different styles.
@@ -163,56 +102,193 @@ And it will also run the tests:
 7. Concordia reads and presents execution results. They relate failing tests to the specification, in order to help you understanding the possible reasons of a failure.
 
 
-## Generated test cases:
+## Generated test cases
 
-Concordia can generate test cases from [funcional requirements](https://en.wikipedia.org/wiki/Functional_requirement). Although it is not able to generate test cases for [non-functional requirements](https://en.wikipedia.org/wiki/Non-functional_requirement) automatically, you can create them manually with traditional BDD tools.
+Concordia can generate test cases from [funcional requirements](https://en.wikipedia.org/wiki/Functional_requirement). Although it is not able to generate test cases for [non-functional requirements](https://en.wikipedia.org/wiki/Non-functional_requirement) automatically, you can create them manually with traditional BDD tools based on [Gherkin](https://github.com/cucumber/cucumber/wiki/Gherkin).
 
-### Covered rules for test data:
+### Covered states
 
-Each input data will receive values according to these rules:
+> *description soon*
+
+### Covered scenarios
+
+> *description soon*
+
+### Covered rules for test data
+
+Each input data may receive values according to its business rules.
+These business rules are classified in the following groups:
+`VALUE`, `LENGTH`, `FORMAT`, `SET`, `REQUIRED`, and `COMPUTED`.
+All but `COMPUTED` are currently available.
 
 ```
-+---------------------------+---------------+--------------------+----------------+
-| RULE                      |   VALUE TYPE  | VALID              | INVALID        |
-|                           | Single | List |                    |                |
-+---------------------------+--------+------+--------------------+----------------+
-| mandatory input           | yes    | yes  | valid random       | empty value    |
-| minimum length boundaries | yes    | N/A  | value, value + 1   | value - 1      |
-| maximum length boundaries | yes    | N/A  | value, value - 1   | value + 1      |
-| minimum value boundaries  | yes    | N/A  | value, next value  | prior value    |
-| maximum value boundaries  | yes    | N/A  | value, prior value | next value     |
-| first last                | N/A    | yes  | yes                | N/A            |
-| last value                | N/A    | yes  | yes                | N/A            |
-| middle length             | yes    | N/A  | yes                | N/A            |
-| middle value              | yes    | yes  | yes                | N/A            |
-| random value              | yes    | yes  | valid random       | invalid random |
-| zero                      | yes    | N/A  | yes                | yes            |
-| regex-based value         | yes    | N/A  | yes                | yes            |
-+---------------------------+--------+------+--------------------+----------------+
-| MAXIMUM POSSIBLE TESTS    | 13     | 5    | 13                 | 8              |
-+---------------------------+--------+------+--------------------+----------------+
++----------+--------------------------------+
+| group    |	testcase                    |
+|----------|--------------------------------|
+| VALUE    | LOWEST_VALUE                   |
+|          | RANDOM_BELOW_MIN_VALUE         |
+|          | JUST_BELOW_MIN_VALUE           |
+|          | MIN_VALUE	                    |
+|          | JUST_ABOVE_MIN_VALUE           |
+|          | ZERO_VALUE	                    |
+|          | MEDIAN_VALUE                   |
+|          | RANDOM_BETWEEN_MIN_MAX_VALUES  |
+|          | JUST_BELOW_MAX_VALUE           |
+|          | MAX_VALUE	                    |
+|          | JUST_ABOVE_MAX_VALUE           |
+|          | RANDOM_ABOVE_MAX_VALUE         |
+|          | GREATEST_VALUE                 |
+| LENGTH   | LOWEST_LENGTH                  |
+|          | RANDOM_BELOW_MIN_LENGTH        |
+|          | JUST_BELOW_MIN_LENGTH          |
+|          | MIN_LENGTH                     |
+|          | JUST_ABOVE_MIN_LENGTH          |
+|          | MEDIAN_LENGTH                  |
+|          | RANDOM_BETWEEN_MIN_MAX_LENGTHS |
+|          | JUST_BELOW_MAX_LENGTH          |
+|          | MAX_LENGTH	                    |
+|          | JUST_ABOVE_MAX_LENGTH          |
+|          | RANDOM_ABOVE_MAX_LENGTH	    |
+|          | GREATEST_LENGTH	            |
+| FORMAT   | VALID_FORMAT                   |
+|          | INVALID_FORMAT                 |
+| SET      | FIRST_ELEMENT                  |
+|          | RANDOM_ELEMENT                 |
+|          | LAST_ELEMENT                   |
+|          | NOT_IN_SET                     |
+| REQUIRED | FILLED                         |
+|          | NOT_FILLED                     |
+| COMPUTED | RIGHT_COMPUTATION	            |
+|          | WRONG_COMPUTATION	            |
++----------+--------------------------------+
 ```
 
-### Covered rules for scenarios:
+### Example 1
 
-1. Each scenario will be covered at least once, unless in case of the test case generation to be filtered.
-2.
+Let's describe a rule for a user interface element `Salary` :
 
-Some details:
-1. A scenario shall include all the steps of called scenarios.
-2. A called scenario will receive valid values, in order to complete successfully, unless it is designed to not complete successfully.
+```gherkin
+UI Element: Salary
+  - data type is double
+```
 
-## Documentation
+Well, no relevant restrictions were made, and `Salary` will be tested with the test cases of the group `REQUIRED`:
+1. `FILLED`: a *pseudo-random* double value will be generated
+2. `NOT_FILLED`: an empty value will be used
 
-*Full documentation* [here](doc/README.md)
+Now let's add a **minimum value** restriction.
 
-### Tutorial
+```gherkin
+UI Element: Salary
+  - data type is double
+  - minimum value is 1000.00
+    Otherwise I must see "Salary must be greater than or equal to 1000"
+```
 
-- [Writing your first feature](docs/tutorial/first-feature.md)
-- [Improving your specification](docs/tutorial/improving-spec.md)
-- [Generating UI tests](docs/tutorial/gen-ui-tests.md)
+Some tests of the group `VALUE` are now applicable:
 
-### Language Specification
+1. `LOWEST_VALUE`: the lowest possible double is generated
+2. `RANDOM_BELOW_MIN_VALUE`: a random double before the minimum value is generated
+3. `JUST_BELOW_MIN_VALUE`: a double just below the minimum value is used
+4. `MIN_VALUE`: the minimum value is used
+5. `JUST_ABOVE_MIN_VALUE`: a double just above the minimum value is used
+6. `ZERO_VALUE`: zero (`0`) is used
+
+Since `1000.00` is the minimum value, the tests `1`, `2`, `3`, and `6` of the group `VALUE` are considered **invalid**, while `4` and `5` are not. For these tests considered **invalid**, the behavior defined as
+```gherkin
+I must see "Salary must be greater than or equal to 1000"
+```
+is expected to happen. In other words, this behavior serves as [test oracle](https://en.wikipedia.org/wiki/Test_oracle).
+
+Unlike this example, when the expected system behavior for invalid values is not specified and a test data is considered **invalid**, Concordia expects that test should **fail**. In this case, it generates the Test Case with the tag `@fail`.
+
+Now let's add **maximum value** restriction:
+
+```gherkin
+UI Element: Salary
+  - data type is double
+  - minimum value is 1000.00
+    Otherwise I must see "Salary must be greater than or equal to 1000"
+  - maximum value is 30000.00
+    Otherwise I must see "Salary must be less than or equal to 30000"
+```
+
+All the test cases of the grup `VALUE` are now applicable. That is, the following tests will be included:
+
+1. `JUST_BELOW_MAX_VALUE`: the value just below the maximum value
+2. `MEDIAN_VALUE`: the median between the minimum and the maximum values
+3. `JUST_BELOW_MAX_VALUE`: the value just below the maximum value
+4. `RANDOM_BETWEEN_MIN_MAX_VALUES`: a pseudo-random double value between the minimum and the maximum values
+5. `JUST_BELOW_MAX_VALUE`: the value just below the maximum value
+6. `MAX_VALUE`: the maximum value
+7. `JUST_ABOVE_MAX_VALUE`: the value just above the maximum value
+8. `RANDOM_ABOVE_MAX_VALUE`: a pseudo-random double above the maximum value
+9. `GREATEST_VALUE`: the greatest possible double
+
+The tests from `7` to `9` will produce values considered **invalid**.
+
+
+### Example 2
+
+Let's define a user interface element named `Profession` and a table named `Professions` from which the values come from:
+
+```gherkin
+UI Element: Profession
+  - type is select
+  - value comes from "SELECT name from [professions]"
+  - required is true
+
+Table: professions
+  | name       |
+  | Lawyer     |
+  | Accountant |
+  | Dentist    |
+  | Professor  |
+  | Mechanic   |
+```
+
+Applicable test are:
+  - `FILLED`
+  - `NOT_FILLED`
+  - `FIRST_ELEMENT`
+  - `RANDOM_ELEMENT`
+  - `LAST_ELEMENT`
+  - `NOT_IN_SET`
+
+The first two tests are in the group `REQUIRED`. Since we declared `Profession` as having required value, `FILLED` is considered **valid** but `NOT_FILLED` isn't. It's important to remember declaring required inputs accordingly.
+
+The last four tests are in the group `SET`. Only the last one, `NOT_IN_SET`, will produce a value considered **invalid**.
+
+### Example 3
+
+In this example, let's adjust the past two examples to make `Salary` rules *dynamic*, and change according to the `Profession`.
+
+Firstly, we'll add two columns the the `Professions` table:
+
+```gherkin
+Table: professions
+  | name       | min_salary | max_salary |
+  | Lawyer     | 4000       | 30000      |
+  | Accountant | 3000       | 15000      |
+  | Dentist    | 5000       | 35000      |
+  | Professor  | 3000       | 25000      |
+  | Mechanic   | 1000       |  7500      |
+```
+
+Secondly, we'll change the rules to retrieve the values from the table:
+
+```gherkin
+UI Element: Salary
+  - data type is double
+  - minimum value comes from the query "SELECT min_salary FROM [Professions] WHERE name = {Profession}"
+    Otherwise I must see "The given Salary is less than the minimum value"
+  - maximum value comes from the query "SELECT max_salary FROM [Professions] WHERE name = {Profession}"
+    Otherwise I must see "The given Salary is greater than the maximum value"
+```
+
+The reference to the UI Element `{Profession}` inside the query, makes the rules of `Salary` depend on `Profession`. Every time a `Profession` is selected, the **minimum value** and the **maximum value** of `Salary` changes according to the columns `min_value` and `max_value` of the table `Professions`.
+
+## Syntax
 
 - [English](docs/language/en.md)
 - [Português](docs/language/pt.md)

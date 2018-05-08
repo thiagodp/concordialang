@@ -5,7 +5,7 @@
 |     | <-- import -- |     |
 |     |               |     |
 +-----+               +-----+
-.feature              .variant
+.feature              .testcase
 ```
 
 ```
