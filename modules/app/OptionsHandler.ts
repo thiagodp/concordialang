@@ -89,11 +89,16 @@ export class OptionsHandler {
                 LocalDateTime.now().format( DateTimeFormatter.ofPattern( 'yyyy-MM-dd HH:mm' ) ).toString();
         }
 
-        cli.newLine(
-            cli.symbolInfo,
-            options.isGeneratedSeed ? 'Generated seed' : 'Seed',
-            cli.colorHighlight( options.seed )
-        );
+        const shouldShow = ! options.help && ! options.about && ! options.version && ! options.newer
+            && ! options.somePluginOption();
+
+        if ( shouldShow ) {
+            cli.newLine(
+                cli.symbolInfo,
+                options.isGeneratedSeed ? 'Generated seed' : 'Seed',
+                cli.colorHighlight( options.seed )
+            );
+        }
 
         // Real seed
         const BYTES_OF_SHA_512 = 64; // 512 divided by 8
