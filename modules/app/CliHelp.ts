@@ -264,6 +264,7 @@ ${chalk.gray('Information')}
 -v,  --version                         Show current version.
 -a,  --about                           Show information about this application.
 -h,  --help                            Show this help.
+-n,  --newer                           Check for newer versions.
 
 ${chalk.yellowBright('Examples')}
 
