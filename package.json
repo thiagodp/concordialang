@@ -118,7 +118,6 @@
     "moment": "^2.19.3",
     "mustache": "^2.3.0",
     "mysql": "^2.15.0",
-    "node-adodb": "^4.1.0",
     "node-fs-extra": "^0.8.2",
     "node-glob": "^1.2.0",
     "object-to-array": "^2.0.1",
