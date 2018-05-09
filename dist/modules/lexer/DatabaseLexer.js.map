@@ -1,0 +1,1 @@
+{"version":3,"file":"DatabaseLexer.js","sourceRoot":"","sources":["../../../modules/lexer/DatabaseLexer.ts"],"names":[],"mappings":";;AACA,qDAAkD;AAClD,gDAA6C;AAE7C;;;;GAIG;AACH,mBAA2B,SAAQ,+BAA0B;IAEzD,YAAa,KAAe;QACxB,KAAK,CAAE,KAAK,EAAE,qBAAS,CAAC,QAAQ,CAAE,CAAC;IACvC,CAAC;IAED,kBAAkB;IAClB,sBAAsB;QAClB,MAAM,CAAC,CAAE,qBAAS,CAAC,QAAQ,CAAE,CAAC;IAClC,CAAC;CAEJ;AAXD,sCAWC"}

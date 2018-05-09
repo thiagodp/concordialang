@@ -1,0 +1,1 @@
+{"version":3,"file":"UIPropertyLexer.js","sourceRoot":"","sources":["../../../modules/lexer/UIPropertyLexer.ts"],"names":[],"mappings":";;AAAA,mDAAgD;AAChD,gDAA6C;AAG7C;;;;GAIG;AACH,qBAA6B,SAAQ,6BAA2B;IAE5D;QACI,KAAK,CAAE,qBAAS,CAAC,WAAW,CAAE,CAAC;IACnC,CAAC;IAED,kBAAkB;IAClB,sBAAsB;QAClB,MAAM,CAAC,CAAE,qBAAS,CAAC,WAAW,CAAE,CAAC;IACrC,CAAC;CAEJ;AAXD,0CAWC"}

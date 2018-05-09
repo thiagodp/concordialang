@@ -1,0 +1,193 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const mustache_1 = require("mustache");
+/**
+ * Translates abstract test commands to CodeceptJS commands.
+ *
+ * @author Matheus Eller Fagundes
+ * @author Thiago Delgado Pinto
+ */
+class ActionMapper {
+    constructor() {
+        this.ANY_TYPE = 'any';
+        this.NONE_TYPE = '---'; // cannot be empty
+        // Evaluation order matters!
+        this.commandMap = [
+            // @see https://github.com/Codeception/CodeceptJS/tree/master/docs/webapi
+            // AM_IN
+            { action: 'amIn', targetType: 'url', template: 'I.amOnPage({{{target}}});' },
+            { action: 'amIn', default: true, template: 'I.amOnPage({{{value}}});' },
+            // APPEND
+            { action: 'append', default: true, template: 'I.appendField({{{target}}}, {{{value}}});' },
+            // ATTACH_FILE
+            { action: 'attachFile', default: true, template: 'I.attachFile({{{target}}}, {{{value}}});' },
+            // CHECK
+            { action: 'check', targetType: this.ANY_TYPE, template: 'I.checkOption({{{target}}});' },
+            { action: 'check', default: true, template: 'I.checkOption({{{value}}});' },
+            // CLEAR
+            { action: 'clear', targetType: 'cookie', template: 'I.clearCookie({{{target}}});' },
+            { action: 'clear', default: true, template: 'I.clearField({{{target}}});' },
+            // CLICK
+            { action: 'click', targetType: this.ANY_TYPE, template: 'I.click({{{target}}});' },
+            { action: 'click', default: true, template: 'I.click({{{value}}});' },
+            // CLOSE
+            // { action: 'close', default: true, template: 'I.click({{{target}}});' },
+            // DOUBLE_CLICK
+            { action: 'doubleClick', targetType: this.ANY_TYPE, template: 'I.doubleClick({{{target}}});' },
+            { action: 'doubleClick', default: true, template: 'I.doubleClick({{{value}}});' },
+            // FILL
+            { action: 'fill', default: true, template: 'I.fillField({{{target}}}, {{{value}}});' },
+            // PRESS
+            { action: 'press', default: true, template: 'I.pressKey({{{value}}});' },
+            // SEE
+            { action: 'see', targetType: 'textbox', template: 'I.seeInField({{{target}}}, {{{value}}});' },
+            { action: 'see', targetType: 'textarea', template: 'I.seeInField({{{target}}}, {{{value}}});' },
+            { action: 'see', targetType: 'cookie', template: 'I.seeCookie({{{target}}});' },
+            { action: 'see', targetType: this.ANY_TYPE, options: ['cookie'], template: 'I.seeCookie({{{target}}});' },
+            { action: 'see', targetType: 'title', template: 'I.seeInTitle({{{target}}});' },
+            { action: 'see', targetType: this.ANY_TYPE, options: ['title'], template: 'I.seeInTitle({{{target}}});' },
+            { action: 'see', targetType: 'url', template: 'I.seeCurrentUrlEquals({{{target}}});' },
+            { action: 'see', targetType: this.ANY_TYPE, options: ['url'], template: 'I.seeCurrentUrlEquals({{{target}}});' },
+            { action: 'see', targetType: this.ANY_TYPE, template: 'I.seeElement({{{target}}});' },
+            { action: 'see', targetType: this.ANY_TYPE, modifier: 'not', template: 'I.dontSeeElement({{{target}}});' },
+            { action: 'see', default: true, modifier: 'not', template: 'I.dontSee({{{value}}});' },
+            { action: 'see', default: true, template: 'I.see({{{value}}});' },
+            // SELECT
+            { action: 'select', default: true, template: 'I.selectOption({{{target}}}, {{{value}}});' },
+            // TAP
+            { action: 'tap', targetType: this.ANY_TYPE, template: 'I.tap({{{target}}});' },
+            { action: 'tap', default: true, template: 'I.tap({{{value}}});' },
+            // WAIT
+            { action: 'wait', targetType: 'text', template: 'I.waitForText({{{target}}}, {{{value}}});' },
+            { action: 'wait', targetType: this.NONE_TYPE, firstValueShouldBeInteger: true, template: 'I.wait({{{value}}});' },
+            { action: 'wait', targetType: this.NONE_TYPE, template: 'I.waitForText({{{value}}});', valueAsNonArray: true },
+            { action: 'wait', targetType: this.ANY_TYPE, template: 'I.waitForElement({{{target}}}, {{{value}}});' },
+        ];
+    }
+    /**
+     * Translates an abstract command to one or more CodeceptJS commands.
+     * Returns an array of commands, since an abstract command can generate
+     * multiple lines of test code.
+     */
+    map(command) {
+        // console.log( 'command', command.action, command.values );
+        let commands = [];
+        let compareMapObj = obj => {
+            const sameAction = obj.action === command.action;
+            if (!sameAction) {
+                return false;
+            }
+            // console.log( "\t", obj );
+            const sameModifier = obj.modifier == command.modifier;
+            if (true === obj.default) {
+                return sameModifier;
+            }
+            const onlyForValues = (this.NONE_TYPE === obj.targetType
+                && (!command.targets || command.targets.length < 1));
+            if (onlyForValues) {
+                if (true === obj.firstValueShouldBeInteger) {
+                    return !command.values
+                        ? false
+                        : command.values.length > 0 && 'number' === typeof command.values[0];
+                }
+                return true;
+            }
+            const acceptsAny = this.ANY_TYPE === obj.targetType
+                && Array.isArray(command.targets)
+                && command.targets.length > 0;
+            const sameTargetType = acceptsAny
+                || (Array.isArray(command.targetTypes)
+                    && command.targetTypes.indexOf(obj.targetType) >= 0);
+            const sameOptions = this.sameValues(obj.options, command.options);
+            // console.log( sameTargetType, sameModifier, sameOptions );
+            return sameTargetType && sameModifier && sameOptions;
+        };
+        // console.log( 'COMMAND', command );
+        let entry = this.commandMap.filter(compareMapObj)[0];
+        // console.log( 'SELECTED', entry );
+        let cmd;
+        if (!entry) {
+            // console.log( 'NOT FOUND', command );
+            cmd = this.generateNotAvailableMessage(command);
+        }
+        else {
+            cmd = mustache_1.render(entry.template + ' // ({{{location.line}}},{{{location.column}}}){{#comment}} {{{comment}}}{{/comment}}', {
+                target: !command.targets ? '' : this.convertTargets(command.targets),
+                value: !command.values ? '' : this.convertValues(command.values, entry.valueAsNonArray),
+                location: command.location,
+                comment: command.comment,
+                modifier: command.modifier,
+                options: command.options,
+            });
+        }
+        commands.push(cmd);
+        return commands;
+    }
+    convertTargets(targets) {
+        if (0 === targets.length) {
+            return '';
+        }
+        const areStrings = 'string' === typeof targets[0];
+        if (areStrings) {
+            let strTargets = targets;
+            if (1 === targets.length) {
+                return this.convertSingleTarget(strTargets[0]);
+            }
+            return strTargets.map(this.convertSingleTarget).join(', ');
+        }
+        function valueReplacer(key, value) {
+            if (typeof value === 'string' && value.charAt(0) === '@') {
+                return { name: value.substr(1) };
+            }
+            return value;
+        }
+        const content = JSON.stringify(targets, valueReplacer);
+        // remove [ and ]
+        return content.substring(1, content.length - 1);
+    }
+    convertSingleTarget(target) {
+        return target.charAt(0) === '@' ? `{name: "${target.substr(1)}"}` : `"${target}"`;
+    }
+    convertValues(values, valueAsNonArrayWhenGreaterThanOne = false) {
+        if (0 === values.length) {
+            return '';
+        }
+        if (1 === values.length) {
+            return this.convertSingleValue(values[0]);
+        }
+        const joint = values.map(this.convertSingleValue).join(', ');
+        if (!valueAsNonArrayWhenGreaterThanOne) {
+            return '[' + joint + ']';
+        }
+        return joint;
+    }
+    convertSingleValue(value) {
+        return typeof value === 'string' ? `"${value}"` : value;
+    }
+    sameValues(a, b) {
+        if (a === b || (!a && !b)) {
+            return true;
+        }
+        if ((!a && !!b) || (!!a && !b)) {
+            return false;
+        }
+        let aa = Array.isArray(a) ? a.sort() : [];
+        let bb = Array.isArray(b) ? b.sort() : [];
+        if (0 === aa.length && 0 === b.length) {
+            return true;
+        }
+        return a.join('').toLowerCase() === b.join('').toLowerCase();
+    }
+    generateNotAvailableMessage(command) {
+        let message = '// Command not available. ';
+        message += `Action: ${!command.action ? 'none' : command.action}. `;
+        message += `Modifier: ${!command.modifier ? 'none' : command.modifier}. `;
+        message += `Option: ${!command.options ? 'none' : command.options}. `;
+        message += `Targets: ${!command.targets ? 'none' : command.targets}. `;
+        message += `Target type: ${!command.targetTypes ? 'none' : command.targetTypes}. `;
+        message += `Values: ${!command.values ? 'none' : command.values}. `;
+        return message;
+    }
+}
+exports.ActionMapper = ActionMapper;
+//# sourceMappingURL=ActionMapper.js.map

@@ -1,0 +1,1 @@
+{"version":3,"file":"DatabasePropertyLexer.js","sourceRoot":"","sources":["../../../modules/lexer/DatabasePropertyLexer.ts"],"names":[],"mappings":";;AAAA,gDAA6C;AAE7C,mDAAgD;AAEhD;;;;GAIG;AACH,2BAAmC,SAAQ,6BAAiC;IAExE;QACI,KAAK,CAAE,qBAAS,CAAC,iBAAiB,CAAE,CAAC;IACzC,CAAC;IAED,kBAAkB;IAClB,sBAAsB;QAClB,MAAM,CAAC,CAAE,qBAAS,CAAC,iBAAiB,CAAE,CAAC;IAC3C,CAAC;CAEJ;AAXD,sDAWC"}

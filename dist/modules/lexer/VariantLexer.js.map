@@ -1,0 +1,1 @@
+{"version":3,"file":"VariantLexer.js","sourceRoot":"","sources":["../../../modules/lexer/VariantLexer.ts"],"names":[],"mappings":";;AAAA,gDAA6C;AAE7C,uEAAoE;AAEpE;;;;GAIG;AACH,kBAA0B,SAAQ,iDAAkC;IAEhE,YAAa,KAAe;QACxB,KAAK,CAAE,KAAK,EAAE,qBAAS,CAAC,OAAO,CAAE,CAAC;IACtC,CAAC;IAED,kBAAkB;IAClB,sBAAsB;QAClB,MAAM,CAAC,CAAE,qBAAS,CAAC,UAAU,CAAE,CAAC;IACpC,CAAC;CACJ;AAVD,oCAUC"}
