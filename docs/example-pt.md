@@ -2,7 +2,7 @@
 
 > Apresentamos aqui um exemplo simples e curto, com objetivo de dar uma ideia do funcionamento básico de Concordia.
 
-Indicamos que leia o exemplo do início ao fim, mesmo sem estar familiarizado com sua sintaxe. Mais adiante, forneceremos mais detalhes.
+Indicamos que leia o exemplo do início ao fim, mesmo sem estar familiarizado com sua [sintaxe](language/pt.md).
 
 ## 1. Escreva uma funcionalidade
 
@@ -58,9 +58,9 @@ Concordia gera [Casos de Teste](https://pt.wikipedia.org/wiki/Caso_de_teste) e S
 
 ### Casos de teste
 
-- Sempre escritos na linguagem *Concordia*
-- São gerados a partir de arquivos `.feature`
-- São declarados em arquivos `.testcase`
+- Sempre escritos na *Linguagem Concordia*
+- Declarados em arquivos `.testcase`
+- Gerados a partir de arquivos `.feature`
 
 Casos de Teste gerados por *Concordia* terão sempre o mesmo nome do arquivo `.feature`. Por exemplo, `login.feature` irá produzir `login.testcase`.
 
@@ -71,7 +71,7 @@ Você também pode escrever seus próprios arquivos `.testcase`, se desejado. Is
 - Linguagem e framework de teste dependem do plug-in usado.
 - São gerados a partir de Casos de Teste.
 
-Scripts de Teste gerados por *Concordia* geralmente terão o mesmo nome do arquivo `.feature` e serão gerados para um subdiretório `test`, caso não especificado. Por exemplo, `login.feature` pode produzir `test/login.js`, se usado o plug-in CodeceptJS.
+Scripts de Teste gerados por *Concordia* geralmente terão o mesmo nome do arquivo `.feature` e serão gerados para um subdiretório `test`, caso não especificado. Por exemplo, `login.testcase` pode produzir `test/login.js`, se usado o plug-in CodeceptJS.
 
 Você também pode escrever seus próprios scripts de teste. Isso permite definir testes adicionais aos gerados por Concordia. **Recomendamos fortemente que testes adicionais nunca sejam declarados em arquivos gerados por Concordia, ou por um de seus plug-ins, uma vez que eles podem ser sobrescritos.**
 
@@ -256,4 +256,4 @@ Se você executou os scripts testes acima, provavelmente todos falharam. Isso oc
 
 Se sua aplicação contém uma funcionalidade como a exemplificada, sugerimos que a adapte e então execute os testes. Ao final, Concordia deve apresentar um relatório que pode indicar eventuais falhas, com as respectivas linhas da especificação e dos scripts de teste. Com base nesse relatório, você pode decidir se o motivo do defeito está relacionado à aplicação - isso é, a aplicação não funcionou conforme especificado - ou à especificação - geralmente se a especificação está desatualizada em relação à implementação.
 
-Agora, manter sua especificação atualizada tem um benefício claro: você pode usá-la para gerar testes e descobrir defeitos existentes em sua aplicação.
+Agora, manter sua especificação atualizada tem um novo benefício claro: você pode usá-la para gerar testes e descobrir defeitos existentes em sua aplicação!
