@@ -63,3 +63,8 @@ Required is compatible with all properties.
 - `table`
 - `textbox`
 - `textarea`
+
+
+## Data Types
+- Allowed are: `string`, `integer`, `double`, `date`, `time`, `datetime`
+- Some ideas for future types [here](http://respect.github.io/Validation/docs/validators.html)

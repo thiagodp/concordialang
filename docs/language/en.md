@@ -1,31 +1,9 @@
-# ASL in English
+# Overview of the Concordia Language
 
-```
-+-----+               +-----+
-|     | <-- import -- |     |
-|     |               |     |
-+-----+               +-----+
-.feature              .testcase
-```
+## Index
 
-```
-Lexer
-  >> Parser
-    >> NLP
-      >> Semantic Analyzer
-        >> Logic Analyzer
-          >> Test Case Generator
-            >> Test Script Generator
-              >> Test Script Executor
-                >> Test Result Analyzer
-```
-
-## Index:
-
-General:
-- [Formats and References](#formats)
-
-Language constructions:
+Language constructions
+- [Comments](#comments)
 - [Language](#language)
 - [Import](#import)
 - [Tag](#tag)
@@ -33,70 +11,59 @@ Language constructions:
 - [State](#state)
 - [Scenario](#scenario)
 - [Constants](#constants)
-- [User Interface Element](#userinterfaceelement)
-- [Regular Expressions](#regularexpressions)
+- [User Interface Element](#user%20interface%20element)
 - [Table](#table)
 - [Database](#database)
 - [Variant](#variant)
-- [Test Case](#testcase)
-- [Test Events](#testevents)
+- [Test Case](#test%20case)
+- [Test Events](#test%20events)
+
+Literals
+- [User Interface Literal](#user%20interface%20literal)
+- [Value](#value)
+- [Number](#number)
+- [List of values](#list%20of%20values)
+- [Query](#query)
+
+References to declarations
+- [User Interface Elements](#user%20interface%20elements)
+- [Constants](#constants)
+- [Tables](#tables)
+- [Databases](#databases)
+- [States](#states)
 
 
+## Language constructions
 
-## Formats and References
+### Comments
 
-### Literals
-- Value: `"value"`
-- Number: `5`
-- List: `[ "val1", "val2", ... ]` or `[ 12, 53, ... ]` or `[ "hello", 90, ... ]`
-- UI Element: `<id>` or `<#id>` or `<@name>` or `<.css>` or `<//xpath>` or `<~mobile_name>`
-- Query: `"SELECT * FROM tbl WHERE fld = 'hello'"` or `"select ..."`
+```gherkin
+# This is a comment
 
-Notes:
-- To force a **query** to be a **value**, it should be used an exclamation mark (`!`) right before it. E.g., `!"SELECT * FROM foo"`
+Feature: Foo # This is also a comment
+```
 
-### References
-- UI Element: `{UI Element}` or `{Feature:UI Element}`
-- Constant: `[constant]` ? Alternatives: `${constant}` ?
-- State: `~state~`
-- Feature: executes the feature `{{Feature}}` ? Alternatives: `'Feature'`, `"Feature"` ?
-- Scenario: `{{Scenario}}` ? Same alternatives to Feature.
-  - from the same feature: `executes the scenario {{Scenario}}`
-  - of a different feature: `executes the scenario {{Scenario}} of the feature {{Feature}}`
-  - by number: `#1`, e.g., `executes the scenario #1 of the feature {{Feature}}`
-- Variant: `{{Variant}}` ? Same alternatives to Feature.
-  - from the same feature: `executes the variant {{Variant}}`
-  - of a different feature: `executes the variant {{Variant}} of the feature {{Feature}}`
-  - by number: `#1`, e.g., `executes the variant #1 of the feature {{Feature}}`
-
-### References inside queries
-- Constant:
-  - `[something]` **can** be used whether the project adopts [AlaSQL](https://github.com/agershun/alasql), with the restriction that [it uses](https://github.com/agershun/alasql#read-and-write-excel-and-raw-data-files) only numbers inside brackets, to refer columns of CSV files. E.g., `"SELECT [3] as city, [4] as population from csv( 'path/to/file.csv')"`. So a [Constant](#constants) name could not be a number.
-  - `[something]` **can** be used whether the project adopts [Database-JS](https://github.com/mlaanderson/database-js), with the restriction that it uses dollar signs (`$`) to reference rows and columns in Excel files. E.g., `"SELECT * FROM [Sheet1$A1:C52]"`. So [Constants](#constants) names could *not* have dollar signs.
-  - References that do not match the format of a [Constant](#constants) name must be ignored, i.e., not replaced by a value.
-
-
-
-## Language
+### Language
 
 *Defines the language used in the current specification file.*
 
 Notes:
 - Local declaration.
 - Just one declaration per file.
+- Defined as a special comment.
 
 Example 1:
-```
+```gherkin
 #language: pt
 ```
 
 Example 2:
-```
+```gherkin
 #language: es-ar
 ```
 
 
-## Import
+### Import
 
 *Imports the definitions of another file.*
 
@@ -105,12 +72,12 @@ Notes:
 - Allowed more than one declaration per file.
 
 Example 1:
-```
+```gherkin
 import "file1.feature"
 ```
 
 
-## Tag
+### Tag
 
 *Adds information to a language construction.*
 
@@ -119,32 +86,30 @@ Notes:
 - Allowed more than one declaration per language construction.
 
 Example 1 (*one per line*):
-```
+```gherkin
 @critical
 ```
 
 Example 2 (*more than one per line*):
-```
+```gherkin
 @critical @slow @gui @generated
 ```
 
 Reserved tags:
-- `@scenario( <name> )`: references a [scenario](#scenario).
-- `@variant( <name> )`: references a [variant](#variant).
-- `@invalid( <ui_element>, <constraint> )`: indicates that a test case has an invalid value for a certain user interface element. The `constraint` is the exploited rule, such as "minimum length", "maximum value", etc.
+- `@scenario( <number> )`: references a [scenario](#scenario).
+- `@variant( <number> )`: references a [variant](#variant).
 - `@importance( <number> )`: indicates the importance. The importance is as higher as its number.
-- `@critical`: indicates a very high importance.
 - `@generated`: indicates that a declaration was computer-generated.
+- `@fail`: indicates that a test case should fail.
 - `@global`: defines an element as global. Can be applied to [User Interface Element](#UserInterfaceElement).
 - `@ignore`: indicates that a declaration should be ignored to generate tests.
-
 
 Reserved for future use:
 - `@issue( <number> )` references an Issue.
 - `@category( <name> )` specifies a category. It can be used for filtering.
 
 
-## Feature
+### Feature
 
 *Feature of the system.*
 
@@ -153,72 +118,54 @@ Notes:
 - Just one declaration per file.
 
 Example 1:
+```gherkin
+Feature: Admininistrator Login
 ```
-Feature: A feature name
+
+Example 2:
+```gherkin
+Feature: Admininistrator Login
   As an administrator
   I would like to login
   So that I can access the system
 ```
 
-Example 2:
-```
-Feature: A feature name
+Example 3:
+```gherkin
+Feature: Admininistrator Login
   In order to access the system
   As an administrator
   I would like to login
 ```
 
 
-## State
+### State
 
 *State of the system.*
 
 Notes:
-- Global declaration.
-- Allowed more than one declaration per file.
+- Local declaration.
+- Only declared inside `Variant` steps.
+- Declaration in a `Given` step means that the state is a **precondition**.
+- Declaration in a `When` step means that the state is a **state call**.
+- Declaration in a `Then` step means that the state is a **postcondition**.
 
-Example 1:
-```
-State: logged in
-
-...
-
-// Its use as a precondition (requires iff have the state)
-Given that I [ { don't | do not } ] have the state "logged in"
-
-...
-
-// Its use as a postcondition (generates iff have the state)
-Then I [ { don't | do not } ] have the state "logged in"
+Precondition:
+```gherkin
+Given that I have ~user logged in~
 ```
 
-### UPDATE:
-
-Is state declaration really necessary?
-
-Example of a postcondition:
-
-  Then ~I am logged in~
-
-Example of a precondition:
-
-  Given that ~I am logged in~
-
-Notes:
-- Anything between ~ and ~ can denote a State.
-- States could be LEARNED to be recognized through NLP,
-  e.g., ~I'm logged in~ and ~I am logged in~ could denote the same state.
-
-Problem:
-- How to denote a that a state should not be present?
-
-Solution 1: Detect negation and negate it
-- e.g., ~I'm logged in~      -=>  ~I'm not logged in~
-- e.g., ~I'm not logged in~  -=>  ~I'm logged in~
-- detect contraction forms ( didn't, didnt, did not, hasn't, hasnt, has not, ...)
+State Call - that is the producer of state will be called:
+```gherkin
+When I need the state ~payment method selected~
+```
+Postcondition:
+```gherkin
+Then I have ~paid~
+```
 
 
-## Scenario
+### Scenario
 
 *Scenario of the system. Not used to generate test cases.*
 
@@ -227,8 +174,8 @@ Notes:
 - Allowed more than one declaration per Feature.
 
 Example 1:
-```
-Scenario: successful login
+```gherkin
+Scenario: Successful login
   Given that I start the system
     And I am not logged in
   When I inform my credentials
@@ -236,8 +183,8 @@ Scenario: successful login
 ```
 
 Example 2:
-```
-Scenario: unsuccessful login
+```gherkin
+Scenario: Unsuccessful login
   Given that I start the system
     And I am not logged in
   When I inform invalid credentials
@@ -245,257 +192,282 @@ Scenario: unsuccessful login
 ```
 
 
-## Constants
+### Constants
 
-*Declaration of a constant value.*
+*Declaration of constant values.*
 
 Notes:
 - Global declaration.
 - Just one declaration per file. One declaration can have more than one constant.
-
-Example 1:
-```
-Constants:
-  - "msg_min_length" is "{name} must have at least {min_length} characters."
-  - "msg_password_too_weak" is "The informed password is too weak."
-```
-### Referencing a Constant
-
-A constant can be referenced inside queries or variants by using brackets.
+- Namespace is shared with Tables and Databases.
 
 Example:
-  `When I fill {Username} with [default password]`
+```gherkin
+Constants:
+  - "PI" is 3.14159
+  - "AppName" is "My App"
+```
 
-In this example, `[default password]` is a reference to a constant `default password`.
 
-
-## UserInterfaceElement
+### User Interface Element
 
 *Element of the User Interface.*
 
 Notes:
-- Local or global declaration.
+- Local or global declaration - although global **is not yet supported** by Concordia.
 - Allowed more than one declaration per Feature.
-- Global declarations allowed through the tag `@global`.
-- Allow inheritance through the property `extends` (e.g. `- extends <Other Element>`).
+- Global declarations allowed through the tag `@global`  - **not supported yet**.
+- Inheritance allowed through the the tag `@extends`, *e.g.*, `@extends(Other Element)` - **not supported yet**.
+- May have properties.
+- Properties must be preceded by a dash (`-`).
 
-Notes about a UI Element:
-- default `type` is `textbox`
-- default `data type` is `string`
-- default `id` is the lowercased element name, without spaces (e.g. "Some Name" becomes "somename")
+Allowed properties:
+- `id`
+- `type`, defaults to `textbox`
+- `editable`, defaults to `true` when an editable `type` is used.
+- `data type`, defaults to `string`
+- `value`
+- `minimum length`
+- `maximum length`
+- `minimum value`
+- `maximum value`
+- `format`
+- `required`, defaults to `false`
 
-Notes about data types:
-- Allowed are: `string`, `integer`, `double`, `date`, `time`, `datetime`. <<< include age? Ideas [here](http://respect.github.io/Validation/docs/validators.html)
-- `double` default precision is 2
-- `double`'s precision can be changed, using `with precision` (e.g. `data type is double wih precision 3`)
+Property `id`:
+  - Example: `- id is "name"`
+  - Default value is the element name in camel case and without spaces, *e.g.*, `"Some Name"` becomes `"someName"`
+  - Value must be declared between quotes (`"`)
+  - Support the following notation:
+    - `"value"` denotes an `id`
+    - `"#value"` denotes an `id`
+    - `"//value"` denotes a `xpath`
+    - `"@value"` denotes a `name`
+    - `"~value"` denotes a `mobile name`
+    - `".value"` denotes a `css`
+  - Multiple identifiers are denoted by `id in [ "<value1>", "<value2>", ... ]`
+  - Example of a multiple identifier:   `id in [ "birthDate", "~birthDate" ]`
 
-Notes about the `id` property:
-- `"value"` denotes an `id`
-- `"#value"` denotes an `id`
-- `"//value"` denotes a `xpath`
-- `"@value"` denotes a `name`
-- `"~value"` denotes a `mobile name`
-- `".value"` denotes a `css`
-- Single identifier is denoted by `id is "<value>"`
-- Example of a single identifier: `id is "birthDate"`
-- Multiple identifiers are denoted by `id in [ "<value1>", "<value2>", ... ]`
-- Example of a multiple identifier:   `id in [ "birthDate", "~birthDate" ]`
+Property `type`:
+  - Example: `- type is button`
+  - Default value is `textbox`
+  - Does not need quotes (`"`)
+  - See [data/en.json](data/en.json) for all the types allowed.
 
-Notes about queries (inside a constraint of a UI Element):
+Property `editable`:
+  - Example: `- editable is true`
+  - Allowed values are `true` and `false`
+  - Does not need quotes (`"`)
+  - Default value is `false`, but assumes `true` automatically when *a least one* of these conditions occur:
+    - An editable `type` is used, that is:
+      - `checkbox`
+      - `fileInput`
+      - `select`
+      - `table`
+      - `textbox`
+      - `textarea`
+    - One of the following properties is defined:
+      - `minimum length`
+      - `maximum length`
+      - `minimum value`
+      - `maximum value`
+      - `value`
 
-1. Should be put inside quotes (").
+Property `data type`:
+  - Example: `- data type is double`
+  - Does not need quotes (`"`)
+  - Allowed types are:
+    - `string`
+    - `integer`
+    - `double`
+    - `date`
+    - `time`
+    - `datetime`
+  - Precision of `double` values is inferred from declared rules, *e.g.*, `12.50` makes Concordia to know that the precision is `2`
 
-2. May use grave accents to refer names with spaces (normally, as in ANSI-SQL). E.g. \`my table\`
+Property `value`:
+  - Accepted values:
+    - [Value](#value)
+    - [Number](#number)
+    - [Constant](#constants)
+    - [List](#listofvalues)
+    - [Query](#query)
+    - Reference to another UI Element
+  - Examples:
+    - `- value is "hello"`
+    - `- value is 5`
+    - `- value is [PI]`
+    - `- value is in [ "Male", "Female", "Other" ]`
+    - `- value comes from "SELECT ..."`
+    - `- value is equal to {Other UI Element}`
+  - Accepts negation. Examples:
+    - `- value is not in [ 10, 20, 30 ]`
+    - `- value is not in "SELECT ..."`
+    - `- value is not equal to {Other UI Element}`
 
-3. May use apostrophes to denote values.
-   Example:
-   ```sql
-   SELECT * FROM user WHERE username = 'bob'
-   ```
+Property `minimum value`:
+  - Accepted values:
+    - [Number](#number)
+    - [Constant](#constants)
+    - [List of numbers](#listofvalues)
+    - [Query](#query)
+    - Reference to another UI Element
+  - Examples:
+    - `- minimum value is 5`
+    - `- minimum value is [PI]`
+    - `- minimum value is in [ 5, 10, 20 ]`
+    - `- minimum value comes from "SELECT ..."`
+    - `- minimum value is equal to {Other UI Element}`
 
-4. May reference a [Table](#table), a [Database](#database), or a [Constant](#constant)
-   using the format `[some name]`, where the content does not contain a dollar sign, `$`.
-   A dollar sign may be use to reference valid Excel table names, instead of referencing
-   names declared in Concordia.
-
-   Example 1: references a declared table and a declared constant.
-   ```sql
-   SELECT nome FROM [My Table] WHERE name = [Some Const Name]
-   ```
-
-   Example 2: references a declared database and a declared constant.
-   ```sql
-   SELECT nome FROM [My DB].`table` WHERE name = [Some Const Name]
-   ```
-
-   Example 2: NOT A REFERENCE name (e.g. excel table)
-   ```sql
-   SELECT nome FROM [Some Excel Table$] WHERE name = [Some Const Name]
-   ```
-
-5. May reference UI Elements using the format `{feature name:ui element name}`, in which
-   `feature name:` is optional. The lack of the feature name should make the tool assuming
-   that the UI element belongs to the feature.
-   Example:
-   ```sql
-   SELECT password FROM user WHERE username = {Login:Username}
-   ```
-
-6. May reference UI element using the format `{ui element name}`, considering that
-   the reference UI element belongs to the current feature (the feature of the current file).
-   Example:
-   ```sql
-   SELECT password FROM user WHERE username = {Username}
-   ```
+Property `maximum value`:
+  - Same syntax as `minimum length`
+  - Examples:
+    - `- maximum value is 5`
+    - `- maximum value is [PI]`
+    - `- maximum value is in [ 5, 10, 20 ]`
+    - `- maximum value comes from "SELECT ..."`
+    - `- maximum value is equal to {Other UI Element}`
 
 
-**Example 1**:
-```
-UI Element: Login Page
-  - type is url
-  - value is "/login"
+Property `minimum length`:
+  - Same syntax as `minimum value`
+  - Examples:
+    - `- minimum length is 5`
+    - `- minimum length is [MIN]`
+    - `- minimum length is in [ 5, 10, 20 ]`
+    - `- minimum length comes from "SELECT ..."`
+    - `- minimum length is equal to {Other UI Element}`
 
+Property `maximum length`:
+  - Same syntax as `minimum length`
+  - Examples:
+    - `- maximum length is 50`
+    - `- maximum length is [MAX]`
+    - `- maximum length is in [ 10, 20, 30 ]`
+    - `- maximum length comes from "SELECT ..."`
+    - `- maximum length is equal to {Other UI Element}`
+
+
+Property `format`:
+  - Accepted values:
+    - [Value](#value)
+    - [Constant](#constants)
+  - Must be a valid [Regular Expression](https://en.wikipedia.org/wiki/Regular_expression)
+  - Examples:
+    - `- format is "/[A-Za-z ._-]{2,50}/"`
+    - `- format is "/^[0-9]{2}\.[0-9]{3}\-[0-9]{3}$/"`
+    - `- format is [Some Constant with RegEx]`
+
+Property `required`:
+  - Accepted values are `true` and `false`
+  - Default value is `false`
+  - Examples:
+    - `- required is true`
+
+
+#### Examples of UI Elements
+
+Example 1:
+```gherkin
 UI Element: Username
-  - type is textbox
-  - id is "username"
-  - data type is string
-  - minimal length is 2,
-    otherwise I must see the message ${msg_min_len}
+  - id is "#user"
+  - minimum length is 2
+    Otherwise I must see [min_length_msg]
   - maximum length is 30
-  - value is queried by "SELECT username FROM {{my db}}.users",
-    otherwise I must see {{invalid_username_password}}
-
-UI Element: Password
-  - type is textbox
-  - id is "password"
-  - minimal length is 6,
-    otherwise I must see the message "Password is too short."
-	    and I must see the color be changed to "red"
-	    and I must see the color of Username be changed to "red"
-  - value is queried by "SELECT password FROM `real db name`.users WHERE username = ${Username} AND profile = 'administrator' ",
-    otherwise I must see {{invalid_username_password}}
+  - value is queried by "SELECT username FROM [MyDB].`users`"
+    Otherwise I must see [max_length_msg]
 
 UI Element: Enter
   - type is button
-  - id is "enter"
 ```
 
-**Examples 2**:
-```
+Example 2:
+```gherkin
 UI Element: Profession
   - type is select
-  - value is queried by "SELECT name FROM profession"
+  - value is queried by "SELECT name FROM [Professions]"
 
 UI Element: Salary
-  - data type is double with precision 2
-  - minimum value is queried by "SELECT min_salary FROM profession WHERE name = ${Profession}"
-
-UI Element: Envy Salary
-  - data type is double with precision 2
-  - value is computed by '${Salary} * 2'
+  - data type is double
+  - minimum value is queried by "SELECT min_salary FROM [Professions] WHERE name = {Profession}"
 ```
 
-Examples 3:
-```
-UI Element: CEP
+Example 3:
+```gherkin
+UI Element: Brazilian Zip Code
   - format is "/^[0-9]{2}\.[0-9]{3}\-\.[0-9]{3}$/"
-
-UI Element: CPF
-  - format from regex <CPF Regex>
-
-UI Element: CPF 2
-  - format is the same as in <CPF>
 ```
 
 
-## RegularExpressions
+### Table
 
-*Declares regular expressions that can be used by constraints of UI elements.*
+*Declares a data table that can be used by UI elements.*
 
 Notes:
 - Global declaration.
-- Just one declaration per file. One declaration can have more than one regular expression.
-
-Example 1:
-```
-Regular Expressions:
-  - "Name Regex" is "/[A-Za-z][A-Za-z '-.]{1,59}/"
-  - "CPF Regex" is "/^[0-9]{3}\.[0-9]{3}\.[0-9]{3}\-[0-9]{2}$/"
-  - "CNPJ Regex" is ...
-```
-
-QUESTION: Aren't constants solving this problem?
-E.g.:
-  UI Element: Foo
-    - format is [CPF Regex]
-
--> Validation whether the Constant is a valid RegEx could be made during the UI Element's format validation.
-
-## Table
-
-*Declares a data table that can be used by constraints of UI elements.*
-
-Notes:
-- Global declaration.
+- Namespace is shared with Constants and Databases.
 - Allowed more than one declaration per file.
-- It is NOT allowed to declare database tables or named queries. Just use "queried by" in constraints of user interface elements.
-- Tables are loaded into in-memory tables, queried with ANSI-SQL.
+- Tables are loaded as in-memory tables and can be queried with SQL.
 
 Example 1:
 ```
-Table: users
+Table: Users
   | username | password |
   | Bob      | bobp4ss  |
   | Joey     | joeypwd  |
 ```
 
-Examples of queries:
-```sql
-SELECT username FROM users WHERE password = "bobp4ss"
 
-SELECT `some field` FROM `some table` WHERE id = 1
-```
-
-
-## Database
+### Database
 
 *Declares a reference to a database, with its connection parameters.*
 
 Notes:
 - Global declaration.
+- Namespace is shared with Constants and Tables.
 - Allowed more than one declaration per file.
-- Databases can be referenced inside contraints' queries. Example:
-```sql
-SELECT price FROM `my database`.product WHERE name = 'beer'
-```
 
-**Example 1**: MySQL database
+Allowed properties:
+  - `type`
+  - `host`
+  - `port`
+  - `name`
+  - `path`
+  - `username`
+  - `password`
+  - `options`
+
+Currently supported values for `type`:
+  - `"adodb"`  for connecting to databases such as [MS Access](https://pt.wikipedia.org/wiki/Microsoft_Access) and [SQL Server](https://en.wikipedia.org/wiki/Microsoft_SQL_Server) through [ActiveX Data Objects](https://en.wikipedia.org/wiki/ActiveX_Data_Objects)
+  - `"csv"` for connecting to files with [Comma Separated Values](https://en.wikipedia.org/wiki/Comma-separated_values)
+  - `"firebase"` for connecting to [Firebase](https://firebase.google.com) databases
+  - `"ini"` for connecting to [INI files](https://en.wikipedia.org/wiki/INI_file)
+  - `"json"` for connecting to [JSON](https://en.wikipedia.org/wiki/JSON) files
+  - `"mysql"` for connecting to [MySQL](https://www.mysql.com/) databases
+  - `"postgres"` for connecting to [PostgreSQL](https://www.postgresql.org/) databases
+  - `"sqlite"` for connecting to [SQLite](https://www.sqlite.org/) databases
+  - `"xlsx"` for connecting to [Excel](https://en.wikipedia.org/wiki/Microsoft_Excel) spreadsheets
+
+
+Example 1:
 ```
-Database: my database
+Database: My DB
   - type is "mysql"
-  - host is "http://127.0.0.1/acme"
+  - host is "http://127.0.0.1"
+  - name is "mydb"
   - username is "admin"
   - password is "p4sss"
 ```
 
-**Files** can also be represented as databases.
-
-**Example 2**: JSON file as a database:
+Example 2:
 ```
-Database my json db
+Database: Another DB
   - type is "json"
   - path is "C:\path\to\db.json"
 ```
 
-**Example 3**: XSL file as a database:
-```
-Database my excel db
-  - type is "excel"
-  - path is "C:\path\to\db.xls"
-```
 
-
-## Variant
+### Variant
 
 *Declares a variant of a scenario. A variant is a template for test cases.*
 
@@ -504,94 +476,347 @@ Notes:
 - Belongs to a Scenario.
 - Should be declared after a Scenario.
 
-Example 1:
-```
-Variant: Usual login
-  Given that I am on the Login Page
-  When I fill Username
-    And I fill Password
-    And I click on Enter
-  Then I have the state ~logged in~
-    And I see the text [welcomeText]
+Example:
+```gherkin
+Variant: Successful login
+  Given that I am on the [Login Page]
+  When I fill {Username}
+    And I fill {Password}
+    And I click on {Enter}
+  Then I have the state ~user logged in~
+    And I see the text [welcome text]
     And I see {Logout}
 ```
 
-## TestCase
+
+### Test Case
 
 *Test case for a Variant*
 
 Notes:
 - Local declaration.
-- Belongs to a Variant.
+- Belongs to a `Variant`.
 - Can be declared in a different file, `.testcase`
 
-Can be generated automatically using:
-1. [variant](#variant)
-2. [ui element](#uielement)
-3. [constant](#constant)
-4. [state](#state)
+Generated automatically from:
+1. [Variant](#variant)
+2. [UI Element](#uielement)
+3. [Constants](#constant)
+4. [States](#states)
 
 A generated test case will:
+- Receive the same name of the `Variant`, plus a number;
 - Receive the tag `@generated`;
-- Receive the tag `@variant` to refer to its source variant;
-- Receive the tag `@invalid`, if the goal is exploit some constraint;
-- Have its name defined according to the testing goal;
-- Replace variant's postconditions, i.e., `Then` clauses, with postconditions of the exploited constraint;
-- Replace variant's states with the corresponding variants that produce them;
-- Replace all the involved constants by their corresponding values;
-- Replace all the involved references to user interface elements by their literals;
-- Keep informed user interface elements' literals;
-- Keep informed values;
+- Receive the tag `@scenario` to refer to its `Scenario`;
+- Receive the tag `@variant` to refer to its `Variant`;
+- Replace a **precondition**, *i.e.,* a `Given` step with a [state](#states), by a `Variant` able to produce this same state;
+- Replace a **state call**, *i.e.,* a `When` step with a [state](#states), by a `Variant` able to produce this same state;
+- Replace a **postconditions**, *i.e.,* `Then` steps with [states](#states), when the current test case generates an invalid value for a certain UI Element *and* the respective UI Element has defined `Otherwise` steps that describe the expected behavior in case of an invalid value. When there are no `Otherwise` steps defined, the Test Case receives a tag `@fail` to indicate that it should not behave the same way as its Variant;
+- Replace all the involved `Constants` by their corresponding values;
+- Replace all the involved references to `UI Elements` by their `UI Literals`, that is, their `id`s;
+- Keep any declared `UI Literals`;
+- Generate random values for `UI Literals` without value;
+- Keep any declared values or numbers;
+- Generate values for `UI Elements` according to their properties and the applicable test cases (see `README.md`).
 
-Additional notes:
-- When a reference to a user interface element is informed **without a value**, values will be produced for the generated test cases, **according to the test goal**;
-
-
-Example 1: Test case produced from the previous variant. Valid input.
-```
+Example:
+```gherkin
 @generated
-@scenario( Successful Login ) # needed only if declared in a external file ?
-@variant( Usual login )
-Test Case: Valid input 1
+@scenario( 1 )
+@variant( 1 )
+Test Case: Successful login - 1
   Given that I am on the page "/login"
   When I fill <#username> with "Bob"
     And I fill <#password> with "bobp4ss"
     And I click on "Enter"
-  Then I see the text "Welcome"
-    And I see a button <logout>
+  Then I see "Welcome"
+    And I see a button <#logout>
 ```
 
-Example 2: Another variant produced from previous variant. Invalid input.
-```
-@generated
-@scenario( Successful Login ) # needed only if declared in a external file ?
-@variant( Usual login )
-@invalid( Username, minimum length )
-Test Case: Invalid input - Username length is too short
-  Given that I am on the page "/login"
-  When I fill <#username> with ""
-    And I fill <#password> with "bobp4ss"
-    And I click on "Enter"
-  Then I see "Username must have at least 2 characters."
-```
 
-## TestEvents
+### Test Events
 
 *Declares events before, after, or around test cases or features. Console commands or SQL scripts can be executed when these events occur.*
 
 Notes:
-- Local declaration (belongs to a Feature).
+- Local declaration.
 - Just one declaration per Feature.
+
+**YET NOT SUPPORTED BY CONCORDIA**
 
 Could be:
 - { Before | After | Around } Each Scenario
 - { Before | After | Around } Feature
-- { Before | After | Around } All
 
-Example 1:
+These events support two type of commands:
+  1. *Console command*: run a command in the console and waits for its termination.
+  2. *SQL command*: run a command to a declared database.
+
+Both commands must declared values between apostrophes (`'`).
+
+Example:
 ```
 Before Each Scenario:
-  I run in console 'cls'
-  And I run the command 'DELETE FROM users'
-  And I run the command 'INSERT INTO users ( username, password ) VALUES ( "Clark", "Kent" ), ( "Bruce", "Wayne" )'
+  - Run 'cls'
+  - Run sql 'DELETE FROM [MyDB].`user`'
+  - Run sql 'INSERT INTO [MyDB].`user` ( `username`, `password` ) VALUES ( "Clark", "Kent" ), ( "Bruce", "Wayne" )'
+```
+
+
+
+## Literals
+
+### User Interface Literal
+
+> Always between `<` and `>`
+
+A UI Literal is an identification (id) of a User Interface element. This identification will be used by the test script to locate the element in the application during the test. For instance, in a web application, an input declared using HTML as `<input id="name" ></input>` has `name` as its identification.
+
+In the following example, `name` is a UI Literal.
+
+```gherkin
+When I fill <name> with "Bob"
+```
+
+Formats accepted:
+- `<value>` denotes an `id`
+- `<#value>` denotes an `id`
+- `<//value>` denotes a `xpath`
+- `<.value>` denotes a `css`
+- `<@value>` denotes a `name`
+- `<~value>` denotes a `mobile name`
+
+
+### Value
+
+> Always between quotes (`"`).
+
+In the following example, `Bob` is a value:
+```gherkin
+When I fill <name> with "Bob"
+```
+
+### Number
+
+> No quotes.
+
+In the following example, `500` is a value:
+```gherkin
+When I fill <quantity> with 500
+```
+
+In the following example, `12.50` is a value:
+```gherkin
+When I fill <price> with 12.50
+```
+
+
+### List of values
+
+> Always between `[` and `]`
+
+Currently accepted only for [UI Elements](#userinterfaceelement)
+
+Example 1:
+
+```gherkin
+UI Element: Sex
+  - value comes from [ "Male", "Female", "Other" ]
+```
+Example 2:
+
+```gherkin
+UI Element: Ages
+  - value comes from [ 12, 16, 18, 21, 65 ]
+```
+
+Example 3:
+
+```gherkin
+UI Element: Prices
+  - value comes from [ 12.50, 20.00 ]
+```
+
+Example 4:
+
+```gherkin
+UI Element: Values
+  - value comes from [ 12, 12.50, "Male" ]
+```
+
+### Query
+
+> Always between quotes (`"`) and starting with `SELECT`
+
+Currently accepted only for [UI Elements](#userinterfaceelement)
+
+Example:
+
+```gherkin
+UI Element: Product
+  - value comes from "SELECT name FROM ..."
+```
+
+**Note**: To force a **query** to be a **value**, it must be used an exclamation mark (`!`) right before it. *E.g.*, `!"SELECT * FROM foo"`.
+
+Notes about queries:
+
+1. May use grave accents to refer to names with spaces, as in ANSI-SQL. *E.g.*, \`my table\`
+
+2. Must use apostrophes to denote non-numeric values. Example:
+   ```sql
+   SELECT * FROM user WHERE username = 'bob'
+   ```
+
+3. May reference a [Table](#table), a [Database](#database), or a [Constant](#constant)
+   using the format `[some name]`, where the content does not contain a dollar sign, `$`.
+   A dollar sign may be use to reference valid Excel table names, instead of referencing
+   names declared in Concordia.
+
+   Example 1: references a declared table and a declared constant.
+   ```sql
+   SELECT column1 FROM [My Table] WHERE name = [My Constant]
+   ```
+
+   Example 2: references a declared database and a declared constant.
+   ```sql
+   SELECT column1 FROM [My DB].`table` WHERE name = [My Constant]
+   ```
+
+   Example 3: name that is **not a reference** (*e.g.*, an Excel table)
+   ```sql
+   SELECT column1 FROM [Some Excel Table$] WHERE name = [My Constant]
+   ```
+
+4. May reference UI Elements using the format `{feature name:ui element name}`, in which
+   `feature name:` is optional. The lack of the feature name should make the tool assuming
+   that the UI element belongs to the feature.
+   Example:
+   ```sql
+   SELECT password FROM [Users] WHERE username = {Login:Username}
+   ```
+
+6. May reference UI element using the format `{ui element name}`, considering that
+   the reference UI element belongs to the current feature (e.g., the feature of the current file).
+   Example:
+   ```sql
+   SELECT password FROM [Users] WHERE username = {Username}
+   ```
+
+
+
+## References to declarations
+
+### User Interface Elements
+
+> Always between `{` and `}`
+
+In the following example, `{Name}` is a reference to a UI Element called `Name` :
+
+```gherkin
+When I fill {Name} with "bob"
+```
+
+The name of the Feature is **optional** when a reference is declared for the same Feature, but **mandatory** otherwise.
+
+Explicit references to a Feature must be separated from the UI Element name by a colon (`:`). For instance `{Add an Employee:Profession}` :
+
+```gherkin
+When I fill {Add an Employee:Profession} with "Dentist"
+```
+
+#### Inside queries
+
+In the following example, `{Profession}` is a reference to a UI Element:
+```gherkin
+Feature: Add an Employee
+
+...
+
+UI Element: Profession
+  - value comes from "SELECT name FROM [Professions]"
+
+UI Element: Salary
+  - minimum value comes from "SELECT min_salary FROM [Professions] WHERE name = {Profession}"
+```
+
+If desired, the reference could also be declared as `{Add an Employee:Profession}`.
+
+
+### Constants
+
+> Always between `[` and `]`
+
+In the following example, `[PI]` is a reference to a Constant:
+
+```gherkin
+...
+  When I fill <firstNumber> with [PI]
+  ...
+
+Constants:
+  - "PI" is 3.14159
+```
+
+**Note**: `Constants`, `Table`s, and `Database`s are global declarations and share the same namespace, so pay attention to name collisions.
+
+### Tables
+
+> Always between `[` and `]`
+
+References to tables are only allowed inside queries.
+
+In the following example, `[Professions]` is a reference to a Table:
+```gherkin
+UI Element: Profession
+  - value comes from "SELECT name FROM [Professions]"
+
+Table: Professions
+  | name       |
+  | Accountant |
+  | Dentist    |
+  | Mechanic   |
+```
+
+**Note**: `Constants`, `Table`s, and `Database`s are global declarations and share the same namespace, so pay attention to name collisions.
+
+### Databases
+
+> Always between `[` and `]`
+
+References to databases are only allowed inside queries.
+
+In the following example, `[Professions]` is a reference to a Database:
+```gherkin
+UI Element: Profession
+  - value comes from "SELECT name FROM [Professions]"
+
+Database: Professions
+  - type is "json"
+  - path is "/path/to/professions.json"
+```
+
+In this other example, `[MyTestDB]` is a reference to another Database:
+
+```gherkin
+UI Element: Profession
+  - value comes from "SELECT name FROM [MyTestDB].`profession`"
+
+Database: MyTestDB
+  - type is "mysql"
+  - name is "mydb"
+  - username is "tester"
+  - password is "testing123"
+```
+
+**Note**: `Constants`, `Table`s, and `Database`s are global declarations and share the same namespace, so pay attention to name collisions.
+
+## States
+
+> Always between tilde (`~`)
+
+Example:
+
+```gherkin
+  Given that I have ~user logged in~
 ```
