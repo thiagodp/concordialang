@@ -19,8 +19,9 @@ const CliScriptExecutionReporter_1 = require("./CliScriptExecutionReporter");
 const ATSGenController_1 = require("./ATSGenController");
 const TestScriptOptions_1 = require("../testscript/TestScriptOptions");
 const CliHelp_1 = require("./CliHelp");
-const meow = require("meow");
 const OptionsHandler_1 = require("./OptionsHandler");
+const meow = require("meow");
+const updateNotifier = require("update-notifier");
 /**
  * Application controller
  *
@@ -64,6 +65,19 @@ class AppController {
             }
             if (options.version) {
                 ui.showVersion();
+                return true;
+            }
+            const pkg = meowInstance.pkg; // require( './package.json' );
+            const oneDay = 1000 * 60 * 60 * 24;
+            const notifier = updateNotifier({
+                pkg,
+                updateCheckInterval: oneDay
+            });
+            notifier.notify();
+            if (options.newer) {
+                if (!notifier.update) {
+                    cli.newLine(cli.symbolInfo, 'No update available');
+                }
                 return true;
             }
             let pluginData = null;

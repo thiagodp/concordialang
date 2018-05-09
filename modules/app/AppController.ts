@@ -15,8 +15,9 @@ import Graph = require( 'graph.js/dist/graph.full.js' );
 import { ATSGenController } from './ATSGenController';
 import { TestScriptGenerationOptions } from '../testscript/TestScriptOptions';
 import { CliHelp } from './CliHelp';
-import * as meow from 'meow';
 import { OptionsHandler } from './OptionsHandler';
+import * as meow from 'meow';
+import * as updateNotifier from 'update-notifier';
 
 /**
  * Application controller
@@ -67,6 +68,23 @@ export class AppController {
 
         if ( options.version ) {
             ui.showVersion();
+            return true;
+        }
+
+        const pkg = meowInstance.pkg; // require( './package.json' );
+        const oneDay = 1000 * 60 * 60 * 24;
+        const notifier = updateNotifier(
+            {
+                pkg,
+                updateCheckInterval: oneDay
+            }
+        );
+        notifier.notify();
+
+        if ( options.newer ) {
+            if ( ! notifier.update ) {
+                cli.newLine( cli.symbolInfo, 'No update available' );
+            }
             return true;
         }
 
