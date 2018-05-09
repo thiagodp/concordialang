@@ -4,6 +4,8 @@
 
 Translations: [Português](readme-pt.md)
 
+[![Build Status](https://travis-ci.org/thiagodp/concordialang.svg?branch=master)](https://travis-ci.org/thiagodp/concordialang)
+
 *Concordia* is a tool that allows you to generate functional tests from a requirements specification writen in *Concordia Language*.  You can use them for:
 
 1. Writing [business-readable](https://martinfowler.com/bliki/BusinessReadableDSL.html) specifications.
