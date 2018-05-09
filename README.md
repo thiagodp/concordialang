@@ -201,15 +201,6 @@ concordia --help
   --random-tries <number>                Random tries to generate invalid values.
                                          Default is 5.
 
-  Specification filtering
-
-  --importance <number>                  Sets the default importance value.
-  --sel-min-feature <number>             Minimum feature importance.  NIY
-  --sel-max-feature <number>             Maximum feature importance.  NIY
-  --sel-min-scenario <number>            Minimum scenario importance. NIY
-  --sel-max-scenario <number>            Maximum scenario importance. NIY
-  --sel-filter <filter>                  Filter by tag. NIY
-
   Combination strategies
 
   --comb-variant (random|first|fmi|all)  Strategy to select variants to combine,
@@ -242,20 +233,11 @@ concordia --help
         ow      = one-wise
         all     = all
 
-  Test script execution filtering (depends on the used plugin)
-
-  --run-min-feature <number>             Minimum feature importance. NIY
-  --run-max-feature <number>             Maximum feature importance. NIY
-  --run-min-scenario <number>            Minimum scenario importance. NIY
-  --run-max-scenario <number>            Maximum scenario importance. NIY
-  --run-filter <filter>                  Filter by tag. NIY
-
   Information
 
   -v,  --version                         Show current version.
   -a,  --about                           Show information about this application.
   -h,  --help                            Show this help.
-  -n,  --newer                           Check for newer versions. NIY
 
   Examples
 
