@@ -22,7 +22,7 @@ A *Linguagem Concordia* é uma meta linguagem de especificação [Ágil](https:/
 
 ## Por que Concordia?
 
-- Sintaxe simples
+- [Sintaxe](docs/language/pt.md) simples
 
 - Não é preciso escrever código
 

@@ -10,7 +10,7 @@ Translations: [Português](readme-pt.md)
 
 1. Writing [business-readable](https://martinfowler.com/bliki/BusinessReadableDSL.html) specifications.
 
-2. Generating and executing [functional test cases](https://en.wikipedia.org/wiki/Functional_testing) automatically. *No just test script skeletons!* It generates complete test cases and test scripts with *test data*. You don't even need to know how to write code!
+2. Generating and executing [functional test cases](https://en.wikipedia.org/wiki/Functional_testing) automatically. *No just test script skeletons!* It generates complete test cases and test scripts - with *test data* and *oracles*. You don't even need to know how to write code!
 
 3. Generating test scripts for different testing frameworks, such as [CodeceptJS](https://codecept.io/), through [plug-ins]().
 
@@ -23,7 +23,7 @@ Translations: [Português](readme-pt.md)
 
 ## Why Concordia ?
 
-- Simple syntax
+- Simple [syntax]((docs/language/en.md))
 
 - No need to write code
 
@@ -255,14 +255,14 @@ concordia --help
 
 2. Use *Concordia* to generate tests from the specification and to run them;
 
-3. If the tests have **failed**, there are some possibilities:
+3. If the tests **failed**, there are some possibilities:
 
     1. You still haven't implemented the corresponding behavior in your application. In this case, just implement it and run the tests again.
 
     2. Your application is behaving differently from the specification. In this case, it may have bugs or you or your team haven't implemented the behavior exactly like described in the specification.   - Whether the application has a bug, we are happy to have discovered it! Just fix it and run the tests again to make sure that the bug is gone.
       - Otherwise, you can decide between **changing your application** to behave exactly like the specification describes, or **changing the specification** to match your application behavior. In the latter case, back to step `1`.
 
-4. If the tests have **passed**, *great job!* Now you can write new requirements or add more test cases, so just back to step `1`.
+4. If the tests **passed**, *great job!* Now you can write new requirements or add more test cases, so just back to step `1`.
 
 
 
@@ -280,7 +280,7 @@ concordia --help
 
 5. Concordia transforms all the test cases into test scripts (that is, source code) using a plug-in.
 
-6. Concordia executes the test scripts through the same plug-in. These test scripts will check your application's behavior through its user interface.
+6. Concordia executes the test scripts with the plug-in. These test scripts will check your application's behavior through its user interface.
 
 7. Concordia reads and presents execution results. These results relate failing tests to the specification, in order to help you understanding the possible reasons of a failure.
 
