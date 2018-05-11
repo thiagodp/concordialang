@@ -4,7 +4,7 @@
 
 Translations: [Português](readme-pt.md)
 
-[![Build Status](https://travis-ci.org/thiagodp/concordialang.svg?branch=master)](https://travis-ci.org/thiagodp/concordialang)
+[![Build Status](https://travis-ci.org/thiagodp/concordialang.svg?branch=master)](https://travis-ci.org/thiagodp/concordialang) [![npm version](https://badge.fury.io/js/concordialang.svg)](https://badge.fury.io/js/concordialang)
 
 *Concordia* is a tool that allows you to generate functional tests from a requirements specification writen in *Concordia Language*.  You can use them for:
 
