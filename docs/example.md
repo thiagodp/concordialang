@@ -2,7 +2,7 @@
 
 > Here we present a short and simple example, with the purpose of giving an idea on how Concordia works.
 
-We recommend you to read the example even without being used with its [syntax](language/en.md).
+We recommend you to read the example even without being used to its [syntax](language/en.md).
 
 `login.feature` :
 ```gherkin
@@ -14,7 +14,7 @@ Feature: Login
 Scenario: Successful login
   Given that I can see the login screen
   When I enter valid credentials
-  Then I can access the main application screen
+  Then I can access the application's main screen
 
   # A Variant is a low-level description or variation of a Scenario
   Variant: Successful login with valid credentials
