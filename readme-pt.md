@@ -109,7 +109,7 @@ Tecle `Ctrl + C` para finalizá-lo.
 
 ## Um exemplo curto
 
-Veja um [exemplo de uso de Concordia](docs/example-pt.md).
+Veja um [exemplo de uso de Concordia](docs/example-pt.md). 👀
 
 
 ## Sintaxe da linguagem
@@ -474,8 +474,8 @@ A referência para o elemento de IU `{Profissao}` dentro da consulta faz as regr
 
 - [How to contribute](contributing.md)
 - [Improve the documentation]()
-- [Report a bug]()
-- [Suggest a feature or change]()
+- [Report a bug](https://github.com/thiagodp/concordialang/issues/new)
+- [Suggest a feature or change](https://github.com/thiagodp/concordialang/issues/new)
 - [Develop it with us](docs/development.md)
 - [Donate](docs/donate.md)
 
