@@ -23,7 +23,7 @@ Translations: [Português](readme-pt.md)
 
 ## Why Concordia ?
 
-- Simple [syntax]((docs/language/en.md))
+- Simple [syntax](docs/language/en.md)
 
 - No need to write code
 

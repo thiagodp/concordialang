@@ -71,9 +71,10 @@ Notes:
 - Local declaration.
 - Allowed more than one declaration per file.
 
-Example 1:
+Examples:
 ```gherkin
 import "file1.feature"
+import "path/to/file2.feature"
 ```
 
 
@@ -106,7 +107,7 @@ Reserved tags:
 
 Reserved for future use:
 - `@issue( <number> )` references an Issue.
-- `@category( <name> )` specifies a category. It can be used for filtering.
+- `@category( <name> )` specifies a category. Useful for filtering.
 
 
 ### Feature
@@ -252,7 +253,7 @@ Property `type`:
   - Example: `- type is button`
   - Default value is `textbox`
   - Does not need quotes (`"`)
-  - See [data/en.json](data/en.json) for all the types allowed.
+  - See [data/en.json](https://github.com/thiagodp/concordialang/blob/master/data/en.json) for all the types allowed.
 
 Property `editable`:
   - Example: `- editable is true`
