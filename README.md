@@ -112,7 +112,7 @@ Type `Ctrl + C` to close it.
 
 ## A short example
 
-See [this short example](docs/example.md) to get an overview of the usage.
+See [this short example](docs/example.md) to get an overview of the usage. 👀
 
 
 ## Language syntax
@@ -475,8 +475,8 @@ The reference to the UI Element `{Profession}` inside the query, makes the rules
 
 - [How to contribute](contributing.md)
 - [Improve the documentation]()
-- [Report a bug]()
-- [Suggest a feature or change]()
+- [Report a bug](https://github.com/thiagodp/concordialang/issues/new)
+- [Suggest a feature or change](https://github.com/thiagodp/concordialang/issues/new)
 - [Develop it with us](docs/development.md)
 - [Donate](docs/donate.md)
 
