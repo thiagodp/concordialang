@@ -140,6 +140,7 @@ export class ActionMapper {
         { action: 'wait', targetType: this.NONE_TYPE, ignoreOptions: true, firstValueShouldBeInteger: true, template: 'I.wait({{{value}}});' },
         { action: 'wait', targetType: this.NONE_TYPE, template: 'I.waitForText({{{value}}});', valueAsNonArray: true },
         { action: 'wait', targetType: this.ANY_TYPE, template: 'I.waitForElement({{{target}}}, {{{value}}});', firstValueShouldBeInteger: true },
+        { action: 'wait', targetType: this.ANY_TYPE, template: 'I.waitForElement({{{target}}});' },
     ];
 
 
