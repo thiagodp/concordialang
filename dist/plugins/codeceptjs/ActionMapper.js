@@ -84,7 +84,7 @@ class ActionMapper {
             { action: 'uncheck', default: true, template: 'I.uncheckOption({{{target}}});' },
             // WAIT
             { action: 'wait', targetType: 'text', template: 'I.waitForText({{{target}}}, {{{value}}});' },
-            { action: 'wait', targetType: this.NONE_TYPE, firstValueShouldBeInteger: true, template: 'I.wait({{{value}}});' },
+            { action: 'wait', targetType: this.NONE_TYPE, ignoreOptions: true, firstValueShouldBeInteger: true, template: 'I.wait({{{value}}});' },
             { action: 'wait', targetType: this.NONE_TYPE, template: 'I.waitForText({{{value}}});', valueAsNonArray: true },
             { action: 'wait', targetType: this.ANY_TYPE, template: 'I.waitForElement({{{target}}}, {{{value}}});' },
         ];
@@ -95,7 +95,7 @@ class ActionMapper {
      * multiple lines of test code.
      */
     map(command) {
-        // console.log( 'command', command.action, command.values );
+        // console.log( 'command', command );
         let commands = [];
         let compareMapObj = obj => {
             const sameAction = obj.action === command.action;
@@ -107,16 +107,22 @@ class ActionMapper {
             if (true === obj.default) {
                 return sameModifier;
             }
-            const onlyForValues = (this.NONE_TYPE === obj.targetType
+            const onlyForValues = ((!obj.targetType || this.NONE_TYPE === obj.targetType)
                 && (!command.targets || command.targets.length < 1));
             const sameOptions = this.sameValues(obj.options, command.options);
             if (onlyForValues) {
                 if (true === obj.firstValueShouldBeInteger) {
-                    return !command.values
-                        ? false
-                        : command.values.length > 0 && 'number' === typeof command.values[0];
+                    if (!command.values || command.values.length < 1) {
+                        return false;
+                    }
+                    const value = command.values[0];
+                    if ('number' === typeof value || !isNaN(parseInt(value))) {
+                        command.values[0] = Number(value); // Guarantee number type
+                        return true;
+                    }
+                    return false;
                 }
-                return sameOptions && sameModifier;
+                return (sameOptions || obj.ignoreOptions) && sameModifier;
             }
             const acceptsAny = this.ANY_TYPE === obj.targetType
                 && Array.isArray(command.targets)
@@ -205,8 +211,8 @@ class ActionMapper {
     }
     generateNotAvailableMessage(command) {
         let message = '// Command not available. ';
-        message += `Action: ${!command.action ? 'none' : command.action}. `;
-        message += `Modifier: ${!command.modifier ? 'none' : command.modifier}. `;
+        message += `Action: "${!command.action ? 'none' : command.action}". `;
+        message += `Modifier: "${!command.modifier ? 'none' : command.modifier}". `;
         message += `Option: ${!command.options ? 'none' : command.options}. `;
         message += `Targets: ${!command.targets ? 'none' : command.targets}. `;
         message += `Target type: ${!command.targetTypes ? 'none' : command.targetTypes}. `;

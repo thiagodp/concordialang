@@ -393,6 +393,15 @@ describe( 'ActionMapperTest', () => {
         expect(mapper.map(command)).toContainEqual('I.wait(2);' + comment);
     });
 
+    it( 'wait with a number as string', () => {
+        let command: ATSCommand = {
+            action: 'wait',
+            targets: [],
+            values: ['2']
+        };
+        expect(mapper.map(command)).toContainEqual('I.wait(2);' + comment);
+    });
+
     it( 'wait for a ui element', () => {
         let command: ATSCommand = {
             action: 'wait',
