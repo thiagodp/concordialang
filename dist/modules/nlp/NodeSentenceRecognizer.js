@@ -37,8 +37,8 @@ class NodeSentenceRecognizer {
             return false;
         }
         for (let node of nodes) {
-            //console.log( 'Node before: ', node );
-            //console.log( language, ', ', node.content, ', ', targetIntent );
+            // console.log( 'Node before: ', node );
+            // console.log( language, ', ', node.content, ', ', targetIntents );
             let r = this._nlp.recognize(language, node.content);
             // let r: NLPResult = null;
             // for ( let ti of targetIntents ) {

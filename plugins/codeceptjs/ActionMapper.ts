@@ -52,29 +52,63 @@ export class ActionMapper {
         { action: 'click', default: true, template: 'I.click({{{value}}});' },
 
         // CLOSE
-        // { action: 'close', default: true, template: 'I.click({{{target}}});' },
+        { action: 'close', targetType: 'currentTab', template: 'I.closeCurrentTab();' },
+        { action: 'close', targetType: this.NONE_TYPE, options: [ 'currentTab' ], template: 'I.closeCurrentTab();' },
+
+        { action: 'close', targetType: 'otherTabs', template: 'I.closeOtherTabs();' },
+        { action: 'close', targetType: this.NONE_TYPE, options: [ 'otherTabs' ], template: 'I.closeOtherTabs();' },
 
         // DOUBLE_CLICK
         { action: 'doubleClick', targetType: this.ANY_TYPE, template: 'I.doubleClick({{{target}}});' },
         { action: 'doubleClick', default: true, template: 'I.doubleClick({{{value}}});' },
 
+        // DRAG
+        { action: 'drag', targetType: this.ANY_TYPE, template: 'I.dragAndDrop({{{target}}});' },
+
         // FILL
         { action: 'fill', default: true, template: 'I.fillField({{{target}}}, {{{value}}});' },
+
+        // MOVE
+        { action: 'move', targetType: this.ANY_TYPE, options: [ 'cursor' ], template: 'I.moveCursorTo({{{target}}});' },
 
         // PRESS
         { action: 'press', default: true, template: 'I.pressKey({{{value}}});' },
 
+        // SAVE SCREENSHOT
+        { action: 'saveScreenshot', default: true, template: 'I.saveScreenshot({{{value}}});' },
+
         // SEE
         { action: 'see',  targetType: 'textbox', template: 'I.seeInField({{{target}}}, {{{value}}});' },
+        { action: 'see',  targetType: 'textbox', modifier: 'not', template: 'I.dontSeeInField({{{target}}}, {{{value}}});' },
         { action: 'see',  targetType: 'textarea', template: 'I.seeInField({{{target}}}, {{{value}}});' },
+        { action: 'see',  targetType: 'textarea', modifier: 'not', template: 'I.dontSeeInField({{{target}}}, {{{value}}});' },
+
+        { action: 'see',  targetType: 'checkbox', options: [ 'checked' ], template: 'I.seeCheckboxIsChecked({{{target}}});' },
+        { action: 'see',  targetType: 'checkbox', modifier: 'not', options: [ 'checked' ], template: 'I.dontSeeCheckboxIsChecked({{{target}}});' },
+
         { action: 'see',  targetType: 'cookie', template: 'I.seeCookie({{{target}}});' },
+        { action: 'see',  targetType: 'cookie', modifier: 'not', template: 'I.dontSeeCookie({{{target}}});' },
         { action: 'see',  targetType: this.ANY_TYPE, options: [ 'cookie' ], template: 'I.seeCookie({{{target}}});' },
+        { action: 'see',  targetType: this.ANY_TYPE, modifier: 'not', options: [ 'cookie' ], template: 'I.dontSeeCookie({{{target}}});' },
+
         { action: 'see',  targetType: 'title', template: 'I.seeInTitle({{{target}}});' },
+        { action: 'see',  targetType: this.NONE_TYPE, options: [ 'inside', 'title' ], template: 'I.seeInTitle({{{value}}});' },
+        { action: 'see',  targetType: 'title', modifier: 'not', template: 'I.dontSeeInTitle({{{target}}});' },
+        { action: 'see',  targetType: this.NONE_TYPE, modifier: 'not', options: [ 'inside', 'title' ], template: 'I.dontSeeInTitle({{{value}}});' },
         { action: 'see',  targetType: this.ANY_TYPE, options: [ 'title' ], template: 'I.seeInTitle({{{target}}});' },
+        { action: 'see',  targetType: this.ANY_TYPE, modifier: 'not', options: [ 'title' ], template: 'I.dontSeeInTitle({{{target}}});' },
+
         { action: 'see',  targetType: 'url', template: 'I.seeCurrentUrlEquals({{{target}}});' },
+        { action: 'see',  targetType: 'url', modifier: 'not', template: 'I.dontSeeCurrentUrlEquals({{{target}}});' },
         { action: 'see',  targetType: this.ANY_TYPE, options: [ 'url' ], template: 'I.seeCurrentUrlEquals({{{target}}});' },
+        { action: 'see',  targetType: this.ANY_TYPE, modifier: 'not', options: [ 'url' ], template: 'I.dontSeeCurrentUrlEquals({{{target}}});' },
+
+        { action: 'see',  targetType: this.NONE_TYPE, options: [ 'inside', 'url' ], template: 'I.seeInCurrentUrl({{{value}}});' },
+        { action: 'see',  targetType: this.NONE_TYPE, modifier: 'not', options: [ 'inside', 'url' ], template: 'I.dontSeeInCurrentUrl({{{value}}});' },
+
         { action: 'see',  targetType: this.ANY_TYPE, template: 'I.seeElement({{{target}}});' },
         { action: 'see',  targetType: this.ANY_TYPE, modifier: 'not', template: 'I.dontSeeElement({{{target}}});' },
+
         { action: 'see',  default: true, modifier: 'not', template: 'I.dontSee({{{value}}});' },
         { action: 'see',  default: true, template: 'I.see({{{value}}});' },
 
@@ -84,6 +118,9 @@ export class ActionMapper {
         // TAP
         { action: 'tap', targetType: this.ANY_TYPE, template: 'I.tap({{{target}}});' },
         { action: 'tap', default: true, template: 'I.tap({{{value}}});' },
+
+        // UNCHECK
+        { action: 'uncheck', default: true, template: 'I.uncheckOption({{{target}}});' },
 
         // WAIT
         { action: 'wait', targetType: 'text', template: 'I.waitForText({{{target}}}, {{{value}}});' },
@@ -123,13 +160,15 @@ export class ActionMapper {
             const onlyForValues = ( this.NONE_TYPE === obj.targetType
                 && ( ! command.targets || command.targets.length < 1 ) );
 
+            const sameOptions = this.sameValues( obj.options, command.options );
+
             if ( onlyForValues ) {
                 if ( true === obj.firstValueShouldBeInteger ) {
                     return ! command.values
                         ? false
                         : command.values.length > 0 && 'number' === typeof command.values[ 0 ];
                 }
-                return true;
+                return sameOptions && sameModifier;
             }
 
             const acceptsAny = this.ANY_TYPE === obj.targetType
@@ -140,7 +179,7 @@ export class ActionMapper {
                 || ( Array.isArray( command.targetTypes )
                     && command.targetTypes.indexOf( obj.targetType ) >= 0 );
 
-            const sameOptions = this.sameValues( obj.options, command.options );
+
 
             // console.log( sameTargetType, sameModifier, sameOptions );
 

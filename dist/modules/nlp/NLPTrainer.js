@@ -15,7 +15,7 @@ class NLPTrainer {
     canBeTrained(language) {
         return this._langLoader.has(language);
     }
-    trainNLP(nlp, language, internalNameFilter) {
+    trainNLP(nlp, language, intentNameFilter) {
         if (!this.canBeTrained(language)) {
             return false;
         }
@@ -36,7 +36,7 @@ class NLPTrainer {
         else {
             data = this._convertedData[language];
         }
-        nlp.train(language, data, internalNameFilter);
+        nlp.train(language, data, intentNameFilter);
         return true;
     }
 }

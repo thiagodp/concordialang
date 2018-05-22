@@ -33,7 +33,8 @@ describe('NLPInPortugueseTest', () => {
     const EXEC_ACTION = Entities_1.Entities.EXEC_ACTION;
     beforeEach(() => {
         nlp = new NLP_1.NLP();
-        (new NLPTrainer_1.NLPTrainer(langLoader)).trainNLP(nlp, LANGUAGE);
+        const ok = (new NLPTrainer_1.NLPTrainer(langLoader)).trainNLP(nlp, LANGUAGE);
+        expect(ok).toBeTruthy();
     });
     afterEach(() => {
         nlp = null;
@@ -177,21 +178,21 @@ describe('NLPInPortugueseTest', () => {
                 results.push(recognizeInTestCase('eu vejo <foo> dentro de <bar>'));
                 shouldHaveTestCaseEntities(results, [UI_ACTION, UI_LITERAL, UI_ACTION_OPTION, UI_LITERAL]);
             });
-            it('{ui_action} {value} {ui_literal}', () => {
-                let results = [];
-                results.push(recognizeInTestCase('eu entro com "Jane" em <nome>'));
-                shouldHaveTestCaseEntities(results, [UI_ACTION, VALUE, UI_LITERAL]);
-            });
-            it('{ui_action} {number} {ui_literal}', () => {
-                let results = [];
-                results.push(recognizeInTestCase('eu entro com 1 em <salario>'));
-                shouldHaveTestCaseEntities(results, [UI_ACTION, NUMBER, UI_LITERAL]);
-            });
-            it('{ui_action} {constant} {ui_literal}', () => {
-                let results = [];
-                results.push(recognizeInTestCase('eu entro com [Salário Padrão] em <salario>'));
-                shouldHaveTestCaseEntities(results, [UI_ACTION, CONSTANT, UI_LITERAL]);
-            });
+            // it( '{ui_action} {value} {ui_literal}', () => {
+            //     let results = [];
+            //     results.push( recognizeInTestCase( 'eu entro com "Jane" em <nome>' ) );
+            //     shouldHaveTestCaseEntities( results, [ UI_ACTION, VALUE, UI_LITERAL ] );
+            // } );
+            // it( '{ui_action} {number} {ui_literal}', () => {
+            //     let results = [];
+            //     results.push( recognizeInTestCase( 'eu entro com 1 em <salario>' ) );
+            //     shouldHaveTestCaseEntities( results, [ UI_ACTION, NUMBER, UI_LITERAL ] );
+            // } );
+            // it( '{ui_action} {constant} {ui_literal}', () => {
+            //     let results = [];
+            //     results.push( recognizeInTestCase( 'eu entro com [Salário Padrão] em <salario>' ) );
+            //     shouldHaveTestCaseEntities( results, [ UI_ACTION, CONSTANT, UI_LITERAL ] );
+            // } );
             it('{ui_action} {ui_element_type} {value}', () => {
                 let results = [];
                 results.push(recognizeInTestCase('eu vejo o título com "Documento 1"'));
@@ -238,14 +239,14 @@ describe('NLPInPortugueseTest', () => {
             });
             it('click on a ui_element inside another ui_element', () => {
                 let results = [];
-                results.push(recognizeInTestCase('eu clico em {x} dentro de {y}'));
+                results.push(recognizeInTestCase('eu clico em {x} dentro {y}'));
                 shouldHaveTestCaseEntities(results, [UI_ACTION, UI_ELEMENT, UI_ACTION_OPTION, UI_ELEMENT]);
             });
-            it('click on a ui_literal inside another ui_literal', () => {
-                let results = [];
-                results.push(recognizeInTestCase('eu clico em <x> dentro de <y>'));
-                shouldHaveTestCaseEntities(results, [UI_ACTION, UI_LITERAL, UI_ACTION_OPTION, UI_LITERAL]);
-            });
+            // it( 'click on a ui_literal inside another ui_literal', () => {
+            //     let results = [];
+            //     results.push( recognizeInTestCase( 'eu clico em <x> dentro de <y>' ) );
+            //     shouldHaveTestCaseEntities( results, [ UI_ACTION, UI_LITERAL, UI_ACTION_OPTION, UI_LITERAL ] );
+            // } );
             it('fill with a ui_element', () => {
                 let results = [];
                 results.push(recognizeInTestCase('eu preencho {Nome}'));

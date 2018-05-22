@@ -24,7 +24,7 @@ export class NLPTrainer {
         return this._langLoader.has( language );
     }
 
-    trainNLP( nlp: NLP, language: string, internalNameFilter?: string ): boolean {
+    trainNLP( nlp: NLP, language: string, intentNameFilter?: string ): boolean {
 
         if ( ! this.canBeTrained( language ) ) {
             return false;
@@ -52,7 +52,7 @@ export class NLPTrainer {
             data = this._convertedData[ language ];
         }
 
-        nlp.train( language, data, internalNameFilter );
+        nlp.train( language, data, intentNameFilter );
         return true;
     }
 

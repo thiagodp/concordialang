@@ -68,8 +68,8 @@ export class NodeSentenceRecognizer {
 
         for ( let node of nodes ) {
 
-            //console.log( 'Node before: ', node );
-            //console.log( language, ', ', node.content, ', ', targetIntent );
+            // console.log( 'Node before: ', node );
+            // console.log( language, ', ', node.content, ', ', targetIntents );
 
             let r: NLPResult = this._nlp.recognize( language, node.content );
 
