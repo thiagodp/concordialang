@@ -46,6 +46,9 @@ class ActionMapper {
             { action: 'move', targetType: this.ANY_TYPE, options: ['cursor'], template: 'I.moveCursorTo({{{target}}});' },
             // PRESS
             { action: 'press', default: true, template: 'I.pressKey({{{value}}});' },
+            // RIGHT_CLICK
+            { action: 'rightClick', targetType: this.ANY_TYPE, template: 'I.rightClick({{{target}}});' },
+            { action: 'rightClick', default: true, template: 'I.rightClick({{{value}}});' },
             // SAVE SCREENSHOT
             { action: 'saveScreenshot', default: true, template: 'I.saveScreenshot({{{value}}});' },
             // SEE

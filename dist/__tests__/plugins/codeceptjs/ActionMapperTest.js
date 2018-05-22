@@ -231,6 +231,13 @@ describe('ActionMapperTest', () => {
         };
         expect(mapper.map(command)).toContainEqual('I.pressKey(["Control", "v"]);' + comment);
     });
+    it('right click', () => {
+        let command = {
+            action: 'rightClick',
+            targets: ['#foo']
+        };
+        expect(mapper.map(command)).toContainEqual('I.rightClick("#foo");' + comment);
+    });
     describe('see', () => {
         it('see', () => {
             let command = {

@@ -77,7 +77,7 @@ Left column indicates currently available actions in Concordia, while the right 
  | press                          | pressKey ✓
  | refresh                        | refreshPage
  | resize + window                | resizeWindow
- | rightClick                     | rightClick
+ | rightClick                     | rightClick ✓
  | -                              | runInWeb
  | -                              | runOnAndroid
  | -                              | runOnIOS
