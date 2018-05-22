@@ -222,10 +222,32 @@ describe( 'ActionMapperTest', () => {
             expect(mapper.map(command)).toContainEqual('I.dontSeeElement("#login");' + comment );
         });
 
-        it( 'see in title', () => {
+        it( 'see in title - in options', () => {
             let command: ATSCommand = {
                 action: 'see',
                 options: [ 'with', 'title' ],
+                values: [ 'Hello' ],
+                modifier: 'not'
+            };
+            expect(mapper.map(command)).toContainEqual('I.dontSeeInTitle("Hello");' + comment );
+        });
+
+        it( 'see in title - option "with" and target type "title"', () => {
+            let command: ATSCommand = {
+                action: 'see',
+                options: [ 'with' ],
+                targetTypes: [ 'title' ],
+                values: [ 'Hello' ],
+                modifier: 'not'
+            };
+            expect(mapper.map(command)).toContainEqual('I.dontSeeInTitle("Hello");' + comment );
+        });
+
+        it( 'see in title - option "inside" and target type "title"', () => {
+            let command: ATSCommand = {
+                action: 'see',
+                options: [ 'inside' ],
+                targetTypes: [ 'title' ],
                 values: [ 'Hello' ],
                 modifier: 'not'
             };
@@ -390,7 +412,7 @@ describe( 'ActionMapperTest', () => {
             expect(mapper.map(command)).toContainEqual('I.seeInField("#foo", "bar");' + comment );
         });
 
-        it( 'see in title', () => {
+        it( 'see in title - in options', () => {
             let command: ATSCommand = {
                 action: 'see',
                 options: [ 'with', 'title' ],
@@ -398,6 +420,27 @@ describe( 'ActionMapperTest', () => {
             };
             expect(mapper.map(command)).toContainEqual('I.seeInTitle("Hello");' + comment );
         });
+
+        it( 'see in title - option "with" and target type "title"', () => {
+            let command: ATSCommand = {
+                action: 'see',
+                options: [ 'with' ],
+                targetTypes: [ 'title' ],
+                values: [ 'Hello' ]
+            };
+            expect(mapper.map(command)).toContainEqual('I.seeInTitle("Hello");' + comment );
+        });
+
+        it( 'see in title - option "inside" and target type "title"', () => {
+            let command: ATSCommand = {
+                action: 'see',
+                options: [ 'inside' ],
+                targetTypes: [ 'title' ],
+                values: [ 'Hello' ]
+            };
+            expect(mapper.map(command)).toContainEqual('I.seeInTitle("Hello");' + comment );
+        });
+
     } );
 
     it( 'save screenshot', () => {
