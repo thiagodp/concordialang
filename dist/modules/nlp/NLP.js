@@ -112,7 +112,12 @@ class NLP {
         }
         nlp = this._nlpMap[language].nlp;
         let method = '*' == entityFilter || !entityFilter ? 'anyEntity' : entityFilter; // | "default"
-        return nlp.test(sentence, method);
+        let r = nlp.test(sentence, method);
+        // console.log(
+        //     'Sentence  :', sentence, "\n",
+        //     'Recognized:', r.text
+        // );
+        return r;
     }
     createNLP() {
         return this._useFuzzyProcessor ? new Bravey.Nlp.Fuzzy() : new Bravey.Nlp.Sequential();

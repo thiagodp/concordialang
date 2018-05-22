@@ -319,6 +319,10 @@
                 "{ui_action_modifier} {ui_action} {ui_element_type} {ui_action_option} {constant}",
                 "{ui_action_modifier} {ui_action} {ui_element_type} {ui_action_option} {number}",
 
+                "{ui_action_modifier} {ui_action} {value} {ui_action_option}",
+                "{ui_action_modifier} {ui_action} {number} {ui_action_option}",
+                "{ui_action_modifier} {ui_action} {constant} {ui_action_option}",
+
                 "{exec_action} {state}",
 
 
