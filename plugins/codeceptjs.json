@@ -1,7 +1,7 @@
 {
     "isFake": false,
     "name": "codeceptjs",
-    "description": "Generates test scripts for CodeceptJS",
+    "description": "Generates test scripts for CodeceptJS with WebDriverIO",
     "version": "0.3",
     "targets": [ "CodeceptJS" ],
     "authors": [
