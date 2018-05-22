@@ -10,7 +10,8 @@ type CmdObj = {
     default? :boolean,
     template: string,
     valueAsNonArray?: boolean, // only when length > 1
-    firstValueShouldBeInteger?: boolean
+    firstValueShouldBeInteger?: boolean,
+    secondValueShouldBeInteger?: boolean
 };
 
 
@@ -136,14 +137,22 @@ export class ActionMapper {
         { action: 'uncheck', default: true, template: 'I.uncheckOption({{{target}}});' },
 
         // WAIT
-        { action: 'wait', targetType: 'text', template: 'I.waitForText({{{target}}}, {{{value}}});' },
+        { action: 'wait', targetType: 'url', options: [ 'second' ], secondValueShouldBeInteger: true, valueAsNonArray: true, template: 'I.waitUrlEquals({{{value}}});' },
+        { action: 'wait', targetType: 'url', ignoreOptions: true, template: 'I.waitUrlEquals({{{value}}});' },
+
         { action: 'wait', targetType: this.NONE_TYPE, options: [ 'visible' ], template: 'I.waitForVisible({{{target}}});' },
+
         { action: 'wait', targetType: this.NONE_TYPE, options: [ 'invisible' ], template: 'I.waitForInvisible({{{target}}});' },
+
         { action: 'wait', targetType: this.NONE_TYPE, options: [ 'enabled' ], template: 'I.waitForEnabled({{{target}}});' },
-        { action: 'wait', targetType: this.NONE_TYPE, ignoreOptions: true, firstValueShouldBeInteger: true, template: 'I.wait({{{value}}});' },
-        { action: 'wait', targetType: this.NONE_TYPE, template: 'I.waitForText({{{value}}});', valueAsNonArray: true },
+
         { action: 'wait', targetType: this.ANY_TYPE, template: 'I.waitForElement({{{target}}}, {{{value}}});', firstValueShouldBeInteger: true },
         { action: 'wait', targetType: this.ANY_TYPE, template: 'I.waitForElement({{{target}}});' },
+
+        { action: 'wait', targetType: 'text', firstValueShouldBeInteger: true, template: 'I.waitForText({{{target}}}, {{{value}}});' },
+        { action: 'wait', targetType: 'text', template: 'I.waitForText({{{value}}});', valueAsNonArray: true },
+
+        { action: 'wait', targetType: this.NONE_TYPE, ignoreOptions: true, firstValueShouldBeInteger: true, template: 'I.wait({{{value}}});' },
     ];
 
 
@@ -154,7 +163,7 @@ export class ActionMapper {
      */
     public map( command: ATSCommand ): Array<string> {
 
-        console.log( 'command', command );
+        // console.log( 'command', command );
 
         let commands: Array<string> = [];
 
@@ -183,13 +192,29 @@ export class ActionMapper {
 
             const acceptsAny = this.ANY_TYPE === obj.targetType && targetsCount > 0;
 
-            if ( ( onlyForValues || acceptsAny ) && true === obj.firstValueShouldBeInteger ) {
+            const sameTargetType = acceptsAny ||
+                ( Array.isArray( command.targetTypes )
+                    && command.targetTypes.indexOf( obj.targetType ) >= 0 );
+
+            if ( ( onlyForValues || acceptsAny || sameTargetType ) && true === obj.firstValueShouldBeInteger ) {
                 if ( valuesCount < 1 ) {
                     return false;
                 }
                 const value = command.values[ 0 ];
                 if ( 'number' === typeof value || ! isNaN( parseInt( value ) ) ) {
                     command.values[ 0 ] = Number( value ); // Guarantee number type
+                    return true;
+                }
+                return false;
+            }
+
+            if ( ( onlyForValues || acceptsAny || sameTargetType ) && true === obj.secondValueShouldBeInteger ) {
+                if ( valuesCount < 2 ) {
+                    return false;
+                }
+                const value = command.values[ 1 ];
+                if ( 'number' === typeof value || ! isNaN( parseInt( value ) ) ) {
+                    command.values[ 1 ] = Number( value ); // Guarantee number type
                     return true;
                 }
                 return false;
@@ -204,10 +229,6 @@ export class ActionMapper {
             if ( isNoneType && sameOptions && valuesCount < 1 ) {
                 return true;
             }
-
-            const sameTargetType = acceptsAny ||
-                ( Array.isArray( command.targetTypes )
-                    && command.targetTypes.indexOf( obj.targetType ) >= 0 );
 
             // console.log( sameTargetType, sameModifier, sameOptions );
 

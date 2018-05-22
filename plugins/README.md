@@ -89,7 +89,7 @@ Left column indicates currently available actions in Concordia, while the right 
  | see + cookie                   | seeCookie ✓
  | -                              | seeCssPropertiesOnElements
  | see + url                      | seeCurrentUrlEquals ✓
- | -                              | seeElement
+ | -                              | seeElement ✓
  | -                              | seeElementInDOM
  | see + inside + url             | seeInCurrentUrl ✓
  | see + textbox | textarea       | seeInField ✓
@@ -113,15 +113,15 @@ Left column indicates currently available actions in Concordia, while the right 
  | wait + number                  | wait ✓
  | -                              | waitForDetached
  | wait + uielement               | waitForElement ✓
- | -                              | waitForEnabled ✓
- | -                              | waitForInvisible ✓
- | wait + value                   | waitForText ✓
+ | wait + enabled + uielement     | waitForEnabled ✓
+ | wait + visible + uielement     | waitForInvisible ✓
+ | wait + text + value            | waitForText ✓
  | -                              | waitForValue
- | -                              | waitForVisible ✓
+ | wait + visible + uielement     | waitForVisible ✓
  | -                              | waitInUrl
  | -                              | waitNumberOfVisibleElements
  | -                              | waitToHide
  | -                              | waitUntil
- | -                              | waitUrlEquals
+ | wait + url + value             | waitUrlEquals ✓
  | -                              | locator
 ```

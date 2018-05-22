@@ -448,6 +448,7 @@ describe('ActionMapperTest', () => {
     it('wait for text', () => {
         let command = {
             action: 'wait',
+            targetTypes: ['text'],
             values: ['Welcome!', 5]
         };
         expect(mapper.map(command)).toContainEqual('I.waitForText("Welcome!", 5);' + comment);
