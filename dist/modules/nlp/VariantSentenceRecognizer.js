@@ -76,8 +76,10 @@ class VariantSentenceRecognizer {
             if (options.length > 0) {
                 item.actionOptions = options;
             }
-            // UI LITERALS (optional)
+            // Targets - UI LITERALS (optional)
             item.targets = r.entities.filter(e => e.entity === Entities_1.Entities.UI_LITERAL).map(e => e.value);
+            // Target Types
+            item.targetTypes = r.entities.filter(e => e.entity === Entities_1.Entities.UI_ELEMENT_TYPE).map(e => e.value);
             // VALUES (optional)
             item.values = r.entities
                 .filter(e => e.entity === Entities_1.Entities.VALUE || e.entity === Entities_1.Entities.NUMBER)
