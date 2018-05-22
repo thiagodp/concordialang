@@ -91,10 +91,10 @@ export class ActionMapper {
         { action: 'see',  targetType: 'checkbox', options: [ 'checked' ], template: 'I.seeCheckboxIsChecked({{{target}}});' },
         { action: 'see',  targetType: 'checkbox', modifier: 'not', options: [ 'checked' ], template: 'I.dontSeeCheckboxIsChecked({{{target}}});' },
 
-        { action: 'see',  targetType: 'cookie', template: 'I.seeCookie({{{target}}});' },
-        { action: 'see',  targetType: 'cookie', modifier: 'not', template: 'I.dontSeeCookie({{{target}}});' },
+        { action: 'see',  targetType: 'cookie', template: 'I.seeCookie({{{value}}});' },
+        { action: 'see',  targetType: 'cookie', modifier: 'not', template: 'I.dontSeeCookie({{{value}}});' },
         { action: 'see',  targetType: this.ANY_TYPE, options: [ 'cookie' ], template: 'I.seeCookie({{{target}}});' },
-        { action: 'see',  targetType: this.ANY_TYPE, modifier: 'not', options: [ 'cookie' ], template: 'I.dontSeeCookie({{{target}}});' },
+        { action: 'see',  targetType: this.ANY_TYPE, options: [ 'cookie' ], modifier: 'not', template: 'I.dontSeeCookie({{{target}}});' },
 
         { action: 'see',  targetType: 'title', template: 'I.seeInTitle({{{target}}});' },
         { action: 'see',  targetType: 'title', modifier: 'not', template: 'I.dontSeeInTitle({{{target}}});' },
