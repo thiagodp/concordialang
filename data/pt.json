@@ -123,7 +123,7 @@
                 "refresh": [ "atualizo", "recarrego" ],
                 "resize": [ "redimensiono", "modifico o tamanho" ],
                 "rightClick": [ "clico com o botao direito", "aciono o botao direito" ],
-                "saveScreenshot": [ "salvo a tela", "bato uma foto da tela", "tiro uma foto da tela", "tiro um print da tela" ],
+                "saveScreenshot": [ "salvo a tela", "foto da tela", "print da tela", "screenshot", "printscreen" ],
                 "scrollTo": [ "rolo" ],
                 "see": [ "vejo", "enxergo", "consigo ver", "devo ver", "ver" ],
                 "select": [ "seleciono" ],

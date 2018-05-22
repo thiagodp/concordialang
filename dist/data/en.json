@@ -77,7 +77,7 @@
                 "refresh": [ "refresh", "reload", "update" ],
                 "resize": [ "resize", "change the size" ],
                 "rightClick": [ "right click" ],
-                "saveScreenshot": [ "screenshot", "printscreen", "take a picture" ],
+                "saveScreenshot": [ "screenshot", "printscreen", "take a picture", "take a photo" ],
                 "scrollTo": [ "scroll" ],
                 "see": [ "see" ],
                 "select": [ "select", "pick", "choose", "opt" ],
