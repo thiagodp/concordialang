@@ -61,8 +61,8 @@ export class ActionMapper {
         { action: 'close', targetType: this.NONE_TYPE, options: [ 'otherTabs' ], template: 'I.closeOtherTabs();' },
 
         // DOUBLE_CLICK
-        { action: 'doubleClick', targetType: this.ANY_TYPE, template: 'I.doubleClick({{{target}}});' },
-        { action: 'doubleClick', default: true, template: 'I.doubleClick({{{value}}});' },
+        { action: 'doubleClick', targetType: this.NONE_TYPE, template: 'I.doubleClick({{{value}}});' },
+        { action: 'doubleClick', default: true, template: 'I.doubleClick({{{target}}});' },
 
         // DRAG
         { action: 'drag', targetType: this.ANY_TYPE, template: 'I.dragAndDrop({{{target}}});' },
@@ -77,8 +77,8 @@ export class ActionMapper {
         { action: 'press', default: true, template: 'I.pressKey({{{value}}});' },
 
         // RIGHT_CLICK
-        { action: 'rightClick', targetType: this.ANY_TYPE, template: 'I.rightClick({{{target}}});' },
-        { action: 'rightClick', default: true, template: 'I.rightClick({{{value}}});' },
+        { action: 'rightClick', targetType: this.NONE_TYPE, template: 'I.rightClick({{{value}}});' },
+        { action: 'rightClick', default: true, template: 'I.rightClick({{{target}}});' },
 
         // SAVE SCREENSHOT
         { action: 'saveScreenshot', default: true, template: 'I.saveScreenshot({{{value}}});' },
