@@ -102,15 +102,15 @@ $ concordia --seed="hello world" --plugin=codeceptjs
 ### Execution without generation
 
 This will not generate test cases or test scripts, but it will execute them and get their results:
-```concordia
-concordia --plugin=codeceptjs --no-test-case --no-script
+```console
+$ concordia --plugin=codeceptjs --no-test-case --no-script
 ```
 
 ## Results
 
 `login.testcase`:
 
-```concordia
+```gherkin
 # Generated with ❤ by Concordia
 #
 # THIS IS A GENERATED FILE - MODIFICATIONS CAN BE LOST !

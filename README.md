@@ -109,10 +109,86 @@ It is likely that your testing server remain open after executing all the tests.
 
 Type `Ctrl + C` to close it.
 
+## Examples
 
-## A short example
+### A very simple example
 
-See [this short example](docs/example.md) to get an overview of the usage. 👀
+> *Example without test data generation, test scenario combination, or most language capabilities.*
+
+**Input**
+
+`search.feature` :
+```gherkin
+Feature: Google Search
+
+Scenario: Search returns expected result
+
+  Variant: Search content on pressing Enter
+    Given that I am on "https://google.com"
+    When I type "concordialang.org" in <q>
+      And I press "Enter"
+    Then I see "npm"
+```
+**Run**
+
+Start the test server (once)
+```bash
+$ concordia --plugin-serve codeceptjs
+```
+Generate and run
+```bash
+$ concordia --plugin codeceptjs
+```
+
+**Output**
+
+`search.testcase` :
+```gherkin
+# Generated with ❤ by Concordia
+#
+# THIS IS A GENERATED FILE - MODIFICATIONS CAN BE LOST !
+
+import "search.feature"
+
+@generated
+@scenario(1)
+@variant(1)
+Test case: Search content on pressing Enter - 1
+  Given that I am on "https://google.com"
+  When I type "concordialang.org" in <q>
+    And I press "Enter"
+  Then I see "npm"
+```
+
+`search.js` :
+```javascript
+// Generated with ❤ by Concordia
+// source: search.testcase
+//
+// THIS IS A GENERATED FILE - MODIFICATIONS CAN BE LOST !
+
+Feature("Google Search");
+
+Scenario("Search returns expected result | Search content on pressing Enter - 1", (I) => {
+    I.amOnPage("https://google.com"); // (10,5)
+    I.fillField("q", "concordialang.org"); // (11,5)
+    I.pressKey("Enter"); // (12,7)
+    I.see("npm"); // (13,5)
+});
+```
+
+and it will also **run the tests**.
+
+
+### Another example
+
+> *Example with generation of test cases and test data, but without the combination of test scenarios and states.*
+
+See [this example](docs/example.md) to get a better overview of the Concordia Language and its usage. 👀
+
+### Detailed example
+
+> *Soon we will add here an example that explores most of Concordia features*
 
 
 ## Language syntax

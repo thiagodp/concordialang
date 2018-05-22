@@ -106,10 +106,91 @@ concordia --plugin codeceptjs
 
 Tecle `Ctrl + C` para finalizá-lo.
 
+## Exemplos
 
-## Um exemplo curto
+### Um exemplo bem simples
 
-Veja um [exemplo de uso de Concordia](docs/example-pt.md). 👀
+> *Exemplo sem geração de dados de teste ou combinação de cenários de teste e sem a maioria dos recursos da linguagem*
+
+**Entrada**
+
+`search-pt.feature` :
+
+```gherkin
+#language: pt
+Feature: Busca no Google
+
+Cenário: Busca retorna resultado esperado
+
+  Variante: Busca ao teclar Enter
+    Dado que estou em "https://google.com.br"
+    Quando eu informo "concordialang.org" em <q>
+      e eu pressiono "Enter"
+    Então eu vejo "npm"
+```
+
+**Execução**
+
+
+Inicia o servidor de testes
+```bash
+$ concordia --plugin-serve codeceptjs
+```
+Gera e executa
+```bash
+$ concordia --plugin codeceptjs
+```
+
+**Saída**
+
+`search-pt.testcase` :
+```gherkin
+# Generated with ❤ by Concordia
+#
+# THIS IS A GENERATED FILE - MODIFICATIONS CAN BE LOST !
+
+#language:pt
+
+importe "search-pt.feature"
+
+@generated
+@scenario(1)
+@variant(1)
+Caso de teste: Busca ao teclar Enter - 1
+  Dado que estou em "https://google.com.br"
+  Quando eu informo "concordialang.org" em <q>
+    e eu pressiono "Enter"
+  Então eu vejo "npm"
+```
+
+`search-pt.js` :
+```javascript
+// Generated with ❤ by Concordia
+// source: search-pt.testcase
+//
+// THIS IS A GENERATED FILE - MODIFICATIONS CAN BE LOST !
+
+Feature("Busca no Google");
+
+Scenario("Busca retorna resultado esperado | Busca ao teclar Enter - 1", (I) => {
+    I.amOnPage("https://google.com.br"); // (10,5)
+    I.fillField("q", "concordialang.org"); // (11,5)
+    I.pressKey("Enter"); // (12,7)
+    I.see("npm"); // (13,5)
+});
+```
+
+e também irá **executar os testes**.
+
+### Outro exemplo
+
+> *Exemplo com geração de casos de teste e de dados de teste, mas sem combinação de cenários de teste e estados.*
+
+Veja [esse outro exemplo](docs/example-pt.md) para ter uma melhor visão geral de Concordia. 👀
+
+### Exemplo detalhado
+
+> *Breve adicionaremos um exemplo que explore grande parte da capacidade de Concordia*
 
 
 ## Sintaxe da linguagem
