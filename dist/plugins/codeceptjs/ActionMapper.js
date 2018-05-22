@@ -95,6 +95,9 @@ class ActionMapper {
             { action: 'uncheck', default: true, template: 'I.uncheckOption({{{target}}});' },
             // WAIT
             { action: 'wait', targetType: 'text', template: 'I.waitForText({{{target}}}, {{{value}}});' },
+            { action: 'wait', targetType: this.NONE_TYPE, options: ['visible'], template: 'I.waitForVisible({{{target}}});' },
+            { action: 'wait', targetType: this.NONE_TYPE, options: ['invisible'], template: 'I.waitForInvisible({{{target}}});' },
+            { action: 'wait', targetType: this.NONE_TYPE, options: ['enabled'], template: 'I.waitForEnabled({{{target}}});' },
             { action: 'wait', targetType: this.NONE_TYPE, ignoreOptions: true, firstValueShouldBeInteger: true, template: 'I.wait({{{value}}});' },
             { action: 'wait', targetType: this.NONE_TYPE, template: 'I.waitForText({{{value}}});', valueAsNonArray: true },
             { action: 'wait', targetType: this.ANY_TYPE, template: 'I.waitForElement({{{target}}}, {{{value}}});', firstValueShouldBeInteger: true },
@@ -107,7 +110,7 @@ class ActionMapper {
      * multiple lines of test code.
      */
     map(command) {
-        // console.log( 'command', command );
+        console.log('command', command);
         let commands = [];
         let compareMapObj = obj => {
             const sameAction = obj.action === command.action;
@@ -119,14 +122,14 @@ class ActionMapper {
             if (true === obj.default) {
                 return sameModifier;
             }
-            const onlyForValues = ((!obj.targetType || this.NONE_TYPE === obj.targetType)
-                && (!command.targets || command.targets.length < 1));
-            const acceptsAny = this.ANY_TYPE === obj.targetType
-                && Array.isArray(command.targets)
-                && command.targets.length > 0;
-            const sameOptions = this.sameValues(obj.options, command.options);
+            const isNoneType = this.NONE_TYPE === obj.targetType;
+            const targetsCount = !command.targets ? 0 : command.targets.length;
+            const targetTypesCount = !command.targetTypes ? 0 : command.targetTypes.length;
+            const valuesCount = !command.values ? 0 : command.values.length;
+            const onlyForValues = ((!obj.targetType || isNoneType) && targetsCount < 1);
+            const acceptsAny = this.ANY_TYPE === obj.targetType && targetsCount > 0;
             if ((onlyForValues || acceptsAny) && true === obj.firstValueShouldBeInteger) {
-                if (!command.values || command.values.length < 1) {
+                if (valuesCount < 1) {
                     return false;
                 }
                 const value = command.values[0];
@@ -136,11 +139,15 @@ class ActionMapper {
                 }
                 return false;
             }
+            const sameOptions = this.sameValues(obj.options, command.options);
             if (onlyForValues) {
                 return (sameOptions || obj.ignoreOptions) && sameModifier;
             }
-            const sameTargetType = acceptsAny
-                || (Array.isArray(command.targetTypes)
+            if (isNoneType && sameOptions && valuesCount < 1) {
+                return true;
+            }
+            const sameTargetType = acceptsAny ||
+                (Array.isArray(command.targetTypes)
                     && command.targetTypes.indexOf(obj.targetType) >= 0);
             // console.log( sameTargetType, sameModifier, sameOptions );
             return sameTargetType && sameModifier && sameOptions;

@@ -175,13 +175,15 @@
             },
 
             "ui_action_option": {
-                "checked": [ "marcado", "ticado", "checked" ],
+                "checked": [ "marcado", "marcada", "ticado", "ticada", "checked" ],
                 "cookie": [ "cookie" ],
                 "currentTab": [ "aba atual", "current tab" ],
-                "disabled": [ "esta desabilitado", "nao esta habilitado", "is disabled", "is not enabled" ],
+                "disabled": [ "desabilitado", "desabilitada", "disabled" ],
                 "down": [ "para baixo", "abaixo", "down" ],
-                "enabled": [ "esta habilitado", "is enabled" ],
+                "enabled": [ "habilitado", "habilitada", "is enabled" ],
+                "hidden": [ "oculto", "escondido", "oculta", "escondida" ],
                 "inside": [ "dentro de", "em", "no", "na", "inside" ],
+                "invisible": [ "invisivel" ],
                 "left": [ "para a esquerda", "a esquerda", "left" ],
                 "millisecond": [ "milissegundo" ],
                 "mobileName": [ "nome mobile", "mobile name" ],
@@ -194,6 +196,7 @@
                 "unchecked": [ "desmarcado", "unchecked" ],
                 "up": [ "para cima", "acima", "up" ],
                 "url": [ "url", "pagina", "endereco", "dominio", "ip", "local", "sitio" ],
+                "visible": [ "visivel" ],
                 "with": [ "com", "with", "contem", "contains" ]
             },
 

@@ -133,10 +133,12 @@
                 "cookie": [ "cookie" ],
                 "currentPage": [ "current page" ],
                 "currentTab": [ "current tab" ],
-                "disabled": [ "is disabled", "is not enabled" ],
+                "disabled": [ "disabled" ],
                 "down": [ "down" ],
-                "enabled": [ "is enabled" ],
+                "enabled": [ "enabled" ],
+                "hidden": [ "hidden" ],
                 "inside": [ "inside", "in" ],
+                "invisible": [ "invisible" ],
                 "left": [ "left" ],
                 "millisecond": [ "millisecond", "milliseconds" ],
                 "mobileName": [ "mobile name" ],
@@ -149,6 +151,7 @@
                 "unchecked": [ "unchecked" ],
                 "up": [ "up" ],
                 "url": [ "url", "address", "ip", "domain", "website", "site", "page" ],
+                "visible": [ "visible" ],
                 "with": [ "with", "containing", "contains" ]
             },
 

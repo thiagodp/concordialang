@@ -113,11 +113,11 @@ Left column indicates currently available actions in Concordia, while the right 
  | wait + number                  | wait ✓
  | -                              | waitForDetached
  | wait + uielement               | waitForElement ✓
- | -                              | waitForEnabled
- | -                              | waitForInvisible
+ | -                              | waitForEnabled ✓
+ | -                              | waitForInvisible ✓
  | wait + value                   | waitForText ✓
  | -                              | waitForValue
- | -                              | waitForVisible
+ | -                              | waitForVisible ✓
  | -                              | waitInUrl
  | -                              | waitNumberOfVisibleElements
  | -                              | waitToHide
