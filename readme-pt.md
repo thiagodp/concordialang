@@ -10,7 +10,7 @@
 
 2. Gerar e executar [casos de teste functional](https://en.wikipedia.org/wiki/Functional_testing) automaticamente. Não *esqueletos de scripts de teste.*, mas [casos de teste](https://pt.wikipedia.org/wiki/Caso_de_teste) e scripts de teste (código-fonte) *completos*. Não é preciso escrever código!
 
-3. Gerar scripts de teste para diferentes frameworks de teste, como [CodeceptJS](https://codecept.io/), através de [plug-ins]().
+3. Gerar scripts de teste para diferentes frameworks de teste, como [CodeceptJS](https://codecept.io/), através de [plug-ins](plugins/README.md).
 
 4. Escrever casos de teste adicionais quando necessário, usando *Linguagem Concordia* - atualmente disponível em  *Inglês* (`en`) e *Português* (`pt`). Esses casos de teste são convertidos em scripts de teste usando plug-ins.
 
@@ -470,14 +470,15 @@ Elemento de IU: Salario
 
 A referência para o elemento de IU `{Profissao}` dentro da consulta faz as regras de `Salario` dependerem de `Profissao`. Cada vez que uma `Profissao` é selecionada, o **valor mínimo** e **valor máximo** de `Salario` mudam de acordo com as colunas `salario_min` e `salario_max` da tabela `Profissoes`.
 
-## Help us
+## Ajude-nos
 
-- [How to contribute](contributing.md)
-- [Improve the documentation]()
-- [Report a bug](https://github.com/thiagodp/concordialang/issues/new)
-- [Suggest a feature or change](https://github.com/thiagodp/concordialang/issues/new)
-- [Develop it with us](docs/development.md)
-- [Donate](docs/donate.md)
+- [Como contribuir](contributing.md)
+- [Crie um plug-in](plugins/README.md)
+- [Melhore a documentação](https://github.com/thiagodp/concordialang#fork-destination-box)
+- [Relate um bug](https://github.com/thiagodp/concordialang/issues/new)
+- [Sugira uma nova funcionalidade ou alteração](https://github.com/thiagodp/concordialang/issues/new)
+- [Desenvolva conosco](docs/development.md)
+- [Doe](docs/donate.md)
 
 ## License
 

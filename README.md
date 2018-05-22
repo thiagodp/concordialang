@@ -12,7 +12,7 @@ Translations: [Português](readme-pt.md)
 
 2. Generating and executing [functional test cases](https://en.wikipedia.org/wiki/Functional_testing) automatically. *No just test script skeletons!* It generates complete test cases and test scripts - with *test data* and *oracles*. You don't even need to know how to write code!
 
-3. Generating test scripts for different testing frameworks, such as [CodeceptJS](https://codecept.io/), through [plug-ins]().
+3. Generating test scripts for different testing frameworks, such as [CodeceptJS](https://codecept.io/), through [plug-ins](plugins/README.md).
 
 4. Write aditional test cases when needed, using *Concordia Language* - currently available in **English** (`en`) and **Portuguese** (`pt`). These test cases are converted to test scripts using plugins.
 
@@ -474,7 +474,8 @@ The reference to the UI Element `{Profession}` inside the query, makes the rules
 ## Help us
 
 - [How to contribute](contributing.md)
-- [Improve the documentation]()
+- [Create a plug-in](plugins/README.md)
+- [Improve the documentation](https://github.com/thiagodp/concordialang#fork-destination-box)
 - [Report a bug](https://github.com/thiagodp/concordialang/issues/new)
 - [Suggest a feature or change](https://github.com/thiagodp/concordialang/issues/new)
 - [Develop it with us](docs/development.md)

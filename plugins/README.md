@@ -1,8 +1,25 @@
 # Plug-ins
 
-## CodeceptJS
+Currently available plug-ins:
 
-Mapping available in `ActionMapper.ts`. A tick (✓) means "checked with a test".
+- [CodeceptJS + WebDriverIO](#CodeceptJS%20with%20WebDriverIO) - *test web applications*
+
+Planned:
+ - CodeceptJS + Appium - *test mobile and desktop applications*
+
+***Help us to develop new plug-ins !*** ✌
+
+> By default, we use [Mustache](https://github.com/janl/mustache.js) templates to generate code. Basically, a JSON object with all the things needed is given and you just have to transform it into code.
+
+ A plug-in can generate code for any programming language and testing framework.
+
+## CodeceptJS with WebDriverIO
+
+*Plugin for [CodeceptJS](https://codecept.io) that tests web applications with different browsers, such as Chrome, Firefox, and IE.*
+
+Mapping from JSON into code is available in `codeceptjs/ActionMapper.ts`.
+
+Left column indicates currently available actions in Concordia, while the right column lists those commands available in the framework.  A tick (✓) means "checked with a test".
 
 ```
  +--------------------------------+-------------------------------
@@ -108,6 +125,3 @@ Mapping available in `ActionMapper.ts`. A tick (✓) means "checked with a test"
  | -                              | waitUrlEquals
  | -                              | locator
 ```
-
-## Fake
-
