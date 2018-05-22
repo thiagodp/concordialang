@@ -63,8 +63,12 @@ class StartingKeywordLexer {
         return { nodes: [node], errors: [], warnings: warnings };
     }
     removeComment(content) {
-        let commentPos = content.indexOf(Symbols_1.Symbols.COMMENT_PREFIX);
+        let commentPos = content.lastIndexOf(Symbols_1.Symbols.COMMENT_PREFIX);
         if (commentPos >= 0) {
+            // If the preceding character is '<', it is not a comment
+            if (commentPos > 1 && content.substr(commentPos - 1, 1) === Symbols_1.Symbols.UI_LITERAL_PREFIX) {
+                return content;
+            }
             return content.substring(0, commentPos).trim();
         }
         return content;

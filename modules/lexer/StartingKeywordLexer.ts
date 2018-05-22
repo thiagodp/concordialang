@@ -80,8 +80,12 @@ export class StartingKeywordLexer< T extends ContentNode > implements NodeLexer<
 
 
     private removeComment( content: string ): string {
-        let commentPos = content.indexOf( Symbols.COMMENT_PREFIX );
+        let commentPos = content.lastIndexOf( Symbols.COMMENT_PREFIX );
         if ( commentPos >= 0 ) {
+            // If the preceding character is '<', it is not a comment
+            if ( commentPos > 1 && content.substr( commentPos - 1, 1 ) === Symbols.UI_LITERAL_PREFIX ) {
+                return content;
+            }
             return content.substring( 0, commentPos ).trim();
         }
         return content;
