@@ -183,9 +183,20 @@ describe( 'ActionMapperTest', () => {
         it( 'see in current url', () => {
             let command: ATSCommand = {
                 action: 'see',
-                options: [ 'inside', 'url' ],
+                options: [ 'with', 'url' ],
                 values: [ '/login' ],
                 modifier: 'not'
+            };
+            expect(mapper.map(command)).toContainEqual('I.dontSeeInCurrentUrl("/login");' + comment );
+        });
+
+        it( 'see in current url 2', () => {
+            let command: ATSCommand = {
+                modifier: 'not',
+                action: 'see',
+                options: [ 'with' ],
+                targetTypes: [ 'url' ],
+                values: [ '/login' ]
             };
             expect(mapper.map(command)).toContainEqual('I.dontSeeInCurrentUrl("/login");' + comment );
         });
@@ -203,7 +214,7 @@ describe( 'ActionMapperTest', () => {
         it( 'see in title', () => {
             let command: ATSCommand = {
                 action: 'see',
-                options: [ 'inside', 'title' ],
+                options: [ 'with', 'title' ],
                 values: [ 'Hello' ],
                 modifier: 'not'
             };
@@ -313,7 +324,17 @@ describe( 'ActionMapperTest', () => {
         it( 'see in current url', () => {
             let command: ATSCommand = {
                 action: 'see',
-                options: [ 'inside', 'url' ],
+                options: [ 'with', 'url' ],
+                values: [ '/login' ]
+            };
+            expect(mapper.map(command)).toContainEqual('I.seeInCurrentUrl("/login");' + comment );
+        });
+
+        it( 'see in current url 2', () => {
+            let command: ATSCommand = {
+                action: 'see',
+                options: [ 'with' ],
+                targetTypes: [ 'url' ],
                 values: [ '/login' ]
             };
             expect(mapper.map(command)).toContainEqual('I.seeInCurrentUrl("/login");' + comment );
@@ -351,7 +372,7 @@ describe( 'ActionMapperTest', () => {
         it( 'see in title', () => {
             let command: ATSCommand = {
                 action: 'see',
-                options: [ 'inside', 'title' ],
+                options: [ 'with', 'title' ],
                 values: [ 'Hello' ]
             };
             expect(mapper.map(command)).toContainEqual('I.seeInTitle("Hello");' + comment );

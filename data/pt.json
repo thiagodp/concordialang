@@ -357,7 +357,16 @@
                 "{ui_action_modifier} {ui_action} {ui_element_type} {ui_property} {number}",
                 "{ui_action_modifier} {ui_action} {ui_element_type} {ui_property} {constant}",
 
-                "{exec_action} {state}"
+                "{ui_action_modifier} {ui_action} {ui_action_option} {value}",
+                "{ui_action_modifier} {ui_action} {ui_action_option} {ui_action_option} {value}",
+
+                "{ui_action_modifier} {ui_action} {ui_element_type} {ui_action_option} {value}",
+                "{ui_action_modifier} {ui_action} {ui_element_type} {ui_action_option} {constant}",
+                "{ui_action_modifier} {ui_action} {ui_element_type} {ui_action_option} {number}",
+
+                "{exec_action} {state}",
+
+                "eu não vejo a url com {value}"
             ]
         },
 

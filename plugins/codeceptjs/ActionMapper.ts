@@ -97,9 +97,9 @@ export class ActionMapper {
         { action: 'see',  targetType: this.ANY_TYPE, modifier: 'not', options: [ 'cookie' ], template: 'I.dontSeeCookie({{{target}}});' },
 
         { action: 'see',  targetType: 'title', template: 'I.seeInTitle({{{target}}});' },
-        { action: 'see',  targetType: this.NONE_TYPE, options: [ 'inside', 'title' ], template: 'I.seeInTitle({{{value}}});' },
+        { action: 'see',  targetType: this.NONE_TYPE, options: [ 'with', 'title' ], template: 'I.seeInTitle({{{value}}});' },
         { action: 'see',  targetType: 'title', modifier: 'not', template: 'I.dontSeeInTitle({{{target}}});' },
-        { action: 'see',  targetType: this.NONE_TYPE, modifier: 'not', options: [ 'inside', 'title' ], template: 'I.dontSeeInTitle({{{value}}});' },
+        { action: 'see',  targetType: this.NONE_TYPE, modifier: 'not', options: [ 'with', 'title' ], template: 'I.dontSeeInTitle({{{value}}});' },
         { action: 'see',  targetType: this.ANY_TYPE, options: [ 'title' ], template: 'I.seeInTitle({{{target}}});' },
         { action: 'see',  targetType: this.ANY_TYPE, modifier: 'not', options: [ 'title' ], template: 'I.dontSeeInTitle({{{target}}});' },
 
@@ -108,8 +108,10 @@ export class ActionMapper {
         { action: 'see',  targetType: this.ANY_TYPE, options: [ 'url' ], template: 'I.seeCurrentUrlEquals({{{target}}});' },
         { action: 'see',  targetType: this.ANY_TYPE, modifier: 'not', options: [ 'url' ], template: 'I.dontSeeCurrentUrlEquals({{{target}}});' },
 
-        { action: 'see',  targetType: this.NONE_TYPE, options: [ 'inside', 'url' ], template: 'I.seeInCurrentUrl({{{value}}});' },
-        { action: 'see',  targetType: this.NONE_TYPE, modifier: 'not', options: [ 'inside', 'url' ], template: 'I.dontSeeInCurrentUrl({{{value}}});' },
+        { action: 'see',  targetType: 'url', options: [ 'with' ], template: 'I.seeInCurrentUrl({{{value}}});' },
+        { action: 'see',  targetType: this.NONE_TYPE, options: [ 'with', 'url' ], template: 'I.seeInCurrentUrl({{{value}}});' },
+        { action: 'see',  targetType: 'url', modifier: 'not', options: [ 'with' ], template: 'I.dontSeeInCurrentUrl({{{value}}});' },
+        { action: 'see',  targetType: this.NONE_TYPE, modifier: 'not', options: [ 'with', 'url' ], template: 'I.dontSeeInCurrentUrl({{{value}}});' },
 
         { action: 'see',  targetType: this.ANY_TYPE, template: 'I.seeElement({{{target}}});' },
         { action: 'see',  targetType: this.ANY_TYPE, modifier: 'not', template: 'I.dontSeeElement({{{target}}});' },

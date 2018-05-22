@@ -312,6 +312,13 @@
                 "{ui_action_modifier} {ui_action} {ui_element_type} {ui_property} {number}",
                 "{ui_action_modifier} {ui_action} {ui_element_type} {ui_property} {constant}",
 
+                "{ui_action_modifier} {ui_action} {ui_action_option} {value}",
+                "{ui_action_modifier} {ui_action} {ui_action_option} {ui_action_option} {value}",
+
+                "{ui_action_modifier} {ui_action} {ui_element_type} {ui_action_option} {value}",
+                "{ui_action_modifier} {ui_action} {ui_element_type} {ui_action_option} {constant}",
+                "{ui_action_modifier} {ui_action} {ui_element_type} {ui_action_option} {number}",
+
                 "{exec_action} {state}",
 
 
@@ -326,7 +333,9 @@
                 "I see {ui_literal} inside {ui_literal}",
                 "I see {ui_literal} with {value}",
                 "I see {ui_literal} with {number}",
-                "I see {ui_literal} with {constant}"
+                "I see {ui_literal} with {constant}",
+
+                "I don't see url with {value}"
             ]
         },
 
