@@ -107,7 +107,7 @@ class ActionMapper {
      * multiple lines of test code.
      */
     map(command) {
-        console.log('command', command);
+        // console.log( 'command', command );
         let commands = [];
         let compareMapObj = obj => {
             const sameAction = obj.action === command.action;

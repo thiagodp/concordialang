@@ -142,11 +142,11 @@ describe('ActionMapperTest', () => {
         it('see cookie', () => {
             let command = {
                 action: 'see',
-                targets: ['preferences'],
                 targetTypes: ['cookie'],
+                values: ['foo'],
                 modifier: 'not'
             };
-            expect(mapper.map(command)).toContainEqual('I.dontSeeCookie("preferences");' + comment);
+            expect(mapper.map(command)).toContainEqual('I.dontSeeCookie("foo");' + comment);
         });
         it('see url', () => {
             let command = {
@@ -298,10 +298,10 @@ describe('ActionMapperTest', () => {
         it('see cookie', () => {
             let command = {
                 action: 'see',
-                targets: ['preferences'],
-                targetTypes: ['cookie']
+                targetTypes: ['cookie'],
+                values: ['foo'],
             };
-            expect(mapper.map(command)).toContainEqual('I.seeCookie("preferences");' + comment);
+            expect(mapper.map(command)).toContainEqual('I.seeCookie("foo");' + comment);
         });
         it('see url', () => {
             let command = {
