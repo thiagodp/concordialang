@@ -109,9 +109,11 @@ export class ActionMapper {
         { action: 'see',  targetType: this.ANY_TYPE, modifier: 'not', options: [ 'url' ], template: 'I.dontSeeCurrentUrlEquals({{{target}}});' },
 
         { action: 'see',  targetType: 'url', options: [ 'with' ], template: 'I.seeInCurrentUrl({{{value}}});' },
+        { action: 'see',  targetType: 'url', options: [ 'inside' ], template: 'I.seeInCurrentUrl({{{value}}});' },
+        { action: 'see',  targetType: 'url', options: [ 'with' ], modifier: 'not', template: 'I.dontSeeInCurrentUrl({{{value}}});' },
+        { action: 'see',  targetType: 'url', options: [ 'inside' ], modifier: 'not', template: 'I.dontSeeInCurrentUrl({{{value}}});' },
         { action: 'see',  targetType: this.NONE_TYPE, options: [ 'with', 'url' ], template: 'I.seeInCurrentUrl({{{value}}});' },
-        { action: 'see',  targetType: 'url', modifier: 'not', options: [ 'with' ], template: 'I.dontSeeInCurrentUrl({{{value}}});' },
-        { action: 'see',  targetType: this.NONE_TYPE, modifier: 'not', options: [ 'with', 'url' ], template: 'I.dontSeeInCurrentUrl({{{value}}});' },
+        { action: 'see',  targetType: this.NONE_TYPE, options: [ 'with', 'url' ], modifier: 'not', template: 'I.dontSeeInCurrentUrl({{{value}}});' },
 
         { action: 'see',  targetType: this.ANY_TYPE, template: 'I.seeElement({{{target}}});' },
         { action: 'see',  targetType: this.ANY_TYPE, modifier: 'not', template: 'I.dontSeeElement({{{target}}});' },

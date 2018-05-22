@@ -157,7 +157,7 @@ describe('ActionMapperTest', () => {
             };
             expect(mapper.map(command)).toContainEqual('I.dontSeeCurrentUrlEquals("http://www.mysite.com/login");' + comment);
         });
-        it('see in current url', () => {
+        it('see the url with', () => {
             let command = {
                 action: 'see',
                 options: ['with', 'url'],
@@ -166,13 +166,23 @@ describe('ActionMapperTest', () => {
             };
             expect(mapper.map(command)).toContainEqual('I.dontSeeInCurrentUrl("/login");' + comment);
         });
-        it('see in current url 2', () => {
+        it('see in the url', () => {
             let command = {
-                modifier: 'not',
+                action: 'see',
+                options: ['inside'],
+                targetTypes: ['url'],
+                values: ['/login'],
+                modifier: 'not'
+            };
+            expect(mapper.map(command)).toContainEqual('I.dontSeeInCurrentUrl("/login");' + comment);
+        });
+        it('see in current url', () => {
+            let command = {
                 action: 'see',
                 options: ['with'],
                 targetTypes: ['url'],
-                values: ['/login']
+                values: ['/login'],
+                modifier: 'not'
             };
             expect(mapper.map(command)).toContainEqual('I.dontSeeInCurrentUrl("/login");' + comment);
         });
@@ -281,7 +291,7 @@ describe('ActionMapperTest', () => {
             };
             expect(mapper.map(command)).toContainEqual('I.seeCurrentUrlEquals("http://www.mysite.com/login");' + comment);
         });
-        it('see in current url', () => {
+        it('see the url with - in options', () => {
             let command = {
                 action: 'see',
                 options: ['with', 'url'],
@@ -289,10 +299,19 @@ describe('ActionMapperTest', () => {
             };
             expect(mapper.map(command)).toContainEqual('I.seeInCurrentUrl("/login");' + comment);
         });
-        it('see in current url 2', () => {
+        it('see the url with - option and target type', () => {
             let command = {
                 action: 'see',
                 options: ['with'],
+                targetTypes: ['url'],
+                values: ['/login']
+            };
+            expect(mapper.map(command)).toContainEqual('I.seeInCurrentUrl("/login");' + comment);
+        });
+        it('see in the url', () => {
+            let command = {
+                action: 'see',
+                options: ['inside'],
                 targetTypes: ['url'],
                 values: ['/login']
             };
