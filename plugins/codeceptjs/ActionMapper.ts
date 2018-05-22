@@ -139,7 +139,7 @@ export class ActionMapper {
         { action: 'wait', targetType: 'text', template: 'I.waitForText({{{target}}}, {{{value}}});' },
         { action: 'wait', targetType: this.NONE_TYPE, ignoreOptions: true, firstValueShouldBeInteger: true, template: 'I.wait({{{value}}});' },
         { action: 'wait', targetType: this.NONE_TYPE, template: 'I.waitForText({{{value}}});', valueAsNonArray: true },
-        { action: 'wait', targetType: this.ANY_TYPE, template: 'I.waitForElement({{{target}}}, {{{value}}});' },
+        { action: 'wait', targetType: this.ANY_TYPE, template: 'I.waitForElement({{{target}}}, {{{value}}});', firstValueShouldBeInteger: true },
     ];
 
 
@@ -173,26 +173,27 @@ export class ActionMapper {
             const onlyForValues = ( ( ! obj.targetType || this.NONE_TYPE === obj.targetType )
                 && ( ! command.targets || command.targets.length < 1 ) );
 
-            const sameOptions = this.sameValues( obj.options, command.options );
-
-            if ( onlyForValues ) {
-                if ( true === obj.firstValueShouldBeInteger ) {
-                    if ( ! command.values || command.values.length < 1 ) {
-                        return false;
-                    }
-                    const value = command.values[ 0 ];
-                    if ( 'number' === typeof value || ! isNaN( parseInt( value ) ) ) {
-                        command.values[ 0 ] = Number( value ); // Guarantee number type
-                        return true;
-                    }
-                    return false;
-                }
-                return ( sameOptions || obj.ignoreOptions ) && sameModifier;
-            }
-
             const acceptsAny = this.ANY_TYPE === obj.targetType
                 && Array.isArray( command.targets )
                 && command.targets.length > 0;
+
+            const sameOptions = this.sameValues( obj.options, command.options );
+
+            if ( ( onlyForValues || acceptsAny ) && true === obj.firstValueShouldBeInteger ) {
+                if ( ! command.values || command.values.length < 1 ) {
+                    return false;
+                }
+                const value = command.values[ 0 ];
+                if ( 'number' === typeof value || ! isNaN( parseInt( value ) ) ) {
+                    command.values[ 0 ] = Number( value ); // Guarantee number type
+                    return true;
+                }
+                return false;
+            }
+
+            if ( onlyForValues ) {
+                return ( sameOptions || obj.ignoreOptions ) && sameModifier;
+            }
 
             const sameTargetType = acceptsAny
                 || ( Array.isArray( command.targetTypes )
