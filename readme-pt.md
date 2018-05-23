@@ -199,6 +199,12 @@ Veja [esse outro exemplo](docs/example-pt.md) para ter uma melhor visão geral d
 - [Português](docs/language/pt.md)
 
 
+## Exemplos de ações
+
+- [English](docs/actions.md)
+- [Português](docs/actions-pt.md)
+
+
 ## CLI
 
 ```

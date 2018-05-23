@@ -534,6 +534,7 @@ Test Case: Successful login - 1
     And I see a button <#logout>
 ```
 
+See [examples of actions](../actions.md)
 
 ### Test Events
 
