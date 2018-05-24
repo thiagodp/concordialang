@@ -3,6 +3,5 @@ node_js:
   - "10"
   - "9"
   - "8"
-addons:
-  apt:
-    update: true
+before_install:
+  - sudo apt-get -qq update
