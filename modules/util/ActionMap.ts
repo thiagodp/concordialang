@@ -10,7 +10,7 @@ import { ActionTargets } from "./ActionTargets";
  */
 export const ACTION_TARGET_MAP = new Map< string, string >(
     [
-        [ Actions.AM_IN           , ActionTargets.URL          ],
+        [ Actions.AM_ON           , ActionTargets.URL          ],
         [ Actions.APPEND          , ActionTargets.LISTBOX      ],
         [ Actions.ATTACH_FILE     , ActionTargets.DIV          ],
         [ Actions.CHECK           , ActionTargets.CHECKBOX     ],

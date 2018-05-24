@@ -7,7 +7,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
  */
 var Actions;
 (function (Actions) {
-    Actions["AM_IN"] = "amIn";
+    Actions["AM_ON"] = "amOn";
     Actions["APPEND"] = "append";
     Actions["ATTACH_FILE"] = "attachFile";
     Actions["CHECK"] = "check";

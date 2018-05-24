@@ -3,7 +3,7 @@
 > Examples of Variant sentences with actions
 
 
-## `amIn`
+## `amOn`
 
 ```gherkin
 Given that I am on "http://concordialang.org"

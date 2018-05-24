@@ -4,7 +4,7 @@
  * @author Thiago Delgado Pinto
  */
 export enum Actions {
-    AM_IN           = "amIn"          , // web, mobile web
+    AM_ON           = "amOn"          , // web, mobile web
     APPEND          = "append"        , // web, mobile web, mobile native, desktop
     ATTACH_FILE     = "attachFile"    , // web, mobile web
     CHECK           = "check"         , // web, mobile web, mobile native, desktop

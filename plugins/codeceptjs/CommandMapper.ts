@@ -102,7 +102,17 @@ export class CommandMapper {
         let s = '// ';
         for ( let prop in cmd ) {
             let val = cmd[ prop ];
-            val = Array.isArray( val ) ? '[ "' + val.join( '", "' ) + '" ]' : '"' + ( val || '' ) + '"';
+            if ( Array.isArray( val ) ) {
+                if ( 0 === val.length ) {
+                    val = '[]';
+                } else {
+                    val = '[ "' + val.join( '", "' ) + '" ]';
+                }
+            } else if ( undefined === val ) {
+                continue;
+            } else {
+                val = '"' + ( val || '' ) + '"';
+            }
             s += prop.substr( 0, 1 ).toUpperCase() + prop.substr( 1 ) + ': ' + val + '  ';
         }
         return s;

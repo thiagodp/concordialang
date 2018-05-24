@@ -30,7 +30,7 @@ Left column indicates currently available actions in Concordia, while the right 
  | -                                         | _locateClickable
  | -                                         | _locateFields
  | -                                         | acceptPopup
- | amIn                                      | amOnPage ✓
+ | amOn                                      | amOnPage ✓
  | append                                    | appendField ✓
  | attachFile                                | attachFile ✓
  | check                                     | checkOption ✓

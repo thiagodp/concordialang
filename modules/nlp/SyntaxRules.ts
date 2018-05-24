@@ -39,7 +39,7 @@ export const DEFAULT_UI_ACTION_SYNTAX_RULE = {
  * @author Thiago Delgado Pinto
  */
 export const UI_ACTION_SYNTAX_RULES = [
-    { name: "amIn", targets: [ "ui_element", "ui_literal", "value", "number", "constant" ] },
+    { name: "amOn", targets: [ "ui_element", "ui_literal", "value", "number", "constant" ] },
     { name: "append" },
     { name: "attachFile" },
     { name: "check", maxTargets: 999, targets: [ "ui_element", "ui_literal", "value", "number", "constant" ] },
@@ -63,7 +63,7 @@ export const UI_ACTION_SYNTAX_RULES = [
     { name: "press", targets: [ "value", "number", "constant" ], maxTargets: 5 },
     { name: "refresh" },
     { name: "rightClick", targets: [ "ui_element", "ui_literal", "value", "number", "constant" ] },
-    { name: "saveScreenshot", minTargets: 0, maxTargets: 0 },
+    { name: "saveScreenshot", targets: [ "value", "constant" ], minTargets: 1, maxTargets: 1 },
     { name: "see",  maxTargets: 2,
         targets: [ "ui_element", "ui_literal", "value", "number", "constant" ],
         ui_element: { min: 0, max: 1 },

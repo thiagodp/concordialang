@@ -2,7 +2,7 @@
 
 > Exemplos de sentenças de Variantes com ações
 
-## `amIn`
+## `amOn`
 
 ```gherkin
 Dado que estou em "http://concordialang.org"

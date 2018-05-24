@@ -10,7 +10,7 @@ const ActionTargets_1 = require("./ActionTargets");
  * @author Thiago Delgado Pinto
  */
 exports.ACTION_TARGET_MAP = new Map([
-    [Actions_1.Actions.AM_IN, ActionTargets_1.ActionTargets.URL],
+    [Actions_1.Actions.AM_ON, ActionTargets_1.ActionTargets.URL],
     [Actions_1.Actions.APPEND, ActionTargets_1.ActionTargets.LISTBOX],
     [Actions_1.Actions.ATTACH_FILE, ActionTargets_1.ActionTargets.DIV],
     [Actions_1.Actions.CHECK, ActionTargets_1.ActionTargets.CHECKBOX],
