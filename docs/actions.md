@@ -2,6 +2,7 @@
 
 > Examples of Variant sentences with actions
 
+Translations: [Português](actions-pt.md)
 
 ## `amOn`
 
