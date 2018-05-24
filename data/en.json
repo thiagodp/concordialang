@@ -57,7 +57,7 @@
             },
 
             "ui_action": {
-                "amIn": [ "am in", "am on", "am at" ],
+                "amOn": [ "am on", "am in", "am at" ],
                 "append": [ "append", "add", "insert" ],
                 "attachFile": [ "attach the file", "add the file", "insert the file", "overwrite the file" ],
                 "check": [ "check" ],

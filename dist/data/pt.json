@@ -103,7 +103,7 @@
             },
 
             "ui_action": {
-                "amIn": [ "estou" ],
+                "amOn": [ "estou" ],
                 "append": [ "adiciono", "acrescento", "insiro" ],
                 "attachFile": [ "anexo o arquivo", "adiciono o arquivo", "sobrescrevo o arquivo" ],
                 "check": [ "marco" ],
@@ -123,7 +123,7 @@
                 "refresh": [ "atualizo", "recarrego" ],
                 "resize": [ "redimensiono", "modifico o tamanho" ],
                 "rightClick": [ "clico com o botao direito", "aciono o botao direito" ],
-                "saveScreenshot": [ "salvo a tela", "foto da tela", "print da tela", "screenshot", "printscreen" ],
+                "saveScreenshot": [ "salvo a tela", "salvo uma foto", "foto da tela", "print da tela", "screenshot", "printscreen" ],
                 "scrollTo": [ "rolo" ],
                 "see": [ "vejo", "enxergo", "consigo ver", "devo ver", "ver" ],
                 "select": [ "seleciono" ],

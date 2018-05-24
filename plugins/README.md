@@ -17,7 +17,7 @@ A plug-in can generate code for any programming language and testing framework.
 
 *Plugin for [CodeceptJS](https://codecept.io) that tests web applications with different browsers, such as Chrome, Firefox, and IE.*
 
-Mapping from JSON into code is available in `codeceptjs/ActionMapper.ts`.
+Mapping from JSON into code is available in `codeceptjs/CommandMapper.ts`.
 
 Left column indicates currently available actions in Concordia, while the right column lists those commands available in the framework.  A tick (✓) means "checked with a test".
 

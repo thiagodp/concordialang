@@ -103,7 +103,7 @@
             },
 
             "ui_action": {
-                "amIn": [ "estou" ],
+                "amOn": [ "estou" ],
                 "append": [ "adiciono", "acrescento", "insiro" ],
                 "attachFile": [ "anexo o arquivo", "adiciono o arquivo", "sobrescrevo o arquivo" ],
                 "check": [ "marco" ],

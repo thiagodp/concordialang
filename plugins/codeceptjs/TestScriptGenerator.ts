@@ -1,6 +1,6 @@
-import { ActionMapper } from "./ActionMapper";
 import { render } from "mustache";
 import { AbstractTestScript, ATSCommand } from '../../modules/testscript/AbstractTestScript';
+import { CommandMapper } from "./CommandMapper";
 
 const dedent = require('dedent-js');
 
@@ -14,7 +14,7 @@ const dedent = require('dedent-js');
 export class TestScriptGenerator {
 
     private template: string;
-    private mapper: ActionMapper;
+    private mapper: CommandMapper;
 
     constructor() {
         this.template =
@@ -34,7 +34,7 @@ export class TestScriptGenerator {
         });
 
         {{/testcases}}`;
-        this.mapper = new ActionMapper();
+        this.mapper = new CommandMapper();
     }
 
     public generate( ats: AbstractTestScript ): string {

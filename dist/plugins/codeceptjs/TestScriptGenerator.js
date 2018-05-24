@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const ActionMapper_1 = require("./ActionMapper");
 const mustache_1 = require("mustache");
+const CommandMapper_1 = require("./CommandMapper");
 const dedent = require('dedent-js');
 /**
  * Generate test scripts for CodeceptJS.
@@ -28,7 +28,7 @@ class TestScriptGenerator {
         });
 
         {{/testcases}}`;
-        this.mapper = new ActionMapper_1.ActionMapper();
+        this.mapper = new CommandMapper_1.CommandMapper();
     }
     generate(ats) {
         // console.log( 'FROM', ats.sourceFile );
