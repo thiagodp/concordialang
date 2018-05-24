@@ -74,7 +74,7 @@ Quando eu arrasto {Foo} para <#bar>
 ## `fill`
 
 ```gherkin
-Quanndo eu preecho {Foo}
+Quando eu preecho {Foo}
   e eu informo {Foo}
   e eu entro com {Foo}
   e eu preencho {Foo} com "foo"
