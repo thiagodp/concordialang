@@ -2,7 +2,9 @@
 
 > Gere testes funcionais automaticamente a partir de sua especificação Ágil
 
-[![Build Status](https://travis-ci.org/thiagodp/concordialang.svg?branch=master)](https://travis-ci.org/thiagodp/concordialang) [![npm version](https://badge.fury.io/js/concordialang.svg)](https://badge.fury.io/js/concordialang)
+[![Build Status](https://travis-ci.org/thiagodp/concordialang.svg?branch=master)](https://travis-ci.org/thiagodp/concordialang) 
+[![npm version](https://badge.fury.io/js/concordialang.svg)](https://badge.fury.io/js/concordialang) 
+[![npm](https://img.shields.io/npm/l/concordialang.svg)](https://github.com/thiagodp/concordialang/blob/master/LICENSE.txt)
 
 *Concordia* é uma ferramenta que permite gerar [testes funcionais](https://en.wikipedia.org/wiki/Functional_testing) a partir de uma especificação de requisitos escrita em *Linguagem Concordia*. Você pode usá-las para:
 
