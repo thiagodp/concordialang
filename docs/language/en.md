@@ -99,15 +99,16 @@ Example 2 (*more than one per line*):
 Reserved tags:
 - `@scenario( <number> )`: references a [scenario](#scenario).
 - `@variant( <number> )`: references a [variant](#variant).
-- `@importance( <number> )`: indicates the importance. The importance is as higher as its number.
+- `@importance( <number> )`: indicates the importance. The importance is as high as its number.
 - `@generated`: indicates that a declaration was computer-generated.
 - `@fail`: indicates that a test case should fail.
-- `@global`: defines an element as global. Can be applied to [User Interface Element](#UserInterfaceElement).
+- `@global`: defines an element as global. Can be applied to [User Interface Element](#User%20Interface%20Element).
 - `@ignore`: indicates that a declaration should be ignored to generate tests.
 
 Reserved for future use:
+- `@extends( <name> )` allows inheritance of [User Interface Elements](#User%20Interface%20Element).
+- `@category( <name> )` specifies a category. Useful for organizing the documentation and for filtering it.
 - `@issue( <number> )` references an Issue.
-- `@category( <name> )` specifies a category. Useful for filtering.
 
 
 ### Feature
