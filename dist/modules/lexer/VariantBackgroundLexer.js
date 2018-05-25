@@ -17,4 +17,3 @@ class VariantBackgroundLexer extends BlockLexer_1.BlockLexer {
     }
 }
 exports.VariantBackgroundLexer = VariantBackgroundLexer;
-//# sourceMappingURL=VariantBackgroundLexer.js.map

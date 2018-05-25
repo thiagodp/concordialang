@@ -17,4 +17,3 @@ class TestCaseLexer extends NamedNodeLexer_1.NamedNodeLexer {
     }
 }
 exports.TestCaseLexer = TestCaseLexer;
-//# sourceMappingURL=TestCaseLexer.js.map

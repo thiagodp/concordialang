@@ -43,4 +43,3 @@ class Connector {
     }
 }
 exports.Connector = Connector;
-//# sourceMappingURL=Connector.js.map

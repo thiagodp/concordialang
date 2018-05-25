@@ -78,4 +78,3 @@ class FirstMostImportantVariantSelectionStrategy {
     }
 }
 exports.FirstMostImportantVariantSelectionStrategy = FirstMostImportantVariantSelectionStrategy;
-//# sourceMappingURL=VariantSelectionStrategy.js.map

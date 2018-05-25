@@ -78,4 +78,3 @@ class SqlHelper {
     }
 }
 exports.SqlHelper = SqlHelper;
-//# sourceMappingURL=SqlHelper.js.map

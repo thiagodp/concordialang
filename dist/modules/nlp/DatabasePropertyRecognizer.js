@@ -70,4 +70,3 @@ class DatabasePropertyRecognizer {
     }
 }
 exports.DatabasePropertyRecognizer = DatabasePropertyRecognizer;
-//# sourceMappingURL=DatabasePropertyRecognizer.js.map

@@ -43,4 +43,3 @@ describe('TableRowLexerTest', () => {
         expect(row.cells).toEqual(['foo', 'bar']);
     });
 });
-//# sourceMappingURL=TableRowLexerTest.spec.js.map

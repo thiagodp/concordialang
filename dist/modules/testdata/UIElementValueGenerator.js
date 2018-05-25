@@ -159,7 +159,7 @@ class UIElementValueGenerator {
                 //
                 // format is <number>|<value>|<constant>|<ui_element>
                 //
-                case DataTestCase_1.DataTestCaseGroup.FORMAT: {
+                case DataTestCase_1.DataTestCaseGroup.FORMAT: { // negation is not valid here
                     if (!pFormat) {
                         return null;
                     }
@@ -168,7 +168,7 @@ class UIElementValueGenerator {
                 //
                 // required is true|false
                 //
-                case DataTestCase_1.DataTestCaseGroup.REQUIRED: {
+                case DataTestCase_1.DataTestCaseGroup.REQUIRED: { // negation is not valid here
                     break;
                 }
                 //
@@ -177,7 +177,7 @@ class UIElementValueGenerator {
                 // value in                   <value_list>|<query>
                 // value not in               <value_list>|<query>
                 //
-                case DataTestCase_1.DataTestCaseGroup.SET: {
+                case DataTestCase_1.DataTestCaseGroup.SET: { // negation allowed
                     if (!pValue) {
                         return null;
                     }
@@ -189,7 +189,7 @@ class UIElementValueGenerator {
                 // min/max value is equal to      <number>|<value>|<constant>|<ui_element>
                 // min/max value in               <value_list>|<query>
                 //
-                case DataTestCase_1.DataTestCaseGroup.VALUE: {
+                case DataTestCase_1.DataTestCaseGroup.VALUE: { // negation is not valid here
                     break;
                 }
                 //
@@ -199,7 +199,7 @@ class UIElementValueGenerator {
                 case DataTestCase_1.DataTestCaseGroup.LENGTH: {
                     break;
                 }
-                case DataTestCase_1.DataTestCaseGroup.COMPUTATION: {
+                case DataTestCase_1.DataTestCaseGroup.COMPUTATION: { // not supported yet
                     return null;
                 }
                 default: return null;
@@ -316,7 +316,7 @@ class UIElementValueGenerator {
                             }
                         }
                     }
-                    else {
+                    else { // none
                         msg = 'Query must have a Database reference or a Table reference.';
                     }
                     if (TypeChecking_1.isDefined(msg)) {
@@ -344,7 +344,7 @@ class UIElementValueGenerator {
     resolveUIElementsInQuery(query, currentFeatureName, owner, context, doc, spec, errors) {
         return __awaiter(this, void 0, void 0, function* () {
             const variables = (new QueryParser_1.QueryParser()).parseAnyVariables(query);
-            if (variables.length < 1) {
+            if (variables.length < 1) { // No variables
                 return query;
             }
             const featureName = TypeChecking_1.isDefined(currentFeatureName)
@@ -514,4 +514,3 @@ class ValueGenContext {
     }
 }
 exports.ValueGenContext = ValueGenContext;
-//# sourceMappingURL=UIElementValueGenerator.js.map

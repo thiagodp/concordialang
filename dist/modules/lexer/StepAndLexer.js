@@ -17,4 +17,3 @@ class StepAndLexer extends StartingKeywordLexer_1.StartingKeywordLexer {
     }
 }
 exports.StepAndLexer = StepAndLexer;
-//# sourceMappingURL=StepAndLexer.js.map

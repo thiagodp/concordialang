@@ -46,4 +46,3 @@ describe('DoubleGeneratorTest', () => {
         expect(gen.randomAboveMax()).toBeGreaterThan(Number(max));
     });
 });
-//# sourceMappingURL=DoubleGeneratorTest.spec.js.map

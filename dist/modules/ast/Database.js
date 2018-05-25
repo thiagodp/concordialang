@@ -19,4 +19,3 @@ var DatabaseProperties;
     DatabaseProperties["CHARSET"] = "charset";
     DatabaseProperties["OPTIONS"] = "options";
 })(DatabaseProperties = exports.DatabaseProperties || (exports.DatabaseProperties = {}));
-//# sourceMappingURL=Database.js.map

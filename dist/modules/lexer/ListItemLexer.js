@@ -4,6 +4,7 @@ const Expressions_1 = require("../req/Expressions");
 const Symbols_1 = require("../req/Symbols");
 const LineChecker_1 = require("../req/LineChecker");
 const LexicalException_1 = require("../req/LexicalException");
+const CommentHandler_1 = require("./CommentHandler");
 /**
  * Detects a node with the format "- anything".
  *
@@ -35,14 +36,8 @@ class ListItemLexer {
         if (!result) {
             return null;
         }
-        let commentPos = line.indexOf(Symbols_1.Symbols.COMMENT_PREFIX);
-        let content;
-        if (commentPos >= 0) {
-            content = this._lineChecker.textAfterSeparator(this._symbol, line.substring(0, commentPos)).trim();
-        }
-        else {
-            content = this._lineChecker.textAfterSeparator(this._symbol, line).trim();
-        }
+        let content = (new CommentHandler_1.CommentHandler()).removeComment(line);
+        content = this._lineChecker.textAfterSeparator(this._symbol, content).trim();
         let pos = this._lineChecker.countLeftSpacesAndTabs(line);
         let node = {
             nodeType: this._nodeType,
@@ -58,4 +53,3 @@ class ListItemLexer {
     }
 }
 exports.ListItemLexer = ListItemLexer;
-//# sourceMappingURL=ListItemLexer.js.map

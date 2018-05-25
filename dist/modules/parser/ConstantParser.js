@@ -40,4 +40,3 @@ class ConstantParser {
     }
 }
 exports.ConstantParser = ConstantParser;
-//# sourceMappingURL=ConstantParser.js.map

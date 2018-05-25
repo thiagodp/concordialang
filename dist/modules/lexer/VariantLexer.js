@@ -17,4 +17,3 @@ class VariantLexer extends NamePlusNumberNodeLexer_1.NamePlusNumberNodeLexer {
     }
 }
 exports.VariantLexer = VariantLexer;
-//# sourceMappingURL=VariantLexer.js.map

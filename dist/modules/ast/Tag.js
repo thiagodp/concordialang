@@ -14,4 +14,3 @@ function tagsWithAnyOfTheNames(tags, names) {
     return tags.filter(t => names.indexOf(t.name.toLowerCase()) >= 0);
 }
 exports.tagsWithAnyOfTheNames = tagsWithAnyOfTheNames;
-//# sourceMappingURL=Tag.js.map

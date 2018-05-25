@@ -23,4 +23,3 @@ class TextCollector {
     }
 }
 exports.TextCollector = TextCollector;
-//# sourceMappingURL=TextCollector.js.map

@@ -50,4 +50,3 @@ describe('RegexLexerTest', () => {
         });
     });
 });
-//# sourceMappingURL=RegexLexerTest.spec.js.map

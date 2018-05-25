@@ -24,7 +24,7 @@ class VariantBackgroundParser {
             return false;
         }
         let target = doesNotHaveScenarios ? feature : context.currentScenario;
-        if (!target) {
+        if (!target) { // Only when currentScenario is not defined
             let e = new SyntaticException_1.SyntaticException('Could not determine the current scenario for the variant background.', node.location);
             errors.push(e);
             return false;
@@ -44,4 +44,3 @@ class VariantBackgroundParser {
     }
 }
 exports.VariantBackgroundParser = VariantBackgroundParser;
-//# sourceMappingURL=VariantBackgroundParser.js.map

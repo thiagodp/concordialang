@@ -28,4 +28,3 @@ describe('VersionUtilTest', () => {
         expect(vu.areCompatibleVersions('1.0', '1.1')).toBeFalsy();
     });
 });
-//# sourceMappingURL=VersionUtilTest.spec.js.map

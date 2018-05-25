@@ -27,4 +27,3 @@ class TableSSA extends SpecificationAnalyzer_1.SpecificationAnalyzer {
     }
 }
 exports.TableSSA = TableSSA;
-//# sourceMappingURL=TableSSA.js.map

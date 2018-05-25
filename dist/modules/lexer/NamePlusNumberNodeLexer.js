@@ -22,4 +22,3 @@ class NamePlusNumberNodeLexer extends NamedNodeLexer_1.NamedNodeLexer {
     }
 }
 exports.NamePlusNumberNodeLexer = NamePlusNumberNodeLexer;
-//# sourceMappingURL=NamePlusNumberNodeLexer.js.map

@@ -28,4 +28,3 @@ class QueryCache {
     }
 }
 exports.QueryCache = QueryCache;
-//# sourceMappingURL=QueryCache.js.map

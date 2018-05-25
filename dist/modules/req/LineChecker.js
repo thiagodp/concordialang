@@ -30,4 +30,3 @@ class LineChecker {
     }
 }
 exports.LineChecker = LineChecker;
-//# sourceMappingURL=LineChecker.js.map

@@ -16,4 +16,3 @@ class TagCollector {
     }
 }
 exports.TagCollector = TagCollector;
-//# sourceMappingURL=TagCollector.js.map

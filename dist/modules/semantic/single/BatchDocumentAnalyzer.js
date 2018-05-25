@@ -27,4 +27,3 @@ class BatchDocumentAnalyzer {
     }
 }
 exports.BatchDocumentAnalyzer = BatchDocumentAnalyzer;
-//# sourceMappingURL=BatchDocumentAnalyzer.js.map

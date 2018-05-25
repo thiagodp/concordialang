@@ -42,4 +42,3 @@ class TextLexer {
     }
 }
 exports.TextLexer = TextLexer;
-//# sourceMappingURL=TextLexer.js.map

@@ -25,7 +25,7 @@ class JsonSchemaVersionDetector {
             try {
                 obj = JSON.parse(content);
             }
-            catch (e) {
+            catch (e) { // SyntaxError
                 return null;
             }
         }
@@ -39,4 +39,3 @@ class JsonSchemaVersionDetector {
     }
 }
 exports.JsonSchemaVersionDetector = JsonSchemaVersionDetector;
-//# sourceMappingURL=JsonSchemaVersionDetector.js.map

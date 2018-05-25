@@ -17,4 +17,3 @@ class ScenarioLexer extends NamedNodeLexer_1.NamedNodeLexer {
     }
 }
 exports.ScenarioLexer = ScenarioLexer;
-//# sourceMappingURL=ScenarioLexer.js.map

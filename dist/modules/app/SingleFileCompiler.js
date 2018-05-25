@@ -60,4 +60,3 @@ class SingleFileCompiler {
     }
 }
 exports.SingleFileCompiler = SingleFileCompiler;
-//# sourceMappingURL=SingleFileCompiler.js.map

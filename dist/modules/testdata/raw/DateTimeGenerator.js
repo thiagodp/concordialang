@@ -91,7 +91,7 @@ class DateTimeGenerator {
         const days = Math.round((diffInDaysOfDates - 1) / 2);
         const seconds = Math.round((diffInSecondsOfTimes - 1) / 2);
         let r = this._min.plusDays(days);
-        if (maxTime.compareTo(minTime) > 0) {
+        if (maxTime.compareTo(minTime) > 0) { // maxTime greater than minTime
             return r.plusSeconds(seconds);
         }
         return r.minusMonths(seconds);
@@ -130,4 +130,3 @@ class DateTimeGenerator {
     }
 }
 exports.DateTimeGenerator = DateTimeGenerator;
-//# sourceMappingURL=DateTimeGenerator.js.map

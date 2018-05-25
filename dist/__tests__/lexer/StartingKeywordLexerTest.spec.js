@@ -69,4 +69,3 @@ describe('StartingKeywordLexerTest', () => {
         expect(r).toBeNull();
     });
 });
-//# sourceMappingURL=StartingKeywordLexerTest.spec.js.map

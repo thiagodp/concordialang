@@ -237,7 +237,7 @@ class UIElementPropertyExtractor {
         let declaredPropertyMap = new Map(); // Just the first of each kind
         for (let propType of valueBasedPropertyTypes) {
             let properties = propertiesMap.get(propType);
-            if (!properties || properties.length < 2) {
+            if (!properties || properties.length < 2) { // << 2 because 1 has no conflit
                 continue;
             }
             let uiProperty = properties[0];
@@ -271,7 +271,7 @@ class UIElementPropertyExtractor {
         const nlpUtil = new NLPResult_1.NLPUtil();
         for (let propType of valueBasedPropertyTypes) {
             let properties = propertiesMap.get(propType);
-            if (!properties || properties.length < 2) {
+            if (!properties || properties.length < 2) { // << 2 because 1 has no conflict
                 continue;
             }
             // Operators are not compatible, so if there are more than one operator
@@ -287,7 +287,7 @@ class UIElementPropertyExtractor {
             const modifiers = properties
                 .map(p => nlpUtil.entityNamed(Entities_1.Entities.UI_CONNECTOR_MODIFIER, p.nlpResult))
                 .map(entity => entity.entity);
-            if (modifiers.length != 1) {
+            if (modifiers.length != 1) { // e.g., 0 or 2
                 incompatible.push(properties);
             }
         }
@@ -336,4 +336,3 @@ class UIElementPropertyExtractor {
     }
 }
 exports.UIElementPropertyExtractor = UIElementPropertyExtractor;
-//# sourceMappingURL=UIElementPropertyExtractor.js.map

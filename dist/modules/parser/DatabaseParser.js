@@ -20,4 +20,3 @@ class DatabaseParser {
     }
 }
 exports.DatabaseParser = DatabaseParser;
-//# sourceMappingURL=DatabaseParser.js.map

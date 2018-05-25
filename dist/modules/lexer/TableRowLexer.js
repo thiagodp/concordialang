@@ -53,4 +53,3 @@ class TableRowLexer {
     }
 }
 exports.TableRowLexer = TableRowLexer;
-//# sourceMappingURL=TableRowLexer.js.map

@@ -17,4 +17,3 @@ class RegexBlockLexer extends BlockLexer_1.BlockLexer {
     }
 }
 exports.RegexBlockLexer = RegexBlockLexer;
-//# sourceMappingURL=RegexBlockLexer.js.map

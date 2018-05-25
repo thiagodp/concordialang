@@ -43,4 +43,3 @@ class GraphFilter extends events_1.EventEmitter {
     }
 }
 exports.GraphFilter = GraphFilter;
-//# sourceMappingURL=GraphFilter.js.map

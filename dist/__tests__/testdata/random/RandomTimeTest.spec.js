@@ -23,4 +23,3 @@ describe('RandomTimeTest', () => {
         expect(val.isBefore(max)).toBeTruthy();
     });
 });
-//# sourceMappingURL=RandomTimeTest.spec.js.map

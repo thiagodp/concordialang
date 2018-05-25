@@ -13,4 +13,3 @@ StringLimits.MAX = 32767; // max short
 // a "usual" maximum length value.
 StringLimits.MAX_USUAL = 127; // max byte
 exports.StringLimits = StringLimits;
-//# sourceMappingURL=StringLimits.js.map

@@ -11,4 +11,3 @@ process.on('uncaughtException', console.error);
     console.error(err);
     process.exit(1);
 });
-//# sourceMappingURL=main.js.map

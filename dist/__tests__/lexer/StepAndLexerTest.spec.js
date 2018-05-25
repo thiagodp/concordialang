@@ -26,4 +26,3 @@ describe('StepAndLexerTest', () => {
         expect(node.content).toBe('And \t the world and everybody on it');
     });
 });
-//# sourceMappingURL=StepAndLexerTest.spec.js.map

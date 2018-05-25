@@ -9,4 +9,3 @@ class VariantRef {
     }
 }
 exports.VariantRef = VariantRef;
-//# sourceMappingURL=VariantRef.js.map

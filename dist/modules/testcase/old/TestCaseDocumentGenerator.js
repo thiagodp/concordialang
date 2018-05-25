@@ -33,7 +33,7 @@ class TestCaseDocumentGenerator extends events_1.EventEmitter {
         for (let [key, value] of graph.vertices_topologically()) {
             const doc = value;
             const newDoc = this.newVariantDocumentFrom(doc, spec, outputDir, startLine);
-            if (!newDoc) {
+            if (!newDoc) { // Probably because the original doc has no variants
                 continue;
             }
             // # Grab the documents' relationship to be added to the graph later.
@@ -137,4 +137,3 @@ class TestCaseDocumentGenerator extends events_1.EventEmitter {
     }
 }
 exports.TestCaseDocumentGenerator = TestCaseDocumentGenerator;
-//# sourceMappingURL=TestCaseDocumentGenerator.js.map

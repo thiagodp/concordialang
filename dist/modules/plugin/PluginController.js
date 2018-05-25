@@ -77,4 +77,3 @@ class PluginController {
     }
 }
 exports.PluginController = PluginController;
-//# sourceMappingURL=PluginController.js.map

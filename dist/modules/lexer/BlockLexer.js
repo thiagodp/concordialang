@@ -4,6 +4,7 @@ const Symbols_1 = require("../req/Symbols");
 const LineChecker_1 = require("../req/LineChecker");
 const Expressions_1 = require("../req/Expressions");
 const LexicalException_1 = require("../req/LexicalException");
+const CommentHandler_1 = require("./CommentHandler");
 /**
  * Detects a node in the format "keyword:".
  *
@@ -46,14 +47,7 @@ class BlockLexer {
         if (!result) {
             return null;
         }
-        let commentPos = line.indexOf(Symbols_1.Symbols.COMMENT_PREFIX);
-        let content;
-        if (commentPos >= 0) {
-            content = line.substring(0, commentPos).trim();
-        }
-        else {
-            content = line.trim();
-        }
+        let content = (new CommentHandler_1.CommentHandler()).removeComment(line);
         let pos = this._lineChecker.countLeftSpacesAndTabs(line);
         let node = {
             nodeType: this._nodeType,
@@ -70,4 +64,3 @@ class BlockLexer {
     }
 }
 exports.BlockLexer = BlockLexer;
-//# sourceMappingURL=BlockLexer.js.map

@@ -38,4 +38,3 @@ class VariantParser {
     }
 }
 exports.VariantParser = VariantParser;
-//# sourceMappingURL=VariantParser.js.map

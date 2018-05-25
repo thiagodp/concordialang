@@ -81,4 +81,3 @@ describe('FeatureParserTest', () => {
         expect(context.doc.feature.sentences).toHaveLength(3);
     });
 });
-//# sourceMappingURL=FeatureParserTest.spec.js.map

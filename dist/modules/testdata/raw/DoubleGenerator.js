@@ -130,4 +130,3 @@ class DoubleGenerator {
     }
 }
 exports.DoubleGenerator = DoubleGenerator;
-//# sourceMappingURL=DoubleGenerator.js.map

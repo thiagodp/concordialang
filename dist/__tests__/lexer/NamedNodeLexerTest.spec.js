@@ -154,4 +154,3 @@ describe('NamedNodeLexerTest', () => {
         expect(lexer.isValidName('Some-name 100 _val.')).toBeTruthy();
     });
 });
-//# sourceMappingURL=NamedNodeLexerTest.spec.js.map

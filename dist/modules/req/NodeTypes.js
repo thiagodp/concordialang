@@ -20,4 +20,3 @@ NodeTypes.TABLE_ROW = 'tableRow';
 NodeTypes.LONG_STRING = 'longString'; // a.k.a. py string
 NodeTypes.TEXT = 'text'; // not empty content
 exports.NodeTypes = NodeTypes;
-//# sourceMappingURL=NodeTypes.js.map

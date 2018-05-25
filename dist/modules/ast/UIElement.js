@@ -42,4 +42,3 @@ class EntityValue {
     }
 }
 exports.EntityValue = EntityValue;
-//# sourceMappingURL=UIElement.js.map

@@ -85,6 +85,7 @@ class UIElementSSA extends SpecificationAnalyzer_1.SpecificationAnalyzer {
                     this.analyzeQuery(content, uiProperty, doc, spec, propValue.references, errors);
                     break;
                 }
+                // No default!
             }
         }
     }
@@ -152,4 +153,3 @@ class UIElementSSA extends SpecificationAnalyzer_1.SpecificationAnalyzer {
     }
 }
 exports.UIElementSSA = UIElementSSA;
-//# sourceMappingURL=UIElementSSA.js.map

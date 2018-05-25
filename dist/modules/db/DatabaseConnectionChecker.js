@@ -79,4 +79,3 @@ class DatabaseConnectionChecker {
     }
 }
 exports.DatabaseConnectionChecker = DatabaseConnectionChecker;
-//# sourceMappingURL=DatabaseConnectionChecker.js.map

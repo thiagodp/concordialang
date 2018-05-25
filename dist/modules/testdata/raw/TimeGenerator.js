@@ -120,4 +120,3 @@ class TimeGenerator {
     }
 }
 exports.TimeGenerator = TimeGenerator;
-//# sourceMappingURL=TimeGenerator.js.map

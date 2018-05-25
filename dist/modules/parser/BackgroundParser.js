@@ -37,4 +37,3 @@ class BackgroundParser {
     }
 }
 exports.BackgroundParser = BackgroundParser;
-//# sourceMappingURL=BackgroundParser.js.map

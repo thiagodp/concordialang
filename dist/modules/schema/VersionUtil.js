@@ -30,4 +30,3 @@ class VersionUtil {
     }
 }
 exports.VersionUtil = VersionUtil;
-//# sourceMappingURL=VersionUtil.js.map

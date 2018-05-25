@@ -40,4 +40,3 @@ class RegexParser {
     }
 }
 exports.RegexParser = RegexParser;
-//# sourceMappingURL=RegexParser.js.map

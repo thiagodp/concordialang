@@ -55,4 +55,3 @@ class StepThenParser {
     }
 }
 exports.StepThenParser = StepThenParser;
-//# sourceMappingURL=StepThenParser.js.map

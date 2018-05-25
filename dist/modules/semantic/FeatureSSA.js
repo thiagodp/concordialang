@@ -26,4 +26,3 @@ class FeatureSSA extends SpecificationAnalyzer_1.SpecificationAnalyzer {
     }
 }
 exports.FeatureSSA = FeatureSSA;
-//# sourceMappingURL=FeatureSSA.js.map

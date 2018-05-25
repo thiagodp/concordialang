@@ -42,4 +42,3 @@ class UIElementParser {
     }
 }
 exports.UIElementParser = UIElementParser;
-//# sourceMappingURL=UIElementParser.js.map

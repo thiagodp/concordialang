@@ -122,7 +122,7 @@ class DataTestCaseAnalyzer {
         const validPair = new ts_pair_1.Pair(DTCAnalysisResult.VALID, []);
         const incompatiblePair = new ts_pair_1.Pair(DTCAnalysisResult.INCOMPATIBLE, []);
         switch (group) {
-            case DataTestCase_1.DataTestCaseGroup.FORMAT: {
+            case DataTestCase_1.DataTestCaseGroup.FORMAT: { // negation is not valid here
                 if (!pFormat) {
                     return incompatiblePair;
                 }
@@ -132,7 +132,7 @@ class DataTestCaseAnalyzer {
                 }
                 return incompatiblePair;
             }
-            case DataTestCase_1.DataTestCaseGroup.REQUIRED: {
+            case DataTestCase_1.DataTestCaseGroup.REQUIRED: { // negation is not valid here
                 const isRequired = this._uiePropExtractor.extractIsRequired(uie);
                 switch (dtc) {
                     case DataTestCase_1.DataTestCase.REQUIRED_FILLED: return validPair;
@@ -323,7 +323,7 @@ class DataTestCaseAnalyzer {
                 }
                 return incompatiblePair;
             }
-            case DataTestCase_1.DataTestCaseGroup.COMPUTATION: {
+            case DataTestCase_1.DataTestCaseGroup.COMPUTATION: { // not supported yet
                 return incompatiblePair;
             }
             default: return incompatiblePair;
@@ -362,4 +362,3 @@ class DataTestCaseAnalyzer {
     }
 }
 exports.DataTestCaseAnalyzer = DataTestCaseAnalyzer;
-//# sourceMappingURL=DataTestCaseAnalyzer.js.map

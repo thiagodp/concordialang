@@ -28,4 +28,3 @@ describe('DatabaseLexerTest', () => {
         expect(n.name).toBe('My DB');
     });
 });
-//# sourceMappingURL=DatabaseLexerTest.spec.js.map

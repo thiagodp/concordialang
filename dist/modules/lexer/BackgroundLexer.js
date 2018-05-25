@@ -17,4 +17,3 @@ class BackgroundLexer extends BlockLexer_1.BlockLexer {
     }
 }
 exports.BackgroundLexer = BackgroundLexer;
-//# sourceMappingURL=BackgroundLexer.js.map

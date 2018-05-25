@@ -37,7 +37,7 @@ class CompilerController {
             let specAnalyzer = new BatchSpecificationAnalyzer_1.BatchSpecificationAnalyzer();
             const lm = new LanguageManager_1.LanguageManager(options.languageDir);
             const availableLanguages = yield lm.availableLanguages();
-            if (availableLanguages.indexOf(options.language) < 0) {
+            if (availableLanguages.indexOf(options.language) < 0) { // not found
                 throw new Error('Informed language is not available: ' + options.language);
             }
             // Verbose output option
@@ -57,4 +57,3 @@ class CompilerController {
     }
 }
 exports.CompilerController = CompilerController;
-//# sourceMappingURL=CompilerController.js.map

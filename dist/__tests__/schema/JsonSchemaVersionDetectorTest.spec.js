@@ -26,4 +26,3 @@ describe('JsonSchemaVersionDetectorTest', () => {
         expect(detector.detect(contentStr)).toBe('bar');
     });
 });
-//# sourceMappingURL=JsonSchemaVersionDetectorTest.spec.js.map

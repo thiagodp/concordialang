@@ -53,4 +53,3 @@ function escapeJson(json) {
     return JSON.stringify({ _: json }).slice(6, -2);
 }
 exports.escapeJson = escapeJson;
-//# sourceMappingURL=escape.js.map

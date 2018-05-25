@@ -37,4 +37,3 @@ var Entities;
     // from the intent "database"
     Entities["DB_PROPERTY"] = "db_property"; //                      e.g.: host, port, ...
 })(Entities = exports.Entities || (exports.Entities = {}));
-//# sourceMappingURL=Entities.js.map

@@ -10,4 +10,3 @@ class LanguageDrawer {
     }
 }
 exports.LanguageDrawer = LanguageDrawer;
-//# sourceMappingURL=LanguageDrawer.js.map

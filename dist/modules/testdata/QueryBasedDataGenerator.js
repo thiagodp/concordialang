@@ -99,7 +99,7 @@ class QueryBasedDataGenerator {
         if (!row) {
             return null;
         }
-        for (let key in row) {
+        for (let key in row) { // works for both an object or an array of values
             return row[key];
         }
         return null;
@@ -128,4 +128,3 @@ class QueryBasedDataGenerator {
     }
 }
 exports.QueryBasedDataGenerator = QueryBasedDataGenerator;
-//# sourceMappingURL=QueryBasedDataGenerator.js.map

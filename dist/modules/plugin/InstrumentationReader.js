@@ -38,4 +38,3 @@ class DefaultInstrumentationReader {
     }
 }
 exports.DefaultInstrumentationReader = DefaultInstrumentationReader;
-//# sourceMappingURL=InstrumentationReader.js.map

@@ -41,4 +41,3 @@ exports.ACTION_TARGET_MAP = new Map([
     [Actions_1.Actions.UNCHECK, ActionTargets_1.ActionTargets.CHECKBOX],
     [Actions_1.Actions.WAIT, ActionTargets_1.ActionTargets.TEXT]
 ]);
-//# sourceMappingURL=ActionMap.js.map

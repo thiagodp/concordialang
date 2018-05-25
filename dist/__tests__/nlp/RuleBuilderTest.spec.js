@@ -20,4 +20,3 @@ describe('RuleBuilderTest', () => {
         expect(first).toHaveProperty('one', 2);
     });
 });
-//# sourceMappingURL=RuleBuilderTest.spec.js.map

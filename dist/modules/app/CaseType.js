@@ -8,4 +8,3 @@ var CaseType;
     CaseType["KEBAB"] = "kebab";
     CaseType["NONE"] = "none";
 })(CaseType = exports.CaseType || (exports.CaseType = {}));
-//# sourceMappingURL=CaseType.js.map

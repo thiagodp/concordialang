@@ -315,4 +315,3 @@ describe('ParserTest', () => {
         expect(featureUIE.items[0].nodeType).toBe(NodeTypes_1.NodeTypes.UI_PROPERTY);
     });
 });
-//# sourceMappingURL=ParserTest.spec.js.map

@@ -13,4 +13,3 @@ class SyntaticException extends LocatedException_1.LocatedException {
     }
 }
 exports.SyntaticException = SyntaticException;
-//# sourceMappingURL=SyntaticException.js.map

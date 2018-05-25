@@ -15,4 +15,3 @@ var Intents;
     Intents["UI_ITEM_QUERY"] = "ui_item_query";
     Intents["DATABASE"] = "database";
 })(Intents = exports.Intents || (exports.Intents = {}));
-//# sourceMappingURL=Intents.js.map

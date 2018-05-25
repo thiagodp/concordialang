@@ -38,4 +38,3 @@ var Actions;
     Actions["UNCHECK"] = "uncheck";
     Actions["WAIT"] = "wait"; // web, mobile web, mobile native, desktop
 })(Actions = exports.Actions || (exports.Actions = {}));
-//# sourceMappingURL=Actions.js.map

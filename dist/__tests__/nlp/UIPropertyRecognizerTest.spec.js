@@ -60,4 +60,3 @@ describe('UIPropertyRecognizerTest', () => {
         });
     });
 });
-//# sourceMappingURL=UIPropertyRecognizerTest.spec.js.map

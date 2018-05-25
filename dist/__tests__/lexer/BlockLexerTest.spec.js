@@ -66,4 +66,3 @@ describe('BlockLexerTest', () => {
         expect(e.location.column).toBe(line.indexOf(content));
     });
 });
-//# sourceMappingURL=BlockLexerTest.spec.js.map

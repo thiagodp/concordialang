@@ -24,4 +24,3 @@ class LanguageController {
     }
 }
 exports.LanguageController = LanguageController;
-//# sourceMappingURL=LanguageController.js.map

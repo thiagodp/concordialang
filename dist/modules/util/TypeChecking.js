@@ -17,4 +17,3 @@ function valueOrNull(val) {
     return isDefined(val) ? val : null;
 }
 exports.valueOrNull = valueOrNull;
-//# sourceMappingURL=TypeChecking.js.map

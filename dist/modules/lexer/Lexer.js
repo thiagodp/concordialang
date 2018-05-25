@@ -156,7 +156,7 @@ class Lexer {
         if (this.shouldStop()) {
             return false;
         }
-        if (0 === line.trim().length) {
+        if (0 === line.trim().length) { // Ignore empty lines
             return false;
         }
         let result;
@@ -210,7 +210,7 @@ class Lexer {
         // Detects a language node and tries to change the language
         if (result.nodes.length > 0 && NodeTypes_1.NodeTypes.LANGUAGE === result.nodes[0].nodeType) {
             let language = result.nodes[0].value;
-            if (language != this._defaultLanguage) {
+            if (language != this._defaultLanguage) { // needs to change ?
                 try {
                     this.changeLanguage(language);
                 }
@@ -275,4 +275,3 @@ class Lexer {
     }
 }
 exports.Lexer = Lexer;
-//# sourceMappingURL=Lexer.js.map

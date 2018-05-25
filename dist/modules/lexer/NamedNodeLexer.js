@@ -4,6 +4,7 @@ const Expressions_1 = require("../req/Expressions");
 const Symbols_1 = require("../req/Symbols");
 const LineChecker_1 = require("../req/LineChecker");
 const LexicalException_1 = require("../req/LexicalException");
+const CommentHandler_1 = require("./CommentHandler");
 const XRegExp = require('xregexp');
 /**
  * Detects a node in the format "keyword: name".
@@ -51,16 +52,8 @@ class NamedNodeLexer {
             return null;
         }
         let pos = this._lineChecker.countLeftSpacesAndTabs(line);
-        let commentPos = line.indexOf(Symbols_1.Symbols.COMMENT_PREFIX);
-        let name;
-        if (commentPos >= 0) {
-            name = this._lineChecker
-                .textAfterSeparator(this._separator, line.substring(0, commentPos))
-                .trim();
-        }
-        else {
-            name = this._lineChecker.textAfterSeparator(this._separator, line).trim();
-        }
+        let name = (new CommentHandler_1.CommentHandler()).removeComment(line);
+        name = this._lineChecker.textAfterSeparator(this._separator, name).trim();
         let node = {
             nodeType: this._nodeType,
             location: { line: lineNumber || 0, column: pos + 1 },
@@ -84,4 +77,3 @@ class NamedNodeLexer {
     }
 }
 exports.NamedNodeLexer = NamedNodeLexer;
-//# sourceMappingURL=NamedNodeLexer.js.map

@@ -63,4 +63,3 @@ class PluginDrawer {
     }
 }
 exports.PluginDrawer = PluginDrawer;
-//# sourceMappingURL=PluginDrawer.js.map

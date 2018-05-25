@@ -65,4 +65,3 @@ class FileInstrumentationReader {
     }
 }
 exports.FileInstrumentationReader = FileInstrumentationReader;
-//# sourceMappingURL=FileInstrumentationReader.js.map

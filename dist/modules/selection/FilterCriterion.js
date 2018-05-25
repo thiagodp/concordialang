@@ -30,4 +30,3 @@ var FilterCriterion;
     FilterCriterion["NAME_ENDING_WITH"] = "name_ending_with";
     FilterCriterion["NAME_CONTAINING"] = "name_containing";
 })(FilterCriterion = exports.FilterCriterion || (exports.FilterCriterion = {}));
-//# sourceMappingURL=FilterCriterion.js.map

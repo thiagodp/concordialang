@@ -13,4 +13,3 @@ class Warning extends LocatedException_1.LocatedException {
     }
 }
 exports.Warning = Warning;
-//# sourceMappingURL=Warning.js.map

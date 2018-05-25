@@ -87,4 +87,3 @@ describe('ValueTypeDetectorTest', () => {
         expect(d.isDateTime('2017-12-31 24:59:59.999')).toBeFalsy(); // invalid time
     });
 });
-//# sourceMappingURL=ValueTypeDetectorTest.spec.js.map

@@ -37,4 +37,3 @@ class TestCaseParser {
     }
 }
 exports.TestCaseParser = TestCaseParser;
-//# sourceMappingURL=TestCaseParser.js.map

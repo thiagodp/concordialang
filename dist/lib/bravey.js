@@ -1222,7 +1222,7 @@ Bravey.DocumentClassifier = function (extensions) {
         return 'stemCount:' + stem;
     };
     var log = function (text) {
-        if (Bravey.DEBUG) {
+        if (Bravey.DEBUG) { // <<< by TDP
             console.log(text);
         }
     };
@@ -4868,7 +4868,7 @@ Bravey.Language.PT.NumberEntityRecognizer = function (entityName, priority) {
                 };
             }
             if (token.trim()) {
-                if (token.trim() == 'e' && 0 == sum) {
+                if (token.trim() == 'e' && 0 == sum) { // skip "e" before a number
                     cursor += token.length;
                     continue;
                 }
@@ -4946,7 +4946,7 @@ Bravey.Nlp.Fuzzy = function (nlpName, extensions) {
         for (var i = 0; i < ent.length; i++)
             if (!done[ent[i].entity]) {
                 done[ent[i].entity] = 1;
-                if (entities[ent[i].entity]) {
+                if (entities[ent[i].entity]) { // <<< by TDP
                     entities[ent[i].entity].getEntities(text, out);
                 }
             }
@@ -5032,7 +5032,7 @@ Bravey.Nlp.Fuzzy = function (nlpName, extensions) {
                         entity: ent,
                         id: nextid
                     });
-                    if (Bravey.DEBUG) {
+                    if (Bravey.DEBUG) { // <<< by TDP
                         console.warn("Adding entity", nextid, "to", intent.name);
                     }
                 }
@@ -5066,7 +5066,7 @@ Bravey.Nlp.Fuzzy = function (nlpName, extensions) {
                     entity: ent,
                     id: nextid
                 });
-                if (Bravey.DEBUG) {
+                if (Bravey.DEBUG) { // <<< by TDP
                     console.warn("Adding entity", nextid, "to", intent.name);
                 }
             }
@@ -5195,11 +5195,11 @@ Bravey.Nlp.Fuzzy = function (nlpName, extensions) {
      */
     this.addDocument = function (text, intent, guess) {
         if (guess) {
-            if (guess.fromFullSentence) {
+            if (guess.fromFullSentence) { // From a full sentence...
                 text = Bravey.Text.clean(text);
-                if (guess.expandIntent) {
+                if (guess.expandIntent) { // Expand intent with found items
                     if (!intents[intent]) {
-                        if (Bravey.DEBUG) {
+                        if (Bravey.DEBUG) { // <<< by TDP
                             console.warn("Adding intent", intent);
                         }
                         this.addIntent(intent, []);
@@ -5208,10 +5208,10 @@ Bravey.Nlp.Fuzzy = function (nlpName, extensions) {
                     return documentClassifier.addDocument(expanded.text, intent);
                 }
             }
-            else if (guess.fromTaggedSentence) {
-                if (guess.expandIntent) {
+            else if (guess.fromTaggedSentence) { // From a {tagged} sentence...
+                if (guess.expandIntent) { // Expand intent with found items
                     if (!intents[intent]) {
-                        if (Bravey.DEBUG) {
+                        if (Bravey.DEBUG) { // <<< by TDP
                             console.warn("Adding intent", intent);
                         }
                         this.addIntent(intent, []);
@@ -5220,16 +5220,16 @@ Bravey.Nlp.Fuzzy = function (nlpName, extensions) {
                     return documentClassifier.addDocument(expanded.text, intent);
                 }
             }
-            if (Bravey.DEBUG) {
+            if (Bravey.DEBUG) { // <<< by TDP
                 console.warn("Can't guess...");
             }
             return false;
         }
-        else {
+        else { // Link a marked sentence to a particular intent
             if (intents[intent])
                 return documentClassifier.addDocument(Bravey.Text.clean(text), intent);
             else {
-                if (Bravey.DEBUG) {
+                if (Bravey.DEBUG) { // <<< by TDP
                     console.warn("Can't find intent", intent);
                 }
                 return false;
@@ -5255,11 +5255,11 @@ Bravey.Nlp.Fuzzy = function (nlpName, extensions) {
                     return result;
                 }
             default:
-                {
+                { // When entities are enough, check classifier.
                     var classification, entlist, result = false, resultscore = -1, resultfound = -1;
                     for (var intent in intents) {
                         entlist = getEntities(text, intents[intent]);
-                        if (!entlist.exceedEntities && !entlist.extraEntities && !entlist.missingEntities) {
+                        if (!entlist.exceedEntities && !entlist.extraEntities && !entlist.missingEntities) { // No unwanted entites, entity count under the threshold and 0 entities for no entities intents
                             classification = documentClassifier.classifyDocument(entlist.text);
                             if ((classification.scores[intent] > confidence) && ((classification.scores[intent] > resultscore) || ((classification.scores[intent] == resultscore) && (entlist.found > resultfound)))) {
                                 result = entlist;
@@ -5328,7 +5328,7 @@ Bravey.Nlp.Sequential = function (nlpName, extensions) {
         for (var i = 0; i < ent.length; i++)
             if (!done[ent[i].entity]) {
                 done[ent[i].entity] = 1;
-                if (entities[ent[i].entity]) {
+                if (entities[ent[i].entity]) { //  <<< by TDP
                     entities[ent[i].entity].getEntities(text, out);
                 }
             }
@@ -5555,12 +5555,12 @@ Bravey.Nlp.Sequential = function (nlpName, extensions) {
      */
     this.addDocument = function (text, intent, guess) {
         if (guess) {
-            if (guess.fromFullSentence) {
+            if (guess.fromFullSentence) { // From a full sentence...
                 text = Bravey.Text.clean(text);
-                if (guess.expandIntent) {
+                if (guess.expandIntent) { // Expand intent with found items
                     var found = guessIntent(text, intent, guess.withNames);
                     if (!intents[found.name]) {
-                        if (Bravey.DEBUG) {
+                        if (Bravey.DEBUG) { // <<< by TDP
                             console.warn("Adding intent", found.name);
                         }
                         this.addIntent(intent, found.entities);
@@ -5568,17 +5568,17 @@ Bravey.Nlp.Sequential = function (nlpName, extensions) {
                     return documentClassifier.addDocument(found.text, intent);
                 }
             }
-            else if (guess.fromTaggedSentence) {
+            else if (guess.fromTaggedSentence) { // From a {tagged} sentence...
                 var found = guessIntentFromTagged(text, intent, guess.withNames);
                 if (found.error !== false) {
-                    if (Bravey.DEBUG) {
+                    if (Bravey.DEBUG) { // <<< by TDP
                         console.warn("Can't find entity typed", found.error);
                     }
                     return false;
                 }
                 else {
                     if (!intents[found.name]) {
-                        if (Bravey.DEBUG) {
+                        if (Bravey.DEBUG) { // <<< by TDP
                             console.warn("Adding intent", found.name);
                         }
                         this.addIntent(intent, found.entities);
@@ -5586,16 +5586,16 @@ Bravey.Nlp.Sequential = function (nlpName, extensions) {
                     return documentClassifier.addDocument(found.text, intent);
                 }
             }
-            if (Bravey.DEBUG) {
+            if (Bravey.DEBUG) { // <<< by TDP
                 console.warn("Can't guess...");
             }
             return false;
         }
-        else {
+        else { // Link a marked sentence to a particular intent
             if (intents[intent])
                 return documentClassifier.addDocument(Bravey.Text.clean(text), getIntentRoot(intent));
             else {
-                if (Bravey.DEBUG) {
+                if (Bravey.DEBUG) { // <<< by TDP
                     console.warn("Can't find intent", intent);
                 }
                 return false;
@@ -5612,11 +5612,11 @@ Bravey.Nlp.Sequential = function (nlpName, extensions) {
     this.test = function (text, method) {
         text = Bravey.Text.clean(text);
         switch (method) {
-            default: {
+            default: { // When entities are enough, check classifier.
                 var score, classification, entlist, result = false, resultscore = -1, resultfound = -1;
                 for (var intent in intents) {
                     entlist = getEntities(text, intents[intent]);
-                    if (!entlist.exceedEntities && !entlist.extraEntities && !entlist.missingEntities) {
+                    if (!entlist.exceedEntities && !entlist.extraEntities && !entlist.missingEntities) { // No unwanted entites, entity count under the threshold and 0 entities for no entities intents
                         classification = documentClassifier.classifyDocument(entlist.text);
                         score = classification.scores[intents[intent].root];
                         if ((score > confidence) && ((score > resultscore) || (entlist.found > resultfound))) {
@@ -5715,7 +5715,7 @@ Bravey.ApiAiAdapter = function (packagePath, extensions) {
                     if (!nlp.hasEntity(b)) {
                         skip = true;
                         if (!missingEntity[b]) {
-                            if (Bravey.DEBUG) {
+                            if (Bravey.DEBUG) { // <<< by TDP
                                 console.warn("Missing entity", b, data.userSays[i].data);
                             }
                             missingEntity[b] = 1;
@@ -6125,4 +6125,3 @@ Bravey.Filter.BasicFilter = function (tokens) {
     else
         return out;
 };
-//# sourceMappingURL=bravey.js.map

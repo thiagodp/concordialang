@@ -27,4 +27,3 @@ class RuleBuilder {
     }
 }
 exports.RuleBuilder = RuleBuilder;
-//# sourceMappingURL=RuleBuilder.js.map

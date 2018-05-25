@@ -176,4 +176,3 @@ class SimpleAppEventsListener {
     }
 }
 exports.SimpleAppEventsListener = SimpleAppEventsListener;
-//# sourceMappingURL=SimpleAppEventsListener.js.map

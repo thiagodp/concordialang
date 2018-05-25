@@ -67,4 +67,3 @@ class SingleDocumentProcessor {
     }
 }
 exports.SingleDocumentProcessor = SingleDocumentProcessor;
-//# sourceMappingURL=SingleDocumentProcessor.js.map

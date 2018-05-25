@@ -157,4 +157,3 @@ class VerboseAppEventsListener {
     }
 }
 exports.VerboseAppEventsListener = VerboseAppEventsListener;
-//# sourceMappingURL=VerboseAppEventsListener.js.map

@@ -10,4 +10,3 @@ var UIElementOperatorModifier;
 (function (UIElementOperatorModifier) {
     UIElementOperatorModifier["NOT"] = "not";
 })(UIElementOperatorModifier = exports.UIElementOperatorModifier || (exports.UIElementOperatorModifier = {}));
-//# sourceMappingURL=UIElementOperator.js.map

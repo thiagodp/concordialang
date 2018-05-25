@@ -17,4 +17,3 @@ class TableLexer extends NamedNodeLexer_1.NamedNodeLexer {
     }
 }
 exports.TableLexer = TableLexer;
-//# sourceMappingURL=TableLexer.js.map

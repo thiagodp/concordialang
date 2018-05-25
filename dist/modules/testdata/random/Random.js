@@ -25,4 +25,3 @@ class Random {
     }
 }
 exports.Random = Random;
-//# sourceMappingURL=Random.js.map

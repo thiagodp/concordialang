@@ -17,4 +17,3 @@ class ImportLexer extends QuotedNodeLexer_1.QuotedNodeLexer {
     }
 }
 exports.ImportLexer = ImportLexer;
-//# sourceMappingURL=ImportLexer.js.map

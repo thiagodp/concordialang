@@ -17,4 +17,3 @@ class FeatureLexer extends NamedNodeLexer_1.NamedNodeLexer {
     }
 }
 exports.FeatureLexer = FeatureLexer;
-//# sourceMappingURL=FeatureLexer.js.map

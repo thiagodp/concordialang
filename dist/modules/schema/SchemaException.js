@@ -12,4 +12,3 @@ class SchemaException extends Error {
     }
 }
 exports.SchemaException = SchemaException;
-//# sourceMappingURL=SchemaException.js.map

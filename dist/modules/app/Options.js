@@ -344,40 +344,40 @@ class Options {
             && (!justRun);
         this.compileSpecification = this.generateTestCase || this.generateScript;
         // Directories
-        if (TypeChecking_1.isString(obj.dirTestCase)) {
+        if (TypeChecking_1.isString(obj.dirTestCase)) { // singular
             this.dirTestCase = obj.dirTestCase;
         }
-        else if (TypeChecking_1.isString(obj.dirTestCases)) {
+        else if (TypeChecking_1.isString(obj.dirTestCases)) { // plural
             this.dirTestCase = obj.dirTestCases;
         }
-        if (TypeChecking_1.isString(obj.dirScript)) {
+        if (TypeChecking_1.isString(obj.dirScript)) { // singular
             this.dirScript = obj.dirScript;
         }
-        else if (TypeChecking_1.isString(obj.dirScripts)) {
+        else if (TypeChecking_1.isString(obj.dirScripts)) { // plural
             this.dirScript = obj.dirScripts;
         }
-        if (TypeChecking_1.isString(obj.dirResult)) {
+        if (TypeChecking_1.isString(obj.dirResult)) { // singular
             this.dirResult = obj.dirResult;
         }
-        else if (TypeChecking_1.isString(obj.dirResults)) {
+        else if (TypeChecking_1.isString(obj.dirResults)) { // plural
             this.dirResult = obj.dirResults;
         }
         if (TypeChecking_1.isString(obj.extensionFeature)) {
             this.extensionFeature = obj.extensionFeature;
         }
-        else if (TypeChecking_1.isString(obj.extFeature)) {
+        else if (TypeChecking_1.isString(obj.extFeature)) { // similar
             this.extensionFeature = obj.extFeature;
         }
         if (TypeChecking_1.isString(obj.extensionTestCase)) {
             this.extensionTestCase = obj.extensionTestCase;
         }
-        else if (TypeChecking_1.isString(obj.extTestCase)) {
+        else if (TypeChecking_1.isString(obj.extTestCase)) { // similar
             this.extensionTestCase = obj.extTestCase;
         }
         if (TypeChecking_1.isString(obj.lineBreaker)) {
             this.lineBreaker = obj.lineBreaker;
         }
-        else if (TypeChecking_1.isString(obj.lineBreak)) {
+        else if (TypeChecking_1.isString(obj.lineBreak)) { // similar
             this.lineBreaker = obj.lineBreak;
         }
         // CONTENT GENERATION
@@ -558,4 +558,3 @@ class Options {
     }
 }
 exports.Options = Options;
-//# sourceMappingURL=Options.js.map

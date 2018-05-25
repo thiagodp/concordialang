@@ -24,4 +24,3 @@ describe('RandomDoubleTest', () => {
         expect(val).toBeLessThan(max);
     });
 });
-//# sourceMappingURL=RandomDoubleTest.spec.js.map

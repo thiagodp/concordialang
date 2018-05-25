@@ -58,4 +58,3 @@ class StepGivenParser {
     }
 }
 exports.StepGivenParser = StepGivenParser;
-//# sourceMappingURL=StepGivenParser.js.map

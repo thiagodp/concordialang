@@ -107,11 +107,11 @@ class AppController {
                     this.showException(err, options, cli);
                     return false;
                 }
-                if (!pluginData) {
+                if (!pluginData) { // needed?
                     cli.newLine(cli.symbolError, 'Plugin not found:', options.plugin);
                     return false;
                 }
-                if (!plugin) {
+                if (!plugin) { // needed?
                     cli.newLine(cli.symbolError, 'Could not load the plugin:', options.plugin);
                     return false;
                 }
@@ -154,7 +154,7 @@ class AppController {
                 return true;
             }
             if (spec !== null) {
-                if (options.generateScript) {
+                if (options.generateScript) { // Requires a plugin
                     const atsCtrl = new ATSGenController_1.ATSGenController();
                     let abstractTestScripts = atsCtrl.generate(spec);
                     if (abstractTestScripts.length > 0) {
@@ -184,7 +184,7 @@ class AppController {
                 }
             }
             let executionResult = null;
-            if (options.executeScript) {
+            if (options.executeScript) { // Requires a plugin
                 let tseo = new TestScriptExecution_1.TestScriptExecutionOptions(options.dirScript, options.dirResult);
                 cli.newLine(cli.symbolInfo, 'Executing test scripts...');
                 const LINE_SIZE = 80;
@@ -201,7 +201,7 @@ class AppController {
             else {
                 cli.newLine(cli.symbolInfo, 'Script execution disabled.');
             }
-            if (options.analyzeResult) {
+            if (options.analyzeResult) { // Requires a plugin
                 if (!executionResult) {
                     cli.newLine(cli.symbolError, 'Could not retrieve execution results.');
                     return false;
@@ -238,4 +238,3 @@ class AppController {
     }
 }
 exports.AppController = AppController;
-//# sourceMappingURL=AppController.js.map

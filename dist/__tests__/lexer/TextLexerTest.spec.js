@@ -27,4 +27,3 @@ describe('TextLexerTest', () => {
         expect(node.content).toBe('  \t  \t anything here \t');
     });
 });
-//# sourceMappingURL=TextLexerTest.spec.js.map

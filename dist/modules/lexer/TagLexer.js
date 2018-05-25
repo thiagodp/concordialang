@@ -4,6 +4,7 @@ const LexicalException_1 = require("../req/LexicalException");
 const NodeTypes_1 = require("../req/NodeTypes");
 const Symbols_1 = require("../req/Symbols");
 const LineChecker_1 = require("../req/LineChecker");
+const CommentHandler_1 = require("./CommentHandler");
 const XRegExp = require('xregexp');
 /**
  * Detects a Tag.
@@ -28,11 +29,7 @@ class TagLexer {
         if (!trimmedLine.startsWith(Symbols_1.Symbols.TAG_PREFIX)) {
             return null;
         }
-        // Ignores a comment
-        let commentPos = line.indexOf(Symbols_1.Symbols.COMMENT_PREFIX);
-        if (commentPos >= 0) {
-            trimmedLine = line.substring(0, commentPos).trim();
-        }
+        trimmedLine = (new CommentHandler_1.CommentHandler()).removeComment(trimmedLine);
         // Detects all the tags in the line and trims their content
         const SPACE = ' ';
         let tags = (SPACE + trimmedLine).split(SPACE + Symbols_1.Symbols.TAG_PREFIX)
@@ -80,4 +77,3 @@ class TagLexer {
     }
 }
 exports.TagLexer = TagLexer;
-//# sourceMappingURL=TagLexer.js.map

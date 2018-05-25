@@ -47,6 +47,9 @@ class MultiFileProcessor {
                 };
                 let fwalker = filewalker(dir, filewalkerOptions);
                 fwalker
+                    // .on( 'dir', ( p ) => {
+                    //      console.log('dir:  %s', p);
+                    // } )
                     .on('file', (p, s) => {
                     this._fileReadListener.fileReadStarted(p, s.size);
                 })
@@ -130,4 +133,3 @@ class MultiFileProcessedData {
     }
 }
 exports.MultiFileProcessedData = MultiFileProcessedData;
-//# sourceMappingURL=MultiFileProcessor.js.map

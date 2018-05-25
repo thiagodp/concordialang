@@ -39,4 +39,3 @@ Expressions.SOMETHING_INSIDE_QUOTES = '("[^"\r\n]*")';
 Expressions.A_NUMBER = '([0-9]+(\.[0-9]+)?)'; // integer or double
 Expressions.AN_INTEGER_NUMBER = '([0-9]+)';
 exports.Expressions = Expressions;
-//# sourceMappingURL=Expressions.js.map

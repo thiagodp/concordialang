@@ -28,4 +28,3 @@ describe('RegexBlockLexerTest', () => {
         });
     });
 });
-//# sourceMappingURL=RegexBlockLexerTest.spec.js.map

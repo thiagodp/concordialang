@@ -17,4 +17,3 @@ class UIPropertyLexer extends ListItemLexer_1.ListItemLexer {
     }
 }
 exports.UIPropertyLexer = UIPropertyLexer;
-//# sourceMappingURL=UIPropertyLexer.js.map

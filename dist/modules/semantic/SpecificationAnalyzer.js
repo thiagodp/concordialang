@@ -12,4 +12,3 @@ class SpecificationAnalyzer {
     }
 }
 exports.SpecificationAnalyzer = SpecificationAnalyzer;
-//# sourceMappingURL=SpecificationAnalyzer.js.map

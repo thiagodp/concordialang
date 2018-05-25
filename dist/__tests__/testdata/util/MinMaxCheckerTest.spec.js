@@ -32,4 +32,3 @@ describe('MinMaxCheckerTest', () => {
         expect(val).toBeCloseTo(0.001, comparedDecimalPlaces);
     });
 });
-//# sourceMappingURL=MinMaxCheckerTest.spec.js.map

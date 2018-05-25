@@ -42,4 +42,3 @@ describe('ListItemLexerTest', () => {
         expect(r.errors[0].message).toMatch(/(empty)/ui);
     });
 });
-//# sourceMappingURL=ListItemLexerTest.spec.js.map

@@ -196,4 +196,3 @@ describe('ReportConverterTest', () => {
         expect(received).toEqual(expected);
     }));
 });
-//# sourceMappingURL=ReportConverterTest.spec.js.map

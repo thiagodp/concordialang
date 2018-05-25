@@ -14,4 +14,3 @@ class VariantRefWithTestScenarios extends VariantRef_1.VariantRef {
     }
 }
 exports.VariantRefWithTestScenarios = VariantRefWithTestScenarios;
-//# sourceMappingURL=VariantRefWithTestScenarios.js.map

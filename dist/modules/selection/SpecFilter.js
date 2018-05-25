@@ -54,4 +54,3 @@ class SpecFilter extends events_1.EventEmitter {
     }
 }
 exports.SpecFilter = SpecFilter;
-//# sourceMappingURL=SpecFilter.js.map

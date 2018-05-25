@@ -57,4 +57,3 @@ describe('LineChecker Test', () => {
         expect(checker.textBeforeSeparator(separator, 'Hello Word')).toBe('');
     });
 });
-//# sourceMappingURL=LineCheckerTest.spec.js.map

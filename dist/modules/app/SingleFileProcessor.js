@@ -25,4 +25,3 @@ class ProcessedFileData {
     }
 }
 exports.ProcessedFileData = ProcessedFileData;
-//# sourceMappingURL=SingleFileProcessor.js.map

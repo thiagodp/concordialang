@@ -37,4 +37,3 @@ describe('SingleDocumentProcessorTest', () => {
         expect(doc.databases).toHaveLength(1);
     });
 });
-//# sourceMappingURL=SingleDocumentProcessorTest.spec.js.map

@@ -41,4 +41,3 @@ class FeatureBasedGraphFilter {
     }
 }
 exports.FeatureBasedGraphFilter = FeatureBasedGraphFilter;
-//# sourceMappingURL=FeatureBasedGraphFilter.js.map

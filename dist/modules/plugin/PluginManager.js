@@ -130,4 +130,3 @@ class PluginManager {
     }
 }
 exports.PluginManager = PluginManager;
-//# sourceMappingURL=PluginManager.js.map

@@ -14,4 +14,3 @@ var UIPropertyTypes;
     UIPropertyTypes["FORMAT"] = "format";
     UIPropertyTypes["REQUIRED"] = "required";
 })(UIPropertyTypes = exports.UIPropertyTypes || (exports.UIPropertyTypes = {}));
-//# sourceMappingURL=UIPropertyTypes.js.map

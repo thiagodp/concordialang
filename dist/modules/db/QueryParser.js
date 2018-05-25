@@ -62,4 +62,3 @@ class QueryParser {
     }
 }
 exports.QueryParser = QueryParser;
-//# sourceMappingURL=QueryParser.js.map

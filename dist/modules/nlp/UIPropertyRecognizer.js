@@ -112,4 +112,3 @@ class UIPropertyRecognizer {
     }
 }
 exports.UIPropertyRecognizer = UIPropertyRecognizer;
-//# sourceMappingURL=UIPropertyRecognizer.js.map

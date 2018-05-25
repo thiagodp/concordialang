@@ -51,4 +51,3 @@ describe('DatabasePropertyRecognizerTest', () => {
         });
     });
 });
-//# sourceMappingURL=DatabasePropertyRecognizerTest.spec.js.map

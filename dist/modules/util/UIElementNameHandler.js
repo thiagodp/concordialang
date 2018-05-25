@@ -56,10 +56,10 @@ class UIElementNameHandler {
             .replace(Symbols_1.Symbols.UI_ELEMENT_SUFFIX, '')
             .trim();
         const index = v.indexOf(Symbols_1.Symbols.FEATURE_TO_UI_ELEMENT_SEPARATOR);
-        if (index < 0) {
+        if (index < 0) { // ui element only
             return [null, v];
         }
-        if (1 === v.length) {
+        if (1 === v.length) { // separator only, e.g., {:}
             return [null, null];
         }
         return v.split(Symbols_1.Symbols.FEATURE_TO_UI_ELEMENT_SEPARATOR);
@@ -81,4 +81,3 @@ class UIElementNameHandler {
     }
 }
 exports.UIElementNameHandler = UIElementNameHandler;
-//# sourceMappingURL=UIElementNameHandler.js.map

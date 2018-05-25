@@ -19,7 +19,7 @@ class JsonSchemaValidator {
             try {
                 obj = JSON.parse(content);
             }
-            catch (e) {
+            catch (e) { // SyntaxError
                 throw new SchemaException_1.SchemaException(e.message);
             }
         }
@@ -40,4 +40,3 @@ class JsonSchemaValidator {
     }
 }
 exports.JsonSchemaValidator = JsonSchemaValidator;
-//# sourceMappingURL=JsonSchemaValidator.js.map

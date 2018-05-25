@@ -17,4 +17,3 @@ class StepOtherwiseLexer extends StartingKeywordLexer_1.StartingKeywordLexer {
     }
 }
 exports.StepOtherwiseLexer = StepOtherwiseLexer;
-//# sourceMappingURL=StepOtherwiseLexer.js.map

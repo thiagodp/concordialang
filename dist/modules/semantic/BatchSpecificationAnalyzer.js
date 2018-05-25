@@ -47,4 +47,3 @@ class BatchSpecificationAnalyzer extends SpecificationAnalyzer_1.SpecificationAn
     }
 }
 exports.BatchSpecificationAnalyzer = BatchSpecificationAnalyzer;
-//# sourceMappingURL=BatchSpecificationAnalyzer.js.map

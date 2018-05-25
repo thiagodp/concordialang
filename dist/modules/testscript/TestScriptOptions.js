@@ -18,4 +18,3 @@ class TestScriptGenerationOptions {
     }
 }
 exports.TestScriptGenerationOptions = TestScriptGenerationOptions;
-//# sourceMappingURL=TestScriptOptions.js.map

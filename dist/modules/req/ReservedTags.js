@@ -16,4 +16,3 @@ var ReservedTags;
     ReservedTags["IGNORE"] = "ignore";
     ReservedTags["IMPORTANCE"] = "importance"; //    example: @importance( 5 )
 })(ReservedTags = exports.ReservedTags || (exports.ReservedTags = {}));
-//# sourceMappingURL=ReservedTags.js.map

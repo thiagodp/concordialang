@@ -15,4 +15,3 @@ describe('RegexUtilTest', () => {
         expect(r).toEqual(['foo']);
     });
 });
-//# sourceMappingURL=RegexUtilTest.spec.js.map

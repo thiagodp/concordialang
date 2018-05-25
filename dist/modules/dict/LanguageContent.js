@@ -14,4 +14,3 @@ class LanguageContent {
     }
 }
 exports.LanguageContent = LanguageContent;
-//# sourceMappingURL=LanguageContent.js.map

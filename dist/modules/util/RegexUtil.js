@@ -31,4 +31,3 @@ class RegexUtil {
     }
 }
 exports.RegexUtil = RegexUtil;
-//# sourceMappingURL=RegexUtil.js.map

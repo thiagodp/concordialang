@@ -37,4 +37,3 @@ describe('SqlHelperTest', () => {
         expect(sqlColumns[6]).toBe('`g` BOOLEAN');
     });
 });
-//# sourceMappingURL=SqlHelperTest.spec.js.map

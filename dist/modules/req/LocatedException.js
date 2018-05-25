@@ -23,4 +23,3 @@ class LocatedException extends Error {
     }
 }
 exports.LocatedException = LocatedException;
-//# sourceMappingURL=LocatedException.js.map

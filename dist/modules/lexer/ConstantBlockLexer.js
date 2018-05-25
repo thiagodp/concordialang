@@ -19,4 +19,3 @@ class ConstantBlockLexer extends BlockLexer_1.BlockLexer {
     }
 }
 exports.ConstantBlockLexer = ConstantBlockLexer;
-//# sourceMappingURL=ConstantBlockLexer.js.map

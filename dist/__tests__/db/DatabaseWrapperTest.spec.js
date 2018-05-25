@@ -112,4 +112,3 @@ describe('DatabaseWrapperTest', () => {
         }
     }));
 });
-//# sourceMappingURL=DatabaseWrapperTest.spec.js.map

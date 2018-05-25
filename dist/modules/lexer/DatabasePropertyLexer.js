@@ -17,4 +17,3 @@ class DatabasePropertyLexer extends ListItemLexer_1.ListItemLexer {
     }
 }
 exports.DatabasePropertyLexer = DatabasePropertyLexer;
-//# sourceMappingURL=DatabasePropertyLexer.js.map

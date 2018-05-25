@@ -35,4 +35,3 @@ describe('LongStringLexerTest', () => {
         expect(r.nodes[0].location).toEqual({ column: 1, line: 1 });
     });
 });
-//# sourceMappingURL=LongStringLexerTest.spec.js.map

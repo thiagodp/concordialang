@@ -9,4 +9,3 @@ const LocatedException_1 = require("./LocatedException");
 class LexicalException extends LocatedException_1.LocatedException {
 }
 exports.LexicalException = LexicalException;
-//# sourceMappingURL=LexicalException.js.map

@@ -93,7 +93,7 @@ class InMemoryTableWrapper {
                 throw new RuntimeException_1.RuntimeException(msg, table.location);
             }
             // Inserts the values
-            for (let i = 1; i < rowCount; ++i) {
+            for (let i = 1; i < rowCount; ++i) { // starts at the second row
                 const row = table.rows[i];
                 try {
                     // console.log( 'row', row );
@@ -158,4 +158,3 @@ class InMemoryTableWrapper {
     }
 }
 exports.InMemoryTableWrapper = InMemoryTableWrapper;
-//# sourceMappingURL=InMemoryTableWrapper.js.map

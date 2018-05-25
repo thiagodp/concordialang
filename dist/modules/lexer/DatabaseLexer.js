@@ -17,4 +17,3 @@ class DatabaseLexer extends NamedNodeLexer_1.NamedNodeLexer {
     }
 }
 exports.DatabaseLexer = DatabaseLexer;
-//# sourceMappingURL=DatabaseLexer.js.map

@@ -35,4 +35,3 @@ class FeatureParser {
     }
 }
 exports.FeatureParser = FeatureParser;
-//# sourceMappingURL=FeatureParser.js.map

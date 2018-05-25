@@ -21,4 +21,3 @@ class State {
     }
 }
 exports.State = State;
-//# sourceMappingURL=VariantLike.js.map

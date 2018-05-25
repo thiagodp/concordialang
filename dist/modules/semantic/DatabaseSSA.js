@@ -38,4 +38,3 @@ class DatabaseSSA extends SpecificationAnalyzer_1.SpecificationAnalyzer {
     }
 }
 exports.DatabaseSSA = DatabaseSSA;
-//# sourceMappingURL=DatabaseSSA.js.map

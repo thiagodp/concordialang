@@ -35,4 +35,3 @@ describe('ReferenceReplacerTest', () => {
         expect(result).toBe(expected);
     });
 });
-//# sourceMappingURL=ReferenceReplacerTest.spec.js.map

@@ -22,4 +22,3 @@ class LexerBuilder {
     }
 }
 exports.LexerBuilder = LexerBuilder;
-//# sourceMappingURL=LexerBuilder.js.map

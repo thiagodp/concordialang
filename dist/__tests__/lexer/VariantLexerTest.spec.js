@@ -42,4 +42,3 @@ describe('VariantLexerTest', () => {
         expect(r.nodes[0].name).toBe('foo bar');
     });
 });
-//# sourceMappingURL=VariantLexerTest.spec.js.map

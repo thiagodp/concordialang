@@ -5,6 +5,7 @@ const LineChecker_1 = require("../req/LineChecker");
 const Expressions_1 = require("../req/Expressions");
 const Symbols_1 = require("../req/Symbols");
 const LexicalException_1 = require("../req/LexicalException");
+const CommentHandler_1 = require("./CommentHandler");
 /**
  * Detects a Regex.
  *
@@ -72,14 +73,8 @@ class RegexLexer {
                 value = value.substring(firstWrapperIndex + 1, lastWrapperIndex);
             }
         }
-        let commentPos = line.lastIndexOf(Symbols_1.Symbols.COMMENT_PREFIX);
-        let content;
-        if (commentPos >= 0) {
-            content = this._lineChecker.textAfterSeparator(Symbols_1.Symbols.LIST_ITEM_PREFIX, line.substring(0, commentPos)).trim();
-        }
-        else {
-            content = this._lineChecker.textAfterSeparator(Symbols_1.Symbols.LIST_ITEM_PREFIX, line).trim();
-        }
+        let content = (new CommentHandler_1.CommentHandler()).removeComment(line);
+        content = this._lineChecker.textAfterSeparator(Symbols_1.Symbols.LIST_ITEM_PREFIX, content).trim();
         let node = {
             nodeType: this._nodeType,
             location: { line: lineNumber || 0, column: pos + 1 },
@@ -107,4 +102,3 @@ class RegexLexer {
     }
 }
 exports.RegexLexer = RegexLexer;
-//# sourceMappingURL=RegexLexer.js.map

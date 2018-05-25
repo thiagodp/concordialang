@@ -43,4 +43,3 @@ class UIPropertyParser {
     }
 }
 exports.UIPropertyParser = UIPropertyParser;
-//# sourceMappingURL=UIPropertyParser.js.map

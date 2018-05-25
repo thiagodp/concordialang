@@ -17,7 +17,8 @@ class DuplicationChecker {
      * @param propertyToCompare Property to compare
      */
     hasDuplication(items, propertyToCompare) {
-        let size = (new Set(items.map((item) => { return item[propertyToCompare]; }))).size;
+        let size = // size of a set containing only the values of the property to compare
+         (new Set(items.map((item) => { return item[propertyToCompare]; }))).size;
         return items.length > size;
     }
     /**
@@ -32,7 +33,7 @@ class DuplicationChecker {
             if (!flags[e]) {
                 flags[e] = true;
             }
-            else {
+            else { // already exists
                 dup.push(e);
             }
         }
@@ -55,7 +56,7 @@ class DuplicationChecker {
             if (!flags[prop]) {
                 flags[prop] = true;
             }
-            else {
+            else { // already exists
                 dup.push(item);
             }
         }
@@ -83,7 +84,7 @@ class DuplicationChecker {
             if (!map[value]) {
                 map[value] = [item];
             }
-            else {
+            else { // already exists
                 map[value].push(item);
             }
         }
@@ -124,4 +125,3 @@ class DuplicationChecker {
     }
 }
 exports.DuplicationChecker = DuplicationChecker;
-//# sourceMappingURL=DuplicationChecker.js.map

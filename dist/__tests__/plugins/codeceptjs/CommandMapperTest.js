@@ -634,4 +634,3 @@ describe('CommandMapperTest', () => {
         });
     });
 });
-//# sourceMappingURL=CommandMapperTest.js.map

@@ -19,4 +19,3 @@ class ATSGenController {
     }
 }
 exports.ATSGenController = ATSGenController;
-//# sourceMappingURL=ATSGenController.js.map

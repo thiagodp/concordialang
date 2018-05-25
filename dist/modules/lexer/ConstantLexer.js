@@ -5,6 +5,7 @@ const LineChecker_1 = require("../req/LineChecker");
 const NodeTypes_1 = require("../req/NodeTypes");
 const Expressions_1 = require("../req/Expressions");
 const Symbols_1 = require("../req/Symbols");
+const CommentHandler_1 = require("./CommentHandler");
 /**
  * Detects a Contant.
  *
@@ -52,15 +53,9 @@ class ConstantLexer {
                 value = value.substring(firstWrapperIndex + 1, lastWrapperIndex);
             }
         }
-        // Ignores a comment
-        let commentPos = line.indexOf(Symbols_1.Symbols.COMMENT_PREFIX);
-        let content;
-        if (commentPos >= 0) {
-            content = this._lineChecker.textAfterSeparator(Symbols_1.Symbols.LIST_ITEM_PREFIX, line.substring(0, commentPos)).trim();
-        }
-        else {
-            content = this._lineChecker.textAfterSeparator(Symbols_1.Symbols.LIST_ITEM_PREFIX, line).trim();
-        }
+        // Ignores comment
+        let content = (new CommentHandler_1.CommentHandler()).removeComment(line);
+        content = this._lineChecker.textAfterSeparator(Symbols_1.Symbols.LIST_ITEM_PREFIX, content).trim();
         let node = {
             nodeType: this._nodeType,
             location: { line: lineNumber || 0, column: pos + 1 },
@@ -89,4 +84,3 @@ class ConstantLexer {
     }
 }
 exports.ConstantLexer = ConstantLexer;
-//# sourceMappingURL=ConstantLexer.js.map

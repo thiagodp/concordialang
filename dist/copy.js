@@ -17,4 +17,3 @@ var basename = require('path').basename;
         });
     });
 });
-//# sourceMappingURL=copy.js.map

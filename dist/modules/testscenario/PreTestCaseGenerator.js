@@ -157,7 +157,7 @@ class PreTestCaseGenerator {
             // console.log( 'allTestPlans', allTestPlans );
             // # Generate values for all the UI Elements, according to the DataTestCase
             let all = [];
-            for (let plan of allTestPlans) {
+            for (let plan of allTestPlans) { // Each plan maps string => UIETestPlan
                 // console.log( 'CURRENT plan', plan );
                 let uieVariableToValueMap = new Map();
                 let context = new UIElementValueGenerator_1.ValueGenContext(plan.dataTestCases, uieVariableToValueMap);
@@ -459,7 +459,7 @@ class PreTestCaseGenerator {
             }
             let uieLiteral = TypeChecking_1.isDefined(uie) && TypeChecking_1.isDefined(uie.info) ? uie.info.uiLiteral : null;
             // console.log( 'uieName', uieName, 'uieLiteral', uieLiteral, 'variable', variable, 'doc', ctx.doc.fileInfo.path );
-            if (null === uieLiteral) {
+            if (null === uieLiteral) { // Should never happer since Spec defines Literals for mapped UI Elements
                 uieLiteral = CaseConversor_1.convertCase(variable, this.uiLiteralCaseOption);
                 const msg = 'Could not retrieve a literal from ' +
                     Symbols_1.Symbols.UI_ELEMENT_PREFIX + variable + Symbols_1.Symbols.UI_ELEMENT_SUFFIX +
@@ -488,7 +488,7 @@ class PreTestCaseGenerator {
             let expectedResult, dtc;
             // console.log( 'uieTestPlan', uieTestPlan );
             // Evaluate the test plan and oracles
-            if (null === uieTestPlan) {
+            if (null === uieTestPlan) { // not expected
                 expectedResult = keywordValid;
                 dtc = '??? (no test plan for variable ' + variable + ')';
             }
@@ -643,4 +643,3 @@ class PreTestCaseGenerator {
     }
 }
 exports.PreTestCaseGenerator = PreTestCaseGenerator;
-//# sourceMappingURL=PreTestCaseGenerator.js.map

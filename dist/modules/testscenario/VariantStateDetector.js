@@ -87,4 +87,3 @@ class VariantStateDetector {
     }
 }
 exports.VariantStateDetector = VariantStateDetector;
-//# sourceMappingURL=VariantStateDetector.js.map

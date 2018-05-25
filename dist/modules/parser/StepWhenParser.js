@@ -60,4 +60,3 @@ class StepWhenParser {
     }
 }
 exports.StepWhenParser = StepWhenParser;
-//# sourceMappingURL=StepWhenParser.js.map

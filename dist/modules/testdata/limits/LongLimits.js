@@ -10,4 +10,3 @@ class LongLimits {
 LongLimits.MIN = Number.MIN_SAFE_INTEGER;
 LongLimits.MAX = Number.MAX_SAFE_INTEGER;
 exports.LongLimits = LongLimits;
-//# sourceMappingURL=LongLimits.js.map

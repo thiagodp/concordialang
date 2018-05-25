@@ -66,4 +66,3 @@ exports.ATSCommand = ATSCommand;
 class ATSTarget {
 }
 exports.ATSTarget = ATSTarget;
-//# sourceMappingURL=AbstractTestScript.js.map

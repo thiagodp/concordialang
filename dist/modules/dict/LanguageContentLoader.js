@@ -28,4 +28,3 @@ exports.InMemoryLanguageContentLoader = InMemoryLanguageContentLoader;
 class JsonLanguageContentLoader extends LanguageBasedJsonFileLoader_1.LanguageBasedJsonFileLoader {
 }
 exports.JsonLanguageContentLoader = JsonLanguageContentLoader;
-//# sourceMappingURL=LanguageContentLoader.js.map

@@ -47,4 +47,3 @@ function stringToDatabaseTypeString(dbType) {
     }
 }
 exports.stringToDatabaseTypeString = stringToDatabaseTypeString;
-//# sourceMappingURL=DatabaseTypes.js.map

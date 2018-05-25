@@ -19,4 +19,3 @@ function upperFirst(text) {
     return text;
 }
 exports.upperFirst = upperFirst;
-//# sourceMappingURL=CaseConversor.js.map

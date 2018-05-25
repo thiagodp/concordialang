@@ -1,1 +1,0 @@
-{"version":3,"file":"RegexBlockLexer.js","sourceRoot":"","sources":["../../../modules/lexer/RegexBlockLexer.ts"],"names":[],"mappings":";;AAAA,6CAA0C;AAE1C,gDAA6C;AAE7C;;;;GAIG;AACH,qBAA6B,SAAQ,uBAAwB;IAEzD,YAAa,KAAe;QACxB,KAAK,CAAE,KAAK,EAAE,qBAAS,CAAC,WAAW,CAAE,CAAC;IAC1C,CAAC;IAED,kBAAkB;IAClB,sBAAsB;QAClB,MAAM,CAAC,CAAE,qBAAS,CAAC,KAAK,CAAE,CAAC;IAC/B,CAAC;CAEJ;AAXD,0CAWC"}

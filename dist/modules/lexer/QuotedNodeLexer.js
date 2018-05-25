@@ -4,6 +4,7 @@ const Expressions_1 = require("../req/Expressions");
 const LineChecker_1 = require("../req/LineChecker");
 const Symbols_1 = require("../req/Symbols");
 const LexicalException_1 = require("../req/LexicalException");
+const CommentHandler_1 = require("./CommentHandler");
 const XRegExp = require('xregexp');
 /**
  * Detects a node in the format "keyword "value"".
@@ -46,20 +47,11 @@ class QuotedNodeLexer {
         if (!result) {
             return null;
         }
-        let commentPos = line.indexOf(Symbols_1.Symbols.COMMENT_PREFIX);
-        let value;
-        if (commentPos >= 0) {
-            value = this._lineChecker
-                .textAfterSeparator(Symbols_1.Symbols.VALUE_WRAPPER, line.substring(0, commentPos))
-                .replace(new RegExp(Symbols_1.Symbols.VALUE_WRAPPER, 'g'), '') // replace all '"' with ''
-                .trim();
-        }
-        else {
-            value = this._lineChecker
-                .textAfterSeparator(Symbols_1.Symbols.VALUE_WRAPPER, line)
-                .replace(new RegExp(Symbols_1.Symbols.VALUE_WRAPPER, 'g'), '') // replace all '"' with ''
-                .trim();
-        }
+        let value = (new CommentHandler_1.CommentHandler()).removeComment(line);
+        value = this._lineChecker
+            .textAfterSeparator(Symbols_1.Symbols.VALUE_WRAPPER, value)
+            .replace(new RegExp(Symbols_1.Symbols.VALUE_WRAPPER, 'g'), '') // replace all '"' with ''
+            .trim();
         let pos = this._lineChecker.countLeftSpacesAndTabs(line);
         let node = {
             nodeType: this._nodeType,
@@ -84,4 +76,3 @@ class QuotedNodeLexer {
     }
 }
 exports.QuotedNodeLexer = QuotedNodeLexer;
-//# sourceMappingURL=QuotedNodeLexer.js.map

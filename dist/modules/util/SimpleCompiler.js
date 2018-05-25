@@ -32,4 +32,3 @@ class SimpleCompiler {
     }
 }
 exports.SimpleCompiler = SimpleCompiler;
-//# sourceMappingURL=SimpleCompiler.js.map

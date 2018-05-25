@@ -26,4 +26,3 @@ describe('StepGivenLexerTest', () => {
         expect(node.content).toBe('Given \t the world and everybody on it');
     });
 });
-//# sourceMappingURL=StepGivenLexerTest.spec.js.map

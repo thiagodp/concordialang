@@ -176,7 +176,7 @@ class TestCaseSSA extends SpecificationAnalyzer_1.SpecificationAnalyzer {
             }
             // continue to check the feature
         }
-        else {
+        else { // multiple features
             if (!featureName) {
                 const msg = 'Test case has no tag that refers to its feature.';
                 const err = new SemanticException_1.SemanticException(msg, this.makeLocationWithPath(testCases.location, doc.fileInfo.path));
@@ -288,7 +288,7 @@ class TestCaseSSA extends SpecificationAnalyzer_1.SpecificationAnalyzer {
             }
             if (hasVariantTag) {
                 const scenario = feature.scenarios[tc.declaredScenarioIndex - 1];
-                if (!scenario) {
+                if (!scenario) { // should not happen since there are prior validations
                     errors.push(new SemanticException_1.SemanticException(msgNoScenario, tc.location));
                     continue;
                 }
@@ -341,4 +341,3 @@ class TestCaseSSA extends SpecificationAnalyzer_1.SpecificationAnalyzer {
     }
 }
 exports.TestCaseSSA = TestCaseSSA;
-//# sourceMappingURL=TestCaseSSA.js.map

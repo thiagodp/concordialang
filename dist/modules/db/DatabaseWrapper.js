@@ -302,4 +302,3 @@ exports.DatabaseWrapper = DatabaseWrapper;
 //         return new Error( 'Internal database interface not instantied.' );
 //     };
 // }
-//# sourceMappingURL=DatabaseWrapper.js.map

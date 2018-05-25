@@ -41,4 +41,3 @@ class UIElementOperatorChecker {
     }
 }
 exports.UIElementOperatorChecker = UIElementOperatorChecker;
-//# sourceMappingURL=UIElementOperatorChecker.js.map

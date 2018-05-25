@@ -35,7 +35,7 @@ class ConnectionCheckResult {
     constructor(success = false, resultsMap = {} // name => ConnectionResult
     ) {
         this.success = success;
-        this.resultsMap = resultsMap; // name => ConnectionResult
+        this.resultsMap = resultsMap;
     }
     /*
     add = ( name: string, r: ConnectionResult ): void => {
@@ -59,4 +59,3 @@ class ConnectionCheckResult {
 }
 exports.ConnectionCheckResult = ConnectionCheckResult;
 // ---
-//# sourceMappingURL=ConnectionResult.js.map

@@ -181,4 +181,3 @@ exports.DATABASE_PROPERTY_SYNTAX_RULES = [
     { name: "options", targets: ["value"] }
 ];
 //#endregion
-//# sourceMappingURL=SyntaxRules.js.map

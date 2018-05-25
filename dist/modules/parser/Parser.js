@@ -111,4 +111,3 @@ class Parser {
     }
 }
 exports.Parser = Parser;
-//# sourceMappingURL=Parser.js.map

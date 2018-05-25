@@ -68,4 +68,3 @@ class JsonBasedPluginFinder {
     }
 }
 exports.JsonBasedPluginFinder = JsonBasedPluginFinder;
-//# sourceMappingURL=JsonBasedPluginFinder.js.map

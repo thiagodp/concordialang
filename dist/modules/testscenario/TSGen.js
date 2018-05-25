@@ -63,7 +63,7 @@ class TSGen {
             let pairMap = {}; // Maps string => Array< Pair< State, TestScenario > >
             let allStatesToReplace = variant.preconditions.concat(variant.stateCalls);
             // console.log( 'States to replace', allStatesToReplace.map( s=> s.name ) );
-            if (allStatesToReplace.length > 0) {
+            if (allStatesToReplace.length > 0) { // Preconditions + State Calls
                 for (let state of allStatesToReplace) {
                     if (TypeChecking_1.isDefined(pairMap[state.name])) {
                         continue;
@@ -286,7 +286,7 @@ class TSGen {
             }
             else if (step.nodeType === NodeTypes_1.NodeTypes.STEP_AND
                 && priorHasState && (priorWasGiven || priorWasWhen)
-                && !nlpUtil.hasEntityNamed(Entities_1.Entities.STATE, step.nlpResult)) {
+                && !nlpUtil.hasEntityNamed(Entities_1.Entities.STATE, step.nlpResult)) { // current does not have state
                 if (priorWasGiven) {
                     // Change node type
                     step.nodeType = NodeTypes_1.NodeTypes.STEP_GIVEN;
@@ -322,4 +322,3 @@ class TSGen {
     }
 }
 exports.TSGen = TSGen;
-//# sourceMappingURL=TSGen.js.map

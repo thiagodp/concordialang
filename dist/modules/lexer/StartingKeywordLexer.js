@@ -1,9 +1,9 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const Warning_1 = require("../req/Warning");
-const Symbols_1 = require("../req/Symbols");
 const LineChecker_1 = require("../req/LineChecker");
 const Expressions_1 = require("../req/Expressions");
+const CommentHandler_1 = require("./CommentHandler");
 /**
  * Detects a node in the format "keyword anything".
  *
@@ -44,8 +44,9 @@ class StartingKeywordLexer {
         if (!result) {
             return null;
         }
-        let value = this.removeComment(result[1].trim());
-        let content = this.removeComment(line.trim());
+        const commmentHandler = new CommentHandler_1.CommentHandler();
+        let value = commmentHandler.removeComment(result[1]);
+        let content = commmentHandler.removeComment(line);
         let pos = this._lineChecker.countLeftSpacesAndTabs(line);
         let node = {
             nodeType: this._nodeType,
@@ -62,17 +63,5 @@ class StartingKeywordLexer {
         }
         return { nodes: [node], errors: [], warnings: warnings };
     }
-    removeComment(content) {
-        let commentPos = content.lastIndexOf(Symbols_1.Symbols.COMMENT_PREFIX);
-        if (commentPos >= 0) {
-            // If the preceding character is '<', it is not a comment
-            if (commentPos > 1 && content.substr(commentPos - 1, 1) === Symbols_1.Symbols.UI_LITERAL_PREFIX) {
-                return content;
-            }
-            return content.substring(0, commentPos).trim();
-        }
-        return content;
-    }
 }
 exports.StartingKeywordLexer = StartingKeywordLexer;
-//# sourceMappingURL=StartingKeywordLexer.js.map

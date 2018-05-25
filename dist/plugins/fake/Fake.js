@@ -49,4 +49,3 @@ class Fake {
     }
 }
 exports.Fake = Fake;
-//# sourceMappingURL=Fake.js.map

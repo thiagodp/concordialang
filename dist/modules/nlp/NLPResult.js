@@ -24,4 +24,3 @@ class NLPUtil {
     }
 }
 exports.NLPUtil = NLPUtil;
-//# sourceMappingURL=NLPResult.js.map

@@ -23,4 +23,3 @@ describe('JsonSchemaValidadorTest', () => {
         expect(() => { v.validate(content, schema); }).not.toThrow();
     });
 });
-//# sourceMappingURL=JsonSchemaValidadorTest.spec.js.map

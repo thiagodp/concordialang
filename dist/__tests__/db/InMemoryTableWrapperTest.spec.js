@@ -43,4 +43,3 @@ describe('InMemoryTableWrapperTest', () => {
         expect(data[0].g).toBe(true);
     }));
 });
-//# sourceMappingURL=InMemoryTableWrapperTest.spec.js.map

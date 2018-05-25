@@ -64,4 +64,3 @@ class NodeIterator {
     }
 }
 exports.NodeIterator = NodeIterator;
-//# sourceMappingURL=NodeIterator.js.map

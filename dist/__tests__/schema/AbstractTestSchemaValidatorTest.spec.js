@@ -16,4 +16,3 @@ describe('AbstractTestSchemaValidator', () => {
     });
     // TO-DO: add tests with content that pass the validation
 });
-//# sourceMappingURL=AbstractTestSchemaValidatorTest.spec.js.map

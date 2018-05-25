@@ -24,4 +24,3 @@ class RegexBlockParser {
     }
 }
 exports.RegexBlockParser = RegexBlockParser;
-//# sourceMappingURL=RegexBlockParser.js.map

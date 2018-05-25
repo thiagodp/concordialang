@@ -13,4 +13,3 @@ class SemanticException extends LocatedException_1.LocatedException {
     }
 }
 exports.SemanticException = SemanticException;
-//# sourceMappingURL=SemanticException.js.map

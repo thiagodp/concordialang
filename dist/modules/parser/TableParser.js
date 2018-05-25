@@ -26,4 +26,3 @@ class TableParser {
     }
 }
 exports.TableParser = TableParser;
-//# sourceMappingURL=TableParser.js.map

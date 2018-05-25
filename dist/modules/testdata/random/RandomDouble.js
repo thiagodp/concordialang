@@ -42,4 +42,3 @@ class RandomDouble {
     }
 }
 exports.RandomDouble = RandomDouble;
-//# sourceMappingURL=RandomDouble.js.map

@@ -77,4 +77,3 @@ describe('UIElementSSATest', () => {
         expect(bar.items[2].value.references[3]).toEqual(zoo);
     }));
 });
-//# sourceMappingURL=UIElementSSATest.spec.js.map

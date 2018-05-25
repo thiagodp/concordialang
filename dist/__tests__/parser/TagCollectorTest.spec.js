@@ -51,4 +51,3 @@ describe('TagCollectorTest', () => {
         expect(currentAfter).toEqual(currentBefore);
     });
 });
-//# sourceMappingURL=TagCollectorTest.spec.js.map

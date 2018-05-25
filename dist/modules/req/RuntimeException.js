@@ -13,4 +13,3 @@ class RuntimeException extends LocatedException_1.LocatedException {
     }
 }
 exports.RuntimeException = RuntimeException;
-//# sourceMappingURL=RuntimeException.js.map

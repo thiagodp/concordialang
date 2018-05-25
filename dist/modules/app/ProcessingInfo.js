@@ -8,4 +8,3 @@ class ProcessingInfo {
     }
 }
 exports.ProcessingInfo = ProcessingInfo;
-//# sourceMappingURL=ProcessingInfo.js.map

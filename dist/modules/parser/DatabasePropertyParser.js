@@ -38,4 +38,3 @@ class DatabasePropertyParser {
     }
 }
 exports.DatabasePropertyParser = DatabasePropertyParser;
-//# sourceMappingURL=DatabasePropertyParser.js.map

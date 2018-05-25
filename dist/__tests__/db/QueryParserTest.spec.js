@@ -29,4 +29,3 @@ describe('QueryParserTest', () => {
         expect(z).toBe('three');
     });
 });
-//# sourceMappingURL=QueryParserTest.spec.js.map

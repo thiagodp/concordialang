@@ -10,4 +10,3 @@ class DoubleLimits {
 DoubleLimits.MIN = Number.MIN_SAFE_INTEGER;
 DoubleLimits.MAX = Number.MAX_SAFE_INTEGER;
 exports.DoubleLimits = DoubleLimits;
-//# sourceMappingURL=DoubleLimits.js.map

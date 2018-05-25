@@ -11,4 +11,3 @@ class DateTimeLimits {
 DateTimeLimits.MIN = js_joda_1.LocalDateTime.of(0, 1, 1, 0, 0, 0, 0); // 0000-01-01 00:00:00.000
 DateTimeLimits.MAX = js_joda_1.LocalDateTime.of(9999, 12, 31, 23, 59, 59, 999); // 9999-12-31 23:59:59.999
 exports.DateTimeLimits = DateTimeLimits;
-//# sourceMappingURL=DateTimeLimits.js.map

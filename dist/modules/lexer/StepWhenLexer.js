@@ -17,4 +17,3 @@ class StepWhenLexer extends StartingKeywordLexer_1.StartingKeywordLexer {
     }
 }
 exports.StepWhenLexer = StepWhenLexer;
-//# sourceMappingURL=StepWhenLexer.js.map

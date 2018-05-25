@@ -17,4 +17,3 @@ class UIElementLexer extends NamedNodeLexer_1.NamedNodeLexer {
     }
 }
 exports.UIElementLexer = UIElementLexer;
-//# sourceMappingURL=UIElementLexer.js.map
