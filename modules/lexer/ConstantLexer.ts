@@ -6,10 +6,11 @@ import { NodeTypes } from '../req/NodeTypes';
 import { Constant } from '../ast/Constant';
 import { Expressions } from '../req/Expressions';
 import { Symbols } from '../req/Symbols';
+import { CommentHandler } from './CommentHandler';
 
 /**
  * Detects a Contant.
- * 
+ *
  * @author Thiago Delgado Pinto
  */
 export class ConstantLexer implements NodeLexer< Constant >, KeywordBasedLexer {
@@ -37,9 +38,9 @@ export class ConstantLexer implements NodeLexer< Constant >, KeywordBasedLexer {
 
     /** @inheritDoc */
     public updateWords( words: string[] ) {
-        this._words = words;   
+        this._words = words;
     }
-        
+
     /** @inheritDoc */
     public analyze( line: string, lineNumber?: number ): LexicalAnalysisResult< Constant > {
 
@@ -50,12 +51,12 @@ export class ConstantLexer implements NodeLexer< Constant >, KeywordBasedLexer {
         }
 
         let pos = this._lineChecker.countLeftSpacesAndTabs( line );
-        
+
         let name = result[ 1 ]
             .replace( new RegExp( Symbols.VALUE_WRAPPER , 'g' ), '' ) // replace all '"' with ''
             .trim();
 
-        let value = result[ 2 ]; 
+        let value = result[ 2 ];
         // Removes the wrapper of the content, if the wrapper exists
         let firstWrapperIndex = value.indexOf( Symbols.VALUE_WRAPPER );
         if ( firstWrapperIndex >= 0 ) {
@@ -65,16 +66,9 @@ export class ConstantLexer implements NodeLexer< Constant >, KeywordBasedLexer {
             }
         }
 
-        // Ignores a comment
-        let commentPos = line.indexOf( Symbols.COMMENT_PREFIX );
-        let content;
-        if ( commentPos >= 0 ) {
-            content = this._lineChecker.textAfterSeparator( Symbols.LIST_ITEM_PREFIX,
-                line.substring( 0, commentPos ) ).trim();
-        } else {
-            content = this._lineChecker.textAfterSeparator( Symbols.LIST_ITEM_PREFIX,
-                line ).trim();
-        }
+        // Ignores comment
+        let content = ( new CommentHandler() ).removeComment( line );
+        content = this._lineChecker.textAfterSeparator( Symbols.LIST_ITEM_PREFIX, content ).trim();
 
         let node = {
             nodeType: this._nodeType,
@@ -96,7 +90,7 @@ export class ConstantLexer implements NodeLexer< Constant >, KeywordBasedLexer {
 
     protected makeRegexForTheWords( words: string[] ): string {
 
-        const regexStr = 
+        const regexStr =
             '^' + Expressions.OPTIONAL_SPACES_OR_TABS
             + Symbols.LIST_ITEM_PREFIX // -
             + Expressions.OPTIONAL_SPACES_OR_TABS
@@ -109,7 +103,6 @@ export class ConstantLexer implements NodeLexer< Constant >, KeywordBasedLexer {
             ;
 
         return regexStr;
-    }    
-    
+    }
+
 }
-    

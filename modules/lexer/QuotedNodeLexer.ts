@@ -5,12 +5,13 @@ import { Expressions } from '../req/Expressions';
 import { LineChecker } from '../req/LineChecker';
 import { Symbols } from "../req/Symbols";
 import { LexicalException } from "../req/LexicalException";
+import { CommentHandler } from './CommentHandler';
 
 const XRegExp = require( 'xregexp' );
 
 /**
  * Detects a node in the format "keyword "value"".
- * 
+ *
  * @author Thiago Delgado Pinto
  */
 export class QuotedNodeLexer< T extends ValuedNode > implements NodeLexer< T >, KeywordBasedLexer  {
@@ -34,11 +35,11 @@ export class QuotedNodeLexer< T extends ValuedNode > implements NodeLexer< T >, 
     public affectedKeyword(): string {
         return this._nodeType;
     }
-        
+
     /** @inheritDoc */
     public updateWords( words: string[] ) {
-        this._words = words;   
-    }     
+        this._words = words;
+    }
 
     protected makeRegexForTheWords( words: string[] ): string {
         return '^' + Expressions.OPTIONAL_SPACES_OR_TABS
@@ -57,19 +58,11 @@ export class QuotedNodeLexer< T extends ValuedNode > implements NodeLexer< T >, 
             return null;
         }
 
-        let commentPos = line.indexOf( Symbols.COMMENT_PREFIX );
-        let value;
-        if ( commentPos >= 0 ) {
-            value = this._lineChecker
-                .textAfterSeparator( Symbols.VALUE_WRAPPER, line.substring( 0, commentPos ) )
-                .replace( new RegExp( Symbols.VALUE_WRAPPER , 'g' ), '' ) // replace all '"' with ''
-                .trim();
-        } else {
-            value = this._lineChecker
-                .textAfterSeparator( Symbols.VALUE_WRAPPER, line )
-                .replace( new RegExp( Symbols.VALUE_WRAPPER , 'g' ), '' ) // replace all '"' with ''
-                .trim();
-        }
+        let value = ( new CommentHandler() ).removeComment( line );
+        value = this._lineChecker
+            .textAfterSeparator( Symbols.VALUE_WRAPPER, value )
+            .replace( new RegExp( Symbols.VALUE_WRAPPER , 'g' ), '' ) // replace all '"' with ''
+            .trim();
 
         let pos = this._lineChecker.countLeftSpacesAndTabs( line );
 
@@ -91,11 +84,11 @@ export class QuotedNodeLexer< T extends ValuedNode > implements NodeLexer< T >, 
 
     /**
      * Returns true if the given name is a valid one.
-     * 
+     *
      * @param name Name
      */
     public isValidName( name: string ): boolean {
         return XRegExp( '^[\\p{L}][\\p{L}0-9 ._-]*$', 'ui' ).test( name ); // TO-DO: improve the regex
-    }    
+    }
 
 }

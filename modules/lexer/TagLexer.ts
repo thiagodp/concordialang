@@ -4,12 +4,13 @@ import { NodeLexer, LexicalAnalysisResult } from './NodeLexer';
 import { NodeTypes } from "../req/NodeTypes";
 import { Symbols } from "../req/Symbols";
 import { LineChecker } from "../req/LineChecker";
+import { CommentHandler } from './CommentHandler';
 
 const XRegExp = require( 'xregexp' );
 
 /**
  * Detects a Tag.
- * 
+ *
  * @author Thiago Delgado Pinto
  */
 export class TagLexer implements NodeLexer< Tag > {
@@ -20,7 +21,7 @@ export class TagLexer implements NodeLexer< Tag > {
     public nodeType(): string {
         return NodeTypes.TAG;
     }
-    
+
     /** @inheritDoc */
     suggestedNextNodeTypes(): string[] {
         return [ NodeTypes.TAG, NodeTypes.VARIANT, NodeTypes.FEATURE, NodeTypes.SCENARIO ];
@@ -34,11 +35,7 @@ export class TagLexer implements NodeLexer< Tag > {
             return null;
         }
 
-        // Ignores a comment
-        let commentPos = line.indexOf( Symbols.COMMENT_PREFIX );
-        if ( commentPos >= 0 ) {
-            trimmedLine = line.substring( 0, commentPos ).trim();
-        }
+        trimmedLine = ( new CommentHandler() ).removeComment( trimmedLine );
 
         // Detects all the tags in the line and trims their content
         const SPACE = ' ';
@@ -51,7 +48,7 @@ export class TagLexer implements NodeLexer< Tag > {
 
     /**
      * Analyzes each tag that was found and returns the analysis result.
-     * 
+     *
      * @param tags Tags to be analyzed.
      * @param line Line where the tags were detected.
      * @param lineNumber Line number.
@@ -76,7 +73,7 @@ export class TagLexer implements NodeLexer< Tag > {
                 continue; // go to the next tag
             }
 
-            let content = result[ 3 ]; 
+            let content = result[ 3 ];
             if ( content ) {
                 content = content
                     .substr( 1, content.length - 2 ) // remove "(" and ")"

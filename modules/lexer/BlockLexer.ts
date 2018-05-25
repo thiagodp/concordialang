@@ -6,10 +6,11 @@ import { Expressions } from "../req/Expressions";
 import { NodeLexer, LexicalAnalysisResult } from './NodeLexer';
 import { KeywordBasedLexer } from "./KeywordBasedLexer";
 import { LexicalException } from "../req/LexicalException";
+import { CommentHandler } from "./CommentHandler";
 
 /**
  * Detects a node in the format "keyword:".
- * 
+ *
  * @author Thiago Delgado Pinto
  */
 export class BlockLexer< T extends Node > implements NodeLexer< T >, KeywordBasedLexer {
@@ -34,11 +35,11 @@ export class BlockLexer< T extends Node > implements NodeLexer< T >, KeywordBase
     public affectedKeyword(): string {
         return this._nodeType;
     }
-    
+
     /** @inheritDoc */
     public updateWords( words: string[] ) {
-        this._words = words;   
-    }     
+        this._words = words;
+    }
 
     protected makeRegexForTheWords( words: string[] ): string {
         return '^' + Expressions.OPTIONAL_SPACES_OR_TABS
@@ -57,14 +58,7 @@ export class BlockLexer< T extends Node > implements NodeLexer< T >, KeywordBase
             return null;
         }
 
-        let commentPos = line.indexOf( Symbols.COMMENT_PREFIX );
-        let content;
-        if ( commentPos >= 0 ) {
-            content = line.substring( 0, commentPos ).trim();
-        } else {
-            content = line.trim();
-        }
-
+        let content = ( new CommentHandler() ).removeComment( line );
         let pos = this._lineChecker.countLeftSpacesAndTabs( line );
 
         let node = {
@@ -73,7 +67,7 @@ export class BlockLexer< T extends Node > implements NodeLexer< T >, KeywordBase
         } as T;
 
         let errors = [];
-        let contentAfterSeparator = this._lineChecker.textAfterSeparator( this._separator, content );        
+        let contentAfterSeparator = this._lineChecker.textAfterSeparator( this._separator, content );
         if ( contentAfterSeparator.length != 0 ) {
             let loc = { line: lineNumber || 0, column: line.indexOf( contentAfterSeparator ) + 1 };
             let msg = 'Invalid content after the ' + this._nodeType + ': "' + contentAfterSeparator + '".';

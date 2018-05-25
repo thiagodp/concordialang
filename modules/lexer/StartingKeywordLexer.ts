@@ -5,6 +5,7 @@ import { NodeLexer, LexicalAnalysisResult } from "./NodeLexer";
 import { LineChecker } from "../req/LineChecker";
 import { Expressions } from "../req/Expressions";
 import { KeywordBasedLexer } from "./KeywordBasedLexer";
+import { CommentHandler } from './CommentHandler';
 
 /**
  * Detects a node in the format "keyword anything".
@@ -54,8 +55,10 @@ export class StartingKeywordLexer< T extends ContentNode > implements NodeLexer<
             return null;
         }
 
-        let value = this.removeComment( result[ 1 ].trim() );
-        let content = this.removeComment( line.trim() );
+        const commmentHandler = new CommentHandler();
+
+        let value = commmentHandler.removeComment( result[ 1 ] );
+        let content = commmentHandler.removeComment( line );
 
         let pos = this._lineChecker.countLeftSpacesAndTabs( line );
 
@@ -76,19 +79,6 @@ export class StartingKeywordLexer< T extends ContentNode > implements NodeLexer<
         }
 
         return { nodes: [ node ], errors: [], warnings: warnings };
-    }
-
-
-    private removeComment( content: string ): string {
-        let commentPos = content.lastIndexOf( Symbols.COMMENT_PREFIX );
-        if ( commentPos >= 0 ) {
-            // If the preceding character is '<', it is not a comment
-            if ( commentPos > 1 && content.substr( commentPos - 1, 1 ) === Symbols.UI_LITERAL_PREFIX ) {
-                return content;
-            }
-            return content.substring( 0, commentPos ).trim();
-        }
-        return content;
     }
 
 }

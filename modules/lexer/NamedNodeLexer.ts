@@ -7,12 +7,13 @@ import { Symbols } from '../req/Symbols';
 import { Node, NamedNode } from '../ast/Node';
 import { LineChecker } from "../req/LineChecker";
 import { LexicalException } from "../req/LexicalException";
+import { CommentHandler } from './CommentHandler';
 
 const XRegExp = require( 'xregexp' );
 
 /**
  * Detects a node in the format "keyword: name".
- * 
+ *
  * @author Thiago Delgado Pinto
  */
 export class NamedNodeLexer< T extends NamedNode > implements NodeLexer< T >, KeywordBasedLexer {
@@ -37,10 +38,10 @@ export class NamedNodeLexer< T extends NamedNode > implements NodeLexer< T >, Ke
     public affectedKeyword(): string {
         return this._nodeType;
     }
-    
+
     /** @inheritDoc */
     public updateWords( words: string[] ) {
-        this._words = words;   
+        this._words = words;
     }
 
     protected separator(): string {
@@ -66,19 +67,12 @@ export class NamedNodeLexer< T extends NamedNode > implements NodeLexer< T >, Ke
 
         let pos = this._lineChecker.countLeftSpacesAndTabs( line );
 
-        let commentPos = line.indexOf( Symbols.COMMENT_PREFIX );
-        let name;
-        if ( commentPos >= 0 ) {
-            name = this._lineChecker
-                .textAfterSeparator( this._separator, line.substring( 0, commentPos ) )
-                .trim();
-        } else {
-            name = this._lineChecker.textAfterSeparator( this._separator, line ).trim();
-        }
+        let name = ( new CommentHandler() ).removeComment( line );
+        name = this._lineChecker.textAfterSeparator( this._separator, name ).trim();
 
         let node = {
             nodeType: this._nodeType,
-            location: { line: lineNumber || 0, column: pos + 1 },            
+            location: { line: lineNumber || 0, column: pos + 1 },
             name: name
         } as T;
 
@@ -94,7 +88,7 @@ export class NamedNodeLexer< T extends NamedNode > implements NodeLexer< T >, Ke
 
     /**
      * Returns true if the given name is a valid one.
-     * 
+     *
      * @param name Name
      */
     public isValidName( name: string ): boolean {
