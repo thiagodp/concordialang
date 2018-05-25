@@ -65,7 +65,7 @@ Exemplo 2:
 
 ### Importe
 
-*Importa definições de outro arquivo de Funcionalidade.*
+*Importa definições de outro arquivo de funcionalidade.*
 
 Observações:
 - Declaração local.
@@ -73,8 +73,8 @@ Observações:
 
 Exemplos:
 ```gherkin
-importe "file1.Funcionalidade"
-importe "caminho/to/file2.Funcionalidade"
+importe "file1.feature"
+importe "caminho/to/file2.feature"
 ```
 
 
@@ -98,7 +98,7 @@ Exemplo 2 - *mais de uma tag por linha*:
 
 Exemplo 3 - *tag com valor numérico*:
 ```gherkin
-@importaance( 5 )
+@importance( 5 )
 ```
 
 Exemplo 4 - *tag com texto*:
@@ -107,9 +107,9 @@ Exemplo 4 - *tag com texto*:
 ```
 
 Tags reservadas:
-- `@scenario( <número> )`: referencia um [scenario](#scenario).
-- `@variant( <número> )`: referencia um [variant](#variant).
-- `@importaance( <número> )`: indica a importaância de uma declaração. Quando mais alto o valor, mais alta a importaância.
+- `@scenario( <número> )`: referencia um [Cenário](#Cenário).
+- `@variant( <número> )`: referencia uma [Variante](#Variante).
+- `@importance( <número> )`: indica a importância de uma declaração. Quando mais alto o valor, mais alta a importância.
 - `@generated`: indica que um Caso de Teste foi gerado.
 - `@fail`: indica que um Caso de Teste deve falhar.
 - `@global`: define um Elemento de Interface de Usuário como global. *Ainda não disponível na ferramenta.*
@@ -230,10 +230,10 @@ Constantes:
 *Elemento de Interface de Usuário.*
 
 Observações:
-- Declaração local ou global - apesar de **declaração global ainda não ser suportaada** pela ferramenta Concordia.
 - Permitida mais de uma declaração por Funcionalidade.
-- Declaração global permitida através da tag `@global` - **ainda não suportaada**.
-- Herança permitida através da tag `@extends`, *e.g.*, `@extends(Other Element)` - **ainda não suportaada**.
+- Declaração local ou global, apesar de a **declaração global ainda não ser suportada** pela ferramenta.
+- Declaração global permitida através da tag `@global` - **ainda não suportada**.
+- Herança permitida através da tag `@extends`, *e.g.*, `@extends(Outro Elemento de IU)` - **ainda não suportada**.
 - Pode ter propriedades.
 - Propriedades são precedidas por um traço (`-`).
 
@@ -254,19 +254,18 @@ Propriedade `id`:
   - Exemplo: `- id é "nome"`
   - O valor *default* é o nome do elemento em *camel case* (primeira letra minúscula) e sem espaços, *e.g.*, `"Algum Nome"` se torna `"algumNome"`
   - Valor deve ser declarado entre aspas (`"`)
-  - Suportaa a seguinte notação:
-    - `"valor"` denota um `id`
+  - Suporta a seguinte notação:
     - `"#valor"` denota um `id`
-    - `"//valor"` denota um `xcaminho`
+    - `"//valor"` denota um `xpath`
     - `"@valor"` denota um `nome`
+    - `"valor"` denota um `css`
     - `"~valor"` denota um `nome mobile`
-    - `".valor"` denota um `css`
-  - Múltiplos identificadores são denotados por `id em [ "<valor1>", "<valor2>", ... ]` **Ainda não suportaada pela ferramenta**
+  - Múltiplos identificadores são denotados por `id em [ "<valor1>", "<valor2>", ... ]` **Ainda não suportada pela ferramenta**
     - Exemplo: `id em [ "nascimento", "~nascimento" ]`
 
 Propriedade `tipo`:
-  - Exemplo: `- tipo é button`
-  - O valor *default* é `textbox`
+  - Exemplo: `- tipo é botão`
+  - O valor *default* é `caixa de texto`
   - Valores não usam aspas (`"`)
   - Veja [data/pt.json](https://github.com/thiagodp/concordialang/blob/master/data/pt.json) para todos os tipos permitidos.
 
@@ -436,7 +435,7 @@ Tabela: Usuarios
 
 ### Banco de Dados
 
-*Declara uma referência para um Banco de Dados, com seus parâmetros d conexão.*
+*Declara uma referência para um Banco de Dados, com seus parâmetros de conexão.*
 
 Observações:
 - Declaração global.
@@ -517,7 +516,9 @@ Observações:
 - Declaração local.
 - Pertence a uma `Variante`.
 - Pode ser declarada em um arquivo `.testcase` (*recomendado*).
-- **Não permite referências como `Elemento de IUs`, `Constantes`, e `Estados`**
+- Deve ter anotação `@scenario( <índice> )` que referencie seu Cenário pelo índice, começando em 1.
+- Deve ter anotação `@variant( <índice> )` que referencie sua Variante pelo índice, começando em 1.
+- **Não permite referências como `Elemento de IU`, `Constantes`, e `Estados`**
 
 Gerado automaticamente a partir de:
 1. [Variante](#variante)
@@ -557,7 +558,7 @@ Test Case: Login com sucesso - 1
     e eu vejo o botão <#logout>
 ```
 
-Veja [Exemplos de ações](../actions-pt.md)
+Veja [Exemplos de Ações](../actions-pt.md).
 
 
 ### Eventos de Teste
@@ -591,7 +592,7 @@ Antes de cada Cenário:
 
 Exemplo 2:
 ```
-Antes e depois de Funcionalidade:
+Antes e depois da Funcionalidade:
   - Execute o script 'DELETE FROM [Meu BD].`cities`'
 ```
 

@@ -513,7 +513,9 @@ See also: [Examples of Actions](../actions.md)
 Notes:
 - Local declaration.
 - Belongs to a `Variant`.
-- Can be declared in a different file, `.testcase`
+- Can be declared in a different file, `.testcase` - **strongly recommended**
+- Must have tag `@scenario( <index> )` that references its Scenario by the index, starting at 1.
+- Must have tag `@variant( <index> )` that references its Variant by the index, starting at 1.
 - **It does not allow references, such as `UI Elements`, `Constants`, and `States`**
 
 Generated automatically from:
@@ -602,12 +604,12 @@ After Each Scenario:
 
 > Always between `<` and `>`
 
-A UI Literal is an identification (id) of a User Interface element. This identification will be used by the test script to locate the element in the application during the test. For instance, in a web application, an input declared using HTML as `<input id="name" ></input>` has `name` as its identification.
+A UI Literal is an identification (id) of a User Interface element. This identification will be used by the test script to locate the element in the application during the test. For instance, in a web application, an input declared using HTML as `<input id="name" ></input>` has `#name` as its identification.
 
-In the following example, `name` is a UI Literal.
+In the following example, `#name` is a UI Literal.
 
 ```gherkin
-When I fill <name> with "Bob"
+When I fill <#name> with "Bob"
 ```
 
 Formats accepted:
