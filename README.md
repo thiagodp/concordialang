@@ -4,12 +4,12 @@
 
 Translations: [Português](readme-pt.md)
 
-[![Build Status](https://travis-ci.org/thiagodp/concordialang.svg?branch=master)](https://travis-ci.org/thiagodp/concordialang) 
-[![npm version](https://badge.fury.io/js/concordialang.svg)](https://badge.fury.io/js/concordialang) 
+[![Build Status](https://travis-ci.org/thiagodp/concordialang.svg?branch=master)](https://travis-ci.org/thiagodp/concordialang)
+[![npm version](https://badge.fury.io/js/concordialang.svg)](https://badge.fury.io/js/concordialang)
 [![npm](https://img.shields.io/npm/l/concordialang.svg)](https://github.com/thiagodp/concordialang/blob/master/LICENSE.txt)
 
 
-*Concordia* is a tool that allows you to generate functional tests from a requirements specification writen in *Concordia Language*.  You can use them for:
+*Concordia* is a tool that allows you to generate functional tests from a requirements specification written in *Concordia Language*.  You can use them for:
 
 1. Writing [business-readable](https://martinfowler.com/bliki/BusinessReadableDSL.html) specifications.
 
@@ -17,7 +17,7 @@ Translations: [Português](readme-pt.md)
 
 3. Generating test scripts for different testing frameworks, such as [CodeceptJS](https://codecept.io/), through [plug-ins](plugins/README.md).
 
-4. Write aditional test cases when needed, using *Concordia Language* - currently available in **English** (`en`) and **Portuguese** (`pt`). These test cases are converted to test scripts using plugins.
+4. Write additional test cases when needed, using *Concordia Language* - currently available in **English** (`en`) and **Portuguese** (`pt`). These test cases are converted to test scripts using plugins.
 
 5. Analyze test results to help evaluating failures.
 
@@ -32,7 +32,7 @@ Translations: [Português](readme-pt.md)
 
 - Separate high-level, **business language** declarations from medium-low-level, **computing language** declarations
 
-- Have complete and relavant tests in few seconds
+- Have complete and relevant tests in few seconds
 
 - High coverage of business rules at a small declaration effort
 
@@ -349,7 +349,7 @@ concordia --help
 
 ![Process](media/process.png)
 
-1. Concordia reads your `.feature` and `.testcase` files like a compiler, and uses a [lexer](https://en.wikipedia.org/wiki/Lexical_analysis) and a [parser](https://en.wikipedia.org/wiki/Parsing#Computer_languages) to identify and check documents' strucuture.
+1. Concordia reads your `.feature` and `.testcase` files like a compiler, and uses a [lexer](https://en.wikipedia.org/wiki/Lexical_analysis) and a [parser](https://en.wikipedia.org/wiki/Parsing#Computer_languages) to identify and check documents' structure.
 
 2. Concordia uses basic [Natural Language Processing](https://en.wikipedia.org/wiki/Natural-language_processing) (NLP) to identify sentences' [intent](http://mrbot.ai/blog/natural-language-processing/understanding-intent-classification/). This increases the chances of recognizing sentences written in different styles.
 
@@ -366,7 +366,7 @@ concordia --help
 
 ## Generated test cases
 
-Concordia can generate test cases from [funcional requirements](https://en.wikipedia.org/wiki/Functional_requirement) written in Concordia Language. Although it is not able to generate test cases for [non-functional requirements](https://en.wikipedia.org/wiki/Non-functional_requirement) automatically, you can create them manually with traditional *Behavior-Driven Development* (BDD) tools based on [Gherkin](https://github.com/cucumber/cucumber/wiki/Gherkin), such as [Cucumber](https://docs.cucumber.io/).
+Concordia can generate test cases from [functional requirements](https://en.wikipedia.org/wiki/Functional_requirement) written in Concordia Language. Although it is not able to generate test cases for [non-functional requirements](https://en.wikipedia.org/wiki/Non-functional_requirement) automatically, you can create them manually with traditional *Behavior-Driven Development* (BDD) tools based on [Gherkin](https://github.com/cucumber/cucumber/wiki/Gherkin), such as [Cucumber](https://docs.cucumber.io/).
 
 ### Covered states
 
