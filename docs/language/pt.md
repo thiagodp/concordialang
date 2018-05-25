@@ -4,7 +4,7 @@
 
 Construções da linguagem
 - [Comentários](#comentários)
-- [Language](#language)
+- [Definição da Língua](#language)
 - [Importe](#importe)
 - [Tag](#tag)
 - [Funcionalidade](#funcionalidade)
@@ -63,9 +63,9 @@ Exemplo 2:
 ```
 
 
-### Importae
+### Importe
 
-*Importaa definições de outro arquivo de Funcionalidade.*
+*Importa definições de outro arquivo de Funcionalidade.*
 
 Observações:
 - Declaração local.
@@ -73,8 +73,8 @@ Observações:
 
 Exemplos:
 ```gherkin
-importae "file1.Funcionalidade"
-importae "caminho/to/file2.Funcionalidade"
+importe "file1.Funcionalidade"
+importe "caminho/to/file2.Funcionalidade"
 ```
 
 
@@ -205,6 +205,7 @@ Cenário: Login sem sucesso
     e confirmo minha entrada
   Então não sou capaz de entrar no sistema
 ```
+
 
 ### Constantes
 
@@ -558,6 +559,7 @@ Test Case: Login com sucesso - 1
 
 Veja [Exemplos de ações](../actions-pt.md)
 
+
 ### Eventos de Teste
 
 *Declara eventos antes ou após Casos de Teste ou Funcionalidades. Comandos do console, scripts SQL ou operações com arquivos podem ser executadas quando esses eventos ocorrerem. Geralmente eles visarão preparar ou ajustar o ambiente, de acordo com os testes.*
@@ -643,7 +645,6 @@ No exemplo a seguir, `12.50` é um valor:
 ```gherkin
 Quando eu preencho <#preco> com 12.50
 ```
-
 
 ### Lista de valores
 
