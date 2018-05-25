@@ -86,24 +86,34 @@ Notes:
 - Local declaration.
 - Allowed more than one declaration per language construction.
 
-Example 1 (*one per line*):
-```gherkin
+Example 1 - *single tag per line*:
+```
 @critical
 ```
 
-Example 2 (*more than one per line*):
-```gherkin
+Example 2 - *more than one per line*:
+```
 @critical @slow @gui @generated
+```
+
+Example 3 - *tag with number*:
+```
+@importance( 5 )
+```
+
+Example 4 - *tag with text*:
+```
+@extends( Full Name )
 ```
 
 Reserved tags:
 - `@scenario( <number> )`: references a [scenario](#scenario).
 - `@variant( <number> )`: references a [variant](#variant).
-- `@importance( <number> )`: indicates the importance. The importance is as high as its number.
-- `@generated`: indicates that a declaration was computer-generated.
-- `@fail`: indicates that a test case should fail.
-- `@global`: defines an element as global. Can be applied to [User Interface Element](#User%20Interface%20Element).
-- `@ignore`: indicates that a declaration should be ignored to generate tests.
+- `@importance( <number> )`: indicates the importance of a declaration. The importance is as high as its number.
+- `@generated`: indicates that a Test Case was computer-generated.
+- `@fail`: indicates that a Test Case should fail.
+- `@global`: defines a [User Interface Element](#User%20Interface%20Element) as global. **Yet not available in the tool*
+- `@ignore`: whether applied to a Variant, it will not produce Test Cases; whether applied to a Test Case, it will not produce test scripts.
 
 Reserved for future use:
 - `@extends( <name> )` allows inheritance of [User Interface Elements](#User%20Interface%20Element).
@@ -152,16 +162,17 @@ Notes:
 - Declaration in a `When` step means that the state is a **state call**.
 - Declaration in a `Then` step means that the state is a **postcondition**.
 
-Precondition:
+**Precondition**:
 ```gherkin
 Given that I have ~user logged in~
 ```
 
-State Call - that is the producer of state will be called:
+**State Call** - that is the producer of state will be called:
 ```gherkin
 When I need the state ~payment method selected~
 ```
-Postcondition:
+
+**Postcondition**:
 ```gherkin
 Then I have ~paid~
 ```
@@ -169,7 +180,7 @@ Then I have ~paid~
 
 ### Scenario
 
-*Scenario of the system. Not used to generate test cases.*
+*Used to describe a usage scenario for a feature, in business terms. Its sentences are not used to generate test cases.*
 
 Notes:
 - Local declaration.
@@ -196,11 +207,12 @@ Scenario: Unsuccessful login
 
 ### Constants
 
-*Declaration of constant values.*
+*Declaration block with constant values.*
 
 Notes:
 - Global declaration.
-- Just one declaration per file. One declaration can have more than one constant.
+- Just one declaration per file.
+- A declaration may have more than one constant.
 - Namespace is shared with Tables and Databases.
 
 Example:
@@ -226,7 +238,7 @@ Notes:
 Allowed properties:
 - `id`
 - `type`, defaults to `textbox`
-- `editable`, defaults to `true` when an editable `type` is used.
+- `editable`, defaults to `true` when an editable `type` is used, that is, when it accepts input data.
 - `data type`, defaults to `string`
 - `value`
 - `minimum length`
@@ -247,8 +259,8 @@ Property `id`:
     - `"@value"` denotes a `name`
     - `"~value"` denotes a `mobile name`
     - `".value"` denotes a `css`
-  - Multiple identifiers are denoted by `id in [ "<value1>", "<value2>", ... ]`
-  - Example of a multiple identifier:   `id in [ "birthDate", "~birthDate" ]`
+  - Multiple identifiers are denoted by `id in [ "<value1>", "<value2>", ... ]` **Yet not supported by the tool**
+    - Example: `id in [ "birthDate", "~birthDate" ]`
 
 Property `type`:
   - Example: `- type is button`
@@ -260,8 +272,8 @@ Property `editable`:
   - Example: `- editable is true`
   - Allowed values are `true` and `false`
   - Does not need quotes (`"`)
-  - Default value is `false`, but assumes `true` automatically when *a least one* of these conditions occur:
-    - An editable `type` is used, that is:
+  - Default value is `false`, but assumes `true` automatically when *a least one* of the following conditions occur:
+    - A `type` considered *editable* is used, that is:
       - `checkbox`
       - `fileInput`
       - `select`
@@ -428,6 +440,7 @@ Notes:
 - Global declaration.
 - Namespace is shared with Constants and Tables.
 - Allowed more than one declaration per file.
+- Property values must be declared between quotes (`"`).
 
 Allowed properties:
   - `type`
@@ -471,7 +484,7 @@ Database: Another DB
 
 ### Variant
 
-*Declares a variant of a scenario. A variant is a template for test cases.*
+*Allow to express the interaction between a user and the system in order to perform a Scenario. It serves as a template to generate Test Cases.*
 
 Notes:
 - Local declaration.
@@ -490,15 +503,18 @@ Variant: Successful login
     And I see {Logout}
 ```
 
+See also: [Examples of Actions](../actions.md)
+
 
 ### Test Case
 
-*Test case for a Variant*
+*Test case produced for a Variant*
 
 Notes:
 - Local declaration.
 - Belongs to a `Variant`.
 - Can be declared in a different file, `.testcase`
+- **It does not allow references, such as `UI Elements`, `Constants`, and `States`**
 
 Generated automatically from:
 1. [Variant](#variant)
@@ -519,7 +535,7 @@ A generated test case will:
 - Keep any declared `UI Literals`;
 - Generate random values for `UI Literals` without value;
 - Keep any declared values or numbers;
-- Generate values for `UI Elements` according to their properties and the applicable test cases (see `README.md`).
+- Generate values for `UI Elements` according to their properties and the applicable test cases - see [reame-pt.md](../../README.md) for more information.
 
 Example:
 ```gherkin
@@ -551,20 +567,33 @@ Could be:
 - { Before | After | Around } Each Scenario
 - { Before | After | Around } Feature
 
-These events support two type of commands:
-  1. *Console command*: run a command in the console and waits for its termination.
-  2. *SQL command*: run a command to a declared database.
+These events support three type of commands:
+  1. *Console command*: runs a command in the console and waits for its termination.
+  2. *SQL command*: runs a command to a declared database.
+  3. *File command*: runs a command that checks or handles a file.
 
-Both commands must declared values between apostrophes (`'`).
+Both Console and SQL commands must declared values between apostrophes (`'`).
 
-Example:
+Example 1:
 ```
 Before Each Scenario:
-  - Run 'cls'
-  - Run sql 'DELETE FROM [MyDB].`user`'
-  - Run sql 'INSERT INTO [MyDB].`user` ( `username`, `password` ) VALUES ( "Clark", "Kent" ), ( "Bruce", "Wayne" )'
+  - Run the command 'cls'
+  - Run the script 'DELETE FROM [MyDB].`user`'
+  - Run the script 'INSERT INTO [MyDB].`user` ( `username`, `password` ) VALUES ( "Clark", "Kent" ), ( "Bruce", "Wayne" )'
 ```
 
+Example 2:
+```
+Around Feature:
+  - Run the script 'DELETE FROM [MyDB].`cities`'
+```
+
+Example 3:
+```
+After Each Scenario:
+  - Create the file 'path/to/foo.json' with `{ "name": "John", "surname": "Doe" }`
+  - Assert that the file 'path/to/bar.xml' has `<person><name>John</name><surname>John</surname></person>`
+```
 
 
 ## Literals
@@ -582,11 +611,10 @@ When I fill <name> with "Bob"
 ```
 
 Formats accepted:
-- `<value>` denotes an `id`
 - `<#value>` denotes an `id`
-- `<//value>` denotes a `xpath`
-- `<.value>` denotes a `css`
 - `<@value>` denotes a `name`
+- `<value>` denotes a `css`
+- `<//value>` denotes a `xpath`
 - `<~value>` denotes a `mobile name`
 
 
@@ -629,21 +657,21 @@ UI Element: Sex
 Example 2:
 
 ```gherkin
-UI Element: Ages
+UI Element: Age
   - value comes from [ 12, 16, 18, 21, 65 ]
 ```
 
 Example 3:
 
 ```gherkin
-UI Element: Prices
+UI Element: Price
   - value comes from [ 12.50, 20.00 ]
 ```
 
 Example 4:
 
 ```gherkin
-UI Element: Values
+UI Element: Example
   - value comes from [ 12, 12.50, "Male" ]
 ```
 
@@ -699,13 +727,11 @@ Notes about queries:
    SELECT password FROM [Users] WHERE username = {Login:Username}
    ```
 
-6. May reference UI element using the format `{ui element name}`, considering that
-   the reference UI element belongs to the current feature (e.g., the feature of the current file).
+5. May reference a UI Element from the current Feature using the format `{UI Element Name}`.
    Example:
    ```sql
    SELECT password FROM [Users] WHERE username = {Username}
    ```
-
 
 
 ## References to declarations
