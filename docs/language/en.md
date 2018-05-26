@@ -1,5 +1,7 @@
 # Overview of the Concordia Language
 
+Translations: [Português](pt.md)
+
 ## Index
 
 Language constructions
