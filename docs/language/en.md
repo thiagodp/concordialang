@@ -11,22 +11,22 @@ Language constructions
 - [State](#state)
 - [Scenario](#scenario)
 - [Constants](#constants)
-- [User Interface Element](#user%20interface%20element)
+- [User Interface Element](#user-interface-element)
 - [Table](#table)
 - [Database](#database)
 - [Variant](#variant)
-- [Test Case](#test%20case)
-- [Test Events](#test%20events)
+- [Test Case](#test-case)
+- [Test Events](#test-events)
 
 Literals
-- [User Interface Literal](#user%20interface%20literal)
+- [User Interface Literal](#user-interface-literal)
 - [Value](#value)
 - [Number](#number)
-- [List of values](#list%20of%20values)
+- [List of values](#list-of-values)
 - [Query](#query)
 
 References to declarations
-- [User Interface Elements](#user%20interface%20elements)
+- [User Interface Elements](#user-interface-elements)
 - [Constants](#constants)
 - [Tables](#tables)
 - [Databases](#databases)
@@ -112,11 +112,11 @@ Reserved tags:
 - `@importance( <number> )`: indicates the importance of a declaration. The importance is as high as its number.
 - `@generated`: indicates that a Test Case was computer-generated.
 - `@fail`: indicates that a Test Case should fail.
-- `@global`: defines a [User Interface Element](#User%20Interface%20Element) as global. **Yet not available in the tool*
+- `@global`: defines a [User Interface Element](#User-Interface-Element) as global. **Yet not available in the tool*
 - `@ignore`: whether applied to a Variant, it will not produce Test Cases; whether applied to a Test Case, it will not produce test scripts.
 
 Reserved for future use:
-- `@extends( <name> )` allows inheritance of [User Interface Elements](#User%20Interface%20Element).
+- `@extends( <name> )` allows inheritance of [User Interface Elements](#User-Interface-Element).
 - `@category( <name> )` specifies a category. Useful for organizing the documentation and for filtering it.
 - `@issue( <number> )` references an Issue.
 
