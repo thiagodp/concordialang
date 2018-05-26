@@ -11,25 +11,25 @@ Construções da linguagem
 - [Estado](#estado)
 - [Cenário](#cenário)
 - [Constantes](#constantes)
-- [Elemento de Interface de Usuário](#Elemento-de-Interface-de-Usuário)
+- [Elemento de Interface de Usuário](#elemento-de-interface-de-usuário)
 - [Tabela](#tabela)
-- [Banco de Dados](#Banco-de-Dados)
-- [Variante](#Variante)
-- [Caso de Teste](#Caso-de-Teste)
-- [Eventos de Teste](#Eventos-de-Teste)
+- [Banco de Dados](#banco-de-dados)
+- [Variante](#variante)
+- [Caso de Teste](#caso-de-teste)
+- [Eventos de Teste](#eventos-de-teste)
 
 Literais
-- [Literal de Interface de Usuário](#Literal-de-Interface-de-Usuário)
+- [Literal de Interface de Usuário](#literal-de-interface-de-usuário)
 - [Valor](#valor)
 - [Número](#numero)
 - [Lista de valores](#lista-de-valores)
 - [Consulta](#consulta)
 
 Referências para declarações
-- [Elementos de Interface de Usuário](#Elementos-de-Interface-de-Usuário)
-- [Constantes](#constantes_)
+- [Elementos de Interface de Usuário](#elementos-de-interface-de-usuário)
+- [Constantes](#constantes-1)
 - [Tabelas](#tabelas)
-- [Bancos de Dados](#Bancos-de-Dados)
+- [Bancos de Dados](#bancos-de-dados)
 - [Estados](#estados)
 
 
@@ -107,8 +107,8 @@ Exemplo 4 - *tag com texto*:
 ```
 
 Tags reservadas:
-- `@scenario( <número> )`: referencia um [Cenário](#Cenário).
-- `@variant( <número> )`: referencia uma [Variante](#Variante).
+- `@scenario( <número> )`: referencia um [Cenário](#cenário).
+- `@variant( <número> )`: referencia uma [Variante](#variante).
 - `@importance( <número> )`: indica a importância de uma declaração. Quando mais alto o valor, mais alta a importância.
 - `@generated`: indica que um Caso de Teste foi gerado.
 - `@fail`: indica que um Caso de Teste deve falhar.
@@ -302,11 +302,11 @@ Propriedade `tipo de dado`:
 
 Propriedade `valor`:
   - Valores aceitos:
-    - [Valor](#Valor)
-    - [Número](#Número)
-    - [Constante](#Constantes)
-    - [Lista](#Lista-de-Valores)
-    - [Consulta](#Consulta)
+    - [Valor](#valor)
+    - [Número](#número)
+    - [Constante](#constantes)
+    - [Lista](#lista-de-valores)
+    - [Consulta](#consulta)
     - Referência para outro Elemento de IU
   - Exemplos:
     - `- valor é "olá"`
@@ -323,9 +323,9 @@ Propriedade `valor`:
 Propriedade `valor mínimo`:
   - Valores aceitos:
     - [Número](#número)
-    - [Constante](#Constantes)
-    - [Lista de números](#Lista-de-Valores)
-    - [Consulta](#Consulta)
+    - [Constante](#constantes)
+    - [Lista de números](#lista-de-valores)
+    - [Consulta](#consulta)
     - Referência para outro Elemento de IU
   - Exemplos:
     - `- valor mínimo é 5`
@@ -366,7 +366,7 @@ Propriedade `comprimento máximo`:
 Propriedade `formato`:
   - Valores aceitos:
     - [Valor](#valor)
-    - [Constant](#Constantes)
+    - [Constant](#constantes)
   - Deve ser uma [Expressão Regular](https://pt.wikipedia.org/wiki/Express%C3%A3o_regular) válida
   - Exemplos:
     - `- formato é "/[A-Za-z ._-]{2,50}/"`
@@ -522,8 +522,8 @@ Observações:
 
 Gerado automaticamente a partir de:
 1. [Variante](#variante)
-2. [Elemento de IU](#Elemento-de-Interface-de-Usuário)
-3. [Constantes](#constant)
+2. [Elemento de IU](#elemento-de-interface-de-usuário)
+3. [Constantes](#constante)
 4. [Estados](#estado)
 
 Um Caso de Teste gerado irá:
@@ -533,16 +533,16 @@ Um Caso de Teste gerado irá:
 - Receber a tag `@variant` para se referir à sua `Variante`;
 - Substituir **pré-condições** ([estados](#estado)), em passos do tipo `Dado`, pelos passos da  `Variante` capaz de produzir esse estado;
 - Substituir **chamadas de estado** ([estados](#estado)), em passos do tipo `Quando`, pelos passos da `Variante` capaz de produzir esse estado;
-- Substituir **pós-condições** ([estados](#estado)), em passos do tipo `Então`, por passos definidos em sentenças `Caso contrário` de [Elementos de IU](#Elemento-de-Interface-de-Usuário), caso seja gerado um valor de teste considerado inválido, segundo as regras desse mesmo [Elemento de IU](#Elemento-de-Interface-de-Usuário). Se o valor for considerado inválido e não houver definição de passos do tipo `Caso contrário`, o `Caso de Teste` receberá a tag `@fail` para indicar que ele não deve se comportar como descrito nos passos `Então` atuais. Por exemplo:
+- Substituir **pós-condições** ([estados](#estado)), em passos do tipo `Então`, por passos definidos em sentenças `Caso contrário` de [Elementos de IU](#elemento-de-interface-de-usuário), caso seja gerado um valor de teste considerado inválido, segundo as regras desse mesmo [Elemento de IU](#elemento-de-interface-de-usuário). Se o valor for considerado inválido e não houver definição de passos do tipo `Caso contrário`, o `Caso de Teste` receberá a tag `@fail` para indicar que ele não deve se comportar como descrito nos passos `Então` atuais. Por exemplo:
   - Suponha que há um `Elemento de IU` que define uma regra `valor mínimo é 10` e `Caso contrário eu devo ver "Valor mínimo é 10"`. Se o gerador de dados de teste fornecer o valor `9` (ou qualquer outro abaixo de `10`), que seria considerado inválido, os passos `Então` do `Caso de Teste` seriam substituídos pelos passos de `Caso contrário`, ficando `Então eu devo ver "Valor mínimo é 10"`.
   - Se não houver definição `Caso contrário` no `Elemento de IU`, não é esperado que o `Caso de Teste` se comporte da mesma forma, já que o valor é considerado inválido. Logo, os passos `Então` serão mantidos, mas a anotação `@fail` será adicionada ao `Caso de Teste`, para indicar que é esperado que ele se comporte diferente e, portanto, falhe.
 
 - Substituir todas as `Constantes` por seus valores;
-- Substituir todas as referências para [Elementos de IU](#Elemento-de-Interface-de-Usuário) por seus [Literais de IU](#Literais-de-IU), isso é, seus `id`s;
-- Manter quaisuqe [Literais de IU](#Literais-de-IU) declarados;
-- Gerar valores aleatórios para [Literais de IU](#Literais-de-IU) sem valor;
+- Substituir todas as referências para [Elementos de IU](#elemento-de-interface-de-usuário) por seus [Literais de IU](#literais-de-iu), isso é, seus `id`s;
+- Manter quaisuqe [Literais de IU](#literais-de-iu) declarados;
+- Gerar valores aleatórios para [Literais de IU](#literais-de-iu) sem valor;
 - Manter valores ou números declarados;
-- Gerar valores para [Elementos de IU](#Elemento-de-Interface-de-Usuário) de acordo com suas propriedades e os valores aplicáveis conforme os casos de teste - veja [reame-pt.md](../../readme-pt.md) para saber mais.
+- Gerar valores para [Elementos de IU](#elemento-de-interface-de-usuário) de acordo com suas propriedades e os valores aplicáveis conforme os casos de teste - veja [reame-pt.md](../../readme-pt.md) para saber mais.
 
 Exemplo:
 ```gherkin
@@ -651,7 +651,7 @@ Quando eu preencho <#preco> com 12.50
 
 > Sempre entre `[` e `]`
 
-Atualmente aceito somente por [Elementos de IUs](#Elemento-de-Interface-de-Usuário)
+Atualmente aceito somente por [Elementos de IUs](#elemento-de-interface-de-usuário)
 
 Exemplo 1:
 
@@ -684,7 +684,7 @@ Elemento de IU: Exemplo
 
 > Sempre entre aspas (`"`) e começando com `SELECT`
 
-Atualmente aceito somente por [Elementos de IU](#Elemento-de-Interface-de-Usuário).
+Atualmente aceito somente por [Elementos de IU](#elemento-de-interface-de-usuário).
 
 Exemplo:
 ```gherkin
@@ -703,7 +703,7 @@ Observações sobre consultas:
    SELECT * FROM usuarios WHERE login = 'bob'
    ```
 
-3. Pode referenciar uma [Tabela](#Tabela), um [Banco de Dados](#Banco-de-Dados), ou uma [Constante](#constante)
+3. Pode referenciar uma [Tabela](#tabela), um [Banco de Dados](#banco-de-dados), ou uma [Constante](#constante)
    através do formato `[algum nome]`, onde o conteúdo não contenha um cifrão (`$`).
    Um cifrão pode ser usado para referenciar nomes de tabela Excel, em vez de nomes declarados com Concordia.
 
@@ -793,7 +793,7 @@ Constantes:
 
 > Sempre entre `[` e `]`
 
-Referências para tabelas são somente permitidas dentro de [Consultas](#Consultas).
+Referências para tabelas são somente permitidas dentro de [Consultas](#consultas).
 
 No exemplo a seguir, `[Profissoes]` é uma referência para uma tabela:
 ```gherkin
@@ -813,7 +813,7 @@ Tabela: Profissoes
 
 > Sempre entre `[` e `]`
 
-Referências para bancos de dados são somente permitidas dentro de [Consultas](#Consultas).
+Referências para bancos de dados são somente permitidas dentro de [Consultas](#consultas).
 
 No exemplo a seguir, `[Profissoes]` é uma referência para um banco de dados:
 ```gherkin

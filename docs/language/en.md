@@ -29,7 +29,7 @@ Literals
 
 References to declarations
 - [User Interface Elements](#user-interface-elements)
-- [Constants](#constants)
+- [Constants](#constants-1)
 - [Tables](#tables)
 - [Databases](#databases)
 - [States](#states)
@@ -114,11 +114,11 @@ Reserved tags:
 - `@importance( <number> )`: indicates the importance of a declaration. The importance is as high as its number.
 - `@generated`: indicates that a Test Case was computer-generated.
 - `@fail`: indicates that a Test Case should fail.
-- `@global`: defines a [User Interface Element](#User-Interface-Element) as global. **Yet not available in the tool*
+- `@global`: defines a [User Interface Element](#user-interface-element) as global. **Yet not available in the tool*
 - `@ignore`: whether applied to a Variant, it will not produce Test Cases; whether applied to a Test Case, it will not produce test scripts.
 
 Reserved for future use:
-- `@extends( <name> )` allows inheritance of [User Interface Elements](#User-Interface-Element).
+- `@extends( <name> )` allows inheritance of [User Interface Elements](#user-interface-element).
 - `@category( <name> )` specifies a category. Useful for organizing the documentation and for filtering it.
 - `@issue( <number> )` references an Issue.
 
@@ -306,7 +306,7 @@ Property `value`:
     - [Value](#value)
     - [Number](#number)
     - [Constant](#constants)
-    - [List](#listofvalues)
+    - [List](#list-of-values)
     - [Query](#query)
     - Reference to another UI Element
   - Examples:
@@ -325,7 +325,7 @@ Property `minimum value`:
   - Accepted values:
     - [Number](#number)
     - [Constant](#constants)
-    - [List of numbers](#listofvalues)
+    - [List of numbers](#list-of-values)
     - [Query](#query)
     - Reference to another UI Element
   - Examples:
@@ -522,18 +522,18 @@ Notes:
 
 Generated automatically from:
 1. [Variant](#variant)
-2. [UI Element](#uielement)
+2. [UI Element](#user-interface-element)
 3. [Constants](#constant)
-4. [States](#states)
+4. [States](#state)
 
 A generated test case will:
 - Receive the same name of the `Variant`, plus a number;
 - Receive the tag `@generated`;
 - Receive the tag `@scenario` to refer to its `Scenario`;
 - Receive the tag `@variant` to refer to its `Variant`;
-- Replace a **precondition**, *i.e.,* a `Given` step with a [state](#states), by a `Variant` able to produce this same state;
-- Replace a **state call**, *i.e.,* a `When` step with a [state](#states), by a `Variant` able to produce this same state;
-- Replace a **postconditions**, *i.e.,* `Then` steps with [states](#states), when the current test case generates an invalid value for a certain UI Element *and* the respective UI Element has defined `Otherwise` steps that describe the expected behavior in case of an invalid value. When there are no `Otherwise` steps defined, the Test Case receives a tag `@fail` to indicate that it should not behave the same way as its Variant;
+- Replace a **precondition**, *i.e.,* a `Given` step with a [state](#state), by a `Variant` able to produce this same state;
+- Replace a **state call**, *i.e.,* a `When` step with a [state](#state), by a `Variant` able to produce this same state;
+- Replace a **postconditions**, *i.e.,* `Then` steps with [states](#state), when the current test case generates an invalid value for a certain UI Element *and* the respective UI Element has defined `Otherwise` steps that describe the expected behavior in case of an invalid value. When there are no `Otherwise` steps defined, the Test Case receives a tag `@fail` to indicate that it should not behave the same way as its Variant;
 - Replace all the involved `Constants` by their corresponding values;
 - Replace all the involved references to `UI Elements` by their `UI Literals`, that is, their `id`s;
 - Keep any declared `UI Literals`;
@@ -650,7 +650,7 @@ When I fill <price> with 12.50
 
 > Always between `[` and `]`
 
-Currently accepted only for [UI Elements](#userinterfaceelement)
+Currently accepted only for [UI Elements](#user-interface-element)
 
 Example 1:
 
@@ -683,7 +683,7 @@ UI Element: Example
 
 > Always between quotes (`"`) and starting with `SELECT`
 
-Currently accepted only for [UI Elements](#userinterfaceelement)
+Currently accepted only for [UI Elements](#user-interface-element)
 
 Example:
 
