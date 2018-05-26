@@ -452,7 +452,7 @@ Propriedades permitidas:
   - `usuario`
   - `senha`
   - `opções`
-  - ou as suas equivalentes [em inglês](en.md#Database)
+  - ou as suas equivalentes [em inglês](en.md#database)
 
 Valores atualmente suportados para `tipo`:
   - `"adodb"`  para conectar a bancos de dados como [MS Access](https://pt.wikipedia.org/wiki/Microsoft_Access) e [SQL Server](https://en.wikipedia.org/wiki/Microsoft_SQL_Server) através de [ActiveX Data Objects](https://en.wikipedia.org/wiki/ActiveX_Data_Objects)
@@ -508,7 +508,7 @@ Variante: Login com sucesso
 Veja também: [Exemplos of Ações](../actions-pt.md)
 
 
-### Casos de Teste
+### Caso de Teste
 
 *Caso de Teste, produzido para uma Variante*
 
