@@ -2,12 +2,11 @@
 
 > Generate functional tests automatically from your Agile specification.
 
-Translations: [Português](readme-pt.md)
-
 [![Build Status](https://travis-ci.org/thiagodp/concordialang.svg?branch=master)](https://travis-ci.org/thiagodp/concordialang)
 [![npm version](https://badge.fury.io/js/concordialang.svg)](https://badge.fury.io/js/concordialang)
 [![npm](https://img.shields.io/npm/l/concordialang.svg)](https://github.com/thiagodp/concordialang/blob/master/LICENSE.txt)
 
+Translations: [Português](readme-pt.md) 🌎
 
 *Concordia* is a tool that allows you to generate functional tests from a requirements specification written in *Concordia Language*.  You can use them for:
 
@@ -23,6 +22,19 @@ Translations: [Português](readme-pt.md)
 
 *Concordia Language* is an [Agile](https://en.wikipedia.org/wiki/Agile_software_development) requirements specification metalanguage inspired in [Gherkin](https://github.com/cucumber/cucumber/wiki/Gherkin).
 
+
+## Contents
+
+- [Why Concordia](#why-concordia)
+- [Install](#install)
+- [Execution](#execution)
+- [Examples](#examples)
+- [Language syntax](#language-syntax)
+- [CLI](#cli)
+- [Recommended usage cycle](#recommended-usage-cycle)
+- [How it works](#how-it-works)
+- [Generated test cases](#generated-test-cases)
+- [Contributing to Concordia](#contributing-to-concordia)
 
 ## Why Concordia ?
 
@@ -80,8 +92,8 @@ concordia --plugin-install codeceptjs
 
 Concordia and its plug-ins install all the needed dependencies by default, in order to make the setup process simpler.
 
-## Execution
 
+## Execution
 
 ### Starting a testing server
 
@@ -95,7 +107,7 @@ concordia --plugin-serve <plugin-name>
 
 After the server is started, you probably have to run Concordia in another terminal (console).
 
-### Running Concordia
+### Running Concordia 🚀
 
 ```bash
 concordia path/to/your/features --plugin <plugin-name>
@@ -111,6 +123,7 @@ concordia --plugin codeceptjs
 It is likely that your testing server remain open after executing all the tests.
 
 Type `Ctrl + C` to close it.
+
 
 ## Examples
 
@@ -198,6 +211,7 @@ See [this example](docs/example.md) to get a better overview of the Concordia La
 
 - [English](docs/language/en.md)
 - [Português](docs/language/pt.md)
+
 
 ## CLI
 
@@ -344,7 +358,6 @@ concordia --help
 4. If the tests **passed**, *great job!* Now you can write new requirements or add more test cases, so just back to step `1`.
 
 
-
 ## How it works
 
 ![Process](media/process.png)
@@ -412,8 +425,8 @@ Every group has related test cases, applied according to the declared business r
 |          | JUST_BELOW_MAX_LENGTH          |
 |          | MAX_LENGTH	                    |
 |          | JUST_ABOVE_MAX_LENGTH          |
-|          | RANDOM_ABOVE_MAX_LENGTH	    |
-|          | GREATEST_LENGTH	            |
+|          | RANDOM_ABOVE_MAX_LENGTH        |
+|          | GREATEST_LENGTH                |
 | FORMAT   | VALID_FORMAT                   |
 |          | INVALID_FORMAT                 |
 | SET      | FIRST_ELEMENT                  |
@@ -489,7 +502,6 @@ All the tests of the group `VALUE` are now applicable. That is, the following te
 
 The tests from `5` to `7` will produce values considered **invalid**.
 
-
 ### Example 2
 
 Let's define a user interface element named `Profession` and a table named `Professions` from which the values come from:
@@ -550,7 +562,8 @@ UI Element: Salary
 
 The reference to the UI Element `{Profession}` inside the query, makes the rules of `Salary` depend on `Profession`. Every time a `Profession` is selected, the **minimum value** and the **maximum value** of `Salary` changes according to the columns `min_salary` and `max_salary` of the table `Professions`.
 
-## Help us
+
+## Contributing to Concordia
 
 - [How to contribute](contributing.md)
 - [Create a plug-in](plugins/README.md)
@@ -559,6 +572,7 @@ The reference to the UI Element `{Profession}` inside the query, makes the rules
 - [Suggest a feature or change](https://github.com/thiagodp/concordialang/issues/new)
 - [Develop it with us](docs/development.md)
 - [Donate](docs/donate.md)
+
 
 ## License
 

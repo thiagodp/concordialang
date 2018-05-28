@@ -2,8 +2,8 @@
 
 > Gere testes funcionais automaticamente a partir de sua especificação Ágil
 
-[![Build Status](https://travis-ci.org/thiagodp/concordialang.svg?branch=master)](https://travis-ci.org/thiagodp/concordialang) 
-[![npm version](https://badge.fury.io/js/concordialang.svg)](https://badge.fury.io/js/concordialang) 
+[![Build Status](https://travis-ci.org/thiagodp/concordialang.svg?branch=master)](https://travis-ci.org/thiagodp/concordialang)
+[![npm version](https://badge.fury.io/js/concordialang.svg)](https://badge.fury.io/js/concordialang)
 [![npm](https://img.shields.io/npm/l/concordialang.svg)](https://github.com/thiagodp/concordialang/blob/master/LICENSE.txt)
 
 *Concordia* é uma ferramenta que permite gerar [testes funcionais](https://en.wikipedia.org/wiki/Functional_testing) a partir de uma especificação de requisitos escrita em *Linguagem Concordia*. Você pode usá-las para:
@@ -20,6 +20,21 @@
 
 
 A *Linguagem Concordia* é uma meta linguagem de especificação [Ágil](https://en.wikipedia.org/wiki/Agile_software_development) de requisitos, inspirada em [Gherkin](https://github.com/cucumber/cucumber/wiki/Gherkin).
+
+
+## Conteúdo
+
+- [Por que Concordia](#por-que-concordia)
+- [Instalação](#instalação)
+- [Execução](#execução)
+- [Exemplos](#exemplos)
+- [Sintaxe da linguagem](#sintaxe-da-linguagem)
+- [Exemplos de ações](#exemplos-de-ações)
+- [CLI](#cli)
+- [Ciclo de uso recomendado](#ciclo-de-uso-recomendado)
+- [Como ela funciona](#como-ela-funciona)
+- [Casos de teste gerados](#casos-de-teste-gerados)
+- [Contribuindo com Concordia](#contribuindo-com-concordia)
 
 
 ## Por que Concordia?
@@ -78,6 +93,7 @@ concordia --plugin-install codeceptjs
 
 Concordia e seus plug-ins procuram instalar todas as dependências necessárias por padrão, para que seja mais simples iniciar o processo de teste.
 
+
 ## Execução
 
 ### Iniciando um servidor de testes
@@ -91,7 +107,7 @@ concordia --plugin-serve <nome-do-plugin>
 ```
 Com o servidor iniciado, você pode executar testes com Concordia em outro terminal (console).
 
-### Executando Concordia
+### Executando Concordia 🚀
 
 ```bash
 concordia caminho/ate/suas/features --plugin <nome-do-plugin>
@@ -107,6 +123,7 @@ concordia --plugin codeceptjs
 É provável que o servidor de testes continue aberto após você executar todos os testes.
 
 Tecle `Ctrl + C` para finalizá-lo.
+
 
 ## Exemplos
 
@@ -132,7 +149,6 @@ Cenário: Busca retorna resultado esperado
 ```
 
 **Execução**
-
 
 Inicia o servidor de testes
 ```bash
@@ -418,8 +434,8 @@ Para cada grupo, uma bateria de testes pode ser executada, dependendo das regras
 |          | JUST_BELOW_MAX_LENGTH          |
 |          | MAX_LENGTH	                    |
 |          | JUST_ABOVE_MAX_LENGTH          |
-|          | RANDOM_ABOVE_MAX_LENGTH	    |
-|          | GREATEST_LENGTH	            |
+|          | RANDOM_ABOVE_MAX_LENGTH        |
+|          | GREATEST_LENGTH                |
 | FORMAT   | VALID_FORMAT                   |
 |          | INVALID_FORMAT                 |
 | SET      | FIRST_ELEMENT                  |
@@ -496,7 +512,6 @@ Todos os testes do grupo `VALUE` são agora aplicáveis. Isso é, os seguintes t
 
 Os testes de `5` a `7` vão produzir valores considerados **inválidos**.
 
-
 ### Exemplo 2
 
 Vamos definir um elemento de interface de usuário chamado`Profissao` e uma tabela chamada `Profissoes` da qual seus valores virão:
@@ -559,7 +574,8 @@ Elemento de IU: Salario
 
 A referência para o elemento de IU `{Profissao}` dentro da consulta faz as regras de `Salario` dependerem de `Profissao`. Cada vez que uma `Profissao` é selecionada, o **valor mínimo** e **valor máximo** de `Salario` mudam de acordo com as colunas `salario_min` e `salario_max` da tabela `Profissoes`.
 
-## Ajude-nos
+
+## Contribuindo com Concordia
 
 - [Como contribuir](contributing.md)
 - [Crie um plug-in](plugins/README.md)
@@ -569,7 +585,7 @@ A referência para o elemento de IU `{Profissao}` dentro da consulta faz as regr
 - [Desenvolva conosco](docs/development.md)
 - [Doe](docs/donate.md)
 
-## License
+## Licença
 
 ![AGPL](http://www.gnu.org/graphics/agplv3-88x31.png) © [Thiago Delgado Pinto](https://github.com/thiagodp)
 
