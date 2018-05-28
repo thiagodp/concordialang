@@ -1120,7 +1120,7 @@ Bravey.RegexEntityRecognizer = function (entityName, additionalPriority) {
      * @returns {Entity[]} The set of found entities.
      */
     this.getEntities = function (string, out) {
-        string = Bravey.Text.clean(string); // <<< by TDP
+        // string = Bravey.Text.clean(string); // <<< by TDP
         var found, piece, match, entitiesFound = [], pos = -1;
         if (!out)
             out = [];
@@ -5244,7 +5244,7 @@ Bravey.Nlp.Fuzzy = function (nlpName, extensions) {
      * @returns {false} When the sentence doesn't match any intent.
      */
     this.test = function (text, method) {
-        text = Bravey.Text.clean(text); // <<< by TDP
+        // text = Bravey.Text.clean(text); // <<< by TDP (commented)
         switch (method) {
             case "anyEntity":
                 {
