@@ -585,22 +585,22 @@ Comandos de Console e SQL devem ser declarados entre apóstrofos (`'`).
 Exemplo 1:
 ```
 Antes de cada Cenário:
-  - Execute o comando 'cls'
-  - Execute o script 'DELETE FROM [Meu BD].`usuarios`'
-  - Execute o script 'INSERT INTO [Meu BD].`usuarios` ( `login`, `senha` ) VALUES ( "Clark", "Kent" ), ( "Bruce", "Wayne" )'
+  Eu executo o comando 'cls'
+  e executo o script 'DELETE FROM [Meu BD].`usuarios`'
+  e executo o script 'INSERT INTO [Meu BD].`usuarios` ( `login`, `senha` ) VALUES ( "Clark", "Kent" ), ( "Bruce", "Wayne" )'
 ```
 
 Exemplo 2:
 ```
 Antes e depois da Funcionalidade:
-  - Execute o script 'DELETE FROM [Meu BD].`cities`'
+  Eu executo o script 'DELETE FROM [Meu BD].`cities`'
 ```
 
 Exemplo 3:
 ```
 Após cada Cenário:
-  - Crie o arquivo 'path/to/foo.json' com `{ "name": "John", "surname": "Doe" }`
-  - Verifique que o arquivo 'path/to/bar.xml' tenha `<person><name>John</name><surname>John</surname></person>`
+  Eu crio o arquivo 'path/to/foo.json' com `{ "name": "John", "surname": "Doe" }`
+  Eu vejo que o arquivo 'path/to/bar.xml' contém `<person><name>John</name><surname>John</surname></person>`
 ```
 
 

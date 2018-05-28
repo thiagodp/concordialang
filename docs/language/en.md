@@ -565,7 +565,7 @@ Notes:
 - Local declaration.
 - Just one declaration per Feature.
 
-**YET NOT SUPPORTED BY CONCORDIA**
+**NOT SUPPORTED BY CONCORDIA YET**
 
 Could be:
 - { Before | After | Around } Each Scenario
@@ -581,22 +581,22 @@ Both Console and SQL commands must declared values between apostrophes (`'`).
 Example 1:
 ```
 Before Each Scenario:
-  - Run the command 'cls'
-  - Run the script 'DELETE FROM [MyDB].`user`'
-  - Run the script 'INSERT INTO [MyDB].`user` ( `username`, `password` ) VALUES ( "Clark", "Kent" ), ( "Bruce", "Wayne" )'
+  I run the command 'cls'
+  and I run the script 'DELETE FROM [MyDB].`user`'
+  and I run the script 'INSERT INTO [MyDB].`user` ( `username`, `password` ) VALUES ( "Clark", "Kent" ), ( "Bruce", "Wayne" )'
 ```
 
 Example 2:
 ```
 Around Feature:
-  - Run the script 'DELETE FROM [MyDB].`cities`'
+  I run the script 'DELETE FROM [MyDB].`cities`'
 ```
 
 Example 3:
 ```
 After Each Scenario:
-  - Create the file 'path/to/foo.json' with `{ "name": "John", "surname": "Doe" }`
-  - Assert that the file 'path/to/bar.xml' has `<person><name>John</name><surname>John</surname></person>`
+  I create the file 'path/to/foo.json' with `{ "name": "John", "surname": "Doe" }`
+  and I assert that the file 'path/to/bar.xml' has `<person><name>John</name><surname>John</surname></person>`
 ```
 
 
