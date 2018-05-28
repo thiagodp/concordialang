@@ -87,11 +87,11 @@ Allow a given UI Element or UI Literal to match a certain Table.
 
 Example 1:
 ```concordia
-Then I see {MyTable} as [Some Table]
+Then I see the table {MyTable} as [Some Table]
 ```
 Example 2:
 ```concordia
-Then I see <myTable> as [Some Table]
+Then I see the table <myTable> as [Some Table]
 ```
 
 In which `Some Table` is declared like this:
