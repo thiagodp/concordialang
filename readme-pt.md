@@ -577,13 +577,23 @@ A referência para o elemento de IU `{Profissao}` dentro da consulta faz as regr
 
 ## Contribuindo com Concordia
 
-- [Como contribuir](contributing.md)
+*Há muitas formas de contribuir. Muitas dão muito pouco trabalho.* 😉
+
+- Divulgando
+  - *Fale sobre Concordia com seus amigos* - mais feedback o projeto receberá
+  - *Dê uma estrela* - ⭐ Quem segue você fica sabendo do projeto
+- Use e nos conte
+  - *Conte no [chat](https://concordialang.slack.com)* - O que achou? Teve dúvidas? Quais?
+  - *Tente usar em sua empresa* - Conte-nos que resultados teve!
+- Melhore a documentação
+  - *[Relate](https://github.com/thiagodp/concordialang/issues/new) erros no texto*
+  - *Estenda a documentação* - nos mande o arquivo ou crie um [fork](https://github.com/thiagodp/concordialang#fork-destination-box) e submeta um *[pull request](https://help.github.com/articles/about-pull-requests/)*
+  - *Traduza para outro idioma* - nos mande o arquivo ou crie um [fork](https://github.com/thiagodp/concordialang#fork-destination-box) e submeta um *[pull request](https://help.github.com/articles/about-pull-requests/)*
 - [Crie um plug-in](plugins/README.md)
-- [Melhore a documentação](https://github.com/thiagodp/concordialang#fork-destination-box)
 - [Relate um bug](https://github.com/thiagodp/concordialang/issues/new)
 - [Sugira uma nova funcionalidade ou alteração](https://github.com/thiagodp/concordialang/issues/new)
 - [Desenvolva conosco](docs/development.md)
-- [Doe](docs/donate.md)
+
 
 ## Licença
 

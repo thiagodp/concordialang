@@ -5,6 +5,7 @@
 [![Build Status](https://travis-ci.org/thiagodp/concordialang.svg?branch=master)](https://travis-ci.org/thiagodp/concordialang)
 [![npm version](https://badge.fury.io/js/concordialang.svg)](https://badge.fury.io/js/concordialang)
 [![npm](https://img.shields.io/npm/l/concordialang.svg)](https://github.com/thiagodp/concordialang/blob/master/LICENSE.txt)
+[![slack](https://img.shields.io/badge/slack-chat-blue.svg)](https://concordialang.slack.com)
 
 Translations: [Português](readme-pt.md) 🌎
 
@@ -572,6 +573,23 @@ The reference to the UI Element `{Profession}` inside the query, makes the rules
 - [Suggest a feature or change](https://github.com/thiagodp/concordialang/issues/new)
 - [Develop it with us](docs/development.md)
 - [Donate](docs/donate.md)
+
+*There are lot of ways to contribute. Many of them are a piece of cake!* 😉
+
+- Spread
+  - *Talk to your friends* - their feedback will help us too!
+  - *Give it a star* - ⭐ People that follows you will know about it
+- Use it and tell us
+  - *[Chat](https://concordialang.slack.com) with us* - Did you like it? Did you have any doubts?
+  - *Try it on your company* - Tell us which results did you get!
+- Improve the documentation
+  - *[Report](https://github.com/thiagodp/concordialang/issues/new) typos*
+  - *Extend it* - send us the file or create a [fork](https://github.com/thiagodp/concordialang#fork-destination-box) and submit a *[pull request](https://help.github.com/articles/about-pull-requests/)*
+  - *Translate* - send us the file or create a [fork](https://github.com/thiagodp/concordialang#fork-destination-box) and submit a *[pull request](https://help.github.com/articles/about-pull-requests/)*
+- [Create a plug-in](plugins/README.md)
+- [Report a bug](https://github.com/thiagodp/concordialang/issues/new)
+- [Suggest a new feature or a change](https://github.com/thiagodp/concordialang/issues/new)
+- [Develop it with us](docs/development.md)
 
 
 ## License
