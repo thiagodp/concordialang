@@ -1,45 +1,53 @@
-# Welcome
+# Development
+
+> Development guidelines
 
 ## Directories
 
-- `doc` - documentation
-  - `examples` - requirement specification examples
-  - `formats` - specification of file formats
-  - `langspec` - language specification
-  - `tutorial` - tutorials about the usage of this tool
-- `src` - source code
-  - `__tests__` - test scripts
-  - `data` - data used by the tool
-  - `dist` - output directory for typescript files (tsc)
-  - `lib` - manually installed libraries
-  - `modules` - modules of the project
-  - `node_modules` - installed libraries
-  - `plugins` - plugins
+- `__tests__` - test scripts
+- `bin` - executable script
+- `data` - data files used by the tool
+- `dist` - output directory - contains generared js and json files
+- `docs` - documentation files
+- `lib` - adapted third party libraries
+- `media` - images or any other multimedia files
+- `modules` - modules of the project
+- `plugins` - plugins
 
 
-## Before starting
+## Getting started
 
-Go to the `src` folder:
-```shell
-$ cd src
-```
-
-### Installation
+### Install dependencies
 ```shell
 $ npm install
-$ npm install -g jest ts-jest
 ```
 
-### How to run the project
+### Install tools
 ```shell
-$ node dist/main.js
+$ npm install -g typescript jest ts-jest
+```
+
+### Running
+```shell
+npm run start
+```
+
+### Building (when needed)
+```shell
+npm run build
 ```
 
 ### How to run the tests
 ```shell
-$ npm test
+$ npm run test
 ```
-or
-```shell
-$ jest --watch
-```
+
+
+## Commit rules
+
+> TO-DO
+
+
+## Coding style
+
+> TO-DO
