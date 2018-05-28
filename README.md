@@ -566,14 +566,6 @@ The reference to the UI Element `{Profession}` inside the query, makes the rules
 
 ## Contributing to Concordia
 
-- [How to contribute](contributing.md)
-- [Create a plug-in](plugins/README.md)
-- [Improve the documentation](https://github.com/thiagodp/concordialang#fork-destination-box)
-- [Report a bug](https://github.com/thiagodp/concordialang/issues/new)
-- [Suggest a feature or change](https://github.com/thiagodp/concordialang/issues/new)
-- [Develop it with us](docs/development.md)
-- [Donate](docs/donate.md)
-
 *There are lot of ways to contribute. Many of them are a piece of cake!* 😉
 
 - Spread
