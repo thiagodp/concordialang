@@ -37,6 +37,7 @@ Translations: [Português](readme-pt.md) 🌎
 - [Generated test cases](#generated-test-cases)
 - [Contributing to Concordia](#contributing-to-concordia)
 
+
 ## Why Concordia ?
 
 - Simple [syntax](docs/language/en.md)
@@ -573,7 +574,7 @@ The reference to the UI Element `{Profession}` inside the query, makes the rules
   - *Give it a star* - ⭐ People that follows you will know about it
 - Use it and tell us
   - *[Chat](https://concordialang.slack.com) with us* - Did you like it? Did you have any doubts?
-  - *Try it on your company* - Tell us which results did you get!
+  - *Try it on your company* - Tell us which results you got!
 - Improve the documentation
   - *[Report](https://github.com/thiagodp/concordialang/issues/new) typos*
   - *Extend it* - send us the file or create a [fork](https://github.com/thiagodp/concordialang#fork-destination-box) and submit a *[pull request](https://help.github.com/articles/about-pull-requests/)*
