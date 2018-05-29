@@ -1,0 +1,15 @@
+{
+    "isFake": false,
+    "name": "codeceptjs-appium",
+    "description": "Generates test scripts for CodeceptJS with Appium",
+    "version": "0.1",
+    "targets": [ "CodeceptJS", "Appium" ],
+    "authors": [
+        "Thiago Delgado Pinto (thiago-dp@bol.com.br)"
+    ],
+    "file": "codeceptjs-appium/CodeceptJS.js",
+    "class": "CodeceptJS",
+    "install": "npm install -g mocha mocha-multi codeceptjs appium && npm install wd",
+    "uninstall": "npm uninstall -g mocha mocha-multi codeceptjs appium && npm uninstall wd",
+    "serve": "appium"
+}
