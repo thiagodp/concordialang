@@ -8,9 +8,6 @@ import { FileInstrumentationReader } from '../../modules/plugin/FileInstrumentat
 
 /**
  * Converts a CodeceptJS execution result to Concordia's format.
- *
- * @author Matheus Fagundes
- * @author Thiago Delgado Pinto
  */
 export class ReportConverter {
 

@@ -2,7 +2,7 @@
     "isFake": false,
     "name": "codeceptjs",
     "description": "Generates test scripts for CodeceptJS with WebDriverIO",
-    "version": "0.5.1",
+    "version": "0.6",
     "targets": [ "CodeceptJS", "WebDriverIO" ],
     "authors": [
         "Matheus Eller Fagundes (matheusefagundes@gmail.com)",

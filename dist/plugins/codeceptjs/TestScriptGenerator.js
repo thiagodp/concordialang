@@ -5,10 +5,8 @@ const CommandMapper_1 = require("./CommandMapper");
 const dedent = require('dedent-js');
 /**
  * Generate test scripts for CodeceptJS.
- * Uses [Mustache](https://github.com/janl/mustache.js/) for this purpose.
  *
- * @author Matheus Eller Fagundes
- * @author Thiago Delgado Pinto
+ * Uses [Mustache](https://github.com/janl/mustache.js/) for this purpose.
  */
 class TestScriptGenerator {
     constructor() {
