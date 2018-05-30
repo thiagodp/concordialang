@@ -8,6 +8,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var ActionTargets;
 (function (ActionTargets) {
     ActionTargets["NONE"] = "none";
+    ActionTargets["APP"] = "app";
     ActionTargets["BUTTON"] = "button";
     ActionTargets["CHECKBOX"] = "checkbox";
     ActionTargets["COOKIE"] = "cookie";

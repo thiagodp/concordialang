@@ -7,6 +7,7 @@ export enum ActionTargets {
 
     NONE         = "none"        , // web, mobile web, mobile native, desktop
 
+    APP          = "app"         , // mobile web, mobile native
     BUTTON       = "button"      , // web, mobile web, mobile native, desktop
     CHECKBOX     = "checkbox"    , // web, mobile web, mobile native, desktop
     COOKIE       = "cookie"      , // web, mobile web

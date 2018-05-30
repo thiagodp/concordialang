@@ -112,7 +112,6 @@
                 "close": [ "fecho", "saio" ],
                 "doubleClick": [ "clico duplamente", "clico duas vezes", "dou um duplo clique" ],
                 "drag": [ "arrasto" ],
-                "drop": [ "solto em" ],
                 "fill": [ "preencho", "informo", "digito", "forneco", "entro" ],
                 "hide": [ "escondo", "oculto" ],
                 "move": [ "movo", "posiciono" ],
