@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const TestScriptGenerator_1 = require("../../../plugins/codeceptjs/TestScriptGenerator");
 const CommandMapper_1 = require("../../../plugins/codeceptjs/CommandMapper");
-const WebDriverIOCommands_1 = require("../../../plugins/codeceptjs/WebDriverIOCommands");
+const Commands_1 = require("../../../plugins/codeceptjs/Commands");
 /**
  * @author Matheus Eller Fagundes
  * @author Thiago Delgado Pinto
@@ -20,7 +20,7 @@ describe('TestScriptGeneratorTest', () => {
         expect(uglify(adjusted)).toBe(uglify(expected));
     }
     beforeEach(() => {
-        gen = new TestScriptGenerator_1.TestScriptGenerator(new CommandMapper_1.CommandMapper(WebDriverIOCommands_1.WEB_DRIVER_IO_COMMANDS));
+        gen = new TestScriptGenerator_1.TestScriptGenerator(new CommandMapper_1.CommandMapper(Commands_1.CODECEPTJS_COMMANDS));
     });
     afterEach(() => {
         gen = null;

@@ -16,8 +16,8 @@ const path = require("path");
 const fse = require("node-fs-extra");
 const util_1 = require("util");
 const CommandMapper_1 = require("./CommandMapper");
-const WebDriverIOCommands_1 = require("./WebDriverIOCommands");
 const ConfigMaker_1 = require("./ConfigMaker");
+const Commands_1 = require("./Commands");
 /**
  * Plugin for CodeceptJS.
  */
@@ -106,7 +106,7 @@ class CodeceptJS {
         });
     }
     createTestScriptGenerator() {
-        return new TestScriptGenerator_1.TestScriptGenerator(new CommandMapper_1.CommandMapper(WebDriverIOCommands_1.WEB_DRIVER_IO_COMMANDS));
+        return new TestScriptGenerator_1.TestScriptGenerator(new CommandMapper_1.CommandMapper(Commands_1.CODECEPTJS_COMMANDS));
     }
     createTestScriptExecutor() {
         const cfgMaker = new ConfigMaker_1.ConfigMaker();

@@ -1,6 +1,6 @@
 import { CommandMapper } from "../../../plugins/codeceptjs/CommandMapper";
 import { ATSCommand } from "../../../modules/testscript/AbstractTestScript";
-import { APPIUM_COMMANDS } from "../../../plugins/codeceptjs-appium/AppiumCommands";
+import { CODECEPTJS_COMMANDS } from "../../../plugins/codeceptjs/Commands";
 
 /**
  * @author Thiago Delgado Pinto
@@ -12,9 +12,7 @@ describe( 'CommandMapperTest', () => {
     const comment = ' // (,)';
 
     beforeEach( () => {
-        cm = new CommandMapper(
-            APPIUM_COMMANDS
-        );
+        cm = new CommandMapper( CODECEPTJS_COMMANDS );
     } );
 
     afterEach( () => {
@@ -147,15 +145,6 @@ describe( 'CommandMapperTest', () => {
 
         describe( 'app', () => {
 
-            it( 'targetType', () => {
-                let cmd: ATSCommand = {
-                    action: 'close',
-                    targetTypes: [ 'app' ]
-                };
-                const r = cm.map( cmd );
-                expect( r ).toContainEqual( 'I.closeApp();' + comment );
-            } );
-
             it( 'options', () => {
                 let cmd: ATSCommand = {
                     action: 'close',
@@ -262,6 +251,50 @@ describe( 'CommandMapperTest', () => {
 
     } );
 
+
+    describe( 'hide', () => {
+
+        describe( 'keyboard', () => {
+
+            it( 'options', () => {
+                let cmd: ATSCommand = {
+                    action: 'hide',
+                    options: [ 'keyboard' ]
+                };
+                const r = cm.map( cmd );
+                expect( r ).toContainEqual( 'I.hideDeviceKeyboard();' + comment );
+            } );
+
+        } );
+
+    } );
+
+
+    describe( 'install', () => {
+
+        it( 'value', () => {
+            let cmd: ATSCommand = {
+                action: 'install',
+                values: [ 'foo.apk' ]
+            };
+            const r = cm.map( cmd );
+            expect( r ).toContainEqual( 'I.installApp("foo.apk");' + comment );
+        } );
+
+        it( 'option, value', () => {
+            let cmd: ATSCommand = {
+                action: 'install',
+                options: [ 'app' ],
+                values: [ 'foo.apk' ]
+            };
+            const r = cm.map( cmd );
+            expect( r ).toContainEqual( 'I.installApp("foo.apk");' + comment );
+        } );
+
+    } );
+
+
+
     describe( 'move', () => {
 
         describe( 'moveCursorTo', () => {
@@ -279,6 +312,25 @@ describe( 'CommandMapperTest', () => {
         } );
 
     } );
+
+
+    describe( 'open', () => {
+
+        describe( 'notifications', () => {
+
+            it( 'options', () => {
+                let cmd: ATSCommand = {
+                    action: 'open',
+                    options: [ 'notifications' ]
+                };
+                const r = cm.map( cmd );
+                expect( r ).toContainEqual( 'I.openNotifications();' + comment );
+            } );
+
+        } );
+
+    } );
+
 
     describe( 'press', () => {
 
@@ -302,6 +354,45 @@ describe( 'CommandMapperTest', () => {
 
     } );
 
+
+    describe( 'pull', () => {
+
+        describe( 'file', () => {
+
+            it( 'options, two values', () => {
+                let cmd: ATSCommand = {
+                    action: 'pull',
+                    options: [ 'file' ],
+                    values: [ 'foo.png', 'bar.png' ]
+                };
+                const r = cm.map( cmd );
+                expect( r ).toContainEqual( 'I.pullFile("foo.png", "bar.png");' + comment );
+            } );
+
+        } );
+
+    } );
+
+
+    describe( 'remove', () => {
+
+        describe( 'app', () => {
+
+            it( 'options, value', () => {
+                let cmd: ATSCommand = {
+                    action: 'remove',
+                    options: [ 'app' ],
+                    values: [ 'foo.apk' ]
+                };
+                const r = cm.map( cmd );
+                expect( r ).toContainEqual( 'I.removeApp("foo.apk");' + comment );
+            } );
+
+        } );
+
+    } );
+
+
     describe( 'rightClick', () => {
 
         it( 'value', () => {
@@ -324,6 +415,21 @@ describe( 'CommandMapperTest', () => {
 
     } );
 
+
+    describe( 'rotate', () => {
+
+        it( 'two numbers', () => {
+            let cmd: ATSCommand = {
+                action: 'rotate',
+                values: [ '100', '200' ]
+            };
+            const r = cm.map( cmd );
+            expect( r ).toContainEqual( 'I.rotate(100, 200);' + comment );
+        } );
+
+    } );
+
+
     describe( 'saveScreenshot', () => {
 
         it( 'value', () => {
@@ -338,6 +444,78 @@ describe( 'CommandMapperTest', () => {
     } );
 
     describe( 'see', () => {
+
+        describe( 'seeAppIsInstalled', () => {
+
+            it( 'options, value', () => {
+                let cmd: ATSCommand = {
+                    action: 'see',
+                    options: [ 'app', 'installed' ],
+                    values: [ 'foo.apk' ],
+                };
+                const r = cm.map( cmd );
+                expect( r ).toContainEqual( 'I.seeAppIsInstalled("foo.apk");' + comment );
+            } );
+
+        } );
+
+        describe( 'seeAppIsNotInstalled', () => {
+
+            it( 'options, value', () => {
+                let cmd: ATSCommand = {
+                    action: 'see',
+                    options: [ 'app', 'installed' ],
+                    values: [ 'foo.apk' ],
+                    modifier: 'not',
+                };
+                const r = cm.map( cmd );
+                expect( r ).toContainEqual( 'I.seeAppIsNotInstalled("foo.apk");' + comment );
+            } );
+
+        } );
+
+        describe( 'seeCurrentActivityIs', () => {
+
+            it( 'options, value', () => {
+                let cmd: ATSCommand = {
+                    action: 'see',
+                    options: [ 'currentActivity' ],
+                    values: [ 'foo' ],
+                };
+                const r = cm.map( cmd );
+                expect( r ).toContainEqual( 'I.seeCurrentActivityIs("foo");' + comment );
+            } );
+
+        } );
+
+
+        describe( 'seeDeviceIsLocked', () => {
+
+            it( 'options, value', () => {
+                let cmd: ATSCommand = {
+                    action: 'see',
+                    options: [ 'device', 'locked' ]
+                };
+                const r = cm.map( cmd );
+                expect( r ).toContainEqual( 'I.seeDeviceIsLocked();' + comment );
+            } );
+
+        } );
+
+
+        describe( 'seeDeviceIsUnlocked', () => {
+
+            it( 'options, value', () => {
+                let cmd: ATSCommand = {
+                    action: 'see',
+                    options: [ 'device', 'unlocked' ]
+                };
+                const r = cm.map( cmd );
+                expect( r ).toContainEqual( 'I.seeDeviceIsUnlocked();' + comment );
+            } );
+
+        } );
+
 
         describe( 'seeInField', () => {
 
@@ -608,6 +786,29 @@ describe( 'CommandMapperTest', () => {
         } );
 
 
+        describe( 'seeOrientationIs', () => {
+
+            it( 'options, value portrait', () => {
+                let cmd: ATSCommand = {
+                    action: 'see',
+                    options: [ 'orientation', 'portrait' ]
+                };
+                const r = cm.map( cmd );
+                expect( r ).toContainEqual( 'I.seeOrientationIs("PORTRAIT");' + comment );
+            } );
+
+            it( 'options, value landscape', () => {
+                let cmd: ATSCommand = {
+                    action: 'see',
+                    options: [ 'orientation', 'landscape' ]
+                };
+                const r = cm.map( cmd );
+                expect( r ).toContainEqual( 'I.seeOrientationIs("LANDSCAPE");' + comment );
+            } );
+
+        } );
+
+
         describe( 'see', () => {
             it( 'value', () => {
                 let cmd: ATSCommand = {
@@ -634,6 +835,18 @@ describe( 'CommandMapperTest', () => {
 
     } );
 
+    describe( 'shake', () => {
+
+        it( 'nothing', () => {
+            let cmd: ATSCommand = {
+                action: 'shake'
+            };
+            const r = cm.map( cmd );
+            expect( r ).toContainEqual( 'I.shakeDevice();' + comment );
+        } );
+
+    } );
+
 
     describe( 'select', () => {
 
@@ -648,6 +861,179 @@ describe( 'CommandMapperTest', () => {
         } );
 
     } );
+
+
+    describe( 'swipe', () => {
+
+        it( 'value, two numbers', () => {
+            let cmd: ATSCommand = {
+                action: 'swipe',
+                values: [ 'foo', '100', '200' ]
+            };
+            const r = cm.map( cmd );
+            expect( r ).toContainEqual( 'I.swipe("foo", 100, 200);' + comment );
+        } );
+
+        it( 'value, three numbers', () => {
+            let cmd: ATSCommand = {
+                action: 'swipe',
+                values: [ 'foo', '100', '200', '3000' ]
+            };
+            const r = cm.map( cmd );
+            expect( r ).toContainEqual( 'I.swipe("foo", 100, 200, 3000);' + comment );
+        } );
+
+    } );
+
+
+    describe( 'swipeDown', () => {
+
+        it( 'value, number', () => {
+            let cmd: ATSCommand = {
+                action: 'swipe',
+                options: [ 'down' ],
+                values: [ 'foo', '100' ]
+            };
+            const r = cm.map( cmd );
+            expect( r ).toContainEqual( 'I.swipeDown("foo", 100);' + comment );
+        } );
+
+        it( 'value, two numbers', () => {
+            let cmd: ATSCommand = {
+                action: 'swipe',
+                options: [ 'down' ],
+                values: [ 'foo', '100', '3000' ]
+            };
+            const r = cm.map( cmd );
+            expect( r ).toContainEqual( 'I.swipeDown("foo", 100, 3000);' + comment );
+        } );
+
+    } );
+
+
+    describe( 'swipeLeft', () => {
+
+        it( 'value, number', () => {
+            let cmd: ATSCommand = {
+                action: 'swipe',
+                options: [ 'left' ],
+                values: [ 'foo', '100' ]
+            };
+            const r = cm.map( cmd );
+            expect( r ).toContainEqual( 'I.swipeLeft("foo", 100);' + comment );
+        } );
+
+        it( 'value, two numbers', () => {
+            let cmd: ATSCommand = {
+                action: 'swipe',
+                options: [ 'left' ],
+                values: [ 'foo', '100', '3000' ]
+            };
+            const r = cm.map( cmd );
+            expect( r ).toContainEqual( 'I.swipeLeft("foo", 100, 3000);' + comment );
+        } );
+
+    } );
+
+
+    describe( 'swipeRight', () => {
+
+        it( 'value, number', () => {
+            let cmd: ATSCommand = {
+                action: 'swipe',
+                options: [ 'right' ],
+                values: [ 'foo', '100' ]
+            };
+            const r = cm.map( cmd );
+            expect( r ).toContainEqual( 'I.swipeRight("foo", 100);' + comment );
+        } );
+
+        it( 'value, two numbers', () => {
+            let cmd: ATSCommand = {
+                action: 'swipe',
+                options: [ 'right' ],
+                values: [ 'foo', '100', '3000' ]
+            };
+            const r = cm.map( cmd );
+            expect( r ).toContainEqual( 'I.swipeRight("foo", 100, 3000);' + comment );
+        } );
+
+    } );
+
+
+
+    describe( 'swipeUp', () => {
+
+        it( 'value, number', () => {
+            let cmd: ATSCommand = {
+                action: 'swipe',
+                options: [ 'up' ],
+                values: [ 'foo', '100' ]
+            };
+            const r = cm.map( cmd );
+            expect( r ).toContainEqual( 'I.swipeUp("foo", 100);' + comment );
+        } );
+
+        it( 'value, two numbers', () => {
+            let cmd: ATSCommand = {
+                action: 'swipe',
+                options: [ 'up' ],
+                values: [ 'foo', '100', '3000' ]
+            };
+            const r = cm.map( cmd );
+            expect( r ).toContainEqual( 'I.swipeUp("foo", 100, 3000);' + comment );
+        } );
+
+    } );
+
+
+    describe( 'switchToNative', () => {
+
+        it( 'option', () => {
+            let cmd: ATSCommand = {
+                action: 'switch',
+                options: [ 'native' ]
+            };
+            const r = cm.map( cmd );
+            expect( r ).toContainEqual( 'I.switchToNative();' + comment );
+        } );
+
+        it( 'option, value', () => {
+            let cmd: ATSCommand = {
+                action: 'switch',
+                options: [ 'native' ],
+                values: [ 'context' ]
+            };
+            const r = cm.map( cmd );
+            expect( r ).toContainEqual( 'I.switchToNative("context");' + comment );
+        } );
+
+    } );
+
+
+    describe( 'switchToWeb', () => {
+
+        it( 'option', () => {
+            let cmd: ATSCommand = {
+                action: 'switch',
+                options: [ 'web' ]
+            };
+            const r = cm.map( cmd );
+            expect( r ).toContainEqual( 'I.switchToWeb();' + comment );
+        } );
+
+        it( 'option, value', () => {
+            let cmd: ATSCommand = {
+                action: 'switch',
+                options: [ 'web' ],
+                values: [ 'context' ]
+            };
+            const r = cm.map( cmd );
+            expect( r ).toContainEqual( 'I.switchToWeb("context");' + comment );
+        } );
+
+    } );
+
 
     describe( 'tap', () => {
 

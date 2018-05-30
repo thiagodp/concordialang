@@ -334,7 +334,7 @@ describe( 'NLPInPortugueseTest', () => {
             it( 'requirement for a state', () => {
                 let results = [];
                 let r: NLPResult;
-                results.push( r = recognizeInTestCase( 'eu preciso ter ~algum estado~') );
+                results.push( r = recognizeInTestCase( 'eu preciso de ~algum estado~') );
                 shouldHaveTestCaseEntities( results, [ EXEC_ACTION, STATE ] );
                 expect( r.entities[ 1 ].value ).toBe( 'algum estado' );
             } );
@@ -342,7 +342,7 @@ describe( 'NLPInPortugueseTest', () => {
             it( 'execution for a state', () => {
                 let results = [];
                 let r: NLPResult;
-                results.push( r = recognizeInTestCase( 'eu executo o estado ~algum estado~' ) );
+                results.push( r = recognizeInTestCase( 'eu tenho ~algum estado~' ) );
                 shouldHaveTestCaseEntities( results, [ EXEC_ACTION, STATE ] );
             } );
 

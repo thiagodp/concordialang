@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const CommandMapper_1 = require("../../../plugins/codeceptjs/CommandMapper");
-const AppiumCommands_1 = require("../../../plugins/codeceptjs-appium/AppiumCommands");
+const Commands_1 = require("../../../plugins/codeceptjs/Commands");
 /**
  * @author Thiago Delgado Pinto
  */
@@ -9,7 +9,7 @@ describe('CommandMapperTest', () => {
     let cm; // under test
     const comment = ' // (,)';
     beforeEach(() => {
-        cm = new CommandMapper_1.CommandMapper(AppiumCommands_1.APPIUM_COMMANDS);
+        cm = new CommandMapper_1.CommandMapper(Commands_1.CODECEPTJS_COMMANDS);
     });
     afterEach(() => {
         cm = null;
@@ -115,6 +115,16 @@ describe('CommandMapperTest', () => {
         });
     });
     describe('close', () => {
+        describe('app', () => {
+            it('options', () => {
+                let cmd = {
+                    action: 'close',
+                    options: ['app']
+                };
+                const r = cm.map(cmd);
+                expect(r).toContainEqual('I.closeApp();' + comment);
+            });
+        });
         describe('currentTab', () => {
             it('targetType', () => {
                 let cmd = {
@@ -191,6 +201,37 @@ describe('CommandMapperTest', () => {
             expect(r).toContainEqual('I.fillField("foo", "bar");' + comment);
         });
     });
+    describe('hide', () => {
+        describe('keyboard', () => {
+            it('options', () => {
+                let cmd = {
+                    action: 'hide',
+                    options: ['keyboard']
+                };
+                const r = cm.map(cmd);
+                expect(r).toContainEqual('I.hideDeviceKeyboard();' + comment);
+            });
+        });
+    });
+    describe('install', () => {
+        it('value', () => {
+            let cmd = {
+                action: 'install',
+                values: ['foo.apk']
+            };
+            const r = cm.map(cmd);
+            expect(r).toContainEqual('I.installApp("foo.apk");' + comment);
+        });
+        it('option, value', () => {
+            let cmd = {
+                action: 'install',
+                options: ['app'],
+                values: ['foo.apk']
+            };
+            const r = cm.map(cmd);
+            expect(r).toContainEqual('I.installApp("foo.apk");' + comment);
+        });
+    });
     describe('move', () => {
         describe('moveCursorTo', () => {
             it('target, options', () => {
@@ -201,6 +242,18 @@ describe('CommandMapperTest', () => {
                 };
                 const r = cm.map(cmd);
                 expect(r).toContainEqual('I.moveCursorTo("foo");' + comment);
+            });
+        });
+    });
+    describe('open', () => {
+        describe('notifications', () => {
+            it('options', () => {
+                let cmd = {
+                    action: 'open',
+                    options: ['notifications']
+                };
+                const r = cm.map(cmd);
+                expect(r).toContainEqual('I.openNotifications();' + comment);
             });
         });
     });
@@ -222,6 +275,32 @@ describe('CommandMapperTest', () => {
             expect(r).toContainEqual('I.pressKey(["Ctrl", "S"]);' + comment);
         });
     });
+    describe('pull', () => {
+        describe('file', () => {
+            it('options, two values', () => {
+                let cmd = {
+                    action: 'pull',
+                    options: ['file'],
+                    values: ['foo.png', 'bar.png']
+                };
+                const r = cm.map(cmd);
+                expect(r).toContainEqual('I.pullFile("foo.png", "bar.png");' + comment);
+            });
+        });
+    });
+    describe('remove', () => {
+        describe('app', () => {
+            it('options, value', () => {
+                let cmd = {
+                    action: 'remove',
+                    options: ['app'],
+                    values: ['foo.apk']
+                };
+                const r = cm.map(cmd);
+                expect(r).toContainEqual('I.removeApp("foo.apk");' + comment);
+            });
+        });
+    });
     describe('rightClick', () => {
         it('value', () => {
             let cmd = {
@@ -240,6 +319,16 @@ describe('CommandMapperTest', () => {
             expect(r).toContainEqual('I.rightClick("foo");' + comment);
         });
     });
+    describe('rotate', () => {
+        it('two numbers', () => {
+            let cmd = {
+                action: 'rotate',
+                values: ['100', '200']
+            };
+            const r = cm.map(cmd);
+            expect(r).toContainEqual('I.rotate(100, 200);' + comment);
+        });
+    });
     describe('saveScreenshot', () => {
         it('value', () => {
             let cmd = {
@@ -251,6 +340,60 @@ describe('CommandMapperTest', () => {
         });
     });
     describe('see', () => {
+        describe('seeAppIsInstalled', () => {
+            it('options, value', () => {
+                let cmd = {
+                    action: 'see',
+                    options: ['app', 'installed'],
+                    values: ['foo.apk'],
+                };
+                const r = cm.map(cmd);
+                expect(r).toContainEqual('I.seeAppIsInstalled("foo.apk");' + comment);
+            });
+        });
+        describe('seeAppIsNotInstalled', () => {
+            it('options, value', () => {
+                let cmd = {
+                    action: 'see',
+                    options: ['app', 'installed'],
+                    values: ['foo.apk'],
+                    modifier: 'not',
+                };
+                const r = cm.map(cmd);
+                expect(r).toContainEqual('I.seeAppIsNotInstalled("foo.apk");' + comment);
+            });
+        });
+        describe('seeCurrentActivityIs', () => {
+            it('options, value', () => {
+                let cmd = {
+                    action: 'see',
+                    options: ['currentActivity'],
+                    values: ['foo'],
+                };
+                const r = cm.map(cmd);
+                expect(r).toContainEqual('I.seeCurrentActivityIs("foo");' + comment);
+            });
+        });
+        describe('seeDeviceIsLocked', () => {
+            it('options, value', () => {
+                let cmd = {
+                    action: 'see',
+                    options: ['device', 'locked']
+                };
+                const r = cm.map(cmd);
+                expect(r).toContainEqual('I.seeDeviceIsLocked();' + comment);
+            });
+        });
+        describe('seeDeviceIsUnlocked', () => {
+            it('options, value', () => {
+                let cmd = {
+                    action: 'see',
+                    options: ['device', 'unlocked']
+                };
+                const r = cm.map(cmd);
+                expect(r).toContainEqual('I.seeDeviceIsUnlocked();' + comment);
+            });
+        });
         describe('seeInField', () => {
             it('targetType textbox, value, field', () => {
                 let cmd = {
@@ -469,6 +612,24 @@ describe('CommandMapperTest', () => {
                 expect(r).toContainEqual('I.dontSeeElement("foo");' + comment);
             });
         });
+        describe('seeOrientationIs', () => {
+            it('options, value portrait', () => {
+                let cmd = {
+                    action: 'see',
+                    options: ['orientation', 'portrait']
+                };
+                const r = cm.map(cmd);
+                expect(r).toContainEqual('I.seeOrientationIs("PORTRAIT");' + comment);
+            });
+            it('options, value landscape', () => {
+                let cmd = {
+                    action: 'see',
+                    options: ['orientation', 'landscape']
+                };
+                const r = cm.map(cmd);
+                expect(r).toContainEqual('I.seeOrientationIs("LANDSCAPE");' + comment);
+            });
+        });
         describe('see', () => {
             it('value', () => {
                 let cmd = {
@@ -491,6 +652,15 @@ describe('CommandMapperTest', () => {
             });
         });
     });
+    describe('shake', () => {
+        it('nothing', () => {
+            let cmd = {
+                action: 'shake'
+            };
+            const r = cm.map(cmd);
+            expect(r).toContainEqual('I.shakeDevice();' + comment);
+        });
+    });
     describe('select', () => {
         it('works with one target and one value', () => {
             let cmd = {
@@ -500,6 +670,142 @@ describe('CommandMapperTest', () => {
             };
             const r = cm.map(cmd);
             expect(r).toContainEqual('I.selectOption("foo", "bar");' + comment);
+        });
+    });
+    describe('swipe', () => {
+        it('value, two numbers', () => {
+            let cmd = {
+                action: 'swipe',
+                values: ['foo', '100', '200']
+            };
+            const r = cm.map(cmd);
+            expect(r).toContainEqual('I.swipe("foo", 100, 200);' + comment);
+        });
+        it('value, three numbers', () => {
+            let cmd = {
+                action: 'swipe',
+                values: ['foo', '100', '200', '3000']
+            };
+            const r = cm.map(cmd);
+            expect(r).toContainEqual('I.swipe("foo", 100, 200, 3000);' + comment);
+        });
+    });
+    describe('swipeDown', () => {
+        it('value, number', () => {
+            let cmd = {
+                action: 'swipe',
+                options: ['down'],
+                values: ['foo', '100']
+            };
+            const r = cm.map(cmd);
+            expect(r).toContainEqual('I.swipeDown("foo", 100);' + comment);
+        });
+        it('value, two numbers', () => {
+            let cmd = {
+                action: 'swipe',
+                options: ['down'],
+                values: ['foo', '100', '3000']
+            };
+            const r = cm.map(cmd);
+            expect(r).toContainEqual('I.swipeDown("foo", 100, 3000);' + comment);
+        });
+    });
+    describe('swipeLeft', () => {
+        it('value, number', () => {
+            let cmd = {
+                action: 'swipe',
+                options: ['left'],
+                values: ['foo', '100']
+            };
+            const r = cm.map(cmd);
+            expect(r).toContainEqual('I.swipeLeft("foo", 100);' + comment);
+        });
+        it('value, two numbers', () => {
+            let cmd = {
+                action: 'swipe',
+                options: ['left'],
+                values: ['foo', '100', '3000']
+            };
+            const r = cm.map(cmd);
+            expect(r).toContainEqual('I.swipeLeft("foo", 100, 3000);' + comment);
+        });
+    });
+    describe('swipeRight', () => {
+        it('value, number', () => {
+            let cmd = {
+                action: 'swipe',
+                options: ['right'],
+                values: ['foo', '100']
+            };
+            const r = cm.map(cmd);
+            expect(r).toContainEqual('I.swipeRight("foo", 100);' + comment);
+        });
+        it('value, two numbers', () => {
+            let cmd = {
+                action: 'swipe',
+                options: ['right'],
+                values: ['foo', '100', '3000']
+            };
+            const r = cm.map(cmd);
+            expect(r).toContainEqual('I.swipeRight("foo", 100, 3000);' + comment);
+        });
+    });
+    describe('swipeUp', () => {
+        it('value, number', () => {
+            let cmd = {
+                action: 'swipe',
+                options: ['up'],
+                values: ['foo', '100']
+            };
+            const r = cm.map(cmd);
+            expect(r).toContainEqual('I.swipeUp("foo", 100);' + comment);
+        });
+        it('value, two numbers', () => {
+            let cmd = {
+                action: 'swipe',
+                options: ['up'],
+                values: ['foo', '100', '3000']
+            };
+            const r = cm.map(cmd);
+            expect(r).toContainEqual('I.swipeUp("foo", 100, 3000);' + comment);
+        });
+    });
+    describe('switchToNative', () => {
+        it('option', () => {
+            let cmd = {
+                action: 'switch',
+                options: ['native']
+            };
+            const r = cm.map(cmd);
+            expect(r).toContainEqual('I.switchToNative();' + comment);
+        });
+        it('option, value', () => {
+            let cmd = {
+                action: 'switch',
+                options: ['native'],
+                values: ['context']
+            };
+            const r = cm.map(cmd);
+            expect(r).toContainEqual('I.switchToNative("context");' + comment);
+        });
+    });
+    describe('switchToWeb', () => {
+        it('option', () => {
+            let cmd = {
+                action: 'switch',
+                options: ['web']
+            };
+            const r = cm.map(cmd);
+            expect(r).toContainEqual('I.switchToWeb();' + comment);
+        });
+        it('option, value', () => {
+            let cmd = {
+                action: 'switch',
+                options: ['web'],
+                values: ['context']
+            };
+            const r = cm.map(cmd);
+            expect(r).toContainEqual('I.switchToWeb("context");' + comment);
         });
     });
     describe('tap', () => {

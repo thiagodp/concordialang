@@ -1,7 +1,7 @@
 import { AbstractTestScript } from '../../../modules/testscript/AbstractTestScript';
 import { TestScriptGenerator } from "../../../plugins/codeceptjs/TestScriptGenerator";
 import { CommandMapper } from '../../../plugins/codeceptjs/CommandMapper';
-import { WEB_DRIVER_IO_COMMANDS } from '../../../plugins/codeceptjs/WebDriverIOCommands';
+import { CODECEPTJS_COMMANDS } from '../../../plugins/codeceptjs/Commands';
 
 /**
  * @author Matheus Eller Fagundes
@@ -26,7 +26,7 @@ describe( 'TestScriptGeneratorTest', () => {
 
     beforeEach(() => {
         gen = new TestScriptGenerator(
-            new CommandMapper( WEB_DRIVER_IO_COMMANDS )
+            new CommandMapper( CODECEPTJS_COMMANDS )
         );
     });
 

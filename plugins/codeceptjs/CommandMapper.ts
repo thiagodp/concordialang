@@ -14,7 +14,11 @@ export enum CmdCmp {
     ONE_VALUE_SAME_OPTION_SAME_MODIFIER,
     ONE_VALUE_OR_ARRAY,
     ONE_VALUE_ONE_NUMBER_SAME_TARGET_TYPE,
+    ONE_VALUE_ONE_NUMBER_SAME_OPTION,
+    ONE_VALUE_TWO_NUMBERS_SAME_OPTION,
     ONE_VALUE_SAME_MODIFIER,
+    ONE_VALUE_TWO_NUMBERS,
+    ONE_VALUE_THREE_NUMBERS,
 
     ONE_NUMBER,
 
@@ -30,7 +34,11 @@ export enum CmdCmp {
     SAME_TARGET_TYPE,
     SAME_OPTION,
 
-    TWO_TARGETS
+    TWO_TARGETS,
+
+    TWO_VALUES_SAME_OPTION,
+
+    TWO_NUMBERS
 }
 
 /**
@@ -188,8 +196,48 @@ export class CommandMapper {
                 return ok;
             }
 
+            case CmdCmp.ONE_VALUE_ONE_NUMBER_SAME_OPTION: {
+                const ok = 2 === valuesCount && isNumber( cmd.values[ 1 ] ) &&
+                    includeOptions( cfg, cmd );
+                if ( ok ) {
+                    cmd.values[ 1 ] = Number( cmd.values[ 1 ] );
+                }
+                return ok;
+            }
+
+            case CmdCmp.ONE_VALUE_TWO_NUMBERS_SAME_OPTION: {
+                const ok = 3 === valuesCount && isNumber( cmd.values[ 1 ] ) &&
+                    isNumber( cmd.values[ 2 ] ) && includeOptions( cfg, cmd );
+                if ( ok ) {
+                    cmd.values[ 1 ] = Number( cmd.values[ 1 ] );
+                    cmd.values[ 2 ] = Number( cmd.values[ 2 ] );
+                }
+                return ok;
+            }
+
             case CmdCmp.ONE_VALUE_SAME_MODIFIER: {
                 return 1 === valuesCount && cmd.modifier === cfg.modifier;
+            }
+
+            case CmdCmp.ONE_VALUE_TWO_NUMBERS: {
+                const ok = 3 === valuesCount && isNumber( cmd.values[ 1 ] ) &&
+                    isNumber( cmd.values[ 2 ] );
+                if ( ok ) {
+                    cmd.values[ 1 ] = Number( cmd.values[ 1 ] );
+                    cmd.values[ 2 ] = Number( cmd.values[ 2 ] );
+                }
+                return ok;
+            }
+
+            case CmdCmp.ONE_VALUE_THREE_NUMBERS: {
+                const ok = 4 === valuesCount && isNumber( cmd.values[ 1 ] ) &&
+                    isNumber( cmd.values[ 2 ] ) && isNumber( cmd.values[ 3 ] );
+                if ( ok ) {
+                    cmd.values[ 1 ] = Number( cmd.values[ 1 ] );
+                    cmd.values[ 2 ] = Number( cmd.values[ 2 ] );
+                    cmd.values[ 3 ] = Number( cmd.values[ 3 ] );
+                }
+                return ok;
             }
 
             case CmdCmp.ONE_NUMBER: {
@@ -247,6 +295,20 @@ export class CommandMapper {
 
             case CmdCmp.TWO_TARGETS: {
                 return 2 === targetsCount;
+            }
+
+            case CmdCmp.TWO_VALUES_SAME_OPTION: {
+                return 2 == valuesCount && includeOptions( cfg, cmd );
+            }
+
+            case CmdCmp.TWO_NUMBERS: {
+                let ok = 2 == valuesCount && isNumber( cmd.values[ 0 ] ) &&
+                    isNumber( cmd.values[ 1 ] );
+                if ( ok ) {
+                    cmd.values[ 0 ] = Number( cmd.values[ 0 ] );
+                    cmd.values[ 1 ] = Number( cmd.values[ 1 ] );
+                }
+                return ok;
             }
         }
 

@@ -10,8 +10,8 @@ import * as path from 'path';
 import * as fse from 'node-fs-extra';
 import { promisify } from 'util';
 import { CommandMapper } from './CommandMapper';
-import { WEB_DRIVER_IO_COMMANDS } from './WebDriverIOCommands';
 import { ConfigMaker } from './ConfigMaker';
+import { CODECEPTJS_COMMANDS } from './Commands';
 
 /**
  * Plugin for CodeceptJS.
@@ -112,7 +112,7 @@ export class CodeceptJS implements Plugin {
 
     protected createTestScriptGenerator(): TestScriptGenerator {
         return new TestScriptGenerator(
-            new CommandMapper( WEB_DRIVER_IO_COMMANDS )
+            new CommandMapper( CODECEPTJS_COMMANDS )
         );
     }
 

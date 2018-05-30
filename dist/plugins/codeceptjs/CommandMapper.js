@@ -15,19 +15,25 @@ var CmdCmp;
     CmdCmp[CmdCmp["ONE_VALUE_SAME_OPTION_SAME_MODIFIER"] = 4] = "ONE_VALUE_SAME_OPTION_SAME_MODIFIER";
     CmdCmp[CmdCmp["ONE_VALUE_OR_ARRAY"] = 5] = "ONE_VALUE_OR_ARRAY";
     CmdCmp[CmdCmp["ONE_VALUE_ONE_NUMBER_SAME_TARGET_TYPE"] = 6] = "ONE_VALUE_ONE_NUMBER_SAME_TARGET_TYPE";
-    CmdCmp[CmdCmp["ONE_VALUE_SAME_MODIFIER"] = 7] = "ONE_VALUE_SAME_MODIFIER";
-    CmdCmp[CmdCmp["ONE_NUMBER"] = 8] = "ONE_NUMBER";
-    CmdCmp[CmdCmp["ONE_TARGET"] = 9] = "ONE_TARGET";
-    CmdCmp[CmdCmp["ONE_TARGET_ONE_VALUE"] = 10] = "ONE_TARGET_ONE_VALUE";
-    CmdCmp[CmdCmp["ONE_TARGET_ONE_NUMBER"] = 11] = "ONE_TARGET_ONE_NUMBER";
-    CmdCmp[CmdCmp["ONE_TARGET_SAME_TARGET_TYPE"] = 12] = "ONE_TARGET_SAME_TARGET_TYPE";
-    CmdCmp[CmdCmp["ONE_TARGET_SAME_TARGET_TYPE_SAME_OPTION_SAME_MODIFIER"] = 13] = "ONE_TARGET_SAME_TARGET_TYPE_SAME_OPTION_SAME_MODIFIER";
-    CmdCmp[CmdCmp["ONE_TARGET_ONE_VALUE_SAME_TARGET_TYPE_SAME_MODIFIER"] = 14] = "ONE_TARGET_ONE_VALUE_SAME_TARGET_TYPE_SAME_MODIFIER";
-    CmdCmp[CmdCmp["ONE_TARGET_SAME_OPTION"] = 15] = "ONE_TARGET_SAME_OPTION";
-    CmdCmp[CmdCmp["ONE_TARGET_SAME_MODIFIER"] = 16] = "ONE_TARGET_SAME_MODIFIER";
-    CmdCmp[CmdCmp["SAME_TARGET_TYPE"] = 17] = "SAME_TARGET_TYPE";
-    CmdCmp[CmdCmp["SAME_OPTION"] = 18] = "SAME_OPTION";
-    CmdCmp[CmdCmp["TWO_TARGETS"] = 19] = "TWO_TARGETS";
+    CmdCmp[CmdCmp["ONE_VALUE_ONE_NUMBER_SAME_OPTION"] = 7] = "ONE_VALUE_ONE_NUMBER_SAME_OPTION";
+    CmdCmp[CmdCmp["ONE_VALUE_TWO_NUMBERS_SAME_OPTION"] = 8] = "ONE_VALUE_TWO_NUMBERS_SAME_OPTION";
+    CmdCmp[CmdCmp["ONE_VALUE_SAME_MODIFIER"] = 9] = "ONE_VALUE_SAME_MODIFIER";
+    CmdCmp[CmdCmp["ONE_VALUE_TWO_NUMBERS"] = 10] = "ONE_VALUE_TWO_NUMBERS";
+    CmdCmp[CmdCmp["ONE_VALUE_THREE_NUMBERS"] = 11] = "ONE_VALUE_THREE_NUMBERS";
+    CmdCmp[CmdCmp["ONE_NUMBER"] = 12] = "ONE_NUMBER";
+    CmdCmp[CmdCmp["ONE_TARGET"] = 13] = "ONE_TARGET";
+    CmdCmp[CmdCmp["ONE_TARGET_ONE_VALUE"] = 14] = "ONE_TARGET_ONE_VALUE";
+    CmdCmp[CmdCmp["ONE_TARGET_ONE_NUMBER"] = 15] = "ONE_TARGET_ONE_NUMBER";
+    CmdCmp[CmdCmp["ONE_TARGET_SAME_TARGET_TYPE"] = 16] = "ONE_TARGET_SAME_TARGET_TYPE";
+    CmdCmp[CmdCmp["ONE_TARGET_SAME_TARGET_TYPE_SAME_OPTION_SAME_MODIFIER"] = 17] = "ONE_TARGET_SAME_TARGET_TYPE_SAME_OPTION_SAME_MODIFIER";
+    CmdCmp[CmdCmp["ONE_TARGET_ONE_VALUE_SAME_TARGET_TYPE_SAME_MODIFIER"] = 18] = "ONE_TARGET_ONE_VALUE_SAME_TARGET_TYPE_SAME_MODIFIER";
+    CmdCmp[CmdCmp["ONE_TARGET_SAME_OPTION"] = 19] = "ONE_TARGET_SAME_OPTION";
+    CmdCmp[CmdCmp["ONE_TARGET_SAME_MODIFIER"] = 20] = "ONE_TARGET_SAME_MODIFIER";
+    CmdCmp[CmdCmp["SAME_TARGET_TYPE"] = 21] = "SAME_TARGET_TYPE";
+    CmdCmp[CmdCmp["SAME_OPTION"] = 22] = "SAME_OPTION";
+    CmdCmp[CmdCmp["TWO_TARGETS"] = 23] = "TWO_TARGETS";
+    CmdCmp[CmdCmp["TWO_VALUES_SAME_OPTION"] = 24] = "TWO_VALUES_SAME_OPTION";
+    CmdCmp[CmdCmp["TWO_NUMBERS"] = 25] = "TWO_NUMBERS";
 })(CmdCmp = exports.CmdCmp || (exports.CmdCmp = {}));
 /**
  * Command mapper
@@ -150,8 +156,44 @@ class CommandMapper {
                 }
                 return ok;
             }
+            case CmdCmp.ONE_VALUE_ONE_NUMBER_SAME_OPTION: {
+                const ok = 2 === valuesCount && isNumber(cmd.values[1]) &&
+                    includeOptions(cfg, cmd);
+                if (ok) {
+                    cmd.values[1] = Number(cmd.values[1]);
+                }
+                return ok;
+            }
+            case CmdCmp.ONE_VALUE_TWO_NUMBERS_SAME_OPTION: {
+                const ok = 3 === valuesCount && isNumber(cmd.values[1]) &&
+                    isNumber(cmd.values[2]) && includeOptions(cfg, cmd);
+                if (ok) {
+                    cmd.values[1] = Number(cmd.values[1]);
+                    cmd.values[2] = Number(cmd.values[2]);
+                }
+                return ok;
+            }
             case CmdCmp.ONE_VALUE_SAME_MODIFIER: {
                 return 1 === valuesCount && cmd.modifier === cfg.modifier;
+            }
+            case CmdCmp.ONE_VALUE_TWO_NUMBERS: {
+                const ok = 3 === valuesCount && isNumber(cmd.values[1]) &&
+                    isNumber(cmd.values[2]);
+                if (ok) {
+                    cmd.values[1] = Number(cmd.values[1]);
+                    cmd.values[2] = Number(cmd.values[2]);
+                }
+                return ok;
+            }
+            case CmdCmp.ONE_VALUE_THREE_NUMBERS: {
+                const ok = 4 === valuesCount && isNumber(cmd.values[1]) &&
+                    isNumber(cmd.values[2]) && isNumber(cmd.values[3]);
+                if (ok) {
+                    cmd.values[1] = Number(cmd.values[1]);
+                    cmd.values[2] = Number(cmd.values[2]);
+                    cmd.values[3] = Number(cmd.values[3]);
+                }
+                return ok;
             }
             case CmdCmp.ONE_NUMBER: {
                 const ok = 1 === valuesCount && isNumber(cmd.values[0]);
@@ -197,6 +239,18 @@ class CommandMapper {
             }
             case CmdCmp.TWO_TARGETS: {
                 return 2 === targetsCount;
+            }
+            case CmdCmp.TWO_VALUES_SAME_OPTION: {
+                return 2 == valuesCount && includeOptions(cfg, cmd);
+            }
+            case CmdCmp.TWO_NUMBERS: {
+                let ok = 2 == valuesCount && isNumber(cmd.values[0]) &&
+                    isNumber(cmd.values[1]);
+                if (ok) {
+                    cmd.values[0] = Number(cmd.values[0]);
+                    cmd.values[1] = Number(cmd.values[1]);
+                }
+                return ok;
             }
         }
         return false;
