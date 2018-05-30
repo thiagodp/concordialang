@@ -1,5 +1,10 @@
 import { CodeceptJS } from "../codeceptjs/CodeceptJS";
 import * as path from 'path';
+import { TestScriptExecutor } from "../codeceptjs/TestScriptExecutor";
+import { APPIUM_COMMANDS } from "./AppiumCommands";
+import { TestScriptGenerator } from "../codeceptjs/TestScriptGenerator";
+import { CommandMapper } from "../codeceptjs/CommandMapper";
+import { ConfigMaker } from "../codeceptjs/ConfigMaker";
 
 /**
  * Plug-in for CodeceptJS with Appium.
@@ -21,6 +26,18 @@ export class CodeceptJSForAppium extends CodeceptJS {
             fsToUse,
             encoding
         );
+    }
+
+    protected createTestScriptGenerator(): TestScriptGenerator {
+        return new TestScriptGenerator(
+            new CommandMapper( APPIUM_COMMANDS )
+        );
+    }
+
+    protected createTestScriptExecutor(): TestScriptExecutor {
+        const cfgMaker: ConfigMaker = new ConfigMaker();
+        const defaultConfig = cfgMaker.makeConfig( cfgMaker.makeAppiumHelperConfig() );
+        return new TestScriptExecutor( defaultConfig );
     }
 
 }

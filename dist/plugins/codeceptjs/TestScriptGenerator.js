@@ -1,7 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const mustache_1 = require("mustache");
-const CommandMapper_1 = require("./CommandMapper");
 const dedent = require('dedent-js');
 /**
  * Generate test scripts for CodeceptJS.
@@ -9,7 +8,8 @@ const dedent = require('dedent-js');
  * Uses [Mustache](https://github.com/janl/mustache.js/) for this purpose.
  */
 class TestScriptGenerator {
-    constructor() {
+    constructor(mapper) {
+        this.mapper = mapper;
         this.template =
             dedent `// Generated with ❤ by Concordia
         // source: {{{sourceFile}}}
@@ -26,7 +26,6 @@ class TestScriptGenerator {
         });
 
         {{/testcases}}`;
-        this.mapper = new CommandMapper_1.CommandMapper();
     }
     generate(ats) {
         // console.log( 'FROM', ats.sourceFile );

@@ -136,6 +136,7 @@
             },
 
             "ui_element_type": {
+                "app": [ "aplicação", "aplicativo", "app" ],
                 "button": [ "botao", "button" ],
                 "checkbox": [ "caixa de marcacao", "checkbox", "check" ],
                 "cookie": [ "cookie" ],
@@ -175,6 +176,7 @@
             },
 
             "ui_action_option": {
+                "app": [ "aplicação", "aplicativo", "app" ],
                 "checked": [ "marcado", "marcada", "ticado", "ticada", "checked" ],
                 "cookie": [ "cookie" ],
                 "currentTab": [ "aba atual", "current tab" ],

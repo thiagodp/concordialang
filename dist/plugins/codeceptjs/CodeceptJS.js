@@ -15,13 +15,23 @@ const fs = require("fs");
 const path = require("path");
 const fse = require("node-fs-extra");
 const util_1 = require("util");
+const CommandMapper_1 = require("./CommandMapper");
+const WebDriverIOCommands_1 = require("./WebDriverIOCommands");
+const ConfigMaker_1 = require("./ConfigMaker");
 /**
  * Plugin for CodeceptJS.
  */
 class CodeceptJS {
-    constructor(fsToUse, _encoding = 'utf8') {
+    /**
+     * Constructor
+     *
+     * @param descriptorPath Path of the plugin descriptor file.
+     * @param fsToUse Filesystem object to use. Default is nodejs fs.
+     * @param _encoding Encoding to use. Default is 'utf8'.
+     */
+    constructor(descriptorPath, fsToUse, _encoding = 'utf8') {
         this._encoding = _encoding;
-        this.PLUGIN_CONFIG_PATH = path.join(__dirname, '../', 'codeceptjs.json');
+        this._descriptorPath = descriptorPath || path.join(__dirname, '../', 'codeceptjs.json');
         this._fs = !fsToUse ? fs : fsToUse;
     }
     /** @inheritDoc */
@@ -39,6 +49,21 @@ class CodeceptJS {
                 }
             }
             return files;
+        });
+    }
+    /** @inheritDoc */
+    executeCode(options) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const scriptExecutor = this.createTestScriptExecutor();
+            const path = yield scriptExecutor.execute(options);
+            return yield this.convertReportFile(path);
+        });
+    }
+    /** @inheritDoc */
+    convertReportFile(filePath) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const reportConverter = new ReportConverter_1.ReportConverter(this._fs, this._encoding);
+            return yield reportConverter.convertFrom(filePath, this._descriptorPath);
         });
     }
     /**
@@ -59,7 +84,7 @@ class CodeceptJS {
             const fileName = parsed.name + '.js';
             const filePath = path.join(targetDir, fileName);
             // Generate content
-            const scriptGenerator = new TestScriptGenerator_1.TestScriptGenerator();
+            const scriptGenerator = this.createTestScriptGenerator();
             const code = scriptGenerator.generate(ats);
             // Write content
             yield this.writeFile(filePath, code);
@@ -80,20 +105,13 @@ class CodeceptJS {
             yield write(path, content, this._encoding);
         });
     }
-    /** @inheritDoc */
-    executeCode(options) {
-        return __awaiter(this, void 0, void 0, function* () {
-            const scriptExecutor = new TestScriptExecutor_1.TestScriptExecutor();
-            const path = yield scriptExecutor.execute(options);
-            return yield this.convertReportFile(path);
-        });
+    createTestScriptGenerator() {
+        return new TestScriptGenerator_1.TestScriptGenerator(new CommandMapper_1.CommandMapper(WebDriverIOCommands_1.WEB_DRIVER_IO_COMMANDS));
     }
-    /** @inheritDoc */
-    convertReportFile(filePath) {
-        return __awaiter(this, void 0, void 0, function* () {
-            const reportConverter = new ReportConverter_1.ReportConverter(this._fs, this._encoding);
-            return yield reportConverter.convertFrom(filePath, this.PLUGIN_CONFIG_PATH);
-        });
+    createTestScriptExecutor() {
+        const cfgMaker = new ConfigMaker_1.ConfigMaker();
+        const defaultConfig = cfgMaker.makeConfig(cfgMaker.makeWebDriverIOHelperConfig());
+        return new TestScriptExecutor_1.TestScriptExecutor(defaultConfig);
     }
 }
 exports.CodeceptJS = CodeceptJS;

@@ -9,6 +9,9 @@ import * as fs from 'fs';
 import * as path from 'path';
 import * as fse from 'node-fs-extra';
 import { promisify } from 'util';
+import { CommandMapper } from './CommandMapper';
+import { WEB_DRIVER_IO_COMMANDS } from './WebDriverIOCommands';
+import { ConfigMaker } from './ConfigMaker';
 
 /**
  * Plugin for CodeceptJS.
@@ -86,7 +89,7 @@ export class CodeceptJS implements Plugin {
         const filePath: string = path.join( targetDir, fileName );
 
         // Generate content
-        const scriptGenerator = new TestScriptGenerator();
+        const scriptGenerator = this.createTestScriptGenerator();
         const code: string = scriptGenerator.generate( ats );
 
         // Write content
@@ -107,8 +110,16 @@ export class CodeceptJS implements Plugin {
         await write( path, content, this._encoding );
     }
 
+    protected createTestScriptGenerator(): TestScriptGenerator {
+        return new TestScriptGenerator(
+            new CommandMapper( WEB_DRIVER_IO_COMMANDS )
+        );
+    }
+
     protected createTestScriptExecutor(): TestScriptExecutor {
-        return new TestScriptExecutor();
+        const cfgMaker: ConfigMaker = new ConfigMaker();
+        const defaultConfig = cfgMaker.makeConfig( cfgMaker.makeWebDriverIOHelperConfig() );
+        return new TestScriptExecutor( defaultConfig );
     }
 
 }

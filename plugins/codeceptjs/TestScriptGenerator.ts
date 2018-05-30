@@ -12,9 +12,10 @@ const dedent = require('dedent-js');
 export class TestScriptGenerator {
 
     private template: string;
-    private mapper: CommandMapper;
 
-    constructor() {
+    constructor(
+        private mapper: CommandMapper
+    ) {
         this.template =
         dedent
         `// Generated with ❤ by Concordia
@@ -32,7 +33,6 @@ export class TestScriptGenerator {
         });
 
         {{/testcases}}`;
-        this.mapper = new CommandMapper();
     }
 
     public generate( ats: AbstractTestScript ): string {

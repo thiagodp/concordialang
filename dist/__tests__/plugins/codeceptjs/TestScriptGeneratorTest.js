@@ -1,6 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const TestScriptGenerator_1 = require("../../../plugins/codeceptjs/TestScriptGenerator");
+const CommandMapper_1 = require("../../../plugins/codeceptjs/CommandMapper");
+const WebDriverIOCommands_1 = require("../../../plugins/codeceptjs/WebDriverIOCommands");
 /**
  * @author Matheus Eller Fagundes
  * @author Thiago Delgado Pinto
@@ -18,7 +20,10 @@ describe('TestScriptGeneratorTest', () => {
         expect(uglify(adjusted)).toBe(uglify(expected));
     }
     beforeEach(() => {
-        gen = new TestScriptGenerator_1.TestScriptGenerator();
+        gen = new TestScriptGenerator_1.TestScriptGenerator(new CommandMapper_1.CommandMapper(WebDriverIOCommands_1.WEB_DRIVER_IO_COMMANDS));
+    });
+    afterEach(() => {
+        gen = null;
     });
     it('generates code for a feature without scenarios and testcases', () => {
         let testCase = {

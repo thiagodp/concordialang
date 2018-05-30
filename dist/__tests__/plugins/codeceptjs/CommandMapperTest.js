@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const CommandMapper_1 = require("../../../plugins/codeceptjs/CommandMapper");
+const AppiumCommands_1 = require("../../../plugins/codeceptjs-appium/AppiumCommands");
 /**
  * @author Thiago Delgado Pinto
  */
@@ -8,7 +9,7 @@ describe('CommandMapperTest', () => {
     let cm; // under test
     const comment = ' // (,)';
     beforeEach(() => {
-        cm = new CommandMapper_1.CommandMapper();
+        cm = new CommandMapper_1.CommandMapper(AppiumCommands_1.APPIUM_COMMANDS);
     });
     afterEach(() => {
         cm = null;

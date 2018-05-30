@@ -90,6 +90,7 @@
             },
 
             "ui_element_type": {
+                "app": [ "application", "app" ],
                 "button": [ "button" ],
                 "checkbox": [ "checkbox", "check" ],
                 "cookie": [ "cookie" ],
@@ -129,7 +130,8 @@
             },
 
             "ui_action_option": {
-                "checked": [ "marcado", "ticado", "checked" ],
+                "app": [ "application", "app" ],
+                "checked": [ "checked" ],
                 "cookie": [ "cookie" ],
                 "currentPage": [ "current page" ],
                 "currentTab": [ "current tab" ],

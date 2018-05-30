@@ -1,5 +1,7 @@
 import { AbstractTestScript } from '../../../modules/testscript/AbstractTestScript';
 import { TestScriptGenerator } from "../../../plugins/codeceptjs/TestScriptGenerator";
+import { CommandMapper } from '../../../plugins/codeceptjs/CommandMapper';
+import { WEB_DRIVER_IO_COMMANDS } from '../../../plugins/codeceptjs/WebDriverIOCommands';
 
 /**
  * @author Matheus Eller Fagundes
@@ -23,8 +25,14 @@ describe( 'TestScriptGeneratorTest', () => {
     }
 
     beforeEach(() => {
-        gen = new TestScriptGenerator();
+        gen = new TestScriptGenerator(
+            new CommandMapper( WEB_DRIVER_IO_COMMANDS )
+        );
     });
+
+    afterEach( () => {
+        gen = null;
+    } );
 
     it( 'generates code for a feature without scenarios and testcases', () => {
 

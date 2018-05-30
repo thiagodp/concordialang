@@ -1,5 +1,6 @@
 import { CommandMapper } from "../../../plugins/codeceptjs/CommandMapper";
 import { ATSCommand } from "../../../modules/testscript/AbstractTestScript";
+import { APPIUM_COMMANDS } from "../../../plugins/codeceptjs-appium/AppiumCommands";
 
 /**
  * @author Thiago Delgado Pinto
@@ -11,7 +12,9 @@ describe( 'CommandMapperTest', () => {
     const comment = ' // (,)';
 
     beforeEach( () => {
-        cm = new CommandMapper();
+        cm = new CommandMapper(
+            APPIUM_COMMANDS
+        );
     } );
 
     afterEach( () => {
@@ -141,6 +144,28 @@ describe( 'CommandMapperTest', () => {
     } );
 
     describe( 'close', () => {
+
+        describe( 'app', () => {
+
+            it( 'targetType', () => {
+                let cmd: ATSCommand = {
+                    action: 'close',
+                    targetTypes: [ 'app' ]
+                };
+                const r = cm.map( cmd );
+                expect( r ).toContainEqual( 'I.closeApp();' + comment );
+            } );
+
+            it( 'options', () => {
+                let cmd: ATSCommand = {
+                    action: 'close',
+                    options: [ 'app' ]
+                };
+                const r = cm.map( cmd );
+                expect( r ).toContainEqual( 'I.closeApp();' + comment );
+            } );
+
+        } );
 
         describe( 'currentTab', () => {
 
