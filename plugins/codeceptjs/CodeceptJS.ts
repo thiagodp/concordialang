@@ -10,19 +10,27 @@ import * as path from 'path';
 import * as fse from 'node-fs-extra';
 import { promisify } from 'util';
 
-
 /**
  * Plugin for CodeceptJS.
  */
 export class CodeceptJS implements Plugin {
 
+    private readonly _descriptorPath: string;
     private readonly _fs: any;
-    private readonly PLUGIN_CONFIG_PATH: string = path.join( __dirname, '../', 'codeceptjs.json' );
 
+    /**
+     * Constructor
+     *
+     * @param descriptorPath Path of the plugin descriptor file.
+     * @param fsToUse Filesystem object to use. Default is nodejs fs.
+     * @param _encoding Encoding to use. Default is 'utf8'.
+     */
     constructor(
+        descriptorPath?: string,
         fsToUse?: any,
         private _encoding: string = 'utf8'
     ) {
+        this._descriptorPath = descriptorPath || path.join( __dirname, '../', 'codeceptjs.json' );
         this._fs = ! fsToUse ? fs : fsToUse;
     }
 
@@ -43,6 +51,19 @@ export class CodeceptJS implements Plugin {
             }
         }
         return files;
+    }
+
+    /** @inheritDoc */
+    public async executeCode( options: TestScriptExecutionOptions ): Promise< TestScriptExecutionResult > {
+        const scriptExecutor = this.createTestScriptExecutor();
+        const path = await scriptExecutor.execute( options );
+        return await this.convertReportFile( path );
+    }
+
+    /** @inheritDoc */
+    public async convertReportFile( filePath: string ): Promise< TestScriptExecutionResult > {
+        const reportConverter = new ReportConverter( this._fs, this._encoding );
+        return await reportConverter.convertFrom( filePath, this._descriptorPath );
     }
 
     /**
@@ -86,17 +107,8 @@ export class CodeceptJS implements Plugin {
         await write( path, content, this._encoding );
     }
 
-    /** @inheritDoc */
-    public async executeCode( options: TestScriptExecutionOptions ): Promise< TestScriptExecutionResult > {
-        const scriptExecutor = new TestScriptExecutor();
-        const path = await scriptExecutor.execute( options );
-        return await this.convertReportFile( path );
-    }
-
-    /** @inheritDoc */
-    public async convertReportFile( filePath: string ): Promise< TestScriptExecutionResult > {
-        const reportConverter = new ReportConverter( this._fs, this._encoding );
-        return await reportConverter.convertFrom( filePath, this.PLUGIN_CONFIG_PATH );
+    protected createTestScriptExecutor(): TestScriptExecutor {
+        return new TestScriptExecutor();
     }
 
 }
