@@ -72,11 +72,10 @@ export class AppController {
         }
 
         const pkg = meowInstance.pkg; // require( './package.json' );
-        const oneDay = 1000 * 60 * 60 * 24;
         const notifier = updateNotifier(
             {
                 pkg,
-                updateCheckInterval: oneDay
+                updateCheckInterval: 1000 * 60 * 60 * 12 // 12 hours
             }
         );
         notifier.notify();

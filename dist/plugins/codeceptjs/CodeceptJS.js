@@ -17,9 +17,6 @@ const fse = require("node-fs-extra");
 const util_1 = require("util");
 /**
  * Plugin for CodeceptJS.
- *
- * @author Thiago Delgado Pinto
- * @author Matheus Eller Fagundes
  */
 class CodeceptJS {
     constructor(fsToUse, _encoding = 'utf8') {

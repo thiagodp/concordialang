@@ -15,9 +15,6 @@ const util_1 = require("util");
 const FileInstrumentationReader_1 = require("../../modules/plugin/FileInstrumentationReader");
 /**
  * Converts a CodeceptJS execution result to Concordia's format.
- *
- * @author Matheus Fagundes
- * @author Thiago Delgado Pinto
  */
 class ReportConverter {
     constructor(_fs = fs, _encoding = 'utf-8') {

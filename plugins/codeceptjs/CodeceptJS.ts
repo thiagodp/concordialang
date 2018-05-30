@@ -5,19 +5,14 @@ import { Plugin } from '../../modules/plugin/Plugin';
 import { AbstractTestScript } from '../../modules/testscript/AbstractTestScript';
 import { TestScriptGenerationOptions } from '../../modules/testscript/TestScriptOptions';
 import { TestScriptExecutionOptions, TestScriptExecutionResult } from '../../modules/testscript/TestScriptExecution';
-
 import * as fs from 'fs';
 import * as path from 'path';
 import * as fse from 'node-fs-extra';
-
 import { promisify } from 'util';
 
 
 /**
  * Plugin for CodeceptJS.
- *
- * @author Thiago Delgado Pinto
- * @author Matheus Eller Fagundes
  */
 export class CodeceptJS implements Plugin {
 
