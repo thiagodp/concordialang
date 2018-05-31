@@ -214,14 +214,6 @@ describe('CommandMapperTest', () => {
         });
     });
     describe('install', () => {
-        it('value', () => {
-            let cmd = {
-                action: 'install',
-                values: ['foo.apk']
-            };
-            const r = cm.map(cmd);
-            expect(r).toContainEqual('I.installApp("foo.apk");' + comment);
-        });
         it('option, value', () => {
             let cmd = {
                 action: 'install',

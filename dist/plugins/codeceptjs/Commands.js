@@ -38,7 +38,7 @@ exports.CODECEPTJS_COMMANDS = [
     // hide + keyboard (Appium only)
     { action: 'hide', comp: CommandMapper_1.CmdCmp.SAME_OPTION, options: ['keyboard'], template: 'I.hideDeviceKeyboard();' },
     // install (Appium only)
-    { action: 'install', comp: CommandMapper_1.CmdCmp.ONE_VALUE, template: 'I.installApp({{{value}}});' },
+    { action: 'install', comp: CommandMapper_1.CmdCmp.ONE_VALUE_SAME_OPTION, options: ['app'], template: 'I.installApp({{{value}}});' },
     // move + cursor
     { action: 'move', comp: CommandMapper_1.CmdCmp.ONE_TARGET_SAME_OPTION, options: ['cursor'], template: 'I.moveCursorTo({{{target}}});' },
     // open + notifications (Appium only)
