@@ -11,6 +11,8 @@ Currently available plug-ins:
 
 A plug-in can generate code for any programming language and testing framework.
 
+See [examples of actions](../docs/actions.md) in Concordia Language. 👀
+
 ## CodeceptJS
 
 *Plugin for [CodeceptJS](https://codecept.io) has two versions:*
