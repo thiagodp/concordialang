@@ -2,7 +2,9 @@
 
 > Examples of Variant sentences with actions
 
-Translations: [Português](actions-pt.md)
+*An example may demonstrate different variations of the same action.*
+
+Translations: [Português](actions-pt.md) 🌎
 
 ## `amOn`
 
@@ -59,6 +61,11 @@ When I close the current tab
 When I close the other tabs
 ```
 
+Appium only:
+```gherkin
+When I close the app
+```
+
 ## `doubleClick`
 
 ```gherkin
@@ -86,11 +93,46 @@ When I fill {Foo}
   and I type "foo" in <#bar>
 ```
 
+## `hide`
+
+Appium only:
+```gherkin
+When I hide the keyboard
+```
+
+## `install`
+
+Appium only:
+```gherkin
+When I install the app "com.example.android.myapp"
+```
+
+## `open`
+
+Appium only:
+```gherkin
+When I open the notifications panel
+```
+
 ## `press`
 
 ```gherkin
 When I press "Enter"
   and I press "Ctrl", "Alt", "Del"
+```
+
+## `pull`
+
+Appium only:
+```gherkin
+When I pull "/storage/emulated/0/DCIM/logo.png" to "some/path"
+```
+
+## `remove`
+
+Appium only:
+```gherkin
+When I remove the app "com.example.android.myapp"
 ```
 
 ## `rightClick`
@@ -153,8 +195,43 @@ Then I see {Foo} is checked
   and I see <#bar> is checked
 ```
 
+Appium only:
+```gherkin
+Then I see that the app "com.example.android.myapp" is installed
+```
+
+Appium only:
+```gherkin
+Then I see that the app "com.example.android.myapp" is not installed
+```
+
+Appium only:
+```gherkin
+Then I see that the current activity is ".HomeScreenActivity"
+```
+
+Appium only:
+```gherkin
+Then I see that the device is locked
+```
+
+Appium only:
+```gherkin
+Then I see that the device is unlocked
+```
+
 ```gherkin
 Then I see the cookie "Foo"
+```
+
+Appium only:
+```gherkin
+Then I see that the orientation is landscape
+```
+
+Appium only:
+```gherkin
+Then I see that the orientation is portrait
 ```
 
 ```gherkin
@@ -179,48 +256,103 @@ Then I see {Foo} is enabled
 ## `select`
 
 ```gherkin
-Then I select "foo" in {Foo}
+When I select "foo" in {Foo}
   and I select "bar" in <#bar>
+```
+
+## `shake`
+
+Appium only:
+```gherkin
+When I shake the device
+  and I shake the phone
+  and I shake the tablet
+```
+
+## `swipe`
+
+Appium only:
+```gherkin
+When I swipe "#io.selendroid.myapp:id/LinearLayout1" to 100, 200
+```
+
+Appium only:
+```gherkin
+When I swipe "#io.selendroid.myapp:id/LinearLayout1" down
+```
+Appium only:
+```gherkin
+When I swipe "#io.selendroid.myapp:id/LinearLayout1" left
+```
+
+Appium only:
+```gherkin
+When I swipe "#io.selendroid.myapp:id/LinearLayout1" right
+```
+
+Appium only:
+```gherkin
+When I swipe "#io.selendroid.myapp:id/LinearLayout1" up
+```
+
+## `switch`
+
+Appium only:
+```gherkin
+When I switch to native
+```
+
+Appium only:
+```gherkin
+When I switch to web
+```
+
+## `tap`
+
+Appium only:
+```gherkin
+When I tap <~ok>
+  and I tap {Confirm}
 ```
 
 ## `uncheck`
 
 ```gherkin
-Then I unckeck {Foo}
+When I unckeck {Foo}
   and I uncheck <#bar>
 ```
 
 ## `wait`
 
 ```gherkin
-Then I wait 2 seconds
+When I wait 2 seconds
 ```
 
 ```gherkin
-Then I wait for {Foo}
+When I wait for {Foo}
   and I wait for <#bar> during 2 seconds
 ```
 
 ```gherkin
-Then I wait {Foo} is enabled
+When I wait {Foo} is enabled
   and I wait <#bar> is enabled
 ```
 
 ```gherkin
-Then I wait {Foo} is invisible
+When I wait {Foo} is invisible
   and I wait <#bar> is invisible
 ```
 
 ```gherkin
-Then I wait {Foo} is visible
+When I wait {Foo} is visible
   and I wait <#bar> is visible
 ```
 
 ```gherkin
-Then I wait for the text "Foo"
+When I wait for the text "Foo"
 ```
 
 ```gherkin
-Then I wait for the url "/foo"
+When I wait for the url "/foo"
   and I wait for the url "/bar" during 3 seconds
 ```

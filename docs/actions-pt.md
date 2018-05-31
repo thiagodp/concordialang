@@ -2,6 +2,8 @@
 
 > Exemplos de sentenças de Variantes com ações
 
+*Um exemplo pode demonstrar diferentes variações da mesma ação.*
+
 ## `amOn`
 
 ```gherkin
@@ -57,6 +59,11 @@ Quando eu fecho a aba atual
 ```gherkin
 Quando eu fecho as outras abas
 ```
+Somente Appium:
+```gherkin
+Quando eu fecho o app
+  e quando eu fecho a aplicação
+```
 
 ## `doubleClick`
 
@@ -85,11 +92,40 @@ Quando eu preecho {Foo}
   e eu informo "foo" em <#bar>
 ```
 
+## `hide`
+
+Somente Appium:
+```gherkin
+Quando I oculto o teclado
+```
+
+## `install`
+
+Somente Appium:
+```gherkin
+Quando eu instalo o app "com.example.android.myapp"
+  e quando eu instalo a aplicação "com.example.android.myapp"
+```
+
+## `open`
+
+Somente Appium:
+```gherkin
+Quando eu abro o painel de notificações
+```
+
 ## `press`
 
 ```gherkin
 Quando eu pressiono "Enter"
   e pressiono "Ctrl", "Alt", "Del"
+```
+
+## `pull`
+
+Somente Appium:
+```gherkin
+Quando eu extraio "/storage/emulated/0/DCIM/logo.png" para "some/path"
 ```
 
 ## `rightClick`
@@ -116,8 +152,44 @@ Então eu não vejo "Foo Bar"
 Então eu não vejo {Foo} is checked
 ```
 
+
+Somente Appium:
+```gherkin
+Então eu vejo que o app "com.example.android.myapp" está instalado
+```
+
+Somente Appium:
+```gherkin
+Então eu vejo que o app "com.example.android.myapp" não está instalado
+```
+
+Somente Appium:
+```gherkin
+Então eu vejo que a atividade atual é ".HomeScreenActivity"
+```
+
+Somente Appium:
+```gherkin
+Então eu vejo que o dispositivo está bloqueado
+```
+
+Somente Appium:
+```gherkin
+Então eu vejo que o dispositivo está desbloqueado
+```
+
 ```gherkin
 Então eu não vejo o cookie "foo"
+```
+
+Somente Appium:
+```gherkin
+Então eu vejo que a orientação é paisagem
+```
+
+Somente Appium:
+```gherkin
+Então eu vejo que a orientação é retrato
 ```
 
 ```gherkin
@@ -173,6 +245,61 @@ Então eu vejo {Foo}
 ```gherkin
 Então eu seleciono "foo" em {Foo}
   e seleciono "bar" em <#bar>
+```
+
+## `shake`
+
+Somente Appium:
+```gherkin
+Quando eu balanço o dispositivo
+  e eu tremo o celular
+  e eu sacudo o tablet
+```
+
+## `swipe`
+
+Somente Appium:
+```gherkin
+Quando eu deslizo "#io.selendroid.myapp:id/LinearLayout1" para 100, 200
+```
+
+Somente Appium:
+```gherkin
+Quando eu deslizo "#io.selendroid.myapp:id/LinearLayout1" para baixo
+```
+Somente Appium:
+```gherkin
+Quando eu deslizo "#io.selendroid.myapp:id/LinearLayout1" para a esquerda
+```
+
+Somente Appium:
+```gherkin
+Quando eu deslizo "#io.selendroid.myapp:id/LinearLayout1" para direita
+```
+
+Somente Appium:
+```gherkin
+Quando eu deslizo "#io.selendroid.myapp:id/LinearLayout1" para cima
+```
+
+## `switch`
+
+Somente Appium:
+```gherkin
+Quando eu troco para nativo
+```
+
+Somente Appium:
+```gherkin
+Quando eu troco para web
+```
+
+## `tap`
+
+Somente Appium:
+```gherkin
+Quando eu toco em <~ok>
+  e eu toco em {Confirm}
 ```
 
 ## `uncheck`
