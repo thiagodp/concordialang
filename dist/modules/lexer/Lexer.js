@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const VariantLexer_1 = require("./VariantLexer");
-const TestEventLexer_1 = require("./TestEventLexer");
+const TestEventLexer_1 = require("../lexer/TestEventLexer");
 const DatabasePropertyLexer_1 = require("./DatabasePropertyLexer");
 const DatabaseLexer_1 = require("./DatabaseLexer");
 const UIPropertyLexer_1 = require("./UIPropertyLexer");
@@ -90,8 +90,8 @@ class Lexer {
             new TestEventLexer_1.AfterAllLexer(dictionary.afterAll),
             new TestEventLexer_1.BeforeFeatureLexer(dictionary.beforeFeature),
             new TestEventLexer_1.AfterFeatureLexer(dictionary.afterFeature),
-            new TestEventLexer_1.BeforeScenariosLexer(dictionary.beforeEachScenario),
-            new TestEventLexer_1.AfterScenariosLexer(dictionary.afterEachScenario),
+            new TestEventLexer_1.BeforeEachScenarioLexer(dictionary.beforeEachScenario),
+            new TestEventLexer_1.AfterEachScenarioLexer(dictionary.afterEachScenario),
             new TextLexer_1.TextLexer() // captures any non-empty
         ];
         // Building the map

@@ -13,7 +13,6 @@ NodeTypes.REGEX = 'regex';
 NodeTypes.CONSTANT = 'constant';
 NodeTypes.UI_PROPERTY = 'uiProperty';
 NodeTypes.DATABASE_PROPERTY = 'databaseProperty';
-NodeTypes.TEST_EVENT_ITEM = 'testEventItem';
 // Also available in Gherkin
 NodeTypes.TAG = 'tag';
 NodeTypes.TABLE_ROW = 'tableRow';
