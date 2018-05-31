@@ -4,6 +4,7 @@
 
 [![Build Status](https://travis-ci.org/thiagodp/concordialang.svg?branch=master)](https://travis-ci.org/thiagodp/concordialang)
 [![npm version](https://badge.fury.io/js/concordialang.svg)](https://badge.fury.io/js/concordialang)
+[![GitHub last commit](https://img.shields.io/github/last-commit/thiagodp/concordialang.svg)](https://github.com/thiagodp/concordialang/releases)
 [![npm](https://img.shields.io/npm/l/concordialang.svg)](https://github.com/thiagodp/concordialang/blob/master/LICENSE.txt)
 [![slack](https://img.shields.io/badge/slack-chat-blue.svg)](https://concordialang.slack.com)
 
