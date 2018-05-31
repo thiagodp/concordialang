@@ -61,7 +61,7 @@ When I close the current tab
 When I close the other tabs
 ```
 
-*Mobile* only:
+The next sentence is for *mobile* only:
 ```gherkin
 When I close the app
 ```
@@ -95,21 +95,21 @@ When I fill {Foo}
 
 ## `hide`
 
-*Mobile* only:
+The next sentence is for *mobile* only:
 ```gherkin
 When I hide the keyboard
 ```
 
 ## `install`
 
-*Mobile* only:
+The next sentence is for *mobile* only:
 ```gherkin
 When I install the app "com.example.android.myapp"
 ```
 
 ## `open`
 
-*Mobile* only:
+The next sentence is for *mobile* only:
 ```gherkin
 When I open the notifications panel
 ```
@@ -123,14 +123,14 @@ When I press "Enter"
 
 ## `pull`
 
-*Mobile* only:
+The next sentence is for *mobile* only:
 ```gherkin
 When I pull "/storage/emulated/0/DCIM/logo.png" to "some/path"
 ```
 
 ## `remove`
 
-*Mobile* only:
+The next sentence is for *mobile* only:
 ```gherkin
 When I remove the app "com.example.android.myapp"
 ```
@@ -195,27 +195,27 @@ Then I see {Foo} is checked
   and I see <#bar> is checked
 ```
 
-*Mobile* only:
+The next sentence is for *mobile* only:
 ```gherkin
 Then I see that the app "com.example.android.myapp" is installed
 ```
 
-*Mobile* only:
+The next sentence is for *mobile* only:
 ```gherkin
 Then I see that the app "com.example.android.myapp" is not installed
 ```
 
-*Mobile* only:
+The next sentence is for *mobile* only:
 ```gherkin
 Then I see that the current activity is ".HomeScreenActivity"
 ```
 
-*Mobile* only:
+The next sentence is for *mobile* only:
 ```gherkin
 Then I see that the device is locked
 ```
 
-*Mobile* only:
+The next sentence is for *mobile* only:
 ```gherkin
 Then I see that the device is unlocked
 ```
@@ -224,12 +224,12 @@ Then I see that the device is unlocked
 Then I see the cookie "Foo"
 ```
 
-*Mobile* only:
+The next sentence is for *mobile* only:
 ```gherkin
 Then I see that the orientation is landscape
 ```
 
-*Mobile* only:
+The next sentence is for *mobile* only:
 ```gherkin
 Then I see that the orientation is portrait
 ```
@@ -262,7 +262,7 @@ When I select "foo" in {Foo}
 
 ## `shake`
 
-*Mobile* only:
+The next sentence is for *mobile* only:
 ```gherkin
 When I shake the device
   and I shake the phone
@@ -271,45 +271,45 @@ When I shake the device
 
 ## `swipe`
 
-*Mobile* only:
+The next sentence is for *mobile* only:
 ```gherkin
 When I swipe "#io.selendroid.myapp:id/LinearLayout1" to 100, 200
 ```
 
-*Mobile* only:
+The next sentence is for *mobile* only:
 ```gherkin
 When I swipe "#io.selendroid.myapp:id/LinearLayout1" down
 ```
-*Mobile* only:
+The next sentence is for *mobile* only:
 ```gherkin
 When I swipe "#io.selendroid.myapp:id/LinearLayout1" left
 ```
 
-*Mobile* only:
+The next sentence is for *mobile* only:
 ```gherkin
 When I swipe "#io.selendroid.myapp:id/LinearLayout1" right
 ```
 
-*Mobile* only:
+The next sentence is for *mobile* only:
 ```gherkin
 When I swipe "#io.selendroid.myapp:id/LinearLayout1" up
 ```
 
 ## `switch`
 
-*Mobile* only:
+The next sentence is for *mobile* only:
 ```gherkin
 When I switch to native
 ```
 
-*Mobile* only:
+The next sentence is for *mobile* only:
 ```gherkin
 When I switch to web
 ```
 
 ## `tap`
 
-*Mobile* only:
+The next sentence is for *mobile* only:
 ```gherkin
 When I tap <~ok>
   and I tap {Confirm}

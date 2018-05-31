@@ -59,7 +59,7 @@ Quando eu fecho a aba atual
 ```gherkin
 Quando eu fecho as outras abas
 ```
-Somente para *mobile*:
+A próxima sentença é somente para *mobile*:
 ```gherkin
 Quando eu fecho o app
   e quando eu fecho a aplicação
@@ -94,14 +94,14 @@ Quando eu preecho {Foo}
 
 ## `hide`
 
-Somente para *mobile*:
+A próxima sentença é somente para *mobile*:
 ```gherkin
 Quando I oculto o teclado
 ```
 
 ## `install`
 
-Somente para *mobile*:
+A próxima sentença é somente para *mobile*:
 ```gherkin
 Quando eu instalo o app "com.example.android.myapp"
   e quando eu instalo a aplicação "com.example.android.myapp"
@@ -109,7 +109,7 @@ Quando eu instalo o app "com.example.android.myapp"
 
 ## `open`
 
-Somente para *mobile*:
+A próxima sentença é somente para *mobile*:
 ```gherkin
 Quando eu abro o painel de notificações
 ```
@@ -123,7 +123,7 @@ Quando eu pressiono "Enter"
 
 ## `pull`
 
-Somente para *mobile*:
+A próxima sentença é somente para *mobile*:
 ```gherkin
 Quando eu extraio "/storage/emulated/0/DCIM/logo.png" para "some/path"
 ```
@@ -153,27 +153,27 @@ Então eu não vejo {Foo} is checked
 ```
 
 
-Somente para *mobile*:
+A próxima sentença é somente para *mobile*:
 ```gherkin
 Então eu vejo que o app "com.example.android.myapp" está instalado
 ```
 
-Somente para *mobile*:
+A próxima sentença é somente para *mobile*:
 ```gherkin
 Então eu vejo que o app "com.example.android.myapp" não está instalado
 ```
 
-Somente para *mobile*:
+A próxima sentença é somente para *mobile*:
 ```gherkin
 Então eu vejo que a atividade atual é ".HomeScreenActivity"
 ```
 
-Somente para *mobile*:
+A próxima sentença é somente para *mobile*:
 ```gherkin
 Então eu vejo que o dispositivo está bloqueado
 ```
 
-Somente para *mobile*:
+A próxima sentença é somente para *mobile*:
 ```gherkin
 Então eu vejo que o dispositivo está desbloqueado
 ```
@@ -182,12 +182,12 @@ Então eu vejo que o dispositivo está desbloqueado
 Então eu não vejo o cookie "foo"
 ```
 
-Somente para *mobile*:
+A próxima sentença é somente para *mobile*:
 ```gherkin
 Então eu vejo que a orientação é paisagem
 ```
 
-Somente para *mobile*:
+A próxima sentença é somente para *mobile*:
 ```gherkin
 Então eu vejo que a orientação é retrato
 ```
@@ -249,7 +249,7 @@ Então eu seleciono "foo" em {Foo}
 
 ## `shake`
 
-Somente para *mobile*:
+A próxima sentença é somente para *mobile*:
 ```gherkin
 Quando eu balanço o dispositivo
   e eu tremo o celular
@@ -258,45 +258,45 @@ Quando eu balanço o dispositivo
 
 ## `swipe`
 
-Somente para *mobile*:
+A próxima sentença é somente para *mobile*:
 ```gherkin
 Quando eu deslizo "#io.selendroid.myapp:id/LinearLayout1" para 100, 200
 ```
 
-Somente para *mobile*:
+A próxima sentença é somente para *mobile*:
 ```gherkin
 Quando eu deslizo "#io.selendroid.myapp:id/LinearLayout1" para baixo
 ```
-Somente para *mobile*:
+A próxima sentença é somente para *mobile*:
 ```gherkin
 Quando eu deslizo "#io.selendroid.myapp:id/LinearLayout1" para a esquerda
 ```
 
-Somente para *mobile*:
+A próxima sentença é somente para *mobile*:
 ```gherkin
 Quando eu deslizo "#io.selendroid.myapp:id/LinearLayout1" para direita
 ```
 
-Somente para *mobile*:
+A próxima sentença é somente para *mobile*:
 ```gherkin
 Quando eu deslizo "#io.selendroid.myapp:id/LinearLayout1" para cima
 ```
 
 ## `switch`
 
-Somente para *mobile*:
+A próxima sentença é somente para *mobile*:
 ```gherkin
 Quando eu troco para nativo
 ```
 
-Somente para *mobile*:
+A próxima sentença é somente para *mobile*:
 ```gherkin
 Quando eu troco para web
 ```
 
 ## `tap`
 
-Somente para *mobile*:
+A próxima sentença é somente para *mobile*:
 ```gherkin
 Quando eu toco em <~ok>
   e eu toco em {Confirm}
