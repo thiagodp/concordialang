@@ -9,7 +9,7 @@
     ],
     "file": "codeceptjs-appium/CodeceptJSForAppium.js",
     "class": "CodeceptJS",
-    "install": "npm install -g mocha mocha-multi codeceptjs appium && npm install wd",
-    "uninstall": "npm uninstall -g mocha mocha-multi codeceptjs appium && npm uninstall wd",
+    "install": "npm install -g mocha mocha-multi codeceptjs appium",
+    "uninstall": "npm uninstall -g mocha mocha-multi codeceptjs appium",
     "serve": "appium"
 }
