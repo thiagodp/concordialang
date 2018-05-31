@@ -24,7 +24,7 @@ export class StepThenParser implements NodeParser< StepThen > {
 
         if ( ! it.hasPrior() || allowedPriorNodes.indexOf( it.spyPrior().nodeType ) < 0 ) {
             let e = new SyntaticException(
-                'The "' + node.nodeType + '" clause must be declared after a Given, When, or And.',
+                'The "' + node.nodeType + '" clause must be declared after: ' + allowedPriorNodes.join( ', ' ),
                 node.location
                 );
             errors.push( e );
@@ -44,12 +44,20 @@ export class StepThenParser implements NodeParser< StepThen > {
         let owner = null;
 
         if ( context.inBackground ) owner = context.currentBackground;
+        else if ( context.inVariantBackground ) owner = context.currentVariantBackground;
         else if ( context.inScenario ) owner = context.currentScenario;
+        else if ( context.inScenarioVariantBackground ) owner = context.currentScenarioVariantBackground;
         else if ( context.inVariant ) owner = context.currentVariant;
         else if ( context.inTestCase ) owner = context.currentTestCase;
+        else if ( context.inBeforeAll ) owner = context.currentBeforeAll;
+        else if ( context.inAfterAll ) owner = context.currentAfterAll;
+        else if ( context.inBeforeFeature ) owner = context.currentBeforeFeature;
+        else if ( context.inAfterFeature ) owner = context.currentAfterFeature;
+        else if ( context.inBeforeEachScenario ) owner = context.currentBeforeEachScenario;
+        else if ( context.inAfterEachScenario ) owner = context.currentAfterEachScenario;
         else {
             let e = new SyntaticException(
-                'The "' + node.nodeType + '" clause must be declared after a Background, Scenario, Variant or Test Case.',
+                'The "' + node.nodeType + '" clause must be declared after a Background, Scenario, Variant Background, Variant, Test Case, Before All, After All, Before Feature, After Feature, Before Each Scenario, AfterEachScenario or UI Element Property.',
                 node.location
                 );
             errors.push( e );

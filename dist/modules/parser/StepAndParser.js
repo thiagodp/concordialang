@@ -46,8 +46,20 @@ class StepAndParser {
                 owner = context.currentVariant;
             else if (context.inTestCase)
                 owner = context.currentTestCase;
+            else if (context.inBeforeAll)
+                owner = context.currentBeforeAll;
+            else if (context.inAfterAll)
+                owner = context.currentAfterAll;
+            else if (context.inBeforeFeature)
+                owner = context.currentBeforeFeature;
+            else if (context.inAfterFeature)
+                owner = context.currentAfterFeature;
+            else if (context.inBeforeEachScenario)
+                owner = context.currentBeforeEachScenario;
+            else if (context.inAfterEachScenario)
+                owner = context.currentAfterEachScenario;
             else {
-                let e = new SyntaticException_1.SyntaticException('The "' + node.nodeType + '" clause must be declared after a Background, Scenario, Variant Background, Variant, Test Case or UI Element Property.', node.location);
+                let e = new SyntaticException_1.SyntaticException('The "' + node.nodeType + '" clause must be declared after a Background, Scenario, Variant Background, Variant, Test Case, Before All, After All, Before Feature, After Feature, Before Each Scenario, AfterEachScenario or UI Element Property.', node.location);
                 errors.push(e);
                 return false;
             }

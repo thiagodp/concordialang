@@ -10,6 +10,7 @@ import { Variant } from '../ast/Variant';
 import { TestCase } from '../ast/TestCase';
 import { Background } from '../ast/Background';
 import { VariantBackground } from '../ast/VariantBackground';
+import { BeforeAll, AfterAll, BeforeFeature, AfterFeature, BeforeEachScenario, AfterEachScenario } from '../ast/TestEvent';
 
 /**
  * Parsing context.
@@ -33,6 +34,12 @@ export class ParsingContext {
     inRegex: boolean = false;
     inUIProperty: boolean = false;
     inTable: boolean = false;
+    inBeforeAll: boolean = false;
+    inAfterAll: boolean = false;
+    inBeforeFeature: boolean = false;
+    inAfterFeature: boolean = false;
+    inBeforeEachScenario: boolean = false;
+    inAfterEachScenario: boolean = false;
 
     currentBackground: Background = null;
     currentVariantBackground: VariantBackground = null;
@@ -46,6 +53,12 @@ export class ParsingContext {
     currentRegexBlock: RegexBlock = null;
     currentTable: Table = null;
     currentDatabase: Database = null;
+    currentBeforeAll: BeforeAll = null;
+    currentAfterAll: AfterAll = null;
+    currentBeforeFeature: BeforeFeature = null;
+    currentAfterFeature: AfterFeature = null;
+    currentBeforeEachScenario: BeforeEachScenario = null;
+    currentAfterEachScenario: AfterEachScenario = null;
 
     constructor( doc?: Document ) {
         if ( doc ) {
@@ -67,5 +80,11 @@ export class ParsingContext {
         this.inRegex = false;
         this.inUIProperty = false;
         this.inTable = false;
+        this.inBeforeAll = false;
+        this.inAfterAll = false;
+        this.inBeforeFeature = false;
+        this.inAfterFeature = false;
+        this.inBeforeEachScenario = false;
+        this.inAfterEachScenario = false;
     }
 }

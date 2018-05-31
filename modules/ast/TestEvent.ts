@@ -7,11 +7,11 @@ import { Step } from './Step';
 export interface TestEvent extends Node {
 
     /**
-     * Normal Given-When-Then steps. Events about Feature and Scenario usually
+     * Normal Given-When-Then sentences. Events about Feature and Scenario usually
      * can interact with the application through its user interface, while
      * the others can't.
      */
-    steps: Step[];
+    sentences: Step[];
 }
 
 /**
