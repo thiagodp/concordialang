@@ -114,6 +114,7 @@
                 "drag": [ "arrasto" ],
                 "fill": [ "preencho", "informo", "digito", "forneco", "entro" ],
                 "hide": [ "escondo", "oculto" ],
+                "maximize": [ "maximizo" ],
                 "move": [ "movo", "posiciono" ],
                 "mouseOut": [ "retiro o mouse" ],
                 "mouseOver": [ "coloco o mouse", "ponho o mouse", "passo o mouse" ],
@@ -122,7 +123,7 @@
                 "pull": [ "extraio", "puxo", "pull" ],
                 "refresh": [ "atualizo", "recarrego" ],
                 "remove": [ "removo", "retiro", "apago", "deleto" ],
-                "resize": [ "redimensiono", "modifico o tamanho" ],
+                "resize": [ "redimensiono", "modifico o tamanho", "mudo o tamanho" ],
                 "rotate": [ "rotaciono", "giro" ],
                 "rightClick": [ "clico com o botao direito", "aciono o botao direito" ],
                 "saveScreenshot": [ "salvo a tela", "salvo uma foto", "foto da tela", "print da tela", "screenshot", "printscreen" ],
@@ -180,7 +181,7 @@
                 "checked": [ "marcado", "marcada", "ticado", "ticada", "checked" ],
                 "cookie": [ "cookie" ],
                 "currentActivity": [ "atividade atual" ],
-                "currentPage": [ "página atual", "site atual" ],
+                "currentPage": [ "página atual", "site atual", "página" ],
                 "currentTab": [ "aba atual", "current tab" ],
                 "device": [ "dispositivo", "celular", "telefone", "fone", "tablet" ],
                 "disabled": [ "desabilitado", "desabilitada", "disabled" ],
@@ -213,6 +214,7 @@
                 "url": [ "url", "pagina", "endereco", "dominio", "ip", "local", "sitio" ],
                 "visible": [ "visivel" ],
                 "web": [ "web" ],
+                "window": [ "janela", "window" ],
                 "with": [ "com", "with", "contem", "contains" ]
             },
 

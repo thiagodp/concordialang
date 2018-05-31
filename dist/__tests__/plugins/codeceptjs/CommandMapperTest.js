@@ -224,6 +224,18 @@ describe('CommandMapperTest', () => {
             expect(r).toContainEqual('I.installApp("foo.apk");' + comment);
         });
     });
+    describe('maximize', () => {
+        describe('window', () => {
+            it('options', () => {
+                let cmd = {
+                    action: 'maximize',
+                    options: ['window']
+                };
+                const r = cm.map(cmd);
+                expect(r).toContainEqual('I.resizeWindow("maximize");' + comment);
+            });
+        });
+    });
     describe('move', () => {
         describe('moveCursorTo', () => {
             it('options, target', () => {
@@ -287,6 +299,41 @@ describe('CommandMapperTest', () => {
                 };
                 const r = cm.map(cmd);
                 expect(r).toContainEqual('I.pullFile("foo.png", "bar.png");' + comment);
+            });
+        });
+    });
+    describe('refresh', () => {
+        describe('currentPage', () => {
+            it('options', () => {
+                let cmd = {
+                    action: 'refresh',
+                    options: ['currentPage']
+                };
+                const r = cm.map(cmd);
+                expect(r).toContainEqual('I.refreshPage();' + comment);
+            });
+        });
+        describe('url', () => {
+            it('options', () => {
+                let cmd = {
+                    action: 'refresh',
+                    options: ['url']
+                };
+                const r = cm.map(cmd);
+                expect(r).toContainEqual('I.refreshPage();' + comment);
+            });
+        });
+    });
+    describe('resize', () => {
+        describe('window', () => {
+            it('options, numbers', () => {
+                let cmd = {
+                    action: 'resize',
+                    options: ['window'],
+                    values: [300, 400]
+                };
+                const r = cm.map(cmd);
+                expect(r).toContainEqual('I.resizeWindow(300, 400);' + comment);
             });
         });
     });

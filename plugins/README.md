@@ -74,6 +74,7 @@ Left column indicates currently available actions in Concordia, while the right 
  | -                                         | grabValueFrom
  | hide + keyboard                           | hideDeviceKeyboard ✓ (Appium only)
  | install + app                             | installApp ✓ (Appium only)
+ | maximize + window                         | resizeWindow( 'maximize' ) ✓
  | move + cursor                             | moveCursorTo ✓
  | mouseOut                                  | -
  | mouseOver                                 | -
@@ -81,9 +82,10 @@ Left column indicates currently available actions in Concordia, while the right 
  | open + notifications                      | openNotifications ✓ (Appium only)
  | press                                     | pressKey ✓
  | pull + file                               | pullFile ✓ (Appium only)
- | refresh                                   | refreshPage
+ | refresh + currentPage                     | refreshPage ✓
+ | refresh + url                             |
  | remove + app                              | removeApp ✓ (Appium only)
- | resize + window                           | resizeWindow
+ | resize + window                           | resizeWindow ✓
  | rightClick                                | rightClick ✓
  | -                                         | runInWeb
  | -                                         | runOnAndroid

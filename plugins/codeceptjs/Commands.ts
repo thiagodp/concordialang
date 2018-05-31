@@ -38,6 +38,8 @@ export const CODECEPTJS_COMMANDS: CmdCfg[] = [
     { action: 'hide', comp: CmdCmp.SAME_OPTION, options: [ 'keyboard' ], template: 'I.hideDeviceKeyboard();' },
     // install (Appium only)
     { action: 'install', comp: CmdCmp.ONE_VALUE_SAME_OPTION, options: [ 'app' ], template: 'I.installApp({{{value}}});' },
+    // maximize + window
+    { action: 'maximize', comp: CmdCmp.SAME_OPTION, options: [ 'window' ], template: 'I.resizeWindow("maximize");' },
     // move + cursor
     { action: 'move', comp: CmdCmp.ONE_TARGET_TWO_NUMBERS_SAME_OPTION, options: [ 'cursor' ], valuesAsNonArray: true, template: 'I.moveCursorTo({{{target}}}, {{{value}}});' },
     { action: 'move', comp: CmdCmp.ONE_TARGET_SAME_OPTION, options: [ 'cursor' ], template: 'I.moveCursorTo({{{target}}});' },
@@ -47,8 +49,14 @@ export const CODECEPTJS_COMMANDS: CmdCfg[] = [
     { action: 'press', comp: CmdCmp.ONE_VALUE_OR_ARRAY, template: 'I.pressKey({{{value}}});' },
     // pull + file (Appium only)
     { action: 'pull', comp: CmdCmp.TWO_VALUES_SAME_OPTION, options: [ 'file' ], valuesAsNonArray: true, template: 'I.pullFile({{{value}}});' },
+    // refresh + currentPage
+    { action: 'refresh', comp: CmdCmp.SAME_OPTION, options: [ 'currentPage' ], template: 'I.refreshPage();' },
+    // refresh + url
+    { action: 'refresh', comp: CmdCmp.SAME_OPTION, options: [ 'url' ], template: 'I.refreshPage();' },
     // remove + app (Appium only)
     { action: 'remove', comp: CmdCmp.ONE_VALUE_SAME_OPTION, options: [ 'app' ], template: 'I.removeApp({{{value}}});' },
+    // resize + window
+    { action: 'resize', comp: CmdCmp.TWO_NUMBERS_SAME_OPTION, options: [ 'window' ], valuesAsNonArray: true, template: 'I.resizeWindow({{{value}}});' },
     // rightClick
     { action: 'rightClick', comp: CmdCmp.ONE_TARGET, template: 'I.rightClick({{{target}}});' },
     { action: 'rightClick', comp: CmdCmp.ONE_VALUE, template: 'I.rightClick({{{value}}});' },

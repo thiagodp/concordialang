@@ -39,6 +39,8 @@ exports.CODECEPTJS_COMMANDS = [
     { action: 'hide', comp: CommandMapper_1.CmdCmp.SAME_OPTION, options: ['keyboard'], template: 'I.hideDeviceKeyboard();' },
     // install (Appium only)
     { action: 'install', comp: CommandMapper_1.CmdCmp.ONE_VALUE_SAME_OPTION, options: ['app'], template: 'I.installApp({{{value}}});' },
+    // maximize + window
+    { action: 'maximize', comp: CommandMapper_1.CmdCmp.SAME_OPTION, options: ['window'], template: 'I.resizeWindow("maximize");' },
     // move + cursor
     { action: 'move', comp: CommandMapper_1.CmdCmp.ONE_TARGET_TWO_NUMBERS_SAME_OPTION, options: ['cursor'], valuesAsNonArray: true, template: 'I.moveCursorTo({{{target}}}, {{{value}}});' },
     { action: 'move', comp: CommandMapper_1.CmdCmp.ONE_TARGET_SAME_OPTION, options: ['cursor'], template: 'I.moveCursorTo({{{target}}});' },
@@ -48,8 +50,14 @@ exports.CODECEPTJS_COMMANDS = [
     { action: 'press', comp: CommandMapper_1.CmdCmp.ONE_VALUE_OR_ARRAY, template: 'I.pressKey({{{value}}});' },
     // pull + file (Appium only)
     { action: 'pull', comp: CommandMapper_1.CmdCmp.TWO_VALUES_SAME_OPTION, options: ['file'], valuesAsNonArray: true, template: 'I.pullFile({{{value}}});' },
+    // refresh + currentPage
+    { action: 'refresh', comp: CommandMapper_1.CmdCmp.SAME_OPTION, options: ['currentPage'], template: 'I.refreshPage();' },
+    // refresh + url
+    { action: 'refresh', comp: CommandMapper_1.CmdCmp.SAME_OPTION, options: ['url'], template: 'I.refreshPage();' },
     // remove + app (Appium only)
     { action: 'remove', comp: CommandMapper_1.CmdCmp.ONE_VALUE_SAME_OPTION, options: ['app'], template: 'I.removeApp({{{value}}});' },
+    // resize + window
+    { action: 'resize', comp: CommandMapper_1.CmdCmp.TWO_NUMBERS_SAME_OPTION, options: ['window'], valuesAsNonArray: true, template: 'I.resizeWindow({{{value}}});' },
     // rightClick
     { action: 'rightClick', comp: CommandMapper_1.CmdCmp.ONE_TARGET, template: 'I.rightClick({{{target}}});' },
     { action: 'rightClick', comp: CommandMapper_1.CmdCmp.ONE_VALUE, template: 'I.rightClick({{{value}}});' },

@@ -18,6 +18,7 @@ var Actions;
     Actions["DRAG"] = "drag";
     Actions["FILL"] = "fill";
     Actions["HIDE"] = "hide";
+    Actions["MAXIMIZE"] = "maximize";
     Actions["MOVE"] = "move";
     Actions["MOUSE_OUT"] = "mouseOut";
     Actions["MOUSE_OVER"] = "mouseOver";

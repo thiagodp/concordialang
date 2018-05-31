@@ -107,6 +107,12 @@ The next sentence is for *mobile* only:
 When I install the app "com.example.android.myapp"
 ```
 
+## `maximize`
+
+```gherkin
+When I maximize the window
+```
+
 ## `open`
 
 The next sentence is for *mobile* only:
@@ -128,11 +134,23 @@ The next sentence is for *mobile* only:
 When I pull "/storage/emulated/0/DCIM/logo.png" to "some/path"
 ```
 
+## `refresh`
+
+```gherkin
+When I refresh the page
+```
+
 ## `remove`
 
 The next sentence is for *mobile* only:
 ```gherkin
 When I remove the app "com.example.android.myapp"
+```
+
+## `resize`
+
+```gherkin
+When I resize the window to 600, 400
 ```
 
 ## `rightClick`

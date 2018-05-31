@@ -21,6 +21,7 @@ exports.ACTION_TARGET_MAP = new Map([
     [Actions_1.Actions.DRAG, ActionTargets_1.ActionTargets.IMAGE],
     [Actions_1.Actions.FILL, ActionTargets_1.ActionTargets.TEXTBOX],
     [Actions_1.Actions.HIDE, ActionTargets_1.ActionTargets.TEXTBOX],
+    [Actions_1.Actions.MAXIMIZE, ActionTargets_1.ActionTargets.WINDOW],
     [Actions_1.Actions.MOVE, ActionTargets_1.ActionTargets.CURSOR],
     [Actions_1.Actions.MOUSE_OUT, ActionTargets_1.ActionTargets.CURSOR],
     [Actions_1.Actions.MOUSE_OVER, ActionTargets_1.ActionTargets.CURSOR],

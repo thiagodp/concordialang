@@ -15,6 +15,7 @@ export enum Actions {
     DRAG            = "drag"          , // web, mobile web, mobile native, desktop
     FILL            = "fill"          , // web, mobile web, mobile native, desktop
     HIDE            = "hide"          , // web, mobile web, mobile native, desktop
+    MAXIMIZE        = "maximize"      , // web, desktop
     MOVE            = "move"          , // web, mobile web, mobile native, desktop
     MOUSE_OUT       = "mouseOut"      , // web, mobile web, desktop
     MOUSE_OVER      = "mouseOver"     , // web, mobile web, desktop
