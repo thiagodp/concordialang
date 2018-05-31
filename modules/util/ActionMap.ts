@@ -21,6 +21,7 @@ export const ACTION_TARGET_MAP = new Map< string, string >(
         [ Actions.DRAG            , ActionTargets.IMAGE        ],
         [ Actions.FILL            , ActionTargets.TEXTBOX      ],
         [ Actions.HIDE            , ActionTargets.TEXTBOX      ],
+        [ Actions.MAXIMIZE        , ActionTargets.WINDOW       ],
         [ Actions.MOVE            , ActionTargets.CURSOR       ],
         [ Actions.MOUSE_OUT       , ActionTargets.CURSOR       ],
         [ Actions.MOUSE_OVER      , ActionTargets.CURSOR       ],

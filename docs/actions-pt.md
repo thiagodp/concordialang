@@ -107,6 +107,12 @@ Quando eu instalo o app "com.example.android.myapp"
   e quando eu instalo a aplicação "com.example.android.myapp"
 ```
 
+## `maximize`
+
+```gherkin
+Quando eu maximizo a janela
+```
+
 ## `open`
 
 A próxima sentença é somente para *mobile*:
@@ -126,6 +132,18 @@ Quando eu pressiono "Enter"
 A próxima sentença é somente para *mobile*:
 ```gherkin
 Quando eu extraio "/storage/emulated/0/DCIM/logo.png" para "some/path"
+```
+
+## `refresh`
+
+```gherkin
+Quando eu atualizo a página
+```
+
+## `resize`
+
+```gherkin
+Quando eu redimensiono a janela para 600, 400
 ```
 
 ## `rightClick`

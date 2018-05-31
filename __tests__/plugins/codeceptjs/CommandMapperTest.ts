@@ -285,6 +285,23 @@ describe( 'CommandMapperTest', () => {
     } );
 
 
+    describe( 'maximize', () => {
+
+        describe( 'window', () => {
+
+            it( 'options', () => {
+                let cmd: ATSCommand = {
+                    action: 'maximize',
+                    options: [ 'window' ]
+                };
+                const r = cm.map( cmd );
+                expect( r ).toContainEqual( 'I.resizeWindow("maximize");' + comment );
+            } );
+
+        } );
+
+    } );
+
 
     describe( 'move', () => {
 
@@ -374,6 +391,57 @@ describe( 'CommandMapperTest', () => {
         } );
 
     } );
+
+
+    describe( 'refresh', () => {
+
+        describe( 'currentPage', () => {
+
+            it( 'options', () => {
+                let cmd: ATSCommand = {
+                    action: 'refresh',
+                    options: [ 'currentPage' ]
+                };
+                const r = cm.map( cmd );
+                expect( r ).toContainEqual( 'I.refreshPage();' + comment );
+            } );
+
+        } );
+
+        describe( 'url', () => {
+
+            it( 'options', () => {
+                let cmd: ATSCommand = {
+                    action: 'refresh',
+                    options: [ 'url' ]
+                };
+                const r = cm.map( cmd );
+                expect( r ).toContainEqual( 'I.refreshPage();' + comment );
+            } );
+
+        } );
+
+    } );
+
+
+    describe( 'resize', () => {
+
+        describe( 'window', () => {
+
+            it( 'options, numbers', () => {
+                let cmd: ATSCommand = {
+                    action: 'resize',
+                    options: [ 'window' ],
+                    values: [ 300, 400 ]
+                };
+                const r = cm.map( cmd );
+                expect( r ).toContainEqual( 'I.resizeWindow(300, 400);' + comment );
+            } );
+
+        } );
+
+    } );
+
 
 
     describe( 'remove', () => {

@@ -68,6 +68,7 @@
                 "drag": [ "drag" ],
                 "fill": [ "fill", "enter", "inform", "type", "give" ],
                 "hide": [ "hide", "oculto" ],
+                "maximize": [ "maximize" ],
                 "move": [ "move" ],
                 "mouseOut": [ "move the mouse out", "remove the mouse" ],
                 "mouseOver": [ "put the mouse over", "place the mouse over", "set the mouse over" ],
@@ -134,7 +135,7 @@
                 "checked": [ "checked" ],
                 "cookie": [ "cookie" ],
                 "currentActivity": [ "current activity" ],
-                "currentPage": [ "current page" ],
+                "currentPage": [ "current page", "page" ],
                 "currentTab": [ "current tab" ],
                 "device": [ "device", "phone", "tablet" ],
                 "disabled": [ "disabled" ],
@@ -167,6 +168,7 @@
                 "url": [ "url", "address", "ip", "domain", "website", "site", "page" ],
                 "visible": [ "visible" ],
                 "web": [ "web" ],
+                "window": [ "window" ],
                 "with": [ "with", "containing", "contains" ]
             },
 

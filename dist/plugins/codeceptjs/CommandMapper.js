@@ -35,6 +35,7 @@ var CmdCmp;
     CmdCmp[CmdCmp["TWO_TARGETS"] = 24] = "TWO_TARGETS";
     CmdCmp[CmdCmp["TWO_VALUES_SAME_OPTION"] = 25] = "TWO_VALUES_SAME_OPTION";
     CmdCmp[CmdCmp["TWO_NUMBERS"] = 26] = "TWO_NUMBERS";
+    CmdCmp[CmdCmp["TWO_NUMBERS_SAME_OPTION"] = 27] = "TWO_NUMBERS_SAME_OPTION";
 })(CmdCmp = exports.CmdCmp || (exports.CmdCmp = {}));
 /**
  * Command mapper
@@ -257,6 +258,15 @@ class CommandMapper {
             case CmdCmp.TWO_NUMBERS: {
                 let ok = 2 == valuesCount && isNumber(cmd.values[0]) &&
                     isNumber(cmd.values[1]);
+                if (ok) {
+                    cmd.values[0] = Number(cmd.values[0]);
+                    cmd.values[1] = Number(cmd.values[1]);
+                }
+                return ok;
+            }
+            case CmdCmp.TWO_NUMBERS_SAME_OPTION: {
+                let ok = 2 == valuesCount && isNumber(cmd.values[0]) &&
+                    isNumber(cmd.values[1]) && includeOptions(cfg, cmd);
                 if (ok) {
                     cmd.values[0] = Number(cmd.values[0]);
                     cmd.values[1] = Number(cmd.values[1]);

@@ -39,7 +39,8 @@ export enum CmdCmp {
 
     TWO_VALUES_SAME_OPTION,
 
-    TWO_NUMBERS
+    TWO_NUMBERS,
+    TWO_NUMBERS_SAME_OPTION
 }
 
 /**
@@ -316,6 +317,16 @@ export class CommandMapper {
             case CmdCmp.TWO_NUMBERS: {
                 let ok = 2 == valuesCount && isNumber( cmd.values[ 0 ] ) &&
                     isNumber( cmd.values[ 1 ] );
+                if ( ok ) {
+                    cmd.values[ 0 ] = Number( cmd.values[ 0 ] );
+                    cmd.values[ 1 ] = Number( cmd.values[ 1 ] );
+                }
+                return ok;
+            }
+
+            case CmdCmp.TWO_NUMBERS_SAME_OPTION: {
+                let ok = 2 == valuesCount && isNumber( cmd.values[ 0 ] ) &&
+                    isNumber( cmd.values[ 1 ] ) && includeOptions( cfg, cmd );
                 if ( ok ) {
                     cmd.values[ 0 ] = Number( cmd.values[ 0 ] );
                     cmd.values[ 1 ] = Number( cmd.values[ 1 ] );
