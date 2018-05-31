@@ -226,14 +226,24 @@ describe('CommandMapperTest', () => {
     });
     describe('move', () => {
         describe('moveCursorTo', () => {
-            it('target, options', () => {
+            it('options, target', () => {
                 let cmd = {
                     action: 'move',
-                    targets: ['foo'],
-                    options: ['cursor']
+                    options: ['cursor'],
+                    targets: ['#foo']
                 };
                 const r = cm.map(cmd);
-                expect(r).toContainEqual('I.moveCursorTo("foo");' + comment);
+                expect(r).toContainEqual('I.moveCursorTo("#foo");' + comment);
+            });
+            it('options, target, two numbers', () => {
+                let cmd = {
+                    action: 'move',
+                    options: ['cursor'],
+                    targets: ['#foo'],
+                    values: ['100', '200']
+                };
+                const r = cm.map(cmd);
+                expect(r).toContainEqual('I.moveCursorTo("#foo", 100, 200);' + comment);
             });
         });
     });

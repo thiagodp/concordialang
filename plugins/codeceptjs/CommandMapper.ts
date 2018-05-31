@@ -25,6 +25,7 @@ export enum CmdCmp {
     ONE_TARGET,
     ONE_TARGET_ONE_VALUE,
     ONE_TARGET_ONE_NUMBER,
+    ONE_TARGET_TWO_NUMBERS_SAME_OPTION,
     ONE_TARGET_SAME_TARGET_TYPE,
     ONE_TARGET_SAME_TARGET_TYPE_SAME_OPTION_SAME_MODIFIER,
     ONE_TARGET_ONE_VALUE_SAME_TARGET_TYPE_SAME_MODIFIER,
@@ -259,6 +260,17 @@ export class CommandMapper {
                     isNumber( cmd.values[ 0 ] );
                 if ( ok ) {
                     cmd.values[ 0 ] = Number( cmd.values[ 0 ] );
+                }
+                return ok;
+            }
+
+            case CmdCmp.ONE_TARGET_TWO_NUMBERS_SAME_OPTION: {
+                const ok = 1 === targetsCount && 2 === valuesCount &&
+                    isNumber( cmd.values[ 0 ] ) && isNumber( cmd.values[ 1 ] ) &&
+                    includeOptions( cfg, cmd );
+                if ( ok ) {
+                    cmd.values[ 0 ] = Number( cmd.values[ 0 ] );
+                    cmd.values[ 1 ] = Number( cmd.values[ 1 ] );
                 }
                 return ok;
             }

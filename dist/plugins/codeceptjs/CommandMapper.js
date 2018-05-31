@@ -24,16 +24,17 @@ var CmdCmp;
     CmdCmp[CmdCmp["ONE_TARGET"] = 13] = "ONE_TARGET";
     CmdCmp[CmdCmp["ONE_TARGET_ONE_VALUE"] = 14] = "ONE_TARGET_ONE_VALUE";
     CmdCmp[CmdCmp["ONE_TARGET_ONE_NUMBER"] = 15] = "ONE_TARGET_ONE_NUMBER";
-    CmdCmp[CmdCmp["ONE_TARGET_SAME_TARGET_TYPE"] = 16] = "ONE_TARGET_SAME_TARGET_TYPE";
-    CmdCmp[CmdCmp["ONE_TARGET_SAME_TARGET_TYPE_SAME_OPTION_SAME_MODIFIER"] = 17] = "ONE_TARGET_SAME_TARGET_TYPE_SAME_OPTION_SAME_MODIFIER";
-    CmdCmp[CmdCmp["ONE_TARGET_ONE_VALUE_SAME_TARGET_TYPE_SAME_MODIFIER"] = 18] = "ONE_TARGET_ONE_VALUE_SAME_TARGET_TYPE_SAME_MODIFIER";
-    CmdCmp[CmdCmp["ONE_TARGET_SAME_OPTION"] = 19] = "ONE_TARGET_SAME_OPTION";
-    CmdCmp[CmdCmp["ONE_TARGET_SAME_MODIFIER"] = 20] = "ONE_TARGET_SAME_MODIFIER";
-    CmdCmp[CmdCmp["SAME_TARGET_TYPE"] = 21] = "SAME_TARGET_TYPE";
-    CmdCmp[CmdCmp["SAME_OPTION"] = 22] = "SAME_OPTION";
-    CmdCmp[CmdCmp["TWO_TARGETS"] = 23] = "TWO_TARGETS";
-    CmdCmp[CmdCmp["TWO_VALUES_SAME_OPTION"] = 24] = "TWO_VALUES_SAME_OPTION";
-    CmdCmp[CmdCmp["TWO_NUMBERS"] = 25] = "TWO_NUMBERS";
+    CmdCmp[CmdCmp["ONE_TARGET_TWO_NUMBERS_SAME_OPTION"] = 16] = "ONE_TARGET_TWO_NUMBERS_SAME_OPTION";
+    CmdCmp[CmdCmp["ONE_TARGET_SAME_TARGET_TYPE"] = 17] = "ONE_TARGET_SAME_TARGET_TYPE";
+    CmdCmp[CmdCmp["ONE_TARGET_SAME_TARGET_TYPE_SAME_OPTION_SAME_MODIFIER"] = 18] = "ONE_TARGET_SAME_TARGET_TYPE_SAME_OPTION_SAME_MODIFIER";
+    CmdCmp[CmdCmp["ONE_TARGET_ONE_VALUE_SAME_TARGET_TYPE_SAME_MODIFIER"] = 19] = "ONE_TARGET_ONE_VALUE_SAME_TARGET_TYPE_SAME_MODIFIER";
+    CmdCmp[CmdCmp["ONE_TARGET_SAME_OPTION"] = 20] = "ONE_TARGET_SAME_OPTION";
+    CmdCmp[CmdCmp["ONE_TARGET_SAME_MODIFIER"] = 21] = "ONE_TARGET_SAME_MODIFIER";
+    CmdCmp[CmdCmp["SAME_TARGET_TYPE"] = 22] = "SAME_TARGET_TYPE";
+    CmdCmp[CmdCmp["SAME_OPTION"] = 23] = "SAME_OPTION";
+    CmdCmp[CmdCmp["TWO_TARGETS"] = 24] = "TWO_TARGETS";
+    CmdCmp[CmdCmp["TWO_VALUES_SAME_OPTION"] = 25] = "TWO_VALUES_SAME_OPTION";
+    CmdCmp[CmdCmp["TWO_NUMBERS"] = 26] = "TWO_NUMBERS";
 })(CmdCmp = exports.CmdCmp || (exports.CmdCmp = {}));
 /**
  * Command mapper
@@ -211,6 +212,16 @@ class CommandMapper {
                     isNumber(cmd.values[0]);
                 if (ok) {
                     cmd.values[0] = Number(cmd.values[0]);
+                }
+                return ok;
+            }
+            case CmdCmp.ONE_TARGET_TWO_NUMBERS_SAME_OPTION: {
+                const ok = 1 === targetsCount && 2 === valuesCount &&
+                    isNumber(cmd.values[0]) && isNumber(cmd.values[1]) &&
+                    includeOptions(cfg, cmd);
+                if (ok) {
+                    cmd.values[0] = Number(cmd.values[0]);
+                    cmd.values[1] = Number(cmd.values[1]);
                 }
                 return ok;
             }

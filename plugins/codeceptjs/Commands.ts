@@ -39,6 +39,7 @@ export const CODECEPTJS_COMMANDS: CmdCfg[] = [
     // install (Appium only)
     { action: 'install', comp: CmdCmp.ONE_VALUE_SAME_OPTION, options: [ 'app' ], template: 'I.installApp({{{value}}});' },
     // move + cursor
+    { action: 'move', comp: CmdCmp.ONE_TARGET_TWO_NUMBERS_SAME_OPTION, options: [ 'cursor' ], valuesAsNonArray: true, template: 'I.moveCursorTo({{{target}}}, {{{value}}});' },
     { action: 'move', comp: CmdCmp.ONE_TARGET_SAME_OPTION, options: [ 'cursor' ], template: 'I.moveCursorTo({{{target}}});' },
     // open + notifications (Appium only)
     { action: 'open', comp: CmdCmp.SAME_OPTION, options: [ 'notifications' ], template: 'I.openNotifications();' },

@@ -40,6 +40,7 @@ exports.CODECEPTJS_COMMANDS = [
     // install (Appium only)
     { action: 'install', comp: CommandMapper_1.CmdCmp.ONE_VALUE_SAME_OPTION, options: ['app'], template: 'I.installApp({{{value}}});' },
     // move + cursor
+    { action: 'move', comp: CommandMapper_1.CmdCmp.ONE_TARGET_TWO_NUMBERS_SAME_OPTION, options: ['cursor'], valuesAsNonArray: true, template: 'I.moveCursorTo({{{target}}}, {{{value}}});' },
     { action: 'move', comp: CommandMapper_1.CmdCmp.ONE_TARGET_SAME_OPTION, options: ['cursor'], template: 'I.moveCursorTo({{{target}}});' },
     // open + notifications (Appium only)
     { action: 'open', comp: CommandMapper_1.CmdCmp.SAME_OPTION, options: ['notifications'], template: 'I.openNotifications();' },
