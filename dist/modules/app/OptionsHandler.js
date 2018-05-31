@@ -61,7 +61,7 @@ class OptionsHandler {
         return __awaiter(this, void 0, void 0, function* () {
             const obj = this._options.export();
             if (!this._cfgFilePath) {
-                this._cfgFilePath = path_1.join(this.appPath, this._options.defaults.CFG_FILE_NAME);
+                this._cfgFilePath = path_1.join(this.processPath, this._options.defaults.CFG_FILE_NAME);
             }
             const write = util_1.promisify(this._fs.writeFile);
             yield write(this._cfgFilePath, JSON.stringify(obj, undefined, "\t"));

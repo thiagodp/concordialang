@@ -66,7 +66,7 @@ export class OptionsHandler {
         const obj = this._options.export();
 
         if ( ! this._cfgFilePath ) {
-            this._cfgFilePath = join( this.appPath, this._options.defaults.CFG_FILE_NAME );
+            this._cfgFilePath = join( this.processPath, this._options.defaults.CFG_FILE_NAME );
         }
 
         const write = promisify( this._fs.writeFile );
