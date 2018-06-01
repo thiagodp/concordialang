@@ -26,6 +26,7 @@ exports.DEFAULT_UI_ACTION_SYNTAX_RULE = {
     number: { min: 1, max: 999 },
     constant: { min: 1, max: 999 },
     state: { min: 1, max: 1 },
+    command: { min: 1, max: 1 },
     // Other action or actions that must be used together.
     mustBeUsedWith: []
 };
@@ -68,6 +69,7 @@ exports.UI_ACTION_SYNTAX_RULES = [
     { name: "resize", minTargets: 2, maxTargets: 2, targets: ["value", "number", "constant"] },
     { name: "rightClick", minTargets: 1, maxTargets: 999, targets: ["ui_element", "ui_literal", "value", "number", "constant"] },
     { name: "rotate", minTargets: 2, maxTargets: 2, targets: ["value", "number", "constant"] },
+    { name: "run", minTargets: 1, maxTargets: 1, targets: ["value", "constant", "command"] },
     { name: "saveScreenshot", minTargets: 1, maxTargets: 1, targets: ["value", "constant"] },
     { name: "see", maxTargets: 2,
         targets: ["ui_element", "ui_literal", "value", "number", "constant"],
