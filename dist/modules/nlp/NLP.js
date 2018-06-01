@@ -38,6 +38,9 @@ class NLP {
         // Add an entity named "state" and its recognizer
         this._additionalEntities.push(Entities_1.Entities.STATE);
         this._additionalRecognizers.push(erMaker.makeState(Entities_1.Entities.STATE));
+        // Add an entity named "command" and its recognizer
+        this._additionalEntities.push(Entities_1.Entities.COMMAND);
+        this._additionalRecognizers.push(erMaker.makeCommand(Entities_1.Entities.COMMAND));
     }
     /**
      * Train the recognizer.
@@ -305,6 +308,25 @@ class EntityRecognizerMaker {
             const value = match[0].toString();
             return value.substring(1, value.length - 1); // exclude '~' and '~'
         }, 10 // priority
+        );
+        return valueRec;
+    }
+    /**
+     * Creates a recognizer for values between single quotes
+     *
+     * Example: I run the command 'DELETE FROM users'
+     * --> the value 'DELETE FROM users' (without single quotes) is recognized.
+     *
+     * @param entityName Entity name.
+     * @returns Bravey.EntityRecognizer
+     */
+    makeCommand(entityName) {
+        let valueRec = new Bravey.RegexEntityRecognizer(entityName, 10);
+        const regex = /'(?:[^'\\]|\\.)*'/g;
+        valueRec.addMatch(regex, function (match) {
+            const content = match.toString();
+            return content.substring(1, content.length - 1).trim();
+        }, 100 // priority
         );
         return valueRec;
     }

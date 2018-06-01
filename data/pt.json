@@ -393,6 +393,8 @@
 
                 "{exec_action} {state}",
 
+                "{ui_action} {ui_action_option} {command}",
+
                 "eu não vejo a url com {value}"
             ]
         },

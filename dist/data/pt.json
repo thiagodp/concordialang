@@ -179,6 +179,7 @@
             "ui_action_option": {
                 "app": [ "aplicação", "aplicativo", "app" ],
                 "checked": [ "marcado", "marcada", "ticado", "ticada", "checked" ],
+                "command": [ "comando" ],
                 "cookie": [ "cookie" ],
                 "currentActivity": [ "atividade atual" ],
                 "currentPage": [ "página atual", "site atual", "página" ],
@@ -205,6 +206,7 @@
                 "orientation": [ "orientação" ],
                 "portrait": [ "retrato", "portrait" ],
                 "right": [ "para a direita", "a direita", "right" ],
+                "script": [ "script" ],
                 "second": [ "segundo" ],
                 "slowly": [ "lentamente", "vagarosamente", "devagar" ],
                 "title": [ "título", "title" ],
@@ -390,6 +392,8 @@
                 "{ui_action_modifier} {ui_action} {constant} {ui_action_option}",
 
                 "{exec_action} {state}",
+
+                "{ui_action} {ui_action_option} {command}",
 
                 "eu não vejo a url com {value}"
             ]
