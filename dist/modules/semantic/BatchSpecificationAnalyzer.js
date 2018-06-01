@@ -16,6 +16,8 @@ const SpecificationAnalyzer_1 = require("./SpecificationAnalyzer");
 const TestCaseSSA_1 = require("./TestCaseSSA");
 const ConstantSSA_1 = require("./ConstantSSA");
 const UIElementSSA_1 = require("./UIElementSSA");
+const BeforeAllSSA_1 = require("./BeforeAllSSA");
+const AfterAllSSA_1 = require("./AfterAllSSA");
 /**
  * Executes many semantic analyzers to a specification in batch.
  *
@@ -32,7 +34,9 @@ class BatchSpecificationAnalyzer extends SpecificationAnalyzer_1.SpecificationAn
             new ConstantSSA_1.ConstantSSA(),
             new DatabaseSSA_1.DatabaseSSA(),
             new TableSSA_1.TableSSA(),
-            new TestCaseSSA_1.TestCaseSSA() // TODO: change the SSA to receive a dictionary loader, according to the analyzed doc
+            new TestCaseSSA_1.TestCaseSSA(),
+            new BeforeAllSSA_1.BeforeAllSSA(),
+            new AfterAllSSA_1.AfterAllSSA()
         ];
     }
     analyze(graph, spec, errors) {

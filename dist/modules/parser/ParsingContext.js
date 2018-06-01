@@ -39,12 +39,6 @@ class ParsingContext {
         this.currentRegexBlock = null;
         this.currentTable = null;
         this.currentDatabase = null;
-        this.currentBeforeAll = null;
-        this.currentAfterAll = null;
-        this.currentBeforeFeature = null;
-        this.currentAfterFeature = null;
-        this.currentBeforeEachScenario = null;
-        this.currentAfterEachScenario = null;
         if (doc) {
             this.doc = doc;
         }

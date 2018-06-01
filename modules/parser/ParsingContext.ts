@@ -53,12 +53,6 @@ export class ParsingContext {
     currentRegexBlock: RegexBlock = null;
     currentTable: Table = null;
     currentDatabase: Database = null;
-    currentBeforeAll: BeforeAll = null;
-    currentAfterAll: AfterAll = null;
-    currentBeforeFeature: BeforeFeature = null;
-    currentAfterFeature: AfterFeature = null;
-    currentBeforeEachScenario: BeforeEachScenario = null;
-    currentAfterEachScenario: AfterEachScenario = null;
 
     constructor( doc?: Document ) {
         if ( doc ) {

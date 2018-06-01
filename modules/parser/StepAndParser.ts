@@ -50,12 +50,12 @@ export class StepAndParser implements NodeParser< StepAnd > {
             else if ( context.inScenarioVariantBackground ) owner = context.currentScenarioVariantBackground;
             else if ( context.inVariant ) owner = context.currentVariant;
             else if ( context.inTestCase ) owner = context.currentTestCase;
-            else if ( context.inBeforeAll ) owner = context.currentBeforeAll;
-            else if ( context.inAfterAll ) owner = context.currentAfterAll;
-            else if ( context.inBeforeFeature ) owner = context.currentBeforeFeature;
-            else if ( context.inAfterFeature ) owner = context.currentAfterFeature;
-            else if ( context.inBeforeEachScenario ) owner = context.currentBeforeEachScenario;
-            else if ( context.inAfterEachScenario ) owner = context.currentAfterEachScenario;
+            else if ( context.inBeforeAll ) owner = context.doc.beforeAll;
+            else if ( context.inAfterAll ) owner = context.doc.afterAll;
+            else if ( context.inBeforeFeature ) owner = context.doc.beforeFeature;
+            else if ( context.inAfterFeature ) owner = context.doc.afterFeature;
+            else if ( context.inBeforeEachScenario ) owner = context.doc.beforeEachScenario;
+            else if ( context.inAfterEachScenario ) owner = context.doc.afterEachScenario;
             else {
                 let e = new SyntaticException(
                     'The "' + node.nodeType + '" clause must be declared after a Background, Scenario, Variant Background, Variant, Test Case, Before All, After All, Before Feature, After Feature, Before Each Scenario, AfterEachScenario or UI Element Property.',

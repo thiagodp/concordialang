@@ -46,17 +46,17 @@ class StepGivenParser {
         else if (context.inTestCase)
             owner = context.currentTestCase;
         else if (context.inBeforeAll)
-            owner = context.currentBeforeAll;
+            owner = context.doc.beforeAll;
         else if (context.inAfterAll)
-            owner = context.currentAfterAll;
+            owner = context.doc.afterAll;
         else if (context.inBeforeFeature)
-            owner = context.currentBeforeFeature;
+            owner = context.doc.beforeFeature;
         else if (context.inAfterFeature)
-            owner = context.currentAfterFeature;
+            owner = context.doc.afterFeature;
         else if (context.inBeforeEachScenario)
-            owner = context.currentBeforeEachScenario;
+            owner = context.doc.beforeEachScenario;
         else if (context.inAfterEachScenario)
-            owner = context.currentAfterEachScenario;
+            owner = context.doc.afterEachScenario;
         else {
             const lastBlock = allowedPriorNodes.indexOf(NodeTypes_1.NodeTypes.STEP_GIVEN);
             const blocks = allowedPriorNodes.filter((v, index) => index < lastBlock);
