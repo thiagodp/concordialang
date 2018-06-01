@@ -13,17 +13,17 @@ Dado que estou em "http://concordialang.org"
 ## `append`
 
 ```gherkin
-Quando eu adiciono "Bar" em {Foo}
+Quando eu adiciono "Conteúdo" em {Foo}
   e adiciono 100 em {Bar}
-  e adiciono "Bar" em <#zoo>
+  e adiciono "Conteúdo" em <#zoo>
   e adiciono 100 em <#xoo>
 ```
 
 ## `attachFile`
 
 ```gherkin
-Quando eu anexo o arquivo "/path/to/file" em {Foo}
-  e anexo "/path/to/file" em <#bar>
+Quando eu anexo o arquivo "/caminho/ate/arquivo" em {Foo}
+  e anexo "/caminho/ate/arquivo" em <#bar>
 ```
 
 ## `check`
@@ -96,7 +96,7 @@ Quando eu preecho {Foo}
 
 A próxima sentença é somente para *mobile*:
 ```gherkin
-Quando I oculto o teclado
+Quando eu oculto o teclado
 ```
 
 ## `install`
@@ -167,9 +167,8 @@ Então eu não vejo "Foo Bar"
 ```
 
 ```gherkin
-Então eu não vejo {Foo} is checked
+Então eu não vejo que {Foo} está marcado
 ```
-
 
 A próxima sentença é somente para *mobile*:
 ```gherkin
@@ -317,7 +316,7 @@ Quando eu troco para web
 A próxima sentença é somente para *mobile*:
 ```gherkin
 Quando eu toco em <~ok>
-  e eu toco em {Confirm}
+  e eu toco em {Confirmar}
 ```
 
 ## `uncheck`
