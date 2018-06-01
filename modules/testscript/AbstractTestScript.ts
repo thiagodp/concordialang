@@ -7,12 +7,19 @@ import { Location } from '../ast/Location';
  */
 export class AbstractTestScript {
 
-    schemaVersion: string = '1.0.0';
+    schemaVersion: string = '1.1.0';
     sourceFile: string;
 
     feature: NamedATSElement;
     scenarios: NamedATSElement[] = [];
     testcases: ATSTestCase[] = [];
+
+    beforeAll?: ATSEvent;
+    afterAll?: ATSEvent;
+    beforeFeature?: ATSEvent;
+    afterFeature?: ATSEvent;
+    beforeEachScenario?: ATSEvent;
+    afterEachScenario?: ATSEvent;
 }
 
 /**
@@ -77,4 +84,39 @@ export class ATSTarget {
     ios?: string;
     windows?: string;
     linux?: string;
+}
+
+
+/**
+ * ATS event
+ */
+export class ATSEvent {
+    commands: ATSCommand[] = [];
+}
+
+/**
+ * ATS database command
+ *
+ * Examples:
+ * ```
+ * { action: "run", options: [ "script" ], values: [ "DELETE FROM foo" ], db: { ... } }
+ * ```
+ */
+export class ATSDBCommand extends ATSCommand {
+    db: AbstractDB; // reference to a database connection used by the command
+}
+
+/**
+ * Abstract database connection
+ *
+ * Attributes are compatible with a JDBC-like interface, such as that provided by database-js.
+ */
+export class AbstractDB {
+    driverName: string;
+    username?: string;
+    password?: string;
+    hostname?: string;
+    port?: string;
+    database: string;
+    parameters?: string;
 }
