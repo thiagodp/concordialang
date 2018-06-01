@@ -30,7 +30,7 @@ export class CompilerController {
         const langLoader: LanguageContentLoader =
             new JsonLanguageContentLoader( options.languageDir, {}, options.encoding );
 
-        let lexer: Lexer = ( new LexerBuilder( langLoader ) ).build( options );
+        let lexer: Lexer = ( new LexerBuilder( langLoader ) ).build( options, options.language );
         let parser: Parser = new Parser();
 
         let nlpTrainer: NLPTrainer = new NLPTrainer( langLoader );

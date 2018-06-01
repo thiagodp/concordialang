@@ -51,7 +51,7 @@ class NLPBasedSentenceRecognizer {
             this._uiPropertyRec.recognizeSentences(language, uiElement.items, errors, warnings);
             for (let item of uiElement.items || []) {
                 // Otherwise sentences of items
-                this._variantSentenceRec.recognizeSentences(language, item.otherwiseSentences, errors, warnings);
+                this._variantSentenceRec.recognizeSentences(language, item.otherwiseSentences, errors, warnings, 'Otherwise sentences');
             }
         }
         // Databases
