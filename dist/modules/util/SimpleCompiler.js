@@ -26,7 +26,11 @@ class SimpleCompiler {
         lines.forEach((val, index) => this.lexer.addNodeFromLine(val, index + 1));
         let doc = {};
         doc.fileInfo = fileInfo;
-        this.singleDocProcessor.analyzeNodes(doc, this.lexer, this.parser, this.nlpRec, this.language);
+        let language = this.language;
+        if (doc.language) {
+            language = doc.language.value;
+        }
+        this.singleDocProcessor.analyzeNodes(doc, this.lexer, this.parser, this.nlpRec, language);
         spec.docs.push(doc);
         return doc;
     }

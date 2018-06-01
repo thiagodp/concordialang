@@ -30,7 +30,7 @@ class CompilerController {
     compile(options, cli) {
         return __awaiter(this, void 0, void 0, function* () {
             const langLoader = new LanguageContentLoader_1.JsonLanguageContentLoader(options.languageDir, {}, options.encoding);
-            let lexer = (new LexerBuilder_1.LexerBuilder(langLoader)).build(options);
+            let lexer = (new LexerBuilder_1.LexerBuilder(langLoader)).build(options, options.language);
             let parser = new Parser_1.Parser();
             let nlpTrainer = new NLPTrainer_1.NLPTrainer(langLoader);
             let nlpBasedSentenceRecognizer = new NLPBasedSentenceRecognizer_1.NLPBasedSentenceRecognizer(nlpTrainer);
