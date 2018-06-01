@@ -79,7 +79,7 @@ export class NLPBasedSentenceRecognizer {
             for ( let item of uiElement.items || [] ) {
                 // Otherwise sentences of items
                 this._variantSentenceRec.recognizeSentences(
-                    language, item.otherwiseSentences, errors, warnings );
+                    language, item.otherwiseSentences, errors, warnings, 'Otherwise sentences' );
             }
         }
 
