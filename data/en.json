@@ -133,6 +133,7 @@
             "ui_action_option": {
                 "app": [ "application", "app" ],
                 "checked": [ "checked" ],
+                "command": [ "command" ],
                 "cookie": [ "cookie" ],
                 "currentActivity": [ "current activity" ],
                 "currentPage": [ "current page", "page" ],
@@ -159,6 +160,7 @@
                 "orientation": [ "orientation" ],
                 "portrait": [ "portrait" ],
                 "right": [ "right" ],
+                "script": [ "script" ],
                 "second": [ "second", "seconds" ],
                 "slowly": [ "slowly", "leisurely" ],
                 "title": [ "title" ],
