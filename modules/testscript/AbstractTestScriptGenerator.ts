@@ -6,7 +6,6 @@ import { Spec } from "../ast/Spec";
 import { TagUtil } from "../util/TagUtil";
 import { ReservedTags } from "../req/ReservedTags";
 import { Location } from "../ast/Location";
-import { NLPUtil } from "../nlp/NLPResult";
 import { Entities } from "../nlp/Entities";
 
 /**
@@ -71,7 +70,6 @@ export class AbstractTestScriptGenerator {
         }
 
         // test cases
-        const nlpUtil = new NLPUtil();
         for ( let tc of doc.testCases ) {
 
             let absTC = new ATSTestCase( tc.location, tc.name );
@@ -99,6 +97,15 @@ export class AbstractTestScriptGenerator {
 
             ats.testcases.push( absTC );
         }
+
+        // before all
+        // after all
+
+        // before feature
+        // after feature
+
+        // before each scenario
+        // after each scenario
 
         return ats;
     }
