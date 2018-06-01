@@ -409,4 +409,205 @@ describe( 'ParserTest', () => {
         expect( featureUIE.items[ 0 ].nodeType ).toBe( NodeTypes.UI_PROPERTY );
     } );
 
+
+    describe( 'Test Events', () => {
+
+        describe( 'detects', () => {
+
+            it( 'Before All with sentences', () => {
+
+                [
+                    '#language:en',
+                    '',
+                    'Before All:',
+                    `  When I run the command 'dir'`
+                ].forEach( ( val, index ) => lexer.addNodeFromLine( val, index + 1 ) );
+
+                let doc: Document = {};
+                parser.analyze( lexer.nodes(), doc );
+
+                expect( parser.errors() ).toEqual( [] );
+
+                expect( doc.beforeAll ).toBeDefined();
+                expect( doc.beforeAll.sentences ).toHaveLength( 1 );
+            } );
+
+            it( 'After All with sentences', () => {
+
+                [
+                    '#language:en',
+                    '',
+                    'After All:',
+                    `  When I run the command 'dir'`
+                ].forEach( ( val, index ) => lexer.addNodeFromLine( val, index + 1 ) );
+
+                let doc: Document = {};
+                parser.analyze( lexer.nodes(), doc );
+
+                expect( parser.errors() ).toEqual( [] );
+
+                expect( doc.afterAll ).toBeDefined();
+                expect( doc.afterAll.sentences ).toHaveLength( 1 );
+            } );
+
+
+            it( 'Before Feature with sentences', () => {
+
+                [
+                    '#language:en',
+                    '',
+                    'Feature: Foo',
+                    '',
+                    'Before Feature:',
+                    `  When I run the command 'dir'`
+                ].forEach( ( val, index ) => lexer.addNodeFromLine( val, index + 1 ) );
+
+                let doc: Document = {};
+                parser.analyze( lexer.nodes(), doc );
+
+                expect( parser.errors() ).toEqual( [] );
+
+                expect( doc.beforeFeature ).toBeDefined();
+                expect( doc.beforeFeature.sentences ).toHaveLength( 1 );
+            } );
+
+
+            it( 'After Feature with sentences', () => {
+
+                [
+                    '#language:en',
+                    '',
+                    'Feature: Foo',
+                    '',
+                    'After Feature:',
+                    `  When I run the command 'dir'`
+                ].forEach( ( val, index ) => lexer.addNodeFromLine( val, index + 1 ) );
+
+                let doc: Document = {};
+                parser.analyze( lexer.nodes(), doc );
+
+                expect( parser.errors() ).toEqual( [] );
+
+                expect( doc.afterFeature ).toBeDefined();
+                expect( doc.afterFeature.sentences ).toHaveLength( 1 );
+            } );
+
+
+            it( 'Before Each Scenario with sentences', () => {
+
+                [
+                    '#language:en',
+                    '',
+                    'Feature: Foo',
+                    '',
+                    'Before Each Scenario:',
+                    `  When I run the command 'dir'`
+                ].forEach( ( val, index ) => lexer.addNodeFromLine( val, index + 1 ) );
+
+                let doc: Document = {};
+                parser.analyze( lexer.nodes(), doc );
+
+                expect( parser.errors() ).toEqual( [] );
+
+                expect( doc.beforeEachScenario ).toBeDefined();
+                expect( doc.beforeEachScenario.sentences ).toHaveLength( 1 );
+            } );
+
+
+            it( 'After Each Scenario with sentences', () => {
+
+                [
+                    '#language:en',
+                    '',
+                    'Feature: Foo',
+                    '',
+                    'After Each Scenario:',
+                    `  When I run the command 'dir'`
+                ].forEach( ( val, index ) => lexer.addNodeFromLine( val, index + 1 ) );
+
+                let doc: Document = {};
+                parser.analyze( lexer.nodes(), doc );
+
+                expect( parser.errors() ).toEqual( [] );
+
+                expect( doc.afterEachScenario ).toBeDefined();
+                expect( doc.afterEachScenario.sentences ).toHaveLength( 1 );
+            } );
+
+        } );
+
+
+        describe( 'gives error when', () => {
+
+            it( 'Before Feature without Feature', () => {
+
+                [
+                    '#language:en',
+                    '',
+                    'Before Feature:',
+                    `  When I run the command 'dir'`
+                ].forEach( ( val, index ) => lexer.addNodeFromLine( val, index + 1 ) );
+
+                let doc: Document = {};
+                parser.analyze( lexer.nodes(), doc );
+
+                expect( parser.errors().length ).toBeGreaterThan( 0 );
+                expect( parser.errors().map( e => e.message ).join( '' ) ).toMatch( 'Before Feature' );
+            } );
+
+
+            it( 'After Feature without Feature', () => {
+
+                [
+                    '#language:en',
+                    '',
+                    'After Feature:',
+                    `  When I run the command 'dir'`
+                ].forEach( ( val, index ) => lexer.addNodeFromLine( val, index + 1 ) );
+
+                let doc: Document = {};
+                parser.analyze( lexer.nodes(), doc );
+
+                expect( parser.errors().length ).toBeGreaterThan( 0 );
+                expect( parser.errors().map( e => e.message ).join( '' ) ).toMatch( 'After Feature' );
+            } );
+
+
+            it( 'Before Each Scenario without Feature', () => {
+
+                [
+                    '#language:en',
+                    '',
+                    'Before Each Scenario:',
+                    `  When I run the command 'dir'`
+                ].forEach( ( val, index ) => lexer.addNodeFromLine( val, index + 1 ) );
+
+                let doc: Document = {};
+                parser.analyze( lexer.nodes(), doc );
+
+                expect( parser.errors().length ).toBeGreaterThan( 0 );
+                expect( parser.errors().map( e => e.message ).join( '' ) ).toMatch( 'Before Each Scenario' );
+            } );
+
+
+            it( 'After Each Scenario without Feature', () => {
+
+                [
+                    '#language:en',
+                    '',
+                    'After Each Scenario:',
+                    `  When I run the command 'dir'`
+                ].forEach( ( val, index ) => lexer.addNodeFromLine( val, index + 1 ) );
+
+                let doc: Document = {};
+                parser.analyze( lexer.nodes(), doc );
+
+                expect( parser.errors().length ).toBeGreaterThan( 0 );
+                expect( parser.errors().map( e => e.message ).join( '' ) ).toMatch( 'After Each Scenario' );
+            } );
+
+        } );
+
+    } );
+
 } );
