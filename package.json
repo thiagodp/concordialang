@@ -65,7 +65,7 @@
   },
   "scripts": {
     "build": "node copy.js && tsc",
-    "test": "node copy.js && jest --all",
+    "test": "node copy.js && jest --runInBand",
     "start": "node bin/concordia.js",
     "postversion": "git push && git push --tags"
   },
