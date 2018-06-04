@@ -27,15 +27,16 @@ var CmdCmp;
     CmdCmp[CmdCmp["ONE_TARGET_TWO_NUMBERS_SAME_OPTION"] = 16] = "ONE_TARGET_TWO_NUMBERS_SAME_OPTION";
     CmdCmp[CmdCmp["ONE_TARGET_SAME_TARGET_TYPE"] = 17] = "ONE_TARGET_SAME_TARGET_TYPE";
     CmdCmp[CmdCmp["ONE_TARGET_SAME_TARGET_TYPE_SAME_OPTION_SAME_MODIFIER"] = 18] = "ONE_TARGET_SAME_TARGET_TYPE_SAME_OPTION_SAME_MODIFIER";
-    CmdCmp[CmdCmp["ONE_TARGET_ONE_VALUE_SAME_TARGET_TYPE_SAME_MODIFIER"] = 19] = "ONE_TARGET_ONE_VALUE_SAME_TARGET_TYPE_SAME_MODIFIER";
-    CmdCmp[CmdCmp["ONE_TARGET_SAME_OPTION"] = 20] = "ONE_TARGET_SAME_OPTION";
-    CmdCmp[CmdCmp["ONE_TARGET_SAME_MODIFIER"] = 21] = "ONE_TARGET_SAME_MODIFIER";
-    CmdCmp[CmdCmp["SAME_TARGET_TYPE"] = 22] = "SAME_TARGET_TYPE";
-    CmdCmp[CmdCmp["SAME_OPTION"] = 23] = "SAME_OPTION";
-    CmdCmp[CmdCmp["TWO_TARGETS"] = 24] = "TWO_TARGETS";
-    CmdCmp[CmdCmp["TWO_VALUES_SAME_OPTION"] = 25] = "TWO_VALUES_SAME_OPTION";
-    CmdCmp[CmdCmp["TWO_NUMBERS"] = 26] = "TWO_NUMBERS";
-    CmdCmp[CmdCmp["TWO_NUMBERS_SAME_OPTION"] = 27] = "TWO_NUMBERS_SAME_OPTION";
+    CmdCmp[CmdCmp["ONE_TARGET_ONE_VALUE_ONE_OPTION_SAME_MODIFIER"] = 19] = "ONE_TARGET_ONE_VALUE_ONE_OPTION_SAME_MODIFIER";
+    CmdCmp[CmdCmp["ONE_TARGET_ONE_VALUE_SAME_TARGET_TYPE_SAME_MODIFIER"] = 20] = "ONE_TARGET_ONE_VALUE_SAME_TARGET_TYPE_SAME_MODIFIER";
+    CmdCmp[CmdCmp["ONE_TARGET_SAME_OPTION"] = 21] = "ONE_TARGET_SAME_OPTION";
+    CmdCmp[CmdCmp["ONE_TARGET_SAME_MODIFIER"] = 22] = "ONE_TARGET_SAME_MODIFIER";
+    CmdCmp[CmdCmp["SAME_TARGET_TYPE"] = 23] = "SAME_TARGET_TYPE";
+    CmdCmp[CmdCmp["SAME_OPTION"] = 24] = "SAME_OPTION";
+    CmdCmp[CmdCmp["TWO_TARGETS"] = 25] = "TWO_TARGETS";
+    CmdCmp[CmdCmp["TWO_VALUES_SAME_OPTION"] = 26] = "TWO_VALUES_SAME_OPTION";
+    CmdCmp[CmdCmp["TWO_NUMBERS"] = 27] = "TWO_NUMBERS";
+    CmdCmp[CmdCmp["TWO_NUMBERS_SAME_OPTION"] = 28] = "TWO_NUMBERS_SAME_OPTION";
 })(CmdCmp = exports.CmdCmp || (exports.CmdCmp = {}));
 /**
  * Command mapper
@@ -231,6 +232,10 @@ class CommandMapper {
             }
             case CmdCmp.ONE_TARGET_SAME_TARGET_TYPE_SAME_OPTION_SAME_MODIFIER: {
                 return 1 === targetsCount && sameTargetTypes(cfg, cmd) &&
+                    includeOptions(cfg, cmd) && cfg.modifier === cmd.modifier;
+            }
+            case CmdCmp.ONE_TARGET_ONE_VALUE_ONE_OPTION_SAME_MODIFIER: {
+                return 1 === targetsCount && 1 === valuesCount &&
                     includeOptions(cfg, cmd) && cfg.modifier === cmd.modifier;
             }
             case CmdCmp.ONE_TARGET_ONE_VALUE_SAME_TARGET_TYPE_SAME_MODIFIER: {

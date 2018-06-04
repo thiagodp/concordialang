@@ -135,7 +135,7 @@
                 "show": [ "mostro", "apresento", "exibo" ],
                 "swipe": [ "deslizo" ],
                 "switch": [ "troco", "mudo para" ],
-                "tap": [ "toco" ],
+                "tap": [ "toco", "dou um toque em" ],
                 "uncheck": [ "desmarco" ],
                 "wait": [ "aguardo", "espero" ]
             },

@@ -28,6 +28,7 @@ export enum CmdCmp {
     ONE_TARGET_TWO_NUMBERS_SAME_OPTION,
     ONE_TARGET_SAME_TARGET_TYPE,
     ONE_TARGET_SAME_TARGET_TYPE_SAME_OPTION_SAME_MODIFIER,
+    ONE_TARGET_ONE_VALUE_ONE_OPTION_SAME_MODIFIER,
     ONE_TARGET_ONE_VALUE_SAME_TARGET_TYPE_SAME_MODIFIER,
     ONE_TARGET_SAME_OPTION,
     ONE_TARGET_SAME_MODIFIER,
@@ -282,6 +283,11 @@ export class CommandMapper {
 
             case CmdCmp.ONE_TARGET_SAME_TARGET_TYPE_SAME_OPTION_SAME_MODIFIER: {
                 return 1 === targetsCount && sameTargetTypes( cfg, cmd ) &&
+                    includeOptions( cfg, cmd ) && cfg.modifier === cmd.modifier;
+            }
+
+            case CmdCmp.ONE_TARGET_ONE_VALUE_ONE_OPTION_SAME_MODIFIER: {
+                return 1 === targetsCount && 1 === valuesCount &&
                     includeOptions( cfg, cmd ) && cfg.modifier === cmd.modifier;
             }
 
