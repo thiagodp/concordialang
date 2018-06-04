@@ -24,7 +24,18 @@ export class AbstractTestScriptGenerator {
         // console.log( 'DOC is', doc.fileInfo.path );
         // console.log( 'Test cases', doc.testCases );
 
-        if ( ! doc.testCases || doc.testCases.length < 1 ) {
+        const hasNoSentences = function hasSentences( target ) {
+            return ( ! target || ! target.sentences || target.sentences.length < 1 );
+        };
+
+        if ( hasNoSentences( doc.beforeAll ) &&
+            hasNoSentences( doc.afterAll ) &&
+            hasNoSentences( doc.beforeFeature ) &&
+            hasNoSentences( doc.afterFeature ) &&
+            hasNoSentences( doc.beforeEachScenario ) &&
+            hasNoSentences( doc.afterEachScenario ) &&
+            hasNoSentences( doc.testCases  )
+        ) {
             return null;
         }
 
@@ -69,8 +80,8 @@ export class AbstractTestScriptGenerator {
             }
         }
 
-        // test cases
-        for ( let tc of doc.testCases ) {
+        // testCases
+        for ( let tc of doc.testCases || [] ) {
 
             let absTC = new ATSTestCase( tc.location, tc.name );
 
@@ -98,14 +109,9 @@ export class AbstractTestScriptGenerator {
             ats.testcases.push( absTC );
         }
 
-        // before all
-        // after all
+        // beforeAll
 
-        // before feature
-        // after feature
 
-        // before each scenario
-        // after each scenario
 
         return ats;
     }

@@ -2,7 +2,6 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const TypeChecking_1 = require("../util/TypeChecking");
 const AbstractTestScript_1 = require("./AbstractTestScript");
-const NLPResult_1 = require("../nlp/NLPResult");
 /**
  * Generates Abstract Test Script
  */
@@ -16,7 +15,16 @@ class AbstractTestScriptGenerator {
     generateFromDocument(doc, spec) {
         // console.log( 'DOC is', doc.fileInfo.path );
         // console.log( 'Test cases', doc.testCases );
-        if (!doc.testCases || doc.testCases.length < 1) {
+        const hasNoSentences = function hasSentences(target) {
+            return (!target || !target.sentences || target.sentences.length < 1);
+        };
+        if (hasNoSentences(doc.beforeAll) &&
+            hasNoSentences(doc.afterAll) &&
+            hasNoSentences(doc.beforeFeature) &&
+            hasNoSentences(doc.afterFeature) &&
+            hasNoSentences(doc.beforeEachScenario) &&
+            hasNoSentences(doc.afterEachScenario) &&
+            hasNoSentences(doc.testCases)) {
             return null;
         }
         // Get from the document
@@ -48,9 +56,8 @@ class AbstractTestScriptGenerator {
                 scenarioNames.push(s.name);
             }
         }
-        // test cases
-        const nlpUtil = new NLPResult_1.NLPUtil();
-        for (let tc of doc.testCases) {
+        // testCases
+        for (let tc of doc.testCases || []) {
             let absTC = new AbstractTestScript_1.ATSTestCase(tc.location, tc.name);
             absTC.scenario = scenarioNames[(tc.declaredScenarioIndex || 1) - 1] || 'Unknown scenario';
             absTC.invalid = tc.shoudFail;
@@ -70,6 +77,7 @@ class AbstractTestScriptGenerator {
             // console.log( absTC );
             ats.testcases.push(absTC);
         }
+        // beforeAll
         return ats;
     }
 }
