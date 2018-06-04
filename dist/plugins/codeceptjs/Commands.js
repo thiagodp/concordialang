@@ -79,6 +79,14 @@ exports.CODECEPTJS_COMMANDS = [
     { action: 'see', comp: CommandMapper_1.CmdCmp.SAME_OPTION, options: ['orientation', 'landscape'], template: 'I.seeOrientationIs("LANDSCAPE");' },
     // see + orientation + portrait (Appium only)
     { action: 'see', comp: CommandMapper_1.CmdCmp.SAME_OPTION, options: ['orientation', 'portrait'], template: 'I.seeOrientationIs("PORTRAIT");' },
+    // see + value + inside + target
+    { action: 'see', comp: CommandMapper_1.CmdCmp.ONE_TARGET_ONE_VALUE_ONE_OPTION_SAME_MODIFIER, options: ['inside'], template: 'I.seeInField({{{target}}}, {{{value}}});' },
+    // see + value + not + inside + target
+    { action: 'see', comp: CommandMapper_1.CmdCmp.ONE_TARGET_ONE_VALUE_ONE_OPTION_SAME_MODIFIER, options: ['inside'], modifier: 'not', template: 'I.dontSeeInField({{{target}}}, {{{value}}});' },
+    // see + with
+    { action: 'see', comp: CommandMapper_1.CmdCmp.ONE_TARGET_ONE_VALUE_ONE_OPTION_SAME_MODIFIER, options: ['with'], template: 'I.seeInField({{{target}}}, {{{value}}});' },
+    // see + with + not
+    { action: 'see', comp: CommandMapper_1.CmdCmp.ONE_TARGET_ONE_VALUE_ONE_OPTION_SAME_MODIFIER, options: ['with'], modifier: 'not', template: 'I.dontSeeInField({{{target}}}, {{{value}}});' },
     // see + textbox
     { action: 'see', comp: CommandMapper_1.CmdCmp.ONE_TARGET_ONE_VALUE_SAME_TARGET_TYPE_SAME_MODIFIER, targetType: 'textbox', template: 'I.seeInField({{{target}}}, {{{value}}});' },
     // see + textbox + not

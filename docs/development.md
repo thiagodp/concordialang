@@ -24,7 +24,7 @@ $ npm install
 
 ### Install tools
 ```shell
-$ npm install -g typescript jest ts-jest
+$ npm install -g typescript@2.8.3 jest ts-jest
 ```
 
 ### Running
