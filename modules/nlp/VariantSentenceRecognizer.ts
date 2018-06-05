@@ -93,31 +93,39 @@ export class VariantSentenceRecognizer {
 
             let item: Step = node as Step;
 
-            // Action
+            // action
             item.action = action;
 
-            // Action modifier (optional)
+            // modifier (optional)
             const modifiers = r.entities.filter( e => e.entity === Entities.UI_ACTION_MODIFIER ).map( e => e.value );
             if ( modifiers.length > 0 ) {
                 item.actionModifier = modifiers[ 0 ];
             }
 
-            // Action option (optional)
+            // options (optional)
             const options = r.entities.filter( e => e.entity === Entities.UI_ACTION_OPTION ).map( e => e.value );
             if ( options.length > 0 ) {
                 item.actionOptions = options;
             }
 
-            // Targets - UI LITERALS (optional)
+            // targets - UI LITERALS (optional)
             item.targets = r.entities.filter( e => e.entity === Entities.UI_LITERAL ).map( e => e.value );
 
-            // Target Types
+            // target types
             item.targetTypes = r.entities.filter( e => e.entity === Entities.UI_ELEMENT_TYPE ).map( e => e.value );
 
-            // VALUES (optional)
+            // values (optional)
             item.values = r.entities
                 .filter( e => e.entity === Entities.VALUE || e.entity === Entities.NUMBER )
                 .map( e => e.value );
+
+            // commands as values (optional)
+            let commands: string[] = r.entities.filter( e => e.entity === Entities.COMMAND )
+                .map( e => e.value.toString() );
+            for ( let cmd of commands ) {
+                ( item.values as string[] ).push( cmd );
+            }
+
         };
 
 

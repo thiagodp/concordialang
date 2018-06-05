@@ -24,6 +24,38 @@ export class TestScriptGenerator {
         // THIS IS A GENERATED FILE - MODIFICATIONS CAN BE LOST !
 
         Feature("{{feature.name}}");
+        {{#beforeFeature}}
+
+        BeforeSuite((I) => { // Before Feature
+            {{#convertedCommands}}
+            {{{.}}}
+            {{/convertedCommands}}
+        });
+        {{/beforeFeature}}
+        {{#afterFeature}}
+
+        AfterSuite((I) => { // After Feature
+            {{#convertedCommands}}
+            {{{.}}}
+            {{/convertedCommands}}
+        });
+        {{/afterFeature}}
+        {{#beforeEachScenario}}
+
+        Before((I) => { // Before Each Scenario
+            {{#convertedCommands}}
+            {{{.}}}
+            {{/convertedCommands}}
+        });
+        {{/beforeEachScenario}}
+        {{#afterEachScenario}}
+
+        After((I) => { // After Each Scenario
+            {{#convertedCommands}}
+            {{{.}}}
+            {{/convertedCommands}}
+        });
+        {{/afterEachScenario}}
 
         {{#testcases}}
         Scenario("{{scenario}} | {{name}}", (I) => {
@@ -45,6 +77,18 @@ export class TestScriptGenerator {
             test.convertedCommands = [];
             for ( let cmd of test.commands || [] ) {
                 test.convertedCommands.push( this.mapper.map( cmd ) );
+            }
+        }
+
+        const events = [ 'beforeFeature', 'afterFeature', 'beforeEachScenario', 'afterEachScenario' ];
+        for ( let eventStr of events ) {
+            let event = obj[ eventStr ];
+            if ( ! event ) {
+                continue;
+            }
+            event.convertedCommands = [];
+            for ( let cmd of obj.beforeFeature.commands || [] ) {
+                event.convertedCommands.push( this.mapper.map( cmd ) );
             }
         }
 

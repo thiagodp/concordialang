@@ -7,7 +7,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
  */
 class AbstractTestScript {
     constructor() {
-        this.schemaVersion = '1.0.0';
+        this.schemaVersion = '1.1.0';
         this.scenarios = [];
         this.testcases = [];
     }
@@ -66,3 +66,26 @@ exports.ATSCommand = ATSCommand;
 class ATSTarget {
 }
 exports.ATSTarget = ATSTarget;
+/**
+ * ATS event
+ */
+class ATSEvent {
+    constructor() {
+        this.commands = [];
+    }
+}
+exports.ATSEvent = ATSEvent;
+/**
+ * ATS database command
+ *
+ * Examples:
+ * ```
+ * { action: "run", options: [ "script" ], values: [ "DELETE FROM foo" ], db: { ... } }
+ * ```
+ */
+class ATSDatabaseCommand extends ATSCommand {
+}
+exports.ATSDatabaseCommand = ATSDatabaseCommand;
+class ATSConsoleCommand extends ATSCommand {
+}
+exports.ATSConsoleCommand = ATSConsoleCommand;

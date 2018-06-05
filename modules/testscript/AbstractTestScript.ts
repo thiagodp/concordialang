@@ -1,4 +1,5 @@
 import { Location } from '../ast/Location';
+import { AbstractDatabase } from '../ast/AbstractDatabase';
 
 /**
  * Abstract test script (ATS).
@@ -102,21 +103,11 @@ export class ATSEvent {
  * { action: "run", options: [ "script" ], values: [ "DELETE FROM foo" ], db: { ... } }
  * ```
  */
-export class ATSDBCommand extends ATSCommand {
-    db: AbstractDB; // reference to a database connection used by the command
+export class ATSDatabaseCommand extends ATSCommand {
+    db: AbstractDatabase; // reference to a database connection used by the command
 }
 
-/**
- * Abstract database connection
- *
- * Attributes are compatible with a JDBC-like interface, such as that provided by database-js.
- */
-export class AbstractDB {
-    driverName: string;
-    username?: string;
-    password?: string;
-    hostname?: string;
-    port?: string;
-    database: string;
-    parameters?: string;
+
+export class ATSConsoleCommand extends ATSCommand {
+    console: true;
 }

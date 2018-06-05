@@ -62,6 +62,8 @@ export const CODECEPTJS_COMMANDS: CmdCfg[] = [
     { action: 'rightClick', comp: CmdCmp.ONE_VALUE, template: 'I.rightClick({{{value}}});' },
     // rotate (Appium only)
     { action: 'rotate', comp: CmdCmp.TWO_NUMBERS, valuesAsNonArray: true, template: 'I.rotate({{{value}}});' },
+    // run + script
+    { action: 'run', comp: CmdCmp.TWO_VALUES_SAME_OPTION, options: [ 'script' ], valuesAsNonArray: true, template: 'runSQL({{{value}}});' },
     // saveScreenshot
     { action: 'saveScreenshot', comp: CmdCmp.ONE_VALUE, template: 'I.saveScreenshot({{{value}}});' },
     // see + app + installed (Appium only)

@@ -63,6 +63,8 @@ exports.CODECEPTJS_COMMANDS = [
     { action: 'rightClick', comp: CommandMapper_1.CmdCmp.ONE_VALUE, template: 'I.rightClick({{{value}}});' },
     // rotate (Appium only)
     { action: 'rotate', comp: CommandMapper_1.CmdCmp.TWO_NUMBERS, valuesAsNonArray: true, template: 'I.rotate({{{value}}});' },
+    // run + script
+    { action: 'run', comp: CommandMapper_1.CmdCmp.TWO_VALUES_SAME_OPTION, options: ['script'], valuesAsNonArray: true, template: 'runSQL({{{value}}});' },
     // saveScreenshot
     { action: 'saveScreenshot', comp: CommandMapper_1.CmdCmp.ONE_VALUE, template: 'I.saveScreenshot({{{value}}});' },
     // see + app + installed (Appium only)

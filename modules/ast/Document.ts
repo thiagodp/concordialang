@@ -37,7 +37,6 @@ export interface Document {
 
     beforeAll?: BeforeAll; // global
     afterAll?: AfterAll; // global
-
     beforeFeature?: BeforeFeature; // local, Feature must be declared before it
     afterFeature?: AfterFeature; // local, Feature must be declared before it
     beforeEachScenario?: BeforeEachScenario; // local, Feature must be declared before it

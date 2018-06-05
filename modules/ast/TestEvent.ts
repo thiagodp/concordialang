@@ -18,6 +18,7 @@ export interface TestEvent extends Node {
  * Executed before all the tests. Should be declared once in all the specification.
  */
 export interface BeforeAll extends TestEvent {}
+
 /**
  * Executed after all the tests. Should be declared once in all the specification.
  */

@@ -1,12 +1,17 @@
 import { TestCase } from "../ast/TestCase";
 import { Document } from '../ast/Document';
 import { isDefined } from "../util/TypeChecking";
-import { AbstractTestScript, ATSElement, NamedATSElement, ATSTestCase, ATSCommand } from "./AbstractTestScript";
+import { AbstractTestScript, ATSElement, NamedATSElement, ATSTestCase, ATSCommand, ATSDatabaseCommand, ATSConsoleCommand, ATSEvent } from "./AbstractTestScript";
 import { Spec } from "../ast/Spec";
 import { TagUtil } from "../util/TagUtil";
 import { ReservedTags } from "../req/ReservedTags";
 import { Location } from "../ast/Location";
 import { Entities } from "../nlp/Entities";
+import { TestEvent } from "../ast/TestEvent";
+import { Actions } from "../util/Actions";
+import { Symbols } from "../req/Symbols";
+import { DatabaseToAbstractDatabase } from "../db/DatabaseToAbstractDatabase";
+import { AbstractDatabase } from "../ast/AbstractDatabase";
 
 /**
  * Generates Abstract Test Script
@@ -24,20 +29,20 @@ export class AbstractTestScriptGenerator {
         // console.log( 'DOC is', doc.fileInfo.path );
         // console.log( 'Test cases', doc.testCases );
 
+        if ( ! doc.testCases || doc.testCases.length < 1 ) {
+            return null;
+        }
+
         const hasNoSentences = function hasSentences( target ) {
             return ( ! target || ! target.sentences || target.sentences.length < 1 );
         };
 
-        if ( hasNoSentences( doc.beforeAll ) &&
-            hasNoSentences( doc.afterAll ) &&
-            hasNoSentences( doc.beforeFeature ) &&
-            hasNoSentences( doc.afterFeature ) &&
-            hasNoSentences( doc.beforeEachScenario ) &&
-            hasNoSentences( doc.afterEachScenario ) &&
-            hasNoSentences( doc.testCases  )
-        ) {
-            return null;
-        }
+        let beforeAll = doc.beforeAll;
+        let afterAll = doc.afterAll;
+        let beforeFeature = doc.beforeFeature;
+        let afterFeature = doc.afterFeature;
+        let beforeEachScenario = doc.beforeEachScenario;
+        let afterEachScenario = doc.afterEachScenario;
 
         // Get from the document
         let feature = ! doc.feature ? null : doc.feature;
@@ -49,7 +54,34 @@ export class AbstractTestScriptGenerator {
 
             // Not found -> get the first feature of a imported document
             if ( docsWithFeature.length > 0 ) {
-                feature = docsWithFeature[ 0 ].feature;
+                const firstDoc = docsWithFeature[ 0 ];
+
+                feature = firstDoc.feature;
+
+                if ( ! beforeAll && isDefined( firstDoc.beforeAll ) ) {
+                    beforeAll = firstDoc.beforeAll;
+                }
+
+                if ( ! afterAll && isDefined( firstDoc.afterAll ) ) {
+                    afterAll = firstDoc.afterAll;
+                }
+
+                if ( ! beforeFeature && isDefined( firstDoc.beforeFeature ) ) {
+                    beforeFeature = firstDoc.beforeFeature;
+                }
+
+                if ( ! afterFeature && isDefined( firstDoc.afterFeature ) ) {
+                    afterFeature = firstDoc.afterFeature;
+                }
+
+                if ( ! beforeEachScenario && isDefined( firstDoc.beforeEachScenario ) ) {
+                    beforeEachScenario = firstDoc.beforeEachScenario;
+                }
+
+                if ( ! afterEachScenario && isDefined( firstDoc.afterEachScenario ) ) {
+                    afterEachScenario = firstDoc.afterEachScenario;
+                }
+
             }
         }
 
@@ -89,18 +121,7 @@ export class AbstractTestScriptGenerator {
             absTC.invalid = tc.shoudFail;
 
             for ( let sentence of tc.sentences ) {
-
-                let cmd = new ATSCommand();
-                cmd.location = sentence.location;
-                cmd.action = sentence.action;
-                cmd.modifier = sentence.actionModifier;
-                cmd.options = sentence.actionOptions;
-                cmd.targets = sentence.targets;
-                cmd.targetTypes = sentence.targetTypes;
-                cmd.values = sentence.values;
-                cmd.invalid = sentence.isInvalidValue;
-                cmd.comment = sentence.comment;
-
+                let cmd = this.sentenceToCommand( sentence );
                 absTC.commands.push( cmd );
             }
 
@@ -109,11 +130,118 @@ export class AbstractTestScriptGenerator {
             ats.testcases.push( absTC );
         }
 
-        // beforeAll
+        // test events
+        let allTestEvents = {
+            beforeAll: beforeAll,
+            afterAll: afterAll,
+            beforeFeature: beforeFeature,
+            afterFeature: afterFeature,
+            beforeEachScenario: beforeEachScenario,
+            afterEachScenario: afterEachScenario
+        };
 
+        for ( let e in allTestEvents ) {
 
+            let event = allTestEvents[ e ];
+            if ( ! isDefined( event ) || ! isDefined( event.sentences ) ||
+                event.sentences.length < 1
+            ) {
+                continue;
+            }
+
+            ats[ e ] = new ATSEvent();
+            ats[ e ].commands = this.convertTestEventSentencesToCommands( event, spec );
+        }
+
+        // console.log( ats );
 
         return ats;
+    }
+
+
+    sentenceToCommand( sentence, obj = new ATSCommand(), valuesOverwrite?: any[] ): ATSCommand {
+        let cmd = obj;
+        cmd.location = sentence.location;
+        cmd.action = sentence.action;
+        cmd.modifier = sentence.actionModifier;
+        cmd.options = sentence.actionOptions;
+        cmd.targets = sentence.targets;
+        cmd.targetTypes = sentence.targetTypes;
+        cmd.values = ( ! valuesOverwrite ) ? sentence.values : valuesOverwrite;
+        cmd.invalid = sentence.isInvalidValue;
+        cmd.comment = sentence.comment;
+        return cmd;
+    }
+
+
+    convertTestEventSentencesToCommands( event: TestEvent, spec: Spec ): ATSCommand[] {
+
+        const dbConversor = new DatabaseToAbstractDatabase();
+        const SCRIPT_OPTION = 'script';
+        const COMMAND_OPTION = 'command';
+        const dbNames = spec.databaseNames();
+        const dbVarNames = dbNames.map( name => Symbols.CONSTANT_PREFIX + name.toLowerCase() + Symbols.CONSTANT_SUFFIX );
+
+        let commands: ATSCommand[] = [];
+        for ( let s of event.sentences || [] ) {
+
+            // action is not run ?
+            if ( Actions.RUN !== ( s.action || '' ) ) {
+                commands.push( this.sentenceToCommand( s ) );
+                continue;
+            }
+
+            // Doesn't it have one value ?
+            if ( ( s.values || [] ).length !== 1 ) {
+                continue;
+            }
+
+            // run + command
+            if ( ( s.actionOptions || [] ).indexOf( COMMAND_OPTION ) >= 0 ) {
+                let cmd = this.sentenceToCommand( s, new ATSConsoleCommand() );
+                commands.push( cmd );
+            }
+            // run + script + value
+            else if ( ( s.actionOptions || [] ).indexOf( SCRIPT_OPTION ) >= 0 ) {
+
+                let absDB: AbstractDatabase = undefined;
+                let newScript = s.values[ 0 ];
+                // Find database names inside que command
+                for ( let i in dbVarNames ) {
+
+                    let dbVar = dbVarNames[ i ];
+                    if ( s.content.toLowerCase().indexOf( dbVar ) < 0 ) {
+                        continue;
+                    }
+                    // Found
+                    let dbName = dbNames[ i ];
+                    let db = spec.databaseWithName( dbName );
+                    if ( ! db ) {
+                        continue;
+                    }
+
+                    // Remove database name
+                    newScript = s.values[ 0 ].toString().replace(
+                        Symbols.CONSTANT_PREFIX + dbName + Symbols.CONSTANT_SUFFIX + '.', '' );
+
+                    // Convert to an abstract db
+                    absDB = dbConversor.convertFromNode( db, spec.basePath );
+                    break;
+                }
+
+                let cmd;
+                if ( isDefined( absDB ) ) {
+                    cmd = this.sentenceToCommand( s, new ATSDatabaseCommand(), [ newScript ] );
+                    ( cmd as ATSDatabaseCommand ).db = absDB;
+                } else {
+                    cmd = this.sentenceToCommand( s );
+                }
+                commands.push( cmd );
+            }
+
+        }
+
+        return commands;
     }
 
 }

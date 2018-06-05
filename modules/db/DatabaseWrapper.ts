@@ -1,8 +1,8 @@
 import { DatabaseInterface } from '../req/DatabaseInterface';
-import { Database, DatabaseProperties } from '../ast/Database';
+import { Database } from '../ast/Database';
+import { isPathBasedDatabaseType } from './DatabaseTypes';
+import { DatabaseToAbstractDatabase } from './DatabaseToAbstractDatabase';
 import dbjs = require( 'database-js' );
-import * as path from 'path';
-import { stringToDatabaseTypeString, isPathBasedDatabaseType } from './DatabaseTypes';
 
 /**
  * A simple database wrapper.
@@ -84,53 +84,9 @@ export class DatabaseWrapper implements DatabaseInterface {
      * @param basePath Base path, in case of the database is file-based.
      */
     private createConnectionFromNode( db: Database, basePath?: string ): dbjs.Connection {
-
-        let dbItems = {};
-
-        if ( db.items ) {
-            for ( let item of db.items ) {
-                dbItems[ item.property ] = item.value;
-            }
-        }
-
-        // Tries to use the database name as the path if the path was not given
-        if ( ! dbItems[ DatabaseProperties.PATH ] ) {
-            dbItems[ DatabaseProperties.PATH ] = db.name;
-        }
-
-        const driverType = stringToDatabaseTypeString( dbItems[ DatabaseProperties.TYPE ] );
-
-        if ( this.hasFileBasedDriver( driverType ) ) {
-            dbItems[ DatabaseProperties.PATH ] =
-                path.resolve(
-                    basePath ? basePath : process.cwd(),
-                    dbItems[ DatabaseProperties.PATH ]
-                );
-        }
-
-        return this.makeConnection( driverType, dbItems );
-    }
-
-
-    /**
-     * Returns a database connection from the given parameters.
-     *
-     * @param driverType Database driver type
-     * @param dbItems Concordia's database configuration items.
-     */
-    private makeConnection( driverType: string, dbItems: object ): dbjs.Connection {
-
-        const connObj = {
-            driverName: driverType,
-            username: dbItems[ DatabaseProperties.USERNAME ],
-            password: dbItems[ DatabaseProperties.PASSWORD ],
-            hostname: dbItems[ DatabaseProperties.HOST ],
-            port: dbItems[ DatabaseProperties.PORT ],
-            database: dbItems[ DatabaseProperties.PATH ],
-            parameters: dbItems[ DatabaseProperties.OPTIONS ]
-        };
-
-        return new dbjs.Connection( connObj );
+        let conversor = new DatabaseToAbstractDatabase();
+        let absDB = conversor.convertFromNode( db, basePath );
+        return new dbjs.Connection( absDB );
     }
 
     /**
