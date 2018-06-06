@@ -17,6 +17,8 @@ export const ACTION_TARGET_MAP = new Map< string, string >(
         [ Actions.CLEAR           , ActionTargets.TEXTBOX      ],
         [ Actions.CLICK           , ActionTargets.BUTTON       ],
         [ Actions.CLOSE           , ActionTargets.WINDOW       ],
+        [ Actions.CONNECT         , ActionTargets.DATABASE     ],
+        [ Actions.DISCONNECT      , ActionTargets.DATABASE     ],
         [ Actions.DOUBLE_CLICK    , ActionTargets.IMAGE        ],
         [ Actions.DRAG            , ActionTargets.IMAGE        ],
         [ Actions.FILL            , ActionTargets.TEXTBOX      ],

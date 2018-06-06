@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const TypeChecking_1 = require("../util/TypeChecking");
 const AbstractTestScript_1 = require("./AbstractTestScript");
+const Entities_1 = require("../nlp/Entities");
 const Actions_1 = require("../util/Actions");
 const Symbols_1 = require("../req/Symbols");
 const DatabaseToAbstractDatabase_1 = require("../db/DatabaseToAbstractDatabase");
@@ -126,57 +127,83 @@ class AbstractTestScriptGenerator {
     }
     convertTestEventSentencesToCommands(event, spec) {
         const dbConversor = new DatabaseToAbstractDatabase_1.DatabaseToAbstractDatabase();
+        const DATABASE_OPTION = 'database';
         const SCRIPT_OPTION = 'script';
         const COMMAND_OPTION = 'command';
         const dbNames = spec.databaseNames();
-        const dbVarNames = dbNames.map(name => Symbols_1.Symbols.CONSTANT_PREFIX + name.toLowerCase() + Symbols_1.Symbols.CONSTANT_SUFFIX);
+        const dbVarNames = dbNames.map(name => Symbols_1.Symbols.CONSTANT_PREFIX + name + Symbols_1.Symbols.CONSTANT_SUFFIX);
+        const makeDbNameRegex = function makeDbNameRegex(dbName) {
+            const r = '\\' + Symbols_1.Symbols.CONSTANT_PREFIX + dbName + '\\' + Symbols_1.Symbols.CONSTANT_SUFFIX + '\\.?';
+            return new RegExp(r, 'gi');
+        };
         let commands = [];
         for (let s of event.sentences || []) {
-            // action is not run ?
-            if (Actions_1.Actions.RUN !== (s.action || '')) {
+            // Action is "connect" or "disconnect"
+            if (s.action === Actions_1.Actions.CONNECT || s.action === Actions_1.Actions.DISCONNECT) {
+                let dbRef = s.nlpResult.entities.find(e => e.entity === Entities_1.Entities.CONSTANT);
+                if (!dbRef) {
+                    console.log('ERROR: database reference not found in:', s.content);
+                    continue;
+                }
+                const dbName = dbRef.value;
+                if (s.action === Actions_1.Actions.CONNECT) {
+                    const db = spec.databaseWithName(dbName);
+                    if (!db) {
+                        console.log('ERROR: database not found with name:', dbName);
+                        continue;
+                    }
+                    const absDB = dbConversor.convertFromNode(db, spec.basePath);
+                    const values = [dbName, absDB];
+                    const cmd = this.sentenceToCommand(s, new AbstractTestScript_1.ATSDatabaseCommand(), values);
+                    cmd.db = absDB;
+                    commands.push(cmd);
+                }
+                else {
+                    commands.push(this.sentenceToCommand(s, new AbstractTestScript_1.ATSCommand(), [dbName]));
+                }
+                continue;
+            }
+            // Action is not "run"
+            if (Actions_1.Actions.RUN !== s.action) {
                 commands.push(this.sentenceToCommand(s));
                 continue;
             }
-            // Doesn't it have one value ?
+            // Action is "run" but it doesn't have a value
             if ((s.values || []).length !== 1) {
                 continue;
             }
-            // run + command
-            if ((s.actionOptions || []).indexOf(COMMAND_OPTION) >= 0) {
+            const options = s.actionOptions || [];
+            // options have "command"
+            if (options.indexOf(COMMAND_OPTION) >= 0) {
                 let cmd = this.sentenceToCommand(s, new AbstractTestScript_1.ATSConsoleCommand());
                 commands.push(cmd);
+                continue;
             }
-            // run + script + value
-            else if ((s.actionOptions || []).indexOf(SCRIPT_OPTION) >= 0) {
-                let absDB = undefined;
-                let newScript = s.values[0];
-                // Find database names inside que command
-                for (let i in dbVarNames) {
-                    let dbVar = dbVarNames[i];
-                    if (s.content.toLowerCase().indexOf(dbVar) < 0) {
-                        continue;
-                    }
-                    // Found
-                    let dbName = dbNames[i];
-                    let db = spec.databaseWithName(dbName);
-                    if (!db) {
-                        continue;
-                    }
-                    // Remove database name
-                    newScript = s.values[0].toString().replace(Symbols_1.Symbols.CONSTANT_PREFIX + dbName + Symbols_1.Symbols.CONSTANT_SUFFIX + '.', '');
-                    // Convert to an abstract db
-                    absDB = dbConversor.convertFromNode(db, spec.basePath);
-                    break;
+            // options have "script"
+            let query = s.values[0];
+            let found = false;
+            // Find database names inside
+            for (let i in dbVarNames) {
+                let dbVar = dbVarNames[i];
+                if (query.toString().toLowerCase().indexOf(dbVar.toLowerCase()) < 0) {
+                    continue;
                 }
-                let cmd;
-                if (TypeChecking_1.isDefined(absDB)) {
-                    cmd = this.sentenceToCommand(s, new AbstractTestScript_1.ATSDatabaseCommand(), [newScript]);
-                    cmd.db = absDB;
+                found = true;
+                // Found
+                let dbName = dbNames[i];
+                let db = spec.databaseWithName(dbName);
+                if (!db) {
+                    console.log('ERROR: database not found with name:', dbName);
+                    continue;
                 }
-                else {
-                    cmd = this.sentenceToCommand(s);
-                }
+                // Remove database name
+                query = query.toString().replace(makeDbNameRegex(dbName), '');
+                let cmd = this.sentenceToCommand(s, new AbstractTestScript_1.ATSDatabaseCommand(), [dbName, query]);
                 commands.push(cmd);
+                break;
+            }
+            if (!found) {
+                commands.push(this.sentenceToCommand(s));
             }
         }
         return commands;

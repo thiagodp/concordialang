@@ -15,6 +15,7 @@ var ActionTargets;
     ActionTargets["CURRENT_PAGE"] = "currentPage";
     ActionTargets["CURRENT_TAG"] = "currentTab";
     ActionTargets["CURSOR"] = "cursor";
+    ActionTargets["DATABASE"] = "database";
     ActionTargets["DIV"] = "div";
     ActionTargets["FILE_INPUT"] = "fileInput";
     ActionTargets["IMAGE"] = "image";

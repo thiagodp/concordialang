@@ -65,6 +65,20 @@ Quando eu fecho o app
   e quando eu fecho a aplicação
 ```
 
+## `connect`
+
+### connect + database
+```
+When I connect to the database [TestDB]
+```
+
+## `disconnect`
+
+### disconnect + database
+```
+When I disconnect from the database [TestDB]
+```
+
 ## `doubleClick`
 
 ```gherkin
@@ -151,6 +165,14 @@ Quando eu redimensiono a janela para 600, 400
 ```gherkin
 Quando eu clico com o botão direito em {Foo}
   e clico com o botão direito em <#bar>
+```
+
+## `run`
+
+### run + script
+
+```gherkin
+Quando eu executo o script 'INSERT INTO [TestDB].users ( username, password ) VALUES ( "bob", "b0bp4s$" )'
 ```
 
 ## `saveScreenshot`

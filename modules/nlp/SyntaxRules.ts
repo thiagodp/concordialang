@@ -51,6 +51,8 @@ export const UI_ACTION_SYNTAX_RULES = [
     { name: "clear", minTargets: 1, maxTargets: 999, targets: [ "ui_element", "ui_literal", "value", "number", "constant" ] },
     { name: "click", minTargets: 1, maxTargets: 999, targets: [ "ui_element", "ui_literal", "value", "number", "constant" ] },
     { name: "close", minTargets: 0 },
+    { name: "connect", minTargets: 1, maxTargets: 1, targets: [ "constant" ] },
+    { name: "disconnect", minTargets: 1, maxTargets: 1, targets: [ "constant" ] },
     { name: "doubleClick", minTargets: 1, targets: [ "ui_element", "ui_literal", "value", "number", "constant" ] },
     { name: "drag", minTargets: 2, maxTargets: 2, targets: [ "ui_element", "ui_literal" ] },
     { name: "fill", minTargets: 1, maxTargets: 999, value: { min: 0, max: 1 }, number: { min: 0, max: 1 } },

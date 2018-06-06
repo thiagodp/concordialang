@@ -17,6 +17,8 @@ exports.ACTION_TARGET_MAP = new Map([
     [Actions_1.Actions.CLEAR, ActionTargets_1.ActionTargets.TEXTBOX],
     [Actions_1.Actions.CLICK, ActionTargets_1.ActionTargets.BUTTON],
     [Actions_1.Actions.CLOSE, ActionTargets_1.ActionTargets.WINDOW],
+    [Actions_1.Actions.CONNECT, ActionTargets_1.ActionTargets.DATABASE],
+    [Actions_1.Actions.DISCONNECT, ActionTargets_1.ActionTargets.DATABASE],
     [Actions_1.Actions.DOUBLE_CLICK, ActionTargets_1.ActionTargets.IMAGE],
     [Actions_1.Actions.DRAG, ActionTargets_1.ActionTargets.IMAGE],
     [Actions_1.Actions.FILL, ActionTargets_1.ActionTargets.TEXTBOX],

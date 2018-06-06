@@ -19,7 +19,7 @@ class TestScriptGenerator {
         Feature("{{feature.name}}");
         {{#beforeFeature}}
 
-        BeforeSuite((I) => { // Before Feature
+        BeforeSuite( async (I) => { // Before Feature
             {{#convertedCommands}}
             {{{.}}}
             {{/convertedCommands}}
@@ -27,7 +27,7 @@ class TestScriptGenerator {
         {{/beforeFeature}}
         {{#afterFeature}}
 
-        AfterSuite((I) => { // After Feature
+        AfterSuite( async (I) => { // After Feature
             {{#convertedCommands}}
             {{{.}}}
             {{/convertedCommands}}
@@ -35,7 +35,7 @@ class TestScriptGenerator {
         {{/afterFeature}}
         {{#beforeEachScenario}}
 
-        Before((I) => { // Before Each Scenario
+        Before( async (I) => { // Before Each Scenario
             {{#convertedCommands}}
             {{{.}}}
             {{/convertedCommands}}
@@ -43,7 +43,7 @@ class TestScriptGenerator {
         {{/beforeEachScenario}}
         {{#afterEachScenario}}
 
-        After((I) => { // After Each Scenario
+        After( async (I) => { // After Each Scenario
             {{#convertedCommands}}
             {{{.}}}
             {{/convertedCommands}}
@@ -75,7 +75,7 @@ class TestScriptGenerator {
                 continue;
             }
             event.convertedCommands = [];
-            for (let cmd of obj.beforeFeature.commands || []) {
+            for (let cmd of event.commands || []) {
                 event.convertedCommands.push(this.mapper.map(cmd));
             }
         }

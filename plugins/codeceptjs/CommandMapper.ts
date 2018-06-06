@@ -56,7 +56,8 @@ export interface CmdCfg {
     options?: string[],
     targetType?: string,
     template: string,
-    valuesAsNonArray?: boolean
+    valuesAsNonArray?: boolean,
+    useSingleQuotes?: boolean
 }
 
 /**
@@ -93,11 +94,25 @@ export class CommandMapper {
      */
     makeCommands( cfg: CmdCfg, cmd: ATSCommand ): string[] {
 
-        const template = cfg.template + ' // ({{{location.line}}},{{{location.column}}}){{#comment}} {{{comment}}}{{/comment}}';
+        const COMMENT_TEMPLATE = ' // ({{{location.line}}},{{{location.column}}}){{#comment}} {{{comment}}}{{/comment}}';
+
+        if ( !! cmd[ "db" ] && cmd.action === 'connect' ) {
+
+            const values = {
+                value: [ '"' + cmd.values[ 0 ] + '"', JSON.stringify( cmd[ "db" ]  ) ],
+                location : cmd.location,
+                comment: cmd.comment,
+            };
+            const template = cfg.template + COMMENT_TEMPLATE;
+
+            return [ render( template, values ) ];
+        }
+
+        const template = cfg.template + COMMENT_TEMPLATE;
 
         const values = {
             target   : ! cmd.targets ? '' : this.targetsToParameters( cmd.targets ),
-            value    : ! cmd.values ? '' : this.valuesToParameters( cmd.values, cfg.valuesAsNonArray ),
+            value    : ! cmd.values ? '' : this.valuesToParameters( cmd.values, cfg.valuesAsNonArray, cfg.useSingleQuotes ),
             location : cmd.location,
             comment  : cmd.comment,
             modifier : cmd.modifier,
@@ -386,23 +401,33 @@ export class CommandMapper {
      * @param values Values to convert.
      * @param valueAsNonArrayWhenGreaterThanOne Whether wants to convert an
      *      array to single values when its size is greater than one.
+     * @param useSingleQuotes Whether is desired to use single quotes.
      */
-    private valuesToParameters( values: any[], valueAsNonArrayWhenGreaterThanOne: boolean = false ): string {
+    private valuesToParameters(
+        values: any[],
+        valueAsNonArrayWhenGreaterThanOne: boolean = false,
+        useSingleQuotes: boolean = false
+    ): string {
         if ( 0 === values.length ) {
             return '';
         }
         if ( 1 === values.length ) {
-            return this.convertSingleValue( values[ 0 ] );
+            return this.convertSingleValue( values[ 0 ], useSingleQuotes );
         }
-        const joint = values.map( this.convertSingleValue ).join( ', ' );
+        const joint = values
+            .map( v => this.convertSingleValue( v, useSingleQuotes ) )
+            .join( ', ' );
         if ( ! valueAsNonArrayWhenGreaterThanOne ) {
             return '[' + joint + ']';
         }
         return joint;
     }
 
-    private convertSingleValue( value: any ) {
-        return typeof value === 'string' ? `"${value}"`: value;
+    private convertSingleValue( value: any, useSingleQuotes: boolean = false ) {
+        if ( typeof value === 'string' ) {
+            return useSingleQuotes ? `'${value}'` : `"${value}"`;
+        }
+        return value;
     }
 
     // private sameValues( a: string[], b: string[] ): boolean {

@@ -177,68 +177,106 @@ export class AbstractTestScriptGenerator {
     convertTestEventSentencesToCommands( event: TestEvent, spec: Spec ): ATSCommand[] {
 
         const dbConversor = new DatabaseToAbstractDatabase();
+        const DATABASE_OPTION = 'database';
         const SCRIPT_OPTION = 'script';
         const COMMAND_OPTION = 'command';
         const dbNames = spec.databaseNames();
-        const dbVarNames = dbNames.map( name => Symbols.CONSTANT_PREFIX + name.toLowerCase() + Symbols.CONSTANT_SUFFIX );
+        const dbVarNames = dbNames.map(
+            name => Symbols.CONSTANT_PREFIX + name + Symbols.CONSTANT_SUFFIX );
+
+        const makeDbNameRegex = function makeDbNameRegex( dbName ) {
+            const r = '\\' + Symbols.CONSTANT_PREFIX + dbName + '\\' +  Symbols.CONSTANT_SUFFIX + '\\.?';
+            return new RegExp( r, 'gi' );
+        };
 
         let commands: ATSCommand[] = [];
         for ( let s of event.sentences || [] ) {
 
-            // action is not run ?
-            if ( Actions.RUN !== ( s.action || '' ) ) {
+            // Action is "connect" or "disconnect"
+            if ( s.action === Actions.CONNECT || s.action === Actions.DISCONNECT ) {
+                let dbRef = s.nlpResult.entities.find( e => e.entity === Entities.CONSTANT );
+                if ( ! dbRef ) {
+                    console.log( 'ERROR: database reference not found in:', s.content );
+                    continue;
+                }
+                const dbName = dbRef.value;
+
+                if ( s.action === Actions.CONNECT ) {
+                    const db = spec.databaseWithName( dbName );
+                    if ( ! db ) {
+                        console.log( 'ERROR: database not found with name:', dbName );
+                        continue;
+                    }
+                    const absDB = dbConversor.convertFromNode( db, spec.basePath );
+                    const values = [ dbName, absDB ];
+
+                    const cmd = this.sentenceToCommand( s, new ATSDatabaseCommand(), values );
+                    ( cmd as ATSDatabaseCommand ).db = absDB;
+
+                    commands.push( cmd );
+                } else {
+                    commands.push( this.sentenceToCommand( s, new ATSCommand(), [ dbName ] ) );
+                }
+
+
+
+                continue;
+            }
+
+            // Action is not "run"
+            if ( Actions.RUN !== s.action ) {
                 commands.push( this.sentenceToCommand( s ) );
                 continue;
             }
 
-            // Doesn't it have one value ?
+            // Action is "run" but it doesn't have a value
             if ( ( s.values || [] ).length !== 1 ) {
                 continue;
             }
 
-            // run + command
-            if ( ( s.actionOptions || [] ).indexOf( COMMAND_OPTION ) >= 0 ) {
+            const options = s.actionOptions || [];
+
+            // options have "command"
+            if ( options.indexOf( COMMAND_OPTION ) >= 0 ) {
                 let cmd = this.sentenceToCommand( s, new ATSConsoleCommand() );
                 commands.push( cmd );
+                continue;
             }
-            // run + script + value
-            else if ( ( s.actionOptions || [] ).indexOf( SCRIPT_OPTION ) >= 0 ) {
 
-                let absDB: AbstractDatabase = undefined;
-                let newScript = s.values[ 0 ];
-                // Find database names inside que command
-                for ( let i in dbVarNames ) {
+            // options have "script"
 
-                    let dbVar = dbVarNames[ i ];
-                    if ( s.content.toLowerCase().indexOf( dbVar ) < 0 ) {
-                        continue;
-                    }
-                    // Found
-                    let dbName = dbNames[ i ];
-                    let db = spec.databaseWithName( dbName );
-                    if ( ! db ) {
-                        continue;
-                    }
+            let query = s.values[ 0 ];
+            let found: boolean = false;
+            // Find database names inside
+            for ( let i in dbVarNames ) {
 
-                    // Remove database name
-                    newScript = s.values[ 0 ].toString().replace(
-                        Symbols.CONSTANT_PREFIX + dbName + Symbols.CONSTANT_SUFFIX + '.', '' );
-
-                    // Convert to an abstract db
-                    absDB = dbConversor.convertFromNode( db, spec.basePath );
-                    break;
+                let dbVar = dbVarNames[ i ];
+                if ( query.toString().toLowerCase().indexOf( dbVar.toLowerCase() ) < 0 ) {
+                    continue;
                 }
 
-                let cmd;
-                if ( isDefined( absDB ) ) {
-                    cmd = this.sentenceToCommand( s, new ATSDatabaseCommand(), [ newScript ] );
-                    ( cmd as ATSDatabaseCommand ).db = absDB;
-                } else {
-                    cmd = this.sentenceToCommand( s );
+                found = true;
+
+                // Found
+                let dbName = dbNames[ i ];
+                let db = spec.databaseWithName( dbName );
+                if ( ! db ) {
+                    console.log( 'ERROR: database not found with name:', dbName );
+                    continue;
                 }
+
+                // Remove database name
+                query = query.toString().replace( makeDbNameRegex( dbName ), '' );
+
+                let cmd = this.sentenceToCommand( s, new ATSDatabaseCommand(), [ dbName, query ] );
                 commands.push( cmd );
+
+                break;
             }
 
+            if ( ! found ) {
+                commands.push( this.sentenceToCommand( s ) );
+            }
         }
 
         return commands;

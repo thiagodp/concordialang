@@ -11,6 +11,8 @@ export enum Actions {
     CLEAR           = "clear"         , // web, mobile web, mobile native, desktop
     CLICK           = "click"         , // web, mobile web, mobile native, desktop
     CLOSE           = "close"         , // web, mobile web, mobile native, desktop
+    CONNECT         = "connect"       , // any -> test event
+    DISCONNECT      = "disconnect"    , // any -> test event
     DOUBLE_CLICK    = "doubleClick"   , // web, mobile web, mobile native, desktop
     DRAG            = "drag"          , // web, mobile web, mobile native, desktop
     FILL            = "fill"          , // web, mobile web, mobile native, desktop

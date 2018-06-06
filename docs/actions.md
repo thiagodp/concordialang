@@ -87,6 +87,20 @@ The next sentence is for *mobile* only:
 When I close the app
 ```
 
+## `connect`
+
+### connect + database
+```
+When I connect to the database [TestDB]
+```
+
+## `disconnect`
+
+### disconnect + database
+```
+When I disconnect from the database [TestDB]
+```
+
 ## `doubleClick`
 
 ### doubleClick + target
@@ -228,6 +242,14 @@ When I right click {Foo}
 ### rightClick + value
 ```gherkin
 When I right click "Foo"
+```
+
+## `run`
+
+### run + script
+
+```gherkin
+When I run the script 'INSERT INTO [TestDB].users ( username, password ) VALUES ( "bob", "b0bp4s$" )'
 ```
 
 ## `saveScreenshot`
