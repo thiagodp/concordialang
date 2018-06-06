@@ -93,7 +93,7 @@ class TCDocGen {
         let docImport = {
             nodeType: NodeTypes_1.NodeTypes.IMPORT,
             location: {
-                column: 0,
+                column: 1,
                 line: startLine
             },
             value: filePath
@@ -128,6 +128,8 @@ class TCDocGen {
         }
         // Header
         tc.location.line = line++;
+        // Solves the problem of references
+        tc.sentences = deepcopy(tc.sentences); // DEEP COPY
         // Sentences
         for (let sentence of tc.sentences || []) {
             sentence.location.line = line++;
