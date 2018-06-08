@@ -572,21 +572,23 @@ Observações:
 - Somente uma declaração por Funcionalidade.
 
 Os eventos podem ser:
-- { Antes de | Depois de } cada Cenário
-- { Antes da | Depois da } Funcionalidade
-- { Antes de | Depois de } Todos
+1. { Antes de | Depois de } cada Cenário
+2. { Antes da | Depois da } Funcionalidade
+3. { Antes de | Depois de } Todos
 
 Esses eventos suportam três tipos de comandos:
-  1. *Comando de console*: executa um comando no console e aguarda seu término.
-  2. *Comando SQL*: executa um comando em um Banco de Dados declarado.
-  3. *Comando de arquivo*: executa uma operação em um arquivo.
+  1. *Scripts SQL*: executa um script em um Banco de Dados declarado.
+  2. *Comando de console*: executa um comando no console e aguarda seu término. (AINDA NÃO SUPORTADO)
+  3. *Comando de arquivo*: executa uma operação em um arquivo. (AINDA NÃO SUPORTADO)
 
-Comandos de Console e SQL devem ser declarados entre apóstrofos (`'`).
+Eventos de Teste para Funcionalidade e Cenário também suportam interações com a interface de usuário, como aquelas comumente usadas em Variantes.
+
+Comandos de Console e SQL devem ser declarados entre apóstrofos (`'`, também conhecido como aspas simples).
 
 Exemplo 1:
 ```gherkin
 Antes da Funcionalidade:
-  Quando eu conection ao banco de dados [Meu BD]
+  Quando eu conecto ao banco de dados [Meu BD]
 ```
 
 Exemplo 2:
@@ -599,7 +601,7 @@ Antes de cada Cenário:
 Exemplo 3:
 ```gherkin
 Depois da Funcionalidade:
-  Quando eu executo o comando 'cls'
+  Quando eu executo o comando 'rmdir some-folder'
     e executo o script 'DELETE FROM [Meu BD].usuarios'
     e eu desconecto do banco de dados [Meu BD]
 ```
