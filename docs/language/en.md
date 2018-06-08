@@ -601,7 +601,7 @@ After Feature:
 ```
 
 Exemplo 4:
-```
+```gherkin
 After Each Scenario:
   When I create the file 'path/to/foo.json' with `{ "name": "John", "surname": "Doe" }`
     and I see the file 'path/to/bar.xml' with `<person><name>John</name><surname>John</surname></person>`
@@ -609,6 +609,7 @@ After Each Scenario:
 
 Some plug-ins may not support some Test Events:
 
+```
 +--------------------------+--------------------------------+
 | PLUGIN                   |     After/Before               |
 |                          | All  | Feature | Each Scenario |
@@ -616,6 +617,7 @@ Some plug-ins may not support some Test Events:
 | CodeceptJS + WebDriverIO | no   |  yes    |  yes          |
 | CodeceptJS + Appium      | no   |  yes    |  yes          |
 +--------------------------+------+---------+---------------+
+```
 
 ## Literals
 

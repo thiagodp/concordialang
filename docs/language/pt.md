@@ -605,7 +605,7 @@ Depois da Funcionalidade:
 ```
 
 Exemplo 4:
-```
+```gherkin
 Após cada Cenário:
   Quando eu crio o arquivo 'path/to/foo.json' com `{ "name": "John", "surname": "Doe" }`
     e eu vejo que o arquivo 'path/to/bar.xml' contém `<person><name>John</name><surname>John</surname></person>`
@@ -613,6 +613,7 @@ Após cada Cenário:
 
 Alguns plugins podem não suportar certos eventos:
 
+```
 +--------------------------+-----------------------------------------+
 | PLUGIN                   |        Antes de / Depois de             |
 |                          | Todos  | Funcionalidade | Cada Cenário  |
@@ -620,6 +621,7 @@ Alguns plugins podem não suportar certos eventos:
 | CodeceptJS + WebDriverIO | não    |  sim           |  sim          |
 | CodeceptJS + Appium      | não    |  sim           |  sim          |
 +--------------------------+--------+----------------+---------------+
+```
 
 ## Literais
 
