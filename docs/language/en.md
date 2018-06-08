@@ -579,25 +579,32 @@ These events support three type of commands:
 
 Both Console and SQL commands must declared values between apostrophes (`'`).
 
-Example 1:
-```
-Before Each Scenario:
-  I run the command 'cls'
-  and I run the script 'DELETE FROM [MyDB].`user`'
-  and I run the script 'INSERT INTO [MyDB].`user` ( `username`, `password` ) VALUES ( "Clark", "Kent" ), ( "Bruce", "Wayne" )'
-```
-
-Example 2:
-```
+Exemplo 1:
+```gherkin
 Before Feature:
-  I run the script 'DELETE FROM [MyDB].`cities`'
+  When I connect to the database [MyDB]
 ```
 
-Example 3:
+Exemplo 2:
+```gherkin
+After Each Scenario:
+  When I run the script 'DELETE FROM [MyDB].`users`'
+    and I run the script 'INSERT INTO [MyDB].`users` ( `login`, `password` ) VALUES ( "Clark", "Kent" ), ( "Bruce", "Wayne" )'
+```
+
+Exemplo 3:
+```gherkin
+After Feature:
+  When I run the command 'cls'
+    and I run the script 'DELETE FROM [MyDB].users'
+    and I disconnect from the database [MyDB]
+```
+
+Exemplo 4:
 ```
 After Each Scenario:
-  I create the file 'path/to/foo.json' with `{ "name": "John", "surname": "Doe" }`
-  and I assert that the file 'path/to/bar.xml' has `<person><name>John</name><surname>John</surname></person>`
+  When I create the file 'path/to/foo.json' with `{ "name": "John", "surname": "Doe" }`
+    and I see the file 'path/to/bar.xml' with `<person><name>John</name><surname>John</surname></person>`
 ```
 
 Some plug-ins may not support some Test Events:

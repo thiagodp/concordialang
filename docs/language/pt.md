@@ -584,24 +584,31 @@ Esses eventos suportam três tipos de comandos:
 Comandos de Console e SQL devem ser declarados entre apóstrofos (`'`).
 
 Exemplo 1:
-```
-Antes de cada Cenário:
-  Eu executo o comando 'cls'
-  e executo o script 'DELETE FROM [Meu BD].`usuarios`'
-  e executo o script 'INSERT INTO [Meu BD].`usuarios` ( `login`, `senha` ) VALUES ( "Clark", "Kent" ), ( "Bruce", "Wayne" )'
+```gherkin
+Antes da Funcionalidade:
+  Quando eu conection ao banco de dados [Meu BD]
 ```
 
 Exemplo 2:
-```
-Antes da Funcionalidade:
-  Eu executo o script 'DELETE FROM [Meu BD].`cities`'
+```gherkin
+Antes de cada Cenário:
+  Quando eu executo o script 'DELETE FROM [Meu BD].`usuarios`'
+    e executo o script 'INSERT INTO [Meu BD].`usuarios` ( `login`, `senha` ) VALUES ( "Clark", "Kent" ), ( "Bruce", "Wayne" )'
 ```
 
 Exemplo 3:
+```gherkin
+Depois da Funcionalidade:
+  Quando eu executo o comando 'cls'
+    e executo o script 'DELETE FROM [Meu BD].usuarios'
+    e eu desconecto do banco de dados [Meu BD]
+```
+
+Exemplo 4:
 ```
 Após cada Cenário:
-  Eu crio o arquivo 'path/to/foo.json' com `{ "name": "John", "surname": "Doe" }`
-  Eu vejo que o arquivo 'path/to/bar.xml' contém `<person><name>John</name><surname>John</surname></person>`
+  Quando eu crio o arquivo 'path/to/foo.json' com `{ "name": "John", "surname": "Doe" }`
+    e eu vejo que o arquivo 'path/to/bar.xml' contém `<person><name>John</name><surname>John</surname></person>`
 ```
 
 Alguns plugins podem não suportar certos eventos:
