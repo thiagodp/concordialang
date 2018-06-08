@@ -353,8 +353,11 @@ export class Options {
         if ( isString( obj.ignore ) ) {
             this.ignore = obj.ignore.trim().split( PARAM_SEPARATOR );
         }
+
         if ( isString( obj.files ) ) {
             this.files = obj.files.trim().split( PARAM_SEPARATOR );
+        } else if ( isString( obj.file ) ) { // alternative
+            this.files = obj.file.trim().split( PARAM_SEPARATOR );
         }
 
         // LANGUAGE
@@ -441,6 +444,8 @@ export class Options {
             this.dirResult = obj.dirResult;
         } else if ( isString( obj.dirResults ) ) { // plural
             this.dirResult = obj.dirResults;
+        } else if ( isString( obj.dirOutput ) ) { // alternative
+            this.dirResult = obj.dirOutput;
         }
 
         if ( isString( obj.extensionFeature ) ) {
