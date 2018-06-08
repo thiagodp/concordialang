@@ -36,7 +36,7 @@
 
 ### Test events
 
-- Test events are not supported yet
+- Test events currently support only database scripts. Console commands and file operations should be added later.
 
 ## Data Test Cases generated from Data Analysis
 

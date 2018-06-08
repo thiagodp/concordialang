@@ -565,11 +565,12 @@ Notes:
 - Local declaration.
 - Just one declaration per Feature.
 
-**NOT SUPPORTED BY CONCORDIA YET**
+**ONLY SQL SCRIPTS ARE CURRENTLY SUPPORTED**
 
 Could be:
-- { Before | After | Around } Each Scenario
-- { Before | After | Around } Feature
+- { Before | After } Each Scenario
+- { Before | After } Feature
+- { Before | After } All
 
 These events support three type of commands:
   1. *Console command*: runs a command in the console and waits for its termination.
@@ -588,7 +589,7 @@ Before Each Scenario:
 
 Example 2:
 ```
-Around Feature:
+Before Feature:
   I run the script 'DELETE FROM [MyDB].`cities`'
 ```
 
@@ -599,6 +600,15 @@ After Each Scenario:
   and I assert that the file 'path/to/bar.xml' has `<person><name>John</name><surname>John</surname></person>`
 ```
 
+Some plug-ins may not support some Test Events:
+
++--------------------------+--------------------------------+
+| PLUGIN                   |     After/Before               |
+|                          | All  | Feature | Each Scenario |
++--------------------------+------+---------+---------------+
+| CodeceptJS + WebDriverIO | no   |  yes    |  yes          |
+| CodeceptJS + Appium      | no   |  yes    |  yes          |
++--------------------------+------+---------+---------------+
 
 ## Literals
 

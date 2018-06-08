@@ -1,13 +1,26 @@
 # Concordia Documentation
 
-*Expected behavior and known limitations*
+- [Overview of the language](language/en.md)
+- [Available Actions](actions.md)
+- [Example](example.md)
+- [Roadmap](roadmap.md)
+- [Known limitations](limitations.md)
+- [FAQ](faq.md)
 
-- [Data generation](#datageneration)
-- [Test case generation](#TestCaseGeneration)
-- [Known limitations](./limitations.md)
+## Technical notes
+
+- [User Interface Elements' Properties](dev/properties.md)
+- [Queries](dev/queries.md)
+- [States](dev/states.md)
+- [Test Cases](dev/test-cases.md)
+- [Test Scenarios](dev/test-scenarios.md)
+
+## Development
+
+- [Development guidelines](development.md)
 
 
-## Data generation
+## Notes on Data Generation
 
 ### Queries
 
@@ -44,8 +57,3 @@ UI Element: salary
 ```javascript
 $uielement[ 'username' ].value = $uielement[ 'name' ].value.split( ' ' )[ 0 ];
 ```
-
-
-## Test Case Generation
-
-...

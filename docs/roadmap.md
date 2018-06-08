@@ -25,15 +25,6 @@ Sanitize files such as:
 Use [this sanitizer](https://github.com/parshap/node-sanitize-filename)
 
 
-## Language
-
-### Language auto-detection
-
-Auto-detect the language of specification files.
-
-Maybe using [Franc](https://github.com/wooorm/franc) (preferred) or [LanguageDetect](https://github.com/FGRibreau/node-language-detect).
-
-
 ### Use UI Element Properties on value entities
 
 Example:
@@ -79,7 +70,6 @@ UI Element: Emergency Contact Name
 
 # Emergency Contact Name inherits the properties from Name
 ```
-
 
 ### Allow table matching
 

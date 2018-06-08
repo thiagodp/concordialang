@@ -565,15 +565,16 @@ Veja [Exemplos de Ações](../actions-pt.md).
 
 *Declara eventos antes ou após Casos de Teste ou Funcionalidades. Comandos do console, scripts SQL ou operações com arquivos podem ser executadas quando esses eventos ocorrerem. Geralmente eles visarão preparar ou ajustar o ambiente, de acordo com os testes.*
 
-**Ainda não suportado pela ferramenta**
+**SOMENTE SCRIPTS SQL SÃO SUPORTADOS ATUALMENTE**
 
 Observações:
 - Declaração local.
 - Somente uma declaração por Funcionalidade.
 
 Os eventos podem ser:
-- { Antes de | Depois de | Antes e depois de } cada cenário
-- { Antes da | Depois da | Antes e depois da } Funcionalidade
+- { Antes de | Depois de } cada Cenário
+- { Antes da | Depois da } Funcionalidade
+- { Antes de | Depois de } Todos
 
 Esses eventos suportam três tipos de comandos:
   1. *Comando de console*: executa um comando no console e aguarda seu término.
@@ -592,7 +593,7 @@ Antes de cada Cenário:
 
 Exemplo 2:
 ```
-Antes e depois da Funcionalidade:
+Antes da Funcionalidade:
   Eu executo o script 'DELETE FROM [Meu BD].`cities`'
 ```
 
@@ -603,6 +604,15 @@ Após cada Cenário:
   Eu vejo que o arquivo 'path/to/bar.xml' contém `<person><name>John</name><surname>John</surname></person>`
 ```
 
+Alguns plugins podem não suportar certos eventos:
+
++--------------------------+-----------------------------------------+
+| PLUGIN                   |        Antes de / Depois de             |
+|                          | Todos  | Funcionalidade | Cada Cenário  |
++--------------------------+--------+----------------+---------------+
+| CodeceptJS + WebDriverIO | não    |  sim           |  sim          |
+| CodeceptJS + Appium      | não    |  sim           |  sim          |
++--------------------------+--------+----------------+---------------+
 
 ## Literais
 

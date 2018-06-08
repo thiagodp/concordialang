@@ -2,6 +2,8 @@
 
 > Here we present a short and simple example, with the purpose of giving an idea on how Concordia works.
 
+Translations: [Português](example-pt.md) 🌎
+
 We recommend you to read the example even without being used to its [syntax](language/en.md).
 
 `login.feature` :
