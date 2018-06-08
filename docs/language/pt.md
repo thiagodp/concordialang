@@ -571,10 +571,13 @@ Observações:
 - Declaração local.
 - Somente uma declaração por Funcionalidade.
 
-Os eventos podem ser:
-1. { Antes de | Depois de } cada Cenário
-2. { Antes da | Depois da } Funcionalidade
-3. { Antes de | Depois de } Todos
+Eles são:
+- `Antes de cada Cenário`: ocorre antes de cada cenário
+- `Depois de cada Cenário`: ocorre depois de cada cenário
+- `Antes da Funcionalidade`: ocorre antes de uma funcionalidade
+- `Depois da Funcionalidade`: ocorre depois de uma funcionalidade
+- `Antes de Todas`: ocorre antes de todas as funcionalidades
+- `Depois de Todas`: ocorre depois de todas as funcionalidades
 
 Esses eventos suportam três tipos de comandos:
 

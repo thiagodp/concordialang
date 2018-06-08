@@ -567,10 +567,13 @@ Notes:
 
 **ONLY SQL SCRIPTS ARE CURRENTLY SUPPORTED**
 
-Could be:
-- { Before | After } Each Scenario
-- { Before | After } Feature
-- { Before | After } All
+They are:
+- `Before Each Scenario`: occurs before each scenario.
+- `After Each Scenario`: occurs after each scenario.
+- `Before Feature`: occurs before a feature.
+- `After Feature`: occurs after a feature.
+- `Before All`: occurs before all the features.
+- `After All`: occurs after all the features.
 
 These events support three type of commands:
 
