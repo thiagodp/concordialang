@@ -301,7 +301,7 @@ Normal syntax, like the aforementioned. Access through ADO currently works only 
     When I run the script 'UPDATE [MyDB] SET age = 22, surname = "Anne" WHERE name = "Mary"'
     ```
 
-#### Firebase databases
+#### Excel and Firebase databases
 
 Syntax similar to [JSON and CSV databases](json-and-csv-databases). However, it has some limitations, as pointed out in [its documentation](https://github.com/mlaanderson/database-js-firebase) :
 

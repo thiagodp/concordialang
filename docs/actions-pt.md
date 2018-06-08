@@ -195,11 +195,11 @@ Quando eu executo o script 'DELETE FROM [MyDB].Users WHERE UserName="Newton"'
 
 Concordia usa [database-js](https://github.com/mlaanderson/database-js) para acessar bancos de dados e arquivos através de uma interface SQL. A sintaxe SQL suportada pode variar de um banco de dados para outro. Em caso de problemas, consulte a [documentação do driver correspondente](https://github.com/mlaanderson/database-js#drivers).
 
-#### MySQL, PostgreSQL, and ADO databases
+#### MySQL, PostgreSQL e ADO
 
 Sintaxe normal, como a exemplificada anteriormente. O acesso através de ADO atualmente funciona somente em Windows.
 
-#### JSON and CSV databases
+#### JSON e CSV
 
 - INSERT
   - Não tem "`INTO`" na sentença
@@ -224,29 +224,29 @@ Sintaxe normal, como a exemplificada anteriormente. O acesso através de ADO atu
     Quando eu executo o script 'UPDATE [MyDB] SET age = 22, surname = "Anne" WHERE name = "Mary"'
     ```
 
-#### Firebase databases
+#### Excel e Firebase
 
-Syntax similar to [JSON and CSV databases](json-and-csv-databases). However, it has some limitations, as pointed out in [its documentation](https://github.com/mlaanderson/database-js-firebase) :
+Sintaxe simular a [JSON e CSV](json-e-csv). Contudo, tem limitações, como apontado em [sua documentação](https://github.com/mlaanderson/database-js-firebase) :
 
-> *SQL commands are limited to SELECT, UPDATE, INSERT and DELETE. WHERE works well. JOINs are not allowed. GROUP BY is not supported. LIMIT and OFFSET are combined into a single LIMIT syntax: LIMIT [offset,]number*
+> *Comandos SQL estão limitados a SELECT, UPDATE, INSERT e DELETE. WHERE funciona bem. JOINs não são permitidos. GROUP BY não é suportado. LIMIT e OFFSET são combinados em uma única sintaxe: LIMIT [offset,]number*
 
-#### INI databases
+#### INI
 
 - INSERT
-  - Not supported yet by [database-js-ini](https://github.com/mlaanderson/database-js-ini)
+  - Ainda não suportado por [database-js-ini](https://github.com/mlaanderson/database-js-ini)
 
 - DELETE
-  - Not supported yet by [database-js-ini](https://github.com/mlaanderson/database-js-ini)
+  - Ainda não suportado por [database-js-ini](https://github.com/mlaanderson/database-js-ini)
 
 - UPDATE
-  - Example:
+  - Examplo:
     ```gherkin
     Quando eu executo o script 'UPDATE [MyDB] SET age = 22 WHERE name = "Mary"'
     ```
 
-#### SQLite databases
+#### SQLite
 
-Currently [database-js-sqlite](https://github.com/mlaanderson/database-js-sqlite) uses [sql.js](https://github.com/kripken/sql.js) that **doesn't persist the changes made to the database**.
+Atualmente [database-js-sqlite](https://github.com/mlaanderson/database-js-sqlite) usa [sql.js](https://github.com/kripken/sql.js) que **não persiste mudanças feitas no banco de dados**.
 
 
 ## `saveScreenshot`
