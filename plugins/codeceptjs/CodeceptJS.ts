@@ -5,13 +5,13 @@ import { Plugin } from '../../modules/plugin/Plugin';
 import { AbstractTestScript } from '../../modules/testscript/AbstractTestScript';
 import { TestScriptGenerationOptions } from '../../modules/testscript/TestScriptOptions';
 import { TestScriptExecutionOptions, TestScriptExecutionResult } from '../../modules/testscript/TestScriptExecution';
-import * as fs from 'fs';
-import * as path from 'path';
-import * as fse from 'node-fs-extra';
 import { promisify } from 'util';
 import { CommandMapper } from './CommandMapper';
 import { ConfigMaker } from './ConfigMaker';
 import { CODECEPTJS_COMMANDS } from './Commands';
+import * as fs from 'fs';
+import { join, parse } from 'path';
+import * as fse from 'node-fs-extra';
 
 /**
  * Plugin for CodeceptJS.
@@ -33,7 +33,7 @@ export class CodeceptJS implements Plugin {
         fsToUse?: any,
         private _encoding: string = 'utf8'
     ) {
-        this._descriptorPath = descriptorPath || path.join( __dirname, '../', 'codeceptjs.json' );
+        this._descriptorPath = descriptorPath || join( __dirname, '../', 'codeceptjs.json' );
         this._fs = ! fsToUse ? fs : fsToUse;
     }
 
@@ -58,7 +58,7 @@ export class CodeceptJS implements Plugin {
 
     /** @inheritDoc */
     public async executeCode( options: TestScriptExecutionOptions ): Promise< TestScriptExecutionResult > {
-        const scriptExecutor = this.createTestScriptExecutor();
+        const scriptExecutor = this.createTestScriptExecutor( options );
         const path = await scriptExecutor.execute( options );
         return await this.convertReportFile( path );
     }
@@ -84,9 +84,9 @@ export class CodeceptJS implements Plugin {
         await this.ensureDir( targetDir );
 
         // Prepare file path
-        const parsed = path.parse( ats.sourceFile );
+        const parsed = parse( ats.sourceFile );
         const fileName: string = parsed.name + '.js';
-        const filePath: string = path.join( targetDir, fileName );
+        const filePath: string = join( targetDir, fileName );
 
         // Generate content
         const scriptGenerator = this.createTestScriptGenerator();
@@ -116,10 +116,19 @@ export class CodeceptJS implements Plugin {
         );
     }
 
-    protected createTestScriptExecutor(): TestScriptExecutor {
+    protected createTestScriptExecutor( options: TestScriptExecutionOptions ): TestScriptExecutor {
+
+        const scriptFileFilter = join( options.sourceCodeDir, '**/*.js' );
+
         const cfgMaker: ConfigMaker = new ConfigMaker();
-        const defaultConfig = cfgMaker.makeConfig( cfgMaker.makeWebDriverIOHelperConfig() );
-        return new TestScriptExecutor( defaultConfig );
+        let config = cfgMaker.makeBasicConfig(
+            scriptFileFilter,
+            options.executionResultDir
+        );
+        cfgMaker.setWebDriverIOHelper( config );
+        cfgMaker.setDbHelper( config );
+
+        return new TestScriptExecutor( config );
     }
 
 }
