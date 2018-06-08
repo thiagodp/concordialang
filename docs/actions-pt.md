@@ -201,27 +201,10 @@ Sintaxe normal, como a exemplificada anteriormente. O acesso através de ADO atu
 
 #### JSON e CSV
 
-- INSERT
-  - Não tem "`INTO`" na sentença
-  - Aceita somente objetos ou arrays JSON como valores
+- INSERT aceita somente objetos ou arrays JSON como valores
   - Examplo:
     ```gherkin
-    Quando eu executo o script 'INSERT [MyDB] VALUES { "name": "Mary", "surname": "Jane", "age": 21 }'
-    ```
-- DELETE
-  - Não tem "`FROM`" na sentença
-  - Examplo 1:
-    ```gherkin
-    Quando eu executo o script 'DELETE [MyDB]'
-    ```
-  - Example 2:
-    ```gherkin
-    Quando eu executo o script 'DELETE [MyDB] WHERE name = "Mary"'
-    ```
-- UPDATE
-  - Example:
-    ```gherkin
-    Quando eu executo o script 'UPDATE [MyDB] SET age = 22, surname = "Anne" WHERE name = "Mary"'
+    Quando eu executo o script 'INSERT INTO [MyDB] VALUES { "name": "Mary", "surname": "Jane", "age": 21 }'
     ```
 
 #### Excel e Firebase

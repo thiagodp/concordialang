@@ -48,3 +48,16 @@ export function stringToDatabaseTypeString( dbType: string ): string {
         default             : return 'unknown';
     }
 }
+
+/**
+ * Returns true whether the database supports table or collections in queries.
+ *
+ * @param dbType Database type
+ */
+export function supportTablesInQueries( dbType: string ): boolean {
+    // The following DOES NOT SUPPORT the concept of tables or collections
+    return [
+        DatabaseType.CSV.toString(),
+        DatabaseType.JSON.toString()
+    ].indexOf( stringToDatabaseTypeString( dbType ) ) < 0;
+}

@@ -278,27 +278,10 @@ Normal syntax, like the aforementioned. Access through ADO currently works only 
 
 #### JSON and CSV databases
 
-- INSERT
-  - Does not have "`INTO`" in the sentence
-  - Accepts only JSON objects or arrays as values
+- INSERT accepts only JSON objects or arrays as values
   - Example:
     ```gherkin
-    When I run the script 'INSERT [MyDB] VALUES { "name": "Mary", "surname": "Jane", "age": 21 }'
-    ```
-- DELETE
-  - Does not have "`FROM`" in the sentence
-  - Example 1:
-    ```gherkin
-    When I run the script 'DELETE [MyDB]'
-    ```
-  - Example 2:
-    ```gherkin
-    When I run the script 'DELETE [MyDB] WHERE name = "Mary"'
-    ```
-- UPDATE
-  - Example:
-    ```gherkin
-    When I run the script 'UPDATE [MyDB] SET age = 22, surname = "Anne" WHERE name = "Mary"'
+    When I run the script 'INSERT INTO [MyDB] VALUES { "name": "Mary", "surname": "Jane", "age": 21 }'
     ```
 
 #### Excel and Firebase databases

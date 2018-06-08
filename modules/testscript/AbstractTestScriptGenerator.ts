@@ -12,6 +12,7 @@ import { Actions } from "../util/Actions";
 import { Symbols } from "../req/Symbols";
 import { DatabaseToAbstractDatabase } from "../db/DatabaseToAbstractDatabase";
 import { AbstractDatabase } from "../ast/AbstractDatabase";
+import { supportTablesInQueries } from "../db/DatabaseTypes";
 
 /**
  * Generates Abstract Test Script
@@ -245,13 +246,13 @@ export class AbstractTestScriptGenerator {
 
             // options have "script"
 
-            let query = s.values[ 0 ];
+            let sqlCommand = s.values[ 0 ];
             let found: boolean = false;
             // Find database names inside
             for ( let i in dbVarNames ) {
 
                 let dbVar = dbVarNames[ i ];
-                if ( query.toString().toLowerCase().indexOf( dbVar.toLowerCase() ) < 0 ) {
+                if ( sqlCommand.toString().toLowerCase().indexOf( dbVar.toLowerCase() ) < 0 ) {
                     continue;
                 }
 
@@ -266,9 +267,23 @@ export class AbstractTestScriptGenerator {
                 }
 
                 // Remove database name
-                query = query.toString().replace( makeDbNameRegex( dbName ), '' );
+                sqlCommand = sqlCommand.toString().replace( makeDbNameRegex( dbName ), '' );
 
-                let cmd = this.sentenceToCommand( s, new ATSDatabaseCommand(), [ dbName, query ] );
+                // Removes some keywords from the command, depending on the database type
+                const absDB = dbConversor.convertFromNode( db, spec.basePath );
+                if ( ! supportTablesInQueries( absDB.driverName ) ) {
+                    const uppercased = sqlCommand.toUpperCase().trim();
+                    if ( uppercased.startsWith( 'DELETE FROM' ) ) {
+                        // Remove the " FROM"
+                        sqlCommand = sqlCommand.replace( /( from)/ui, '' ); // Just the first one
+                    } else if ( uppercased.startsWith( 'INSERT INTO' ) ) {
+                        // Remove the " INTO"
+                        sqlCommand = sqlCommand.replace( /( into)/ui, '' ); // Just the first one
+                    }
+                }
+
+                // Transforms to a command
+                let cmd = this.sentenceToCommand( s, new ATSDatabaseCommand(), [ dbName, sqlCommand ] );
                 commands.push( cmd );
 
                 break;
