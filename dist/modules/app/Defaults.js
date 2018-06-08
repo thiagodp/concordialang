@@ -77,7 +77,7 @@ class Defaults {
         this.DIR_LANGUAGE = 'data/';
         this.DIR_TEST_CASE = null; // null means "same as the feature file"
         this.DIR_SCRIPT = 'test/';
-        this.DIR_SCRIPT_RESULT = 'test/';
+        this.DIR_SCRIPT_RESULT = 'output/';
         // CONTENT GENERATION
         this.CASE_UI = CaseType_1.CaseType.CAMEL.toString(); // e.g., fullName
         this.CASE_METHOD = CaseType_1.CaseType.SNAKE.toString(); // e.g., my_test_method

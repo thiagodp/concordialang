@@ -104,7 +104,7 @@ export class Defaults {
     readonly DIR_LANGUAGE: string = 'data/';
     readonly DIR_TEST_CASE: string = null; // null means "same as the feature file"
     readonly DIR_SCRIPT: string = 'test/';
-    readonly DIR_SCRIPT_RESULT: string = 'test/';
+    readonly DIR_SCRIPT_RESULT: string = 'output/';
 
     // CONTENT GENERATION
 
