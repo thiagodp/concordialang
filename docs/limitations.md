@@ -27,6 +27,7 @@
 
 - More than one `Database` entity in the same query is not supported.
 - More than one `Table` entity in the same query is not supported.
+- SQL syntax may vary depend on the used database. See [actions.md](actions.md#run).
 
 ### Variant sentences
 

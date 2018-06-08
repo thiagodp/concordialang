@@ -172,8 +172,82 @@ Quando eu clico com o botão direito em {Foo}
 ### run + script
 
 ```gherkin
-Quando eu executo o script 'INSERT INTO [TestDB].users ( username, password ) VALUES ( "bob", "b0bp4s$" )'
+Quando eu executo o script 'INSERT INTO [MyDB].product ( name, price ) VALUES ( "Soda", 1.50 )'
+  e eu executo o script 'INSERT INTO [MyDB].Users( UserName, UserSex, UserAge ) VALUES ( "Newton", "Male", 25 )'
+  e eu executo o script 'INSERT INTO [MyDB].`my long table name`( 'long column`, `another long column`) VALUES ("Foo", 10)'
 ```
+
+```gherkin
+Quando eu executo o script 'UPDATE [MyDB].Users SET UserAge=26, UserStatus="online" WHERE UserName="Newton"'
+  e eu executo o script 'UPDATE [MyDB].`my long table name` SET `long column` = "Bar" WHERE `another long column` = 70'
+```
+
+```gherkin
+Quando eu executo o script 'DELETE FROM [MyDB].Users WHERE UserName="Newton"'
+  e eu executo o script 'DELETE FROM [MyDB].`my long table name` WHERE `another long column` = 70'
+```
+
+👉 *Script devem ser declarados entre aspas simples (`'`) e devem ficar em uma única linha*
+
+👉 *Sempre inclua a referência para o banco de dados*
+
+👉 *Comandos SQL podem depender do banco de dados utilizado*
+
+Concordia usa [database-js](https://github.com/mlaanderson/database-js) para acessar bancos de dados e arquivos através de uma interface SQL. A sintaxe SQL suportada pode variar de um banco de dados para outro. Em caso de problemas, consulte a [documentação do driver correspondente](https://github.com/mlaanderson/database-js#drivers).
+
+#### MySQL, PostgreSQL, and ADO databases
+
+Sintaxe normal, como a exemplificada anteriormente. O acesso através de ADO atualmente funciona somente em Windows.
+
+#### JSON and CSV databases
+
+- INSERT
+  - Não tem "`INTO`" na sentença
+  - Aceita somente objetos ou arrays JSON como valores
+  - Examplo:
+    ```gherkin
+    Quando eu executo o script 'INSERT [MyDB] VALUES { "name": "Mary", "surname": "Jane", "age": 21 }'
+    ```
+- DELETE
+  - Não tem "`FROM`" na sentença
+  - Examplo 1:
+    ```gherkin
+    Quando eu executo o script 'DELETE [MyDB]'
+    ```
+  - Example 2:
+    ```gherkin
+    Quando eu executo o script 'DELETE [MyDB] WHERE name = "Mary"'
+    ```
+- UPDATE
+  - Example:
+    ```gherkin
+    Quando eu executo o script 'UPDATE [MyDB] SET age = 22, surname = "Anne" WHERE name = "Mary"'
+    ```
+
+#### Firebase databases
+
+Syntax similar to [JSON and CSV databases](json-and-csv-databases). However, it has some limitations, as pointed out in [its documentation](https://github.com/mlaanderson/database-js-firebase) :
+
+> *SQL commands are limited to SELECT, UPDATE, INSERT and DELETE. WHERE works well. JOINs are not allowed. GROUP BY is not supported. LIMIT and OFFSET are combined into a single LIMIT syntax: LIMIT [offset,]number*
+
+#### INI databases
+
+- INSERT
+  - Not supported yet by [database-js-ini](https://github.com/mlaanderson/database-js-ini)
+
+- DELETE
+  - Not supported yet by [database-js-ini](https://github.com/mlaanderson/database-js-ini)
+
+- UPDATE
+  - Example:
+    ```gherkin
+    Quando eu executo o script 'UPDATE [MyDB] SET age = 22 WHERE name = "Mary"'
+    ```
+
+#### SQLite databases
+
+Currently [database-js-sqlite](https://github.com/mlaanderson/database-js-sqlite) uses [sql.js](https://github.com/kripken/sql.js) that **doesn't persist the changes made to the database**.
+
 
 ## `saveScreenshot`
 
