@@ -23,6 +23,7 @@ See [examples of actions](../docs/actions.md) in Concordia Language. 👀
 
 ### Test Events
 
+```
 +--------------------+-------------------------------------------------+
 | Concordia keyword  | CodeceptJS support (method/other)               |
 +--------------------+-------------------------------------------------+
@@ -33,6 +34,7 @@ See [examples of actions](../docs/actions.md) in Concordia Language. 👀
 | beforeEachScenario | Before or Background                            |
 | afterEachScenario  | After                                           |
 +--------------------+-------------------------------------------------+
+```
 
 ### Actions
 
