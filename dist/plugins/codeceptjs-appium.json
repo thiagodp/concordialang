@@ -9,7 +9,7 @@
     ],
     "file": "codeceptjs-appium/CodeceptJSForAppium.js",
     "class": "CodeceptJS",
-    "install": "npm install -g mocha mocha-multi codeceptjs appium && npm install --save-dev codeceptjs-dbhelper database-js-json && echo PLEASE RUN THE FOLLOWING COMMAND FOR SUPPORTING OTHER DATABASES && echo npm install --save-dev database-js-csv database-js-xlsx database-js-ini database-js-firebase database-js-mysql database-js-postgres database-js-sqlite",
-    "uninstall": "npm uninstall -g mocha mocha-multi codeceptjs appium && npm uninstall --save-dev codeceptjs-dbhelper database-js-json && echo PLEASE RUN THE FOLLOWING COMMAND FOR UNINSTALLING THE SUPPORT TO OTHER DATABASES && echo npm install --save-dev database-js-csv database-js-xlsx database-js-ini database-js-firebase database-js-mysql database-js-postgres database-js-sqlite",
+    "install": "npm install -g mocha mocha-multi codeceptjs appium && npm init --yes && npm install --save-dev codeceptjs-dbhelper database-js database-js-json && echo PLEASE RUN THE FOLLOWING COMMAND FOR SUPPORTING OTHER DATABASES && echo npm install --save-dev database-js-csv database-js-xlsx database-js-ini database-js-firebase database-js-mysql database-js-postgres database-js-sqlite",
+    "uninstall": "npm uninstall -g mocha mocha-multi codeceptjs appium && npm uninstall --save-dev codeceptjs-dbhelper database-js database-js-json && echo PLEASE RUN THE FOLLOWING COMMAND FOR UNINSTALLING THE SUPPORT TO OTHER DATABASES && echo npm install --save-dev database-js-csv database-js-xlsx database-js-ini database-js-firebase database-js-mysql database-js-postgres database-js-sqlite",
     "serve": "appium"
 }
