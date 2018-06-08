@@ -9,12 +9,12 @@
         "uiElement": [ "elemento da iu", "elemento de iu", "ui element" ],
         "database": [ "banco de dados", "database" ],
 
-        "beforeAll": [ "antes de todos", "antes de tudo", "before all" ],
-        "afterAll": [ "depois de todos", "após todos", "depois de tudo", "após tudo", "after all" ],
+        "beforeAll": [ "antes de todas", "antes de todos", "antes de tudo", "before all" ],
+        "afterAll": [ "depois de todas", "depois de todos", "após todos", "após todas", "depois de tudo", "após tudo", "after all" ],
         "beforeFeature": [ "antes da funcionalidade", "antes da característica", "antes da feature", "before feature" ],
         "afterFeature": [ "depois da funcionalidade", "depois da característica", "depois da feature", "após a funcionalidade", "após a característica", "após a feature", "after feature" ],
-        "beforeEachScenario": [ "antes de cada cenário", "before each scenario" ],
-        "afterEachScenario": [ "depois de cada cenário", "após cada cenário", "after each scenario" ],
+        "beforeEachScenario": [ "antes de cada cenário", "antes de cenário", "before each scenario" ],
+        "afterEachScenario": [ "depois de cada cenário", "depois de cenário", "após cada cenário", "after each scenario" ],
 
         "i": [ "eu" ],
         "is": [ "é", "is" ],
