@@ -25,6 +25,12 @@ import { UIElementParser } from './UIElementParser';
 import { TableParser } from './TableParser';
 import { DatabaseParser } from './DatabaseParser';
 import { VariantBackgroundParser } from './VariantBackgroundParser';
+import { BeforeAllParser } from './BeforeAllParser';
+import { AfterAllParser } from './AfterAllParser';
+import { BeforeFeatureParser } from './BeforeFeatureParser';
+import { AfterFeatureParser } from './AfterFeatureParser';
+import { BeforeEachScenarioParser } from './BeforeEachScenarioParser';
+import { AfterEachScenarioParser } from './AfterEachScenarioParser';
 
 /**
  * Builds an AST from the nodes detected by the lexer. It checks syntatic properties
@@ -63,6 +69,12 @@ export class Parser {
         this._parsersMap[ NodeTypes.DATABASE_PROPERTY ] = new ListItemParser();
         this._parsersMap[ NodeTypes.VARIANT ] = new VariantParser();
         this._parsersMap[ NodeTypes.TEST_CASE ] = new TestCaseParser();
+        this._parsersMap[ NodeTypes.BEFORE_ALL ] = new BeforeAllParser();
+        this._parsersMap[ NodeTypes.AFTER_ALL ] = new AfterAllParser();
+        this._parsersMap[ NodeTypes.BEFORE_FEATURE ] = new BeforeFeatureParser();
+        this._parsersMap[ NodeTypes.AFTER_FEATURE ] = new AfterFeatureParser();
+        this._parsersMap[ NodeTypes.BEFORE_EACH_SCENARIO ] = new BeforeEachScenarioParser();
+        this._parsersMap[ NodeTypes.AFTER_EACH_SCENARIO ] = new AfterEachScenarioParser();
     }
 
     public reset(): void {

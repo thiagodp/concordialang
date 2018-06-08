@@ -17,6 +17,38 @@ class TestScriptGenerator {
         // THIS IS A GENERATED FILE - MODIFICATIONS CAN BE LOST !
 
         Feature("{{feature.name}}");
+        {{#beforeFeature}}
+
+        BeforeSuite( async (I) => { // Before Feature
+            {{#convertedCommands}}
+            {{{.}}}
+            {{/convertedCommands}}
+        });
+        {{/beforeFeature}}
+        {{#afterFeature}}
+
+        AfterSuite( async (I) => { // After Feature
+            {{#convertedCommands}}
+            {{{.}}}
+            {{/convertedCommands}}
+        });
+        {{/afterFeature}}
+        {{#beforeEachScenario}}
+
+        Before( async (I) => { // Before Each Scenario
+            {{#convertedCommands}}
+            {{{.}}}
+            {{/convertedCommands}}
+        });
+        {{/beforeEachScenario}}
+        {{#afterEachScenario}}
+
+        After( async (I) => { // After Each Scenario
+            {{#convertedCommands}}
+            {{{.}}}
+            {{/convertedCommands}}
+        });
+        {{/afterEachScenario}}
 
         {{#testcases}}
         Scenario("{{scenario}} | {{name}}", (I) => {
@@ -34,6 +66,17 @@ class TestScriptGenerator {
             test.convertedCommands = [];
             for (let cmd of test.commands || []) {
                 test.convertedCommands.push(this.mapper.map(cmd));
+            }
+        }
+        const events = ['beforeFeature', 'afterFeature', 'beforeEachScenario', 'afterEachScenario'];
+        for (let eventStr of events) {
+            let event = obj[eventStr];
+            if (!event) {
+                continue;
+            }
+            event.convertedCommands = [];
+            for (let cmd of event.commands || []) {
+                event.convertedCommands.push(this.mapper.map(cmd));
             }
         }
         return mustache_1.render(this.template, obj); // mustache's renderer

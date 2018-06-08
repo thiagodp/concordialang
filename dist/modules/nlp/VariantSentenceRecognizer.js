@@ -64,26 +64,32 @@ class VariantSentenceRecognizer {
                 action = r.entities[execActionIndex].value;
             }
             let item = node;
-            // Action
+            // action
             item.action = action;
-            // Action modifier (optional)
+            // modifier (optional)
             const modifiers = r.entities.filter(e => e.entity === Entities_1.Entities.UI_ACTION_MODIFIER).map(e => e.value);
             if (modifiers.length > 0) {
                 item.actionModifier = modifiers[0];
             }
-            // Action option (optional)
+            // options (optional)
             const options = r.entities.filter(e => e.entity === Entities_1.Entities.UI_ACTION_OPTION).map(e => e.value);
             if (options.length > 0) {
                 item.actionOptions = options;
             }
-            // Targets - UI LITERALS (optional)
+            // targets - UI LITERALS (optional)
             item.targets = r.entities.filter(e => e.entity === Entities_1.Entities.UI_LITERAL).map(e => e.value);
-            // Target Types
+            // target types
             item.targetTypes = r.entities.filter(e => e.entity === Entities_1.Entities.UI_ELEMENT_TYPE).map(e => e.value);
-            // VALUES (optional)
+            // values (optional)
             item.values = r.entities
                 .filter(e => e.entity === Entities_1.Entities.VALUE || e.entity === Entities_1.Entities.NUMBER)
                 .map(e => e.value);
+            // commands as values (optional)
+            let commands = r.entities.filter(e => e.entity === Entities_1.Entities.COMMAND)
+                .map(e => e.value.toString());
+            for (let cmd of commands) {
+                item.values.push(cmd);
+            }
         };
         recognizer.recognize(language, nodes, [Intents_1.Intents.TEST_CASE], variantName, errors, warnings, processor);
     }

@@ -14,6 +14,8 @@ var Actions;
     Actions["CLEAR"] = "clear";
     Actions["CLICK"] = "click";
     Actions["CLOSE"] = "close";
+    Actions["CONNECT"] = "connect";
+    Actions["DISCONNECT"] = "disconnect";
     Actions["DOUBLE_CLICK"] = "doubleClick";
     Actions["DRAG"] = "drag";
     Actions["FILL"] = "fill";

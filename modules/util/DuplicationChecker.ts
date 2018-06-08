@@ -1,5 +1,6 @@
 import { SemanticException } from "../semantic/SemanticException";
 import { NamedNode } from "../ast/Node";
+import { Location } from "../ast/Location";
 
 // TO-DO: remove the following dependencies:
 import chalk from 'chalk';
@@ -122,20 +123,22 @@ export class DuplicationChecker {
             return;
         }
 
-        let makeNodeLocationStr = function( node ) {
-            return "\n  " + logSymbols.error + " (" + node.location.line + ',' + node.location.column + ') ' +
-                node.location.filePath || '';
-        };
-
         const map = this.mapDuplicates( nodes, 'name' );
         for ( let prop in map ) {
             let duplicatedNodes: NamedNode[] = map[ prop ];
-            let msg = 'Duplicated ' + nodeName +  ' "' + prop + '" in: ' +
-                chalk.white( duplicatedNodes.map( node => makeNodeLocationStr( node ) ).join( ', ' ) );
-            let err = new SemanticException( msg );
-            errors.push( err );
+            let locations: Location[] = duplicatedNodes.map( node => node.location );
+            let msg = 'Duplicated ' + nodeName +  ' "' + prop + '" in: ' + this.jointLocations( locations );
+            errors.push( new SemanticException( msg ) );
         }
         return map;
+    }
+
+    jointLocations( locations: Location[] ): string {
+        return chalk.white( locations.map( this.makeLocationString ).join( ', ' ) );
+    }
+
+    makeLocationString( loc: Location ): string {
+        return "\n  " + logSymbols.error + " (" + loc.line + ',' + loc.column + ') ' + loc.filePath || '';
     }
 
 }

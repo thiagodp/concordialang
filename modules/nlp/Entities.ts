@@ -20,6 +20,7 @@ export enum Entities {
     CONSTANT = 'constant', //                           e.g., [hello]
     VALUE_LIST = 'value_list', //                       e.g., [ 1, "hello", 2 ]
     STATE = 'state', //                                 e.g., ~some state~
+    COMMAND = 'command', //                             e.g., 'DELETE FROM table'
 
     // from the intent "testcase"
     //UI_PROPERTY = 'ui_property', //                   e.g.: text, value, color, ...

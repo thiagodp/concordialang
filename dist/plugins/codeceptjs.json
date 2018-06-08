@@ -10,7 +10,7 @@
     ],
     "file": "codeceptjs/CodeceptJS.js",
     "class": "CodeceptJS",
-    "install": "npm install -g mocha mocha-multi codeceptjs webdriverio selenium-standalone && selenium-standalone install",
-    "uninstall": "npm uninstall -g mocha mocha-multi codeceptjs webdriverio selenium-standalone",
+    "install": "npm install -g mocha mocha-multi codeceptjs webdriverio selenium-standalone && selenium-standalone install && npm init --yes && npm install --save-dev codeceptjs-dbhelper database-js database-js-json && echo PLEASE RUN THE FOLLOWING COMMAND FOR SUPPORTING OTHER DATABASES && echo npm install --save-dev database-js-csv database-js-xlsx database-js-ini database-js-firebase database-js-mysql database-js-postgres database-js-sqlite",
+    "uninstall": "npm uninstall -g mocha mocha-multi codeceptjs webdriverio selenium-standalone && npm uninstall --save-dev codeceptjs-dbhelper database-js database-js-json && echo PLEASE RUN THE FOLLOWING COMMAND FOR UNINSTALLING THE SUPPORT TO OTHER DATABASES && echo npm install --save-dev database-js-csv database-js-xlsx database-js-ini database-js-firebase database-js-mysql database-js-postgres database-js-sqlite",
     "serve": "selenium-standalone start"
 }

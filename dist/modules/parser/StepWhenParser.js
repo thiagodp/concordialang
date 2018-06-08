@@ -17,13 +17,19 @@ class StepWhenParser {
             NodeTypes_1.NodeTypes.VARIANT_BACKGROUND,
             NodeTypes_1.NodeTypes.VARIANT,
             NodeTypes_1.NodeTypes.TEST_CASE,
+            NodeTypes_1.NodeTypes.BEFORE_ALL,
+            NodeTypes_1.NodeTypes.BEFORE_FEATURE,
+            NodeTypes_1.NodeTypes.BEFORE_EACH_SCENARIO,
+            NodeTypes_1.NodeTypes.AFTER_ALL,
+            NodeTypes_1.NodeTypes.AFTER_FEATURE,
+            NodeTypes_1.NodeTypes.AFTER_EACH_SCENARIO,
             NodeTypes_1.NodeTypes.STEP_GIVEN,
             NodeTypes_1.NodeTypes.STEP_WHEN,
             NodeTypes_1.NodeTypes.STEP_AND,
             NodeTypes_1.NodeTypes.STEP_THEN // because of the scenario combination
         ];
         if (!it.hasPrior() || allowedPriorNodes.indexOf(it.spyPrior().nodeType) < 0) {
-            let e = new SyntaticException_1.SyntaticException('The "' + node.nodeType + '" clause must be declared after a Background, Scenario, Variant Background, Variant, Test Case, When, or And.', node.location);
+            let e = new SyntaticException_1.SyntaticException('The "' + node.nodeType + '" clause must be declared after: ' + allowedPriorNodes.join(', '), node.location);
             errors.push(e);
             return false;
         }
@@ -41,8 +47,22 @@ class StepWhenParser {
             owner = context.currentVariant;
         else if (context.inTestCase)
             owner = context.currentTestCase;
+        else if (context.inBeforeAll)
+            owner = context.doc.beforeAll;
+        else if (context.inAfterAll)
+            owner = context.doc.afterAll;
+        else if (context.inBeforeFeature)
+            owner = context.doc.beforeFeature;
+        else if (context.inAfterFeature)
+            owner = context.doc.afterFeature;
+        else if (context.inBeforeEachScenario)
+            owner = context.doc.beforeEachScenario;
+        else if (context.inAfterEachScenario)
+            owner = context.doc.afterEachScenario;
         else {
-            let e = new SyntaticException_1.SyntaticException('The "' + node.nodeType + '" clause must be declared after a Background, Scenario, Variant Background, Variant or Test Case.', node.location);
+            const lastBlock = allowedPriorNodes.indexOf(NodeTypes_1.NodeTypes.STEP_GIVEN);
+            const blocks = allowedPriorNodes.filter((v, index) => index < lastBlock);
+            let e = new SyntaticException_1.SyntaticException('The "' + node.nodeType + '" clause must be declared after:' + blocks.join(','), node.location);
             errors.push(e);
             return false;
         }

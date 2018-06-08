@@ -87,6 +87,20 @@ The next sentence is for *mobile* only:
 When I close the app
 ```
 
+## `connect`
+
+### connect + database
+```
+When I connect to the database [TestDB]
+```
+
+## `disconnect`
+
+### disconnect + database
+```
+When I disconnect from the database [TestDB]
+```
+
 ## `doubleClick`
 
 ### doubleClick + target
@@ -229,6 +243,88 @@ When I right click {Foo}
 ```gherkin
 When I right click "Foo"
 ```
+
+## `run`
+
+### run + script
+
+```gherkin
+When I run the script 'INSERT INTO [MyDB].product ( name, price ) VALUES ( "Soda", 1.50 )'
+  and I run the script 'INSERT INTO [MyDB].Users( UserName, UserSex, UserAge ) VALUES ( "Newton", "Male", 25 )'
+  and I run the script 'INSERT INTO [MyDB].`my long table name`( 'long column`, `another long column`) VALUES ("Foo", 10)'
+```
+
+```gherkin
+When I run the script 'UPDATE [MyDB].Users SET UserAge=26, UserStatus="online" WHERE UserName="Newton"'
+  and I run the script 'UPDATE [MyDB].`my long table name` SET `long column` = "Bar" WHERE `another long column` = 70'
+```
+
+```gherkin
+When I run the script 'DELETE FROM [MyDB].Users WHERE UserName="Newton"'
+  and I run the script 'DELETE FROM [MyDB].`my long table name` WHERE `another long column` = 70'
+```
+
+👉 *Scripts should be declared between single quotes (`'`) and must stay in a single line*
+
+👉 *Always include the reference to the database*
+
+👉 *SQL commands may depend on the used database*
+
+Concordia uses [database-js](https://github.com/mlaanderson/database-js) to access databases and files through a SQL-based interface. The supported SQL syntax may vary from one database to another. In case of problems, please see the [documentation of the corresponding driver](https://github.com/mlaanderson/database-js#drivers).
+
+#### MySQL, PostgreSQL, and ADO databases
+
+Normal syntax, like the aforementioned. Access through ADO currently works only on Windows.
+
+#### JSON and CSV databases
+
+- INSERT
+  - Does not have "`INTO`" in the sentence
+  - Accepts only JSON objects or arrays as values
+  - Example:
+    ```gherkin
+    When I run the script 'INSERT [MyDB] VALUES { "name": "Mary", "surname": "Jane", "age": 21 }'
+    ```
+- DELETE
+  - Does not have "`FROM`" in the sentence
+  - Example 1:
+    ```gherkin
+    When I run the script 'DELETE [MyDB]'
+    ```
+  - Example 2:
+    ```gherkin
+    When I run the script 'DELETE [MyDB] WHERE name = "Mary"'
+    ```
+- UPDATE
+  - Example:
+    ```gherkin
+    When I run the script 'UPDATE [MyDB] SET age = 22, surname = "Anne" WHERE name = "Mary"'
+    ```
+
+#### Excel and Firebase databases
+
+Syntax similar to [JSON and CSV databases](json-and-csv-databases). However, it has some limitations, as pointed out in [its documentation](https://github.com/mlaanderson/database-js-firebase) :
+
+> *SQL commands are limited to SELECT, UPDATE, INSERT and DELETE. WHERE works well. JOINs are not allowed. GROUP BY is not supported. LIMIT and OFFSET are combined into a single LIMIT syntax: LIMIT [offset,]number*
+
+#### INI databases
+
+- INSERT
+  - Not supported yet by [database-js-ini](https://github.com/mlaanderson/database-js-ini)
+
+- DELETE
+  - Not supported yet by [database-js-ini](https://github.com/mlaanderson/database-js-ini)
+
+- UPDATE
+  - Example:
+    ```gherkin
+    When I run the script 'UPDATE [MyDB] SET age = 22 WHERE name = "Mary"'
+    ```
+
+#### SQLite databases
+
+Currently [database-js-sqlite](https://github.com/mlaanderson/database-js-sqlite) uses [sql.js](https://github.com/kripken/sql.js) that **doesn't persist the changes made to the database**.
+
 
 ## `saveScreenshot`
 

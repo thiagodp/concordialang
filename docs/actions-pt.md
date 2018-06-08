@@ -6,133 +6,108 @@
 
 ## `amOn`
 
-### amOn + value
 ```gherkin
-Dado que eu estou em "http://concordialang.org"
+Dado que estou em "http://concordialang.org"
 ```
 
 ## `append`
 
-### append + number + target
 ```gherkin
-Quando eu adiciono "Foo" em {Foo}
-  e eu adiciono "Bar" em <#foo>
-```
-
-### append + value + target
-```gherkin
-Quando eu adiciono 100 em {Bar}
-  e eu adiciono 200 em <#foo>
+Quando eu adiciono "Conteúdo" em {Foo}
+  e adiciono 100 em {Bar}
+  e adiciono "Conteúdo" em <#zoo>
+  e adiciono 100 em <#xoo>
 ```
 
 ## `attachFile`
 
-### attach + file + value + target
 ```gherkin
-Quando eu anexo o arquivo "/path/to/file" em {Foo}
-  e eu anexo o arquivo "/path/to/file" em <#bar>
+Quando eu anexo o arquivo "/caminho/ate/arquivo" em {Foo}
+  e anexo "/caminho/ate/arquivo" em <#bar>
 ```
 
 ## `check`
 
-### check + target
 ```gherkin
 Quando eu marco {Foo}
-  e eu marco <#bar>
+  e marco <#bar>
 ```
 
 ## `clear`
 
-### clear + target
+```gherkin
+Quando eu apago o cookie "foo"
+  e quando eu limpo o cookie "bar"
+```
 ```gherkin
 Quando eu limpo {Foo}
-  e eu limpo <#bar>
-```
-
-### clear + cookie + value
-```gherkin
-Quando eu limpo o cookie "foo"
-  e eu apago o cookie "bar"
+  e limpo <#bar>
 ```
 
 ## `click`
 
-### click + target
 ```gherkin
 Quando eu clico em {Foo}
-  e eu clico em <#bar>
-```
-
-### click + value
-```gherkin
-Quando eu clico em "Foo"
+  e clico em <#bar>
 ```
 
 ## `close`
 
-### close + current tab
 ```gherkin
 Quando eu fecho a aba atual
 ```
-
-### close + other tabs
 ```gherkin
 Quando eu fecho as outras abas
 ```
-
-### close + app
 A próxima sentença é somente para *mobile*:
 ```gherkin
 Quando eu fecho o app
+  e quando eu fecho a aplicação
+```
+
+## `connect`
+
+### connect + database
+```
+When I connect to the database [TestDB]
+```
+
+## `disconnect`
+
+### disconnect + database
+```
+When I disconnect from the database [TestDB]
 ```
 
 ## `doubleClick`
 
-### doubleClick + target
 ```gherkin
-Quando eu dou um duplo clique em {Foo}
-  e eu clico duplamente em <#bar>
-```
-
-### doubleClick + value
-```gherkin
-Quando eu dou um duplo clique em "Foo"
-  e eu clico duplamente em "bar"
+Quando eu clico duas vezes em {Foo}
+  e dou um duplo clique em <#bar>
 ```
 
 ## `drag`
 
-### drag + target + target
 ```gherkin
 Quando eu arrasto {Foo} para <#bar>
 ```
 
 ## `fill`
 
-### fill + target
 ```gherkin
-Quando eu preencho {Foo}
+Quando eu preecho {Foo}
   e eu informo {Foo}
   e eu entro com {Foo}
-  e eu digito {Foo}
-```
-
-### fill + target + with + value or number
-```gherkin
-Quando eu preencho {Foo} com "foo"
+  e eu preencho {Foo} com "foo"
+  e eu preencho {Foo} com 100
   e eu preencho <#bar> com "bar"
-  e eu preencho <#bar> com 3.1415
-```
-
-### fill + value + inside + target
-```gherkin
-Quando eu digito "bar" em {Foo}
-  e eu digito "foo" em <#bar>
+  e eu precho <#bar> com 3.1415
+  e eu digito "bar" em {Foo}
+  e eu informo "foo" em <#bar>
 ```
 
 ## `hide`
 
-### hide + keyboard
 A próxima sentença é somente para *mobile*:
 ```gherkin
 Quando eu oculto o teclado
@@ -140,35 +115,20 @@ Quando eu oculto o teclado
 
 ## `install`
 
-### install + app + value
 A próxima sentença é somente para *mobile*:
 ```gherkin
 Quando eu instalo o app "com.example.android.myapp"
+  e quando eu instalo a aplicação "com.example.android.myapp"
 ```
 
 ## `maximize`
 
-### maximize + window
 ```gherkin
-Quando eu maximize a janela
-```
-
-## `move`
-
-### move + cursor + target
-```gherkin
-Quando eu movo o cursor para {Foo}
-  e eu movo o cursor para <#bar>
-```
-
-### move + cursor + target + number + number
-```gherkin
-Quando eu movo o cursor para {Foo} para 100, 200
+Quando eu maximizo a janela
 ```
 
 ## `open`
 
-### open + notificationsPanel
 A próxima sentença é somente para *mobile*:
 ```gherkin
 Quando eu abro o painel de notificações
@@ -176,15 +136,13 @@ Quando eu abro o painel de notificações
 
 ## `press`
 
-### press + value
 ```gherkin
 Quando eu pressiono "Enter"
-  e eu pressiono "Ctrl", "Alt", "Del"
+  e pressiono "Ctrl", "Alt", "Del"
 ```
 
 ## `pull`
 
-### pull + value + value
 A próxima sentença é somente para *mobile*:
 ```gherkin
 Quando eu extraio "/storage/emulated/0/DCIM/logo.png" para "some/path"
@@ -192,273 +150,246 @@ Quando eu extraio "/storage/emulated/0/DCIM/logo.png" para "some/path"
 
 ## `refresh`
 
-### refresh + currentPage
 ```gherkin
-Quando eu atualizo a página atual
-```
-
-### refresh + url
-```gherkin
-Quando eu atualizo a url
-```
-
-## `remove`
-
-### remove + app + value
-A próxima sentença é somente para *mobile*:
-```gherkin
-Quando eu removo o app "com.example.android.myapp"
+Quando eu atualizo a página
 ```
 
 ## `resize`
 
-### resize + window + value + value
 ```gherkin
-Quando eu redimensiono uma janela para 600, 400
+Quando eu redimensiono a janela para 600, 400
 ```
 
 ## `rightClick`
 
-### rightClick + target
 ```gherkin
 Quando eu clico com o botão direito em {Foo}
-  e eu clico com o botão direito em <#bar>
+  e clico com o botão direito em <#bar>
 ```
 
-### righClick + value
+## `run`
+
+### run + script
+
 ```gherkin
-Quando eu clico com o botão direito em "Foo"
+Quando eu executo o script 'INSERT INTO [MyDB].product ( name, price ) VALUES ( "Soda", 1.50 )'
+  e eu executo o script 'INSERT INTO [MyDB].Users( UserName, UserSex, UserAge ) VALUES ( "Newton", "Male", 25 )'
+  e eu executo o script 'INSERT INTO [MyDB].`my long table name`( 'long column`, `another long column`) VALUES ("Foo", 10)'
 ```
+
+```gherkin
+Quando eu executo o script 'UPDATE [MyDB].Users SET UserAge=26, UserStatus="online" WHERE UserName="Newton"'
+  e eu executo o script 'UPDATE [MyDB].`my long table name` SET `long column` = "Bar" WHERE `another long column` = 70'
+```
+
+```gherkin
+Quando eu executo o script 'DELETE FROM [MyDB].Users WHERE UserName="Newton"'
+  e eu executo o script 'DELETE FROM [MyDB].`my long table name` WHERE `another long column` = 70'
+```
+
+👉 *Script devem ser declarados entre aspas simples (`'`) e devem ficar em uma única linha*
+
+👉 *Sempre inclua a referência para o banco de dados*
+
+👉 *Comandos SQL podem depender do banco de dados utilizado*
+
+Concordia usa [database-js](https://github.com/mlaanderson/database-js) para acessar bancos de dados e arquivos através de uma interface SQL. A sintaxe SQL suportada pode variar de um banco de dados para outro. Em caso de problemas, consulte a [documentação do driver correspondente](https://github.com/mlaanderson/database-js#drivers).
+
+#### MySQL, PostgreSQL e ADO
+
+Sintaxe normal, como a exemplificada anteriormente. O acesso através de ADO atualmente funciona somente em Windows.
+
+#### JSON e CSV
+
+- INSERT
+  - Não tem "`INTO`" na sentença
+  - Aceita somente objetos ou arrays JSON como valores
+  - Examplo:
+    ```gherkin
+    Quando eu executo o script 'INSERT [MyDB] VALUES { "name": "Mary", "surname": "Jane", "age": 21 }'
+    ```
+- DELETE
+  - Não tem "`FROM`" na sentença
+  - Examplo 1:
+    ```gherkin
+    Quando eu executo o script 'DELETE [MyDB]'
+    ```
+  - Example 2:
+    ```gherkin
+    Quando eu executo o script 'DELETE [MyDB] WHERE name = "Mary"'
+    ```
+- UPDATE
+  - Example:
+    ```gherkin
+    Quando eu executo o script 'UPDATE [MyDB] SET age = 22, surname = "Anne" WHERE name = "Mary"'
+    ```
+
+#### Excel e Firebase
+
+Sintaxe simular a [JSON e CSV](json-e-csv). Contudo, tem limitações, como apontado em [sua documentação](https://github.com/mlaanderson/database-js-firebase) :
+
+> *Comandos SQL estão limitados a SELECT, UPDATE, INSERT e DELETE. WHERE funciona bem. JOINs não são permitidos. GROUP BY não é suportado. LIMIT e OFFSET são combinados em uma única sintaxe: LIMIT [offset,]number*
+
+#### INI
+
+- INSERT
+  - Ainda não suportado por [database-js-ini](https://github.com/mlaanderson/database-js-ini)
+
+- DELETE
+  - Ainda não suportado por [database-js-ini](https://github.com/mlaanderson/database-js-ini)
+
+- UPDATE
+  - Examplo:
+    ```gherkin
+    Quando eu executo o script 'UPDATE [MyDB] SET age = 22 WHERE name = "Mary"'
+    ```
+
+#### SQLite
+
+Atualmente [database-js-sqlite](https://github.com/mlaanderson/database-js-sqlite) usa [sql.js](https://github.com/kripken/sql.js) que **não persiste mudanças feitas no banco de dados**.
+
 
 ## `saveScreenshot`
 
-### saveScreenshot + value
 ```gherkin
-Quando eu salvo uma foto da tela em "foo.png"
-  e eu bato uma foto para "bar.png"
+Quando salvo uma foto pra "foo.png"
+  e eu bato uma foto da tela para "bar.png"
 ```
 
 ## `see`
 
-### see + value
 ```gherkin
-Então eu vejo "Foo Bar"
+Então eu não vejo "Foo Bar"
 ```
 
-### see + not + value
 ```gherkin
-Então eu não vejo "foo"
-  e eu não vejo "bar"
+Então eu não vejo que {Foo} está marcado
 ```
 
-### see + app + value + installed
 A próxima sentença é somente para *mobile*:
 ```gherkin
 Então eu vejo que o app "com.example.android.myapp" está instalado
 ```
 
-### see + app + value + not + installed
 A próxima sentença é somente para *mobile*:
 ```gherkin
 Então eu vejo que o app "com.example.android.myapp" não está instalado
 ```
 
-### see + currentActivity + value
 A próxima sentença é somente para *mobile*:
 ```gherkin
 Então eu vejo que a atividade atual é ".HomeScreenActivity"
 ```
 
-### see + device + locked
 A próxima sentença é somente para *mobile*:
 ```gherkin
 Então eu vejo que o dispositivo está bloqueado
 ```
 
-### see + device + unlocked
 A próxima sentença é somente para *mobile*:
 ```gherkin
 Então eu vejo que o dispositivo está desbloqueado
 ```
 
-### see + value + inside + target
-```gherkin
-Então eu vejo "hello" em {foo}
-  e eu vejo "world" em <bar>
-```
-
-### see + value + not + inside + target
-```gherkin
-Então eu não vejo "hello" em {foo}
-  e eu não vejo "world" em <bar>
-```
-
-### see + target + with + value
-```gherkin
-Então eu vejo "hello" em {foo}
-  e eu vejo "world" em <bar>
-```
-
-### see + not + target + with + value
-```gherkin
-Então eu não vejo {Foo} com "hello"
-  e eu não vejo <bar> com "world"
-```
-
-### see + not + value
-```gherkin
-Então eu não vejo "Foo Bar"
-  e eu não vejo "Foo"
-```
-
-### see + target + checked
-```gherkin
-Então eu vejo que {Foo} está marcado
-  e eu vejo que <#bar> está marcado
-```
-
-### see + not + target + checked
-```gherkin
-Então eu não vejo que {Foo} está marcado
-  e eu não vejo que <#bar> está marcado
-```
-
-### see + cookie + value
-```gherkin
-Então eu vejo o cookie "foo"
-```
-
-### see + not + cookie + value
 ```gherkin
 Então eu não vejo o cookie "foo"
-  e eu não vejo o cookie "bar"
 ```
 
-### see + url + value
-```gherkin
-Então eu vejo a url "/foo"
-```
-
-### see + not + url + value
-```gherkin
-Então eu não vejo a url "/foo"
-  e eu não vejo a url "/bar"
-```
-
-### see + value + inside + title
-```gherkin
-Então eu vejo "foo" no título
-```
-
-### see + not + value + inside + title
-```gherkin
-Então eu não vejo "foo" no título
-  e eu não vejo "bar" no título
-```
-
-### see + title + with + value
-```gherkin
-Então eu vejo o título com "foo"
-```
-
-### see + not + title + with + value
-```gherkin
-Então eu não vejo o título com "foo"
-  e eu não vejo o título com "bar"
-```
-
-### see + target
-```gherkin
-Então eu vejo {Foo}
-  e eu vejo <#bar>
-```
-
-### see + not + target
-```gherkin
-Então eu não vejo {Foo}
-  e eu não vejo <#bar>
-```
-
-### see + target + checked
-```gherkin
-Então eu vejo que {Foo} está marcado
-  e eu vejo que <#bar> está marcado
-```
-
-### see + not + target + checked
-```gherkin
-Então eu não vejo que {Foo} está marcado
-  e eu não vejo que <#bar> está marcado
-```
-
-### see + orientation + landscape
 A próxima sentença é somente para *mobile*:
 ```gherkin
 Então eu vejo que a orientação é paisagem
 ```
 
-### see + orientation + portrait
 A próxima sentença é somente para *mobile*:
 ```gherkin
 Então eu vejo que a orientação é retrato
 ```
 
-### see + url + value
+```gherkin
+Então eu não vejo a url "/foo"
+```
+
+```gherkin
+Então eu não vejo {Foo} com "foo"
+  e eu não vejo <#bar> com "bar"
+```
+
+```gherkin
+Então eu não vejo a "foo" no título
+```
+
+```gherkin
+Então eu não vejo {Foo}
+  e eu não vejo <#bar>
+```
+
+```gherkin
+Então eu vejo "Foo Bar"
+```
+
+```gherkin
+Então eu vejo que {Foo} está marcado
+```
+
+```gherkin
+Então eu vejo o cookie "foo"
+```
+
 ```gherkin
 Então eu vejo a url "/foo"
 ```
 
-### see + target + enabled
 ```gherkin
-Então eu vejo {Foo} ficar habilitado
-  e eu vejo <#bar> ficar habilitado
+Então eu vejo {Foo} com "foo"
+  e eu vejo <#bar> com "bar"
+```
+
+```gherkin
+Então eu vejo a "foo" no título
+```
+
+```gherkin
+Então eu vejo {Foo}
+  e eu vejo <#bar>
 ```
 
 ## `select`
 
-### select + value + inside + target
 ```gherkin
-Quando eu seleciono "foo" em {Foo}
-  e eu seleciono "bar" em <#bar>
+Então eu seleciono "foo" em {Foo}
+  e seleciono "bar" em <#bar>
 ```
 
 ## `shake`
 
-### shake + device
 A próxima sentença é somente para *mobile*:
 ```gherkin
 Quando eu balanço o dispositivo
-  e eu sacudo o telefone
-  e eu tremo o tablet
+  e eu tremo o celular
+  e eu sacudo o tablet
 ```
 
-## `deslizo`
+## `swipe`
 
-### deslizo + value + number + number
 A próxima sentença é somente para *mobile*:
 ```gherkin
 Quando eu deslizo "#io.selendroid.myapp:id/LinearLayout1" para 100, 200
 ```
 
-### deslizo + value + down
 A próxima sentença é somente para *mobile*:
 ```gherkin
 Quando eu deslizo "#io.selendroid.myapp:id/LinearLayout1" para baixo
 ```
-
-### deslizo + value + left
 A próxima sentença é somente para *mobile*:
 ```gherkin
 Quando eu deslizo "#io.selendroid.myapp:id/LinearLayout1" para a esquerda
 ```
 
-### deslizo + value + right
 A próxima sentença é somente para *mobile*:
 ```gherkin
-Quando eu deslizo "#io.selendroid.myapp:id/LinearLayout1" para a direita
+Quando eu deslizo "#io.selendroid.myapp:id/LinearLayout1" para direita
 ```
 
-### deslizo + value + up
 A próxima sentença é somente para *mobile*:
 ```gherkin
 Quando eu deslizo "#io.selendroid.myapp:id/LinearLayout1" para cima
@@ -466,13 +397,11 @@ Quando eu deslizo "#io.selendroid.myapp:id/LinearLayout1" para cima
 
 ## `switch`
 
-### switch + native
 A próxima sentença é somente para *mobile*:
 ```gherkin
 Quando eu troco para nativo
 ```
 
-### switch + web
 A próxima sentença é somente para *mobile*:
 ```gherkin
 Quando eu troco para web
@@ -480,70 +409,51 @@ Quando eu troco para web
 
 ## `tap`
 
-### tap + target
 A próxima sentença é somente para *mobile*:
 ```gherkin
-Quando eu toco <~ok>
-  e eu toco {Confirm}
+Quando eu toco em <~ok>
+  e eu toco em {Confirmar}
 ```
 
 ## `uncheck`
 
-### uncheck + target
 ```gherkin
-Quando eu desmarco {Foo}
+Então eu desmarco {Foo}
   e eu desmarco <#bar>
 ```
 
 ## `wait`
 
-### wait + segundos
 ```gherkin
-Quando eu aguardo 2 segundos
-  e eu espero 2 segundos
+Então eu espero 2 segundos
+  e eu aguardo 3 segundos
 ```
 
-### wait + target
 ```gherkin
-Quando eu aguardo {Foo}
-  e eu aguardo <#bar>
+Então eu espero por {Foo}
+  e eu espero <#bar> por 2 segundos
 ```
 
-### wait + target + segundos
 ```gherkin
-Quando eu aguardo {Foo} por 2 segundos
-  e eu aguardo <#bar> por 3 segundos
+Então eu espero {Foo} ficar habilitado
+  e eu espero por <#bar> ficar habilitado
 ```
 
-### wait + target + enabled
 ```gherkin
-Quando eu aguardo {Foo} estar habilitado
-  e eu aguardo <#bar> estar habilitado
+Então eu espero {Foo} ficar invisível
+  e eu espero por <#bar> ficar invisível
 ```
 
-### wait + target + invisible
 ```gherkin
-Quando eu aguardo {Foo} estar invisível
-  e eu aguardo <#bar> estar invisível
+Então eu espero {Foo} ficar visível
+  e eu espero por <#bar> ficar visível
 ```
 
-### wait + target + visible
 ```gherkin
-Quando eu aguardo {Foo} estar visível
-  e eu aguardo <#bar> estar visível
+Então eu espero pelo texto "Foo"
 ```
 
-### wait + text + value
 ```gherkin
-Quando eu aguardo o texto "Foo"
-```
-
-### wait + url + value
-```gherkin
-Quando eu aguardo a url "/foo"
-```
-
-### wait + url + value + segundos
-```gherkin
-Quando eu aguardo a url "/bar" por 3 segundos
+Então eu espero pela url "/foo"
+  e espero pela url "/bar" por 3 segundos
 ```

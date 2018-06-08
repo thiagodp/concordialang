@@ -1,5 +1,5 @@
 import { VariantLexer } from './VariantLexer';
-import { BeforeAllLexer, AfterAllLexer, BeforeFeatureLexer, AfterFeatureLexer, BeforeScenariosLexer, AfterScenariosLexer } from './TestEventLexer';
+import { BeforeAllLexer, AfterAllLexer, BeforeFeatureLexer, AfterFeatureLexer, BeforeEachScenarioLexer, AfterEachScenarioLexer } from '../lexer/TestEventLexer';
 import { DatabasePropertyLexer } from './DatabasePropertyLexer';
 import { DatabaseLexer } from './DatabaseLexer';
 import { UIPropertyLexer } from './UIPropertyLexer';
@@ -103,8 +103,8 @@ export class Lexer {
             , new AfterAllLexer( dictionary.afterAll )
             , new BeforeFeatureLexer( dictionary.beforeFeature )
             , new AfterFeatureLexer( dictionary.afterFeature )
-            , new BeforeScenariosLexer( dictionary.beforeEachScenario )
-            , new AfterScenariosLexer( dictionary.afterEachScenario )
+            , new BeforeEachScenarioLexer( dictionary.beforeEachScenario )
+            , new AfterEachScenarioLexer( dictionary.afterEachScenario )
             , new TextLexer() // captures any non-empty
         ];
 

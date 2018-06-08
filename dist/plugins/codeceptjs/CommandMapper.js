@@ -68,10 +68,20 @@ class CommandMapper {
      * @returns Lines of code.
      */
     makeCommands(cfg, cmd) {
-        const template = cfg.template + ' // ({{{location.line}}},{{{location.column}}}){{#comment}} {{{comment}}}{{/comment}}';
+        const COMMENT_TEMPLATE = ' // ({{{location.line}}},{{{location.column}}}){{#comment}} {{{comment}}}{{/comment}}';
+        if (!!cmd["db"] && cmd.action === 'connect') {
+            const values = {
+                value: ['"' + cmd.values[0] + '"', JSON.stringify(cmd["db"])],
+                location: cmd.location,
+                comment: cmd.comment,
+            };
+            const template = cfg.template + COMMENT_TEMPLATE;
+            return [mustache_1.render(template, values)];
+        }
+        const template = cfg.template + COMMENT_TEMPLATE;
         const values = {
             target: !cmd.targets ? '' : this.targetsToParameters(cmd.targets),
-            value: !cmd.values ? '' : this.valuesToParameters(cmd.values, cfg.valuesAsNonArray),
+            value: !cmd.values ? '' : this.valuesToParameters(cmd.values, cfg.valuesAsNonArray, cfg.useSingleQuotes),
             location: cmd.location,
             comment: cmd.comment,
             modifier: cmd.modifier,
@@ -317,22 +327,28 @@ class CommandMapper {
      * @param values Values to convert.
      * @param valueAsNonArrayWhenGreaterThanOne Whether wants to convert an
      *      array to single values when its size is greater than one.
+     * @param useSingleQuotes Whether is desired to use single quotes.
      */
-    valuesToParameters(values, valueAsNonArrayWhenGreaterThanOne = false) {
+    valuesToParameters(values, valueAsNonArrayWhenGreaterThanOne = false, useSingleQuotes = false) {
         if (0 === values.length) {
             return '';
         }
         if (1 === values.length) {
-            return this.convertSingleValue(values[0]);
+            return this.convertSingleValue(values[0], useSingleQuotes);
         }
-        const joint = values.map(this.convertSingleValue).join(', ');
+        const joint = values
+            .map(v => this.convertSingleValue(v, useSingleQuotes))
+            .join(', ');
         if (!valueAsNonArrayWhenGreaterThanOne) {
             return '[' + joint + ']';
         }
         return joint;
     }
-    convertSingleValue(value) {
-        return typeof value === 'string' ? `"${value}"` : value;
+    convertSingleValue(value, useSingleQuotes = false) {
+        if (typeof value === 'string') {
+            return useSingleQuotes ? `'${value}'` : `"${value}"`;
+        }
+        return value;
     }
 }
 exports.CommandMapper = CommandMapper;

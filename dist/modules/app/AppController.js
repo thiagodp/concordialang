@@ -161,7 +161,7 @@ class AppController {
                         let errors = [];
                         let files = [];
                         try {
-                            files = yield plugin.generateCode(abstractTestScripts, new TestScriptOptions_1.TestScriptGenerationOptions(options.dirScript, options.dirResult), errors);
+                            files = yield plugin.generateCode(abstractTestScripts, new TestScriptOptions_1.TestScriptGenerationOptions(options.plugin, options.dirScript), errors);
                         }
                         catch (err) {
                             hasErrors = true;

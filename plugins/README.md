@@ -21,6 +21,21 @@ See [examples of actions](../docs/actions.md) in Concordia Language. 👀
 
 **Note**: Commands from *WebDriverIO* are also supported by *Appium*. The command mapping from JSON to code is available in `codeceptjs/Commands.ts`.
 
+### Test Events
+
++--------------------+-------------------------------------------------+
+| Concordia keyword  | CodeceptJS support (method/other)               |
++--------------------+-------------------------------------------------+
+| beforeAll          | through hooks, see https://codecept.io/hooks/   |
+| afterAll           | through hooks, see https://codecept.io/hooks/   |
+| beforeFeature      | BeforeSuite                                     |
+| afterFeature       | AfterSuite                                      |
+| beforeEachScenario | Before or Background                            |
+| afterEachScenario  | After                                           |
++--------------------+-------------------------------------------------+
+
+### Actions
+
 Left column indicates currently available actions in Concordia, while the right column lists those commands available in the framework.  A tick (✓) means "checked with a test".
 
 ```
@@ -74,6 +89,7 @@ Left column indicates currently available actions in Concordia, while the right 
  | -                                         | grabValueFrom
  | hide + keyboard                           | hideDeviceKeyboard ✓ (Appium only)
  | install + app                             | installApp ✓ (Appium only)
+ | -                                         | locator
  | maximize + window                         | resizeWindow( 'maximize' ) ✓
  | move + cursor                             | moveCursorTo ✓
  | mouseOut                                  | -
@@ -145,5 +161,5 @@ Left column indicates currently available actions in Concordia, while the right 
  | -                                         | waitToHide
  | -                                         | waitUntil
  | wait + url + value                        | waitUrlEquals ✓
- | -                                         | locator
+ +-------------------------------------------+-------------------------------
 ```

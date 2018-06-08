@@ -1,31 +1,10 @@
-import { TestEventBlock, TestEventItem } from '../ast/TestEvent';
+import { TestEvent, BeforeAll, AfterAll, BeforeFeature, AfterFeature, BeforeEachScenario, AfterEachScenario } from '../ast/TestEvent';
 import { NodeTypes } from "../req/NodeTypes";
 import { BlockLexer } from './BlockLexer';
 import { ListItemLexer } from './ListItemLexer';
 
-/**
- * TestEventItem lexer.
- * 
- * @author Thiago Delgado Pinto
- */
-export class TestEventItemLexer extends ListItemLexer< TestEventItem > {
 
-    constructor() {
-        super( NodeTypes.TEST_EVENT_ITEM );
-    }
-
-    /** @inheritDoc */
-    suggestedNextNodeTypes(): string[] {
-        return [ NodeTypes.TEST_EVENT_ITEM ];
-    }
-}
-
-/**
- * Detects a BeforeAll.
- * 
- * @author Thiago Delgado Pinto
- */
-export class BeforeAllLexer extends BlockLexer< TestEventBlock > {
+export class BeforeAllLexer extends BlockLexer< BeforeAll > {
 
     constructor( words: string[] ) {
         super( words, NodeTypes.BEFORE_ALL );
@@ -33,17 +12,13 @@ export class BeforeAllLexer extends BlockLexer< TestEventBlock > {
 
     /** @inheritDoc */
     suggestedNextNodeTypes(): string[] {
-        return [ NodeTypes.TEST_EVENT_ITEM ];
+        return [ NodeTypes.STEP_GIVEN ];
     }
 
 }
 
-/**
- * Detects an AfterAll.
- * 
- * @author Thiago Delgado Pinto
- */
-export class AfterAllLexer extends BlockLexer< TestEventBlock > {
+
+export class AfterAllLexer extends BlockLexer< AfterAll > {
 
     constructor( words: string[] ) {
         super( words, NodeTypes.AFTER_ALL );
@@ -51,17 +26,13 @@ export class AfterAllLexer extends BlockLexer< TestEventBlock > {
 
     /** @inheritDoc */
     suggestedNextNodeTypes(): string[] {
-        return [ NodeTypes.TEST_EVENT_ITEM ];
+        return [ NodeTypes.STEP_GIVEN ];
     }
 
 }
 
-/**
- * Detects a BeforeFeature.
- * 
- * @author Thiago Delgado Pinto
- */
-export class BeforeFeatureLexer extends BlockLexer< TestEventBlock > {
+
+export class BeforeFeatureLexer extends BlockLexer< BeforeFeature > {
 
     constructor( words: string[] ) {
         super( words, NodeTypes.BEFORE_FEATURE );
@@ -69,17 +40,12 @@ export class BeforeFeatureLexer extends BlockLexer< TestEventBlock > {
 
     /** @inheritDoc */
     suggestedNextNodeTypes(): string[] {
-        return [ NodeTypes.TEST_EVENT_ITEM ];
+        return [ NodeTypes.STEP_GIVEN ];
     }
 
 }
 
-/**
- * Detects an AfterFeature.
- * 
- * @author Thiago Delgado Pinto
- */
-export class AfterFeatureLexer extends BlockLexer< TestEventBlock > {
+export class AfterFeatureLexer extends BlockLexer< AfterFeature > {
 
     constructor( words: string[] ) {
         super( words, NodeTypes.AFTER_FEATURE );
@@ -87,17 +53,13 @@ export class AfterFeatureLexer extends BlockLexer< TestEventBlock > {
 
     /** @inheritDoc */
     suggestedNextNodeTypes(): string[] {
-        return [ NodeTypes.TEST_EVENT_ITEM ];
+        return [ NodeTypes.STEP_GIVEN ];
     }
 
 }
 
-/**
- * Detects a BeforeScenarios.
- * 
- * @author Thiago Delgado Pinto
- */
-export class BeforeScenariosLexer extends BlockLexer< TestEventBlock > {
+
+export class BeforeEachScenarioLexer extends BlockLexer< BeforeEachScenario > {
 
     constructor( words: string[] ) {
         super( words, NodeTypes.BEFORE_EACH_SCENARIO );
@@ -105,17 +67,12 @@ export class BeforeScenariosLexer extends BlockLexer< TestEventBlock > {
 
     /** @inheritDoc */
     suggestedNextNodeTypes(): string[] {
-        return [ NodeTypes.TEST_EVENT_ITEM ];
+        return [ NodeTypes.STEP_GIVEN ];
     }
 
 }
 
-/**
- * Detects an AfterScenarios.
- * 
- * @author Thiago Delgado Pinto
- */
-export class AfterScenariosLexer extends BlockLexer< TestEventBlock > {
+export class AfterEachScenarioLexer extends BlockLexer< AfterEachScenario > {
 
     constructor( words: string[] ) {
         super( words, NodeTypes.AFTER_EACH_SCENARIO );
@@ -123,7 +80,7 @@ export class AfterScenariosLexer extends BlockLexer< TestEventBlock > {
 
     /** @inheritDoc */
     suggestedNextNodeTypes(): string[] {
-        return [ NodeTypes.TEST_EVENT_ITEM ];
+        return [ NodeTypes.STEP_GIVEN ];
     }
-        
+
 }

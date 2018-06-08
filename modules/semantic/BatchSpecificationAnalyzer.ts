@@ -10,6 +10,8 @@ import { ConstantSSA } from './ConstantSSA';
 import { UIElementSSA } from './UIElementSSA';
 import Graph = require( 'graph.js/dist/graph.full.js' );
 import { Options } from '../app/Options';
+import { BeforeAllSSA } from './BeforeAllSSA';
+import { AfterAllSSA } from './AfterAllSSA';
 
 /**
  * Executes many semantic analyzers to a specification in batch.
@@ -31,7 +33,9 @@ export class BatchSpecificationAnalyzer extends SpecificationAnalyzer {
             new ConstantSSA(),
             new DatabaseSSA(),
             new TableSSA(),
-            new TestCaseSSA() // TODO: change the SSA to receive a dictionary loader, according to the analyzed doc
+            new TestCaseSSA(), // TODO: change the SSA to receive a dictionary loader, according to the analyzed doc
+            new BeforeAllSSA(),
+            new AfterAllSSA()
         ];
     }
 

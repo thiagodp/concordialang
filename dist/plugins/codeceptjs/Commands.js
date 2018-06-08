@@ -28,6 +28,10 @@ exports.CODECEPTJS_COMMANDS = [
     // close + otherTabs
     { action: 'close', comp: CommandMapper_1.CmdCmp.SAME_TARGET_TYPE, targetType: 'otherTabs', template: 'I.closeOtherTabs();' },
     { action: 'close', comp: CommandMapper_1.CmdCmp.SAME_OPTION, options: ['otherTabs'], template: 'I.closeOtherTabs();' },
+    // connect + database (usually during a Test Event)
+    { action: 'connect', comp: CommandMapper_1.CmdCmp.TWO_VALUES_SAME_OPTION, options: ['database'], valuesAsNonArray: true, template: 'I.connect({{{value}}});' },
+    // disconnect + database (usually during a Test Event)
+    { action: 'disconnect', comp: CommandMapper_1.CmdCmp.ONE_VALUE_SAME_OPTION, options: ['database'], valuesAsNonArray: true, template: 'await I.disconnect({{{value}}});' },
     // doubleClick
     { action: 'doubleClick', comp: CommandMapper_1.CmdCmp.ONE_TARGET, template: 'I.doubleClick({{{target}}});' },
     { action: 'doubleClick', comp: CommandMapper_1.CmdCmp.ONE_VALUE, template: 'I.doubleClick({{{value}}});' },
@@ -63,6 +67,8 @@ exports.CODECEPTJS_COMMANDS = [
     { action: 'rightClick', comp: CommandMapper_1.CmdCmp.ONE_VALUE, template: 'I.rightClick({{{value}}});' },
     // rotate (Appium only)
     { action: 'rotate', comp: CommandMapper_1.CmdCmp.TWO_NUMBERS, valuesAsNonArray: true, template: 'I.rotate({{{value}}});' },
+    // run + script (usually during a Test Event)
+    { action: 'run', comp: CommandMapper_1.CmdCmp.TWO_VALUES_SAME_OPTION, options: ['script'], valuesAsNonArray: true, useSingleQuotes: true, template: 'await I.run({{{value}}});' },
     // saveScreenshot
     { action: 'saveScreenshot', comp: CommandMapper_1.CmdCmp.ONE_VALUE, template: 'I.saveScreenshot({{{value}}});' },
     // see + app + installed (Appium only)

@@ -23,6 +23,7 @@ describe('NLPInPortugueseTest', () => {
     const CONSTANT = Entities_1.Entities.CONSTANT;
     const QUERY = Entities_1.Entities.QUERY;
     const STATE = Entities_1.Entities.STATE;
+    const COMMAND = Entities_1.Entities.COMMAND;
     const UI_ACTION = Entities_1.Entities.UI_ACTION;
     const UI_ACTION_MODIFIER = Entities_1.Entities.UI_ACTION_MODIFIER;
     const UI_ACTION_OPTION = Entities_1.Entities.UI_ACTION_OPTION;
@@ -223,6 +224,11 @@ describe('NLPInPortugueseTest', () => {
                 let results = [];
                 results.push(recognizeInTestCase('dado que eu tenho ~foo~'));
                 shouldHaveTestCaseEntities(results, [EXEC_ACTION, STATE]);
+            });
+            it('{ui_action} {ui_action_option} {command}', () => {
+                let results = [];
+                results.push(recognizeInTestCase("dado que eu executo o script 'foo'"));
+                shouldHaveTestCaseEntities(results, [UI_ACTION, UI_ACTION_OPTION, COMMAND]);
             });
         });
         describe('free', () => {

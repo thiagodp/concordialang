@@ -58,6 +58,14 @@ class NLPBasedSentenceRecognizer {
         for (let db of doc.databases || []) {
             this._dbPropertyRec.recognizeSentences(language, db.items, errors, warnings);
         }
+        // Before All
+        if (TypeChecking_1.isDefined(doc.beforeAll)) {
+            this._variantSentenceRec.recognizeSentences(language, doc.beforeAll.sentences, errors, warnings, 'Before All');
+        }
+        // After All
+        if (TypeChecking_1.isDefined(doc.afterAll)) {
+            this._variantSentenceRec.recognizeSentences(language, doc.afterAll.sentences, errors, warnings, 'After All');
+        }
         //
         // LOCAL
         //
@@ -92,6 +100,22 @@ class NLPBasedSentenceRecognizer {
             for (let variant of scenario.variants || []) {
                 this._variantSentenceRec.recognizeSentences(language, variant.sentences, errors, warnings);
             }
+        }
+        // Before Feature
+        if (TypeChecking_1.isDefined(doc.beforeFeature)) {
+            this._variantSentenceRec.recognizeSentences(language, doc.beforeFeature.sentences, errors, warnings, 'Before Feature');
+        }
+        // After Feature
+        if (TypeChecking_1.isDefined(doc.afterFeature)) {
+            this._variantSentenceRec.recognizeSentences(language, doc.afterFeature.sentences, errors, warnings, 'After Feature');
+        }
+        // Before Each Scenario
+        if (TypeChecking_1.isDefined(doc.beforeEachScenario)) {
+            this._variantSentenceRec.recognizeSentences(language, doc.beforeEachScenario.sentences, errors, warnings, 'Before Each Scenario');
+        }
+        // After Each Scenario
+        if (TypeChecking_1.isDefined(doc.afterEachScenario)) {
+            this._variantSentenceRec.recognizeSentences(language, doc.afterEachScenario.sentences, errors, warnings, 'After Feature');
         }
     }
 }

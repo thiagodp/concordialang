@@ -64,6 +64,8 @@
                 "clear": [ "clear" ],
                 "click": [ "click", "activate", "trigger", "set" ],
                 "close": [ "close", "leave" ],
+                "connect": [ "connect" ],
+                "disconnect": [ "disconnect" ],
                 "doubleClick": [ "double click", "click twice" ],
                 "drag": [ "drag" ],
                 "fill": [ "fill", "enter", "inform", "type", "give" ],
@@ -133,10 +135,12 @@
             "ui_action_option": {
                 "app": [ "application", "app" ],
                 "checked": [ "checked" ],
+                "command": [ "command" ],
                 "cookie": [ "cookie" ],
                 "currentActivity": [ "current activity" ],
                 "currentPage": [ "current page", "page" ],
                 "currentTab": [ "current tab" ],
+                "database": [ "database" ],
                 "device": [ "device", "phone", "tablet" ],
                 "disabled": [ "disabled" ],
                 "down": [ "down" ],
@@ -159,6 +163,7 @@
                 "orientation": [ "orientation" ],
                 "portrait": [ "portrait" ],
                 "right": [ "right" ],
+                "script": [ "script" ],
                 "second": [ "second", "seconds" ],
                 "slowly": [ "slowly", "leisurely" ],
                 "title": [ "title" ],
@@ -345,6 +350,7 @@
 
                 "{exec_action} {state}",
 
+                "{ui_action} {ui_action_option} {command}",
 
                 "I {exec_action} the {state}",
                 "I have {state}",

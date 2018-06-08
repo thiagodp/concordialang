@@ -292,6 +292,9 @@ class Options {
         if (TypeChecking_1.isString(obj.files)) {
             this.files = obj.files.trim().split(PARAM_SEPARATOR);
         }
+        else if (TypeChecking_1.isString(obj.file)) { // alternative
+            this.files = obj.file.trim().split(PARAM_SEPARATOR);
+        }
         // LANGUAGE
         if (TypeChecking_1.isString(obj.language)) {
             this.language = obj.language.trim().toLowerCase();
@@ -361,6 +364,9 @@ class Options {
         }
         else if (TypeChecking_1.isString(obj.dirResults)) { // plural
             this.dirResult = obj.dirResults;
+        }
+        else if (TypeChecking_1.isString(obj.dirOutput)) { // alternative
+            this.dirResult = obj.dirOutput;
         }
         if (TypeChecking_1.isString(obj.extensionFeature)) {
             this.extensionFeature = obj.extensionFeature;

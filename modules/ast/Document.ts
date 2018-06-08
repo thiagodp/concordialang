@@ -10,6 +10,7 @@ import { Tag } from "./Tag";
 import { Import } from "./Import";
 import { Language } from "./Language";
 import { RegexBlock } from "./RegexBlock";
+import { BeforeAll, AfterAll, BeforeFeature, AfterFeature, BeforeEachScenario, AfterEachScenario } from './TestEvent';
 
 /**
  * Document
@@ -33,5 +34,12 @@ export interface Document {
     uiElements?: UIElement[]; // global, but a feature may have them too
     tables?: Table[]; // global
     databases?: Database[]; // global
+
+    beforeAll?: BeforeAll; // global
+    afterAll?: AfterAll; // global
+    beforeFeature?: BeforeFeature; // local, Feature must be declared before it
+    afterFeature?: AfterFeature; // local, Feature must be declared before it
+    beforeEachScenario?: BeforeEachScenario; // local, Feature must be declared before it
+    afterEachScenario?: AfterEachScenario; // local, Feature must be declared before it
 
 }

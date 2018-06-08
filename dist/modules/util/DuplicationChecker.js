@@ -109,19 +109,20 @@ class DuplicationChecker {
         if (nodes.length < 1) {
             return;
         }
-        let makeNodeLocationStr = function (node) {
-            return "\n  " + logSymbols.error + " (" + node.location.line + ',' + node.location.column + ') ' +
-                node.location.filePath || '';
-        };
         const map = this.mapDuplicates(nodes, 'name');
         for (let prop in map) {
             let duplicatedNodes = map[prop];
-            let msg = 'Duplicated ' + nodeName + ' "' + prop + '" in: ' +
-                chalk_1.default.white(duplicatedNodes.map(node => makeNodeLocationStr(node)).join(', '));
-            let err = new SemanticException_1.SemanticException(msg);
-            errors.push(err);
+            let locations = duplicatedNodes.map(node => node.location);
+            let msg = 'Duplicated ' + nodeName + ' "' + prop + '" in: ' + this.jointLocations(locations);
+            errors.push(new SemanticException_1.SemanticException(msg));
         }
         return map;
+    }
+    jointLocations(locations) {
+        return chalk_1.default.white(locations.map(this.makeLocationString).join(', '));
+    }
+    makeLocationString(loc) {
+        return "\n  " + logSymbols.error + " (" + loc.line + ',' + loc.column + ') ' + loc.filePath || '';
     }
 }
 exports.DuplicationChecker = DuplicationChecker;

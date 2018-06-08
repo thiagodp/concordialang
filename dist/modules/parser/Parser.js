@@ -23,6 +23,12 @@ const UIElementParser_1 = require("./UIElementParser");
 const TableParser_1 = require("./TableParser");
 const DatabaseParser_1 = require("./DatabaseParser");
 const VariantBackgroundParser_1 = require("./VariantBackgroundParser");
+const BeforeAllParser_1 = require("./BeforeAllParser");
+const AfterAllParser_1 = require("./AfterAllParser");
+const BeforeFeatureParser_1 = require("./BeforeFeatureParser");
+const AfterFeatureParser_1 = require("./AfterFeatureParser");
+const BeforeEachScenarioParser_1 = require("./BeforeEachScenarioParser");
+const AfterEachScenarioParser_1 = require("./AfterEachScenarioParser");
 /**
  * Builds an AST from the nodes detected by the lexer. It checks syntatic properties
  * of the model (e.g. the order of appearance), but it does not check semantic properties
@@ -58,6 +64,12 @@ class Parser {
         this._parsersMap[NodeTypes_1.NodeTypes.DATABASE_PROPERTY] = new ListItemParser_1.ListItemParser();
         this._parsersMap[NodeTypes_1.NodeTypes.VARIANT] = new VariantParser_1.VariantParser();
         this._parsersMap[NodeTypes_1.NodeTypes.TEST_CASE] = new TestCaseParser_1.TestCaseParser();
+        this._parsersMap[NodeTypes_1.NodeTypes.BEFORE_ALL] = new BeforeAllParser_1.BeforeAllParser();
+        this._parsersMap[NodeTypes_1.NodeTypes.AFTER_ALL] = new AfterAllParser_1.AfterAllParser();
+        this._parsersMap[NodeTypes_1.NodeTypes.BEFORE_FEATURE] = new BeforeFeatureParser_1.BeforeFeatureParser();
+        this._parsersMap[NodeTypes_1.NodeTypes.AFTER_FEATURE] = new AfterFeatureParser_1.AfterFeatureParser();
+        this._parsersMap[NodeTypes_1.NodeTypes.BEFORE_EACH_SCENARIO] = new BeforeEachScenarioParser_1.BeforeEachScenarioParser();
+        this._parsersMap[NodeTypes_1.NodeTypes.AFTER_EACH_SCENARIO] = new AfterEachScenarioParser_1.AfterEachScenarioParser();
     }
     reset() {
         this._errors = [];

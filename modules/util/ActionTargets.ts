@@ -14,6 +14,7 @@ export enum ActionTargets {
     CURRENT_PAGE = "currentPage",  // web, mobile web
     CURRENT_TAG  = "currentTab"  , // web, mobile web, mobile native, desktop
     CURSOR       = "cursor"      , // web, mobile web, mobile native, desktop
+    DATABASE     = "database"    , // any
     DIV          = "div"         , // web, mobile web
     FILE_INPUT   = "fileInput"   , // web, mobile web
     IMAGE        = "image"       , // web, mobile web, mobile native, desktop

@@ -21,6 +21,12 @@ class ParsingContext {
         this.inRegex = false;
         this.inUIProperty = false;
         this.inTable = false;
+        this.inBeforeAll = false;
+        this.inAfterAll = false;
+        this.inBeforeFeature = false;
+        this.inAfterFeature = false;
+        this.inBeforeEachScenario = false;
+        this.inAfterEachScenario = false;
         this.currentBackground = null;
         this.currentVariantBackground = null;
         this.currentScenario = null;
@@ -51,6 +57,12 @@ class ParsingContext {
         this.inRegex = false;
         this.inUIProperty = false;
         this.inTable = false;
+        this.inBeforeAll = false;
+        this.inAfterAll = false;
+        this.inBeforeFeature = false;
+        this.inAfterFeature = false;
+        this.inBeforeEachScenario = false;
+        this.inAfterEachScenario = false;
     }
 }
 exports.ParsingContext = ParsingContext;

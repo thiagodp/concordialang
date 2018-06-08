@@ -1,16 +1,45 @@
 import { Node } from './Node';
-import { Block, BlockItem } from './Block';
+import { Step } from './Step';
 
-export interface TestEventBlock extends Node, Block< TestEventItem > {}
+/**
+ * Test event
+ */
+export interface TestEvent extends Node {
 
-export interface TestEventItem extends BlockItem {}
+    /**
+     * Normal Given-When-Then sentences. Events about Feature and Scenario usually
+     * can interact with the application through its user interface, while
+     * the others can't.
+     */
+    sentences: Step[];
+}
 
+/**
+ * Executed before all the tests. Should be declared once in all the specification.
+ */
+export interface BeforeAll extends TestEvent {}
 
-export interface BeforeAll extends TestEventItem {}
-export interface AfterAll extends TestEventItem {}
+/**
+ * Executed after all the tests. Should be declared once in all the specification.
+ */
+export interface AfterAll extends TestEvent {}
 
-export interface BeforeFeature extends TestEventItem {}
-export interface AfterFeature extends TestEventItem {}
+/**
+ * Executed before the current feature.
+ */
+export interface BeforeFeature extends TestEvent {}
 
-export interface BeforeScenario extends TestEventItem {}
-export interface AfterScenario extends TestEventItem {}
+/**
+ * Executed after the current feature.
+ */
+export interface AfterFeature extends TestEvent {}
+
+/**
+ * Executed before each scenario.
+ */
+export interface BeforeEachScenario extends TestEvent {}
+
+/**
+ * Executed after each scenario.
+ */
+export interface AfterEachScenario extends TestEvent {}

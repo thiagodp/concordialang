@@ -22,6 +22,14 @@ export class StepWhenParser implements NodeParser< StepWhen > {
             NodeTypes.VARIANT_BACKGROUND,
             NodeTypes.VARIANT,
             NodeTypes.TEST_CASE,
+
+            NodeTypes.BEFORE_ALL,
+            NodeTypes.BEFORE_FEATURE,
+            NodeTypes.BEFORE_EACH_SCENARIO,
+            NodeTypes.AFTER_ALL,
+            NodeTypes.AFTER_FEATURE,
+            NodeTypes.AFTER_EACH_SCENARIO,
+
             NodeTypes.STEP_GIVEN,
             NodeTypes.STEP_WHEN,
             NodeTypes.STEP_AND,
@@ -30,7 +38,7 @@ export class StepWhenParser implements NodeParser< StepWhen > {
 
         if ( ! it.hasPrior() || allowedPriorNodes.indexOf( it.spyPrior().nodeType ) < 0 ) {
             let e = new SyntaticException(
-                'The "' + node.nodeType + '" clause must be declared after a Background, Scenario, Variant Background, Variant, Test Case, When, or And.',
+                'The "' + node.nodeType + '" clause must be declared after: ' + allowedPriorNodes.join( ', ' ),
                 node.location
                 );
             errors.push( e );
@@ -46,9 +54,17 @@ export class StepWhenParser implements NodeParser< StepWhen > {
         else if ( context.inScenarioVariantBackground ) owner = context.currentScenarioVariantBackground;
         else if ( context.inVariant ) owner = context.currentVariant;
         else if ( context.inTestCase ) owner = context.currentTestCase;
+        else if ( context.inBeforeAll ) owner = context.doc.beforeAll;
+        else if ( context.inAfterAll ) owner = context.doc.afterAll;
+        else if ( context.inBeforeFeature ) owner = context.doc.beforeFeature;
+        else if ( context.inAfterFeature ) owner = context.doc.afterFeature;
+        else if ( context.inBeforeEachScenario ) owner = context.doc.beforeEachScenario;
+        else if ( context.inAfterEachScenario ) owner = context.doc.afterEachScenario;
         else {
+            const lastBlock = allowedPriorNodes.indexOf( NodeTypes.STEP_GIVEN );
+            const blocks = allowedPriorNodes.filter( ( v, index ) => index < lastBlock );
             let e = new SyntaticException(
-                'The "' + node.nodeType + '" clause must be declared after a Background, Scenario, Variant Background, Variant or Test Case.',
+                'The "' + node.nodeType + '" clause must be declared after:' + blocks.join( ',' ),
                 node.location
                 );
             errors.push( e );
