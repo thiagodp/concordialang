@@ -577,13 +577,16 @@ Os eventos podem ser:
 3. { Antes de | Depois de } Todos
 
 Esses eventos suportam três tipos de comandos:
-  1. *Scripts SQL*: executa um script em um Banco de Dados declarado.
-  2. *Comando de console*: executa um comando no console e aguarda seu término. (AINDA NÃO SUPORTADO)
-  3. *Comando de arquivo*: executa uma operação em um arquivo. (AINDA NÃO SUPORTADO)
+
+1. **Scripts SQL**: executa um script em um Banco de Dados declarado. Veja as ações [connect](../actions-pt.md#connect), [disconnect](../actions-pt.md#disconnect) e [run](../actions-pt.md#run).
+
+2. **Comando de console**: executa um comando no console e aguarda seu término. (AINDA NÃO SUPORTADO)
+
+3. **Comando de arquivo**: executa uma operação em um arquivo. (AINDA NÃO SUPORTADO)
 
 Eventos de Teste para Funcionalidade e Cenário também suportam interações com a interface de usuário, como aquelas comumente usadas em Variantes.
 
-Comandos de Console e SQL devem ser declarados entre apóstrofos (`'`, também conhecido como aspas simples).
+Comandos de Console e SQL devem ser declarados entre apóstrofos (`'`), também conhecidos como *aspas simples*.
 
 Exemplo 1:
 ```gherkin
@@ -593,22 +596,22 @@ Antes da Funcionalidade:
 
 Exemplo 2:
 ```gherkin
-Antes de cada Cenário:
-  Quando eu executo o script 'DELETE FROM [Meu BD].`usuarios`'
-    e executo o script 'INSERT INTO [Meu BD].`usuarios` ( `login`, `senha` ) VALUES ( "Clark", "Kent" ), ( "Bruce", "Wayne" )'
-```
-
-Exemplo 3:
-```gherkin
 Depois da Funcionalidade:
   Quando eu executo o comando 'rmdir some-folder'
     e executo o script 'DELETE FROM [Meu BD].usuarios'
     e eu desconecto do banco de dados [Meu BD]
 ```
 
+Exemplo 3:
+```gherkin
+Antes de cada Cenário:
+  Quando eu executo o script 'DELETE FROM [Meu BD].`usuarios`'
+    e executo o script 'INSERT INTO [Meu BD].`usuarios` ( `login`, `senha` ) VALUES ( "Clark", "Kent" ), ( "Bruce", "Wayne" )'
+```
+
 Exemplo 4:
 ```gherkin
-Após cada Cenário:
+Depois de cada Cenário:
   Quando eu crio o arquivo 'path/to/foo.json' com `{ "name": "John", "surname": "Doe" }`
     e eu vejo que o arquivo 'path/to/bar.xml' contém `<person><name>John</name><surname>John</surname></person>`
 ```
