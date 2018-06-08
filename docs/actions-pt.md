@@ -69,14 +69,14 @@ Quando eu fecho o app
 
 ### connect + database
 ```
-When I connect to the database [TestDB]
+Quando eu conecto ao banco de dados [TestDB]
 ```
 
 ## `disconnect`
 
 ### disconnect + database
 ```
-When I disconnect from the database [TestDB]
+Quando eu desconecto do banco de dados [TestDB]
 ```
 
 ## `doubleClick`
