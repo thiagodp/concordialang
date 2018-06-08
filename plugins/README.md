@@ -39,9 +39,9 @@ See [examples of actions](../docs/actions.md) in Concordia Language. 👀
 Left column indicates currently available actions in Concordia, while the right column lists those commands available in the framework.  A tick (✓) means "checked with a test".
 
 ```
- +-------------------------------------------+-------------------------------
- | Concordia action/keywords                 | CodeceptJS with WebDriverIO
- +-------------------------------------------+-------------------------------
+ +-------------------------------------------+---------------------------------------
+ | Concordia action/keywords                 | CodeceptJS with WebDriverIO or Appium
+ +-------------------------------------------+---------------------------------------
  | -                                         | _locate
  | -                                         | _locateCheckable
  | -                                         | _locateClickable
@@ -57,7 +57,9 @@ Left column indicates currently available actions in Concordia, while the right 
  | close + app                               | closeApp ✓ (Appium only)
  | close + currentTab                        | closeCurrentTab ✓
  | close + otherTabs                         | closeOtherTabs ✓
+ | connect + database                        | N/A - supported via [dbhelper](https://github.com/thiagodp/codeceptjs-dbhelper)
  | -                                         | defineTimeout
+ | disconnect + database                     | N/A - supported via [dbhelper](https://github.com/thiagodp/codeceptjs-dbhelper)
  | not + see                                 | dontSee ✓
  | not + see + checkbox                      | dontSeeCheckboxIsChecked ✓
  | not + see + cookie                        | dontSeeCookie ✓
@@ -103,6 +105,7 @@ Left column indicates currently available actions in Concordia, while the right 
  | remove + app                              | removeApp ✓ (Appium only)
  | resize + window                           | resizeWindow ✓
  | rightClick                                | rightClick ✓
+ | run + script                              | N/A - supported via [dbhelper](https://github.com/thiagodp/codeceptjs-dbhelper)
  | -                                         | runInWeb
  | -                                         | runOnAndroid
  | -                                         | runOnIOS

@@ -202,14 +202,14 @@ Sintaxe normal, como a exemplificada anteriormente. O acesso através de ADO atu
 #### JSON e CSV
 
 - INSERT aceita somente objetos ou arrays JSON como valores
-  - Examplo:
+  - Exemplo:
     ```gherkin
     Quando eu executo o script 'INSERT INTO [MyDB] VALUES { "name": "Mary", "surname": "Jane", "age": 21 }'
     ```
 
 #### Excel e Firebase
 
-Sintaxe simular a [JSON e CSV](json-e-csv). Contudo, tem limitações, como apontado em [sua documentação](https://github.com/mlaanderson/database-js-firebase) :
+Sintaxe similar à de [JSON e CSV](json-e-csv). Contudo, tem limitações, como apontado em [sua documentação](https://github.com/mlaanderson/database-js-firebase) :
 
 > *Comandos SQL estão limitados a SELECT, UPDATE, INSERT e DELETE. WHERE funciona bem. JOINs não são permitidos. GROUP BY não é suportado. LIMIT e OFFSET são combinados em uma única sintaxe: LIMIT [offset,]number*
 
@@ -222,7 +222,7 @@ Sintaxe simular a [JSON e CSV](json-e-csv). Contudo, tem limitações, como apon
   - Ainda não suportado por [database-js-ini](https://github.com/mlaanderson/database-js-ini)
 
 - UPDATE
-  - Examplo:
+  - Exemplo:
     ```gherkin
     Quando eu executo o script 'UPDATE [MyDB] SET age = 22 WHERE name = "Mary"'
     ```
