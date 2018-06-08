@@ -178,8 +178,8 @@ export class AppController {
                         files = await plugin.generateCode(
                             abstractTestScripts,
                             new TestScriptGenerationOptions(
-                                options.dirScript,
-                                options.dirResult
+                                options.plugin,
+                                options.dirScript
                             ),
                             errors
                         );
