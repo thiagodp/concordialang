@@ -326,7 +326,7 @@ class EntityRecognizerMaker {
         valueRec.addMatch(regex, function (match) {
             const content = match.toString();
             return content.substring(1, content.length - 1).trim();
-        }, 100 // priority
+        }, 500 // priority
         );
         return valueRec;
     }
