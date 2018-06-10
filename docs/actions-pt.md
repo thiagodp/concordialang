@@ -173,6 +173,8 @@ Quando eu clico com o botão direito em {Foo}
 
 *Executa comandos no console/terminal*
 
+👉 *Comandos devem ser declarados entre aspas simples (`'`) e devem ficar em uma linha*
+
 ```gherkin
 Quando eu executo o comando 'rmdir foo'
   e rodo o comando './script.sh'

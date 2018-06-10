@@ -250,6 +250,8 @@ When I right click "Foo"
 
 *Run command in the console/terminal*
 
+👉 *Commands should be declared between single quotes (`'`) and must stay in a single line*
+
 ```gherkin
 When I run the command 'rmdir foo'
   and I run the command './script.sh'
