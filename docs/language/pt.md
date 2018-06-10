@@ -565,8 +565,6 @@ Veja [Exemplos de Ações](../actions-pt.md).
 
 *Declara eventos antes ou após Casos de Teste ou Funcionalidades. Comandos do console, scripts SQL ou operações com arquivos podem ser executadas quando esses eventos ocorrerem. Geralmente eles visarão preparar ou ajustar o ambiente, de acordo com os testes.*
 
-**SOMENTE SCRIPTS SQL SÃO SUPORTADOS ATUALMENTE**
-
 Observações:
 - Declaração local.
 - Somente uma declaração por Funcionalidade.
@@ -583,7 +581,7 @@ Esses eventos suportam três tipos de comandos:
 
 1. **Scripts SQL**: executa um script em um Banco de Dados declarado. Veja as ações [connect](../actions-pt.md#connect), [disconnect](../actions-pt.md#disconnect) e [run](../actions-pt.md#run).
 
-2. **Comando de console**: executa um comando no console e aguarda seu término. (AINDA NÃO SUPORTADO)
+2. **Comando de console**: executa um comando no console e aguarda seu término.
 
 3. **Comando de arquivo**: executa uma operação em um arquivo. (AINDA NÃO SUPORTADO)
 

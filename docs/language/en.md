@@ -565,8 +565,6 @@ Notes:
 - Local declaration.
 - Just one declaration per Feature.
 
-**ONLY SQL SCRIPTS ARE CURRENTLY SUPPORTED**
-
 They are:
 - `Before Each Scenario`: occurs before each scenario.
 - `After Each Scenario`: occurs after each scenario.
@@ -579,7 +577,7 @@ These events support three type of commands:
 
 1. **SQL script**: runs a SQL script into a declared database. See the actions [connect](../actions.md#connect), [disconnect](../actions.md#disconnect), and [run](../actions.md#run).
 
-2. **Console command**: runs a command in the console and waits for its termination. (NOT SUPPORTED YET)
+2. **Console command**: runs a command in the console and waits for its termination.
 
 3. **File command**: runs a command that checks or handles a file. (NOT SUPPORTED YET)
 
@@ -587,13 +585,13 @@ Test Events for Features and Scenarios also support interactions with the user i
 
 Both Console and SQL commands must declared values between apostrophes (`'`), as known as *single quotes*.
 
-Exemplo 1:
+Example 1:
 ```gherkin
 Before Feature:
   When I connect to the database [MyDB]
 ```
 
-Exemplo 2:
+Example 2:
 ```gherkin
 After Feature:
   When I run the command 'rmdir some-folder'
@@ -601,14 +599,14 @@ After Feature:
     and I disconnect from the database [MyDB]
 ```
 
-Exemplo 3:
+Example 3:
 ```gherkin
 Before Each Scenario:
   When I run the script 'DELETE FROM [MyDB].`users`'
     and I run the script 'INSERT INTO [MyDB].`users` ( `login`, `password` ) VALUES ( "Clark", "Kent" ), ( "Bruce", "Wayne" )'
 ```
 
-Exemplo 4:
+Example 4:
 ```gherkin
 After Each Scenario:
   When I create the file 'path/to/foo.json' with `{ "name": "John", "surname": "Doe" }`
