@@ -23,6 +23,7 @@ class CodeceptJSForAppium extends CodeceptJS_1.CodeceptJS {
         let config = cfgMaker.makeBasicConfig(scriptFileFilter, options.executionResultDir);
         cfgMaker.setAppiumHelper(config);
         cfgMaker.setDbHelper(config);
+        cfgMaker.setCmdHelper(config);
         return new TestScriptExecutor_1.TestScriptExecutor(config);
     }
 }

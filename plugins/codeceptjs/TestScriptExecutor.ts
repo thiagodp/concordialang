@@ -38,6 +38,8 @@ export class TestScriptExecutor {
         }
 
         const executionPath = process.cwd();
+        const cfgMaker = new ConfigMaker();
+        const writeF = promisify( writeFile );
 
         // About codeceptj.json
 
@@ -62,7 +64,6 @@ export class TestScriptExecutor {
         if ( ! configFileExists ) {
 
             try {
-                const writeF = promisify( writeFile );
                 await writeF( configFilePath, JSON.stringify( this._defaultConfig ) );
 
                 this.write( iconInfo, textColor( 'Generated configuration file' ), highlight( configFilePath ) );
@@ -72,8 +73,47 @@ export class TestScriptExecutor {
                 this.write( iconError, textColor( 'Could not generate' ), highlight( configFilePath ) + '.', textColor( 'Please run the following command:' ) );
                 this.write( textColor( '  codeceptjs init' ) );
             }
+
         } else {
-            this.write( iconInfo, textColor( 'Read' ), highlight( configFilePath ) );
+
+            // Let's check needed dependencies
+            let config = {};
+            let hadReadError: boolean = false;
+            try {
+                const readF = promisify( readFile );
+                const content = await readF( configFilePath );
+                config = JSON.parse( content.toString() );
+
+                this.write( iconInfo, textColor( 'Read' ), highlight( configFilePath ) );
+            } catch ( e ) {
+                hadReadError = true;
+                this.write( iconError, textColor( 'Could not read' ), highlight( configFilePath ) );
+            }
+
+            if ( ! hadReadError ) {
+
+                let needsToWriteConfig: boolean = ! cfgMaker.hasHelpersProperty( config );
+
+                if ( ! cfgMaker.hasCmdHelper( config ) ) {
+                    cfgMaker.setCmdHelper( config );
+                    needsToWriteConfig = true;
+                }
+
+                if ( ! cfgMaker.hasDbHelper( config ) ) {
+                    cfgMaker.setDbHelper( config );
+                    needsToWriteConfig = true;
+                }
+
+                if ( needsToWriteConfig ) {
+                    try {
+                        await writeF( configFilePath, JSON.stringify( config ) );
+                        this.write( iconInfo, textColor( 'Updated configuration file' ), highlight( configFilePath ) );
+                    } catch ( e ) {
+                        this.write( iconError, textColor( 'Error updating configuration file' ), highlight( configFilePath ) + '. Please check if it has DbHelper and CmdHelper configured.' );
+                    }
+                }
+            }
+
         }
 
         // About package.json
@@ -83,7 +123,7 @@ export class TestScriptExecutor {
 
         let showOptionalPackages: boolean = false;
         const packageFileExists: boolean = await this.fileExists( packageFilePath );
-        const neededPackages = [ 'codeceptjs-dbhelper', 'database-js', 'database-js-json' ];
+        const neededPackages = [ 'codeceptjs-cmdhelper', 'codeceptjs-dbhelper', 'database-js', 'database-js-json' ];
         if ( ! packageFileExists ) {
             this.write( iconInfo, textColor( 'Creating' ), highlight( PROJECT_FILE_NAME ), textColor( 'with needed dependencies...\n' ) );
             const cmd = 'npm init --yes && npm install --save-dev ' + neededPackages.join( ' ' );
@@ -136,7 +176,6 @@ export class TestScriptExecutor {
         const OUTPUT_FILE_NAME = 'output.json';
         const outputFilePath = path.join( options.executionResultDir || '.', OUTPUT_FILE_NAME );
 
-        const cfgMaker = new ConfigMaker();
         const overrideOptions = cfgMaker.makeMochaConfig( outputFilePath );
         const overrideOptionsStr = this.escapeJson( JSON.stringify( overrideOptions ) );
 

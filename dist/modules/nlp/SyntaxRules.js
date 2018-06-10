@@ -33,6 +33,8 @@ exports.DEFAULT_UI_ACTION_SYNTAX_RULE = {
 /**
  * Syntax rules for the supported UI Actions. Every rule overwrites DEFAULT_UI_ACTION_SYNTAX_RULE.
  *
+ * TO-DO: Replace raw values by constants in Actions class, etc.
+ *
  * @author Thiago Delgado Pinto
  */
 exports.UI_ACTION_SYNTAX_RULES = [

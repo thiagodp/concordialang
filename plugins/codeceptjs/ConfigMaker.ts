@@ -73,11 +73,61 @@ export class ConfigMaker {
     setDbHelper(
         config: any,
         requireFile: string = './node_modules/codeceptjs-dbhelper'
-    ) {
+    ): void {
         let helpers = this.ensureHelpersProperty( config );
-        helpers[ "DbHelper" ] = {
+        const property = this.getDbHelperProperty();
+        helpers[ property ] = {
             require: requireFile
         };
+    }
+
+    /** Returns the property for DbHelper */
+    getDbHelperProperty(): string {
+        return 'DbHelper';
+    }
+
+    /**
+     * Returns true whether the given configuration has DbHelper.
+     *
+     * @param config Target configuration
+     */
+    hasDbHelper( config: any ): boolean {
+        let helpers = this.ensureHelpersProperty( config );
+        const property = this.getDbHelperProperty();
+        return ! helpers[ property ] ? false : true;
+    }
+
+    /**
+     * Sets a CmdHelper
+     *
+     * @param config Target configuration.
+     * @param requireFile Required file or library. Defaults to "./node_modules/codeceptjs-cmdhelper".
+     */
+    setCmdHelper(
+        config: any,
+        requireFile: string = './node_modules/codeceptjs-cmdhelper'
+    ) {
+        let helpers = this.ensureHelpersProperty( config );
+        const property = this.getCmdHelperProperty();
+        helpers[ property ] = {
+            require: requireFile
+        };
+    }
+
+    /** Returns the property for CmdHelper */
+    getCmdHelperProperty(): string {
+        return 'CmdHelper';
+    }
+
+    /**
+     * Returns true whether the given configuration has CmdHelper.
+     *
+     * @param config Target configuration
+     */
+    hasCmdHelper( config: any ): boolean {
+        let helpers = this.ensureHelpersProperty( config );
+        const property = this.getCmdHelperProperty();
+        return ! helpers[ property ] ? false : true;
     }
 
     /**
@@ -108,13 +158,24 @@ export class ConfigMaker {
      * Ensure that the given configurations have a helpers property.
      *
      * @param config Target configuration.
+     *
      * @returns A reference to the helpers property.
      */
-    private ensureHelpersProperty( config: any ) {
+    ensureHelpersProperty( config: any ): any {
         if ( ! config.helpers ) {
             config.helpers = {};
         }
         return config.helpers;
+    }
+
+
+    /**
+     * Returns true whether the given configuration has a helpers property.
+     *
+     * @param config Target configuration
+     */
+    hasHelpersProperty( config: any ): boolean {
+        return ! config.helpers ? false : true;
     }
 
 }

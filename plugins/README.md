@@ -107,6 +107,7 @@ Left column indicates currently available actions in Concordia, while the right 
  | remove + app                              | removeApp ✓ (Appium only)
  | resize + window                           | resizeWindow ✓
  | rightClick                                | rightClick ✓
+ | run + command                             | N/A - supported via [cmdhelper](https://github.com/thiagodp/codeceptjs-cmdhelper)
  | run + script                              | N/A - supported via [dbhelper](https://github.com/thiagodp/codeceptjs-dbhelper)
  | -                                         | runInWeb
  | -                                         | runOnAndroid

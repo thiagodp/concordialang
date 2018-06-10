@@ -39,6 +39,7 @@ export class CodeceptJSForAppium extends CodeceptJS {
         );
         cfgMaker.setAppiumHelper( config );
         cfgMaker.setDbHelper( config );
+        cfgMaker.setCmdHelper( config );
 
         return new TestScriptExecutor( config );
     }

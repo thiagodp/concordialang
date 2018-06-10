@@ -40,6 +40,8 @@ class TestScriptExecutor {
                 fse.mkdirs(options.sourceCodeDir);
             }
             const executionPath = process.cwd();
+            const cfgMaker = new ConfigMaker_1.ConfigMaker();
+            const writeF = util_1.promisify(fs_1.writeFile);
             // About codeceptj.json
             const CONFIG_FILE_NAME = 'codecept.json';
             const configFilePath = path.join(executionPath, CONFIG_FILE_NAME);
@@ -59,7 +61,6 @@ class TestScriptExecutor {
             // It's only possible to run CodeceptJS if there is a config file
             if (!configFileExists) {
                 try {
-                    const writeF = util_1.promisify(fs_1.writeFile);
                     yield writeF(configFilePath, JSON.stringify(this._defaultConfig));
                     this.write(iconInfo, textColor('Generated configuration file'), highlight(configFilePath));
                     this.write(figures_1.arrowRight, textColor('If this file does not work for you, delete it and then run:'));
@@ -71,14 +72,46 @@ class TestScriptExecutor {
                 }
             }
             else {
-                this.write(iconInfo, textColor('Read'), highlight(configFilePath));
+                // Let's check needed dependencies
+                let config = {};
+                let hadReadError = false;
+                try {
+                    const readF = util_1.promisify(fs_1.readFile);
+                    const content = yield readF(configFilePath);
+                    config = JSON.parse(content.toString());
+                    this.write(iconInfo, textColor('Read'), highlight(configFilePath));
+                }
+                catch (e) {
+                    hadReadError = true;
+                    this.write(iconError, textColor('Could not read'), highlight(configFilePath));
+                }
+                if (!hadReadError) {
+                    let needsToWriteConfig = !cfgMaker.hasHelpersProperty(config);
+                    if (!cfgMaker.hasCmdHelper(config)) {
+                        cfgMaker.setCmdHelper(config);
+                        needsToWriteConfig = true;
+                    }
+                    if (!cfgMaker.hasDbHelper(config)) {
+                        cfgMaker.setDbHelper(config);
+                        needsToWriteConfig = true;
+                    }
+                    if (needsToWriteConfig) {
+                        try {
+                            yield writeF(configFilePath, JSON.stringify(config));
+                            this.write(iconInfo, textColor('Updated configuration file'), highlight(configFilePath));
+                        }
+                        catch (e) {
+                            this.write(iconError, textColor('Error updating configuration file'), highlight(configFilePath) + '. Please check if it has DbHelper and CmdHelper configured.');
+                        }
+                    }
+                }
             }
             // About package.json
             const PROJECT_FILE_NAME = 'package.json';
             const packageFilePath = path.join(executionPath, PROJECT_FILE_NAME);
             let showOptionalPackages = false;
             const packageFileExists = yield this.fileExists(packageFilePath);
-            const neededPackages = ['codeceptjs-dbhelper', 'database-js', 'database-js-json'];
+            const neededPackages = ['codeceptjs-cmdhelper', 'codeceptjs-dbhelper', 'database-js', 'database-js-json'];
             if (!packageFileExists) {
                 this.write(iconInfo, textColor('Creating'), highlight(PROJECT_FILE_NAME), textColor('with needed dependencies...\n'));
                 const cmd = 'npm init --yes && npm install --save-dev ' + neededPackages.join(' ');
@@ -129,7 +162,6 @@ class TestScriptExecutor {
             // Run CodeceptJS
             const OUTPUT_FILE_NAME = 'output.json';
             const outputFilePath = path.join(options.executionResultDir || '.', OUTPUT_FILE_NAME);
-            const cfgMaker = new ConfigMaker_1.ConfigMaker();
             const overrideOptions = cfgMaker.makeMochaConfig(outputFilePath);
             const overrideOptionsStr = this.escapeJson(JSON.stringify(overrideOptions));
             const cmd = `codeceptjs run --reporter mocha-multi --config ${configFilePath} --override "${overrideOptionsStr}" --colors`;

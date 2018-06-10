@@ -114,6 +114,7 @@ class CodeceptJS {
         let config = cfgMaker.makeBasicConfig(scriptFileFilter, options.executionResultDir);
         cfgMaker.setWebDriverIOHelper(config);
         cfgMaker.setDbHelper(config);
+        cfgMaker.setCmdHelper(config);
         return new TestScriptExecutor_1.TestScriptExecutor(config);
     }
 }

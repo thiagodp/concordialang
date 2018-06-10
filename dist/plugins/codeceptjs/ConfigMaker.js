@@ -58,9 +58,51 @@ class ConfigMaker {
      */
     setDbHelper(config, requireFile = './node_modules/codeceptjs-dbhelper') {
         let helpers = this.ensureHelpersProperty(config);
-        helpers["DbHelper"] = {
+        const property = this.getDbHelperProperty();
+        helpers[property] = {
             require: requireFile
         };
+    }
+    /** Returns the property for DbHelper */
+    getDbHelperProperty() {
+        return 'DbHelper';
+    }
+    /**
+     * Returns true whether the given configuration has DbHelper.
+     *
+     * @param config Target configuration
+     */
+    hasDbHelper(config) {
+        let helpers = this.ensureHelpersProperty(config);
+        const property = this.getDbHelperProperty();
+        return !helpers[property] ? false : true;
+    }
+    /**
+     * Sets a CmdHelper
+     *
+     * @param config Target configuration.
+     * @param requireFile Required file or library. Defaults to "./node_modules/codeceptjs-cmdhelper".
+     */
+    setCmdHelper(config, requireFile = './node_modules/codeceptjs-cmdhelper') {
+        let helpers = this.ensureHelpersProperty(config);
+        const property = this.getCmdHelperProperty();
+        helpers[property] = {
+            require: requireFile
+        };
+    }
+    /** Returns the property for CmdHelper */
+    getCmdHelperProperty() {
+        return 'CmdHelper';
+    }
+    /**
+     * Returns true whether the given configuration has CmdHelper.
+     *
+     * @param config Target configuration
+     */
+    hasCmdHelper(config) {
+        let helpers = this.ensureHelpersProperty(config);
+        const property = this.getCmdHelperProperty();
+        return !helpers[property] ? false : true;
     }
     /**
      * Creates a configuration for the Mocha reporter, useful for overriding
@@ -89,6 +131,7 @@ class ConfigMaker {
      * Ensure that the given configurations have a helpers property.
      *
      * @param config Target configuration.
+     *
      * @returns A reference to the helpers property.
      */
     ensureHelpersProperty(config) {
@@ -96,6 +139,14 @@ class ConfigMaker {
             config.helpers = {};
         }
         return config.helpers;
+    }
+    /**
+     * Returns true whether the given configuration has a helpers property.
+     *
+     * @param config Target configuration
+     */
+    hasHelpersProperty(config) {
+        return !config.helpers ? false : true;
     }
 }
 exports.ConfigMaker = ConfigMaker;

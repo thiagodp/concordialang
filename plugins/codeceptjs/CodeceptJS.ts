@@ -127,6 +127,7 @@ export class CodeceptJS implements Plugin {
         );
         cfgMaker.setWebDriverIOHelper( config );
         cfgMaker.setDbHelper( config );
+        cfgMaker.setCmdHelper( config );
 
         return new TestScriptExecutor( config );
     }
