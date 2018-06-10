@@ -28,6 +28,7 @@ Translations: [Português](readme-pt.md) 🌎
 ## Contents
 
 - [Latest news](https://github.com/thiagodp/concordialang/releases)
+- [Documentation](docs/README.md)
 - [Why Concordia ?](#why-concordia)
 - [Install](#install)
 - [Execution](#execution)
@@ -38,7 +39,6 @@ Translations: [Português](readme-pt.md) 🌎
 - [How it works](#how-it-works)
 - [Generated test cases](#generated-test-cases)
 - [Contributing to Concordia](#contributing-to-concordia)
-- [Documentation](docs/README.md)
 
 
 ## Why Concordia ?
