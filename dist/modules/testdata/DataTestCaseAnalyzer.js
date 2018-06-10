@@ -127,8 +127,14 @@ class DataTestCaseAnalyzer {
                     return incompatiblePair;
                 }
                 switch (dtc) {
-                    case DataTestCase_1.DataTestCase.FORMAT_VALID: return validPair;
-                    case DataTestCase_1.DataTestCase.FORMAT_INVALID: return new ts_pair_1.Pair(DTCAnalysisResult.INVALID, pFormat.otherwiseSentences || []);
+                    case DataTestCase_1.DataTestCase.FORMAT_VALID: {
+                        const hasAnyValueOrLengthProperty = TypeChecking_1.isDefined(pValue) ||
+                            TypeChecking_1.isDefined(pMinValue) || TypeChecking_1.isDefined(pMaxValue) ||
+                            TypeChecking_1.isDefined(pMinLength) || TypeChecking_1.isDefined(pMaxLength);
+                        return hasAnyValueOrLengthProperty ? incompatiblePair : validPair;
+                    }
+                    case DataTestCase_1.DataTestCase.FORMAT_INVALID:
+                        return new ts_pair_1.Pair(DTCAnalysisResult.INVALID, pFormat.otherwiseSentences || []);
                 }
                 return incompatiblePair;
             }

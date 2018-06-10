@@ -165,8 +165,16 @@ export class DataTestCaseAnalyzer {
                 }
 
                 switch ( dtc ) {
-                    case DataTestCase.FORMAT_VALID   : return validPair;
-                    case DataTestCase.FORMAT_INVALID : return new Pair( DTCAnalysisResult.INVALID, pFormat.otherwiseSentences || [] );
+                    case DataTestCase.FORMAT_VALID: {
+
+                        const hasAnyValueOrLengthProperty = isDefined( pValue ) ||
+                            isDefined( pMinValue ) || isDefined( pMaxValue ) ||
+                            isDefined( pMinLength ) || isDefined( pMaxLength );
+
+                        return hasAnyValueOrLengthProperty ? incompatiblePair : validPair;
+                    }
+                    case DataTestCase.FORMAT_INVALID:
+                        return new Pair( DTCAnalysisResult.INVALID, pFormat.otherwiseSentences || [] );
                 }
                 return incompatiblePair;
             }
