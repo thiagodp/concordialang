@@ -273,155 +273,107 @@ ${chalk.yellowBright('Examples')}
  $ ${exeName} --files "file1.feature,path/to/file2.feature" -p some-plugin -l pt
 `;
 
-    }
-
-    // meowNewOptions(): object {
-    //     return {
-
-    //         flags: {
-
-    //             // INPUT DIRECTORIES AND FILES
-
-    //             directory: { type: 'string', alias: 'd' },
-    //             noRecursive: { type: 'boolean', alias: 'nr' },
-    //             encoding: { type: 'string', alias: 'e' },
-    //             extensions: { type: 'string', alias: 'x' },
-    //             ignore: { type: 'string', alias: 'i' },
-    //             files: { type: 'string', alias: 'f' },
-
-    //             language: { type: 'string', alias: 'l' },
-    //             languageList: { type: 'boolean', alias: 'll' },
-
-    //             // PLUG-IN
-
-    //             plugin: { type: 'string', alias: 'p' },
-    //             pluginAbout: { type: 'string', alias: 'pa' },
-    //             pluginInstall: { type: 'string', alias: 'pi' },
-    //             pluginUninstall: { type: 'string', alias: 'pu' },
-    //             pluginList: { type: 'boolean', alias: 'pl' },
-
-    //             // PROCESSING AND OUTPUT
-
-    //             verbose: { type: 'boolean', alias: 'b' },
-
-    //             noSpec: { type: 'boolean', alias: 'np' },
-    //             noTestCases: { type: 'boolean', alias: 'nt' },
-    //             noScripts: { type: 'boolean', alias: 'ns' },
-    //             noRun: { type: 'boolean', alias: 'nr' },
-    //             noResults: { type: 'boolean', alias: 'nu' },
-
-    //             justSpec: { type: 'boolean', alias: 'jp' },
-    //             justTestCases: { type: 'boolean', alias: 'jt' },
-    //             justScripts: { type: 'boolean', alias: 'js' },
-    //             justRun: { type: 'boolean', alias: 'jx' },
-
-    //             dirTestCases: { type: 'string', alias: 'dt' },
-    //             dirScripts: { type: 'string', alias: 'ds' },
-    //             dirResults: { type: 'string', alias: 'du' },
-
-    //             extFeature: { type: 'string', alias: 'ef' },
-    //             extTestCases: { type: 'string', alias: 'et' },
-    //             lineBreaker: { type: 'string', alias: 'lb' },
-
-    //             // CONTENT GENERATION
-
-    //             caseUi: { type: 'string' },
-    //             caseMethod: { type: 'string' },
-    //             tcSuppressHeader: { type: 'boolean' },
-    //             tcIndenter: { type: 'string' },
-
-    //             // RANDOMIC GENERATION
-
-    //             seed: { type: 'string' },
-    //             randomMinStringSize: { type: 'integer' },
-    //             randomMaxStringSize: { type: 'integer' },
-    //             randomTries: { type: 'integer' },
-
-    //             // SPECIFICATION FILTERING
-
-    //             importance: { type: 'integer' },
-    //             selMinFeature: { type: 'integer' },
-    //             selMaxFeature: { type: 'integer' },
-    //             selMinScenario: { type: 'integer' },
-    //             selMaxScenario: { type: 'integer' },
-    //             selFilter: { type: 'string' },
-
-    //             // COMBINATION STRATEGIES
-
-    //             combVariant: { type: 'string' },
-    //             combState: { type: 'string' },
-    //             combInvalid: { type: 'string' },
-    //             combData: { type: 'string' },
-
-    //             // TEST SCRIPT FILTERING
-
-    //             runMinFeature: { type: 'integer' },
-    //             runMaxFeature: { type: 'integer' },
-    //             runMinScenario: { type: 'integer' },
-    //             runMaxScenario: { type: 'integer' },
-    //             runFilter: { type: 'string' },
-
-    //             // INFO
-
-    //             help: { alias: 'h', type: 'boolean' },
-    //             about: { alias: 'a', type: 'boolean' },
-    //             version: { alias: 'v', type: 'boolean' },
-    //             newer: { alias: 'n', type: 'boolean' },
-    //         }
-    //     };
-    // }
-
+    } // method content()
 
     meowOptions(): object {
         return {
-            alias: {
 
-                // FILES
-                d: 'directory',
-                nr: 'no-recursive',
-                e: 'encoding',
-                x: 'extensions',
-                i: 'ignore',
-                f: 'files',
+            booleanDefault: undefined,
+
+            flags: {
+
+                // INPUT DIRECTORIES AND FILES
+
+                directory: { type: 'string', alias: 'd' },
+                noRecursive: { type: 'boolean', alias: 'nr' },
+                encoding: { type: 'string', alias: 'e' },
+                extensions: { type: 'string', alias: 'x' },
+                ignore: { type: 'string', alias: 'i' },
+                files: { type: 'string', alias: 'f' },
 
                 // LANGUAGE
-                l: 'language',
-                ll: 'language-list',
 
-                // PLUGIN
-                p: 'plugin',
-                pa: 'plugin-about',
-                pi: 'plugin-install',
-                pu: 'plugin-uninstall',
-                ps: 'plugin-serve',
-                pl: 'plugin-list',
+                language: { type: 'string', alias: 'l' },
+                languageList: { type: 'boolean', alias: 'll' },
 
-                // PROCESSING
-                b: 'verbose',
-                ff: 'fail-fast',
+                // PLUG-IN
 
-                np: 'no-spec',
-                nt: 'no-test-case',
-                ns: 'no-script',
-                nx: 'no-run',
-                nu: 'no-result',
+                plugin: { type: 'string', alias: 'p' },
+                pluginAbout: { type: 'string', alias: 'pa' },
+                pluginInstall: { type: 'string', alias: 'pi' },
+                pluginUninstall: { type: 'string', alias: 'pu' },
+                pluginServe: { type: 'string', alias: 'pu' },
+                pluginList: { type: 'boolean', alias: 'pl' },
 
-                jp: 'just-spec',
-                jt: 'just-test-case',
-                js: 'just-script',
-                jx: 'just-run',
+                // PROCESSING AND OUTPUT
 
-                dt: 'dir-test-case',
-                ds: 'dir-script',
-                du: 'dir-result',
+                verbose: { type: 'boolean', alias: 'b' },
+                failFast: { type: 'boolean', alias: 'ff' },
 
-                lb: 'line-breaker',
+                noSpec: { type: 'boolean', alias: 'np' },
+                noTestCase: { type: 'boolean', alias: 'nt' },
+                noScript: { type: 'boolean', alias: 'ns' },
+                noRun: { type: 'boolean', alias: 'nr' },
+                noResult: { type: 'boolean', alias: 'nu' },
+
+                justSpec: { type: 'boolean', alias: 'jp' },
+                justTestCase: { type: 'boolean', alias: 'jt' },
+                justScript: { type: 'boolean', alias: 'js' },
+                justRun: { type: 'boolean', alias: 'jx' },
+
+                dirTestCase: { type: 'string', alias: 'dt' },
+                dirScript: { type: 'string', alias: 'ds' },
+                dirResult: { type: 'string', alias: 'du' },
+
+                extFeature: { type: 'string', alias: 'ef' },
+                extTestCases: { type: 'string', alias: 'et' },
+
+                lineBreaker: { type: 'string', alias: 'lb' },
+
+                // CONTENT GENERATION
+
+                caseUi: { type: 'string' },
+                caseMethod: { type: 'string' },
+                tcSuppressHeader: { type: 'boolean' },
+                tcIndenter: { type: 'string' },
+
+                // RANDOMIC GENERATION
+
+                seed: { type: 'string' },
+                randomMinStringSize: { type: 'integer' },
+                randomMaxStringSize: { type: 'integer' },
+                randomTries: { type: 'integer' },
+
+                // COMBINATION STRATEGIES
+
+                combVariant: { type: 'string' },
+                combState: { type: 'string' },
+                combInvalid: { type: 'string' },
+                combData: { type: 'string' },
+
+                // // SPECIFICATION FILTERING
+
+                // importance: { type: 'integer' },
+                // selMinFeature: { type: 'integer' },
+                // selMaxFeature: { type: 'integer' },
+                // selMinScenario: { type: 'integer' },
+                // selMaxScenario: { type: 'integer' },
+                // selFilter: { type: 'string' },
+
+                // // TEST SCRIPT FILTERING
+
+                // runMinFeature: { type: 'integer' },
+                // runMaxFeature: { type: 'integer' },
+                // runMinScenario: { type: 'integer' },
+                // runMaxScenario: { type: 'integer' },
+                // runFilter: { type: 'string' },
 
                 // INFO
-                h: 'help',
-                a: 'about',
-                v: 'version',
-                n: 'newer'
+
+                help: { alias: 'h', type: 'boolean' },
+                about: { alias: 'a', type: 'boolean' },
+                version: { alias: 'v', type: 'boolean' },
+                newer: { alias: 'n', type: 'boolean' },
             }
         };
     }
