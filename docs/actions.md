@@ -246,7 +246,18 @@ When I right click "Foo"
 
 ## `run`
 
+### run + command
+
+*Run command in the console/terminal*
+
+```gherkin
+When I run the command 'rmdir foo'
+  and I run the command './script.sh'
+```
+
 ### run + script
+
+*Run SQL commands in a database*
 
 ```gherkin
 When I run the script 'INSERT INTO [MyDB].product ( name, price ) VALUES ( "Soda", 1.50 )'

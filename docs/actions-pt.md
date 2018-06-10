@@ -169,7 +169,18 @@ Quando eu clico com o botão direito em {Foo}
 
 ## `run`
 
+### run + command
+
+*Executa comandos no console/terminal*
+
+```gherkin
+Quando eu executo o comando 'rmdir foo'
+  e rodo o comando './script.sh'
+```
+
 ### run + script
+
+*Executa comandos SQL em um banco de dados*
 
 ```gherkin
 Quando eu executo o script 'INSERT INTO [MyDB].product ( name, price ) VALUES ( "Soda", 1.50 )'
