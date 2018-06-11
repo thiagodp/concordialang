@@ -353,6 +353,13 @@ describe( 'NLPInPortugueseTest', () => {
                 shouldHaveTestCaseEntities( results, [ EXEC_ACTION, STATE ] );
             } );
 
+            it( 'click with escaped xpath', () => {
+                let results = [];
+                let r: NLPResult;
+                results.push( r = recognizeInTestCase( 'eu clico em "//*[@id=\\"left-panel\\"]/nav/ul/li[2]/a"' ) );
+                shouldHaveTestCaseEntities( results, [ UI_ACTION, VALUE ] );
+            } );
+
         });
 
     } );

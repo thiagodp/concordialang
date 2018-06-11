@@ -286,6 +286,12 @@ describe('NLPInPortugueseTest', () => {
                 results.push(r = recognizeInTestCase('eu tenho ~algum estado~'));
                 shouldHaveTestCaseEntities(results, [EXEC_ACTION, STATE]);
             });
+            it('click with escaped xpath', () => {
+                let results = [];
+                let r;
+                results.push(r = recognizeInTestCase('eu clico em "//*[@id=\\"left-panel\\"]/nav/ul/li[2]/a"'));
+                shouldHaveTestCaseEntities(results, [UI_ACTION, VALUE]);
+            });
         });
     });
     describe('ui entities', () => {
