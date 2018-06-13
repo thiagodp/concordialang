@@ -332,9 +332,9 @@ class Options {
         const justResult = TypeChecking_1.isDefined(obj.justResult) || TypeChecking_1.isDefined(obj.justResults);
         // compare to false is important because meow transforms no-xxx to xxx === false
         const noSpec = false === obj.spec || false === obj.specification;
-        const noTestCase = false === obj.testCase || false === obj.testCases;
-        const noScript = false === obj.script || false === obj.scripts;
-        const noRun = false === obj.run;
+        const noTestCase = false === obj.testCase || false === obj.testCases || false === obj.testcase;
+        const noScript = false === obj.script || false === obj.scripts || false === obj.testScript || false == obj.testscript;
+        const noRun = false === obj.run || false === obj.execute;
         const noResult = false === obj.result || false === obj.results;
         // Adjust flags
         this.generateTestCase = (!noTestCase || justTestCase)
