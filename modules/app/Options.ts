@@ -407,9 +407,9 @@ export class Options {
 
         // compare to false is important because meow transforms no-xxx to xxx === false
         const noSpec: boolean = false === obj.spec || false === obj.specification;
-        const noTestCase: boolean = false === obj.testCase || false === obj.testCases;
-        const noScript: boolean = false === obj.script || false === obj.scripts;
-        const noRun: boolean = false === obj.run;
+        const noTestCase: boolean = false === obj.testCase || false === obj.testCases || false === obj.testcase;
+        const noScript: boolean = false === obj.script || false === obj.scripts || false === obj.testScript || false == obj.testscript;
+        const noRun: boolean = false === obj.run || false === obj.execute;
         const noResult: boolean = false === obj.result || false === obj.results;
 
         // Adjust flags

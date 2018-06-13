@@ -2,7 +2,7 @@ import { AppController } from "./modules/app/AppController";
 
 process.on( 'uncaughtException', console.error );
 
-process.on( 'SIGINT', () => {
+process.on( 'SIGINT', () => { // e.g., Terminate execution with Ctrl + C
 	console.log( '\nAborted. Bye!' );
 	process.exit( 1 );
 } );
