@@ -520,12 +520,12 @@ Os testes de `5` a `7` vão produzir valores considerados **inválidos**.
 Vamos definir um elemento de interface de usuário chamado`Profissao` e uma tabela chamada `Profissoes` da qual seus valores virão:
 
 ```gherkin
-UI Element: Profissao
+Elemento de IU: Profissao
   - tipo é select
   - valor vem de "SELECT nome FROM [Profissoes]"
   - obrigatório é true
 
-Table: Profissoes
+Tabela: Profissoes
   | nome       |
   | Advogado   |
   | Contador   |
@@ -553,7 +553,7 @@ Nesse exemplo, vamos ajustar os dois exemplos anteriores para tornar as regras d
 Primeiro, vamos adicionar duas colunas à tabela `Profissoes`:
 
 ```gherkin
-Table: Profissoes
+Tabela: Profissoes
   | nome       | salario_min | salario_max |
   | Advogado   | 3000        | 30000       |
   | Contador   | 3000        | 10000       |
@@ -569,10 +569,9 @@ UI Element: Salary
 Elemento de IU: Salario
   - tipo de dado é double
   - valor mínimo vem da consulta "SELECT salario_min FROM [Profissoes] WHERE nome = {Profissao}"
-    Caso contrário, eu devo ver "O salário informado é menor que o valor mínimo permitido."
-    Otherwise I must see "The given Salary is less than the minimum value"
+    Caso contrário eu devo ver "O salário informado é menor que o valor mínimo permitido."
   - valor máximo vem da consulta "SELECT salario_max FROM [Profissoes] WHERE nome = {Profissao}"
-    Caso contrário, eu devo ver "O salário informado é maior que o valor máximo permitido."
+    Caso contrário eu devo ver "O salário informado é maior que o valor máximo permitido."
 ```
 
 A referência para o elemento de IU `{Profissao}` dentro da consulta faz as regras de `Salario` dependerem de `Profissao`. Cada vez que uma `Profissao` é selecionada, o **valor mínimo** e **valor máximo** de `Salario` mudam de acordo com as colunas `salario_min` e `salario_max` da tabela `Profissoes`.
@@ -580,7 +579,7 @@ A referência para o elemento de IU `{Profissao}` dentro da consulta faz as regr
 
 ## Contribuindo com Concordia
 
-*Há muitas formas de contribuir. Muitas dão muito pouco trabalho.* 😉
+*Há muitas formas de contribuir. A maioria é bem fácil.* 😉
 
 - Divulgando
   - *Fale sobre Concordia com seus amigos* - mais feedback o projeto receberá
