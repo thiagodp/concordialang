@@ -87,20 +87,24 @@ export const CODECEPTJS_COMMANDS: CmdCfg[] = [
     // see + orientation + portrait (Appium only)
     { action: 'see', comp: CmdCmp.SAME_OPTION, options: [ 'orientation', 'portrait' ], template: 'I.seeOrientationIs("PORTRAIT");' },
     // see + value + inside + target
-    { action: 'see', comp: CmdCmp.ONE_TARGET_ONE_VALUE_ONE_OPTION_SAME_MODIFIER, options: [ 'inside' ], template: 'I.seeInField({{{target}}}, {{{value}}});' },
+    { action: 'see', comp: CmdCmp.ONE_TARGET_ONE_VALUE_ONE_OPTION_SAME_MODIFIER, options: [ 'inside' ], template: 'I.see({{{value}}}, {{{target}}});' },
     // see + value + not + inside + target
-    { action: 'see', comp: CmdCmp.ONE_TARGET_ONE_VALUE_ONE_OPTION_SAME_MODIFIER, options: [ 'inside' ], modifier: 'not', template: 'I.dontSeeInField({{{target}}}, {{{value}}});' },
+    { action: 'see', comp: CmdCmp.ONE_TARGET_ONE_VALUE_ONE_OPTION_SAME_MODIFIER, options: [ 'inside' ], modifier: 'not', template: 'I.dontSee({{{value}}}, {{{target}}});' },
     // see + with
-    { action: 'see', comp: CmdCmp.ONE_TARGET_ONE_VALUE_ONE_OPTION_SAME_MODIFIER, options: [ 'with' ], template: 'I.seeInField({{{target}}}, {{{value}}});' },
+    { action: 'see', comp: CmdCmp.ONE_TARGET_ONE_VALUE_ONE_OPTION_SAME_MODIFIER, options: [ 'with' ], template: 'I.see({{{value}}}, {{{target}}});' },
     // see + with + not
-    { action: 'see', comp: CmdCmp.ONE_TARGET_ONE_VALUE_ONE_OPTION_SAME_MODIFIER, options: [ 'with' ], modifier: 'not', template: 'I.dontSeeInField({{{target}}}, {{{value}}});' },
-    // see + textbox
+    { action: 'see', comp: CmdCmp.ONE_TARGET_ONE_VALUE_ONE_OPTION_SAME_MODIFIER, options: [ 'with' ], modifier: 'not', template: 'I.dontSee({{{value}}}, {{{target}}});' },
+    // see + field as option
+    { action: 'see', comp: CmdCmp.ONE_TARGET_ONE_VALUE_ONE_OPTION_SAME_MODIFIER, options: [ 'field' ], template: 'I.seeInField({{{target}}}, {{{value}}});' },
+    // see + field as option + not
+    { action: 'see', comp: CmdCmp.ONE_TARGET_ONE_VALUE_ONE_OPTION_SAME_MODIFIER, options: [ 'field' ], modifier: 'not', template: 'I.dontSeeInField({{{target}}}, {{{value}}});' },
+    // see + textbox as target type
     { action: 'see', comp: CmdCmp.ONE_TARGET_ONE_VALUE_SAME_TARGET_TYPE_SAME_MODIFIER, targetType: 'textbox', template: 'I.seeInField({{{target}}}, {{{value}}});' },
-    // see + textbox + not
+    // see + textbox as target type + not
     { action: 'see', comp: CmdCmp.ONE_TARGET_ONE_VALUE_SAME_TARGET_TYPE_SAME_MODIFIER, targetType: 'textbox', modifier: 'not', template: 'I.dontSeeInField({{{target}}}, {{{value}}});' },
-    // see + textarea
+    // see + textarea as target type
     { action: 'see', comp: CmdCmp.ONE_TARGET_ONE_VALUE_SAME_TARGET_TYPE_SAME_MODIFIER, targetType: 'textarea', template: 'I.seeInField({{{target}}}, {{{value}}});' },
-    // see + textarea + not
+    // see + textarea as target type + not
     { action: 'see', comp: CmdCmp.ONE_TARGET_ONE_VALUE_SAME_TARGET_TYPE_SAME_MODIFIER, targetType: 'textarea', modifier: 'not', template: 'I.dontSeeInField({{{target}}}, {{{value}}});' },
     // see + checkbox
     { action: 'see', comp: CmdCmp.ONE_TARGET_SAME_TARGET_TYPE_SAME_OPTION_SAME_MODIFIER, targetType: 'checkbox', options: [ 'checked' ], template: 'I.seeCheckboxIsChecked({{{target}}});' },

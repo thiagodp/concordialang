@@ -444,15 +444,25 @@ describe('CommandMapperTest', () => {
             });
         });
         describe('seeInField', () => {
+            it('option field, value, field', () => {
+                let cmd = {
+                    action: 'see',
+                    options: ['field'],
+                    targets: ['#foo'],
+                    values: ['bar'],
+                };
+                const r = cm.map(cmd);
+                expect(r).toContainEqual('I.seeInField("#foo", "bar");' + comment);
+            });
             it('targetType textbox, value, field', () => {
                 let cmd = {
                     action: 'see',
                     targetTypes: ['textbox'],
-                    targets: ['foo'],
+                    targets: ['#foo'],
                     values: ['bar'],
                 };
                 const r = cm.map(cmd);
-                expect(r).toContainEqual('I.seeInField("foo", "bar");' + comment);
+                expect(r).toContainEqual('I.seeInField("#foo", "bar");' + comment);
             });
             it('targetType textarea, value, field', () => {
                 let cmd = {
@@ -463,48 +473,6 @@ describe('CommandMapperTest', () => {
                 };
                 const r = cm.map(cmd);
                 expect(r).toContainEqual('I.seeInField("foo", "bar");' + comment);
-            });
-            it('value, option inside, target', () => {
-                let cmd = {
-                    action: 'see',
-                    values: ['bar'],
-                    options: ['inside'],
-                    targets: ['#foo'],
-                };
-                const r = cm.map(cmd);
-                expect(r).toContainEqual('I.seeInField("#foo", "bar");' + comment);
-            });
-            it('value, option inside, target, modifier', () => {
-                let cmd = {
-                    action: 'see',
-                    values: ['bar'],
-                    options: ['inside'],
-                    targets: ['#foo'],
-                    modifier: 'not'
-                };
-                const r = cm.map(cmd);
-                expect(r).toContainEqual('I.dontSeeInField("#foo", "bar");' + comment);
-            });
-            it('target, option with, value', () => {
-                let cmd = {
-                    action: 'see',
-                    targets: ['#foo'],
-                    options: ['with'],
-                    values: ['bar']
-                };
-                const r = cm.map(cmd);
-                expect(r).toContainEqual('I.seeInField("#foo", "bar");' + comment);
-            });
-            it('target, option with, value, modifier', () => {
-                let cmd = {
-                    action: 'see',
-                    targets: ['#foo'],
-                    options: ['with'],
-                    values: ['bar'],
-                    modifier: 'not'
-                };
-                const r = cm.map(cmd);
-                expect(r).toContainEqual('I.dontSeeInField("#foo", "bar");' + comment);
             });
         });
         describe('dontSeeInField', () => {
@@ -730,6 +698,26 @@ describe('CommandMapperTest', () => {
                 const r = cm.map(cmd);
                 expect(r).toContainEqual('I.see("foo");' + comment);
             });
+            it('value, option inside, target', () => {
+                let cmd = {
+                    action: 'see',
+                    values: ['bar'],
+                    options: ['inside'],
+                    targets: ['#foo'],
+                };
+                const r = cm.map(cmd);
+                expect(r).toContainEqual('I.see("bar", "#foo");' + comment);
+            });
+            it('target, option with, value', () => {
+                let cmd = {
+                    action: 'see',
+                    targets: ['#foo'],
+                    options: ['with'],
+                    values: ['bar']
+                };
+                const r = cm.map(cmd);
+                expect(r).toContainEqual('I.see("bar", "#foo");' + comment);
+            });
         });
         describe('dontSee', () => {
             it('value, modifier', () => {
@@ -740,6 +728,28 @@ describe('CommandMapperTest', () => {
                 };
                 const r = cm.map(cmd);
                 expect(r).toContainEqual('I.dontSee("foo");' + comment);
+            });
+            it('value, option inside, target, modifier', () => {
+                let cmd = {
+                    action: 'see',
+                    values: ['bar'],
+                    options: ['inside'],
+                    targets: ['#foo'],
+                    modifier: 'not'
+                };
+                const r = cm.map(cmd);
+                expect(r).toContainEqual('I.dontSee("bar", "#foo");' + comment);
+            });
+            it('target, option with, value, modifier', () => {
+                let cmd = {
+                    action: 'see',
+                    targets: ['#foo'],
+                    options: ['with'],
+                    values: ['bar'],
+                    modifier: 'not'
+                };
+                const r = cm.map(cmd);
+                expect(r).toContainEqual('I.dontSee("bar", "#foo");' + comment);
             });
         });
     });
