@@ -114,6 +114,7 @@
                 "disconnect": [ "desconecto" ],
                 "doubleClick": [ "clico duplamente", "clico duas vezes", "dou um duplo clique" ],
                 "drag": [ "arrasto" ],
+                "field": [ "campo" ],
                 "fill": [ "preencho", "informo", "digito", "forneco", "entro" ],
                 "hide": [ "escondo", "oculto" ],
                 "maximize": [ "maximizo" ],

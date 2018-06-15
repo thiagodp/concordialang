@@ -1212,6 +1212,16 @@ describe( 'CommandMapperTest', () => {
                 expect( r ).toContainEqual( 'I.waitUrlEquals("/foo", 3);' + comment );
             } );
 
+            it( 'option, value, number', () => {
+                let cmd: ATSCommand = {
+                    action: 'wait',
+                    options: [ 'url' ],
+                    values: [ '/foo', '3' ]
+                };
+                const r = cm.map( cmd );
+                expect( r ).toContainEqual( 'I.waitUrlEquals("/foo", 3);' + comment );
+            } );
+
         } );
 
 

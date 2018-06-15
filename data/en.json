@@ -145,6 +145,7 @@
                 "disabled": [ "disabled" ],
                 "down": [ "down" ],
                 "enabled": [ "enabled" ],
+                "field": [ "field" ],
                 "file": [ "file" ],
                 "hidden": [ "hidden" ],
                 "inside": [ "inside", "in" ],

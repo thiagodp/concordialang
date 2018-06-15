@@ -165,6 +165,7 @@ export const CODECEPTJS_COMMANDS: CmdCfg[] = [
     // wait + url
     { action: 'wait', comp: CmdCmp.ONE_VALUE_SAME_TARGET_TYPE, targetType: 'url', template: 'I.waitUrlEquals({{{value}}});' },
     { action: 'wait', comp: CmdCmp.ONE_VALUE_ONE_NUMBER_SAME_TARGET_TYPE, targetType: 'url', valuesAsNonArray: true, template: 'I.waitUrlEquals({{{value}}});' },
+    { action: 'wait', comp: CmdCmp.ONE_VALUE_ONE_NUMBER_SAME_OPTION, options: [ 'url' ], valuesAsNonArray: true, template: 'I.waitUrlEquals({{{value}}});' },
     // wait + visible
     { action: 'wait', comp: CmdCmp.ONE_TARGET_SAME_OPTION, options: [ 'visible' ], template: 'I.waitForVisible({{{target}}});' },
     // wait + invisible

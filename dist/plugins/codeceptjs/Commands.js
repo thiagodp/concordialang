@@ -166,6 +166,7 @@ exports.CODECEPTJS_COMMANDS = [
     // wait + url
     { action: 'wait', comp: CommandMapper_1.CmdCmp.ONE_VALUE_SAME_TARGET_TYPE, targetType: 'url', template: 'I.waitUrlEquals({{{value}}});' },
     { action: 'wait', comp: CommandMapper_1.CmdCmp.ONE_VALUE_ONE_NUMBER_SAME_TARGET_TYPE, targetType: 'url', valuesAsNonArray: true, template: 'I.waitUrlEquals({{{value}}});' },
+    { action: 'wait', comp: CommandMapper_1.CmdCmp.ONE_VALUE_ONE_NUMBER_SAME_OPTION, options: ['url'], valuesAsNonArray: true, template: 'I.waitUrlEquals({{{value}}});' },
     // wait + visible
     { action: 'wait', comp: CommandMapper_1.CmdCmp.ONE_TARGET_SAME_OPTION, options: ['visible'], template: 'I.waitForVisible({{{target}}});' },
     // wait + invisible
