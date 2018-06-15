@@ -18,6 +18,8 @@ import { CliHelp } from './CliHelp';
 import { OptionsHandler } from './OptionsHandler';
 import * as meow from 'meow';
 import * as updateNotifier from 'update-notifier';
+import { AbstractTestScript } from '../testscript/AbstractTestScript';
+import { TestResultAnalyzer } from '../testscript/TestResultAnalyzer';
 
 /**
  * Application controller
@@ -162,11 +164,12 @@ export class AppController {
             return true;
         }
 
+        let abstractTestScripts: AbstractTestScript[] = [];
         if ( spec !== null ) {
             if ( options.generateScript ) { // Requires a plugin
 
                 const atsCtrl = new ATSGenController();
-                let abstractTestScripts = atsCtrl.generate( spec );
+                abstractTestScripts = atsCtrl.generate( spec );
 
                 if ( abstractTestScripts.length > 0 ) {
 
@@ -231,12 +234,14 @@ export class AppController {
                 return false;
             }
             try {
-                executionResult = await plugin.convertReportFile( executionResult.sourceFile );
-                ( new CliScriptExecutionReporter( cli ) ).scriptExecuted( executionResult );
+                let reportedResult = await plugin.convertReportFile( executionResult.sourceFile );
+                // ( new TestResultAnalyzer() ).adjustResult( reportedResult, abstractTestScripts );
+                ( new CliScriptExecutionReporter( cli ) ).scriptExecuted( reportedResult );
             } catch ( err ) {
                 hasErrors = true;
                 this.showException( err, options, cli );
             }
+
         } else {
             cli.newLine( cli.symbolInfo, 'Results\' analysis disabled.' );
         }

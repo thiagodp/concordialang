@@ -152,10 +152,11 @@ class AppController {
                 cli.newLine(cli.symbolWarning, 'A plugin was not defined.');
                 return true;
             }
+            let abstractTestScripts = [];
             if (spec !== null) {
                 if (options.generateScript) { // Requires a plugin
                     const atsCtrl = new ATSGenController_1.ATSGenController();
-                    let abstractTestScripts = atsCtrl.generate(spec);
+                    abstractTestScripts = atsCtrl.generate(spec);
                     if (abstractTestScripts.length > 0) {
                         // cli.newLine( cli.symbolInfo, 'Generated', abstractTestScripts.length, 'abstract test scripts' );
                         let errors = [];
@@ -206,8 +207,9 @@ class AppController {
                     return false;
                 }
                 try {
-                    executionResult = yield plugin.convertReportFile(executionResult.sourceFile);
-                    (new CliScriptExecutionReporter_1.CliScriptExecutionReporter(cli)).scriptExecuted(executionResult);
+                    let reportedResult = yield plugin.convertReportFile(executionResult.sourceFile);
+                    // ( new TestResultAnalyzer() ).adjustResult( reportedResult, abstractTestScripts );
+                    (new CliScriptExecutionReporter_1.CliScriptExecutionReporter(cli)).scriptExecuted(reportedResult);
                 }
                 catch (err) {
                     hasErrors = true;
