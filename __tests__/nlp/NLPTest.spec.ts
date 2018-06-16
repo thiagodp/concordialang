@@ -245,6 +245,13 @@ describe( 'NLPTest', () => {
                     );
                 } );
 
+                it( 'xpath with brackets, quotes, at', () => {
+                    recogLiteral(
+                        '<//*[@id="event-1684412635"]/span[2]/a>',
+                        '//*[@id="event-1684412635"]/span[2]/a'
+                    );
+                } );
+
             } );
 
 

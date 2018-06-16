@@ -173,6 +173,9 @@ describe('NLPTest', () => {
                 it('long, escaped CSS selectors', () => {
                     recogLiteral(' <#js-repo-pjax-container \> div.container.new-discussion-timeline.experiment-repo-nav \> div.repository-content \> div.release-show \> div \> div.release-body.commit.open.float-left \> div.my-4 \> h2>', '#js-repo-pjax-container \> div.container.new-discussion-timeline.experiment-repo-nav \> div.repository-content \> div.release-show \> div \> div.release-body.commit.open.float-left \> div.my-4 \> h2');
                 });
+                it('xpath with brackets, quotes, at', () => {
+                    recogLiteral('<//*[@id="event-1684412635"]/span[2]/a>', '//*[@id="event-1684412635"]/span[2]/a');
+                });
             });
             describe('does not recognize', () => {
                 it('number', () => {
