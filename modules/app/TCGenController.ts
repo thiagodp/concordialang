@@ -100,7 +100,7 @@ export class TCGenController {
         for ( let [ key, value ] of vertices ) {
 
             let doc: Document = value;
-            if ( ! doc.feature || ! doc.feature.scenarios ) {
+            if ( ! doc || ! doc.feature || ! doc.feature.scenarios ) {
                 continue;
             }
             // console.log( 'doc is', doc.fileInfo.path);

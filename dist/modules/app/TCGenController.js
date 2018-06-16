@@ -53,7 +53,7 @@ class TCGenController {
             let newTestCaseDocuments = [];
             for (let [key, value] of vertices) {
                 let doc = value;
-                if (!doc.feature || !doc.feature.scenarios) {
+                if (!doc || !doc.feature || !doc.feature.scenarios) {
                     continue;
                 }
                 // console.log( 'doc is', doc.fileInfo.path);

@@ -1,4 +1,5 @@
 import { Step } from "../ast/Step";
+// import * as deepcopy from 'deepcopy';
 
 /**
  * Test Scenario
@@ -33,6 +34,15 @@ export class TestScenario {
         ts.ignoreForTestCaseGeneration = this.ignoreForTestCaseGeneration;
         ts.stepAfterPreconditions = this.stepAfterPreconditions;
         return ts;
+        // let ts = new TestScenario();
+        // ts.steps = [];
+        // for ( let step of this.steps ) {
+        //     ts.steps.push( deepcopy( step ) as Step );
+        // }
+        // ts.ignoreForTestCaseGeneration = this.ignoreForTestCaseGeneration;
+        // const stepIndex = this.steps.indexOf( this.stepAfterPreconditions );
+        // ts.stepAfterPreconditions = stepIndex < 0 ? null : ts.steps[ stepIndex ];
+        // return ts;
     }
 
     stepsWithoutPreconditions(): Step[] {
