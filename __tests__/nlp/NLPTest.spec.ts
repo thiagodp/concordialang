@@ -252,17 +252,12 @@ describe( 'NLPTest', () => {
                     );
                 } );
 
-            } );
-
-
-            describe( 'does not recognize', () => {
-
                 it( 'number', () => {
-                    recogLiteral( ' <1> ', null );
+                    recogLiteral( ' <1> ', '1' );
                 } );
 
                 it( 'starting with a number', () => {
-                    recogLiteral( ' <1a> ', null );
+                    recogLiteral( ' <1a> ', '1a' );
                 } );
 
             } );
