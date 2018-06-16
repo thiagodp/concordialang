@@ -10,6 +10,8 @@
 
 Translations: [Português](readme-pt.md) 🌎
 
+![Example](media/example-en.gif)
+
 *Concordia* is a tool that allows you to generate functional tests from a requirements specification written in *Concordia Language*.  You can use them for:
 
 1. Writing [business-readable](https://martinfowler.com/bliki/BusinessReadableDSL.html) specifications.
