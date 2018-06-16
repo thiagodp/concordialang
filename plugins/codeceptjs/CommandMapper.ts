@@ -401,9 +401,14 @@ export class CommandMapper {
     }
 
     private convertSingleTarget( target: string, singleQuotedTargets: boolean ): string {
+
+        const t = ! singleQuotedTargets
+            ? this.escapeDoubleQuotes( target )
+            : this.escapeSingleQuotes( target );
+
         return ! singleQuotedTargets
-            ? target.charAt( 0 ) === '@' ? `{name: "${target.substr(1)}"}` : `"${target}"`
-            : target.charAt( 0 ) === '@' ? `{name: '${target.substr(1)}'}` : `'${target}'`;
+            ? t.charAt( 0 ) === '@' ? `{name: "${t.substr(1)}"}` : `"${t}"`
+            : t.charAt( 0 ) === '@' ? `{name: '${t.substr(1)}'}` : `'${t}'`;
     }
 
     /**
@@ -436,9 +441,24 @@ export class CommandMapper {
 
     private convertSingleValue( value: any, singleQuotedValues: boolean = false ) {
         if ( typeof value === 'string' ) {
-            return singleQuotedValues ? `'${value}'` : `"${value}"`;
+            const v = singleQuotedValues
+                ? this.escapeSingleQuotes( value )
+                : this.escapeDoubleQuotes( value );
+            return singleQuotedValues ? `'${v}'` : `"${v}"`;
         }
         return value;
+    }
+
+    public escapeDoubleQuotes( value: string ): string {
+        return value.replace( /[^\\](")/g, ( p1 ) => {
+            return p1.substr( 0, 1 ) + '\\"';
+        } );
+    }
+
+    public escapeSingleQuotes( value: string ): string {
+        return value.replace( /[^\\](')/g, ( p1 ) => {
+            return p1.substr( 0, 1 ) + "\\'";
+        } );
     }
 
     // private sameValues( a: string[], b: string[] ): boolean {

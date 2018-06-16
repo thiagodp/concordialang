@@ -19,6 +19,30 @@ describe( 'CommandMapperTest', () => {
         cm = null;
     } );
 
+    describe( '#escapeDoubleQuotes', () => {
+        it( 'escape', () => {
+            expect( cm.escapeDoubleQuotes( `//*[id="foo"]/a[2]/button` ) )
+                .toEqual( `//*[id=\\"foo\\"]/a[2]/button` );
+        } );
+
+        it( 'does not escape escaped quotes', () => {
+            expect( cm.escapeDoubleQuotes( `//*[id=\\"foo\\"]/a[2]/button` ) )
+                .toEqual( `//*[id=\\"foo\\"]/a[2]/button` );
+        } );
+    } );
+
+    describe( '#escapeSingleQuotes', () => {
+        it( 'escape', () => {
+            expect( cm.escapeSingleQuotes( `//*[id='foo']/a[2]/button` ) )
+                .toEqual( `//*[id=\\'foo\\']/a[2]/button` );
+        } );
+
+        it( 'does not escape escaped single quotes', () => {
+            expect( cm.escapeSingleQuotes( `//*[id=\\'foo\\']/a[2]/button` ) )
+                .toEqual( `//*[id=\\'foo\\']/a[2]/button` );
+        } );
+    } );
+
     describe( 'amOn', () => {
 
         it( 'value', () => {

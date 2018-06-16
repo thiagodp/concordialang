@@ -326,9 +326,12 @@ class CommandMapper {
         return content.substring(1, content.length - 1);
     }
     convertSingleTarget(target, singleQuotedTargets) {
+        const t = !singleQuotedTargets
+            ? this.escapeDoubleQuotes(target)
+            : this.escapeSingleQuotes(target);
         return !singleQuotedTargets
-            ? target.charAt(0) === '@' ? `{name: "${target.substr(1)}"}` : `"${target}"`
-            : target.charAt(0) === '@' ? `{name: '${target.substr(1)}'}` : `'${target}'`;
+            ? t.charAt(0) === '@' ? `{name: "${t.substr(1)}"}` : `"${t}"`
+            : t.charAt(0) === '@' ? `{name: '${t.substr(1)}'}` : `'${t}'`;
     }
     /**
      * Convert values to function parameters.
@@ -355,9 +358,22 @@ class CommandMapper {
     }
     convertSingleValue(value, singleQuotedValues = false) {
         if (typeof value === 'string') {
-            return singleQuotedValues ? `'${value}'` : `"${value}"`;
+            const v = singleQuotedValues
+                ? this.escapeSingleQuotes(value)
+                : this.escapeDoubleQuotes(value);
+            return singleQuotedValues ? `'${v}'` : `"${v}"`;
         }
         return value;
+    }
+    escapeDoubleQuotes(value) {
+        return value.replace(/[^\\](")/g, (p1) => {
+            return p1.substr(0, 1) + '\\"';
+        });
+    }
+    escapeSingleQuotes(value) {
+        return value.replace(/[^\\](')/g, (p1) => {
+            return p1.substr(0, 1) + "\\'";
+        });
     }
 }
 exports.CommandMapper = CommandMapper;
