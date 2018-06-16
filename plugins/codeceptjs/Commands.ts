@@ -67,9 +67,9 @@ export const CODECEPTJS_COMMANDS: CmdCfg[] = [
     // rotate (Appium only)
     { action: 'rotate', comp: CmdCmp.TWO_NUMBERS, valuesAsNonArray: true, template: 'I.rotate({{{value}}});' },
     // run + command (usually during a Test Event)
-    { action: 'run', comp: CmdCmp.ONE_VALUE_SAME_OPTION, options: [ 'command' ], useSingleQuotes: true, template: 'await I.runCommand({{{value}}});' },
+    { action: 'run', comp: CmdCmp.ONE_VALUE_SAME_OPTION, options: [ 'command' ], singleQuotedValues: true, template: 'await I.runCommand({{{value}}});' },
     // run + script (usually during a Test Event)
-    { action: 'run', comp: CmdCmp.TWO_VALUES_SAME_OPTION, options: [ 'script' ], valuesAsNonArray: true, useSingleQuotes: true, template: 'await I.run({{{value}}});' },
+    { action: 'run', comp: CmdCmp.TWO_VALUES_SAME_OPTION, options: [ 'script' ], valuesAsNonArray: true, singleQuotedValues: true, template: 'await I.run({{{value}}});' },
     // saveScreenshot
     { action: 'saveScreenshot', comp: CmdCmp.ONE_VALUE, template: 'I.saveScreenshot({{{value}}});' },
     // see + app + installed (Appium only)

@@ -68,6 +68,10 @@ class CommandMapper {
      * @returns Lines of code.
      */
     makeCommands(cfg, cmd) {
+        // singleQuotedTargets defaults to true if undefined
+        if (undefined === cfg.singleQuotedTargets) {
+            cfg.singleQuotedTargets = true;
+        }
         const COMMENT_TEMPLATE = ' // ({{{location.line}}},{{{location.column}}}){{#comment}} {{{comment}}}{{/comment}}';
         if (!!cmd["db"] && cmd.action === 'connect') {
             const values = {
@@ -80,8 +84,8 @@ class CommandMapper {
         }
         const template = cfg.template + COMMENT_TEMPLATE;
         const values = {
-            target: !cmd.targets ? '' : this.targetsToParameters(cmd.targets),
-            value: !cmd.values ? '' : this.valuesToParameters(cmd.values, cfg.valuesAsNonArray, cfg.useSingleQuotes),
+            target: !cmd.targets ? '' : this.targetsToParameters(cmd.targets, cfg.singleQuotedTargets),
+            value: !cmd.values ? '' : this.valuesToParameters(cmd.values, cfg.valuesAsNonArray, cfg.singleQuotedValues),
             location: cmd.location,
             comment: cmd.comment,
             modifier: cmd.modifier,
@@ -295,8 +299,9 @@ class CommandMapper {
      * Convert targets to function parameters.
      *
      * @param targets Targets to convert, usually UI literals.
+     * @param singleQuotedTargets Whether the targets should be wrapped with single quotes.
      */
-    targetsToParameters(targets) {
+    targetsToParameters(targets, singleQuotedTargets) {
         if (0 === targets.length) {
             return '';
         }
@@ -304,9 +309,11 @@ class CommandMapper {
         if (areStrings) {
             let strTargets = targets;
             if (1 === targets.length) {
-                return this.convertSingleTarget(strTargets[0]);
+                return this.convertSingleTarget(strTargets[0], singleQuotedTargets);
             }
-            return strTargets.map(this.convertSingleTarget).join(', ');
+            return strTargets
+                .map(v => this.convertSingleTarget(v, singleQuotedTargets))
+                .join(', ');
         }
         function valueReplacer(key, value) {
             if (typeof value === 'string' && value.charAt(0) === '@') {
@@ -318,8 +325,10 @@ class CommandMapper {
         // remove [ and ]
         return content.substring(1, content.length - 1);
     }
-    convertSingleTarget(target) {
-        return target.charAt(0) === '@' ? `{name: "${target.substr(1)}"}` : `"${target}"`;
+    convertSingleTarget(target, singleQuotedTargets) {
+        return !singleQuotedTargets
+            ? target.charAt(0) === '@' ? `{name: "${target.substr(1)}"}` : `"${target}"`
+            : target.charAt(0) === '@' ? `{name: '${target.substr(1)}'}` : `'${target}'`;
     }
     /**
      * Convert values to function parameters.
@@ -327,26 +336,26 @@ class CommandMapper {
      * @param values Values to convert.
      * @param valueAsNonArrayWhenGreaterThanOne Whether wants to convert an
      *      array to single values when its size is greater than one.
-     * @param useSingleQuotes Whether is desired to use single quotes.
+     * @param singleQuotedValues Whether is desired to use single quotes.
      */
-    valuesToParameters(values, valueAsNonArrayWhenGreaterThanOne = false, useSingleQuotes = false) {
+    valuesToParameters(values, valueAsNonArrayWhenGreaterThanOne = false, singleQuotedValues = false) {
         if (0 === values.length) {
             return '';
         }
         if (1 === values.length) {
-            return this.convertSingleValue(values[0], useSingleQuotes);
+            return this.convertSingleValue(values[0], singleQuotedValues);
         }
         const joint = values
-            .map(v => this.convertSingleValue(v, useSingleQuotes))
+            .map(v => this.convertSingleValue(v, singleQuotedValues))
             .join(', ');
         if (!valueAsNonArrayWhenGreaterThanOne) {
             return '[' + joint + ']';
         }
         return joint;
     }
-    convertSingleValue(value, useSingleQuotes = false) {
+    convertSingleValue(value, singleQuotedValues = false) {
         if (typeof value === 'string') {
-            return useSingleQuotes ? `'${value}'` : `"${value}"`;
+            return singleQuotedValues ? `'${value}'` : `"${value}"`;
         }
         return value;
     }

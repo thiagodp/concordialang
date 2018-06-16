@@ -2,11 +2,11 @@
     "isFake": false,
     "name": "codeceptjs",
     "description": "Generates test scripts for CodeceptJS with WebDriverIO",
-    "version": "0.7",
+    "version": "0.8",
     "targets": [ "CodeceptJS", "WebDriverIO" ],
     "authors": [
-        "Matheus Eller Fagundes (matheusefagundes@gmail.com)",
-        "Thiago Delgado Pinto (thiago-dp@bol.com.br)"
+        "Thiago Delgado Pinto (thiago-dp@bol.com.br)",
+        "Matheus Eller Fagundes (matheusefagundes@gmail.com)"
     ],
     "file": "codeceptjs/CodeceptJS.js",
     "class": "CodeceptJS",

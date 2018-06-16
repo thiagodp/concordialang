@@ -2,7 +2,7 @@
     "isFake": false,
     "name": "codeceptjs-appium",
     "description": "Generates test scripts for CodeceptJS with Appium",
-    "version": "0.2",
+    "version": "0.3",
     "targets": [ "CodeceptJS", "Appium" ],
     "authors": [
         "Thiago Delgado Pinto (thiago-dp@bol.com.br)"
