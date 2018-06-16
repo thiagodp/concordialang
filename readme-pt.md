@@ -39,6 +39,7 @@ A *Linguagem Concordia* é uma meta linguagem de especificação [Ágil](https:/
 - [Como ela funciona](#como-ela-funciona)
 - [Casos de teste gerados](#casos-de-teste-gerados)
 - [Contribuindo com Concordia](#contribuindo-com-concordia)
+- [Veja também](#veja-também)
 
 ## Por que Concordia?
 
@@ -595,6 +596,11 @@ A referência para o elemento de IU `{Profissao}` dentro da consulta faz as regr
 - [Relate um bug](https://github.com/thiagodp/concordialang/issues/new)
 - [Sugira uma nova funcionalidade ou alteração](https://github.com/thiagodp/concordialang/issues/new)
 - [Desenvolva conosco](docs/development.md)
+
+
+## Veja também
+
+- [katalon-concordia](https://github.com/thiagodp/katalon-concordia) - converte scripts de teste gravados com Katalon Recorder para sentenças em linguagem Concordia.
 
 
 ## Licença

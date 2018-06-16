@@ -41,6 +41,7 @@ Translations: [Português](readme-pt.md) 🌎
 - [How it works](#how-it-works)
 - [Generated test cases](#generated-test-cases)
 - [Contributing to Concordia](#contributing-to-concordia)
+- [See also](#see-also)
 
 
 ## Why Concordia ?
@@ -588,6 +589,11 @@ The reference to the UI Element `{Profession}` inside the query, makes the rules
 - [Report a bug](https://github.com/thiagodp/concordialang/issues/new)
 - [Suggest a new feature or a change](https://github.com/thiagodp/concordialang/issues/new)
 - [Develop it with us](docs/development.md)
+
+
+## See also
+
+- [katalon-concordia](https://github.com/thiagodp/katalon-concordia) - converts test scripts recorded with Katalon Recorder into sentences in Concordia Language.
 
 
 ## License
