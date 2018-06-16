@@ -238,6 +238,13 @@ describe( 'NLPTest', () => {
                     recogLiteral( ' <~foo> ', '~foo' );
                 } );
 
+                it( 'long, escaped CSS selectors', () => {
+                    recogLiteral(
+                        ' <#js-repo-pjax-container \> div.container.new-discussion-timeline.experiment-repo-nav \> div.repository-content \> div.release-show \> div \> div.release-body.commit.open.float-left \> div.my-4 \> h2>',
+                        '#js-repo-pjax-container \> div.container.new-discussion-timeline.experiment-repo-nav \> div.repository-content \> div.release-show \> div \> div.release-body.commit.open.float-left \> div.my-4 \> h2'
+                    );
+                } );
+
             } );
 
 
