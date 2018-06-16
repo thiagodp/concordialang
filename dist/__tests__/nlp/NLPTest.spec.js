@@ -176,13 +176,11 @@ describe('NLPTest', () => {
                 it('xpath with brackets, quotes, at', () => {
                     recogLiteral('<//*[@id="event-1684412635"]/span[2]/a>', '//*[@id="event-1684412635"]/span[2]/a');
                 });
-            });
-            describe('does not recognize', () => {
                 it('number', () => {
-                    recogLiteral(' <1> ', null);
+                    recogLiteral(' <1> ', '1');
                 });
                 it('starting with a number', () => {
-                    recogLiteral(' <1a> ', null);
+                    recogLiteral(' <1a> ', '1a');
                 });
             });
         });

@@ -320,7 +320,6 @@ describe('NLPInPortugueseTest', () => {
                 let results = [];
                 let r;
                 results.push(r = recognizeInTestCase('Quando eu informo <Nome> com "kz[RU8\'$}*Nxzk)tdc/%56Qy\\v,7hkkK-(@X ]\\"k\\FQxj%rF=PNzAP:\'%@Tp9IY4[yr,03OCd1BTY5z5RW\\"Z1Qy_4#e`1aE_6)U|:]bgP^-sb\\>|-wSBA4dn}B.9OGB?uMpT`xd8G7I~=+*,T?nUmL2!EIXA(}ywY*CW2Hb*6`E{I).B`n`eAIx0]hjz#,T;sE|pPWxM0`92`h#Iw3jXp *z*ERq"'));
-                console.log(r);
                 shouldHaveTestCaseEntities(results, [UI_LITERAL, VALUE]);
                 let uiLiterals = r.entities.filter(e => e.entity === UI_LITERAL);
                 let values = r.entities.filter(e => e.entity === VALUE);
