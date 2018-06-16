@@ -651,7 +651,7 @@ Formatos aceitos:
 Assegure que localizadores CSS estejam escapados apropriadamente. Por exemplo:
 
 ```gherkin
-Quando eu vejo <ul \> li \> div \> a>
+Então eu vejo <ul \> li \> div \> a>
 ```
 localiza `ul > li > div > a`.
 

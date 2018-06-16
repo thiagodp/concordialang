@@ -649,7 +649,7 @@ Formats accepted:
 Make sure to escape CSS locators properly. Example:
 
 ```gherkin
-When I see <ul \> li \> div \> a>
+Then I see <ul \> li \> div \> a>
 ```
 locate `ul > li > div > a`.
 
