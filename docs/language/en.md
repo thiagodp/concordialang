@@ -631,12 +631,12 @@ Some plug-ins may not support some Test Events:
 
 > Always between `<` and `>`
 
-A UI Literal is an identification (id) of a User Interface element. This identification will be used by the test script to locate the element in the application during the test. For instance, in a web application, an input declared using HTML as `<input id="name" ></input>` has `#name` as its identification.
+A UI Literal is an identification (id) of a User Interface element. This identification will be used by the test script to locate the element in the application during the test. For instance, in a web application, an input declared using HTML as `<input id="foo" ></input>` has `#foo` as its identification.
 
-In the following example, `#name` is a UI Literal.
+In the following example, `#foo` is a UI Literal.
 
 ```gherkin
-When I fill <#name> with "Bob"
+When I fill <#foo> with "Bob"
 ```
 
 Formats accepted:
@@ -646,6 +646,12 @@ Formats accepted:
 - `<//value>` denotes a `xpath`
 - `<~value>` denotes a `mobile name`
 
+Make sure to escape CSS locators properly. Example:
+
+```gherkin
+When I see <ul \> li \> div \> a>
+```
+locate `ul > li > div > a`.
 
 ### Value
 

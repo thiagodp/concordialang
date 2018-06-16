@@ -635,10 +635,10 @@ Alguns plugins podem não suportar certos eventos:
 
 > Sempre entre `<` e `>`
 
-Um Literal de IU é uma identificação de um Elemento de IU. Essa identificação será usada pelo script de teste para localizar o elemento na aplicação durante a execução os testes. Por exemplo, em uma aplicação web, um campo de entrada de dados pode ser identificado pelo teste de diferentes maneiras. Em uma declaração HTML como `<input id="nome" ></input>`, pode-se usar `#nome` como Literal de IU:
+Um Literal de IU é uma identificação de um Elemento de IU. Essa identificação será usada pelo script de teste para localizar o elemento na aplicação durante a execução os testes. Por exemplo, em uma aplicação web, um campo de entrada de dados pode ser identificado pelo teste de diferentes maneiras. Em uma declaração HTML como `<input id="foo" ></input>`, pode-se usar `#foo` como Literal de IU:
 
 ```gherkin
-Quando eu preencho <#nome> com "Bob"
+Quando eu preencho <#foo> com "Bob"
 ```
 
 Formatos aceitos:
@@ -648,6 +648,12 @@ Formatos aceitos:
 - `<//valor>` denota um `xpath`
 - `<~valor>` denota um `nome mobile`
 
+Assegure que localizadores CSS estejam escapados apropriadamente. Por exemplo:
+
+```gherkin
+Quando eu vejo <ul \> li \> div \> a>
+```
+localiza `ul > li > div > a`.
 
 ### Valor
 
