@@ -16,15 +16,18 @@ function escapeChar(char) {
         case '\r': return '\\r';
         // symbols
         case '\"': ; // continue
-        case '\'': ; // escape single quotes because of database values
-        case '\%': ; // escape percent because of database values
+        case '\'': ; // escape "single quotes" because of database values
+        case '\%': ; // escape "percent" because of database values
+        case '\<': ; // escape "less than" because of ui literals
+        case '\>': ; // escape "greater than" because of ui literals
         case '\\': return '\\' + char;
     }
     return char;
 }
 function escapeString(str) {
     //return str.replace( /[\0\x08\x09\x1a\n\r"'\\\%]/g, escapeChar );
-    let newStr = str.replace(/[\0\x08\x09\x1a\n\r"'\\]/g, escapeChar);
+    const charsToReplace = /[\0\x08\x09\x1a\n\r"'\\><]/g;
+    let newStr = str.replace(charsToReplace, escapeChar);
     // Replace unbalanced backslash
     newStr = newStr.replace(/[^\\](\\\\\\)[^\\]/g, '\\\\');
     // Check unbalanced escaped quotes

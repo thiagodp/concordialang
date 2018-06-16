@@ -255,7 +255,8 @@ class EntityRecognizerMaker {
     public makeUILiteral( entityName: string ): any {
         var valueRec = new Bravey.RegexEntityRecognizer( entityName, 10 );
         // const regex = /(?:\<)((?:#|@|\.|\/\/|~|[a-zA-ZÀ-ÖØ-öø-ÿ])[^<\r\n\>]*)(?:\>)/g;
-        const regex = /(?:\<)((?:#|@|\.|\/\/|~|[a-zA-ZÀ-ÖØ-öø-ÿ])[^<\r\n]*)(?:\>)/g;
+        // const regex = /(?:\<)((?:#|@|\.|\/\/|~|[a-zA-ZÀ-ÖØ-öø-ÿ])[^<\r\n]*)(?:\>)/g; // Issue #19
+        const regex = /(?:\<)((?:#|@|\.|\/\/|~|[a-zA-ZÀ-ÖØ-öø-ÿ ]?)[^<\r\n]*[^\\>])(?:\>)/g;
         valueRec.addMatch(
             regex,
             function( match ) {
