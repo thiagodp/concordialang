@@ -73,7 +73,11 @@ Translations: [Português](readme-pt.md) 🌎
 
 ## Install
 
-Concordia requires [NodeJS](https://nodejs.org/) version `8` or above. After NodeJS is installed, run the following command:
+Concordia requires [NodeJS](https://nodejs.org/) version `8` or above.
+
+> Whether you wish to install the plugin CodeceptJS for testing web applications (CodeceptJS + WebDriverIO), it is also needed to install the [Java Runtime Environment (JRE)](http://www.oracle.com/technetwork/java/javase/downloads/index.html).
+
+After NodeJS is installed, run the following command:
 ```bash
 npm install -g concordialang
 ```

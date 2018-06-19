@@ -69,7 +69,11 @@ A *Linguagem Concordia* é uma meta linguagem de especificação [Ágil](https:/
 
 ## Instalação
 
-Concordia requer [NodeJS](https://nodejs.org/) versão `8` ou superior. Com o NodeJS instalado, execute o seguinte comando:
+Concordia requer [NodeJS](https://nodejs.org/) versão `8` ou superior.
+
+> Se você for instalar o plug-in para CodeceptJS para testar aplicações web (CodeceptJS + WebDriverIO), também é preciso instalar o [Java Runtime Environment (JRE)](http://www.oracle.com/technetwork/java/javase/downloads/index.html).
+
+Com o NodeJS instalado, execute o seguinte comando:
 ```bash
 npm install -g concordialang
 ```
