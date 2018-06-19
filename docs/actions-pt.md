@@ -4,6 +4,28 @@
 
 *Um exemplo pode demonstrar diferentes variações da mesma ação.*
 
+## `accept`
+
+### accept + alert
+```gherkin
+Quando eu aceito o alerta
+```
+
+### accept + confirm
+```gherkin
+Quando eu aceito a confirmação
+```
+
+### accept + popup
+```gherkin
+Quando eu aceito o popup
+```
+
+### accept + prompt
+```gherkin
+Quando eu aceito o prompt
+```
+
 ## `amOn`
 
 ```gherkin
@@ -26,11 +48,42 @@ Quando eu anexo o arquivo "/caminho/ate/arquivo" em {Foo}
   e anexo "/caminho/ate/arquivo" em <#bar>
 ```
 
+## `cancel`
+
+### cancel + alert
+```gherkin
+Quando eu cancelo o alerta
+```
+
+### cancel + confirm
+```gherkin
+Quando eu cancelo a confirmação
+```
+
+### cancel + popup
+```gherkin
+Quando eu cancelo o popup
+```
+
+### cancel + prompt
+```gherkin
+Quando eu cancelo o prompt
+```
+
 ## `check`
+
+### check + target
 
 ```gherkin
 Quando eu marco {Foo}
-  e marco <#bar>
+  e eu marco <#bar>
+```
+
+### check + target + target
+
+Marca um elemento que está dentro de outro:
+```gherkin
+Então eu marco {Foo} em <#bar>
 ```
 
 ## `clear`
@@ -101,7 +154,7 @@ Quando eu preecho {Foo}
   e eu preencho {Foo} com "foo"
   e eu preencho {Foo} com 100
   e eu preencho <#bar> com "bar"
-  e eu precho <#bar> com 3.1415
+  e eu preencho <#bar> com 3.1415
   e eu digito "bar" em {Foo}
   e eu informo "foo" em <#bar>
 ```
@@ -403,6 +456,21 @@ A próxima sentença é somente para *mobile*:
 Quando eu troco para web
 ```
 
+### switch + tab
+```gherkin
+Quando eu troco para a aba 3
+```
+
+### switch + next + tab
+```gherkin
+Quando eu troco para a próxima aba
+```
+
+### switch + previous + tab
+```gherkin
+Quando eu troco para a aba anterior
+```
+
 ## `tap`
 
 A próxima sentença é somente para *mobile*:
@@ -413,43 +481,112 @@ Quando eu toco em <~ok>
 
 ## `uncheck`
 
+### uncheck + target
 ```gherkin
 Então eu desmarco {Foo}
   e eu desmarco <#bar>
 ```
 
+### uncheck + target + target
+
+Desmarca um elemento que está dentro de outro:
+```gherkin
+Então eu desmarco {Foo} em <#bar>
+```
+
 ## `wait`
 
+### wait + seconds
 ```gherkin
-Então eu espero 2 segundos
-  e eu aguardo 3 segundos
+Quando eu espero 2 segundos
 ```
 
+### wait + target
 ```gherkin
-Então eu espero por {Foo}
-  e eu espero <#bar> por 2 segundos
+Quando eu espero por {Foo}
+  e eu espero por <#bar>
 ```
 
+### wait + seconds + target
 ```gherkin
-Então eu espero {Foo} ficar habilitado
-  e eu espero por <#bar> ficar habilitado
+Quando eu espero 3 segundos por {Foo}
+  e eu espero 5 segundos por <#bar>
 ```
 
+### wait + target + hide
 ```gherkin
-Então eu espero {Foo} ficar invisível
-  e eu espero por <#bar> ficar invisível
+Quando eu espero {Foo} ficar oculto
+  e eu espero <#bar> ficar oculto
 ```
 
+### wait + seconds + target + hide
 ```gherkin
-Então eu espero {Foo} ficar visível
-  e eu espero por <#bar> ficar visível
+Quando eu espero 3 segundos por {Foo} ficar oculto
+  e eu espero 5 segundos por <#bar> ficar oculto
 ```
 
+### wait + target + enabled
 ```gherkin
-Então eu espero pelo texto "Foo"
+Quando eu espero {Foo} ficar habilitado
+  e eu espero <#bar> ficar habilitado
 ```
 
+### wait + seconds + target + enabled
 ```gherkin
-Então eu espero pela url "/foo"
-  e espero pela url "/bar" por 3 segundos
+Quando eu espero 3 segundos por {Foo} ficar habilitado
+  e eu espero 5 segundos por <#bar> ficar habilitado
+```
+
+### wait + target + invisible
+```gherkin
+Quando eu espero {Foo} ficar visível
+  e eu espero <#bar> ficar visível
+```
+
+### wait + seconds + target + invisible
+```gherkin
+Quando eu espero 3 segundos {Foo} ficar invisível
+  e eu espero 5 segundos <#bar> ficar invisível
+```
+
+### wait + seconds + target + visible
+```gherkin
+Quando eu espero {Foo} ficar visível
+  e eu espero <#bar> ficar visível
+```
+
+### wait + seconds + target + visible
+```gherkin
+Quando eu espero 3 segundos por {Foo} ficar visível
+  e eu espero 5 segundos por <#bar> ficar visível
+```
+
+### wait + text + value
+```gherkin
+Quando eu espero pelo texto "Foo"
+```
+
+### wait + seconds + text + value
+```gherkin
+Quando eu espero 3 segundos pelo texto "Foo"
+```
+
+### wait + url + value
+```gherkin
+Quando eu espero pela url "/foo"
+```
+
+### wait + seconds + url + value
+```gherkin
+Quando eu espero 3 segundos pela url "/bar"
+```
+
+### wait + option value + value + target
+```gherkin
+Quando eu espero pelo valor "foo" em <#bar>
+```
+
+### wait + seconds + option value + value + target
+```gherkin
+Quando eu espero 5 segundos pelo valor "foo" em <#bar>
 ```

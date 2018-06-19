@@ -43,6 +43,38 @@ describe( 'CommandMapperTest', () => {
         } );
     } );
 
+
+    describe( 'accept', () => {
+
+        it( 'option alert', () => {
+            let cmd: ATSCommand = {
+                action: 'accept',
+                options: [ 'alert' ]
+            };
+            const r = cm.map( cmd );
+            expect( r ).toContainEqual( 'I.acceptPopup();' + comment );
+        } );
+
+        it( 'option confirm', () => {
+            let cmd: ATSCommand = {
+                action: 'accept',
+                options: [ 'confirm' ]
+            };
+            const r = cm.map( cmd );
+            expect( r ).toContainEqual( 'I.acceptPopup();' + comment );
+        } );
+
+        it( 'option prompt', () => {
+            let cmd: ATSCommand = {
+                action: 'accept',
+                options: [ 'prompt' ]
+            };
+            const r = cm.map( cmd );
+            expect( r ).toContainEqual( 'I.acceptPopup();' + comment );
+        } );
+
+    } );
+
     describe( 'amOn', () => {
 
         it( 'value', () => {
@@ -90,7 +122,66 @@ describe( 'CommandMapperTest', () => {
         } );
     } );
 
+    describe( 'cancel', () => {
+
+        it( 'option alert', () => {
+            let cmd: ATSCommand = {
+                action: 'cancel',
+                options: [ 'alert' ]
+            };
+            const r = cm.map( cmd );
+            expect( r ).toContainEqual( 'I.cancelPopup();' + comment );
+        } );
+
+        it( 'option confirm', () => {
+            let cmd: ATSCommand = {
+                action: 'cancel',
+                options: [ 'confirm' ]
+            };
+            const r = cm.map( cmd );
+            expect( r ).toContainEqual( 'I.cancelPopup();' + comment );
+        } );
+
+        it( 'option prompt', () => {
+            let cmd: ATSCommand = {
+                action: 'cancel',
+                options: [ 'prompt' ]
+            };
+            const r = cm.map( cmd );
+            expect( r ).toContainEqual( 'I.cancelPopup();' + comment );
+        } );
+
+    } );
+
     describe( 'check', () => {
+
+        it( 'target', () => {
+            let cmd: ATSCommand = {
+                action: 'check',
+                targets: [ '#foo' ],
+            };
+            const r = cm.map( cmd );
+            expect( r ).toContainEqual( `I.checkOption('#foo');` + comment );
+        } );
+
+        it( 'two targets', () => {
+            let cmd: ATSCommand = {
+                action: 'check',
+                targets: [ '#foo', '#bar' ],
+            };
+            const r = cm.map( cmd );
+            expect( r ).toContainEqual( `I.checkOption('#foo', '#bar');` + comment );
+        } );
+
+        it( 'value, target', () => {
+            let cmd: ATSCommand = {
+                action: 'check',
+                values: [ '#foo' ],
+                targets: [ '#bar' ],
+            };
+            const r = cm.map( cmd );
+            expect( r ).toContainEqual( `I.checkOption("#foo", '#bar');` + comment );
+        } );
 
         it( 'value', () => {
             let cmd: ATSCommand = {
@@ -99,15 +190,6 @@ describe( 'CommandMapperTest', () => {
             };
             const r = cm.map( cmd );
             expect( r ).toContainEqual( 'I.checkOption("foo");' + comment );
-        } );
-
-        it( 'target', () => {
-            let cmd: ATSCommand = {
-                action: 'check',
-                targets: [ '#foo' ],
-            };
-            const r = cm.map( cmd );
-            expect( r ).toContainEqual( 'I.checkOption(\'#foo\');' + comment );
         } );
 
     } );
@@ -151,7 +233,17 @@ describe( 'CommandMapperTest', () => {
                 values: [ 'foo' ]
             };
             const r = cm.map( cmd );
-            expect( r ).toContainEqual( 'I.click("foo");' + comment );
+            expect( r ).toContainEqual( `I.click("foo");` + comment );
+        } );
+
+        it( 'value, target', () => {
+            let cmd: ATSCommand = {
+                action: 'click',
+                values: [ 'foo' ],
+                targets: [ '#bar' ]
+            };
+            const r = cm.map( cmd );
+            expect( r ).toContainEqual( `I.click("foo", '#bar');` + comment );
         } );
 
         it( 'target', () => {
@@ -160,7 +252,16 @@ describe( 'CommandMapperTest', () => {
                 targets: [ '#foo' ],
             };
             const r = cm.map( cmd );
-            expect( r ).toContainEqual( 'I.click(\'#foo\');' + comment );
+            expect( r ).toContainEqual( `I.click('#foo');` + comment );
+        } );
+
+        it( 'two target', () => {
+            let cmd: ATSCommand = {
+                action: 'click',
+                targets: [ '#foo', '#bar' ],
+            };
+            const r = cm.map( cmd );
+            expect( r ).toContainEqual( `I.click('#foo', '#bar');` + comment );
         } );
 
     } );
@@ -1191,6 +1292,42 @@ describe( 'CommandMapperTest', () => {
     } );
 
 
+    describe( 'switchToNextTab', () => {
+
+        it( 'option, number', () => {
+            let cmd: ATSCommand = {
+                action: 'switch',
+                options: [ 'tab' ],
+                values: [ '2' ]
+            };
+            const r = cm.map( cmd );
+            expect( r ).toContainEqual( 'I.switchToNextTab(2);' + comment );
+        } );
+
+        it( 'option', () => {
+            let cmd: ATSCommand = {
+                action: 'switch',
+                options: [ 'next', 'tab' ]
+            };
+            const r = cm.map( cmd );
+            expect( r ).toContainEqual( 'I.switchToNextTab();' + comment );
+        } );
+
+    } );
+
+    describe( 'switchToPreviousTab', () => {
+
+        it( 'option', () => {
+            let cmd: ATSCommand = {
+                action: 'switch',
+                options: [ 'previous', 'tab' ]
+            };
+            const r = cm.map( cmd );
+            expect( r ).toContainEqual( 'I.switchToPreviousTab();' + comment );
+        } );
+
+    } );
+
     describe( 'tap', () => {
 
         it( 'value', () => {
@@ -1221,7 +1358,35 @@ describe( 'CommandMapperTest', () => {
                 targets: [ '#foo' ],
             };
             const r = cm.map( cmd );
-            expect( r ).toContainEqual( 'I.uncheckOption(\'#foo\');' + comment );
+            expect( r ).toContainEqual( `I.uncheckOption('#foo');` + comment );
+        } );
+
+        it( 'two targets', () => {
+            let cmd: ATSCommand = {
+                action: 'uncheck',
+                targets: [ '#foo', '#bar' ],
+            };
+            const r = cm.map( cmd );
+            expect( r ).toContainEqual( `I.uncheckOption('#foo', '#bar');` + comment );
+        } );
+
+        it( 'value, target', () => {
+            let cmd: ATSCommand = {
+                action: 'uncheck',
+                values: [ '#foo' ],
+                targets: [ '#bar' ],
+            };
+            const r = cm.map( cmd );
+            expect( r ).toContainEqual( `I.uncheckOption("#foo", '#bar');` + comment );
+        } );
+
+        it( 'value', () => {
+            let cmd: ATSCommand = {
+                action: 'uncheck',
+                values: [ 'foo' ]
+            };
+            const r = cm.map( cmd );
+            expect( r ).toContainEqual( 'I.uncheckOption("foo");' + comment );
         } );
 
     } );
@@ -1245,26 +1410,58 @@ describe( 'CommandMapperTest', () => {
                 let cmd: ATSCommand = {
                     action: 'wait',
                     targetTypes: [ 'url' ],
-                    values: [ '/foo', '3' ]
+                    values: [ '/foo', '5' ]
                 };
                 const r = cm.map( cmd );
-                expect( r ).toContainEqual( 'I.waitUrlEquals("/foo", 3);' + comment );
+                expect( r ).toContainEqual( 'I.waitUrlEquals("/foo", 5);' + comment );
+            } );
+
+            it( 'option, value', () => {
+                let cmd: ATSCommand = {
+                    action: 'wait',
+                    options: [ 'url' ],
+                    values: [ '/foo' ]
+                };
+                const r = cm.map( cmd );
+                expect( r ).toContainEqual( 'I.waitUrlEquals("/foo");' + comment );
             } );
 
             it( 'option, value, number', () => {
                 let cmd: ATSCommand = {
                     action: 'wait',
                     options: [ 'url' ],
-                    values: [ '/foo', '3' ]
+                    values: [ '/foo', '5' ]
                 };
                 const r = cm.map( cmd );
-                expect( r ).toContainEqual( 'I.waitUrlEquals("/foo", 3);' + comment );
+                expect( r ).toContainEqual( 'I.waitUrlEquals("/foo", 5);' + comment );
+            } );
+
+            it( 'option, target', () => {
+                let cmd: ATSCommand = {
+                    action: 'wait',
+                    options: [ 'url' ],
+                    targets: [ '/foo' ],
+                };
+                const r = cm.map( cmd );
+                expect( r ).toContainEqual( `I.waitUrlEquals('/foo');` + comment );
+            } );
+
+            it( 'option, target, number', () => {
+                let cmd: ATSCommand = {
+                    action: 'wait',
+                    options: [ 'url' ],
+                    targets: [ '/foo' ],
+                    values: [ '5' ]
+                };
+                const r = cm.map( cmd );
+                expect( r ).toContainEqual( `I.waitUrlEquals('/foo', 5);` + comment );
             } );
 
         } );
 
 
         describe( 'waitForVisible', () => {
+
             it( 'option, target', () => {
                 let cmd: ATSCommand = {
                     action: 'wait',
@@ -1272,12 +1469,45 @@ describe( 'CommandMapperTest', () => {
                     targets: [ '#foo' ]
                 };
                 const r = cm.map( cmd );
-                expect( r ).toContainEqual( 'I.waitForVisible(\'#foo\');' + comment );
+                expect( r ).toContainEqual( `I.waitForVisible('#foo');` + comment );
             } );
+
+            it( 'option, target, number', () => {
+                let cmd: ATSCommand = {
+                    action: 'wait',
+                    options: [ 'visible' ],
+                    targets: [ '#foo' ],
+                    values: [ '5' ]
+                };
+                const r = cm.map( cmd );
+                expect( r ).toContainEqual( `I.waitForVisible('#foo', 5);` + comment );
+            } );
+
+            it( 'option, value', () => {
+                let cmd: ATSCommand = {
+                    action: 'wait',
+                    options: [ 'visible' ],
+                    values: [ '#foo' ]
+                };
+                const r = cm.map( cmd );
+                expect( r ).toContainEqual( `I.waitForVisible("#foo");` + comment );
+            } );
+
+            it( 'option, value, number', () => {
+                let cmd: ATSCommand = {
+                    action: 'wait',
+                    options: [ 'visible' ],
+                    values: [ '#foo', '5' ]
+                };
+                const r = cm.map( cmd );
+                expect( r ).toContainEqual( `I.waitForVisible("#foo", 5);` + comment );
+            } );
+
         } );
 
 
         describe( 'waitForInvisible', () => {
+
             it( 'option, target', () => {
                 let cmd: ATSCommand = {
                     action: 'wait',
@@ -1285,12 +1515,45 @@ describe( 'CommandMapperTest', () => {
                     targets: [ '#foo' ]
                 };
                 const r = cm.map( cmd );
-                expect( r ).toContainEqual( 'I.waitForInvisible(\'#foo\');' + comment );
+                expect( r ).toContainEqual( `I.waitForInvisible('#foo');` + comment );
             } );
+
+            it( 'option, target, number', () => {
+                let cmd: ATSCommand = {
+                    action: 'wait',
+                    options: [ 'invisible' ],
+                    targets: [ '#foo' ],
+                    values: [ '5' ]
+                };
+                const r = cm.map( cmd );
+                expect( r ).toContainEqual( `I.waitForInvisible('#foo', 5);` + comment );
+            } );
+
+            it( 'option, value', () => {
+                let cmd: ATSCommand = {
+                    action: 'wait',
+                    options: [ 'invisible' ],
+                    values: [ '#foo' ]
+                };
+                const r = cm.map( cmd );
+                expect( r ).toContainEqual( `I.waitForInvisible("#foo");` + comment );
+            } );
+
+            it( 'option, value, number', () => {
+                let cmd: ATSCommand = {
+                    action: 'wait',
+                    options: [ 'invisible' ],
+                    values: [ '#foo', '5' ]
+                };
+                const r = cm.map( cmd );
+                expect( r ).toContainEqual( `I.waitForInvisible("#foo", 5);` + comment );
+            } );
+
         } );
 
 
         describe( 'waitForEnabled', () => {
+
             it( 'option, target', () => {
                 let cmd: ATSCommand = {
                     action: 'wait',
@@ -1298,8 +1561,86 @@ describe( 'CommandMapperTest', () => {
                     targets: [ '#foo' ]
                 };
                 const r = cm.map( cmd );
-                expect( r ).toContainEqual( 'I.waitForEnabled(\'#foo\');' + comment );
+                expect( r ).toContainEqual( `I.waitForEnabled('#foo');` + comment );
             } );
+
+            it( 'option, target, number', () => {
+                let cmd: ATSCommand = {
+                    action: 'wait',
+                    options: [ 'enabled' ],
+                    targets: [ '#foo' ],
+                    values: [ '5' ]
+                };
+                const r = cm.map( cmd );
+                expect( r ).toContainEqual( `I.waitForEnabled('#foo', 5);` + comment );
+            } );
+
+            it( 'option, value', () => {
+                let cmd: ATSCommand = {
+                    action: 'wait',
+                    options: [ 'enabled' ],
+                    values: [ '#foo' ]
+                };
+                const r = cm.map( cmd );
+                expect( r ).toContainEqual( `I.waitForEnabled("#foo");` + comment );
+            } );
+
+            it( 'option, value, number', () => {
+                let cmd: ATSCommand = {
+                    action: 'wait',
+                    options: [ 'enabled' ],
+                    values: [ '#foo', '5' ]
+                };
+                const r = cm.map( cmd );
+                expect( r ).toContainEqual( `I.waitForEnabled("#foo", 5);` + comment );
+            } );
+
+        } );
+
+
+        describe( 'waitToHide', () => {
+
+            it( 'option, target', () => {
+                let cmd: ATSCommand = {
+                    action: 'wait',
+                    options: [ 'hide' ],
+                    targets: [ '#foo' ]
+                };
+                const r = cm.map( cmd );
+                expect( r ).toContainEqual( `I.waitToHide('#foo');` + comment );
+            } );
+
+            it( 'option, target, number', () => {
+                let cmd: ATSCommand = {
+                    action: 'wait',
+                    options: [ 'hide' ],
+                    targets: [ '#foo' ],
+                    values: [ '5' ]
+                };
+                const r = cm.map( cmd );
+                expect( r ).toContainEqual( `I.waitToHide('#foo', 5);` + comment );
+            } );
+
+            it( 'option, value', () => {
+                let cmd: ATSCommand = {
+                    action: 'wait',
+                    options: [ 'hide' ],
+                    values: [ '#foo' ]
+                };
+                const r = cm.map( cmd );
+                expect( r ).toContainEqual( `I.waitToHide("#foo");` + comment );
+            } );
+
+            it( 'option, value, number', () => {
+                let cmd: ATSCommand = {
+                    action: 'wait',
+                    options: [ 'hide' ],
+                    values: [ '#foo', '5' ]
+                };
+                const r = cm.map( cmd );
+                expect( r ).toContainEqual( `I.waitToHide("#foo", 5);` + comment );
+            } );
+
         } );
 
 
@@ -1311,17 +1652,35 @@ describe( 'CommandMapperTest', () => {
                     targets: [ '#foo' ]
                 };
                 const r = cm.map( cmd );
-                expect( r ).toContainEqual( 'I.waitForElement(\'#foo\');' + comment );
+                expect( r ).toContainEqual( `I.waitForElement('#foo');` + comment );
             } );
 
             it( 'target, number', () => {
                 let cmd: ATSCommand = {
                     action: 'wait',
                     targets: [ '#foo' ],
-                    values: [ '3' ]
+                    values: [ '5' ]
                 };
                 const r = cm.map( cmd );
-                expect( r ).toContainEqual( 'I.waitForElement(\'#foo\', 3);' + comment );
+                expect( r ).toContainEqual( `I.waitForElement('#foo', 5);` + comment );
+            } );
+
+            it( 'value', () => {
+                let cmd: ATSCommand = {
+                    action: 'wait',
+                    values: [ '#foo' ]
+                };
+                const r = cm.map( cmd );
+                expect( r ).toContainEqual( 'I.waitForElement("#foo");' + comment );
+            } );
+
+            it( 'value, number', () => {
+                let cmd: ATSCommand = {
+                    action: 'wait',
+                    values: [ '#foo', '5' ]
+                };
+                const r = cm.map( cmd );
+                expect( r ).toContainEqual( `I.waitForElement("#foo", 5);` + comment );
             } );
 
         } );
@@ -1336,7 +1695,18 @@ describe( 'CommandMapperTest', () => {
                     targets: [ 'foo' ]
                 };
                 const r = cm.map( cmd );
-                expect( r ).toContainEqual( 'I.waitForText(\'foo\');' + comment );
+                expect( r ).toContainEqual( `I.waitForText('foo');` + comment );
+            } );
+
+            it( 'targetType text, target, number', () => {
+                let cmd: ATSCommand = {
+                    action: 'wait',
+                    targetTypes: [ 'text' ],
+                    targets: [ 'foo' ],
+                    values: [ '5' ]
+                };
+                const r = cm.map( cmd );
+                expect( r ).toContainEqual( `I.waitForText('foo', 5);` + comment );
             } );
 
             it( 'option text, value', () => {
@@ -1346,13 +1716,109 @@ describe( 'CommandMapperTest', () => {
                     values: [ 'foo' ]
                 };
                 const r = cm.map( cmd );
-                expect( r ).toContainEqual( 'I.waitForText("foo");' + comment );
+                expect( r ).toContainEqual( `I.waitForText("foo");` + comment );
+            } );
+
+            it( 'option text, value, number', () => {
+                let cmd: ATSCommand = {
+                    action: 'wait',
+                    options: [ 'text' ],
+                    values: [ 'foo', '5' ]
+                };
+                const r = cm.map( cmd );
+                expect( r ).toContainEqual( `I.waitForText("foo", 5);` + comment );
+            } );
+
+            it( 'option text, value, number, value', () => {
+                let cmd: ATSCommand = {
+                    action: 'wait',
+                    options: [ 'text' ],
+                    values: [ 'foo', '5', '#bar' ]
+                };
+                const r = cm.map( cmd );
+                expect( r ).toContainEqual( `I.waitForText("foo", 5, "#bar");` + comment );
+            } );
+
+            it( 'option text, value, number, target', () => {
+                let cmd: ATSCommand = {
+                    action: 'wait',
+                    options: [ 'text' ],
+                    values: [ 'foo', '5' ],
+                    targets: [ '#bar' ]
+                };
+                const r = cm.map( cmd );
+                expect( r ).toContainEqual( `I.waitForText("foo", 5, '#bar');` + comment );
+            } );
+
+            it( 'option text, target', () => {
+                let cmd: ATSCommand = {
+                    action: 'wait',
+                    options: [ 'text' ],
+                    targets: [ 'bar' ]
+                };
+                const r = cm.map( cmd );
+                expect( r ).toContainEqual( `I.waitForText('bar');` + comment );
+            } );
+
+            it( 'option text, target, number', () => {
+                let cmd: ATSCommand = {
+                    action: 'wait',
+                    options: [ 'text' ],
+                    targets: [ 'bar' ],
+                    values: [ '5' ]
+                };
+                const r = cm.map( cmd );
+                expect( r ).toContainEqual( `I.waitForText('bar', 5);` + comment );
+            } );
+
+        } );
+
+
+        describe( 'waitForValue', () => {
+
+            it( 'option, target, value', () => {
+                let cmd: ATSCommand = {
+                    action: 'wait',
+                    options: [ 'value' ],
+                    targets: [ '#foo' ],
+                    values: [ 'bar' ]
+                };
+                const r = cm.map( cmd );
+                expect( r ).toContainEqual( `I.waitForValue('#foo', "bar");` + comment );
+            } );
+
+            it( 'option, target, value, number', () => {
+                let cmd: ATSCommand = {
+                    action: 'wait',
+                    options: [ 'value' ],
+                    targets: [ '#foo' ],
+                    values: [ 'bar', '5' ]
+                };
+                const r = cm.map( cmd );
+                expect( r ).toContainEqual( `I.waitForValue('#foo', "bar", 5);` + comment );
+            } );
+
+        } );
+
+
+        describe( 'waitNumberOfVisibleElements', () => {
+
+            it( 'options, target, number', () => {
+                let cmd: ATSCommand = {
+                    action: 'wait',
+                    options: [ 'visible', 'elements' ],
+                    targets: [ '#foo' ],
+                    values: [ '7' ]
+                };
+                const r = cm.map( cmd );
+                expect( r ).toContainEqual( `I.waitNumberOfVisibleElements('#foo', 7);` + comment );
             } );
 
         } );
 
 
         describe( 'wait', () => {
+
             it( 'number', () => {
                 let cmd: ATSCommand = {
                     action: 'wait',
@@ -1361,6 +1827,7 @@ describe( 'CommandMapperTest', () => {
                 const r = cm.map( cmd );
                 expect( r ).toContainEqual( 'I.wait(3);' + comment );
             } );
+
         } );
 
     } );

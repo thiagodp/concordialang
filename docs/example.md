@@ -1,12 +1,16 @@
 # Example
 
-> Here we present a short and simple example, with the purpose of giving an idea on how Concordia works.
+> *Example with generation of test cases and test data, but without the combination of test scenarios and states.*
 
 Translations: [Português](example-pt.md) 🌎
 
-We recommend you to read the example even without being used to its [syntax](language/en.md).
+We recommend you to read the following example even without being used to its [syntax](language/en.md) and [actions](actions.md).
 
-`login.feature` :
+## 1. Writing a specification
+
+The following file specifies a simple *Login* feature. Its `Feature` describe the desired behavior as a [User Story](https://en.wikipedia.org/wiki/User_story). Its `Scenario` define a high-level, *business-oriented* description of a usage scenario, using the [Given-When-Then](https://www.martinfowler.com/bliki/GivenWhenThen.html) (GWT) syntax. A `Feature` may have as many `Scenarios` as it needs. Features and Scenarios **are not used to generate test cases** in Concordia Language. Thus, you are free to use them to express your business needs.
+
+*login.feature* :
 ```gherkin
 Feature: Login
   As a user
@@ -15,10 +19,46 @@ Feature: Login
 
 Scenario: Successful login
   Given that I can see the login screen
-  When I enter valid credentials
+  When I enter with valid credentials
+  Then I can access the application's main screen
+```
+
+Concordia Language uses a `Variant` to express a possible interaction between a *user* and the *system* in order to complete a (business) `Scenario`. A `Scenario` may have as many `Variants` it needs. A `Variant` also follows the [GWT](https://www.martinfowler.com/bliki/GivenWhenThen.html) syntax and always uses the word "`I`" to represent a *user* or *user role*.
+
+Let's add a `Variant` that expects a interaction with a *web application* and uses fixed values.
+
+```gherkin
+Feature: Login
+  As a user
+  I would like to authenticate myself
+  In order to access the application
+
+Scenario: Successful login
+  Given that I can see the login screen
+  When I enter with valid credentials
   Then I can access the application's main screen
 
-  # A Variant is a low-level description or variation of a Scenario
+  Variant: Successful login with valid credentials
+    Given that I see the url "/login"
+    When I fill <#username> with "john.doe"
+      and I fill <#password> with "123456"
+      and I click on <#ok>
+    Then I see "Welcome"
+```
+
+The `Variant`'s sentences has [actions](actions.md) that will be transformed to code by a [plug-in](../plugins/README.md).
+
+```gherkin
+Feature: Login
+  As a user
+  I would like to authenticate myself
+  In order to access the application
+
+Scenario: Successful login
+  Given that I can see the login screen
+  When I enter with valid credentials
+  Then I can access the application's main screen
+
   Variant: Successful login with valid credentials
     Given that I am in the [Login Screen]
     When I fill {Username}

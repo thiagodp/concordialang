@@ -6,6 +6,28 @@
 
 Translations: [Português](actions-pt.md) 🌎
 
+## `accept`
+
+### accept + alert
+```gherkin
+When I accept the alert
+```
+
+### accept + confirm
+```gherkin
+When I accept the confirmation
+```
+
+### accept + popup
+```gherkin
+When I accept the popup
+```
+
+### accept + prompt
+```gherkin
+When I accept the prompt
+```
+
 ## `amOn`
 
 ### amOn + value
@@ -33,6 +55,28 @@ When I append 100 to {Bar}
 ```gherkin
 When I attach the file "/path/to/file" to {Foo}
   and I attach the file "/path/to/file" to <#bar>
+```
+
+## `cancel`
+
+### cancel + alert
+```gherkin
+When I cancel the alert
+```
+
+### cancel + confirm
+```gherkin
+When I cancel the confirmation
+```
+
+### cancel + popup
+```gherkin
+When I cancel the popup
+```
+
+### cancel + prompt
+```gherkin
+When I cancel the prompt
 ```
 
 ## `check`
@@ -570,6 +614,21 @@ The next sentence is for *mobile* only:
 When I switch to web
 ```
 
+### switch + tab
+```gherkin
+When I switch to the tab 3
+```
+
+### switch + next + tab
+```gherkin
+When I switch to the next tab
+```
+
+### switch + previous + tab
+```gherkin
+When I switch to the previous tab
+```
+
 ## `tap`
 
 ### tap + target
@@ -587,6 +646,11 @@ When I unckeck {Foo}
   and I uncheck <#bar>
 ```
 
+### uncheck + target + target
+```gherkin
+When I unckeck {Foo} in <#bar>
+```
+
 ## `wait`
 
 ### wait + seconds
@@ -600,16 +664,34 @@ When I wait for {Foo}
   and I wait for <#bar>
 ```
 
-### wait + target + seconds
+### wait + seconds + target
 ```gherkin
-When I wait for {Foo} during 2 seconds
-  and I wait for <#bar> during 3 seconds
+When I wait 3 seconds for {Foo}
+  and I wait 5 seconds for <#bar>
+```
+
+### wait + target + hide
+```gherkin
+When I wait {Foo} to hide
+  and I wait <#bar> to hide
+```
+
+### wait + seconds + target + hide
+```gherkin
+When I wait 3 seconds for {Foo} to hide
+  and I wait 5 seconds for <#bar> to hide
 ```
 
 ### wait + target + enabled
 ```gherkin
-When I wait {Foo} is enabled
-  and I wait <#bar> is enabled
+When I wait {Foo} to be enabled
+  and I wait <#bar> to be enabled
+```
+
+### wait + seconds + target + enabled
+```gherkin
+When I wait 3 seconds for {Foo} to be enabled
+  and I wait 5 seconds for <#bar> to be enabled
 ```
 
 ### wait + target + invisible
@@ -618,10 +700,22 @@ When I wait {Foo} is invisible
   and I wait <#bar> is invisible
 ```
 
+### wait + seconds + target + invisible
+```gherkin
+When I wait 3 seconds {Foo} to be invisible
+  and I wait 5 seconds <#bar> to be invisible
+```
+
 ### wait + target + visible
 ```gherkin
-When I wait {Foo} is visible
-  and I wait <#bar> is visible
+When I wait {Foo} to be visible
+  and I wait <#bar> to be visible
+```
+
+### wait + seconds + target + visible
+```gherkin
+When I wait 3 seconds for {Foo} to be visible
+  and I wait 5 seconds for <#bar> to be visible
 ```
 
 ### wait + text + value
@@ -629,12 +723,27 @@ When I wait {Foo} is visible
 When I wait for the text "Foo"
 ```
 
+### wait + seconds + text + value
+```gherkin
+When I wait 3 seconds for the text "Foo"
+```
+
 ### wait + url + value
 ```gherkin
 When I wait for the url "/foo"
 ```
 
-### wait + url + value + seconds
+### wait + seconds + url + value
 ```gherkin
-When I wait for the url "/bar" during 3 seconds
+When I wait 3 seconds for the url "/bar"
+```
+
+### wait + option value + value + target
+```gherkin
+When I wait for the value "foo" in <#bar>
+```
+
+### wait + seconds + option value + value + target
+```gherkin
+When I wait 5 seconds for the value "foo" in <#bar>
 ```

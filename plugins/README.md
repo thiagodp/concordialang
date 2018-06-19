@@ -94,10 +94,11 @@ Left column indicates currently available actions in Concordia, while the right 
  | -                                         | _locateCheckable |
  | -                                         | _locateClickable |
  | -                                         | _locateFields |
- | -                                         | acceptPopup |
+ | accept + (alert|confirm|popup|prompt)     | acceptPopup ✓ |
  | amOn                                      | amOnPage ✓ |
  | append                                    | appendField ✓ |
  | attachFile                                | attachFile ✓ |
+ | cancel + (alert|confirm|popup|prompt)     | cancelPopup ✓ |
  | check                                     | checkOption ✓ |
  | clear + cookie                            | clearCookie ✓ |
  | clear                                     | clearField ✓ |
@@ -196,8 +197,9 @@ Left column indicates currently available actions in Concordia, while the right 
  | switch + native                           | switchToNative ✓ (Appium only) |
  | switch + web                              | switchToWeb ✓ (Appium only) |
  | -                                         | switchTo |
- | -                                         | switchToNextTab |
- | -                                         | switchToPreviousTab |
+ | switch + tab + number                     | switchToNextTab ✓ |
+ | switch + next + tab                       | switchToNextTab ✓ |
+ | switch + previous + tab                   | switchToPreviousTab ✓ |
  | tap                                       | tap ✓ (Appium only) |
  | uncheck                                   | uncheckOption ✓ |
  | wait + number                             | wait ✓ |
@@ -206,11 +208,11 @@ Left column indicates currently available actions in Concordia, while the right 
  | wait + enabled + uielement | uiliteral    | waitForEnabled ✓ |
  | wait + invisible + uielement | uiliteral  | waitForInvisible ✓ |
  | wait + text + value                       | waitForText ✓ |
- | -                                         | waitForValue |
+ | wait + option value + value               | waitForValue ✓ |
  | wait + visible + uielement | uiliteral    | waitForVisible ✓ |
  | -                                         | waitInUrl |
- | -                                         | waitNumberOfVisibleElements |
- | -                                         | waitToHide |
+ | -                                         | waitNumberOfVisibleElements ✓ |
+ | wait + hide + uielement | uiliteral       | waitToHide ✓ |
  | -                                         | waitUntil |
  | wait + url + value                        | waitUrlEquals ✓ |
  |                                           | |
