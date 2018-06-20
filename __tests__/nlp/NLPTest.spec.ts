@@ -101,6 +101,13 @@ describe( 'NLPTest', () => {
                 expect( r.entities[ 1 ].value ).toBe( 'bar' );
             } );
 
+            it( 'starts with a number', () => {
+                let r: NLPResult = nlp.recognize( 'en', ' "1foo" ' );
+                expect( r.entities ).toHaveLength( 1 );
+                expect( r.entities[ 0 ].entity ).toBe( Entities.VALUE );
+                expect( r.entities[ 0 ].value ).toBe( '1foo' );
+            } );
+
         });
 
 
