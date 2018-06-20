@@ -66,7 +66,6 @@ export class DuplicationChecker {
         return dup;
     }
 
-
     /**
      * Returns a map containg the value of the property to compare as a key and
      * the duplicated items as an array.
@@ -76,16 +75,29 @@ export class DuplicationChecker {
      * will return `{ 'foo': [ { id: 1, name: 'foo' }, { id: 2, name: 'foo' } ] }`.
      *
      * @param items Items to compare
-     * @param propertyToCompare Property to compare
+     * @param propertyOrExtractFn Property to extract the value or function to extract the value.
      * @return map
      */
-    public mapDuplicates( items: any[], propertyToCompare: string ): object {
+    public mapDuplicates< T >(
+        items: any[],
+        propertyOrExtractFn: string | (( T ) => any)
+    ): object {
         let map = {};
+
+        const isString = typeof propertyOrExtractFn === 'string';
+        const prop: string = typeof propertyOrExtractFn === 'string' ? propertyOrExtractFn : '';
+        const fn = typeof propertyOrExtractFn === 'function' ? propertyOrExtractFn : () => { return '' };
+
         for ( let item of items ) {
-            if ( ! item[ propertyToCompare ] ) {
-                continue;
+            let value;
+            if ( isString ) {
+                if ( ! item[ prop ] ) {
+                    continue;
+                }
+                value = item[ prop ];
+            } else {
+                value = fn( item );
             }
-            let value = item[ propertyToCompare ];
             if ( ! map[ value ] ) {
                 map[ value ] = [ item ];
             } else { // already exists
@@ -111,19 +123,22 @@ export class DuplicationChecker {
      * @param nodes Nodes to check.
      * @param errors Errors found.
      * @param nodeName Node name to compose the exception message.
+     * @param propertyOrExtractFn Property to extract the value or function to extract the value. Optional. Default is 'name'.
+     *
      * @returns A object map in the format returned by `mapDuplicates()`
      */
     public checkDuplicatedNamedNodes(
         nodes: NamedNode[],
         errors: SemanticException[],
-        nodeName: string
+        nodeName: string,
+        propertyOrExtractFn: string | (( NamedNode ) => any ) = 'name'
     ): object {
 
         if ( nodes.length < 1 ) {
             return;
         }
 
-        const map = this.mapDuplicates( nodes, 'name' );
+        const map = this.mapDuplicates( nodes, propertyOrExtractFn );
         for ( let prop in map ) {
             let duplicatedNodes: NamedNode[] = map[ prop ];
             let locations: Location[] = duplicatedNodes.map( node => node.location );
@@ -138,7 +153,7 @@ export class DuplicationChecker {
     }
 
     makeLocationString( loc: Location ): string {
-        return "\n  " + logSymbols.error + " (" + loc.line + ',' + loc.column + ') ' + loc.filePath || '';
+        return "\n  " + logSymbols.error + " (" + loc.line + ',' + loc.column + ')' + ( ! loc.filePath ? '' : ' ' + loc.filePath );
     }
 
 }

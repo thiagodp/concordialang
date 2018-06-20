@@ -28,7 +28,7 @@ import { isDefined } from '../util/TypeChecking';
  *    - Import a single file with a Feature OR
  *    - Import multiple files BUT have a tag @feature( <name> )
  *
- *  - Duplicated Test Case names
+ *  - Duplicated Test Case names (plus the Scenario and the Variant)
  *
  *  - Tag @variant without a tag @scenario
  *
@@ -47,6 +47,13 @@ import { isDefined } from '../util/TypeChecking';
  *
  *  - Tag @variant( <index> ) changes the property 'declaredVariantIndex'
  *    when it is a number greater than zero.
+ *
+ *  - location.filePath is defined if not defined.
+ *
+ * Notes:
+ *
+ *   - Duplicated test case names must be checked after the changes. The name
+ *     must be compared as wall as the scenario and the variant.
  *
  *
  * @author Thiago Delgado Pinto
@@ -116,11 +123,25 @@ export class TestCaseSSA extends SpecificationAnalyzer {
             }
         }
 
-        // Duplicated test case names
-        this._checker.checkDuplicatedNamedNodes( doc.testCases, errors, 'Test Case' );
-
         // @variant without @scenario, tag values, @generated
         this.checkOtherTags( doc.testCases, spec, doc, errors );
+
+        // Update filePath if not defined
+        for ( let testCase of doc.testCases ) {
+            if ( ! testCase.location.filePath ) {
+                testCase.location.filePath = doc.fileInfo.path;
+            }
+        }
+
+        // Function to extract the test case information to compare
+        const fn = ( node: TestCase ): any => {
+            return '@scenario(' + ( node.declaredScenarioIndex || '0' ) + ') ' +
+                '@variant(' + ( node.declaredVariantIndex || '0' ) + ') ' +
+                node.name;
+        };
+
+        // Duplicated test cases
+        this._checker.checkDuplicatedNamedNodes( doc.testCases, errors, 'Test Case', fn );
     }
 
 
