@@ -57,6 +57,7 @@ exports.CODECEPTJS_COMMANDS = [
     // fill
     { action: 'fill', comp: CommandMapper_1.CmdCmp.ONE_TARGET__ONE_VALUE, template: 'I.fillField({{{target}}}, {{{value}}});' },
     { action: 'fill', comp: CommandMapper_1.CmdCmp.SAME_OPTION__ONE_TARGET__ONE_VALUE, options: ['field'], template: 'I.fillField({{{target}}}, {{{value}}});' },
+    { action: 'fill', comp: CommandMapper_1.CmdCmp.SAME_OPTION__ONE_TARGET__ONE_VALUE, options: ['inside'], template: 'I.fillField({{{target}}}, {{{value}}});' },
     // hide + keyboard (Appium only)
     { action: 'hide', comp: CommandMapper_1.CmdCmp.SAME_OPTION, options: ['keyboard'], template: 'I.hideDeviceKeyboard();' },
     // install (Appium only)

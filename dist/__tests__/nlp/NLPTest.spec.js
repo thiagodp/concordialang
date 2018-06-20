@@ -76,6 +76,12 @@ describe('NLPTest', () => {
                 expect(r.entities[1].entity).toBe(Entities_1.Entities.VALUE);
                 expect(r.entities[1].value).toBe('bar');
             });
+            it('starts with a number', () => {
+                let r = nlp.recognize('en', ' "1foo" ');
+                expect(r.entities).toHaveLength(1);
+                expect(r.entities[0].entity).toBe(Entities_1.Entities.VALUE);
+                expect(r.entities[0].value).toBe('1foo');
+            });
         });
         describe('number', () => {
             function recogNumber(text, expected, debug = false) {
