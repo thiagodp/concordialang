@@ -397,7 +397,7 @@ export class Options {
 
         this.saveConfig = isDefined( obj.saveConfig );
         this.verbose = isDefined( obj.verbose );
-        this.stopOnTheFirstError = isDefined( obj.failFast );
+        this.stopOnTheFirstError = true === obj.failFast || true === obj.stopOnTheFirstError;
 
         const justSpec: boolean = isDefined( obj.justSpec ) || isDefined( obj.justSpecification );
         const justTestCase: boolean = isDefined( obj.justTestCase ) || isDefined( obj.justTestCases );
@@ -406,11 +406,24 @@ export class Options {
         const justResult: boolean = isDefined( obj.justResult ) || isDefined( obj.justResults );
 
         // compare to false is important because meow transforms no-xxx to xxx === false
-        const noSpec: boolean = false === obj.spec || false === obj.specification;
-        const noTestCase: boolean = false === obj.testCase || false === obj.testCases || false === obj.testcase;
-        const noScript: boolean = false === obj.script || false === obj.scripts || false === obj.testScript || false == obj.testscript;
-        const noRun: boolean = false === obj.run || false === obj.execute;
-        const noResult: boolean = false === obj.result || false === obj.results;
+        const noSpec: boolean = false === obj.compileSpecification ||
+            false === obj.spec ||
+            false === obj.specification;
+        const noTestCase: boolean = false === obj.generateTestCase ||
+            false === obj.testCase ||
+            false === obj.testCases ||
+            false === obj.testcase;
+        const noScript: boolean = false === obj.generateScript ||
+            false === obj.script ||
+            false === obj.scripts ||
+            false === obj.testScript ||
+            false == obj.testscript;
+        const noRun: boolean = false == obj.executeScript ||
+            false === obj.run ||
+            false === obj.execute;
+        const noResult: boolean = false === obj.analyzeResult ||
+            false === obj.result ||
+            false === obj.results;
 
         // Adjust flags
 
