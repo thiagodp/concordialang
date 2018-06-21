@@ -81,7 +81,12 @@ export class TCDocGen {
         const props = parse( docPath );
         const fileName = props.name + this._extensionTestCase;
         const outDir = ! outputDir ? props.dir : relative( props.dir, outputDir );
-        const fullPath = normalize( resolve( this._basePath, join( outDir, fileName ) ) );
+
+        // const fullPath = normalize( resolve( this._basePath, join( outDir, fileName ) ) );
+        const resolvedPath = resolve( this._basePath, join( outDir, fileName ) )
+            .replace( /%20/g, ' ' ); // #23 and https://github.com/nodejs/node/issues/21444
+        const fullPath = normalize( resolvedPath );
+
         return fullPath;
     }
 
