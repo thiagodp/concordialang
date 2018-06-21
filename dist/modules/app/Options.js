@@ -534,15 +534,21 @@ class Options {
      * Returns an object that can be saved.
      */
     export() {
-        let newOptions = new Options(this.appPath, this.processPath);
+        const newOptions = new Options(this.appPath, this.processPath);
         let obj = {};
+        let paramsToIgnore = this.PARAMS_TO_IGNORE.slice(0); // copy
+        // Individual cases
+        if (this.isGeneratedSeed) {
+            paramsToIgnore.push('seed');
+        }
+        // Convert
         for (let p in this) {
             let pType = typeof p;
             if ('function' === pType) {
                 // console.log( 'function', p );
                 continue;
             }
-            if (this.PARAMS_TO_IGNORE.indexOf(p) >= 0) {
+            if (paramsToIgnore.indexOf(p) >= 0) {
                 // console.log( 'ignored property', p );
                 continue;
             }
