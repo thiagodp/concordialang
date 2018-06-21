@@ -180,6 +180,7 @@ exports.DEFAULT_UI_PROPERTY_SYNTAX_RULE = {
     ui_property: { min: 1, max: 1 },
     ui_data_type: { min: 1, max: 1 },
     bool_value: { min: 1, max: 1 },
+    command: { min: 1, max: 1 },
     // Other action or actions that must be used together.
     mustBeUsedWith: []
 };
@@ -189,7 +190,7 @@ exports.DEFAULT_UI_PROPERTY_SYNTAX_RULE = {
  * @author Thiago Delgado Pinto
  */
 exports.UI_PROPERTY_SYNTAX_RULES = [
-    { name: "id", targets: ["value"] },
+    { name: "id", targets: ["value", "command"] },
     { name: "type", targets: ["ui_property"] },
     { name: "editable", targets: ["bool_value", "number"], minTargets: 0 },
     { name: "datatype", targets: ["ui_data_type"] },
