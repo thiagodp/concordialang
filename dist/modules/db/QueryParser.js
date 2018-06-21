@@ -56,9 +56,14 @@ class QueryParser {
      * Returns a regex for the given name.
      *
      * @param name Name
+     * @param replaceDot Whether is desired to replace dot. Optional. Default is false.
      */
-    makeNameRegex(name) {
-        return new RegExp('(?:\\[)(' + name + ')(?:\\])', 'gui');
+    makeNameRegex(name, replaceDot = false) {
+        let exp = '(?:\\[)(' + name + ')(?:\\])';
+        if (replaceDot) {
+            exp += '\.?';
+        }
+        return new RegExp(exp, 'gui');
     }
 }
 exports.QueryParser = QueryParser;
