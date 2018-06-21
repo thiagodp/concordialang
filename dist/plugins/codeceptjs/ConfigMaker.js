@@ -31,7 +31,8 @@ class ConfigMaker {
         let helpers = this.ensureHelpersProperty(config);
         helpers["WebDriverIO"] = {
             browser: browser,
-            url: url
+            url: url,
+            windowSize: "maximize"
         };
     }
     /**
