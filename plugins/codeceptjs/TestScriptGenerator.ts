@@ -1,8 +1,9 @@
 import { render } from "mustache";
 import { AbstractTestScript, ATSCommand } from '../../modules/testscript/AbstractTestScript';
 import { CommandMapper } from "./CommandMapper";
-
 const dedent = require('dedent-js');
+import * as logSymbols from 'log-symbols';
+import chalk from 'chalk';
 
 /**
  * Generate test scripts for CodeceptJS.
@@ -76,7 +77,16 @@ export class TestScriptGenerator {
         for ( let test of obj.testcases || [] ) {
             test.convertedCommands = [];
             for ( let cmd of test.commands || [] ) {
-                test.convertedCommands.push( this.mapper.map( cmd ) );
+                let converted: string[] = this.mapper.map( cmd );
+                if ( 0 === converted.length ) {
+                    console.log( logSymbols.warning,
+                        'Plug-in could not convert command from',
+                        chalk.yellowBright( ats.sourceFile ),
+                        '(' + cmd.location.line + ',' + cmd.location.column + ')'
+                    );
+                    converted = [ this.mapper.makeCommentWithCommand( cmd ) ];
+                }
+                test.convertedCommands.push.apply( test.convertedCommands, converted );
             }
         }
 
