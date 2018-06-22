@@ -1,12 +1,11 @@
 import { Document } from "../ast/Document";
 import { TestCase } from "../ast/TestCase";
-import { parse, relative, join, dirname, basename, normalize } from "path";
+import { parse, resolve, relative, join, dirname, basename, normalize } from "path";
 import { FileInfo } from "../ast/FileInfo";
 import { Language } from "../ast/Language";
 import * as deepcopy from 'deepcopy';
 import { Import } from "../ast/Import";
 import { NodeTypes } from "../req/NodeTypes";
-import { resolve } from "url";
 
 
 /**
@@ -81,12 +80,7 @@ export class TCDocGen {
         const props = parse( docPath );
         const fileName = props.name + this._extensionTestCase;
         const outDir = ! outputDir ? props.dir : relative( props.dir, outputDir );
-
-        // const fullPath = normalize( resolve( this._basePath, join( outDir, fileName ) ) );
-        const resolvedPath = resolve( this._basePath, join( outDir, fileName ) )
-            .replace( /%20/g, ' ' ); // #23 and https://github.com/nodejs/node/issues/21444
-        const fullPath = normalize( resolvedPath );
-
+        const fullPath = normalize( resolve( this._basePath, join( outDir, fileName ) ) );
         return fullPath;
     }
 
