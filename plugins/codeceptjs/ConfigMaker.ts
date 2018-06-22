@@ -15,7 +15,11 @@ export class ConfigMaker {
     ) {
         return {
             "tests": filter,
-            "timeout": 10000,
+            "smartWait": 5000,
+            "timeouts": {
+                "script": 60000,
+                "page load": 10000
+            },
             "output": output,
             "helpers": {},
             "bootstrap": false,
