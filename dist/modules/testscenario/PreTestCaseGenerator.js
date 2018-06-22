@@ -30,6 +30,7 @@ const CaseType_1 = require("../app/CaseType");
 const PreTestCase_1 = require("./PreTestCase");
 const js_joda_1 = require("js-joda");
 const ActionMap_1 = require("../util/ActionMap");
+const Actions_1 = require("../util/Actions");
 const ActionTargets_1 = require("../util/ActionTargets");
 const UIElementNameHandler_1 = require("../util/UIElementNameHandler");
 const path_1 = require("path");
@@ -249,7 +250,7 @@ class PreTestCaseGenerator {
      * @param keywords Keywords dictionary
      */
     fillUILiteralsWithoutValueInSingleStep(step, keywords) {
-        const fillEntity = this.extractFillEntity(step);
+        const fillEntity = this.extractDataInputActionEntity(step);
         if (null === fillEntity || this.hasValue(step) || this.hasNumber(step)) {
             return [step];
         }
@@ -345,7 +346,7 @@ class PreTestCaseGenerator {
         for (let step of steps) {
             if (onlyFillSteps) {
                 // Ignore steps with 'fill' entity
-                const fillEntity = this.extractFillEntity(step);
+                const fillEntity = this.extractDataInputActionEntity(step);
                 if (TypeChecking_1.isDefined(fillEntity)) {
                     continue;
                 }
@@ -400,8 +401,8 @@ class PreTestCaseGenerator {
         return targetTypes;
     }
     fillUIElementWithValueAndReplaceByUILiteralInStep(step, langContent, uieVariableToUIETestPlanMap, uieVariableToValueMap, language, ctx) {
-        const fillEntity = this.extractFillEntity(step);
-        if (null === fillEntity || this.hasValue(step) || this.hasNumber(step)) {
+        const dataInputActionEntity = this.extractDataInputActionEntity(step);
+        if (null === dataInputActionEntity || this.hasValue(step) || this.hasNumber(step)) {
             let steps = [step];
             this.replaceUIElementsWithUILiterals(steps, language, langContent.keywords, ctx, false);
             return [steps, []];
@@ -478,7 +479,7 @@ class PreTestCaseGenerator {
                 formattedValue = value.format(js_joda_1.DateTimeFormatter.ofPattern('dd/MM/yyyy HH:mm')).toString();
             }
             // Generate the sentence
-            let sentence = prefix + ' ' + keywordI + ' ' + fillEntity.string + ' ' +
+            let sentence = prefix + ' ' + keywordI + ' ' + dataInputActionEntity.string + ' ' +
                 Symbols_1.Symbols.UI_LITERAL_PREFIX + uieLiteral + Symbols_1.Symbols.UI_LITERAL_SUFFIX +
                 ' ' + keywordWith + ' ' +
                 ('number' === typeof formattedValue
@@ -596,12 +597,15 @@ class PreTestCaseGenerator {
     //
     // OTHER
     //
-    extractFillEntity(step) {
+    extractDataInputActionEntity(step) {
         return step.nlpResult.entities
-            .find(e => e.entity === Entities_1.Entities.UI_ACTION && this.isFillAction(e.value)) || null;
+            .find(e => e.entity === Entities_1.Entities.UI_ACTION && this.isDataInputAction(e.value)) || null;
     }
-    isFillAction(action) {
-        return 'fill' === action; // TODO: refactor
+    isDataInputAction(action) {
+        return Actions_1.Actions.FILL === action ||
+            Actions_1.Actions.SELECT === action ||
+            Actions_1.Actions.APPEND === action ||
+            Actions_1.Actions.ATTACH_FILE === action;
     }
     hasValue(step) {
         if (!step || !step.nlpResult) {
