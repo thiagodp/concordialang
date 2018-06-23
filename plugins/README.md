@@ -194,9 +194,9 @@ Left column indicates currently available actions in Concordia, while the right 
  | swipe + left                              | swipeLeft ✓ (Appium only) |
  | swipe + right                             | swipeRight ✓ (Appium only) |
  | swipe + up                                | swipeUp ✓ (Appium only) |
+ | swipe + targets                           | swipeTo ✓ (Appium only) |
  | switch + native                           | switchToNative ✓ (Appium only) |
  | switch + web                              | switchToWeb ✓ (Appium only) |
- | -                                         | switchTo |
  | switch + tab + number                     | switchToNextTab ✓ |
  | switch + next + tab                       | switchToNextTab ✓ |
  | switch + previous + tab                   | switchToPreviousTab ✓ |

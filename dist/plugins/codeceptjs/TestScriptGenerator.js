@@ -67,11 +67,7 @@ class TestScriptGenerator {
         for (let test of obj.testcases || []) {
             test.convertedCommands = [];
             for (let cmd of test.commands || []) {
-                let converted = this.mapper.map(cmd);
-                if (0 === converted.length) {
-                    console.log(logSymbols.warning, 'Plug-in could not convert command from', chalk_1.default.yellowBright(ats.sourceFile), '(' + cmd.location.line + ',' + cmd.location.column + ')');
-                    converted = [this.mapper.makeCommentWithCommand(cmd)];
-                }
+                let converted = this.analyzeConverted(this.mapper.map(cmd), cmd, ats);
                 test.convertedCommands.push.apply(test.convertedCommands, converted);
             }
         }
@@ -83,10 +79,19 @@ class TestScriptGenerator {
             }
             event.convertedCommands = [];
             for (let cmd of event.commands || []) {
-                event.convertedCommands.push(this.mapper.map(cmd));
+                let converted = this.analyzeConverted(this.mapper.map(cmd), cmd, ats);
+                event.convertedCommands.push.apply(event.convertedCommands, converted);
             }
         }
         return mustache_1.render(this.template, obj); // mustache's renderer
     }
+    analyzeConverted(converted, cmd, ats) {
+        if (0 === converted.length) {
+            console.log(logSymbols.warning, 'Plug-in could not convert command from', chalk_1.default.yellowBright(ats.sourceFile), '(' + cmd.location.line + ',' + cmd.location.column + ')');
+            return [this.mapper.makeCommentWithCommand(cmd)];
+        }
+        return converted;
+    }
+    ;
 }
 exports.TestScriptGenerator = TestScriptGenerator;

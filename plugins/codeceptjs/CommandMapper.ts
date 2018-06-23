@@ -27,6 +27,8 @@ export enum CmdCmp {
     ONE_TARGET__ONE_VALUE,
     ONE_TARGET__ONE_NUMBER,
     ONE_TARGET__ONE_VALUE_OR_NUMBER,
+    ONE_TARGET__TWO_NUMBERS,
+    ONE_TARGET__THREE_NUMBERS,
 
     SAME_TARGET_TYPE,
     SAME_TARGET_TYPE__ONE_NUMBER,
@@ -35,6 +37,7 @@ export enum CmdCmp {
     SAME_TARGET_TYPE__ONE_TARGET,
     SAME_TARGET_TYPE__ONE_TARGET__ONE_NUMBER,
     SAME_TARGET_TYPE__ONE_TARGET__ONE_NUMBER__ONE_VALUE,
+    SAME_TARGET_TYPE__ONE_TARGET__TWO_NUMBERS,
     SAME_TARGET_TYPE__ONE_TARGET__ONE_VALUE_OR_NUMBER,
     SAME_TARGET_TYPE__ONE_TARGET__ONE_VALUE__ONE_NUMBER,
 
@@ -52,6 +55,7 @@ export enum CmdCmp {
     SAME_OPTION__ONE_VALUE__TWO_NUMBERS,
 
     SAME_OPTION__ONE_VALUE_OR_NUMBER,
+    SAME_OPTION__ONE_VALUE_OR_NUMBER__ONE_NUMBER,
 
     SAME_OPTION__ONE_TARGET,
     SAME_OPTION__ONE_TARGET__ONE_NUMBER,
@@ -61,6 +65,8 @@ export enum CmdCmp {
     SAME_OPTION__ONE_TARGET__ONE_VALUE_OR_NUMBER__ONE_NUMBER,
     SAME_OPTION__ONE_TARGET__ONE_VALUE__ONE_NUMBER,
 
+    SAME_OPTION__SAME_TARGET_TYPE,
+    SAME_OPTION__SAME_TARGET_TYPE__ONE_NUMBER,
     SAME_OPTION__SAME_TARGET_TYPE__ONE_VALUE_OR_NUMBER,
     SAME_OPTION__SAME_TARGET_TYPE__ONE_VALUE_OR_NUMBER__ONE_NUMBER,
     SAME_OPTION__SAME_TARGET_TYPE__ONE_TARGET,
@@ -69,6 +75,7 @@ export enum CmdCmp {
     SAME_MODIFIER__ONE_VALUE,
     SAME_MODIFIER__ONE_VALUE_OR_NUMBER,
     SAME_MODIFIER__ONE_TARGET,
+    SAME_MODIFIER__SAME_OPTION,
     SAME_MODIFIER__SAME_OPTION__ONE_VALUE,
     SAME_MODIFIER__SAME_OPTION__ONE_VALUE_OR_NUMBER,
     SAME_MODIFIER__SAME_OPTION__ONE_TARGET,
@@ -84,7 +91,8 @@ export enum CmdCmp {
     TWO_VALUES_SAME_OPTION,
 
     TWO_NUMBERS,
-    TWO_NUMBERS_SAME_OPTION
+    TWO_NUMBERS_SAME_OPTION,
+    TWO_NUMBERS_SAME_TARGET_TYPE
 }
 
 /**
@@ -125,7 +133,7 @@ export class CommandMapper {
         if ( ! cmdCfg ) {
             return [];
         }
-        // console.log( cmd, cmdCfg );
+        // if ( cmd.action === 'swipe' ) console.log( cmd, cmdCfg );
         return this.makeCommands( cmdCfg, cmd );
     }
 
@@ -309,6 +317,11 @@ export class CommandMapper {
                     includeOptions( cfg, cmd );
             }
 
+            case CmdCmp.SAME_MODIFIER__SAME_OPTION: {
+                return includeOptions( cfg, cmd ) &&
+                    cfg.modifier === cmd.modifier;
+            }
+
             case CmdCmp.SAME_MODIFIER__SAME_OPTION__ONE_VALUE: {
                 return 1 === valuesCount &&
                     ! isNumber( cmd.values[ 0 ] ) &&
@@ -390,6 +403,10 @@ export class CommandMapper {
                 return 1 === valuesCount && includeOptions( cfg, cmd );
             }
 
+            case CmdCmp.SAME_OPTION__ONE_VALUE_OR_NUMBER__ONE_NUMBER: {
+                return oneValueThenNumbers( cmd, 1, true ) && includeOptions( cfg, cmd );
+            }
+
             case CmdCmp.ONE_VALUE__THREE_NUMBERS: {
                 return oneValueThenThreeNumbers( cmd );
             }
@@ -436,6 +453,32 @@ export class CommandMapper {
                 return 1 === targetsCount && 1 === valuesCount;
             }
 
+            case CmdCmp.ONE_TARGET__TWO_NUMBERS: {
+                const ok = 1 === targetsCount &&
+                    2 === valuesCount &&
+                    isNumber( cmd.values[ 0 ] ) &&
+                    isNumber( cmd.values[ 1 ] );
+                if ( ok ) {
+                    cmd.values[ 0 ] = Number( cmd.values[ 0 ] );
+                    cmd.values[ 1 ] = Number( cmd.values[ 1 ] );
+                }
+                return ok;
+            }
+
+            case CmdCmp.ONE_TARGET__THREE_NUMBERS: {
+                const ok = 1 === targetsCount &&
+                    3 === valuesCount &&
+                    isNumber( cmd.values[ 0 ] ) &&
+                    isNumber( cmd.values[ 1 ] ) &&
+                    isNumber( cmd.values[ 2 ] );
+                if ( ok ) {
+                    cmd.values[ 0 ] = Number( cmd.values[ 0 ] );
+                    cmd.values[ 1 ] = Number( cmd.values[ 1 ] );
+                    cmd.values[ 2 ] = Number( cmd.values[ 2 ] );
+                }
+                return ok;
+            }
+
             case CmdCmp.SAME_OPTION__ONE_TARGET__ONE_NUMBER: {
                 const ok = 1 === targetsCount &&
                     1 === valuesCount &&
@@ -468,6 +511,18 @@ export class CommandMapper {
                 ok = oneValueThenNumbers( cmd, 1, true );
                 if ( ok ) {
                     cmd.values = [ cmd.values[ 1 ], cmd.values[ 0 ] ];
+                }
+                return ok;
+            }
+
+            case CmdCmp.SAME_TARGET_TYPE__ONE_TARGET__TWO_NUMBERS: {
+                const ok = 1 === targetsCount &&
+                    2 === valuesCount &&
+                    isNumber( cmd.values[ 0 ] ) &&
+                    isNumber( cmd.values[ 1 ] ) &&
+                    sameTargetTypes( cfg, cmd );
+                if ( ok ) {
+                    cmd.values = [ Number( cmd.values[ 0 ] ), Number( cmd.values[ 1 ] ) ];
                 }
                 return ok;
             }
@@ -544,6 +599,22 @@ export class CommandMapper {
                 return 1 === targetsCount &&
                     includeOptions( cfg, cmd ) &&
                     oneValueThenOneNumber( cmd );
+            }
+
+            case CmdCmp.SAME_OPTION__SAME_TARGET_TYPE: {
+                return includeOptions( cfg, cmd ) &&
+                    sameTargetTypes( cfg, cmd );
+            }
+
+            case CmdCmp.SAME_OPTION__SAME_TARGET_TYPE__ONE_NUMBER: {
+                const ok = 1 === valuesCount &&
+                    isNumber( cmd.values[ 0 ] ) &&
+                    includeOptions( cfg, cmd ) &&
+                    sameTargetTypes( cfg, cmd );
+                if ( ok ) {
+                    cmd.values[ 0 ] = Number( cmd.values[ 0 ] );
+                }
+                return ok;
             }
 
             case CmdCmp.SAME_OPTION__SAME_TARGET_TYPE__ONE_VALUE_OR_NUMBER: {
@@ -663,6 +734,18 @@ export class CommandMapper {
                     isNumber( cmd.values[ 0 ] ) &&
                     isNumber( cmd.values[ 1 ] ) &&
                     includeOptions( cfg, cmd );
+                if ( ok ) {
+                    cmd.values[ 0 ] = Number( cmd.values[ 0 ] );
+                    cmd.values[ 1 ] = Number( cmd.values[ 1 ] );
+                }
+                return ok;
+            }
+
+            case CmdCmp.TWO_NUMBERS_SAME_TARGET_TYPE: {
+                let ok = 2 == valuesCount &&
+                    isNumber( cmd.values[ 0 ] ) &&
+                    isNumber( cmd.values[ 1 ] ) &&
+                    sameTargetTypes( cfg, cmd );
                 if ( ok ) {
                     cmd.values[ 0 ] = Number( cmd.values[ 0 ] );
                     cmd.values[ 1 ] = Number( cmd.values[ 1 ] );

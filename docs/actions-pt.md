@@ -121,6 +121,8 @@ Quando eu fecho o app
 ## `connect`
 
 ### connect + database
+
+A próxima sentença é somente para [Eventos de Teste](language/pt.md#eventos-de-teste):
 ```
 Quando eu conecto ao banco de dados [TestDB]
 ```
@@ -128,6 +130,8 @@ Quando eu conecto ao banco de dados [TestDB]
 ## `disconnect`
 
 ### disconnect + database
+
+A próxima sentença é somente para [Eventos de Teste](language/pt.md#eventos-de-teste):
 ```
 Quando eu desconecto do banco de dados [TestDB]
 ```
@@ -205,6 +209,9 @@ Quando eu extraio "/storage/emulated/0/DCIM/logo.png" para "some/path"
 
 ```gherkin
 Quando eu atualizo a página
+  e eu atualizo a página atual
+  e eu recarrego a página
+  e eu recarrego a página atual
 ```
 
 ## `resize`
@@ -228,6 +235,7 @@ Quando eu clico com o botão direito em {Foo}
 
 👉 *Comandos devem ser declarados entre aspas simples (`'`) e devem ficar em uma linha*
 
+A próxima sentença é somente para [Eventos de Teste](language/pt.md#eventos-de-teste):
 ```gherkin
 Quando eu executo o comando 'rmdir foo'
   e rodo o comando './script.sh'
@@ -237,6 +245,7 @@ Quando eu executo o comando 'rmdir foo'
 
 *Executa comandos SQL em um banco de dados*
 
+A próxima sentença é somente para [Eventos de Teste](language/pt.md#eventos-de-teste):
 ```gherkin
 Quando eu executo o script 'INSERT INTO [MyDB].product ( name, price ) VALUES ( "Soda", 1.50 )'
   e eu executo o script 'INSERT INTO [MyDB].Users( UserName, UserSex, UserAge ) VALUES ( "Newton", "Male", 25 )'
@@ -303,6 +312,14 @@ Atualmente [database-js-sqlite](https://github.com/mlaanderson/database-js-sqlit
 ```gherkin
 Quando salvo uma foto pra "foo.png"
   e eu bato uma foto da tela para "bar.png"
+```
+
+## `scrollTo`
+
+```gherkin
+Quando eu rolo para <#foo>
+  e eu rolo para {Bar}
+  e eu dou um scroll para <#bar>
 ```
 
 ## `see`
@@ -422,26 +439,31 @@ Quando eu balanço o dispositivo
 
 A próxima sentença é somente para *mobile*:
 ```gherkin
-Quando eu deslizo "#io.selendroid.myapp:id/LinearLayout1" para 100, 200
+Quando eu deslizo <#io.selendroid.myapp:id/LinearLayout1> para 100, 200
 ```
 
 A próxima sentença é somente para *mobile*:
 ```gherkin
-Quando eu deslizo "#io.selendroid.myapp:id/LinearLayout1" para baixo
+Quando eu deslizo <#io.selendroid.myapp:id/LinearLayout1> para baixo
 ```
 A próxima sentença é somente para *mobile*:
 ```gherkin
-Quando eu deslizo "#io.selendroid.myapp:id/LinearLayout1" para a esquerda
-```
-
-A próxima sentença é somente para *mobile*:
-```gherkin
-Quando eu deslizo "#io.selendroid.myapp:id/LinearLayout1" para direita
+Quando eu deslizo <#io.selendroid.myapp:id/LinearLayout1> para a esquerda
 ```
 
 A próxima sentença é somente para *mobile*:
 ```gherkin
-Quando eu deslizo "#io.selendroid.myapp:id/LinearLayout1" para cima
+Quando eu deslizo <#io.selendroid.myapp:id/LinearLayout1> para direita
+```
+
+A próxima sentença é somente para *mobile*:
+```gherkin
+Quando eu deslizo <#io.selendroid.myapp:id/LinearLayout1> para cima
+```
+
+A próxima sentença é somente para *mobile*:
+```gherkin
+Quando eu deslizo <#foo> para <#bar>
 ```
 
 ## `switch`

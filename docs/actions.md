@@ -133,6 +133,7 @@ When I close the app
 
 ## `connect`
 
+The next sentence is for [Test Events](language/en.md#test-events) only:
 ### connect + database
 ```
 When I connect to the database [TestDB]
@@ -140,6 +141,7 @@ When I connect to the database [TestDB]
 
 ## `disconnect`
 
+The next sentence is for [Test Events](language/en.md#test-events) only:
 ### disconnect + database
 ```
 When I disconnect from the database [TestDB]
@@ -250,19 +252,20 @@ When I pull "/storage/emulated/0/DCIM/logo.png" to "some/path"
 
 ## `refresh`
 
-### refresh + currentPage
+### refresh + page or currentPage or url
 ```gherkin
-When I refresh the current page
-```
-
-### refresh + url
-```gherkin
-When I refresh the url
+When I refresh the page
+  and I refresh the current page
+  and I reload the page
+  and I reload the current page
 ```
 
 ## `remove`
 
 ### remove + app + value
+
+*Same as uninstall*
+
 The next sentence is for *mobile* only:
 ```gherkin
 When I remove the app "com.example.android.myapp"
@@ -296,6 +299,7 @@ When I right click "Foo"
 
 👉 *Commands should be declared between single quotes (`'`) and must stay in a single line*
 
+The next sentence is for [Test Events](language/en.md#test-events) only:
 ```gherkin
 When I run the command 'rmdir foo'
   and I run the command './script.sh'
@@ -305,6 +309,7 @@ When I run the command 'rmdir foo'
 
 *Run SQL commands in a database*
 
+The next sentence is for [Test Events](language/en.md#test-events) only:
 ```gherkin
 When I run the script 'INSERT INTO [MyDB].product ( name, price ) VALUES ( "Soda", 1.50 )'
   and I run the script 'INSERT INTO [MyDB].Users( UserName, UserSex, UserAge ) VALUES ( "Newton", "Male", 25 )'
@@ -368,10 +373,16 @@ Currently [database-js-sqlite](https://github.com/mlaanderson/database-js-sqlite
 
 ## `saveScreenshot`
 
-### saveScreenshot + value
 ```gherkin
 When I save a screenshot to "foo.png"
   and I take a photo to "bar.png"
+```
+
+## `scrollTo`
+
+```gherkin
+When I scroll to <#foo>
+  and I scroll to {Bar}
 ```
 
 ## `see`
@@ -573,31 +584,37 @@ When I shake the device
 ### swipe + value + number + number
 The next sentence is for *mobile* only:
 ```gherkin
-When I swipe "#io.selendroid.myapp:id/LinearLayout1" to 100, 200
+When I swipe <#io.selendroid.myapp:id/LinearLayout1> to 100, 200
 ```
 
 ### swipe + value + down
 The next sentence is for *mobile* only:
 ```gherkin
-When I swipe "#io.selendroid.myapp:id/LinearLayout1" down
+When I swipe <#io.selendroid.myapp:id/LinearLayout1> down
 ```
 
 ### swipe + value + left
 The next sentence is for *mobile* only:
 ```gherkin
-When I swipe "#io.selendroid.myapp:id/LinearLayout1" left
+When I swipe <#io.selendroid.myapp:id/LinearLayout1> left
 ```
 
 ### swipe + value + right
 The next sentence is for *mobile* only:
 ```gherkin
-When I swipe "#io.selendroid.myapp:id/LinearLayout1" right
+When I swipe <#io.selendroid.myapp:id/LinearLayout1> right
 ```
 
 ### swipe + value + up
 The next sentence is for *mobile* only:
 ```gherkin
-When I swipe "#io.selendroid.myapp:id/LinearLayout1" up
+When I swipe <#io.selendroid.myapp:id/LinearLayout1> up
+```
+
+### swipe + from .. to
+The next sentence is for *mobile* only:
+```gherkin
+When I swipe <#foo> to <#bar>
 ```
 
 ## `switch`

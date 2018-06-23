@@ -43,5 +43,6 @@ var Actions;
     Actions["SWITCH"] = "switch";
     Actions["TAP"] = "tap";
     Actions["UNCHECK"] = "uncheck";
+    Actions["UNINSTALL"] = "uninstall";
     Actions["WAIT"] = "wait"; // web, mobile web, mobile native, desktop
 })(Actions = exports.Actions || (exports.Actions = {}));

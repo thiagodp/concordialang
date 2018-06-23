@@ -77,15 +77,7 @@ export class TestScriptGenerator {
         for ( let test of obj.testcases || [] ) {
             test.convertedCommands = [];
             for ( let cmd of test.commands || [] ) {
-                let converted: string[] = this.mapper.map( cmd );
-                if ( 0 === converted.length ) {
-                    console.log( logSymbols.warning,
-                        'Plug-in could not convert command from',
-                        chalk.yellowBright( ats.sourceFile ),
-                        '(' + cmd.location.line + ',' + cmd.location.column + ')'
-                    );
-                    converted = [ this.mapper.makeCommentWithCommand( cmd ) ];
-                }
+                let converted: string[] = this.analyzeConverted( this.mapper.map( cmd ), cmd, ats );
                 test.convertedCommands.push.apply( test.convertedCommands, converted );
             }
         }
@@ -98,11 +90,25 @@ export class TestScriptGenerator {
             }
             event.convertedCommands = [];
             for ( let cmd of event.commands || [] ) {
-                event.convertedCommands.push( this.mapper.map( cmd ) );
+                let converted: string[] = this.analyzeConverted( this.mapper.map( cmd ), cmd, ats );
+                event.convertedCommands.push.apply( event.convertedCommands, converted );
             }
         }
 
         return render( this.template, obj ); // mustache's renderer
     }
+
+    analyzeConverted( converted: string[], cmd: ATSCommand, ats: AbstractTestScript ): string[] {
+        if ( 0 === converted.length ) {
+            console.log( logSymbols.warning,
+                'Plug-in could not convert command from',
+                chalk.yellowBright( ats.sourceFile ),
+                '(' + cmd.location.line + ',' + cmd.location.column + ')'
+            );
+            return [ this.mapper.makeCommentWithCommand( cmd ) ];
+        }
+        return converted;
+    };
+
 
 }

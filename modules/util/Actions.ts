@@ -40,5 +40,6 @@ export enum Actions {
     SWITCH          = "switch"        , // mobile web, mobile native
     TAP             = "tap"           , // mobile web, mobile native
     UNCHECK         = "uncheck"       , // web, mobile web, mobile native, desktop
+    UNINSTALL       = "uninstall"     , // mobile web, mobile native, desktop
     WAIT            = "wait"            // web, mobile web, mobile native, desktop
 }
