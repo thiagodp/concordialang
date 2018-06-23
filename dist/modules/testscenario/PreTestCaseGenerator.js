@@ -290,7 +290,7 @@ class PreTestCaseGenerator {
             let sentence = prefix + ' ' + keywordI + ' ' + fillEntity.string + ' ';
             let comment = null;
             if (Entities_1.Entities.UI_LITERAL === entity.entity) {
-                sentence += Symbols_1.Symbols.UI_LITERAL_PREFIX + entity.string + Symbols_1.Symbols.UI_LITERAL_SUFFIX +
+                sentence += Symbols_1.Symbols.UI_LITERAL_PREFIX + entity.value + Symbols_1.Symbols.UI_LITERAL_SUFFIX +
                     ' ' + keywordWith + ' ' +
                     Symbols_1.Symbols.VALUE_WRAPPER + this.randomString() + Symbols_1.Symbols.VALUE_WRAPPER;
                 comment = ' ' + keywordValid + Symbols_1.Symbols.TITLE_SEPARATOR + ' ' + keywordRandom;

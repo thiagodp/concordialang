@@ -381,7 +381,7 @@ export class PreTestCaseGenerator {
             let comment = null;
 
             if ( Entities.UI_LITERAL === entity.entity ) {
-                sentence += Symbols.UI_LITERAL_PREFIX + entity.string + Symbols.UI_LITERAL_SUFFIX +
+                sentence += Symbols.UI_LITERAL_PREFIX + entity.value + Symbols.UI_LITERAL_SUFFIX +
                     ' ' + keywordWith + ' ' +
                     Symbols.VALUE_WRAPPER + this.randomString() + Symbols.VALUE_WRAPPER;
 

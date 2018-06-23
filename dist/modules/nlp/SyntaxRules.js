@@ -82,7 +82,14 @@ exports.UI_ACTION_SYNTAX_RULES = [
         constant: { min: 0, max: 1 }
     },
     { name: "drag", minTargets: 2, maxTargets: 2, targets: ["ui_element", "ui_literal"] },
-    { name: "fill", minTargets: 1, maxTargets: 999, value: { min: 0, max: 1 }, number: { min: 0, max: 1 } },
+    { name: "fill", minTargets: 0, maxTargets: 999,
+        targets: ["ui_element", "ui_literal", "value", "number", "constant"],
+        ui_element: { min: 0, max: 999 },
+        ui_literal: { min: 0, max: 999 },
+        value: { min: 0, max: 1 },
+        number: { min: 0, max: 1 },
+        constant: { min: 0, max: 1 }
+    },
     { name: "hide", minTargets: 0 },
     { name: "install", minTargets: 1, maxTargets: 1, targets: ["value", "constant"] },
     { name: "maximize", minTargets: 0 },

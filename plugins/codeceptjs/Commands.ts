@@ -81,6 +81,7 @@ export const CODECEPTJS_COMMANDS: CmdCfg[] = [
     // refresh + ( page | currentPage )
     { action: 'refresh', comp: CmdCmp.SAME_TARGET_TYPE, targetType: 'page', template: 'I.refreshPage();' },
     { action: 'refresh', comp: CmdCmp.SAME_OPTION, options: [ 'currentPage' ], template: 'I.refreshPage();' },
+    { action: 'refresh', comp: CmdCmp.SAME_OPTION, options: [ 'page' ], template: 'I.refreshPage();' },
     // remove + app (Appium only)
     { action: 'remove', comp: CmdCmp.SAME_OPTION__ONE_VALUE, options: [ 'app' ], template: 'I.removeApp({{{value}}});' },
     // resize + window
@@ -306,12 +307,13 @@ export const CODECEPTJS_COMMANDS: CmdCfg[] = [
     { action: 'wait', comp: CmdCmp.SAME_TARGET_TYPE__ONE_VALUE_OR_NUMBER, targetType: 'text', template: 'I.waitForText({{{value}}});' },
 
     { action: 'wait', comp: CmdCmp.SAME_OPTION__ONE_VALUE__ONE_NUMBER__ONE_TARGET, options: [ 'text' ], valuesAsNonArray: true, template: 'I.waitForText({{{value}}}, {{{target}}});' },
-    { action: 'wait', comp: CmdCmp.SAME_OPTION__ONE_VALUE_OR_NUMBER, options: [ 'text' ], template: 'I.waitForText({{{value}}});' },
-    { action: 'wait', comp: CmdCmp.SAME_OPTION__ONE_VALUE__ONE_NUMBER, options: [ 'text' ], valuesAsNonArray: true, template: 'I.waitForText({{{value}}});' },
-    { action: 'wait', comp: CmdCmp.SAME_OPTION__ONE_VALUE__ONE_NUMBER__ONE_VALUE, options: [ 'text' ], valuesAsNonArray: true, template: 'I.waitForText({{{value}}});' },
 
     { action: 'wait', comp: CmdCmp.SAME_OPTION__ONE_TARGET__ONE_NUMBER, options: [ 'text' ], template: 'I.waitForText({{{target}}}, {{{value}}});' },
     { action: 'wait', comp: CmdCmp.SAME_OPTION__ONE_TARGET, options: [ 'text' ], template: 'I.waitForText({{{target}}});' },
+
+    { action: 'wait', comp: CmdCmp.SAME_OPTION__ONE_VALUE_OR_NUMBER, options: [ 'text' ], template: 'I.waitForText({{{value}}});' },
+    { action: 'wait', comp: CmdCmp.SAME_OPTION__ONE_VALUE__ONE_NUMBER, options: [ 'text' ], valuesAsNonArray: true, template: 'I.waitForText({{{value}}});' },
+    { action: 'wait', comp: CmdCmp.SAME_OPTION__ONE_VALUE__ONE_NUMBER__ONE_VALUE, options: [ 'text' ], valuesAsNonArray: true, template: 'I.waitForText({{{value}}});' },
 
     // wait + value
     { action: 'wait', comp: CmdCmp.SAME_OPTION__ONE_TARGET__ONE_VALUE_OR_NUMBER__ONE_NUMBER, options: [ 'value' ], valuesAsNonArray: true, template: 'I.waitForValue({{{target}}}, {{{value}}});' }, // target, value, duration

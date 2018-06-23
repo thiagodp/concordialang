@@ -533,12 +533,12 @@ describe( 'CommandMapperTest', () => {
 
         } );
 
-        describe( 'url', () => {
+        describe( 'page', () => {
 
             it( 'options', () => {
                 let cmd: ATSCommand = {
                     action: 'refresh',
-                    options: [ 'url' ]
+                    options: [ 'page' ]
                 };
                 const r = cm.map( cmd );
                 expect( r ).toContainEqual( 'I.refreshPage();' + comment );
@@ -1603,7 +1603,7 @@ describe( 'CommandMapperTest', () => {
             it( 'option, target', () => {
                 let cmd: ATSCommand = {
                     action: 'wait',
-                    options: [ 'hide' ],
+                    options: [ 'hidden' ],
                     targets: [ '#foo' ]
                 };
                 const r = cm.map( cmd );
@@ -1613,7 +1613,7 @@ describe( 'CommandMapperTest', () => {
             it( 'option, target, number', () => {
                 let cmd: ATSCommand = {
                     action: 'wait',
-                    options: [ 'hide' ],
+                    options: [ 'hidden' ],
                     targets: [ '#foo' ],
                     values: [ '5' ]
                 };
@@ -1624,7 +1624,7 @@ describe( 'CommandMapperTest', () => {
             it( 'option, value', () => {
                 let cmd: ATSCommand = {
                     action: 'wait',
-                    options: [ 'hide' ],
+                    options: [ 'hidden' ],
                     values: [ '#foo' ]
                 };
                 const r = cm.map( cmd );
@@ -1634,7 +1634,7 @@ describe( 'CommandMapperTest', () => {
             it( 'option, value, number', () => {
                 let cmd: ATSCommand = {
                     action: 'wait',
-                    options: [ 'hide' ],
+                    options: [ 'hidden' ],
                     values: [ '#foo', '5' ]
                 };
                 const r = cm.map( cmd );
