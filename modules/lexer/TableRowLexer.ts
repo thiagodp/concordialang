@@ -9,7 +9,7 @@ import { NodeTypes } from '../req/NodeTypes';
 
 /**
  * TableRow lexer.
- * 
+ *
  * @author Thiago Delgado Pinto
  */
 export class TableRowLexer implements NodeLexer< TableRow > {
@@ -24,10 +24,14 @@ export class TableRowLexer implements NodeLexer< TableRow > {
     /** @inheritDoc */
     suggestedNextNodeTypes(): string[] {
         return [ NodeTypes.TABLE_ROW ];
-    }    
+    }
 
     /** @inheritDoc */
     public analyze( line: string, lineNumber: number ): LexicalAnalysisResult< TableRow > | null {
+
+        if ( line.trimLeft().startsWith( Symbols.COMMENT_PREFIX ) ) {
+            return null;
+        }
 
         // Replace empty cells with cells with a space, in order to capture their value correctly.
         // That is, "||"" with "| |".
@@ -35,7 +39,7 @@ export class TableRowLexer implements NodeLexer< TableRow > {
             new RegExp( Expressions.escape( Symbols.TABLE_CELL_SEPARATOR + Symbols.TABLE_CELL_SEPARATOR ), 'g' ),
             Symbols.TABLE_CELL_SEPARATOR + ' ' + Symbols.TABLE_CELL_SEPARATOR
         );
-        
+
         let index: number = line.indexOf( Symbols.TABLE_PREFIX );
         if ( index < 0 ) {
             return null;
@@ -52,7 +56,7 @@ export class TableRowLexer implements NodeLexer< TableRow > {
         const cells: string[] = content.split( Symbols.TABLE_CELL_SEPARATOR ).map( value => value.trim() );
 
         const location: Location = { column: index, line: lineNumber };
-        let errors = [];        
+        let errors = [];
         if ( cells.length < 1 ) {
             errors.push( new LexicalException( 'Invalid table row declaration: "' + line + '".', location ) );
         }

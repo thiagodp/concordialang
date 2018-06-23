@@ -24,6 +24,9 @@ class TableRowLexer {
     }
     /** @inheritDoc */
     analyze(line, lineNumber) {
+        if (line.trimLeft().startsWith(Symbols_1.Symbols.COMMENT_PREFIX)) {
+            return null;
+        }
         // Replace empty cells with cells with a space, in order to capture their value correctly.
         // That is, "||"" with "| |".
         line = line.replace(new RegExp(Expressions_1.Expressions.escape(Symbols_1.Symbols.TABLE_CELL_SEPARATOR + Symbols_1.Symbols.TABLE_CELL_SEPARATOR), 'g'), Symbols_1.Symbols.TABLE_CELL_SEPARATOR + ' ' + Symbols_1.Symbols.TABLE_CELL_SEPARATOR);
