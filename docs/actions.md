@@ -51,6 +51,8 @@ When I append 100 to {Bar}
 
 ## `attachFile`
 
+This action selects the given file and confirm (*e.g.*, clicks OK).
+
 ### attach + file + value + target
 ```gherkin
 When I attach the file "/path/to/file" to {Foo}
@@ -236,11 +238,47 @@ When I open the notifications panel
 
 ## `press`
 
+Press a key or key combination, separated by comma.
+
 ### press + value
 ```gherkin
 When I press "Enter"
-  and I press "Ctrl", "Alt", "Del"
+  and I press "Control", "Alt", "Delete"
+  and I press "Control", "S"
 ```
+
+Some special keys (*case sensitive!*):
+
+- `Add`
+- `Alt`
+- `ArrowDown` or `Down arrow`
+- `ArrowLeft` or `Left arrow`
+- `ArrowRight` or `Right arrow`
+- `ArrowUp` or `Up arrow`
+- `Backspace`
+- `Command`
+- `Control`
+- `Del`
+- `Divide`
+- `End`
+- `Enter`
+- `Equals`
+- `Escape`
+- `F1` to `F12`
+- `Home`
+- `Insert`
+- `Meta`
+- `Multiply`
+- `Numpad 0` to `Numpad 9`
+- `Pause`
+- `Pagedown` or `PageDown`
+- `Pageup` or `PageUp`
+- `Semicolon`
+- `Shift`
+- `Space`
+- `Subtract`
+- `Tab`
+
 
 ## `pull`
 

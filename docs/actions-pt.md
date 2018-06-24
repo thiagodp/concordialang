@@ -43,6 +43,8 @@ Quando eu adiciono "Conteúdo" em {Foo}
 
 ## `attachFile`
 
+Essa ação seleciona o arquivo informado e confirma (*e.g.*, clica em OK).
+
 ```gherkin
 Quando eu anexo o arquivo "/caminho/ate/arquivo" em {Foo}
   e anexo "/caminho/ate/arquivo" em <#bar>
@@ -193,10 +195,45 @@ Quando eu abro o painel de notificações
 
 ## `press`
 
+Pressiona uma tecla ou uma combinação de teclas, separadas por vírgula.
+
 ```gherkin
 Quando eu pressiono "Enter"
-  e pressiono "Ctrl", "Alt", "Del"
+  e pressiono "Control", "Alt", "Delete"
 ```
+
+Algumas teclas especiais (*sensível a maiúsculas e minúsculas!*):
+
+- `Add`
+- `Alt`
+- `ArrowDown` ou `Down arrow`
+- `ArrowLeft` ou `Left arrow`
+- `ArrowRight` ou `Right arrow`
+- `ArrowUp` ou `Up arrow`
+- `Backspace`
+- `Command`
+- `Control`
+- `Del`
+- `Divide`
+- `End`
+- `Enter`
+- `Equals`
+- `Escape`
+- `F1` até `F12`
+- `Home`
+- `Insert`
+- `Meta`
+- `Multiply`
+- `Numpad 0` até `Numpad 9`
+- `Pause`
+- `Pagedown` ou `PageDown`
+- `Pageup` ou `PageUp`
+- `Semicolon`
+- `Shift`
+- `Space`
+- `Subtract`
+- `Tab`
+
 
 ## `pull`
 
