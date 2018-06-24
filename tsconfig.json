@@ -10,6 +10,13 @@
             "./node_modules/@types"
         ]
     },
+    "include": [
+        "__tests__",
+        "data",
+        "lib",
+        "modules",
+        "plugins",
+    ],
     "exclude": [
         "node_modules",
         "typings/globals",
