@@ -34,7 +34,7 @@
 
         "language": [ "language" ],
 
-        "feature": [ "funcionalidade", "característica", "feature" ],
+        "feature": [ "funcionalidade", "característica", "feature", "história", "história de usuário" ],
         "background": [ "contexto", "cenário de fundo", "fundo", "background" ],
         "scenario": [ "cenário", "scenario" ],
 
