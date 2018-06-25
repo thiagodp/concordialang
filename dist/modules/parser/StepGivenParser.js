@@ -11,7 +11,7 @@ class StepGivenParser {
     /** @inheritDoc */
     analyze(node, context, it, errors) {
         // Checks prior nodes
-        const allowedPriorNodes = [
+        let allowedPriorNodes = [
             NodeTypes_1.NodeTypes.BACKGROUND,
             NodeTypes_1.NodeTypes.SCENARIO,
             NodeTypes_1.NodeTypes.VARIANT_BACKGROUND,
@@ -24,8 +24,12 @@ class StepGivenParser {
             NodeTypes_1.NodeTypes.AFTER_FEATURE,
             NodeTypes_1.NodeTypes.AFTER_EACH_SCENARIO,
             NodeTypes_1.NodeTypes.STEP_GIVEN,
-            NodeTypes_1.NodeTypes.STEP_THEN // Because of joint scenarios
+            NodeTypes_1.NodeTypes.STEP_AND
         ];
+        if (context.inTestCase) { // because of joint scenarios
+            allowedPriorNodes.push(NodeTypes_1.NodeTypes.STEP_WHEN);
+            allowedPriorNodes.push(NodeTypes_1.NodeTypes.STEP_THEN);
+        }
         if (!it.hasPrior() || allowedPriorNodes.indexOf(it.spyPrior().nodeType) < 0) {
             let e = new SyntaticException_1.SyntaticException('The "' + node.nodeType + '" clause must be declared after: ' + allowedPriorNodes.join(', '), node.location);
             errors.push(e);

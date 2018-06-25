@@ -16,7 +16,8 @@ export class StepGivenParser implements NodeParser< StepGiven > {
     public analyze( node: StepGiven, context: ParsingContext, it: NodeIterator, errors: Error[] ): boolean {
 
         // Checks prior nodes
-        const allowedPriorNodes = [
+
+        let allowedPriorNodes = [
             NodeTypes.BACKGROUND,
             NodeTypes.SCENARIO,
             NodeTypes.VARIANT_BACKGROUND,
@@ -31,8 +32,14 @@ export class StepGivenParser implements NodeParser< StepGiven > {
             NodeTypes.AFTER_EACH_SCENARIO,
 
             NodeTypes.STEP_GIVEN,
-            NodeTypes.STEP_THEN // Because of joint scenarios
+            NodeTypes.STEP_AND
         ];
+
+        if ( context.inTestCase ) { // because of joint scenarios
+            allowedPriorNodes.push( NodeTypes.STEP_WHEN );
+            allowedPriorNodes.push( NodeTypes.STEP_THEN );
+        }
+
 
         if ( ! it.hasPrior() || allowedPriorNodes.indexOf( it.spyPrior().nodeType ) < 0 ) {
             let e = new SyntaticException(

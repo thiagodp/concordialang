@@ -16,7 +16,8 @@ export class StepWhenParser implements NodeParser< StepWhen > {
     public analyze( node: StepWhen, context: ParsingContext, it: NodeIterator, errors: Error[] ): boolean {
 
         // Checks prior nodes
-        const allowedPriorNodes = [
+
+        let allowedPriorNodes = [
             NodeTypes.BACKGROUND,
             NodeTypes.SCENARIO,
             NodeTypes.VARIANT_BACKGROUND,
@@ -32,9 +33,12 @@ export class StepWhenParser implements NodeParser< StepWhen > {
 
             NodeTypes.STEP_GIVEN,
             NodeTypes.STEP_WHEN,
-            NodeTypes.STEP_AND,
-            NodeTypes.STEP_THEN // because of the scenario combination
+            NodeTypes.STEP_AND
         ];
+
+        if ( context.inTestCase ) { // because of joint scenarios
+            allowedPriorNodes.push( NodeTypes.STEP_THEN );
+        }
 
         if ( ! it.hasPrior() || allowedPriorNodes.indexOf( it.spyPrior().nodeType ) < 0 ) {
             let e = new SyntaticException(
