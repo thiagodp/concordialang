@@ -287,13 +287,14 @@ class EntityRecognizerMaker {
         var valueRec = new Bravey.RegexEntityRecognizer(entityName, 10);
         // const regex = /\[(?: )*((?:,) ?|([0-9]+(\.[0-9]+)?|\"(.*[^\\])\"))+(?: )*\]/g;
         // const regex = /(\[[\t ]*([^\]])*[\t ]*[^\\]\])+/g; // only [ anything ]
-        const regex = /(?:\[[\t ]*)(("[^"]*"|(-?[0-9]+(\.[0-9]+)?))*,?[\t ]?)+[^\]]?(?:\])/g; // [ value or number ]
+        // const regex = /(?:\[[\t ]*)(("[^"]*"|(-?[0-9]+(\.[0-9]+)?))*,?[\t ]?)+[^\]]?(?:\])/g; // [ value or number ]
+        const regex = /(?:\[[\t ]*)(("(\\"|[^"])+"|(-?[0-9]+(\.[0-9]+)?))+,?[\t ]?)+[^\]]?(?:\])/g; // [ value or number ]
         valueRec.addMatch(regex, function (match) {
             // console.log( 'match: ', match );
             // return match[ 0 ].toString().trim();
             let content = match[0].toString().trim();
             content = content.substring(1, content.length - 1); // Remove [ and ]
-            const contentRegex = /(((-?[0-9]+(?:\.[0-9]+)?)|\"[^"]+\"))+/g;
+            const contentRegex = /(((-?[0-9]+(?:\.[0-9]+)?)|"(\\"|[^"])+"))+/g;
             let values = [];
             let result;
             while ((result = contentRegex.exec(content)) !== undefined) {

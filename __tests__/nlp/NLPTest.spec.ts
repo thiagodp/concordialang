@@ -31,8 +31,8 @@ describe( 'NLPTest', () => {
             ).toBeTruthy();
         } else {
             expect( r.entities ).toHaveLength( 1 );
-            expect( r.entities[ 0 ].entity ).toBe( expectedEntity );
-            expect( r.entities[ 0 ].value ).toBe( expected );
+            expect( r.entities[ 0 ].entity ).toEqual( expectedEntity );
+            expect( r.entities[ 0 ].value ).toEqual( expected );
         }
         return r;
     }
@@ -336,7 +336,7 @@ describe( 'NLPTest', () => {
 
         describe( 'value list', () => {
 
-            function recogValueList( text: string, expected: string | null, debug: boolean = false ): NLPResult | null {
+            function recogValueList( text: string, expected: any, debug: boolean = false ): NLPResult | null {
                 return recog( text, expected, Entities.VALUE_LIST, debug );
             }
 
@@ -346,21 +346,30 @@ describe( 'NLPTest', () => {
             } );
 
             it( 'single number', () => {
-                recogValueList( ' [1] ', '[1]' );
+                recogValueList(
+                    ' [1] ',
+                    [1]
+                );
             } );
 
             it( 'numbers', () => {
-                recogValueList( ' [1, 2] ', '[1, 2]' );
+                recogValueList(
+                    ' [1, 2] ',
+                    [1, 2]
+                );
             } );
 
             it( 'strings', () => {
-                recogValueList( ' [ "alice", "bob" ] ', '[ "alice", "bob" ]' );
+                recogValueList(
+                    ' [ "alice", "bob" ] ',
+                    ["alice", "bob"]
+                );
             } );
 
             it( 'strings with escaped strings', () => {
                 recogValueList(
-                    ' [ "alice say \\\"hello\\\"" ] ',
-                    '[ "alice say \\\"hello\\\"" ]'
+                    ' [ "alice say \\\"hello\\\" world" ] ',
+                    ["alice say \\\"hello\\\" world"]
                 );
             } );
 
@@ -368,12 +377,12 @@ describe( 'NLPTest', () => {
 
                 recogValueList(
                     ' [ "alice", 1, "bob", 2 ] ',
-                    '[ "alice", 1, "bob", 2 ]'
+                    ["alice", 1, "bob", 2]
                 );
 
                 recogValueList(
                     ' [ 1, "alice", 2, "bob", 3, 4, "bob", "joe" ] ',
-                    '[ 1, "alice", 2, "bob", 3, 4, "bob", "joe" ]'
+                    [1, "alice", 2, "bob", 3, 4, "bob", "joe"]
                 );
 
             } );

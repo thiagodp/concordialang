@@ -27,8 +27,8 @@ describe('NLPTest', () => {
         }
         else {
             expect(r.entities).toHaveLength(1);
-            expect(r.entities[0].entity).toBe(expectedEntity);
-            expect(r.entities[0].value).toBe(expected);
+            expect(r.entities[0].entity).toEqual(expectedEntity);
+            expect(r.entities[0].value).toEqual(expected);
         }
         return r;
     }
@@ -240,20 +240,20 @@ describe('NLPTest', () => {
                 expect(r.entities).toHaveLength(0);
             });
             it('single number', () => {
-                recogValueList(' [1] ', '[1]');
+                recogValueList(' [1] ', [1]);
             });
             it('numbers', () => {
-                recogValueList(' [1, 2] ', '[1, 2]');
+                recogValueList(' [1, 2] ', [1, 2]);
             });
             it('strings', () => {
-                recogValueList(' [ "alice", "bob" ] ', '[ "alice", "bob" ]');
+                recogValueList(' [ "alice", "bob" ] ', ["alice", "bob"]);
             });
             it('strings with escaped strings', () => {
-                recogValueList(' [ "alice say \\\"hello\\\"" ] ', '[ "alice say \\\"hello\\\"" ]');
+                recogValueList(' [ "alice say \\\"hello\\\" world" ] ', ["alice say \\\"hello\\\" world"]);
             });
             it('strings and numbers mixed', () => {
-                recogValueList(' [ "alice", 1, "bob", 2 ] ', '[ "alice", 1, "bob", 2 ]');
-                recogValueList(' [ 1, "alice", 2, "bob", 3, 4, "bob", "joe" ] ', '[ 1, "alice", 2, "bob", 3, 4, "bob", "joe" ]');
+                recogValueList(' [ "alice", 1, "bob", 2 ] ', ["alice", 1, "bob", 2]);
+                recogValueList(' [ 1, "alice", 2, "bob", 3, 4, "bob", "joe" ] ', [1, "alice", 2, "bob", 3, 4, "bob", "joe"]);
             });
         });
     });
