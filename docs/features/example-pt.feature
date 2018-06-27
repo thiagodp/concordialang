@@ -280,6 +280,7 @@ Cenário: Converte corretamente para CodeceptJS com WebDriverIO ou Appium
       # wait [+ seconds] + url
       e eu espero pela url "/foo"
       e eu espero 2 segundos pela url "/foo"
+      e eu espero pela url "/foo" por 2 segundos
       # wait [+ seconds] + contains + url
       e eu espero pela url conter "/foo"
       e eu espero 2 segundos pela url conter "/foo"
