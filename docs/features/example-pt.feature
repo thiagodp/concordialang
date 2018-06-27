@@ -349,7 +349,7 @@ Cenário: Converte corretamente para CodeceptJS com WebDriverIO ou Appium
 
 Banco de Dados: Meu BD
   - tipo é "json"
-  - caminho é "../../package.json"
+  - caminho é "../package.json"
 
 Antes da Funcionalidade:
   # connect + database
