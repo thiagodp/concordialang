@@ -31,17 +31,22 @@ export class TestScriptExecutor {
         const iconWarning = chalk.yellow( warning );
 
         const textColor = chalk.cyanBright;
+        const textCommand = chalk.cyan;
         const highlight = chalk.yellowBright;
 
         if ( !! options.sourceCodeDir ) {
             fse.mkdirs( options.sourceCodeDir );
         }
 
+        if ( !! options.executionResultDir ) {
+            fse.mkdirs( options.executionResultDir );
+        }
+
         const executionPath = process.cwd();
         const cfgMaker = new ConfigMaker();
         const writeF = promisify( writeFile );
 
-        // About codeceptj.json
+        // About codeceptj.json ------------------------------------------------
 
         const CONFIG_FILE_NAME = 'codecept.json';
         const configFilePath = path.join( executionPath, CONFIG_FILE_NAME );
@@ -64,7 +69,7 @@ export class TestScriptExecutor {
         if ( ! configFileExists ) {
 
             try {
-                await writeF( configFilePath, JSON.stringify( this._defaultConfig ) );
+                await writeF( configFilePath, JSON.stringify( this._defaultConfig, undefined, "\t" ) );
 
                 this.write( iconInfo, textColor( 'Generated configuration file' ), highlight( configFilePath ) );
                 this.write( arrowRight, textColor( 'If this file does not work for you, delete it and then run:' ) );
@@ -116,70 +121,118 @@ export class TestScriptExecutor {
 
         }
 
-        // About package.json
+        // About package.json --------------------------------------------------
 
         const PROJECT_FILE_NAME = 'package.json';
         const packageFilePath = path.join( executionPath, PROJECT_FILE_NAME );
 
         let showOptionalPackages: boolean = false;
         const packageFileExists: boolean = await this.fileExists( packageFilePath );
-        const neededPackages = [ 'codeceptjs-cmdhelper', 'codeceptjs-dbhelper', 'database-js', 'database-js-json' ];
+
+        const neededPackages = [
+            'mocha',
+            'mocha-multi',
+            'codeceptjs',
+            'codeceptjs-cmdhelper',
+            'codeceptjs-dbhelper',
+            'database-js',
+            'database-js-json'
+        ];
+
+        let hasCodeceptScriptInPackage: boolean = false;
+
+        // Creating package.json if it does not exist
+
         if ( ! packageFileExists ) {
-            this.write( iconInfo, textColor( 'Creating' ), highlight( PROJECT_FILE_NAME ), textColor( 'with needed dependencies...\n' ) );
-            const cmd = 'npm init --yes && npm install --save-dev ' + neededPackages.join( ' ' );
-            await this.runCommand( cmd );
+            this.write( iconInfo, textColor( 'Creating' ), highlight( PROJECT_FILE_NAME ), textColor( 'with needed dependencies...' ) );
+            const cmd1 = 'npm init --yes';
+            this.write( ' ', textCommand( cmd1 ) );
+            await this.runCommand( cmd1 );
+            const cmd2 = 'npm install --save-dev ' + neededPackages.join( ' ' );
+            this.write( ' ', textCommand( cmd2 ) );
+            await this.runCommand( cmd2 );
+            showOptionalPackages = true;
+        }
+
+        // Reading package.json
+
+        let pkg = {};
+        try {
+            const readF = promisify( readFile );
+            const content = await readF( packageFilePath );
+            pkg = JSON.parse( content.toString() );
+        } catch ( e ) {
+            // Need to do nothing since pkg stay empty
+        }
+
+        // Evaluate property "devDependencies" of package.json
+
+        const DEV_DEPENDENCIES_PROPERTY = 'devDependencies';
+        const devDependencies = pkg[ DEV_DEPENDENCIES_PROPERTY ];
+        if ( ! devDependencies ) {
+            this.write( iconWarning, 'Could not read', highlight( packageFilePath ) + '.' );
+            this.write( iconArrow, 'Please check if it has the following packages in the property "' + highlight( DEV_DEPENDENCIES_PROPERTY ) + '":' );
+            neededPackages.forEach( v => this.write( '  ', v ) );
             showOptionalPackages = true;
         } else {
-            // Let's check needed dependencies
-            let pkg = {};
-            try {
-                const readF = promisify( readFile );
-                const content = await readF( packageFilePath );
-                pkg = JSON.parse( content.toString() );
-            } catch ( e ) {
-                // Need to do nothing since pkg stay empty
+            // Check needed packages
+            let packagesNotFound = [];
+            for ( let np of neededPackages ) {
+                if ( ! devDependencies[ np ] ) {
+                    packagesNotFound.push( np );
+                }
             }
-
-            // Evaluate property "devDependencies"
-            const DEV_DEPENDENCIES_PROPERTY = 'devDependencies';
-            const devDependencies = pkg[ DEV_DEPENDENCIES_PROPERTY ];
-            if ( ! devDependencies ) {
-                this.write( iconWarning, 'Could not read', highlight( packageFilePath ) + '.' );
-                this.write( iconArrow, 'Please check if it has the following packages in the property "' + highlight( DEV_DEPENDENCIES_PROPERTY ) + '":' );
-                neededPackages.forEach( v => this.write( '  ', v ) );
+            // Install the packages that were not found
+            if ( packagesNotFound.length > 0 ) {
+                this.write( iconInfo, textColor( 'Installing needed dependencies...' ) );
+                const cmd = 'npm install --save-dev ' + packagesNotFound.join( ' ' );
+                this.write( ' ', textCommand( cmd ) );
+                await this.runCommand( cmd );
                 showOptionalPackages = true;
-            } else {
-                // Check needed packages
-                let packagesNotFound = [];
-                for ( let np of neededPackages ) {
-                    if ( ! devDependencies[ np ] ) {
-                        packagesNotFound.push( np );
-                    }
-                }
-                // Install the packages that were not found
-                if ( packagesNotFound.length > 0 ) {
-                    this.write( iconInfo, textColor( 'Installing needed dependencies...' ) );
-                    const cmd = 'npm install --save-dev ' + packagesNotFound.join( ' ' );
-                    await this.runCommand( cmd );
-                    showOptionalPackages = true;
-                }
             }
         }
+
+        // Evaluate property "scripts" of package.json
+
+        const SCRIPTS_PROPERTY = 'scripts';
+        const scripts = pkg[ SCRIPTS_PROPERTY ];
+        if ( ! scripts ) {
+            pkg[ SCRIPTS_PROPERTY ] = {};
+        }
+        const CODECEPTJS_SCRIPT_PROPERTY = 'concordia:codeceptjs';
+        if ( ! pkg[ SCRIPTS_PROPERTY ][ CODECEPTJS_SCRIPT_PROPERTY ] ) {
+            pkg[ SCRIPTS_PROPERTY ][ CODECEPTJS_SCRIPT_PROPERTY ] = 'codeceptjs run --reporter mocha-multi --colors'
+
+            // Overwrite package.json
+            try {
+                await writeF( packageFilePath, JSON.stringify( pkg, undefined, "\t" ) );
+                hasCodeceptScriptInPackage = true;
+            } catch ( e ) {
+                this.write( iconError, 'Error: could not write package.json' );
+            }
+        } else {
+            hasCodeceptScriptInPackage = true;
+        }
+
+        // Show optional packages
 
         if ( showOptionalPackages ) {
             this.write( iconInfo, textColor( 'For supporting other databases, please run:' ) );
-            this.write( textColor( '  npm install --save-dev database-js-csv database-js-xlsx database-js-ini database-js-firebase database-js-mysql database-js-postgres database-js-sqlite\n' ) );
+            this.write( ' ', textColor( 'npm install --save-dev database-js-csv database-js-xlsx database-js-ini database-js-firebase database-js-mysql database-js-postgres database-js-sqlite\n' ) );
         }
 
-        // Run CodeceptJS
+        // Run CodeceptJS ------------------------------------------------------
 
         const OUTPUT_FILE_NAME = 'output.json';
         const outputFilePath = path.join( options.executionResultDir || '.', OUTPUT_FILE_NAME );
 
-        const overrideOptions = cfgMaker.makeMochaConfig( outputFilePath );
-        const overrideOptionsStr = this.escapeJson( JSON.stringify( overrideOptions ) );
+        this.write( iconInfo, textColor( 'Running tests...' ) );
 
-        const cmd = `codeceptjs run --reporter mocha-multi --config ${configFilePath} --override "${overrideOptionsStr}" --colors`;
+        const cmd = hasCodeceptScriptInPackage
+            ? 'npm run concordia:codeceptjs'
+            : `codeceptjs run --steps --reporter mocha-multi --config ${configFilePath} --colors`;
+
+        this.write( ' ', textCommand( cmd ) );
         const code = await this.runCommand( cmd );
 
         return outputFilePath;
