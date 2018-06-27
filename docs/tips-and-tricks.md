@@ -2,10 +2,13 @@
 
 ## How to show the steps from CodeceptJS in Portuguese:
 
-1. Add to `codecept.json` the following:
+1. Edit `codecept.json` and add the key `translation` with the value `pt-BR`:
 
 ```json
-"translation": "pt-BR"
+{
+   ...
+   "translation": "pt-BR"
+}
 ```
 
 
