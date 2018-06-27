@@ -237,7 +237,7 @@ export const UI_PROPERTY_SYNTAX_RULES = [
     { name: "type", targets: [ "ui_property" ] },
     { name: "editable", targets: [ "bool_value", "number" ], minTargets: 0 }, // target not needed
     { name: "datatype", targets: [ "ui_data_type" ] }, // e.g. string, integer, ...
-    { name: "value", targets: [ "value", "number", "query", "constant" ] },
+    { name: "value", targets: [ "value", "number", "query", "constant", "value_list" ] },
     { name: "minlength", targets: [ "number", "constant" ] },
     { name: "maxlength", targets: [ "number", "constant" ] },
     { name: "minvalue", targets: [ "number", "constant" ] },
