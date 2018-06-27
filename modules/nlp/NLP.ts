@@ -3,6 +3,7 @@ import { NLPTrainingData } from "./NLPTrainingData";
 import { NLPResult } from './NLPResult';
 
 import Bravey = require('../../lib/bravey'); // .js file
+import { adjustValueToTheRightType } from '../util/ValueTypeDetector';
 
 /**
  * Natural Language Processor
@@ -348,12 +349,34 @@ class EntityRecognizerMaker {
      */
     public makeValueList( entityName: string ): any {
         var valueRec = new Bravey.RegexEntityRecognizer( entityName, 10 );
-        const regex = /\[(?: )*((?:,) ?|([0-9]+(\.[0-9]+)?|\"(.*[^\\])\"))+(?: )*\]/g;
+        // const regex = /\[(?: )*((?:,) ?|([0-9]+(\.[0-9]+)?|\"(.*[^\\])\"))+(?: )*\]/g;
+        // const regex = /(\[[\t ]*([^\]])*[\t ]*[^\\]\])+/g; // only [ anything ]
+        const regex = /(?:\[[\t ]*)(("[^"]*"|(-?[0-9]+(\.[0-9]+)?))*,?[\t ]?)+[^\]]?(?:\])/g; // [ value or number ]
         valueRec.addMatch(
             regex,
             function( match ) {
-                //console.log( 'match: ', match );
-                return match[ 0 ].toString().trim();
+                // console.log( 'match: ', match );
+                // return match[ 0 ].toString().trim();
+                let content = match[ 0 ].toString().trim();
+                content = content.substring( 1, content.length - 1 ); // Remove [ and ]
+
+                const contentRegex = /(((-?[0-9]+(?:\.[0-9]+)?)|\"[^"]+\"))+/g;
+                let values: any[] = [];
+                let result;
+                while ( ( result = contentRegex.exec( content ) ) !== undefined ) {
+                    if ( null === result ) {
+                        break;
+                    }
+                    const v = result[ 0 ];
+                    if ( v.startsWith( '"' ) ) {
+                        values.push( v.substring( 1, v.length - 1 ) ); // Remove quotes
+                    } else {
+                        values.push( adjustValueToTheRightType( v ) );
+                    }
+                }
+
+                // console.log( "VALUES:", values );
+                return values;
             },
             1000 // priority
         );
