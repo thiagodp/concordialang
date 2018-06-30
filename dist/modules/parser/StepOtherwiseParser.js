@@ -11,7 +11,11 @@ class StepOtherwiseParser {
     /** @inheritDoc */
     analyze(node, context, it, errors) {
         // Checks prior nodes
-        const allowedPriorNodes = [NodeTypes_1.NodeTypes.UI_PROPERTY];
+        const allowedPriorNodes = [
+            NodeTypes_1.NodeTypes.UI_PROPERTY,
+            NodeTypes_1.NodeTypes.STEP_OTHERWISE,
+            NodeTypes_1.NodeTypes.STEP_AND
+        ];
         if (!it.hasPrior() || allowedPriorNodes.indexOf(it.spyPrior().nodeType) < 0) {
             let e = new SyntaticException_1.SyntaticException('The "' + node.nodeType + '" clause must be declared after a UI Element Property.', node.location);
             errors.push(e);

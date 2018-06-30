@@ -8,7 +8,7 @@ import { ParsingContext } from "./ParsingContext";
 
 /**
  * Step Otherwise node parser.
- * 
+ *
  * @author Thiago Delgado Pinto
  */
 export class StepOtherwiseParser implements NodeParser< StepOtherwise > {
@@ -17,15 +17,19 @@ export class StepOtherwiseParser implements NodeParser< StepOtherwise > {
     public analyze( node: StepOtherwise, context: ParsingContext, it: NodeIterator, errors: Error[] ): boolean {
 
         // Checks prior nodes
-        const allowedPriorNodes = [ NodeTypes.UI_PROPERTY ];
-        
+        const allowedPriorNodes = [
+            NodeTypes.UI_PROPERTY,
+            NodeTypes.STEP_OTHERWISE,
+            NodeTypes.STEP_AND
+        ];
+
         if ( ! it.hasPrior() || allowedPriorNodes.indexOf( it.spyPrior().nodeType ) < 0 ) {
             let e = new SyntaticException(
                 'The "' + node.nodeType + '" clause must be declared after a UI Element Property.',
                 node.location
                 );
             errors.push( e );
-            return false;                
+            return false;
         }
 
         let prior: UIProperty = it.spyPrior() as any;

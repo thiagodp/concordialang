@@ -42,6 +42,7 @@ export const DEFAULT_UI_ACTION_SYNTAX_RULE = {
  * @author Thiago Delgado Pinto
  */
 export const UI_ACTION_SYNTAX_RULES = [
+    { name: "accept", minTargets: 0, maxTargets: 0 },
     { name: "amOn", minTargets: 1, targets: [ "ui_element", "ui_literal", "value", "number", "constant" ] },
     { name: "append", targets: [ "ui_element", "ui_literal", "value", "number", "constant" ],
         minTargets: 1, maxTargets: 999,
@@ -49,15 +50,50 @@ export const UI_ACTION_SYNTAX_RULES = [
         number: { min: 0, max: 1 }
     },
     { name: "attachFile", minTargets: 1, maxTargets: 2, targets: [ "ui_element", "ui_literal", "value", "number", "constant" ] },
-    { name: "check", minTargets: 1, maxTargets: 999, targets: [ "ui_element", "ui_literal", "value", "number", "constant" ] },
+    { name: "cancel", minTargets: 0, maxTargets: 0 },
+    { name: "check", minTargets: 1, maxTargets: 2,
+        targets: [ "ui_element", "ui_literal", "value", "number", "constant" ],
+        ui_element: { min: 0, max: 2 },
+        ui_literal: { min: 0, max: 2 },
+        value: { min: 0, max: 1 },
+        number: { min: 0, max: 1 },
+        constant: { min: 0, max: 1 }
+    },
     { name: "clear", minTargets: 1, maxTargets: 999, targets: [ "ui_element", "ui_literal", "value", "number", "constant" ] },
-    { name: "click", minTargets: 1, maxTargets: 999, targets: [ "ui_element", "ui_literal", "value", "number", "constant" ] },
+    { name: "click", minTargets: 1, maxTargets: 999,
+        targets: [ "ui_element", "ui_literal", "value", "number", "constant" ],
+        ui_element: { min: 0, max: 999 },
+        ui_literal: { min: 0, max: 999 },
+        value: { min: 0, max: 1 },
+        number: { min: 0, max: 1 },
+        constant: { min: 0, max: 1 }
+    },
     { name: "close", minTargets: 0 },
-    { name: "connect", minTargets: 1, maxTargets: 1, targets: [ "constant" ] },
-    { name: "disconnect", minTargets: 1, maxTargets: 1, targets: [ "constant" ] },
-    { name: "doubleClick", minTargets: 1, targets: [ "ui_element", "ui_literal", "value", "number", "constant" ] },
+    { name: "connect", minTargets: 0, maxTargets: 1, // Concordia will transform to 2 when convert to plugin
+        targets: [ "constant" ],
+        constant: { min: 1, max: 1 }
+    },
+    { name: "disconnect", minTargets: 1, maxTargets: 1,
+        targets: [ "constant" ],
+        constant: { min: 1, max: 1 }
+    },
+    { name: "doubleClick", minTargets: 1, maxTargets: 999,
+        targets: [ "ui_element", "ui_literal", "value", "number", "constant" ],
+        ui_element: { min: 0, max: 999 },
+        ui_literal: { min: 0, max: 999 },
+        value: { min: 0, max: 1 },
+        number: { min: 0, max: 1 },
+        constant: { min: 0, max: 1 }
+    },
     { name: "drag", minTargets: 2, maxTargets: 2, targets: [ "ui_element", "ui_literal" ] },
-    { name: "fill", minTargets: 1, maxTargets: 999, value: { min: 0, max: 1 }, number: { min: 0, max: 1 } },
+    { name: "fill", minTargets: 0, maxTargets: 999,
+        targets: [ "ui_element", "ui_literal", "value", "number", "constant" ],
+        ui_element: { min: 0, max: 999 },
+        ui_literal: { min: 0, max: 999 },
+        value: { min: 0, max: 1 },
+        number: { min: 0, max: 1 },
+        constant: { min: 0, max: 1 }
+    },
     { name: "hide", minTargets: 0 },
     { name: "install", minTargets: 1, maxTargets: 1, targets: [ "value", "constant" ] },
     { name: "maximize", minTargets: 0 },
@@ -77,9 +113,22 @@ export const UI_ACTION_SYNTAX_RULES = [
     { name: "resize", minTargets: 2, maxTargets: 2, targets: [ "value", "number", "constant" ] },
     { name: "rightClick", minTargets: 1, maxTargets: 999, targets: [ "ui_element", "ui_literal", "value", "number", "constant" ] },
     { name: "rotate", minTargets: 2, maxTargets: 2, targets: [ "value", "number", "constant" ] },
-    { name: "run", minTargets: 1, maxTargets: 1, targets: [ "value", "constant", "command" ] },
+    { name: "run", minTargets: 1, maxTargets: 2,
+        targets: [ "value", "constant", "command" ],
+        value: { min: 0, max: 1 },
+        constant: { min: 0, max: 1 },
+        command: { min: 0, max: 1 }
+    },
     { name: "saveScreenshot", minTargets: 1, maxTargets: 1, targets: [ "value", "constant" ] },
-    { name: "see",  maxTargets: 2,
+    { name: "scrollTo", minTargets: 1, maxTargets: 1,
+        targets: [ "ui_element", "ui_literal", "value", "number", "constant" ],
+        ui_element: { min: 0, max: 1 },
+        ui_literal: { min: 0, max: 1 },
+        value: { min: 0, max: 1 },
+        number: { min: 0, max: 1 },
+        constant: { min: 0, max: 1 }
+    },
+    { name: "see", minTargets: 0,  maxTargets: 2,
         targets: [ "ui_element", "ui_literal", "value", "number", "constant" ],
         ui_element: { min: 0, max: 1 },
         ui_literal: { min: 0, max: 1 },
@@ -96,18 +145,37 @@ export const UI_ACTION_SYNTAX_RULES = [
         constant: { min: 0, max: 1 }
     },
     { name: "shake", minTargets: 0 },
-    { name: "swipe", minTargets: 2, maxTargets: 4, targets: [ "value", "number", "constant" ] },
-    { name: "switch", minTargets: 0, maxTargets: 1, targets: [ "value", "number", "constant" ] },
-    { name: "tap", minTargets: 1, maxTargets: 999, targets: [ "ui_element", "ui_literal", "value", "number", "constant" ] },
-    { name: "uncheck", minTargets: 1, maxTargets: 999, targets: [ "ui_element", "ui_literal", "value", "number", "constant" ] },
-    { name: "wait",
-        minTargets: 1, maxTargets: 2,
+    { name: "swipe", minTargets: 1, maxTargets: 5,
         targets: [ "ui_element", "ui_literal", "value", "number", "constant" ],
-        ui_element: { min: 1, max: 1 },
-        ui_literal: { min: 1, max: 1 },
-        value: { min: 1, max: 1 },
-        number: { min: 1, max: 1 },
-        constant: { min: 1, max: 1 }
+        ui_element: { min: 0, max: 2 },
+        ui_literal: { min: 0, max: 2 },
+        value: { min: 0, max: 3 },
+        number: { min: 0, max: 3 },
+        constant: { min: 0, max: 3 }
+    },
+    { name: "switch", minTargets: 0, maxTargets: 1,
+        targets: [ "value", "number", "constant" ]
+    },
+    { name: "tap", minTargets: 1, maxTargets: 999,
+        targets: [ "ui_element", "ui_literal", "value", "number", "constant" ]
+    },
+    { name: "uncheck", minTargets: 1, maxTargets: 2,
+        targets: [ "ui_element", "ui_literal", "value", "number", "constant" ],
+        ui_element: { min: 0, max: 2 },
+        ui_literal: { min: 0, max: 2 },
+        value: { min: 0, max: 1 },
+        number: { min: 0, max: 1 },
+        constant: { min: 0, max: 1 }
+    },
+    { name: "uninstall", minTargets: 1, maxTargets: 1, targets: [ "value", "constant" ] },
+    { name: "wait",
+        minTargets: 1, maxTargets: 3,
+        targets: [ "ui_element", "ui_literal", "value", "number", "constant" ],
+        ui_element: { min: 0, max: 1 },
+        ui_literal: { min: 0, max: 1 },
+        value: { min: 0, max: 2 },
+        number: { min: 0, max: 2 },
+        constant: { min: 0, max: 2 }
     }
 ];
 
@@ -153,6 +221,8 @@ export const DEFAULT_UI_PROPERTY_SYNTAX_RULE = {
 
     bool_value: { min: 1, max: 1 },
 
+    command: { min: 1, max: 1 },
+
     // Other action or actions that must be used together.
     mustBeUsedWith: []
 };
@@ -163,11 +233,11 @@ export const DEFAULT_UI_PROPERTY_SYNTAX_RULE = {
  * @author Thiago Delgado Pinto
  */
 export const UI_PROPERTY_SYNTAX_RULES = [
-    { name: "id", targets: [ "value" ] },
+    { name: "id", targets: [ "value", "command" ] },
     { name: "type", targets: [ "ui_property" ] },
     { name: "editable", targets: [ "bool_value", "number" ], minTargets: 0 }, // target not needed
     { name: "datatype", targets: [ "ui_data_type" ] }, // e.g. string, integer, ...
-    { name: "value", targets: [ "value", "number", "query", "constant" ] },
+    { name: "value", targets: [ "value", "number", "query", "constant", "value_list" ] },
     { name: "minlength", targets: [ "number", "constant" ] },
     { name: "maxlength", targets: [ "number", "constant" ] },
     { name: "minvalue", targets: [ "number", "constant" ] },

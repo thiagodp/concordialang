@@ -24,6 +24,8 @@ const QueryParser_1 = require("../db/QueryParser");
 const DatabaseWrapper_1 = require("../db/DatabaseWrapper");
 const InMemoryTableWrapper_1 = require("../db/InMemoryTableWrapper");
 const UIElementNameHandler_1 = require("../util/UIElementNameHandler");
+const DatabaseToAbstractDatabase_1 = require("../db/DatabaseToAbstractDatabase");
+const DatabaseTypes_1 = require("../db/DatabaseTypes");
 // value is equal to          <number>|<value>|<constant>|<ui_element>
 // value is not equal to      <number>|<value>|<constant>|<ui_element>
 // value in                   <value_list>|<query>
@@ -380,8 +382,12 @@ class UIElementValueGenerator {
     }
     resolveDatabaseReferenceInQuery(propType, query, database, spec, errors) {
         return __awaiter(this, void 0, void 0, function* () {
+            const absDB = (new DatabaseToAbstractDatabase_1.DatabaseToAbstractDatabase()).convertFromNode(database);
+            const supportTables = DatabaseTypes_1.supportTablesInQueries(absDB.driverName);
+            // console.log( 'before', query );
             // Remove database reference from the query
-            const newQuery = this._queryRefReplacer.replaceDatabaseInQuery(query, database.name);
+            const newQuery = this._queryRefReplacer.replaceDatabaseInQuery(query, database.name, !supportTables);
+            // console.log( 'after', newQuery );
             if (this._dbQueryCache.has(newQuery)) {
                 // console.log( 'query', newQuery, 'dbQueryCache', this._dbQueryCache.get( newQuery ) );
                 return this.properDataFor(propType, this._dbQueryCache.get(newQuery));
@@ -411,11 +417,13 @@ class UIElementValueGenerator {
     }
     resolveTableReferenceInQuery(propType, query, table, spec, errors) {
         return __awaiter(this, void 0, void 0, function* () {
+            // console.log( 'before', query );
             // Replace table reference with its internal name
             const newQuery = this._queryRefReplacer.replaceTableInQuery(query, table.name, table.internalName);
             if (this._tblQueryCache.has(newQuery)) {
                 return this.properDataFor(propType, this._tblQueryCache.get(newQuery));
             }
+            // console.log( 'after', newQuery );
             // Retrieve table interface
             let intf = spec.tableNameToInterfaceMap().get(table.name);
             // Create the table interface if not available

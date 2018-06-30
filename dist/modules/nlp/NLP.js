@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const Entities_1 = require("./Entities");
 const Bravey = require("../../lib/bravey"); // .js file
+const ValueTypeDetector_1 = require("../util/ValueTypeDetector");
 /**
  * Natural Language Processor
  *
@@ -206,7 +207,9 @@ class EntityRecognizerMaker {
      */
     makeUILiteral(entityName) {
         var valueRec = new Bravey.RegexEntityRecognizer(entityName, 10);
-        const regex = /(?:\<)((?:#|@|\.|\/\/|~|[a-zA-ZÀ-ÖØ-öø-ÿ])[^<\r\n\>]*)(?:\>)/g;
+        // const regex = /(?:\<)((?:#|@|\.|\/\/|~|[a-zA-ZÀ-ÖØ-öø-ÿ])[^<\r\n\>]*)(?:\>)/g;
+        // const regex = /(?:\<)((?:#|@|\.|\/\/|~|[a-zA-ZÀ-ÖØ-öø-ÿ])[^<\r\n]*)(?:\>)/g; // Issue #19
+        const regex = /(?:\<)((?:#|@|\.|\/\/|~|[a-zA-ZÀ-ÖØ-öø-ÿ0-9 ]?)[^<\r\n]*[^\\>])(?:\>)/g;
         valueRec.addMatch(regex, function (match) {
             //console.log( 'match: ', match );
             return match[1].toString();
@@ -282,10 +285,32 @@ class EntityRecognizerMaker {
      */
     makeValueList(entityName) {
         var valueRec = new Bravey.RegexEntityRecognizer(entityName, 10);
-        const regex = /\[(?: )*((?:,) ?|([0-9]+(\.[0-9]+)?|\"(.*[^\\])\"))+(?: )*\]/g;
+        // const regex = /\[(?: )*((?:,) ?|([0-9]+(\.[0-9]+)?|\"(.*[^\\])\"))+(?: )*\]/g;
+        // const regex = /(\[[\t ]*([^\]])*[\t ]*[^\\]\])+/g; // only [ anything ]
+        // const regex = /(?:\[[\t ]*)(("[^"]*"|(-?[0-9]+(\.[0-9]+)?))*,?[\t ]?)+[^\]]?(?:\])/g; // [ value or number ]
+        const regex = /(?:\[[\t ]*)(("(\\"|[^"])+"|(-?[0-9]+(\.[0-9]+)?))+,?[\t ]?)+[^\]]?(?:\])/g; // [ value or number ]
         valueRec.addMatch(regex, function (match) {
-            //console.log( 'match: ', match );
-            return match[0].toString().trim();
+            // console.log( 'match: ', match );
+            // return match[ 0 ].toString().trim();
+            let content = match[0].toString().trim();
+            content = content.substring(1, content.length - 1); // Remove [ and ]
+            const contentRegex = /(((-?[0-9]+(?:\.[0-9]+)?)|"(\\"|[^"])+"))+/g;
+            let values = [];
+            let result;
+            while ((result = contentRegex.exec(content)) !== undefined) {
+                if (null === result) {
+                    break;
+                }
+                const v = result[0];
+                if (v.startsWith('"')) {
+                    values.push(v.substring(1, v.length - 1)); // Remove quotes
+                }
+                else {
+                    values.push(ValueTypeDetector_1.adjustValueToTheRightType(v));
+                }
+            }
+            // console.log( "VALUES:", values );
+            return values;
         }, 1000 // priority
         );
         return valueRec;

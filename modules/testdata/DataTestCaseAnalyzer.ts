@@ -167,6 +167,7 @@ export class DataTestCaseAnalyzer {
                 switch ( dtc ) {
                     case DataTestCase.FORMAT_VALID: {
 
+                        // Does not consider FORMAT_VALID whether it has a value-related property
                         const hasAnyValueOrLengthProperty = isDefined( pValue ) ||
                             isDefined( pMinValue ) || isDefined( pMaxValue ) ||
                             isDefined( pMinLength ) || isDefined( pMaxLength );
@@ -245,6 +246,14 @@ export class DataTestCaseAnalyzer {
 
             case DataTestCaseGroup.VALUE: {
 
+                // If it has VALUE property:
+                // - it must NOT generate VALID length values but it must generate invalid.
+                // - if it has negation, it must generate VALID as valid, and INVALID as invalid.
+                const hasValueProperty = isDefined( pValue );
+                const valueHasNegation = hasValueProperty && this.hasNegation( pValue ); // e.g., "value NOT IN ..."
+
+                const shouldGenerateValid = ! hasValueProperty || ( hasValueProperty && valueHasNegation );
+
                 const hasMinValue = isDefined( pMinValue );
                 const hasMaxValue = isDefined( pMaxValue );
 
@@ -286,7 +295,9 @@ export class DataTestCaseAnalyzer {
                     case DataTestCase.VALUE_RANDOM_BELOW_MIN: ; // next
                     case DataTestCase.VALUE_JUST_BELOW_MIN: {
                         if ( hasMinValue || isToFakeMinValue ) {
-                            return analyzer.hasValuesBelowMin() ? invalidMinPair : validPair;
+                            return analyzer.hasValuesBelowMin()
+                                ? invalidMinPair
+                                : shouldGenerateValid ? validPair : incompatiblePair;
                         }
                         return incompatiblePair;
                     }
@@ -294,7 +305,7 @@ export class DataTestCaseAnalyzer {
                     case DataTestCase.VALUE_JUST_ABOVE_MIN: ; // next
                     case DataTestCase.VALUE_MIN: {
                         if ( hasMinValue || isToFakeMinValue ) {
-                            return validPair;
+                            return shouldGenerateValid ? validPair : incompatiblePair;
                         }
                         return incompatiblePair;
                     }
@@ -302,7 +313,7 @@ export class DataTestCaseAnalyzer {
                     case DataTestCase.VALUE_RANDOM_BETWEEN_MIN_MAX: ; // next
                     case DataTestCase.VALUE_MEDIAN: {
                         if ( ( hasMinValue || isToFakeMinValue ) && ( hasMaxValue || isToFakeMaxValue ) ) {
-                            return validPair;
+                            return shouldGenerateValid ? validPair : incompatiblePair;
                         }
                         return incompatiblePair;
                     }
@@ -310,7 +321,7 @@ export class DataTestCaseAnalyzer {
                     case DataTestCase.VALUE_JUST_BELOW_MAX: ; // next
                     case DataTestCase.VALUE_MAX: {
                         if ( hasMaxValue || isToFakeMaxValue ) {
-                            return validPair;
+                            return shouldGenerateValid ? validPair : incompatiblePair;
                         }
                         return incompatiblePair;
                     }
@@ -318,7 +329,7 @@ export class DataTestCaseAnalyzer {
                     case DataTestCase.VALUE_ZERO: {
                         if ( ( hasMinValue || isToFakeMinValue ) && ( hasMaxValue || isToFakeMaxValue ) ) {
                             if ( analyzer.isZeroBetweenMinAndMax()  ) {
-                                return validPair;
+                                return shouldGenerateValid ? validPair : incompatiblePair;
                             }
                             return analyzer.isZeroBelowMin() ? invalidMinPair : invalidMaxPair;
                         }
@@ -329,7 +340,9 @@ export class DataTestCaseAnalyzer {
                     case DataTestCase.VALUE_RANDOM_ABOVE_MAX: ; // next
                     case DataTestCase.VALUE_GREATEST: {
                         if ( hasMaxValue || isToFakeMaxValue ) {
-                            return analyzer.hasValuesAboveMax() ? invalidMaxPair : validPair;
+                            return analyzer.hasValuesAboveMax()
+                                ? invalidMaxPair
+                                : shouldGenerateValid ? validPair : incompatiblePair;
                         }
                         return incompatiblePair;
                     }
@@ -341,6 +354,20 @@ export class DataTestCaseAnalyzer {
 
 
             case DataTestCaseGroup.LENGTH: {
+
+                // If it has VALUE property:
+                // - it must NOT generate VALID length values but it must generate invalid.
+                // - if it has negation, it must generate VALID as valid, and INVALID as invalid.
+                const hasValueProperty = isDefined( pValue );
+                const valueHasNegation = hasValueProperty && this.hasNegation( pValue ); // e.g., "value NOT IN ..."
+
+                const shouldGenerateValid = ! hasValueProperty || ( hasValueProperty && valueHasNegation );
+
+
+                // // Does not consider FORMAT_VALID whether it has a value-related property
+                // const hasAnyValueOrLengthProperty = isDefined( pValue ) ||
+                //     isDefined( pMinValue ) || isDefined( pMaxValue ) ||
+                //     isDefined( pMinLength ) || isDefined( pMaxLength );
 
                 const hasMinLength = isDefined( pMinLength );
                 const hasMaxLength = isDefined( pMaxLength );
@@ -379,7 +406,9 @@ export class DataTestCaseAnalyzer {
                     case DataTestCase.LENGTH_RANDOM_BELOW_MIN: ; // next
                     case DataTestCase.LENGTH_JUST_BELOW_MIN: {
                         if ( hasMinLength || isToFakeMinLength ) {
-                            return analyzer.hasValuesBelowMin() ? invalidMinPair : validPair;
+                            return analyzer.hasValuesBelowMin()
+                                ? invalidMinPair
+                                : shouldGenerateValid ? validPair : incompatiblePair;
                         }
                         return incompatiblePair;
                     }
@@ -387,7 +416,7 @@ export class DataTestCaseAnalyzer {
                     case DataTestCase.LENGTH_JUST_ABOVE_MIN: ; // next
                     case DataTestCase.LENGTH_MIN: {
                         if ( hasMinLength || isToFakeMinLength ) {
-                            return validPair;
+                            return shouldGenerateValid ? validPair : incompatiblePair;
                         }
                         return incompatiblePair;
                     }
@@ -395,7 +424,7 @@ export class DataTestCaseAnalyzer {
                     case DataTestCase.LENGTH_RANDOM_BETWEEN_MIN_MAX: ; // next
                     case DataTestCase.LENGTH_MEDIAN: {
                         if ( ( hasMinLength || isToFakeMinLength ) && ( hasMaxLength || isToFakeMaxLength ) ) {
-                            return validPair;
+                            return shouldGenerateValid ? validPair : incompatiblePair;
                         }
                         return incompatiblePair;
                     }
@@ -403,7 +432,7 @@ export class DataTestCaseAnalyzer {
                     case DataTestCase.LENGTH_JUST_BELOW_MAX: ; // next
                     case DataTestCase.LENGTH_MAX: {
                         if ( hasMaxLength || isToFakeMaxLength ) {
-                            return validPair;
+                            return shouldGenerateValid ? validPair : incompatiblePair;
                         }
                         return incompatiblePair;
                     }
@@ -412,7 +441,9 @@ export class DataTestCaseAnalyzer {
                     case DataTestCase.LENGTH_RANDOM_ABOVE_MAX: ; // next
                     case DataTestCase.LENGTH_GREATEST: {
                         if ( hasMaxLength || isToFakeMaxLength ) {
-                            return analyzer.hasValuesAboveMax() ? invalidMaxPair : validPair;
+                            return analyzer.hasValuesAboveMax()
+                                ? invalidMaxPair
+                                : shouldGenerateValid ? validPair : incompatiblePair;
                         }
                         return incompatiblePair;
                     }

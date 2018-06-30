@@ -18,12 +18,14 @@ export class QueryReferenceReplacer {
         return query.replace( regex, this.wrapValue( value ) );
     }
 
-    replaceDatabaseInQuery( query: string, variable: string ): string {
-        // Removes "FROM"
-        const fromRegex = / from /gi;
-        let newQuery = query.replace( fromRegex, '' );
+    replaceDatabaseInQuery( query: string, variable: string, removeFrom: boolean ): string {
+        let newQuery: string = query;
+        if ( removeFrom ) {
+            const fromRegex = / from /gi;
+            newQuery = query.replace( fromRegex, ' ' );
+        }
         // Removes the Database variable
-        const dbNameRegex = this.makeNameRegex( variable );
+        const dbNameRegex = this.makeNameRegex( variable, true );
         return newQuery.replace( dbNameRegex, '' );
     }
 
@@ -44,8 +46,14 @@ export class QueryReferenceReplacer {
         return ( new QueryParser() ).makeVariableRegex( name );
     }
 
-    private makeNameRegex( name: string ): RegExp {
-        return ( new QueryParser() ).makeNameRegex( name );
+    /**
+     * Make a regex for a Concordia name: constant, table or database.
+     *
+     * @param name Name
+     * @param replaceDot Whether is desired to replace dot. Optional. Default is false.
+     */
+    private makeNameRegex( name: string, replaceDot: boolean = false ): RegExp {
+        return ( new QueryParser() ).makeNameRegex( name, replaceDot );
     }
 
 }

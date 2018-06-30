@@ -7,28 +7,30 @@ const Symbols_1 = require("../req/Symbols");
  * @author Thiago Delgado Pinto
  */
 class CommentHandler {
-    removeComment(content, ignoreTrim = false) {
-        let commentPos = content.lastIndexOf(Symbols_1.Symbols.COMMENT_PREFIX);
-        if (commentPos >= 0) {
-            // If the preceding character is `<`, it is not a comment
-            if (commentPos > 1) {
-                const ignorePredecessors = [Symbols_1.Symbols.UI_LITERAL_PREFIX];
-                let predecessor = content.substr(commentPos - 1, 1);
-                if (ignorePredecessors.indexOf(predecessor) >= 0) {
-                    return !ignoreTrim ? content.trim() : content;
-                }
-            }
-            // If the last character is `"` or `>`, assumes that it is not a comment
-            const lastOnes = [Symbols_1.Symbols.UI_LITERAL_SUFFIX, Symbols_1.Symbols.VALUE_WRAPPER];
-            const trimmedContent = content.trim();
-            const lastChar = trimmedContent.substr(trimmedContent.length - 1);
-            if (lastOnes.indexOf(lastChar) >= 0) {
-                return !ignoreTrim ? content.trim() : content;
-            }
-            // Well, it is a comment
-            return content.substring(0, commentPos).trim();
+    remove(content, ignoreTrim = false) {
+        // Comment is the first character after trim left
+        if (0 === content.trimLeft().indexOf(Symbols_1.Symbols.COMMENT_PREFIX)) {
+            return content.substring(0, content.indexOf(Symbols_1.Symbols.COMMENT_PREFIX));
         }
-        return !ignoreTrim ? content.trim() : content;
+        // There is content before the comment, let's get the last index
+        let commentPos = content.lastIndexOf(Symbols_1.Symbols.COMMENT_PREFIX);
+        if (commentPos < 0) { // not found
+            return content;
+        }
+        // Check whether it has any terminator after it
+        let lastValueIndex = content.lastIndexOf(Symbols_1.Symbols.VALUE_WRAPPER);
+        let lastUILiteralIndex = content.lastIndexOf(Symbols_1.Symbols.UI_LITERAL_SUFFIX);
+        let lastCommandIndex = content.lastIndexOf(Symbols_1.Symbols.COMMAND_WRAPPER);
+        if ((lastValueIndex >= 0 && commentPos < lastValueIndex) ||
+            (lastUILiteralIndex >= 0 && commentPos < lastUILiteralIndex) ||
+            (lastCommandIndex >= 0 && commentPos < lastCommandIndex)) {
+            return content;
+        }
+        return content.substring(0, commentPos);
+    }
+    removeComment(content, ignoreTrim = false) {
+        const result = this.remove(content);
+        return ignoreTrim ? result : result.trim();
     }
 }
 exports.CommentHandler = CommentHandler;

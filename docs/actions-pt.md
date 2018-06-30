@@ -4,6 +4,28 @@
 
 *Um exemplo pode demonstrar diferentes variações da mesma ação.*
 
+## `accept`
+
+### accept + alert
+```gherkin
+Quando eu aceito o alerta
+```
+
+### accept + confirm
+```gherkin
+Quando eu aceito a confirmação
+```
+
+### accept + popup
+```gherkin
+Quando eu aceito o popup
+```
+
+### accept + prompt
+```gherkin
+Quando eu aceito o prompt
+```
+
 ## `amOn`
 
 ```gherkin
@@ -21,16 +43,49 @@ Quando eu adiciono "Conteúdo" em {Foo}
 
 ## `attachFile`
 
+Essa ação seleciona o arquivo informado e confirma (*e.g.*, clica em OK).
+
 ```gherkin
 Quando eu anexo o arquivo "/caminho/ate/arquivo" em {Foo}
   e anexo "/caminho/ate/arquivo" em <#bar>
 ```
 
+## `cancel`
+
+### cancel + alert
+```gherkin
+Quando eu cancelo o alerta
+```
+
+### cancel + confirm
+```gherkin
+Quando eu cancelo a confirmação
+```
+
+### cancel + popup
+```gherkin
+Quando eu cancelo o popup
+```
+
+### cancel + prompt
+```gherkin
+Quando eu cancelo o prompt
+```
+
 ## `check`
+
+### check + target
 
 ```gherkin
 Quando eu marco {Foo}
-  e marco <#bar>
+  e eu marco <#bar>
+```
+
+### check + target + target
+
+Marca um elemento que está dentro de outro:
+```gherkin
+Então eu marco {Foo} em <#bar>
 ```
 
 ## `clear`
@@ -68,6 +123,8 @@ Quando eu fecho o app
 ## `connect`
 
 ### connect + database
+
+A próxima sentença é somente para [Eventos de Teste](language/pt.md#eventos-de-teste):
 ```
 Quando eu conecto ao banco de dados [TestDB]
 ```
@@ -75,6 +132,8 @@ Quando eu conecto ao banco de dados [TestDB]
 ## `disconnect`
 
 ### disconnect + database
+
+A próxima sentença é somente para [Eventos de Teste](language/pt.md#eventos-de-teste):
 ```
 Quando eu desconecto do banco de dados [TestDB]
 ```
@@ -101,7 +160,7 @@ Quando eu preecho {Foo}
   e eu preencho {Foo} com "foo"
   e eu preencho {Foo} com 100
   e eu preencho <#bar> com "bar"
-  e eu precho <#bar> com 3.1415
+  e eu preencho <#bar> com 3.1415
   e eu digito "bar" em {Foo}
   e eu informo "foo" em <#bar>
 ```
@@ -136,10 +195,45 @@ Quando eu abro o painel de notificações
 
 ## `press`
 
+Pressiona uma tecla ou uma combinação de teclas, separadas por vírgula.
+
 ```gherkin
 Quando eu pressiono "Enter"
-  e pressiono "Ctrl", "Alt", "Del"
+  e pressiono "Control", "Alt", "Delete"
 ```
+
+Algumas teclas especiais (*sensível a maiúsculas e minúsculas!*):
+
+- `Add`
+- `Alt`
+- `ArrowDown` ou `Down arrow`
+- `ArrowLeft` ou `Left arrow`
+- `ArrowRight` ou `Right arrow`
+- `ArrowUp` ou `Up arrow`
+- `Backspace`
+- `Command`
+- `Control`
+- `Del`
+- `Divide`
+- `End`
+- `Enter`
+- `Equals`
+- `Escape`
+- `F1` até `F12`
+- `Home`
+- `Insert`
+- `Meta`
+- `Multiply`
+- `Numpad 0` até `Numpad 9`
+- `Pause`
+- `Pagedown` ou `PageDown`
+- `Pageup` ou `PageUp`
+- `Semicolon`
+- `Shift`
+- `Space`
+- `Subtract`
+- `Tab`
+
 
 ## `pull`
 
@@ -152,6 +246,9 @@ Quando eu extraio "/storage/emulated/0/DCIM/logo.png" para "some/path"
 
 ```gherkin
 Quando eu atualizo a página
+  e eu atualizo a página atual
+  e eu recarrego a página
+  e eu recarrego a página atual
 ```
 
 ## `resize`
@@ -175,6 +272,7 @@ Quando eu clico com o botão direito em {Foo}
 
 👉 *Comandos devem ser declarados entre aspas simples (`'`) e devem ficar em uma linha*
 
+A próxima sentença é somente para [Eventos de Teste](language/pt.md#eventos-de-teste):
 ```gherkin
 Quando eu executo o comando 'rmdir foo'
   e rodo o comando './script.sh'
@@ -184,6 +282,7 @@ Quando eu executo o comando 'rmdir foo'
 
 *Executa comandos SQL em um banco de dados*
 
+A próxima sentença é somente para [Eventos de Teste](language/pt.md#eventos-de-teste):
 ```gherkin
 Quando eu executo o script 'INSERT INTO [MyDB].product ( name, price ) VALUES ( "Soda", 1.50 )'
   e eu executo o script 'INSERT INTO [MyDB].Users( UserName, UserSex, UserAge ) VALUES ( "Newton", "Male", 25 )'
@@ -250,6 +349,14 @@ Atualmente [database-js-sqlite](https://github.com/mlaanderson/database-js-sqlit
 ```gherkin
 Quando salvo uma foto pra "foo.png"
   e eu bato uma foto da tela para "bar.png"
+```
+
+## `scrollTo`
+
+```gherkin
+Quando eu rolo para <#foo>
+  e eu rolo para {Bar}
+  e eu dou um scroll para <#bar>
 ```
 
 ## `see`
@@ -369,26 +476,31 @@ Quando eu balanço o dispositivo
 
 A próxima sentença é somente para *mobile*:
 ```gherkin
-Quando eu deslizo "#io.selendroid.myapp:id/LinearLayout1" para 100, 200
+Quando eu deslizo <#io.selendroid.myapp:id/LinearLayout1> para 100, 200
 ```
 
 A próxima sentença é somente para *mobile*:
 ```gherkin
-Quando eu deslizo "#io.selendroid.myapp:id/LinearLayout1" para baixo
+Quando eu deslizo <#io.selendroid.myapp:id/LinearLayout1> para baixo
 ```
 A próxima sentença é somente para *mobile*:
 ```gherkin
-Quando eu deslizo "#io.selendroid.myapp:id/LinearLayout1" para a esquerda
-```
-
-A próxima sentença é somente para *mobile*:
-```gherkin
-Quando eu deslizo "#io.selendroid.myapp:id/LinearLayout1" para direita
+Quando eu deslizo <#io.selendroid.myapp:id/LinearLayout1> para a esquerda
 ```
 
 A próxima sentença é somente para *mobile*:
 ```gherkin
-Quando eu deslizo "#io.selendroid.myapp:id/LinearLayout1" para cima
+Quando eu deslizo <#io.selendroid.myapp:id/LinearLayout1> para direita
+```
+
+A próxima sentença é somente para *mobile*:
+```gherkin
+Quando eu deslizo <#io.selendroid.myapp:id/LinearLayout1> para cima
+```
+
+A próxima sentença é somente para *mobile*:
+```gherkin
+Quando eu deslizo <#foo> para <#bar>
 ```
 
 ## `switch`
@@ -403,6 +515,21 @@ A próxima sentença é somente para *mobile*:
 Quando eu troco para web
 ```
 
+### switch + tab
+```gherkin
+Quando eu troco para a aba 3
+```
+
+### switch + next + tab
+```gherkin
+Quando eu troco para a próxima aba
+```
+
+### switch + previous + tab
+```gherkin
+Quando eu troco para a aba anterior
+```
+
 ## `tap`
 
 A próxima sentença é somente para *mobile*:
@@ -413,43 +540,112 @@ Quando eu toco em <~ok>
 
 ## `uncheck`
 
+### uncheck + target
 ```gherkin
 Então eu desmarco {Foo}
   e eu desmarco <#bar>
 ```
 
+### uncheck + target + target
+
+Desmarca um elemento que está dentro de outro:
+```gherkin
+Então eu desmarco {Foo} em <#bar>
+```
+
 ## `wait`
 
+### wait + seconds
 ```gherkin
-Então eu espero 2 segundos
-  e eu aguardo 3 segundos
+Quando eu espero 2 segundos
 ```
 
+### wait + target
 ```gherkin
-Então eu espero por {Foo}
-  e eu espero <#bar> por 2 segundos
+Quando eu espero por {Foo}
+  e eu espero por <#bar>
 ```
 
+### wait + seconds + target
 ```gherkin
-Então eu espero {Foo} ficar habilitado
-  e eu espero por <#bar> ficar habilitado
+Quando eu espero 3 segundos por {Foo}
+  e eu espero 5 segundos por <#bar>
 ```
 
+### wait + target + hide
 ```gherkin
-Então eu espero {Foo} ficar invisível
-  e eu espero por <#bar> ficar invisível
+Quando eu espero {Foo} ficar oculto
+  e eu espero <#bar> ficar oculto
 ```
 
+### wait + seconds + target + hide
 ```gherkin
-Então eu espero {Foo} ficar visível
-  e eu espero por <#bar> ficar visível
+Quando eu espero 3 segundos por {Foo} ficar oculto
+  e eu espero 5 segundos por <#bar> ficar oculto
 ```
 
+### wait + target + enabled
 ```gherkin
-Então eu espero pelo texto "Foo"
+Quando eu espero {Foo} ficar habilitado
+  e eu espero <#bar> ficar habilitado
 ```
 
+### wait + seconds + target + enabled
 ```gherkin
-Então eu espero pela url "/foo"
-  e espero pela url "/bar" por 3 segundos
+Quando eu espero 3 segundos por {Foo} ficar habilitado
+  e eu espero 5 segundos por <#bar> ficar habilitado
+```
+
+### wait + target + invisible
+```gherkin
+Quando eu espero {Foo} ficar visível
+  e eu espero <#bar> ficar visível
+```
+
+### wait + seconds + target + invisible
+```gherkin
+Quando eu espero 3 segundos {Foo} ficar invisível
+  e eu espero 5 segundos <#bar> ficar invisível
+```
+
+### wait + seconds + target + visible
+```gherkin
+Quando eu espero {Foo} ficar visível
+  e eu espero <#bar> ficar visível
+```
+
+### wait + seconds + target + visible
+```gherkin
+Quando eu espero 3 segundos por {Foo} ficar visível
+  e eu espero 5 segundos por <#bar> ficar visível
+```
+
+### wait + text + value
+```gherkin
+Quando eu espero pelo texto "Foo"
+```
+
+### wait + seconds + text + value
+```gherkin
+Quando eu espero 3 segundos pelo texto "Foo"
+```
+
+### wait + url + value
+```gherkin
+Quando eu espero pela url "/foo"
+```
+
+### wait + seconds + url + value
+```gherkin
+Quando eu espero 3 segundos pela url "/bar"
+```
+
+### wait + option value + value + target
+```gherkin
+Quando eu espero pelo valor "foo" em <#bar>
+```
+
+### wait + seconds + option value + value + target
+```gherkin
+Quando eu espero 5 segundos pelo valor "foo" em <#bar>
 ```

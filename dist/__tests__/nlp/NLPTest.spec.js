@@ -27,8 +27,8 @@ describe('NLPTest', () => {
         }
         else {
             expect(r.entities).toHaveLength(1);
-            expect(r.entities[0].entity).toBe(expectedEntity);
-            expect(r.entities[0].value).toBe(expected);
+            expect(r.entities[0].entity).toEqual(expectedEntity);
+            expect(r.entities[0].value).toEqual(expected);
         }
         return r;
     }
@@ -75,6 +75,12 @@ describe('NLPTest', () => {
                 expect(r.entities[0].value).toBe('foo');
                 expect(r.entities[1].entity).toBe(Entities_1.Entities.VALUE);
                 expect(r.entities[1].value).toBe('bar');
+            });
+            it('starts with a number', () => {
+                let r = nlp.recognize('en', ' "1foo" ');
+                expect(r.entities).toHaveLength(1);
+                expect(r.entities[0].entity).toBe(Entities_1.Entities.VALUE);
+                expect(r.entities[0].value).toBe('1foo');
             });
         });
         describe('number', () => {
@@ -170,13 +176,17 @@ describe('NLPTest', () => {
                 it('mobile name notation', () => {
                     recogLiteral(' <~foo> ', '~foo');
                 });
-            });
-            describe('does not recognize', () => {
+                it('long, escaped CSS selectors', () => {
+                    recogLiteral(' <#js-repo-pjax-container \> div.container.new-discussion-timeline.experiment-repo-nav \> div.repository-content \> div.release-show \> div \> div.release-body.commit.open.float-left \> div.my-4 \> h2>', '#js-repo-pjax-container \> div.container.new-discussion-timeline.experiment-repo-nav \> div.repository-content \> div.release-show \> div \> div.release-body.commit.open.float-left \> div.my-4 \> h2');
+                });
+                it('xpath with brackets, quotes, at', () => {
+                    recogLiteral('<//*[@id="event-1684412635"]/span[2]/a>', '//*[@id="event-1684412635"]/span[2]/a');
+                });
                 it('number', () => {
-                    recogLiteral(' <1> ', null);
+                    recogLiteral(' <1> ', '1');
                 });
                 it('starting with a number', () => {
-                    recogLiteral(' <1a> ', null);
+                    recogLiteral(' <1a> ', '1a');
                 });
             });
         });
@@ -230,20 +240,20 @@ describe('NLPTest', () => {
                 expect(r.entities).toHaveLength(0);
             });
             it('single number', () => {
-                recogValueList(' [1] ', '[1]');
+                recogValueList(' [1] ', [1]);
             });
             it('numbers', () => {
-                recogValueList(' [1, 2] ', '[1, 2]');
+                recogValueList(' [1, 2] ', [1, 2]);
             });
             it('strings', () => {
-                recogValueList(' [ "alice", "bob" ] ', '[ "alice", "bob" ]');
+                recogValueList(' [ "alice", "bob" ] ', ["alice", "bob"]);
             });
             it('strings with escaped strings', () => {
-                recogValueList(' [ "alice say \\\"hello\\\"" ] ', '[ "alice say \\\"hello\\\"" ]');
+                recogValueList(' [ "alice say \\\"hello\\\" world" ] ', ["alice say \\\"hello\\\" world"]);
             });
             it('strings and numbers mixed', () => {
-                recogValueList(' [ "alice", 1, "bob", 2 ] ', '[ "alice", 1, "bob", 2 ]');
-                recogValueList(' [ 1, "alice", 2, "bob", 3, 4, "bob", "joe" ] ', '[ 1, "alice", 2, "bob", 3, 4, "bob", "joe" ]');
+                recogValueList(' [ "alice", 1, "bob", 2 ] ', ["alice", 1, "bob", 2]);
+                recogValueList(' [ 1, "alice", 2, "bob", 3, 4, "bob", "joe" ] ', [1, "alice", 2, "bob", 3, 4, "bob", "joe"]);
             });
         });
     });

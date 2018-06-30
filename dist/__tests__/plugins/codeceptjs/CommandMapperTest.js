@@ -14,6 +14,52 @@ describe('CommandMapperTest', () => {
     afterEach(() => {
         cm = null;
     });
+    describe('#escapeDoubleQuotes', () => {
+        it('escape', () => {
+            expect(cm.escapeDoubleQuotes(`//*[id="foo"]/a[2]/button`))
+                .toEqual(`//*[id=\\"foo\\"]/a[2]/button`);
+        });
+        it('does not escape escaped quotes', () => {
+            expect(cm.escapeDoubleQuotes(`//*[id=\\"foo\\"]/a[2]/button`))
+                .toEqual(`//*[id=\\"foo\\"]/a[2]/button`);
+        });
+    });
+    describe('#escapeSingleQuotes', () => {
+        it('escape', () => {
+            expect(cm.escapeSingleQuotes(`//*[id='foo']/a[2]/button`))
+                .toEqual(`//*[id=\\'foo\\']/a[2]/button`);
+        });
+        it('does not escape escaped single quotes', () => {
+            expect(cm.escapeSingleQuotes(`//*[id=\\'foo\\']/a[2]/button`))
+                .toEqual(`//*[id=\\'foo\\']/a[2]/button`);
+        });
+    });
+    describe('accept', () => {
+        it('option alert', () => {
+            let cmd = {
+                action: 'accept',
+                options: ['alert']
+            };
+            const r = cm.map(cmd);
+            expect(r).toContainEqual('I.acceptPopup();' + comment);
+        });
+        it('option confirm', () => {
+            let cmd = {
+                action: 'accept',
+                options: ['confirm']
+            };
+            const r = cm.map(cmd);
+            expect(r).toContainEqual('I.acceptPopup();' + comment);
+        });
+        it('option prompt', () => {
+            let cmd = {
+                action: 'accept',
+                options: ['prompt']
+            };
+            const r = cm.map(cmd);
+            expect(r).toContainEqual('I.acceptPopup();' + comment);
+        });
+    });
     describe('amOn', () => {
         it('value', () => {
             let cmd = {
@@ -30,44 +76,87 @@ describe('CommandMapperTest', () => {
                 targets: ['/foo']
             };
             const r = cm.map(cmd);
-            expect(r).toContainEqual('I.amOnPage("/foo");' + comment);
+            expect(r).toContainEqual('I.amOnPage(\'/foo\');' + comment);
         });
     });
     describe('append', () => {
         it('target, value', () => {
             let cmd = {
                 action: 'append',
-                targets: ['foo'],
+                targets: ['#foo'],
                 values: ['bar']
             };
             const r = cm.map(cmd);
-            expect(r).toContainEqual('I.appendField("foo", "bar");' + comment);
+            expect(r).toContainEqual('I.appendField(\'#foo\', "bar");' + comment);
         });
     });
     describe('attachFile', () => {
         it('target, value', () => {
             let cmd = {
                 action: 'attachFile',
-                targets: ['foo'],
+                targets: ['#foo'],
                 values: ['bar']
             };
             const r = cm.map(cmd);
-            expect(r).toContainEqual('I.attachFile("foo", "bar");' + comment);
+            expect(r).toContainEqual('I.attachFile(\'#foo\', "bar");' + comment);
+        });
+    });
+    describe('cancel', () => {
+        it('option alert', () => {
+            let cmd = {
+                action: 'cancel',
+                options: ['alert']
+            };
+            const r = cm.map(cmd);
+            expect(r).toContainEqual('I.cancelPopup();' + comment);
+        });
+        it('option confirm', () => {
+            let cmd = {
+                action: 'cancel',
+                options: ['confirm']
+            };
+            const r = cm.map(cmd);
+            expect(r).toContainEqual('I.cancelPopup();' + comment);
+        });
+        it('option prompt', () => {
+            let cmd = {
+                action: 'cancel',
+                options: ['prompt']
+            };
+            const r = cm.map(cmd);
+            expect(r).toContainEqual('I.cancelPopup();' + comment);
         });
     });
     describe('check', () => {
+        it('target', () => {
+            let cmd = {
+                action: 'check',
+                targets: ['#foo'],
+            };
+            const r = cm.map(cmd);
+            expect(r).toContainEqual(`I.checkOption('#foo');` + comment);
+        });
+        it('two targets', () => {
+            let cmd = {
+                action: 'check',
+                targets: ['#foo', '#bar'],
+            };
+            const r = cm.map(cmd);
+            expect(r).toContainEqual(`I.checkOption('#foo', '#bar');` + comment);
+        });
+        it('value, target', () => {
+            let cmd = {
+                action: 'check',
+                values: ['#foo'],
+                targets: ['#bar'],
+            };
+            const r = cm.map(cmd);
+            expect(r).toContainEqual(`I.checkOption("#foo", '#bar');` + comment);
+        });
         it('value', () => {
             let cmd = {
                 action: 'check',
                 values: ['foo']
-            };
-            const r = cm.map(cmd);
-            expect(r).toContainEqual('I.checkOption("foo");' + comment);
-        });
-        it('target', () => {
-            let cmd = {
-                action: 'check',
-                targets: ['foo'],
             };
             const r = cm.map(cmd);
             expect(r).toContainEqual('I.checkOption("foo");' + comment);
@@ -78,10 +167,10 @@ describe('CommandMapperTest', () => {
             it('target', () => {
                 let cmd = {
                     action: 'clear',
-                    targets: ['foo'],
+                    targets: ['#foo'],
                 };
                 const r = cm.map(cmd);
-                expect(r).toContainEqual('I.clearField("foo");' + comment);
+                expect(r).toContainEqual('I.clearField(\'#foo\');' + comment);
             });
         });
         describe('clearCookie', () => {
@@ -92,7 +181,7 @@ describe('CommandMapperTest', () => {
                     targets: ['foo']
                 };
                 const r = cm.map(cmd);
-                expect(r).toContainEqual('I.clearCookie("foo");' + comment);
+                expect(r).toContainEqual('I.clearCookie(\'foo\');' + comment);
             });
         });
     });
@@ -103,15 +192,32 @@ describe('CommandMapperTest', () => {
                 values: ['foo']
             };
             const r = cm.map(cmd);
-            expect(r).toContainEqual('I.click("foo");' + comment);
+            expect(r).toContainEqual(`I.click("foo");` + comment);
+        });
+        it('value, target', () => {
+            let cmd = {
+                action: 'click',
+                values: ['foo'],
+                targets: ['#bar']
+            };
+            const r = cm.map(cmd);
+            expect(r).toContainEqual(`I.click("foo", '#bar');` + comment);
         });
         it('target', () => {
             let cmd = {
                 action: 'click',
-                targets: ['foo'],
+                targets: ['#foo'],
             };
             const r = cm.map(cmd);
-            expect(r).toContainEqual('I.click("foo");' + comment);
+            expect(r).toContainEqual(`I.click('#foo');` + comment);
+        });
+        it('two target', () => {
+            let cmd = {
+                action: 'click',
+                targets: ['#foo', '#bar'],
+            };
+            const r = cm.map(cmd);
+            expect(r).toContainEqual(`I.click('#foo', '#bar');` + comment);
         });
     });
     describe('close', () => {
@@ -174,31 +280,31 @@ describe('CommandMapperTest', () => {
         it('target', () => {
             let cmd = {
                 action: 'doubleClick',
-                targets: ['foo'],
+                targets: ['#foo'],
             };
             const r = cm.map(cmd);
-            expect(r).toContainEqual('I.doubleClick("foo");' + comment);
+            expect(r).toContainEqual('I.doubleClick(\'#foo\');' + comment);
         });
     });
     describe('drag', () => {
         it('two targets', () => {
             let cmd = {
                 action: 'drag',
-                targets: ['foo', 'bar'],
+                targets: ['#foo', '#bar'],
             };
             const r = cm.map(cmd);
-            expect(r).toContainEqual('I.dragAndDrop("foo", "bar");' + comment);
+            expect(r).toContainEqual('I.dragAndDrop(\'#foo\', \'#bar\');' + comment);
         });
     });
     describe('fill', () => {
         it('target, value', () => {
             let cmd = {
                 action: 'fill',
-                targets: ['foo'],
+                targets: ['#foo'],
                 values: ['bar']
             };
             const r = cm.map(cmd);
-            expect(r).toContainEqual('I.fillField("foo", "bar");' + comment);
+            expect(r).toContainEqual('I.fillField(\'#foo\', "bar");' + comment);
         });
     });
     describe('hide', () => {
@@ -245,7 +351,7 @@ describe('CommandMapperTest', () => {
                     targets: ['#foo']
                 };
                 const r = cm.map(cmd);
-                expect(r).toContainEqual('I.moveCursorTo("#foo");' + comment);
+                expect(r).toContainEqual('I.moveCursorTo(\'#foo\');' + comment);
             });
             it('options, target, two numbers', () => {
                 let cmd = {
@@ -255,7 +361,7 @@ describe('CommandMapperTest', () => {
                     values: ['100', '200']
                 };
                 const r = cm.map(cmd);
-                expect(r).toContainEqual('I.moveCursorTo("#foo", 100, 200);' + comment);
+                expect(r).toContainEqual('I.moveCursorTo(\'#foo\', 100, 200);' + comment);
             });
         });
     });
@@ -313,11 +419,11 @@ describe('CommandMapperTest', () => {
                 expect(r).toContainEqual('I.refreshPage();' + comment);
             });
         });
-        describe('url', () => {
+        describe('page', () => {
             it('options', () => {
                 let cmd = {
                     action: 'refresh',
-                    options: ['url']
+                    options: ['page']
                 };
                 const r = cm.map(cmd);
                 expect(r).toContainEqual('I.refreshPage();' + comment);
@@ -362,10 +468,10 @@ describe('CommandMapperTest', () => {
         it('target', () => {
             let cmd = {
                 action: 'rightClick',
-                targets: ['foo'],
+                targets: ['#foo'],
             };
             const r = cm.map(cmd);
-            expect(r).toContainEqual('I.rightClick("foo");' + comment);
+            expect(r).toContainEqual('I.rightClick(\'#foo\');' + comment);
         });
     });
     describe('rotate', () => {
@@ -444,67 +550,35 @@ describe('CommandMapperTest', () => {
             });
         });
         describe('seeInField', () => {
+            it('option field, value, field', () => {
+                let cmd = {
+                    action: 'see',
+                    options: ['field'],
+                    targets: ['#foo'],
+                    values: ['bar'],
+                };
+                const r = cm.map(cmd);
+                expect(r).toContainEqual('I.seeInField(\'#foo\', "bar");' + comment);
+            });
             it('targetType textbox, value, field', () => {
                 let cmd = {
                     action: 'see',
                     targetTypes: ['textbox'],
-                    targets: ['foo'],
+                    targets: ['#foo'],
                     values: ['bar'],
                 };
                 const r = cm.map(cmd);
-                expect(r).toContainEqual('I.seeInField("foo", "bar");' + comment);
+                expect(r).toContainEqual('I.seeInField(\'#foo\', "bar");' + comment);
             });
             it('targetType textarea, value, field', () => {
                 let cmd = {
                     action: 'see',
                     targetTypes: ['textarea'],
-                    targets: ['foo'],
+                    targets: ['#foo'],
                     values: ['bar'],
                 };
                 const r = cm.map(cmd);
-                expect(r).toContainEqual('I.seeInField("foo", "bar");' + comment);
-            });
-            it('value, option inside, target', () => {
-                let cmd = {
-                    action: 'see',
-                    values: ['bar'],
-                    options: ['inside'],
-                    targets: ['#foo'],
-                };
-                const r = cm.map(cmd);
-                expect(r).toContainEqual('I.seeInField("#foo", "bar");' + comment);
-            });
-            it('value, option inside, target, modifier', () => {
-                let cmd = {
-                    action: 'see',
-                    values: ['bar'],
-                    options: ['inside'],
-                    targets: ['#foo'],
-                    modifier: 'not'
-                };
-                const r = cm.map(cmd);
-                expect(r).toContainEqual('I.dontSeeInField("#foo", "bar");' + comment);
-            });
-            it('target, option with, value', () => {
-                let cmd = {
-                    action: 'see',
-                    targets: ['#foo'],
-                    options: ['with'],
-                    values: ['bar']
-                };
-                const r = cm.map(cmd);
-                expect(r).toContainEqual('I.seeInField("#foo", "bar");' + comment);
-            });
-            it('target, option with, value, modifier', () => {
-                let cmd = {
-                    action: 'see',
-                    targets: ['#foo'],
-                    options: ['with'],
-                    values: ['bar'],
-                    modifier: 'not'
-                };
-                const r = cm.map(cmd);
-                expect(r).toContainEqual('I.dontSeeInField("#foo", "bar");' + comment);
+                expect(r).toContainEqual('I.seeInField(\'#foo\', "bar");' + comment);
             });
         });
         describe('dontSeeInField', () => {
@@ -512,23 +586,23 @@ describe('CommandMapperTest', () => {
                 let cmd = {
                     action: 'see',
                     targetTypes: ['textbox'],
-                    targets: ['foo'],
+                    targets: ['#foo'],
                     values: ['bar'],
                     modifier: 'not'
                 };
                 const r = cm.map(cmd);
-                expect(r).toContainEqual('I.dontSeeInField("foo", "bar");' + comment);
+                expect(r).toContainEqual('I.dontSeeInField(\'#foo\', "bar");' + comment);
             });
             it('targetType textarea, target, value, modifier', () => {
                 let cmd = {
                     action: 'see',
                     targetTypes: ['textarea'],
-                    targets: ['foo'],
+                    targets: ['#foo'],
                     values: ['bar'],
                     modifier: 'not'
                 };
                 const r = cm.map(cmd);
-                expect(r).toContainEqual('I.dontSeeInField("foo", "bar");' + comment);
+                expect(r).toContainEqual('I.dontSeeInField(\'#foo\', "bar");' + comment);
             });
         });
         describe('seeCheckboxIsChecked', () => {
@@ -537,10 +611,10 @@ describe('CommandMapperTest', () => {
                     action: 'see',
                     targetTypes: ['checkbox'],
                     options: ['checked'],
-                    targets: ['foo']
+                    targets: ['#foo']
                 };
                 const r = cm.map(cmd);
-                expect(r).toContainEqual('I.seeCheckboxIsChecked("foo");' + comment);
+                expect(r).toContainEqual('I.seeCheckboxIsChecked(\'#foo\');' + comment);
             });
         });
         describe('dontSeeCheckboxIsChecked', () => {
@@ -549,11 +623,11 @@ describe('CommandMapperTest', () => {
                     action: 'see',
                     targetTypes: ['checkbox'],
                     options: ['checked'],
-                    targets: ['foo'],
+                    targets: ['#foo'],
                     modifier: 'not'
                 };
                 const r = cm.map(cmd);
-                expect(r).toContainEqual('I.dontSeeCheckboxIsChecked("foo");' + comment);
+                expect(r).toContainEqual('I.dontSeeCheckboxIsChecked(\'#foo\');' + comment);
             });
         });
         describe('seeCookie', () => {
@@ -686,21 +760,21 @@ describe('CommandMapperTest', () => {
             it('target', () => {
                 let cmd = {
                     action: 'see',
-                    targets: ['foo']
+                    targets: ['#foo']
                 };
                 const r = cm.map(cmd);
-                expect(r).toContainEqual('I.seeElement("foo");' + comment);
+                expect(r).toContainEqual('I.seeElement(\'#foo\');' + comment);
             });
         });
         describe('dontSeeElement', () => {
             it('target, modifier', () => {
                 let cmd = {
                     action: 'see',
-                    targets: ['foo'],
+                    targets: ['#foo'],
                     modifier: 'not'
                 };
                 const r = cm.map(cmd);
-                expect(r).toContainEqual('I.dontSeeElement("foo");' + comment);
+                expect(r).toContainEqual('I.dontSeeElement(\'#foo\');' + comment);
             });
         });
         describe('seeOrientationIs', () => {
@@ -730,6 +804,26 @@ describe('CommandMapperTest', () => {
                 const r = cm.map(cmd);
                 expect(r).toContainEqual('I.see("foo");' + comment);
             });
+            it('value, option inside, target', () => {
+                let cmd = {
+                    action: 'see',
+                    values: ['bar'],
+                    options: ['inside'],
+                    targets: ['#foo'],
+                };
+                const r = cm.map(cmd);
+                expect(r).toContainEqual('I.see("bar", \'#foo\');' + comment);
+            });
+            it('target, option with, value', () => {
+                let cmd = {
+                    action: 'see',
+                    targets: ['#foo'],
+                    options: ['with'],
+                    values: ['bar']
+                };
+                const r = cm.map(cmd);
+                expect(r).toContainEqual('I.see("bar", \'#foo\');' + comment);
+            });
         });
         describe('dontSee', () => {
             it('value, modifier', () => {
@@ -740,6 +834,28 @@ describe('CommandMapperTest', () => {
                 };
                 const r = cm.map(cmd);
                 expect(r).toContainEqual('I.dontSee("foo");' + comment);
+            });
+            it('value, option inside, target, modifier', () => {
+                let cmd = {
+                    action: 'see',
+                    values: ['bar'],
+                    options: ['inside'],
+                    targets: ['#foo'],
+                    modifier: 'not'
+                };
+                const r = cm.map(cmd);
+                expect(r).toContainEqual('I.dontSee("bar", \'#foo\');' + comment);
+            });
+            it('target, option with, value, modifier', () => {
+                let cmd = {
+                    action: 'see',
+                    targets: ['#foo'],
+                    options: ['with'],
+                    values: ['bar'],
+                    modifier: 'not'
+                };
+                const r = cm.map(cmd);
+                expect(r).toContainEqual('I.dontSee("bar", \'#foo\');' + comment);
             });
         });
     });
@@ -756,11 +872,11 @@ describe('CommandMapperTest', () => {
         it('works with one target and one value', () => {
             let cmd = {
                 action: 'select',
-                targets: ['foo'],
+                targets: ['#foo'],
                 values: ['bar']
             };
             const r = cm.map(cmd);
-            expect(r).toContainEqual('I.selectOption("foo", "bar");' + comment);
+            expect(r).toContainEqual('I.selectOption(\'#foo\', "bar");' + comment);
         });
     });
     describe('swipe', () => {
@@ -899,6 +1015,35 @@ describe('CommandMapperTest', () => {
             expect(r).toContainEqual('I.switchToWeb("context");' + comment);
         });
     });
+    describe('switchToNextTab', () => {
+        it('option, number', () => {
+            let cmd = {
+                action: 'switch',
+                options: ['tab'],
+                values: ['2']
+            };
+            const r = cm.map(cmd);
+            expect(r).toContainEqual('I.switchToNextTab(2);' + comment);
+        });
+        it('option', () => {
+            let cmd = {
+                action: 'switch',
+                options: ['next', 'tab']
+            };
+            const r = cm.map(cmd);
+            expect(r).toContainEqual('I.switchToNextTab();' + comment);
+        });
+    });
+    describe('switchToPreviousTab', () => {
+        it('option', () => {
+            let cmd = {
+                action: 'switch',
+                options: ['previous', 'tab']
+            };
+            const r = cm.map(cmd);
+            expect(r).toContainEqual('I.switchToPreviousTab();' + comment);
+        });
+    });
     describe('tap', () => {
         it('value', () => {
             let cmd = {
@@ -911,17 +1056,42 @@ describe('CommandMapperTest', () => {
         it('target', () => {
             let cmd = {
                 action: 'tap',
-                targets: ['foo'],
+                targets: ['#foo'],
             };
             const r = cm.map(cmd);
-            expect(r).toContainEqual('I.tap("foo");' + comment);
+            expect(r).toContainEqual('I.tap(\'#foo\');' + comment);
         });
     });
     describe('uncheck', () => {
         it('target', () => {
             let cmd = {
                 action: 'uncheck',
-                targets: ['foo'],
+                targets: ['#foo'],
+            };
+            const r = cm.map(cmd);
+            expect(r).toContainEqual(`I.uncheckOption('#foo');` + comment);
+        });
+        it('two targets', () => {
+            let cmd = {
+                action: 'uncheck',
+                targets: ['#foo', '#bar'],
+            };
+            const r = cm.map(cmd);
+            expect(r).toContainEqual(`I.uncheckOption('#foo', '#bar');` + comment);
+        });
+        it('value, target', () => {
+            let cmd = {
+                action: 'uncheck',
+                values: ['#foo'],
+                targets: ['#bar'],
+            };
+            const r = cm.map(cmd);
+            expect(r).toContainEqual(`I.uncheckOption("#foo", '#bar');` + comment);
+        });
+        it('value', () => {
+            let cmd = {
+                action: 'uncheck',
+                values: ['foo']
             };
             const r = cm.map(cmd);
             expect(r).toContainEqual('I.uncheckOption("foo");' + comment);
@@ -942,19 +1112,47 @@ describe('CommandMapperTest', () => {
                 let cmd = {
                     action: 'wait',
                     targetTypes: ['url'],
-                    values: ['/foo', '3']
+                    values: ['/foo', '5']
                 };
                 const r = cm.map(cmd);
-                expect(r).toContainEqual('I.waitUrlEquals("/foo", 3);' + comment);
+                expect(r).toContainEqual('I.waitUrlEquals("/foo", 5);' + comment);
+            });
+            it('option, value', () => {
+                let cmd = {
+                    action: 'wait',
+                    options: ['url'],
+                    values: ['/foo']
+                };
+                const r = cm.map(cmd);
+                expect(r).toContainEqual('I.waitUrlEquals("/foo");' + comment);
             });
             it('option, value, number', () => {
                 let cmd = {
                     action: 'wait',
                     options: ['url'],
-                    values: ['/foo', '3']
+                    values: ['/foo', '5']
                 };
                 const r = cm.map(cmd);
-                expect(r).toContainEqual('I.waitUrlEquals("/foo", 3);' + comment);
+                expect(r).toContainEqual('I.waitUrlEquals("/foo", 5);' + comment);
+            });
+            it('option, target', () => {
+                let cmd = {
+                    action: 'wait',
+                    options: ['url'],
+                    targets: ['/foo'],
+                };
+                const r = cm.map(cmd);
+                expect(r).toContainEqual(`I.waitUrlEquals('/foo');` + comment);
+            });
+            it('option, target, number', () => {
+                let cmd = {
+                    action: 'wait',
+                    options: ['url'],
+                    targets: ['/foo'],
+                    values: ['5']
+                };
+                const r = cm.map(cmd);
+                expect(r).toContainEqual(`I.waitUrlEquals('/foo', 5);` + comment);
             });
         });
         describe('waitForVisible', () => {
@@ -962,10 +1160,38 @@ describe('CommandMapperTest', () => {
                 let cmd = {
                     action: 'wait',
                     options: ['visible'],
-                    targets: ['foo']
+                    targets: ['#foo']
                 };
                 const r = cm.map(cmd);
-                expect(r).toContainEqual('I.waitForVisible("foo");' + comment);
+                expect(r).toContainEqual(`I.waitForVisible('#foo');` + comment);
+            });
+            it('option, target, number', () => {
+                let cmd = {
+                    action: 'wait',
+                    options: ['visible'],
+                    targets: ['#foo'],
+                    values: ['5']
+                };
+                const r = cm.map(cmd);
+                expect(r).toContainEqual(`I.waitForVisible('#foo', 5);` + comment);
+            });
+            it('option, value', () => {
+                let cmd = {
+                    action: 'wait',
+                    options: ['visible'],
+                    values: ['#foo']
+                };
+                const r = cm.map(cmd);
+                expect(r).toContainEqual(`I.waitForVisible("#foo");` + comment);
+            });
+            it('option, value, number', () => {
+                let cmd = {
+                    action: 'wait',
+                    options: ['visible'],
+                    values: ['#foo', '5']
+                };
+                const r = cm.map(cmd);
+                expect(r).toContainEqual(`I.waitForVisible("#foo", 5);` + comment);
             });
         });
         describe('waitForInvisible', () => {
@@ -973,10 +1199,38 @@ describe('CommandMapperTest', () => {
                 let cmd = {
                     action: 'wait',
                     options: ['invisible'],
-                    targets: ['foo']
+                    targets: ['#foo']
                 };
                 const r = cm.map(cmd);
-                expect(r).toContainEqual('I.waitForInvisible("foo");' + comment);
+                expect(r).toContainEqual(`I.waitForInvisible('#foo');` + comment);
+            });
+            it('option, target, number', () => {
+                let cmd = {
+                    action: 'wait',
+                    options: ['invisible'],
+                    targets: ['#foo'],
+                    values: ['5']
+                };
+                const r = cm.map(cmd);
+                expect(r).toContainEqual(`I.waitForInvisible('#foo', 5);` + comment);
+            });
+            it('option, value', () => {
+                let cmd = {
+                    action: 'wait',
+                    options: ['invisible'],
+                    values: ['#foo']
+                };
+                const r = cm.map(cmd);
+                expect(r).toContainEqual(`I.waitForInvisible("#foo");` + comment);
+            });
+            it('option, value, number', () => {
+                let cmd = {
+                    action: 'wait',
+                    options: ['invisible'],
+                    values: ['#foo', '5']
+                };
+                const r = cm.map(cmd);
+                expect(r).toContainEqual(`I.waitForInvisible("#foo", 5);` + comment);
             });
         });
         describe('waitForEnabled', () => {
@@ -984,29 +1238,112 @@ describe('CommandMapperTest', () => {
                 let cmd = {
                     action: 'wait',
                     options: ['enabled'],
-                    targets: ['foo']
+                    targets: ['#foo']
                 };
                 const r = cm.map(cmd);
-                expect(r).toContainEqual('I.waitForEnabled("foo");' + comment);
+                expect(r).toContainEqual(`I.waitForEnabled('#foo');` + comment);
+            });
+            it('option, target, number', () => {
+                let cmd = {
+                    action: 'wait',
+                    options: ['enabled'],
+                    targets: ['#foo'],
+                    values: ['5']
+                };
+                const r = cm.map(cmd);
+                expect(r).toContainEqual(`I.waitForEnabled('#foo', 5);` + comment);
+            });
+            it('option, value', () => {
+                let cmd = {
+                    action: 'wait',
+                    options: ['enabled'],
+                    values: ['#foo']
+                };
+                const r = cm.map(cmd);
+                expect(r).toContainEqual(`I.waitForEnabled("#foo");` + comment);
+            });
+            it('option, value, number', () => {
+                let cmd = {
+                    action: 'wait',
+                    options: ['enabled'],
+                    values: ['#foo', '5']
+                };
+                const r = cm.map(cmd);
+                expect(r).toContainEqual(`I.waitForEnabled("#foo", 5);` + comment);
+            });
+        });
+        describe('waitToHide', () => {
+            it('option, target', () => {
+                let cmd = {
+                    action: 'wait',
+                    options: ['hidden'],
+                    targets: ['#foo']
+                };
+                const r = cm.map(cmd);
+                expect(r).toContainEqual(`I.waitToHide('#foo');` + comment);
+            });
+            it('option, target, number', () => {
+                let cmd = {
+                    action: 'wait',
+                    options: ['hidden'],
+                    targets: ['#foo'],
+                    values: ['5']
+                };
+                const r = cm.map(cmd);
+                expect(r).toContainEqual(`I.waitToHide('#foo', 5);` + comment);
+            });
+            it('option, value', () => {
+                let cmd = {
+                    action: 'wait',
+                    options: ['hidden'],
+                    values: ['#foo']
+                };
+                const r = cm.map(cmd);
+                expect(r).toContainEqual(`I.waitToHide("#foo");` + comment);
+            });
+            it('option, value, number', () => {
+                let cmd = {
+                    action: 'wait',
+                    options: ['hidden'],
+                    values: ['#foo', '5']
+                };
+                const r = cm.map(cmd);
+                expect(r).toContainEqual(`I.waitToHide("#foo", 5);` + comment);
             });
         });
         describe('waitForElement', () => {
             it('target', () => {
                 let cmd = {
                     action: 'wait',
-                    targets: ['foo']
+                    targets: ['#foo']
                 };
                 const r = cm.map(cmd);
-                expect(r).toContainEqual('I.waitForElement("foo");' + comment);
+                expect(r).toContainEqual(`I.waitForElement('#foo');` + comment);
             });
             it('target, number', () => {
                 let cmd = {
                     action: 'wait',
-                    targets: ['foo'],
-                    values: ['3']
+                    targets: ['#foo'],
+                    values: ['5']
                 };
                 const r = cm.map(cmd);
-                expect(r).toContainEqual('I.waitForElement("foo", 3);' + comment);
+                expect(r).toContainEqual(`I.waitForElement('#foo', 5);` + comment);
+            });
+            it('value', () => {
+                let cmd = {
+                    action: 'wait',
+                    values: ['#foo']
+                };
+                const r = cm.map(cmd);
+                expect(r).toContainEqual('I.waitForElement("#foo");' + comment);
+            });
+            it('value, number', () => {
+                let cmd = {
+                    action: 'wait',
+                    values: ['#foo', '5']
+                };
+                const r = cm.map(cmd);
+                expect(r).toContainEqual(`I.waitForElement("#foo", 5);` + comment);
             });
         });
         describe('waitForText', () => {
@@ -1017,7 +1354,17 @@ describe('CommandMapperTest', () => {
                     targets: ['foo']
                 };
                 const r = cm.map(cmd);
-                expect(r).toContainEqual('I.waitForText("foo");' + comment);
+                expect(r).toContainEqual(`I.waitForText('foo');` + comment);
+            });
+            it('targetType text, target, number', () => {
+                let cmd = {
+                    action: 'wait',
+                    targetTypes: ['text'],
+                    targets: ['foo'],
+                    values: ['5']
+                };
+                const r = cm.map(cmd);
+                expect(r).toContainEqual(`I.waitForText('foo', 5);` + comment);
             });
             it('option text, value', () => {
                 let cmd = {
@@ -1026,7 +1373,88 @@ describe('CommandMapperTest', () => {
                     values: ['foo']
                 };
                 const r = cm.map(cmd);
-                expect(r).toContainEqual('I.waitForText("foo");' + comment);
+                expect(r).toContainEqual(`I.waitForText("foo");` + comment);
+            });
+            it('option text, value, number', () => {
+                let cmd = {
+                    action: 'wait',
+                    options: ['text'],
+                    values: ['foo', '5']
+                };
+                const r = cm.map(cmd);
+                expect(r).toContainEqual(`I.waitForText("foo", 5);` + comment);
+            });
+            it('option text, value, number, value', () => {
+                let cmd = {
+                    action: 'wait',
+                    options: ['text'],
+                    values: ['foo', '5', '#bar']
+                };
+                const r = cm.map(cmd);
+                expect(r).toContainEqual(`I.waitForText("foo", 5, "#bar");` + comment);
+            });
+            it('option text, value, number, target', () => {
+                let cmd = {
+                    action: 'wait',
+                    options: ['text'],
+                    values: ['foo', '5'],
+                    targets: ['#bar']
+                };
+                const r = cm.map(cmd);
+                expect(r).toContainEqual(`I.waitForText("foo", 5, '#bar');` + comment);
+            });
+            it('option text, target', () => {
+                let cmd = {
+                    action: 'wait',
+                    options: ['text'],
+                    targets: ['bar']
+                };
+                const r = cm.map(cmd);
+                expect(r).toContainEqual(`I.waitForText('bar');` + comment);
+            });
+            it('option text, target, number', () => {
+                let cmd = {
+                    action: 'wait',
+                    options: ['text'],
+                    targets: ['bar'],
+                    values: ['5']
+                };
+                const r = cm.map(cmd);
+                expect(r).toContainEqual(`I.waitForText('bar', 5);` + comment);
+            });
+        });
+        describe('waitForValue', () => {
+            it('option, target, value', () => {
+                let cmd = {
+                    action: 'wait',
+                    options: ['value'],
+                    targets: ['#foo'],
+                    values: ['bar']
+                };
+                const r = cm.map(cmd);
+                expect(r).toContainEqual(`I.waitForValue('#foo', "bar");` + comment);
+            });
+            it('option, target, value, number', () => {
+                let cmd = {
+                    action: 'wait',
+                    options: ['value'],
+                    targets: ['#foo'],
+                    values: ['bar', '5']
+                };
+                const r = cm.map(cmd);
+                expect(r).toContainEqual(`I.waitForValue('#foo', "bar", 5);` + comment);
+            });
+        });
+        describe('waitNumberOfVisibleElements', () => {
+            it('options, target, number', () => {
+                let cmd = {
+                    action: 'wait',
+                    options: ['visible', 'elements'],
+                    targets: ['#foo'],
+                    values: ['7']
+                };
+                const r = cm.map(cmd);
+                expect(r).toContainEqual(`I.waitNumberOfVisibleElements('#foo', 7);` + comment);
             });
         });
         describe('wait', () => {

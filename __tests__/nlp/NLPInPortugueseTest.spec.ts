@@ -358,6 +358,51 @@ describe( 'NLPInPortugueseTest', () => {
                 let r: NLPResult;
                 results.push( r = recognizeInTestCase( 'eu clico em "//*[@id=\\"left-panel\\"]/nav/ul/li[2]/a"' ) );
                 shouldHaveTestCaseEntities( results, [ UI_ACTION, VALUE ] );
+                expect( r.entities.find( e => e.entity === VALUE ).value ).toEqual( '//*[@id=\\"left-panel\\"]/nav/ul/li[2]/a' );
+            } );
+
+            it( 'click with long css selector', () => {
+                let results = [];
+                let r: NLPResult;
+                results.push( r = recognizeInTestCase( 'eu clico em "#js-repo-pjax-container > div.container.new-discussion-timeline.experiment-repo-nav > div.repository-content > div.release-show > div > div.release-body.commit.open.float-left > div.my-4 > h2"' ) );
+                shouldHaveTestCaseEntities( results, [ UI_ACTION, VALUE ] );
+                expect( r.entities.find( e => e.entity === VALUE ).value ).toEqual( '#js-repo-pjax-container > div.container.new-discussion-timeline.experiment-repo-nav > div.repository-content > div.release-show > div > div.release-body.commit.open.float-left > div.my-4 > h2' );
+            } );
+
+            it( 'see with long escaped css selector as ui literal', () => {
+                let results = [];
+                let r: NLPResult;
+                results.push( r = recognizeInTestCase( 'eu vejo <#js-repo-pjax-container \> div.container.new-discussion-timeline.experiment-repo-nav \> div.repository-content \> div.release-show \> div \> div.release-body.commit.open.float-left \> div.my-4 \> h2>' ) );
+                shouldHaveTestCaseEntities( results, [ UI_ACTION, UI_LITERAL ] );
+                expect( r.entities.find( e => e.entity === UI_LITERAL ).value ).toEqual(
+                    '#js-repo-pjax-container > div.container.new-discussion-timeline.experiment-repo-nav > div.repository-content > div.release-show > div > div.release-body.commit.open.float-left > div.my-4 > h2' );
+            } );
+
+            it( 'drag and drop with with long escaped css selector as ui literals', () => {
+                let results = [];
+                let r: NLPResult;
+                results.push( r = recognizeInTestCase(
+                    'eu arrasto <#js-repo-pjax-container \> div.container \> div h2> para <foo \> bar \> zoo>' ) );
+                shouldHaveTestCaseEntities( results, [ UI_ACTION, UI_LITERAL, UI_LITERAL ] );
+
+                let found = r.entities.filter( e => e.entity === UI_LITERAL );
+                expect( found[ 0 ].value ).toEqual( '#js-repo-pjax-container \> div.container \> div h2' );
+                expect( found[ 1 ].value ).toEqual( 'foo \> bar \> zoo' );
+            } );
+
+            it( 'fill with ui literal and long value', () => {
+
+                let results = [];
+                let r: NLPResult;
+                results.push( r = recognizeInTestCase(
+                    'Quando eu informo <Nome> com "kz[RU8\'$}*Nxzk)tdc/%56Qy\\v,7hkkK-(@X ]\\"k\\FQxj%rF=PNzAP:\'%@Tp9IY4[yr,03OCd1BTY5z5RW\\"Z1Qy_4#e`1aE_6)U|:]bgP^-sb\\>|-wSBA4dn}B.9OGB?uMpT`xd8G7I~=+*,T?nUmL2!EIXA(}ywY*CW2Hb*6`E{I).B`n`eAIx0]hjz#,T;sE|pPWxM0`92`h#Iw3jXp *z*ERq"'
+                ) );
+
+                shouldHaveTestCaseEntities( results, [ UI_LITERAL, VALUE ] );
+                let uiLiterals = r.entities.filter( e => e.entity === UI_LITERAL );
+                let values = r.entities.filter( e => e.entity === VALUE );
+                expect( uiLiterals[ 0 ].value = 'Nome' );
+                expect( values[ 0 ].value = 'kz[RU8\'$}*Nxzk)tdc/%56Qy\\v,7hkkK-(@X ]\"k\\FQxj%rF=PNzAP:\'%@Tp9IY4[yr,03OCd1BTY5z5RW\"Z1Qy_4#e`1aE_6)U|:]bgP^-sb>|-wSBA4dn}B.9OGB?uMpT`xd8G7I~=+*,T?nUmL2!EIXA(}ywY*CW2Hb*6`E{I).B`n`eAIx0]hjz#,T;sE|pPWxM0`92`h#Iw3jXp *z*ERq' );
             } );
 
         });

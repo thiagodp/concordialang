@@ -7,7 +7,6 @@ const NodeSentenceRecognizer_1 = require("./NodeSentenceRecognizer");
 const UIElement_1 = require("../ast/UIElement");
 const NLPException_1 = require("./NLPException");
 const Entities_1 = require("./Entities");
-const Symbols_1 = require("../req/Symbols");
 const ValueTypeDetector_1 = require("../util/ValueTypeDetector");
 const TypeChecking_1 = require("../util/TypeChecking");
 /**
@@ -70,8 +69,9 @@ class UIPropertyRecognizer {
                     case Entities_1.Entities.NUMBER:
                         uiv = new UIElement_1.EntityValue(e.entity, ValueTypeDetector_1.adjustValueToTheRightType(e.value));
                         break;
+                    // case Entities.VALUE_LIST    : uiv = new EntityValue( e.entity, _this.makeValueList( e.value ) ); break;
                     case Entities_1.Entities.VALUE_LIST:
-                        uiv = new UIElement_1.EntityValue(e.entity, _this.makeValueList(e.value));
+                        uiv = new UIElement_1.EntityValue(e.entity, e.value);
                         break;
                     case Entities_1.Entities.QUERY:
                         uiv = new UIElement_1.EntityValue(e.entity, e.value);
@@ -103,12 +103,6 @@ class UIPropertyRecognizer {
     }
     buildSyntaxRules() {
         return (new RuleBuilder_1.RuleBuilder()).build(SyntaxRules_1.UI_PROPERTY_SYNTAX_RULES, SyntaxRules_1.DEFAULT_UI_PROPERTY_SYNTAX_RULE);
-    }
-    makeValueList(content) {
-        return content.trim()
-            .substring(1, content.length - 1) // removes '[' and ']'
-            .split(Symbols_1.Symbols.VALUE_SEPARATOR) // split values
-            .map(v => ValueTypeDetector_1.adjustValueToTheRightType(v)); // convert type if needed
     }
 }
 exports.UIPropertyRecognizer = UIPropertyRecognizer;

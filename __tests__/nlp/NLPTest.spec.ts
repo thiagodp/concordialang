@@ -31,8 +31,8 @@ describe( 'NLPTest', () => {
             ).toBeTruthy();
         } else {
             expect( r.entities ).toHaveLength( 1 );
-            expect( r.entities[ 0 ].entity ).toBe( expectedEntity );
-            expect( r.entities[ 0 ].value ).toBe( expected );
+            expect( r.entities[ 0 ].entity ).toEqual( expectedEntity );
+            expect( r.entities[ 0 ].value ).toEqual( expected );
         }
         return r;
     }
@@ -99,6 +99,13 @@ describe( 'NLPTest', () => {
 
                 expect( r.entities[ 1 ].entity ).toBe( Entities.VALUE );
                 expect( r.entities[ 1 ].value ).toBe( 'bar' );
+            } );
+
+            it( 'starts with a number', () => {
+                let r: NLPResult = nlp.recognize( 'en', ' "1foo" ' );
+                expect( r.entities ).toHaveLength( 1 );
+                expect( r.entities[ 0 ].entity ).toBe( Entities.VALUE );
+                expect( r.entities[ 0 ].value ).toBe( '1foo' );
             } );
 
         });
@@ -238,17 +245,26 @@ describe( 'NLPTest', () => {
                     recogLiteral( ' <~foo> ', '~foo' );
                 } );
 
-            } );
+                it( 'long, escaped CSS selectors', () => {
+                    recogLiteral(
+                        ' <#js-repo-pjax-container \> div.container.new-discussion-timeline.experiment-repo-nav \> div.repository-content \> div.release-show \> div \> div.release-body.commit.open.float-left \> div.my-4 \> h2>',
+                        '#js-repo-pjax-container \> div.container.new-discussion-timeline.experiment-repo-nav \> div.repository-content \> div.release-show \> div \> div.release-body.commit.open.float-left \> div.my-4 \> h2'
+                    );
+                } );
 
-
-            describe( 'does not recognize', () => {
+                it( 'xpath with brackets, quotes, at', () => {
+                    recogLiteral(
+                        '<//*[@id="event-1684412635"]/span[2]/a>',
+                        '//*[@id="event-1684412635"]/span[2]/a'
+                    );
+                } );
 
                 it( 'number', () => {
-                    recogLiteral( ' <1> ', null );
+                    recogLiteral( ' <1> ', '1' );
                 } );
 
                 it( 'starting with a number', () => {
-                    recogLiteral( ' <1a> ', null );
+                    recogLiteral( ' <1a> ', '1a' );
                 } );
 
             } );
@@ -320,7 +336,7 @@ describe( 'NLPTest', () => {
 
         describe( 'value list', () => {
 
-            function recogValueList( text: string, expected: string | null, debug: boolean = false ): NLPResult | null {
+            function recogValueList( text: string, expected: any, debug: boolean = false ): NLPResult | null {
                 return recog( text, expected, Entities.VALUE_LIST, debug );
             }
 
@@ -330,21 +346,30 @@ describe( 'NLPTest', () => {
             } );
 
             it( 'single number', () => {
-                recogValueList( ' [1] ', '[1]' );
+                recogValueList(
+                    ' [1] ',
+                    [1]
+                );
             } );
 
             it( 'numbers', () => {
-                recogValueList( ' [1, 2] ', '[1, 2]' );
+                recogValueList(
+                    ' [1, 2] ',
+                    [1, 2]
+                );
             } );
 
             it( 'strings', () => {
-                recogValueList( ' [ "alice", "bob" ] ', '[ "alice", "bob" ]' );
+                recogValueList(
+                    ' [ "alice", "bob" ] ',
+                    ["alice", "bob"]
+                );
             } );
 
             it( 'strings with escaped strings', () => {
                 recogValueList(
-                    ' [ "alice say \\\"hello\\\"" ] ',
-                    '[ "alice say \\\"hello\\\"" ]'
+                    ' [ "alice say \\\"hello\\\" world" ] ',
+                    ["alice say \\\"hello\\\" world"]
                 );
             } );
 
@@ -352,12 +377,12 @@ describe( 'NLPTest', () => {
 
                 recogValueList(
                     ' [ "alice", 1, "bob", 2 ] ',
-                    '[ "alice", 1, "bob", 2 ]'
+                    ["alice", 1, "bob", 2]
                 );
 
                 recogValueList(
                     ' [ 1, "alice", 2, "bob", 3, 4, "bob", "joe" ] ',
-                    '[ 1, "alice", 2, "bob", 3, 4, "bob", "joe" ]'
+                    [1, "alice", 2, "bob", 3, 4, "bob", "joe"]
                 );
 
             } );

@@ -1,3 +1,5 @@
+import { dirname, join } from 'path';
+
 /**
  * Configuration maker
  */
@@ -8,18 +10,48 @@ export class ConfigMaker {
      *
      * @param filter Filter for test files.
      * @param output Output folder. Default is "./output".
+     * @param outputFile Output report file. Default is 'output.json'.
      */
     makeBasicConfig(
         filter: string = 'test/**/*.js',
-        output: string = './output'
+        output: string = './output',
+        outputFile: string = 'output.json'
     ) {
         return {
             "tests": filter,
-            "timeout": 10000,
+            "smartWait": 5000,
+            "timeouts": {
+                "script": 60000,
+                "page load": 10000
+            },
             "output": output,
             "helpers": {},
             "bootstrap": false,
-            "mocha": {},
+            "mocha": {
+                reporterOptions: {
+
+                    "codeceptjs-cli-reporter": {
+                        stdout: "-",
+                        options: {
+                            steps: true
+                        }
+                    },
+
+                    "json": {
+                        stdout: join( output, outputFile )
+                    }
+
+                    // "mochawesome": {
+                    //     stdout: "-",
+                    //     options: {
+                    //         reportDir: output,
+                    //         reportFilename: "report",
+                    //         uniqueScreenshotNames: true,
+                    //         timestamp: true
+                    //     }
+                    // },
+                }
+            }
         };
     }
 
@@ -38,7 +70,8 @@ export class ConfigMaker {
         let helpers = this.ensureHelpersProperty( config );
         helpers[ "WebDriverIO" ] = {
             browser: browser,
-            url: url
+            url: url,
+            windowSize: "maximize"
         };
     }
 
@@ -128,30 +161,6 @@ export class ConfigMaker {
         let helpers = this.ensureHelpersProperty( config );
         const property = this.getCmdHelperProperty();
         return ! helpers[ property ] ? false : true;
-    }
-
-    /**
-     * Creates a configuration for the Mocha reporter, useful for overriding
-     * the current CodeceptJS configuration.
-     *
-     * @param outputFile File that will contain the test results.
-     */
-    makeMochaConfig( outputFile: string ): any {
-        return {
-            mocha: {
-                reporterOptions: {
-                    "codeceptjs-cli-reporter": {
-                        stdout: "-",
-                        options: {
-                            steps: true
-                        }
-                    },
-                    json: {
-                        stdout: outputFile
-                    }
-                }
-            }
-        };
     }
 
     /**

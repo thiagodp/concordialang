@@ -48,7 +48,7 @@ export class EnglishKeywordDictionary implements KeywordDictionary {
 
     language: string[] = [ 'language' ];
 
-    feature: string[] = [ 'feature' ];
+    feature: string[] = [ 'feature', 'story', 'user story' ];
     background: string[] = [ 'background' ];
     scenario: string[] = [ 'scenario' ];
 

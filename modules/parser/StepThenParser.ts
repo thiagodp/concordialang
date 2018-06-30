@@ -19,7 +19,8 @@ export class StepThenParser implements NodeParser< StepThen > {
         const allowedPriorNodes = [
             NodeTypes.STEP_GIVEN,
             NodeTypes.STEP_WHEN,
-            NodeTypes.STEP_AND
+            NodeTypes.STEP_AND,
+            NodeTypes.STEP_THEN
         ];
 
         if ( ! it.hasPrior() || allowedPriorNodes.indexOf( it.spyPrior().nodeType ) < 0 ) {

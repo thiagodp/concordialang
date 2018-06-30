@@ -95,7 +95,8 @@ export class UIPropertyRecognizer {
                 switch ( e.entity ) {
                     case Entities.VALUE         : ; // go to next
                     case Entities.NUMBER        : uiv = new EntityValue( e.entity, adjustValueToTheRightType( e.value ) ); break;
-                    case Entities.VALUE_LIST    : uiv = new EntityValue( e.entity, _this.makeValueList( e.value ) ); break;
+                    // case Entities.VALUE_LIST    : uiv = new EntityValue( e.entity, _this.makeValueList( e.value ) ); break;
+                    case Entities.VALUE_LIST    : uiv = new EntityValue( e.entity, e.value ); break;
                     case Entities.QUERY         : uiv = new EntityValue( e.entity, e.value ); break;
                     case Entities.UI_ELEMENT    : uiv = new EntityValue( e.entity, e.value ); break;
                     case Entities.UI_LITERAL    : uiv = new EntityValue( e.entity, e.value ); break;
@@ -127,11 +128,11 @@ export class UIPropertyRecognizer {
         return ( new RuleBuilder() ).build( UI_PROPERTY_SYNTAX_RULES, DEFAULT_UI_PROPERTY_SYNTAX_RULE );
     }
 
-    public makeValueList( content: string ): any[] {
-        return content.trim()
-            .substring( 1, content.length - 1 ) // removes '[' and ']'
-            .split( Symbols.VALUE_SEPARATOR )   // split values
-            .map( v => adjustValueToTheRightType( v ) ); // convert type if needed
-    }
+    // public makeValueList( content: string ): any[] {
+    //     return content.trim()
+    //         .substring( 1, content.length - 1 ) // removes '[' and ']'
+    //         .split( Symbols.VALUE_SEPARATOR )   // split values
+    //         .map( v => adjustValueToTheRightType( v ) ); // convert type if needed
+    // }
 
 }

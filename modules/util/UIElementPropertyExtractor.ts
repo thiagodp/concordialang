@@ -30,7 +30,12 @@ export class UIElementPropertyExtractor {
         const item: UIProperty | null = this.extractProperty( uie, UIPropertyTypes.ID );
         if ( isDefined( item ) ) {
             // Find an entity "value" in the NLP result
-            const entity = item.nlpResult.entities.find( ( e: NLPEntity ) => Entities.VALUE === e.entity );
+            let entity = item.nlpResult.entities.find( ( e: NLPEntity ) => Entities.VALUE === e.entity );
+
+            if ( ! isDefined( entity ) ) { // Let's try as command
+                entity = item.nlpResult.entities.find( ( e: NLPEntity ) => Entities.COMMAND === e.entity );
+            }
+
             if ( isDefined( entity ) ) {
                 return entity.value;
             }

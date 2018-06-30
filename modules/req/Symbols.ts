@@ -39,4 +39,5 @@ export abstract class Symbols {
     // wrappers
 
     static VALUE_WRAPPER = '"';
+    static COMMAND_WRAPPER = "'";
 }

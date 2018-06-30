@@ -71,16 +71,25 @@ class DuplicationChecker {
      * will return `{ 'foo': [ { id: 1, name: 'foo' }, { id: 2, name: 'foo' } ] }`.
      *
      * @param items Items to compare
-     * @param propertyToCompare Property to compare
+     * @param propertyOrExtractFn Property to extract the value or function to extract the value.
      * @return map
      */
-    mapDuplicates(items, propertyToCompare) {
+    mapDuplicates(items, propertyOrExtractFn) {
         let map = {};
+        const isString = typeof propertyOrExtractFn === 'string';
+        const prop = typeof propertyOrExtractFn === 'string' ? propertyOrExtractFn : '';
+        const fn = typeof propertyOrExtractFn === 'function' ? propertyOrExtractFn : () => { return ''; };
         for (let item of items) {
-            if (!item[propertyToCompare]) {
-                continue;
+            let value;
+            if (isString) {
+                if (!item[prop]) {
+                    continue;
+                }
+                value = item[prop];
             }
-            let value = item[propertyToCompare];
+            else {
+                value = fn(item);
+            }
             if (!map[value]) {
                 map[value] = [item];
             }
@@ -103,13 +112,15 @@ class DuplicationChecker {
      * @param nodes Nodes to check.
      * @param errors Errors found.
      * @param nodeName Node name to compose the exception message.
+     * @param propertyOrExtractFn Property to extract the value or function to extract the value. Optional. Default is 'name'.
+     *
      * @returns A object map in the format returned by `mapDuplicates()`
      */
-    checkDuplicatedNamedNodes(nodes, errors, nodeName) {
+    checkDuplicatedNamedNodes(nodes, errors, nodeName, propertyOrExtractFn = 'name') {
         if (nodes.length < 1) {
             return;
         }
-        const map = this.mapDuplicates(nodes, 'name');
+        const map = this.mapDuplicates(nodes, propertyOrExtractFn);
         for (let prop in map) {
             let duplicatedNodes = map[prop];
             let locations = duplicatedNodes.map(node => node.location);
@@ -122,7 +133,7 @@ class DuplicationChecker {
         return chalk_1.default.white(locations.map(this.makeLocationString).join(', '));
     }
     makeLocationString(loc) {
-        return "\n  " + logSymbols.error + " (" + loc.line + ',' + loc.column + ') ' + loc.filePath || '';
+        return "\n  " + logSymbols.error + " (" + loc.line + ',' + loc.column + ')' + (!loc.filePath ? '' : ' ' + loc.filePath);
     }
 }
 exports.DuplicationChecker = DuplicationChecker;

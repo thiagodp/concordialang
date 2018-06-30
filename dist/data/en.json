@@ -57,9 +57,11 @@
             },
 
             "ui_action": {
+                "accept": [ "accept" ],
                 "amOn": [ "am on", "am in", "am at" ],
                 "append": [ "append", "add", "insert" ],
                 "attachFile": [ "attach the file", "add the file", "insert the file", "overwrite the file" ],
+                "cancel": [ "cancel", "reject", "dismiss" ],
                 "check": [ "check" ],
                 "clear": [ "clear" ],
                 "click": [ "click", "activate", "trigger", "set" ],
@@ -70,6 +72,7 @@
                 "drag": [ "drag" ],
                 "fill": [ "fill", "enter", "inform", "type", "give" ],
                 "hide": [ "hide", "oculto" ],
+                "install": [ "install" ],
                 "maximize": [ "maximize" ],
                 "move": [ "move" ],
                 "mouseOut": [ "move the mouse out", "remove the mouse" ],
@@ -93,6 +96,7 @@
                 "switch": [ "switch", "change to" ],
                 "tap": [ "tap", "touch" ],
                 "uncheck": [ "uncheck" ],
+                "uninstall": [ "uninstall" ],
                 "wait": [ "wait" ]
             },
 
@@ -133,9 +137,11 @@
             },
 
             "ui_action_option": {
+                "alert": [ "alert" ],
                 "app": [ "application", "app" ],
                 "checked": [ "checked" ],
                 "command": [ "command" ],
+                "confirm": [ "confirmation", "confirm" ],
                 "cookie": [ "cookie" ],
                 "currentActivity": [ "current activity" ],
                 "currentPage": [ "current page", "page" ],
@@ -144,9 +150,11 @@
                 "device": [ "device", "phone", "tablet" ],
                 "disabled": [ "disabled" ],
                 "down": [ "down" ],
+                "elements": [ "elements", "items" ],
                 "enabled": [ "enabled" ],
                 "field": [ "field" ],
                 "file": [ "file" ],
+                "hide": [ "hide" ],
                 "hidden": [ "hidden" ],
                 "inside": [ "inside", "in" ],
                 "installed": [ "installed" ],
@@ -159,19 +167,26 @@
                 "mobileName": [ "mobile name" ],
                 "native": [ "native" ],
                 "newTab": [ "new tab" ],
+                "next": [ "next" ],
                 "notifications": [ "notifications", "notification", "notification panel" ],
                 "otherTabs": [ "other tabs" ],
                 "orientation": [ "orientation" ],
+                "popup": [ "popup" ],
                 "portrait": [ "portrait" ],
+                "previous": [ "previous" ],
+                "prompt": [ "prompt" ],
                 "right": [ "right" ],
                 "script": [ "script" ],
                 "second": [ "second", "seconds" ],
                 "slowly": [ "slowly", "leisurely" ],
+                "tab": [ "tab" ],
                 "title": [ "title" ],
                 "unchecked": [ "unchecked" ],
+                "uninstalled": [ "uninstalled" ],
                 "unlocked": [ "unlocked" ],
                 "up": [ "up" ],
                 "url": [ "url", "address", "ip", "domain", "website", "site", "page" ],
+                "value": [ "value" ],
                 "visible": [ "visible" ],
                 "web": [ "web" ],
                 "window": [ "window" ],
@@ -187,7 +202,7 @@
         "ui": {
 
             "ui_property": {
-                "id": [ "id", "identification" ],
+                "id": [ "id", "identification", "identificator" ],
                 "type": [ "type" ],
                 "editable": [ "editable" ],
                 "datatype": [ "data type" ],
@@ -277,6 +292,10 @@
                 "{ui_action} {value} {ui_literal}",
                 "{ui_action} {number} {ui_literal}",
                 "{ui_action} {constant} {ui_literal}",
+
+                "{ui_action} {value} {ui_literal} {ui_action_option}",
+                "{ui_action} {number} {ui_literal} {ui_action_option}",
+                "{ui_action} {constant} {ui_literal} {ui_action_option}",
 
                 "{ui_action} {ui_element_type} {value}",
                 "{ui_action} {ui_element_type} {number}",

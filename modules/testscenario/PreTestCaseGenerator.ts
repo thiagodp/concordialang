@@ -330,7 +330,7 @@ export class PreTestCaseGenerator {
      */
     fillUILiteralsWithoutValueInSingleStep( step: Step, keywords: KeywordDictionary ): Step[] {
 
-        const fillEntity = this.extractFillEntity( step );
+        const fillEntity = this.extractDataInputActionEntity( step );
 
         if ( null === fillEntity || this.hasValue( step ) || this.hasNumber( step ) ) {
             return [ step ];
@@ -381,7 +381,7 @@ export class PreTestCaseGenerator {
             let comment = null;
 
             if ( Entities.UI_LITERAL === entity.entity ) {
-                sentence += Symbols.UI_LITERAL_PREFIX + entity.string + Symbols.UI_LITERAL_SUFFIX +
+                sentence += Symbols.UI_LITERAL_PREFIX + entity.value + Symbols.UI_LITERAL_SUFFIX +
                     ' ' + keywordWith + ' ' +
                     Symbols.VALUE_WRAPPER + this.randomString() + Symbols.VALUE_WRAPPER;
 
@@ -459,7 +459,7 @@ export class PreTestCaseGenerator {
 
             if ( onlyFillSteps ) {
                 // Ignore steps with 'fill' entity
-                const fillEntity = this.extractFillEntity( step );
+                const fillEntity = this.extractDataInputActionEntity( step );
                 if ( isDefined( fillEntity ) ) {
                     continue;
                 }
@@ -534,8 +534,8 @@ export class PreTestCaseGenerator {
     ): [ Step[], Step[] ] {  // [ steps, oracles ]
 
 
-        const fillEntity = this.extractFillEntity( step );
-        if ( null === fillEntity || this.hasValue( step ) || this.hasNumber( step ) ) {
+        const dataInputActionEntity = this.extractDataInputActionEntity( step );
+        if ( null === dataInputActionEntity || this.hasValue( step ) || this.hasNumber( step ) ) {
 
             let steps = [ step ];
             this.replaceUIElementsWithUILiterals( steps, language, langContent.keywords, ctx, false );
@@ -630,7 +630,7 @@ export class PreTestCaseGenerator {
             }
 
             // Generate the sentence
-            let sentence = prefix + ' ' + keywordI + ' ' + fillEntity.string + ' ' +
+            let sentence = prefix + ' ' + keywordI + ' ' + dataInputActionEntity.string + ' ' +
                 Symbols.UI_LITERAL_PREFIX + uieLiteral + Symbols.UI_LITERAL_SUFFIX +
                 ' ' + keywordWith + ' ' +
                 ( 'number' === typeof formattedValue
@@ -803,13 +803,16 @@ export class PreTestCaseGenerator {
     // OTHER
     //
 
-    extractFillEntity( step: Step ): NLPEntity | null {
+    extractDataInputActionEntity( step: Step ): NLPEntity | null {
         return step.nlpResult.entities
-            .find( e => e.entity === Entities.UI_ACTION && this.isFillAction( e.value ) ) || null;
+            .find( e => e.entity === Entities.UI_ACTION && this.isDataInputAction( e.value ) ) || null;
     }
 
-    isFillAction( action: string ): boolean {
-        return 'fill' === action; // TODO: refactor
+    isDataInputAction( action: string ): boolean {
+        return Actions.FILL === action ||
+            Actions.SELECT === action ||
+            Actions.APPEND === action ||
+            Actions.ATTACH_FILE === action;
     }
 
     hasValue( step: Step ): boolean {

@@ -1,12 +1,11 @@
 import { Document } from "../ast/Document";
 import { TestCase } from "../ast/TestCase";
-import { parse, relative, join, dirname, basename, normalize } from "path";
+import { parse, resolve, relative, join, dirname, basename, normalize } from "path";
 import { FileInfo } from "../ast/FileInfo";
 import { Language } from "../ast/Language";
 import * as deepcopy from 'deepcopy';
 import { Import } from "../ast/Import";
 import { NodeTypes } from "../req/NodeTypes";
-import { resolve } from "url";
 
 
 /**

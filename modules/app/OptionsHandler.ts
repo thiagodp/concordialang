@@ -86,7 +86,7 @@ export class OptionsHandler {
         if ( ! options.seed ) {
             options.isGeneratedSeed = true;
             options.seed =
-                LocalDateTime.now().format( DateTimeFormatter.ofPattern( 'yyyy-MM-dd HH:mm' ) ).toString();
+                LocalDateTime.now().format( DateTimeFormatter.ofPattern( 'yyyy-MM-dd HH:mm:ss' ) ).toString();
         }
 
         const shouldShow = ! options.help && ! options.about && ! options.version && ! options.newer

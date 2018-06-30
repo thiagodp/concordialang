@@ -324,18 +324,31 @@ class Options {
         // PROCESSING
         this.saveConfig = TypeChecking_1.isDefined(obj.saveConfig);
         this.verbose = TypeChecking_1.isDefined(obj.verbose);
-        this.stopOnTheFirstError = TypeChecking_1.isDefined(obj.failFast);
+        this.stopOnTheFirstError = true === obj.failFast || true === obj.stopOnTheFirstError;
         const justSpec = TypeChecking_1.isDefined(obj.justSpec) || TypeChecking_1.isDefined(obj.justSpecification);
         const justTestCase = TypeChecking_1.isDefined(obj.justTestCase) || TypeChecking_1.isDefined(obj.justTestCases);
         const justScript = TypeChecking_1.isDefined(obj.justScript) || TypeChecking_1.isDefined(obj.justScripts);
         const justRun = TypeChecking_1.isDefined(obj.justRun);
         const justResult = TypeChecking_1.isDefined(obj.justResult) || TypeChecking_1.isDefined(obj.justResults);
         // compare to false is important because meow transforms no-xxx to xxx === false
-        const noSpec = false === obj.spec || false === obj.specification;
-        const noTestCase = false === obj.testCase || false === obj.testCases || false === obj.testcase;
-        const noScript = false === obj.script || false === obj.scripts || false === obj.testScript || false == obj.testscript;
-        const noRun = false === obj.run || false === obj.execute;
-        const noResult = false === obj.result || false === obj.results;
+        const noSpec = false === obj.compileSpecification ||
+            false === obj.spec ||
+            false === obj.specification;
+        const noTestCase = false === obj.generateTestCase ||
+            false === obj.testCase ||
+            false === obj.testCases ||
+            false === obj.testcase;
+        const noScript = false === obj.generateScript ||
+            false === obj.script ||
+            false === obj.scripts ||
+            false === obj.testScript ||
+            false == obj.testscript;
+        const noRun = false == obj.executeScript ||
+            false === obj.run ||
+            false === obj.execute;
+        const noResult = false === obj.analyzeResult ||
+            false === obj.result ||
+            false === obj.results;
         // Adjust flags
         this.generateTestCase = (!noTestCase || justTestCase)
             && (!justScript && !justRun && !justResult);
@@ -534,15 +547,21 @@ class Options {
      * Returns an object that can be saved.
      */
     export() {
-        let newOptions = new Options(this.appPath, this.processPath);
+        const newOptions = new Options(this.appPath, this.processPath);
         let obj = {};
+        let paramsToIgnore = this.PARAMS_TO_IGNORE.slice(0); // copy
+        // Individual cases
+        if (this.isGeneratedSeed) {
+            paramsToIgnore.push('seed');
+        }
+        // Convert
         for (let p in this) {
             let pType = typeof p;
             if ('function' === pType) {
                 // console.log( 'function', p );
                 continue;
             }
-            if (this.PARAMS_TO_IGNORE.indexOf(p) >= 0) {
+            if (paramsToIgnore.indexOf(p) >= 0) {
                 // console.log( 'ignored property', p );
                 continue;
             }

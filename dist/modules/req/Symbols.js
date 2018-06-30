@@ -34,4 +34,5 @@ Symbols.VALUE_SEPARATOR = ',';
 Symbols.FEATURE_TO_UI_ELEMENT_SEPARATOR = ':';
 // wrappers
 Symbols.VALUE_WRAPPER = '"';
+Symbols.COMMAND_WRAPPER = "'";
 exports.Symbols = Symbols;

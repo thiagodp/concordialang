@@ -136,9 +136,9 @@ describe('TestScriptGeneratorTest', () => {
 
             Scenario("successful login | finishes successfully with valid values", (I) => {
                 I.see("Login"); // (40,1)
-                I.fillField("#username", "bob"); // (41,1)
-                I.fillField("#password", "b0bp4s$"); // (42,1)
-                I.click("#enter"); // (43,1)
+                I.fillField('#username', "bob"); // (41,1)
+                I.fillField('#password', "b0bp4s$"); // (42,1)
+                I.click('#enter'); // (43,1)
             });
         `;
         compare(testCase, expected);
@@ -232,16 +232,16 @@ describe('TestScriptGeneratorTest', () => {
 
             Scenario("successful login | finishes successfully with valid values", (I) => {
                 I.see("Login"); // (41,1)
-                I.fillField("#username", "bob"); // (42,1)
-                I.fillField("#password", "b0bp4s$"); // (43,1)
-                I.click("#enter"); // (44,1)
+                I.fillField('#username', "bob"); // (42,1)
+                I.fillField('#password', "b0bp4s$"); // (43,1)
+                I.click('#enter'); // (44,1)
             });
 
             Scenario("unsuccessful login | finishes unsuccessfully with invalid values", (I) => {
                 I.see("Login"); // (41,1)
-                I.fillField("#username", "kdsldhçs dwd"); // (42,1)
-                I.fillField("#password", "d0d s98 23923 2 32$"); // (43,1)
-                I.click("#enter"); // (44,1)
+                I.fillField('#username', "kdsldhçs dwd"); // (42,1)
+                I.fillField('#password', "d0d s98 23923 2 32$"); // (43,1)
+                I.click('#enter'); // (44,1)
             });
         `;
         compare(testCase, expected);

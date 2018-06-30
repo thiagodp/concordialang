@@ -14,7 +14,8 @@ class StepThenParser {
         const allowedPriorNodes = [
             NodeTypes_1.NodeTypes.STEP_GIVEN,
             NodeTypes_1.NodeTypes.STEP_WHEN,
-            NodeTypes_1.NodeTypes.STEP_AND
+            NodeTypes_1.NodeTypes.STEP_AND,
+            NodeTypes_1.NodeTypes.STEP_THEN
         ];
         if (!it.hasPrior() || allowedPriorNodes.indexOf(it.spyPrior().nodeType) < 0) {
             let e = new SyntaticException_1.SyntaticException('The "' + node.nodeType + '" clause must be declared after: ' + allowedPriorNodes.join(', '), node.location);

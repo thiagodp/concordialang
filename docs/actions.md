@@ -6,6 +6,28 @@
 
 Translations: [Português](actions-pt.md) 🌎
 
+## `accept`
+
+### accept + alert
+```gherkin
+When I accept the alert
+```
+
+### accept + confirm
+```gherkin
+When I accept the confirmation
+```
+
+### accept + popup
+```gherkin
+When I accept the popup
+```
+
+### accept + prompt
+```gherkin
+When I accept the prompt
+```
+
 ## `amOn`
 
 ### amOn + value
@@ -29,10 +51,34 @@ When I append 100 to {Bar}
 
 ## `attachFile`
 
+This action selects the given file and confirm (*e.g.*, clicks OK).
+
 ### attach + file + value + target
 ```gherkin
 When I attach the file "/path/to/file" to {Foo}
   and I attach the file "/path/to/file" to <#bar>
+```
+
+## `cancel`
+
+### cancel + alert
+```gherkin
+When I cancel the alert
+```
+
+### cancel + confirm
+```gherkin
+When I cancel the confirmation
+```
+
+### cancel + popup
+```gherkin
+When I cancel the popup
+```
+
+### cancel + prompt
+```gherkin
+When I cancel the prompt
 ```
 
 ## `check`
@@ -89,6 +135,7 @@ When I close the app
 
 ## `connect`
 
+The next sentence is for [Test Events](language/en.md#test-events) only:
 ### connect + database
 ```
 When I connect to the database [TestDB]
@@ -96,6 +143,7 @@ When I connect to the database [TestDB]
 
 ## `disconnect`
 
+The next sentence is for [Test Events](language/en.md#test-events) only:
 ### disconnect + database
 ```
 When I disconnect from the database [TestDB]
@@ -190,11 +238,47 @@ When I open the notifications panel
 
 ## `press`
 
+Press a key or key combination, separated by comma.
+
 ### press + value
 ```gherkin
 When I press "Enter"
-  and I press "Ctrl", "Alt", "Del"
+  and I press "Control", "Alt", "Delete"
+  and I press "Control", "S"
 ```
+
+Some special keys (*case sensitive!*):
+
+- `Add`
+- `Alt`
+- `ArrowDown` or `Down arrow`
+- `ArrowLeft` or `Left arrow`
+- `ArrowRight` or `Right arrow`
+- `ArrowUp` or `Up arrow`
+- `Backspace`
+- `Command`
+- `Control`
+- `Del`
+- `Divide`
+- `End`
+- `Enter`
+- `Equals`
+- `Escape`
+- `F1` to `F12`
+- `Home`
+- `Insert`
+- `Meta`
+- `Multiply`
+- `Numpad 0` to `Numpad 9`
+- `Pause`
+- `Pagedown` or `PageDown`
+- `Pageup` or `PageUp`
+- `Semicolon`
+- `Shift`
+- `Space`
+- `Subtract`
+- `Tab`
+
 
 ## `pull`
 
@@ -206,19 +290,20 @@ When I pull "/storage/emulated/0/DCIM/logo.png" to "some/path"
 
 ## `refresh`
 
-### refresh + currentPage
+### refresh + page or currentPage or url
 ```gherkin
-When I refresh the current page
-```
-
-### refresh + url
-```gherkin
-When I refresh the url
+When I refresh the page
+  and I refresh the current page
+  and I reload the page
+  and I reload the current page
 ```
 
 ## `remove`
 
 ### remove + app + value
+
+*Same as uninstall*
+
 The next sentence is for *mobile* only:
 ```gherkin
 When I remove the app "com.example.android.myapp"
@@ -252,6 +337,7 @@ When I right click "Foo"
 
 👉 *Commands should be declared between single quotes (`'`) and must stay in a single line*
 
+The next sentence is for [Test Events](language/en.md#test-events) only:
 ```gherkin
 When I run the command 'rmdir foo'
   and I run the command './script.sh'
@@ -261,6 +347,7 @@ When I run the command 'rmdir foo'
 
 *Run SQL commands in a database*
 
+The next sentence is for [Test Events](language/en.md#test-events) only:
 ```gherkin
 When I run the script 'INSERT INTO [MyDB].product ( name, price ) VALUES ( "Soda", 1.50 )'
   and I run the script 'INSERT INTO [MyDB].Users( UserName, UserSex, UserAge ) VALUES ( "Newton", "Male", 25 )'
@@ -324,10 +411,16 @@ Currently [database-js-sqlite](https://github.com/mlaanderson/database-js-sqlite
 
 ## `saveScreenshot`
 
-### saveScreenshot + value
 ```gherkin
 When I save a screenshot to "foo.png"
   and I take a photo to "bar.png"
+```
+
+## `scrollTo`
+
+```gherkin
+When I scroll to <#foo>
+  and I scroll to {Bar}
 ```
 
 ## `see`
@@ -529,31 +622,37 @@ When I shake the device
 ### swipe + value + number + number
 The next sentence is for *mobile* only:
 ```gherkin
-When I swipe "#io.selendroid.myapp:id/LinearLayout1" to 100, 200
+When I swipe <#io.selendroid.myapp:id/LinearLayout1> to 100, 200
 ```
 
 ### swipe + value + down
 The next sentence is for *mobile* only:
 ```gherkin
-When I swipe "#io.selendroid.myapp:id/LinearLayout1" down
+When I swipe <#io.selendroid.myapp:id/LinearLayout1> down
 ```
 
 ### swipe + value + left
 The next sentence is for *mobile* only:
 ```gherkin
-When I swipe "#io.selendroid.myapp:id/LinearLayout1" left
+When I swipe <#io.selendroid.myapp:id/LinearLayout1> left
 ```
 
 ### swipe + value + right
 The next sentence is for *mobile* only:
 ```gherkin
-When I swipe "#io.selendroid.myapp:id/LinearLayout1" right
+When I swipe <#io.selendroid.myapp:id/LinearLayout1> right
 ```
 
 ### swipe + value + up
 The next sentence is for *mobile* only:
 ```gherkin
-When I swipe "#io.selendroid.myapp:id/LinearLayout1" up
+When I swipe <#io.selendroid.myapp:id/LinearLayout1> up
+```
+
+### swipe + from .. to
+The next sentence is for *mobile* only:
+```gherkin
+When I swipe <#foo> to <#bar>
 ```
 
 ## `switch`
@@ -568,6 +667,21 @@ When I switch to native
 The next sentence is for *mobile* only:
 ```gherkin
 When I switch to web
+```
+
+### switch + tab
+```gherkin
+When I switch to the tab 3
+```
+
+### switch + next + tab
+```gherkin
+When I switch to the next tab
+```
+
+### switch + previous + tab
+```gherkin
+When I switch to the previous tab
 ```
 
 ## `tap`
@@ -587,6 +701,11 @@ When I unckeck {Foo}
   and I uncheck <#bar>
 ```
 
+### uncheck + target + target
+```gherkin
+When I unckeck {Foo} in <#bar>
+```
+
 ## `wait`
 
 ### wait + seconds
@@ -600,16 +719,34 @@ When I wait for {Foo}
   and I wait for <#bar>
 ```
 
-### wait + target + seconds
+### wait + seconds + target
 ```gherkin
-When I wait for {Foo} during 2 seconds
-  and I wait for <#bar> during 3 seconds
+When I wait 3 seconds for {Foo}
+  and I wait 5 seconds for <#bar>
+```
+
+### wait + target + hide
+```gherkin
+When I wait {Foo} to hide
+  and I wait <#bar> to hide
+```
+
+### wait + seconds + target + hide
+```gherkin
+When I wait 3 seconds for {Foo} to hide
+  and I wait 5 seconds for <#bar> to hide
 ```
 
 ### wait + target + enabled
 ```gherkin
-When I wait {Foo} is enabled
-  and I wait <#bar> is enabled
+When I wait {Foo} to be enabled
+  and I wait <#bar> to be enabled
+```
+
+### wait + seconds + target + enabled
+```gherkin
+When I wait 3 seconds for {Foo} to be enabled
+  and I wait 5 seconds for <#bar> to be enabled
 ```
 
 ### wait + target + invisible
@@ -618,10 +755,22 @@ When I wait {Foo} is invisible
   and I wait <#bar> is invisible
 ```
 
+### wait + seconds + target + invisible
+```gherkin
+When I wait 3 seconds {Foo} to be invisible
+  and I wait 5 seconds <#bar> to be invisible
+```
+
 ### wait + target + visible
 ```gherkin
-When I wait {Foo} is visible
-  and I wait <#bar> is visible
+When I wait {Foo} to be visible
+  and I wait <#bar> to be visible
+```
+
+### wait + seconds + target + visible
+```gherkin
+When I wait 3 seconds for {Foo} to be visible
+  and I wait 5 seconds for <#bar> to be visible
 ```
 
 ### wait + text + value
@@ -629,12 +778,27 @@ When I wait {Foo} is visible
 When I wait for the text "Foo"
 ```
 
+### wait + seconds + text + value
+```gherkin
+When I wait 3 seconds for the text "Foo"
+```
+
 ### wait + url + value
 ```gherkin
 When I wait for the url "/foo"
 ```
 
-### wait + url + value + seconds
+### wait + seconds + url + value
 ```gherkin
-When I wait for the url "/bar" during 3 seconds
+When I wait 3 seconds for the url "/bar"
+```
+
+### wait + option value + value + target
+```gherkin
+When I wait for the value "foo" in <#bar>
+```
+
+### wait + seconds + option value + value + target
+```gherkin
+When I wait 5 seconds for the value "foo" in <#bar>
 ```

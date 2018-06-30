@@ -22,10 +22,10 @@ export class QueryParser {
     // Notes on limitations:
     //  - Queries cannot select from more than one database
     //
-    
+
     /**
      * Parse Concordia variables, in the format {anything}.
-     * 
+     *
      * @param command Command to parse.
      * @returns Parsed variables
      */
@@ -36,7 +36,7 @@ export class QueryParser {
 
     /**
      * Parse Concordia names, in the format [anything], ignoring contents with dollar ($).
-     * 
+     *
      * @param command Command to parse.
      * @returns Parsed variables
      */
@@ -49,7 +49,7 @@ export class QueryParser {
 
     /**
      * Returns a regex for the given variable name.
-     * 
+     *
      * @param name Name
      */
     public makeVariableRegex( name: string ): RegExp {
@@ -58,11 +58,16 @@ export class QueryParser {
 
     /**
      * Returns a regex for the given name.
-     * 
+     *
      * @param name Name
-     */    
-    public makeNameRegex( name: string ): RegExp {
-        return new RegExp( '(?:\\[)(' + name + ')(?:\\])', 'gui' );
-    }    
+     * @param replaceDot Whether is desired to replace dot. Optional. Default is false.
+     */
+    public makeNameRegex( name: string, replaceDot: boolean = false ): RegExp {
+        let exp = '(?:\\[)(' + name + ')(?:\\])';
+        if ( replaceDot ) {
+            exp += '\.?';
+        }
+        return new RegExp( exp, 'gui' );
+    }
 
 }

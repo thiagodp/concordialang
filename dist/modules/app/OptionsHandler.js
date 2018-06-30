@@ -73,7 +73,7 @@ class OptionsHandler {
         if (!options.seed) {
             options.isGeneratedSeed = true;
             options.seed =
-                js_joda_1.LocalDateTime.now().format(js_joda_1.DateTimeFormatter.ofPattern('yyyy-MM-dd HH:mm')).toString();
+                js_joda_1.LocalDateTime.now().format(js_joda_1.DateTimeFormatter.ofPattern('yyyy-MM-dd HH:mm:ss')).toString();
         }
         const shouldShow = !options.help && !options.about && !options.version && !options.newer
             && !options.somePluginOption();

@@ -94,6 +94,7 @@ export class TSGen {
 
             for ( let state of allStatesToReplace ) {
 
+                // Already mapped?
                 if ( isDefined( pairMap[ state.name ] ) ) {
                     continue;
                 }
@@ -151,6 +152,7 @@ export class TSGen {
                 let ts = baseScenario.clone();
                 // console.log( "\nTS is\n", ts.steps.map( s => s.content ) );
 
+                let stepsAdded = 0;
                 for ( let stateName in obj ) {
                     const pair = obj[ stateName ];
                     let [ state, tsToReplaceStep ] = pair.toArray();
@@ -175,16 +177,18 @@ export class TSGen {
 
                     // Replace TestScenario steps with the new ones
                     tsToUse.steps = preTestCase.steps;
-                    tsToUse.stepAfterPreconditions = null;
 
                     // Adjust the stepAfterPreconditions
+                    tsToUse.stepAfterPreconditions = null;
                     let oldIndex = tsToReplaceStep.steps.indexOf( tsToReplaceStep.stepAfterPreconditions );
                     if ( oldIndex >= 0 ) {
                         tsToUse.stepAfterPreconditions = tsToUse.steps[ oldIndex ];
                     }
                     // ---
 
-                    this.replaceStepWithTestScenario( ts, state.stepIndex, tsToUse, isPrecondition );
+                    // console.log( 'state to replace: ', ( state as State ).name );
+                    state.stepIndex += stepsAdded > 0 ? stepsAdded - 1 : 0;
+                    stepsAdded += this.replaceStepWithTestScenario( ts, state, tsToUse, isPrecondition );
                 }
                 // console.log( "\nTS modified is\n", ts.steps.map( s => s.content ) );
                 testScenarios.push( ts );
@@ -417,7 +421,7 @@ export class TSGen {
 
     replaceStepWithTestScenario(
         ts: TestScenario,
-        stepIndex: number,
+        state: State,
         tsToReplaceStep: TestScenario,
         isPrecondition: boolean
     ) {
@@ -431,9 +435,16 @@ export class TSGen {
         }
 
         // console.log( "\nBEFORE\n\n", ts.steps.map( s => s.content ).join( "\n" ) );
-        // console.log( "\nSTEPS to replace index", stepIndex, "\n\n", stepsToReplace.map( s => s.content ).join( "\n" ) );
-        ts.steps.splice( stepIndex, 1, ... stepsToReplace );
+        // console.log( "\nSTATE INDEX", state.stepIndex, "\n\nWILL REPLACE WITH\n\n", stepsToReplace.map( s => s.content ).join( "\n" ) );
+
+        ts.steps.splice( state.stepIndex, 1, ... stepsToReplace );
+        const stepsAdded = stepsToReplace.length;
+        state.stepIndex += stepsAdded;
+
+        // console.log( "\nSTATE INDEX after", state.stepIndex );
         // console.log( "\nAFTER\n\n", ts.steps.map( s => s.content ).join( "\n" ) );
+
+        return stepsAdded;
     }
 
 }

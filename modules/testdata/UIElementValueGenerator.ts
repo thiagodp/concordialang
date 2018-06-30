@@ -26,6 +26,8 @@ import { InMemoryTableWrapper } from '../db/InMemoryTableWrapper';
 import { Queryable } from '../req/Queryable';
 import { UIETestPlan } from '../testcase/UIETestPlan';
 import { UIElementNameHandler } from '../util/UIElementNameHandler';
+import { DatabaseToAbstractDatabase } from '../db/DatabaseToAbstractDatabase';
+import { supportTablesInQueries } from '../db/DatabaseTypes';
 
 // value is equal to          <number>|<value>|<constant>|<ui_element>
 // value is not equal to      <number>|<value>|<constant>|<ui_element>
@@ -483,8 +485,13 @@ export class UIElementValueGenerator {
         errors: LocatedException[]
     ): Promise< EntityValueType > {
 
+        const absDB = ( new DatabaseToAbstractDatabase() ).convertFromNode( database );
+        const supportTables = supportTablesInQueries( absDB.driverName );
+
+        // console.log( 'before', query );
         // Remove database reference from the query
-        const newQuery = this._queryRefReplacer.replaceDatabaseInQuery( query, database.name );
+        const newQuery = this._queryRefReplacer.replaceDatabaseInQuery( query, database.name, ! supportTables );
+        // console.log( 'after', newQuery );
 
         if ( this._dbQueryCache.has( newQuery ) ) {
             // console.log( 'query', newQuery, 'dbQueryCache', this._dbQueryCache.get( newQuery ) );
@@ -524,12 +531,14 @@ export class UIElementValueGenerator {
         errors: LocatedException[]
     ): Promise< EntityValueType > {
 
+        // console.log( 'before', query );
         // Replace table reference with its internal name
         const newQuery = this._queryRefReplacer.replaceTableInQuery( query, table.name, table.internalName );
 
         if ( this._tblQueryCache.has( newQuery ) ) {
             return this.properDataFor( propType, this._tblQueryCache.get( newQuery ) );
         }
+        // console.log( 'after', newQuery );
 
         // Retrieve table interface
         let intf = spec.tableNameToInterfaceMap().get( table.name );

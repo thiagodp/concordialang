@@ -40,7 +40,7 @@ class EnglishKeywordDictionary {
         this.tagGenerated = ['generated'];
         // Also available in Gherkin
         this.language = ['language'];
-        this.feature = ['feature'];
+        this.feature = ['feature', 'story', 'user story'];
         this.background = ['background'];
         this.scenario = ['scenario'];
         this.stepGiven = ['given that', 'given'];
