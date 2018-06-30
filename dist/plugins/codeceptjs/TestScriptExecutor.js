@@ -179,8 +179,10 @@ class TestScriptExecutor {
                 pkg[SCRIPTS_PROPERTY] = {};
             }
             const CODECEPTJS_SCRIPT_PROPERTY = 'concordia:codeceptjs';
-            if (!pkg[SCRIPTS_PROPERTY][CODECEPTJS_SCRIPT_PROPERTY]) {
-                pkg[SCRIPTS_PROPERTY][CODECEPTJS_SCRIPT_PROPERTY] = 'codeceptjs run --reporter mocha-multi --colors';
+            const oldCommand = 'codeceptjs run --reporter mocha-multi --colors';
+            if (!pkg[SCRIPTS_PROPERTY][CODECEPTJS_SCRIPT_PROPERTY] ||
+                oldCommand === pkg[SCRIPTS_PROPERTY][CODECEPTJS_SCRIPT_PROPERTY]) {
+                pkg[SCRIPTS_PROPERTY][CODECEPTJS_SCRIPT_PROPERTY] = 'codeceptjs run --reporter mocha-multi --colors || true';
                 // Overwrite package.json
                 try {
                     yield writeF(packageFilePath, JSON.stringify(pkg, undefined, "\t"));
