@@ -19,7 +19,7 @@ import { OptionsHandler } from './OptionsHandler';
 import * as meow from 'meow';
 import * as updateNotifier from 'update-notifier';
 import { AbstractTestScript } from '../testscript/AbstractTestScript';
-import { TestResultAnalyzer } from '../testscript/TestResultAnalyzer';
+// import { TestResultAnalyzer } from '../testscript/TestResultAnalyzer';
 
 /**
  * Application controller

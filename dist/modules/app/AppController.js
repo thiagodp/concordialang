@@ -22,6 +22,7 @@ const CliHelp_1 = require("./CliHelp");
 const OptionsHandler_1 = require("./OptionsHandler");
 const meow = require("meow");
 const updateNotifier = require("update-notifier");
+// import { TestResultAnalyzer } from '../testscript/TestResultAnalyzer';
 /**
  * Application controller
  *
