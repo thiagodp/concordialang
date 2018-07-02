@@ -678,7 +678,7 @@ export class PreTestCaseGenerator {
             // Make comment
             let comment = ' ' + expectedResult + Symbols.TITLE_SEPARATOR + ' ' + dtc;
             if ( uieNameWithoutFeature ) {
-                comment = ' ' + uieNameWithoutFeature + ',' + comment;
+                comment = ' ' + Symbols.UI_ELEMENT_PREFIX + uieNameWithoutFeature + Symbols.UI_ELEMENT_SUFFIX + ',' + comment;
             }
 
             // Make the step
