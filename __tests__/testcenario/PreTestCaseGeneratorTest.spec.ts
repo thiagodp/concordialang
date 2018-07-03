@@ -262,13 +262,14 @@ describe( 'PreTestCaseGeneratorTest', () => {
         const rand = new RandomString( new Random( SEED ) );
         const value1 = rand.between( gen.minRandomStringSize, gen.maxRandomStringSize );
         const value2 = rand.between( gen.minRandomStringSize, gen.maxRandomStringSize );
-        const comment = '# válido: aleatório';
+        const comment1 = '# válido: aleatório';
+        const comment2 = '# válido: aleatório';
 
         expect( lines ).toEqual(
             [
-                'Quando eu preencho <a> com "' + value1 + '" ' + comment,
+                'Quando eu preencho <a> com "' + value1 + '" ' + comment1,
                 'E eu preencho <b> com "foo"',
-                'E eu preencho <c> com "' + value2 + '" ' + comment,
+                'E eu preencho <c> com "' + value2 + '" ' + comment2,
                 'Então eu tenho ~foo~'
             ]
         );
@@ -324,13 +325,14 @@ describe( 'PreTestCaseGeneratorTest', () => {
         const lines = preTC.steps.map( s => s.content + ( ! s.comment ? '' : ' #' + s.comment ) );
         const value1 = '';
         const value2 = '';
-        const comment = '# válido: não preenchido';
+        const comment1 = '# {A}, válido: não preenchido';
+        const comment2 = '# {C}, válido: não preenchido';
 
         expect( lines ).toEqual(
             [
-                'Quando eu preencho <a> com "' + value1 + '" ' + comment,
+                'Quando eu preencho <a> com "' + value1 + '" ' + comment1,
                 'E eu preencho <b> com "foo"',
-                'E eu preencho <c> com "' + value2 + '" ' + comment,
+                'E eu preencho <c> com "' + value2 + '" ' + comment2,
                 'Então eu tenho ~foo~'
             ]
         );
@@ -384,7 +386,8 @@ describe( 'PreTestCaseGeneratorTest', () => {
         const lines = preTC.steps.map( s => s.content + ( ! s.comment ? '' : ' #' + s.comment ) );
         const value1 = '';
         const value2 = '';
-        const commentValue = '# válido: não preenchido';
+        const comment1Value = '# {A}, válido: não preenchido';
+        const comment2Value = '# {C}, válido: não preenchido';
         const randStr = new RandomString( new Random( SEED ) );
         const random1 = randStr.between( gen.minRandomStringSize, gen.maxRandomStringSize );
         const random2 = randStr.between( gen.minRandomStringSize, gen.maxRandomStringSize );
@@ -392,9 +395,9 @@ describe( 'PreTestCaseGeneratorTest', () => {
 
         expect( lines ).toEqual(
             [
-                'Quando eu preencho <a> com "' + value1 + '" ' + commentValue,
+                'Quando eu preencho <a> com "' + value1 + '" ' + comment1Value,
                 'E eu preencho <b> com "' + random1 + '" ' + commentRandom,
-                'E eu preencho <c> com "' + value2 + '" ' + commentValue,
+                'E eu preencho <c> com "' + value2 + '" ' + comment2Value,
                 'E eu preencho <d> com "' + random2 + '" ' + commentRandom,
                 'Então eu tenho ~foo~'
             ]
@@ -450,7 +453,7 @@ describe( 'PreTestCaseGeneratorTest', () => {
         // Content + Comment
         const lines = preTC.steps.map( s => s.content + ( ! s.comment ? '' : ' #' + s.comment ) );
         const value1 = LongLimits.MIN;
-        const comment = '# inválido: menor valor aplicável';
+        const comment = '# {A}, inválido: menor valor aplicável';
 
         expect( lines ).toEqual(
             [

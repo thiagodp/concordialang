@@ -72,7 +72,7 @@ describe('TCGenTest', () => {
         // Content + Comment
         const lines = tc.sentences.map(s => s.content + (!s.comment ? '' : ' #' + s.comment));
         const value1 = LongLimits_1.LongLimits.MIN;
-        const comment = '# inválido: menor valor aplicável';
+        const comment = '# {A}, inválido: menor valor aplicável';
         expect(lines).toEqual([
             'Quando eu preencho <a> com ' + value1 + ' ' + comment,
             'E eu preencho <b> com "foo"',
@@ -114,7 +114,7 @@ describe('TCGenTest', () => {
         // Content + Comment
         const lines = tc.sentences.map(s => s.content + (!s.comment ? '' : ' #' + s.comment));
         const value1 = LongLimits_1.LongLimits.MIN;
-        const comment = '# inválido: menor valor aplicável';
+        const comment = '# {A}, inválido: menor valor aplicável';
         expect(lines).toEqual([
             'Quando eu preencho <a> com ' + value1 + ' ' + comment,
             'E eu preencho <b> com "foo"',
