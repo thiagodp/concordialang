@@ -455,12 +455,13 @@ Allowed properties:
   - `options`
 
 Currently supported values for `type`:
-  - `"adodb"`  for connecting to databases such as [MS Access](https://pt.wikipedia.org/wiki/Microsoft_Access) and [SQL Server](https://en.wikipedia.org/wiki/Microsoft_SQL_Server) through [ActiveX Data Objects](https://en.wikipedia.org/wiki/ActiveX_Data_Objects)
+  - `"adodb"`  for connecting to databases such as [MS Access](https://pt.wikipedia.org/wiki/Microsoft_Access) and [MS SQL Server](https://en.wikipedia.org/wiki/Microsoft_SQL_Server) through [ActiveX Data Objects](https://en.wikipedia.org/wiki/ActiveX_Data_Objects) - *Windows Only*
   - `"csv"` for connecting to files with [Comma Separated Values](https://en.wikipedia.org/wiki/Comma-separated_values)
   - `"firebase"` for connecting to [Firebase](https://firebase.google.com) databases
   - `"ini"` for connecting to [INI files](https://en.wikipedia.org/wiki/INI_file)
   - `"json"` for connecting to [JSON](https://en.wikipedia.org/wiki/JSON) files
   - `"mysql"` for connecting to [MySQL](https://www.mysql.com/) databases
+  - `"mssql"` for connecting to [MS SQL Server](https://www.microsoft.com/en-us/sql-server)
   - `"postgres"` for connecting to [PostgreSQL](https://www.postgresql.org/) databases
   - `"sqlite"` for connecting to [SQLite](https://www.sqlite.org/) databases
   - `"xlsx"` for connecting to [Excel](https://en.wikipedia.org/wiki/Microsoft_Excel) spreadsheets

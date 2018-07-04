@@ -455,12 +455,13 @@ Propriedades permitidas:
   - ou as suas equivalentes [em inglês](en.md#database)
 
 Valores atualmente suportados para `tipo`:
-  - `"adodb"`  para conectar a bancos de dados como [MS Access](https://pt.wikipedia.org/wiki/Microsoft_Access) e [SQL Server](https://en.wikipedia.org/wiki/Microsoft_SQL_Server) através de [ActiveX Data Objects](https://en.wikipedia.org/wiki/ActiveX_Data_Objects)
+  - `"adodb"`  para conectar a bancos de dados como [MS Access](https://pt.wikipedia.org/wiki/Microsoft_Access) e [MS SQL Server](https://en.wikipedia.org/wiki/Microsoft_SQL_Server) através de [ActiveX Data Objects](https://en.wikipedia.org/wiki/ActiveX_Data_Objects) - *Somente para Windows*
   - `"csv"` para conectar a arquivos no formato de [Valores Separados por Vírgula](https://pt.wikipedia.org/wiki/Comma-separated_values)
   - `"firebase"` para conectar a bancos de dados [Firebase](https://firebase.google.com)
   - `"ini"` para conectar a [arquivos INI](https://en.wikipedia.org/wiki/INI_file)
   - `"json"` para conectar a arquivos [JSON](https://en.wikipedia.org/wiki/JSON)
   - `"mysql"` para conectar a bancos de dados [MySQL](https://www.mysql.com/)
+  - `"mssql"` para conectar a bancos de dados [MS SQL Server](https://www.microsoft.com/pt-br/sql-server/)
   - `"postgres"` para conectar a bancos de dados [PostgreSQL](https://www.postgresql.org/)
   - `"sqlite"` para conectar a banco de dados [SQLite](https://www.sqlite.org/)
   - `"xlsx"` para conectar a arquivos [Excel](https://en.wikipedia.org/wiki/Microsoft_Excel)

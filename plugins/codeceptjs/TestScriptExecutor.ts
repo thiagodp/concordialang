@@ -221,7 +221,7 @@ export class TestScriptExecutor {
 
         if ( showOptionalPackages ) {
             this.write( iconInfo, textColor( 'For supporting other databases, please run:' ) );
-            this.write( ' ', textColor( 'npm install --save-dev database-js-csv database-js-xlsx database-js-ini database-js-firebase database-js-mysql database-js-postgres database-js-sqlite\n' ) );
+            this.write( ' ', textColor( 'npm install --save-dev database-js-csv database-js-xlsx database-js-ini database-js-firebase database-js-mysql database-js-mssql database-js-postgres database-js-sqlite\n' ) );
         }
 
         // Run CodeceptJS ------------------------------------------------------
