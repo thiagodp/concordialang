@@ -1,7 +1,8 @@
 import { RandomLong } from "./RandomLong";
 import { Random } from "./Random";
 import { isDefined } from '../../util/TypeChecking';
-import { escapeString } from "../util/escape";
+import { randstr } from 'better-randstr';
+import { escapeChar } from "../util/escape";
 
 /**
  * Random string generator, compatible with Unicode. Defaults to the ASCII range,
@@ -12,7 +13,7 @@ import { escapeString } from "../util/escape";
 export class RandomString {
 
     public readonly MIN_PRINTABLE_ASCII: number = 32;
-    public readonly MAX_PRINTABLE_ASCII: number = 126;
+    public readonly MAX_PRINTABLE_ASCII: number = 255;
 
     private readonly _randomLong: RandomLong;
     private _minCharCode: number;
@@ -33,25 +34,19 @@ export class RandomString {
     // VALUE GENERATION
 
     public exactly( length: number ): string {
-        if ( length <= 0 ) {
-            return '';
-        }
-        let tmp = '';
-        for ( let i = 0; i < length; ++i ) {
-            tmp += this.randomCharCode();
-        }
 
-        if ( ! this.escaped ) {
-            return tmp;
-        }
+        const self = this;
 
-        // Guarantee the minimum size
-        while ( ( tmp = escapeString( tmp ) ).length < length ) {
-            tmp += this.randomCharCode();
-        }
+        const fn = (): number => {
+            return self._random.generate();
+        };
 
-        // Guarantee the maximum size
-        return tmp.substr( 0, length );
+        return randstr( {
+            random: fn,
+            length: length,
+            replacer: escapeChar,
+            chars: [ this._minCharCode, this._maxCharCode ]
+        } );
     }
 
     public between( minimum: number, maximum: number ): string {
@@ -64,12 +59,6 @@ export class RandomString {
     }
 
     // UTIL
-
-    public randomCharCode(): string {
-        return String.fromCharCode(
-            this._randomLong.between( this._minCharCode, this._maxCharCode )
-            );
-    }
 
     public minCharCode( min?: number ) {
         if ( isDefined( min ) && min >= 0 ) {

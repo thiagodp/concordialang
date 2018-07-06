@@ -3,22 +3,25 @@
 //
 // Adapted for Concordia needs.
 //
-function escapeChar( char ) {
+export function escapeChar( char ) {
     switch ( char ) {
         // special
-        case '\0':      return '\\0';
-        case '\x08':    return '\\b';
-        case '\x09':    return '\\t';
-        case '\x1a':    return '\\z';
-        case '\n':      return '\\n';
-        case '\r':      return '\\r';
+        case '\0'  : return '\\0';
+        case '\x08': return '\\b';
+        case '\x09': return '\\t';
+        case '\x1a': return '\\z';
+        case '\n'  : return '\\n';
+        case '\r'  : return '\\r';
         // symbols
-        case '\"': ;    // continue
-        case '\'': ;    // escape "single quotes" because of database values
-        case '\%': ;    // escape "percent" because of database values
-        case '\<' : ;    // escape "less than" because of ui literals
-        case '\>' : ;    // escape "greater than" because of ui literals
-        case '\\':      return '\\' + char;
+        case '"' : ; // continue
+        case "'" : ; // escape "single quotes" because of database values
+        // database-related
+        case '%' : ; // escape "percent" because of database values
+        case '`' : ; // escape "x" because of database values
+        // ui literals
+        case '<' : ; // escape "less than" because of ui literals
+        case '>' : ; // escape "greater than" because of ui literals
+        case '\\': return '\\' + char;
     }
     return char;
 }
