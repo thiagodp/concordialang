@@ -517,7 +517,10 @@ class PreTestCaseGenerator {
                 }
             }
             // Make comment
-            const comment = ' ' + expectedResult + Symbols_1.Symbols.TITLE_SEPARATOR + ' ' + dtc;
+            let comment = ' ' + expectedResult + Symbols_1.Symbols.TITLE_SEPARATOR + ' ' + dtc;
+            if (uieNameWithoutFeature) {
+                comment = ' ' + Symbols_1.Symbols.UI_ELEMENT_PREFIX + uieNameWithoutFeature + Symbols_1.Symbols.UI_ELEMENT_SUFFIX + ',' + comment;
+            }
             // Make the step
             let newStep = {
                 nodeType: nodeType,

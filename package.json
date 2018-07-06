@@ -1,6 +1,6 @@
 {
   "name": "concordialang",
-  "version": "0.92.0",
+  "version": "0.93.1",
   "description": "Concordia Language Compiler",
   "keywords": [
     "concordia",
@@ -84,6 +84,7 @@
     "alasql": "^0.4.5",
     "arr-diff": "^4.0.0",
     "array-move": "^1.0.0",
+    "better-randstr": "^1.0.0",
     "cartesian": "^1.0.1",
     "case": "^1.5.5",
     "chalk": "^2.4.1",
@@ -95,6 +96,7 @@
     "database-js-firebase": "^1.1.4",
     "database-js-ini": "^1.0.1",
     "database-js-json": "^1.2.1",
+    "database-js-mssql": "^0.2.1",
     "database-js-mysql": "^1.1.1",
     "database-js-postgres": "^1.1.2",
     "database-js-sqlite": "^1.2.2",
@@ -151,5 +153,8 @@
     "memfs": "^2.9.0",
     "ts-jest": "^21.2.4",
     "typescript": "^2.8.3"
+  },
+  "engines": {
+    "node": ">=8"
   }
 }

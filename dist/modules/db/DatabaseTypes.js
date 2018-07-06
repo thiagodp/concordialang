@@ -17,6 +17,7 @@ var DatabaseType;
     DatabaseType["EXCEL"] = "xlsx";
     DatabaseType["CSV"] = "csv";
     DatabaseType["JSON"] = "json";
+    DatabaseType["MSSQL"] = "mssql";
 })(DatabaseType = exports.DatabaseType || (exports.DatabaseType = {}));
 function isPathBasedDatabaseType(dbType) {
     return [
@@ -43,6 +44,8 @@ function stringToDatabaseTypeString(dbType) {
         case 'postgresql': return DatabaseType.POSTGRESQL;
         case 'ado': return DatabaseType.ADO;
         case 'xls': return DatabaseType.EXCEL;
+        case 'sqlserver': ; // continue
+        case 'mssqlserver': return DatabaseType.MSSQL;
         default: return 'unknown';
     }
 }

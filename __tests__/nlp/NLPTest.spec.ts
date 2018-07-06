@@ -129,6 +129,10 @@ describe( 'NLPTest', () => {
                 recogNumber( ' -3 ', '-3' );
             } );
 
+            it( 'longer negative integer', () => {
+                recogNumber( ' -53358731722743 ', '-53358731722743' );
+            } );
+
             it( 'negative double', () => {
                 recogNumber( ' -3.14159 ', '-3.14159' );
             } );

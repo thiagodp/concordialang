@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const RandomLong_1 = require("./RandomLong");
 const TypeChecking_1 = require("../../util/TypeChecking");
+const better_randstr_1 = require("better-randstr");
 const escape_1 = require("../util/escape");
 /**
  * Random string generator, compatible with Unicode. Defaults to the ASCII range,
@@ -20,29 +21,23 @@ class RandomString {
         this._random = _random;
         this.escaped = escaped;
         this.MIN_PRINTABLE_ASCII = 32;
-        this.MAX_PRINTABLE_ASCII = 126;
+        this.MAX_PRINTABLE_ASCII = 255;
         this._randomLong = new RandomLong_1.RandomLong(_random);
         this._minCharCode = this.MIN_PRINTABLE_ASCII;
         this._maxCharCode = this.MAX_PRINTABLE_ASCII;
     }
     // VALUE GENERATION
     exactly(length) {
-        if (length <= 0) {
-            return '';
-        }
-        let tmp = '';
-        for (let i = 0; i < length; ++i) {
-            tmp += this.randomCharCode();
-        }
-        if (!this.escaped) {
-            return tmp;
-        }
-        // Guarantee the minimum size
-        while ((tmp = escape_1.escapeString(tmp)).length < length) {
-            tmp += this.randomCharCode();
-        }
-        // Guarantee the maximum size
-        return tmp.substr(0, length);
+        const self = this;
+        const fn = () => {
+            return self._random.generate();
+        };
+        return better_randstr_1.randstr({
+            random: fn,
+            length: length,
+            replacer: escape_1.escapeChar,
+            chars: [this._minCharCode, this._maxCharCode]
+        });
     }
     between(minimum, maximum) {
         const min = minimum < 0 ? 0 : minimum;
@@ -53,9 +48,6 @@ class RandomString {
         return this.exactly(this._randomLong.between(min, max));
     }
     // UTIL
-    randomCharCode() {
-        return String.fromCharCode(this._randomLong.between(this._minCharCode, this._maxCharCode));
-    }
     minCharCode(min) {
         if (TypeChecking_1.isDefined(min) && min >= 0) {
             this._minCharCode = min;

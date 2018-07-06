@@ -179,8 +179,10 @@ class TestScriptExecutor {
                 pkg[SCRIPTS_PROPERTY] = {};
             }
             const CODECEPTJS_SCRIPT_PROPERTY = 'concordia:codeceptjs';
-            if (!pkg[SCRIPTS_PROPERTY][CODECEPTJS_SCRIPT_PROPERTY]) {
-                pkg[SCRIPTS_PROPERTY][CODECEPTJS_SCRIPT_PROPERTY] = 'codeceptjs run --reporter mocha-multi --colors';
+            const oldCommand = 'codeceptjs run --reporter mocha-multi --colors';
+            if (!pkg[SCRIPTS_PROPERTY][CODECEPTJS_SCRIPT_PROPERTY] ||
+                oldCommand === pkg[SCRIPTS_PROPERTY][CODECEPTJS_SCRIPT_PROPERTY]) {
+                pkg[SCRIPTS_PROPERTY][CODECEPTJS_SCRIPT_PROPERTY] = 'codeceptjs run --reporter mocha-multi --colors || true';
                 // Overwrite package.json
                 try {
                     yield writeF(packageFilePath, JSON.stringify(pkg, undefined, "\t"));
@@ -196,7 +198,7 @@ class TestScriptExecutor {
             // Show optional packages
             if (showOptionalPackages) {
                 this.write(iconInfo, textColor('For supporting other databases, please run:'));
-                this.write(' ', textColor('npm install --save-dev database-js-csv database-js-xlsx database-js-ini database-js-firebase database-js-mysql database-js-postgres database-js-sqlite\n'));
+                this.write(' ', textColor('npm install --save-dev database-js-csv database-js-xlsx database-js-ini database-js-firebase database-js-mysql database-js-mssql database-js-postgres database-js-sqlite\n'));
             }
             // Run CodeceptJS ------------------------------------------------------
             const OUTPUT_FILE_NAME = 'output.json';

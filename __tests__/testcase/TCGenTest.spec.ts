@@ -100,7 +100,7 @@ describe( 'TCGenTest', () => {
         // Content + Comment
         const lines = tc.sentences.map( s => s.content + ( ! s.comment ? '' : ' #' + s.comment ) );
         const value1 = LongLimits.MIN;
-        const comment = '# inválido: menor valor aplicável';
+        const comment = '# {A}, inválido: menor valor aplicável';
 
         expect( lines ).toEqual(
             [
@@ -165,7 +165,7 @@ describe( 'TCGenTest', () => {
         // Content + Comment
         const lines = tc.sentences.map( s => s.content + ( ! s.comment ? '' : ' #' + s.comment ) );
         const value1 = LongLimits.MIN;
-        const comment = '# inválido: menor valor aplicável';
+        const comment = '# {A}, inválido: menor valor aplicável';
 
         expect( lines ).toEqual(
             [

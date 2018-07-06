@@ -15,7 +15,8 @@ export enum DatabaseType {
     INI = 'ini',
     EXCEL = 'xlsx',
     CSV = 'csv',
-    JSON = 'json'
+    JSON = 'json',
+    MSSQL = 'mssql'
 }
 
 export function isPathBasedDatabaseType( dbType: string ): boolean {
@@ -45,6 +46,8 @@ export function stringToDatabaseTypeString( dbType: string ): string {
         case 'postgresql'   : return DatabaseType.POSTGRESQL
         case 'ado'          : return DatabaseType.ADO;
         case 'xls'          : return DatabaseType.EXCEL;
+        case 'sqlserver'    : ; // continue
+        case 'mssqlserver'  : return DatabaseType.MSSQL;
         default             : return 'unknown';
     }
 }
