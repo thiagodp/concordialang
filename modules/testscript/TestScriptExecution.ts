@@ -77,6 +77,7 @@ export class TotalExecutionResult {
     passed: number = 0;
     skipped: number = 0;
     failed: number = 0;
+    adjusted?: number = 0;
     error: number = 0;
     unknown: number = 0;
 }
@@ -100,7 +101,7 @@ export class TestMethodResult {
 
     name: string;
 
-    status: 'passed' | 'failed' | 'skipped' | 'error' | 'unknown';
+    status: 'passed' | 'adjusted' | 'failed' | 'skipped' | 'error' | 'unknown';
 
     durationMs: number; // milliseconds
 

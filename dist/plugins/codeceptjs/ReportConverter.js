@@ -31,7 +31,13 @@ class ReportConverter {
     convertFrom(resultFilePath, pluginConfigFilePath) {
         return __awaiter(this, void 0, void 0, function* () {
             const source = yield this.readJsonFile(resultFilePath);
-            const pluginConfig = yield this.readJsonFile(pluginConfigFilePath);
+            let pluginConfig = {};
+            try {
+                pluginConfig = yield this.readJsonFile(pluginConfigFilePath);
+            }
+            catch (e) {
+                // will stay with empty plug-in info
+            }
             let result = new TestScriptExecution_1.TestScriptExecutionResult();
             source.resultFilePath = resultFilePath;
             this.fillMetadata(source, result);
@@ -60,10 +66,15 @@ class ReportConverter {
         result.started = source.stats.start;
         result.finished = source.stats.end;
         result.durationMs = source.stats.duration;
+        // Because of a bug in CodeceptJS JSON's counting
+        let failed = source.stats.failures;
+        if (failed === source.stats.tests && source.stats.passes > 0) {
+            failed -= source.stats.passes;
+        }
         result.total = {
             tests: source.stats.tests,
             passed: source.stats.passes,
-            failed: source.stats.failures,
+            failed: failed,
             skipped: 0,
             error: 0,
             unknown: 0
@@ -115,7 +126,9 @@ class ReportConverter {
                     };
                 }
                 // Pushes a TestMethodResult to its correspondent TestSuiteResult.
-                let suiteName = method.fullTitle.split(':')[0]; //fullTitle format is 'feature: test'
+                const suiteName = method.fullTitle.indexOf(':') >= 0
+                    ? method.fullTitle.split(':')[0] //fullTitle format is 'feature: test'
+                    : method.fullTitle;
                 this.pushTestMethodResult(result, testMethodResult, suiteName);
             }
         });
@@ -154,12 +167,12 @@ class ReportConverter {
      */
     extractScriptLocationFromStackTrace(stackTrace) {
         // Extract file name and line, e.g., 'path/to/file.js:15:7'
-        const regex = /((\w:| |\w|\/|\\|\.\/)+\.js):(\d+):(\d+)/umi;
+        const regex = /(?:\()([^(]+.js)\:(\d+)\:(\d+)(?:\))/gm;
         const r = regex.exec(stackTrace);
         if (!r || !r[1]) {
             return null;
         }
-        const [_, path, __, lin, col] = r;
+        const [_, path, lin, col] = r;
         return {
             filePath: path,
             line: parseInt(lin),

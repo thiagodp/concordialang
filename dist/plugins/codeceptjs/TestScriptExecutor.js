@@ -179,10 +179,12 @@ class TestScriptExecutor {
                 pkg[SCRIPTS_PROPERTY] = {};
             }
             const CODECEPTJS_SCRIPT_PROPERTY = 'concordia:codeceptjs';
-            const oldCommand = 'codeceptjs run --reporter mocha-multi --colors';
+            const oldCommand1 = 'codeceptjs run --reporter mocha-multi --colors';
+            const oldCommand2 = 'codeceptjs run --reporter mocha-multi --colors || true';
             if (!pkg[SCRIPTS_PROPERTY][CODECEPTJS_SCRIPT_PROPERTY] ||
-                oldCommand === pkg[SCRIPTS_PROPERTY][CODECEPTJS_SCRIPT_PROPERTY]) {
-                pkg[SCRIPTS_PROPERTY][CODECEPTJS_SCRIPT_PROPERTY] = 'codeceptjs run --reporter mocha-multi --colors || true';
+                oldCommand1 === pkg[SCRIPTS_PROPERTY][CODECEPTJS_SCRIPT_PROPERTY] ||
+                oldCommand2 === pkg[SCRIPTS_PROPERTY][CODECEPTJS_SCRIPT_PROPERTY]) {
+                pkg[SCRIPTS_PROPERTY][CODECEPTJS_SCRIPT_PROPERTY] = 'codeceptjs run --reporter mocha-multi --colors || echo .';
                 // Overwrite package.json
                 try {
                     yield writeF(packageFilePath, JSON.stringify(pkg, undefined, "\t"));
@@ -209,6 +211,7 @@ class TestScriptExecutor {
                 : `codeceptjs run --steps --reporter mocha-multi --config ${configFilePath} --colors`;
             this.write(' ', textCommand(cmd));
             const code = yield this.runCommand(cmd);
+            this.write(iconInfo, textColor('Retrieving output file'), highlight(outputFilePath) + textColor('...'));
             return outputFilePath;
         });
     }

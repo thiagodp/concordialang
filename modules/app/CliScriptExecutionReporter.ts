@@ -1,6 +1,7 @@
 import { ScriptExecutionReporter } from "./ScriptExecutionReporter";
 import { TestScriptExecutionResult } from "../testscript/TestScriptExecution";
 import { CLI } from "./CLI";
+import { millisToString } from "../util/TimeFormat";
 
 /**
  * CLI script execution reporter
@@ -34,14 +35,15 @@ export class CliScriptExecutionReporter implements ScriptExecutionReporter {
         }
         const passedStr = t.passed ? this._cli.bgSuccess( t.passed + ' passed' ) : '';
         const failedStr = t.failed ? this._cli.bgWarning( t.failed + ' failed' ) : '';
+        const adjustedStr = t.adjusted ? this._cli.colors.bgCyan( t.adjusted + ' adjusted' ) : '';
         const errorStr = t.error ? this._cli.bgError( t.error + ' with error' ) : '';
         const skippedStr = t.skipped ? t.skipped + ' skipped' : '';
         const totalStr = ( t.tests || '0' ) + ' total';
 
         this._cli.newLine(
             '  ',
-            [ passedStr, failedStr, errorStr, skippedStr, totalStr ].filter( s => s.length > 0 ).join( ', ' ),
-            this._cli.colorInfo( 'in ' + r.durationMs + 'ms' ),
+            [ passedStr, adjustedStr, failedStr, errorStr, skippedStr, totalStr ].filter( s => s.length > 0 ).join( ', ' ),
+            this._cli.colorInfo( 'in ' + millisToString( r.durationMs, null, ' ' ) ),
             "\n"
             );
 
@@ -85,10 +87,11 @@ export class CliScriptExecutionReporter implements ScriptExecutionReporter {
     private cliColorForStatus( status: string ): any {
         switch ( status.toLowerCase() ) {
             case 'passed': return this._cli.colorSuccess;
+            case 'adjusted': return this._cli.colors.cyanBright;
             case 'failed': return this._cli.colorWarning;
             case 'error': return this._cli.colorError;
             default: return this._cli.colorText;
         }
     }
 
-}
+ }

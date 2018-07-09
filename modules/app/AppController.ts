@@ -19,7 +19,7 @@ import { OptionsHandler } from './OptionsHandler';
 import * as meow from 'meow';
 import * as updateNotifier from 'update-notifier';
 import { AbstractTestScript } from '../testscript/AbstractTestScript';
-// import { TestResultAnalyzer } from '../testscript/TestResultAnalyzer';
+import { TestResultAnalyzer } from '../testscript/TestResultAnalyzer';
 
 /**
  * Application controller
@@ -165,11 +165,13 @@ export class AppController {
         }
 
         let abstractTestScripts: AbstractTestScript[] = [];
-        if ( spec !== null ) {
-            if ( options.generateScript ) { // Requires a plugin
 
-                const atsCtrl = new ATSGenController();
-                abstractTestScripts = atsCtrl.generate( spec );
+        if ( spec !== null ) {
+
+            const atsCtrl = new ATSGenController();
+            abstractTestScripts = atsCtrl.generate( spec );
+
+            if ( options.generateScript ) { // Requires a plugin
 
                 if ( abstractTestScripts.length > 0 ) {
 
@@ -235,7 +237,7 @@ export class AppController {
             }
             try {
                 let reportedResult = await plugin.convertReportFile( executionResult.sourceFile );
-                // ( new TestResultAnalyzer() ).adjustResult( reportedResult, abstractTestScripts );
+                ( new TestResultAnalyzer() ).adjustResult( reportedResult, abstractTestScripts );
                 ( new CliScriptExecutionReporter( cli ) ).scriptExecuted( reportedResult );
             } catch ( err ) {
                 hasErrors = true;

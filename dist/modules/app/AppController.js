@@ -22,7 +22,7 @@ const CliHelp_1 = require("./CliHelp");
 const OptionsHandler_1 = require("./OptionsHandler");
 const meow = require("meow");
 const updateNotifier = require("update-notifier");
-// import { TestResultAnalyzer } from '../testscript/TestResultAnalyzer';
+const TestResultAnalyzer_1 = require("../testscript/TestResultAnalyzer");
 /**
  * Application controller
  *
@@ -155,9 +155,9 @@ class AppController {
             }
             let abstractTestScripts = [];
             if (spec !== null) {
+                const atsCtrl = new ATSGenController_1.ATSGenController();
+                abstractTestScripts = atsCtrl.generate(spec);
                 if (options.generateScript) { // Requires a plugin
-                    const atsCtrl = new ATSGenController_1.ATSGenController();
-                    abstractTestScripts = atsCtrl.generate(spec);
                     if (abstractTestScripts.length > 0) {
                         // cli.newLine( cli.symbolInfo, 'Generated', abstractTestScripts.length, 'abstract test scripts' );
                         let errors = [];
@@ -209,7 +209,7 @@ class AppController {
                 }
                 try {
                     let reportedResult = yield plugin.convertReportFile(executionResult.sourceFile);
-                    // ( new TestResultAnalyzer() ).adjustResult( reportedResult, abstractTestScripts );
+                    (new TestResultAnalyzer_1.TestResultAnalyzer()).adjustResult(reportedResult, abstractTestScripts);
                     (new CliScriptExecutionReporter_1.CliScriptExecutionReporter(cli)).scriptExecuted(reportedResult);
                 }
                 catch (err) {

@@ -30,7 +30,13 @@ export class ReportConverter {
     ): Promise< TestScriptExecutionResult > {
 
         const source: any = await this.readJsonFile( resultFilePath );
-        const pluginConfig = await this.readJsonFile( pluginConfigFilePath );
+
+        let pluginConfig = {};
+        try {
+            pluginConfig = await this.readJsonFile( pluginConfigFilePath );
+        } catch ( e ) {
+            // will stay with empty plug-in info
+        }
 
         let result: TestScriptExecutionResult = new TestScriptExecutionResult();
 
@@ -63,10 +69,17 @@ export class ReportConverter {
         result.started = source.stats.start;
         result.finished = source.stats.end;
         result.durationMs = source.stats.duration;
+
+        // Because of a bug in CodeceptJS JSON's counting
+        let failed = source.stats.failures;
+        if ( failed === source.stats.tests && source.stats.passes > 0 ) {
+            failed -= source.stats.passes;
+        }
+
         result.total = {
             tests: source.stats.tests,
             passed: source.stats.passes,
-            failed: source.stats.failures,
+            failed: failed,
             skipped: 0,
             error: 0,
             unknown: 0
@@ -128,7 +141,10 @@ export class ReportConverter {
             }
 
             // Pushes a TestMethodResult to its correspondent TestSuiteResult.
-            let suiteName: string = method.fullTitle.split( ':' )[0]; //fullTitle format is 'feature: test'
+            const suiteName: string = method.fullTitle.indexOf( ':' ) >= 0
+                ? method.fullTitle.split( ':' )[0] //fullTitle format is 'feature: test'
+                : method.fullTitle;
+
             this.pushTestMethodResult( result, testMethodResult, suiteName );
         }
     }
@@ -140,7 +156,11 @@ export class ReportConverter {
      * @param testMethodResult TestMethodResult to be pushed.
      * @param suiteName Test Suite Result name.
      */
-    private pushTestMethodResult( result: TestScriptExecutionResult, testMethodResult: TestMethodResult, suiteName: string ): void {
+    private pushTestMethodResult(
+        result: TestScriptExecutionResult,
+        testMethodResult: TestMethodResult,
+        suiteName: string
+    ): void {
 
         // Finds the correspondent test suite.
         let testSuiteResult: TestSuiteResult =
@@ -174,12 +194,12 @@ export class ReportConverter {
     public extractScriptLocationFromStackTrace( stackTrace: string ): Location | null {
 
         // Extract file name and line, e.g., 'path/to/file.js:15:7'
-        const regex = /((\w:| |\w|\/|\\|\.\/)+\.js):(\d+):(\d+)/umi;
+        const regex = /(?:\()([^(]+.js)\:(\d+)\:(\d+)(?:\))/gm;
         const r = regex.exec( stackTrace );
         if ( ! r || ! r[ 1 ] ) {
             return null;
         }
-        const [ _, path, __, lin, col ] = r;
+        const [ _, path, lin, col ] = r;
 
         return {
             filePath: path,

@@ -8,24 +8,37 @@ class TestResultAnalyzer {
                 let ats = this.findAbstractTestCase(featureName, m.name, abstractTestScripts);
                 if (!ats) {
                     // ERROR
-                    console.log('error - not found', featureName, m.name);
+                    // console.log( 'error - not found', featureName, m.name );
                     continue;
                 }
                 if (this.shouldAdjustMethodToPassed(ats, m)) {
-                    m.status = 'passed';
+                    m.status = 'adjusted';
+                    if (undefined === executionResult.total.adjusted) {
+                        executionResult.total.adjusted = 1;
+                    }
+                    else {
+                        executionResult.total.adjusted++;
+                    }
+                    if (!isNaN(executionResult.total.failed) &&
+                        executionResult.total.failed > 0) {
+                        executionResult.total.failed--;
+                    }
                     // Notify user!
-                    console.log('adjusted to pass', featureName, m.name);
+                    // console.log( 'adjusted to pass', featureName, m.name );
                 }
             }
         }
     }
     findAbstractTestCase(featureName, testCaseName, abstractTestScripts) {
+        const name = testCaseName.indexOf('|') >= 0
+            ? testCaseName.split('|')[1].trim()
+            : testCaseName;
         for (let ats of abstractTestScripts || []) {
-            if (ats.feature !== featureName) {
+            if (ats.feature.name !== featureName) {
                 continue;
             }
             for (let tc of ats.testcases || []) {
-                if (tc.name === testCaseName) {
+                if (tc.name === name) {
                     return tc;
                 }
             }

@@ -59,6 +59,7 @@ class TotalExecutionResult {
         this.passed = 0;
         this.skipped = 0;
         this.failed = 0;
+        this.adjusted = 0;
         this.error = 0;
         this.unknown = 0;
     }
