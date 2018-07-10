@@ -10,6 +10,7 @@ import { ListBasedDataGenerator } from "./ListBasedDataGenerator";
 import { EntityValueType } from "../ast/UIElement";
 import { InvertedLogicQueryBasedDataGenerator } from "./InvertedLogicQueryBasedDataGenerator";
 import { InvertedLogicListBasedDataGenerator } from "./InvertedLogicListBasedDataGenerator";
+import * as deepcopy from 'deepcopy';
 
 /**
  * Configuration (restrictions) used for generating test data.
@@ -114,8 +115,18 @@ export class DataGenerator {
 				return this.rawGeneratorFor( cfg ).lowest();
 
 			case DataTestCase.VALUE_RANDOM_BELOW_MIN:
-			case DataTestCase.LENGTH_RANDOM_BELOW_MIN:
 				return this.rawGeneratorFor( cfg ).randomBelowMin();
+
+			case DataTestCase.LENGTH_RANDOM_BELOW_MIN: {
+				// Generates a random number between 1 and min value
+				if ( cfg.required && isDefined( cfg.minValue ) ) {
+					let newCfg = deepcopy( cfg ) as DataGenConfig;
+					newCfg.minValue = 1;
+					newCfg.maxValue = cfg.minValue;
+					return this.rawGeneratorFor( newCfg ).randomBetweenMinAndMax();
+				}
+				return this.rawGeneratorFor( cfg ).randomBelowMin();
+			}
 
 			case DataTestCase.VALUE_JUST_BELOW_MIN:
 			case DataTestCase.LENGTH_JUST_BELOW_MIN:

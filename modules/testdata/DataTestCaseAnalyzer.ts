@@ -355,6 +355,8 @@ export class DataTestCaseAnalyzer {
 
             case DataTestCaseGroup.LENGTH: {
 
+                const isRequired: boolean = this._uiePropExtractor.extractIsRequired( uie );
+
                 // If it has VALUE property:
                 // - it must NOT generate VALID length values but it must generate invalid.
                 // - if it has negation, it must generate VALID as valid, and INVALID as invalid.
@@ -405,6 +407,24 @@ export class DataTestCaseAnalyzer {
                     case DataTestCase.LENGTH_LOWEST: ; // next
                     case DataTestCase.LENGTH_RANDOM_BELOW_MIN: ; // next
                     case DataTestCase.LENGTH_JUST_BELOW_MIN: {
+
+                        if ( isRequired ) {
+
+                            if ( dtc === DataTestCase.LENGTH_LOWEST ) {
+                                return incompatiblePair;
+                            }
+
+                            if ( dtc === DataTestCase.LENGTH_RANDOM_BELOW_MIN &&
+                                2 === minLength && ! isToFakeMinLength ) {
+                                return incompatiblePair;
+                            }
+
+                            if ( dtc === DataTestCase.LENGTH_JUST_BELOW_MIN &&
+                                1 === minLength && ! isToFakeMinLength ) {
+                                return incompatiblePair;
+                            }
+                        }
+
                         if ( hasMinLength || isToFakeMinLength ) {
                             return analyzer.hasValuesBelowMin()
                                 ? invalidMinPair

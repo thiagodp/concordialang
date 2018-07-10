@@ -11,6 +11,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const ValueTypeDetector_1 = require("../util/ValueTypeDetector");
 const DataTestCase_1 = require("./DataTestCase");
 const TypeChecking_1 = require("../util/TypeChecking");
+const deepcopy = require("deepcopy");
 /**
  * Configuration (restrictions) used for generating test data.
  *
@@ -87,8 +88,17 @@ class DataGenerator {
                 case DataTestCase_1.DataTestCase.LENGTH_LOWEST:
                     return this.rawGeneratorFor(cfg).lowest();
                 case DataTestCase_1.DataTestCase.VALUE_RANDOM_BELOW_MIN:
-                case DataTestCase_1.DataTestCase.LENGTH_RANDOM_BELOW_MIN:
                     return this.rawGeneratorFor(cfg).randomBelowMin();
+                case DataTestCase_1.DataTestCase.LENGTH_RANDOM_BELOW_MIN: {
+                    // Generates a random number between 1 and min value
+                    if (cfg.required && TypeChecking_1.isDefined(cfg.minValue)) {
+                        let newCfg = deepcopy(cfg);
+                        newCfg.minValue = 1;
+                        newCfg.maxValue = cfg.minValue;
+                        return this.rawGeneratorFor(newCfg).randomBetweenMinAndMax();
+                    }
+                    return this.rawGeneratorFor(cfg).randomBelowMin();
+                }
                 case DataTestCase_1.DataTestCase.VALUE_JUST_BELOW_MIN:
                 case DataTestCase_1.DataTestCase.LENGTH_JUST_BELOW_MIN:
                     return this.rawGeneratorFor(cfg).justBelowMin();
