@@ -16,6 +16,7 @@ exports.CODECEPTJS_COMMANDS = [
     { action: 'append', comp: CommandMapper_1.CmdCmp.ONE_TARGET__ONE_VALUE_OR_NUMBER, template: 'I.appendField({{{target}}}, {{{value}}});' },
     // attachFile
     { action: 'attachFile', comp: CommandMapper_1.CmdCmp.ONE_TARGET__ONE_VALUE, template: 'I.attachFile({{{target}}}, {{{value}}});' },
+    { action: 'fill', comp: CommandMapper_1.CmdCmp.SAME_TARGET_TYPE__ONE_TARGET__ONE_VALUE_OR_NUMBER, targetType: 'inputFile', template: 'I.attachFile({{{target}}}, {{{value}}});' },
     // cancel
     { action: 'cancel', comp: CommandMapper_1.CmdCmp.SAME_OPTION, options: ['alert'], template: 'I.cancelPopup();' },
     { action: 'cancel', comp: CommandMapper_1.CmdCmp.SAME_OPTION, options: ['confirm'], template: 'I.cancelPopup();' },

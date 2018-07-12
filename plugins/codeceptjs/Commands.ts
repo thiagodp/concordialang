@@ -15,6 +15,7 @@ export const CODECEPTJS_COMMANDS: CmdCfg[] = [
     { action: 'append', comp: CmdCmp.ONE_TARGET__ONE_VALUE_OR_NUMBER, template: 'I.appendField({{{target}}}, {{{value}}});' },
     // attachFile
     { action: 'attachFile', comp: CmdCmp.ONE_TARGET__ONE_VALUE, template: 'I.attachFile({{{target}}}, {{{value}}});' },
+    { action: 'fill', comp: CmdCmp.SAME_TARGET_TYPE__ONE_TARGET__ONE_VALUE_OR_NUMBER, targetType: 'inputFile', template: 'I.attachFile({{{target}}}, {{{value}}});' },
     // cancel
     { action: 'cancel', comp: CmdCmp.SAME_OPTION, options: [ 'alert' ], template: 'I.cancelPopup();' },
     { action: 'cancel', comp: CmdCmp.SAME_OPTION, options: [ 'confirm' ], template: 'I.cancelPopup();' },
