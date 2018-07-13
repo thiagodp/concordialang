@@ -19,11 +19,6 @@ export class ConfigMaker {
     ) {
         return {
             "tests": filter,
-            "smartWait": 5000,
-            "timeouts": {
-                "script": 60000,
-                "page load": 10000
-            },
             "output": output,
             "helpers": {},
             "bootstrap": false,
@@ -71,7 +66,12 @@ export class ConfigMaker {
         helpers[ "WebDriverIO" ] = {
             browser: browser,
             url: url,
-            windowSize: "maximize"
+            windowSize: "maximize",
+            smartWait: 5000,
+            timeouts: {
+                "script": 60000,
+                "page load": 10000
+            }
         };
     }
 
