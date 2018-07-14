@@ -17,7 +17,6 @@ import { KeywordDictionary } from "../dict/KeywordDictionary";
 import { NLPUtil } from "../nlp/NLPResult";
 import { Entities } from "../nlp/Entities";
 import { CombinationStrategy, SingleRandomOfEachStrategy } from "../selection/CombinationStrategy";
-import { Pair } from "ts-pair";
 import * as deepcopy from 'deepcopy';
 import { upperFirst } from "../util/CaseConversor";
 import { PreTestCaseGenerator, GenContext } from "./PreTestCaseGenerator";
@@ -88,7 +87,7 @@ export class TSGen {
             return [];
         }
 
-        let pairMap = {}; // Maps string => Array< Pair< State, TestScenario > >
+        let pairMap = {}; // Maps string => [ [ State, TestScenario ] ]
 
         let allStatesToReplace = variant.preconditions.concat( variant.stateCalls );
         // console.log( 'States to replace', allStatesToReplace.map( s=> s.name ) );
@@ -103,6 +102,10 @@ export class TSGen {
                 if ( isDefined( pairMap[ state.name ] ) ) {
                     continue;
                 }
+                if ( ! pairMap[ state.name ] ) {
+                    pairMap[ state.name ] = [];
+                }
+                let currentMap = pairMap[ state.name ];
 
                 let producerVariants = this.variantsThatProduce( state.name );
                 // console.log( 'Producer variants', producerVariants );
@@ -120,7 +123,6 @@ export class TSGen {
                 producerVariants = this.selectVariantsToCombine( producerVariants );
 
                 // Make pairs State => Test Scenario to combine later
-                let pairs: Pair< State, TestScenario >[] = [];
                 for ( let otherVariant of producerVariants ) {
                     // console.log( 'otherVariant >>', otherVariant.name, '\n', otherVariant.sentences.map( s => s.content ) );
                     let testScenario = this.selectSingleValidTestScenarioOf( otherVariant, ctx.errors ); // randomly
@@ -128,91 +130,112 @@ export class TSGen {
                     if ( null === testScenario ) {
                         continue; // Ignore
                     }
-                    pairs.push( new Pair( state, testScenario ) );
+                    currentMap.push( [ state, testScenario ] );
                 }
-
-                pairMap[ state.name ] = pairs;
             }
+
+            // console.log( 'pairMap', pairMap );
 
             //
             // Example when there are the states "foo" and "bar":
             //
             // {
-            //     "foo": [ Pair( State( "foo", 1 ), TS1 ) ]
-            //     "bar": [ Pair( State( "bar", 3 ), TS2 ), Pair( State( "bar", 3 ), TS3 ) ]
+            //     "foo": [ [ State( "foo", 1 ), TS1 ] ]
+            //     "bar": [ [ State( "bar", 3 ), TS2 ], [ State( "bar", 3 ), TS3 ] ]
             // }
             //
             // All combinations will produce:
             //
             // [
-            //     { "foo": Pair( State( "foo", 1 ), TS1 ), "bar": Pair( State( "bar", 3 ), TS2 ) },
-            //     { "foo": Pair( State( "foo", 1 ), TS1 ), "bar": Pair( State( "bar", 3 ), TS3 ) },
+            //     { "foo": [ State( "foo", 1 ), TS1 ], "bar": [ State( "bar", 3 ), TS2 ] },
+            //     { "foo": [ State( "foo", 1 ), TS1 ], "bar": [ State( "bar", 3 ), TS3 ] },
             // ]
             //
 
-            // console.log( 'pairMap', pairMap );
+            // console.log( 'pairMap', JSON.stringify( pairMap ) );
+
             // let product = cartesian( pairMap ); // TO-DO replace cartesian with strategy
             let result = this._statePairCombinationStrategy.combine( pairMap );
-            // console.log( 'Product', product );
+
             let testScenariosToCombineByState: any[] = result;
 
-            for ( let obj of testScenariosToCombineByState ) {
+            // console.log( 'after combining', result );
+
+            for ( let stateObj of testScenariosToCombineByState ) {
+
                 let ts = baseScenario.clone();
-                // console.log( "\nTS is\n", ts.steps.map( s => s.content ) );
 
-                let stepsAdded = 0;
-                for ( let stateName in obj ) {
+                // console.log( '\nNEW TS ---------------------------------\n' );
 
-                    let [ st, tsToReplaceStep ] = obj[ stateName ].toArray();
-                    let state = st as State
+                for ( let stateInTestCase of allStatesToReplace ) {
 
-                    // Adjust step index (precondition or state call)
-                    let stepIndex: number = 0;
-                    for ( let tsStep of ts.steps ) {
-                        let tsState = tsStep.nlpResult.entities.find( e => e.entity === Entities.STATE );
-                        if ( tsState && state.nameEquals( tsState.value ) ) {
-                            state.stepIndex = stepIndex;
-                            break;
+                    // console.log( "\tTS steps\n", ts.steps.map( s => s.content ) );
+
+                    for ( let stateName in stateObj ) {
+
+                        if ( ! stateInTestCase.nameEquals( stateName ) ) {
+                            continue;
                         }
-                        ++stepIndex;
+
+                        // console.log( "\tstateName", stateName );
+
+                        let statePair = stateObj[ stateName ];
+
+                        // console.log( "\tstatePair\n", statePair );
+
+                        let state = statePair[ 0 ];
+                        let tsToReplaceStep = statePair[ 1 ];
+                        let stepsAdded = 0;
+
+                        // Adjust step index (precondition or state call)
+                        let stepIndex: number = 0;
+                        for ( let tsStep of ts.steps ) {
+                            let tsState = tsStep.nlpResult.entities.find( e => e.entity === Entities.STATE );
+                            if ( tsState && state.nameEquals( tsState.value ) ) {
+                                state.stepIndex = stepIndex;
+                                break;
+                            }
+                            ++stepIndex;
+                        }
+
+                        const variantPreconditionIndex = variant.preconditions.indexOf( state );
+                        const isPrecondition = variantPreconditionIndex >= 0;
+
+                        // ---
+                        // Use GenUtil to replace references and fill values of the TestScenario
+
+                        // Clone the current TestScenario
+                        let tsToUse: TestScenario = tsToReplaceStep.clone();
+
+                        // Make all substitutions and generate valid values
+                        let all = await this._preTestCaseGenerator.generate(
+                            tsToReplaceStep.steps,
+                            ctx,
+                            [ this._validValuePlanMaker ]
+                        );
+
+                        const preTestCase = all[ 0 ];
+
+                        // console.log( "\nPreTestCase\n", preTestCase.steps.map( s => s.content ) );
+
+                        // Replace TestScenario steps with the new ones
+                        tsToUse.steps = preTestCase.steps;
+
+                        // Adjust the stepAfterPreconditions
+                        tsToUse.stepAfterPreconditions = null;
+                        let oldIndex = tsToReplaceStep.steps.indexOf( tsToReplaceStep.stepAfterPreconditions );
+                        if ( oldIndex >= 0 ) {
+                            tsToUse.stepAfterPreconditions = tsToUse.steps[ oldIndex ];
+                        }
+                        // ---
+
+                        // console.log( 'state to replace: ', state.name, '@', state.stepIndex );
+                        state.stepIndex += stepsAdded > 0 ? stepsAdded - 1 : 0;
+                        stepsAdded += this.replaceStepWithTestScenario( ts, state, tsToUse, isPrecondition );
+                        // console.log( "\nTS modified is\n", ts.steps.map( s => s.content ) );
                     }
 
-                    const variantPreconditionIndex = variant.preconditions.indexOf( state );
-                    const isPrecondition = variantPreconditionIndex >= 0;
-
-                    // ---
-                    // Use GenUtil to replace references and fill values of the TestScenario
-
-                    // Clone the current TestScenario
-                    let tsToUse: TestScenario = tsToReplaceStep.clone();
-
-                    // Make all substitutions and generate valid values
-                    let all = await this._preTestCaseGenerator.generate(
-                        tsToReplaceStep.steps,
-                        ctx,
-                        [ this._validValuePlanMaker ]
-                    );
-
-                    const preTestCase = all[ 0 ];
-
-                    // console.log( "\nPreTestCase\n", preTestCase.steps.map( s => s.content ) );
-
-                    // Replace TestScenario steps with the new ones
-                    tsToUse.steps = preTestCase.steps;
-
-                    // Adjust the stepAfterPreconditions
-                    tsToUse.stepAfterPreconditions = null;
-                    let oldIndex = tsToReplaceStep.steps.indexOf( tsToReplaceStep.stepAfterPreconditions );
-                    if ( oldIndex >= 0 ) {
-                        tsToUse.stepAfterPreconditions = tsToUse.steps[ oldIndex ];
-                    }
-                    // ---
-
-                    // console.log( 'state to replace: ', state.name, '@', state.stepIndex );
-                    state.stepIndex += stepsAdded > 0 ? stepsAdded - 1 : 0;
-                    stepsAdded += this.replaceStepWithTestScenario( ts, state, tsToUse, isPrecondition );
                 }
-                // console.log( "\nTS modified is\n", ts.steps.map( s => s.content ) );
                 testScenarios.push( ts );
             }
 
@@ -456,15 +479,15 @@ export class TSGen {
             step.external = true;
         }
 
-        // console.log( "\nBEFORE\n\n", ts.steps.map( s => s.content ).join( "\n" ) );
-        // console.log( "\nSTATE INDEX", state.stepIndex, "\n\nWILL REPLACE WITH\n\n", stepsToReplace.map( s => s.content ).join( "\n" ) );
+        // console.log( "\n\tBEFORE\n\n", ts.steps.map( s => s.content ) );
+        // console.log( "\n\tSTATE INDEX", state.stepIndex, "\n\nWILL REPLACE WITH\n\n", stepsToReplace.map( s => s.content ).join( "\n" ) );
 
         ts.steps.splice( state.stepIndex, 1, ... stepsToReplace );
         const stepsAdded = stepsToReplace.length;
         state.stepIndex += stepsAdded;
 
-        // console.log( "\nSTATE INDEX after", state.stepIndex );
-        // console.log( "\nAFTER\n\n", ts.steps.map( s => s.content ).join( "\n" ) );
+        // console.log( "\n\tSTATE INDEX after", state.stepIndex );
+        // console.log( "\n\tAFTER\n\n", ts.steps.map( s => s.content ) );
 
         return stepsAdded;
     }
