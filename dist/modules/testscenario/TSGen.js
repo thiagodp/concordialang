@@ -18,7 +18,6 @@ const Tag_1 = require("../ast/Tag");
 const NodeTypes_1 = require("../req/NodeTypes");
 const NLPResult_1 = require("../nlp/NLPResult");
 const Entities_1 = require("../nlp/Entities");
-const CombinationStrategy_1 = require("../selection/CombinationStrategy");
 const ts_pair_1 = require("ts-pair");
 const deepcopy = require("deepcopy");
 const CaseConversor_1 = require("../util/CaseConversor");
@@ -43,19 +42,22 @@ class TSGen {
         this.seed = this._preTestCaseGenerator.seed;
         this._randomLong = new RandomLong_1.RandomLong(new Random_1.Random(this.seed));
         // Makes a PlanMaker to create valid values for Precondition scenarios
-        this._validValuePlanMaker = new TestPlanMaker_1.TestPlanMaker(new DataTestCaseMix_1.OnlyValidMix(), new CombinationStrategy_1.SingleRandomOfEachStrategy(this.seed), this.seed);
+        this._validValuePlanMaker = new TestPlanMaker_1.TestPlanMaker(new DataTestCaseMix_1.OnlyValidMix(), 
+        // new SingleRandomOfEachStrategy( this.seed ),
+        _statePairCombinationStrategy, this.seed);
     }
     generate(ctx, variant) {
         return __awaiter(this, void 0, void 0, function* () {
             let testScenarios = [];
             // Detect Preconditions, State Calls, and Postconditions of the Variant
             this.detectVariantStates(variant, ctx.errors);
+            // console.log( 'variant', variant.name, '\n', variant.sentences.map( s => s.content ) );
             // console.log( 'pre', variant.preconditions );
             // console.log( 'post', variant.postconditions );
             const docLanguage = this._preTestCaseGenerator.docLanguage(ctx.doc);
             // Also removes Then steps with postconditions
             let baseScenario = this.makeTestScenarioFromVariant(variant, docLanguage);
-            // console.log( '>>>', baseScenario.steps.map( s => s.content ) );
+            // console.log( 'baseScenario\n', baseScenario.steps.map( s => s.content ) );
             // No steps -> No test scenarios
             if (!baseScenario.steps || baseScenario.steps.length < 1) {
                 return [];
@@ -64,7 +66,8 @@ class TSGen {
             let allStatesToReplace = variant.preconditions.concat(variant.stateCalls);
             // console.log( 'States to replace', allStatesToReplace.map( s=> s.name ) );
             if (allStatesToReplace.length > 0) { // Preconditions + State Calls
-                for (let state of allStatesToReplace) {
+                for (let stateToReplace of allStatesToReplace) {
+                    let state = deepcopy(stateToReplace);
                     // Already mapped?
                     if (TypeChecking_1.isDefined(pairMap[state.name])) {
                         continue;
@@ -84,7 +87,9 @@ class TSGen {
                     // Make pairs State => Test Scenario to combine later
                     let pairs = [];
                     for (let otherVariant of producerVariants) {
+                        // console.log( 'otherVariant >>', otherVariant.name, '\n', otherVariant.sentences.map( s => s.content ) );
                         let testScenario = this.selectSingleValidTestScenarioOf(otherVariant, ctx.errors); // randomly
+                        // console.log( 'testScenario >>\n', testScenario.steps.map( s => s.content ) );
                         if (null === testScenario) {
                             continue; // Ignore
                         }
@@ -117,9 +122,20 @@ class TSGen {
                     // console.log( "\nTS is\n", ts.steps.map( s => s.content ) );
                     let stepsAdded = 0;
                     for (let stateName in obj) {
-                        const pair = obj[stateName];
-                        let [state, tsToReplaceStep] = pair.toArray();
-                        const isPrecondition = variant.preconditions.indexOf(state) >= 0;
+                        let [st, tsToReplaceStep] = obj[stateName].toArray();
+                        let state = st;
+                        // Adjust step index (precondition or state call)
+                        let stepIndex = 0;
+                        for (let tsStep of ts.steps) {
+                            let tsState = tsStep.nlpResult.entities.find(e => e.entity === Entities_1.Entities.STATE);
+                            if (tsState && state.nameEquals(tsState.value)) {
+                                state.stepIndex = stepIndex;
+                                break;
+                            }
+                            ++stepIndex;
+                        }
+                        const variantPreconditionIndex = variant.preconditions.indexOf(state);
+                        const isPrecondition = variantPreconditionIndex >= 0;
                         // ---
                         // Use GenUtil to replace references and fill values of the TestScenario
                         // Clone the current TestScenario
@@ -137,7 +153,7 @@ class TSGen {
                             tsToUse.stepAfterPreconditions = tsToUse.steps[oldIndex];
                         }
                         // ---
-                        // console.log( 'state to replace: ', ( state as State ).name );
+                        // console.log( 'state to replace: ', state.name, '@', state.stepIndex );
                         state.stepIndex += stepsAdded > 0 ? stepsAdded - 1 : 0;
                         stepsAdded += this.replaceStepWithTestScenario(ts, state, tsToUse, isPrecondition);
                     }

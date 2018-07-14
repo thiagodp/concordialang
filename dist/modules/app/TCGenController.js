@@ -74,6 +74,7 @@ class TCGenController {
                             errors.push(err);
                             continue;
                         }
+                        let tsIndex = 0;
                         for (let ts of testScenarios) {
                             // Generating Test Cases
                             let generatedTC = [];
@@ -90,8 +91,9 @@ class TCGenController {
                             let tcIndex = 1;
                             for (let tc of generatedTC) {
                                 tcGen.addReferenceTagsTo(tc, scenarioIndex + 1, variantIndex + 1);
-                                tc.name = (variant.name || scenario.name) + ' - ' + tcIndex;
+                                tc.name = (variant.name || scenario.name) + ' - ' + (tcIndex + tsIndex);
                                 ++tcIndex;
+                                ++tsIndex;
                             }
                             testCases.push.apply(testCases, generatedTC);
                         }

@@ -56,7 +56,8 @@ export class TSGen {
         // Makes a PlanMaker to create valid values for Precondition scenarios
         this._validValuePlanMaker = new TestPlanMaker(
             new OnlyValidMix(),
-            new SingleRandomOfEachStrategy( this.seed ),
+            // new SingleRandomOfEachStrategy( this.seed ),
+            _statePairCombinationStrategy,
             this.seed
         );
     }
@@ -71,6 +72,8 @@ export class TSGen {
 
         // Detect Preconditions, State Calls, and Postconditions of the Variant
         this.detectVariantStates( variant, ctx.errors );
+
+        // console.log( 'variant', variant.name, '\n', variant.sentences.map( s => s.content ) );
         // console.log( 'pre', variant.preconditions );
         // console.log( 'post', variant.postconditions );
 
@@ -78,7 +81,7 @@ export class TSGen {
 
         // Also removes Then steps with postconditions
         let baseScenario: TestScenario = this.makeTestScenarioFromVariant( variant, docLanguage );
-        // console.log( '>>>', baseScenario.steps.map( s => s.content ) );
+        // console.log( 'baseScenario\n', baseScenario.steps.map( s => s.content ) );
 
         // No steps -> No test scenarios
         if ( ! baseScenario.steps || baseScenario.steps.length < 1 ) {
@@ -92,7 +95,9 @@ export class TSGen {
 
         if ( allStatesToReplace.length > 0 ) { // Preconditions + State Calls
 
-            for ( let state of allStatesToReplace ) {
+            for ( let stateToReplace of allStatesToReplace ) {
+
+                let state = deepcopy( stateToReplace );
 
                 // Already mapped?
                 if ( isDefined( pairMap[ state.name ] ) ) {
@@ -101,6 +106,7 @@ export class TSGen {
 
                 let producerVariants = this.variantsThatProduce( state.name );
                 // console.log( 'Producer variants', producerVariants );
+
                 // No producers ? -> Error
                 if ( producerVariants.length < 1 ) {
                     const msg = 'A producer of the state "' + state.name + '" was not found.';
@@ -116,7 +122,9 @@ export class TSGen {
                 // Make pairs State => Test Scenario to combine later
                 let pairs: Pair< State, TestScenario >[] = [];
                 for ( let otherVariant of producerVariants ) {
+                    // console.log( 'otherVariant >>', otherVariant.name, '\n', otherVariant.sentences.map( s => s.content ) );
                     let testScenario = this.selectSingleValidTestScenarioOf( otherVariant, ctx.errors ); // randomly
+                    // console.log( 'testScenario >>\n', testScenario.steps.map( s => s.content ) );
                     if ( null === testScenario ) {
                         continue; // Ignore
                     }
@@ -154,9 +162,23 @@ export class TSGen {
 
                 let stepsAdded = 0;
                 for ( let stateName in obj ) {
-                    const pair = obj[ stateName ];
-                    let [ state, tsToReplaceStep ] = pair.toArray();
-                    const isPrecondition = variant.preconditions.indexOf( state ) >= 0;
+
+                    let [ st, tsToReplaceStep ] = obj[ stateName ].toArray();
+                    let state = st as State
+
+                    // Adjust step index (precondition or state call)
+                    let stepIndex: number = 0;
+                    for ( let tsStep of ts.steps ) {
+                        let tsState = tsStep.nlpResult.entities.find( e => e.entity === Entities.STATE );
+                        if ( tsState && state.nameEquals( tsState.value ) ) {
+                            state.stepIndex = stepIndex;
+                            break;
+                        }
+                        ++stepIndex;
+                    }
+
+                    const variantPreconditionIndex = variant.preconditions.indexOf( state );
+                    const isPrecondition = variantPreconditionIndex >= 0;
 
                     // ---
                     // Use GenUtil to replace references and fill values of the TestScenario
@@ -186,7 +208,7 @@ export class TSGen {
                     }
                     // ---
 
-                    // console.log( 'state to replace: ', ( state as State ).name );
+                    // console.log( 'state to replace: ', state.name, '@', state.stepIndex );
                     state.stepIndex += stepsAdded > 0 ? stepsAdded - 1 : 0;
                     stepsAdded += this.replaceStepWithTestScenario( ts, state, tsToUse, isPrecondition );
                 }
