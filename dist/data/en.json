@@ -111,6 +111,7 @@
                 "label": [ "label" ],
                 "li": [ "list item", "li" ],
                 "link": [ "link" ],
+                "ol": [ "ordered list", "ol" ],
                 "page": [ "page" ],
                 "paragraph": [ "paragraph" ],
                 "radio": [ "radio", "radio button" ],
