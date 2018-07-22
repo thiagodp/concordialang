@@ -268,7 +268,33 @@ Property `type`:
   - Example: `- type is button`
   - Default value is `textbox`
   - Does not need quotes (`"`)
-  - See [data/en.json](https://github.com/thiagodp/concordialang/blob/master/data/en.json) for all the types allowed.
+  - Allowed values are:
+  - `button`
+	- `checkbox` or `check`
+	- `cookie`
+	- `div`
+	- `file input`
+	- `image`
+	- `label`
+	- `list item` or `li`
+	- `link`
+  - `ordered list` or `ol`
+	- `page`
+	- `paragraph`
+	- `radio` or `radio button`
+  - `screen`
+  - `select` or `combo` or `combobox` or `combo box` or `selection box`
+  - `slider`
+  - `span`
+  - `tab`
+  - `table`
+  - `text`
+  - `textbox` or `input`
+  - `textarea` or `text area`
+  - `title`
+  - `window`
+  - `unordered list` or `ul`
+  - `url` or `address` or `ip` or `site`
 
 Property `editable`:
   - Example: `- editable is true`

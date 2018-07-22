@@ -267,7 +267,33 @@ Propriedade `tipo`:
   - Exemplo: `- tipo é botão`
   - O valor *default* é `caixa de texto`
   - Valores não usam aspas (`"`)
-  - Veja [data/pt.json](https://github.com/thiagodp/concordialang/blob/master/data/pt.json) para todos os tipos permitidos.
+  - Valores permitidos são:
+  - `botão` ou `button`
+	- `caixa de marcação` ou `checkbox` ou `check`
+	- `cookie`
+	- `div`
+	- `arquivo` ou `file input`
+	- `imagem` ou `image`
+	- `rótulo` ou `label`
+	- `item de lista` ou `list item` ou `li`
+	- `ligação` ou `link`
+  - `lista ordenada` ou `ordered list` ou `ol`
+	- `página` ou `page`
+	- `parágrafo` ou `paragraph`
+	- `radio` ou `radio button`
+  - `tela` ou `screen`
+  - `caixa de seleção` ou `select` ou `combo` ou `combobox`
+  - `deslizador` ou `slider`
+  - `span`
+  - `aba` ou `tab`
+  - `tabela` ou `table`
+  - `texto` ou `text`
+  - `caixa de texto` ou `textbox` ou `input`
+  - `área de texto` ou `textarea` ou `text area`
+  - `título` ou `title`
+  - `janela` ou `window`
+  - `lista desordenada` ou `lista não ordenada` ou `unordered list` ou `ul`
+  - `url` ou `address` ou `ip` ou `site`
 
 Propriedade `editável`:
   - Exemplo: `- editável é true`
