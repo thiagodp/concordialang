@@ -268,32 +268,32 @@ Propriedade `tipo`:
   - O valor *default* é `caixa de texto`
   - Valores não usam aspas (`"`)
   - Valores permitidos são:
-  - `botão` ou `button`
+    - `aba` ou `tab`
+    - `área de texto` ou `textarea` ou `text area`
+    - `arquivo` ou `file input`
+    - `botão` ou `button`
 	- `caixa de marcação` ou `checkbox` ou `check`
+	- `caixa de seleção` ou `select` ou `combo` ou `combobox`
+	- `caixa de texto` ou `textbox` ou `input`
 	- `cookie`
+	- `deslizador` ou `slider`
 	- `div`
-	- `arquivo` ou `file input`
 	- `imagem` ou `image`
-	- `rótulo` ou `label`
 	- `item de lista` ou `list item` ou `li`
+	- `janela` ou `window`
 	- `ligação` ou `link`
-  - `lista ordenada` ou `ordered list` ou `ol`
+	- `lista não ordenada` ou `lista desordenada` ou `unordered list` ou `ul`
+    - `lista ordenada` ou `ordered list` ou `ol`
 	- `página` ou `page`
 	- `parágrafo` ou `paragraph`
 	- `radio` ou `radio button`
-  - `tela` ou `screen`
-  - `caixa de seleção` ou `select` ou `combo` ou `combobox`
-  - `deslizador` ou `slider`
-  - `span`
-  - `aba` ou `tab`
-  - `tabela` ou `table`
-  - `texto` ou `text`
-  - `caixa de texto` ou `textbox` ou `input`
-  - `área de texto` ou `textarea` ou `text area`
-  - `título` ou `title`
-  - `janela` ou `window`
-  - `lista desordenada` ou `lista não ordenada` ou `unordered list` ou `ul`
-  - `url` ou `address` ou `ip` ou `site`
+	- `rótulo` ou `label`
+    - `span`
+    - `tabela` ou `table`
+	- `tela` ou `screen`
+    - `texto` ou `text`	
+    - `título` ou `title`    
+    - `url` ou `address` ou `ip` ou `site`
 
 Propriedade `editável`:
   - Exemplo: `- editável é true`
