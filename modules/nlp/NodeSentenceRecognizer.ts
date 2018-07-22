@@ -133,13 +133,13 @@ export class NodeSentenceRecognizer {
         // Checking minTargets
         if ( expectedTargetsCount < rule.minTargets ) {
             const msg = 'The property "' + property + '" expects at least ' + rule.minTargets + ' values, but it was informed ' +  expectedTargetsCount +  '.';
-            errors.push( new NLPException( msg, node.location ) );
+            warnings.push( new Warning( msg, node.location ) );
             return false;
         }
         // Checking maxTargets
         if ( expectedTargetsCount > rule.maxTargets ) {
             const msg = 'The property "' + property + '" expects at most ' + rule.maxTargets + ' values, but it was informed ' + expectedTargetsCount  + '.';
-            errors.push( new NLPException( msg, node.location ) );
+            warnings.push( new Warning( msg, node.location ) );
             return false;
         }
         // Checking targets
@@ -147,7 +147,7 @@ export class NodeSentenceRecognizer {
             // Inexistent rule for the target
             if ( ! rule[ target ] ) {
                 const msg = 'The sentence "' + node.content + '" could not be validated due to an inexistent rule for the target "' + target + '" of the property "' + property + '"';
-                warnings.push( new NLPException( msg, node.location ) );
+                warnings.push( new Warning( msg, node.location ) );
                 return false;
             }
             const targetRule = rule[ target ];
@@ -160,13 +160,13 @@ export class NodeSentenceRecognizer {
                 // Min
                 if ( numberOfEntitiesOfTheTarget < targetRule.min ) {
                     const msg = 'The property "' + property + '" expects at least ' + targetRule.min + ' for "' + target + '", but it was informed ' + numberOfEntitiesOfTheTarget + '.';
-                    errors.push( new NLPException( msg, node.location ) );
+                    warnings.push( new Warning( msg, node.location ) );
                     return false;
                 }
                 // Max
                 if ( numberOfEntitiesOfTheTarget > targetRule.max ) {
                     const msg = 'The property "' + property + '" expects at most ' + targetRule.max + ' for "' + target + '", but it was informed ' + numberOfEntitiesOfTheTarget  + '.';
-                    errors.push( new NLPException( msg, node.location ) );
+                    warnings.push( new Warning( msg, node.location ) );
                     return false;
                 }
             }
@@ -177,7 +177,7 @@ export class NodeSentenceRecognizer {
             // Must have the other entity
             if ( recognizedEntityNames.indexOf( otherEntity ) < 0 ) {
                 const msg = 'The property "' + property + '" must be used with "' + otherEntity + '".';
-                errors.push( new NLPException( msg, node.location ) );
+                warnings.push( new Warning( msg, node.location ) );
                 return false;
             }
         }
