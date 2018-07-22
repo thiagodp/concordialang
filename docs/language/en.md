@@ -269,32 +269,32 @@ Property `type`:
   - Default value is `textbox`
   - Does not need quotes (`"`)
   - Allowed values are:
-  - `button`
-	- `checkbox` or `check`
-	- `cookie`
-	- `div`
-	- `file input`
-	- `image`
-	- `label`
-	- `list item` or `li`
-	- `link`
-  - `ordered list` or `ol`
-	- `page`
-	- `paragraph`
-	- `radio` or `radio button`
-  - `screen`
-  - `select` or `combo` or `combobox` or `combo box` or `selection box`
-  - `slider`
-  - `span`
-  - `tab`
-  - `table`
-  - `text`
-  - `textbox` or `input`
-  - `textarea` or `text area`
-  - `title`
-  - `window`
-  - `unordered list` or `ul`
-  - `url` or `address` or `ip` or `site`
+    - `button`
+    - `checkbox` or `check`
+    - `cookie`
+    - `div`
+    - `file input`
+    - `image`
+    - `label`
+    - `list item` or `li`
+    - `link`
+    - `ordered list` or `ol`
+    - `page`
+    - `paragraph`
+    - `radio` or `radio button`
+    - `screen`
+    - `select` or `combo` or `combobox` or `combo box` or `selection box`
+    - `slider`
+    - `span`
+    - `tab`
+    - `table`
+    - `text`
+    - `textbox` or `input`
+    - `textarea` or `text area`
+    - `title`
+    - `window`
+    - `unordered list` or `ul`
+    - `url` or `address` or `ip` or `site`
 
 Property `editable`:
   - Example: `- editable is true`
