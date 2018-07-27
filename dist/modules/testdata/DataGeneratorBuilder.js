@@ -26,9 +26,10 @@ const InvertedLogicQueryBasedDataGenerator_1 = require("./InvertedLogicQueryBase
  * @author Thiago Delgado Pinto
  */
 class DataGeneratorBuilder {
-    constructor(_seed, _randomTriesToInvalidValues = 10) {
+    constructor(_seed, _randomTriesToInvalidValues = 10, _maxPossibleStringLength) {
         this._seed = _seed;
         this._randomTriesToInvalidValues = _randomTriesToInvalidValues;
+        this._maxPossibleStringLength = _maxPossibleStringLength;
         this._queryCache = new QueryCache_1.QueryCache();
         this._random = new Random_1.Random(this._seed);
         this._randomString = new RandomString_1.RandomString(this._random);
@@ -40,7 +41,7 @@ class DataGeneratorBuilder {
     }
     raw(valueType, min, max) {
         switch (valueType) {
-            case ValueTypeDetector_1.ValueType.STRING: return new StringGenerator_1.StringGenerator(this._randomString, min, max);
+            case ValueTypeDetector_1.ValueType.STRING: return new StringGenerator_1.StringGenerator(this._randomString, min, max, this._maxPossibleStringLength);
             case ValueTypeDetector_1.ValueType.INTEGER: return new LongGenerator_1.LongGenerator(this._randomLong, min, max);
             case ValueTypeDetector_1.ValueType.DOUBLE: return new DoubleGenerator_1.DoubleGenerator(this._randomDouble, min, max);
             case ValueTypeDetector_1.ValueType.DATE: return new DateGenerator_1.DateGenerator(this._randomDate, min, max);

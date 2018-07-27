@@ -81,7 +81,11 @@ export class PreTestCaseGenerator {
         this._randomString = new RandomString( random );
         this._randomLong = new RandomLong( random );
         this._dtcAnalyzer = new DataTestCaseAnalyzer( seed );
-        this._uieValueGen = new UIElementValueGenerator( seed, randomTriesToInvalidValues );
+        this._uieValueGen = new UIElementValueGenerator(
+            new DataGenerator(
+                new DataGeneratorBuilder( seed, randomTriesToInvalidValues, maxRandomStringSize )
+            )
+        );
     }
 
 

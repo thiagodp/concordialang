@@ -47,17 +47,14 @@ export class UIElementValueGenerator {
 
     private readonly _uiePropExtractor = new UIElementPropertyExtractor();
     private readonly _opChecker = new UIElementOperatorChecker();
-    private readonly _dataGen: DataGenerator;
 
     private readonly _dbQueryCache = new Map< string, any[] >(); // query => values of the FIRST column only (for all columns, see QueryCache)
     private readonly _tblQueryCache = new Map< string, any[] >(); // query => values of the FIRST column only (for all columns, see QueryCache)
 
 
     constructor(
-        seed: string,
-        randomTriesToInvalidValues: number = 10
+        private readonly _dataGen: DataGenerator
     ) {
-        this._dataGen = new DataGenerator( new DataGeneratorBuilder( seed, randomTriesToInvalidValues ) );
     }
 
 

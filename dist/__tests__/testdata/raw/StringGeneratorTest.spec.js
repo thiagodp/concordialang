@@ -40,4 +40,9 @@ describe('StringGeneratorTest', () => {
     it('random above max', () => {
         expect(gen.randomAboveMax().length).toBeGreaterThan(aMax);
     });
+    it('accepts custom max possible length', () => {
+        const MAX_POSSIBLE_LENGTH = 100;
+        let newGen = new StringGenerator_1.StringGenerator(ranL, aMin, aMax, MAX_POSSIBLE_LENGTH);
+        expect(newGen.greatest().length).toBe(MAX_POSSIBLE_LENGTH);
+    });
 });

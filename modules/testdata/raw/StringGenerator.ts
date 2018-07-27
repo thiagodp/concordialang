@@ -13,20 +13,23 @@ export class StringGenerator implements RawDataGenerator< string >, RangeAnalyze
 
     private readonly _minLength: number;
     private readonly _maxLength: number;
+    private readonly _maxPossibleLength: number;
 
 	/**
 	 * Constructor.
 	 *
 	 * @param _random   Random generator
-	 * @param minLength Minimum length. Optional. Assumes the minimum string length if undefined.
-	 * @param maxLength Maximum length. Optional. Assumes the usual maximum string length if undefined.
+	 * @param minLength Minimum length. Optional. Assumes StringLimits.MIN if undefined.
+	 * @param maxLength Maximum length. Optional. Assumes StringLimits.MAX_USUAL if undefined.
+     * @param maxPossibleLength Maximum possible length. Optional. Assumes StringLimits.MAX if undefined.
 	 *
 	 * @throws Error In case of invalid values.
 	 */
     constructor(
         private readonly _randomString: RandomString,
         minLength?: number,
-        maxLength?: number
+        maxLength?: number,
+        maxPossibleLength?: number
     ) {
         ( new MinMaxChecker() ).check( minLength, maxLength ); // may throw Error
 
@@ -38,8 +41,16 @@ export class StringGenerator implements RawDataGenerator< string >, RangeAnalyze
             throw Error( 'Maximum string length is ' + StringLimits.MAX );
         }
 
+        if ( maxPossibleLength && maxPossibleLength > StringLimits.MAX ) {
+            throw Error( 'Maximum possible string length is ' + StringLimits.MAX );
+        }
+
         this._minLength = minLength ? minLength : StringLimits.MIN; // 0
         this._maxLength = maxLength ? maxLength : StringLimits.MAX_USUAL; // 255
+
+        this._maxPossibleLength = ( maxPossibleLength == undefined || maxPossibleLength === null )
+            ? StringLimits.MAX
+            : maxPossibleLength;
     }
 
     public minLength(): number {
@@ -167,12 +178,12 @@ export class StringGenerator implements RawDataGenerator< string >, RangeAnalyze
         if ( ! this.hasValuesAboveMax() ) {
             return this.max();
         }
-        return this._randomString.between( this._maxLength + 1, StringLimits.MAX );
+        return this._randomString.between( this._maxLength + 1, this._maxPossibleLength );
     }
 
     /** @inheritDoc */
     public greatest() {
-        return this._randomString.exactly( StringLimits.MAX );
+        return this._randomString.exactly( this._maxPossibleLength );
     }
 
 }

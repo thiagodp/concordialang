@@ -16,22 +16,22 @@ describe( 'StringGeneratorTest', () => {
 
     it( 'random below min', () => {
         expect( gen.randomBelowMin().length ).toBeLessThan( aMin );
-    } );    
+    } );
 
     it( 'just below min', () => {
         expect( gen.justBelowMin().length ).toBe( aMin - 1 );
     } );
-    
+
     it( 'just above min', () => {
         expect( gen.justAboveMin().length ).toBe( aMin + 1 );
-    } );    
+    } );
 
     it( 'median value', () => {
         expect( gen.median().length ).toBe( aMedian );
         const gen2: StringGenerator = new StringGenerator( ranL, 1, 1 );
         expect( gen2.median().length ).toBe( 1 );
     } );
-    
+
     it( 'random between min and max', () => {
         const val = gen.randomBetweenMinAndMax().length;
         expect( val ).toBeGreaterThan( aMin );
@@ -49,5 +49,11 @@ describe( 'StringGeneratorTest', () => {
     it( 'random above max', () => {
         expect( gen.randomAboveMax().length ).toBeGreaterThan( aMax );
     } );
-    
+
+    it( 'accepts custom max possible length', () => {
+        const MAX_POSSIBLE_LENGTH = 100;
+        let newGen = new StringGenerator( ranL, aMin, aMax, MAX_POSSIBLE_LENGTH );
+        expect( newGen.greatest().length ).toBe( MAX_POSSIBLE_LENGTH );
+    } );
+
 } );

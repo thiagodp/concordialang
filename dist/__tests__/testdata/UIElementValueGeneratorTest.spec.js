@@ -17,16 +17,20 @@ const DataTestCaseAnalyzer_1 = require("../../modules/testdata/DataTestCaseAnaly
 const BatchSpecificationAnalyzer_1 = require("../../modules/semantic/BatchSpecificationAnalyzer");
 const SpecFilter_1 = require("../../modules/selection/SpecFilter");
 const path_1 = require("path");
+const DataGenerator_1 = require("../../modules/testdata/DataGenerator");
+const DataGeneratorBuilder_1 = require("../../modules/testdata/DataGeneratorBuilder");
 describe('UIElementValueGeneratorTest', () => {
     let gen; // under test
     const SEED = 'concordia';
     const LANGUAGE = 'pt';
+    let dataGen;
     let cp;
     let bsa;
     let spec;
     let errors = [];
     beforeEach(() => {
-        gen = new UIElementValueGenerator_1.UIElementValueGenerator(SEED);
+        dataGen = new DataGenerator_1.DataGenerator(new DataGeneratorBuilder_1.DataGeneratorBuilder(SEED));
+        gen = new UIElementValueGenerator_1.UIElementValueGenerator(dataGen);
         cp = new SimpleCompiler_1.SimpleCompiler(LANGUAGE);
         bsa = new BatchSpecificationAnalyzer_1.BatchSpecificationAnalyzer();
         spec = new Spec_1.Spec();

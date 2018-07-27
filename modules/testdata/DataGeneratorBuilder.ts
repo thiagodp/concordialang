@@ -42,7 +42,8 @@ export class DataGeneratorBuilder {
 
     constructor(
         private readonly _seed: string,
-        private readonly _randomTriesToInvalidValues: number = 10
+        private readonly _randomTriesToInvalidValues: number = 10,
+        private readonly _maxPossibleStringLength?: number
     ) {
         this._random = new Random( this._seed );
         this._randomString = new RandomString( this._random );
@@ -55,7 +56,7 @@ export class DataGeneratorBuilder {
 
 	raw( valueType: ValueType, min?: any, max?: any ): RawDataGenerator< any > {
 		switch ( valueType ) {
-			case ValueType.STRING: return new StringGenerator( this._randomString, min, max );
+			case ValueType.STRING: return new StringGenerator( this._randomString, min, max, this._maxPossibleStringLength );
 			case ValueType.INTEGER: return new LongGenerator( this._randomLong, min, max );
 			case ValueType.DOUBLE: return new DoubleGenerator( this._randomDouble, min, max );
 			case ValueType.DATE: return new DateGenerator( this._randomDate, min, max );

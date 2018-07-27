@@ -12,7 +12,6 @@ const UIElementPropertyExtractor_1 = require("../util/UIElementPropertyExtractor
 const DataGenerator_1 = require("./DataGenerator");
 const UIPropertyTypes_1 = require("../util/UIPropertyTypes");
 const UIElementOperatorChecker_1 = require("../util/UIElementOperatorChecker");
-const DataGeneratorBuilder_1 = require("./DataGeneratorBuilder");
 const Entities_1 = require("../nlp/Entities");
 const RuntimeException_1 = require("../req/RuntimeException");
 const TypeChecking_1 = require("../util/TypeChecking");
@@ -38,13 +37,13 @@ const DatabaseTypes_1 = require("../db/DatabaseTypes");
 //
 // required is true|false                                               <-- negation is not valid for required
 class UIElementValueGenerator {
-    constructor(seed, randomTriesToInvalidValues = 10) {
+    constructor(_dataGen) {
+        this._dataGen = _dataGen;
         this._queryRefReplacer = new QueryReferenceReplacer_1.QueryReferenceReplacer();
         this._uiePropExtractor = new UIElementPropertyExtractor_1.UIElementPropertyExtractor();
         this._opChecker = new UIElementOperatorChecker_1.UIElementOperatorChecker();
         this._dbQueryCache = new Map(); // query => values of the FIRST column only (for all columns, see QueryCache)
         this._tblQueryCache = new Map(); // query => values of the FIRST column only (for all columns, see QueryCache)
-        this._dataGen = new DataGenerator_1.DataGenerator(new DataGeneratorBuilder_1.DataGeneratorBuilder(seed, randomTriesToInvalidValues));
     }
     generate(uieName, context, doc, spec, errors) {
         return __awaiter(this, void 0, void 0, function* () {

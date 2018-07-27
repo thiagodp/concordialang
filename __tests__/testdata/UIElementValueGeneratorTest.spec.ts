@@ -9,6 +9,8 @@ import { EntityValueType } from "../../modules/ast/UIElement";
 import { BatchSpecificationAnalyzer } from "../../modules/semantic/BatchSpecificationAnalyzer";
 import { SpecFilter } from "../../modules/selection/SpecFilter";
 import { join } from "path";
+import { DataGenerator } from "../../modules/testdata/DataGenerator";
+import { DataGeneratorBuilder } from "../../modules/testdata/DataGeneratorBuilder";
 
 describe( 'UIElementValueGeneratorTest', () => {
 
@@ -16,13 +18,15 @@ describe( 'UIElementValueGeneratorTest', () => {
 
     const SEED = 'concordia';
     const LANGUAGE = 'pt';
+    let dataGen: DataGenerator;
     let cp: SimpleCompiler;
     let bsa: BatchSpecificationAnalyzer;
     let spec: Spec;
     let errors: Error[] = [];
 
     beforeEach( () => {
-        gen = new UIElementValueGenerator( SEED );
+        dataGen = new DataGenerator( new DataGeneratorBuilder( SEED ) );
+        gen = new UIElementValueGenerator( dataGen );
         cp = new SimpleCompiler( LANGUAGE );
         bsa = new BatchSpecificationAnalyzer();
         spec = new Spec();

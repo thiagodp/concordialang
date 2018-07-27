@@ -15,6 +15,8 @@ const RandomString_1 = require("../testdata/random/RandomString");
 const RandomLong_1 = require("../testdata/random/RandomLong");
 const UIElementPropertyExtractor_1 = require("../util/UIElementPropertyExtractor");
 const DataTestCaseAnalyzer_1 = require("../testdata/DataTestCaseAnalyzer");
+const DataGenerator_1 = require("../testdata/DataGenerator");
+const DataGeneratorBuilder_1 = require("../testdata/DataGeneratorBuilder");
 const CaseConversor_1 = require("../util/CaseConversor");
 const Symbols_1 = require("../req/Symbols");
 const NodeTypes_1 = require("../req/NodeTypes");
@@ -64,7 +66,7 @@ class PreTestCaseGenerator {
         this._randomString = new RandomString_1.RandomString(random);
         this._randomLong = new RandomLong_1.RandomLong(random);
         this._dtcAnalyzer = new DataTestCaseAnalyzer_1.DataTestCaseAnalyzer(seed);
-        this._uieValueGen = new UIElementValueGenerator_1.UIElementValueGenerator(seed, randomTriesToInvalidValues);
+        this._uieValueGen = new UIElementValueGenerator_1.UIElementValueGenerator(new DataGenerator_1.DataGenerator(new DataGeneratorBuilder_1.DataGeneratorBuilder(seed, randomTriesToInvalidValues, maxRandomStringSize)));
     }
     /**
      * Change steps and produce oracles, according to the given test plans.
