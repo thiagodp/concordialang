@@ -153,8 +153,9 @@ export class TCGenController {
                             tc.name = ( variant.name || scenario.name ) + ' - ' + ( tcIndex + tsIndex );
 
                             ++tcIndex;
-                            ++tsIndex;
                         }
+
+                        ++tsIndex;
 
                         testCases.push.apply( testCases, generatedTC );
                     }

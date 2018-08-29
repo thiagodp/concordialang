@@ -93,8 +93,8 @@ class TCGenController {
                                 tcGen.addReferenceTagsTo(tc, scenarioIndex + 1, variantIndex + 1);
                                 tc.name = (variant.name || scenario.name) + ' - ' + (tcIndex + tsIndex);
                                 ++tcIndex;
-                                ++tsIndex;
                             }
+                            ++tsIndex;
                             testCases.push.apply(testCases, generatedTC);
                         }
                         ++variantIndex;
