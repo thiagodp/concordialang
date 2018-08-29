@@ -180,6 +180,9 @@ export class TSGen {
                         // console.log( "\tstateName", stateName );
 
                         let statePair = stateObj[ stateName ];
+                        if ( ! statePair ) {
+                            continue;
+                        }
 
                         // console.log( "\tstatePair\n", statePair );
 

@@ -130,6 +130,9 @@ class TSGen {
                             }
                             // console.log( "\tstateName", stateName );
                             let statePair = stateObj[stateName];
+                            if (!statePair) {
+                                continue;
+                            }
                             // console.log( "\tstatePair\n", statePair );
                             let state = statePair[0];
                             let tsToReplaceStep = statePair[1];
