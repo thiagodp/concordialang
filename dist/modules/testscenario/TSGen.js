@@ -79,7 +79,7 @@ class TSGen {
                     // console.log( 'Producer variants', producerVariants );
                     // No producers ? -> Error
                     if (producerVariants.length < 1) {
-                        const msg = 'A producer of the state "' + state.name + '" was not found.';
+                        const msg = 'The producer of the state "' + state.name + '" was not found.';
                         const loc = variant.sentences[state.stepIndex].location;
                         const err = new RuntimeException_1.RuntimeException(msg, loc);
                         ctx.errors.push(err);
@@ -266,6 +266,9 @@ class TSGen {
     }
     makeTestScenarioFromVariant(variant, docLanguage) {
         let ts = new TestScenario_1.TestScenario();
+        if (!TypeChecking_1.isDefined(variant) || !TypeChecking_1.isDefined(variant.sentences)) {
+            return ts;
+        }
         let sentencesCount = variant.sentences.length;
         if (sentencesCount < 1) {
             return ts;
