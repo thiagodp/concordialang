@@ -39,7 +39,7 @@ exports.DEFAULT_UI_ACTION_SYNTAX_RULE = {
  */
 exports.UI_ACTION_SYNTAX_RULES = [
     { name: "accept", minTargets: 0, maxTargets: 0 },
-    { name: "amOn", minTargets: 1, targets: ["ui_element", "ui_literal", "value", "number", "constant"] },
+    { name: "amOn", minTargets: 1, maxTargets: 1, targets: ["ui_element", "ui_literal", "value", "number", "constant"] },
     { name: "append", targets: ["ui_element", "ui_literal", "value", "number", "constant"],
         minTargets: 1, maxTargets: 999,
         value: { min: 0, max: 1 },
