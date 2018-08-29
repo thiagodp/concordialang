@@ -25,8 +25,6 @@ const TestPlan_1 = require("../testcase/TestPlan");
 const UIElementValueGenerator_1 = require("../testdata/UIElementValueGenerator");
 const TypeChecking_1 = require("../util/TypeChecking");
 const EnglishKeywordDictionary_1 = require("../dict/EnglishKeywordDictionary");
-const arrayDiff = require("arr-diff");
-const deepcopy = require("deepcopy");
 const ReferenceReplacer_1 = require("../util/ReferenceReplacer");
 const CaseType_1 = require("../app/CaseType");
 const PreTestCase_1 = require("./PreTestCase");
@@ -35,7 +33,10 @@ const ActionMap_1 = require("../util/ActionMap");
 const Actions_1 = require("../util/Actions");
 const ActionTargets_1 = require("../util/ActionTargets");
 const UIElementNameHandler_1 = require("../util/UIElementNameHandler");
+const LineChecker_1 = require("../req/LineChecker");
 const path_1 = require("path");
+const arrayDiff = require("arr-diff");
+const deepcopy = require("deepcopy");
 class GenContext {
     constructor(spec, doc, errors, warnings) {
         this.spec = spec;
@@ -62,6 +63,7 @@ class PreTestCaseGenerator {
         this.randomTriesToInvalidValues = randomTriesToInvalidValues;
         this._nlpUtil = new NLPResult_1.NLPUtil();
         this._uiePropExtractor = new UIElementPropertyExtractor_1.UIElementPropertyExtractor();
+        this._lineChecker = new LineChecker_1.LineChecker();
         const random = new Random_1.Random(seed);
         this._randomString = new RandomString_1.RandomString(random);
         this._randomLong = new RandomLong_1.RandomLong(random);
@@ -305,7 +307,8 @@ class PreTestCaseGenerator {
                 content: sentence,
                 comment: comment,
                 location: {
-                    column: step.location.column,
+                    // column: step.location.column,
+                    column: this._lineChecker.countLeftSpacesAndTabs(sentence),
                     line: line++,
                     filePath: step.location.filePath
                 },
@@ -353,6 +356,9 @@ class PreTestCaseGenerator {
                     continue;
                 }
             }
+            // Recognize again to adjust positions entities positions
+            // -> Needed because there is a conversion of AND steps in GIVEN to GIVEN and this changes the position
+            this._variantSentenceRec.recognizeSentences(language, [step], ctx.errors, ctx.warnings);
             let before = step.content;
             let [newContent, comment] = refReplacer.replaceUIElementsWithUILiterals(step.content, step.nlpResult, ctx.doc, ctx.spec, this.uiLiteralCaseOption);
             // Replace content
@@ -364,6 +370,7 @@ class PreTestCaseGenerator {
             // Add target types
             step.targetTypes = this.extractTargetTypes(step, ctx.doc, ctx.spec);
             if (before != newContent) {
+                // console.log( 'BEFORE', before, "\nNEW   ", newContent);
                 // Update NLP !
                 this._variantSentenceRec.recognizeSentences(language, [step], ctx.errors, ctx.warnings);
             }
@@ -530,6 +537,7 @@ class PreTestCaseGenerator {
                 comment: (step.comment || '') + comment,
                 location: {
                     column: step.location.column,
+                    // column: this._lineChecker.countLeftSpacesAndTabs( sentence ),
                     line: line++,
                     filePath: step.location.filePath
                 },

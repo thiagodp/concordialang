@@ -20,7 +20,6 @@ import { Spec } from "../ast/Spec";
 import { LocatedException } from "../req/LocatedException";
 import { RuntimeException } from "../req/RuntimeException";
 import { DataTestCase } from "../testdata/DataTestCase";
-import { Pair } from "ts-pair";
 import { TestPlanMaker } from "../testcase/TestPlanMaker";
 import { TestPlan } from "../testcase/TestPlan";
 import { UIElementValueGenerator, ValueGenContext } from "../testdata/UIElementValueGenerator";
@@ -28,11 +27,8 @@ import { isDefined } from "../util/TypeChecking";
 import { UIETestPlan } from "../testcase/UIETestPlan";
 import { LanguageContent } from "../dict/LanguageContent";
 import { EnglishKeywordDictionary } from "../dict/EnglishKeywordDictionary";
-import * as arrayDiff from 'arr-diff';
-import * as deepcopy from 'deepcopy';
 import { ReferenceReplacer } from "../util/ReferenceReplacer";
 import { VariantSentenceRecognizer } from "../nlp/VariantSentenceRecognizer";
-import { Keywords } from "../req/Keywords";
 import { CaseType } from "../app/CaseType";
 import { PreTestCase } from "./PreTestCase";
 import { LocalTime, DateTimeFormatter, LocalDate, LocalDateTime } from "js-joda";
@@ -40,7 +36,11 @@ import { ACTION_TARGET_MAP } from "../util/ActionMap";
 import { Actions } from "../util/Actions";
 import { ActionTargets } from "../util/ActionTargets";
 import { UIElementNameHandler } from "../util/UIElementNameHandler";
+import { LineChecker } from "../req/LineChecker";
+import { Pair } from "ts-pair";
 import { basename } from "path";
+import * as arrayDiff from 'arr-diff';
+import * as deepcopy from 'deepcopy';
 
 export class GenContext {
     constructor(
@@ -61,11 +61,13 @@ export class PreTestCaseGenerator {
 
     private readonly _nlpUtil = new NLPUtil();
     private readonly _uiePropExtractor = new UIElementPropertyExtractor();
+    private readonly _lineChecker = new LineChecker();
 
     private readonly _randomString: RandomString;
     private readonly _randomLong: RandomLong;
     private readonly _dtcAnalyzer: DataTestCaseAnalyzer;
     private readonly _uieValueGen: UIElementValueGenerator;
+
 
     constructor(
         private readonly _variantSentenceRec: VariantSentenceRecognizer,
@@ -399,7 +401,8 @@ export class PreTestCaseGenerator {
                 content: sentence,
                 comment: comment,
                 location: {
-                    column: step.location.column,
+                    // column: step.location.column,
+                    column: this._lineChecker.countLeftSpacesAndTabs( sentence ),
                     line: line++,
                     filePath: step.location.filePath
                 } as Location,
@@ -469,6 +472,10 @@ export class PreTestCaseGenerator {
                 }
             }
 
+            // Recognize again to adjust positions entities positions
+            // -> Needed because there is a conversion of AND steps in GIVEN to GIVEN and this changes the position
+            this._variantSentenceRec.recognizeSentences( language, [ step ], ctx.errors, ctx.warnings );
+
             let before = step.content;
 
             let [ newContent, comment ] = refReplacer.replaceUIElementsWithUILiterals(
@@ -485,6 +492,7 @@ export class PreTestCaseGenerator {
             step.targetTypes = this.extractTargetTypes( step, ctx.doc, ctx.spec );
 
             if ( before != newContent ) {
+                // console.log( 'BEFORE', before, "\nNEW   ", newContent);
                 // Update NLP !
                 this._variantSentenceRec.recognizeSentences( language, [ step ], ctx.errors, ctx.warnings );
             }
@@ -692,6 +700,7 @@ export class PreTestCaseGenerator {
                 comment: ( step.comment || '' ) + comment,
                 location: {
                     column: step.location.column,
+                    // column: this._lineChecker.countLeftSpacesAndTabs( sentence ),
                     line: line++,
                     filePath: step.location.filePath
                 } as Location,
