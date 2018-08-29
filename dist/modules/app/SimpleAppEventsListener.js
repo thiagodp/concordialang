@@ -6,8 +6,9 @@ const ErrorSorting_1 = require("../util/ErrorSorting");
 const ProcessingInfo_1 = require("./ProcessingInfo");
 const TypeChecking_1 = require("../util/TypeChecking");
 class SimpleAppEventsListener {
-    constructor(_cli) {
+    constructor(_cli, _debug = false) {
         this._cli = _cli;
+        this._debug = _debug;
     }
     //
     // FileReadListener
@@ -157,13 +158,19 @@ class SimpleAppEventsListener {
         const sortedErrors = ErrorSorting_1.sortErrorsByLocation(errors);
         const spaces = ' ';
         for (let e of sortedErrors) {
+            let msg = this._debug
+                ? e.message + ' ' + this.formattedStackOf(e)
+                : e.message;
             if (showSpaces) {
-                this._cli.newLine(spaces, symbol, e.message);
+                this._cli.newLine(spaces, symbol, msg);
             }
             else {
-                this._cli.newLine(symbol, e.message);
+                this._cli.newLine(symbol, msg);
             }
         }
+    }
+    formattedStackOf(err) {
+        return "\n  DETAILS: " + err.stack.substring(err.stack.indexOf("\n"));
     }
     formatHash(hash) {
         return this._cli.colorInfo(hash.substr(0, 8));

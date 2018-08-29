@@ -23,7 +23,8 @@ export class SimpleAppEventsListener implements
 {
 
     constructor(
-        private _cli: CLI
+        private _cli: CLI,
+        private _debug: boolean = false
     ) {
     }
 
@@ -258,12 +259,19 @@ export class SimpleAppEventsListener implements
         const sortedErrors = sortErrorsByLocation( errors );
         const spaces = ' ';
         for ( let e of sortedErrors ) {
+            let msg = this._debug
+                ? e.message + ' ' + this.formattedStackOf( e )
+                : e.message;
             if ( showSpaces ) {
-                this._cli.newLine( spaces, symbol, e.message );
+                this._cli.newLine( spaces, symbol, msg );
             } else {
-                this._cli.newLine( symbol, e.message );
+                this._cli.newLine( symbol, msg );
             }
         }
+    }
+
+    private formattedStackOf( err: Error ): string {
+        return "\n  DETAILS: " + err.stack.substring( err.stack.indexOf( "\n" ) );
     }
 
     private formatHash( hash: string ): string {

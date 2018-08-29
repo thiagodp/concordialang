@@ -42,8 +42,8 @@ class CompilerController {
             }
             // Verbose output option
             let listener = options.verbose
-                ? new VerboseAppEventsListener_1.VerboseAppEventsListener(cli)
-                : new SimpleAppEventsListener_1.SimpleAppEventsListener(cli);
+                ? new VerboseAppEventsListener_1.VerboseAppEventsListener(cli, options.debug)
+                : new SimpleAppEventsListener_1.SimpleAppEventsListener(cli, options.debug);
             let singleFileCompiler = new SingleFileCompiler_1.SingleFileCompiler(lexer, parser, nlpBasedSentenceRecognizer, options.language);
             let mfp = new MultiFileProcessor_1.MultiFileProcessor(singleFileCompiler, listener, listener, listener, listener);
             let compiler = new Compiler_1.Compiler(mfp, specAnalyzer);

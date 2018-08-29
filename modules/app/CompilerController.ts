@@ -46,8 +46,8 @@ export class CompilerController {
 
         // Verbose output option
         let listener =  options.verbose
-            ? new VerboseAppEventsListener( cli )
-            : new SimpleAppEventsListener( cli );
+            ? new VerboseAppEventsListener( cli, options.debug )
+            : new SimpleAppEventsListener( cli, options.debug );
 
         let singleFileCompiler = new SingleFileCompiler(
             lexer,

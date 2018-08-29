@@ -173,7 +173,8 @@ class AppController {
                             cli.newLine(cli.symbolSuccess, 'Generated script', cli.colorHighlight(file));
                         }
                         for (let err of errors) {
-                            cli.newLine(cli.symbolError, err.message);
+                            // cli.newLine( cli.symbolError, err.message );
+                            this.showException(err, options, cli);
                         }
                     }
                     else {
