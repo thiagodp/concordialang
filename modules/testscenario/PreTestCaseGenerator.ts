@@ -627,7 +627,7 @@ export class PreTestCaseGenerator {
                 const locStr = '(' + step.location.line + ',' + step.location.column + ')';
                 const msg = 'Could not retrieve a value from ' +
                     Symbols.UI_ELEMENT_PREFIX + variable + Symbols.UI_ELEMENT_SUFFIX +
-                    ' of ' + fileName + ' ' + locStr + '. It will receive an empty value.';
+                    ' in ' + fileName + ' ' + locStr + '. It will receive an empty value.';
                 // console.log( uieVariableToValueMap );
                 // console.log( variable, '<'.repeat( 10 ) );
                 ctx.warnings.push( new RuntimeException( msg ) );
@@ -641,7 +641,7 @@ export class PreTestCaseGenerator {
                 uieLiteral = convertCase( variable, this.uiLiteralCaseOption );
                 const msg = 'Could not retrieve a literal from ' +
                     Symbols.UI_ELEMENT_PREFIX + variable +
-                    Symbols.UI_ELEMENT_SUFFIX + '. Generating "' + uieLiteral + '"';
+                    Symbols.UI_ELEMENT_SUFFIX + '. Generating the identification "' + uieLiteral + '"';
                 ctx.warnings.push( new RuntimeException( msg, step.location ) );
             }
 
