@@ -588,6 +588,12 @@ The next sentence is for *mobile* only:
 Then I see that the orientation is portrait
 ```
 
+### see + text + value
+```gherkin
+Then I see the text "foo"
+  and I see the text 1000
+```
+
 ### see + url + value
 ```gherkin
 Then I see the url "/foo"

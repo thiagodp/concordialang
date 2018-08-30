@@ -200,6 +200,12 @@ Cenário: Converte corretamente para CodeceptJS com WebDriverIO ou Appium
       e eu não vejo o cookie "Meu Cookie"
       e eu não vejo o cookie 1
 
+      # see + text [+ not]
+      e eu vejo o texto "Hello"
+      e eu vejo o texto 1000
+      e eu não vejo o texto "Hello"
+      e eu não vejo o texto 1000
+
       # see + title [+ not]
       e eu vejo no título "Meu Título"
       e eu vejo no título 1

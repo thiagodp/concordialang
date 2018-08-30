@@ -163,6 +163,13 @@ export const CODECEPTJS_COMMANDS: CmdCfg[] = [
     { action: 'see', comp: CmdCmp.SAME_MODIFIER__SAME_TARGET_TYPE__ONE_VALUE_OR_NUMBER, targetType: 'cookie', modifier: 'not', template: 'I.dontSeeCookie({{{value}}});' },
     { action: 'see', comp: CmdCmp.SAME_MODIFIER__SAME_OPTION__ONE_VALUE_OR_NUMBER, options: [ 'cookie' ], modifier: 'not', template: 'I.dontSeeCookie({{{value}}});' },
 
+    // see + text + value | number
+    { action: 'see', comp: CmdCmp.SAME_MODIFIER__SAME_TARGET_TYPE__ONE_VALUE_OR_NUMBER, targetType: 'text', template: 'I.seeTextEquals({{{value}}});' },
+    { action: 'see', comp: CmdCmp.SAME_MODIFIER__SAME_OPTION__ONE_VALUE_OR_NUMBER, options: [ 'text' ], template: 'I.seeTextEquals({{{value}}});' },
+    // see + text + not + value | number
+    { action: 'see', comp: CmdCmp.SAME_MODIFIER__SAME_TARGET_TYPE__ONE_VALUE_OR_NUMBER, targetType: 'text', modifier: 'not', template: 'I.dontSeeTextEquals({{{value}}});' },
+    { action: 'see', comp: CmdCmp.SAME_MODIFIER__SAME_OPTION__ONE_VALUE_OR_NUMBER, options: [ 'text' ], modifier: 'not', template: 'I.dontSeeTextEquals({{{value}}});' },
+
     // see + title + value | number
     { action: 'see', comp: CmdCmp.SAME_MODIFIER__SAME_TARGET_TYPE__ONE_VALUE_OR_NUMBER, targetType: 'title', template: 'I.seeInTitle({{{value}}});' },
     { action: 'see', comp: CmdCmp.SAME_MODIFIER__SAME_OPTION__ONE_VALUE_OR_NUMBER, options: [ 'title' ], template: 'I.seeInTitle({{{value}}});' },

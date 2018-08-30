@@ -409,6 +409,11 @@ Então eu vejo que a orientação é retrato
 ```
 
 ```gherkin
+Então eu vejo o texto "foo"
+  e eu vejo o texto 1000
+```
+
+```gherkin
 Então eu não vejo a url "/foo"
 ```
 
