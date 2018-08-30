@@ -211,8 +211,11 @@ class UIElementValueGenerator {
                 value = yield this._dataGen.generate(dtc, cfg);
             }
             catch (e) {
-                const msg = doc.fileInfo.path + ': Error generating value for "' + uieName + '".';
-                errors.push(new RuntimeException_1.RuntimeException(msg));
+                const msg = 'Error generating value for "' + uieName + '": ' + e.message;
+                if (!uie.location.filePath) {
+                    uie.location.filePath = doc.fileInfo.path;
+                }
+                errors.push(new RuntimeException_1.RuntimeException(msg, uie.location));
             }
             // console.log( '--------------> ', value );
             // Save in the map
@@ -243,7 +246,12 @@ class UIElementValueGenerator {
                         let value = TypeChecking_1.valueOrNull(context.uieVariableToValueMap.get(uie.info.fullVariableName));
                         // Generate if not in cache
                         if (!TypeChecking_1.isDefined(value)) {
-                            value = yield this.generate(uie.info.fullVariableName, context, doc, spec, errors);
+                            try {
+                                value = yield this.generate(uie.info.fullVariableName, context, doc, spec, errors);
+                            }
+                            catch (e) {
+                                // Error is already consumed by the array errors
+                            }
                         }
                         return value;
                     }
@@ -370,8 +378,14 @@ class UIElementValueGenerator {
                 let value = TypeChecking_1.valueOrNull(context.uieVariableToValueMap.get(fullVariableName));
                 // console.log( 'Value from cache', isDefined( value ) ? value : 'null' );
                 if (null === value) {
-                    value = yield this.generate(fullVariableName, context, doc, spec, errors);
-                    // console.log( 'Generated value', isDefined( value ) ? value : 'null' );
+                    try {
+                        value = yield this.generate(fullVariableName, context, doc, spec, errors);
+                        // console.log( 'Generated value', isDefined( value ) ? value : 'null' );
+                    }
+                    catch (e) {
+                        // errors.push( e );
+                        // Ignored because errors already consumes the error
+                    }
                 }
                 newQuery = this._queryRefReplacer.replaceUIElementInQuery(newQuery, variable, Array.isArray(value) ? value[0] : value);
                 // console.log( 'newQuery', newQuery );
@@ -405,7 +419,14 @@ class UIElementValueGenerator {
                 }
                 spec.databaseNameToInterfaceMap().set(database.name, intf);
             }
-            const returnedData = yield this.queryResult(newQuery, intf, errors);
+            let returnedData;
+            try {
+                returnedData = yield this.queryResult(newQuery, intf, errors);
+            }
+            catch (err) {
+                errors.push(err);
+                return null;
+            }
             // console.log( 'returnedData', returnedData );
             const firstColumnData = this.firstColumnOf(returnedData);
             if (TypeChecking_1.isDefined(firstColumnData)) {
@@ -437,7 +458,14 @@ class UIElementValueGenerator {
                 }
                 spec.tableNameToInterfaceMap().set(table.name, intf);
             }
-            const returnedData = yield this.queryResult(newQuery, intf, errors);
+            let returnedData;
+            try {
+                returnedData = yield this.queryResult(newQuery, intf, errors);
+            }
+            catch (err) {
+                errors.push(err);
+                return null;
+            }
             const firstColumnData = this.firstColumnOf(returnedData);
             if (TypeChecking_1.isDefined(firstColumnData)) {
                 this._tblQueryCache.set(newQuery, firstColumnData);

@@ -19,6 +19,7 @@ import * as enumUtil from 'enum-util';
 import { Pair } from "ts-pair";
 import { Step } from "../ast/Step";
 import { RangeAnalyzer } from "./raw/RangeAnalyzer";
+import { NodeTypes } from "../req/NodeTypes";
 
 
 /**
@@ -90,18 +91,24 @@ export class DataTestCaseAnalyzer {
         // }
 
         let compatibles: DataTestCase[] = enumUtil.getValues( DataTestCase );
+        const incompatiblePair = new Pair( DTCAnalysisResult.INCOMPATIBLE, [] );
 
         // Analyzes compatible rules (valid/invalid)
         for ( let dtc of compatibles ) {
-            // Result, Otherwise steps
-            const result: Pair< DTCAnalysisResult, Step[] > = this.analyzeProperties( dtc, uie, errors );
-            // console.log( 'Analysis', dtc, result.getFirst() );
-            map.set( dtc, result );
+            try {
+                // Result, Otherwise steps
+                const result: Pair< DTCAnalysisResult, Step[] > = this.analyzeProperties( dtc, uie, errors );
+                // console.log( 'Analysis', dtc, result.getFirst() );
+                map.set( dtc, result );
+            } catch ( e ) {
+                map.set( dtc, incompatiblePair );
+                // errors.push( new RuntimeException( e.message, uie.location ) );
+                // Variable errors already consumes the error
+            }
         }
 
         // Sets incompatible ones
         const incompatibles: DataTestCase[] = arrayDiff( compatibles, enumUtil.getValues( DataTestCase ) );
-        const incompatiblePair = new Pair( DTCAnalysisResult.INCOMPATIBLE, [] );
         for ( let dtc of incompatibles ) {
             map.set( dtc, incompatiblePair );
         }
@@ -184,7 +191,20 @@ export class DataTestCaseAnalyzer {
             case DataTestCaseGroup.REQUIRED: { // negation is not valid here
                 const isRequired: boolean = this._uiePropExtractor.extractIsRequired( uie );
                 switch ( dtc ) {
-                    case DataTestCase.REQUIRED_FILLED: return validPair;
+                    case DataTestCase.REQUIRED_FILLED: {
+
+                        // Check whether the value has a reference to another UI Element
+                        if ( isDefined( pValue ) ) {
+                            const hasQuery = this._nlpUtil.hasEntityNamed( Entities.QUERY, pValue.nlpResult );
+                            if ( hasQuery ) {
+                                // return new Pair( DTCAnalysisResult.INVALID, pRequired.otherwiseSentences || [] );
+                                return incompatiblePair;
+                            }
+                        }
+
+                        return validPair;
+                    }
+
                     case DataTestCase.REQUIRED_NOT_FILLED: {
 
                         // // Incompatible if value comes from a query
@@ -203,6 +223,10 @@ export class DataTestCaseAnalyzer {
 
 
             case DataTestCaseGroup.SET: {
+
+                // TO-DO:   Analyze if the has QUERY and the QUERY depends on another UI Element
+                //          If it depends and the data test case of the other element is INVALID,
+                //          the result should also be invalid.
 
                 if ( ! pValue ) {
                     return incompatiblePair;
@@ -232,6 +256,20 @@ export class DataTestCaseAnalyzer {
                     }
                     return incompatiblePair;
                 }
+
+
+                // // Check whether the value has a reference to another UI Element
+                // if ( isDefined( pValue ) ) {
+                //     const hasQuery = this._nlpUtil.hasEntityNamed( Entities.QUERY, pValue.nlpResult );
+
+                //     const hasRefToUIE = isDefined( pValue.value.references.find(
+                //         node => node.nodeType === NodeTypes.UI_ELEMENT ) );
+
+                //     if ( hasQuery && hasRefToUIE ) {
+                //         const invalidPair = new Pair( DTCAnalysisResult.INVALID, pValue.otherwiseSentences || [] );
+                //         return invalidPair;
+                //     }
+                // }
 
                 switch ( dtc ) {
                     case DataTestCase.SET_FIRST_ELEMENT  : ; // next

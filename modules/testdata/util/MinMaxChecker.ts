@@ -30,7 +30,7 @@ export class MinMaxChecker {
         }
         // min > max
         if ( isDefined( min ) && isDefined( max ) && Number( min ) > Number( max ) ) {
-            throw new Error( "min can't be greater than max." );
+            throw new Error( "The minimum value cannot be greater than the maximum value." );
         }
 		// delta
 		if ( isDefined( delta ) && delta < 0 ) {

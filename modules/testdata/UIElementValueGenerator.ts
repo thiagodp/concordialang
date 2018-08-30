@@ -263,8 +263,11 @@ export class UIElementValueGenerator {
         try {
             value = await this._dataGen.generate( dtc, cfg );
         } catch ( e ) {
-            const msg = doc.fileInfo.path + ': Error generating value for "' + uieName + '".';
-            errors.push( new RuntimeException( msg ) );
+            const msg = 'Error generating value for "' + uieName + '": ' + e.message;
+            if ( ! uie.location.filePath ) {
+                uie.location.filePath = doc.fileInfo.path;
+            }
+            errors.push( new RuntimeException( msg, uie.location ) );
         }
 
         // console.log( '--------------> ', value );
@@ -314,7 +317,11 @@ export class UIElementValueGenerator {
 
                     // Generate if not in cache
                     if ( ! isDefined( value ) ) {
-                        value = await this.generate( uie.info.fullVariableName, context, doc, spec, errors );
+                        try {
+                            value = await this.generate( uie.info.fullVariableName, context, doc, spec, errors );
+                        } catch ( e ) {
+                            // Error is already consumed by the array errors
+                        }
                     }
 
                     return value;
@@ -459,8 +466,13 @@ export class UIElementValueGenerator {
             let value = valueOrNull( context.uieVariableToValueMap.get( fullVariableName ) );
             // console.log( 'Value from cache', isDefined( value ) ? value : 'null' );
             if ( null === value ) {
-                value = await this.generate( fullVariableName, context, doc, spec, errors );
-                // console.log( 'Generated value', isDefined( value ) ? value : 'null' );
+                try {
+                    value = await this.generate( fullVariableName, context, doc, spec, errors );
+                    // console.log( 'Generated value', isDefined( value ) ? value : 'null' );
+                } catch ( e ) {
+                    // errors.push( e );
+                    // Ignored because errors already consumes the error
+                }
             }
 
             newQuery = this._queryRefReplacer.replaceUIElementInQuery(
@@ -510,7 +522,13 @@ export class UIElementValueGenerator {
             spec.databaseNameToInterfaceMap().set( database.name, intf );
         }
 
-        const returnedData = await this.queryResult( newQuery, intf, errors );
+        let returnedData;
+        try {
+            returnedData = await this.queryResult( newQuery, intf, errors );
+        } catch ( err ) {
+            errors.push( err );
+            return null;
+        }
         // console.log( 'returnedData', returnedData );
         const firstColumnData = this.firstColumnOf( returnedData );
         if ( isDefined( firstColumnData ) ) {
@@ -552,7 +570,13 @@ export class UIElementValueGenerator {
             spec.tableNameToInterfaceMap().set( table.name, intf );
         }
 
-        const returnedData = await this.queryResult( newQuery, intf, errors );
+        let returnedData;
+        try {
+            returnedData = await this.queryResult( newQuery, intf, errors );
+        } catch ( err ) {
+            errors.push( err );
+            return null;
+        }
         const firstColumnData = this.firstColumnOf( returnedData );
         if ( isDefined( firstColumnData ) ) {
             this._tblQueryCache.set( newQuery, firstColumnData );

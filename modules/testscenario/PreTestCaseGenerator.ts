@@ -211,7 +211,14 @@ export class PreTestCaseGenerator {
 
             for ( let [ uieVar, uieTestPlan ] of plan.dataTestCases ) {
                 // console.log( 'uieVar', uieVar, '\nuieTestPlan', uieTestPlan, "\n" );
-                let generatedValue = await this._uieValueGen.generate( uieVar, context, ctx.doc, ctx.spec, ctx.errors );
+
+                let generatedValue;
+                try {
+                    generatedValue = await this._uieValueGen.generate( uieVar, context, ctx.doc, ctx.spec, ctx.errors );
+                } catch ( e ) {
+                    ctx.doc.fileErrors.push( e );
+                    continue;
+                }
                 // console.log( 'GENERATED', generatedValue, '<'.repeat( 10 ) );
                 uieVariableToValueMap.set( uieVar, generatedValue );
             }
@@ -429,15 +436,22 @@ export class PreTestCaseGenerator {
     ): UIElement[] {
         let all: UIElement[] = [];
         const uieNames = this.extractUIElementNamesFromSteps( steps );
-        const baseMsg = 'Referenced UI Element not found: ';
+        let namesNotFound: string[] = [];
         for ( let name of uieNames ) {
             let uie = ctx.spec.uiElementByVariable( name, ctx.doc );
             if ( ! uie ) {
-                ctx.errors.push( new RuntimeException( baseMsg + name ) );
+                namesNotFound.push( name );
                 continue;
             }
             all.push( uie );
         }
+
+        if ( namesNotFound.length > 0 ) {
+            const msg = 'Referenced UI Elements not found: ' + namesNotFound.join( ', ' );
+            const err = new RuntimeException( msg );
+            ctx.errors.push( err );
+        }
+
         return all;
     }
 
@@ -626,8 +640,8 @@ export class PreTestCaseGenerator {
             if ( null === uieLiteral ) { // Should never happer since Spec defines Literals for mapped UI Elements
                 uieLiteral = convertCase( variable, this.uiLiteralCaseOption );
                 const msg = 'Could not retrieve a literal from ' +
-                Symbols.UI_ELEMENT_PREFIX + variable + Symbols.UI_ELEMENT_SUFFIX +
-                '. Generating one: "' + uieLiteral + '"';
+                    Symbols.UI_ELEMENT_PREFIX + variable +
+                    Symbols.UI_ELEMENT_SUFFIX + '. Generating "' + uieLiteral + '"';
                 ctx.warnings.push( new RuntimeException( msg, step.location ) );
             }
 

@@ -27,7 +27,7 @@ class MinMaxChecker {
         }
         // min > max
         if (TypeChecking_1.isDefined(min) && TypeChecking_1.isDefined(max) && Number(min) > Number(max)) {
-            throw new Error("min can't be greater than max.");
+            throw new Error("The minimum value cannot be greater than the maximum value.");
         }
         // delta
         if (TypeChecking_1.isDefined(delta) && delta < 0) {
