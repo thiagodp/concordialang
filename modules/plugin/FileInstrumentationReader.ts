@@ -56,7 +56,9 @@ import { promisify } from 'util';
         // Specification info not found, reject it
         if ( null === specFilePath || 0 === specLineNumber ) {
             const msg = 'Specification information could not be retrieved from "' + scriptLoc.filePath + '".';
-            throw new Warning( msg, scriptLoc );
+            // throw new Warning( msg, scriptLoc );
+            specFilePath = msg;
+            specLineNumber = 1;
         }
 
         const specLoc: Location = {

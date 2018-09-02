@@ -9,7 +9,6 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const InstrumentationReader_1 = require("./InstrumentationReader");
-const Warning_1 = require("../req/Warning");
 const fs = require("fs");
 const util_1 = require("util");
 /**
@@ -53,7 +52,9 @@ class FileInstrumentationReader {
             // Specification info not found, reject it
             if (null === specFilePath || 0 === specLineNumber) {
                 const msg = 'Specification information could not be retrieved from "' + scriptLoc.filePath + '".';
-                throw new Warning_1.Warning(msg, scriptLoc);
+                // throw new Warning( msg, scriptLoc );
+                specFilePath = msg;
+                specLineNumber = 1;
             }
             const specLoc = {
                 filePath: specFilePath,
