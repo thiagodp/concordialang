@@ -53,7 +53,7 @@
         "testcase": {
 
             "ui_action_modifier": {
-                "not": [ "not", "no", "do not", "don't", "does not", "doesn't" ]
+                "not": [ "not", "no", "dont", "don't", "doesn't", "cannot", "shouldn't", "mustn't" ]
             },
 
             "ui_action": {
