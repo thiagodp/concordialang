@@ -16,6 +16,7 @@
         "lib",
         "modules",
         "plugins",
+        "main.ts"
     ],
     "exclude": [
         "node_modules",
