@@ -1,9 +1,9 @@
-import { NLPTrainingIntentExample, NLPTrainingData } from "./NLPTrainingData";
-import { NLPTrainingDataConversor } from "./NLPTrainingDataConversor";
-import { NLP } from "./NLP";
-import { LanguageContentLoader } from "../dict/LanguageContentLoader";
-import { LanguageContent } from "../dict/LanguageContent";
-import { isDefined } from "../util/TypeChecking";
+import { LanguageContent } from '../dict/LanguageContent';
+import { LanguageContentLoader } from '../dict/LanguageContentLoader';
+import { isDefined } from '../util/TypeChecking';
+import { NLP } from './NLP';
+import { NLPTrainingData } from './NLPTrainingData';
+import { NLPTrainingDataConversor } from './NLPTrainingDataConversor';
 
 /**
  * NLP trainer.

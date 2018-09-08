@@ -5,7 +5,7 @@ import * as childProcess from 'child_process';
 import { promisify } from 'util';
 import { writeFile, access, constants, readFile } from 'fs';
 import { ConfigMaker } from './ConfigMaker';
-import chalk, { Chalk } from 'chalk';
+import chalk from 'chalk';
 import { arrowRight, info, cross, warning } from 'figures';
 
 /**
@@ -239,7 +239,8 @@ export class TestScriptExecutor {
             : `codeceptjs run --steps --reporter mocha-multi --config ${configFilePath} --colors`;
 
         this.write( ' ', textCommand( cmd ) );
-        const code = await this.runCommand( cmd );
+        // const code = await this.runCommand( cmd );
+        await this.runCommand( cmd );
 
         this.write( iconInfo, textColor( 'Retrieving output file' ), highlight( outputFilePath ) + textColor( '...' ) );
 
@@ -279,9 +280,9 @@ export class TestScriptExecutor {
     //     return `codeceptjs run --reporter mocha-multi --override "${optionsStr}" -c ${ options.sourceCodeDir } --colors`;
     // }
 
-    private escapeJson( json: string ): string {
-        return JSON.stringify( { _: json} ).slice( 6, -2 );
-    }
+    // private escapeJson( json: string ): string {
+    //     return JSON.stringify( { _: json} ).slice( 6, -2 );
+    // }
 
     private async runCommand(
         command: string

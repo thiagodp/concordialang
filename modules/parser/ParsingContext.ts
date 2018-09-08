@@ -1,16 +1,14 @@
-import { Database } from '../ast/Database';
-import { Table } from '../ast/Table';
-import { UIElement, UIProperty } from '../ast/UIElement';
-import { ConstantBlock } from '../ast/ConstantBlock';
-import { RegexBlock } from '../ast/RegexBlock';
-import { Document } from '../ast/Document';
-import { Feature } from "../ast/Feature";
-import { Scenario } from "../ast/Scenario";
-import { Variant } from '../ast/Variant';
-import { TestCase } from '../ast/TestCase';
 import { Background } from '../ast/Background';
+import { ConstantBlock } from '../ast/ConstantBlock';
+import { Database } from '../ast/Database';
+import { Document } from '../ast/Document';
+import { RegexBlock } from '../ast/RegexBlock';
+import { Scenario } from '../ast/Scenario';
+import { Table } from '../ast/Table';
+import { TestCase } from '../ast/TestCase';
+import { UIElement, UIProperty } from '../ast/UIElement';
+import { Variant } from '../ast/Variant';
 import { VariantBackground } from '../ast/VariantBackground';
-import { BeforeAll, AfterAll, BeforeFeature, AfterFeature, BeforeEachScenario, AfterEachScenario } from '../ast/TestEvent';
 
 /**
  * Parsing context.

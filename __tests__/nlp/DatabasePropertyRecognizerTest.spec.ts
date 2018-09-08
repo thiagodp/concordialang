@@ -1,11 +1,8 @@
-import { Intents } from '../../modules/nlp/Intents';
 import { DatabasePropertyRecognizer } from '../../modules/nlp/DatabasePropertyRecognizer';
 import { DatabaseProperty } from '../../modules/ast/Database';
 import { NodeTypes } from '../../modules/req/NodeTypes';
-import { ContentNode } from '../../modules/ast/Node';
 import { NLPTrainer } from '../../modules/nlp/NLPTrainer';
 import { NLP } from '../../modules/nlp/NLP';
-import { Lexer } from '../../modules/lexer/Lexer';
 import { Options } from '../../modules/app/Options';
 import { resolve } from 'path';
 import { LanguageContentLoader, JsonLanguageContentLoader } from '../../modules/dict/LanguageContentLoader';

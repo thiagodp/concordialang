@@ -1,20 +1,17 @@
-import { RuleBuilder } from './RuleBuilder';
-import { UI_PROPERTY_SYNTAX_RULES, DEFAULT_UI_PROPERTY_SYNTAX_RULE } from './SyntaxRules';
-import { Intents } from './Intents';
-import { NodeSentenceRecognizer, NLPResultProcessor } from "./NodeSentenceRecognizer";
-import { UIProperty, EntityValue } from "../ast/UIElement";
-import { LocatedException } from "../req/LocatedException";
-import { ContentNode } from "../ast/Node";
-import { NLP } from "./NLP";
 import { NLPResult } from '../../modules/nlp/NLPResult';
-import { NLPException } from "./NLPException";
-import { Entities } from "./Entities";
-import { Warning } from "../req/Warning";
-import { NLPTrainer } from './NLPTrainer';
-import { Symbols } from '../req/Symbols';
-import { ValueTypeDetector, ValueType, adjustValueToTheRightType } from '../util/ValueTypeDetector';
-import { LocalDate, LocalTime, LocalDateTime } from 'js-joda';
+import { ContentNode } from '../ast/Node';
+import { EntityValue, UIProperty } from '../ast/UIElement';
+import { LocatedException } from '../req/LocatedException';
 import { isDefined } from '../util/TypeChecking';
+import { adjustValueToTheRightType, ValueTypeDetector } from '../util/ValueTypeDetector';
+import { Entities } from './Entities';
+import { Intents } from './Intents';
+import { NLP } from './NLP';
+import { NLPException } from './NLPException';
+import { NLPTrainer } from './NLPTrainer';
+import { NLPResultProcessor, NodeSentenceRecognizer } from './NodeSentenceRecognizer';
+import { RuleBuilder } from './RuleBuilder';
+import { DEFAULT_UI_PROPERTY_SYNTAX_RULE, UI_PROPERTY_SYNTAX_RULES } from './SyntaxRules';
 
 /**
  * UI element property sentence recognizer.

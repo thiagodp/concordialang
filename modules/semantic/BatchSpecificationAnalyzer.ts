@@ -1,17 +1,17 @@
-import { TableSSA } from './TableSSA';
+import Graph = require('graph.js/dist/graph.full.js');
+
+import { Spec } from '../ast/Spec';
+import { AfterAllSSA } from './AfterAllSSA';
+import { BeforeAllSSA } from './BeforeAllSSA';
+import { ConstantSSA } from './ConstantSSA';
 import { DatabaseSSA } from './DatabaseSSA';
 import { FeatureSSA } from './FeatureSSA';
 import { ImportSSA } from './ImportSSA';
-import { SpecificationAnalyzer } from './SpecificationAnalyzer';
-import { Spec } from "../ast/Spec";
-import { TestCaseSSA } from './TestCaseSSA';
 import { SemanticException } from './SemanticException';
-import { ConstantSSA } from './ConstantSSA';
+import { SpecificationAnalyzer } from './SpecificationAnalyzer';
+import { TableSSA } from './TableSSA';
+import { TestCaseSSA } from './TestCaseSSA';
 import { UIElementSSA } from './UIElementSSA';
-import Graph = require( 'graph.js/dist/graph.full.js' );
-import { Options } from '../app/Options';
-import { BeforeAllSSA } from './BeforeAllSSA';
-import { AfterAllSSA } from './AfterAllSSA';
 
 /**
  * Executes many semantic analyzers to a specification in batch.

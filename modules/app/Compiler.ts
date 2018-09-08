@@ -1,14 +1,11 @@
 import { MultiFileProcessor, MultiFileProcessedData } from "./MultiFileProcessor";
 import { Options } from "./Options";
-import { CLI } from "./CLI";
 import { BatchSpecificationAnalyzer } from "../semantic/BatchSpecificationAnalyzer";
 import { Spec } from "../ast/Spec";
 import { Document } from "../ast/Document";
 import { LocatedException } from "../req/LocatedException";
 import { CompilerListener } from "./CompilerListener";
-import { Warning } from "../req/Warning";
 import { SpecFilter } from "../selection/SpecFilter";
-import { isDefined } from "../util/TypeChecking";
 import Graph = require( 'graph.js/dist/graph.full.js' );
 import { ProcessingInfo } from "./ProcessingInfo";
 
@@ -29,7 +26,7 @@ export class Compiler {
 
         listener.compilerStarted( options );
 
-        const startTime: number = Date.now();
+        // const startTime: number = Date.now();
 
         const r: MultiFileProcessedData = await this._mfp.process( options );
         const compiledFilesCount = r.compiledFiles.length;

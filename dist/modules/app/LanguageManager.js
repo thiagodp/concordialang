@@ -95,8 +95,5 @@ class LanguageManager {
             return this._languageDir;
         };
     }
-    makeLanguageFilePath(language) {
-        return path.join(this._languageDir, language + '.json');
-    }
 }
 exports.LanguageManager = LanguageManager;

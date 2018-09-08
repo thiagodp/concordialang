@@ -1,16 +1,15 @@
-import { QueryParser } from '../db/QueryParser';
-import { escapeId, escape } from 'sqlstring';
-import { isNumber, isDefined } from './TypeChecking';
-import { Entities } from '../nlp/Entities';
-import { LocatedException } from '../req/LocatedException';
-import { Warning } from '../req/Warning';
+import { escape, escapeId } from 'sqlstring';
+
 import { CaseType } from '../app/CaseType';
-import { convertCase } from './CaseConversor';
-import { Symbols } from '../req/Symbols';
-import { NLPResult } from '../nlp/NLPResult';
-import { ValueTypeDetector } from './ValueTypeDetector';
-import { Spec } from '../ast/Spec';
 import { Document } from '../ast/Document';
+import { Spec } from '../ast/Spec';
+import { QueryParser } from '../db/QueryParser';
+import { Entities } from '../nlp/Entities';
+import { NLPResult } from '../nlp/NLPResult';
+import { Symbols } from '../req/Symbols';
+import { convertCase } from './CaseConversor';
+import { isDefined } from './TypeChecking';
+import { ValueTypeDetector } from './ValueTypeDetector';
 
 /**
  * Replaces references to Concordia constructions - such as named databases,

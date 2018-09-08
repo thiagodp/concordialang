@@ -1,10 +1,8 @@
 import { UIProperty } from '../../modules/ast/UIElement';
 import { NodeTypes } from '../../modules/req/NodeTypes';
-import { ContentNode } from '../../modules/ast/Node';
 import { NLPTrainer } from '../../modules/nlp/NLPTrainer';
 import { NLP } from '../../modules/nlp/NLP';
 import { UIPropertyRecognizer } from "../../modules/nlp/UIPropertyRecognizer";
-import { Lexer } from '../../modules/lexer/Lexer';
 import { Options } from '../../modules/app/Options';
 import { resolve } from 'path';
 import { LanguageContentLoader, JsonLanguageContentLoader } from '../../modules/dict/LanguageContentLoader';

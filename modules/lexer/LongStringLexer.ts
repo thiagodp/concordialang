@@ -1,17 +1,14 @@
-import { Symbols } from '../req/Symbols';
-import { NodeTypes } from '../req/NodeTypes';
-import { NodeLexer, LexicalAnalysisResult } from "./NodeLexer";
-import { LineChecker } from "../req/LineChecker";
 import { LongString } from '../ast/LongString';
+import { NodeTypes } from '../req/NodeTypes';
+import { Symbols } from '../req/Symbols';
+import { LexicalAnalysisResult, NodeLexer } from './NodeLexer';
 
 /**
  * Detects anything not empty.
- * 
+ *
  * @author Thiago Delgado Pinto
  */
 export class LongStringLexer implements NodeLexer< LongString > {
-
-    private _lineChecker: LineChecker = new LineChecker();
 
     /** @inheritDoc */
     public nodeType(): string {
@@ -21,7 +18,7 @@ export class LongStringLexer implements NodeLexer< LongString > {
     /** @inheritDoc */
     suggestedNextNodeTypes(): string[] {
         return [ NodeTypes.LONG_STRING ];
-    }    
+    }
 
     /** @inheritDoc */
     public analyze( line: string, lineNumber?: number ): LexicalAnalysisResult< LongString > {

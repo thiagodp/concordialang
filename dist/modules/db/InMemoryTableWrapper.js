@@ -8,11 +8,11 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const alasql = require("alasql");
+const RuntimeException_1 = require("../req/RuntimeException");
+const TypeChecking_1 = require("../util/TypeChecking");
 const ValueTypeDetector_1 = require("../util/ValueTypeDetector");
 const SqlHelper_1 = require("./SqlHelper");
-const TypeChecking_1 = require("../util/TypeChecking");
-const RuntimeException_1 = require("../req/RuntimeException");
+const alasql = require("alasql");
 /**
  * In-memory table wrapper
  *

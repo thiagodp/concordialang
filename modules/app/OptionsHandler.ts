@@ -1,5 +1,4 @@
 import { Options } from "./Options";
-import { CliHelp } from "./CliHelp";
 import { CLI } from "./CLI";
 import { isDefined } from "../util/TypeChecking";
 import { relative, join } from "path";

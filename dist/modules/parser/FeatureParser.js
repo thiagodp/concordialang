@@ -1,8 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const TextCollector_1 = require("./TextCollector");
-const TagCollector_1 = require("./TagCollector");
 const SyntaticException_1 = require("../req/SyntaticException");
+const TagCollector_1 = require("./TagCollector");
+const TextCollector_1 = require("./TextCollector");
 /**
  * Feature parser
  *

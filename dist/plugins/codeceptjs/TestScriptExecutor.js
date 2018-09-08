@@ -210,7 +210,8 @@ class TestScriptExecutor {
                 ? 'npm run concordia:codeceptjs'
                 : `codeceptjs run --steps --reporter mocha-multi --config ${configFilePath} --colors`;
             this.write(' ', textCommand(cmd));
-            const code = yield this.runCommand(cmd);
+            // const code = await this.runCommand( cmd );
+            yield this.runCommand(cmd);
             this.write(iconInfo, textColor('Retrieving output file'), highlight(outputFilePath) + textColor('...'));
             return outputFilePath;
         });
@@ -247,9 +248,9 @@ class TestScriptExecutor {
     //     const optionsStr: string = this.escapeJson( JSON.stringify( commandOptions ) );
     //     return `codeceptjs run --reporter mocha-multi --override "${optionsStr}" -c ${ options.sourceCodeDir } --colors`;
     // }
-    escapeJson(json) {
-        return JSON.stringify({ _: json }).slice(6, -2);
-    }
+    // private escapeJson( json: string ): string {
+    //     return JSON.stringify( { _: json} ).slice( 6, -2 );
+    // }
     runCommand(command) {
         return __awaiter(this, void 0, void 0, function* () {
             let options = {

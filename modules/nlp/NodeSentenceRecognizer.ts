@@ -1,13 +1,11 @@
-import { UIProperty } from '../ast/UIElement';
-import { NodeTypes } from '../req/NodeTypes';
-import { ContentNode } from "../ast/Node";
-import { Location } from "../ast/Location";
-import { NLP } from "./NLP";
 import { NLPResult } from '../../modules/nlp/NLPResult';
-import { LocatedException } from "../req/LocatedException";
-import { NLPException } from "./NLPException";
+import { Location } from '../ast/Location';
+import { ContentNode } from '../ast/Node';
+import { LocatedException } from '../req/LocatedException';
 import { Warning } from '../req/Warning';
 import { isDefined } from '../util/TypeChecking';
+import { NLP } from './NLP';
+import { NLPException } from './NLPException';
 
 /**
  * NLP result processor

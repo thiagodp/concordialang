@@ -172,7 +172,7 @@ class ReportConverter {
         if (!r || !r[1]) {
             return null;
         }
-        const [_, path, lin, col] = r;
+        const [, path, lin, col] = r;
         return {
             filePath: path,
             line: parseInt(lin),

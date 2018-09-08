@@ -73,7 +73,6 @@ class MultiFileProcessor {
                         this._fileReadListener.fileReadFinished(p);
                         const fileStartTime = Date.now();
                         const fileMeta = new SingleFileProcessor_1.FileMeta(fullPath, s.size, hashStr);
-                        let hasErrors = false;
                         try {
                             const fileData = new SingleFileProcessor_1.FileData(fileMeta, fileContent);
                             this._fileProcessorListener.processStarted(fileMeta);

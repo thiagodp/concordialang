@@ -72,9 +72,6 @@ describe('NLPInPortugueseTest', () => {
         shouldHaveEntities(results, expectedEntitiesNames, Intents_1.Intents.UI, debug);
     }
     describe('testcase entities', () => {
-        const entity = 'testcase';
-        // it( '', () => {
-        // } );
         describe('structure', () => {
             it('{ui_action} {ui_element}', () => {
                 let results = [];

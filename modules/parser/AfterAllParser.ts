@@ -1,11 +1,9 @@
-import { Node } from '../ast/Node';
-import { Document } from '../ast/Document';
+import { AfterAll } from '../ast/TestEvent';
 import { SyntaticException } from '../req/SyntaticException';
+import { isDefined } from '../util/TypeChecking';
 import { NodeIterator } from './NodeIterator';
 import { NodeParser } from './NodeParser';
-import { ParsingContext } from "./ParsingContext";
-import { AfterAll } from '../ast/TestEvent';
-import { isDefined } from '../util/TypeChecking';
+import { ParsingContext } from './ParsingContext';
 
 /**
  * AfterAll parser

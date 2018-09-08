@@ -1,10 +1,10 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const DatabasePropertyRecognizer_1 = require("./DatabasePropertyRecognizer");
-const VariantSentenceRecognizer_1 = require("./VariantSentenceRecognizer");
-const UIPropertyRecognizer_1 = require("./UIPropertyRecognizer");
-const NLP_1 = require("./NLP");
 const TypeChecking_1 = require("../util/TypeChecking");
+const DatabasePropertyRecognizer_1 = require("./DatabasePropertyRecognizer");
+const GivenWhenThenSentenceRecognizer_1 = require("./GivenWhenThenSentenceRecognizer");
+const NLP_1 = require("./NLP");
+const UIPropertyRecognizer_1 = require("./UIPropertyRecognizer");
 /**
  * NLP-based sentence recognizer.
  *
@@ -15,7 +15,7 @@ class NLPBasedSentenceRecognizer {
         this._nlpTrainer = _nlpTrainer;
         this._useFuzzyProcessor = _useFuzzyProcessor;
         this._uiPropertyRec = new UIPropertyRecognizer_1.UIPropertyRecognizer(new NLP_1.NLP(_useFuzzyProcessor));
-        this._variantSentenceRec = new VariantSentenceRecognizer_1.VariantSentenceRecognizer(new NLP_1.NLP(_useFuzzyProcessor));
+        this._variantSentenceRec = new GivenWhenThenSentenceRecognizer_1.GivenWhenThenSentenceRecognizer(new NLP_1.NLP(_useFuzzyProcessor));
         this._dbPropertyRec = new DatabasePropertyRecognizer_1.DatabasePropertyRecognizer(new NLP_1.NLP(_useFuzzyProcessor));
     }
     get uiPropertyRec() {

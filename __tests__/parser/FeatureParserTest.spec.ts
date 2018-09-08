@@ -1,4 +1,3 @@
-import { Node } from '../../modules/ast/Node';
 import { NodeIterator } from '../../modules/parser/NodeIterator';
 import { ParsingContext } from '../../modules/parser/ParsingContext';
 import { NodeTypes } from '../../modules/req/NodeTypes';
@@ -21,12 +20,12 @@ describe( 'FeatureParserTest', () => {
 
     let context: ParsingContext = null;
     let errors: Error[] = [];
-    
+
     let featureNode: Feature = {
         nodeType: NodeTypes.FEATURE,
         location: { column: 1, line: 1 },
         name: "My feature"
-    };    
+    };
 
     beforeEach( () => {
         errors = [];
@@ -44,12 +43,12 @@ describe( 'FeatureParserTest', () => {
 
         expect( errors ).toHaveLength( 0 );
         expect( context.doc.feature ).toBeDefined();
-        expect( context.doc.feature.name ).toBe( "My feature" );        
+        expect( context.doc.feature.name ).toBe( "My feature" );
     } );
 
     it( 'generates an error when a feature was already defined', () => {
         let nodes = [ featureNode, featureNode ];
-        let nodeIt = new NodeIterator( nodes );             
+        let nodeIt = new NodeIterator( nodes );
         parser.analyze( featureNode, context, nodeIt, errors );
         parser.analyze( featureNode, context, nodeIt, errors );
         expect( errors ).toHaveLength( 1 );
@@ -57,7 +56,7 @@ describe( 'FeatureParserTest', () => {
 
     it( 'indicates that it is in a feature when a feature is detected', () => {
         let nodes = [ featureNode ];
-        let nodeIt = new NodeIterator( nodes );       
+        let nodeIt = new NodeIterator( nodes );
         parser.analyze( featureNode, context, nodeIt, errors );
         expect( context.inFeature ).toBeTruthy();
     } );
@@ -71,7 +70,7 @@ describe( 'FeatureParserTest', () => {
         let nodeIt = new NodeIterator( nodes );
         expect( lexer.nodes() ).toHaveLength( 3 );
         expect( nodeIt.nodes() ).toHaveLength( 3 );
-        
+
         // It is needed to move the iterator to the feature
         nodeIt.next(); // tag 1
         nodeIt.next(); // tag 2
@@ -93,13 +92,13 @@ describe( 'FeatureParserTest', () => {
         let nodeIt = new NodeIterator( nodes );
         expect( nodes ).toHaveLength( 4 );
         expect( nodeIt.nodes() ).toHaveLength( 4 );
-        
+
         // It is needed to move the iterator to the feature
         nodeIt.next(); // feature
         parser.analyze( nodes[ 0 ] as Feature, context, nodeIt, errors );
 
         expect( errors ).toHaveLength( 0 );
         expect( context.doc.feature.sentences ).toHaveLength( 3 );
-    } );    
+    } );
 
 } );

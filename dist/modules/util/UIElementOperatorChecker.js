@@ -1,8 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+const Entities_1 = require("../nlp/Entities");
 const NLPResult_1 = require("../nlp/NLPResult");
 const UIElementOperator_1 = require("./UIElementOperator");
-const Entities_1 = require("../nlp/Entities");
 /**
  * UI Element operator checker.
  *

@@ -1,11 +1,11 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+const Entities_1 = require("./Entities");
+const Intents_1 = require("./Intents");
+const NLPException_1 = require("./NLPException");
+const NodeSentenceRecognizer_1 = require("./NodeSentenceRecognizer");
 const RuleBuilder_1 = require("./RuleBuilder");
 const SyntaxRules_1 = require("./SyntaxRules");
-const Intents_1 = require("./Intents");
-const NodeSentenceRecognizer_1 = require("./NodeSentenceRecognizer");
-const NLPException_1 = require("./NLPException");
-const Entities_1 = require("./Entities");
 /**
  * Database property sentence recognizer.
  *

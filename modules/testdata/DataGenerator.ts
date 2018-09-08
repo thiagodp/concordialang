@@ -1,16 +1,14 @@
-import { Queryable } from "../req/Queryable";
-import { ValueType, ValueTypeDetector } from "../util/ValueTypeDetector";
-import { DataGeneratorBuilder } from "./DataGeneratorBuilder";
-import { DataTestCase } from "./DataTestCase";
-import { isDefined } from "../util/TypeChecking";
-import { RawDataGenerator } from "./raw/RawDataGenerator";
-import { RegexBasedDataGenerator } from "./RegexBasedDataGenerator";
-import { QueryBasedDataGenerator } from "./QueryBasedDataGenerator";
-import { ListBasedDataGenerator } from "./ListBasedDataGenerator";
-import { EntityValueType } from "../ast/UIElement";
-import { InvertedLogicQueryBasedDataGenerator } from "./InvertedLogicQueryBasedDataGenerator";
-import { InvertedLogicListBasedDataGenerator } from "./InvertedLogicListBasedDataGenerator";
 import * as deepcopy from 'deepcopy';
+
+import { EntityValueType } from '../ast/UIElement';
+import { isDefined } from '../util/TypeChecking';
+import { ValueType, ValueTypeDetector } from '../util/ValueTypeDetector';
+import { DataGeneratorBuilder } from './DataGeneratorBuilder';
+import { DataTestCase } from './DataTestCase';
+import { InvertedLogicListBasedDataGenerator } from './InvertedLogicListBasedDataGenerator';
+import { ListBasedDataGenerator } from './ListBasedDataGenerator';
+import { RawDataGenerator } from './raw/RawDataGenerator';
+import { RegexBasedDataGenerator } from './RegexBasedDataGenerator';
 
 /**
  * Configuration (restrictions) used for generating test data.

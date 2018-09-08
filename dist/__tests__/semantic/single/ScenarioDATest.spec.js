@@ -13,7 +13,6 @@ describe('ScenarioDATest', () => {
     let parser = new Parser_1.Parser();
     const options = new Options_1.Options(path_1.resolve(process.cwd(), 'dist/'));
     let lexer = (new LexerBuilder_1.LexerBuilder()).build(options);
-    let doc1;
     beforeEach(() => {
         lexer.reset();
     });

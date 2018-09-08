@@ -1,4 +1,5 @@
-import { escapeId, escape } from 'sqlstring';
+import { escape } from 'sqlstring';
+
 import { QueryParser } from '../db/QueryParser';
 
 /**

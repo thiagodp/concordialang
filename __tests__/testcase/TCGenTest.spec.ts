@@ -1,24 +1,19 @@
 import { TCGen } from "../../modules/testcase/TCGen";
 import { SimpleCompiler } from "../../modules/util/SimpleCompiler";
-import { Compiler } from "../../modules/app/Compiler";
 import { Spec } from "../../modules/ast/Spec";
 import { Document } from "../../modules/ast/Document";
-import { RandomString } from "../../modules/testdata/random/RandomString";
-import { Random } from "../../modules/testdata/random/Random";
 import { PreTestCaseGenerator, GenContext } from "../../modules/testscenario/PreTestCaseGenerator";
 import { FileInfo } from "../../modules/ast/FileInfo";
 import { SpecFilter } from "../../modules/selection/SpecFilter";
 import { BatchSpecificationAnalyzer } from "../../modules/semantic/BatchSpecificationAnalyzer";
 import { LocatedException } from "../../modules/req/LocatedException";
-import { TestPlanMaker } from "../../modules/testcase/TestPlanMaker";
-import { JustOneInvalidMix, OnlyValidMix } from "../../modules/testcase/DataTestCaseMix";
-import { IndexOfEachStrategy, CartesianProductStrategy } from "../../modules/selection/CombinationStrategy";
+import { TestPlanner } from "../../modules/testcase/TestPlanner";
+import { JustOneInvalidMix } from "../../modules/testcase/DataTestCaseMix";
+import { IndexOfEachStrategy } from "../../modules/selection/CombinationStrategy";
 import { Variant } from "../../modules/ast/Variant";
 import { TestScenario } from "../../modules/testscenario/TestScenario";
 import { LongLimits } from "../../modules/testdata/limits/LongLimits";
 import { TestCase } from "../../modules/ast/TestCase";
-// import { TCDocGen } from "../../modules/testcase/TCDocGen";
-// import { TestCaseFileGenerator } from "../../modules/testcase/TestCaseFileGenerator";
 
 describe( 'TCGenTest', () => {
 
@@ -80,9 +75,9 @@ describe( 'TCGenTest', () => {
         // expect( doc1.fileErrors ).toEqual( [] );
         // expect( doc2.fileErrors ).toEqual( [] );
 
-        const testPlanMakers: TestPlanMaker[] = [
+        const testPlanMakers: TestPlanner[] = [
             // new TestPlanMaker( new AllValidMix(), new SingleRandomOfEachStrategy( SEED ) )
-            new TestPlanMaker( new JustOneInvalidMix(), new IndexOfEachStrategy( 0 ), SEED )
+            new TestPlanner( new JustOneInvalidMix(), new IndexOfEachStrategy( 0 ), SEED )
         ];
 
         const ctx1 = new GenContext( spec, doc1, errors, warnings );
@@ -145,9 +140,9 @@ describe( 'TCGenTest', () => {
         // expect( doc1.fileErrors ).toEqual( [] );
         // expect( doc2.fileErrors ).toEqual( [] );
 
-        const testPlanMakers: TestPlanMaker[] = [
+        const testPlanMakers: TestPlanner[] = [
             // new TestPlanMaker( new AllValidMix(), new SingleRandomOfEachStrategy( SEED ) )
-            new TestPlanMaker( new JustOneInvalidMix(), new IndexOfEachStrategy( 0 ), SEED )
+            new TestPlanner( new JustOneInvalidMix(), new IndexOfEachStrategy( 0 ), SEED )
         ];
 
         const ctx1 = new GenContext( spec, doc1, errors, warnings );

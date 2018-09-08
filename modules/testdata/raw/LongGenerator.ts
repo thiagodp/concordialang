@@ -1,8 +1,6 @@
-import { max, min } from 'moment/src/lib/moment/min-max';
 import { RandomLong } from '../random/RandomLong';
 import { MinMaxChecker } from '../util/MinMaxChecker';
 import { LongLimits } from '../limits/LongLimits';
-import { ValueType } from '../../util/ValueTypeDetector';
 import { RawDataGenerator } from './RawDataGenerator';
 import { RangeAnalyzer } from './RangeAnalyzer';
 

@@ -1,13 +1,13 @@
 /**
  * Regex utilities.
- * 
+ *
  * @author Thiago Delgado Pinto
  */
 export class RegexUtil {
 
     /**
      * Returns matches, ignoring undefined values. It is capable of ignoring full matches.
-     * 
+     *
      * @param regex Regex
      * @param text Text
      * @param ignoresFullMatch Ignores the full match
@@ -17,7 +17,6 @@ export class RegexUtil {
         let rx: RegExp = ( regex.global ) ? regex : new RegExp( regex.source, 'g' );
         let results: string[] = [];
         let match: RegExpExecArray = null;
-        let pos = 0;
         while ( ( match = rx.exec( text ) ) !== null ) {
             // Add all the groups, but the full match
             results.push.apply( results, ignoresFullMatch
@@ -28,6 +27,6 @@ export class RegexUtil {
             rx.lastIndex = match.index + ( match[ 0 ].length || 1 );
         }
         return results;
-    }    
+    }
 
 }

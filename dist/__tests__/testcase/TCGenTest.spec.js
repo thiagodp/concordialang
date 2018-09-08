@@ -14,13 +14,11 @@ const Spec_1 = require("../../modules/ast/Spec");
 const PreTestCaseGenerator_1 = require("../../modules/testscenario/PreTestCaseGenerator");
 const SpecFilter_1 = require("../../modules/selection/SpecFilter");
 const BatchSpecificationAnalyzer_1 = require("../../modules/semantic/BatchSpecificationAnalyzer");
-const TestPlanMaker_1 = require("../../modules/testcase/TestPlanMaker");
+const TestPlanner_1 = require("../../modules/testcase/TestPlanner");
 const DataTestCaseMix_1 = require("../../modules/testcase/DataTestCaseMix");
 const CombinationStrategy_1 = require("../../modules/selection/CombinationStrategy");
 const TestScenario_1 = require("../../modules/testscenario/TestScenario");
 const LongLimits_1 = require("../../modules/testdata/limits/LongLimits");
-// import { TCDocGen } from "../../modules/testcase/TCDocGen";
-// import { TestCaseFileGenerator } from "../../modules/testcase/TestCaseFileGenerator";
 describe('TCGenTest', () => {
     let gen; // under test
     const LANGUAGE = 'pt';
@@ -59,7 +57,7 @@ describe('TCGenTest', () => {
         // expect( doc2.fileErrors ).toEqual( [] );
         const testPlanMakers = [
             // new TestPlanMaker( new AllValidMix(), new SingleRandomOfEachStrategy( SEED ) )
-            new TestPlanMaker_1.TestPlanMaker(new DataTestCaseMix_1.JustOneInvalidMix(), new CombinationStrategy_1.IndexOfEachStrategy(0), SEED)
+            new TestPlanner_1.TestPlanner(new DataTestCaseMix_1.JustOneInvalidMix(), new CombinationStrategy_1.IndexOfEachStrategy(0), SEED)
         ];
         const ctx1 = new PreTestCaseGenerator_1.GenContext(spec, doc1, errors, warnings);
         const variant1 = doc1.feature.scenarios[0].variants[0];
@@ -101,7 +99,7 @@ describe('TCGenTest', () => {
         // expect( doc2.fileErrors ).toEqual( [] );
         const testPlanMakers = [
             // new TestPlanMaker( new AllValidMix(), new SingleRandomOfEachStrategy( SEED ) )
-            new TestPlanMaker_1.TestPlanMaker(new DataTestCaseMix_1.JustOneInvalidMix(), new CombinationStrategy_1.IndexOfEachStrategy(0), SEED)
+            new TestPlanner_1.TestPlanner(new DataTestCaseMix_1.JustOneInvalidMix(), new CombinationStrategy_1.IndexOfEachStrategy(0), SEED)
         ];
         const ctx1 = new PreTestCaseGenerator_1.GenContext(spec, doc1, errors, warnings);
         const variant1 = doc1.feature.scenarios[0].variants[0];

@@ -1,9 +1,9 @@
 import { ListItem } from './ListItem';
-import { HasItems, HasName, HasValue, NodeWithNameAndValue } from './Node';
+import { HasItems, HasName, HasValue } from './Node';
 
 /**
  * Block node.
- * 
+ *
  * @author Thiago Delgado Pinto
  */
 export interface Block< T extends BlockItem > extends HasItems< T > {
@@ -12,7 +12,7 @@ export interface Block< T extends BlockItem > extends HasItems< T > {
 
 /**
  * Block item node.
- * 
+ *
  * @author Thiago Delgado Pinto
  */
 export interface BlockItem extends ListItem, HasName, HasValue {

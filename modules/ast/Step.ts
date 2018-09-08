@@ -1,6 +1,5 @@
 import { ContentNode } from "./Node";
 import { NLPResult } from "../nlp/NLPResult";
-import { DataTestCase } from "../testdata/DataTestCase";
 
 export interface Step extends ContentNode {
 

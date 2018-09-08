@@ -8,8 +8,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const SpecificationAnalyzer_1 = require("./SpecificationAnalyzer");
 const DatabaseConnectionChecker_1 = require("../db/DatabaseConnectionChecker");
+const SpecificationAnalyzer_1 = require("./SpecificationAnalyzer");
 /**
  * Executes semantic analysis of Databases in a specification.
  *

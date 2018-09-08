@@ -1,6 +1,4 @@
-import { DataTestCase } from "../testdata/DataTestCase";
-import { Step } from "../ast/Step";
-import { UIETestPlan } from "./UIETestPlan";
+import { UIETestPlan } from './UIETestPlan';
 
 /**
  * A test plan can be applied to test scenarios to produce test cases.

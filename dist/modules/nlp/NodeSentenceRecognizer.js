@@ -1,8 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const NLPException_1 = require("./NLPException");
 const Warning_1 = require("../req/Warning");
 const TypeChecking_1 = require("../util/TypeChecking");
+const NLPException_1 = require("./NLPException");
 /**
  * Node sentence recognizer
  *

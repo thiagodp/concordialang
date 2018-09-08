@@ -1,8 +1,6 @@
 import { NamedNode } from './Node';
 import { MayHaveTags } from './Tag';
-import { Step } from './Step';
-import { VariantLike, State } from './VariantLike';
-import { TestCase } from './TestCase';
+import { State, VariantLike } from './VariantLike';
 
 /**
  * Variant

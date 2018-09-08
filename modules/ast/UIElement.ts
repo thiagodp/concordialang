@@ -1,15 +1,11 @@
-import { NLPResult, NLPEntity } from '../nlp/NLPResult';
-import { HasItems, NamedNode, Node } from './Node';
+import { Entities } from '../nlp/Entities';
+import { NLPResult } from '../nlp/NLPResult';
+import { Document } from './Document';
+import { Feature } from './Feature';
+import { ListItem } from './ListItem';
+import { NamedNode, Node } from './Node';
 import { Step } from './Step';
 import { MayHaveTags } from './Tag';
-import { ListItem } from './ListItem';
-import { Table } from './Table';
-import { Constant } from './Constant';
-import { Database } from './Database';
-import { Entities } from '../nlp/Entities';
-import { NodeTypes } from '../req/NodeTypes';
-import { Feature } from './Feature';
-import { Document } from './Document';
 
 /**
  * UI element node.

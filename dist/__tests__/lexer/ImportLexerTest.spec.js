@@ -8,7 +8,6 @@ describe('ImportLexerTest', () => {
     // IMPORTANT: since ImportLexer inherits from QuotedNodeLexer and does not add any
     // behavior, the QuotedNodeLexerTest already covers most test cases.
     let keyword = 'import';
-    let wordInsensitive = 'ImPorT';
     let word = 'import';
     let words = [word];
     let lexer = new ImportLexer_1.ImportLexer(words); // under test

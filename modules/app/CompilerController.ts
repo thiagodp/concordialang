@@ -1,12 +1,11 @@
 import { Options } from "./Options";
 import { CLI } from "./CLI";
 import { SingleFileCompiler } from "./SingleFileCompiler";
-import { MultiFileProcessor, MultiFileProcessedData } from "./MultiFileProcessor";
+import { MultiFileProcessor } from "./MultiFileProcessor";
 import { VerboseAppEventsListener } from "./VerboseAppEventsListener";
 import { SimpleAppEventsListener } from "./SimpleAppEventsListener";
 import { Spec } from "../ast/Spec";
 import { Lexer } from "../lexer/Lexer";
-import { LocatedException } from "../req/LocatedException";
 import { Parser } from "../parser/Parser";
 import { NLPTrainer } from "../nlp/NLPTrainer";
 import { NLPBasedSentenceRecognizer } from "../nlp/NLPBasedSentenceRecognizer";

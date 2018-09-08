@@ -1,28 +1,26 @@
-import { TestScenario } from "./TestScenario";
-import { Variant } from "../ast/Variant";
-import { RuntimeException } from "../req/RuntimeException";
-import { VariantStateDetector } from "./VariantStateDetector";
-import { State } from "../ast/VariantLike";
-import { isDefined } from "../util/TypeChecking";
-import { VariantSelectionStrategy } from "../selection/VariantSelectionStrategy";
-import { RandomLong } from "../testdata/random/RandomLong";
-import { Random } from "../testdata/random/Random";
-import { Step } from "../ast/Step";
-import { TagUtil } from "../util/TagUtil";
-import { Tag, tagsWithAnyOfTheNames } from "../ast/Tag";
-import { LanguageContentLoader } from "../dict/LanguageContentLoader";
-import { NodeTypes } from "../req/NodeTypes";
-import { LanguageContent } from "../dict/LanguageContent";
-import { KeywordDictionary } from "../dict/KeywordDictionary";
-import { NLPUtil } from "../nlp/NLPResult";
-import { Entities } from "../nlp/Entities";
-import { CombinationStrategy, SingleRandomOfEachStrategy } from "../selection/CombinationStrategy";
 import * as deepcopy from 'deepcopy';
-import { upperFirst } from "../util/CaseConversor";
-import { PreTestCaseGenerator, GenContext } from "./PreTestCaseGenerator";
-import { TestPlanMaker } from "../testcase/TestPlanMaker";
-import { OnlyValidMix } from "../testcase/DataTestCaseMix";
-import { Location } from '../ast/Location';
+
+import { Step } from '../ast/Step';
+import { Tag, tagsWithAnyOfTheNames } from '../ast/Tag';
+import { Variant } from '../ast/Variant';
+import { State } from '../ast/VariantLike';
+import { KeywordDictionary } from '../dict/KeywordDictionary';
+import { LanguageContentLoader } from '../dict/LanguageContentLoader';
+import { Entities } from '../nlp/Entities';
+import { NLPUtil } from '../nlp/NLPResult';
+import { NodeTypes } from '../req/NodeTypes';
+import { RuntimeException } from '../req/RuntimeException';
+import { CombinationStrategy } from '../selection/CombinationStrategy';
+import { VariantSelectionStrategy } from '../selection/VariantSelectionStrategy';
+import { OnlyValidMix } from '../testcase/DataTestCaseMix';
+import { TestPlanner } from '../testcase/TestPlanner';
+import { Random } from '../testdata/random/Random';
+import { RandomLong } from '../testdata/random/RandomLong';
+import { upperFirst } from '../util/CaseConversor';
+import { isDefined } from '../util/TypeChecking';
+import { GenContext, PreTestCaseGenerator } from './PreTestCaseGenerator';
+import { TestScenario } from './TestScenario';
+import { VariantStateDetector } from './VariantStateDetector';
 
 /**
  * Test Scenario generator
@@ -38,7 +36,7 @@ export class TSGen {
     private readonly _defaultLanguage: string;
     public readonly seed: string;
 
-    private readonly _validValuePlanMaker: TestPlanMaker;
+    private readonly _validValuePlanMaker: TestPlanner;
 
     constructor(
         private _preTestCaseGenerator: PreTestCaseGenerator,
@@ -53,7 +51,7 @@ export class TSGen {
         this._randomLong = new RandomLong( new Random( this.seed ) );
 
         // Makes a PlanMaker to create valid values for Precondition scenarios
-        this._validValuePlanMaker = new TestPlanMaker(
+        this._validValuePlanMaker = new TestPlanner(
             new OnlyValidMix(),
             // new SingleRandomOfEachStrategy( this.seed ),
             _statePairCombinationStrategy,

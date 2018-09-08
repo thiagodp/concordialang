@@ -1,12 +1,12 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const TypeChecking_1 = require("../util/TypeChecking");
-const AbstractTestScript_1 = require("./AbstractTestScript");
-const Entities_1 = require("../nlp/Entities");
-const Actions_1 = require("../util/Actions");
-const Symbols_1 = require("../req/Symbols");
 const DatabaseToAbstractDatabase_1 = require("../db/DatabaseToAbstractDatabase");
 const DatabaseTypes_1 = require("../db/DatabaseTypes");
+const Entities_1 = require("../nlp/Entities");
+const Symbols_1 = require("../req/Symbols");
+const Actions_1 = require("../util/Actions");
+const TypeChecking_1 = require("../util/TypeChecking");
+const AbstractTestScript_1 = require("./AbstractTestScript");
 /**
  * Generates Abstract Test Script
  */
@@ -23,9 +23,6 @@ class AbstractTestScriptGenerator {
         if (!doc.testCases || doc.testCases.length < 1) {
             return null;
         }
-        const hasNoSentences = function hasSentences(target) {
-            return (!target || !target.sentences || target.sentences.length < 1);
-        };
         let beforeAll = doc.beforeAll;
         let afterAll = doc.afterAll;
         let beforeFeature = doc.beforeFeature;
@@ -128,8 +125,8 @@ class AbstractTestScriptGenerator {
     }
     convertTestEventSentencesToCommands(event, spec) {
         const dbConversor = new DatabaseToAbstractDatabase_1.DatabaseToAbstractDatabase();
-        const DATABASE_OPTION = 'database';
-        const SCRIPT_OPTION = 'script';
+        // const DATABASE_OPTION = 'database';
+        // const SCRIPT_OPTION = 'script';
         const COMMAND_OPTION = 'command';
         const dbNames = spec.databaseNames();
         const dbVarNames = dbNames.map(name => Symbols_1.Symbols.CONSTANT_PREFIX + name + Symbols_1.Symbols.CONSTANT_SUFFIX);

@@ -1,7 +1,5 @@
 import { CodeceptJS } from "../codeceptjs/CodeceptJS";
 import { TestScriptExecutor } from "../codeceptjs/TestScriptExecutor";
-import { TestScriptGenerator } from "../codeceptjs/TestScriptGenerator";
-import { CommandMapper } from "../codeceptjs/CommandMapper";
 import { ConfigMaker } from "../codeceptjs/ConfigMaker";
 import { TestScriptExecutionOptions } from "../../modules/testscript/TestScriptExecution";
 import { join } from 'path';

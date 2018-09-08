@@ -8,9 +8,9 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+const path_1 = require("path");
 const SemanticException_1 = require("./SemanticException");
 const SpecificationAnalyzer_1 = require("./SpecificationAnalyzer");
-const path_1 = require("path");
 /**
  * Executes semantic analysis of Imports in a specification.
  *

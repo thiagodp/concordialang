@@ -1,11 +1,9 @@
-import { Node } from '../ast/Node';
-import { Document } from '../ast/Document';
+import { Background } from '../ast/Background';
 import { SyntaticException } from '../req/SyntaticException';
+import { isDefined } from '../util/TypeChecking';
 import { NodeIterator } from './NodeIterator';
 import { NodeParser } from './NodeParser';
-import { ParsingContext } from "./ParsingContext";
-import { Background } from "../ast/Background";
-import { isDefined } from '../util/TypeChecking';
+import { ParsingContext } from './ParsingContext';
 
 /**
  * Background parser

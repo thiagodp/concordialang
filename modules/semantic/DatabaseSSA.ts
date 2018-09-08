@@ -1,13 +1,9 @@
-import { Database } from '../ast/Database';
-import { Document } from '../ast/Document';
-import { SpecificationAnalyzer } from './SpecificationAnalyzer';
-import { Spec } from "../ast/Spec";
-import { DuplicationChecker } from '../util/DuplicationChecker';
-import { SemanticException } from './SemanticException';
-import { Warning } from '../req/Warning';
+import Graph = require('graph.js/dist/graph.full.js');
+
+import { Spec } from '../ast/Spec';
 import { DatabaseConnectionChecker } from '../db/DatabaseConnectionChecker';
-import { ConnectionCheckResult } from '../req/ConnectionResult';
-import Graph = require( 'graph.js/dist/graph.full.js' );
+import { SemanticException } from './SemanticException';
+import { SpecificationAnalyzer } from './SpecificationAnalyzer';
 
 /**
  * Executes semantic analysis of Databases in a specification.

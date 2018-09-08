@@ -1,11 +1,10 @@
-import { Expressions } from '../req/Expressions';
 import { Location } from '../ast/Location';
 import { TableRow } from '../ast/Table';
-import { NodeLexer, LexicalAnalysisResult } from './NodeLexer';
-import { LineChecker } from '../req/LineChecker';
-import { Symbols } from '../req/Symbols';
+import { Expressions } from '../req/Expressions';
 import { LexicalException } from '../req/LexicalException';
 import { NodeTypes } from '../req/NodeTypes';
+import { Symbols } from '../req/Symbols';
+import { LexicalAnalysisResult, NodeLexer } from './NodeLexer';
 
 /**
  * TableRow lexer.
@@ -13,8 +12,6 @@ import { NodeTypes } from '../req/NodeTypes';
  * @author Thiago Delgado Pinto
  */
 export class TableRowLexer implements NodeLexer< TableRow > {
-
-    private _lineChecker: LineChecker = new LineChecker();
 
     /** @inheritDoc */
     public nodeType(): string {

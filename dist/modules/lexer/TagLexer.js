@@ -3,7 +3,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const LexicalException_1 = require("../req/LexicalException");
 const NodeTypes_1 = require("../req/NodeTypes");
 const Symbols_1 = require("../req/Symbols");
-const LineChecker_1 = require("../req/LineChecker");
 const CommentHandler_1 = require("./CommentHandler");
 const XRegExp = require('xregexp');
 /**
@@ -12,9 +11,6 @@ const XRegExp = require('xregexp');
  * @author Thiago Delgado Pinto
  */
 class TagLexer {
-    constructor() {
-        this._lineChecker = new LineChecker_1.LineChecker();
-    }
     /** @inheritDoc */
     nodeType() {
         return NodeTypes_1.NodeTypes.TAG;

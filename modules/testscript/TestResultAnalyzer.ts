@@ -1,6 +1,5 @@
 import { AbstractTestScript, ATSTestCase } from './AbstractTestScript';
-import { TestScriptExecutionResult, TestSuiteResult, TestMethodResult } from "./TestScriptExecution";
-import { TestCase } from "../ast/TestCase";
+import { TestMethodResult, TestScriptExecutionResult } from './TestScriptExecution';
 
 export class TestResultAnalyzer {
 

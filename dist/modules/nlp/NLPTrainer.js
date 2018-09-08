@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const NLPTrainingDataConversor_1 = require("./NLPTrainingDataConversor");
 const TypeChecking_1 = require("../util/TypeChecking");
+const NLPTrainingDataConversor_1 = require("./NLPTrainingDataConversor");
 /**
  * NLP trainer.
  *

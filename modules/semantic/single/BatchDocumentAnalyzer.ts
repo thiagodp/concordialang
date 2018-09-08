@@ -1,11 +1,9 @@
+import { Document } from '../../ast/Document';
+import { SemanticException } from '../SemanticException';
 import { DatabaseDA } from './DatabaseDA';
 import { DocumentAnalyzer } from './DocumentAnalyzer';
-import { ScenarioDA } from './ScenarioDA';
-import { LocatedException } from '../../req/LocatedException';
 import { ImportDA } from './ImportDA';
-import { SemanticException } from '../SemanticException';
-import { Import } from '../../ast/Import';
-import { Document } from '../../ast/Document';
+import { ScenarioDA } from './ScenarioDA';
 import { UIElementDA } from './UIElementDA';
 import { VariantGivenStepDA } from './VariantGivenStepDA';
 

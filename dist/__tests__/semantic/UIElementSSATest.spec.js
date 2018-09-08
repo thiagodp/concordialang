@@ -15,6 +15,7 @@ const SpecFilter_1 = require("../../modules/selection/SpecFilter");
 const BatchSpecificationAnalyzer_1 = require("../../modules/semantic/BatchSpecificationAnalyzer");
 const path_1 = require("path");
 describe('UIElementSSATest', () => {
+    // @ts-ignore
     let sa; // under test
     const path = __dirname;
     let cp;

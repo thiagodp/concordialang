@@ -9,8 +9,8 @@ describe('RegexLexerTest', () => {
     let words = ['is'];
     let keyword = NodeTypes_1.NodeTypes.REGEX;
     let lexer = new RegexLexer_1.RegexLexer(words); // under test
-    // IMPORTANT: Since the lexer under test inherits from another lexer and 
-    // there are tests for the parent class, few additional tests are necessary.    
+    // IMPORTANT: Since the lexer under test inherits from another lexer and
+    // there are tests for the parent class, few additional tests are necessary.
     it('detects correctly with a text value', () => {
         let value = '/[0-9]/';
         let line = `- "foo" is "${value}"`;

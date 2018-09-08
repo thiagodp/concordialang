@@ -1,8 +1,8 @@
-import { VariantLike, State } from "../ast/VariantLike";
-import { NLPUtil } from "../nlp/NLPResult";
-import { NodeTypes } from "../req/NodeTypes";
-import { Entities } from "../nlp/Entities";
-import { Variant } from "../ast/Variant";
+import { Variant } from '../ast/Variant';
+import { State } from '../ast/VariantLike';
+import { Entities } from '../nlp/Entities';
+import { NLPUtil } from '../nlp/NLPResult';
+import { NodeTypes } from '../req/NodeTypes';
 
 /**
  * Detects preconditions, state calls and postconditions.

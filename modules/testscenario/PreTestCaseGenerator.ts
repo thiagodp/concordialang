@@ -1,46 +1,46 @@
-import { NLPUtil, NLPEntity } from "../nlp/NLPResult";
-import { Step } from "../ast/Step";
-import { Location } from "../ast/Location";
-import { Entities } from "../nlp/Entities";
-import { Random } from "../testdata/random/Random";
-import { RandomString } from "../testdata/random/RandomString";
-import { RandomLong } from "../testdata/random/RandomLong";
-import { UIElementPropertyExtractor } from "../util/UIElementPropertyExtractor";
-import { DataTestCaseAnalyzer, DTCAnalysisResult } from "../testdata/DataTestCaseAnalyzer";
-import { DataGenerator } from "../testdata/DataGenerator";
-import { DataGeneratorBuilder } from "../testdata/DataGeneratorBuilder";
-import { upperFirst, convertCase } from "../util/CaseConversor";
-import { KeywordDictionary } from "../dict/KeywordDictionary";
-import { Symbols } from "../req/Symbols";
-import { NodeTypes } from "../req/NodeTypes";
-import { Document } from "../ast/Document";
-import { LanguageContentLoader } from "../dict/LanguageContentLoader";
-import { UIElement, EntityValueType } from "../ast/UIElement";
-import { Spec } from "../ast/Spec";
-import { LocatedException } from "../req/LocatedException";
-import { RuntimeException } from "../req/RuntimeException";
-import { DataTestCase } from "../testdata/DataTestCase";
-import { TestPlanMaker } from "../testcase/TestPlanMaker";
-import { TestPlan } from "../testcase/TestPlan";
-import { UIElementValueGenerator, ValueGenContext } from "../testdata/UIElementValueGenerator";
-import { isDefined } from "../util/TypeChecking";
-import { UIETestPlan } from "../testcase/UIETestPlan";
-import { LanguageContent } from "../dict/LanguageContent";
-import { EnglishKeywordDictionary } from "../dict/EnglishKeywordDictionary";
-import { ReferenceReplacer } from "../util/ReferenceReplacer";
-import { VariantSentenceRecognizer } from "../nlp/VariantSentenceRecognizer";
-import { CaseType } from "../app/CaseType";
-import { PreTestCase } from "./PreTestCase";
-import { LocalTime, DateTimeFormatter, LocalDate, LocalDateTime } from "js-joda";
-import { ACTION_TARGET_MAP } from "../util/ActionMap";
-import { Actions } from "../util/Actions";
-import { ActionTargets } from "../util/ActionTargets";
-import { UIElementNameHandler } from "../util/UIElementNameHandler";
-import { LineChecker } from "../req/LineChecker";
-import { Pair } from "ts-pair";
-import { basename } from "path";
 import * as arrayDiff from 'arr-diff';
 import * as deepcopy from 'deepcopy';
+import { DateTimeFormatter, LocalDate, LocalDateTime, LocalTime } from 'js-joda';
+import { basename } from 'path';
+import { Pair } from 'ts-pair';
+
+import { CaseType } from '../app/CaseType';
+import { Document } from '../ast/Document';
+import { Location } from '../ast/Location';
+import { Spec } from '../ast/Spec';
+import { Step } from '../ast/Step';
+import { EntityValueType, UIElement } from '../ast/UIElement';
+import { EnglishKeywordDictionary } from '../dict/EnglishKeywordDictionary';
+import { KeywordDictionary } from '../dict/KeywordDictionary';
+import { LanguageContent } from '../dict/LanguageContent';
+import { LanguageContentLoader } from '../dict/LanguageContentLoader';
+import { Entities } from '../nlp/Entities';
+import { GivenWhenThenSentenceRecognizer } from '../nlp/GivenWhenThenSentenceRecognizer';
+import { NLPEntity, NLPUtil } from '../nlp/NLPResult';
+import { LineChecker } from '../req/LineChecker';
+import { LocatedException } from '../req/LocatedException';
+import { NodeTypes } from '../req/NodeTypes';
+import { RuntimeException } from '../req/RuntimeException';
+import { Symbols } from '../req/Symbols';
+import { TestPlan } from '../testcase/TestPlan';
+import { TestPlanner } from '../testcase/TestPlanner';
+import { UIETestPlan } from '../testcase/UIETestPlan';
+import { DataGenerator } from '../testdata/DataGenerator';
+import { DataGeneratorBuilder } from '../testdata/DataGeneratorBuilder';
+import { DataTestCase } from '../testdata/DataTestCase';
+import { DataTestCaseAnalyzer, DTCAnalysisResult } from '../testdata/DataTestCaseAnalyzer';
+import { Random } from '../testdata/random/Random';
+import { RandomString } from '../testdata/random/RandomString';
+import { UIElementValueGenerator, ValueGenContext } from '../testdata/UIElementValueGenerator';
+import { ACTION_TARGET_MAP } from '../util/ActionMap';
+import { Actions } from '../util/Actions';
+import { ActionTargets } from '../util/ActionTargets';
+import { convertCase, upperFirst } from '../util/CaseConversor';
+import { ReferenceReplacer } from '../util/ReferenceReplacer';
+import { isDefined } from '../util/TypeChecking';
+import { UIElementNameHandler } from '../util/UIElementNameHandler';
+import { UIElementPropertyExtractor } from '../util/UIElementPropertyExtractor';
+import { PreTestCase } from './PreTestCase';
 
 export class GenContext {
     constructor(
@@ -64,13 +64,12 @@ export class PreTestCaseGenerator {
     private readonly _lineChecker = new LineChecker();
 
     private readonly _randomString: RandomString;
-    private readonly _randomLong: RandomLong;
     private readonly _dtcAnalyzer: DataTestCaseAnalyzer;
     private readonly _uieValueGen: UIElementValueGenerator;
 
 
     constructor(
-        private readonly _variantSentenceRec: VariantSentenceRecognizer,
+        private readonly _variantSentenceRec: GivenWhenThenSentenceRecognizer,
         public readonly langContentLoader: LanguageContentLoader,
         public readonly defaultLanguage: string,
         public readonly seed: string,
@@ -81,7 +80,6 @@ export class PreTestCaseGenerator {
     ) {
         const random = new Random( seed );
         this._randomString = new RandomString( random );
-        this._randomLong = new RandomLong( random );
         this._dtcAnalyzer = new DataTestCaseAnalyzer( seed );
         this._uieValueGen = new UIElementValueGenerator(
             new DataGenerator(
@@ -126,7 +124,7 @@ export class PreTestCaseGenerator {
     async generate(
         steps: Step[],
         ctx: GenContext,
-        testPlanMakers: TestPlanMaker[]
+        testPlanMakers: TestPlanner[]
     ): Promise< PreTestCase[] > {
 
         if ( ! steps || steps.length < 1 ) {

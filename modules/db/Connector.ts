@@ -1,5 +1,5 @@
 import { ConnectionResult_ } from "../req/ConnectionResult";
-import { Database, DatabaseProperties } from "../ast/Database";
+import { Database } from "../ast/Database";
 import { Table } from "../ast/Table";
 import { DatabaseWrapper } from "./DatabaseWrapper";
 import { InMemoryTableWrapper } from "./InMemoryTableWrapper";

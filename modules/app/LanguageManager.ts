@@ -1,11 +1,10 @@
 import * as filewalker from 'filewalker';
 import * as path from 'path';
-import * as fse from 'node-fs-extra';
 import { EnglishKeywordDictionary } from '../dict/EnglishKeywordDictionary';
 
 /**
  * Language manager
- * 
+ *
  * @author Thiago Delgado Pinto
  */
 export class LanguageManager {
@@ -14,7 +13,7 @@ export class LanguageManager {
 
     /**
      * Constructor
-     * 
+     *
      * @param _languageDir Directory to search language files.
      */
     constructor(
@@ -25,7 +24,7 @@ export class LanguageManager {
 
     /**
      * Returns available languages.
-     * 
+     *
      * @param ignoreCache Whether it should ignore cached content. Defaults to false.
      */
     public availableLanguages = async ( ignoreCache: boolean = false ): Promise< string[] > => {
@@ -78,7 +77,7 @@ export class LanguageManager {
 
     /**
      * Returns a content of a language.
-     * 
+     *
      * @param language Language to load.
      * @return Promise to the content, null or undefined.
      */
@@ -106,8 +105,8 @@ export class LanguageManager {
         return this._languageDir;
     };
 
-    private makeLanguageFilePath( language: string ): string {
-        return path.join( this._languageDir,  language + '.json' );
-    }    
+    // private makeLanguageFilePath( language: string ): string {
+    //     return path.join( this._languageDir,  language + '.json' );
+    // }
 
 }

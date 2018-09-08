@@ -15,7 +15,6 @@ describe('FeatureSpecAnalyzerTest', () => {
     let parser = new Parser_1.Parser();
     const options = new Options_1.Options(path_1.resolve(process.cwd(), 'dist/'));
     let lexer = (new LexerBuilder_1.LexerBuilder()).build(options, 'en');
-    let doc1;
     beforeEach(() => {
         lexer.reset();
     });

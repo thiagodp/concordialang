@@ -4,7 +4,6 @@ import { ProcessedFileData } from './SingleFileProcessor';
 import { Options } from './Options';
 import * as filewalker from 'filewalker';
 import { createHash } from 'crypto';
-import * as path from 'path';
 
 export class MultiFileProcessor {
 
@@ -91,7 +90,6 @@ export class MultiFileProcessor {
                         const fileStartTime = Date.now();
 
                         const fileMeta = new FileMeta( fullPath, s.size, hashStr );
-                        let hasErrors: boolean = false;
                         try {
                             const fileData = new FileData( fileMeta, fileContent );
 

@@ -1,8 +1,6 @@
 /**
  * @author Thiago Delgado Pinto
  */
-import { Location } from '../../modules/ast/Location';
-import { Node } from '../../modules/ast/Node';
 import { ListItemLexer } from '../../modules/lexer/ListItemLexer';
 describe( 'ListItemLexerTest', () => {
 
@@ -41,7 +39,7 @@ describe( 'ListItemLexerTest', () => {
         let node = r.nodes[ 0 ];
         expect( node.content ).toBe( 'foo' );
     } );
-    
+
     it( 'detects an error when an empty node is given', () => {
         let line = '- ';
         let r = lexer.analyze( line, 1 );

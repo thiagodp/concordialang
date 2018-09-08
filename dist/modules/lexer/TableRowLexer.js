@@ -1,19 +1,15 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const Expressions_1 = require("../req/Expressions");
-const LineChecker_1 = require("../req/LineChecker");
-const Symbols_1 = require("../req/Symbols");
 const LexicalException_1 = require("../req/LexicalException");
 const NodeTypes_1 = require("../req/NodeTypes");
+const Symbols_1 = require("../req/Symbols");
 /**
  * TableRow lexer.
  *
  * @author Thiago Delgado Pinto
  */
 class TableRowLexer {
-    constructor() {
-        this._lineChecker = new LineChecker_1.LineChecker();
-    }
     /** @inheritDoc */
     nodeType() {
         return NodeTypes_1.NodeTypes.TABLE_ROW;

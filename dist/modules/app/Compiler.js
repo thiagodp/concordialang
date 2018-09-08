@@ -22,7 +22,7 @@ class Compiler {
         this._specificationAnalyzer = _specificationAnalyzer;
         this.compile = (options, listener) => __awaiter(this, void 0, void 0, function* () {
             listener.compilerStarted(options);
-            const startTime = Date.now();
+            // const startTime: number = Date.now();
             const r = yield this._mfp.process(options);
             const compiledFilesCount = r.compiledFiles.length;
             // Create the specification

@@ -1,4 +1,3 @@
-import { Expressions } from '../../modules/req/Expressions';
 import { NodeTypes } from "../../modules/req/NodeTypes";
 import { RegexLexer } from "../../modules/lexer/RegexLexer";
 
@@ -6,13 +5,13 @@ import { RegexLexer } from "../../modules/lexer/RegexLexer";
  * @author Thiago Delgado Pinto
  */
 describe( 'RegexLexerTest', () => {
-    
+
     let words = [ 'is' ];
     let keyword = NodeTypes.REGEX;
     let lexer = new RegexLexer( words ); // under test
 
-    // IMPORTANT: Since the lexer under test inherits from another lexer and 
-    // there are tests for the parent class, few additional tests are necessary.    
+    // IMPORTANT: Since the lexer under test inherits from another lexer and
+    // there are tests for the parent class, few additional tests are necessary.
 
     it( 'detects correctly with a text value', () => {
         let value = '/[0-9]/';
@@ -27,7 +26,7 @@ describe( 'RegexLexerTest', () => {
                 name: "foo",
                 value: value
             }
-        );        
+        );
     } );
 
     it( 'detects correctly even with the regular expression has quotes', () => {
@@ -42,9 +41,9 @@ describe( 'RegexLexerTest', () => {
                 name: "foo",
                 value: '\\"bar'
             }
-        );        
+        );
     } );
-    
+
     it( 'ignores a comment after the value', () => {
         let line = '- "foo" is "bar"#comment';
         let r = lexer.analyze( line, 1 );
@@ -58,7 +57,7 @@ describe( 'RegexLexerTest', () => {
                 name: "foo",
                 value: "bar"
             }
-        );        
-    } );    
+        );
+    } );
 
 } );

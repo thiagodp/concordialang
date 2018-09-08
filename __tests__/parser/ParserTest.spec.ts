@@ -1,7 +1,6 @@
 import { NodeTypes } from '../../modules/req/NodeTypes';
 import { Lexer } from '../../modules/lexer/Lexer';
 import { Parser } from '../../modules/parser/Parser';
-import { KeywordDictionary } from "../../modules/dict/KeywordDictionary";
 import { Document } from '../../modules/ast/Document';
 import { Options } from '../../modules/app/Options';
 import { LexerBuilder } from '../../modules/lexer/LexerBuilder';

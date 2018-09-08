@@ -1,10 +1,10 @@
-import { ImportBasedGraphBuilder } from "./ImportBasedGraphBuilder";
-import { FilterCriterion } from "./FilterCriterion";
-import { GraphFilter, GraphFilterEvent } from "./GraphFilter";
-import { Spec } from "../ast/Spec";
-import { Document } from "../ast/Document";
-import Graph = require( 'graph.js/dist/graph.full.js' );
-import { EventEmitter } from "events";
+import { EventEmitter } from 'events';
+import Graph = require('graph.js/dist/graph.full.js');
+
+import { Document } from '../ast/Document';
+import { Spec } from '../ast/Spec';
+import { GraphFilter, GraphFilterEvent } from './GraphFilter';
+import { ImportBasedGraphBuilder } from './ImportBasedGraphBuilder';
 
 /**
  * Specification filter

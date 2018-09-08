@@ -1,23 +1,20 @@
-import { Import } from '../ast/Import';
-import { Spec } from '../ast/Spec';
-import { ReservedTags } from '../req/ReservedTags';
-import { Scenario } from '../ast/Scenario';
-import { Document } from '../ast/Document';
-import { DuplicationChecker } from "../util/DuplicationChecker";
-import { SemanticException } from "./SemanticException";
-import { Feature } from '../ast/Feature';
-import { Tag } from '../ast/Tag';
-import { Variant } from '../ast/Variant';
-import { TestCase } from '../ast/TestCase';
-import { SpecificationAnalyzer } from './SpecificationAnalyzer';
-import { Location } from '../ast/Location';
-import { LocatedException } from '../req/LocatedException';
-import Graph = require( 'graph.js/dist/graph.full.js' );
-import * as path from 'path';
 import * as deepcopy from 'deepcopy';
-import { KeywordDictionary } from '../dict/KeywordDictionary';
+import Graph = require('graph.js/dist/graph.full.js');
+import * as path from 'path';
+
+import { Document } from '../ast/Document';
+import { Feature } from '../ast/Feature';
+import { Import } from '../ast/Import';
+import { Location } from '../ast/Location';
+import { Spec } from '../ast/Spec';
+import { Tag } from '../ast/Tag';
+import { TestCase } from '../ast/TestCase';
 import { EnglishKeywordDictionary } from '../dict/EnglishKeywordDictionary';
+import { KeywordDictionary } from '../dict/KeywordDictionary';
+import { LocatedException } from '../req/LocatedException';
 import { isDefined } from '../util/TypeChecking';
+import { SemanticException } from './SemanticException';
+import { SpecificationAnalyzer } from './SpecificationAnalyzer';
 
 /**
  * Executes semantic analysis of Test Cases in a specification.
@@ -286,7 +283,6 @@ export class TestCaseSSA extends SpecificationAnalyzer {
             return false;
         }
 
-        let feature = availableFeatures[ featureIndex ];
         let featureFilePath = availableFeaturePaths[ featureIndex ];
 
         if ( spec.basePath ) {

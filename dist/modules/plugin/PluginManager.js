@@ -40,7 +40,8 @@ class PluginManager {
                 throw new Error('No "install" property found in the plugin file. Can\'t install it.');
             }
             drawer.showPluginInstallStart(pluginData.name);
-            const code = yield this.runPluginCommand(pluginData.install, drawer);
+            // const code = await this.runPluginCommand( pluginData.install, drawer );
+            yield this.runPluginCommand(pluginData.install, drawer);
         });
     }
     uninstall(pluginData, drawer) {

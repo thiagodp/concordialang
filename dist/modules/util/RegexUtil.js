@@ -18,7 +18,6 @@ class RegexUtil {
         let rx = (regex.global) ? regex : new RegExp(regex.source, 'g');
         let results = [];
         let match = null;
-        let pos = 0;
         while ((match = rx.exec(text)) !== null) {
             // Add all the groups, but the full match
             results.push.apply(results, ignoresFullMatch

@@ -1,5 +1,4 @@
 import { ConnectionResult } from '../req/ConnectionResult';
-import { BlockItem } from './Block';
 import { HasItems, HasValue, NamedNode } from './Node';
 import { ListItem } from './ListItem';
 
@@ -16,7 +15,7 @@ import { ListItem } from './ListItem';
 
 /**
  * Database node.
- * 
+ *
  * @author Thiago Delgado Pinto
  */
 export interface Database extends NamedNode, HasItems< DatabaseProperty > {
@@ -25,7 +24,7 @@ export interface Database extends NamedNode, HasItems< DatabaseProperty > {
 
 /**
  * Database item node.
- * 
+ *
  * @author Thiago Delgado Pinto
  */
 export interface DatabaseProperty extends ListItem, HasValue {
@@ -34,10 +33,10 @@ export interface DatabaseProperty extends ListItem, HasValue {
 
 /**
  * Database properties.
- * 
+ *
  * Files could also be represented as a database, using "type", "path", and maybe "options".
  * Example: { type: 'json', path: 'C://path/to/file.json' }
- * 
+ *
  * @author Thiago Delgado Pinto
  */
 export enum DatabaseProperties {

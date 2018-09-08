@@ -1,25 +1,23 @@
-import { Document } from "../ast/Document";
-import { Spec } from "../ast/Spec";
-import { DataTestCase, DataTestCaseGroupDef, DataTestCaseGroup } from "./DataTestCase";
-import { DocumentUtil } from "../util/DocumentUtil";
-import { UIElement, UIProperty } from "../ast/UIElement";
-import { NLPUtil, NLPEntity } from "../nlp/NLPResult";
-import { UIElementPropertyExtractor } from "../util/UIElementPropertyExtractor";
-import { DataTestCaseVsValueType } from "./DataTestCaseVsValueType";
-import { ValueType, ValueTypeDetector, adjustValueToTheRightType } from "../util/ValueTypeDetector";
-import { UIPropertyTypes } from "../util/UIPropertyTypes";
-import { isDefined } from "../util/TypeChecking";
-import { Entities } from "../nlp/Entities";
-import { UIElementOperatorChecker } from "../util/UIElementOperatorChecker";
-import { RuntimeException } from "../req/RuntimeException";
-import { Constant } from "../ast/Constant";
-import { DataGeneratorBuilder } from "./DataGeneratorBuilder";
 import * as arrayDiff from 'arr-diff';
 import * as enumUtil from 'enum-util';
-import { Pair } from "ts-pair";
-import { Step } from "../ast/Step";
-import { RangeAnalyzer } from "./raw/RangeAnalyzer";
-import { NodeTypes } from "../req/NodeTypes";
+import { Pair } from 'ts-pair';
+
+import { Constant } from '../ast/Constant';
+import { Step } from '../ast/Step';
+import { UIElement, UIProperty } from '../ast/UIElement';
+import { Entities } from '../nlp/Entities';
+import { NLPUtil } from '../nlp/NLPResult';
+import { RuntimeException } from '../req/RuntimeException';
+import { DocumentUtil } from '../util/DocumentUtil';
+import { isDefined } from '../util/TypeChecking';
+import { UIElementOperatorChecker } from '../util/UIElementOperatorChecker';
+import { UIElementPropertyExtractor } from '../util/UIElementPropertyExtractor';
+import { UIPropertyTypes } from '../util/UIPropertyTypes';
+import { adjustValueToTheRightType, ValueType } from '../util/ValueTypeDetector';
+import { DataGeneratorBuilder } from './DataGeneratorBuilder';
+import { DataTestCase, DataTestCaseGroup, DataTestCaseGroupDef } from './DataTestCase';
+import { DataTestCaseVsValueType } from './DataTestCaseVsValueType';
+import { RangeAnalyzer } from './raw/RangeAnalyzer';
 
 
 /**

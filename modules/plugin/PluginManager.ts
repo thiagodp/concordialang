@@ -34,7 +34,8 @@ export class PluginManager {
         }
 
         drawer.showPluginInstallStart( pluginData.name );
-        const code = await this.runPluginCommand( pluginData.install, drawer );
+        // const code = await this.runPluginCommand( pluginData.install, drawer );
+        await this.runPluginCommand( pluginData.install, drawer );
     }
 
     public async uninstall( pluginData: PluginData, drawer: PluginDrawer ): Promise< void > {

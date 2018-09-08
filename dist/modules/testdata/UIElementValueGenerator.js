@@ -8,23 +8,23 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const UIElementPropertyExtractor_1 = require("../util/UIElementPropertyExtractor");
-const DataGenerator_1 = require("./DataGenerator");
-const UIPropertyTypes_1 = require("../util/UIPropertyTypes");
-const UIElementOperatorChecker_1 = require("../util/UIElementOperatorChecker");
-const Entities_1 = require("../nlp/Entities");
-const RuntimeException_1 = require("../req/RuntimeException");
-const TypeChecking_1 = require("../util/TypeChecking");
-const DataTestCase_1 = require("./DataTestCase");
-const NodeTypes_1 = require("../req/NodeTypes");
-const QueryReferenceReplacer_1 = require("../util/QueryReferenceReplacer");
-const ValueTypeDetector_1 = require("../util/ValueTypeDetector");
-const QueryParser_1 = require("../db/QueryParser");
-const DatabaseWrapper_1 = require("../db/DatabaseWrapper");
-const InMemoryTableWrapper_1 = require("../db/InMemoryTableWrapper");
-const UIElementNameHandler_1 = require("../util/UIElementNameHandler");
 const DatabaseToAbstractDatabase_1 = require("../db/DatabaseToAbstractDatabase");
 const DatabaseTypes_1 = require("../db/DatabaseTypes");
+const DatabaseWrapper_1 = require("../db/DatabaseWrapper");
+const InMemoryTableWrapper_1 = require("../db/InMemoryTableWrapper");
+const QueryParser_1 = require("../db/QueryParser");
+const Entities_1 = require("../nlp/Entities");
+const NodeTypes_1 = require("../req/NodeTypes");
+const RuntimeException_1 = require("../req/RuntimeException");
+const QueryReferenceReplacer_1 = require("../util/QueryReferenceReplacer");
+const TypeChecking_1 = require("../util/TypeChecking");
+const UIElementNameHandler_1 = require("../util/UIElementNameHandler");
+const UIElementOperatorChecker_1 = require("../util/UIElementOperatorChecker");
+const UIElementPropertyExtractor_1 = require("../util/UIElementPropertyExtractor");
+const UIPropertyTypes_1 = require("../util/UIPropertyTypes");
+const ValueTypeDetector_1 = require("../util/ValueTypeDetector");
+const DataGenerator_1 = require("./DataGenerator");
+const DataTestCase_1 = require("./DataTestCase");
 // value is equal to          <number>|<value>|<constant>|<ui_element>
 // value is not equal to      <number>|<value>|<constant>|<ui_element>
 // value in                   <value_list>|<query>

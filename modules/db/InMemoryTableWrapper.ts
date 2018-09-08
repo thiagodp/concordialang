@@ -1,10 +1,10 @@
-import { InMemoryTableInterface } from "../req/InMemoryTableInterface";
+import { Table } from '../ast/Table';
+import { InMemoryTableInterface } from '../req/InMemoryTableInterface';
+import { RuntimeException } from '../req/RuntimeException';
+import { isDefined } from '../util/TypeChecking';
+import { ValueType, ValueTypeDetector } from '../util/ValueTypeDetector';
+import { SqlHelper } from './SqlHelper';
 import * as alasql from 'alasql';
-import { Table } from "../ast/Table";
-import { ValueType, ValueTypeDetector } from "../util/ValueTypeDetector";
-import { SqlHelper } from "./SqlHelper";
-import { isDefined } from "../util/TypeChecking";
-import { RuntimeException } from "../req/RuntimeException";
 
 // @ts-ignore
 type TargetInMemoryDB = alasql.Database;

@@ -2,7 +2,6 @@ import { TestMethodResult, TestScriptExecutionResult, TestSuiteResult } from '..
 import { DefaultInstrumentationReader } from '../../modules/plugin/InstrumentationReader';
 import { Location } from '../../modules/ast/Location';
 import * as fs from 'fs';
-import * as readline from 'readline';
 import { promisify } from 'util';
 import { FileInstrumentationReader } from '../../modules/plugin/FileInstrumentationReader';
 
@@ -199,7 +198,7 @@ export class ReportConverter {
         if ( ! r || ! r[ 1 ] ) {
             return null;
         }
-        const [ _, path, lin, col ] = r;
+        const [ , path, lin, col ] = r;
 
         return {
             filePath: path,

@@ -2,7 +2,6 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const Expressions_1 = require("../req/Expressions");
 const NamedNodeLexer_1 = require("./NamedNodeLexer");
-const XRegExp = require('xregexp');
 /**
  * Detects a node in the format "keyword number: name" (e.g. "variant 1: buy with credit card").
  *

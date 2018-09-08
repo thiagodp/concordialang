@@ -1,11 +1,7 @@
-import { InstrumentationReader, DefaultInstrumentationReader } from "./InstrumentationReader";
-import { Location  } from "../ast/Location";
-import { RuntimeException } from '../req/RuntimeException';
-import { Warning } from '../req/Warning';
-import * as readline from 'readline';
+import { Location } from '../ast/Location';
+import { DefaultInstrumentationReader, InstrumentationReader } from './InstrumentationReader';
 import * as fs from 'fs';
 import { promisify } from 'util';
-
 
  /**
   * Default script file instrumentation.

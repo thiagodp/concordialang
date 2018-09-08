@@ -9,8 +9,6 @@ const VariantLexer_1 = require("../../modules/lexer/VariantLexer");
 describe('VariantLexerTest', () => {
     // IMPORTANT: This lexer inherits from NamedNodeLexerTest and
     // since it does not add behavior, few additional tests are necessary.
-    let keyword = 'variant';
-    let wordInsensitive = 'Variant';
     let word = 'variant';
     let words = [word];
     let lexer = new VariantLexer_1.VariantLexer(words); // under test

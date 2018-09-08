@@ -1,5 +1,4 @@
 import { Lexer } from "../../modules/lexer/Lexer";
-import { KeywordDictionary } from "../../modules/dict/KeywordDictionary";
 import { NodeTypes } from "../../modules/req/NodeTypes";
 import { Options } from '../../modules/app/Options';
 import { LexerBuilder } from '../../modules/lexer/LexerBuilder';

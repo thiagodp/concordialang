@@ -7,7 +7,7 @@ import { Symbols } from "../req/Symbols";
  */
 export class CommentHandler {
 
-    remove( content: string, ignoreTrim: boolean = false ): string {
+    remove( content: string ): string {
         // Comment is the first character after trim left
         if ( 0 === content.trimLeft().indexOf( Symbols.COMMENT_PREFIX ) ) {
             return content.substring( 0, content.indexOf( Symbols.COMMENT_PREFIX ) );

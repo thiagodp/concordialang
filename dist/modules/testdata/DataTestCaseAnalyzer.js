@@ -1,19 +1,19 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const DataTestCase_1 = require("./DataTestCase");
-const DocumentUtil_1 = require("../util/DocumentUtil");
-const NLPResult_1 = require("../nlp/NLPResult");
-const UIElementPropertyExtractor_1 = require("../util/UIElementPropertyExtractor");
-const DataTestCaseVsValueType_1 = require("./DataTestCaseVsValueType");
-const ValueTypeDetector_1 = require("../util/ValueTypeDetector");
-const UIPropertyTypes_1 = require("../util/UIPropertyTypes");
-const TypeChecking_1 = require("../util/TypeChecking");
-const Entities_1 = require("../nlp/Entities");
-const UIElementOperatorChecker_1 = require("../util/UIElementOperatorChecker");
-const DataGeneratorBuilder_1 = require("./DataGeneratorBuilder");
 const arrayDiff = require("arr-diff");
 const enumUtil = require("enum-util");
 const ts_pair_1 = require("ts-pair");
+const Entities_1 = require("../nlp/Entities");
+const NLPResult_1 = require("../nlp/NLPResult");
+const DocumentUtil_1 = require("../util/DocumentUtil");
+const TypeChecking_1 = require("../util/TypeChecking");
+const UIElementOperatorChecker_1 = require("../util/UIElementOperatorChecker");
+const UIElementPropertyExtractor_1 = require("../util/UIElementPropertyExtractor");
+const UIPropertyTypes_1 = require("../util/UIPropertyTypes");
+const ValueTypeDetector_1 = require("../util/ValueTypeDetector");
+const DataGeneratorBuilder_1 = require("./DataGeneratorBuilder");
+const DataTestCase_1 = require("./DataTestCase");
+const DataTestCaseVsValueType_1 = require("./DataTestCaseVsValueType");
 /**
  * Data test case analysis result
  *

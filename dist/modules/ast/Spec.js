@@ -1,9 +1,9 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const TypeChecking_1 = require("../util/TypeChecking");
 const path_1 = require("path");
-const DocumentUtil_1 = require("../util/DocumentUtil");
 const CaseType_1 = require("../app/CaseType");
+const DocumentUtil_1 = require("../util/DocumentUtil");
+const TypeChecking_1 = require("../util/TypeChecking");
 const UIElementNameHandler_1 = require("../util/UIElementNameHandler");
 class MappedContent {
     constructor() {

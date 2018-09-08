@@ -1,4 +1,3 @@
-import { isDefined } from "../util/TypeChecking";
 import { isValue } from "enum-util";
 
 /**

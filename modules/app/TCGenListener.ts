@@ -1,4 +1,3 @@
-import { ProcessingInfo } from "./ProcessingInfo";
 import { LocatedException } from "../req/LocatedException";
 import { Warning } from "../req/Warning";
 

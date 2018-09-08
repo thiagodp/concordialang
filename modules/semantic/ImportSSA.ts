@@ -1,11 +1,11 @@
+import Graph = require('graph.js/dist/graph.full.js');
+import { basename } from 'path';
+
+import { Document } from '../ast/Document';
 import { Location } from '../ast/Location';
+import { Spec } from '../ast/Spec';
 import { SemanticException } from './SemanticException';
 import { SpecificationAnalyzer } from './SpecificationAnalyzer';
-import { Spec } from "../ast/Spec";
-import { Document } from "../ast/Document";
-import { ImportBasedGraphBuilder } from '../selection/ImportBasedGraphBuilder';
-import Graph = require( 'graph.js/dist/graph.full.js' );
-import { basename } from 'path';
 
 /**
  * Executes semantic analysis of Imports in a specification.

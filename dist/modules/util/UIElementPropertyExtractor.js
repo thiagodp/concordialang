@@ -1,14 +1,14 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+const enumUtil = require("enum-util");
 const CaseType_1 = require("../app/CaseType");
-const TypeChecking_1 = require("./TypeChecking");
 const Entities_1 = require("../nlp/Entities");
 const NLPResult_1 = require("../nlp/NLPResult");
+const ActionTargets_1 = require("./ActionTargets");
 const CaseConversor_1 = require("./CaseConversor");
+const TypeChecking_1 = require("./TypeChecking");
 const UIPropertyTypes_1 = require("./UIPropertyTypes");
 const ValueTypeDetector_1 = require("./ValueTypeDetector");
-const ActionTargets_1 = require("./ActionTargets");
-const enumUtil = require("enum-util");
 /**
  * Extract properties from UI Elements.
  *

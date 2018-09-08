@@ -1,4 +1,3 @@
-import { DatabaseWrapper } from '../../modules/db/DatabaseWrapper';
 import { NLPBasedSentenceRecognizer } from '../../modules/nlp/NLPBasedSentenceRecognizer';
 import { SingleDocumentProcessor } from '../../modules/app/SingleDocumentProcessor';
 import { Parser } from '../../modules/parser/Parser';
@@ -14,7 +13,7 @@ import { LexerBuilder } from '../../modules/lexer/LexerBuilder';
  * @author Thiago Delgado Pinto
  */
 describe( 'SingleDocumentProcessorTest', () => {
-    
+
     const LANGUAGE = 'pt';
 
     const options: Options = new Options( resolve( process.cwd(), 'dist/' ) );

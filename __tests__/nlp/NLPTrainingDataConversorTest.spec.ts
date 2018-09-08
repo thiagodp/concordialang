@@ -1,5 +1,5 @@
 import { NLPTrainingDataConversor } from "../../modules/nlp/NLPTrainingDataConversor";
-import { NLPTrainingData, NLPTrainingIntentExample } from '../../modules/nlp/NLPTrainingData';
+import { NLPTrainingIntentExample } from '../../modules/nlp/NLPTrainingData';
 
 /**
  * @author Thiago Delgado Pinto
@@ -57,7 +57,7 @@ describe( 'NLPTrainingDataConversorTest', () => {
                                     {
                                         "id": "match2",
                                         "samples": [ "three", "four", "five" ]
-                                    }                                    
+                                    }
                                 ]
                             },
                             {
@@ -66,9 +66,9 @@ describe( 'NLPTrainingDataConversorTest', () => {
                                     {
                                         "id": "match3",
                                         "samples": [ "six" ]
-                                    }                                    
+                                    }
                                 ]
-                            }                            
+                            }
                         ]
                     },
 
@@ -81,7 +81,7 @@ describe( 'NLPTrainingDataConversorTest', () => {
                                     {
                                         "id": "match4",
                                         "samples": [ "seven", "eight" ]
-                                    }                                   
+                                    }
                                 ]
                             },
                             {
@@ -90,16 +90,16 @@ describe( 'NLPTrainingDataConversorTest', () => {
                                     {
                                         "id": "match5",
                                         "samples": [ "nine", "ten", "eleven" ]
-                                    },                                    
+                                    },
                                     {
                                         "id": "match6",
                                         "samples": [ "twelve" ]
-                                    }                                    
+                                    }
                                 ]
-                            }                            
+                            }
                         ]
                     }
-                    
+
                 ],
 
                 "examples": [
@@ -115,7 +115,7 @@ describe( 'NLPTrainingDataConversorTest', () => {
     it( 'converts an empty object correctly', () => {
         let data = conversor.convert( {}, [] );
         expect( data.intents ).toHaveLength( 0 );
-        expect( data.examples ).toHaveLength( 0 );        
+        expect( data.examples ).toHaveLength( 0 );
     } );
 
 } );

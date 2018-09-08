@@ -1,10 +1,10 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const DocumentUtil_1 = require("../../util/DocumentUtil");
-const NodeTypes_1 = require("../../req/NodeTypes");
-const path_1 = require("path");
-const events_1 = require("events");
 const deepcopy_1 = require("deepcopy");
+const events_1 = require("events");
+const path_1 = require("path");
+const NodeTypes_1 = require("../../req/NodeTypes");
+const DocumentUtil_1 = require("../../util/DocumentUtil");
 /**
  * Events related to the generation of Documents with Variants.
  *

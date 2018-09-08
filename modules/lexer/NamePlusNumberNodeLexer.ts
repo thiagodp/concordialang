@@ -1,19 +1,10 @@
-import { KeywordBasedLexer } from './KeywordBasedLexer';
-import { Feature } from '../ast/Feature';
-import { LocatedException } from '../req/LocatedException';
-import { NodeLexer, LexicalAnalysisResult } from './NodeLexer';
+import { NamedNode } from '../ast/Node';
 import { Expressions } from '../req/Expressions';
-import { Symbols } from '../req/Symbols';
-import { Node, NamedNode } from '../ast/Node';
-import { LineChecker } from "../req/LineChecker";
-import { LexicalException } from "../req/LexicalException";
 import { NamedNodeLexer } from './NamedNodeLexer';
-
-const XRegExp = require( 'xregexp' );
 
 /**
  * Detects a node in the format "keyword number: name" (e.g. "variant 1: buy with credit card").
- * 
+ *
  * @author Thiago Delgado Pinto
  */
 export class NamePlusNumberNodeLexer< T extends NamedNode > extends NamedNodeLexer< T > {
@@ -30,5 +21,5 @@ export class NamePlusNumberNodeLexer< T extends NamedNode > extends NamedNodeLex
             + this.separator()
             + Expressions.ANYTHING; // the name
     }
-    
+
 }

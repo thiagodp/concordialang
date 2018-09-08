@@ -1,14 +1,12 @@
-import { Scenario } from "../ast/Scenario";
-import { Node } from '../ast/Node';
-import { Document } from '../ast/Document';
+import { Scenario } from '../ast/Scenario';
 import { SyntaticException } from '../req/SyntaticException';
 import { NodeIterator } from './NodeIterator';
 import { NodeParser } from './NodeParser';
-import { ParsingContext } from "./ParsingContext";
+import { ParsingContext } from './ParsingContext';
 
 /**
  * Scenario parser
- * 
+ *
  * @author Thiago Delgado Pinto
  */
 export class ScenarioParser implements NodeParser< Scenario > {
@@ -24,7 +22,7 @@ export class ScenarioParser implements NodeParser< Scenario > {
             return false;
         }
 
-        // Prepare the feature to receive the scenario        
+        // Prepare the feature to receive the scenario
         let feature = context.doc.feature;
         if ( ! feature.scenarios ) {
             feature.scenarios = [];

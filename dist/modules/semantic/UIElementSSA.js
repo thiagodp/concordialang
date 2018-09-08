@@ -8,12 +8,12 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const SpecificationAnalyzer_1 = require("./SpecificationAnalyzer");
-const SemanticException_1 = require("./SemanticException");
-const TypeChecking_1 = require("../util/TypeChecking");
-const Entities_1 = require("../nlp/Entities");
-const QueryParser_1 = require("../db/QueryParser");
 const deepcopy = require("deepcopy");
+const QueryParser_1 = require("../db/QueryParser");
+const Entities_1 = require("../nlp/Entities");
+const TypeChecking_1 = require("../util/TypeChecking");
+const SemanticException_1 = require("./SemanticException");
+const SpecificationAnalyzer_1 = require("./SpecificationAnalyzer");
 /**
  * Executes semantic analysis of UI Elements in a specification.
  *

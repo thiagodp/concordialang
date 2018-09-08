@@ -10,7 +10,6 @@ import { PluginManager } from '../plugin/PluginManager';
 import { Plugin } from '../plugin/Plugin';
 import { TestScriptExecutionOptions, TestScriptExecutionResult } from '../testscript/TestScriptExecution';
 import { CliScriptExecutionReporter } from './CliScriptExecutionReporter';
-import { TCGenController } from './TCGenController';
 import Graph = require( 'graph.js/dist/graph.full.js' );
 import { ATSGenController } from './ATSGenController';
 import { TestScriptGenerationOptions } from '../testscript/TestScriptOptions';

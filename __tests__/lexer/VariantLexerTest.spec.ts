@@ -1,6 +1,5 @@
 import { NodeTypes } from '../../modules/req/NodeTypes';
 import { VariantLexer } from "../../modules/lexer/VariantLexer";
-import { Variant } from "../../modules/ast/Variant";
 
 /**
  * @author Thiago Delgado Pinto
@@ -11,8 +10,6 @@ describe( 'VariantLexerTest', () => {
     // IMPORTANT: This lexer inherits from NamedNodeLexerTest and
     // since it does not add behavior, few additional tests are necessary.
 
-    let keyword = 'variant';
-    let wordInsensitive = 'Variant';
     let word = 'variant';
     let words = [ word ];
 

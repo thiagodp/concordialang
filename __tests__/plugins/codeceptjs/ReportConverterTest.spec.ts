@@ -1,7 +1,6 @@
 import { ReportConverter } from '../../../plugins/codeceptjs/ReportConverter';
 import { TestScriptExecutionResult, TestSuiteResult, TestMethodResult } from '../../../modules/testscript/TestScriptExecution';
-import { resolve, join, normalize } from 'path';
-import { promisify } from 'util';
+import { join, normalize } from 'path';
 import { vol, fs as memfs } from 'memfs';
 
 /**

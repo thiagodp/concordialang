@@ -4,21 +4,19 @@ import { NodeSentenceRecognizer, NLPResultProcessor } from "./NodeSentenceRecogn
 import { LocatedException } from "../req/LocatedException";
 import { ContentNode } from "../ast/Node";
 import { NLP } from "./NLP";
-import { NLPResult } from '../../modules/nlp/NLPResult';
+import { NLPResult } from './NLPResult';
 import { NLPException } from "./NLPException";
 import { Entities } from "./Entities";
-import { Warning } from "../req/Warning";
 import { RuleBuilder } from './RuleBuilder';
 import { UI_ACTION_SYNTAX_RULES, DEFAULT_UI_ACTION_SYNTAX_RULE } from './SyntaxRules';
 import { Step } from '../ast/Step';
-import { filter } from 'minimatch';
 
 /**
- * Variant sentence recognizer.
+ * Given-When-Then sentence recognizer.
  *
  * @author Thiago Delgado Pinto
  */
-export class VariantSentenceRecognizer {
+export class GivenWhenThenSentenceRecognizer {
 
     private _syntaxRules: any[];
 
@@ -45,6 +43,7 @@ export class VariantSentenceRecognizer {
      * @param nodes Nodes to be recognized.
      * @param errors Output errors.
      * @param warnings Output warnings.
+     * @param ownerName Owner of the sentences.
      *
      * @throws Error If the NLP is not trained.
      */
@@ -53,7 +52,7 @@ export class VariantSentenceRecognizer {
         nodes: Step[],
         errors: LocatedException[],
         warnings: LocatedException[],
-        variantName: string = 'Variant'
+        ownerName: string = 'Variant'
     ) {
         const recognizer = new NodeSentenceRecognizer( this._nlp );
         const syntaxRules = this._syntaxRules;
@@ -133,7 +132,7 @@ export class VariantSentenceRecognizer {
             language,
             nodes,
             [ Intents.TEST_CASE ],
-            variantName,
+            ownerName,
             errors,
             warnings,
             processor

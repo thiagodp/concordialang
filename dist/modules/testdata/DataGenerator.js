@@ -8,10 +8,10 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+const deepcopy = require("deepcopy");
+const TypeChecking_1 = require("../util/TypeChecking");
 const ValueTypeDetector_1 = require("../util/ValueTypeDetector");
 const DataTestCase_1 = require("./DataTestCase");
-const TypeChecking_1 = require("../util/TypeChecking");
-const deepcopy = require("deepcopy");
 /**
  * Configuration (restrictions) used for generating test data.
  *

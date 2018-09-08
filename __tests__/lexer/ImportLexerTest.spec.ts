@@ -9,28 +9,27 @@ describe( 'ImportLexerTest', () => {
     // behavior, the QuotedNodeLexerTest already covers most test cases.
 
     let keyword = 'import';
-    let wordInsensitive = 'ImPorT';
     let word = 'import';
-    let words = [ word ];    
+    let words = [ word ];
 
     let lexer = new ImportLexer( words ); // under test
 
     it( 'ignores a comment after the value', () => {
         let line = "  \t \t" + word + " \t " + '"Hello world"#comment';
-        
+
         let r = lexer.analyze( line, 1 );
         expect( r ).toBeDefined();
         expect( r.errors ).toHaveLength( 0 );
         expect( r.nodes ).toHaveLength( 1 );
-        
+
         let node = r.nodes[ 0 ];
         expect( node ).toEqual(
             {
                 nodeType: keyword,
                 location: { line: 1, column: 6 },
-                value: "Hello world"                
+                value: "Hello world"
             }
         );
-    } );     
+    } );
 
 } );

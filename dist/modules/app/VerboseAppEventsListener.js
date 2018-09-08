@@ -156,9 +156,9 @@ class VerboseAppEventsListener {
     formattedStackOf(err) {
         return "\n  DETAILS: " + err.stack.substring(err.stack.indexOf("\n"));
     }
-    formatHash(hash) {
-        return this._cli.colorInfo(hash.substr(0, 8));
-    }
+    // private formatHash( hash: string ): string {
+    //     return this._cli.colorInfo( hash.substr( 0, 8 ) );
+    // }
     formatDuration(durationMs) {
         return this._cli.colorInfo('(' + durationMs.toString() + 'ms)');
     }

@@ -8,20 +8,20 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const TestScenario_1 = require("./TestScenario");
-const RuntimeException_1 = require("../req/RuntimeException");
-const VariantStateDetector_1 = require("./VariantStateDetector");
-const TypeChecking_1 = require("../util/TypeChecking");
-const RandomLong_1 = require("../testdata/random/RandomLong");
-const Random_1 = require("../testdata/random/Random");
-const Tag_1 = require("../ast/Tag");
-const NodeTypes_1 = require("../req/NodeTypes");
-const NLPResult_1 = require("../nlp/NLPResult");
-const Entities_1 = require("../nlp/Entities");
 const deepcopy = require("deepcopy");
-const CaseConversor_1 = require("../util/CaseConversor");
-const TestPlanMaker_1 = require("../testcase/TestPlanMaker");
+const Tag_1 = require("../ast/Tag");
+const Entities_1 = require("../nlp/Entities");
+const NLPResult_1 = require("../nlp/NLPResult");
+const NodeTypes_1 = require("../req/NodeTypes");
+const RuntimeException_1 = require("../req/RuntimeException");
 const DataTestCaseMix_1 = require("../testcase/DataTestCaseMix");
+const TestPlanner_1 = require("../testcase/TestPlanner");
+const Random_1 = require("../testdata/random/Random");
+const RandomLong_1 = require("../testdata/random/RandomLong");
+const CaseConversor_1 = require("../util/CaseConversor");
+const TypeChecking_1 = require("../util/TypeChecking");
+const TestScenario_1 = require("./TestScenario");
+const VariantStateDetector_1 = require("./VariantStateDetector");
 /**
  * Test Scenario generator
  *
@@ -41,7 +41,7 @@ class TSGen {
         this.seed = this._preTestCaseGenerator.seed;
         this._randomLong = new RandomLong_1.RandomLong(new Random_1.Random(this.seed));
         // Makes a PlanMaker to create valid values for Precondition scenarios
-        this._validValuePlanMaker = new TestPlanMaker_1.TestPlanMaker(new DataTestCaseMix_1.OnlyValidMix(), 
+        this._validValuePlanMaker = new TestPlanner_1.TestPlanner(new DataTestCaseMix_1.OnlyValidMix(), 
         // new SingleRandomOfEachStrategy( this.seed ),
         _statePairCombinationStrategy, this.seed);
     }

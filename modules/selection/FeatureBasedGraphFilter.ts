@@ -1,10 +1,9 @@
-import { FilterCriterion } from './FilterCriterion';
-import { CriteriaMatcher } from './CriteriaMatcher';
-import { Feature } from '../ast/Feature';
+import Graph = require('graph.js/dist/graph.full.js');
+
 import { Document } from '../ast/Document';
-import { Tag } from '../ast/Tag';
 import { isDefined } from '../util/TypeChecking';
-import Graph = require( 'graph.js/dist/graph.full.js' );
+import { CriteriaMatcher } from './CriteriaMatcher';
+import { FilterCriterion } from './FilterCriterion';
 
 
 /**

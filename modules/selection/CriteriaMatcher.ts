@@ -2,7 +2,7 @@ import { FilterCriterion } from './FilterCriterion';
 import { ReservedTags } from '../req/ReservedTags';
 import { Defaults } from '../app/Defaults';
 import { Tag } from '../ast/Tag';
-import { isDefined, isString } from '../util/TypeChecking';
+import { isString } from '../util/TypeChecking';
 import { TagUtil } from '../util/TagUtil';
 
 export class CriteriaMatcher {

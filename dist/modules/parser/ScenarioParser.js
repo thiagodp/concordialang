@@ -15,7 +15,7 @@ class ScenarioParser {
             errors.push(e);
             return false;
         }
-        // Prepare the feature to receive the scenario        
+        // Prepare the feature to receive the scenario
         let feature = context.doc.feature;
         if (!feature.scenarios) {
             feature.scenarios = [];

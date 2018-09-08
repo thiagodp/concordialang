@@ -4,7 +4,6 @@ import { Document } from "../ast/Document";
 import { SingleDocumentProcessor } from "./SingleDocumentProcessor";
 import { Parser } from "../parser/Parser";
 import { NLPBasedSentenceRecognizer } from "../nlp/NLPBasedSentenceRecognizer";
-import { Defaults } from "./Defaults";
 
 export class SingleFileCompiler implements SingleFileProcessor {
 

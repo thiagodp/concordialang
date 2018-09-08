@@ -1,8 +1,6 @@
 import { DataGenerator, DataGenConfig } from "../../modules/testdata/DataGenerator";
-import { Random } from "../../modules/testdata/random/Random";
 import { DataTestCase, DataTestCaseGroupDef, DataTestCaseGroup } from "../../modules/testdata/DataTestCase";
 import { ValueType } from "../../modules/util/ValueTypeDetector";
-import * as enumUtil from 'enum-util';
 import { LocalDate, LocalTime, LocalDateTime } from "js-joda";
 import { DateLimits } from "../../modules/testdata/limits/DateLimits";
 import { TimeLimits } from "../../modules/testdata/limits/TimeLimits";

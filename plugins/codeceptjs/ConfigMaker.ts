@@ -1,4 +1,4 @@
-import { dirname, join } from 'path';
+import { join } from 'path';
 
 /**
  * Configuration maker

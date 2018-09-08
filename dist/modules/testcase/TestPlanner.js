@@ -1,32 +1,28 @@
-import { DataTestCaseMix, TestAnalysisMap } from './DataTestCaseMix';
-import { CombinationStrategy } from '../selection/CombinationStrategy';
-import * as objectToArray from 'object-to-array';
-import { TestPlan } from './TestPlan';
-import { RandomLong } from '../testdata/random/RandomLong';
-import { Random } from '../testdata/random/Random';
-import { DTCAnalysisResult } from '../testdata/DataTestCaseAnalyzer';
-
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const objectToArray = require("object-to-array");
+const TestPlan_1 = require("./TestPlan");
+const RandomLong_1 = require("../testdata/random/RandomLong");
+const Random_1 = require("../testdata/random/Random");
+const DataTestCaseAnalyzer_1 = require("../testdata/DataTestCaseAnalyzer");
 /**
  * Uses the given mixing strategy to select the DataTestCases that will be included
  * for every UI Element and then combine these DataTestCases to form TestPlans.
  *
  * @author Thiago Delgado Pinto
  */
-export class TestPlanMaker {
-
+class TestPlanner {
     /**
      * Constructor
      *
      * @param mixingStrategy How many UI Elements will receive invalid data at a time.
      * @param combinationStrategy How the DataTestCases of each UI Element will be combined.
      */
-    constructor(
-        public readonly mixingStrategy: DataTestCaseMix,
-        public readonly combinationStrategy: CombinationStrategy,
-        public readonly seed: string
-    ) {
+    constructor(mixingStrategy, combinationStrategy, seed) {
+        this.mixingStrategy = mixingStrategy;
+        this.combinationStrategy = combinationStrategy;
+        this.seed = seed;
     }
-
     /**
      * Produces test plans, i.e., maps from UI Elements variables to UIETestPlan, in which
      * the expected result and oracles are embedded.
@@ -37,44 +33,36 @@ export class TestPlanMaker {
      *
      * @param alwaysValidVariables  UI Element Variables that should always be valid.
      */
-    make(
-        map: TestAnalysisMap,
-        alwaysValidVariables: string[]
-    ): TestPlan[] {
-
-        let plans: TestPlan[] = [];
-
+    make(map, alwaysValidVariables) {
+        let plans = [];
         // console.log( 'alwaysValidVariables', alwaysValidVariables );
         // console.log( 'INPUT map      ', map );
-
-        if ( alwaysValidVariables.length > 0 ) {
-            const randomLong = new RandomLong( new Random( this.seed ) );
-            for ( let uieVar of alwaysValidVariables ) {
-                let dtcMap = map.get( uieVar );
-                if ( ! dtcMap ) {
+        if (alwaysValidVariables.length > 0) {
+            const randomLong = new RandomLong_1.RandomLong(new Random_1.Random(this.seed));
+            for (let uieVar of alwaysValidVariables) {
+                let dtcMap = map.get(uieVar);
+                if (!dtcMap) {
                     continue;
                 }
-                for ( let [ dtc, pair ] of dtcMap ) {
-                    let [ result, oracle ] = pair.toArray();
-                    if ( result === DTCAnalysisResult.INVALID || result === DTCAnalysisResult.INCOMPATIBLE ) {
-                        dtcMap.delete( dtc );
+                for (let [dtc, pair] of dtcMap) {
+                    let [result, oracle] = pair.toArray();
+                    if (result === DataTestCaseAnalyzer_1.DTCAnalysisResult.INVALID || result === DataTestCaseAnalyzer_1.DTCAnalysisResult.INCOMPATIBLE) {
+                        dtcMap.delete(dtc);
                     }
                 }
                 let count = dtcMap.size;
-                if ( count > 1 ) {
-                    let index = randomLong.between( 0, count - 1 );
-                    let arr = Array.from( dtcMap );
-                    let [ key, v ] = arr[ index ];
+                if (count > 1) {
+                    let index = randomLong.between(0, count - 1);
+                    let arr = Array.from(dtcMap);
+                    let [key, v] = arr[index];
                     dtcMap.clear();
-                    dtcMap.set( key, v );
+                    dtcMap.set(key, v);
                 }
             }
             // console.log( 'REDUCED map      ', map );
         }
-
-        let objects = this.mixingStrategy.select( map, alwaysValidVariables );
+        let objects = this.mixingStrategy.select(map, alwaysValidVariables);
         // console.log( 'SELECTED by mix', objects, 'by', this.mixingStrategy.constructor.name );
-
         // // Reduction for the always valid variables
         // if ( alwaysValidVariables.length > 0 ) {
         //     let randomLong = new RandomLong( new Random( this.seed ) );
@@ -96,25 +84,19 @@ export class TestPlanMaker {
         //     }
         //     // console.log( 'AFTER REDUCTION', objects );
         // }
-
         // Each object is a map with an array of UIEPlans
-        for ( let obj of objects ) {
-
-            let combinations = this.combinationStrategy.combine( obj );
+        for (let obj of objects) {
+            let combinations = this.combinationStrategy.combine(obj);
             // console.log( 'combinations ', combinations, 'by', this.combinationStrategy.constructor.name );
-
             // Each combination now is a map uieName => UIEPlan
             // Thet will be transformed in a TestPlan
-            for ( let combObj of combinations ) {
-
-                let plan = new TestPlan();
-                plan.dataTestCases = new Map( objectToArray( combObj ) );
-
-                plans.push( plan );
+            for (let combObj of combinations) {
+                let plan = new TestPlan_1.TestPlan();
+                plan.dataTestCases = new Map(objectToArray(combObj));
+                plans.push(plan);
             }
         }
-
         return plans;
     }
-
 }
+exports.TestPlanner = TestPlanner;

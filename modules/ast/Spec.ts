@@ -1,21 +1,18 @@
-import { Feature } from './Feature';
-import { Table } from './Table';
-import { ReservedTags } from '../req/ReservedTags';
-import { NodeTypes } from '../req/NodeTypes';
-import { Tag } from './Tag';
-import { UIElement } from './UIElement';
-import { Constant } from './Constant';
-import { Database, DatabaseProperties } from './Database';
-import { Document } from './Document';
-import { isDefined, valueOrNull } from '../util/TypeChecking';
-import { join, resolve, dirname, relative, isAbsolute } from 'path';
-import { UIElementPropertyExtractor } from '../util/UIElementPropertyExtractor';
-import { DocumentUtil } from '../util/DocumentUtil';
+import { dirname, resolve } from 'path';
+
 import { CaseType } from '../app/CaseType';
-import { NamedNode } from './Node';
 import { DatabaseInterface } from '../req/DatabaseInterface';
 import { InMemoryTableInterface } from '../req/InMemoryTableInterface';
+import { DocumentUtil } from '../util/DocumentUtil';
+import { isDefined, valueOrNull } from '../util/TypeChecking';
 import { UIElementNameHandler } from '../util/UIElementNameHandler';
+import { Constant } from './Constant';
+import { Database } from './Database';
+import { Document } from './Document';
+import { Feature } from './Feature';
+import { NamedNode } from './Node';
+import { Table } from './Table';
+import { UIElement } from './UIElement';
 
 class MappedContent {
     feature: boolean = false;

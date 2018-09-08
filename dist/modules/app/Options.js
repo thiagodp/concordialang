@@ -325,15 +325,15 @@ class Options {
         this.saveConfig = TypeChecking_1.isDefined(obj.saveConfig);
         this.verbose = TypeChecking_1.isDefined(obj.verbose);
         this.stopOnTheFirstError = true === obj.failFast || true === obj.stopOnTheFirstError;
-        const justSpec = TypeChecking_1.isDefined(obj.justSpec) || TypeChecking_1.isDefined(obj.justSpecification);
+        // const justSpec: boolean = isDefined( obj.justSpec ) || isDefined( obj.justSpecification );
         const justTestCase = TypeChecking_1.isDefined(obj.justTestCase) || TypeChecking_1.isDefined(obj.justTestCases);
         const justScript = TypeChecking_1.isDefined(obj.justScript) || TypeChecking_1.isDefined(obj.justScripts);
         const justRun = TypeChecking_1.isDefined(obj.justRun);
         const justResult = TypeChecking_1.isDefined(obj.justResult) || TypeChecking_1.isDefined(obj.justResults);
         // compare to false is important because meow transforms no-xxx to xxx === false
-        const noSpec = false === obj.compileSpecification ||
-            false === obj.spec ||
-            false === obj.specification;
+        // const noSpec: boolean = false === obj.compileSpecification ||
+        //     false === obj.spec ||
+        //     false === obj.specification;
         const noTestCase = false === obj.generateTestCase ||
             false === obj.testCase ||
             false === obj.testCases ||

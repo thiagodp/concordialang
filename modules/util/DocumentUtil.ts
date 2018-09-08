@@ -1,14 +1,11 @@
-import { isDefined } from "./TypeChecking";
+import { CaseType } from '../app/CaseType';
 import { Document } from '../ast/Document';
-import { hasTagNamed } from "../ast/Tag";
-import { ReservedTags } from "../req/ReservedTags";
-import { Variant } from "../ast/Variant";
-import { Scenario } from "../ast/Scenario";
-import { UIElement, UIElementInfo } from "../ast/UIElement";
-import { Feature } from "../ast/Feature";
-import { CaseType } from "../app/CaseType";
-import { UIElementNameHandler } from "./UIElementNameHandler";
-import { UIElementPropertyExtractor } from "./UIElementPropertyExtractor";
+import { Scenario } from '../ast/Scenario';
+import { UIElement, UIElementInfo } from '../ast/UIElement';
+import { Variant } from '../ast/Variant';
+import { isDefined } from './TypeChecking';
+import { UIElementNameHandler } from './UIElementNameHandler';
+import { UIElementPropertyExtractor } from './UIElementPropertyExtractor';
 
 export class DocumentUtil {
 

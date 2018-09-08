@@ -8,12 +8,12 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const SemanticException_1 = require("./SemanticException");
-const SpecificationAnalyzer_1 = require("./SpecificationAnalyzer");
-const path = require("path");
 const deepcopy = require("deepcopy");
+const path = require("path");
 const EnglishKeywordDictionary_1 = require("../dict/EnglishKeywordDictionary");
 const TypeChecking_1 = require("../util/TypeChecking");
+const SemanticException_1 = require("./SemanticException");
+const SpecificationAnalyzer_1 = require("./SpecificationAnalyzer");
 /**
  * Executes semantic analysis of Test Cases in a specification.
  *
@@ -213,7 +213,6 @@ class TestCaseSSA extends SpecificationAnalyzer_1.SpecificationAnalyzer {
             errors.push(err);
             return false;
         }
-        let feature = availableFeatures[featureIndex];
         let featureFilePath = availableFeaturePaths[featureIndex];
         if (spec.basePath) {
             // Normalizes the path, according to the base path

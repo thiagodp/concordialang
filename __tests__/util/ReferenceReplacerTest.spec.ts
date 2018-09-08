@@ -1,4 +1,3 @@
-import { QueryParser } from '../../modules/db/QueryParser';
 import { ReferenceReplacer } from '../../modules/util/ReferenceReplacer';
 
 /**
@@ -6,7 +5,7 @@ import { ReferenceReplacer } from '../../modules/util/ReferenceReplacer';
  */
 describe( 'ReferenceReplacerTest', () => {
 
-    let replacer = new ReferenceReplacer(); // under test   
+    let replacer = new ReferenceReplacer(); // under test
 
     it( 'replaces a query', () => {
 
@@ -15,8 +14,8 @@ describe( 'ReferenceReplacerTest', () => {
             'LEFT JOIN [table3] AS tbl3' +
             '  ON tbl3.someField = {fieldB} ' +
             'WHERE [table1].fieldX = {fieldA} OR ' +
-            '[table2].fieldY = [const1] OR [table3].x = [const2]';        
-                
+            '[table2].fieldY = [const1] OR [table3].x = [const2]';
+
         const result = replacer.replaceQuery( query,
             new Map< string, string >( [
                 [ 'db', 'mydb' ]
@@ -39,7 +38,7 @@ describe( 'ReferenceReplacerTest', () => {
         const expected = 'SELECT `user`.fieldX, tbl2.fieldY, `customer`.fieldY ' +
             'FROM `mydb`.`user`, `customer`, tbl3 ' +
             'LEFT JOIN `employee` AS tbl3' +
-            '  ON tbl3.someField = 100 ' +            
+            '  ON tbl3.someField = 100 ' +
             'WHERE `user`.fieldX = \'Jack\' OR ' +
             '`customer`.fieldY = \'administrator\' OR `employee`.x = 200';
 

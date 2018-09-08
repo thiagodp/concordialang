@@ -1,13 +1,11 @@
-import { KeywordBasedLexer } from './KeywordBasedLexer';
-import { Feature } from '../ast/Feature';
-import { LocatedException } from '../req/LocatedException';
-import { NodeLexer, LexicalAnalysisResult } from './NodeLexer';
+import { NamedNode } from '../ast/Node';
 import { Expressions } from '../req/Expressions';
+import { LexicalException } from '../req/LexicalException';
+import { LineChecker } from '../req/LineChecker';
 import { Symbols } from '../req/Symbols';
-import { Node, NamedNode } from '../ast/Node';
-import { LineChecker } from "../req/LineChecker";
-import { LexicalException } from "../req/LexicalException";
 import { CommentHandler } from './CommentHandler';
+import { KeywordBasedLexer } from './KeywordBasedLexer';
+import { LexicalAnalysisResult, NodeLexer } from './NodeLexer';
 
 const XRegExp = require( 'xregexp' );
 

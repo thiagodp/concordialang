@@ -1,15 +1,16 @@
-import { SpecificationAnalyzer } from "./SpecificationAnalyzer";
-import { Spec } from "../ast/Spec";
-import { SemanticException } from "./SemanticException";
-import { Document } from "../ast/Document";
-import { isDefined } from "../util/TypeChecking";
-import { UIElement, UIProperty } from "../ast/UIElement";
-import { Entities } from "../nlp/Entities";
-import { Location } from "../ast/Location";
-import { Node } from "../ast/Node";
-import { QueryParser } from "../db/QueryParser";
-import Graph = require( 'graph.js/dist/graph.full.js' );
 import * as deepcopy from 'deepcopy';
+import Graph = require('graph.js/dist/graph.full.js');
+
+import { Document } from '../ast/Document';
+import { Location } from '../ast/Location';
+import { Node } from '../ast/Node';
+import { Spec } from '../ast/Spec';
+import { UIElement, UIProperty } from '../ast/UIElement';
+import { QueryParser } from '../db/QueryParser';
+import { Entities } from '../nlp/Entities';
+import { isDefined } from '../util/TypeChecking';
+import { SemanticException } from './SemanticException';
+import { SpecificationAnalyzer } from './SpecificationAnalyzer';
 
 /**
  * Executes semantic analysis of UI Elements in a specification.

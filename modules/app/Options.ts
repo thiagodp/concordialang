@@ -1,5 +1,5 @@
-import { resolve, join } from 'path';
-import { Defaults, VariantSelectionOptions, StateCombinationOptions, CombinationOptions } from './Defaults';
+import { resolve } from 'path';
+import { Defaults, VariantSelectionOptions, CombinationOptions } from './Defaults';
 import { CaseType } from './CaseType';
 import { isString, isNumber, isDefined } from '../util/TypeChecking';
 import * as enumUtil from 'enum-util';
@@ -399,16 +399,16 @@ export class Options {
         this.verbose = isDefined( obj.verbose );
         this.stopOnTheFirstError = true === obj.failFast || true === obj.stopOnTheFirstError;
 
-        const justSpec: boolean = isDefined( obj.justSpec ) || isDefined( obj.justSpecification );
+        // const justSpec: boolean = isDefined( obj.justSpec ) || isDefined( obj.justSpecification );
         const justTestCase: boolean = isDefined( obj.justTestCase ) || isDefined( obj.justTestCases );
         const justScript: boolean = isDefined( obj.justScript ) || isDefined( obj.justScripts );
         const justRun: boolean = isDefined( obj.justRun );
         const justResult: boolean = isDefined( obj.justResult ) || isDefined( obj.justResults );
 
         // compare to false is important because meow transforms no-xxx to xxx === false
-        const noSpec: boolean = false === obj.compileSpecification ||
-            false === obj.spec ||
-            false === obj.specification;
+        // const noSpec: boolean = false === obj.compileSpecification ||
+        //     false === obj.spec ||
+        //     false === obj.specification;
         const noTestCase: boolean = false === obj.generateTestCase ||
             false === obj.testCase ||
             false === obj.testCases ||

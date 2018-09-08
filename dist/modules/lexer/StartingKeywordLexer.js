@@ -1,8 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const Warning_1 = require("../req/Warning");
-const LineChecker_1 = require("../req/LineChecker");
 const Expressions_1 = require("../req/Expressions");
+const LineChecker_1 = require("../req/LineChecker");
+const Warning_1 = require("../req/Warning");
 const CommentHandler_1 = require("./CommentHandler");
 /**
  * Detects a node in the format "keyword anything".

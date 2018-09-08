@@ -10,6 +10,7 @@ import { join } from 'path';
 
 describe( 'UIElementSSATest', () => {
 
+    // @ts-ignore
     let sa: UIElementSSA; // under test
 
     const path = __dirname;

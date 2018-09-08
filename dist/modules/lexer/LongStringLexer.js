@@ -1,17 +1,13 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const Symbols_1 = require("../req/Symbols");
 const NodeTypes_1 = require("../req/NodeTypes");
-const LineChecker_1 = require("../req/LineChecker");
+const Symbols_1 = require("../req/Symbols");
 /**
  * Detects anything not empty.
  *
  * @author Thiago Delgado Pinto
  */
 class LongStringLexer {
-    constructor() {
-        this._lineChecker = new LineChecker_1.LineChecker();
-    }
     /** @inheritDoc */
     nodeType() {
         return NodeTypes_1.NodeTypes.LONG_STRING;

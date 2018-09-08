@@ -8,16 +8,16 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const TableSSA_1 = require("./TableSSA");
+const AfterAllSSA_1 = require("./AfterAllSSA");
+const BeforeAllSSA_1 = require("./BeforeAllSSA");
+const ConstantSSA_1 = require("./ConstantSSA");
 const DatabaseSSA_1 = require("./DatabaseSSA");
 const FeatureSSA_1 = require("./FeatureSSA");
 const ImportSSA_1 = require("./ImportSSA");
 const SpecificationAnalyzer_1 = require("./SpecificationAnalyzer");
+const TableSSA_1 = require("./TableSSA");
 const TestCaseSSA_1 = require("./TestCaseSSA");
-const ConstantSSA_1 = require("./ConstantSSA");
 const UIElementSSA_1 = require("./UIElementSSA");
-const BeforeAllSSA_1 = require("./BeforeAllSSA");
-const AfterAllSSA_1 = require("./AfterAllSSA");
 /**
  * Executes many semantic analyzers to a specification in batch.
  *

@@ -1,7 +1,7 @@
-import { NLPUtil, NLPEntity } from "../nlp/NLPResult";
-import { UIProperty } from "../ast/UIElement";
-import { UIElementOperator, UIElementOperatorModifier } from "./UIElementOperator";
-import { Entities } from "../nlp/Entities";
+import { UIProperty } from '../ast/UIElement';
+import { Entities } from '../nlp/Entities';
+import { NLPUtil } from '../nlp/NLPResult';
+import { UIElementOperator, UIElementOperatorModifier } from './UIElementOperator';
 
 /**
  * UI Element operator checker.

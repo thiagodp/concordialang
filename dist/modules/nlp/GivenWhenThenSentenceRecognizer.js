@@ -7,11 +7,11 @@ const Entities_1 = require("./Entities");
 const RuleBuilder_1 = require("./RuleBuilder");
 const SyntaxRules_1 = require("./SyntaxRules");
 /**
- * Variant sentence recognizer.
+ * Given-When-Then sentence recognizer.
  *
  * @author Thiago Delgado Pinto
  */
-class VariantSentenceRecognizer {
+class GivenWhenThenSentenceRecognizer {
     constructor(_nlp) {
         this._nlp = _nlp;
         this._syntaxRules = this.buildSyntaxRules();
@@ -32,10 +32,11 @@ class VariantSentenceRecognizer {
      * @param nodes Nodes to be recognized.
      * @param errors Output errors.
      * @param warnings Output warnings.
+     * @param ownerName Owner of the sentences.
      *
      * @throws Error If the NLP is not trained.
      */
-    recognizeSentences(language, nodes, errors, warnings, variantName = 'Variant') {
+    recognizeSentences(language, nodes, errors, warnings, ownerName = 'Variant') {
         const recognizer = new NodeSentenceRecognizer_1.NodeSentenceRecognizer(this._nlp);
         const syntaxRules = this._syntaxRules;
         let processor = function (node, r, errors, warnings) {
@@ -91,10 +92,10 @@ class VariantSentenceRecognizer {
                 item.values.push(cmd);
             }
         };
-        recognizer.recognize(language, nodes, [Intents_1.Intents.TEST_CASE], variantName, errors, warnings, processor);
+        recognizer.recognize(language, nodes, [Intents_1.Intents.TEST_CASE], ownerName, errors, warnings, processor);
     }
     buildSyntaxRules() {
         return (new RuleBuilder_1.RuleBuilder()).build(SyntaxRules_1.UI_ACTION_SYNTAX_RULES, SyntaxRules_1.DEFAULT_UI_ACTION_SYNTAX_RULE);
     }
 }
-exports.VariantSentenceRecognizer = VariantSentenceRecognizer;
+exports.GivenWhenThenSentenceRecognizer = GivenWhenThenSentenceRecognizer;

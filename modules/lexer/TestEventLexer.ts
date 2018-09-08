@@ -1,7 +1,6 @@
-import { TestEvent, BeforeAll, AfterAll, BeforeFeature, AfterFeature, BeforeEachScenario, AfterEachScenario } from '../ast/TestEvent';
-import { NodeTypes } from "../req/NodeTypes";
+import { AfterAll, AfterEachScenario, AfterFeature, BeforeAll, BeforeEachScenario, BeforeFeature } from '../ast/TestEvent';
+import { NodeTypes } from '../req/NodeTypes';
 import { BlockLexer } from './BlockLexer';
-import { ListItemLexer } from './ListItemLexer';
 
 
 export class BeforeAllLexer extends BlockLexer< BeforeAll > {

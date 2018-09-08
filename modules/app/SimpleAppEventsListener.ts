@@ -274,9 +274,9 @@ export class SimpleAppEventsListener implements
         return "\n  DETAILS: " + err.stack.substring( err.stack.indexOf( "\n" ) );
     }
 
-    private formatHash( hash: string ): string {
-        return this._cli.colorInfo( hash.substr( 0, 8 ) );
-    }
+    // private formatHash( hash: string ): string {
+    //     return this._cli.colorInfo( hash.substr( 0, 8 ) );
+    // }
 
     private formatDuration( durationMs: number ): string {
         if ( durationMs < 0 ) {

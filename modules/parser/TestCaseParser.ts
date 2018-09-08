@@ -1,12 +1,9 @@
-import { Scenario } from "../ast/Scenario";
-import { Node } from '../ast/Node';
-import { Document } from '../ast/Document';
+import { TestCase } from '../ast/TestCase';
 import { SyntaticException } from '../req/SyntaticException';
 import { NodeIterator } from './NodeIterator';
 import { NodeParser } from './NodeParser';
-import { ParsingContext } from "./ParsingContext";
-import { TestCase } from "../ast/TestCase";
-import { TagCollector } from "./TagCollector";
+import { ParsingContext } from './ParsingContext';
+import { TagCollector } from './TagCollector';
 
 /**
  * TestCase parser

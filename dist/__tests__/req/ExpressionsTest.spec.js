@@ -2,7 +2,6 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const Expressions_1 = require("../../modules/req/Expressions");
 describe('Expressions Test', () => {
-    let invalid = [];
     it('espaces a char for a regex correctly', () => {
         expect(Expressions_1.Expressions.escape('.')).toBe("\\.");
     });

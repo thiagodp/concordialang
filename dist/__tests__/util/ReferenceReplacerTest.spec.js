@@ -5,7 +5,7 @@ const ReferenceReplacer_1 = require("../../modules/util/ReferenceReplacer");
  * @author Thiago Delgado Pinto
  */
 describe('ReferenceReplacerTest', () => {
-    let replacer = new ReferenceReplacer_1.ReferenceReplacer(); // under test   
+    let replacer = new ReferenceReplacer_1.ReferenceReplacer(); // under test
     it('replaces a query', () => {
         const query = 'SELECT [table1].fieldX, tbl2.fieldY, [table2].fieldY ' +
             'FROM [db].[table1], [table2], tbl3 ' +

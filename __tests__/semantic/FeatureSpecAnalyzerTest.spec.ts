@@ -1,6 +1,5 @@
 import { FeatureSSA } from '../../modules/semantic/FeatureSSA';
 import { Parser } from '../../modules/parser/Parser';
-import { ScenarioDA } from '../../modules/semantic/single/ScenarioDA';
 import { Lexer } from '../../modules/lexer/Lexer';
 import { Document } from '../../modules/ast/Document';
 import { Spec } from '../../modules/ast/Spec';
@@ -19,9 +18,6 @@ describe( 'FeatureSpecAnalyzerTest', () => {
     let parser = new Parser();
     const options: Options = new Options( resolve( process.cwd(), 'dist/' ) );
     let lexer: Lexer = ( new LexerBuilder() ).build( options, 'en' );
-
-    let doc1: Document;
-
 
     beforeEach( () => {
         lexer.reset();

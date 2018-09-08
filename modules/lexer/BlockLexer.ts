@@ -1,12 +1,11 @@
-import { NamedNodeLexer } from "./NamedNodeLexer";
 import { Node } from '../ast/Node';
-import { Symbols } from "../req/Symbols";
-import { LineChecker } from "../req/LineChecker";
-import { Expressions } from "../req/Expressions";
-import { NodeLexer, LexicalAnalysisResult } from './NodeLexer';
-import { KeywordBasedLexer } from "./KeywordBasedLexer";
-import { LexicalException } from "../req/LexicalException";
-import { CommentHandler } from "./CommentHandler";
+import { Expressions } from '../req/Expressions';
+import { LexicalException } from '../req/LexicalException';
+import { LineChecker } from '../req/LineChecker';
+import { Symbols } from '../req/Symbols';
+import { CommentHandler } from './CommentHandler';
+import { KeywordBasedLexer } from './KeywordBasedLexer';
+import { LexicalAnalysisResult, NodeLexer } from './NodeLexer';
 
 /**
  * Detects a node in the format "keyword:".

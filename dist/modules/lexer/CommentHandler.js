@@ -7,7 +7,7 @@ const Symbols_1 = require("../req/Symbols");
  * @author Thiago Delgado Pinto
  */
 class CommentHandler {
-    remove(content, ignoreTrim = false) {
+    remove(content) {
         // Comment is the first character after trim left
         if (0 === content.trimLeft().indexOf(Symbols_1.Symbols.COMMENT_PREFIX)) {
             return content.substring(0, content.indexOf(Symbols_1.Symbols.COMMENT_PREFIX));

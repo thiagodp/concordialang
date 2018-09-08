@@ -1,4 +1,4 @@
-import { VariantSentenceRecognizer } from "../nlp/VariantSentenceRecognizer";
+import { GivenWhenThenSentenceRecognizer } from "../nlp/GivenWhenThenSentenceRecognizer";
 import { LanguageContentLoader } from "../dict/LanguageContentLoader";
 import { Options } from "./Options";
 import { PreTestCaseGenerator, GenContext } from "../testscenario/PreTestCaseGenerator";
@@ -13,19 +13,17 @@ import { TestScenario } from "../testscenario/TestScenario";
 import { LocatedException } from "../req/LocatedException";
 import { TCGen } from "../testcase/TCGen";
 import { TestCase } from "../ast/TestCase";
-import { TestPlanMaker } from "../testcase/TestPlanMaker";
+import { TestPlanner } from "../testcase/TestPlanner";
 import { TCDocGen } from "../testcase/TCDocGen";
 import { TestCaseFileGenerator } from "../testcase/TestCaseFileGenerator";
 import { promisify } from "util";
 import { RuntimeException } from "../req/RuntimeException";
 import { writeFile } from 'fs';
-import { VariantSelectionOptions, StateCombinationOptions, CombinationOptions, InvalidSpecialOptions } from "./Defaults";
+import { VariantSelectionOptions, CombinationOptions, InvalidSpecialOptions } from "./Defaults";
 import { ReservedTags } from "../req/ReservedTags";
 import { Warning } from "../req/Warning";
 import { DataTestCaseMix, OnlyValidMix, JustOneInvalidMix, OnlyInvalidMix, UnfilteredMix } from "../testcase/DataTestCaseMix";
-import { CLI } from "./CLI";
 import { TCGenListener } from "./TCGenListener";
-import { ProcessingInfo } from "./ProcessingInfo";
 
 export class TCGenController {
 
@@ -33,7 +31,7 @@ export class TCGenController {
     }
 
     async execute(
-        variantSentenceRec: VariantSentenceRecognizer,
+        variantSentenceRec: GivenWhenThenSentenceRecognizer,
         langLoader: LanguageContentLoader,
         options: Options,
         spec: Spec,
@@ -79,7 +77,7 @@ export class TCGenController {
 
         const tcGen = new TCGen( preTCGen );
 
-        const testPlanMakers: TestPlanMaker[] = this.testPlanMakersFromOptions( options, strategyWarnings );
+        const testPlanMakers: TestPlanner[] = this.testPlanMakersFromOptions( options, strategyWarnings );
 
         const tcDocGen = new TCDocGen( options.extensionTestCase, options.directory );
 
@@ -308,7 +306,7 @@ export class TCGenController {
     }
 
 
-    private testPlanMakersFromOptions( options: Options, warnings: LocatedException[] ): TestPlanMaker[] {
+    private testPlanMakersFromOptions( options: Options, warnings: LocatedException[] ): TestPlanner[] {
 
         // INVALID DATA TEST CASES AT A TIME
 
@@ -366,7 +364,7 @@ export class TCGenController {
         );
 
         return [
-            new TestPlanMaker( mixStrategy, combinationStrategy, options.realSeed )
+            new TestPlanner( mixStrategy, combinationStrategy, options.realSeed )
         ];
     }
 

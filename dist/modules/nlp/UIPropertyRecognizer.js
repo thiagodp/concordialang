@@ -1,14 +1,14 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+const UIElement_1 = require("../ast/UIElement");
+const TypeChecking_1 = require("../util/TypeChecking");
+const ValueTypeDetector_1 = require("../util/ValueTypeDetector");
+const Entities_1 = require("./Entities");
+const Intents_1 = require("./Intents");
+const NLPException_1 = require("./NLPException");
+const NodeSentenceRecognizer_1 = require("./NodeSentenceRecognizer");
 const RuleBuilder_1 = require("./RuleBuilder");
 const SyntaxRules_1 = require("./SyntaxRules");
-const Intents_1 = require("./Intents");
-const NodeSentenceRecognizer_1 = require("./NodeSentenceRecognizer");
-const UIElement_1 = require("../ast/UIElement");
-const NLPException_1 = require("./NLPException");
-const Entities_1 = require("./Entities");
-const ValueTypeDetector_1 = require("../util/ValueTypeDetector");
-const TypeChecking_1 = require("../util/TypeChecking");
 /**
  * UI element property sentence recognizer.
  *

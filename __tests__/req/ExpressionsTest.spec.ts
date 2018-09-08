@@ -2,8 +2,6 @@ import { Expressions } from "../../modules/req/Expressions";
 
 describe( 'Expressions Test', () => {
 
-    let invalid = [];
-
     it( 'espaces a char for a regex correctly', () => {
         expect( Expressions.escape( '.' ) ).toBe( "\\." );
     } );
@@ -19,7 +17,7 @@ describe( 'Expressions Test', () => {
 
         r = Expressions.anythingBut( [ '"' ] ).test( 'hello "world' );
         expect( r ).toBeFalsy();
-    } );    
+    } );
 
 
 } );

@@ -13,7 +13,7 @@ const TSGen_1 = require("../testscenario/TSGen");
 const VariantSelectionStrategy_1 = require("../selection/VariantSelectionStrategy");
 const CombinationStrategy_1 = require("../selection/CombinationStrategy");
 const TCGen_1 = require("../testcase/TCGen");
-const TestPlanMaker_1 = require("../testcase/TestPlanMaker");
+const TestPlanner_1 = require("../testcase/TestPlanner");
 const TCDocGen_1 = require("../testcase/TCDocGen");
 const TestCaseFileGenerator_1 = require("../testcase/TestCaseFileGenerator");
 const util_1 = require("util");
@@ -226,7 +226,7 @@ class TCGenController {
         // console.log( 'options.invalid', options.invalid, 'desired', desired, 'dataCombinationOption', dataCombinationOption );
         let combinationStrategy = this.combinationStrategyFrom(dataCombinationOption, 'Data', options, warnings);
         return [
-            new TestPlanMaker_1.TestPlanMaker(mixStrategy, combinationStrategy, options.realSeed)
+            new TestPlanner_1.TestPlanner(mixStrategy, combinationStrategy, options.realSeed)
         ];
     }
 }

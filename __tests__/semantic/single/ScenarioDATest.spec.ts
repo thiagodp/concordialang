@@ -13,18 +13,14 @@ describe( 'ScenarioDATest', () => {
 
     const analyzer = new ScenarioDA(); // under test
 
-
     let parser = new Parser();
-
-    const options: Options = new Options( resolve( process.cwd(), 'dist/' ) );    
+    const options: Options = new Options( resolve( process.cwd(), 'dist/' ) );
     let lexer: Lexer = ( new LexerBuilder() ).build( options );
-
-    let doc1: Document;    
 
 
     beforeEach( () => {
         lexer.reset();
-    } );    
+    } );
 
     it( 'does not critize when it is all right', () => {
         [
@@ -54,6 +50,6 @@ describe( 'ScenarioDATest', () => {
         analyzer.analyze( doc1, errors );
         expect( errors ).toHaveLength( 1 );
         expect( errors[ 0 ].message ).toMatch( /duplicated/ui );
-    } );    
+    } );
 
 } );

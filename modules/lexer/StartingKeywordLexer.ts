@@ -1,11 +1,10 @@
+import { ContentNode } from '../ast/Node';
+import { Expressions } from '../req/Expressions';
+import { LineChecker } from '../req/LineChecker';
 import { Warning } from '../req/Warning';
-import { Symbols } from '../req/Symbols';
-import { Node, ContentNode, HasValue } from '../ast/Node';
-import { NodeLexer, LexicalAnalysisResult } from "./NodeLexer";
-import { LineChecker } from "../req/LineChecker";
-import { Expressions } from "../req/Expressions";
-import { KeywordBasedLexer } from "./KeywordBasedLexer";
 import { CommentHandler } from './CommentHandler';
+import { KeywordBasedLexer } from './KeywordBasedLexer';
+import { LexicalAnalysisResult, NodeLexer } from './NodeLexer';
 
 /**
  * Detects a node in the format "keyword anything".

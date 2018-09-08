@@ -1,9 +1,9 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const VariantLike_1 = require("../ast/VariantLike");
+const Entities_1 = require("../nlp/Entities");
 const NLPResult_1 = require("../nlp/NLPResult");
 const NodeTypes_1 = require("../req/NodeTypes");
-const Entities_1 = require("../nlp/Entities");
 /**
  * Detects preconditions, state calls and postconditions.
  *

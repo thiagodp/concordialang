@@ -1,14 +1,12 @@
-import { Intents } from './Intents';
-import { NLPTrainer } from './NLPTrainer';
-import { DatabasePropertyRecognizer } from './DatabasePropertyRecognizer';
-import { NLPException } from './NLPException';
-import { VariantSentenceRecognizer } from './VariantSentenceRecognizer';
-import { UIPropertyRecognizer } from './UIPropertyRecognizer';
-import { Warning } from '../req/Warning';
-import { LocatedException } from '../req/LocatedException';
 import { Document } from '../ast/Document';
-import { NLP } from './NLP';
+import { LocatedException } from '../req/LocatedException';
+import { Warning } from '../req/Warning';
 import { isDefined } from '../util/TypeChecking';
+import { DatabasePropertyRecognizer } from './DatabasePropertyRecognizer';
+import { GivenWhenThenSentenceRecognizer } from './GivenWhenThenSentenceRecognizer';
+import { NLP } from './NLP';
+import { NLPTrainer } from './NLPTrainer';
+import { UIPropertyRecognizer } from './UIPropertyRecognizer';
 
 /**
  * NLP-based sentence recognizer.
@@ -18,7 +16,7 @@ import { isDefined } from '../util/TypeChecking';
 export class NLPBasedSentenceRecognizer {
 
     private _uiPropertyRec: UIPropertyRecognizer;
-    private _variantSentenceRec: VariantSentenceRecognizer;
+    private _variantSentenceRec: GivenWhenThenSentenceRecognizer;
     private _dbPropertyRec: DatabasePropertyRecognizer;
 
     constructor(
@@ -26,7 +24,7 @@ export class NLPBasedSentenceRecognizer {
         private _useFuzzyProcessor?: boolean
     ) {
         this._uiPropertyRec = new UIPropertyRecognizer( new NLP( _useFuzzyProcessor ) );
-        this._variantSentenceRec = new VariantSentenceRecognizer( new NLP( _useFuzzyProcessor ) );
+        this._variantSentenceRec = new GivenWhenThenSentenceRecognizer( new NLP( _useFuzzyProcessor ) );
         this._dbPropertyRec = new DatabasePropertyRecognizer( new NLP( _useFuzzyProcessor ) );
     }
 

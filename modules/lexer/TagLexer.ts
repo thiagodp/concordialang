@@ -1,10 +1,9 @@
-import { LexicalException } from '../req/LexicalException';
 import { Tag } from '../ast/Tag';
-import { NodeLexer, LexicalAnalysisResult } from './NodeLexer';
-import { NodeTypes } from "../req/NodeTypes";
-import { Symbols } from "../req/Symbols";
-import { LineChecker } from "../req/LineChecker";
+import { LexicalException } from '../req/LexicalException';
+import { NodeTypes } from '../req/NodeTypes';
+import { Symbols } from '../req/Symbols';
 import { CommentHandler } from './CommentHandler';
+import { LexicalAnalysisResult, NodeLexer } from './NodeLexer';
 
 const XRegExp = require( 'xregexp' );
 
@@ -15,7 +14,6 @@ const XRegExp = require( 'xregexp' );
  */
 export class TagLexer implements NodeLexer< Tag > {
 
-    private _lineChecker: LineChecker = new LineChecker();
 
     /** @inheritDoc */
     public nodeType(): string {

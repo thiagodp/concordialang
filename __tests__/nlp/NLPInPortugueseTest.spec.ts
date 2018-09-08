@@ -91,12 +91,6 @@ describe( 'NLPInPortugueseTest', () => {
 
     describe( 'testcase entities', () => {
 
-        const entity = 'testcase';
-
-        // it( '', () => {
-
-        // } );
-
         describe( 'structure', () => {
 
             it( '{ui_action} {ui_element}', () => {

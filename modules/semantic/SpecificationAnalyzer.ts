@@ -1,8 +1,8 @@
-import { Spec } from "../ast/Spec";
+import Graph = require('graph.js/dist/graph.full.js');
+
+import { Spec } from '../ast/Spec';
 import { DuplicationChecker } from '../util/DuplicationChecker';
 import { SemanticException } from './SemanticException';
-import { NamedNode } from "../ast/Node";
-import Graph = require( 'graph.js/dist/graph.full.js' );
 
 /**
  * Specification semantic analyzer.

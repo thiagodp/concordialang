@@ -1,6 +1,5 @@
 import { TestCaseFileGenerator } from "../../modules/testcase/TestCaseFileGenerator";
 import { JsonLanguageContentLoader, LanguageContentLoader } from "../../modules/dict/LanguageContentLoader";
-import { LanguageContent } from "../../modules/dict/LanguageContent";
 import { Document } from '../../modules/ast/Document';
 import { resolve } from "path";
 import { Options } from "../../modules/app/Options";

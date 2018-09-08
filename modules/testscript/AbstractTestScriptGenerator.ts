@@ -1,18 +1,22 @@
-import { TestCase } from "../ast/TestCase";
 import { Document } from '../ast/Document';
-import { isDefined } from "../util/TypeChecking";
-import { AbstractTestScript, ATSElement, NamedATSElement, ATSTestCase, ATSCommand, ATSDatabaseCommand, ATSConsoleCommand, ATSEvent } from "./AbstractTestScript";
-import { Spec } from "../ast/Spec";
-import { TagUtil } from "../util/TagUtil";
-import { ReservedTags } from "../req/ReservedTags";
-import { Location } from "../ast/Location";
-import { Entities } from "../nlp/Entities";
-import { TestEvent } from "../ast/TestEvent";
-import { Actions } from "../util/Actions";
-import { Symbols } from "../req/Symbols";
-import { DatabaseToAbstractDatabase } from "../db/DatabaseToAbstractDatabase";
-import { AbstractDatabase } from "../ast/AbstractDatabase";
-import { supportTablesInQueries } from "../db/DatabaseTypes";
+import { Location } from '../ast/Location';
+import { Spec } from '../ast/Spec';
+import { TestEvent } from '../ast/TestEvent';
+import { DatabaseToAbstractDatabase } from '../db/DatabaseToAbstractDatabase';
+import { supportTablesInQueries } from '../db/DatabaseTypes';
+import { Entities } from '../nlp/Entities';
+import { Symbols } from '../req/Symbols';
+import { Actions } from '../util/Actions';
+import { isDefined } from '../util/TypeChecking';
+import {
+    AbstractTestScript,
+    ATSCommand,
+    ATSConsoleCommand,
+    ATSDatabaseCommand,
+    ATSEvent,
+    ATSTestCase,
+    NamedATSElement,
+} from './AbstractTestScript';
 
 /**
  * Generates Abstract Test Script
@@ -33,10 +37,6 @@ export class AbstractTestScriptGenerator {
         if ( ! doc.testCases || doc.testCases.length < 1 ) {
             return null;
         }
-
-        const hasNoSentences = function hasSentences( target ) {
-            return ( ! target || ! target.sentences || target.sentences.length < 1 );
-        };
 
         let beforeAll = doc.beforeAll;
         let afterAll = doc.afterAll;
@@ -178,8 +178,8 @@ export class AbstractTestScriptGenerator {
     convertTestEventSentencesToCommands( event: TestEvent, spec: Spec ): ATSCommand[] {
 
         const dbConversor = new DatabaseToAbstractDatabase();
-        const DATABASE_OPTION = 'database';
-        const SCRIPT_OPTION = 'script';
+        // const DATABASE_OPTION = 'database';
+        // const SCRIPT_OPTION = 'script';
         const COMMAND_OPTION = 'command';
         const dbNames = spec.databaseNames();
         const dbVarNames = dbNames.map(

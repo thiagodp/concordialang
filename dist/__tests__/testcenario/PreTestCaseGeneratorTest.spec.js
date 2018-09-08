@@ -13,7 +13,7 @@ const SimpleCompiler_1 = require("../../modules/util/SimpleCompiler");
 const Spec_1 = require("../../modules/ast/Spec");
 const SpecFilter_1 = require("../../modules/selection/SpecFilter");
 const BatchSpecificationAnalyzer_1 = require("../../modules/semantic/BatchSpecificationAnalyzer");
-const TestPlanMaker_1 = require("../../modules/testcase/TestPlanMaker");
+const TestPlanner_1 = require("../../modules/testcase/TestPlanner");
 const DataTestCaseMix_1 = require("../../modules/testcase/DataTestCaseMix");
 const CombinationStrategy_1 = require("../../modules/selection/CombinationStrategy");
 const RandomString_1 = require("../../modules/testdata/random/RandomString");
@@ -53,7 +53,7 @@ describe('PreTestCaseGeneratorTest', () => {
         // expect( doc1.fileErrors ).toEqual( [] );
         // expect( doc2.fileErrors ).toEqual( [] );
         const testPlanMakers = [
-            new TestPlanMaker_1.TestPlanMaker(new DataTestCaseMix_1.OnlyValidMix(), new CombinationStrategy_1.SingleRandomOfEachStrategy(SEED), SEED)
+            new TestPlanner_1.TestPlanner(new DataTestCaseMix_1.OnlyValidMix(), new CombinationStrategy_1.SingleRandomOfEachStrategy(SEED), SEED)
         ];
         const ctx1 = new PreTestCaseGenerator_1.GenContext(spec, doc1, errors, warnings);
         const variant1 = doc1.feature.scenarios[0].variants[0];
@@ -91,7 +91,7 @@ describe('PreTestCaseGeneratorTest', () => {
         // expect( doc1.fileErrors ).toEqual( [] );
         // expect( doc2.fileErrors ).toEqual( [] );
         const testPlanMakers = [
-            new TestPlanMaker_1.TestPlanMaker(new DataTestCaseMix_1.OnlyValidMix(), new CombinationStrategy_1.SingleRandomOfEachStrategy(SEED), SEED)
+            new TestPlanner_1.TestPlanner(new DataTestCaseMix_1.OnlyValidMix(), new CombinationStrategy_1.SingleRandomOfEachStrategy(SEED), SEED)
         ];
         const ctx1 = new PreTestCaseGenerator_1.GenContext(spec, doc1, errors, warnings);
         const variant1 = doc1.feature.scenarios[0].variants[0];
@@ -133,7 +133,7 @@ describe('PreTestCaseGeneratorTest', () => {
         // expect( doc1.fileErrors ).toEqual( [] );
         // expect( doc2.fileErrors ).toEqual( [] );
         const testPlanMakers = [
-            new TestPlanMaker_1.TestPlanMaker(new DataTestCaseMix_1.OnlyValidMix(), new CombinationStrategy_1.SingleRandomOfEachStrategy(SEED), SEED)
+            new TestPlanner_1.TestPlanner(new DataTestCaseMix_1.OnlyValidMix(), new CombinationStrategy_1.SingleRandomOfEachStrategy(SEED), SEED)
         ];
         const ctx1 = new PreTestCaseGenerator_1.GenContext(spec, doc1, errors, warnings);
         const variant1 = doc1.feature.scenarios[0].variants[0];
@@ -169,7 +169,7 @@ describe('PreTestCaseGeneratorTest', () => {
         // expect( doc1.fileErrors ).toEqual( [] );
         // expect( doc2.fileErrors ).toEqual( [] );
         const testPlanMakers = [
-            new TestPlanMaker_1.TestPlanMaker(new DataTestCaseMix_1.OnlyValidMix(), new CombinationStrategy_1.SingleRandomOfEachStrategy(SEED), SEED)
+            new TestPlanner_1.TestPlanner(new DataTestCaseMix_1.OnlyValidMix(), new CombinationStrategy_1.SingleRandomOfEachStrategy(SEED), SEED)
         ];
         const ctx1 = new PreTestCaseGenerator_1.GenContext(spec, doc1, errors, warnings);
         const variant1 = doc1.feature.scenarios[0].variants[0];
@@ -213,7 +213,7 @@ describe('PreTestCaseGeneratorTest', () => {
         // expect( doc2.fileErrors ).toEqual( [] );
         const testPlanMakers = [
             // new TestPlanMaker( new AllValidMix(), new SingleRandomOfEachStrategy( SEED ) )
-            new TestPlanMaker_1.TestPlanMaker(new DataTestCaseMix_1.OnlyValidMix(), new CombinationStrategy_1.IndexOfEachStrategy(1), SEED)
+            new TestPlanner_1.TestPlanner(new DataTestCaseMix_1.OnlyValidMix(), new CombinationStrategy_1.IndexOfEachStrategy(1), SEED)
         ];
         const ctx1 = new PreTestCaseGenerator_1.GenContext(spec, doc1, errors, warnings);
         const variant1 = doc1.feature.scenarios[0].variants[0];
@@ -254,7 +254,7 @@ describe('PreTestCaseGeneratorTest', () => {
         // expect( doc2.fileErrors ).toEqual( [] );
         const testPlanMakers = [
             // new TestPlanMaker( new AllValidMix(), new SingleRandomOfEachStrategy( SEED ) )
-            new TestPlanMaker_1.TestPlanMaker(new DataTestCaseMix_1.OnlyValidMix(), new CombinationStrategy_1.IndexOfEachStrategy(1), SEED)
+            new TestPlanner_1.TestPlanner(new DataTestCaseMix_1.OnlyValidMix(), new CombinationStrategy_1.IndexOfEachStrategy(1), SEED)
         ];
         const ctx1 = new PreTestCaseGenerator_1.GenContext(spec, doc1, errors, warnings);
         const variant1 = doc1.feature.scenarios[0].variants[0];
@@ -302,7 +302,7 @@ describe('PreTestCaseGeneratorTest', () => {
         // expect( doc2.fileErrors ).toEqual( [] );
         const testPlanMakers = [
             // new TestPlanMaker( new AllValidMix(), new SingleRandomOfEachStrategy( SEED ) )
-            new TestPlanMaker_1.TestPlanMaker(new DataTestCaseMix_1.JustOneInvalidMix(), new CombinationStrategy_1.IndexOfEachStrategy(0), SEED)
+            new TestPlanner_1.TestPlanner(new DataTestCaseMix_1.JustOneInvalidMix(), new CombinationStrategy_1.IndexOfEachStrategy(0), SEED)
         ];
         const ctx1 = new PreTestCaseGenerator_1.GenContext(spec, doc1, errors, warnings);
         const variant1 = doc1.feature.scenarios[0].variants[0];

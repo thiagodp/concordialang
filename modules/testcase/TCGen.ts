@@ -1,14 +1,11 @@
 import { PreTestCaseGenerator, GenContext } from "../testscenario/PreTestCaseGenerator";
 import { TestScenario } from "../testscenario/TestScenario";
 import { TestCase } from "../ast/TestCase";
-import { TestPlanMaker } from "./TestPlanMaker";
-import { Pair } from "ts-pair";
-import { Step } from "../ast/Step";
+import { TestPlanner } from "./TestPlanner";
 import { PreTestCase } from "../testscenario/PreTestCase";
 import { NodeTypes } from "../req/NodeTypes";
 import { Tag } from "../ast/Tag";
 import { ReservedTags } from "../req/ReservedTags";
-import { isDefined } from "../util/TypeChecking";
 
 /**
  * Generates Test Cases from Test Scenarios and parameters.
@@ -29,7 +26,7 @@ export class TCGen {
      * @param ctx Generation context
      * @param testPlanMakers Test plan makers
      */
-    async generate( ts: TestScenario, ctx: GenContext, testPlanMakers: TestPlanMaker[] ): Promise< TestCase[] > {
+    async generate( ts: TestScenario, ctx: GenContext, testPlanMakers: TestPlanner[] ): Promise< TestCase[] > {
 
         if ( true === ts.ignoreForTestCaseGeneration ) {
             return [];

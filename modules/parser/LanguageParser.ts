@@ -1,14 +1,12 @@
 import { Language } from '../ast/Language';
-import { Node } from '../ast/Node';
-import { Document } from '../ast/Document';
 import { SyntaticException } from '../req/SyntaticException';
 import { NodeIterator } from './NodeIterator';
 import { NodeParser } from './NodeParser';
-import { ParsingContext } from "./ParsingContext";
+import { ParsingContext } from './ParsingContext';
 
 /**
  * Language parser
- * 
+ *
  * @author Thiago Delgado Pinto
  */
 export class LanguageParser implements NodeParser< Language > {
@@ -27,15 +25,15 @@ export class LanguageParser implements NodeParser< Language > {
         if ( context.doc.imports && context.doc.imports.length > 0 ) {
             let e = new SyntaticException( 'The language must be declared before an import.', node.location );
             errors.push( e );
-            return false;            
-        }        
+            return false;
+        }
 
         // Checks if a feature is declared before it
         if ( context.doc.feature ) {
             let e = new SyntaticException( 'The language must be declared before a feature.', node.location );
             errors.push( e );
             return false;
-        }        
+        }
 
         context.doc.language = node;
 

@@ -1,5 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+/**
+ * @author Thiago Delgado Pinto
+ */
 const ListItemLexer_1 = require("../../modules/lexer/ListItemLexer");
 describe('ListItemLexerTest', () => {
     let myNodeType = 'myType';

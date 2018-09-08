@@ -1,11 +1,10 @@
-import { TextCollector } from './TextCollector';
-import { TagCollector } from './TagCollector';
-import { Feature } from "../ast/Feature";
-import { Node } from '../ast/Node';
+import { Feature } from '../ast/Feature';
 import { SyntaticException } from '../req/SyntaticException';
 import { NodeIterator } from './NodeIterator';
 import { NodeParser } from './NodeParser';
-import { ParsingContext } from "./ParsingContext";
+import { ParsingContext } from './ParsingContext';
+import { TagCollector } from './TagCollector';
+import { TextCollector } from './TextCollector';
 
 /**
  * Feature parser
