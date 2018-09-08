@@ -6,7 +6,7 @@ export class CliHelp {
     content(): string {
 
         const exeName: string = chalk.magenta( 'concordia' );
-        const NIY: string = chalk.red( 'NIY' );
+        // const NIY: string = chalk.red( 'NIY' );
 
 /*
         return `
@@ -302,7 +302,7 @@ ${chalk.yellowBright('Examples')}
                 pluginAbout: { type: 'string', alias: 'pa' },
                 pluginInstall: { type: 'string', alias: 'pi' },
                 pluginUninstall: { type: 'string', alias: 'pu' },
-                pluginServe: { type: 'string', alias: 'pu' },
+                pluginServe: { type: 'string', alias: 'ps' },
                 pluginList: { type: 'boolean', alias: 'pl' },
 
                 // PROCESSING AND OUTPUT

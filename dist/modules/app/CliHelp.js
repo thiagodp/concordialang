@@ -4,7 +4,7 @@ const chalk_1 = require("chalk");
 class CliHelp {
     content() {
         const exeName = chalk_1.default.magenta('concordia');
-        const NIY = chalk_1.default.red('NIY');
+        // const NIY: string = chalk.red( 'NIY' );
         /*
                 return `
           ${chalk.yellowBright('Usage:')} ${exeName} [<dir>] [options]
@@ -288,7 +288,7 @@ ${chalk_1.default.yellowBright('Examples')}
                 pluginAbout: { type: 'string', alias: 'pa' },
                 pluginInstall: { type: 'string', alias: 'pi' },
                 pluginUninstall: { type: 'string', alias: 'pu' },
-                pluginServe: { type: 'string', alias: 'pu' },
+                pluginServe: { type: 'string', alias: 'ps' },
                 pluginList: { type: 'boolean', alias: 'pl' },
                 // PROCESSING AND OUTPUT
                 verbose: { type: 'boolean', alias: 'b' },
