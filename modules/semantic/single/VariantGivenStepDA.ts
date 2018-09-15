@@ -11,8 +11,8 @@ import { Entities } from "../../nlp/Entities";
  * Variant's Given step analyzer for a single document.
  *
  * Checkings:
- *  - Givens cannot appear after other steps.
- *  - Givens with state must be the declared before other Given steps.
+ *  - Given steps cannot appear after other steps.
+ *  - Given steps with state must be the declared before other Given steps.
  *
  * @author Thiago Delgado Pinto
  */

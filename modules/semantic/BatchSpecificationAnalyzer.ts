@@ -14,7 +14,7 @@ import { TestCaseSSA } from './TestCaseSSA';
 import { UIElementSSA } from './UIElementSSA';
 
 /**
- * Executes many semantic analyzers to a specification in batch.
+ * Executes semantic analyzers into a specification in batch.
  *
  * @author Thiago Delgado Pinto
  */
