@@ -2,18 +2,14 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const arrayDiff = require("arr-diff");
 const enumUtil = require("enum-util");
-const ts_pair_1 = require("ts-pair");
 const Entities_1 = require("../nlp/Entities");
 const NLPResult_1 = require("../nlp/NLPResult");
-const DocumentUtil_1 = require("../util/DocumentUtil");
 const TypeChecking_1 = require("../util/TypeChecking");
-const UIElementOperatorChecker_1 = require("../util/UIElementOperatorChecker");
 const UIElementPropertyExtractor_1 = require("../util/UIElementPropertyExtractor");
 const UIPropertyTypes_1 = require("../util/UIPropertyTypes");
 const ValueTypeDetector_1 = require("../util/ValueTypeDetector");
 const DataGeneratorBuilder_1 = require("./DataGeneratorBuilder");
 const DataTestCase_1 = require("./DataTestCase");
-const DataTestCaseVsValueType_1 = require("./DataTestCaseVsValueType");
 /**
  * Data test case analysis result
  *
@@ -25,6 +21,14 @@ var DTCAnalysisResult;
     DTCAnalysisResult["INVALID"] = "invalid";
     DTCAnalysisResult["VALID"] = "valid";
 })(DTCAnalysisResult = exports.DTCAnalysisResult || (exports.DTCAnalysisResult = {}));
+class DTCAnalysisData {
+    constructor(result, oracles = [], uieVariableDependencies = []) {
+        this.result = result;
+        this.oracles = oracles;
+        this.uieVariableDependencies = uieVariableDependencies;
+    }
+}
+exports.DTCAnalysisData = DTCAnalysisData;
 /**
  * Data test case analyzer
  *
@@ -32,11 +36,8 @@ var DTCAnalysisResult;
  */
 class DataTestCaseAnalyzer {
     constructor(seed) {
-        this._docUtil = new DocumentUtil_1.DocumentUtil();
         this._uiePropExtractor = new UIElementPropertyExtractor_1.UIElementPropertyExtractor();
         this._nlpUtil = new NLPResult_1.NLPUtil();
-        this._vsType = new DataTestCaseVsValueType_1.DataTestCaseVsValueType();
-        this._opChecker = new UIElementOperatorChecker_1.UIElementOperatorChecker();
         this._dataGenBuilder = new DataGeneratorBuilder_1.DataGeneratorBuilder(seed);
     }
     /**
@@ -69,7 +70,7 @@ class DataTestCaseAnalyzer {
         //     compatibles.push( DataTestCase.REQUIRED_FILLED ); // Should produce a random value
         // }
         let compatibles = enumUtil.getValues(DataTestCase_1.DataTestCase);
-        const incompatiblePair = new ts_pair_1.Pair(DTCAnalysisResult.INCOMPATIBLE, []);
+        const incompatiblePair = new DTCAnalysisData(DTCAnalysisResult.INCOMPATIBLE, []);
         // Analyzes compatible rules (valid/invalid)
         for (let dtc of compatibles) {
             try {
@@ -126,8 +127,8 @@ class DataTestCaseAnalyzer {
             }
         }
         // console.log( 'group', group, 'valueType', valueType, 'propertiesMap', propertiesMap.keys() );
-        const validPair = new ts_pair_1.Pair(DTCAnalysisResult.VALID, []);
-        const incompatiblePair = new ts_pair_1.Pair(DTCAnalysisResult.INCOMPATIBLE, []);
+        const validPair = new DTCAnalysisData(DTCAnalysisResult.VALID, []);
+        const incompatiblePair = new DTCAnalysisData(DTCAnalysisResult.INCOMPATIBLE, []);
         switch (group) {
             case DataTestCase_1.DataTestCaseGroup.FORMAT: { // negation is not valid here
                 if (!pFormat) {
@@ -142,7 +143,7 @@ class DataTestCaseAnalyzer {
                         return hasAnyValueOrLengthProperty ? incompatiblePair : validPair;
                     }
                     case DataTestCase_1.DataTestCase.FORMAT_INVALID:
-                        return new ts_pair_1.Pair(DTCAnalysisResult.INVALID, pFormat.otherwiseSentences || []);
+                        return new DTCAnalysisData(DTCAnalysisResult.INVALID, pFormat.otherwiseSentences || []);
                 }
                 return incompatiblePair;
             }
@@ -167,7 +168,7 @@ class DataTestCaseAnalyzer {
                         //     return incompatiblePair;
                         // }
                         return isRequired
-                            ? new ts_pair_1.Pair(DTCAnalysisResult.INVALID, pRequired.otherwiseSentences || [])
+                            ? new DTCAnalysisData(DTCAnalysisResult.INVALID, pRequired.otherwiseSentences || [])
                             : validPair;
                     }
                 }
@@ -189,7 +190,7 @@ class DataTestCaseAnalyzer {
                     return incompatiblePair;
                 }
                 const hasNegation = this.hasNegation(pValue); // e.g., "value NOT IN ..."
-                const invalidPair = new ts_pair_1.Pair(DTCAnalysisResult.INVALID, pValue.otherwiseSentences || []);
+                const invalidPair = new DTCAnalysisData(DTCAnalysisResult.INVALID, pValue.otherwiseSentences || []);
                 // Diminush the number of applicable test cases if it is a value or a constant
                 if (hasValue || hasConstant) {
                     if (DataTestCase_1.DataTestCase.SET_FIRST_ELEMENT === dtc) {
@@ -236,8 +237,8 @@ class DataTestCaseAnalyzer {
                 let [maxValue, isToFakeMaxValue] = hasMaxValue
                     ? this.resolvePropertyValue(UIPropertyTypes_1.UIPropertyTypes.MAX_VALUE, pMaxValue, valueType)
                     : [null, false];
-                const invalidMinPair = new ts_pair_1.Pair(DTCAnalysisResult.INVALID, hasMinValue ? pMinValue.otherwiseSentences || [] : []);
-                const invalidMaxPair = new ts_pair_1.Pair(DTCAnalysisResult.INVALID, hasMaxValue ? pMaxValue.otherwiseSentences || [] : []);
+                const invalidMinPair = new DTCAnalysisData(DTCAnalysisResult.INVALID, hasMinValue ? pMinValue.otherwiseSentences || [] : []);
+                const invalidMaxPair = new DTCAnalysisData(DTCAnalysisResult.INVALID, hasMaxValue ? pMaxValue.otherwiseSentences || [] : []);
                 if (isToFakeMinValue) {
                     if (isToFakeMaxValue) {
                         // Both need to be faked, let's generate random min and max
@@ -338,8 +339,8 @@ class DataTestCaseAnalyzer {
                     maxLength = 60; // fake with fixed value - does not matter, since it is to evaluate data test case
                 }
                 let analyzer = this._dataGenBuilder.rawAnalyzer(valueType, minLength, maxLength);
-                const invalidMinPair = new ts_pair_1.Pair(DTCAnalysisResult.INVALID, hasMinLength ? pMinLength.otherwiseSentences || [] : []);
-                const invalidMaxPair = new ts_pair_1.Pair(DTCAnalysisResult.INVALID, hasMaxLength ? pMaxLength.otherwiseSentences || [] : []);
+                const invalidMinPair = new DTCAnalysisData(DTCAnalysisResult.INVALID, hasMinLength ? pMinLength.otherwiseSentences || [] : []);
+                const invalidMaxPair = new DTCAnalysisData(DTCAnalysisResult.INVALID, hasMaxLength ? pMaxLength.otherwiseSentences || [] : []);
                 switch (dtc) {
                     case DataTestCase_1.DataTestCase.LENGTH_LOWEST: ; // next
                     case DataTestCase_1.DataTestCase.LENGTH_RANDOM_BELOW_MIN: ; // next

@@ -128,7 +128,6 @@
     "shuffle-obj-arrays": "^1.0.0",
     "sprintf-js": "^1.1.1",
     "sqlstring": "^2.3.1",
-    "ts-pair": "^1.1.1",
     "update-notifier": "^2.5.0",
     "xregexp": "^3.2.0"
   },

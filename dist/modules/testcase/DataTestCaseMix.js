@@ -26,10 +26,9 @@ class OnlyValidMix {
         let obj = {};
         for (let [uieName, dtcMap] of map) {
             obj[uieName] = [];
-            for (let [dtc, pair] of dtcMap) {
-                let [result, oracles] = pair.toArray();
-                if (DataTestCaseAnalyzer_1.DTCAnalysisResult.VALID === result) {
-                    obj[uieName].push(new UIETestPlan_1.UIETestPlan(dtc, result, oracles));
+            for (let [dtc, data] of dtcMap) {
+                if (DataTestCaseAnalyzer_1.DTCAnalysisResult.VALID === data.result) {
+                    obj[uieName].push(new UIETestPlan_1.UIETestPlan(dtc, data.result, data.oracles));
                 }
             }
         }
@@ -83,16 +82,15 @@ class JustOneInvalidMix {
             obj[uieName] = [];
             let isTheTargetUIE = uieName === targetUIEName;
             let currentMustBeValid = alwaysValidVariables.indexOf(uieName) >= 0;
-            for (let [dtc, pair] of dtcMap) {
-                let [result, oracles] = pair.toArray();
-                if (DataTestCaseAnalyzer_1.DTCAnalysisResult.VALID === result) {
+            for (let [dtc, data] of dtcMap) {
+                if (DataTestCaseAnalyzer_1.DTCAnalysisResult.VALID === data.result) {
                     if (!isTheTargetUIE || currentMustBeValid) {
-                        obj[uieName].push(new UIETestPlan_1.UIETestPlan(dtc, result, oracles));
+                        obj[uieName].push(new UIETestPlan_1.UIETestPlan(dtc, data.result, data.oracles));
                     }
                 }
-                else if (DataTestCaseAnalyzer_1.DTCAnalysisResult.INVALID === result) {
+                else if (DataTestCaseAnalyzer_1.DTCAnalysisResult.INVALID === data.result) {
                     if (isTheTargetUIE && !currentMustBeValid) {
-                        obj[uieName].push(new UIETestPlan_1.UIETestPlan(dtc, result, oracles));
+                        obj[uieName].push(new UIETestPlan_1.UIETestPlan(dtc, data.result, data.oracles));
                     }
                 }
             }
@@ -128,13 +126,12 @@ class OnlyInvalidMix {
         for (let [uieName, dtcMap] of map) {
             obj[uieName] = [];
             let currentMustBeValid = alwaysValidVariables.indexOf(uieName) >= 0;
-            for (let [dtc, pair] of dtcMap) {
-                let [result, oracles] = pair.toArray();
-                if (DataTestCaseAnalyzer_1.DTCAnalysisResult.INVALID === result && !currentMustBeValid) {
-                    obj[uieName].push(new UIETestPlan_1.UIETestPlan(dtc, result, oracles));
+            for (let [dtc, data] of dtcMap) {
+                if (DataTestCaseAnalyzer_1.DTCAnalysisResult.INVALID === data.result && !currentMustBeValid) {
+                    obj[uieName].push(new UIETestPlan_1.UIETestPlan(dtc, data.result, data.oracles));
                 }
-                else if (DataTestCaseAnalyzer_1.DTCAnalysisResult.VALID === result && currentMustBeValid) {
-                    obj[uieName].push(new UIETestPlan_1.UIETestPlan(dtc, result, oracles));
+                else if (DataTestCaseAnalyzer_1.DTCAnalysisResult.VALID === data.result && currentMustBeValid) {
+                    obj[uieName].push(new UIETestPlan_1.UIETestPlan(dtc, data.result, data.oracles));
                 }
             }
         }
@@ -155,13 +152,12 @@ class UnfilteredMix {
         for (let [uieName, dtcMap] of map) {
             obj[uieName] = [];
             let currentMustBeValid = alwaysValidVariables.indexOf(uieName) >= 0;
-            for (let [dtc, pair] of dtcMap) {
-                let [result, oracles] = pair.toArray();
-                if (DataTestCaseAnalyzer_1.DTCAnalysisResult.INCOMPATIBLE === result
-                    || (currentMustBeValid && DataTestCaseAnalyzer_1.DTCAnalysisResult.INVALID === result)) {
+            for (let [dtc, data] of dtcMap) {
+                if (DataTestCaseAnalyzer_1.DTCAnalysisResult.INCOMPATIBLE === data.result
+                    || (currentMustBeValid && DataTestCaseAnalyzer_1.DTCAnalysisResult.INVALID === data.result)) {
                     continue;
                 }
-                obj[uieName].push(new UIETestPlan_1.UIETestPlan(dtc, result, oracles));
+                obj[uieName].push(new UIETestPlan_1.UIETestPlan(dtc, data.result, data.oracles));
             }
         }
         return [obj];

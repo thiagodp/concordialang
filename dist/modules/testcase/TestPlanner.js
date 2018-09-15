@@ -1,10 +1,10 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const objectToArray = require("object-to-array");
-const TestPlan_1 = require("./TestPlan");
-const RandomLong_1 = require("../testdata/random/RandomLong");
-const Random_1 = require("../testdata/random/Random");
 const DataTestCaseAnalyzer_1 = require("../testdata/DataTestCaseAnalyzer");
+const Random_1 = require("../testdata/random/Random");
+const RandomLong_1 = require("../testdata/random/RandomLong");
+const TestPlan_1 = require("./TestPlan");
 /**
  * Uses the given mixing strategy to select the DataTestCases that will be included
  * for every UI Element and then combine these DataTestCases to form TestPlans.
@@ -44,9 +44,8 @@ class TestPlanner {
                 if (!dtcMap) {
                     continue;
                 }
-                for (let [dtc, pair] of dtcMap) {
-                    let [result, oracle] = pair.toArray();
-                    if (result === DataTestCaseAnalyzer_1.DTCAnalysisResult.INVALID || result === DataTestCaseAnalyzer_1.DTCAnalysisResult.INCOMPATIBLE) {
+                for (let [dtc, data] of dtcMap) {
+                    if (data.result === DataTestCaseAnalyzer_1.DTCAnalysisResult.INVALID || data.result === DataTestCaseAnalyzer_1.DTCAnalysisResult.INCOMPATIBLE) {
                         dtcMap.delete(dtc);
                     }
                 }
@@ -54,9 +53,9 @@ class TestPlanner {
                 if (count > 1) {
                     let index = randomLong.between(0, count - 1);
                     let arr = Array.from(dtcMap);
-                    let [key, v] = arr[index];
+                    let [dtc, data] = arr[index];
                     dtcMap.clear();
-                    dtcMap.set(key, v);
+                    dtcMap.set(dtc, data);
                 }
             }
             // console.log( 'REDUCED map      ', map );

@@ -2,7 +2,6 @@ import * as arrayDiff from 'arr-diff';
 import * as deepcopy from 'deepcopy';
 import { DateTimeFormatter, LocalDate, LocalDateTime, LocalTime } from 'js-joda';
 import { basename } from 'path';
-import { Pair } from 'ts-pair';
 
 import { CaseType } from '../app/CaseType';
 import { Document } from '../ast/Document';
@@ -27,8 +26,7 @@ import { TestPlanner } from '../testcase/TestPlanner';
 import { UIETestPlan } from '../testcase/UIETestPlan';
 import { DataGenerator } from '../testdata/DataGenerator';
 import { DataGeneratorBuilder } from '../testdata/DataGeneratorBuilder';
-import { DataTestCase } from '../testdata/DataTestCase';
-import { DataTestCaseAnalyzer, DTCAnalysisResult } from '../testdata/DataTestCaseAnalyzer';
+import { DataTestCaseAnalyzer, DTCAnalysisResult, DTCMap, UIEVariableToDTCMap } from '../testdata/DataTestCaseAnalyzer';
 import { Random } from '../testdata/random/Random';
 import { RandomString } from '../testdata/random/RandomString';
 import { UIElementValueGenerator, ValueGenContext } from '../testdata/UIElementValueGenerator';
@@ -177,7 +175,7 @@ export class PreTestCaseGenerator {
         // # Analyze DataTestCases for every UI Element
         //   Non-editable UI Elements are not included
         //   { Full variable name => { DTC => { Result, Otherwise steps }} }
-        let uieVariableToDTCMap = new Map< string, Map< DataTestCase, Pair< DTCAnalysisResult, Step[] > > >();
+        let uieVariableToDTCMap: UIEVariableToDTCMap = new Map< string, DTCMap >();
         for ( let uie of allAvailableUIElements ) {
             let map = this._dtcAnalyzer.analyzeUIElement( uie, ctx.errors );
             uieVariableToDTCMap.set( uie.info.fullVariableName, map );

@@ -1,15 +1,6 @@
-import { DataTestCase } from "../testdata/DataTestCase";
-import { Pair } from "ts-pair";
-import { DTCAnalysisResult } from "../testdata/DataTestCaseAnalyzer";
-import { Step } from "../ast/Step";
-import { UIETestPlan } from "./UIETestPlan";
+import { DTCAnalysisResult, UIEVariableToDTCMap } from '../testdata/DataTestCaseAnalyzer';
+import { UIETestPlan } from './UIETestPlan';
 
-/**
- * A map from UI Element Variables to anoher map containing all available DataTestCases
- * and their respective expected result (valid, invalid or incompatible) plus the eventual
- * Oracle steps applicable in case of a invalid result.
- */
-export type TestAnalysisMap = Map< string, Map< DataTestCase, Pair< DTCAnalysisResult, Step[] > > >;
 
 // /**
 //  * Returns a new map with only the given UI Element Variables.
@@ -17,7 +8,7 @@ export type TestAnalysisMap = Map< string, Map< DataTestCase, Pair< DTCAnalysisR
 //  * @param map Map to filter.
 //  * @param uieVariables UI Element Variables.
 //  */
-// function filterTestAnalysisMap( map: TestAnalysisMap, uieVariables: string[] ): TestAnalysisMap {
+// function filterUIEVariableToDTCMap( map: UIEVariableToDTCMap, uieVariables: string[] ): UIEVariableToDTCMap {
 //     let newMap = new Map< string, Map< DataTestCase, Pair< DTCAnalysisResult, Step[] > > >();
 //     for ( let uiev of uieVariables ) {
 //         if ( map.has( uiev ) ) {
@@ -48,7 +39,7 @@ export interface DataTestCaseMix {
      *              to an array of UIETestPlan.
      *
      */
-    select( map: TestAnalysisMap, alwaysValidVariables: string[] ): object[];
+    select( map: UIEVariableToDTCMap, alwaysValidVariables: string[] ): object[];
 
 }
 
@@ -73,14 +64,13 @@ export interface DataTestCaseMix {
 export class OnlyValidMix implements DataTestCaseMix {
 
     /** @inheritDoc */
-    select( map: TestAnalysisMap, alwaysValidVariables: string[] ): object[] {
+    select( map: UIEVariableToDTCMap, alwaysValidVariables: string[] ): object[] {
         let obj = {};
         for ( let [ uieName, dtcMap ] of map ) {
             obj[ uieName ] = [];
-            for ( let [ dtc, pair ] of dtcMap ) {
-                let [ result, oracles ] = pair.toArray();
-                if ( DTCAnalysisResult.VALID === result ) {
-                    obj[ uieName ].push( new UIETestPlan( dtc, result, oracles ) );
+            for ( let [ dtc, data ] of dtcMap ) {
+                if ( DTCAnalysisResult.VALID === data.result ) {
+                    obj[ uieName ].push( new UIETestPlan( dtc, data.result, data.oracles ) );
                 }
             }
         }
@@ -123,7 +113,7 @@ export class OnlyValidMix implements DataTestCaseMix {
 export class JustOneInvalidMix implements DataTestCaseMix {
 
     /** @inheritDoc */
-    select( map: TestAnalysisMap, alwaysValidVariables: string[] ): object[] {
+    select( map: UIEVariableToDTCMap, alwaysValidVariables: string[] ): object[] {
         let all = [];
         for ( let [ uieName, dtcMap ] of map ) {
             let obj = this.oneUIEWithInvalidDataTestCasesAndTheOthersWithValid(
@@ -134,7 +124,7 @@ export class JustOneInvalidMix implements DataTestCaseMix {
     }
 
     private oneUIEWithInvalidDataTestCasesAndTheOthersWithValid(
-        map: TestAnalysisMap,
+        map: UIEVariableToDTCMap,
         targetUIEName: string,
         alwaysValidVariables: string[]
     ): object {
@@ -145,17 +135,15 @@ export class JustOneInvalidMix implements DataTestCaseMix {
             let isTheTargetUIE = uieName === targetUIEName;
             let currentMustBeValid = alwaysValidVariables.indexOf( uieName ) >= 0;
 
-            for ( let [ dtc, pair ] of dtcMap ) {
+            for ( let [ dtc, data ] of dtcMap ) {
 
-                let [ result, oracles ] = pair.toArray();
-
-                if ( DTCAnalysisResult.VALID === result ) {
+                if ( DTCAnalysisResult.VALID === data.result ) {
                     if ( ! isTheTargetUIE || currentMustBeValid ) {
-                        obj[ uieName ].push( new UIETestPlan( dtc, result, oracles ) );
+                        obj[ uieName ].push( new UIETestPlan( dtc, data.result, data.oracles ) );
                     }
-                } else if ( DTCAnalysisResult.INVALID === result ) {
+                } else if ( DTCAnalysisResult.INVALID === data.result ) {
                     if ( isTheTargetUIE && ! currentMustBeValid ) {
-                        obj[ uieName ].push( new UIETestPlan( dtc, result, oracles ) );
+                        obj[ uieName ].push( new UIETestPlan( dtc, data.result, data.oracles ) );
                     }
                 }
             }
@@ -191,17 +179,16 @@ export class JustOneInvalidMix implements DataTestCaseMix {
 export class OnlyInvalidMix implements DataTestCaseMix {
 
     /** @inheritDoc */
-    select( map: TestAnalysisMap, alwaysValidVariables: string[] ): object[] {
+    select( map: UIEVariableToDTCMap, alwaysValidVariables: string[] ): object[] {
         let obj = {};
         for ( let [ uieName, dtcMap ] of map ) {
             obj[ uieName ] = [];
             let currentMustBeValid = alwaysValidVariables.indexOf( uieName ) >= 0;
-            for ( let [ dtc, pair ] of dtcMap ) {
-                let [ result, oracles ] = pair.toArray();
-                if ( DTCAnalysisResult.INVALID === result && ! currentMustBeValid ) {
-                    obj[ uieName ].push( new UIETestPlan( dtc, result, oracles ) );
-                } else if ( DTCAnalysisResult.VALID === result && currentMustBeValid ) {
-                    obj[ uieName ].push( new UIETestPlan( dtc, result, oracles ) );
+            for ( let [ dtc, data ] of dtcMap ) {
+                if ( DTCAnalysisResult.INVALID === data.result && ! currentMustBeValid ) {
+                    obj[ uieName ].push( new UIETestPlan( dtc, data.result, data.oracles ) );
+                } else if ( DTCAnalysisResult.VALID === data.result && currentMustBeValid ) {
+                    obj[ uieName ].push( new UIETestPlan( dtc, data.result, data.oracles ) );
                 }
             }
         }
@@ -219,18 +206,17 @@ export class OnlyInvalidMix implements DataTestCaseMix {
 export class UnfilteredMix implements DataTestCaseMix {
 
     /** @inheritDoc */
-    select( map: TestAnalysisMap, alwaysValidVariables: string[] ): object[] {
+    select( map: UIEVariableToDTCMap, alwaysValidVariables: string[] ): object[] {
         let obj = {};
         for ( let [ uieName, dtcMap ] of map ) {
             obj[ uieName ] = [];
             let currentMustBeValid = alwaysValidVariables.indexOf( uieName ) >= 0;
-            for ( let [ dtc, pair ] of dtcMap ) {
-                let [ result, oracles ] = pair.toArray();
-                if ( DTCAnalysisResult.INCOMPATIBLE === result
-                    || ( currentMustBeValid && DTCAnalysisResult.INVALID === result ) ) {
+            for ( let [ dtc, data ] of dtcMap ) {
+                if ( DTCAnalysisResult.INCOMPATIBLE === data.result
+                    || ( currentMustBeValid && DTCAnalysisResult.INVALID === data.result ) ) {
                     continue;
                 }
-                obj[ uieName ].push( new UIETestPlan( dtc, result, oracles ) );
+                obj[ uieName ].push( new UIETestPlan( dtc, data.result, data.oracles ) );
             }
 
         }

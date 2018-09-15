@@ -1,10 +1,11 @@
-import { DataTestCaseMix, TestAnalysisMap } from './DataTestCaseMix';
-import { CombinationStrategy } from '../selection/CombinationStrategy';
 import * as objectToArray from 'object-to-array';
-import { TestPlan } from './TestPlan';
-import { RandomLong } from '../testdata/random/RandomLong';
+
+import { CombinationStrategy } from '../selection/CombinationStrategy';
+import { DTCAnalysisResult, UIEVariableToDTCMap } from '../testdata/DataTestCaseAnalyzer';
 import { Random } from '../testdata/random/Random';
-import { DTCAnalysisResult } from '../testdata/DataTestCaseAnalyzer';
+import { RandomLong } from '../testdata/random/RandomLong';
+import { DataTestCaseMix } from './DataTestCaseMix';
+import { TestPlan } from './TestPlan';
 
 /**
  * Uses the given mixing strategy to select the DataTestCases that will be included
@@ -38,7 +39,7 @@ export class TestPlanner {
      * @param alwaysValidVariables  UI Element Variables that should always be valid.
      */
     make(
-        map: TestAnalysisMap,
+        map: UIEVariableToDTCMap,
         alwaysValidVariables: string[]
     ): TestPlan[] {
 
@@ -54,9 +55,8 @@ export class TestPlanner {
                 if ( ! dtcMap ) {
                     continue;
                 }
-                for ( let [ dtc, pair ] of dtcMap ) {
-                    let [ result, oracle ] = pair.toArray();
-                    if ( result === DTCAnalysisResult.INVALID || result === DTCAnalysisResult.INCOMPATIBLE ) {
+                for ( let [ dtc, data ] of dtcMap ) {
+                    if ( data.result === DTCAnalysisResult.INVALID || data.result === DTCAnalysisResult.INCOMPATIBLE ) {
                         dtcMap.delete( dtc );
                     }
                 }
@@ -64,9 +64,9 @@ export class TestPlanner {
                 if ( count > 1 ) {
                     let index = randomLong.between( 0, count - 1 );
                     let arr = Array.from( dtcMap );
-                    let [ key, v ] = arr[ index ];
+                    let [ dtc, data ] = arr[ index ];
                     dtcMap.clear();
-                    dtcMap.set( key, v );
+                    dtcMap.set( dtc, data );
                 }
             }
             // console.log( 'REDUCED map      ', map );

@@ -1,6 +1,5 @@
 import * as arrayDiff from 'arr-diff';
 import * as enumUtil from 'enum-util';
-import { Pair } from 'ts-pair';
 
 import { Constant } from '../ast/Constant';
 import { Step } from '../ast/Step';
@@ -8,15 +7,12 @@ import { UIElement, UIProperty } from '../ast/UIElement';
 import { Entities } from '../nlp/Entities';
 import { NLPUtil } from '../nlp/NLPResult';
 import { RuntimeException } from '../req/RuntimeException';
-import { DocumentUtil } from '../util/DocumentUtil';
 import { isDefined } from '../util/TypeChecking';
-import { UIElementOperatorChecker } from '../util/UIElementOperatorChecker';
 import { UIElementPropertyExtractor } from '../util/UIElementPropertyExtractor';
 import { UIPropertyTypes } from '../util/UIPropertyTypes';
 import { adjustValueToTheRightType, ValueType } from '../util/ValueTypeDetector';
 import { DataGeneratorBuilder } from './DataGeneratorBuilder';
 import { DataTestCase, DataTestCaseGroup, DataTestCaseGroupDef } from './DataTestCase';
-import { DataTestCaseVsValueType } from './DataTestCaseVsValueType';
 import { RangeAnalyzer } from './raw/RangeAnalyzer';
 
 
@@ -31,6 +27,25 @@ export enum DTCAnalysisResult {
     VALID = 'valid'
 }
 
+export class DTCAnalysisData {
+    constructor(
+        public result: DTCAnalysisResult,
+        public oracles: Step[] = [],
+        public uieVariableDependencies: string[] = []
+    ) {
+    }
+}
+
+export type DTCMap = Map< DataTestCase, DTCAnalysisData >;
+
+/**
+ * A map from UI Element Variables to anoher map containing all available DataTestCases
+ * and their respective expected result (valid, invalid or incompatible) plus the eventual
+ * Oracle steps applicable in case of a invalid result.
+ */
+export type UIEVariableToDTCMap = Map< string, DTCMap >;
+
+
 /**
  * Data test case analyzer
  *
@@ -38,16 +53,11 @@ export enum DTCAnalysisResult {
  */
 export class DataTestCaseAnalyzer {
 
-    private readonly _docUtil = new DocumentUtil();
     private readonly _uiePropExtractor = new UIElementPropertyExtractor();
     private readonly _nlpUtil = new NLPUtil();
-    private readonly _vsType = new DataTestCaseVsValueType();
-    private readonly _opChecker = new UIElementOperatorChecker();
     private readonly _dataGenBuilder: DataGeneratorBuilder;
 
-    constructor(
-        seed: string
-    ) {
+    constructor( seed: string ) {
         this._dataGenBuilder = new DataGeneratorBuilder( seed );
     }
 
@@ -66,9 +76,9 @@ export class DataTestCaseAnalyzer {
     analyzeUIElement(
         uie: UIElement,
         errors: Error[]
-    ): Map< DataTestCase, Pair< DTCAnalysisResult, Step[] > > {
+    ): DTCMap {
 
-        let map = new Map< DataTestCase, Pair< DTCAnalysisResult, Step[] > >();
+        let map: DTCMap = new Map< DataTestCase, DTCAnalysisData >();
 
         // Returns if not editable
         if ( ! this._uiePropExtractor.extractIsEditable( uie ) ) {
@@ -89,13 +99,13 @@ export class DataTestCaseAnalyzer {
         // }
 
         let compatibles: DataTestCase[] = enumUtil.getValues( DataTestCase );
-        const incompatiblePair = new Pair( DTCAnalysisResult.INCOMPATIBLE, [] );
+        const incompatiblePair = new DTCAnalysisData( DTCAnalysisResult.INCOMPATIBLE, [] );
 
         // Analyzes compatible rules (valid/invalid)
         for ( let dtc of compatibles ) {
             try {
                 // Result, Otherwise steps
-                const result: Pair< DTCAnalysisResult, Step[] > = this.analyzeProperties( dtc, uie, errors );
+                const result: DTCAnalysisData = this.analyzeProperties( dtc, uie, errors );
                 // console.log( 'Analysis', dtc, result.getFirst() );
                 map.set( dtc, result );
             } catch ( e ) {
@@ -126,7 +136,7 @@ export class DataTestCaseAnalyzer {
         dtc: DataTestCase,
         uie: UIElement,
         errors: RuntimeException[]
-    ): Pair< DTCAnalysisResult, Step[] > {
+    ): DTCAnalysisData {
 
         // Note: assumes that properties were validated previously, and conflicting properties were already solved.
 
@@ -159,8 +169,8 @@ export class DataTestCaseAnalyzer {
         }
         // console.log( 'group', group, 'valueType', valueType, 'propertiesMap', propertiesMap.keys() );
 
-        const validPair = new Pair( DTCAnalysisResult.VALID, [] );
-        const incompatiblePair = new Pair( DTCAnalysisResult.INCOMPATIBLE, [] );
+        const validPair = new DTCAnalysisData( DTCAnalysisResult.VALID, [] );
+        const incompatiblePair = new DTCAnalysisData( DTCAnalysisResult.INCOMPATIBLE, [] );
 
         switch ( group ) {
 
@@ -180,7 +190,7 @@ export class DataTestCaseAnalyzer {
                         return hasAnyValueOrLengthProperty ? incompatiblePair : validPair;
                     }
                     case DataTestCase.FORMAT_INVALID:
-                        return new Pair( DTCAnalysisResult.INVALID, pFormat.otherwiseSentences || [] );
+                        return new DTCAnalysisData( DTCAnalysisResult.INVALID, pFormat.otherwiseSentences || [] );
                 }
                 return incompatiblePair;
             }
@@ -212,7 +222,7 @@ export class DataTestCaseAnalyzer {
                         // }
 
                         return isRequired
-                            ? new Pair( DTCAnalysisResult.INVALID, pRequired.otherwiseSentences || [] )
+                            ? new DTCAnalysisData( DTCAnalysisResult.INVALID, pRequired.otherwiseSentences || [] )
                             : validPair;
                     }
                 }
@@ -243,7 +253,7 @@ export class DataTestCaseAnalyzer {
 
                 const hasNegation = this.hasNegation( pValue ); // e.g., "value NOT IN ..."
 
-                const invalidPair = new Pair( DTCAnalysisResult.INVALID, pValue.otherwiseSentences || [] );
+                const invalidPair = new DTCAnalysisData( DTCAnalysisResult.INVALID, pValue.otherwiseSentences || [] );
 
                 // Diminush the number of applicable test cases if it is a value or a constant
                 if ( hasValue || hasConstant ) {
@@ -305,8 +315,8 @@ export class DataTestCaseAnalyzer {
                     ? this.resolvePropertyValue( UIPropertyTypes.MAX_VALUE, pMaxValue, valueType )
                     : [ null, false ];
 
-                const invalidMinPair = new Pair( DTCAnalysisResult.INVALID, hasMinValue ? pMinValue.otherwiseSentences || [] : [] );
-                const invalidMaxPair = new Pair( DTCAnalysisResult.INVALID, hasMaxValue ? pMaxValue.otherwiseSentences || [] : [] );
+                const invalidMinPair = new DTCAnalysisData( DTCAnalysisResult.INVALID, hasMinValue ? pMinValue.otherwiseSentences || [] : [] );
+                const invalidMaxPair = new DTCAnalysisData( DTCAnalysisResult.INVALID, hasMaxValue ? pMaxValue.otherwiseSentences || [] : [] );
 
                 if ( isToFakeMinValue ) {
                     if ( isToFakeMaxValue ) {
@@ -434,8 +444,8 @@ export class DataTestCaseAnalyzer {
 
                 let analyzer: RangeAnalyzer = this._dataGenBuilder.rawAnalyzer( valueType, minLength, maxLength );
 
-                const invalidMinPair = new Pair( DTCAnalysisResult.INVALID, hasMinLength ? pMinLength.otherwiseSentences || [] : [] );
-                const invalidMaxPair = new Pair( DTCAnalysisResult.INVALID, hasMaxLength ? pMaxLength.otherwiseSentences || [] : [] );
+                const invalidMinPair = new DTCAnalysisData( DTCAnalysisResult.INVALID, hasMinLength ? pMinLength.otherwiseSentences || [] : [] );
+                const invalidMaxPair = new DTCAnalysisData( DTCAnalysisResult.INVALID, hasMaxLength ? pMaxLength.otherwiseSentences || [] : [] );
 
 
                 switch ( dtc ) {
