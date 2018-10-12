@@ -4,9 +4,7 @@
 
 Translations: [Português](example-pt.md) 🌎
 
-We recommend you to read the following example even without being used to its [syntax](language/en.md) and [actions](actions.md).
-
-## 1. Writing a specification
+## 1. Writing a specification file
 
 The following file specifies a simple *Login* feature. Its `Feature` describe the desired behavior as a [User Story](https://en.wikipedia.org/wiki/User_story). Its `Scenario` define a high-level, *business-oriented* description of a usage scenario, using the [Given-When-Then](https://www.martinfowler.com/bliki/GivenWhenThen.html) (GWT) syntax. A `Feature` may have as many `Scenarios` as it needs. Features and Scenarios **are not used to generate test cases** in Concordia Language. Thus, you are free to use them to express your business needs.
 
@@ -282,10 +280,14 @@ Scenario("Successful login | Successful login with valid credentials - 6", (I) =
 
 ## Result analysis
 
-Whether you has runned the test scripts above, probably you will see they fail. That's because they didn't find a web application running at `http://localhost/login` or because it did find but the application didn't match the expected behavior.
+Whether you ran the test scripts above, you probably saw they fail. That's because they didn't find a web application running at `http://localhost/login` or because the application was found but it did not match the expected behavior. You may adapt your application and run the tests again.
 
-You may adapt your application, if it has a similar behavior, and then run the tests again.
-
-Concordia shows a report that indicates the reasons of the failures and includes the respective lines of both test cases and test scripts. Thus, you can decide whether a failure is related to the application - that is, it didn't behave as expected - or to the specification - usually if it is outdated in relation to the application.
+Concordia shows a report that indicates the failures' locations. They help you to decide if a failure was caused by the application under test (*e.g.*, it did not behave as expected) or because of the requirements specification (*e.g.*, it is outdated in relation to the application).
 
 Now keeping your specification updated has a new clear benefit: you can use it to generate tests and discover existing defects in your application!
+
+
+## See also
+
+- [Language syntax](language/en.md)
+- [Available actions](actions.md)
