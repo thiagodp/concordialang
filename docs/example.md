@@ -146,7 +146,7 @@ This will not generate test cases or test scripts, but it will execute them and 
 $ concordia --plugin=codeceptjs --no-test-case --no-script
 ```
 
-## Results
+## Output
 
 `login.testcase`:
 
@@ -278,7 +278,7 @@ Scenario("Successful login | Successful login with valid credentials - 6", (I) =
 });
 ```
 
-## Result analysis
+## 3. Analyze the results
 
 Whether you ran the test scripts above, you probably saw they fail. That's because they didn't find a web application running at `http://localhost/login` or because the application was found but it did not match the expected behavior. You may adapt your application and run the tests again.
 
