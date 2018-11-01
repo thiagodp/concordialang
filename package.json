@@ -93,7 +93,7 @@
     "database-js": "^3.0.2",
     "database-js-adodb": "^1.1.1",
     "database-js-csv": "^1.0.0",
-    "database-js-firebase": "^1.1.4",
+    "database-js-firebase": "^1.2.1",
     "database-js-ini": "^1.0.1",
     "database-js-json": "^1.2.1",
     "database-js-mssql": "^0.2.1",
@@ -137,7 +137,8 @@
     "mysql": "^2.15.0",
     "pg": "^7.4.3",
     "sql.js": "^0.5.0",
-    "xlsx-populate": "^1.16.0"
+    "xlsx-populate": "^1.16.0",
+    "merge": ">=1.2.1"
   },
   "devDependencies": {
     "@types/chalk": "^0.4.31",
