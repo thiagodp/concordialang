@@ -382,7 +382,7 @@ concordia --help
   - *Talk to your friends* - their feedback will help us too!
   - *Give it a star* - ⭐ People that follows you will know about it
 - Use it and tell us
-  - *[Chat](https://concordialang.slack.com) with us* - Did you like it? Did you have any doubts?
+  - *[Chat](https://concordialang.slack.com) with us* - Did you like it? Do you have any doubts?
   - *Try it on your company* - Tell us which results you got!
 - Improve the documentation
   - *[Report](https://github.com/thiagodp/concordialang/issues/new) typos*
@@ -396,7 +396,7 @@ concordia --help
 
 ## See also
 
-- [katalon-concordia](https://github.com/thiagodp/katalon-concordia) - converts test scripts recorded with Katalon Recorder into sentences in Concordia Language.
+- [katalon-concordia](https://github.com/thiagodp/katalon-concordia) - converts test scripts recorded with [Katalon Recorder](https://chrome.google.com/webstore/detail/katalon-recorder-selenium/ljdobmomdgdljniojadhoplhkpialdid) into sentences in Concordia Language.
 
 
 ## License
