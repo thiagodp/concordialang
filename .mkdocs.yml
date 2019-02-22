@@ -1,0 +1,4 @@
+site_name: Concordia
+theme: readthedocs
+nav:
+    - Home: ../README.md
