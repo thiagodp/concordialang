@@ -38,7 +38,7 @@ A *Linguagem Concordia* é uma meta linguagem de especificação [Ágil](https:/
 - [Contribuindo com Concordia](#contribuindo-com-concordia)
 - [Veja também](#veja-também)
 
-## Por que Concordia?
+## ❓ Por que Concordia?
 
 - [Sintaxe](docs/language/pt.md) simples
 
@@ -67,7 +67,7 @@ A *Linguagem Concordia* é uma meta linguagem de especificação [Ágil](https:/
 - Vem com tudo incluído - instale e use
 
 
-## Instalação
+## 💿 Instalação
 
 Concordia requer [NodeJS](https://nodejs.org/) versão `8` ou superior.
 
@@ -84,7 +84,7 @@ concordia --version
 ```
 Se a versão do concordia for exibida, a instalação teve sucesso.
 
-### Instalando um plugin do Concordia
+### 🔌 Instalando um plugin do Concordia
 
 Primeiramente, *liste os plugins disponíveis*:
 ```bash
@@ -99,9 +99,9 @@ concordia --plugin-install codeceptjs
 Concordia e seus plug-ins procuram instalar todas as dependências necessárias por padrão, para que seja mais simples iniciar o processo de teste.
 
 
-## Execução
+## 🚀 Execução
 
-### Iniciando um servidor de testes
+### 🖥 Iniciando um servidor de testes
 
 Quando executamos testes para a interface de usuário, pode haver necessidade de um servidor de testes que controle a execução. Por exemplo, `CodeceptJS` pode usar um servidor `Selenium` para controlar um  navegador durante a execução de testes para aplicações web. **Sem um servidor, é possível que os testes não possam ser executados**.
 
@@ -112,7 +112,7 @@ concordia --plugin-serve <nome-do-plugin>
 ```
 Com o servidor iniciado, você pode executar testes com Concordia em outro terminal (console).
 
-### Executando Concordia 🚀
+### 🗲 Executando Concordia
 
 ```bash
 concordia caminho/ate/suas/features --plugin <nome-do-plugin>
@@ -123,14 +123,14 @@ Se você já estiver no diretório onde estão suas features, basta informar o p
 concordia --plugin codeceptjs
 ```
 
-### Parando um servidor de testes
+### 🖥 Parando um servidor de testes
 
 É provável que o servidor de testes continue aberto após você executar todos os testes.
 
 Tecle `Ctrl + C` para finalizá-lo.
 
 
-## Exemplo básico
+## 📑 Exemplo básico
 
 > *Exemplo sem geração de dados de teste ou combinação de cenários de teste e sem a maioria dos recursos da linguagem*
 
@@ -206,7 +206,7 @@ e também irá **executar os testes**.
 Veja mais na [Documentação](docs/readme-pt.md). 👀
 
 
-## CLI
+## 💻 CLI
 
 ```
 concordia --help
@@ -335,7 +335,7 @@ concordia --help
 ```
 
 
-## Ciclo de uso recomendado
+## ♺ Ciclo de uso recomendado
 
 1. Escreva ou atualize sua especificação de requisitos com a *Linguagem Concordia* e valide-a com usuários ou interessados;
 
@@ -352,7 +352,7 @@ concordia --help
 4. Se os testes **passaram**, *bom trabalho!* Agora você pode escrever novos requisitos or adicionar mais casos testes. Nesse caso, basta voltar ao passo `1`.
 
 
-## Como ela funciona
+## 🧠 Como ela funciona
 
 ![Process](media/process.png)
 
@@ -374,7 +374,7 @@ concordia --help
 👉 Veja os [casos de teste gerados por Concordia](docs/test-cases-pt.md).
 
 
-## Contribuindo com Concordia
+## 🍻 Contribuindo com Concordia
 
 *Há muitas formas de contribuir. A maioria é bem fácil.* 😉
 
