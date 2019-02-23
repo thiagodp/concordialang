@@ -37,6 +37,7 @@ class GivenWhenThenSentenceRecognizer {
      * @throws Error If the NLP is not trained.
      */
     recognizeSentences(language, nodes, errors, warnings, ownerName = 'Variant') {
+        nodes = nodes || [];
         const recognizer = new NodeSentenceRecognizer_1.NodeSentenceRecognizer(this._nlp);
         const syntaxRules = this._syntaxRules;
         let processor = function (node, r, errors, warnings) {
@@ -45,7 +46,6 @@ class GivenWhenThenSentenceRecognizer {
                 warnings.push(new NLPException_1.NLPException(msg, node.location));
                 return;
             }
-            //console.log( 'Entities', r.entities );
             const recognizedEntityNames = r.entities.map(e => e.entity);
             // ACTION or EXEC ACTION
             const actionIndex = recognizedEntityNames.indexOf(Entities_1.Entities.UI_ACTION);
@@ -91,6 +91,7 @@ class GivenWhenThenSentenceRecognizer {
             for (let cmd of commands) {
                 item.values.push(cmd);
             }
+            return item;
         };
         recognizer.recognize(language, nodes, [Intents_1.Intents.TEST_CASE], ownerName, errors, warnings, processor);
     }

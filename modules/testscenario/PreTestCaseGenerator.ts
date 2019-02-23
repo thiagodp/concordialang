@@ -125,6 +125,9 @@ export class PreTestCaseGenerator {
         testPlanMakers: TestPlanner[]
     ): Promise< PreTestCase[] > {
 
+        // console.log( '>>> input steps');
+        // console.log( steps );
+
         if ( ! steps || steps.length < 1 ) {
             return [];
         }
@@ -399,20 +402,18 @@ export class PreTestCaseGenerator {
                 sentence += entity.string; // UI Element currently doesn't need prefix/sufix
             }
 
-            let newStep = {
-                nodeType: nodeType,
-                content: sentence,
-                comment: comment,
-                location: {
+            let newStep: Step = deepcopy( step ) as Step;
+            newStep.nodeType = nodeType;
+            newStep.content = sentence;
+            newStep.comment = comment;
+            newStep.location = {
                     // column: step.location.column,
                     column: this._lineChecker.countLeftSpacesAndTabs( sentence ),
                     line: line++,
                     filePath: step.location.filePath
-                } as Location,
+                } as Location;
 
-                isInvalidValue: false
-
-            } as Step;
+            newStep.isInvalidValue = false;
 
             steps.push( newStep );
 
@@ -513,16 +514,9 @@ export class PreTestCaseGenerator {
         if ( ! step.nlpResult ) {
             return [];
         }
-        let action = step.action || null;
-        let targetTypes: string[] = [];
+        let targetTypes: string[] = step.targetTypes.slice( 0 );
         for ( let e of step.nlpResult.entities || [] ) {
             switch ( e.entity ) {
-                case Entities.UI_ACTION: {
-                    if ( null === action ) {
-                        action = e.value;
-                    }
-                    break;
-                }
                 case Entities.UI_ELEMENT: {
                     const uie = spec.uiElementByVariable( e.value, doc );
                     if ( isDefined( uie ) ) {
@@ -533,6 +527,7 @@ export class PreTestCaseGenerator {
                     // continue as UI_LITERAL
                 }
                 case Entities.UI_LITERAL: {
+                    let action = step.action || null;
                     if ( isDefined( action ) ) {
                         targetTypes.push(
                             ACTION_TARGET_MAP.get( action ) || ActionTargets.NONE
@@ -547,7 +542,7 @@ export class PreTestCaseGenerator {
 
 
     fillUIElementWithValueAndReplaceByUILiteralInStep(
-        step: Step,
+        inputStep: Step,
         langContent: LanguageContent,
         uieVariableToUIETestPlanMap: Map< string, UIETestPlan >,
         uieVariableToValueMap: Map< string, EntityValueType >,
@@ -555,13 +550,14 @@ export class PreTestCaseGenerator {
         ctx: GenContext
     ): [ Step[], Step[] ] {  // [ steps, oracles ]
 
+        let step = deepcopy( inputStep );
 
         const dataInputActionEntity = this.extractDataInputActionEntity( step );
         if ( null === dataInputActionEntity || this.hasValue( step ) || this.hasNumber( step ) ) {
 
             let steps = [ step ];
             this.replaceUIElementsWithUILiterals( steps, language, langContent.keywords, ctx, false );
-
+            // console.log( "EXIT 1" );
             return [ steps, [] ];
         }
 
@@ -572,6 +568,7 @@ export class PreTestCaseGenerator {
         let uiElements = this._nlpUtil.entitiesNamed( Entities.UI_ELEMENT, step.nlpResult );
         const uiElementsCount = uiElements.length;
         if ( uiElementsCount < 1 ) {
+            // console.log( "EXIT 2" );
             return [ [ step ], [] ]; // nothing to do
         }
 
@@ -704,20 +701,34 @@ export class PreTestCaseGenerator {
             }
 
             // Make the step
-            let newStep = {
-                nodeType: nodeType,
-                content: sentence,
-                comment: ( step.comment || '' ) + comment,
-                location: {
+            let newStep = step;
+            newStep.nodeType = nodeType;
+            newStep.content = sentence;
+            newStep.comment = ( step.comment || '' ) + comment;
+            newStep.location = {
                     column: step.location.column,
                     // column: this._lineChecker.countLeftSpacesAndTabs( sentence ),
                     line: line++,
                     filePath: step.location.filePath
-                } as Location,
+                } as Location;
+            newStep.isInvalidValue = ( isDefined( uieTestPlan ) && uieTestPlan.result === DTCAnalysisResult.INVALID );
 
-                isInvalidValue: ( isDefined( uieTestPlan ) && uieTestPlan.result === DTCAnalysisResult.INVALID )
+            // console.log( newStep );
 
-            } as Step;
+            // let newStep = {
+            //     nodeType: nodeType,
+            //     content: sentence,
+            //     comment: ( step.comment || '' ) + comment,
+            //     location: {
+            //         column: step.location.column,
+            //         // column: this._lineChecker.countLeftSpacesAndTabs( sentence ),
+            //         line: line++,
+            //         filePath: step.location.filePath
+            //     } as Location,
+
+            //     isInvalidValue: ( isDefined( uieTestPlan ) && uieTestPlan.result === DTCAnalysisResult.INVALID )
+
+            // } as Step;
 
             // Update NLP !
             this._variantSentenceRec.recognizeSentences( language, [ newStep ], ctx.errors, ctx.warnings );

@@ -109,6 +109,9 @@ class TestCaseFileGenerator {
             lineNumber++;
             // Sentences
             for (let sentence of testCase.sentences || []) {
+                if (!sentence) {
+                    continue;
+                }
                 // Transform to text
                 let ind = indentation;
                 if (NodeTypes_1.NodeTypes.STEP_AND === sentence.nodeType) {

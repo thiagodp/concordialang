@@ -105,7 +105,7 @@ describe('TestCaseFileGeneratorTest', () => {
             '',
             'caso de teste: foo',
             '  dado que eu vejo a url "http://localhost/foo"',
-            '  quando click em <register>',
+            '  quando clico em <register>',
             '  então eu vejo "Register"',
             '    e eu vejo a url "http://localhost/foo/register"'
         ];
@@ -119,7 +119,7 @@ describe('TestCaseFileGeneratorTest', () => {
             '',
             'caso de teste: foo',
             '  dado que eu vejo a url "http://localhost/foo"',
-            '  quando click em <register>',
+            '  quando clico em <register>',
             '  então eu vejo "Register"',
             '    e eu vejo a url "http://localhost/foo/register"',
             '',

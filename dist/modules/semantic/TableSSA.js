@@ -14,7 +14,6 @@ const SpecificationAnalyzer_1 = require("./SpecificationAnalyzer");
  *
  * Checkings:
  * - duplicated names
- * - declared table structure through its instantiation << TO-DO ???
  *
  * @author Thiago Delgado Pinto
  */

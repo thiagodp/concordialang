@@ -19,7 +19,7 @@ const TableSSA_1 = require("./TableSSA");
 const TestCaseSSA_1 = require("./TestCaseSSA");
 const UIElementSSA_1 = require("./UIElementSSA");
 /**
- * Executes many semantic analyzers to a specification in batch.
+ * Executes semantic analyzers into a specification in batch.
  *
  * @author Thiago Delgado Pinto
  */

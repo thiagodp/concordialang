@@ -60,7 +60,8 @@ export class DatabasePropertyRecognizer {
             r: NLPResult,
             errors: LocatedException[],
             warnings: LocatedException[]
-        ) {
+        ): ContentNode {
+
             const recognizedEntityNames: string[] = r.entities.map( e => e.entity );
 
             // Must have a DS Property
@@ -85,9 +86,11 @@ export class DatabasePropertyRecognizer {
                 errors.push( new NLPException( msg, node.location ) );
                 return;
             }
+
             let item: DatabaseProperty = node as DatabaseProperty;
             item.property = property;
             item.value = values[ 0 ];
+            return item;
         };
 
         recognizer.recognize(

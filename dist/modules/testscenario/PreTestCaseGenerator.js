@@ -102,6 +102,8 @@ class PreTestCaseGenerator {
      */
     generate(steps, ctx, testPlanMakers) {
         return __awaiter(this, void 0, void 0, function* () {
+            // console.log( '>>> input steps');
+            // console.log( steps );
             if (!steps || steps.length < 1) {
                 return [];
             }
@@ -307,18 +309,17 @@ class PreTestCaseGenerator {
             else {
                 sentence += entity.string; // UI Element currently doesn't need prefix/sufix
             }
-            let newStep = {
-                nodeType: nodeType,
-                content: sentence,
-                comment: comment,
-                location: {
-                    // column: step.location.column,
-                    column: this._lineChecker.countLeftSpacesAndTabs(sentence),
-                    line: line++,
-                    filePath: step.location.filePath
-                },
-                isInvalidValue: false
+            let newStep = deepcopy(step);
+            newStep.nodeType = nodeType;
+            newStep.content = sentence;
+            newStep.comment = comment;
+            newStep.location = {
+                // column: step.location.column,
+                column: this._lineChecker.countLeftSpacesAndTabs(sentence),
+                line: line++,
+                filePath: step.location.filePath
             };
+            newStep.isInvalidValue = false;
             steps.push(newStep);
             ++count;
         }
@@ -390,16 +391,9 @@ class PreTestCaseGenerator {
         if (!step.nlpResult) {
             return [];
         }
-        let action = step.action || null;
-        let targetTypes = [];
+        let targetTypes = step.targetTypes.slice(0);
         for (let e of step.nlpResult.entities || []) {
             switch (e.entity) {
-                case Entities_1.Entities.UI_ACTION: {
-                    if (null === action) {
-                        action = e.value;
-                    }
-                    break;
-                }
                 case Entities_1.Entities.UI_ELEMENT: {
                     const uie = spec.uiElementByVariable(e.value, doc);
                     if (TypeChecking_1.isDefined(uie)) {
@@ -410,6 +404,7 @@ class PreTestCaseGenerator {
                     // continue as UI_LITERAL
                 }
                 case Entities_1.Entities.UI_LITERAL: {
+                    let action = step.action || null;
                     if (TypeChecking_1.isDefined(action)) {
                         targetTypes.push(ActionMap_1.ACTION_TARGET_MAP.get(action) || ActionTargets_1.ActionTargets.NONE);
                     }
@@ -419,11 +414,13 @@ class PreTestCaseGenerator {
         }
         return targetTypes;
     }
-    fillUIElementWithValueAndReplaceByUILiteralInStep(step, langContent, uieVariableToUIETestPlanMap, uieVariableToValueMap, language, ctx) {
+    fillUIElementWithValueAndReplaceByUILiteralInStep(inputStep, langContent, uieVariableToUIETestPlanMap, uieVariableToValueMap, language, ctx) {
+        let step = deepcopy(inputStep);
         const dataInputActionEntity = this.extractDataInputActionEntity(step);
         if (null === dataInputActionEntity || this.hasValue(step) || this.hasNumber(step)) {
             let steps = [step];
             this.replaceUIElementsWithUILiterals(steps, language, langContent.keywords, ctx, false);
+            // console.log( "EXIT 1" );
             return [steps, []];
         }
         // Add target types
@@ -432,6 +429,7 @@ class PreTestCaseGenerator {
         let uiElements = this._nlpUtil.entitiesNamed(Entities_1.Entities.UI_ELEMENT, step.nlpResult);
         const uiElementsCount = uiElements.length;
         if (uiElementsCount < 1) {
+            // console.log( "EXIT 2" );
             return [[step], []]; // nothing to do
         }
         const keywords = langContent.keywords || new EnglishKeywordDictionary_1.EnglishKeywordDictionary();
@@ -541,18 +539,30 @@ class PreTestCaseGenerator {
                 comment = ' ' + Symbols_1.Symbols.UI_ELEMENT_PREFIX + uieNameWithoutFeature + Symbols_1.Symbols.UI_ELEMENT_SUFFIX + ',' + comment;
             }
             // Make the step
-            let newStep = {
-                nodeType: nodeType,
-                content: sentence,
-                comment: (step.comment || '') + comment,
-                location: {
-                    column: step.location.column,
-                    // column: this._lineChecker.countLeftSpacesAndTabs( sentence ),
-                    line: line++,
-                    filePath: step.location.filePath
-                },
-                isInvalidValue: (TypeChecking_1.isDefined(uieTestPlan) && uieTestPlan.result === DataTestCaseAnalyzer_1.DTCAnalysisResult.INVALID)
+            let newStep = step;
+            newStep.nodeType = nodeType;
+            newStep.content = sentence;
+            newStep.comment = (step.comment || '') + comment;
+            newStep.location = {
+                column: step.location.column,
+                // column: this._lineChecker.countLeftSpacesAndTabs( sentence ),
+                line: line++,
+                filePath: step.location.filePath
             };
+            newStep.isInvalidValue = (TypeChecking_1.isDefined(uieTestPlan) && uieTestPlan.result === DataTestCaseAnalyzer_1.DTCAnalysisResult.INVALID);
+            // console.log( newStep );
+            // let newStep = {
+            //     nodeType: nodeType,
+            //     content: sentence,
+            //     comment: ( step.comment || '' ) + comment,
+            //     location: {
+            //         column: step.location.column,
+            //         // column: this._lineChecker.countLeftSpacesAndTabs( sentence ),
+            //         line: line++,
+            //         filePath: step.location.filePath
+            //     } as Location,
+            //     isInvalidValue: ( isDefined( uieTestPlan ) && uieTestPlan.result === DTCAnalysisResult.INVALID )
+            // } as Step;
             // Update NLP !
             this._variantSentenceRec.recognizeSentences(language, [newStep], ctx.errors, ctx.warnings);
             steps.push(newStep);

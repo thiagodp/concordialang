@@ -66,7 +66,8 @@ export class UIPropertyRecognizer {
             r: NLPResult,
             errors: LocatedException[],
             warnings: LocatedException[]
-        ) {
+        ): ContentNode {
+
             const recognizedEntityNames: string[] = r.entities.map( e => e.entity );
 
             // Must have a UI Property
@@ -107,6 +108,8 @@ export class UIPropertyRecognizer {
                     break;
                 }
             }
+
+            return item;
         };
 
         recognizer.recognize(

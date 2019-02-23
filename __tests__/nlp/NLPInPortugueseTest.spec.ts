@@ -372,6 +372,16 @@ describe( 'NLPInPortugueseTest', () => {
                     '#js-repo-pjax-container > div.container.new-discussion-timeline.experiment-repo-nav > div.repository-content > div.release-show > div > div.release-body.commit.open.float-left > div.my-4 > h2' );
             } );
 
+            it( 'see the url', () => {
+                let results = [];
+                let r: NLPResult;
+                results.push( r = recognizeInTestCase( 'eu vejo a url "/foo"' ) );
+                shouldHaveTestCaseEntities( results, [ UI_ACTION, UI_ELEMENT_TYPE, VALUE ] );
+                expect( r.entities.find( e => e.entity === UI_ACTION ).value ).toEqual( 'see' );
+                expect( r.entities.find( e => e.entity === UI_ELEMENT_TYPE ).value ).toEqual( 'url' );
+                expect( r.entities.find( e => e.entity === VALUE ).value ).toEqual( '/foo' );
+            } );
+
             it( 'drag and drop with with long escaped css selector as ui literals', () => {
                 let results = [];
                 let r: NLPResult;

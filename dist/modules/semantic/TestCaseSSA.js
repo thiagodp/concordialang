@@ -27,10 +27,10 @@ const SpecificationAnalyzer_1 = require("./SpecificationAnalyzer");
  *
  *  - Tag @variant without a tag @scenario
  *
- *  - Content of the tag @scenarios must be number greater than zero,
+ *  - Tag @scenarios' content must be number greater than zero,
  *    and less than the number of scenarios in the feature.
  *
- *  - Content of the tag @variant must be number greater than zero,
+ *  - Tag @variant's content must be number greater than zero,
  *    and less than the number of variant in the scenario.
  *
  * Changes:
@@ -48,7 +48,7 @@ const SpecificationAnalyzer_1 = require("./SpecificationAnalyzer");
  * Notes:
  *
  *   - Duplicated test case names must be checked after the changes. The name
- *     must be compared as wall as the scenario and the variant.
+ *     must be compared as well as the scenario and the variant.
  *
  *
  * @author Thiago Delgado Pinto

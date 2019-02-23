@@ -62,6 +62,7 @@ class DatabasePropertyRecognizer {
             let item = node;
             item.property = property;
             item.value = values[0];
+            return item;
         };
         recognizer.recognize(language, nodes, [Intents_1.Intents.DATABASE], 'Database Property', errors, warnings, processor);
     }

@@ -17,7 +17,7 @@ export type NLPResultProcessor = (
     result: NLPResult,
     errors: LocatedException[],
     warnings: LocatedException[]
-) => void;
+) => ContentNode;
 
 /**
  * Node sentence recognizer
@@ -64,7 +64,8 @@ export class NodeSentenceRecognizer {
             return false;
         }
 
-        for ( let node of nodes ) {
+        // for ( let node of nodes ) {
+        nodes.forEach( ( node: ContentNode, index: number, allNodes: ContentNode[] ) => {
 
             // console.log( 'Node before: ', node );
             // console.log( language, ', ', node.content, ', ', targetIntents );
@@ -83,7 +84,8 @@ export class NodeSentenceRecognizer {
             if ( ! r ) {
                 let msg = 'Unrecognized: "' + node.content + '". Intents: ' + targetIntents.join( ',' );
                 warnings.push( new NLPException( msg, node.location ) );
-                continue;
+                // continue;
+                return;
             }
 
             // Save the result in the node
@@ -94,11 +96,16 @@ export class NodeSentenceRecognizer {
                 //let msg = 'Unrecognized as part of a ' + targetDisplayName + ': ' + node.content;
                 let msg = 'Different intent recognized for: ' + node.content + '. Intent: ' + r.intent;
                 warnings.push( new NLPException( msg, node.location ) );
-                continue;
+                // continue;
+                return;
             }
+
             // Process the result
-            resultProcessor( node, r, errors, warnings );
-        }
+            let newNode = resultProcessor( node, r, errors, warnings );
+
+            // Replace the old node
+            allNodes[ index ] = newNode;
+        } );
 
         return 0 === errors.length;
     }

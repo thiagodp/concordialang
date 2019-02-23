@@ -54,6 +54,8 @@ export class GivenWhenThenSentenceRecognizer {
         warnings: LocatedException[],
         ownerName: string = 'Variant'
     ) {
+        nodes = nodes || [];
+
         const recognizer = new NodeSentenceRecognizer( this._nlp );
         const syntaxRules = this._syntaxRules;
 
@@ -62,13 +64,12 @@ export class GivenWhenThenSentenceRecognizer {
             r: NLPResult,
             errors: LocatedException[],
             warnings: LocatedException[]
-        ) {
+        ): ContentNode {
             if ( ! r.entities || r.entities.length < 1 ) {
                 const msg = 'Unrecognized entities in: ' + node.content;
                 warnings.push( new NLPException( msg, node.location ) );
                 return;
             }
-            //console.log( 'Entities', r.entities );
 
             const recognizedEntityNames: string[] = r.entities.map( e => e.entity );
 
@@ -125,6 +126,7 @@ export class GivenWhenThenSentenceRecognizer {
                 ( item.values as string[] ).push( cmd );
             }
 
+            return item;
         };
 
 

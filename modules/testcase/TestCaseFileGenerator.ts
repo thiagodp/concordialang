@@ -146,6 +146,10 @@ export class TestCaseFileGenerator {
             // Sentences
             for ( let sentence of testCase.sentences || [] ) {
 
+                if ( ! sentence ) {
+                    continue;
+                }
+
                 // Transform to text
 
                 let ind = indentation;

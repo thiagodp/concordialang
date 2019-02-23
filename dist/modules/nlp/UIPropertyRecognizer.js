@@ -98,6 +98,7 @@ class UIPropertyRecognizer {
                     break;
                 }
             }
+            return item;
         };
         recognizer.recognize(language, nodes, [Intents_1.Intents.UI, Intents_1.Intents.UI_ITEM_QUERY], 'UI Element', errors, warnings, processor);
     }

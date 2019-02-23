@@ -115,10 +115,10 @@ class AbstractTestScriptGenerator {
         cmd.location = sentence.location;
         cmd.action = sentence.action;
         cmd.modifier = sentence.actionModifier;
-        cmd.options = sentence.actionOptions;
-        cmd.targets = sentence.targets;
-        cmd.targetTypes = sentence.targetTypes;
-        cmd.values = (!valuesOverwrite) ? sentence.values : valuesOverwrite;
+        cmd.options = (sentence.actionOptions || []).slice(0);
+        cmd.targets = (sentence.targets || []).slice(0);
+        cmd.targetTypes = (sentence.targetTypes || []).slice(0);
+        cmd.values = (((!valuesOverwrite) ? sentence.values : valuesOverwrite) || []).slice(0);
         cmd.invalid = sentence.isInvalidValue;
         cmd.comment = sentence.comment;
         return cmd;

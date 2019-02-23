@@ -36,7 +36,8 @@ class NodeSentenceRecognizer {
             errors.push(new NLPException_1.NLPException(msg, { line: 1, column: 1 }));
             return false;
         }
-        for (let node of nodes) {
+        // for ( let node of nodes ) {
+        nodes.forEach((node, index, allNodes) => {
             // console.log( 'Node before: ', node );
             // console.log( language, ', ', node.content, ', ', targetIntents );
             let r = this._nlp.recognize(language, node.content);
@@ -51,7 +52,8 @@ class NodeSentenceRecognizer {
             if (!r) {
                 let msg = 'Unrecognized: "' + node.content + '". Intents: ' + targetIntents.join(',');
                 warnings.push(new NLPException_1.NLPException(msg, node.location));
-                continue;
+                // continue;
+                return;
             }
             // Save the result in the node
             node['nlpResult'] = r;
@@ -60,11 +62,14 @@ class NodeSentenceRecognizer {
                 //let msg = 'Unrecognized as part of a ' + targetDisplayName + ': ' + node.content;
                 let msg = 'Different intent recognized for: ' + node.content + '. Intent: ' + r.intent;
                 warnings.push(new NLPException_1.NLPException(msg, node.location));
-                continue;
+                // continue;
+                return;
             }
             // Process the result
-            resultProcessor(node, r, errors, warnings);
-        }
+            let newNode = resultProcessor(node, r, errors, warnings);
+            // Replace the old node
+            allNodes[index] = newNode;
+        });
         return 0 === errors.length;
     }
     validate(node, recognizedEntityNames, syntaxRules, property, errors, warnings) {
