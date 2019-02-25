@@ -14,7 +14,9 @@ const fs = require("fs");
 const util_1 = require("util");
 const FileInstrumentationReader_1 = require("../../modules/plugin/FileInstrumentationReader");
 /**
- * Converts a CodeceptJS execution result to Concordia's format.
+ * Converts a Mocha Multi Report to Concordia's format.
+ *
+ * @see https://github.com/stanleyhlng/mocha-multi-reporters
  */
 class ReportConverter {
     constructor(_fs = fs, _encoding = 'utf-8') {
@@ -48,32 +50,56 @@ class ReportConverter {
         });
     }
     /**
-     * Fills test result metadata.
+     * Fills the basic metadata
      *
-     * @param source The CodeceptJS' result in JSON format.
-     * @param result The Concordia's result to fill.
+     * @param source Object read from the original report.
+     * @param result Concordia format.
      */
     fillMetadata(source, result) {
         result.sourceFile = source.resultFilePath;
     }
     /**
-     * Fills test result status.
+     * Fills the status
      *
-     * @param source The CodeceptJS' result in JSON format.
-     * @param result The Concordia's result to fill.
+     * @param source Object read from the original report.
+     * @param result Concordia format.
      */
     fillStatus(source, result) {
-        result.started = source.stats.start;
-        result.finished = source.stats.end;
-        result.durationMs = source.stats.duration;
+        const stats = source.stats;
+        if (!stats) {
+            result.started = 'Unknown';
+            result.finished = (new Date()).toUTCString();
+            // Get the needed details from `tests`
+            if (!source.tests) {
+                return;
+            }
+            const tests = source.tests;
+            // Duration
+            let totalDuration = 0;
+            for (let t of tests) {
+                totalDuration += t.duration;
+            }
+            result.durationMs = totalDuration;
+            // Total tests
+            if (!result.total) {
+                result.total = new TestScriptExecution_1.TotalExecutionResult();
+            }
+            result.total.tests = tests.length;
+            result.total.passed = (source.passes || []).length;
+            result.total.failed = (source.failures || []).length;
+            return;
+        }
+        result.started = stats.start;
+        result.finished = stats.end;
+        result.durationMs = stats.duration;
         // Because of a bug in CodeceptJS JSON's counting
-        let failed = source.stats.failures;
-        if (failed === source.stats.tests && source.stats.passes > 0) {
-            failed -= source.stats.passes;
+        let failed = stats.failures;
+        if (failed === stats.tests && stats.passes > 0) {
+            failed -= stats.passes;
         }
         result.total = {
-            tests: source.stats.tests,
-            passed: source.stats.passes,
+            tests: stats.tests,
+            passed: stats.passes,
             failed: failed,
             skipped: 0,
             error: 0,
@@ -83,8 +109,8 @@ class ReportConverter {
     /**
      * Fills plugin's info.
      *
-     * @param source The CodeceptJS plugin configuration.
-     * @param result The Concordia's result to fill.
+     * @param source Object read from the original report.
+     * @param result Concordia format.
      */
     fillPluginInfo(pluginConfig, result) {
         result.plugin = {
@@ -97,8 +123,8 @@ class ReportConverter {
     /**
      * Fills execution results.
      *
-     * @param source The CodeceptJS' result in JSON format.
-     * @param result The Concordia's result to fill.
+     * @param source Object read from the original report.
+     * @param result Concordia format.
      */
     fillResults(source, result) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -136,7 +162,7 @@ class ReportConverter {
     /**
      * Pushes a Test Method Result to a Test Script Execution Result.
      *
-     * @param result The Concordia's result to fill.
+     * @param result Concordia format.
      * @param testMethodResult TestMethodResult to be pushed.
      * @param suiteName Test Suite Result name.
      */
