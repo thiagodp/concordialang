@@ -3,6 +3,7 @@
 - [Overview of the language](language/en.md)
 - [Available Actions](actions.md)
 - [Example](example.md)
+- [Configuration file](config.md) 🔥
 - [Tips and Tricks](tips-and-tricks.md) 🔥
 - [Generated Test Cases](test-cases.md)
 - [Plug-ins](../plugins/README.md)

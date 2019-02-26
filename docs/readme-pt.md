@@ -3,6 +3,7 @@
 - [Visão geral da linguagem](language/pt.md)
 - [Ações](actions-pt.md)
 - [Exemplo](example-pt.md)
+- [Arquivo de configuração](config.md) *(inglês)* 🔥
 - [Dicas e Truques](tips-and-tricks.md) *(inglês)* 🔥
 - [Plug-ins](../plugins/README.md) *(inglês)*
 - [Casos de Teste gerados](test-cases-pt.md)
