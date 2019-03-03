@@ -1,10 +1,10 @@
-# Plug-ins for CodeceptJS
+# Plug-ins para CodeceptJS
 
-Available plug-ins for CodeceptJS:
-- `codeceptjs` for testing web applications
-- `codeceptjs-appium` for testing mobile or desktop applications
+Plug-ins disponíveis para CodeceptJS:
+- `codeceptjs` para testar aplicações para a web
+- `codeceptjs-appium` para testar aplicações para dispositivos móveis e desktop
 
-The above plug-ins shall generate a default configuration file `codecept.json` when that file is not found. Instead, you can configure CodeceptJS by yourself with the following command:
+Os plug-ins acima gerarão um arquivo de configuração `codecept.json` quando este não for encontrado. Caso desejar, você mesmo pode configurar o CodeceptJS pelo seguinte comando:
 
 ```bash
 codeceptjs init
@@ -13,7 +13,7 @@ codeceptjs init
 
 ## `codeceptjs`
 
-Generates the following `codecept.json`:
+Gera o seguinte `codecept.json`:
 
 ```json
 {
@@ -56,7 +56,7 @@ Generates the following `codecept.json`:
 
 ## `codeceptjs-appium`
 
-Generates the following `codecept.json`:
+Gera o seguinte `codecept.json`:
 
 ```json
 ```
