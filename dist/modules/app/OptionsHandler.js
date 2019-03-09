@@ -78,7 +78,11 @@ class OptionsHandler {
             options.seed =
                 js_joda_1.LocalDateTime.now().format(js_joda_1.DateTimeFormatter.ofPattern('yyyy-MM-dd HH:mm:ss')).toString();
         }
-        const shouldShow = !options.help && !options.about && !options.version && !options.newer
+        const shouldShow = !options.help
+            && !options.about
+            && !options.version
+            && !options.newer
+            && !options.init
             && !options.somePluginOption();
         if (shouldShow) {
             cli.newLine(cli.symbolInfo, options.isGeneratedSeed ? 'Generated seed' : 'Seed', cli.colorHighlight(options.seed));

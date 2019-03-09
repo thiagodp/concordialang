@@ -242,6 +242,8 @@ concordia --help
 
   Processing and output
 
+  --init                                 Init a guided, basic configuration.
+
   --save-config                          Save/overwrite a configuration file
                                          with the other command line options.
 

@@ -92,7 +92,11 @@ export class OptionsHandler {
                 LocalDateTime.now().format( DateTimeFormatter.ofPattern( 'yyyy-MM-dd HH:mm:ss' ) ).toString();
         }
 
-        const shouldShow = ! options.help && ! options.about && ! options.version && ! options.newer
+        const shouldShow = ! options.help
+            && ! options.about
+            && ! options.version
+            && ! options.newer
+            && ! options.init
             && ! options.somePluginOption();
 
         if ( shouldShow ) {
