@@ -35,6 +35,7 @@ class Options {
             'pluginUninstall',
             'pluginServe',
             // Processing
+            'init',
             'saveConfig',
             // Randomic generation
             'isGeneratedSeed',
@@ -67,7 +68,9 @@ class Options {
         this.pluginUninstall = false; // uninstall an available plug-in
         this.pluginServe = false; // start the test server of a plug-in
         // PROCESSING
-        /** Whether is desired to save/overwrite a configuration file */
+        /** Whether it is wanted to execute a guided configuration */
+        this.init = false;
+        /** Whether it is desired to save/overwrite a configuration file */
         this.saveConfig = false;
         /** Verbose output */
         this.verbose = false;
@@ -322,6 +325,7 @@ class Options {
             this.pluginServe = true;
         }
         // PROCESSING
+        this.init = TypeChecking_1.isDefined(obj.init);
         this.saveConfig = TypeChecking_1.isDefined(obj.saveConfig);
         this.verbose = TypeChecking_1.isDefined(obj.verbose);
         this.stopOnTheFirstError = true === obj.failFast || true === obj.stopOnTheFirstError;

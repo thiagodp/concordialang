@@ -23,6 +23,7 @@ const OptionsHandler_1 = require("./OptionsHandler");
 const meow = require("meow");
 const updateNotifier = require("update-notifier");
 const TestResultAnalyzer_1 = require("../testscript/TestResultAnalyzer");
+const GuidedConfig_1 = require("./GuidedConfig");
 /**
  * Application controller
  *
@@ -43,6 +44,15 @@ class AppController {
             catch (err) {
                 this.showException(err, options, cli);
                 return false; // exit
+            }
+            if (options.init) {
+                if (optionsHandler.wasLoaded()) {
+                    cli.newLine(cli.symbolWarning, 'You already have a configuration file.');
+                }
+                else {
+                    options = yield (new GuidedConfig_1.GuidedConfig()).prompt(options);
+                    options.saveConfig = true;
+                }
             }
             // Save config ?
             if (options.saveConfig) {
@@ -66,6 +76,9 @@ class AppController {
             }
             if (options.version) {
                 ui.showVersion();
+                return true;
+            }
+            if (options.init) {
                 return true;
             }
             const pkg = meowInstance.pkg; // require( './package.json' );

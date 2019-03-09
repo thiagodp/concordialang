@@ -32,6 +32,10 @@ class OptionsHandler {
     get() {
         return this._options;
     }
+    /** Sets the current options */
+    set(options) {
+        this._options = options;
+    }
     /** Returns true whether the options were already loaded. */
     wasLoaded() {
         return this._wasLoaded;
@@ -47,8 +51,7 @@ class OptionsHandler {
             options.import(optionsInfo.config);
             // Update seed
             this.updateSeed(options, this._cli);
-            // Save
-            this._wasLoaded = true;
+            // Save loaded parameters
             this._cfgFilePath = optionsInfo.filepath; // may be null
             this._options = options;
             return options;
@@ -102,6 +105,9 @@ class OptionsHandler {
             // some argument to `optionsFromConfigFile`.
             const cliOptions = this.optionsFromCLI();
             const cfg = yield this.optionsFromConfigFile();
+            if (!!cfg) {
+                this._wasLoaded = true;
+            }
             const cfgFileOptions = !cfg ? {} : cfg.config;
             const finalObj = Object.assign(cfgFileOptions, cliOptions);
             return { config: finalObj, filepath: !cfg ? null : cfg.filepath };

@@ -31,6 +31,11 @@ export class OptionsHandler {
         return this._options;
     }
 
+    /** Sets the current options */
+    set( options: Options ): void {
+        this._options = options;
+    }
+
     /** Returns true whether the options were already loaded. */
     wasLoaded(): boolean {
         return this._wasLoaded;
@@ -50,8 +55,7 @@ export class OptionsHandler {
         // Update seed
         this.updateSeed( options, this._cli );
 
-        // Save
-        this._wasLoaded = true;
+        // Save loaded parameters
         this._cfgFilePath = optionsInfo.filepath; // may be null
         this._options = options;
 
@@ -126,6 +130,10 @@ export class OptionsHandler {
 
         const cfg: { config: any, filepath: string } | null =
             await this.optionsFromConfigFile();
+
+        if ( !! cfg ) {
+            this._wasLoaded = true;
+        }
 
         const cfgFileOptions = ! cfg ? {} : cfg.config;
 

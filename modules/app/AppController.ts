@@ -19,6 +19,7 @@ import * as meow from 'meow';
 import * as updateNotifier from 'update-notifier';
 import { AbstractTestScript } from '../testscript/AbstractTestScript';
 import { TestResultAnalyzer } from '../testscript/TestResultAnalyzer';
+import { GuidedConfig } from './GuidedConfig';
 
 /**
  * Application controller
@@ -35,6 +36,7 @@ export class AppController {
 
         const optionsHandler = new OptionsHandler( appPath, processPath, cli, meowInstance );
         let options: Options;
+
         // Load options
         try {
             options = await optionsHandler.load();
@@ -42,6 +44,16 @@ export class AppController {
             this.showException( err, options, cli );
             return false; // exit
         }
+
+        if ( options.init ) {
+            if ( optionsHandler.wasLoaded() ) {
+                cli.newLine( cli.symbolWarning, 'You already have a configuration file.' );
+            } else {
+                options = await ( new GuidedConfig() ).prompt( options );
+                options.saveConfig = true;
+            }
+        }
+
         // Save config ?
         if ( options.saveConfig ) {
             try {
@@ -69,6 +81,10 @@ export class AppController {
 
         if ( options.version ) {
             ui.showVersion();
+            return true;
+        }
+
+        if ( options.init ) {
             return true;
         }
 

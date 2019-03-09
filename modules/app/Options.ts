@@ -36,6 +36,7 @@ export class Options {
         'pluginServe',
 
         // Processing
+        'init',
         'saveConfig',
 
         // Randomic generation
@@ -76,7 +77,9 @@ export class Options {
 
     // PROCESSING
 
-    /** Whether is desired to save/overwrite a configuration file */
+    /** Whether it is wanted to execute a guided configuration */
+    public init: boolean = false;
+    /** Whether it is desired to save/overwrite a configuration file */
     public saveConfig: boolean = false;
     /** Verbose output */
     public verbose: boolean = false;
@@ -395,6 +398,7 @@ export class Options {
 
         // PROCESSING
 
+        this.init = isDefined( obj.init );
         this.saveConfig = isDefined( obj.saveConfig );
         this.verbose = isDefined( obj.verbose );
         this.stopOnTheFirstError = true === obj.failFast || true === obj.stopOnTheFirstError;

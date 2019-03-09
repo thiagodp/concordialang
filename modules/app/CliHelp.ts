@@ -180,8 +180,10 @@ ${chalk.gray('Plug-in')}
 
 ${chalk.gray('Processing and output')}
 
+--init                                 Init a guided, basic configuration.
+
 --save-config                          Save/overwrite a configuration file
-                                       with the other command line options.
+                                       with other command line options.
 
 -b,  --verbose                         Verbose output.
 
@@ -306,6 +308,7 @@ ${chalk.yellowBright('Examples')}
                 pluginList: { type: 'boolean', alias: 'pl' },
 
                 // PROCESSING AND OUTPUT
+                init: { type: 'boolean' },
 
                 verbose: { type: 'boolean', alias: 'b' },
                 failFast: { type: 'boolean', alias: 'ff' },
