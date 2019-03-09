@@ -46,10 +46,11 @@ class UIPropertyRecognizer {
         let _this = this;
         let processor = function (node, r, errors, warnings) {
             const recognizedEntityNames = r.entities.map(e => e.entity);
+            // console.log( r.entities );
             // Must have a UI Property
             const propertyIndex = recognizedEntityNames.indexOf(Entities_1.Entities.UI_PROPERTY);
             if (propertyIndex < 0) {
-                const msg = 'Unrecognized: ' + node.content;
+                const msg = 'Unrecognized (' + language + '): ' + node.content;
                 warnings.push(new NLPException_1.NLPException(msg, node.location));
                 return;
             }

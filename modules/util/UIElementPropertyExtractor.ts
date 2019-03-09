@@ -134,14 +134,14 @@ export class UIElementPropertyExtractor {
         if ( ! isDefined( uie.items ) ) {
             return null;
         }
-        return uie.items.find( item => property === item.property ) || null;
+        return uie.items.find( item => !! item && property === item.property ) || null;
     }
 
     extractProperties( uie: UIElement, property: string ): UIProperty[] {
         if ( ! isDefined( uie.items ) ) {
             return [];
         }
-        return uie.items.filter( item => property === item.property );
+        return uie.items.filter( item => !! item && property === item.property );
     }
 
     hasEntities( uip: UIProperty, entities: string[] ): boolean {

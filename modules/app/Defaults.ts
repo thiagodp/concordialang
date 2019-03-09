@@ -40,8 +40,7 @@ export enum CombinationOptions {
 export type StateCombinationOptions = CombinationOptions;
 
 /**
- * This is the special cases for the number of UI Elements that will receive
- * invalid DataTestCases at a time.
+ * Number of UI Elements that will receive invalid DataTestCases at a time.
  *
  * The values can be indicated with a number or a string value.
  * The possible string values are defined with this enum type.

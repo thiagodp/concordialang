@@ -66,6 +66,9 @@ class UIElementSSA extends SpecificationAnalyzer_1.SpecificationAnalyzer {
     }
     analyzePropertiesReferencesOf(uie, doc, spec, errors) {
         for (let uiProperty of uie.items || []) {
+            if (!uiProperty) {
+                continue;
+            }
             const propValue = uiProperty.value;
             if (!propValue) {
                 continue;

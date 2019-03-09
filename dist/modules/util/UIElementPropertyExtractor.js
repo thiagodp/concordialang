@@ -112,13 +112,13 @@ class UIElementPropertyExtractor {
         if (!TypeChecking_1.isDefined(uie.items)) {
             return null;
         }
-        return uie.items.find(item => property === item.property) || null;
+        return uie.items.find(item => !!item && property === item.property) || null;
     }
     extractProperties(uie, property) {
         if (!TypeChecking_1.isDefined(uie.items)) {
             return [];
         }
-        return uie.items.filter(item => property === item.property);
+        return uie.items.filter(item => !!item && property === item.property);
     }
     hasEntities(uip, entities) {
         const uipEntities = uip.nlpResult.entities.map(e => e.entity);

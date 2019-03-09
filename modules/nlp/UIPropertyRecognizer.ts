@@ -69,11 +69,12 @@ export class UIPropertyRecognizer {
         ): ContentNode {
 
             const recognizedEntityNames: string[] = r.entities.map( e => e.entity );
+            // console.log( r.entities );
 
             // Must have a UI Property
             const propertyIndex: number = recognizedEntityNames.indexOf( Entities.UI_PROPERTY );
             if ( propertyIndex < 0 ) {
-                const msg = 'Unrecognized: ' + node.content;
+                const msg = 'Unrecognized (' + language + '): ' + node.content;
                 warnings.push( new NLPException( msg, node.location ) );
                 return;
             }

@@ -85,6 +85,10 @@ export class UIElementSSA extends SpecificationAnalyzer {
 
         for ( let uiProperty of uie.items || [] ) {
 
+            if ( ! uiProperty ) {
+                continue;
+            }
+
             const propValue = uiProperty.value;
             if ( ! propValue ) {
                 continue;

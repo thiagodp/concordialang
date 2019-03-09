@@ -72,7 +72,8 @@ export class NLPBasedSentenceRecognizer {
 
         // UI Elements
         for ( let uiElement of doc.uiElements || [] ) {
-            this._uiPropertyRec.recognizeSentences( language, uiElement.items, errors, warnings );
+
+            this._uiPropertyRec.recognizeSentences( language, uiElement.items || [], errors, warnings );
 
             for ( let item of uiElement.items || [] ) {
                 // Otherwise sentences of items
@@ -126,9 +127,12 @@ export class NLPBasedSentenceRecognizer {
                 language, uiElement.items, errors, warnings );
 
             for ( let item of uiElement.items || [] ) {
+                if ( ! item ) {
+                    continue;
+                }
                 // Otherwise sentences of items
                 this._variantSentenceRec.recognizeSentences(
-                    language, item.otherwiseSentences, errors, warnings );
+                    language, item.otherwiseSentences || [], errors, warnings );
             }
         }
 

@@ -71,6 +71,7 @@ export class NodeSentenceRecognizer {
             // console.log( language, ', ', node.content, ', ', targetIntents );
 
             let r: NLPResult = this._nlp.recognize( language, node.content );
+            // console.log( r );
 
             // let r: NLPResult = null;
             // for ( let ti of targetIntents ) {
@@ -102,6 +103,10 @@ export class NodeSentenceRecognizer {
 
             // Process the result
             let newNode = resultProcessor( node, r, errors, warnings );
+            // console.log( 'Node after: ', newNode );
+            if ( ! newNode ) {
+                newNode = node;
+            }
 
             // Replace the old node
             allNodes[ index ] = newNode;
