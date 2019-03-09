@@ -8,7 +8,7 @@
 [![npm](https://img.shields.io/npm/l/concordialang.svg)](https://github.com/thiagodp/concordialang/blob/master/LICENSE.txt)
 [![slack](https://img.shields.io/badge/slack-chat-blue.svg)](https://bit.ly/2u2vKJX)
 
-*Concordia* é uma ferramenta que permite gerar [testes funcionais](https://en.wikipedia.org/wiki/Functional_testing) a partir de uma especificação de requisitos escrita em *Linguagem Concordia*. Você pode usá-las para:
+O *Compilador Concordia* é uma ferramenta que permite gerar [testes funcionais](https://en.wikipedia.org/wiki/Functional_testing) a partir de uma especificação de requisitos escrita em *Linguagem Concordia*. Você pode usá-las para:
 
 1. Escrever especificações [legíveis para pessoas de negócio](https://martinfowler.com/bliki/BusinessReadableDSL.html).
 
@@ -28,7 +28,7 @@ A *Linguagem Concordia* é uma meta linguagem de especificação [Ágil](https:/
 
 - [Últimas novidades](https://github.com/thiagodp/concordialang/releases)
 - [Documentação](docs/readme-pt.md)
-- [Por que Concordia?](#por-que-concordia)
+- [Por que usar Concordia?](#por-que-usar-concordia)
 - [Instalação](#instalação)
 - [Execução](#execução)
 - [Exemplo básico](#exemplo-básico)
@@ -38,7 +38,7 @@ A *Linguagem Concordia* é uma meta linguagem de especificação [Ágil](https:/
 - [Contribuindo com Concordia](#contribuindo-com-concordia)
 - [Veja também](#veja-também)
 
-## ❓ Por que Concordia?
+## ❓ Por que usar Concordia?
 
 - [Sintaxe](docs/language/pt.md) simples
 
@@ -69,7 +69,7 @@ A *Linguagem Concordia* é uma meta linguagem de especificação [Ágil](https:/
 
 ## 💿 Instalação
 
-Concordia requer [NodeJS](https://nodejs.org/) versão `8` ou superior.
+O Compilador Concordia requer [NodeJS](https://nodejs.org/) versão `8` ou superior.
 
 > Se você for instalar o plug-in para CodeceptJS para testar aplicações web (CodeceptJS + WebDriverIO), também é preciso instalar o [Java Runtime Environment (JRE)](http://www.oracle.com/technetwork/java/javase/downloads/index.html).
 
@@ -110,15 +110,15 @@ Para iniciar o servidor relacionado ao plugin, basta executar:
 ```bash
 concordia --plugin-serve <nome-do-plugin>
 ```
-Com o servidor iniciado, você pode executar testes com Concordia em outro terminal (console).
+Com o servidor iniciado, você pode executar testes com Concordia Compiler em outro terminal (console).
 
-### 🗲 Executando Concordia
+### 🗲 Executando
 
 ```bash
 concordia caminho/ate/suas/features --plugin <nome-do-plugin>
 ```
 
-Se você já estiver no diretório onde estão suas features, basta informar o plugin. Exemplo:
+Por exemplo, o comando abaixo procura recursivamente por arquivos de feature a partir do diretório atual.
 ```bash
 concordia --plugin codeceptjs
 ```
@@ -127,7 +127,7 @@ concordia --plugin codeceptjs
 
 É provável que o servidor de testes continue aberto após você executar todos os testes.
 
-Tecle `Ctrl + C` para finalizá-lo.
+Tecle <kbd>Ctrl</kbd> + <kbd>C</kbd> para finalizá-lo.
 
 
 ## 📑 Exemplo básico
@@ -339,7 +339,7 @@ concordia --help
 
 1. Escreva ou atualize sua especificação de requisitos com a *Linguagem Concordia* e valide-a com usuários ou interessados;
 
-2. Use **Concordia** para gerar testes a partir da especificação e os execute;
+2. Use o **Compilador Concordia** para gerar testes a partir da especificação e os execute;
 
 3. Se os testes **falharam**, há algumas possibilidades, como:
 
@@ -356,30 +356,29 @@ concordia --help
 
 ![Process](media/process.png)
 
-1. Concordia lê arquivos `.feature` e `.testcase` como um compilador e usa um [lexer](https://pt.wikipedia.org/wiki/An%C3%A1lise_l%C3%A9xica) e um [parser](https://pt.wikipedia.org/wiki/An%C3%A1lise_sint%C3%A1tica_(computa%C3%A7%C3%A3o)) para identificar e verificar a estrutura dos documentos.
+1. Lê arquivos `.feature` e `.testcase` como um compilador e usa um [lexer](https://pt.wikipedia.org/wiki/An%C3%A1lise_l%C3%A9xica) e um [parser](https://pt.wikipedia.org/wiki/An%C3%A1lise_sint%C3%A1tica_(computa%C3%A7%C3%A3o)) para identificar e verificar a estrutura dos documentos.
 
-2. Concordia usa [processamento de linguagem natural](https://pt.wikipedia.org/wiki/Processamento_de_linguagem_natural) para identificar a [intenção](http://mrbot.ai/blog/natural-language-processing/understanding-intent-classification/) das sentenças. Isso aumenta as changes de reconhecer sentenças em diferentes estilos de escrita.
+2. Usa [processamento de linguagem natural](https://pt.wikipedia.org/wiki/Processamento_de_linguagem_natural) para identificar a [intenção](http://mrbot.ai/blog/natural-language-processing/understanding-intent-classification/) das sentenças. Isso aumenta as changes de reconhecer sentenças em diferentes estilos de escrita.
 
-3. Concordia realiza uma [análise semântica](https://pt.wikipedia.org/wiki/An%C3%A1lise_sem%C3%A2ntica) para checar as declarações reconhecidas.
+3. Realiza uma [análise semântica](https://pt.wikipedia.org/wiki/An%C3%A1lise_sem%C3%A2ntica) para checar as declarações reconhecidas.
 
-4. Concordia usa a especificação para inferir os casos de teste, dados de teste e oráculos de teste e gera arquivos `.testcase` em Linguagem Concordia, um tipo de *linguagem natural restrita*.
+4. Usa a especificação para inferir os casos de teste, dados de teste e oráculos de teste e gera arquivos `.testcase` em Linguagem Concordia, um tipo de *linguagem natural restrita*.
 
-5. Concordia transforma todos os casos de teste em scripts de teste (isso é, código-fonte) usando um plug-in.
+5. Transforma todos os casos de teste em scripts de teste (isso é, código-fonte) usando um plug-in.
 
-6. Concordia executa os scripts de teste através do mesmo plug-in. Esses scripts irão verificar o comportamento da aplicação através de sua interface de usuário.
+6. Executa os scripts de teste através do mesmo plug-in. Esses scripts irão verificar o comportamento da aplicação através de sua interface de usuário.
 
-7. Concordia lê e apresenta os resultados da execução. Esses resultados relacionam testes que falharam com a especificação, de forma a ajudar a você a decidir as possíveis razões.
-
-
-👉 Veja os [casos de teste gerados por Concordia](docs/test-cases-pt.md).
+7. Lê e apresenta os resultados da execução. Esses resultados relacionam testes que falharam com a especificação, de forma a ajudar a você a decidir as possíveis razões.
 
 
-## 🍻 Contribuindo com Concordia
+👉 Veja os [tipos de casos de teste gerados](docs/test-cases-pt.md).
+
+
+## 🍻 Contribuindo
 
 *Há muitas formas de contribuir. A maioria é bem fácil.* 😉
 
 - Divulgando
-  - *Fale sobre Concordia com seus amigos* - mais feedback o projeto receberá
   - *Dê uma estrela* - ⭐ Quem segue você fica sabendo do projeto
 - Use e nos conte
   - *Conte no [chat](https://concordialang.slack.com)* - O que achou? Teve dúvidas? Quais?
