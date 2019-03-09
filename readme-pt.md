@@ -394,6 +394,14 @@ concordia --help
 - [Desenvolva conosco](docs/development.md)
 
 
+## Badge
+
+Mostre ao mundo que você está usando Concordia → [![Concordia e2e](https://img.shields.io/badge/e2e-concordia-brightgreen.svg)](http://concordialang.org)
+
+```
+[![Concordia e2e](https://img.shields.io/badge/e2e-concordia-brightgreen.svg)](http://concordialang.org)
+```
+
 ## Veja também
 
 - [katalon-concordia](https://github.com/thiagodp/katalon-concordia) - converte scripts de teste gravados com Katalon Recorder para sentenças em linguagem Concordia.

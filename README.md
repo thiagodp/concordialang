@@ -394,6 +394,14 @@ concordia --help
 - [Develop it with us](docs/development.md)
 
 
+## Badge
+
+Show to the world you're using Concordia → [![Concordia e2e](https://img.shields.io/badge/e2e-concordia-brightgreen.svg)](http://concordialang.org)
+
+```
+[![Concordia e2e](https://img.shields.io/badge/e2e-concordia-brightgreen.svg)](http://concordialang.org)
+```
+
 ## 👁 See also
 
 - [katalon-concordia](https://github.com/thiagodp/katalon-concordia) - converts test scripts recorded with [Katalon Recorder](https://chrome.google.com/webstore/detail/katalon-recorder-selenium/ljdobmomdgdljniojadhoplhkpialdid) into sentences in Concordia Language.
