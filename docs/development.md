@@ -24,7 +24,7 @@ $ npm install
 
 ### Install tools
 ```shell
-$ npm install -g typescript@2.8.3 jest ts-jest
+$ npm install -g typescript@3.0.1 jest ts-jest
 ```
 
 ### Running
@@ -41,6 +41,19 @@ npm run build
 ```shell
 $ npm run test
 ```
+
+## Pointing the CLI to the source code
+
+Whether you wish the `concordia` command to execute directly from **your** source code, go to the project root folder then run
+```shell
+npm link
+```
+
+To unlink it later, go to the project root folder then run
+```shell
+npm unlink
+```
+
 
 ## Pull Requests
 
