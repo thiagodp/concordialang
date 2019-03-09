@@ -378,24 +378,18 @@ concordia --help
 
 *Há muitas formas de contribuir. A maioria é bem fácil.* 😉
 
-- Divulgando
-  - *Dê uma estrela* - ⭐ Quem segue você fica sabendo do projeto
-- Use e nos conte
-  - *Conte no [chat](https://concordialang.slack.com)* - O que achou? Teve dúvidas? Quais?
-  - *Tente usar em sua empresa* - Conte-nos que resultados teve!
-- Melhore a documentação
-  - *[Relate](https://github.com/thiagodp/concordialang/issues/new) erros no texto*
-  - *Estenda a documentação* - nos mande o arquivo ou crie um [fork](https://github.com/thiagodp/concordialang#fork-destination-box) e submeta um *[pull request](https://help.github.com/articles/about-pull-requests/)*
-  - *Traduza para outro idioma* - nos mande o arquivo ou crie um [fork](https://github.com/thiagodp/concordialang#fork-destination-box) e submeta um *[pull request](https://help.github.com/articles/about-pull-requests/)*
-- [Crie um plug-in](plugins/README.md)
+- *Dê uma estrela* (⭐) - Quem segue você fica sabendo do projeto
+- *Dê feedback* em nosso [chat](https://concordialang.slack.com)
+- Estenda a documentação, a traduza para outros idiomas ou [relate erros](https://github.com/thiagodp/concordialang/issues/new) no texto
+- [Crie um plug-in](plugins/README.md) para sua linguagem ou framework de testes preferidos
 - [Relate um bug](https://github.com/thiagodp/concordialang/issues/new)
-- [Sugira uma nova funcionalidade ou alteração](https://github.com/thiagodp/concordialang/issues/new)
-- [Desenvolva conosco](docs/development.md)
+- [Sugira](https://github.com/thiagodp/concordialang/issues/new) uma melhoria ou uma nova funcionalidade
+- [Desenvolva](docs/development.md) conosco
 
 
-## Badge
+### Badge
 
-Mostre ao mundo que você está usando Concordia → [![Concordia e2e](https://img.shields.io/badge/e2e-concordia-brightgreen.svg)](http://concordialang.org)
+Mostre que seu projeto está usando Concordia → [![Concordia e2e](https://img.shields.io/badge/e2e-concordia-brightgreen.svg)](http://concordialang.org)
 
 ```
 [![Concordia e2e](https://img.shields.io/badge/e2e-concordia-brightgreen.svg)](http://concordialang.org)

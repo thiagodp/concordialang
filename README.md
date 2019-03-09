@@ -378,24 +378,18 @@ concordia --help
 
 *There are lot of ways to contribute. Many of them are a piece of cake!* 😉
 
-- Spread
-  - *Give it a star* - ⭐ People that follows you will know about it
-- Use it and tell us
-  - *[Chat](https://concordialang.slack.com) with us* - Did you like it? Do you have any doubts?
-  - *Try it on your company* - Tell us which results you got!
-- Improve the documentation
-  - *[Report](https://github.com/thiagodp/concordialang/issues/new) typos*
-  - *Extend it* - send us the file or create a [fork](https://github.com/thiagodp/concordialang#fork-destination-box) and submit a *[pull request](https://help.github.com/articles/about-pull-requests/)*
-  - *Translate* - send us the file or create a [fork](https://github.com/thiagodp/concordialang#fork-destination-box) and submit a *[pull request](https://help.github.com/articles/about-pull-requests/)*
-- [Create a plug-in](plugins/README.md)
+- Give it a star (⭐) - people that follows you will know about it
+- Give feedback using our [chat](https://concordialang.slack.com)
+- Improve the documentation, translate it or [report](https://github.com/thiagodp/concordialang/issues/new) typos
+- [Create a new plug-in](plugins/README.md) for your favorite programming language and testing framework
 - [Report a bug](https://github.com/thiagodp/concordialang/issues/new)
-- [Suggest a new feature or a change](https://github.com/thiagodp/concordialang/issues/new)
-- [Develop it with us](docs/development.md)
+- Suggest [improvement or new features](https://github.com/thiagodp/concordialang/issues/new)
+- [Develop it](docs/development.md) with us
 
 
-## Badge
+### Badge
 
-Show to the world you're using Concordia → [![Concordia e2e](https://img.shields.io/badge/e2e-concordia-brightgreen.svg)](http://concordialang.org)
+Show that your project is using Concordia → [![Concordia e2e](https://img.shields.io/badge/e2e-concordia-brightgreen.svg)](http://concordialang.org)
 
 ```
 [![Concordia e2e](https://img.shields.io/badge/e2e-concordia-brightgreen.svg)](http://concordialang.org)
