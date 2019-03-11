@@ -1,5 +1,5 @@
 import { FileData, SingleFileProcessor, FileMeta, SingleFileProcessorListener } from './SingleFileProcessor';
-import { FileReadListener, DirectoryReadListener, DirectoryReadResult } from './listeners';
+import { FileReadListener, DirectoryReadListener, DirectoryReadResult } from './Listeners';
 import { ProcessedFileData } from './SingleFileProcessor';
 import { Options } from './Options';
 import * as filewalker from 'filewalker';

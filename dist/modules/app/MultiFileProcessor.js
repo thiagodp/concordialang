@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const SingleFileProcessor_1 = require("./SingleFileProcessor");
-const listeners_1 = require("./listeners");
+const Listeners_1 = require("./Listeners");
 const SingleFileProcessor_2 = require("./SingleFileProcessor");
 const filewalker = require("filewalker");
 const crypto_1 = require("crypto");
@@ -97,7 +97,7 @@ class MultiFileProcessor {
                     // TO-DO: Remove the comparison and use fwalker.dirs when its Issue 20 is fixed.
                     // https://github.com/oleics/node-filewalker/issues/20
                     const dirCount = recursive ? fwalker.dirs : 1;
-                    const data = new listeners_1.DirectoryReadResult(dirCount, fwalker.files, fwalker.bytes, durationMs, errors.length);
+                    const data = new Listeners_1.DirectoryReadResult(dirCount, fwalker.files, fwalker.bytes, durationMs, errors.length);
                     this._directoryReadListener.directoryReadFinished(data);
                     yield Promise.all(filePromises);
                     durationMs = Date.now() - startTime;
