@@ -20,9 +20,9 @@ Translations: [Português](readme-pt.md) 🌎
 
 3. Generating test scripts for different testing frameworks, such as [CodeceptJS](https://codecept.io/), through [plug-ins](plugins/README.md).
 
-4. Write additional test cases when needed, using *Concordia Language* - currently available in **English** (`en`) and **Portuguese** (`pt`). These test cases are converted to test scripts using plugins.
+4. Writing additional test cases when needed, using *Concordia Language* - currently available in **English** (`en`) and **Portuguese** (`pt`). These test cases are converted to test scripts using plugins.
 
-5. Analyze test results to help evaluating failures.
+5. Analyzing test results to help evaluating failures.
 
 *Concordia Language* is an [Agile](https://en.wikipedia.org/wiki/Agile_software_development) requirements specification metalanguage inspired in [Gherkin](https://github.com/cucumber/cucumber/wiki/Gherkin).
 
@@ -69,6 +69,8 @@ Translations: [Português](readme-pt.md) 🌎
 - Use your favorite [version control system](https://en.wikipedia.org/wiki/Version_control) to manage changes
 
 - Batteries included (install and use)
+
+- Works on Windows, Linux, and Mac
 
 
 ## 💿 Installation
