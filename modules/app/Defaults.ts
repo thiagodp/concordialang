@@ -104,6 +104,8 @@ export class Defaults {
     readonly DIR_SCRIPT: string = 'test/';
     readonly DIR_SCRIPT_RESULT: string = 'output/';
 
+    readonly AST_FILE: string = 'ast.json';
+
     // CONTENT GENERATION
 
     readonly CASE_UI: string = CaseType.CAMEL.toString(); // e.g., fullName

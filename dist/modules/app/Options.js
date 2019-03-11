@@ -37,6 +37,7 @@ class Options {
             // Processing
             'init',
             'saveConfig',
+            'ast',
             // Randomic generation
             'isGeneratedSeed',
             'realSeed',
@@ -72,6 +73,8 @@ class Options {
         this.init = false;
         /** Whether it is desired to save/overwrite a configuration file */
         this.saveConfig = false;
+        /** Generates an AST file instead of executing anything else */
+        this.ast = null;
         /** Verbose output */
         this.verbose = false;
         /** Stop on the first error */
@@ -325,8 +328,12 @@ class Options {
             this.pluginServe = true;
         }
         // PROCESSING
+        const ast = TypeChecking_1.isString(obj.ast)
+            ? obj.ast
+            : (TypeChecking_1.isDefined(obj.ast) ? this.defaults.AST_FILE : undefined);
         this.init = TypeChecking_1.isDefined(obj.init);
         this.saveConfig = TypeChecking_1.isDefined(obj.saveConfig);
+        this.ast = ast;
         this.verbose = TypeChecking_1.isDefined(obj.verbose);
         this.stopOnTheFirstError = true === obj.failFast || true === obj.stopOnTheFirstError;
         // const justSpec: boolean = isDefined( obj.justSpec ) || isDefined( obj.justSpecification );

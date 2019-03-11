@@ -24,6 +24,8 @@ const meow = require("meow");
 const updateNotifier = require("update-notifier");
 const TestResultAnalyzer_1 = require("../testscript/TestResultAnalyzer");
 const GuidedConfig_1 = require("./GuidedConfig");
+const fs_1 = require("fs");
+const util_1 = require("util");
 /**
  * Application controller
  *
@@ -162,6 +164,30 @@ class AppController {
             }
             //cli.newLine( '-=[ SPEC ]=-', "\n\n" );
             //cli.newLine( spec );
+            if (options.ast) {
+                const getCircularReplacer = () => {
+                    const seen = new WeakSet();
+                    return (key, value) => {
+                        if ('object' === typeof value && value !== null) {
+                            if (seen.has(value)) {
+                                return;
+                            }
+                            seen.add(value);
+                        }
+                        return value;
+                    };
+                };
+                try {
+                    const write = util_1.promisify(fs_1.writeFile);
+                    yield write(options.ast, JSON.stringify(spec, getCircularReplacer(), "  "));
+                }
+                catch (e) {
+                    cli.newLine(cli.symbolError, 'Error saving', cli.colorHighlight(options.ast), ': ' + e.message);
+                    return false;
+                }
+                cli.newLine(cli.symbolInfo, 'Saved', cli.colorHighlight(options.ast));
+                return true;
+            }
             if (!plugin && (options.generateScript || options.executeScript || options.analyzeResult)) {
                 cli.newLine(cli.symbolWarning, 'A plugin was not defined.');
                 return true;

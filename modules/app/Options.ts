@@ -38,6 +38,7 @@ export class Options {
         // Processing
         'init',
         'saveConfig',
+        'ast',
 
         // Randomic generation
         'isGeneratedSeed',
@@ -81,6 +82,8 @@ export class Options {
     public init: boolean = false;
     /** Whether it is desired to save/overwrite a configuration file */
     public saveConfig: boolean = false;
+    /** Generates an AST file instead of executing anything else */
+    public ast: string = null;
     /** Verbose output */
     public verbose: boolean = false;
     /** Stop on the first error */
@@ -398,8 +401,13 @@ export class Options {
 
         // PROCESSING
 
+        const ast = isString( obj.ast )
+            ? obj.ast
+            : ( isDefined( obj.ast ) ? this.defaults.AST_FILE : undefined );
+
         this.init = isDefined( obj.init );
         this.saveConfig = isDefined( obj.saveConfig );
+        this.ast = ast;
         this.verbose = isDefined( obj.verbose );
         this.stopOnTheFirstError = true === obj.failFast || true === obj.stopOnTheFirstError;
 

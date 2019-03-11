@@ -97,6 +97,7 @@ export class OptionsHandler {
             && ! options.version
             && ! options.newer
             && ! options.init
+            && ! options.ast
             && ! options.somePluginOption();
 
         if ( shouldShow ) {

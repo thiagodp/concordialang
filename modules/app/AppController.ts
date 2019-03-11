@@ -20,6 +20,8 @@ import * as updateNotifier from 'update-notifier';
 import { AbstractTestScript } from '../testscript/AbstractTestScript';
 import { TestResultAnalyzer } from '../testscript/TestResultAnalyzer';
 import { GuidedConfig } from './GuidedConfig';
+import { writeFile } from 'fs';
+import { promisify } from 'util';
 
 /**
  * Application controller
@@ -173,6 +175,33 @@ export class AppController {
 
         //cli.newLine( '-=[ SPEC ]=-', "\n\n" );
         //cli.newLine( spec );
+        if ( options.ast ) {
+
+            const getCircularReplacer = () => {
+                const seen = new WeakSet();
+                return ( key, value ) => {
+                    if ( 'object' === typeof value && value !== null ) {
+                        if (seen.has(value)) {
+                            return;
+                        }
+                        seen.add(value);
+                    }
+                    return value;
+                };
+            };
+
+            try {
+                const write = promisify( writeFile );
+                await write( options.ast, JSON.stringify( spec, getCircularReplacer(), "  " ) );
+            } catch ( e ) {
+                cli.newLine( cli.symbolError, 'Error saving', cli.colorHighlight( options.ast ), ': ' + e.message );
+                return false;
+            }
+
+            cli.newLine( cli.symbolInfo, 'Saved', cli.colorHighlight( options.ast ) );
+
+            return true;
+        }
 
         if ( ! plugin && ( options.generateScript || options.executeScript || options.analyzeResult ) ) {
             cli.newLine( cli.symbolWarning, 'A plugin was not defined.' );
