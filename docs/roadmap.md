@@ -92,16 +92,6 @@ Table: Some Table
 | Suzan | 25  |
 ```
 
-
-## CLI
-
-### Guided configuration
-
-Adding a `init` parameter to the CLI (i.e., `concordia init`) as step-by-step guide to configure Concordia. The configuration must be stored in a file such as `.concordiarc`. If the file already exists, it must be overwritten.
-
-Using [Inquirer](https://github.com/SBoudrias/Inquirer.js) could help with the guide.
-
-
 ## Performance
 
 ### Do not regenerate tests when a feature file and its dependencies have not changed their hash
