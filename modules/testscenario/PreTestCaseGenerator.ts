@@ -168,6 +168,30 @@ export class PreTestCaseGenerator {
             return [ preTC ];
         }
 
+        // ALL UI ELEMENTS WITH FIXED VALUES --> No values to generate and no oracles to add
+        // ---
+        let uiElementsWithValue: number = 0;
+        let uiElementsWithFillEntity: number = 0;
+        for ( let step of newSteps ) {
+
+            const hasUIE: boolean = !! step.nlpResult.entities.find( e => e.entity === Entities.UI_ELEMENT );
+            const hasValue: boolean = ( step.values || [] ).length > 0;
+            if ( hasUIE && hasValue ) {
+                ++uiElementsWithValue;
+            }
+
+            const dataInputActionEntity = this.extractDataInputActionEntity( step );
+            if ( isDefined( dataInputActionEntity ) ) {
+                ++uiElementsWithFillEntity;
+            }
+        }
+        if ( uiElementsWithValue >= uiElementsWithFillEntity ) {
+            this.replaceUIElementsWithUILiterals( newSteps, language, langContent.keywords, ctx, false );
+            let preTC = new PreTestCase( new TestPlan(), newSteps, [] );
+            return [ preTC ];
+        }
+        // ---
+
         const stepUIEVariables: string[] = stepUIElements.map( uie => uie.info ? uie.info.fullVariableName : uie.name );
 
         const allAvailableUIElements: UIElement[] = ctx.spec.extractUIElementsFromDocumentAndImports( ctx.doc );
@@ -342,9 +366,9 @@ export class PreTestCaseGenerator {
      */
     fillUILiteralsWithoutValueInSingleStep( step: Step, keywords: KeywordDictionary ): Step[] {
 
-        const fillEntity = this.extractDataInputActionEntity( step );
+        const inputDataActionEntity = this.extractDataInputActionEntity( step ); // 'fill'-like entity
 
-        if ( null === fillEntity || this.hasValue( step ) || this.hasNumber( step ) ) {
+        if ( null === inputDataActionEntity || this.hasValue( step ) || this.hasNumber( step ) ) {
             return [ step ];
         }
 
@@ -389,7 +413,7 @@ export class PreTestCaseGenerator {
                 prefix = prefixAnd;
             }
 
-            let sentence = prefix + ' ' + keywordI + ' ' + fillEntity.string + ' ';
+            let sentence = prefix + ' ' + keywordI + ' ' + inputDataActionEntity.string + ' ';
             let comment = null;
 
             if ( Entities.UI_LITERAL === entity.entity ) {
@@ -476,9 +500,9 @@ export class PreTestCaseGenerator {
         for ( let step of steps ) {
 
             if ( onlyFillSteps ) {
-                // Ignore steps with 'fill' entity
-                const fillEntity = this.extractDataInputActionEntity( step );
-                if ( isDefined( fillEntity ) ) {
+                // Ignore steps with an input data action - i.e., 'fill' like steps
+                const dataInputActionEntity = this.extractDataInputActionEntity( step );
+                if ( isDefined( dataInputActionEntity ) ) {
                     continue;
                 }
             }

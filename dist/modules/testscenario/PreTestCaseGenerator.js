@@ -134,6 +134,27 @@ class PreTestCaseGenerator {
                 let preTC = new PreTestCase_1.PreTestCase(new TestPlan_1.TestPlan(), newSteps, []);
                 return [preTC];
             }
+            // ALL UI ELEMENTS WITH FIXED VALUES --> No values to generate and no oracles to add
+            // ---
+            let uiElementsWithValue = 0;
+            let uiElementsWithFillEntity = 0;
+            for (let step of newSteps) {
+                const hasUIE = !!step.nlpResult.entities.find(e => e.entity === Entities_1.Entities.UI_ELEMENT);
+                const hasValue = (step.values || []).length > 0;
+                if (hasUIE && hasValue) {
+                    ++uiElementsWithValue;
+                }
+                const dataInputActionEntity = this.extractDataInputActionEntity(step);
+                if (TypeChecking_1.isDefined(dataInputActionEntity)) {
+                    ++uiElementsWithFillEntity;
+                }
+            }
+            if (uiElementsWithValue >= uiElementsWithFillEntity) {
+                this.replaceUIElementsWithUILiterals(newSteps, language, langContent.keywords, ctx, false);
+                let preTC = new PreTestCase_1.PreTestCase(new TestPlan_1.TestPlan(), newSteps, []);
+                return [preTC];
+            }
+            // ---
             const stepUIEVariables = stepUIElements.map(uie => uie.info ? uie.info.fullVariableName : uie.name);
             const allAvailableUIElements = ctx.spec.extractUIElementsFromDocumentAndImports(ctx.doc);
             const allAvailableVariables = allAvailableUIElements.map(uie => uie.info ? uie.info.fullVariableName : uie.name);
@@ -261,8 +282,8 @@ class PreTestCaseGenerator {
      * @param keywords Keywords dictionary
      */
     fillUILiteralsWithoutValueInSingleStep(step, keywords) {
-        const fillEntity = this.extractDataInputActionEntity(step);
-        if (null === fillEntity || this.hasValue(step) || this.hasNumber(step)) {
+        const inputDataActionEntity = this.extractDataInputActionEntity(step); // 'fill'-like entity
+        if (null === inputDataActionEntity || this.hasValue(step) || this.hasNumber(step)) {
             return [step];
         }
         let uiLiterals = this._nlpUtil.entitiesNamed(Entities_1.Entities.UI_LITERAL, step.nlpResult);
@@ -298,7 +319,7 @@ class PreTestCaseGenerator {
                 nodeType = NodeTypes_1.NodeTypes.STEP_AND;
                 prefix = prefixAnd;
             }
-            let sentence = prefix + ' ' + keywordI + ' ' + fillEntity.string + ' ';
+            let sentence = prefix + ' ' + keywordI + ' ' + inputDataActionEntity.string + ' ';
             let comment = null;
             if (Entities_1.Entities.UI_LITERAL === entity.entity) {
                 sentence += Symbols_1.Symbols.UI_LITERAL_PREFIX + entity.value + Symbols_1.Symbols.UI_LITERAL_SUFFIX +
@@ -361,9 +382,9 @@ class PreTestCaseGenerator {
         const refReplacer = new ReferenceReplacer_1.ReferenceReplacer();
         for (let step of steps) {
             if (onlyFillSteps) {
-                // Ignore steps with 'fill' entity
-                const fillEntity = this.extractDataInputActionEntity(step);
-                if (TypeChecking_1.isDefined(fillEntity)) {
+                // Ignore steps with an input data action - i.e., 'fill' like steps
+                const dataInputActionEntity = this.extractDataInputActionEntity(step);
+                if (TypeChecking_1.isDefined(dataInputActionEntity)) {
                     continue;
                 }
             }
