@@ -45,6 +45,12 @@ class GenContext {
     }
 }
 exports.GenContext = GenContext;
+var UIElementReplacementOption;
+(function (UIElementReplacementOption) {
+    UIElementReplacementOption[UIElementReplacementOption["ALL"] = 0] = "ALL";
+    UIElementReplacementOption[UIElementReplacementOption["JUST_INPUT_ACTIONS"] = 1] = "JUST_INPUT_ACTIONS";
+    UIElementReplacementOption[UIElementReplacementOption["NO_INPUT_ACTIONS"] = 2] = "NO_INPUT_ACTIONS";
+})(UIElementReplacementOption || (UIElementReplacementOption = {}));
 /**
  * Generates `PreTestCase`s.
  *
@@ -115,6 +121,17 @@ class PreTestCaseGenerator {
             this.replaceConstantsWithTheirValues(clonedSteps, language, ctx);
             // # Replace UI LITERALS without VALUES with VALUES
             let newSteps = this.fillUILiteralsWithoutValueInSteps(clonedSteps, language, langContent.keywords, ctx);
+            // # (NEW-2019-03-16) Replace UI ELEMENTS with VALUES by UI LITERALS
+            // console.log( 'BEFORE' );
+            // console.log( newSteps.map( ( e ) => e.content ) );
+            for (let step of newSteps) {
+                const inputDataActionEntity = this.extractDataInputActionEntity(step); // 'fill'-like entity
+                if (TypeChecking_1.isDefined(inputDataActionEntity) && (this.hasValue(step) || this.hasNumber(step))) {
+                    this.replaceUIElementsWithUILiterals([step], language, ctx, UIElementReplacementOption.JUST_INPUT_ACTIONS);
+                }
+            }
+            // console.log( 'AFTER' );
+            // console.log( newSteps.map( ( e ) => e.content ) );
             // # Extract UI Elements to generate value
             //
             //  The extraction is from all UI Elements involved with the document.
@@ -136,24 +153,24 @@ class PreTestCaseGenerator {
             }
             // ALL UI ELEMENTS WITH FIXED VALUES --> No values to generate and no oracles to add
             // ---
-            let uiElementsWithValue = 0;
-            let uiElementsWithFillEntity = 0;
-            for (let step of newSteps) {
-                const hasUIE = !!step.nlpResult.entities.find(e => e.entity === Entities_1.Entities.UI_ELEMENT);
-                const hasValue = (step.values || []).length > 0;
-                if (hasUIE && hasValue) {
-                    ++uiElementsWithValue;
-                }
-                const dataInputActionEntity = this.extractDataInputActionEntity(step);
-                if (TypeChecking_1.isDefined(dataInputActionEntity)) {
-                    ++uiElementsWithFillEntity;
-                }
-            }
-            if (uiElementsWithValue >= uiElementsWithFillEntity) {
-                this.replaceUIElementsWithUILiterals(newSteps, language, langContent.keywords, ctx, false);
-                let preTC = new PreTestCase_1.PreTestCase(new TestPlan_1.TestPlan(), newSteps, []);
-                return [preTC];
-            }
+            // let uiElementsWithValue: number = 0;
+            // let uiElementsWithFillEntity: number = 0;
+            // for ( let step of newSteps ) {
+            //     const hasUIE: boolean = !! step.nlpResult.entities.find( e => e.entity === Entities.UI_ELEMENT );
+            //     const hasValue: boolean = ( step.values || [] ).length > 0;
+            //     if ( hasUIE && hasValue ) {
+            //         ++uiElementsWithValue;
+            //     }
+            //     const dataInputActionEntity = this.extractDataInputActionEntity( step );
+            //     if ( isDefined( dataInputActionEntity ) ) {
+            //         ++uiElementsWithFillEntity;
+            //     }
+            // }
+            // if ( uiElementsWithValue >= uiElementsWithFillEntity ) {
+            //     this.replaceUIElementsWithUILiterals( newSteps, language, ctx, UIElementReplacementOption.JUST_INPUT_ACTIONS );
+            //     let preTC = new PreTestCase( new TestPlan(), newSteps, [] );
+            //     return [ preTC ];
+            // }
             // ---
             const stepUIEVariables = stepUIElements.map(uie => uie.info ? uie.info.fullVariableName : uie.name);
             const allAvailableUIElements = ctx.spec.extractUIElementsFromDocumentAndImports(ctx.doc);
@@ -378,13 +395,15 @@ class PreTestCaseGenerator {
         }
         return Array.from(uniqueNames);
     }
-    replaceUIElementsWithUILiterals(steps, language, keywords, ctx, onlyFillSteps = true) {
+    replaceUIElementsWithUILiterals(steps, language, ctx, option) {
         const refReplacer = new ReferenceReplacer_1.ReferenceReplacer();
         for (let step of steps) {
-            if (onlyFillSteps) {
+            if (UIElementReplacementOption.ALL !== option) {
                 // Ignore steps with an input data action - i.e., 'fill' like steps
                 const dataInputActionEntity = this.extractDataInputActionEntity(step);
-                if (TypeChecking_1.isDefined(dataInputActionEntity)) {
+                const hasInputAction = TypeChecking_1.isDefined(dataInputActionEntity);
+                if (hasInputAction && UIElementReplacementOption.NO_INPUT_ACTIONS === option
+                    || !hasInputAction && UIElementReplacementOption.JUST_INPUT_ACTIONS === option) {
                     continue;
                 }
             }
@@ -440,7 +459,7 @@ class PreTestCaseGenerator {
         const dataInputActionEntity = this.extractDataInputActionEntity(step);
         if (null === dataInputActionEntity || this.hasValue(step) || this.hasNumber(step)) {
             let steps = [step];
-            this.replaceUIElementsWithUILiterals(steps, language, langContent.keywords, ctx, false);
+            this.replaceUIElementsWithUILiterals(steps, language, ctx, UIElementReplacementOption.ALL);
             // console.log( "EXIT 1" );
             return [steps, []];
         }
@@ -601,7 +620,7 @@ class PreTestCaseGenerator {
         // UI LITERALS
         stepsClone = this.fillUILiteralsWithoutValueInSteps(stepsClone, language, keywords, ctx);
         // UI ELEMENTS
-        this.replaceUIElementsWithUILiterals(stepsClone, language, keywords, ctx, true);
+        this.replaceUIElementsWithUILiterals(stepsClone, language, ctx, UIElementReplacementOption.ALL);
         // Note: Oracle steps cannot have 'fill' steps
         return stepsClone;
     }

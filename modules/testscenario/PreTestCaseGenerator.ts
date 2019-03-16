@@ -50,6 +50,13 @@ export class GenContext {
     }
 }
 
+
+enum UIElementReplacementOption {
+    ALL,
+    JUST_INPUT_ACTIONS,
+    NO_INPUT_ACTIONS
+}
+
 /**
  * Generates `PreTestCase`s.
  *
@@ -146,6 +153,22 @@ export class PreTestCaseGenerator {
             clonedSteps, language, langContent.keywords, ctx
         );
 
+        // # (NEW-2019-03-16) Replace UI ELEMENTS with VALUES by UI LITERALS
+
+        // console.log( 'BEFORE' );
+        // console.log( newSteps.map( ( e ) => e.content ) );
+
+        for ( let step of newSteps ) {
+            const inputDataActionEntity = this.extractDataInputActionEntity( step ); // 'fill'-like entity
+            if ( isDefined( inputDataActionEntity ) && ( this.hasValue( step ) || this.hasNumber( step ) ) ) {
+                this.replaceUIElementsWithUILiterals( [ step ], language, ctx, UIElementReplacementOption.JUST_INPUT_ACTIONS );
+            }
+        }
+
+        // console.log( 'AFTER' );
+        // console.log( newSteps.map( ( e ) => e.content ) );
+
+
         // # Extract UI Elements to generate value
         //
         //  The extraction is from all UI Elements involved with the document.
@@ -170,26 +193,26 @@ export class PreTestCaseGenerator {
 
         // ALL UI ELEMENTS WITH FIXED VALUES --> No values to generate and no oracles to add
         // ---
-        let uiElementsWithValue: number = 0;
-        let uiElementsWithFillEntity: number = 0;
-        for ( let step of newSteps ) {
+        // let uiElementsWithValue: number = 0;
+        // let uiElementsWithFillEntity: number = 0;
+        // for ( let step of newSteps ) {
 
-            const hasUIE: boolean = !! step.nlpResult.entities.find( e => e.entity === Entities.UI_ELEMENT );
-            const hasValue: boolean = ( step.values || [] ).length > 0;
-            if ( hasUIE && hasValue ) {
-                ++uiElementsWithValue;
-            }
+        //     const hasUIE: boolean = !! step.nlpResult.entities.find( e => e.entity === Entities.UI_ELEMENT );
+        //     const hasValue: boolean = ( step.values || [] ).length > 0;
+        //     if ( hasUIE && hasValue ) {
+        //         ++uiElementsWithValue;
+        //     }
 
-            const dataInputActionEntity = this.extractDataInputActionEntity( step );
-            if ( isDefined( dataInputActionEntity ) ) {
-                ++uiElementsWithFillEntity;
-            }
-        }
-        if ( uiElementsWithValue >= uiElementsWithFillEntity ) {
-            this.replaceUIElementsWithUILiterals( newSteps, language, langContent.keywords, ctx, false );
-            let preTC = new PreTestCase( new TestPlan(), newSteps, [] );
-            return [ preTC ];
-        }
+        //     const dataInputActionEntity = this.extractDataInputActionEntity( step );
+        //     if ( isDefined( dataInputActionEntity ) ) {
+        //         ++uiElementsWithFillEntity;
+        //     }
+        // }
+        // if ( uiElementsWithValue >= uiElementsWithFillEntity ) {
+        //     this.replaceUIElementsWithUILiterals( newSteps, language, ctx, UIElementReplacementOption.JUST_INPUT_ACTIONS );
+        //     let preTC = new PreTestCase( new TestPlan(), newSteps, [] );
+        //     return [ preTC ];
+        // }
         // ---
 
         const stepUIEVariables: string[] = stepUIElements.map( uie => uie.info ? uie.info.fullVariableName : uie.name );
@@ -487,22 +510,22 @@ export class PreTestCaseGenerator {
         return Array.from( uniqueNames );
     }
 
-
     replaceUIElementsWithUILiterals(
         steps: Step[],
         language: string,
-        keywords: KeywordDictionary,
         ctx: GenContext,
-        onlyFillSteps: boolean = true
+        option: UIElementReplacementOption
     ): void {
         const refReplacer = new ReferenceReplacer();
 
         for ( let step of steps ) {
 
-            if ( onlyFillSteps ) {
+            if ( UIElementReplacementOption.ALL !== option ) {
                 // Ignore steps with an input data action - i.e., 'fill' like steps
                 const dataInputActionEntity = this.extractDataInputActionEntity( step );
-                if ( isDefined( dataInputActionEntity ) ) {
+                const hasInputAction = isDefined( dataInputActionEntity );
+                if ( hasInputAction && UIElementReplacementOption.NO_INPUT_ACTIONS === option
+                    || ! hasInputAction && UIElementReplacementOption.JUST_INPUT_ACTIONS === option ) {
                     continue;
                 }
             }
@@ -580,7 +603,7 @@ export class PreTestCaseGenerator {
         if ( null === dataInputActionEntity || this.hasValue( step ) || this.hasNumber( step ) ) {
 
             let steps = [ step ];
-            this.replaceUIElementsWithUILiterals( steps, language, langContent.keywords, ctx, false );
+            this.replaceUIElementsWithUILiterals( steps, language, ctx, UIElementReplacementOption.ALL );
             // console.log( "EXIT 1" );
             return [ steps, [] ];
         }
@@ -791,8 +814,7 @@ export class PreTestCaseGenerator {
 
         // UI ELEMENTS
 
-        this.replaceUIElementsWithUILiterals(
-            stepsClone, language, keywords, ctx, true );
+        this.replaceUIElementsWithUILiterals( stepsClone, language, ctx, UIElementReplacementOption.ALL );
 
         // Note: Oracle steps cannot have 'fill' steps
 

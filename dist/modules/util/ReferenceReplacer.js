@@ -71,18 +71,19 @@ class ReferenceReplacer {
         let newSentence = sentence;
         let uiElements = [];
         for (let e of nlpResult.entities || []) {
-            if (Entities_1.Entities.UI_ELEMENT === e.entity) {
-                // Get the UI_LITERAL name by the UI_ELEMENT name
-                const ui = spec.uiElementByVariable(e.value, doc);
-                let literalName = TypeChecking_1.isDefined(ui) && TypeChecking_1.isDefined(ui.info)
-                    ? ui.info.uiLiteral
-                    : CaseConversor_1.convertCase(e.value, uiLiteralCaseOption); // Uses the UI_ELEMENT name as the literal name, when it is not found.
-                // Replace
-                newSentence = this.replaceAtPosition(newSentence, e.position, Symbols_1.Symbols.UI_ELEMENT_PREFIX + e.value + Symbols_1.Symbols.UI_ELEMENT_SUFFIX, // e.g., {Foo}
-                Symbols_1.Symbols.UI_LITERAL_PREFIX + literalName + Symbols_1.Symbols.UI_LITERAL_SUFFIX // e.g., <foo>
-                );
-                uiElements.push(Symbols_1.Symbols.UI_ELEMENT_PREFIX + e.value + Symbols_1.Symbols.UI_ELEMENT_SUFFIX);
+            if (Entities_1.Entities.UI_ELEMENT != e.entity) {
+                continue;
             }
+            // Get the UI_LITERAL name by the UI_ELEMENT name
+            const ui = spec.uiElementByVariable(e.value, doc);
+            let literalName = TypeChecking_1.isDefined(ui) && TypeChecking_1.isDefined(ui.info)
+                ? ui.info.uiLiteral
+                : CaseConversor_1.convertCase(e.value, uiLiteralCaseOption); // Uses the UI_ELEMENT name as the literal name, when it is not found.
+            // Replace
+            newSentence = this.replaceAtPosition(newSentence, e.position, Symbols_1.Symbols.UI_ELEMENT_PREFIX + e.value + Symbols_1.Symbols.UI_ELEMENT_SUFFIX, // e.g., {Foo}
+            Symbols_1.Symbols.UI_LITERAL_PREFIX + literalName + Symbols_1.Symbols.UI_LITERAL_SUFFIX // e.g., <foo>
+            );
+            uiElements.push(Symbols_1.Symbols.UI_ELEMENT_PREFIX + e.value + Symbols_1.Symbols.UI_ELEMENT_SUFFIX);
         }
         return [newSentence, uiElements.join(', ')];
     }

@@ -100,25 +100,26 @@ export class ReferenceReplacer {
         let uiElements: string[] = [];
         for ( let e of nlpResult.entities || [] ) {
 
-            if ( Entities.UI_ELEMENT === e.entity ) {
-
-                // Get the UI_LITERAL name by the UI_ELEMENT name
-                const ui = spec.uiElementByVariable( e.value, doc );
-
-                let literalName: string = isDefined( ui ) && isDefined( ui.info )
-                    ? ui.info.uiLiteral
-                    : convertCase( e.value, uiLiteralCaseOption ); // Uses the UI_ELEMENT name as the literal name, when it is not found.
-
-                // Replace
-                newSentence = this.replaceAtPosition(
-                    newSentence,
-                    e.position,
-                    Symbols.UI_ELEMENT_PREFIX + e.value + Symbols.UI_ELEMENT_SUFFIX, // e.g., {Foo}
-                    Symbols.UI_LITERAL_PREFIX + literalName + Symbols.UI_LITERAL_SUFFIX // e.g., <foo>
-                );
-
-                uiElements.push( Symbols.UI_ELEMENT_PREFIX + e.value + Symbols.UI_ELEMENT_SUFFIX );
+            if ( Entities.UI_ELEMENT != e.entity ) {
+                continue;
             }
+
+            // Get the UI_LITERAL name by the UI_ELEMENT name
+            const ui = spec.uiElementByVariable( e.value, doc );
+
+            let literalName: string = isDefined( ui ) && isDefined( ui.info )
+                ? ui.info.uiLiteral
+                : convertCase( e.value, uiLiteralCaseOption ); // Uses the UI_ELEMENT name as the literal name, when it is not found.
+
+            // Replace
+            newSentence = this.replaceAtPosition(
+                newSentence,
+                e.position,
+                Symbols.UI_ELEMENT_PREFIX + e.value + Symbols.UI_ELEMENT_SUFFIX, // e.g., {Foo}
+                Symbols.UI_LITERAL_PREFIX + literalName + Symbols.UI_LITERAL_SUFFIX // e.g., <foo>
+            );
+
+            uiElements.push( Symbols.UI_ELEMENT_PREFIX + e.value + Symbols.UI_ELEMENT_SUFFIX );
         }
         return [ newSentence, uiElements.join( ', ' ) ];
     }
