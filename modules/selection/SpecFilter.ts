@@ -2,7 +2,7 @@ import { EventEmitter } from 'events';
 import Graph = require('graph.js/dist/graph.full.js');
 
 import { Document } from '../ast/Document';
-import { Spec } from '../ast/Spec';
+import { AugmentedSpec } from '../ast/AugmentedSpec';
 import { GraphFilter, GraphFilterEvent } from './GraphFilter';
 import { ImportBasedGraphBuilder } from './ImportBasedGraphBuilder';
 
@@ -16,7 +16,7 @@ export class SpecFilter extends EventEmitter {
     private readonly _graphFilter = new GraphFilter();
     private _graph: Graph = null;
 
-    constructor( private _spec: Spec ) {
+    constructor( private _spec: AugmentedSpec ) {
         super();
     }
 

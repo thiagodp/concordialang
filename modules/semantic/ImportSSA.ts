@@ -3,7 +3,7 @@ import { basename } from 'path';
 
 import { Document } from '../ast/Document';
 import { Location } from '../ast/Location';
-import { Spec } from '../ast/Spec';
+import { AugmentedSpec } from '../ast/AugmentedSpec';
 import { SemanticException } from './SemanticException';
 import { SpecificationAnalyzer } from './SpecificationAnalyzer';
 
@@ -20,13 +20,13 @@ export class ImportSSA extends SpecificationAnalyzer {
     /** @inheritDoc */
     public async analyze(
         graph: Graph,
-        spec: Spec,
+        spec: AugmentedSpec,
         errors: SemanticException[]
     ): Promise< void > {
         this.findCyclicReferences( graph, spec, errors );
     }
 
-    private findCyclicReferences( graph: Graph, spec: Spec, errors: SemanticException[] ) {
+    private findCyclicReferences( graph: Graph, spec: AugmentedSpec, errors: SemanticException[] ) {
 
         // Let's find cyclic references and report them as errors
         for ( let it = graph.cycles(), kv; ! ( kv = it.next() ).done; ) {

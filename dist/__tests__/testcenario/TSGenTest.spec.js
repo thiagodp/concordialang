@@ -11,7 +11,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const TSGen_1 = require("../../modules/testscenario/TSGen");
 const SimpleCompiler_1 = require("../../modules/util/SimpleCompiler");
 const VariantSelectionStrategy_1 = require("../../modules/selection/VariantSelectionStrategy");
-const Spec_1 = require("../../modules/ast/Spec");
+const AugmentedSpec_1 = require("../../modules/ast/AugmentedSpec");
 const BatchSpecificationAnalyzer_1 = require("../../modules/semantic/BatchSpecificationAnalyzer");
 const SpecFilter_1 = require("../../modules/selection/SpecFilter");
 const CombinationStrategy_1 = require("../../modules/selection/CombinationStrategy");
@@ -39,7 +39,7 @@ describe('TSGenTest', () => {
         gen = null;
     });
     it('generates for a single Variant without preconditions', () => __awaiter(this, void 0, void 0, function* () {
-        let spec = new Spec_1.Spec('.');
+        let spec = new AugmentedSpec_1.AugmentedSpec('.');
         let doc1 = cp.addToSpec(spec, [
             '#language:pt',
             'Feature: Feature 1',
@@ -66,7 +66,7 @@ describe('TSGenTest', () => {
         expect(ts1).toHaveLength(1);
     }));
     it('includes other TS based on precondition', () => __awaiter(this, void 0, void 0, function* () {
-        let spec = new Spec_1.Spec('.');
+        let spec = new AugmentedSpec_1.AugmentedSpec('.');
         let doc1 = cp.addToSpec(spec, [
             '#language:pt',
             'Feature: Feature 1',
@@ -115,7 +115,7 @@ describe('TSGenTest', () => {
         expect(stepsContent).toEqual(expectedSteps);
     }));
     it('gets an error when precondition requires a state not declared', () => __awaiter(this, void 0, void 0, function* () {
-        let spec = new Spec_1.Spec('.');
+        let spec = new AugmentedSpec_1.AugmentedSpec('.');
         let doc = cp.addToSpec(spec, [
             '#language:pt',
             'Feature: Feature 2',
@@ -136,7 +136,7 @@ describe('TSGenTest', () => {
         expect(ts).toHaveLength(0);
     }));
     it('replaces orfan postcondition AND steps with THEN', () => __awaiter(this, void 0, void 0, function* () {
-        let spec = new Spec_1.Spec('.');
+        let spec = new AugmentedSpec_1.AugmentedSpec('.');
         let doc1 = cp.addToSpec(spec, [
             '#language:pt',
             'Feature: Feature 1',
@@ -187,7 +187,7 @@ describe('TSGenTest', () => {
         expect(stepsContent).toEqual(expectedSteps);
     }));
     it('replaces orfan precondition AND steps with GIVEN', () => __awaiter(this, void 0, void 0, function* () {
-        let spec = new Spec_1.Spec('.');
+        let spec = new AugmentedSpec_1.AugmentedSpec('.');
         let doc1 = cp.addToSpec(spec, [
             '#language:pt',
             'Feature: Feature 1',
@@ -240,7 +240,7 @@ describe('TSGenTest', () => {
         expect(stepsContent).toEqual(expectedSteps);
     }));
     it('replaces state calls', () => __awaiter(this, void 0, void 0, function* () {
-        let spec = new Spec_1.Spec('.');
+        let spec = new AugmentedSpec_1.AugmentedSpec('.');
         let doc1 = cp.addToSpec(spec, [
             '#language:pt',
             'Feature: Feature 1',
@@ -293,7 +293,7 @@ describe('TSGenTest', () => {
         expect(stepsContent).toEqual(expectedSteps);
     }));
     it('includes preconditions of preconditions', () => __awaiter(this, void 0, void 0, function* () {
-        let spec = new Spec_1.Spec('.');
+        let spec = new AugmentedSpec_1.AugmentedSpec('.');
         let doc1 = cp.addToSpec(spec, [
             '#language:pt',
             'Feature: Feature 1',
@@ -368,7 +368,7 @@ describe('TSGenTest', () => {
         expect(stepsContent).toEqual(expectedSteps);
     }));
     it('does not include preconditions of state calls', () => __awaiter(this, void 0, void 0, function* () {
-        let spec = new Spec_1.Spec('.');
+        let spec = new AugmentedSpec_1.AugmentedSpec('.');
         let doc1 = cp.addToSpec(spec, [
             '#language:pt',
             'Feature: Feature 1',

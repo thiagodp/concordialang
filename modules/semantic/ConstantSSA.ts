@@ -1,6 +1,6 @@
 import Graph = require('graph.js/dist/graph.full.js');
 
-import { Spec } from '../ast/Spec';
+import { AugmentedSpec } from '../ast/AugmentedSpec';
 import { SemanticException } from './SemanticException';
 import { SpecificationAnalyzer } from './SpecificationAnalyzer';
 
@@ -17,7 +17,7 @@ export class ConstantSSA extends SpecificationAnalyzer {
     /** @inheritDoc */
     public async analyze(
         graph: Graph,
-        spec: Spec,
+        spec: AugmentedSpec,
         errors: SemanticException[]
     ): Promise< void > {
         this._checker.checkDuplicatedNamedNodes( spec.constants(), errors, 'constant' );

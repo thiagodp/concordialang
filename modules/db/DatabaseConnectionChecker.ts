@@ -3,7 +3,7 @@ import { DatabaseInterface } from '../req/DatabaseInterface';
 import { RuntimeException } from '../req/RuntimeException';
 import { DatabaseWrapper } from './DatabaseWrapper';
 import { LocatedException } from '../req/LocatedException';
-import { Spec } from '../ast/Spec';
+import { AugmentedSpec } from '../ast/AugmentedSpec';
 import { ConnectionCheckResult, ConnectionResult } from '../req/ConnectionResult';
 
 /**
@@ -14,7 +14,7 @@ import { ConnectionCheckResult, ConnectionResult } from '../req/ConnectionResult
 export class DatabaseConnectionChecker {
 
     async check(
-        spec: Spec,
+        spec: AugmentedSpec,
         errors: LocatedException[],
         disconnectAfterConnecting: boolean = false
     ): Promise< ConnectionCheckResult > {

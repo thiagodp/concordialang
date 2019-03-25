@@ -1,12 +1,12 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const Spec_1 = require("../../modules/ast/Spec");
+const AugmentedSpec_1 = require("../../modules/ast/AugmentedSpec");
 const SimpleCompiler_1 = require("../../modules/util/SimpleCompiler");
 const path_1 = require("path");
 describe('SpecTest', () => {
     let spec; // under test
     const basePath = process.cwd();
-    beforeEach(() => spec = new Spec_1.Spec(basePath));
+    beforeEach(() => spec = new AugmentedSpec_1.AugmentedSpec(basePath));
     afterEach(() => spec = null);
     describe('findUIElementInDocumentImports', () => {
         describe('found', () => {

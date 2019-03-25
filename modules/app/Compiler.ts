@@ -1,7 +1,7 @@
 import { MultiFileProcessor, MultiFileProcessedData } from "./MultiFileProcessor";
 import { Options } from "./Options";
 import { BatchSpecificationAnalyzer } from "../semantic/BatchSpecificationAnalyzer";
-import { Spec } from "../ast/Spec";
+import { AugmentedSpec } from "../ast/AugmentedSpec";
 import { Document } from "../ast/Document";
 import { LocatedException } from "../req/LocatedException";
 import { CompilerListener } from "./CompilerListener";
@@ -22,7 +22,7 @@ export class Compiler {
     ) {
     }
 
-    public compile = async ( options: Options, listener: CompilerListener ): Promise< [ Spec, Graph ] > => {
+    public compile = async ( options: Options, listener: CompilerListener ): Promise< [ AugmentedSpec, Graph ] > => {
 
         listener.compilerStarted( options );
 
@@ -32,7 +32,7 @@ export class Compiler {
         const compiledFilesCount = r.compiledFiles.length;
 
         // Create the specification
-        let spec = new Spec( options.directory );
+        let spec = new AugmentedSpec( options.directory );
 
         // Add the documents
         for ( let file of r.compiledFiles ) {

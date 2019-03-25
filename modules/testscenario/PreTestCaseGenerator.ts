@@ -6,7 +6,7 @@ import { basename } from 'path';
 import { CaseType } from '../app/CaseType';
 import { Document } from '../ast/Document';
 import { Location } from '../ast/Location';
-import { Spec } from '../ast/Spec';
+import { AugmentedSpec } from '../ast/AugmentedSpec';
 import { Step } from '../ast/Step';
 import { EntityValueType, UIElement } from '../ast/UIElement';
 import { EnglishKeywordDictionary } from '../dict/EnglishKeywordDictionary';
@@ -42,7 +42,7 @@ import { PreTestCase } from './PreTestCase';
 
 export class GenContext {
     constructor(
-        public spec: Spec,
+        public spec: AugmentedSpec,
         public doc: Document,
         public errors: LocatedException[],
         public warnings: LocatedException[]
@@ -557,7 +557,7 @@ export class PreTestCaseGenerator {
         }
     }
 
-    extractTargetTypes( step: Step, doc: Document, spec: Spec ): string[] {
+    extractTargetTypes( step: Step, doc: Document, spec: AugmentedSpec ): string[] {
         if ( ! step.nlpResult ) {
             return [];
         }

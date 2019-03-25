@@ -9,7 +9,7 @@ import { FileInfo } from '../../ast/FileInfo';
 import { Import } from '../../ast/Import';
 import { Language } from '../../ast/Language';
 import { Scenario } from '../../ast/Scenario';
-import { Spec } from '../../ast/Spec';
+import { AugmentedSpec } from '../../ast/AugmentedSpec';
 import { TestCase } from '../../ast/TestCase';
 import { Variant } from '../../ast/Variant';
 import { NodeTypes } from '../../req/NodeTypes';
@@ -43,7 +43,7 @@ export class TestCaseDocumentGenerator extends EventEmitter {
 
     generateDocuments(
         graph: Graph,
-        spec: Spec,
+        spec: AugmentedSpec,
         outputDirectory: string,
         startLine: number
     ): Graph {
@@ -88,7 +88,7 @@ export class TestCaseDocumentGenerator extends EventEmitter {
 
     newVariantDocumentFrom(
         doc: Document,
-        spec: Spec,
+        spec: AugmentedSpec,
         outputDir: string,
         startLine: number
     ): Document | null {
@@ -195,7 +195,7 @@ export class TestCaseDocumentGenerator extends EventEmitter {
     generateTestCasesFromVariants(
         variantsMap: Map< Variant, Scenario >,
         doc: Document,
-        spec: Spec,
+        spec: AugmentedSpec,
         startLine: number
     ): TestCase[] {
 

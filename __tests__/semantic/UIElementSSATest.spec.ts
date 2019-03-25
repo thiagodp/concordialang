@@ -1,6 +1,6 @@
 import { UIElementSSA } from "../../modules/semantic/UIElementSSA";
 import { SimpleCompiler } from "../../modules/util/SimpleCompiler";
-import { Spec } from "../../modules/ast/Spec";
+import { AugmentedSpec } from "../../modules/ast/AugmentedSpec";
 import { Document } from "../../modules/ast/Document";
 import { SpecFilter } from "../../modules/selection/SpecFilter";
 import { BatchSpecificationAnalyzer } from "../../modules/semantic/BatchSpecificationAnalyzer";
@@ -30,7 +30,7 @@ describe( 'UIElementSSATest', () => {
 
     it( 'detect all references', async () => {
 
-        let spec = new Spec( path );
+        let spec = new AugmentedSpec( path );
 
         const mydbPath = join( __dirname, '../db/users.json' );
 

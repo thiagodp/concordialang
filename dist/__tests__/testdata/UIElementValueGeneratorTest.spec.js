@@ -10,7 +10,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const UIElementValueGenerator_1 = require("../../modules/testdata/UIElementValueGenerator");
 const SimpleCompiler_1 = require("../../modules/util/SimpleCompiler");
-const Spec_1 = require("../../modules/ast/Spec");
+const AugmentedSpec_1 = require("../../modules/ast/AugmentedSpec");
 const UIETestPlan_1 = require("../../modules/testcase/UIETestPlan");
 const DataTestCase_1 = require("../../modules/testdata/DataTestCase");
 const DataTestCaseAnalyzer_1 = require("../../modules/testdata/DataTestCaseAnalyzer");
@@ -33,7 +33,7 @@ describe('UIElementValueGeneratorTest', () => {
         gen = new UIElementValueGenerator_1.UIElementValueGenerator(dataGen);
         cp = new SimpleCompiler_1.SimpleCompiler(LANGUAGE);
         bsa = new BatchSpecificationAnalyzer_1.BatchSpecificationAnalyzer();
-        spec = new Spec_1.Spec();
+        spec = new AugmentedSpec_1.AugmentedSpec();
         errors = [];
     });
     afterEach(() => {

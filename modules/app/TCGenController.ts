@@ -2,7 +2,7 @@ import { GivenWhenThenSentenceRecognizer } from "../nlp/GivenWhenThenSentenceRec
 import { LanguageContentLoader } from "../dict/LanguageContentLoader";
 import { Options } from "./Options";
 import { PreTestCaseGenerator, GenContext } from "../testscenario/PreTestCaseGenerator";
-import { Spec } from "../ast/Spec";
+import { AugmentedSpec } from "../ast/AugmentedSpec";
 import { Document } from "../ast/Document";
 import Graph = require( 'graph.js/dist/graph.full.js' );
 import { TSGen } from "../testscenario/TSGen";
@@ -34,9 +34,9 @@ export class TCGenController {
         variantSentenceRec: GivenWhenThenSentenceRecognizer,
         langLoader: LanguageContentLoader,
         options: Options,
-        spec: Spec,
+        spec: AugmentedSpec,
         graph: Graph,
-    ): Promise< [ Spec, Graph ] > {
+    ): Promise< [ AugmentedSpec, Graph ] > {
 
         const startTime = Date.now();
 

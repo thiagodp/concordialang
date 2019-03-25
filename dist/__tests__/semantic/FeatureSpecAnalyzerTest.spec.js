@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const FeatureSSA_1 = require("../../modules/semantic/FeatureSSA");
 const Parser_1 = require("../../modules/parser/Parser");
-const Spec_1 = require("../../modules/ast/Spec");
+const AugmentedSpec_1 = require("../../modules/ast/AugmentedSpec");
 const Options_1 = require("../../modules/app/Options");
 const LexerBuilder_1 = require("../../modules/lexer/LexerBuilder");
 const path_1 = require("path");
@@ -30,7 +30,7 @@ describe('FeatureSpecAnalyzerTest', () => {
         ].forEach((val, index) => lexer.addNodeFromLine(val, index + 1));
         let doc2 = {};
         parser.analyze(lexer.nodes(), doc2);
-        let spec = new Spec_1.Spec('.');
+        let spec = new AugmentedSpec_1.AugmentedSpec('.');
         spec.docs.push(doc1, doc2);
         const graph = (new SpecFilter_1.SpecFilter(spec)).graph();
         let errors = [];
@@ -49,7 +49,7 @@ describe('FeatureSpecAnalyzerTest', () => {
         ].forEach((val, index) => lexer.addNodeFromLine(val, index + 1));
         let doc2 = {};
         parser.analyze(lexer.nodes(), doc2);
-        let spec = new Spec_1.Spec('.');
+        let spec = new AugmentedSpec_1.AugmentedSpec('.');
         spec.docs.push(doc1, doc2);
         const graph = (new SpecFilter_1.SpecFilter(spec)).graph();
         let errors = [];

@@ -8,7 +8,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const Spec_1 = require("../ast/Spec");
+const AugmentedSpec_1 = require("../ast/AugmentedSpec");
 const SpecFilter_1 = require("../selection/SpecFilter");
 const ProcessingInfo_1 = require("./ProcessingInfo");
 /**
@@ -26,7 +26,7 @@ class Compiler {
             const r = yield this._mfp.process(options);
             const compiledFilesCount = r.compiledFiles.length;
             // Create the specification
-            let spec = new Spec_1.Spec(options.directory);
+            let spec = new AugmentedSpec_1.AugmentedSpec(options.directory);
             // Add the documents
             for (let file of r.compiledFiles) {
                 let doc = file.content;

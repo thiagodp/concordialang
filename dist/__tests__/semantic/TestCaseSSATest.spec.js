@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const NodeTypes_1 = require("../../modules/req/NodeTypes");
 const ReservedTags_1 = require("../../modules/req/ReservedTags");
-const Spec_1 = require("../../modules/ast/Spec");
+const AugmentedSpec_1 = require("../../modules/ast/AugmentedSpec");
 const TestCaseSSA_1 = require("../../modules/semantic/TestCaseSSA");
 const path_1 = require("path");
 /**
@@ -30,7 +30,7 @@ describe('TestCaseSSATest', () => {
             - F has a feature and no imports
             - G has a feature, no imports, and the tag references another feature
         */
-        spec = new Spec_1.Spec(path);
+        spec = new AugmentedSpec_1.AugmentedSpec(path);
         docA = {
             fileInfo: { path: path_1.join(path, "A.feature") },
             feature: {

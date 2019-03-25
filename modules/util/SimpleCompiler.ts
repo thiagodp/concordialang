@@ -7,7 +7,7 @@ import { Document } from '../ast/Document';
 import { NLPTrainer } from "../nlp/NLPTrainer";
 import { NLPBasedSentenceRecognizer } from "../nlp/NLPBasedSentenceRecognizer";
 import { SingleDocumentProcessor } from "../app/SingleDocumentProcessor";
-import { Spec } from "../ast/Spec";
+import { AugmentedSpec } from "../ast/AugmentedSpec";
 import { resolve } from 'path';
 import { FileInfo } from "../ast/FileInfo";
 
@@ -33,7 +33,7 @@ export class SimpleCompiler {
 
     singleDocProcessor: SingleDocumentProcessor = new SingleDocumentProcessor();
 
-    addToSpec( spec: Spec, lines: string[], fileInfo?: FileInfo ): Document {
+    addToSpec( spec: AugmentedSpec, lines: string[], fileInfo?: FileInfo ): Document {
         lines.forEach( ( val, index ) => this.lexer.addNodeFromLine( val, index + 1 ) );
         let doc: Document = {} as Document;
         doc.fileInfo = fileInfo;

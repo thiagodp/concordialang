@@ -10,7 +10,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const TCGen_1 = require("../../modules/testcase/TCGen");
 const SimpleCompiler_1 = require("../../modules/util/SimpleCompiler");
-const Spec_1 = require("../../modules/ast/Spec");
+const AugmentedSpec_1 = require("../../modules/ast/AugmentedSpec");
 const PreTestCaseGenerator_1 = require("../../modules/testscenario/PreTestCaseGenerator");
 const SpecFilter_1 = require("../../modules/selection/SpecFilter");
 const BatchSpecificationAnalyzer_1 = require("../../modules/semantic/BatchSpecificationAnalyzer");
@@ -36,7 +36,7 @@ describe('TCGenTest', () => {
         gen = null;
     });
     it('generates invalid values and oracles based on UI Element properties', () => __awaiter(this, void 0, void 0, function* () {
-        let spec = new Spec_1.Spec('.');
+        let spec = new AugmentedSpec_1.AugmentedSpec('.');
         let doc1 = cp.addToSpec(spec, [
             '#language:pt',
             'Feature: Feature 1',
@@ -79,7 +79,7 @@ describe('TCGenTest', () => {
         expect(tc.shoudFail).toBeFalsy();
     }));
     it('indicates that should fail when no Otherwise is declared and has Then sentence withou state', () => __awaiter(this, void 0, void 0, function* () {
-        let spec = new Spec_1.Spec('.');
+        let spec = new AugmentedSpec_1.AugmentedSpec('.');
         let doc1 = cp.addToSpec(spec, [
             '#language:pt',
             'Feature: Feature 1',

@@ -6,7 +6,7 @@ import { Document } from '../ast/Document';
 import { Feature } from '../ast/Feature';
 import { Import } from '../ast/Import';
 import { Location } from '../ast/Location';
-import { Spec } from '../ast/Spec';
+import { AugmentedSpec } from '../ast/AugmentedSpec';
 import { Tag } from '../ast/Tag';
 import { TestCase } from '../ast/TestCase';
 import { EnglishKeywordDictionary } from '../dict/EnglishKeywordDictionary';
@@ -67,7 +67,7 @@ export class TestCaseSSA extends SpecificationAnalyzer {
     /** @inheritDoc */
     public async analyze(
         graph: Graph,
-        spec: Spec,
+        spec: AugmentedSpec,
         errors: SemanticException[]
     ): Promise< void > {
         for ( let doc of spec.docs ) {
@@ -75,7 +75,7 @@ export class TestCaseSSA extends SpecificationAnalyzer {
         }
     }
 
-    public analyzeDocument( spec: Spec, doc: Document, errors: SemanticException[] ) {
+    public analyzeDocument( spec: AugmentedSpec, doc: Document, errors: SemanticException[] ) {
 
         // No Test Cases -> exit
         if ( ! doc.testCases || doc.testCases.length < 1 ) {
@@ -142,7 +142,7 @@ export class TestCaseSSA extends SpecificationAnalyzer {
     }
 
 
-    private processSingleImport( spec: Spec, doc: Document, docImport: Import, errors: Error[] ): boolean {
+    private processSingleImport( spec: AugmentedSpec, doc: Document, docImport: Import, errors: Error[] ): boolean {
 
         let feature = this.featureFromImport( spec, doc, docImport, errors );
         // It must have a feature
@@ -158,7 +158,7 @@ export class TestCaseSSA extends SpecificationAnalyzer {
     }
 
 
-    private featureFromImport( spec: Spec, doc: Document, docImport: Import, errors: Error[] ): Feature {
+    private featureFromImport( spec: AugmentedSpec, doc: Document, docImport: Import, errors: Error[] ): Feature {
 
         // Gets the imported document
         const filePath = docImport.value;
@@ -176,7 +176,7 @@ export class TestCaseSSA extends SpecificationAnalyzer {
     }
 
 
-    private processMultipleImports( spec: Spec, doc: Document, errors: Error[] ): boolean {
+    private processMultipleImports( spec: AugmentedSpec, doc: Document, errors: Error[] ): boolean {
 
         // Sanity checking
         if ( 0 === doc.imports.length ) {
@@ -225,7 +225,7 @@ export class TestCaseSSA extends SpecificationAnalyzer {
 
 
     private checkFeatureTags(
-        spec: Spec,
+        spec: AugmentedSpec,
         doc: Document,
         testCases: TestCase,
         availableFeatures: Feature[],
@@ -302,7 +302,7 @@ export class TestCaseSSA extends SpecificationAnalyzer {
 
 
 
-    checkOtherTags( testCases: TestCase[], spec: Spec, doc: Document, errors: LocatedException[] ) {
+    checkOtherTags( testCases: TestCase[], spec: AugmentedSpec, doc: Document, errors: LocatedException[] ) {
 
         const msgNoFeature = 'Feature found.';
         const msgNoScenarios = 'The referenced Feature does not have Scenarios';

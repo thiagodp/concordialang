@@ -10,7 +10,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const PreTestCaseGenerator_1 = require("../../modules/testscenario/PreTestCaseGenerator");
 const SimpleCompiler_1 = require("../../modules/util/SimpleCompiler");
-const Spec_1 = require("../../modules/ast/Spec");
+const AugmentedSpec_1 = require("../../modules/ast/AugmentedSpec");
 const SpecFilter_1 = require("../../modules/selection/SpecFilter");
 const BatchSpecificationAnalyzer_1 = require("../../modules/semantic/BatchSpecificationAnalyzer");
 const TestPlanner_1 = require("../../modules/testcase/TestPlanner");
@@ -33,7 +33,7 @@ describe('PreTestCaseGeneratorTest', () => {
         gen = null;
     });
     it('replaces Constants by their values', () => __awaiter(this, void 0, void 0, function* () {
-        let spec = new Spec_1.Spec('.');
+        let spec = new AugmentedSpec_1.AugmentedSpec('.');
         let doc1 = cp.addToSpec(spec, [
             '#language:pt',
             'Feature: Feature 1',
@@ -70,7 +70,7 @@ describe('PreTestCaseGeneratorTest', () => {
         ]);
     }));
     it('replaces UI Elements with values by their literals', () => __awaiter(this, void 0, void 0, function* () {
-        let spec = new Spec_1.Spec('.');
+        let spec = new AugmentedSpec_1.AugmentedSpec('.');
         let doc1 = cp.addToSpec(spec, [
             '#language:pt',
             'Feature: Feature 1',
@@ -109,7 +109,7 @@ describe('PreTestCaseGeneratorTest', () => {
         ]);
     }));
     it('replaces UI Elements with Constants by their literals and values', () => __awaiter(this, void 0, void 0, function* () {
-        let spec = new Spec_1.Spec('.');
+        let spec = new AugmentedSpec_1.AugmentedSpec('.');
         let doc1 = cp.addToSpec(spec, [
             '#language:pt',
             'Feature: Feature 1',
@@ -151,7 +151,7 @@ describe('PreTestCaseGeneratorTest', () => {
         ]);
     }));
     it('fills UI Literals without value with random value', () => __awaiter(this, void 0, void 0, function* () {
-        let spec = new Spec_1.Spec('.');
+        let spec = new AugmentedSpec_1.AugmentedSpec('.');
         let doc1 = cp.addToSpec(spec, [
             '#language:pt',
             'Feature: Feature 1',
@@ -192,7 +192,7 @@ describe('PreTestCaseGeneratorTest', () => {
         ]);
     }));
     it('fills UI Elements without value with generated value', () => __awaiter(this, void 0, void 0, function* () {
-        let spec = new Spec_1.Spec('.');
+        let spec = new AugmentedSpec_1.AugmentedSpec('.');
         let doc1 = cp.addToSpec(spec, [
             '#language:pt',
             'Feature: Feature 1',
@@ -235,7 +235,7 @@ describe('PreTestCaseGeneratorTest', () => {
         ]);
     }));
     it('separates UI literals and UI Elements', () => __awaiter(this, void 0, void 0, function* () {
-        let spec = new Spec_1.Spec('.');
+        let spec = new AugmentedSpec_1.AugmentedSpec('.');
         let doc1 = cp.addToSpec(spec, [
             '#language:pt',
             'Feature: Feature 1',
@@ -281,7 +281,7 @@ describe('PreTestCaseGeneratorTest', () => {
         ]);
     }));
     it('generates invalid values and oracles based on UI Element properties', () => __awaiter(this, void 0, void 0, function* () {
-        let spec = new Spec_1.Spec('.');
+        let spec = new AugmentedSpec_1.AugmentedSpec('.');
         let doc1 = cp.addToSpec(spec, [
             '#language:pt',
             'Feature: Feature 1',

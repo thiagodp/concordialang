@@ -4,7 +4,7 @@ import { TestScenario } from "../../modules/testscenario/TestScenario";
 import { SimpleCompiler } from "../../modules/util/SimpleCompiler";
 import { AllVariantsSelectionStrategy } from "../../modules/selection/VariantSelectionStrategy";
 import { Variant } from "../../modules/ast/Variant";
-import { Spec } from "../../modules/ast/Spec";
+import { AugmentedSpec } from "../../modules/ast/AugmentedSpec";
 import { Document } from "../../modules/ast/Document";
 import { LocatedException } from "../../modules/req/LocatedException";
 import { BatchSpecificationAnalyzer } from "../../modules/semantic/BatchSpecificationAnalyzer";
@@ -58,7 +58,7 @@ describe( 'TSGenTest', () => {
 
     it( 'generates for a single Variant without preconditions', async () => {
 
-        let spec = new Spec( '.' );
+        let spec = new AugmentedSpec( '.' );
 
         let doc1: Document = cp.addToSpec( spec,
             [
@@ -97,7 +97,7 @@ describe( 'TSGenTest', () => {
 
     it( 'includes other TS based on precondition', async () => {
 
-        let spec = new Spec( '.' );
+        let spec = new AugmentedSpec( '.' );
 
         let doc1: Document = cp.addToSpec( spec,
             [
@@ -165,7 +165,7 @@ describe( 'TSGenTest', () => {
 
     it( 'gets an error when precondition requires a state not declared', async () => {
 
-        let spec = new Spec( '.' );
+        let spec = new AugmentedSpec( '.' );
 
         let doc: Document = cp.addToSpec( spec,
             [
@@ -198,7 +198,7 @@ describe( 'TSGenTest', () => {
 
     it( 'replaces orfan postcondition AND steps with THEN', async () => {
 
-        let spec = new Spec( '.' );
+        let spec = new AugmentedSpec( '.' );
 
         let doc1: Document = cp.addToSpec( spec,
             [
@@ -267,7 +267,7 @@ describe( 'TSGenTest', () => {
 
     it( 'replaces orfan precondition AND steps with GIVEN', async () => {
 
-        let spec = new Spec( '.' );
+        let spec = new AugmentedSpec( '.' );
 
         let doc1: Document = cp.addToSpec( spec,
             [
@@ -339,7 +339,7 @@ describe( 'TSGenTest', () => {
 
     it( 'replaces state calls', async () => {
 
-        let spec = new Spec( '.' );
+        let spec = new AugmentedSpec( '.' );
 
         let doc1: Document = cp.addToSpec( spec,
             [
@@ -411,7 +411,7 @@ describe( 'TSGenTest', () => {
 
     it( 'includes preconditions of preconditions', async () => {
 
-        let spec = new Spec( '.' );
+        let spec = new AugmentedSpec( '.' );
 
         let doc1: Document = cp.addToSpec( spec,
             [
@@ -510,7 +510,7 @@ describe( 'TSGenTest', () => {
 
     it( 'does not include preconditions of state calls', async () => {
 
-        let spec = new Spec( '.' );
+        let spec = new AugmentedSpec( '.' );
 
         let doc1: Document = cp.addToSpec( spec,
             [

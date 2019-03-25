@@ -1,5 +1,5 @@
 import { AbstractTestScript } from "../testscript/AbstractTestScript";
-import { Spec } from "../ast/Spec";
+import { AugmentedSpec } from "../ast/AugmentedSpec";
 import { AbstractTestScriptGenerator } from "../testscript/AbstractTestScriptGenerator";
 import { isDefined } from "../util/TypeChecking";
 
@@ -8,7 +8,7 @@ import { isDefined } from "../util/TypeChecking";
  */
 export class ATSGenController {
 
-    generate( spec: Spec ): AbstractTestScript[] {
+    generate( spec: AugmentedSpec ): AbstractTestScript[] {
         let all: AbstractTestScript[] = [];
         const gen = new AbstractTestScriptGenerator();
         for ( let doc of spec.docs || [] ) {

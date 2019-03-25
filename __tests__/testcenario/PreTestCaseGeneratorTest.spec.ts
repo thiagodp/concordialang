@@ -1,6 +1,6 @@
 import { PreTestCaseGenerator, GenContext } from "../../modules/testscenario/PreTestCaseGenerator";
 import { SimpleCompiler } from "../../modules/util/SimpleCompiler";
-import { Spec } from "../../modules/ast/Spec";
+import { AugmentedSpec } from "../../modules/ast/AugmentedSpec";
 import { Document } from "../../modules/ast/Document";
 import { FileInfo } from "../../modules/ast/FileInfo";
 import { SpecFilter } from "../../modules/selection/SpecFilter";
@@ -42,7 +42,7 @@ describe( 'PreTestCaseGeneratorTest', () => {
 
     it( 'replaces Constants by their values', async () => {
 
-        let spec = new Spec( '.' );
+        let spec = new AugmentedSpec( '.' );
 
         let doc1: Document = cp.addToSpec( spec,
             [
@@ -98,7 +98,7 @@ describe( 'PreTestCaseGeneratorTest', () => {
 
     it( 'replaces UI Elements with values by their literals', async () => {
 
-        let spec = new Spec( '.' );
+        let spec = new AugmentedSpec( '.' );
 
         let doc1: Document = cp.addToSpec( spec,
             [
@@ -157,7 +157,7 @@ describe( 'PreTestCaseGeneratorTest', () => {
 
     it( 'replaces UI Elements with Constants by their literals and values', async () => {
 
-        let spec = new Spec( '.' );
+        let spec = new AugmentedSpec( '.' );
 
         let doc1: Document = cp.addToSpec( spec,
             [
@@ -218,7 +218,7 @@ describe( 'PreTestCaseGeneratorTest', () => {
 
     it( 'fills UI Literals without value with random value', async () => {
 
-        let spec = new Spec( '.' );
+        let spec = new AugmentedSpec( '.' );
 
         let doc1: Document = cp.addToSpec( spec,
             [
@@ -280,7 +280,7 @@ describe( 'PreTestCaseGeneratorTest', () => {
 
     it( 'fills UI Elements without value with generated value', async () => {
 
-        let spec = new Spec( '.' );
+        let spec = new AugmentedSpec( '.' );
 
         let doc1: Document = cp.addToSpec( spec,
             [
@@ -343,7 +343,7 @@ describe( 'PreTestCaseGeneratorTest', () => {
 
     it( 'separates UI literals and UI Elements', async () => {
 
-        let spec = new Spec( '.' );
+        let spec = new AugmentedSpec( '.' );
 
         let doc1: Document = cp.addToSpec( spec,
             [
@@ -409,7 +409,7 @@ describe( 'PreTestCaseGeneratorTest', () => {
 
     it( 'generates invalid values and oracles based on UI Element properties', async () => {
 
-        let spec = new Spec( '.' );
+        let spec = new AugmentedSpec( '.' );
 
         let doc1: Document = cp.addToSpec( spec,
             [

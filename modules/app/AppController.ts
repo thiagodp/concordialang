@@ -3,7 +3,7 @@ import { Options } from "./Options";
 import { PluginController } from '../plugin/PluginController';
 import { CLI } from './CLI';
 import { CompilerController } from './CompilerController';
-import { Spec } from '../ast/Spec';
+import { AugmentedSpec } from '../ast/AugmentedSpec';
 import { LanguageController } from './LanguageController';
 import { PluginData } from '../plugin/PluginData';
 import { PluginManager } from '../plugin/PluginManager';
@@ -156,7 +156,7 @@ export class AppController {
         }
 
         let hasErrors: boolean = false;
-        let spec: Spec = null;
+        let spec: AugmentedSpec = null;
         let graph: Graph = null;
         if ( options.compileSpecification ) {
             if ( ! options.generateTestCase ) {

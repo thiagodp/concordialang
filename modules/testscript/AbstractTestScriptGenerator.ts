@@ -1,6 +1,6 @@
 import { Document } from '../ast/Document';
 import { Location } from '../ast/Location';
-import { Spec } from '../ast/Spec';
+import { AugmentedSpec } from '../ast/AugmentedSpec';
 import { TestEvent } from '../ast/TestEvent';
 import { DatabaseToAbstractDatabase } from '../db/DatabaseToAbstractDatabase';
 import { supportTablesInQueries } from '../db/DatabaseTypes';
@@ -30,7 +30,7 @@ export class AbstractTestScriptGenerator {
      * @param doc Document
      * @param spec Specification
      */
-    generateFromDocument( doc: Document, spec: Spec ): AbstractTestScript | null {
+    generateFromDocument( doc: Document, spec: AugmentedSpec ): AbstractTestScript | null {
 
         // console.log( 'DOC is', doc.fileInfo.path );
         // console.log( 'Test cases', doc.testCases );
@@ -176,7 +176,7 @@ export class AbstractTestScriptGenerator {
     }
 
 
-    convertTestEventSentencesToCommands( event: TestEvent, spec: Spec ): ATSCommand[] {
+    convertTestEventSentencesToCommands( event: TestEvent, spec: AugmentedSpec ): ATSCommand[] {
 
         const dbConversor = new DatabaseToAbstractDatabase();
         // const DATABASE_OPTION = 'database';

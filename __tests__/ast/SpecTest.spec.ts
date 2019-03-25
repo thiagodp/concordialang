@@ -1,15 +1,15 @@
-import { Spec } from "../../modules/ast/Spec";
+import { AugmentedSpec } from "../../modules/ast/AugmentedSpec";
 import { SimpleCompiler } from "../../modules/util/SimpleCompiler";
 import { FileInfo } from "../../modules/ast/FileInfo";
 import { join } from "path";
 
 describe( 'SpecTest', () => {
 
-    let spec: Spec; // under test
+    let spec: AugmentedSpec; // under test
 
     const basePath = process.cwd();
 
-    beforeEach( () => spec = new Spec( basePath ) );
+    beforeEach( () => spec = new AugmentedSpec( basePath ) );
     afterEach( () => spec = null );
 
     describe( 'findUIElementInDocumentImports', () => {

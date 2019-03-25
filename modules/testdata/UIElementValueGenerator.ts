@@ -2,7 +2,7 @@ import { Constant } from '../ast/Constant';
 import { Database } from '../ast/Database';
 import { Document } from '../ast/Document';
 import { Node } from '../ast/Node';
-import { Spec } from '../ast/Spec';
+import { AugmentedSpec } from '../ast/AugmentedSpec';
 import { Table } from '../ast/Table';
 import { EntityValue, EntityValueType, UIElement, UIProperty } from '../ast/UIElement';
 import { DatabaseToAbstractDatabase } from '../db/DatabaseToAbstractDatabase';
@@ -59,7 +59,7 @@ export class UIElementValueGenerator {
         uieName: string,
         context: ValueGenContext,
         doc: Document | null,
-        spec: Spec,
+        spec: AugmentedSpec,
         errors: LocatedException[]
     ): Promise< EntityValueType > {
 
@@ -282,7 +282,7 @@ export class UIElementValueGenerator {
         propertyValue: EntityValue,
         context: ValueGenContext,
         doc: Document,
-        spec: Spec,
+        spec: AugmentedSpec,
         errors: LocatedException[]
     ): Promise< EntityValueType > {
 
@@ -430,7 +430,7 @@ export class UIElementValueGenerator {
         owner: UIProperty,
         context: ValueGenContext,
         doc: Document,
-        spec: Spec,
+        spec: AugmentedSpec,
         errors: LocatedException[]
     ): Promise< string > {
 
@@ -487,7 +487,7 @@ export class UIElementValueGenerator {
         propType: UIPropertyTypes,
         query: string,
         database: Database,
-        spec: Spec,
+        spec: AugmentedSpec,
         errors: LocatedException[]
     ): Promise< EntityValueType > {
 
@@ -539,7 +539,7 @@ export class UIElementValueGenerator {
         propType: UIPropertyTypes,
         query: string,
         table: Table,
-        spec: Spec,
+        spec: AugmentedSpec,
         errors: LocatedException[]
     ): Promise< EntityValueType > {
 

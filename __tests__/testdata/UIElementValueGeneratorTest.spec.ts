@@ -1,6 +1,6 @@
 import { UIElementValueGenerator, ValueGenContext } from "../../modules/testdata/UIElementValueGenerator";
 import { SimpleCompiler } from "../../modules/util/SimpleCompiler";
-import { Spec } from "../../modules/ast/Spec";
+import { AugmentedSpec } from "../../modules/ast/AugmentedSpec";
 import { FileInfo } from "../../modules/ast/FileInfo";
 import { UIETestPlan } from "../../modules/testcase/UIETestPlan";
 import { DataTestCase } from "../../modules/testdata/DataTestCase";
@@ -21,7 +21,7 @@ describe( 'UIElementValueGeneratorTest', () => {
     let dataGen: DataGenerator;
     let cp: SimpleCompiler;
     let bsa: BatchSpecificationAnalyzer;
-    let spec: Spec;
+    let spec: AugmentedSpec;
     let errors: Error[] = [];
 
     beforeEach( () => {
@@ -29,7 +29,7 @@ describe( 'UIElementValueGeneratorTest', () => {
         gen = new UIElementValueGenerator( dataGen );
         cp = new SimpleCompiler( LANGUAGE );
         bsa = new BatchSpecificationAnalyzer();
-        spec = new Spec();
+        spec = new AugmentedSpec();
         errors = [];
     } );
 

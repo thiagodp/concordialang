@@ -1,6 +1,6 @@
 import Graph = require('graph.js/dist/graph.full.js');
 
-import { Spec } from '../ast/Spec';
+import { AugmentedSpec } from '../ast/AugmentedSpec';
 import { AfterAllSSA } from './AfterAllSSA';
 import { BeforeAllSSA } from './BeforeAllSSA';
 import { ConstantSSA } from './ConstantSSA';
@@ -41,7 +41,7 @@ export class BatchSpecificationAnalyzer extends SpecificationAnalyzer {
 
     public async analyze(
         graph: Graph,
-        spec: Spec,
+        spec: AugmentedSpec,
         errors: SemanticException[]
     ): Promise< void > {
 

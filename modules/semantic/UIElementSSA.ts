@@ -4,7 +4,7 @@ import Graph = require('graph.js/dist/graph.full.js');
 import { Document } from '../ast/Document';
 import { Location } from '../ast/Location';
 import { Node } from '../ast/Node';
-import { Spec } from '../ast/Spec';
+import { AugmentedSpec } from '../ast/AugmentedSpec';
 import { UIElement, UIProperty } from '../ast/UIElement';
 import { QueryParser } from '../db/QueryParser';
 import { Entities } from '../nlp/Entities';
@@ -30,7 +30,7 @@ export class UIElementSSA extends SpecificationAnalyzer {
     /** @inheritDoc */
     public async analyze(
         graph: Graph,
-        spec: Spec,
+        spec: AugmentedSpec,
         errors: SemanticException[]
     ): Promise< void > {
         this._checker.checkDuplicatedNamedNodes( spec.uiElements(), errors, 'global UI Element' );
@@ -39,7 +39,7 @@ export class UIElementSSA extends SpecificationAnalyzer {
 
     retriveReferences(
         graph: Graph,
-        spec: Spec,
+        spec: AugmentedSpec,
         errors: SemanticException[]
     ): void {
 
@@ -61,7 +61,7 @@ export class UIElementSSA extends SpecificationAnalyzer {
     }
 
 
-    analyzePropertiesReferences( doc: Document, spec: Spec, errors: SemanticException[] ): void {
+    analyzePropertiesReferences( doc: Document, spec: AugmentedSpec, errors: SemanticException[] ): void {
 
         if ( ! doc ) {
             return;
@@ -81,7 +81,7 @@ export class UIElementSSA extends SpecificationAnalyzer {
     }
 
 
-    analyzePropertiesReferencesOf( uie: UIElement, doc: Document, spec: Spec, errors: SemanticException[] ) {
+    analyzePropertiesReferencesOf( uie: UIElement, doc: Document, spec: AugmentedSpec, errors: SemanticException[] ) {
 
         for ( let uiProperty of uie.items || [] ) {
 
@@ -120,7 +120,7 @@ export class UIElementSSA extends SpecificationAnalyzer {
     }
 
 
-    analyzeConstant( variable: string, uiProperty: UIProperty, doc: Document, spec: Spec, references: Node[], errors: Error[] ): void {
+    analyzeConstant( variable: string, uiProperty: UIProperty, doc: Document, spec: AugmentedSpec, references: Node[], errors: Error[] ): void {
         const node = spec.constantWithName( variable );
         if ( isDefined( node ) ) {
             references.push( node );
@@ -131,7 +131,7 @@ export class UIElementSSA extends SpecificationAnalyzer {
     }
 
 
-    analyzeUIElement( variable: string, uiProperty: UIProperty, doc: Document, spec: Spec, references: Node[], errors: Error[] ): void {
+    analyzeUIElement( variable: string, uiProperty: UIProperty, doc: Document, spec: AugmentedSpec, references: Node[], errors: Error[] ): void {
         const node = spec.uiElementByVariable( variable, doc );
         if ( isDefined( node ) ) {
             references.push( node );
@@ -142,7 +142,7 @@ export class UIElementSSA extends SpecificationAnalyzer {
     }
 
 
-    analyzeQuery( query: string, uiProperty: UIProperty, doc: Document, spec: Spec, references: Node[], errors: Error[] ): void {
+    analyzeQuery( query: string, uiProperty: UIProperty, doc: Document, spec: AugmentedSpec, references: Node[], errors: Error[] ): void {
 
         const queryParser = new QueryParser(); // stateless
 
@@ -158,7 +158,7 @@ export class UIElementSSA extends SpecificationAnalyzer {
     }
 
 
-    analyzeNames( names: string[], uiProperty: UIProperty, doc: Document, spec: Spec, references: Node[], errors: Error[] ): void {
+    analyzeNames( names: string[], uiProperty: UIProperty, doc: Document, spec: AugmentedSpec, references: Node[], errors: Error[] ): void {
         for ( let name of names || [] ) {
             let node = null;
 

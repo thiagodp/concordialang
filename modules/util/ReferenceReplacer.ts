@@ -2,7 +2,7 @@ import { escape, escapeId } from 'sqlstring';
 
 import { CaseType } from '../app/CaseType';
 import { Document } from '../ast/Document';
-import { Spec } from '../ast/Spec';
+import { AugmentedSpec } from '../ast/AugmentedSpec';
 import { QueryParser } from '../db/QueryParser';
 import { Entities } from '../nlp/Entities';
 import { NLPResult } from '../nlp/NLPResult';
@@ -44,7 +44,7 @@ export class ReferenceReplacer {
     replaceConstantsWithTheirValues(
         sentence: string,
         nlpResult: NLPResult,
-        spec: Spec
+        spec: AugmentedSpec
     ): [ string, string ] {
         let newSentence: string = sentence;
         const valueTypeDetector = new ValueTypeDetector();
@@ -93,7 +93,7 @@ export class ReferenceReplacer {
         sentence: string,
         nlpResult: NLPResult,
         doc: Document,
-        spec: Spec,
+        spec: AugmentedSpec,
         uiLiteralCaseOption: CaseType
     ): [ string, string ] {
         let newSentence: string = sentence;

@@ -10,7 +10,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const UIElementSSA_1 = require("../../modules/semantic/UIElementSSA");
 const SimpleCompiler_1 = require("../../modules/util/SimpleCompiler");
-const Spec_1 = require("../../modules/ast/Spec");
+const AugmentedSpec_1 = require("../../modules/ast/AugmentedSpec");
 const SpecFilter_1 = require("../../modules/selection/SpecFilter");
 const BatchSpecificationAnalyzer_1 = require("../../modules/semantic/BatchSpecificationAnalyzer");
 const path_1 = require("path");
@@ -28,7 +28,7 @@ describe('UIElementSSATest', () => {
         sa = null;
     });
     it('detect all references', () => __awaiter(this, void 0, void 0, function* () {
-        let spec = new Spec_1.Spec(path);
+        let spec = new AugmentedSpec_1.AugmentedSpec(path);
         const mydbPath = path_1.join(__dirname, '../db/users.json');
         let doc1 = cp.addToSpec(spec, [
             '#language:pt',

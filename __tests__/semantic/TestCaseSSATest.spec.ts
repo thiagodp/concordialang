@@ -6,7 +6,7 @@ import { ReservedTags } from '../../modules/req/ReservedTags';
 import { Tag } from '../../modules/ast/Tag';
 import { Feature } from '../../modules/ast/Feature';
 import { Document } from '../../modules/ast/Document';
-import { Spec } from '../../modules/ast/Spec';
+import { AugmentedSpec } from '../../modules/ast/AugmentedSpec';
 import { TestCaseSSA } from '../../modules/semantic/TestCaseSSA';
 import { TestCase } from '../../modules/ast/TestCase';
 import { join } from 'path';
@@ -20,7 +20,7 @@ describe( 'TestCaseSSATest', () => {
 
     const path = process.cwd();
 
-    let spec: Spec;
+    let spec: AugmentedSpec;
     let docA: Document;
     let docB: Document;
     let docC: Document;
@@ -43,7 +43,7 @@ describe( 'TestCaseSSATest', () => {
             - G has a feature, no imports, and the tag references another feature
         */
 
-        spec = new Spec( path );
+        spec = new AugmentedSpec( path );
 
         docA = {
             fileInfo: { path: join( path, "A.feature" ) } as FileInfo,

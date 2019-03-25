@@ -4,7 +4,7 @@ import { SingleFileCompiler } from "./SingleFileCompiler";
 import { MultiFileProcessor } from "./MultiFileProcessor";
 import { VerboseAppEventsListener } from "./VerboseAppEventsListener";
 import { SimpleAppEventsListener } from "./SimpleAppEventsListener";
-import { Spec } from "../ast/Spec";
+import { AugmentedSpec } from "../ast/AugmentedSpec";
 import { Lexer } from "../lexer/Lexer";
 import { Parser } from "../parser/Parser";
 import { NLPTrainer } from "../nlp/NLPTrainer";
@@ -24,7 +24,7 @@ import { TCGenController } from "./TCGenController";
  */
 export class CompilerController {
 
-    public async compile( options: Options, cli: CLI ): Promise< [ Spec, Graph ] > {
+    public async compile( options: Options, cli: CLI ): Promise< [ AugmentedSpec, Graph ] > {
 
         const langLoader: LanguageContentLoader =
             new JsonLanguageContentLoader( options.languageDir, {}, options.encoding );

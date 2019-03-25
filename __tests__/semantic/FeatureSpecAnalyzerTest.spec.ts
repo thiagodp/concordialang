@@ -2,7 +2,7 @@ import { FeatureSSA } from '../../modules/semantic/FeatureSSA';
 import { Parser } from '../../modules/parser/Parser';
 import { Lexer } from '../../modules/lexer/Lexer';
 import { Document } from '../../modules/ast/Document';
-import { Spec } from '../../modules/ast/Spec';
+import { AugmentedSpec } from '../../modules/ast/AugmentedSpec';
 import { Options } from '../../modules/app/Options';
 import { LexerBuilder } from '../../modules/lexer/LexerBuilder';
 import { resolve } from 'path';
@@ -39,7 +39,7 @@ describe( 'FeatureSpecAnalyzerTest', () => {
         parser.analyze( lexer.nodes(), doc2 );
 
 
-        let spec = new Spec( '.' );
+        let spec = new AugmentedSpec( '.' );
         spec.docs.push( doc1, doc2 );
         const graph = ( new SpecFilter( spec ) ).graph();
 
@@ -65,7 +65,7 @@ describe( 'FeatureSpecAnalyzerTest', () => {
         parser.analyze( lexer.nodes(), doc2 );
 
 
-        let spec = new Spec( '.' );
+        let spec = new AugmentedSpec( '.' );
         spec.docs.push( doc1, doc2 );
         const graph = ( new SpecFilter( spec ) ).graph();
 

@@ -1,4 +1,4 @@
-import { Spec } from "../ast/Spec";
+import { AugmentedSpec } from "../ast/AugmentedSpec";
 //const Graph = require( 'graph.js/dist/graph.full.js' );
 import  Graph = require( 'graph.js/dist/graph.full.js' );
 
@@ -18,7 +18,7 @@ export class ImportBasedGraphBuilder {
      *
      * @param spec Specification
      */
-    buildFrom( spec: Spec ): Graph {
+    buildFrom( spec: AugmentedSpec ): Graph {
 
         let graph = new Graph();
         for ( let doc of spec.docs ) {

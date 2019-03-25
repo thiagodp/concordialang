@@ -1,6 +1,6 @@
 import { TCGen } from "../../modules/testcase/TCGen";
 import { SimpleCompiler } from "../../modules/util/SimpleCompiler";
-import { Spec } from "../../modules/ast/Spec";
+import { AugmentedSpec } from "../../modules/ast/AugmentedSpec";
 import { Document } from "../../modules/ast/Document";
 import { PreTestCaseGenerator, GenContext } from "../../modules/testscenario/PreTestCaseGenerator";
 import { FileInfo } from "../../modules/ast/FileInfo";
@@ -47,7 +47,7 @@ describe( 'TCGenTest', () => {
 
     it( 'generates invalid values and oracles based on UI Element properties', async () => {
 
-        let spec = new Spec( '.' );
+        let spec = new AugmentedSpec( '.' );
 
         let doc1: Document = cp.addToSpec( spec,
             [
@@ -113,7 +113,7 @@ describe( 'TCGenTest', () => {
 
     it( 'indicates that should fail when no Otherwise is declared and has Then sentence withou state', async () => {
 
-        let spec = new Spec( '.' );
+        let spec = new AugmentedSpec( '.' );
 
         let doc1: Document = cp.addToSpec( spec,
             [
