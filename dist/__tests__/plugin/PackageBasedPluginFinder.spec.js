@@ -53,6 +53,7 @@ describe('PackageBasedPluginFinder', () => {
         memfs_1.vol.writeFileSync(localPluginPackageFile, JSON.stringify(pkg));
         const finder = new PackageBasedPluginFinder_1.PackageBasedPluginFinder(currentDir, memfs_1.fs);
         const pluginData = yield finder.find();
+        expect(pluginData).toHaveLength(1);
         const first = pluginData[0];
         expect(first.name).toEqual(pkg.name);
     }));
@@ -61,6 +62,7 @@ describe('PackageBasedPluginFinder', () => {
         memfs_1.vol.writeFileSync(globalPluginPackageFile, JSON.stringify(pkg));
         const finder = new PackageBasedPluginFinder_1.PackageBasedPluginFinder(currentDir, memfs_1.fs);
         const pluginData = yield finder.find();
+        expect(pluginData).toHaveLength(1);
         const first = pluginData[0];
         expect(first.name).toEqual(pkg.name);
     }));
@@ -68,11 +70,11 @@ describe('PackageBasedPluginFinder', () => {
         memfs_1.vol.mkdirpSync(localPluginDir); // local
         memfs_1.vol.writeFileSync(localPluginPackageFile, JSON.stringify(pkg)); // local
         const pkg2 = Object.assign({}, pkg); // copy properties
-        pkg2.name += '-global';
         memfs_1.vol.mkdirpSync(globalPluginDir); // global
         memfs_1.vol.writeFileSync(globalPluginPackageFile, JSON.stringify(pkg2)); // global
         const finder = new PackageBasedPluginFinder_1.PackageBasedPluginFinder(currentDir, memfs_1.fs);
         const pluginData = yield finder.find();
+        expect(pluginData).toHaveLength(1);
         const first = pluginData[0];
         expect(first.name).toEqual(pkg.name);
     }));
@@ -85,8 +87,21 @@ describe('PackageBasedPluginFinder', () => {
         memfs_1.vol.writeFileSync(globalPluginPackageFile, JSON.stringify(pkg2)); // global
         const finder = new PackageBasedPluginFinder_1.PackageBasedPluginFinder(currentDir, memfs_1.fs);
         const pluginData = yield finder.find();
+        expect(pluginData).toHaveLength(2);
         const first = pluginData[0];
         const content = path_1.join(localPluginDir, pkg.concordiaPluginData.file);
         expect(first.file).toEqual(content);
+    }));
+    it('ignores a package that is not a plugin', () => __awaiter(this, void 0, void 0, function* () {
+        memfs_1.vol.mkdirpSync(localPluginDir); // local
+        memfs_1.vol.writeFileSync(localPluginPackageFile, JSON.stringify(pkg)); // local
+        const pkg2 = Object.assign({}, pkg); // copy properties
+        pkg2.name += '-non-plugin';
+        pkg2.concordiaPluginData = undefined; // removes the expected property
+        memfs_1.vol.mkdirpSync(path_1.join(localModulesDir, pkg2.name));
+        memfs_1.vol.writeFileSync(path_1.join(localModulesDir, pkg2.name, PKG_FILENAME), JSON.stringify(pkg2));
+        const finder = new PackageBasedPluginFinder_1.PackageBasedPluginFinder(currentDir, memfs_1.fs);
+        const pluginData = yield finder.find();
+        expect(pluginData).toHaveLength(1);
     }));
 });

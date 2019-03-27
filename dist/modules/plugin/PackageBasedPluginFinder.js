@@ -70,6 +70,11 @@ class PackageBasedPluginFinder {
                     throw new Error(`Cannot read plugin data from "${pkgFile}" because the file cannot be read. Details: ` + err.message);
                 }
                 const pkg = JSON.parse(content);
+                // Ignores a package that does not have the expected property,
+                // because it is not supposed to be a Concordia plugin.
+                if (!pkg[this.PACKAGE_PROPERTY]) {
+                    continue;
+                }
                 const data = conversor.convert(pkg);
                 if (!data) {
                     // continue; // Cannot convert to plugin data
