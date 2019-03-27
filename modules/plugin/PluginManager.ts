@@ -1,9 +1,9 @@
+import * as childProcess from 'child_process';
 import { PluginData } from "./PluginData";
 import { JsonBasedPluginFinder } from "./JsonBasedPluginFinder";
 import { PluginDrawer } from "./PluginDrawer";
 import { Plugin } from "./Plugin";
-import * as path from 'path';
-import * as childProcess from 'child_process';
+import { PluginFinder } from "./PluginFinder";
 
 /**
  * Plug-in manager
@@ -12,12 +12,17 @@ import * as childProcess from 'child_process';
  */
 export class PluginManager {
 
-    constructor( private _pluginDir: string ) {
+    private readonly _finder: PluginFinder;
+
+    constructor(
+        private _pluginDir: string,
+        finder?: PluginFinder
+        ) {
+        this._finder = finder || new JsonBasedPluginFinder( this._pluginDir );
     }
 
     public async findAll(): Promise< PluginData[] > {
-        const finder = new JsonBasedPluginFinder( this._pluginDir );
-        const all = await finder.find();
+        const all = await this._finder.find();
         return this.sortByName( all );
     }
 
@@ -68,7 +73,7 @@ export class PluginManager {
      */
     public async load( pluginData: PluginData ): Promise< Plugin > {
 
-        const pluginClassFile = path.resolve( this._pluginDir, pluginData.file );
+        const pluginClassFile: string = await this._finder.classFileFor( pluginData );
 
         // Dynamically include the file
         const pluginClassFileContext = require( pluginClassFile );

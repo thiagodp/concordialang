@@ -1,13 +1,14 @@
+import { resolve } from 'path';
+import { promisify } from 'util';
+import * as fs from 'fs';
+import * as fwalker from 'fwalker';
 import { PluginFinder } from './PluginFinder';
 import { PluginData } from './PluginData';
 import { JsonSchemaValidator } from '../schema/JsonSchemaValidator';
-import * as filewalker from 'filewalker';
-import * as fs from 'fs';
-import * as util from 'util';
 
 /**
  * JSON-based test script plug-in finder.
- * 
+ *
  * @author Thiago Delgado Pinto
  */
 export class JsonBasedPluginFinder implements PluginFinder {
@@ -15,6 +16,7 @@ export class JsonBasedPluginFinder implements PluginFinder {
     constructor( private _dir: string, private _fs: any = fs ) {
     }
 
+    /** @inheritdoc */
     public async find(): Promise< PluginData[] > {
         let files: string[] = await this.readConfigFiles( this._dir );
         let plugins: PluginData[] = [];
@@ -24,6 +26,11 @@ export class JsonBasedPluginFinder implements PluginFinder {
         }
         return plugins;
     };
+
+    /** @inheritdoc */
+    public async classFileFor( pluginData: PluginData ): Promise< string > {
+        return resolve( this._dir, pluginData.file );
+    }
 
     public readConfigFiles = ( dir: string ): Promise< string[] > => {
 
@@ -38,7 +45,7 @@ export class JsonBasedPluginFinder implements PluginFinder {
 
             let files: string[] = [];
 
-            filewalker( dir, options )
+            fwalker( dir, options )
                 .on( 'file', ( relPath, stats, absPath ) => files.push( absPath ) )
                 .on( 'error', ( err ) => reject( err ) )
                 .on( 'done', () => resolve( files ) )
@@ -48,7 +55,7 @@ export class JsonBasedPluginFinder implements PluginFinder {
     };
 
     public async loadConfigFile( filePath: string ): Promise< PluginData > {
-        const read = util.promisify( this._fs.readFile );
+        const read = promisify( this._fs.readFile );
         const content = await read( filePath );
         return this.processConfigFileData( content );
     }

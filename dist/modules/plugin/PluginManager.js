@@ -8,22 +8,21 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const JsonBasedPluginFinder_1 = require("./JsonBasedPluginFinder");
-const path = require("path");
 const childProcess = require("child_process");
+const JsonBasedPluginFinder_1 = require("./JsonBasedPluginFinder");
 /**
  * Plug-in manager
  *
  * @author Thiago Delgado Pinto
  */
 class PluginManager {
-    constructor(_pluginDir) {
+    constructor(_pluginDir, finder) {
         this._pluginDir = _pluginDir;
+        this._finder = finder || new JsonBasedPluginFinder_1.JsonBasedPluginFinder(this._pluginDir);
     }
     findAll() {
         return __awaiter(this, void 0, void 0, function* () {
-            const finder = new JsonBasedPluginFinder_1.JsonBasedPluginFinder(this._pluginDir);
-            const all = yield finder.find();
+            const all = yield this._finder.find();
             return this.sortByName(all);
         });
     }
@@ -71,7 +70,7 @@ class PluginManager {
      */
     load(pluginData) {
         return __awaiter(this, void 0, void 0, function* () {
-            const pluginClassFile = path.resolve(this._pluginDir, pluginData.file);
+            const pluginClassFile = yield this._finder.classFileFor(pluginData);
             // Dynamically include the file
             const pluginClassFileContext = require(pluginClassFile);
             // Create an instance of the class

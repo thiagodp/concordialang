@@ -8,10 +8,11 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const JsonSchemaValidator_1 = require("../schema/JsonSchemaValidator");
-const filewalker = require("filewalker");
+const path_1 = require("path");
+const util_1 = require("util");
 const fs = require("fs");
-const util = require("util");
+const fwalker = require("fwalker");
+const JsonSchemaValidator_1 = require("../schema/JsonSchemaValidator");
 /**
  * JSON-based test script plug-in finder.
  *
@@ -30,7 +31,7 @@ class JsonBasedPluginFinder {
                     matchRegExp: new RegExp('\\.json$')
                 };
                 let files = [];
-                filewalker(dir, options)
+                fwalker(dir, options)
                     .on('file', (relPath, stats, absPath) => files.push(absPath))
                     .on('error', (err) => reject(err))
                     .on('done', () => resolve(files))
@@ -38,6 +39,7 @@ class JsonBasedPluginFinder {
             });
         };
     }
+    /** @inheritdoc */
     find() {
         return __awaiter(this, void 0, void 0, function* () {
             let files = yield this.readConfigFiles(this._dir);
@@ -50,9 +52,15 @@ class JsonBasedPluginFinder {
         });
     }
     ;
+    /** @inheritdoc */
+    classFileFor(pluginData) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return path_1.resolve(this._dir, pluginData.file);
+        });
+    }
     loadConfigFile(filePath) {
         return __awaiter(this, void 0, void 0, function* () {
-            const read = util.promisify(this._fs.readFile);
+            const read = util_1.promisify(this._fs.readFile);
             const content = yield read(filePath);
             return this.processConfigFileData(content);
         });

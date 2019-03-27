@@ -135,7 +135,7 @@ describe( 'ReportConverterTest', () => {
     let createFiles = () => {
 
         // Synchronize the current path (IMPORTANT!)
-        vol.mkdirpSync( dir );
+        vol.mkdirpSync( dir, { recursive: true } ); // mkdirpSync, not mkdirSync !
 
         memfs.writeFileSync( reportFilePath, JSON.stringify( report ) );
         memfs.writeFileSync( pluginConfigPath, JSON.stringify( pluginConfig ) );
