@@ -19,8 +19,8 @@ const JsonSchemaValidator_1 = require("../schema/JsonSchemaValidator");
  * @author Thiago Delgado Pinto
  */
 class JsonBasedPluginFinder {
-    constructor(_dir, _fs = fs) {
-        this._dir = _dir;
+    constructor(_pluginDir, _fs = fs) {
+        this._pluginDir = _pluginDir;
         this._fs = _fs;
         this.readConfigFiles = (dir) => {
             return new Promise((resolve, reject) => {
@@ -42,7 +42,7 @@ class JsonBasedPluginFinder {
     /** @inheritdoc */
     find() {
         return __awaiter(this, void 0, void 0, function* () {
-            let files = yield this.readConfigFiles(this._dir);
+            let files = yield this.readConfigFiles(this._pluginDir);
             let plugins = [];
             for (let file of files) {
                 let plugin = yield this.loadConfigFile(file);
@@ -55,7 +55,7 @@ class JsonBasedPluginFinder {
     /** @inheritdoc */
     classFileFor(pluginData) {
         return __awaiter(this, void 0, void 0, function* () {
-            return path_1.resolve(this._dir, pluginData.file);
+            return path_1.resolve(this._pluginDir, pluginData.file);
         });
     }
     loadConfigFile(filePath) {

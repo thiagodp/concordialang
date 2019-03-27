@@ -13,12 +13,12 @@ import { JsonSchemaValidator } from '../schema/JsonSchemaValidator';
  */
 export class JsonBasedPluginFinder implements PluginFinder {
 
-    constructor( private _dir: string, private _fs: any = fs ) {
+    constructor( private _pluginDir: string, private _fs: any = fs ) {
     }
 
     /** @inheritdoc */
     public async find(): Promise< PluginData[] > {
-        let files: string[] = await this.readConfigFiles( this._dir );
+        let files: string[] = await this.readConfigFiles( this._pluginDir );
         let plugins: PluginData[] = [];
         for ( let file of files ) {
             let plugin = await this.loadConfigFile( file );
@@ -29,7 +29,7 @@ export class JsonBasedPluginFinder implements PluginFinder {
 
     /** @inheritdoc */
     public async classFileFor( pluginData: PluginData ): Promise< string > {
-        return resolve( this._dir, pluginData.file );
+        return resolve( this._pluginDir, pluginData.file );
     }
 
     public readConfigFiles = ( dir: string ): Promise< string[] > => {
