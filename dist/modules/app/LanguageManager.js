@@ -8,7 +8,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const filewalker = require("filewalker");
+const fwalker = require("fwalker");
 const path = require("path");
 const EnglishKeywordDictionary_1 = require("../dict/EnglishKeywordDictionary");
 /**
@@ -59,7 +59,7 @@ class LanguageManager {
                     recursive: false
                 };
                 let files = [];
-                filewalker(this._languageDir, options)
+                fwalker(this._languageDir, options)
                     .on('file', (relPath, stats, absPath) => files.push(relPath))
                     .on('error', (err) => reject(err))
                     .on('done', () => resolve(files))

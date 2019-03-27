@@ -1,9 +1,9 @@
+import * as fwalker from 'fwalker';
+import { createHash } from 'crypto';
 import { FileData, SingleFileProcessor, FileMeta, SingleFileProcessorListener } from './SingleFileProcessor';
 import { FileReadListener, DirectoryReadListener, DirectoryReadResult } from './Listeners';
 import { ProcessedFileData } from './SingleFileProcessor';
 import { Options } from './Options';
-import * as filewalker from 'filewalker';
-import { createHash } from 'crypto';
 
 export class MultiFileProcessor {
 
@@ -44,7 +44,7 @@ export class MultiFileProcessor {
             this._directoryReadListener.directoryReadStarted( dir, target, hasFilesToConsider );
             this._multiFileProcessListener.multiProcessStarted();
 
-            const filewalkerOptions = {
+            const walkerOptions = {
                 maxPending: -1,
                 maxAttempts: 0, // reattempts on error
                 attemptTimeout: 1000,
@@ -52,9 +52,9 @@ export class MultiFileProcessor {
                 recursive: recursive
             };
 
-            let fwalker = filewalker( dir, filewalkerOptions );
+            let walker = fwalker( dir, walkerOptions );
 
-            fwalker
+            walker
                 // .on( 'dir', ( p ) => {
                 //      console.log('dir:  %s', p);
                 // } )
@@ -123,12 +123,12 @@ export class MultiFileProcessor {
 
                     // TO-DO: Remove the comparison and use fwalker.dirs when its Issue 20 is fixed.
                     // https://github.com/oleics/node-filewalker/issues/20
-                    const dirCount = recursive ? fwalker.dirs : 1;
+                    const dirCount = recursive ? walker.dirs || 1 : 1;
 
                     const data = new DirectoryReadResult(
                         dirCount,
-                        fwalker.files,
-                        fwalker.bytes,
+                        walker.files,
+                        walker.bytes,
                         durationMs,
                         errors.length
                         );
@@ -139,7 +139,7 @@ export class MultiFileProcessor {
 
                     durationMs = Date.now() - startTime;
 
-                    this._multiFileProcessListener.multiProcessFinished( fwalker.files, durationMs );
+                    this._multiFileProcessListener.multiProcessFinished( walker.files, durationMs );
 
                     return resolve( new MultiFileProcessedData( processedFiles, errors ) );
                 } )

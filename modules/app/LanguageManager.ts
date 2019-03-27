@@ -1,4 +1,4 @@
-import * as filewalker from 'filewalker';
+import * as fwalker from 'fwalker';
 import * as path from 'path';
 import { EnglishKeywordDictionary } from '../dict/EnglishKeywordDictionary';
 
@@ -65,7 +65,7 @@ export class LanguageManager {
 
             let files: string[] = [];
 
-            filewalker( this._languageDir, options )
+            fwalker( this._languageDir, options )
                 .on( 'file', ( relPath, stats, absPath ) => files.push( relPath ) )
                 .on( 'error', ( err ) => reject( err ) )
                 .on( 'done', () => resolve( files ) )

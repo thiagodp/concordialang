@@ -8,11 +8,11 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+const fwalker = require("fwalker");
+const crypto_1 = require("crypto");
 const SingleFileProcessor_1 = require("./SingleFileProcessor");
 const Listeners_1 = require("./Listeners");
 const SingleFileProcessor_2 = require("./SingleFileProcessor");
-const filewalker = require("filewalker");
-const crypto_1 = require("crypto");
 class MultiFileProcessor {
     constructor(_singleProcessor, _fileReadListener, _fileProcessorListener, _directoryReadListener, _multiFileProcessListener) {
         this._singleProcessor = _singleProcessor;
@@ -38,15 +38,15 @@ class MultiFileProcessor {
                 const startTime = Date.now();
                 this._directoryReadListener.directoryReadStarted(dir, target, hasFilesToConsider);
                 this._multiFileProcessListener.multiProcessStarted();
-                const filewalkerOptions = {
+                const walkerOptions = {
                     maxPending: -1,
                     maxAttempts: 0,
                     attemptTimeout: 1000,
                     matchRegExp: matchRegExp,
                     recursive: recursive
                 };
-                let fwalker = filewalker(dir, filewalkerOptions);
-                fwalker
+                let walker = fwalker(dir, walkerOptions);
+                walker
                     // .on( 'dir', ( p ) => {
                     //      console.log('dir:  %s', p);
                     // } )
@@ -96,12 +96,12 @@ class MultiFileProcessor {
                     let durationMs = Date.now() - startTime;
                     // TO-DO: Remove the comparison and use fwalker.dirs when its Issue 20 is fixed.
                     // https://github.com/oleics/node-filewalker/issues/20
-                    const dirCount = recursive ? fwalker.dirs : 1;
-                    const data = new Listeners_1.DirectoryReadResult(dirCount, fwalker.files, fwalker.bytes, durationMs, errors.length);
+                    const dirCount = recursive ? walker.dirs || 1 : 1;
+                    const data = new Listeners_1.DirectoryReadResult(dirCount, walker.files, walker.bytes, durationMs, errors.length);
                     this._directoryReadListener.directoryReadFinished(data);
                     yield Promise.all(filePromises);
                     durationMs = Date.now() - startTime;
-                    this._multiFileProcessListener.multiProcessFinished(fwalker.files, durationMs);
+                    this._multiFileProcessListener.multiProcessFinished(walker.files, durationMs);
                     return resolve(new MultiFileProcessedData(processedFiles, errors));
                 }))
                     .walk();
