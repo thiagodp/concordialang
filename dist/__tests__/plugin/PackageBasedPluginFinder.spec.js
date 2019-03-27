@@ -16,14 +16,14 @@ describe('PackageBasedPluginFinder', () => {
     const currentDir = path_1.normalize(process.cwd());
     const localModulesDir = path_1.join(currentDir, 'node_modules');
     const globalModulesDir = globalDirs.npm.packages;
-    const PKG_NAME = 'concordialang-fake';
+    const PLUGIN_NAME = 'concordialang-fake';
     const PKG_FILENAME = 'package.json';
-    const localPackageDir = path_1.join(localModulesDir, PKG_NAME);
-    const localPackageFile = path_1.join(localPackageDir, PKG_FILENAME);
-    const globalPackageDir = path_1.join(globalModulesDir, PKG_NAME);
-    const globalPackageFile = path_1.join(globalPackageDir, PKG_FILENAME);
+    const localPluginDir = path_1.join(localModulesDir, PLUGIN_NAME);
+    const localPluginPackageFile = path_1.join(localPluginDir, PKG_FILENAME);
+    const globalPluginDir = path_1.join(globalModulesDir, PLUGIN_NAME);
+    const globalPluginPackageFile = path_1.join(globalPluginDir, PKG_FILENAME);
     const pkg = {
-        name: PKG_NAME,
+        name: PLUGIN_NAME,
         description: 'Fake plugin',
         version: '0.1.0',
         author: {
@@ -49,31 +49,44 @@ describe('PackageBasedPluginFinder', () => {
         memfs_1.vol.reset(); // erase in-memory structure
     });
     it('finds in a local module', () => __awaiter(this, void 0, void 0, function* () {
-        memfs_1.vol.mkdirpSync(localPackageDir);
-        memfs_1.vol.writeFileSync(localPackageFile, JSON.stringify(pkg));
+        memfs_1.vol.mkdirpSync(localPluginDir);
+        memfs_1.vol.writeFileSync(localPluginPackageFile, JSON.stringify(pkg));
         const finder = new PackageBasedPluginFinder_1.PackageBasedPluginFinder(currentDir, memfs_1.fs);
         const pluginData = yield finder.find();
         const first = pluginData[0];
         expect(first.name).toEqual(pkg.name);
     }));
     it('finds in a global module', () => __awaiter(this, void 0, void 0, function* () {
-        memfs_1.vol.mkdirpSync(globalPackageDir);
-        memfs_1.vol.writeFileSync(globalPackageFile, JSON.stringify(pkg));
+        memfs_1.vol.mkdirpSync(globalPluginDir);
+        memfs_1.vol.writeFileSync(globalPluginPackageFile, JSON.stringify(pkg));
         const finder = new PackageBasedPluginFinder_1.PackageBasedPluginFinder(currentDir, memfs_1.fs);
         const pluginData = yield finder.find();
         const first = pluginData[0];
         expect(first.name).toEqual(pkg.name);
     }));
     it('prefers local than global', () => __awaiter(this, void 0, void 0, function* () {
-        memfs_1.vol.mkdirpSync(localPackageDir); // local
-        memfs_1.vol.writeFileSync(localPackageFile, JSON.stringify(pkg)); // local
+        memfs_1.vol.mkdirpSync(localPluginDir); // local
+        memfs_1.vol.writeFileSync(localPluginPackageFile, JSON.stringify(pkg)); // local
         const pkg2 = Object.assign({}, pkg); // copy properties
         pkg2.name += '-global';
-        memfs_1.vol.mkdirpSync(globalPackageDir); // global
-        memfs_1.vol.writeFileSync(globalPackageFile, JSON.stringify(pkg2)); // global
+        memfs_1.vol.mkdirpSync(globalPluginDir); // global
+        memfs_1.vol.writeFileSync(globalPluginPackageFile, JSON.stringify(pkg2)); // global
         const finder = new PackageBasedPluginFinder_1.PackageBasedPluginFinder(currentDir, memfs_1.fs);
         const pluginData = yield finder.find();
         const first = pluginData[0];
         expect(first.name).toEqual(pkg.name);
+    }));
+    it('returns class file with path', () => __awaiter(this, void 0, void 0, function* () {
+        memfs_1.vol.mkdirpSync(localPluginDir); // local
+        memfs_1.vol.writeFileSync(localPluginPackageFile, JSON.stringify(pkg)); // local
+        const pkg2 = Object.assign({}, pkg); // copy properties
+        pkg2.name += '-global';
+        memfs_1.vol.mkdirpSync(globalPluginDir); // global
+        memfs_1.vol.writeFileSync(globalPluginPackageFile, JSON.stringify(pkg2)); // global
+        const finder = new PackageBasedPluginFinder_1.PackageBasedPluginFinder(currentDir, memfs_1.fs);
+        const pluginData = yield finder.find();
+        const first = pluginData[0];
+        const content = path_1.join(localPluginDir, pkg.concordiaPluginData.file);
+        expect(first.file).toEqual(content);
     }));
 });

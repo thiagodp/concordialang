@@ -44,12 +44,19 @@ class PackageBasedPluginFinder {
     /** @inheritdoc */
     classFileFor(pluginData) {
         return __awaiter(this, void 0, void 0, function* () {
-            return path_1.resolve(this._appPath, pluginData.file);
+            // The property pluginData.file is changed when the file is loaded,
+            // so it have the full path.
+            return pluginData.file;
         });
     }
+    /**
+     * Finds Concordia plug-ins and returns their data.
+     *
+     * @param dir Directory to find.
+     */
     findOnDir(dir) {
         return __awaiter(this, void 0, void 0, function* () {
-            const packageDirectories = yield this.findPluginPackageDirectories(dir);
+            const packageDirectories = yield this.detectPluginPackageDirectories(dir);
             const conversor = new PackageToPluginData_1.PackageToPluginData(this.PACKAGE_PROPERTY);
             const readFile = util_1.promisify(this._fs.readFile);
             let pluginData = [];
@@ -68,12 +75,24 @@ class PackageBasedPluginFinder {
                     // continue; // Cannot convert to plugin data
                     throw new Error(`Cannot convert package file "${pkgFile}" to plugin data. `);
                 }
+                // Modifies the `file` property to contain the full path
+                if (data.file.indexOf(data.name) < 0) {
+                    data.file = path_1.join(dir, data.name, data.file);
+                }
+                else {
+                    data.file = path_1.join(dir, data.file);
+                }
                 pluginData.push(data);
             }
             return pluginData;
         });
     }
-    findPluginPackageDirectories(dir) {
+    /**
+     * Detects Concordia plug-ins' directories, i.e.,  starting with `concordialang-'.
+     *
+     * @param dir Directory to find.
+     */
+    detectPluginPackageDirectories(dir) {
         return new Promise((resolve, reject) => {
             let directories = [];
             const dirRegExp = new RegExp(this.PLUGIN_PACKAGE_PREFIX);

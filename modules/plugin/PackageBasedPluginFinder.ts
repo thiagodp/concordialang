@@ -44,13 +44,19 @@ export class PackageBasedPluginFinder implements PluginFinder {
 
     /** @inheritdoc */
     public async classFileFor( pluginData: PluginData ): Promise< string > {
-        return resolve( this._appPath, pluginData.file );
+        // The property pluginData.file is changed when the file is loaded,
+        // so it have the full path.
+        return pluginData.file;
     }
 
-
+    /**
+     * Finds Concordia plug-ins and returns their data.
+     *
+     * @param dir Directory to find.
+     */
     private async findOnDir( dir: string ): Promise< PluginData[] > {
 
-        const packageDirectories: string[] = await this.findPluginPackageDirectories( dir );
+        const packageDirectories: string[] = await this.detectPluginPackageDirectories( dir );
         const conversor = new PackageToPluginData( this.PACKAGE_PROPERTY );
 
         const readFile = promisify( this._fs.readFile );
@@ -73,6 +79,13 @@ export class PackageBasedPluginFinder implements PluginFinder {
                 throw new Error( `Cannot convert package file "${pkgFile}" to plugin data. ` );
             }
 
+            // Modifies the `file` property to contain the full path
+            if ( data.file.indexOf( data.name ) < 0 ) {
+                data.file = join( dir, data.name, data.file );
+            } else {
+                data.file = join( dir, data.file );
+            }
+
             pluginData.push( data );
         }
 
@@ -80,7 +93,12 @@ export class PackageBasedPluginFinder implements PluginFinder {
     }
 
 
-    private findPluginPackageDirectories( dir: string ): Promise< string[] > {
+    /**
+     * Detects Concordia plug-ins' directories, i.e.,  starting with `concordialang-'.
+     *
+     * @param dir Directory to find.
+     */
+    private detectPluginPackageDirectories( dir: string ): Promise< string[] > {
 
         return new Promise< string[] >( ( resolve, reject ) => {
 
