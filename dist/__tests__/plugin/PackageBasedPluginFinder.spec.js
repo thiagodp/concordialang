@@ -30,10 +30,10 @@ describe('PackageBasedPluginFinder', () => {
             name: 'Bob',
             email: 'bob@fake.com'
         },
+        main: 'path/to/main.js',
         concordiaPluginData: {
             isFake: true,
             targets: ['foo', 'bar'],
-            file: 'path/to/main.js',
             class: 'Main',
             install: 'npm --version',
             uninstall: 'npm --version',
@@ -89,7 +89,7 @@ describe('PackageBasedPluginFinder', () => {
         const pluginData = yield finder.find();
         expect(pluginData).toHaveLength(2);
         const first = pluginData[0];
-        const content = path_1.join(localPluginDir, pkg.concordiaPluginData.file);
+        const content = path_1.join(localPluginDir, pkg.main);
         expect(first.file).toEqual(content);
     }));
     it('ignores a package that is not a plugin', () => __awaiter(this, void 0, void 0, function* () {
