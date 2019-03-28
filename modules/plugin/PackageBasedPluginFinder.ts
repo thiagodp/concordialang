@@ -20,7 +20,7 @@ export class PackageBasedPluginFinder implements PluginFinder {
     public readonly PACKAGE_PROPERTY: string = 'concordiaPluginData';
 
     constructor(
-        private readonly _appPath: string,
+        private readonly _processPath: string,
         private readonly _fs: any = fs
         ) {
     }
@@ -29,7 +29,7 @@ export class PackageBasedPluginFinder implements PluginFinder {
     /** @inheritdoc */
     public async find(): Promise< PluginData[] > {
 
-        const localPackagesDir = resolve( this._appPath, this.NODE_MODULES );
+        const localPackagesDir = resolve( this._processPath, this.NODE_MODULES );
         const localPluginData: PluginData[] = await this.findOnDir( localPackagesDir );
 
         const globalPackagesDir = globalDirs.npm.packages;

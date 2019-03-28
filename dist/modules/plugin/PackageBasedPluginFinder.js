@@ -20,8 +20,8 @@ const PackageToPluginData_1 = require("./PackageToPluginData");
  * @author Thiago Delgado Pinto
  */
 class PackageBasedPluginFinder {
-    constructor(_appPath, _fs = fs) {
-        this._appPath = _appPath;
+    constructor(_processPath, _fs = fs) {
+        this._processPath = _processPath;
         this._fs = _fs;
         this.PLUGIN_PACKAGE_PREFIX = 'concordialang-';
         this.NODE_MODULES = 'node_modules';
@@ -31,7 +31,7 @@ class PackageBasedPluginFinder {
     /** @inheritdoc */
     find() {
         return __awaiter(this, void 0, void 0, function* () {
-            const localPackagesDir = path_1.resolve(this._appPath, this.NODE_MODULES);
+            const localPackagesDir = path_1.resolve(this._processPath, this.NODE_MODULES);
             const localPluginData = yield this.findOnDir(localPackagesDir);
             const globalPackagesDir = globalDirs.npm.packages;
             const globalPluginData = yield this.findOnDir(globalPackagesDir);
