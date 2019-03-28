@@ -6,11 +6,24 @@ class PluginDrawer {
         this._cli = _cli;
     }
     drawPluginList(plugins) {
+        if (plugins.length < 1) {
+            this.write(this._cli.symbolInfo, 'No plugins found. Try to install a plugin with NPM.');
+            return;
+        }
+        // const highlight = this._cli.colorHighlight;
+        // const format = "%-20s %-8s %-22s"; // util.format does not support padding :(
+        // this.write( highlight( sprintf( format, 'Name', 'Version', 'Description' ) ) );
+        // for ( let p of plugins ) {
+        //     this.write( sprintf( format, p.name, p.version, p.description ) );
+        // }
         const highlight = this._cli.colorHighlight;
-        const format = "%-20s %-8s %-22s"; // util.format does not support padding :(
-        this.write(highlight(sprintf_js_1.sprintf(format, 'Name', 'Version', 'Description')));
+        const format = "%-15s";
+        this.write(this._cli.symbolInfo, highlight('Available Plugins:'));
         for (let p of plugins) {
-            this.write(sprintf_js_1.sprintf(format, p.name, p.version, p.description));
+            this.write(' ');
+            this.write(highlight(sprintf_js_1.sprintf(format, '  Name')), p.name);
+            this.write(highlight(sprintf_js_1.sprintf(format, '  Version')), p.version);
+            this.write(highlight(sprintf_js_1.sprintf(format, '  Description')), p.description);
         }
     }
     drawSinglePlugin(p) {
