@@ -1,3 +1,8 @@
+import { writeFile } from 'fs';
+import { promisify } from 'util';
+import * as meow from 'meow';
+import * as updateNotifier from 'update-notifier';
+import Graph = require( 'graph.js/dist/graph.full.js' );
 import { UI } from './UI';
 import { Options } from "./Options";
 import { PluginController } from '../plugin/PluginController';
@@ -10,18 +15,14 @@ import { PluginManager } from '../plugin/PluginManager';
 import { Plugin } from '../plugin/Plugin';
 import { TestScriptExecutionOptions, TestScriptExecutionResult } from '../testscript/TestScriptExecution';
 import { CliScriptExecutionReporter } from './CliScriptExecutionReporter';
-import Graph = require( 'graph.js/dist/graph.full.js' );
 import { ATSGenController } from './ATSGenController';
 import { TestScriptGenerationOptions } from '../testscript/TestScriptOptions';
 import { CliHelp } from './CliHelp';
 import { OptionsHandler } from './OptionsHandler';
-import * as meow from 'meow';
-import * as updateNotifier from 'update-notifier';
 import { AbstractTestScript } from '../testscript/AbstractTestScript';
 import { TestResultAnalyzer } from '../testscript/TestResultAnalyzer';
 import { GuidedConfig } from './GuidedConfig';
-import { writeFile } from 'fs';
-import { promisify } from 'util';
+import { PackageBasedPluginFinder } from '../plugin/PackageBasedPluginFinder';
 
 /**
  * Application controller
@@ -107,7 +108,9 @@ export class AppController {
         }
 
         let pluginData: PluginData = null;
-        let pluginManager: PluginManager = new PluginManager( options.pluginDir );
+        // let pluginManager: PluginManager = new PluginManager( options.pluginDir );
+        let pluginManager: PluginManager = new PluginManager(
+            options.pluginDir, new PackageBasedPluginFinder( options.processPath ) );
         let plugin: Plugin = null;
 
         if ( options.somePluginOption() ) {

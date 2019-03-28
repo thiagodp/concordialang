@@ -2,6 +2,7 @@ import { PluginDrawer } from "./PluginDrawer";
 import { Options } from "../app/Options";
 import { PluginManager } from "./PluginManager";
 import { CLI } from "../app/CLI";
+import { PackageBasedPluginFinder } from "./PackageBasedPluginFinder";
 
 /**
  * Plugin controller
@@ -18,7 +19,8 @@ export class PluginController {
 
     public process = async ( options: Options ): Promise< boolean > => {
 
-        const pm = new PluginManager( options.pluginDir );
+        // const pm = new PluginManager( options.pluginDir );
+        const pm = new PluginManager( options.pluginDir, new PackageBasedPluginFinder( options.processPath ) );
 
         if ( options.pluginList ) {
             try {

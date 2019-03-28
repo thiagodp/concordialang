@@ -10,6 +10,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const PluginDrawer_1 = require("./PluginDrawer");
 const PluginManager_1 = require("./PluginManager");
+const PackageBasedPluginFinder_1 = require("./PackageBasedPluginFinder");
 /**
  * Plugin controller
  *
@@ -18,7 +19,8 @@ const PluginManager_1 = require("./PluginManager");
 class PluginController {
     constructor(cli) {
         this.process = (options) => __awaiter(this, void 0, void 0, function* () {
-            const pm = new PluginManager_1.PluginManager(options.pluginDir);
+            // const pm = new PluginManager( options.pluginDir );
+            const pm = new PluginManager_1.PluginManager(options.pluginDir, new PackageBasedPluginFinder_1.PackageBasedPluginFinder(options.processPath));
             if (options.pluginList) {
                 try {
                     this._drawer.drawPluginList(yield pm.findAll());

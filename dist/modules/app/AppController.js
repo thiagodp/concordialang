@@ -8,6 +8,10 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+const fs_1 = require("fs");
+const util_1 = require("util");
+const meow = require("meow");
+const updateNotifier = require("update-notifier");
 const UI_1 = require("./UI");
 const PluginController_1 = require("../plugin/PluginController");
 const CLI_1 = require("./CLI");
@@ -20,12 +24,9 @@ const ATSGenController_1 = require("./ATSGenController");
 const TestScriptOptions_1 = require("../testscript/TestScriptOptions");
 const CliHelp_1 = require("./CliHelp");
 const OptionsHandler_1 = require("./OptionsHandler");
-const meow = require("meow");
-const updateNotifier = require("update-notifier");
 const TestResultAnalyzer_1 = require("../testscript/TestResultAnalyzer");
 const GuidedConfig_1 = require("./GuidedConfig");
-const fs_1 = require("fs");
-const util_1 = require("util");
+const PackageBasedPluginFinder_1 = require("../plugin/PackageBasedPluginFinder");
 /**
  * Application controller
  *
@@ -96,7 +97,8 @@ class AppController {
                 return true;
             }
             let pluginData = null;
-            let pluginManager = new PluginManager_1.PluginManager(options.pluginDir);
+            // let pluginManager: PluginManager = new PluginManager( options.pluginDir );
+            let pluginManager = new PluginManager_1.PluginManager(options.pluginDir, new PackageBasedPluginFinder_1.PackageBasedPluginFinder(options.processPath));
             let plugin = null;
             if (options.somePluginOption()) {
                 let pluginController = new PluginController_1.PluginController(cli);
