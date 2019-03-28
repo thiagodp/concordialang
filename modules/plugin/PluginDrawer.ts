@@ -35,7 +35,7 @@ export class PluginDrawer {
         const highlight = this._cli.colorHighlight;
         const format = "  - %-12s: %s"; // util.format does not support padding :(
         const authors = p.authors.map( ( a, idx ) => 0 === idx ? a : sprintf( '%-17s %s', '', a ) );
-        this.write( 'Plugin ' + highlight( p.name ) );
+        this.write( this._cli.symbolInfo, 'Plugin ' + highlight( p.name ) );
         this.write( sprintf( format, 'version', p.version ) );
         this.write( sprintf( format, 'description', p.description ) );
         this.write( sprintf( format, 'targets', p.targets.join( ', ' ) ) );
