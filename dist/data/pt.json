@@ -104,7 +104,7 @@
 
             "ui_action": {
                 "accept": [ "aceito" ],
-                "amOn": [ "estou" ],
+                "amOn": [ "estou", "visito" ],
                 "append": [ "adiciono", "acrescento", "insiro" ],
                 "attachFile": [ "anexo", "adiciono o arquivo", "sobrescrevo o arquivo" ],
                 "cancel": [ "cancelo", "rejeito" ],

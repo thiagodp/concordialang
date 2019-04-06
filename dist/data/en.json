@@ -58,7 +58,7 @@
 
             "ui_action": {
                 "accept": [ "accept" ],
-                "amOn": [ "am on", "am in", "am at" ],
+                "amOn": [ "am on", "am in", "am at", "visit" ],
                 "append": [ "append", "add", "insert" ],
                 "attachFile": [ "attach the file", "add the file", "insert the file", "overwrite the file" ],
                 "cancel": [ "cancel", "reject", "dismiss" ],
@@ -206,14 +206,14 @@
                 "id": [ "id", "identification", "identificator" ],
                 "type": [ "type" ],
                 "editable": [ "editable" ],
-                "datatype": [ "data type" ],
+                "datatype": [ "data type", "datatype" ],
                 "value": [ "value" ],
-                "minlength": [ "min length", "minimum length" ],
-                "maxlength": [ "max length", "maximum length" ],
-                "minvalue": [ "min value", "minimum value" ],
-                "maxvalue": [ "max value", "maximum value" ],
+                "minlength": [ "min length", "minimum length", "minlength" ],
+                "maxlength": [ "max length", "maximum length", "maxlength" ],
+                "minvalue": [ "min value", "minimum value", "minvalue" ],
+                "maxvalue": [ "max value", "maximum value", "maxvalue" ],
                 "format": [ "format" ],
-                "required": [ "required", "mandatory" ]
+                "required": [ "required", "mandatory", "obligatory", "necessary" ]
             },
 
             "ui_connector": {

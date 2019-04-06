@@ -12,6 +12,7 @@ import { NLPTrainer } from './NLPTrainer';
 import { NLPResultProcessor, NodeSentenceRecognizer } from './NodeSentenceRecognizer';
 import { RuleBuilder } from './RuleBuilder';
 import { DEFAULT_UI_PROPERTY_SYNTAX_RULE, UI_PROPERTY_SYNTAX_RULES } from './SyntaxRules';
+import { UIPropertyTypes } from '../util/UIPropertyTypes';
 
 /**
  * UI element property sentence recognizer.
@@ -108,6 +109,13 @@ export class UIPropertyRecognizer {
                     item.value = uiv;
                     break;
                 }
+            }
+
+            // A boolean property without value ?
+            const booleanProperties: string[] = [ UIPropertyTypes.REQUIRED, UIPropertyTypes.EDITABLE ];
+            if ( booleanProperties.indexOf( property ) >= 0 &&
+                ! r.entities.find( e => e.entity === Entities.BOOL_VALUE ) ) {
+                item.value = new EntityValue( Entities.BOOL_VALUE, true );
             }
 
             return item;
