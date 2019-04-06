@@ -58,7 +58,7 @@
 
             "ui_action": {
                 "accept": [ "accept" ],
-                "amOn": [ "am on", "am in", "am at" ],
+                "amOn": [ "am on", "am in", "am at", "visit" ],
                 "append": [ "append", "add", "insert" ],
                 "attachFile": [ "attach the file", "add the file", "insert the file", "overwrite the file" ],
                 "cancel": [ "cancel", "reject", "dismiss" ],
