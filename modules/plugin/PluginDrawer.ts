@@ -2,7 +2,11 @@ import { CLI } from "../app/CLI";
 import { PluginData } from "./PluginData";
 import { sprintf } from 'sprintf-js';
 
-
+/**
+ * Draws plug-in related data.
+ *
+ * @author Thiago Delgado Pinto
+ */
 export class PluginDrawer {
 
     constructor( private _cli: CLI ) {

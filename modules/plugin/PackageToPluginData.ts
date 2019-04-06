@@ -1,6 +1,10 @@
 import { PluginData } from "./PluginData";
 
-
+/**
+ * Converts data from a NPM package file into Concordia Plugin Data.
+ *
+ * @author Thiago Delgado Pinto
+ */
 export class PackageToPluginData {
 
     constructor( private readonly _packageProperty: string ) {
