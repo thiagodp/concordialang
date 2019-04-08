@@ -1,6 +1,6 @@
 # Concordia Documentation
 
-- [Overview of the language](language/en.md)
+- [Overview of the Language](language/en.md)
 - [Available Actions](actions.md)
 - [Example](example.md)
 - [Configuration file](config.md) 🔥
@@ -8,7 +8,6 @@
 - [Generated Test Cases](test-cases.md)
 - [Plug-ins](../plugins/README.md)
 - [Roadmap](roadmap.md)
-- [Known limitations](limitations.md)
 - [FAQ](faq.md)
 
 ## Technical notes
