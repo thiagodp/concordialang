@@ -25,6 +25,8 @@ Sanitize files such as:
 Use [this sanitizer](https://github.com/parshap/node-sanitize-filename)
 
 
+## Language
+
 ### Use UI Element Properties on value entities
 
 Example:
@@ -91,6 +93,38 @@ Table: Some Table
 | Bob   | 21  |
 | Suzan | 25  |
 ```
+
+### Allow to declare more than one property of each type 
+
+> Is it really needed? (to-do: analyze)
+
+*E.g.*:
+  - `- value is equal to {SomeElement}`
+  - `- value is not equal to {OtherElement}`
+
+
+### Improvements to Queries
+
+- Allow queries to be written in multiple lines
+
+  - Current:  *E.g.*, `- value comes from "SELECT name FROM [MyDB].profession"`
+  - Proposal:
+  ```sql
+  - value comes from "SELECT name 
+                      FROM [MyDB].profession"`
+  ```
+
+- Allow to use more than one `Database` entity in the same query
+
+- Allow to use more than one `Table` entity in the same query
+
+
+## Generated Data Test Cases
+
+- Since we are simulating min value and max value when they come from a QUERY or a UI_ELEMENT, in order to not generate their values, the data test VALUE_ZERO will be considered:
+  - INVALID when min is defined and greater than 0 OR when max is defined and less than 0
+  - INCOMPATIBLE in any other case when min or max needs to be faked
+
 
 ## Performance
 
