@@ -1,6 +1,6 @@
 # Documentação do Concordia
 
-- [Visão geral da linguagem](language/pt.md)
+- [Visão geral da Linguagem](language/pt.md)
 - [Ações](actions-pt.md)
 - [Exemplo](example-pt.md)
 - [Arquivo de configuração](config.md) *(inglês)* 🔥
@@ -8,7 +8,6 @@
 - [Plug-ins](../plugins/README.md) *(inglês)*
 - [Casos de Teste gerados](test-cases-pt.md)
 - [Roadmap](roadmap.md) *(inglês)*
-- [Limitações conhecidas](limitations.md) *(inglês)*
 - [FAQ](faq.md) *(inglês)*
 
 ## Anotações técnicas
