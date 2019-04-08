@@ -26,8 +26,8 @@ A *Linguagem Concordia* é uma meta linguagem de especificação [Ágil](https:/
 
 ## Conteúdo
 
-- [Últimas novidades](https://github.com/thiagodp/concordialang/releases)
-- [Documentação](docs/readme-pt.md)
+- [Últimas novidades](https://github.com/thiagodp/concordialang/releases) 🔥
+- [Documentação](docs/readme-pt.md) 📖
 - [Por que usar Concordia?](#por-que-usar-concordia)
 - [Instalação](#instalação)
 - [Execução](#execução)
