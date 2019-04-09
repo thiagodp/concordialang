@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const req_1 = require("concordialang-types/req");
-const RuntimeException_1 = require("modules/req/RuntimeException");
+const RuntimeException_1 = require("../req/RuntimeException");
 const DatabaseWrapper_1 = require("./DatabaseWrapper");
 /**
  * Checks all the connections of a specification.

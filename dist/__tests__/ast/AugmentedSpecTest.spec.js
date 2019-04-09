@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const path_1 = require("path");
-const AugmentedSpec_1 = require("modules/ast/AugmentedSpec");
+const AugmentedSpec_1 = require("../../modules/ast/AugmentedSpec");
 const SimpleCompiler_1 = require("../../modules/util/SimpleCompiler");
 describe('AugmentedSpecTest', () => {
     let spec; // under test

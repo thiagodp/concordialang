@@ -1,6 +1,6 @@
 import { Database } from 'concordialang-types/ast';
 import { DatabaseInterface, LocatedException, ConnectionCheckResult, ConnectionResult } from 'concordialang-types/req';
-import { RuntimeException } from 'modules/req/RuntimeException';
+import { RuntimeException } from '../req/RuntimeException';
 import { DatabaseWrapper } from './DatabaseWrapper';
 import { AugmentedSpec } from '../ast/AugmentedSpec';
 
