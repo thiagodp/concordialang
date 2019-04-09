@@ -1,11 +1,10 @@
+import { resolve } from 'path';
+import { Document, Table } from 'concordialang-types/ast';
 import { InMemoryTableWrapper } from '../../modules/db/InMemoryTableWrapper';
-import { Table } from '../../modules/ast/Table';
 import { Parser } from '../../modules/parser/Parser';
 import { Lexer } from '../../modules/lexer/Lexer';
-import { Document } from '../../modules/ast/Document';
 import { Options } from '../../modules/app/Options';
 import { LexerBuilder } from '../../modules/lexer/LexerBuilder';
-import { resolve } from 'path';
 
 /**
  * @author Thiago Delgado Pinto

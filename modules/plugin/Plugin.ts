@@ -1,6 +1,9 @@
-import { AbstractTestScript } from '../testscript/AbstractTestScript';
-import { TestScriptGenerationOptions } from "../testscript/TestScriptOptions";
-import { TestScriptExecutionResult, TestScriptExecutionOptions } from "../testscript/TestScriptExecution";
+import {
+    AbstractTestScript,
+    TestScriptGenerationOptions,
+    TestScriptExecutionResult,
+    TestScriptExecutionOptions
+} from 'concordialang-types/testscript';
 
 /**
  * Test script plugin.

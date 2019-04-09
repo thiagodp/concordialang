@@ -1,7 +1,8 @@
+import { ListItemLexer } from '../../modules/lexer/ListItemLexer';
+
 /**
  * @author Thiago Delgado Pinto
  */
-import { ListItemLexer } from '../../modules/lexer/ListItemLexer';
 describe( 'ListItemLexerTest', () => {
 
     let myNodeType = 'myType';

@@ -1,12 +1,10 @@
+import { Feature, Document, UIElement } from "concordialang-types/ast";
 import { DocumentUtil } from "../../modules/util/DocumentUtil";
-import { Feature } from "../../modules/ast/Feature";
-import { Document } from "../../modules/ast/Document";
-import { UIElement } from "../../modules/ast/UIElement";
+
 
 describe( 'DocumentUtilTest', () => {
 
     const util = new DocumentUtil(); // under test (no state)
-
 
     it( 'maps ui element variables from a document', () => {
 

@@ -1,5 +1,5 @@
+import { VariantBackground } from "concordialang-types/ast";
 import { NodeParser } from "./NodeParser";
-import { VariantBackground } from "../ast/VariantBackground";
 import { ParsingContext } from "./ParsingContext";
 import { NodeIterator } from './NodeIterator';
 import { SyntaticException } from "../req/SyntaticException";

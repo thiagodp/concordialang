@@ -1,6 +1,5 @@
 import * as deepcopy from 'deepcopy';
-
-import { EntityValueType } from '../ast/UIElement';
+import { EntityValueType } from 'concordialang-types/ast';
 import { isDefined } from '../util/TypeChecking';
 import { ValueType, ValueTypeDetector } from '../util/ValueTypeDetector';
 import { DataGeneratorBuilder } from './DataGeneratorBuilder';

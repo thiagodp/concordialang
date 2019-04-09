@@ -1,7 +1,7 @@
+import { Document } from 'concordialang-types/ast';
 import { FeatureSSA } from '../../modules/semantic/FeatureSSA';
 import { Parser } from '../../modules/parser/Parser';
 import { Lexer } from '../../modules/lexer/Lexer';
-import { Document } from '../../modules/ast/Document';
 import { AugmentedSpec } from '../../modules/ast/AugmentedSpec';
 import { Options } from '../../modules/app/Options';
 import { LexerBuilder } from '../../modules/lexer/LexerBuilder';

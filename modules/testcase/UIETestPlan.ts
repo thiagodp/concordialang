@@ -1,6 +1,6 @@
+import { Step } from "concordialang-types/ast";
 import { DataTestCase } from "../testdata/DataTestCase";
 import { DTCAnalysisResult } from "../testdata/DataTestCaseAnalyzer";
-import { Step } from "../ast/Step";
 
 export class UIETestPlan {
 

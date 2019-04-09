@@ -1,10 +1,10 @@
+import { Tag } from "concordialang-types/ast";
 import { NodeIterator } from './NodeIterator';
-import { Tag } from "../ast/Tag";
 import { NodeTypes } from "../req/NodeTypes";
 
 /**
  * Tag collector
- * 
+ *
  * @author Thiago Delgado Pinto
  */
 export class TagCollector {
@@ -14,6 +14,6 @@ export class TagCollector {
         while ( itClone.hasPrior() && itClone.spyPrior().nodeType === NodeTypes.TAG ) {
             let tag = itClone.prior() as Tag;
             targetTags.unshift( tag ); // Inserts in the beginning
-        }        
+        }
     }
 }

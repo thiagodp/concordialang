@@ -2,8 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const arrayDiff = require("arr-diff");
 const enumUtil = require("enum-util");
-const Entities_1 = require("../nlp/Entities");
-const NLPResult_1 = require("../nlp/NLPResult");
+const nlp_1 = require("concordialang-types/nlp");
 const TypeChecking_1 = require("../util/TypeChecking");
 const UIElementPropertyExtractor_1 = require("../util/UIElementPropertyExtractor");
 const UIPropertyTypes_1 = require("../util/UIPropertyTypes");
@@ -37,7 +36,7 @@ exports.DTCAnalysisData = DTCAnalysisData;
 class DataTestCaseAnalyzer {
     constructor(seed) {
         this._uiePropExtractor = new UIElementPropertyExtractor_1.UIElementPropertyExtractor();
-        this._nlpUtil = new NLPResult_1.NLPUtil();
+        this._nlpUtil = new nlp_1.NLPUtil();
         this._dataGenBuilder = new DataGeneratorBuilder_1.DataGeneratorBuilder(seed);
     }
     /**
@@ -153,7 +152,7 @@ class DataTestCaseAnalyzer {
                     case DataTestCase_1.DataTestCase.REQUIRED_FILLED: {
                         // Check whether the value has a reference to another UI Element
                         if (TypeChecking_1.isDefined(pValue)) {
-                            const hasQuery = this._nlpUtil.hasEntityNamed(Entities_1.Entities.QUERY, pValue.nlpResult);
+                            const hasQuery = this._nlpUtil.hasEntityNamed(nlp_1.Entities.QUERY, pValue.nlpResult);
                             if (hasQuery) {
                                 // return new Pair( DTCAnalysisResult.INVALID, pRequired.otherwiseSentences || [] );
                                 return incompatiblePair;
@@ -181,12 +180,12 @@ class DataTestCaseAnalyzer {
                 if (!pValue) {
                     return incompatiblePair;
                 }
-                const hasValue = this._nlpUtil.hasEntityNamed(Entities_1.Entities.VALUE, pValue.nlpResult);
-                const hasConstant = this._nlpUtil.hasEntityNamed(Entities_1.Entities.CONSTANT, pValue.nlpResult);
+                const hasValue = this._nlpUtil.hasEntityNamed(nlp_1.Entities.VALUE, pValue.nlpResult);
+                const hasConstant = this._nlpUtil.hasEntityNamed(nlp_1.Entities.CONSTANT, pValue.nlpResult);
                 if (!hasValue
                     && !hasConstant
-                    && !this._nlpUtil.hasEntityNamed(Entities_1.Entities.QUERY, pValue.nlpResult)
-                    && !this._nlpUtil.hasEntityNamed(Entities_1.Entities.VALUE_LIST, pValue.nlpResult)) {
+                    && !this._nlpUtil.hasEntityNamed(nlp_1.Entities.QUERY, pValue.nlpResult)
+                    && !this._nlpUtil.hasEntityNamed(nlp_1.Entities.VALUE_LIST, pValue.nlpResult)) {
                     return incompatiblePair;
                 }
                 const hasNegation = this.hasNegation(pValue); // e.g., "value NOT IN ..."
@@ -418,7 +417,7 @@ class DataTestCaseAnalyzer {
             return [null, false];
         }
         switch (uip.value.entity) {
-            case Entities_1.Entities.CONSTANT: {
+            case nlp_1.Entities.CONSTANT: {
                 const constant = uip.value.references[0];
                 if (TypeChecking_1.isDefined(constant)) {
                     return [ValueTypeDetector_1.adjustValueToTheRightType(constant.value), false];
@@ -426,15 +425,15 @@ class DataTestCaseAnalyzer {
                 return [null, false];
             }
             // case Entities.COMPUTATION: ; // next
-            case Entities_1.Entities.QUERY: ; // next
-            case Entities_1.Entities.UI_ELEMENT: {
+            case nlp_1.Entities.QUERY: ; // next
+            case nlp_1.Entities.UI_ELEMENT: {
                 return [null, true]; // << FAKED !
             }
             default: return [uip.value.value, false];
         }
     }
     hasNegation(uip) {
-        return this._nlpUtil.hasEntityNamed(Entities_1.Entities.UI_CONNECTOR_MODIFIER, uip.nlpResult);
+        return this._nlpUtil.hasEntityNamed(nlp_1.Entities.UI_CONNECTOR_MODIFIER, uip.nlpResult);
     }
 }
 exports.DataTestCaseAnalyzer = DataTestCaseAnalyzer;

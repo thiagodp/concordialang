@@ -8,7 +8,7 @@ const NodeTypes_1 = require("../../modules/req/NodeTypes");
 describe('ConstantBlockLexerTest', () => {
     let words = ['constants'];
     let lexer = new ConstantBlockLexer_1.ConstantBlockLexer(words); // under test
-    // IMPORTANT: Since the lexer under test inherits from another lexer and 
+    // IMPORTANT: Since the lexer under test inherits from another lexer and
     // there are tests for the parent class, few additional tests are necessary.
     it('detects in the correct position', () => {
         let line = '\tConstants\t:\t';

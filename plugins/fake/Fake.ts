@@ -1,7 +1,10 @@
+import {
+    AbstractTestScript,
+    TestScriptGenerationOptions,
+    TestScriptExecutionOptions,
+    TestScriptExecutionResult
+} from 'concordialang-types/testscript';
 import { Plugin } from '../../modules/plugin/Plugin';
-import { AbstractTestScript } from '../../modules/testscript/AbstractTestScript';
-import { TestScriptGenerationOptions } from '../../modules/testscript/TestScriptOptions';
-import { TestScriptExecutionOptions, TestScriptExecutionResult } from '../../modules/testscript/TestScriptExecution';
 
 /**
  * Fake plugin.

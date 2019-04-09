@@ -1,13 +1,8 @@
 import * as deepcopy from 'deepcopy';
-
-import { Step } from '../ast/Step';
-import { Tag, tagsWithAnyOfTheNames } from '../ast/Tag';
-import { Variant } from '../ast/Variant';
-import { State } from '../ast/VariantLike';
+import { Step, Tag, tagsWithAnyOfTheNames, Variant, State } from 'concordialang-types/ast';
+import { Entities, NLPUtil } from 'concordialang-types/nlp';
 import { KeywordDictionary } from '../dict/KeywordDictionary';
 import { LanguageContentLoader } from '../dict/LanguageContentLoader';
-import { Entities } from '../nlp/Entities';
-import { NLPUtil } from '../nlp/NLPResult';
 import { NodeTypes } from '../req/NodeTypes';
 import { RuntimeException } from '../req/RuntimeException';
 import { CombinationStrategy } from '../selection/CombinationStrategy';

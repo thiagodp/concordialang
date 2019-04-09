@@ -1,5 +1,4 @@
-import { Document } from '../ast/Document';
-import { Node } from '../ast/Node';
+import { Document, Node } from 'concordialang-types/ast';
 import { NodeTypes } from '../req/NodeTypes';
 import { AfterAllParser } from './AfterAllParser';
 import { AfterEachScenarioParser } from './AfterEachScenarioParser';

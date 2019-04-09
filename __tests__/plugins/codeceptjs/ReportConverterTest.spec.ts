@@ -1,7 +1,7 @@
-import { ReportConverter } from '../../../plugins/codeceptjs/ReportConverter';
-import { TestScriptExecutionResult, TestSuiteResult, TestMethodResult } from '../../../modules/testscript/TestScriptExecution';
 import { join, normalize } from 'path';
 import { vol, fs as memfs } from 'memfs';
+import { TestScriptExecutionResult, TestSuiteResult, TestMethodResult } from 'concordialang-types/testscript';
+import { ReportConverter } from '../../../plugins/codeceptjs/ReportConverter';
 
 /**
  * @author Matheus Eller Fagundes

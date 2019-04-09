@@ -1,11 +1,11 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+const XRegExp = require('xregexp');
 const Expressions_1 = require("../req/Expressions");
 const LineChecker_1 = require("../req/LineChecker");
 const Symbols_1 = require("../req/Symbols");
 const LexicalException_1 = require("../req/LexicalException");
 const CommentHandler_1 = require("./CommentHandler");
-const XRegExp = require('xregexp');
 /**
  * Detects a node in the format "keyword "value"".
  *

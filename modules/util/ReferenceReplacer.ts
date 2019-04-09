@@ -1,11 +1,9 @@
 import { escape, escapeId } from 'sqlstring';
-
+import { Document } from "concordialang-types/ast";
+import { Entities, NLPResult } from "concordialang-types/nlp";
 import { CaseType } from '../app/CaseType';
-import { Document } from '../ast/Document';
 import { AugmentedSpec } from '../ast/AugmentedSpec';
 import { QueryParser } from '../db/QueryParser';
-import { Entities } from '../nlp/Entities';
-import { NLPResult } from '../nlp/NLPResult';
 import { Symbols } from '../req/Symbols';
 import { convertCase } from './CaseConversor';
 import { isDefined } from './TypeChecking';

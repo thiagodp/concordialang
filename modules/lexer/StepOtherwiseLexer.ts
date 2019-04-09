@@ -1,10 +1,10 @@
+import { StepOtherwise } from 'concordialang-types/ast';
 import { StartingKeywordLexer } from './StartingKeywordLexer';
-import { StepOtherwise } from '../ast/Step';
 import { NodeTypes } from "../req/NodeTypes";
 
 /**
  * Detects an Otherwise node.
- * 
+ *
  * @author Thiago Delgado Pinto
  */
 export class StepOtherwiseLexer extends StartingKeywordLexer< StepOtherwise > {
@@ -16,6 +16,6 @@ export class StepOtherwiseLexer extends StartingKeywordLexer< StepOtherwise > {
     /** @inheritDoc */
     suggestedNextNodeTypes(): string[] {
         return [ NodeTypes.STEP_AND ];
-    }    
+    }
 
 }

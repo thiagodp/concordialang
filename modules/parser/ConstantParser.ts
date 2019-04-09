@@ -1,23 +1,22 @@
-import { Constant } from '../ast/Constant';
-import {SyntaticException} from '../req/SyntaticException';
-import {ParsingContext} from './ParsingContext';
-import {NodeTypes} from '../req/NodeTypes';
-import {ListItem} from '../ast/ListItem';
+import { Constant, ListItem } from 'concordialang-types/ast'
+import { SyntaticException } from '../req/SyntaticException';
+import { ParsingContext } from './ParsingContext';
+import { NodeTypes } from '../req/NodeTypes';
 import { ListItemNodeParser } from './ListItemNodeParser';
 import { NodeIterator } from './NodeIterator';
 
 /**
  * Constant parser.
- * 
+ *
  * @author Thiago Delgado Pinto
  */
 export class ConstantParser implements ListItemNodeParser {
-    
+
     /** @inheritDoc */
     public isAccepted( node: ListItem, it: NodeIterator ): boolean {
         const allowedPriorNodes = [
             NodeTypes.CONSTANT_BLOCK,
-            NodeTypes.CONSTANT            
+            NodeTypes.CONSTANT
         ];
         return allowedPriorNodes.indexOf( it.spyPrior().nodeType ) >= 0;
     }

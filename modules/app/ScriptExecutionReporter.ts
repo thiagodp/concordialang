@@ -1,8 +1,8 @@
-import { TestScriptExecutionResult } from "../testscript/TestScriptExecution";
+import { TestScriptExecutionResult } from "concordialang-types/testscript";
 
 /**
  * Script execution reporter
- * 
+ *
  * @author Thiago Delgado Pinto
  */
 export interface ScriptExecutionReporter {

@@ -1,19 +1,19 @@
 import { dirname, resolve } from 'path';
-
-import { Spec } from './Spec';
+import {
+    Spec,
+    Constant,
+    Database,
+    Document,
+    Feature,
+    NamedNode,
+    Table,
+    UIElement
+} from 'concordialang-types/ast';
+import { DatabaseInterface, InMemoryTableInterface } from 'concordialang-types/req';
 import { CaseType } from '../app/CaseType';
-import { DatabaseInterface } from '../req/DatabaseInterface';
-import { InMemoryTableInterface } from '../req/InMemoryTableInterface';
 import { DocumentUtil } from '../util/DocumentUtil';
 import { isDefined, valueOrNull } from '../util/TypeChecking';
 import { UIElementNameHandler } from '../util/UIElementNameHandler';
-import { Constant } from './Constant';
-import { Database } from './Database';
-import { Document } from './Document';
-import { Feature } from './Feature';
-import { NamedNode } from './Node';
-import { Table } from './Table';
-import { UIElement } from './UIElement';
 
 class MappedContent {
     feature: boolean = false;

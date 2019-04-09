@@ -1,4 +1,4 @@
-import { AfterAll } from '../ast/TestEvent';
+import { AfterAll } from 'concordialang-types/ast';
 import { SyntaticException } from '../req/SyntaticException';
 import { isDefined } from '../util/TypeChecking';
 import { NodeIterator } from './NodeIterator';

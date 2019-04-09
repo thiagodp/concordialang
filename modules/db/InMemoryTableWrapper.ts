@@ -1,5 +1,5 @@
-import { Table } from '../ast/Table';
-import { InMemoryTableInterface } from '../req/InMemoryTableInterface';
+import { Table } from 'concordialang-types/ast';
+import { InMemoryTableInterface } from 'concordialang-types/req';
 import { RuntimeException } from '../req/RuntimeException';
 import { isDefined } from '../util/TypeChecking';
 import { ValueType, ValueTypeDetector } from '../util/ValueTypeDetector';

@@ -1,8 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const sqlstring_1 = require("sqlstring");
+const nlp_1 = require("concordialang-types/nlp");
 const QueryParser_1 = require("../db/QueryParser");
-const Entities_1 = require("../nlp/Entities");
 const Symbols_1 = require("../req/Symbols");
 const CaseConversor_1 = require("./CaseConversor");
 const TypeChecking_1 = require("./TypeChecking");
@@ -38,7 +38,7 @@ class ReferenceReplacer {
         const valueTypeDetector = new ValueTypeDetector_1.ValueTypeDetector();
         let constants = [];
         for (let e of nlpResult.entities || []) {
-            if (Entities_1.Entities.CONSTANT === e.entity) {
+            if (nlp_1.Entities.CONSTANT === e.entity) {
                 let valueContent = spec.constantNameToValueMap().get(e.value);
                 if (undefined === valueContent) {
                     valueContent = '';
@@ -71,7 +71,7 @@ class ReferenceReplacer {
         let newSentence = sentence;
         let uiElements = [];
         for (let e of nlpResult.entities || []) {
-            if (Entities_1.Entities.UI_ELEMENT != e.entity) {
+            if (nlp_1.Entities.UI_ELEMENT != e.entity) {
                 continue;
             }
             // Get the UI_LITERAL name by the UI_ELEMENT name

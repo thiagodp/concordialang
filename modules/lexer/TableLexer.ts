@@ -1,10 +1,10 @@
+import { Table } from "concordialang-types/ast";
 import { NamedNodeLexer } from "./NamedNodeLexer";
 import { NodeTypes } from "../req/NodeTypes";
-import { Table } from "../ast/Table";
 
 /**
  * Detects a Table.
- * 
+ *
  * @author Thiago Delgado Pinto
  */
 export class TableLexer extends NamedNodeLexer< Table > {
@@ -16,6 +16,6 @@ export class TableLexer extends NamedNodeLexer< Table > {
     /** @inheritDoc */
     suggestedNextNodeTypes(): string[] {
         return [ NodeTypes.TABLE_ROW ];
-    }    
+    }
 
 }

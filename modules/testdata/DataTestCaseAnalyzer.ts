@@ -1,11 +1,7 @@
 import * as arrayDiff from 'arr-diff';
 import * as enumUtil from 'enum-util';
-
-import { Constant } from '../ast/Constant';
-import { Step } from '../ast/Step';
-import { UIElement, UIProperty } from '../ast/UIElement';
-import { Entities } from '../nlp/Entities';
-import { NLPUtil } from '../nlp/NLPResult';
+import { Constant, Step, UIElement, UIProperty } from 'concordialang-types/ast';
+import { Entities, NLPUtil } from 'concordialang-types/nlp';
 import { RuntimeException } from '../req/RuntimeException';
 import { isDefined } from '../util/TypeChecking';
 import { UIElementPropertyExtractor } from '../util/UIElementPropertyExtractor';
@@ -14,7 +10,6 @@ import { adjustValueToTheRightType, ValueType } from '../util/ValueTypeDetector'
 import { DataGeneratorBuilder } from './DataGeneratorBuilder';
 import { DataTestCase, DataTestCaseGroup, DataTestCaseGroupDef } from './DataTestCase';
 import { RangeAnalyzer } from './raw/RangeAnalyzer';
-
 
 /**
  * Data test case analysis result

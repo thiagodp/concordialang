@@ -1,8 +1,8 @@
-import { DatabaseInterface } from '../req/DatabaseInterface';
-import { Database } from '../ast/Database';
+import dbjs = require( 'database-js' );
+import { DatabaseInterface } from 'concordialang-types/req';
+import { Database } from 'concordialang-types/ast';
 import { isPathBasedDatabaseType } from './DatabaseTypes';
 import { DatabaseToAbstractDatabase } from './DatabaseToAbstractDatabase';
-import dbjs = require( 'database-js' );
 
 /**
  * A simple database wrapper.

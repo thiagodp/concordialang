@@ -1,12 +1,12 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+const path_1 = require("path");
 const NodeIterator_1 = require("../../modules/parser/NodeIterator");
 const ParsingContext_1 = require("../../modules/parser/ParsingContext");
 const NodeTypes_1 = require("../../modules/req/NodeTypes");
 const FeatureParser_1 = require("../../modules/parser/FeatureParser");
 const Options_1 = require("../../modules/app/Options");
 const LexerBuilder_1 = require("../../modules/lexer/LexerBuilder");
-const path_1 = require("path");
 /**
  * @author Thiago Delgado Pinto
  */

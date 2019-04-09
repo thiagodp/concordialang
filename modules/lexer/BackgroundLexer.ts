@@ -1,7 +1,6 @@
-
+import { Background } from "concordialang-types/ast";
 import { BlockLexer } from "./BlockLexer";
 import { NodeTypes } from "../req/NodeTypes";
-import { Background } from "../ast/Background";
 
 /**
  * Detects a Background block.

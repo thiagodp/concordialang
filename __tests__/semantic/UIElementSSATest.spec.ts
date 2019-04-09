@@ -1,12 +1,12 @@
+import { join } from 'path';
+import { Document, FileInfo } from "concordialang-types/ast";
+import { LocatedException } from "concordialang-types/req";
 import { UIElementSSA } from "../../modules/semantic/UIElementSSA";
 import { SimpleCompiler } from "../../modules/util/SimpleCompiler";
 import { AugmentedSpec } from "../../modules/ast/AugmentedSpec";
-import { Document } from "../../modules/ast/Document";
 import { SpecFilter } from "../../modules/selection/SpecFilter";
 import { BatchSpecificationAnalyzer } from "../../modules/semantic/BatchSpecificationAnalyzer";
-import { LocatedException } from "../../modules/req/LocatedException";
-import { FileInfo } from "../../modules/ast/FileInfo";
-import { join } from 'path';
+
 
 describe( 'UIElementSSATest', () => {
 

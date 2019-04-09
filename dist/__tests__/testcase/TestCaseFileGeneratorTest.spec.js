@@ -8,9 +8,9 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+const path_1 = require("path");
 const TestCaseFileGenerator_1 = require("../../modules/testcase/TestCaseFileGenerator");
 const LanguageContentLoader_1 = require("../../modules/dict/LanguageContentLoader");
-const path_1 = require("path");
 const Options_1 = require("../../modules/app/Options");
 const SingleFileCompiler_1 = require("../../modules/app/SingleFileCompiler");
 const LexerBuilder_1 = require("../../modules/lexer/LexerBuilder");

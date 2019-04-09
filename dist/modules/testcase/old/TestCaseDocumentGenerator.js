@@ -1,8 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const deepcopy_1 = require("deepcopy");
 const events_1 = require("events");
 const path_1 = require("path");
+const deepcopy_1 = require("deepcopy");
 const NodeTypes_1 = require("../../req/NodeTypes");
 const DocumentUtil_1 = require("../../util/DocumentUtil");
 /**

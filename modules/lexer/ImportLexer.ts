@@ -1,10 +1,10 @@
-import { Import } from '../ast/Import';
+import { Import } from 'concordialang-types/ast';
 import { QuotedNodeLexer } from './QuotedNodeLexer';
 import { NodeTypes } from "../req/NodeTypes";
 
 /**
  * Detects an Import.
- * 
+ *
  * @author Thiago Delgado Pinto
  */
 export class ImportLexer extends QuotedNodeLexer< Import > {

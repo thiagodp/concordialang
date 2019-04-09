@@ -1,10 +1,8 @@
 import Graph = require('graph.js/dist/graph.full.js');
-
-import { Document } from '../ast/Document';
+import { Document } from 'concordialang-types/ast';
 import { isDefined } from '../util/TypeChecking';
 import { CriteriaMatcher } from './CriteriaMatcher';
 import { FilterCriterion } from './FilterCriterion';
-
 
 /**
  * Feature-based graph filter.

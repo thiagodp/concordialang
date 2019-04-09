@@ -1,12 +1,7 @@
-import { Document } from "../ast/Document";
-import { TestCase } from "../ast/TestCase";
 import { parse, resolve, relative, join, dirname, basename, normalize } from "path";
-import { FileInfo } from "../ast/FileInfo";
-import { Language } from "../ast/Language";
 import * as deepcopy from 'deepcopy';
-import { Import } from "../ast/Import";
+import { Document, TestCase, FileInfo, Language, Import } from "concordialang-types/ast";
 import { NodeTypes } from "../req/NodeTypes";
-
 
 /**
  * Document (object) generator for Test Cases.

@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+const path_1 = require("path");
 const Options_1 = require("../app/Options");
 const LanguageContentLoader_1 = require("../dict/LanguageContentLoader");
 const LexerBuilder_1 = require("../lexer/LexerBuilder");
@@ -7,7 +8,6 @@ const Parser_1 = require("../parser/Parser");
 const NLPTrainer_1 = require("../nlp/NLPTrainer");
 const NLPBasedSentenceRecognizer_1 = require("../nlp/NLPBasedSentenceRecognizer");
 const SingleDocumentProcessor_1 = require("../app/SingleDocumentProcessor");
-const path_1 = require("path");
 /**
  * Useful for testing purposes.
  */

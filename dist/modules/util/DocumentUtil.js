@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+const ast_1 = require("concordialang-types/ast");
 const CaseType_1 = require("../app/CaseType");
-const UIElement_1 = require("../ast/UIElement");
 const TypeChecking_1 = require("./TypeChecking");
 const UIElementNameHandler_1 = require("./UIElementNameHandler");
 const UIElementPropertyExtractor_1 = require("./UIElementPropertyExtractor");
@@ -92,7 +92,7 @@ class DocumentUtil {
             const uiLiteral = this._uiePropExtractor.extractId(uie, caseOption);
             // Creates the info if not defined
             if (!uie.info) {
-                uie.info = new UIElement_1.UIElementInfo(doc, uiLiteral, null);
+                uie.info = new ast_1.UIElementInfo(doc, uiLiteral, null);
             }
             const variableName = this._uieNameHandler.makeVariableName(null, uie.name);
             uie.info.fullVariableName = variableName;
@@ -110,7 +110,7 @@ class DocumentUtil {
             const featureName = !keepItLocal ? doc.feature.name : null;
             // Creates the info if not defined
             if (!uie.info) {
-                uie.info = new UIElement_1.UIElementInfo(doc, uiLiteral, doc.feature);
+                uie.info = new ast_1.UIElementInfo(doc, uiLiteral, doc.feature);
             }
             const variableName = this._uieNameHandler.makeVariableName(featureName, uie.name);
             uie.info.fullVariableName = variableName;

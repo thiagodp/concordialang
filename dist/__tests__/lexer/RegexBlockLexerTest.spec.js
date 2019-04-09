@@ -9,7 +9,7 @@ describe('RegexBlockLexerTest', () => {
     let words = ['regular expressions'];
     let lexer = new RegexBlockLexer_1.RegexBlockLexer(words);
     ; // under test
-    // IMPORTANT: Since the lexer under test inherits from another lexer and 
+    // IMPORTANT: Since the lexer under test inherits from another lexer and
     // there are tests for the parent class, few additional tests are necessary.
     it('detects in the correct position', () => {
         let line = '\tRegular expressions\t:\t';

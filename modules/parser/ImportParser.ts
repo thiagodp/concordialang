@@ -1,4 +1,4 @@
-import { Import } from '../ast/Import';
+import { Import } from 'concordialang-types/ast';
 import { NodeParser } from "./NodeParser";
 import { ParsingContext } from "./ParsingContext";
 import { NodeIterator } from './NodeIterator';
@@ -6,7 +6,7 @@ import { SyntaticException } from "../req/SyntaticException";
 
 /**
  * Import parser.
- * 
+ *
  * @author Thiago Delgado Pinto
  */
 export class ImportParser implements NodeParser< Import > {
@@ -22,7 +22,7 @@ export class ImportParser implements NodeParser< Import > {
         // Checks the structure
         if ( ! context.doc.imports ) {
             context.doc.imports = [];
-        }        
+        }
 
         // Checks if a feature is declared before it
         if ( context.doc.feature ) {

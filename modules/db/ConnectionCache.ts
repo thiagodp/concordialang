@@ -1,8 +1,8 @@
-import { DatabaseInterface } from "../req/DatabaseInterface";
+import { DatabaseInterface } from "concordialang-types/req";
 
 /**
  * Connection cache.
- * 
+ *
  * @author Thiago Delgado Pinto
  */
 export class ConnectionCache {

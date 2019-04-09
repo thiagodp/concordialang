@@ -1,10 +1,10 @@
+import { Queryable } from "concordialang-types/req";
 import { QueryBasedDataGenerator } from "../../modules/testdata/QueryBasedDataGenerator";
 import { RandomLong } from "../../modules/testdata/random/RandomLong";
 import { Random } from "../../modules/testdata/random/Random";
 import { StringGenerator } from "../../modules/testdata/raw/StringGenerator";
 import { RandomString } from "../../modules/testdata/random/RandomString";
 import { QueryCache } from "../../modules/db/QueryCache";
-import { Queryable } from "../../modules/req/Queryable";
 
 /**
  * @author Thiago Delgado Pinto
@@ -62,7 +62,7 @@ describe( 'QueryBasedDataGeneratorTest', () => {
     const rand = new Random();
     const randL = new RandomLong( rand );
     const strGen = new StringGenerator( new RandomString( rand ) );
-    const queryCache = new QueryCache();    
+    const queryCache = new QueryCache();
 
     let rawValueGen: QueryBasedDataGenerator< any > = new QueryBasedDataGenerator(
         randL,
@@ -76,7 +76,7 @@ describe( 'QueryBasedDataGeneratorTest', () => {
         ] ),
         queryCache,
         'SELECT whathever FROM doesnt_matter'
-    );        
+    );
 
     let objValueGen: QueryBasedDataGenerator< any > = new QueryBasedDataGenerator(
         randL,

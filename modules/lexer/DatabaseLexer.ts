@@ -1,10 +1,10 @@
-import { Database } from '../ast/Database';
+import { Database } from 'concordialang-types/ast';
 import { NamedNodeLexer } from "./NamedNodeLexer";
 import { NodeTypes } from "../req/NodeTypes";
 
 /**
  * Detects a Database node.
- * 
+ *
  * @author Thiago Delgado Pinto
  */
 export class DatabaseLexer extends NamedNodeLexer< Database > {

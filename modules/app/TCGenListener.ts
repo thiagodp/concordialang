@@ -1,4 +1,4 @@
-import { LocatedException } from "../req/LocatedException";
+import { LocatedException } from "concordialang-types/req";
 import { Warning } from "../req/Warning";
 
 export interface TCGenListener {

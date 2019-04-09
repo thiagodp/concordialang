@@ -1,15 +1,15 @@
-import { Database } from '../ast/Database';
+import { Database } from 'concordialang-types/ast';
 import { NodeParser } from './NodeParser';
 import { ParsingContext } from './ParsingContext';
 import { NodeIterator } from './NodeIterator';
 
 /**
  * Database parser
- * 
+ *
  * @author Thiago Delgado Pinto
  */
 export class DatabaseParser implements NodeParser< Database > {
-    
+
     analyze(
         node: Database,
         context: ParsingContext,
@@ -18,17 +18,17 @@ export class DatabaseParser implements NodeParser< Database > {
     ): boolean {
 
         // Adjusts the context
-        context.resetInValues();        
+        context.resetInValues();
         context.currentDatabase = node;
 
         // Checks the structure
         if ( ! context.doc.databases ) {
             context.doc.databases = [];
         }
-        
+
         // Adds the node
         context.doc.databases.push( node );
-        
+
         return true;
     }
 

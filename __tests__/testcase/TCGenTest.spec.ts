@@ -1,19 +1,17 @@
 import { TCGen } from "../../modules/testcase/TCGen";
 import { SimpleCompiler } from "../../modules/util/SimpleCompiler";
 import { AugmentedSpec } from "../../modules/ast/AugmentedSpec";
-import { Document } from "../../modules/ast/Document";
+import { Document, FileInfo, Variant, TestCase } from "concordialang-types/ast";
+import { LocatedException } from "concordialang-types/req";
 import { PreTestCaseGenerator, GenContext } from "../../modules/testscenario/PreTestCaseGenerator";
-import { FileInfo } from "../../modules/ast/FileInfo";
 import { SpecFilter } from "../../modules/selection/SpecFilter";
 import { BatchSpecificationAnalyzer } from "../../modules/semantic/BatchSpecificationAnalyzer";
-import { LocatedException } from "../../modules/req/LocatedException";
 import { TestPlanner } from "../../modules/testcase/TestPlanner";
 import { JustOneInvalidMix } from "../../modules/testcase/DataTestCaseMix";
 import { IndexOfEachStrategy } from "../../modules/selection/CombinationStrategy";
-import { Variant } from "../../modules/ast/Variant";
 import { TestScenario } from "../../modules/testscenario/TestScenario";
 import { LongLimits } from "../../modules/testdata/limits/LongLimits";
-import { TestCase } from "../../modules/ast/TestCase";
+
 
 describe( 'TCGenTest', () => {
 

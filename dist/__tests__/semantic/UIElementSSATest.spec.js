@@ -8,12 +8,12 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+const path_1 = require("path");
 const UIElementSSA_1 = require("../../modules/semantic/UIElementSSA");
 const SimpleCompiler_1 = require("../../modules/util/SimpleCompiler");
 const AugmentedSpec_1 = require("../../modules/ast/AugmentedSpec");
 const SpecFilter_1 = require("../../modules/selection/SpecFilter");
 const BatchSpecificationAnalyzer_1 = require("../../modules/semantic/BatchSpecificationAnalyzer");
-const path_1 = require("path");
 describe('UIElementSSATest', () => {
     // @ts-ignore
     let sa; // under test

@@ -1,10 +1,10 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+const path_1 = require("path");
 const NodeTypes_1 = require("../../modules/req/NodeTypes");
 const ReservedTags_1 = require("../../modules/req/ReservedTags");
 const AugmentedSpec_1 = require("../../modules/ast/AugmentedSpec");
 const TestCaseSSA_1 = require("../../modules/semantic/TestCaseSSA");
-const path_1 = require("path");
 /**
  * @author Thiago Delgado Pinto
  */

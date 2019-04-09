@@ -1,4 +1,4 @@
-import { ContentNode } from '../ast/Node';
+import { ContentNode } from 'concordialang-types/ast';
 import { Expressions } from '../req/Expressions';
 import { LineChecker } from '../req/LineChecker';
 import { Warning } from '../req/Warning';

@@ -1,5 +1,4 @@
-import { Location } from '../ast/Location';
-import { TableRow } from '../ast/Table';
+import { Location, TableRow } from 'concordialang-types/ast';
 import { Expressions } from '../req/Expressions';
 import { LexicalException } from '../req/LexicalException';
 import { NodeTypes } from '../req/NodeTypes';

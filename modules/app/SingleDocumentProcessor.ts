@@ -1,8 +1,7 @@
+import { Node, Document } from "concordialang-types/ast";
 import { NLPBasedSentenceRecognizer } from '../nlp/NLPBasedSentenceRecognizer';
 import { Parser } from '../parser/Parser';
 import { Lexer } from "../lexer/Lexer";
-import { Node } from '../ast/Node';
-import { Document } from '../ast/Document';
 import { BatchDocumentAnalyzer } from '../semantic/single/BatchDocumentAnalyzer';
 import { SemanticException } from '../semantic/SemanticException';
 

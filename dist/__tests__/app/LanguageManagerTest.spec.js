@@ -8,9 +8,9 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+const path_1 = require("path");
 const LanguageManager_1 = require("../../modules/app/LanguageManager");
 const Options_1 = require("../../modules/app/Options");
-const path_1 = require("path");
 /**
  * @author Thiago Delgado Pinto
  */

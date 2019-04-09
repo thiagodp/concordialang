@@ -1,10 +1,10 @@
+import { resolve } from 'path';
+import { Document } from 'concordialang-types/ast';
 import { Parser } from '../../../modules/parser/Parser';
 import { ScenarioDA } from '../../../modules/semantic/single/ScenarioDA';
 import { Lexer } from '../../../modules/lexer/Lexer';
-import { Document } from '../../../modules/ast/Document';
 import { LexerBuilder } from '../../../modules/lexer/LexerBuilder';
 import { Options } from '../../../modules/app/Options';
-import { resolve } from 'path';
 
 /**
  * @author Thiago Delgado Pinto

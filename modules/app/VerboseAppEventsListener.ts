@@ -1,14 +1,14 @@
+import * as prettyBytes from 'pretty-bytes';
+import { LocatedException } from 'concordialang-types/req';
 import { FileReadListener, DirectoryReadListener, DirectoryReadResult } from './Listeners';
 import { SingleFileProcessorListener, FileMeta, ProcessedFileData } from './SingleFileProcessor';
 import { MultiFileProcessListener } from './MultiFileProcessor';
 import { CLI } from './CLI';
 import { CompilerListener } from './CompilerListener';
-import * as prettyBytes from 'pretty-bytes';
 import { Options } from './Options';
 import { sortErrorsByLocation } from '../util/ErrorSorting';
 import { ProcessingInfo } from './ProcessingInfo';
 import { TCGenListener } from './TCGenListener';
-import { LocatedException } from '../req/LocatedException';
 import { Warning } from '../req/Warning';
 import { isDefined } from '../util/TypeChecking';
 

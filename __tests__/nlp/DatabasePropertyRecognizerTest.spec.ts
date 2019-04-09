@@ -1,5 +1,5 @@
+import { DatabaseProperty } from 'concordialang-types/ast';
 import { DatabasePropertyRecognizer } from '../../modules/nlp/DatabasePropertyRecognizer';
-import { DatabaseProperty } from '../../modules/ast/Database';
 import { NodeTypes } from '../../modules/req/NodeTypes';
 import { NLPTrainer } from '../../modules/nlp/NLPTrainer';
 import { NLP } from '../../modules/nlp/NLP';

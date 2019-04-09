@@ -1,8 +1,8 @@
 import { resolve } from 'path';
+import * as enumUtil from 'enum-util';
 import { Defaults, VariantSelectionOptions, CombinationOptions } from './Defaults';
 import { CaseType } from './CaseType';
 import { isString, isNumber, isDefined } from '../util/TypeChecking';
-import * as enumUtil from 'enum-util';
 
 /**
  * Application options

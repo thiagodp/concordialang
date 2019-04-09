@@ -1,6 +1,5 @@
-import { UIProperty } from '../ast/UIElement';
-import { Entities } from '../nlp/Entities';
-import { NLPUtil } from '../nlp/NLPResult';
+import { UIProperty } from 'concordialang-types/ast';
+import { Entities, NLPUtil } from 'concordialang-types/nlp';
 import { UIElementOperator, UIElementOperatorModifier } from './UIElementOperator';
 
 /**

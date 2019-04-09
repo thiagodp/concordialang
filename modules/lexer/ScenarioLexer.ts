@@ -1,6 +1,6 @@
+import { Scenario } from "concordialang-types/ast";
 import { NamedNodeLexer } from "./NamedNodeLexer";
 import { NodeTypes } from "../req/NodeTypes";
-import { Scenario } from "../ast/Scenario";
 
 /**
  * Detects a Scenario.

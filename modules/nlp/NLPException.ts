@@ -1,8 +1,8 @@
-import { LocatedException } from '../req/LocatedException';
+import { LocatedException } from 'concordialang-types/req';
 
 /**
  * Natural Language Processing Exception
- * 
+ *
  * @author Thiago Delgado Pinto
  */
 export class NLPException extends LocatedException {

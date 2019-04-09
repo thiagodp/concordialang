@@ -1,22 +1,21 @@
-import { Regex } from '../ast/Regex';
-import {SyntaticException} from '../req/SyntaticException';
-import {ParsingContext} from './ParsingContext';
-import {NodeTypes} from '../req/NodeTypes';
-import {ListItem} from '../ast/ListItem';
+import { Regex, ListItem } from 'concordialang-types/ast';
+import { SyntaticException } from '../req/SyntaticException';
+import { ParsingContext } from './ParsingContext';
+import { NodeTypes} from '../req/NodeTypes';
 import { ListItemNodeParser } from './ListItemNodeParser';
 import { NodeIterator } from './NodeIterator';
 
 /**
  * Regex parser.
- * 
+ *
  * @author Thiago Delgado Pinto
  */
 export class RegexParser implements ListItemNodeParser {
-    
+
     /** @inheritDoc */
     public isAccepted( node: ListItem, it: NodeIterator ): boolean {
         const allowedPriorNodes = [
-            NodeTypes.REGEX_BLOCK,            
+            NodeTypes.REGEX_BLOCK,
             NodeTypes.REGEX
         ];
         return allowedPriorNodes.indexOf( it.spyPrior().nodeType ) >= 0;

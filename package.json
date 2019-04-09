@@ -89,6 +89,7 @@
     "case": "^1.5.5",
     "chalk": "^2.4.1",
     "cli-truncate": "^1.1.0",
+    "concordialang-types": "^0.1.3",
     "cosmiconfig": "^4.0.0",
     "database-js": "^3.0.2",
     "database-js-adodb": "^1.1.1",

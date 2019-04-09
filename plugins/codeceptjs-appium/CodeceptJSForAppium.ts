@@ -1,8 +1,8 @@
+import { join } from 'path';
+import { TestScriptExecutionOptions } from "concordialang-types/testscript";
 import { CodeceptJS } from "../codeceptjs/CodeceptJS";
 import { TestScriptExecutor } from "../codeceptjs/TestScriptExecutor";
 import { ConfigMaker } from "../codeceptjs/ConfigMaker";
-import { TestScriptExecutionOptions } from "../../modules/testscript/TestScriptExecution";
-import { join } from 'path';
 
 /**
  * Plug-in for CodeceptJS with Appium.

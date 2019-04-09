@@ -1,17 +1,10 @@
-import { deepcopy } from 'deepcopy';
 import { EventEmitter } from 'events';
-import Graph = require('graph.js/dist/graph.full.js');
 import { basename, dirname, join, parse, relative } from 'path';
-
+import { deepcopy } from 'deepcopy';
+import Graph = require('graph.js/dist/graph.full.js');
+import { Document, FileInfo, Import, Language, Scenario, TestCase, Variant } from 'concordialang-types/ast';
 import { Options } from '../../app/Options';
-import { Document } from '../../ast/Document';
-import { FileInfo } from '../../ast/FileInfo';
-import { Import } from '../../ast/Import';
-import { Language } from '../../ast/Language';
-import { Scenario } from '../../ast/Scenario';
 import { AugmentedSpec } from '../../ast/AugmentedSpec';
-import { TestCase } from '../../ast/TestCase';
-import { Variant } from '../../ast/Variant';
 import { NodeTypes } from '../../req/NodeTypes';
 import { DocumentUtil } from '../../util/DocumentUtil';
 

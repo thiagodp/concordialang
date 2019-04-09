@@ -1,17 +1,11 @@
 import * as deepcopy from 'deepcopy';
 import Graph = require('graph.js/dist/graph.full.js');
 import * as path from 'path';
-
-import { Document } from '../ast/Document';
-import { Feature } from '../ast/Feature';
-import { Import } from '../ast/Import';
-import { Location } from '../ast/Location';
+import { Document, Feature, Import, Location, Tag, TestCase } from 'concordialang-types/ast';
+import { LocatedException } from 'concordialang-types/req';
 import { AugmentedSpec } from '../ast/AugmentedSpec';
-import { Tag } from '../ast/Tag';
-import { TestCase } from '../ast/TestCase';
 import { EnglishKeywordDictionary } from '../dict/EnglishKeywordDictionary';
 import { KeywordDictionary } from '../dict/KeywordDictionary';
-import { LocatedException } from '../req/LocatedException';
 import { isDefined } from '../util/TypeChecking';
 import { SemanticException } from './SemanticException';
 import { SpecificationAnalyzer } from './SpecificationAnalyzer';

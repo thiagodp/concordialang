@@ -1,12 +1,12 @@
+import { resolve } from 'path';
+import { Feature } from 'concordialang-types/ast';
 import { NodeIterator } from '../../modules/parser/NodeIterator';
 import { ParsingContext } from '../../modules/parser/ParsingContext';
 import { NodeTypes } from '../../modules/req/NodeTypes';
-import { Feature } from '../../modules/ast/Feature';
 import { FeatureParser } from '../../modules/parser/FeatureParser';
 import { Lexer } from "../../modules/lexer/Lexer";
 import { Options } from '../../modules/app/Options';
 import { LexerBuilder } from '../../modules/lexer/LexerBuilder';
-import { resolve } from 'path';
 
 /**
  * @author Thiago Delgado Pinto

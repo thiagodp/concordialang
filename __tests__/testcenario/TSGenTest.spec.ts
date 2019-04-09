@@ -1,15 +1,12 @@
-
+import { Document, Variant, FileInfo } from "concordialang-types/ast";
+import { LocatedException } from "concordialang-types/req";
 import { TSGen } from "../../modules/testscenario/TSGen";
 import { TestScenario } from "../../modules/testscenario/TestScenario";
 import { SimpleCompiler } from "../../modules/util/SimpleCompiler";
 import { AllVariantsSelectionStrategy } from "../../modules/selection/VariantSelectionStrategy";
-import { Variant } from "../../modules/ast/Variant";
 import { AugmentedSpec } from "../../modules/ast/AugmentedSpec";
-import { Document } from "../../modules/ast/Document";
-import { LocatedException } from "../../modules/req/LocatedException";
 import { BatchSpecificationAnalyzer } from "../../modules/semantic/BatchSpecificationAnalyzer";
 import { SpecFilter } from "../../modules/selection/SpecFilter";
-import { FileInfo } from "../../modules/ast/FileInfo";
 import { CartesianProductStrategy } from "../../modules/selection/CombinationStrategy";
 import { PreTestCaseGenerator, GenContext } from "../../modules/testscenario/PreTestCaseGenerator";
 

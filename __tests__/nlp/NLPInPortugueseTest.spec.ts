@@ -1,11 +1,11 @@
+import { Entities, NLPResult } from 'concordialang-types/nlp';
 import { Intents } from '../../modules/nlp/Intents';
 import { NLPTrainer } from '../../modules/nlp/NLPTrainer';
-import { Entities } from '../../modules/nlp/Entities';
 import { NLP } from '../../modules/nlp/NLP';
 import { Options } from '../../modules/app/Options';
 import { resolve } from 'path';
 import { LanguageContentLoader, JsonLanguageContentLoader } from '../../modules/dict/LanguageContentLoader';
-import { NLPResult } from '../../modules/nlp/NLPResult';
+
 
 /**
  * @author Thiago Delgado Pinto

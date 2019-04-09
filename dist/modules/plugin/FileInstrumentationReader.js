@@ -8,9 +8,9 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const InstrumentationReader_1 = require("./InstrumentationReader");
 const fs = require("fs");
 const util_1 = require("util");
+const InstrumentationReader_1 = require("./InstrumentationReader");
 /**
  * Default script file instrumentation.
  *

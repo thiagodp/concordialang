@@ -1,9 +1,9 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+const path_1 = require("path");
 const CodeceptJS_1 = require("../codeceptjs/CodeceptJS");
 const TestScriptExecutor_1 = require("../codeceptjs/TestScriptExecutor");
 const ConfigMaker_1 = require("../codeceptjs/ConfigMaker");
-const path_1 = require("path");
 /**
  * Plug-in for CodeceptJS with Appium.
  */

@@ -1,10 +1,10 @@
-import { UIProperty } from '../../modules/ast/UIElement';
+import { resolve } from 'path';
+import { UIProperty } from 'concordialang-types/ast';
 import { NodeTypes } from '../../modules/req/NodeTypes';
 import { NLPTrainer } from '../../modules/nlp/NLPTrainer';
 import { NLP } from '../../modules/nlp/NLP';
 import { UIPropertyRecognizer } from "../../modules/nlp/UIPropertyRecognizer";
 import { Options } from '../../modules/app/Options';
-import { resolve } from 'path';
 import { LanguageContentLoader, JsonLanguageContentLoader } from '../../modules/dict/LanguageContentLoader';
 
 describe( 'UIPropertyRecognizerTest', () => {

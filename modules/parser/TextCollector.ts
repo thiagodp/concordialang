@@ -1,17 +1,17 @@
+import { Text } from 'concordialang-types/ast';
 import { NodeIterator } from './NodeIterator';
-import { Text } from '../ast/Text';
 import { NodeTypes } from '../req/NodeTypes';
 
 /**
  * Text collector
- * 
+ *
  * @author Thiago Delgado Pinto
  */
 export class TextCollector {
-    
+
     /**
      * Add forward text nodes.
-     * 
+     *
      * @param it Node iterator
      * @param target Where to put the nodes found.
      * @param changeIterator If the iterator can be changed.

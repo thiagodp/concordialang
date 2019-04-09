@@ -1,10 +1,7 @@
+import { Node, Feature, Tag, Import } from 'concordialang-types/ast';
 import { NodeIterator } from '../../modules/parser/NodeIterator';
-import { Node } from '../../modules/ast/Node';
-import { Tag } from '../../modules/ast/Tag';
-import { Feature } from '../../modules/ast/Feature';
 import { TagCollector } from '../../modules/parser/TagCollector';
 import { NodeTypes } from "../../modules/req/NodeTypes";
-import { Import } from "../../modules/ast/Import";
 /**
  * @author Thiago Delgado Pinto
  */
@@ -13,7 +10,7 @@ describe( 'TagCollectorTest', () => {
     let tc = new TagCollector(); // under test
 
     let lin = 1;
-    
+
     let importNode: Import = {
         nodeType: NodeTypes.IMPORT,
         location: { line: lin++, column: 1 },
@@ -32,7 +29,7 @@ describe( 'TagCollectorTest', () => {
         location: { line: lin++, column: 1 },
         name: 'hello',
         content: 'world'
-    };    
+    };
 
     let featureNode: Feature = {
         nodeType: NodeTypes.FEATURE,
@@ -57,7 +54,7 @@ describe( 'TagCollectorTest', () => {
         expect( featureNode.tags ).toEqual( [ tagNode1, tagNode2 ] );
     } );
 
-    
+
     it( 'does not change the given iterator', () => {
 
         let nodes: Node[] = [ importNode, tagNode1, tagNode2, featureNode ];

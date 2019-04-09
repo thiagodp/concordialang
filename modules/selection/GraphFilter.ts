@@ -1,6 +1,7 @@
-import { Document } from "../ast/Document";
 import Graph = require( 'graph.js/dist/graph.full.js' );
 import { EventEmitter } from "events";
+import { Document } from "concordialang-types/ast";
+
 
 export enum GraphFilterEvent {
     DOCUMENT_NOT_INCLUDED = 'concordia:documentNotIncluded'

@@ -12,16 +12,15 @@ const fs_1 = require("fs");
 const util_1 = require("util");
 const meow = require("meow");
 const updateNotifier = require("update-notifier");
+const testscript_1 = require("concordialang-types/testscript");
 const UI_1 = require("./UI");
 const PluginController_1 = require("../plugin/PluginController");
 const CLI_1 = require("./CLI");
 const CompilerController_1 = require("./CompilerController");
 const LanguageController_1 = require("./LanguageController");
 const PluginManager_1 = require("../plugin/PluginManager");
-const TestScriptExecution_1 = require("../testscript/TestScriptExecution");
 const CliScriptExecutionReporter_1 = require("./CliScriptExecutionReporter");
 const ATSGenController_1 = require("./ATSGenController");
-const TestScriptOptions_1 = require("../testscript/TestScriptOptions");
 const CliHelp_1 = require("./CliHelp");
 const OptionsHandler_1 = require("./OptionsHandler");
 const TestResultAnalyzer_1 = require("../testscript/TestResultAnalyzer");
@@ -204,7 +203,7 @@ class AppController {
                         let errors = [];
                         let files = [];
                         try {
-                            files = yield plugin.generateCode(abstractTestScripts, new TestScriptOptions_1.TestScriptGenerationOptions(options.plugin, options.dirScript), errors);
+                            files = yield plugin.generateCode(abstractTestScripts, new testscript_1.TestScriptGenerationOptions(options.plugin, options.dirScript), errors);
                         }
                         catch (err) {
                             hasErrors = true;
@@ -228,7 +227,7 @@ class AppController {
             }
             let executionResult = null;
             if (options.executeScript) { // Requires a plugin
-                let tseo = new TestScriptExecution_1.TestScriptExecutionOptions(options.dirScript, options.dirResult);
+                let tseo = new testscript_1.TestScriptExecutionOptions(options.dirScript, options.dirResult);
                 cli.newLine(cli.symbolInfo, 'Executing test scripts...');
                 const LINE_SIZE = 80;
                 const SEPARATION_LINE = '_'.repeat(LINE_SIZE);

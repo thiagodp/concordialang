@@ -1,7 +1,6 @@
-import { Database, DatabaseProperties } from "../ast/Database";
-import { AbstractDatabase } from "../ast/AbstractDatabase";
-import { stringToDatabaseTypeString, isPathBasedDatabaseType } from "./DatabaseTypes";
 import { resolve } from 'path';
+import { Database, DatabaseProperties, AbstractDatabase } from "concordialang-types/ast";
+import { stringToDatabaseTypeString, isPathBasedDatabaseType } from "./DatabaseTypes";
 
 /**
  * Convert a Database to an AbstractDatabase

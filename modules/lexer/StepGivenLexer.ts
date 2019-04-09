@@ -1,10 +1,10 @@
+import { StepGiven } from "concordialang-types/ast";
 import { StartingKeywordLexer } from './StartingKeywordLexer';
-import { StepGiven } from "../ast/Step";
 import { NodeTypes } from "../req/NodeTypes";
 
 /**
  * Detects a Given node.
- * 
+ *
  * @author Thiago Delgado Pinto
  */
 export class StepGivenLexer extends StartingKeywordLexer< StepGiven > {
@@ -16,6 +16,6 @@ export class StepGivenLexer extends StartingKeywordLexer< StepGiven > {
     /** @inheritDoc */
     suggestedNextNodeTypes(): string[] {
         return [ NodeTypes.STEP_AND, NodeTypes.STEP_WHEN, NodeTypes.STEP_THEN ];
-    }    
+    }
 
 }

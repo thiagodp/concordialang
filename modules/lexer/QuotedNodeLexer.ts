@@ -1,13 +1,12 @@
+const XRegExp = require( 'xregexp' );
+import { ValuedNode } from 'concordialang-types/ast';
 import { KeywordBasedLexer } from './KeywordBasedLexer';
-import { ValuedNode } from '../ast/Node';
 import { NodeLexer, LexicalAnalysisResult } from './NodeLexer';
 import { Expressions } from '../req/Expressions';
 import { LineChecker } from '../req/LineChecker';
 import { Symbols } from "../req/Symbols";
 import { LexicalException } from "../req/LexicalException";
 import { CommentHandler } from './CommentHandler';
-
-const XRegExp = require( 'xregexp' );
 
 /**
  * Detects a node in the format "keyword "value"".

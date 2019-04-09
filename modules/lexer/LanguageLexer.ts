@@ -1,5 +1,5 @@
+import { Language } from 'concordialang-types/ast';
 import { KeywordBasedLexer } from './KeywordBasedLexer';
-import { Language } from '../ast/Language';
 import { Expressions } from '../req/Expressions';
 import { NodeTypes } from '../req/NodeTypes';
 import { Symbols } from '../req/Symbols';
@@ -8,7 +8,7 @@ import { LexicalAnalysisResult, NodeLexer } from './NodeLexer';
 
 /**
  * Detects a Language.
- * 
+ *
  * @author Thiago Delgado Pinto
  */
 export class LanguageLexer implements NodeLexer< Language >, KeywordBasedLexer {
@@ -35,8 +35,8 @@ export class LanguageLexer implements NodeLexer< Language >, KeywordBasedLexer {
 
     /** @inheritDoc */
     public updateWords( words: string[] ) {
-        this._words = words;   
-    }     
+        this._words = words;
+    }
 
     private makeRegexForTheWords( words: string[] ): string {
         return '^' + Expressions.OPTIONAL_SPACES_OR_TABS
@@ -59,7 +59,7 @@ export class LanguageLexer implements NodeLexer< Language >, KeywordBasedLexer {
 
         let pos = this._lineChecker.countLeftSpacesAndTabs( line );
         let value = this._lineChecker.textAfterSeparator( Symbols.LANGUAGE_SEPARATOR, line ).trim();
-        
+
         let node = {
             nodeType: NodeTypes.LANGUAGE,
             location: { line: lineNumber || 0, column: pos + 1 },

@@ -1,8 +1,8 @@
-import { Node } from '../ast/Node';
+import { Node } from 'concordialang-types/ast';
 
 /**
  * Node iterator.
- * 
+ *
  * @author Thiago Delgado Pinto
  */
 export class NodeIterator {

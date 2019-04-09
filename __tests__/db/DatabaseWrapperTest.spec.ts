@@ -1,8 +1,7 @@
-import { Location } from '../../modules/ast/Location';
-import { NodeTypes } from '../../modules/req/NodeTypes';
-import { Database, DatabaseProperties, DatabaseProperty } from '../../modules/ast/Database';
-import { DatabaseWrapper } from '../../modules/db/DatabaseWrapper';
 import * as path from 'path';
+import { Location, Database, DatabaseProperties, DatabaseProperty } from 'concordialang-types/ast';
+import { NodeTypes } from '../../modules/req/NodeTypes';
+import { DatabaseWrapper } from '../../modules/db/DatabaseWrapper';
 
 /**
  * @author Thiago Delgado Pinto
@@ -31,7 +30,7 @@ describe( 'DatabaseWrapperTest', () => {
                     location: { line: 2, column: 1 } as Location,
                     property: DatabaseProperties.PATH,
                     value: path,
-                    content: 'path is "' + path + '"' 
+                    content: 'path is "' + path + '"'
                 } as DatabaseProperty
                 /*
                 {
@@ -76,7 +75,7 @@ describe( 'DatabaseWrapperTest', () => {
     } );
 
     /* DISABLED BECAUSE sqlite ALLOWS CONNECTING TO NON EXISTENT DATABASES.
-    it( 'fails when trying to connect to a non existing database', async () => {        
+    it( 'fails when trying to connect to a non existing database', async () => {
         let db = makeDB( 'Non Existent DB', './non-existing-db.sqlite' );
         try {
             await wrapper.connect( db );
@@ -94,7 +93,7 @@ describe( 'DatabaseWrapperTest', () => {
             expect( isConnected ).toBeFalsy();
         } catch ( e ) {
             fail( e );
-        }        
+        }
     } );
 
     it( 'is able to query', async () => {
@@ -113,7 +112,7 @@ describe( 'DatabaseWrapperTest', () => {
             expect( firstObj.username ).toBe( 'bob' );
         } catch ( e ) {
             fail( e );
-        }        
+        }
     } );
 
 

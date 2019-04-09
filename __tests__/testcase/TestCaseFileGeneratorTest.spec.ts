@@ -1,7 +1,7 @@
+import { resolve } from "path";
+import { Document } from 'concordialang-types/ast';
 import { TestCaseFileGenerator } from "../../modules/testcase/TestCaseFileGenerator";
 import { JsonLanguageContentLoader, LanguageContentLoader } from "../../modules/dict/LanguageContentLoader";
-import { Document } from '../../modules/ast/Document';
-import { resolve } from "path";
 import { Options } from "../../modules/app/Options";
 import { SingleFileCompiler } from "../../modules/app/SingleFileCompiler";
 import { LexerBuilder } from "../../modules/lexer/LexerBuilder";

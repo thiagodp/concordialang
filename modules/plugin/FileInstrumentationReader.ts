@@ -1,7 +1,7 @@
-import { Location } from '../ast/Location';
-import { DefaultInstrumentationReader, InstrumentationReader } from './InstrumentationReader';
 import * as fs from 'fs';
 import { promisify } from 'util';
+import { Location } from 'concordialang-types/ast';
+import { DefaultInstrumentationReader, InstrumentationReader } from './InstrumentationReader';
 
  /**
   * Default script file instrumentation.

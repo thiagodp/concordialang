@@ -1,10 +1,9 @@
-import { SemanticException } from "../semantic/SemanticException";
-import { NamedNode } from "../ast/Node";
-import { Location } from "../ast/Location";
-
 // TO-DO: remove the following dependencies:
 import chalk from 'chalk';
 import * as logSymbols from 'log-symbols';
+// ---
+import { NamedNode, Location } from "concordialang-types/ast";
+import { SemanticException } from "../semantic/SemanticException";
 
 /**
  * Duplication checker.

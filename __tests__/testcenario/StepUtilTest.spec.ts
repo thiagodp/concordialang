@@ -1,11 +1,12 @@
-import {Step} from '../../modules/ast/Step';
-import { StepUtil } from "../../modules/testscenario/StepUtil";
-import { NodeTypes } from '../../modules/req/NodeTypes';
-import { Entities } from '../../modules/nlp/Entities';
 import * as arrayMove from 'array-move';
 import * as deepcopy from 'deepcopy';
+import { Step } from 'concordialang-types/ast';
+import { Entities } from 'concordialang-types/nlp';
+import { StepUtil } from "../../modules/testscenario/StepUtil";
+import { NodeTypes } from '../../modules/req/NodeTypes';
 import { KeywordDictionary } from '../../modules/dict/KeywordDictionary';
 import { EnglishKeywordDictionary } from '../../modules/dict/EnglishKeywordDictionary';
+
 
 describe( 'StepUtilTest', () => {
 

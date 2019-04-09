@@ -1,4 +1,4 @@
-import { AfterAll, AfterEachScenario, AfterFeature, BeforeAll, BeforeEachScenario, BeforeFeature } from '../ast/TestEvent';
+import { AfterAll, AfterEachScenario, AfterFeature, BeforeAll, BeforeEachScenario, BeforeFeature } from 'concordialang-types/ast';
 import { NodeTypes } from '../req/NodeTypes';
 import { BlockLexer } from './BlockLexer';
 

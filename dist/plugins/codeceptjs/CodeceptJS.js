@@ -8,16 +8,16 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+const fs = require("fs");
+const path_1 = require("path");
+const util_1 = require("util");
+const fse = require("node-fs-extra");
 const TestScriptExecutor_1 = require("./TestScriptExecutor");
 const TestScriptGenerator_1 = require("./TestScriptGenerator");
 const ReportConverter_1 = require("./ReportConverter");
-const util_1 = require("util");
 const CommandMapper_1 = require("./CommandMapper");
 const ConfigMaker_1 = require("./ConfigMaker");
 const Commands_1 = require("./Commands");
-const fs = require("fs");
-const path_1 = require("path");
-const fse = require("node-fs-extra");
 /**
  * Plugin for CodeceptJS.
  */

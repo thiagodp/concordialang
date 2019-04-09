@@ -8,14 +8,14 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const Options_1 = require("./Options");
-const TypeChecking_1 = require("../util/TypeChecking");
 const path_1 = require("path");
 const fs = require("fs");
-const cosmiconfig = require("cosmiconfig");
 const util_1 = require("util");
 const crypto = require("crypto");
 const js_joda_1 = require("js-joda");
+const cosmiconfig = require("cosmiconfig");
+const Options_1 = require("./Options");
+const TypeChecking_1 = require("../util/TypeChecking");
 class OptionsHandler {
     constructor(appPath, processPath, _cli, _meow, _fs = fs) {
         this.appPath = appPath;

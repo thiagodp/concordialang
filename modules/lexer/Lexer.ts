@@ -1,3 +1,4 @@
+import { Language, Node } from 'concordialang-types/ast';
 import { VariantLexer } from './VariantLexer';
 import { BeforeAllLexer, AfterAllLexer, BeforeFeatureLexer, AfterFeatureLexer, BeforeEachScenarioLexer, AfterEachScenarioLexer } from '../lexer/TestEventLexer';
 import { DatabasePropertyLexer } from './DatabasePropertyLexer';
@@ -5,10 +6,8 @@ import { DatabaseLexer } from './DatabaseLexer';
 import { UIPropertyLexer } from './UIPropertyLexer';
 import { UIElementLexer } from './UIElementLexer';
 import { KeywordBasedLexer } from './KeywordBasedLexer';
-import { Language } from '../ast/Language';
 import { NodeTypes } from '../req/NodeTypes';
 import { TestCaseLexer } from './TestCaseLexer';
-import { Node } from '../ast/Node';
 import { NodeLexer, LexicalAnalysisResult } from './NodeLexer';
 import { LanguageLexer } from "./LanguageLexer";
 import { TagLexer } from "./TagLexer";

@@ -1,5 +1,6 @@
-import { Node } from '../ast/Node';
+import { Node } from 'concordialang-types/ast';
 import { LexicalException } from "../req/LexicalException";
+
 
 export interface LexicalAnalysisResult< T extends Node > {
     nodes: Array< T >,
@@ -9,7 +10,7 @@ export interface LexicalAnalysisResult< T extends Node > {
 
 /**
  * Node lexer
- * 
+ *
  * @author Thiago Delgado Pinto
  */
 export interface NodeLexer< T extends Node > {
@@ -25,9 +26,9 @@ export interface NodeLexer< T extends Node > {
     suggestedNextNodeTypes(): string[];
 
     /**
-     * Perform a lexical analysis of a line. Returns null if the line 
+     * Perform a lexical analysis of a line. Returns null if the line
      * does not contain the node, or a lexical analysis result otherwise.
-     * 
+     *
      * @param line Line.
      * @param lineNumber Line number.
      */

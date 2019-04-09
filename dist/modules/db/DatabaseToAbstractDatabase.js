@@ -1,8 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const Database_1 = require("../ast/Database");
-const DatabaseTypes_1 = require("./DatabaseTypes");
 const path_1 = require("path");
+const ast_1 = require("concordialang-types/ast");
+const DatabaseTypes_1 = require("./DatabaseTypes");
 /**
  * Convert a Database to an AbstractDatabase
  */
@@ -21,13 +21,13 @@ class DatabaseToAbstractDatabase {
             }
         }
         // Tries to use the database name as the path if the path was not given
-        if (!dbItems[Database_1.DatabaseProperties.PATH]) {
-            dbItems[Database_1.DatabaseProperties.PATH] = db.name;
+        if (!dbItems[ast_1.DatabaseProperties.PATH]) {
+            dbItems[ast_1.DatabaseProperties.PATH] = db.name;
         }
-        const driverType = DatabaseTypes_1.stringToDatabaseTypeString(dbItems[Database_1.DatabaseProperties.TYPE]);
+        const driverType = DatabaseTypes_1.stringToDatabaseTypeString(dbItems[ast_1.DatabaseProperties.TYPE]);
         if (DatabaseTypes_1.isPathBasedDatabaseType(driverType)) {
-            dbItems[Database_1.DatabaseProperties.PATH] =
-                path_1.resolve(basePath ? basePath : process.cwd(), dbItems[Database_1.DatabaseProperties.PATH]);
+            dbItems[ast_1.DatabaseProperties.PATH] =
+                path_1.resolve(basePath ? basePath : process.cwd(), dbItems[ast_1.DatabaseProperties.PATH]);
         }
         return this.makeAbstractDatabase(driverType, dbItems);
     }
@@ -40,12 +40,12 @@ class DatabaseToAbstractDatabase {
     makeAbstractDatabase(driverType, dbItems) {
         const adb = {
             driverName: driverType,
-            username: dbItems[Database_1.DatabaseProperties.USERNAME],
-            password: dbItems[Database_1.DatabaseProperties.PASSWORD],
-            hostname: dbItems[Database_1.DatabaseProperties.HOST],
-            port: dbItems[Database_1.DatabaseProperties.PORT],
-            database: dbItems[Database_1.DatabaseProperties.PATH],
-            parameters: dbItems[Database_1.DatabaseProperties.OPTIONS]
+            username: dbItems[ast_1.DatabaseProperties.USERNAME],
+            password: dbItems[ast_1.DatabaseProperties.PASSWORD],
+            hostname: dbItems[ast_1.DatabaseProperties.HOST],
+            port: dbItems[ast_1.DatabaseProperties.PORT],
+            database: dbItems[ast_1.DatabaseProperties.PATH],
+            parameters: dbItems[ast_1.DatabaseProperties.OPTIONS]
         };
         return adb;
     }

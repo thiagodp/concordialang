@@ -1,10 +1,10 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const StepUtil_1 = require("../../modules/testscenario/StepUtil");
-const NodeTypes_1 = require("../../modules/req/NodeTypes");
-const Entities_1 = require("../../modules/nlp/Entities");
 const arrayMove = require("array-move");
 const deepcopy = require("deepcopy");
+const nlp_1 = require("concordialang-types/nlp");
+const StepUtil_1 = require("../../modules/testscenario/StepUtil");
+const NodeTypes_1 = require("../../modules/req/NodeTypes");
 const EnglishKeywordDictionary_1 = require("../../modules/dict/EnglishKeywordDictionary");
 describe('StepUtilTest', () => {
     let util = null;
@@ -50,7 +50,7 @@ describe('StepUtilTest', () => {
             { nodeType: NodeTypes_1.NodeTypes.STEP_WHEN, values: ['a'] },
             { nodeType: NodeTypes_1.NodeTypes.STEP_AND, values: ['b'] },
             { nodeType: NodeTypes_1.NodeTypes.STEP_AND, values: ['c'] },
-            { nodeType: NodeTypes_1.NodeTypes.STEP_GIVEN, values: ['d'], nlpResult: { entities: [{ entity: Entities_1.Entities.STATE, value: 'some state' }] } },
+            { nodeType: NodeTypes_1.NodeTypes.STEP_GIVEN, values: ['d'], nlpResult: { entities: [{ entity: nlp_1.Entities.STATE, value: 'some state' }] } },
             { nodeType: NodeTypes_1.NodeTypes.STEP_AND, values: ['e'] },
             { nodeType: NodeTypes_1.NodeTypes.STEP_AND, values: ['f'] },
             { nodeType: NodeTypes_1.NodeTypes.STEP_THEN, values: ['g'] },
@@ -70,7 +70,7 @@ describe('StepUtilTest', () => {
             { nodeType: NodeTypes_1.NodeTypes.STEP_AND, values: ['b'] },
             { nodeType: NodeTypes_1.NodeTypes.STEP_AND, values: ['c'] },
             { nodeType: NodeTypes_1.NodeTypes.STEP_GIVEN, values: ['d'] },
-            { nodeType: NodeTypes_1.NodeTypes.STEP_AND, values: ['e'], nlpResult: { entities: [{ entity: Entities_1.Entities.STATE, value: 'some state' }] } },
+            { nodeType: NodeTypes_1.NodeTypes.STEP_AND, values: ['e'], nlpResult: { entities: [{ entity: nlp_1.Entities.STATE, value: 'some state' }] } },
             { nodeType: NodeTypes_1.NodeTypes.STEP_AND, values: ['f'] },
             { nodeType: NodeTypes_1.NodeTypes.STEP_THEN, values: ['g'] },
             { nodeType: NodeTypes_1.NodeTypes.STEP_AND, values: ['h'] }
@@ -87,12 +87,12 @@ describe('StepUtilTest', () => {
     });
     it('moves after existing steps with preconditions', () => {
         let steps = [
-            { nodeType: NodeTypes_1.NodeTypes.STEP_GIVEN, values: ['a'], nlpResult: { entities: [{ entity: Entities_1.Entities.STATE, value: 'foo' }] } },
+            { nodeType: NodeTypes_1.NodeTypes.STEP_GIVEN, values: ['a'], nlpResult: { entities: [{ entity: nlp_1.Entities.STATE, value: 'foo' }] } },
             { nodeType: NodeTypes_1.NodeTypes.STEP_WHEN, values: ['b'] },
             { nodeType: NodeTypes_1.NodeTypes.STEP_AND, values: ['c'] },
             { nodeType: NodeTypes_1.NodeTypes.STEP_AND, values: ['d'] },
-            { nodeType: NodeTypes_1.NodeTypes.STEP_GIVEN, values: ['e'], nlpResult: { entities: [{ entity: Entities_1.Entities.STATE, value: 'bar' }] } },
-            { nodeType: NodeTypes_1.NodeTypes.STEP_AND, values: ['f'], nlpResult: { entities: [{ entity: Entities_1.Entities.STATE, value: 'baz' }] } },
+            { nodeType: NodeTypes_1.NodeTypes.STEP_GIVEN, values: ['e'], nlpResult: { entities: [{ entity: nlp_1.Entities.STATE, value: 'bar' }] } },
+            { nodeType: NodeTypes_1.NodeTypes.STEP_AND, values: ['f'], nlpResult: { entities: [{ entity: nlp_1.Entities.STATE, value: 'baz' }] } },
             { nodeType: NodeTypes_1.NodeTypes.STEP_AND, values: ['g'] },
             { nodeType: NodeTypes_1.NodeTypes.STEP_THEN, values: ['h'] },
             { nodeType: NodeTypes_1.NodeTypes.STEP_AND, values: ['i'] }

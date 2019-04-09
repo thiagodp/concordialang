@@ -1,13 +1,5 @@
-import { Document } from '../ast/Document';
-import { Location } from '../ast/Location';
-import { AugmentedSpec } from '../ast/AugmentedSpec';
-import { TestEvent } from '../ast/TestEvent';
-import { DatabaseToAbstractDatabase } from '../db/DatabaseToAbstractDatabase';
-import { supportTablesInQueries } from '../db/DatabaseTypes';
-import { Entities } from '../nlp/Entities';
-import { Symbols } from '../req/Symbols';
-import { Actions } from '../util/Actions';
-import { isDefined } from '../util/TypeChecking';
+import { Document, Location, Step, TestEvent } from 'concordialang-types/ast';
+import { Entities } from 'concordialang-types/nlp';
 import {
     AbstractTestScript,
     ATSCommand,
@@ -16,8 +8,13 @@ import {
     ATSEvent,
     ATSTestCase,
     NamedATSElement,
-} from './AbstractTestScript';
-import { Step } from '../ast/Step';
+} from 'concordialang-types/testscript';
+import { AugmentedSpec } from '../ast/AugmentedSpec';
+import { DatabaseToAbstractDatabase } from '../db/DatabaseToAbstractDatabase';
+import { supportTablesInQueries } from '../db/DatabaseTypes';
+import { Symbols } from '../req/Symbols';
+import { Actions } from '../util/Actions';
+import { isDefined } from '../util/TypeChecking';
 
 /**
  * Generates Abstract Test Script

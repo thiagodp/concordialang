@@ -1,7 +1,7 @@
+import { ListItem } from 'concordialang-types/ast';
 import { RegexParser } from './RegexParser';
 import { ConstantParser } from './ConstantParser';
 import { NodeParser } from './NodeParser';
-import { ListItem } from '../ast/ListItem';
 import { ParsingContext } from './ParsingContext';
 import { NodeIterator } from './NodeIterator';
 import { ListItemNodeParser } from './ListItemNodeParser';
@@ -10,7 +10,7 @@ import { DatabasePropertyParser } from './DatabasePropertyParser';
 
 /**
  * Parses a ListItem node and decide what node type it will be.
- * 
+ *
  * @author Thiago Delgado Pinto
  */
 export class ListItemParser implements NodeParser< ListItem > {
@@ -23,7 +23,7 @@ export class ListItemParser implements NodeParser< ListItem > {
         this._nodeParsers.push( new UIPropertyParser() );
         this._nodeParsers.push( new DatabasePropertyParser() );
     }
-    
+
     analyze(
         node: ListItem,
         context: ParsingContext,

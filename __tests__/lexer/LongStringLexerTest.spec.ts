@@ -1,6 +1,6 @@
+import { Location } from 'concordialang-types/ast';
 import { LongStringLexer } from "../../modules/lexer/LongStringLexer";
 import { NodeTypes } from "../../modules/req/NodeTypes";
-import { Location } from '../../modules/ast/Location';
 
 describe( 'LongStringLexerTest', () => {
 
@@ -39,6 +39,6 @@ describe( 'LongStringLexerTest', () => {
         expect( r.nodes ).toHaveLength( 1 );
         expect( r.nodes[ 0 ].nodeType ).toBe( NodeTypes.LONG_STRING );
         expect( r.nodes[ 0 ].location ).toEqual( { column: 1, line: 1 } as Location );
-    } );    
+    } );
 
 } );

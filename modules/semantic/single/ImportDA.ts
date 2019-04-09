@@ -1,10 +1,9 @@
-import { DocumentAnalyzer } from './DocumentAnalyzer';
-import { Import } from '../../ast/Import';
-import { DuplicationChecker } from '../../util/DuplicationChecker';
-import { SemanticException } from "../SemanticException";
-import { Document } from '../../ast/Document';
 import * as fs from 'fs';
 import { dirname, join } from 'path';
+import { Import, Document } from 'concordialang-types/ast';
+import { DocumentAnalyzer } from './DocumentAnalyzer';
+import { DuplicationChecker } from '../../util/DuplicationChecker';
+import { SemanticException } from "../SemanticException";
 
 /**
  * Import analyzer for a single document.

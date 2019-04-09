@@ -8,9 +8,9 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+const dbjs = require("database-js");
 const DatabaseTypes_1 = require("./DatabaseTypes");
 const DatabaseToAbstractDatabase_1 = require("./DatabaseToAbstractDatabase");
-const dbjs = require("database-js");
 /**
  * A simple database wrapper.
  *

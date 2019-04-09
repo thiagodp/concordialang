@@ -1,9 +1,9 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const DuplicationChecker_1 = require("../../util/DuplicationChecker");
-const SemanticException_1 = require("../SemanticException");
 const fs = require("fs");
 const path_1 = require("path");
+const DuplicationChecker_1 = require("../../util/DuplicationChecker");
+const SemanticException_1 = require("../SemanticException");
 /**
  * Import analyzer for a single document.
  *

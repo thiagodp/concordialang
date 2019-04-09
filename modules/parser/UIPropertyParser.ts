@@ -1,14 +1,13 @@
+import { ListItem, UIProperty } from 'concordialang-types/ast';
 import { ListItemNodeParser } from "./ListItemNodeParser";
-import { ListItem } from '../ast/ListItem';
 import { NodeIterator } from './NodeIterator';
 import { ParsingContext } from './ParsingContext';
 import { NodeTypes } from "../req/NodeTypes";
-import { UIProperty } from "../ast/UIElement";
 import { SyntaticException } from "../req/SyntaticException";
 
 /**
  * UI property parser.
- * 
+ *
  * @author Thiago Delgado Pinto
  */
 export class UIPropertyParser implements ListItemNodeParser {
@@ -30,7 +29,7 @@ export class UIPropertyParser implements ListItemNodeParser {
 
         // Adjusts the node type
         node.nodeType = NodeTypes.UI_PROPERTY;
-        
+
         // Checks the context
         if ( ! context.currentUIElement ) {
             let e = new SyntaticException(

@@ -1,5 +1,5 @@
+import { VariantBackground } from "concordialang-types/ast";
 import { BlockLexer } from "./BlockLexer";
-import { VariantBackground } from "../ast/VariantBackground";
 import { NodeTypes } from "../req/NodeTypes";
 
 /**

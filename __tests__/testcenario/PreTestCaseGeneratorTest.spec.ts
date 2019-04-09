@@ -1,18 +1,17 @@
+import { Document, FileInfo, Variant } from "concordialang-types/ast";
+import { LocatedException } from "concordialang-types/req";
 import { PreTestCaseGenerator, GenContext } from "../../modules/testscenario/PreTestCaseGenerator";
 import { SimpleCompiler } from "../../modules/util/SimpleCompiler";
 import { AugmentedSpec } from "../../modules/ast/AugmentedSpec";
-import { Document } from "../../modules/ast/Document";
-import { FileInfo } from "../../modules/ast/FileInfo";
 import { SpecFilter } from "../../modules/selection/SpecFilter";
 import { BatchSpecificationAnalyzer } from "../../modules/semantic/BatchSpecificationAnalyzer";
-import { LocatedException } from "../../modules/req/LocatedException";
-import { Variant } from "../../modules/ast/Variant";
 import { TestPlanner } from "../../modules/testcase/TestPlanner";
 import { OnlyValidMix, JustOneInvalidMix } from "../../modules/testcase/DataTestCaseMix";
 import { SingleRandomOfEachStrategy, IndexOfEachStrategy } from "../../modules/selection/CombinationStrategy";
 import { RandomString } from "../../modules/testdata/random/RandomString";
 import { Random } from "../../modules/testdata/random/Random";
 import { LongLimits } from "../../modules/testdata/limits/LongLimits";
+
 
 describe( 'PreTestCaseGeneratorTest', () => {
 

@@ -8,9 +8,9 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const RuntimeException_1 = require("../req/RuntimeException");
+const req_1 = require("concordialang-types/req");
+const RuntimeException_1 = require("modules/req/RuntimeException");
 const DatabaseWrapper_1 = require("./DatabaseWrapper");
-const ConnectionResult_1 = require("../req/ConnectionResult");
 /**
  * Checks all the connections of a specification.
  *
@@ -25,7 +25,7 @@ class DatabaseConnectionChecker {
     }
     check(spec, errors, disconnectAfterConnecting = false) {
         return __awaiter(this, void 0, void 0, function* () {
-            let r = new ConnectionResult_1.ConnectionCheckResult(true);
+            let r = new req_1.ConnectionCheckResult(true);
             for (let doc of spec.docs) {
                 // Sanity checking
                 if (!doc.databases) {

@@ -1,10 +1,10 @@
+import { UIProperty } from "concordialang-types/ast";
 import { ListItemLexer } from './ListItemLexer';
 import { NodeTypes } from '../req/NodeTypes';
-import { UIProperty } from "../ast/UIElement";
 
 /**
  * Detects a UIProperty node.
- * 
+ *
  * @author Thiago Delgado Pinto
  */
 export class UIPropertyLexer extends ListItemLexer< UIProperty > {
@@ -16,6 +16,6 @@ export class UIPropertyLexer extends ListItemLexer< UIProperty > {
     /** @inheritDoc */
     suggestedNextNodeTypes(): string[] {
         return [ NodeTypes.UI_PROPERTY ];
-    }    
+    }
 
 }

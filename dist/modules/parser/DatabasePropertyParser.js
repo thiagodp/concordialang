@@ -32,7 +32,7 @@ class DatabasePropertyParser {
         if (!context.currentDatabase.items) {
             context.currentDatabase.items = [];
         }
-        // Adds the node        
+        // Adds the node
         context.currentDatabase.items.push(node);
         return true;
     }

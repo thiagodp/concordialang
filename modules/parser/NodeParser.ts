@@ -1,4 +1,4 @@
-import { Node } from '../ast/Node';
+import { Node } from 'concordialang-types/ast';
 import { NodeIterator } from './NodeIterator';
 import { ParsingContext } from './ParsingContext';
 

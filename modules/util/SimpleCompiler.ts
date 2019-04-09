@@ -1,15 +1,15 @@
+import { resolve } from 'path';
+import { Document, FileInfo } from "concordialang-types/ast";
 import { Options } from "../app/Options";
 import { LanguageContentLoader, JsonLanguageContentLoader } from "../dict/LanguageContentLoader";
 import { LexerBuilder } from "../lexer/LexerBuilder";
 import { Lexer } from "../lexer/Lexer";
 import { Parser } from "../parser/Parser";
-import { Document } from '../ast/Document';
 import { NLPTrainer } from "../nlp/NLPTrainer";
 import { NLPBasedSentenceRecognizer } from "../nlp/NLPBasedSentenceRecognizer";
 import { SingleDocumentProcessor } from "../app/SingleDocumentProcessor";
 import { AugmentedSpec } from "../ast/AugmentedSpec";
-import { resolve } from 'path';
-import { FileInfo } from "../ast/FileInfo";
+
 
 /**
  * Useful for testing purposes.

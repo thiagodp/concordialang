@@ -1,13 +1,9 @@
 import * as deepcopy from 'deepcopy';
 import Graph = require('graph.js/dist/graph.full.js');
-
-import { Document } from '../ast/Document';
-import { Location } from '../ast/Location';
-import { Node } from '../ast/Node';
+import { UIElement, UIProperty, Document, Location, Node } from 'concordialang-types/ast';
+import { Entities } from 'concordialang-types/nlp';
 import { AugmentedSpec } from '../ast/AugmentedSpec';
-import { UIElement, UIProperty } from '../ast/UIElement';
 import { QueryParser } from '../db/QueryParser';
-import { Entities } from '../nlp/Entities';
 import { isDefined } from '../util/TypeChecking';
 import { SemanticException } from './SemanticException';
 import { SpecificationAnalyzer } from './SpecificationAnalyzer';

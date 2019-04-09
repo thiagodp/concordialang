@@ -1,4 +1,4 @@
-import { AfterEachScenario } from '../ast/TestEvent';
+import { AfterEachScenario } from 'concordialang-types/ast';
 import { SyntaticException } from '../req/SyntaticException';
 import { isDefined } from '../util/TypeChecking';
 import { NodeIterator } from './NodeIterator';

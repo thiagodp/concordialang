@@ -1,5 +1,9 @@
 {
     "compilerOptions": {
+        "baseUrl": ".",
+        "paths": {
+            "concordialang-types/*": [ "node_modules/concordialang-types/dist/*" ]
+        },
         "outDir": "dist",
         "module": "commonjs",
         "target": "es6",

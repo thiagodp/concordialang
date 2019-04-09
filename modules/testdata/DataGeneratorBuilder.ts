@@ -1,3 +1,4 @@
+import { Queryable } from "concordialang-types/req";
 import { ValueType } from "../util/ValueTypeDetector";
 import { RawDataGenerator } from "./raw/RawDataGenerator";
 import { StringGenerator } from "./raw/StringGenerator";
@@ -17,7 +18,6 @@ import { RangeAnalyzer } from "./raw/RangeAnalyzer";
 import { RegexBasedDataGenerator } from "./RegexBasedDataGenerator";
 import { ListBasedDataGenerator } from "./ListBasedDataGenerator";
 import { QueryBasedDataGenerator } from "./QueryBasedDataGenerator";
-import { Queryable } from "../req/Queryable";
 import { QueryCache } from "../db/QueryCache";
 import { InvertedLogicListBasedDataGenerator } from "./InvertedLogicListBasedDataGenerator";
 import { InvertedLogicQueryBasedDataGenerator } from "./InvertedLogicQueryBasedDataGenerator";

@@ -1,9 +1,9 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const SemanticException_1 = require("../semantic/SemanticException");
 // TO-DO: remove the following dependencies:
 const chalk_1 = require("chalk");
 const logSymbols = require("log-symbols");
+const SemanticException_1 = require("../semantic/SemanticException");
 /**
  * Duplication checker.
  *

@@ -1,10 +1,10 @@
-import { ListItem } from '../ast/ListItem';
+import { ListItem } from 'concordialang-types/ast';
 import { NodeIterator } from './NodeIterator';
 import { ParsingContext } from './ParsingContext';
 
 /**
  * List item node parser.
- * 
+ *
  * @author Thiago Delgado Pinto
  */
 export interface ListItemNodeParser {

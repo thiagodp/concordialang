@@ -43,7 +43,7 @@ class NLPTrainingDataConversor {
                 // add the entity to the intent
                 intent.entities.push(entity);
             }
-            // add intent            
+            // add intent
             data.intents.push(intent);
         }
         // docs

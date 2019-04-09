@@ -1,10 +1,10 @@
+import { StepWhen } from "concordialang-types/ast";
 import { StartingKeywordLexer } from './StartingKeywordLexer';
-import { StepWhen } from "../ast/Step";
 import { NodeTypes } from "../req/NodeTypes";
 
 /**
  * Detects a When node.
- * 
+ *
  * @author Thiago Delgado Pinto
  */
 export class StepWhenLexer extends StartingKeywordLexer< StepWhen > {
@@ -16,6 +16,6 @@ export class StepWhenLexer extends StartingKeywordLexer< StepWhen > {
     /** @inheritDoc */
     suggestedNextNodeTypes(): string[] {
         return [ NodeTypes.STEP_AND, NodeTypes.STEP_THEN ];
-    }    
+    }
 
 }

@@ -1,4 +1,4 @@
-import { LocatedException } from '../req/LocatedException';
+import { LocatedException } from 'concordialang-types/req';
 import { Warning } from '../req/Warning';
 
 export function sortErrorsByLocation( errors: LocatedException[] ): LocatedException[] {
@@ -21,4 +21,4 @@ export function sortErrorsByLocation( errors: LocatedException[] ): LocatedExcep
         }
         return aIsWarning ? 1 : -1;
     } );
-}  
+}

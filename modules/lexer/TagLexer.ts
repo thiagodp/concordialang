@@ -1,4 +1,4 @@
-import { Tag } from '../ast/Tag';
+import { Tag } from 'concordialang-types/ast';
 import { LexicalException } from '../req/LexicalException';
 import { NodeTypes } from '../req/NodeTypes';
 import { Symbols } from '../req/Symbols';

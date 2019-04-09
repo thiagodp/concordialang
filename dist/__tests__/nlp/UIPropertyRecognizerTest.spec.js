@@ -1,11 +1,11 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+const path_1 = require("path");
 const NodeTypes_1 = require("../../modules/req/NodeTypes");
 const NLPTrainer_1 = require("../../modules/nlp/NLPTrainer");
 const NLP_1 = require("../../modules/nlp/NLP");
 const UIPropertyRecognizer_1 = require("../../modules/nlp/UIPropertyRecognizer");
 const Options_1 = require("../../modules/app/Options");
-const path_1 = require("path");
 const LanguageContentLoader_1 = require("../../modules/dict/LanguageContentLoader");
 describe('UIPropertyRecognizerTest', () => {
     let nodes = [];

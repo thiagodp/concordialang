@@ -1,8 +1,8 @@
-import { TestMethodResult, TestScriptExecutionResult, TestSuiteResult, TotalExecutionResult } from '../../modules/testscript/TestScriptExecution';
-import { DefaultInstrumentationReader } from '../../modules/plugin/InstrumentationReader';
-import { Location } from '../../modules/ast/Location';
 import * as fs from 'fs';
 import { promisify } from 'util';
+import { TestMethodResult, TestScriptExecutionResult, TestSuiteResult, TotalExecutionResult } from 'concordialang-types/testscript';
+import { Location } from 'concordialang-types/ast';
+import { DefaultInstrumentationReader } from '../../modules/plugin/InstrumentationReader';
 import { FileInstrumentationReader } from '../../modules/plugin/FileInstrumentationReader';
 
 /**

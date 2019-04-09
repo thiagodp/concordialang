@@ -1,5 +1,10 @@
-import { AbstractTestScript, ATSTestCase } from './AbstractTestScript';
-import { TestMethodResult, TestScriptExecutionResult } from './TestScriptExecution';
+import {
+    AbstractTestScript,
+    ATSTestCase,
+    TestMethodResult,
+    TestScriptExecutionResult
+} from 'concordialang-types/testscript';
+
 
 export class TestResultAnalyzer {
 
@@ -14,9 +19,7 @@ export class TestResultAnalyzer {
                 let ats = this.findAbstractTestCase( featureName, m.name, abstractTestScripts );
                 if ( ! ats ) {
                     // ERROR
-
                     // console.log( 'error - not found', featureName, m.name );
-
                     continue;
                 }
 
@@ -36,7 +39,6 @@ export class TestResultAnalyzer {
                     }
 
                     // Notify user!
-
                     // console.log( 'adjusted to pass', featureName, m.name );
                 }
             }

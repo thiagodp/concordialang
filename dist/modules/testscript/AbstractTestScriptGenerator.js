@@ -1,12 +1,12 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+const nlp_1 = require("concordialang-types/nlp");
+const testscript_1 = require("concordialang-types/testscript");
 const DatabaseToAbstractDatabase_1 = require("../db/DatabaseToAbstractDatabase");
 const DatabaseTypes_1 = require("../db/DatabaseTypes");
-const Entities_1 = require("../nlp/Entities");
 const Symbols_1 = require("../req/Symbols");
 const Actions_1 = require("../util/Actions");
 const TypeChecking_1 = require("../util/TypeChecking");
-const AbstractTestScript_1 = require("./AbstractTestScript");
 /**
  * Generates Abstract Test Script
  */
@@ -65,21 +65,21 @@ class AbstractTestScriptGenerator {
             : feature.location;
         const featureName = !feature ? 'Unknown feature' : feature.name;
         // ASTRACT TEST SCRIPT
-        let ats = new AbstractTestScript_1.AbstractTestScript();
+        let ats = new testscript_1.AbstractTestScript();
         // feature, location, sourceFile
         ats.sourceFile = doc.fileInfo.path;
-        ats.feature = new AbstractTestScript_1.NamedATSElement(location, featureName);
+        ats.feature = new testscript_1.NamedATSElement(location, featureName);
         // scenarios
         let scenarioNames = [];
         if (TypeChecking_1.isDefined(feature)) {
             for (let s of feature.scenarios || []) {
-                ats.scenarios.push(new AbstractTestScript_1.NamedATSElement(s.location, s.name));
+                ats.scenarios.push(new testscript_1.NamedATSElement(s.location, s.name));
                 scenarioNames.push(s.name);
             }
         }
         // testCases
         for (let tc of doc.testCases || []) {
-            let absTC = new AbstractTestScript_1.ATSTestCase(tc.location, tc.name);
+            let absTC = new testscript_1.ATSTestCase(tc.location, tc.name);
             absTC.scenario = scenarioNames[(tc.declaredScenarioIndex || 1) - 1] || 'Unknown scenario';
             absTC.invalid = tc.shoudFail;
             for (let sentence of tc.sentences) {
@@ -104,13 +104,13 @@ class AbstractTestScriptGenerator {
                 event.sentences.length < 1) {
                 continue;
             }
-            ats[e] = new AbstractTestScript_1.ATSEvent();
+            ats[e] = new testscript_1.ATSEvent();
             ats[e].commands = this.convertTestEventSentencesToCommands(event, spec);
         }
         // console.log( ats );
         return ats;
     }
-    sentenceToCommand(sentence, obj = new AbstractTestScript_1.ATSCommand(), valuesOverwrite) {
+    sentenceToCommand(sentence, obj = new testscript_1.ATSCommand(), valuesOverwrite) {
         let cmd = obj;
         cmd.location = sentence.location;
         cmd.action = sentence.action;
@@ -138,7 +138,7 @@ class AbstractTestScriptGenerator {
         for (let s of event.sentences || []) {
             // Action is "connect" or "disconnect"
             if (s.action === Actions_1.Actions.CONNECT || s.action === Actions_1.Actions.DISCONNECT) {
-                let dbRef = s.nlpResult.entities.find(e => e.entity === Entities_1.Entities.CONSTANT);
+                let dbRef = s.nlpResult.entities.find(e => e.entity === nlp_1.Entities.CONSTANT);
                 if (!dbRef) {
                     console.log('ERROR: database reference not found in:', s.content);
                     continue;
@@ -152,12 +152,12 @@ class AbstractTestScriptGenerator {
                     }
                     const absDB = dbConversor.convertFromNode(db, spec.basePath);
                     const values = [dbName, absDB];
-                    const cmd = this.sentenceToCommand(s, new AbstractTestScript_1.ATSDatabaseCommand(), values);
+                    const cmd = this.sentenceToCommand(s, new testscript_1.ATSDatabaseCommand(), values);
                     cmd.db = absDB;
                     commands.push(cmd);
                 }
                 else {
-                    commands.push(this.sentenceToCommand(s, new AbstractTestScript_1.ATSCommand(), [dbName]));
+                    commands.push(this.sentenceToCommand(s, new testscript_1.ATSCommand(), [dbName]));
                 }
                 continue;
             }
@@ -173,7 +173,7 @@ class AbstractTestScriptGenerator {
             const options = s.actionOptions || [];
             // options have "command"
             if (options.indexOf(COMMAND_OPTION) >= 0) {
-                let cmd = this.sentenceToCommand(s, new AbstractTestScript_1.ATSConsoleCommand());
+                let cmd = this.sentenceToCommand(s, new testscript_1.ATSConsoleCommand());
                 commands.push(cmd);
                 continue;
             }
@@ -210,7 +210,7 @@ class AbstractTestScriptGenerator {
                     }
                 }
                 // Transforms to a command
-                let cmd = this.sentenceToCommand(s, new AbstractTestScript_1.ATSDatabaseCommand(), [dbName, sqlCommand]);
+                let cmd = this.sentenceToCommand(s, new testscript_1.ATSDatabaseCommand(), [dbName, sqlCommand]);
                 commands.push(cmd);
                 break;
             }

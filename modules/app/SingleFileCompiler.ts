@@ -1,6 +1,6 @@
+import { Document } from "concordialang-types/ast";
 import { SingleFileProcessor, FileData, ProcessedFileData } from "./SingleFileProcessor";
 import { Lexer } from "../lexer/Lexer";
-import { Document } from "../ast/Document";
 import { SingleDocumentProcessor } from "./SingleDocumentProcessor";
 import { Parser } from "../parser/Parser";
 import { NLPBasedSentenceRecognizer } from "../nlp/NLPBasedSentenceRecognizer";

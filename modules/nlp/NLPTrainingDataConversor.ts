@@ -1,20 +1,26 @@
-import { NLPTrainingEntity, NLPTrainingIntent, NLPTrainingMatch, NLPTrainingData, NLPTrainingIntentExample } from './NLPTrainingData';
+import {
+    NLPTrainingEntity,
+    NLPTrainingIntent,
+    NLPTrainingMatch,
+    NLPTrainingData,
+    NLPTrainingIntentExample
+} from './NLPTrainingData';
 
 /**
  * Training data conversor.
- * 
+ *
  * @author Thiago Delgado Pinto
  */
 export class NLPTrainingDataConversor {
 
     /**
      * Build training data from a translation map and training documents.
-     * 
+     *
      * @param translationMap4NLP    Translation object map containing
      *                              intent name => entity name => match name => samples.
      *                              Example:
      *                              ```
-     *                              { 
+     *                              {
      *                                  "intent1": {
      *                                      "entity1": {
      *                                          "match1": [ "sample1", "sample2" ],
@@ -43,10 +49,10 @@ export class NLPTrainingDataConversor {
                     entity.matches.push( match );
                 }
                 // add the entity to the intent
-                intent.entities.push( entity );                
+                intent.entities.push( entity );
             }
-            // add intent            
-            data.intents.push( intent );            
+            // add intent
+            data.intents.push( intent );
         }
 
         // docs

@@ -1,4 +1,4 @@
-import { ConstantBlock } from '../../modules/ast/ConstantBlock';
+import { ConstantBlock } from 'concordialang-types/ast';
 import { ConstantBlockLexer } from '../../modules/lexer/ConstantBlockLexer';
 import { NodeTypes } from '../../modules/req/NodeTypes';
 
@@ -10,7 +10,7 @@ describe( 'ConstantBlockLexerTest', () => {
     let words = [ 'constants' ];
     let lexer = new ConstantBlockLexer( words ); // under test
 
-    // IMPORTANT: Since the lexer under test inherits from another lexer and 
+    // IMPORTANT: Since the lexer under test inherits from another lexer and
     // there are tests for the parent class, few additional tests are necessary.
 
     it( 'detects in the correct position', () => {
@@ -32,7 +32,7 @@ describe( 'ConstantBlockLexerTest', () => {
                 nodeType: NodeTypes.CONSTANT_BLOCK,
                 location: { line: 1, column: 1 }
             } as ConstantBlock
-        );        
+        );
     } );
 
 } );

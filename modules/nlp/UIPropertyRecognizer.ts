@@ -1,10 +1,9 @@
-import { NLPResult } from '../../modules/nlp/NLPResult';
-import { ContentNode } from '../ast/Node';
-import { EntityValue, UIProperty } from '../ast/UIElement';
-import { LocatedException } from '../req/LocatedException';
+
+import { NLPResult, Entities } from 'concordialang-types/nlp';
+import { ContentNode, UIProperty, EntityValue } from 'concordialang-types/ast';
+import { LocatedException } from 'concordialang-types/req';
 import { isDefined } from '../util/TypeChecking';
 import { adjustValueToTheRightType, ValueTypeDetector } from '../util/ValueTypeDetector';
-import { Entities } from './Entities';
 import { Intents } from './Intents';
 import { NLP } from './NLP';
 import { NLPException } from './NLPException';

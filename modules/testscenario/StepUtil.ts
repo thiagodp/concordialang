@@ -1,13 +1,13 @@
-import { Step } from "../ast/Step";
-import { NLPUtil } from "../nlp/NLPResult";
+import * as arrayMove from 'array-move';
+import * as deepcopy from 'deepcopy';
+import { Step } from 'concordialang-types/ast';
+import { NLPUtil, Entities } from 'concordialang-types/nlp'
 import { NodeTypes } from "../req/NodeTypes";
-import { Entities } from "../nlp/Entities";
 import { isDefined } from "../util/TypeChecking";
 import { KeywordDictionary } from "../dict/KeywordDictionary";
 import { convertCase } from "../util/CaseConversor";
 import { CaseType } from "../app/CaseType";
-import * as arrayMove from 'array-move';
-import * as deepcopy from 'deepcopy';
+
 
 export class StepUtil {
 

@@ -1,4 +1,4 @@
-import { Variant } from "../ast/Variant";
+import { Variant } from "concordialang-types/ast";
 import { RandomLong } from "../testdata/random/RandomLong";
 import { Random } from "../testdata/random/Random";
 import { TagUtil } from "../util/TagUtil";

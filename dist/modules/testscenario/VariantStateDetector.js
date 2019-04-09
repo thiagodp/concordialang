@@ -1,8 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const VariantLike_1 = require("../ast/VariantLike");
-const Entities_1 = require("../nlp/Entities");
-const NLPResult_1 = require("../nlp/NLPResult");
+const ast_1 = require("concordialang-types/ast");
+const nlp_1 = require("concordialang-types/nlp");
 const NodeTypes_1 = require("../req/NodeTypes");
 /**
  * Detects preconditions, state calls and postconditions.
@@ -31,7 +30,7 @@ class VariantStateDetector {
             variantLike.postconditions = [];
         }
         // Analysing detected entities of the steps
-        const nlpUtil = new NLPResult_1.NLPUtil();
+        const nlpUtil = new nlp_1.NLPUtil();
         let lastGWT = null;
         let stepIndex = -1;
         for (let step of variantLike.sentences) {
@@ -62,9 +61,9 @@ class VariantStateDetector {
             if (null === targetStates) {
                 continue;
             }
-            const stateNames = nlpUtil.valuesOfEntitiesNamed(Entities_1.Entities.STATE, step.nlpResult);
+            const stateNames = nlpUtil.valuesOfEntitiesNamed(nlp_1.Entities.STATE, step.nlpResult);
             for (let name of stateNames) {
-                targetStates.push(new VariantLike_1.State(name, stepIndex));
+                targetStates.push(new ast_1.State(name, stepIndex));
             }
         }
     }

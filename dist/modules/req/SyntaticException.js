@@ -1,12 +1,12 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const LocatedException_1 = require("./LocatedException");
+const req_1 = require("concordialang-types/req");
 /**
  * Syntatic exception
  *
  * @author Thiago Delgado Pinto
  */
-class SyntaticException extends LocatedException_1.LocatedException {
+class SyntaticException extends req_1.LocatedException {
     constructor() {
         super(...arguments);
         this.name = 'SyntaxError';

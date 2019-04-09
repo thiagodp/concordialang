@@ -1,14 +1,17 @@
-import { Background } from '../ast/Background';
-import { ConstantBlock } from '../ast/ConstantBlock';
-import { Database } from '../ast/Database';
-import { Document } from '../ast/Document';
-import { RegexBlock } from '../ast/RegexBlock';
-import { Scenario } from '../ast/Scenario';
-import { Table } from '../ast/Table';
-import { TestCase } from '../ast/TestCase';
-import { UIElement, UIProperty } from '../ast/UIElement';
-import { Variant } from '../ast/Variant';
-import { VariantBackground } from '../ast/VariantBackground';
+import {
+    Background,
+    ConstantBlock,
+    Database,
+    Document,
+    RegexBlock,
+    Scenario,
+    Table,
+    TestCase,
+    UIElement,
+    UIProperty,
+    Variant,
+    VariantBackground
+ } from 'concordialang-types/ast';
 
 /**
  * Parsing context.

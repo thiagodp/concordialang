@@ -1,9 +1,8 @@
+import Graph = require( 'graph.js/dist/graph.full.js' );
+import { Location } from 'concordialang-types/ast';
 import { SpecificationAnalyzer } from './SpecificationAnalyzer';
 import { AugmentedSpec } from '../ast/AugmentedSpec';
 import { SemanticException } from './SemanticException';
-import { Location } from '../ast/Location';
-import Graph = require( 'graph.js/dist/graph.full.js' );
-
 
 /**
  * Executes semantic analysis of After All events.

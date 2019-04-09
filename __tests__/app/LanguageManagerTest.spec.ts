@@ -1,6 +1,6 @@
+import { resolve } from 'path';
 import { LanguageManager } from "../../modules/app/LanguageManager";
 import { Options } from "../../modules/app/Options";
-import { resolve } from 'path';
 
 /**
  * @author Thiago Delgado Pinto
@@ -13,7 +13,7 @@ describe( 'LanguageManagerTest', () => {
         const m = new LanguageManager( langDir );
         const files: string[] = await m.languageFiles();
         expect( files ).toContain( 'pt.json' );
-    } );    
+    } );
 
     it( 'detects available correctly', async () => {
         const m = new LanguageManager( langDir );

@@ -1,9 +1,9 @@
+import { Constant } from 'concordialang-types/ast';
 import { LexicalException} from '../req/LexicalException';
 import { LineChecker} from '../req/LineChecker';
 import { KeywordBasedLexer } from './KeywordBasedLexer';
 import { LexicalAnalysisResult, NodeLexer } from './NodeLexer';
 import { NodeTypes } from '../req/NodeTypes';
-import { Constant } from '../ast/Constant';
 import { Expressions } from '../req/Expressions';
 import { Symbols } from '../req/Symbols';
 import { CommentHandler } from './CommentHandler';

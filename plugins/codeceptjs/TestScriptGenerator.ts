@@ -1,9 +1,9 @@
 import { render } from "mustache";
-import { AbstractTestScript, ATSCommand } from '../../modules/testscript/AbstractTestScript';
-import { CommandMapper } from "./CommandMapper";
 const dedent = require('dedent-js');
 import * as logSymbols from 'log-symbols';
 import chalk from 'chalk';
+import { AbstractTestScript, ATSCommand } from 'concordialang-types/testscript';
+import { CommandMapper } from "./CommandMapper";
 
 /**
  * Generate test scripts for CodeceptJS.

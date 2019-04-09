@@ -1,12 +1,12 @@
+import { Text } from 'concordialang-types/ast';
 import { Symbols } from '../req/Symbols';
 import { NodeTypes } from '../req/NodeTypes';
 import { NodeLexer, LexicalAnalysisResult } from "./NodeLexer";
-import { Text } from '../ast/Text';
 import { LineChecker } from "../req/LineChecker";
 
 /**
  * Detects anything not empty.
- * 
+ *
  * @author Thiago Delgado Pinto
  */
 export class TextLexer implements NodeLexer< Text > {
@@ -21,13 +21,13 @@ export class TextLexer implements NodeLexer< Text > {
     /** @inheritDoc */
     suggestedNextNodeTypes(): string[] {
         return [ NodeTypes.TEXT ];
-    }    
+    }
 
     /** @inheritDoc */
     public analyze( line: string, lineNumber?: number ): LexicalAnalysisResult< Text > {
 
         let trimmedLine = line.trim();
-        
+
         // Empty line is not accepted
         if ( 0 === trimmedLine.length ) {
             return null;

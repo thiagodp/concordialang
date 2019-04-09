@@ -1,15 +1,9 @@
-import { FileInfo } from '../../modules/ast/FileInfo';
-import { Import } from '../../modules/ast/Import';
-import { Location } from '../../modules/ast/Location';
+import { join } from 'path';
+import { FileInfo, Import, Location, Feature, Document, TestCase, Tag } from 'concordialang-types/ast';
 import { NodeTypes } from '../../modules/req/NodeTypes';
 import { ReservedTags } from '../../modules/req/ReservedTags';
-import { Tag } from '../../modules/ast/Tag';
-import { Feature } from '../../modules/ast/Feature';
-import { Document } from '../../modules/ast/Document';
 import { AugmentedSpec } from '../../modules/ast/AugmentedSpec';
 import { TestCaseSSA } from '../../modules/semantic/TestCaseSSA';
-import { TestCase } from '../../modules/ast/TestCase';
-import { join } from 'path';
 
 /**
  * @author Thiago Delgado Pinto

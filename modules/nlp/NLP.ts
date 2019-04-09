@@ -1,8 +1,6 @@
-import { Entities } from './Entities';
-import { NLPTrainingData } from "./NLPTrainingData";
-import { NLPResult } from './NLPResult';
-
 import Bravey = require('../../lib/bravey'); // .js file
+import { NLPResult, Entities } from 'concordialang-types/nlp';
+import { NLPTrainingData } from "./NLPTrainingData";
 import { adjustValueToTheRightType } from '../util/ValueTypeDetector';
 
 /**

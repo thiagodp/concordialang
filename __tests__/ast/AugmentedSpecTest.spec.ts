@@ -1,9 +1,9 @@
-import { AugmentedSpec } from "../../modules/ast/AugmentedSpec";
-import { SimpleCompiler } from "../../modules/util/SimpleCompiler";
-import { FileInfo } from "../../modules/ast/FileInfo";
 import { join } from "path";
+import { FileInfo } from 'concordialang-types/ast';
+import { AugmentedSpec } from "modules/ast/AugmentedSpec";
+import { SimpleCompiler } from "../../modules/util/SimpleCompiler";
 
-describe( 'SpecTest', () => {
+describe( 'AugmentedSpecTest', () => {
 
     let spec: AugmentedSpec; // under test
 

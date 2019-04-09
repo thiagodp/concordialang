@@ -1,4 +1,4 @@
-import { Node } from '../ast/Node';
+import { Node } from 'concordialang-types/ast';
 import { Expressions } from '../req/Expressions';
 import { LexicalException } from '../req/LexicalException';
 import { LineChecker } from '../req/LineChecker';
