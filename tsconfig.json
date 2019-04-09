@@ -2,7 +2,8 @@
     "compilerOptions": {
         "baseUrl": ".",
         "paths": {
-            "concordialang-types/*": [ "node_modules/concordialang-types/dist/*" ]
+            "concordialang-types/*": [ "node_modules/concordialang-types/dist/*" ],
+            "concordialang-plugin/*": [ "node_modules/concordialang-plugin/dist/*" ]
         },
         "outDir": "dist",
         "module": "commonjs",

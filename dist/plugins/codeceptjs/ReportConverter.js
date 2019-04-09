@@ -11,8 +11,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const fs = require("fs");
 const util_1 = require("util");
 const testscript_1 = require("concordialang-types/testscript");
-const InstrumentationReader_1 = require("../../modules/plugin/InstrumentationReader");
-const FileInstrumentationReader_1 = require("../../modules/plugin/FileInstrumentationReader");
+const concordialang_plugin_1 = require("concordialang-plugin");
 /**
  * Converts a Mocha Multi Report to Concordia's format.
  *
@@ -22,7 +21,7 @@ class ReportConverter {
     constructor(_fs = fs, _encoding = 'utf-8') {
         this._fs = _fs;
         this._encoding = _encoding;
-        this._instrumentator = new FileInstrumentationReader_1.FileInstrumentationReader(new InstrumentationReader_1.DefaultInstrumentationReader(), _fs, _encoding);
+        this._instrumentator = new concordialang_plugin_1.FileInstrumentationReader(new concordialang_plugin_1.DefaultInstrumentationReader(), _fs, _encoding);
     }
     /**
      * Reads a execution result file and converts it to the expected Concordia's format.

@@ -1,8 +1,8 @@
 import * as childProcess from 'child_process';
+import { Plugin } from "concordialang-plugin";
 import { PluginData } from "./PluginData";
 import { JsonBasedPluginFinder } from "./JsonBasedPluginFinder";
 import { PluginDrawer } from "./PluginDrawer";
-import { Plugin } from "./Plugin";
 import { PluginFinder } from "./PluginFinder";
 
 /**

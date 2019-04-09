@@ -4,7 +4,7 @@ import {
     TestScriptExecutionOptions,
     TestScriptExecutionResult
 } from 'concordialang-types/testscript';
-import { Plugin } from '../../modules/plugin/Plugin';
+import { Plugin } from 'concordialang-plugin';
 
 /**
  * Fake plugin.
