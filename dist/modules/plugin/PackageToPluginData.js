@@ -1,5 +1,10 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+/**
+ * Converts data from a NPM package file into Concordia Plugin Data.
+ *
+ * @author Thiago Delgado Pinto
+ */
 class PackageToPluginData {
     constructor(_packageProperty) {
         this._packageProperty = _packageProperty;
@@ -9,6 +14,7 @@ class PackageToPluginData {
         if (!prop) {
             return; // undefined
         }
+        // TO-DO: validate properties' schema
         let data = {
             // From the package object
             name: pkg.name,
@@ -16,10 +22,10 @@ class PackageToPluginData {
             version: pkg.version,
             // authors: this.packageAuthorToAuthors( pkg.author ).concat( this.packageContributorsToAuthors( pkg.contributors ) ),
             authors: this.packageAuthorToAuthors(pkg.author),
-            file: pkg.main,
             // From the custom property
             isFake: prop.isFake,
             targets: prop.targets,
+            file: prop.file,
             class: prop.class,
             install: prop.install,
             uninstall: prop.uninstall,

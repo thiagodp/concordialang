@@ -12,6 +12,7 @@ const path_1 = require("path");
 const memfs_1 = require("memfs");
 const globalDirs = require("global-dirs");
 const PackageBasedPluginFinder_1 = require("../../modules/plugin/PackageBasedPluginFinder");
+const PluginData_1 = require("../../modules/plugin/PluginData");
 describe('PackageBasedPluginFinder', () => {
     const currentDir = path_1.normalize(process.cwd());
     const localModulesDir = path_1.join(currentDir, 'node_modules');
@@ -22,23 +23,23 @@ describe('PackageBasedPluginFinder', () => {
     const localPluginPackageFile = path_1.join(localPluginDir, PKG_FILENAME);
     const globalPluginDir = path_1.join(globalModulesDir, PLUGIN_NAME);
     const globalPluginPackageFile = path_1.join(globalPluginDir, PKG_FILENAME);
-    const pkg = {
+    let pkg = {
         name: PLUGIN_NAME,
         description: 'Fake plugin',
         version: '0.1.0',
         author: {
             name: 'Bob',
             email: 'bob@fake.com'
-        },
-        main: 'path/to/main.js',
-        concordiaPluginData: {
-            isFake: true,
-            targets: ['foo', 'bar'],
-            class: 'Main',
-            install: 'npm --version',
-            uninstall: 'npm --version',
-            serve: 'npm --version'
         }
+    };
+    pkg[PluginData_1.PLUGIN_PROPERTY] = {
+        isFake: true,
+        targets: ['foo', 'bar'],
+        file: 'path/to/main.js',
+        class: 'Main',
+        install: 'npm --version',
+        uninstall: 'npm --version',
+        serve: 'npm --version'
     };
     beforeEach(() => {
         memfs_1.vol.mkdirpSync(currentDir, { recursive: true }); // Synchronize - IMPORTANT! - mkdirpSync, not mkdirSync
@@ -89,15 +90,14 @@ describe('PackageBasedPluginFinder', () => {
         const pluginData = yield finder.find();
         expect(pluginData).toHaveLength(2);
         const first = pluginData[0];
-        const content = path_1.join(localPluginDir, pkg.main);
-        expect(first.file).toEqual(content);
+        expect(first.file).toContain(localPluginDir);
     }));
     it('ignores a package that is not a plugin', () => __awaiter(this, void 0, void 0, function* () {
         memfs_1.vol.mkdirpSync(localPluginDir); // local
         memfs_1.vol.writeFileSync(localPluginPackageFile, JSON.stringify(pkg)); // local
         const pkg2 = Object.assign({}, pkg); // copy properties
         pkg2.name += '-non-plugin';
-        pkg2.concordiaPluginData = undefined; // removes the expected property
+        pkg2[PluginData_1.PLUGIN_PROPERTY] = undefined; // removes the expected property
         memfs_1.vol.mkdirpSync(path_1.join(localModulesDir, pkg2.name));
         memfs_1.vol.writeFileSync(path_1.join(localModulesDir, pkg2.name, PKG_FILENAME), JSON.stringify(pkg2));
         const finder = new PackageBasedPluginFinder_1.PackageBasedPluginFinder(currentDir, memfs_1.fs);

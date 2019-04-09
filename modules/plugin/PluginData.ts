@@ -1,3 +1,9 @@
+
+/**
+ * Property that must be declared in a package file of a plugin.
+ */
+export const PLUGIN_PROPERTY = 'concordiaPlugin';
+
 /**
  * Test script plugin data.
  *

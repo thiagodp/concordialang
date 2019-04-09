@@ -1,11 +1,11 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const PackageToPluginData_1 = require("../../modules/plugin/PackageToPluginData");
+const PluginData_1 = require("../../modules/plugin/PluginData");
 describe('PackageToPluginData', () => {
-    const property = 'concordiaPluginData';
     let p;
     beforeEach(() => {
-        p = new PackageToPluginData_1.PackageToPluginData(property);
+        p = new PackageToPluginData_1.PackageToPluginData(PluginData_1.PLUGIN_PROPERTY);
     });
     afterEach(() => {
         p = null;
@@ -42,7 +42,7 @@ describe('PackageToPluginData', () => {
             let pkg = {
                 name: 'concordialang-fake'
             };
-            pkg[property] = {
+            pkg[PluginData_1.PLUGIN_PROPERTY] = {
                 isFake: true
             };
             const r = p.convert(pkg);

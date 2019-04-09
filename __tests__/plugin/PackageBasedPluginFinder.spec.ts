@@ -2,7 +2,7 @@ import { join, normalize } from 'path';
 import { vol, fs } from 'memfs';
 import * as globalDirs from 'global-dirs';
 import { PackageBasedPluginFinder } from '../../modules/plugin/PackageBasedPluginFinder';
-import { PluginData } from '../../modules/plugin/PluginData';
+import { PluginData, PLUGIN_PROPERTY } from '../../modules/plugin/PluginData';
 
 describe( 'PackageBasedPluginFinder', () => {
 
@@ -18,24 +18,26 @@ describe( 'PackageBasedPluginFinder', () => {
     const globalPluginDir: string = join( globalModulesDir, PLUGIN_NAME );
     const globalPluginPackageFile: string = join( globalPluginDir, PKG_FILENAME );
 
-    const pkg = {
+    let pkg = {
         name: PLUGIN_NAME,
         description: 'Fake plugin',
         version: '0.1.0',
         author: {
             name: 'Bob',
             email: 'bob@fake.com'
-        },
-        main: 'path/to/main.js',
-        concordiaPluginData: {
-            isFake: true,
-            targets: [ 'foo', 'bar' ],
-            class: 'Main',
-            install: 'npm --version',
-            uninstall: 'npm --version',
-            serve: 'npm --version'
         }
     };
+
+    pkg[ PLUGIN_PROPERTY ] = {
+        isFake: true,
+        targets: [ 'foo', 'bar' ],
+        file: 'path/to/main.js',
+        class: 'Main',
+        install: 'npm --version',
+        uninstall: 'npm --version',
+        serve: 'npm --version'
+    } as PluginData;
+
 
     beforeEach( () => {
         vol.mkdirpSync( currentDir, { recursive: true } ); // Synchronize - IMPORTANT! - mkdirpSync, not mkdirSync
@@ -112,8 +114,7 @@ describe( 'PackageBasedPluginFinder', () => {
 
         const first = pluginData[ 0 ];
 
-        const content = join( localPluginDir, pkg.main );
-        expect( first.file ).toEqual( content );
+        expect( first.file ).toContain( localPluginDir );
     } );
 
 
@@ -124,7 +125,7 @@ describe( 'PackageBasedPluginFinder', () => {
 
         const pkg2 = { ... pkg }; // copy properties
         pkg2.name += '-non-plugin';
-        pkg2.concordiaPluginData = undefined; // removes the expected property
+        pkg2[ PLUGIN_PROPERTY ] = undefined; // removes the expected property
 
         vol.mkdirpSync( join( localModulesDir, pkg2.name ) );
         vol.writeFileSync( join( localModulesDir, pkg2.name, PKG_FILENAME ), JSON.stringify( pkg2 ) );

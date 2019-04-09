@@ -13,6 +13,7 @@ const fs = require("fs");
 const util_1 = require("util");
 const globalDirs = require("global-dirs");
 const fwalker = require("fwalker");
+const PluginData_1 = require("./PluginData");
 const PackageToPluginData_1 = require("./PackageToPluginData");
 /**
  * Finds plugins based on installed NodeJS packages.
@@ -26,7 +27,6 @@ class PackageBasedPluginFinder {
         this.PLUGIN_PACKAGE_PREFIX = 'concordialang-';
         this.NODE_MODULES = 'node_modules';
         this.PACKAGE_FILE = 'package.json';
-        this.PACKAGE_PROPERTY = 'concordiaPluginData';
     }
     /** @inheritdoc */
     find() {
@@ -57,9 +57,9 @@ class PackageBasedPluginFinder {
     findOnDir(dir) {
         return __awaiter(this, void 0, void 0, function* () {
             const packageDirectories = yield this.detectPluginPackageDirectories(dir);
-            const conversor = new PackageToPluginData_1.PackageToPluginData(this.PACKAGE_PROPERTY);
+            const conversor = new PackageToPluginData_1.PackageToPluginData(PluginData_1.PLUGIN_PROPERTY);
             const readFile = util_1.promisify(this._fs.readFile);
-            let pluginData = [];
+            let allPluginData = [];
             for (const pkgDir of packageDirectories) {
                 const pkgFile = path_1.join(pkgDir, this.PACKAGE_FILE);
                 let content;
@@ -72,24 +72,29 @@ class PackageBasedPluginFinder {
                 const pkg = JSON.parse(content);
                 // Ignores a package that does not have the expected property,
                 // because it is not supposed to be a Concordia plugin.
-                if (!pkg[this.PACKAGE_PROPERTY]) {
+                if (!pkg[PluginData_1.PLUGIN_PROPERTY]) {
                     continue;
                 }
-                const data = conversor.convert(pkg);
-                if (!data) {
+                const pluginData = conversor.convert(pkg);
+                if (!pluginData) {
                     // continue; // Cannot convert to plugin data
                     throw new Error(`Cannot convert package file "${pkgFile}" to plugin data. `);
                 }
                 // Modifies the `file` property to contain the full path
-                if (data.file.indexOf(data.name) < 0) {
-                    data.file = path_1.join(dir, data.name, data.file);
+                let file = pluginData.file;
+                if (!file) {
+                    throw new Error(`Package file "${pkgFile}" does not have a property "${PluginData_1.PLUGIN_PROPERTY}.file".`);
+                }
+                if (file.indexOf(pluginData.name) < 0) {
+                    file = path_1.join(dir, pluginData.name, file);
                 }
                 else {
-                    data.file = path_1.join(dir, data.file);
+                    file = path_1.join(dir, file);
                 }
-                pluginData.push(data);
+                pluginData.file = file;
+                allPluginData.push(pluginData);
             }
-            return pluginData;
+            return allPluginData;
         });
     }
     /**

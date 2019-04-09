@@ -1,12 +1,12 @@
 import { PackageToPluginData } from "../../modules/plugin/PackageToPluginData";
+import { PLUGIN_PROPERTY } from "../../modules/plugin/PluginData";
 
 describe( 'PackageToPluginData', () => {
 
-    const property: string = 'concordiaPluginData';
     let p: PackageToPluginData;
 
     beforeEach( () => {
-        p = new PackageToPluginData( property );
+        p = new PackageToPluginData( PLUGIN_PROPERTY );
     } );
 
     afterEach( () => {
@@ -52,7 +52,7 @@ describe( 'PackageToPluginData', () => {
                 name: 'concordialang-fake'
             };
 
-            pkg[ property ] = {
+            pkg[ PLUGIN_PROPERTY ] = {
                 isFake: true
             };
 

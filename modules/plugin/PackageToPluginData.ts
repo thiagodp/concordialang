@@ -17,6 +17,8 @@ export class PackageToPluginData {
             return; // undefined
         }
 
+        // TO-DO: validate properties' schema
+
         let data: PluginData = {
             // From the package object
             name: pkg.name,
@@ -24,11 +26,11 @@ export class PackageToPluginData {
             version: pkg.version,
             // authors: this.packageAuthorToAuthors( pkg.author ).concat( this.packageContributorsToAuthors( pkg.contributors ) ),
             authors: this.packageAuthorToAuthors( pkg.author ),
-            file: pkg.main,
 
             // From the custom property
             isFake: prop.isFake,
             targets: prop.targets,
+            file: prop.file,
             class: prop.class,
             install: prop.install,
             uninstall: prop.uninstall,

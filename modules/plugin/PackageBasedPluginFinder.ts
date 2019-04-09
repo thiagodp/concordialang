@@ -4,7 +4,7 @@ import { promisify } from 'util';
 import * as globalDirs from 'global-dirs';
 import * as fwalker from 'fwalker';
 import { PluginFinder } from "./PluginFinder";
-import { PluginData } from "./PluginData";
+import { PluginData, PLUGIN_PROPERTY } from "./PluginData";
 import { PackageToPluginData } from './PackageToPluginData';
 
 /**
@@ -17,7 +17,6 @@ export class PackageBasedPluginFinder implements PluginFinder {
     public readonly PLUGIN_PACKAGE_PREFIX: string = 'concordialang-';
     public readonly NODE_MODULES: string = 'node_modules';
     public readonly PACKAGE_FILE: string = 'package.json';
-    public readonly PACKAGE_PROPERTY: string = 'concordiaPluginData';
 
     constructor(
         private readonly _processPath: string,
@@ -57,11 +56,11 @@ export class PackageBasedPluginFinder implements PluginFinder {
     private async findOnDir( dir: string ): Promise< PluginData[] > {
 
         const packageDirectories: string[] = await this.detectPluginPackageDirectories( dir );
-        const conversor = new PackageToPluginData( this.PACKAGE_PROPERTY );
+        const conversor = new PackageToPluginData( PLUGIN_PROPERTY );
 
         const readFile = promisify( this._fs.readFile );
 
-        let pluginData: PluginData[] = [];
+        let allPluginData: PluginData[] = [];
         for ( const pkgDir of packageDirectories ) {
 
             const pkgFile: string = join( pkgDir, this.PACKAGE_FILE );
@@ -76,27 +75,33 @@ export class PackageBasedPluginFinder implements PluginFinder {
 
             // Ignores a package that does not have the expected property,
             // because it is not supposed to be a Concordia plugin.
-            if ( ! pkg[ this.PACKAGE_PROPERTY ] ) {
+            if ( ! pkg[ PLUGIN_PROPERTY ] ) {
                 continue;
             }
 
-            const data = conversor.convert( pkg );
-            if ( ! data ) {
+            const pluginData = conversor.convert( pkg );
+            if ( ! pluginData ) {
                 // continue; // Cannot convert to plugin data
                 throw new Error( `Cannot convert package file "${pkgFile}" to plugin data. ` );
             }
 
             // Modifies the `file` property to contain the full path
-            if ( data.file.indexOf( data.name ) < 0 ) {
-                data.file = join( dir, data.name, data.file );
-            } else {
-                data.file = join( dir, data.file );
+            let file: string = pluginData.file;
+            if ( ! file ) {
+                throw new Error( `Package file "${pkgFile}" does not have a property "${PLUGIN_PROPERTY}.file".` );
             }
+            if ( file.indexOf( pluginData.name ) < 0 ) {
+                file = join( dir, pluginData.name, file );
+            } else {
+                file = join( dir, file );
+            }
+            pluginData.file = file;
 
-            pluginData.push( data );
+
+            allPluginData.push( pluginData );
         }
 
-        return pluginData;
+        return allPluginData;
     }
 
 
