@@ -78,14 +78,7 @@
       "ts",
       "tsx",
       "js"
-    ],
-    "moduleNameMapper": {
-      "concordialang-types/ast": "<rootDir>/node_modules/concordialang-types/dist/ast",
-      "concordialang-types/nlp": "<rootDir>/node_modules/concordialang-types/dist/nlp",
-      "concordialang-types/req": "<rootDir>/node_modules/concordialang-types/dist/req",
-      "concordialang-types/testscript": "<rootDir>/node_modules/concordialang-types/dist/testscript",
-      "concordialang-plugin": "<rootDir>/node_modules/concordialang-plugin/dist"
-    }
+    ]
   },
   "dependencies": {
     "alasql": "^0.4.11",
