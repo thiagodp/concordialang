@@ -40,23 +40,59 @@ describe('UIPropertyRecognizerTest', () => {
             expect(node.value).toBeDefined();
             expect(node.value.value).toBe(expectedValue);
         }
-        it('recognizes an id with a value', () => {
-            shouldRecognize('- id é "foo"', 'id', 'foo');
-        });
-        it('recognizes a max length with a value', () => {
-            shouldRecognize('- comprimento máximo é 8', 'maxlength', 8);
-        });
-        it('recognizes a min length with a value', () => {
-            shouldRecognize('- comprimento mínimo é 1', 'minlength', 1);
-        });
-        it('recognizes a max value with a value', () => {
-            shouldRecognize('- valor máximo é 7.33', 'maxvalue', 7.33);
-        });
-        it('recognizes a min value with a value', () => {
-            shouldRecognize('- valor mínimo é -15.22', 'minvalue', -15.22);
-        });
-        it('recognizes a value with a query', () => {
-            shouldRecognize('- valor está em "SELECT * FROM someTable"', 'value', 'SELECT * FROM someTable');
+        describe('recognizes', () => {
+            it('an id with a value', () => {
+                shouldRecognize('- id é "foo"', 'id', 'foo');
+            });
+            it('a max length with a value', () => {
+                shouldRecognize('- comprimento máximo é 8', 'maxlength', 8);
+            });
+            it('a min length with a value', () => {
+                shouldRecognize('- comprimento mínimo é 1', 'minlength', 1);
+            });
+            it('a max value with a value', () => {
+                shouldRecognize('- valor máximo é 7.33', 'maxvalue', 7.33);
+            });
+            it('a min value with a value', () => {
+                shouldRecognize('- valor mínimo é -15.22', 'minvalue', -15.22);
+            });
+            it('a value with a query', () => {
+                shouldRecognize('- valor está em "SELECT * FROM someTable"', 'value', 'SELECT * FROM someTable');
+            });
+            describe('a required property', () => {
+                it('with true', () => {
+                    shouldRecognize('- obrigatório é true', 'required', true);
+                });
+                it('with false', () => {
+                    shouldRecognize('- obrigatório é false', 'required', false);
+                });
+                it('with verdadeiro', () => {
+                    shouldRecognize('- obrigatório é verdadeiro', 'required', true);
+                });
+                it('with falso', () => {
+                    shouldRecognize('- obrigatório é falso', 'required', false);
+                });
+                it('without value as true', () => {
+                    shouldRecognize('- obrigatório', 'required', true);
+                });
+            });
+            describe('an editable property', () => {
+                it('with true', () => {
+                    shouldRecognize('- editável é true', 'editable', true);
+                });
+                it('with false', () => {
+                    shouldRecognize('- editável é false', 'editable', false);
+                });
+                it('with verdadeiro', () => {
+                    shouldRecognize('- editável é verdadeiro', 'editable', true);
+                });
+                it('with falso', () => {
+                    shouldRecognize('- editável é falso', 'editable', false);
+                });
+                it('without value as true', () => {
+                    shouldRecognize('- editável', 'editable', true);
+                });
+            });
         });
     });
 });

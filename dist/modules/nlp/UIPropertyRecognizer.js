@@ -9,6 +9,7 @@ const NLPException_1 = require("./NLPException");
 const NodeSentenceRecognizer_1 = require("./NodeSentenceRecognizer");
 const RuleBuilder_1 = require("./RuleBuilder");
 const SyntaxRules_1 = require("./SyntaxRules");
+const UIPropertyTypes_1 = require("../util/UIPropertyTypes");
 /**
  * UI element property sentence recognizer.
  *
@@ -98,6 +99,12 @@ class UIPropertyRecognizer {
                     item.value = uiv;
                     break;
                 }
+            }
+            // A boolean property without value ?
+            const booleanProperties = [UIPropertyTypes_1.UIPropertyTypes.REQUIRED, UIPropertyTypes_1.UIPropertyTypes.EDITABLE];
+            if (booleanProperties.indexOf(property) >= 0 &&
+                !r.entities.find(e => e.entity === Entities_1.Entities.BOOL_VALUE)) {
+                item.value = new UIElement_1.EntityValue(Entities_1.Entities.BOOL_VALUE, true);
             }
             return item;
         };
