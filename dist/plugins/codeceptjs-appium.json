@@ -2,14 +2,14 @@
     "isFake": false,
     "name": "codeceptjs-appium",
     "description": "Generates test scripts for CodeceptJS with Appium",
-    "version": "0.6.0",
+    "version": "0.6.1",
     "targets": [ "CodeceptJS", "Appium" ],
     "authors": [
         "Thiago Delgado Pinto (thiago-dp@bol.com.br)"
     ],
     "file": "codeceptjs-appium/CodeceptJSForAppium.js",
     "class": "CodeceptJS",
-    "install": "npm install -g codeceptjs appium",
+    "install": "npm install -g codeceptjs@1.2.1 appium",
     "uninstall": "npm uninstall -g codeceptjs appium",
     "serve": "appium"
 }
