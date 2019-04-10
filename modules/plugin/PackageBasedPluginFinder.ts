@@ -4,7 +4,7 @@ import { promisify } from 'util';
 import * as globalDirs from 'global-dirs';
 import * as fwalker from 'fwalker';
 import { PluginFinder } from "./PluginFinder";
-import { PluginData, PLUGIN_PROPERTY } from "./PluginData";
+import { PluginData, PLUGIN_PROPERTY, PLUGIN_PREFIX } from "./PluginData";
 import { PackageToPluginData } from './PackageToPluginData';
 
 /**
@@ -14,7 +14,6 @@ import { PackageToPluginData } from './PackageToPluginData';
  */
 export class PackageBasedPluginFinder implements PluginFinder {
 
-    public readonly PLUGIN_PACKAGE_PREFIX: string = 'concordialang-';
     public readonly NODE_MODULES: string = 'node_modules';
     public readonly PACKAGE_FILE: string = 'package.json';
 
@@ -115,7 +114,7 @@ export class PackageBasedPluginFinder implements PluginFinder {
         return new Promise< string[] >( ( resolve, reject ) => {
 
             let directories: string[] = [];
-            const dirRegExp = new RegExp( this.PLUGIN_PACKAGE_PREFIX );
+            const dirRegExp = new RegExp( PLUGIN_PREFIX );
 
             const onDir = ( path, stats, absPath ) => {
                 // Ignore directories that do not match the prefix

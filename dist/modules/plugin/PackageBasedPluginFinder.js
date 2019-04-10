@@ -24,7 +24,6 @@ class PackageBasedPluginFinder {
     constructor(_processPath, _fs = fs) {
         this._processPath = _processPath;
         this._fs = _fs;
-        this.PLUGIN_PACKAGE_PREFIX = 'concordialang-';
         this.NODE_MODULES = 'node_modules';
         this.PACKAGE_FILE = 'package.json';
     }
@@ -105,7 +104,7 @@ class PackageBasedPluginFinder {
     detectPluginPackageDirectories(dir) {
         return new Promise((resolve, reject) => {
             let directories = [];
-            const dirRegExp = new RegExp(this.PLUGIN_PACKAGE_PREFIX);
+            const dirRegExp = new RegExp(PluginData_1.PLUGIN_PREFIX);
             const onDir = (path, stats, absPath) => {
                 // Ignore directories that do not match the prefix
                 if (!dirRegExp.test(path)) {

@@ -1,6 +1,6 @@
 import * as childProcess from 'child_process';
 import { Plugin } from "concordialang-plugin";
-import { PluginData } from "./PluginData";
+import { PluginData, PLUGIN_PREFIX } from "./PluginData";
 import { JsonBasedPluginFinder } from "./JsonBasedPluginFinder";
 import { PluginDrawer } from "./PluginDrawer";
 import { PluginFinder } from "./PluginFinder";
@@ -26,9 +26,19 @@ export class PluginManager {
         return this.sortByName( all );
     }
 
-    public async pluginWithName( name: string ): Promise< PluginData | null > {
+    public async pluginWithName( name: string, partialComparison: boolean = false ): Promise< PluginData | null > {
+
+        const compareNames = ( from: string, to: string, partialComparison: boolean ): boolean => {
+            return partialComparison
+                ? from.includes( to )
+                : ( from === to || from === PLUGIN_PREFIX + to || PLUGIN_PREFIX + from === to );
+        };
+
         const all: PluginData[] = await this.findAll();
-        const withName: PluginData[] = all.filter( v => v.name.toLowerCase() === name.toLowerCase() );
+        const lowerCasedName: string = name.toLowerCase();
+        const withName: PluginData[] = all.filter(
+            v => compareNames( v.name.toLowerCase(), lowerCasedName, partialComparison ) );
+
         return withName.length > 0 ? withName[ 0 ] : null;
     }
 

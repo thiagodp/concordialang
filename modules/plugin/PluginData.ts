@@ -2,7 +2,12 @@
 /**
  * Property that must be declared in a package file of a plugin.
  */
-export const PLUGIN_PROPERTY = 'concordiaPlugin';
+export const PLUGIN_PROPERTY: string = 'concordiaPlugin';
+
+/**
+ * Prefix for plug-ins.
+ */
+export const PLUGIN_PREFIX: string = 'concordialang-';
 
 /**
  * Test script plugin data.

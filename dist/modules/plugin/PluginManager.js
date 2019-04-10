@@ -9,6 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const childProcess = require("child_process");
+const PluginData_1 = require("./PluginData");
 const JsonBasedPluginFinder_1 = require("./JsonBasedPluginFinder");
 /**
  * Plug-in manager
@@ -26,10 +27,16 @@ class PluginManager {
             return this.sortByName(all);
         });
     }
-    pluginWithName(name) {
+    pluginWithName(name, partialComparison = false) {
         return __awaiter(this, void 0, void 0, function* () {
+            const compareNames = (from, to, partialComparison) => {
+                return partialComparison
+                    ? from.includes(to)
+                    : (from === to || from === PluginData_1.PLUGIN_PREFIX + to || PluginData_1.PLUGIN_PREFIX + from === to);
+            };
             const all = yield this.findAll();
-            const withName = all.filter(v => v.name.toLowerCase() === name.toLowerCase());
+            const lowerCasedName = name.toLowerCase();
+            const withName = all.filter(v => compareNames(v.name.toLowerCase(), lowerCasedName, partialComparison));
             return withName.length > 0 ? withName[0] : null;
         });
     }
