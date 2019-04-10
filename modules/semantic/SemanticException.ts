@@ -1,4 +1,4 @@
-import { LocatedException } from 'concordialang-types/req';
+import { LocatedException } from 'concordialang-types';
 
 /**
  * Semantic exception.

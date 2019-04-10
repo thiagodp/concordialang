@@ -1,4 +1,4 @@
-import { Node } from 'concordialang-types/ast';
+import { Node } from 'concordialang-types';
 import { LexicalException } from "../req/LexicalException";
 
 

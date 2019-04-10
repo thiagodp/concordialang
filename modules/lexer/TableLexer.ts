@@ -1,4 +1,4 @@
-import { Table } from "concordialang-types/ast";
+import { Table } from "concordialang-types";
 import { NamedNodeLexer } from "./NamedNodeLexer";
 import { NodeTypes } from "../req/NodeTypes";
 

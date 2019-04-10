@@ -1,6 +1,6 @@
-import { NLPResult, Entities } from 'concordialang-types/nlp';
-import { DatabaseProperty, ContentNode } from 'concordialang-types/ast';
-import { LocatedException } from 'concordialang-types/req';
+import { NLPResult, Entities } from 'concordialang-types';
+import { DatabaseProperty, ContentNode } from 'concordialang-types';
+import { LocatedException } from 'concordialang-types';
 import { Intents } from './Intents';
 import { NLP } from './NLP';
 import { NLPException } from './NLPException';

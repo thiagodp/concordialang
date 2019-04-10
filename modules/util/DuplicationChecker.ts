@@ -2,7 +2,7 @@
 import chalk from 'chalk';
 import * as logSymbols from 'log-symbols';
 // ---
-import { NamedNode, Location } from "concordialang-types/ast";
+import { NamedNode, Location } from "concordialang-types";
 import { SemanticException } from "../semantic/SemanticException";
 
 /**

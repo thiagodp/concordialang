@@ -1,4 +1,4 @@
-import { Document } from 'concordialang-types/ast';
+import { Document } from 'concordialang-types';
 import { SemanticException } from '../SemanticException';
 
 /**

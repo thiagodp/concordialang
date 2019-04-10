@@ -1,5 +1,5 @@
 import * as prettyBytes from 'pretty-bytes';
-import { LocatedException } from 'concordialang-types/req';
+import { LocatedException } from 'concordialang-types';
 import { FileReadListener, DirectoryReadListener, DirectoryReadResult } from './Listeners';
 import { SingleFileProcessorListener, FileMeta, ProcessedFileData } from './SingleFileProcessor';
 import { MultiFileProcessListener } from './MultiFileProcessor';

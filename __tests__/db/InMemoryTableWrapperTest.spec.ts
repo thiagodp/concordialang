@@ -1,5 +1,5 @@
 import { resolve } from 'path';
-import { Document, Table } from 'concordialang-types/ast';
+import { Document, Table } from 'concordialang-types';
 import { InMemoryTableWrapper } from '../../modules/db/InMemoryTableWrapper';
 import { Parser } from '../../modules/parser/Parser';
 import { Lexer } from '../../modules/lexer/Lexer';

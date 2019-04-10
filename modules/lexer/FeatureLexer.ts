@@ -1,4 +1,4 @@
-import { Feature } from "concordialang-types/ast";
+import { Feature } from "concordialang-types";
 import { NamedNodeLexer } from "./NamedNodeLexer";
 import { NodeTypes } from "../req/NodeTypes";
 

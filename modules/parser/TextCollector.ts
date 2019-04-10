@@ -1,4 +1,4 @@
-import { Text } from 'concordialang-types/ast';
+import { Text } from 'concordialang-types';
 import { NodeIterator } from './NodeIterator';
 import { NodeTypes } from '../req/NodeTypes';
 

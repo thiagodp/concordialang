@@ -1,6 +1,6 @@
 import { join } from 'path';
-import { Document, FileInfo } from "concordialang-types/ast";
-import { LocatedException } from "concordialang-types/req";
+import { Document, FileInfo } from "concordialang-types";
+import { LocatedException } from "concordialang-types";
 import { UIElementSSA } from "../../modules/semantic/UIElementSSA";
 import { SimpleCompiler } from "../../modules/util/SimpleCompiler";
 import { AugmentedSpec } from "../../modules/ast/AugmentedSpec";

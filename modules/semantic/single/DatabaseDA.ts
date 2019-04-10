@@ -1,4 +1,4 @@
-import { Document, Database, DatabaseProperties } from 'concordialang-types/ast';
+import { Document, Database, DatabaseProperties } from 'concordialang-types';
 import { DocumentAnalyzer } from './DocumentAnalyzer';
 import { SemanticException } from '../SemanticException';
 

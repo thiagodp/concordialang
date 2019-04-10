@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const nlp_1 = require("concordialang-types/nlp");
+const concordialang_types_1 = require("concordialang-types");
 const NLPTrainingDataConversor_1 = require("../../modules/nlp/NLPTrainingDataConversor");
 const NLP_1 = require("../../modules/nlp/NLP");
 /**
@@ -56,7 +56,7 @@ describe('NLPTest', () => {
         });
         describe('value', () => {
             function recogValue(text, expected, debug = false) {
-                return recog(text, expected, nlp_1.Entities.VALUE, debug);
+                return recog(text, expected, concordialang_types_1.Entities.VALUE, debug);
             }
             it('between quotes', () => {
                 recogValue(' "foo" ', 'foo');
@@ -71,21 +71,21 @@ describe('NLPTest', () => {
             it('more than one value', () => {
                 let r = nlp.recognize('en', ' prop is "foo" or "bar" ');
                 expect(r.entities).toHaveLength(2);
-                expect(r.entities[0].entity).toBe(nlp_1.Entities.VALUE);
+                expect(r.entities[0].entity).toBe(concordialang_types_1.Entities.VALUE);
                 expect(r.entities[0].value).toBe('foo');
-                expect(r.entities[1].entity).toBe(nlp_1.Entities.VALUE);
+                expect(r.entities[1].entity).toBe(concordialang_types_1.Entities.VALUE);
                 expect(r.entities[1].value).toBe('bar');
             });
             it('starts with a number', () => {
                 let r = nlp.recognize('en', ' "1foo" ');
                 expect(r.entities).toHaveLength(1);
-                expect(r.entities[0].entity).toBe(nlp_1.Entities.VALUE);
+                expect(r.entities[0].entity).toBe(concordialang_types_1.Entities.VALUE);
                 expect(r.entities[0].value).toBe('1foo');
             });
         });
         describe('number', () => {
             function recogNumber(text, expected, debug = false) {
-                return recog(text, expected, nlp_1.Entities.NUMBER, debug);
+                return recog(text, expected, concordialang_types_1.Entities.NUMBER, debug);
             }
             it('positive integer', () => {
                 recogNumber(' 3 ', '3');
@@ -125,7 +125,7 @@ describe('NLPTest', () => {
         });
         describe('ui_element', () => {
             function recogElement(text, expected, debug = false) {
-                return recog(text, expected, nlp_1.Entities.UI_ELEMENT, debug);
+                return recog(text, expected, concordialang_types_1.Entities.UI_ELEMENT, debug);
             }
             describe('recognizes', () => {
                 it('single character', () => {
@@ -152,7 +152,7 @@ describe('NLPTest', () => {
         });
         describe('ui_literal', () => {
             function recogLiteral(text, expected, debug = false) {
-                return recog(text, expected, nlp_1.Entities.UI_LITERAL, debug);
+                return recog(text, expected, concordialang_types_1.Entities.UI_LITERAL, debug);
             }
             describe('recognizes', () => {
                 it('single character', () => {
@@ -195,7 +195,7 @@ describe('NLPTest', () => {
         });
         describe('query', () => {
             function recogQuery(text, expected, debug = false) {
-                return recog(text, expected, nlp_1.Entities.QUERY, debug);
+                return recog(text, expected, concordialang_types_1.Entities.QUERY, debug);
             }
             it('in uppercase', () => {
                 recogQuery(' "SELECT foo FROM bar" ', 'SELECT foo FROM bar');
@@ -209,7 +209,7 @@ describe('NLPTest', () => {
         });
         describe('constant', () => {
             function recogConstant(text, expected, debug = false) {
-                return recog(text, expected, nlp_1.Entities.CONSTANT, debug);
+                return recog(text, expected, concordialang_types_1.Entities.CONSTANT, debug);
             }
             describe('recognizes', () => {
                 it('a single word', () => {
@@ -236,7 +236,7 @@ describe('NLPTest', () => {
         });
         describe('value list', () => {
             function recogValueList(text, expected, debug = false) {
-                return recog(text, expected, nlp_1.Entities.VALUE_LIST, debug);
+                return recog(text, expected, concordialang_types_1.Entities.VALUE_LIST, debug);
             }
             it('does not recognize an empty list', () => {
                 let r = nlp.recognize('en', ' [] ');

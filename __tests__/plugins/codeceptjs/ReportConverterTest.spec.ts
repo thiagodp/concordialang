@@ -1,6 +1,6 @@
 import { join, normalize } from 'path';
 import { vol, fs as memfs } from 'memfs';
-import { TestScriptExecutionResult, TestSuiteResult, TestMethodResult } from 'concordialang-types/testscript';
+import { TestScriptExecutionResult, TestSuiteResult, TestMethodResult } from 'concordialang-types';
 import { ReportConverter } from '../../../plugins/codeceptjs/ReportConverter';
 
 /**

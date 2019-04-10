@@ -1,4 +1,4 @@
-import { Step } from "concordialang-types/ast";
+import { Step } from "concordialang-types";
 // import * as deepcopy from 'deepcopy';
 
 /**

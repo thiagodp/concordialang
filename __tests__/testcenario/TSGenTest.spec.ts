@@ -1,5 +1,5 @@
-import { Document, Variant, FileInfo } from "concordialang-types/ast";
-import { LocatedException } from "concordialang-types/req";
+import { Document, Variant, FileInfo } from "concordialang-types";
+import { LocatedException } from "concordialang-types";
 import { TSGen } from "../../modules/testscenario/TSGen";
 import { TestScenario } from "../../modules/testscenario/TestScenario";
 import { SimpleCompiler } from "../../modules/util/SimpleCompiler";

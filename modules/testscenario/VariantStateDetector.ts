@@ -1,5 +1,5 @@
-import { Variant, State } from 'concordialang-types/ast';
-import { Entities, NLPUtil } from 'concordialang-types/nlp';
+import { Variant, State } from 'concordialang-types';
+import { Entities, NLPUtil } from 'concordialang-types';
 import { NodeTypes } from '../req/NodeTypes';
 
 /**

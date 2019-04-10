@@ -1,4 +1,4 @@
-import { Regex } from 'concordialang-types/ast';
+import { Regex } from 'concordialang-types';
 import { NodeTypes } from "../req/NodeTypes";
 import { NodeLexer, LexicalAnalysisResult } from './NodeLexer';
 import { KeywordBasedLexer } from './KeywordBasedLexer';

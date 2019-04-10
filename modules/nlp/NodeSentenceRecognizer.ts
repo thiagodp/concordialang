@@ -1,6 +1,6 @@
-import { LocatedException } from 'concordialang-types/req';
-import { NLPResult } from 'concordialang-types/nlp';
-import { ContentNode, Location } from 'concordialang-types/ast';
+import { LocatedException } from 'concordialang-types';
+import { NLPResult } from 'concordialang-types';
+import { ContentNode, Location } from 'concordialang-types';
 import { Warning } from '../req/Warning';
 import { isDefined } from '../util/TypeChecking';
 import { NLP } from './NLP';

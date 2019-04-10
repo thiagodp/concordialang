@@ -1,5 +1,5 @@
 import { resolve } from 'path';
-import { Document } from 'concordialang-types/ast';
+import { Document } from 'concordialang-types';
 import { Parser } from '../../../modules/parser/Parser';
 import { ScenarioDA } from '../../../modules/semantic/single/ScenarioDA';
 import { Lexer } from '../../../modules/lexer/Lexer';

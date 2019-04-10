@@ -1,7 +1,7 @@
 import * as arrayMove from 'array-move';
 import * as deepcopy from 'deepcopy';
-import { Step } from 'concordialang-types/ast';
-import { NLPUtil, Entities } from 'concordialang-types/nlp'
+import { Step } from 'concordialang-types';
+import { NLPUtil, Entities } from 'concordialang-types'
 import { NodeTypes } from "../req/NodeTypes";
 import { isDefined } from "../util/TypeChecking";
 import { KeywordDictionary } from "../dict/KeywordDictionary";

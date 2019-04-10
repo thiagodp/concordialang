@@ -1,6 +1,6 @@
 import { escape, escapeId } from 'sqlstring';
-import { Document } from "concordialang-types/ast";
-import { Entities, NLPResult } from "concordialang-types/nlp";
+import { Document } from "concordialang-types";
+import { Entities, NLPResult } from "concordialang-types";
 import { CaseType } from '../app/CaseType';
 import { AugmentedSpec } from '../ast/AugmentedSpec';
 import { QueryParser } from '../db/QueryParser';

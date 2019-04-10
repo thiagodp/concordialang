@@ -1,4 +1,4 @@
-import { TestCase, Tag } from "concordialang-types/ast";
+import { TestCase, Tag } from "concordialang-types";
 import { PreTestCaseGenerator, GenContext } from "../testscenario/PreTestCaseGenerator";
 import { TestScenario } from "../testscenario/TestScenario";
 import { TestPlanner } from "./TestPlanner";

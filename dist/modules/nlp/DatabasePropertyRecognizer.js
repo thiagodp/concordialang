@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const nlp_1 = require("concordialang-types/nlp");
+const concordialang_types_1 = require("concordialang-types");
 const Intents_1 = require("./Intents");
 const NLPException_1 = require("./NLPException");
 const NodeSentenceRecognizer_1 = require("./NodeSentenceRecognizer");
@@ -41,7 +41,7 @@ class DatabasePropertyRecognizer {
         let processor = function (node, r, errors, warnings) {
             const recognizedEntityNames = r.entities.map(e => e.entity);
             // Must have a DS Property
-            const propertyIndex = recognizedEntityNames.indexOf(nlp_1.Entities.DB_PROPERTY);
+            const propertyIndex = recognizedEntityNames.indexOf(concordialang_types_1.Entities.DB_PROPERTY);
             if (propertyIndex < 0) {
                 const msg = 'Unrecognized: ' + node.content;
                 warnings.push(new NLPException_1.NLPException(msg, node.location));
@@ -52,7 +52,7 @@ class DatabasePropertyRecognizer {
             recognizer.validate(node, recognizedEntityNames, syntaxRules, property, errors, warnings);
             // Getting the values
             let values = r.entities
-                .filter(e => e.entity == nlp_1.Entities.VALUE || e.entity == nlp_1.Entities.NUMBER)
+                .filter(e => e.entity == concordialang_types_1.Entities.VALUE || e.entity == concordialang_types_1.Entities.NUMBER)
                 .map(e => e.value);
             if (values.length < 1) {
                 const msg = 'Value expected in the sentence "' + node.content + '".';

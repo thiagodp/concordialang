@@ -1,6 +1,6 @@
 import * as deepcopy from 'deepcopy';
-import { Step, Tag, tagsWithAnyOfTheNames, Variant, State } from 'concordialang-types/ast';
-import { Entities, NLPUtil } from 'concordialang-types/nlp';
+import { Step, Tag, tagsWithAnyOfTheNames, Variant, State } from 'concordialang-types';
+import { Entities, NLPUtil } from 'concordialang-types';
 import { KeywordDictionary } from '../dict/KeywordDictionary';
 import { LanguageContentLoader } from '../dict/LanguageContentLoader';
 import { NodeTypes } from '../req/NodeTypes';

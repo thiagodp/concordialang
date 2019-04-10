@@ -1,4 +1,4 @@
-import { LocatedException } from "concordialang-types/req";
+import { LocatedException } from "concordialang-types";
 
 /**
  * Provides an exception that should be handled as a warning.

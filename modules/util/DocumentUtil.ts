@@ -1,4 +1,4 @@
-import { Document, Scenario, UIElement, UIElementInfo, Variant } from 'concordialang-types/ast';
+import { Document, Scenario, UIElement, UIElementInfo, Variant } from 'concordialang-types';
 import { CaseType } from '../app/CaseType';
 import { isDefined } from './TypeChecking';
 import { UIElementNameHandler } from './UIElementNameHandler';

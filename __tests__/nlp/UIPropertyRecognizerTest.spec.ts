@@ -1,5 +1,5 @@
 import { resolve } from 'path';
-import { UIProperty } from 'concordialang-types/ast';
+import { UIProperty } from 'concordialang-types';
 import { NodeTypes } from '../../modules/req/NodeTypes';
 import { NLPTrainer } from '../../modules/nlp/NLPTrainer';
 import { NLP } from '../../modules/nlp/NLP';

@@ -1,5 +1,5 @@
-import { Document, Step } from "concordialang-types/ast";
-import { NLPUtil, Entities } from "concordialang-types/nlp";
+import { Document, Step } from "concordialang-types";
+import { NLPUtil, Entities } from "concordialang-types";
 import { DocumentAnalyzer } from "./DocumentAnalyzer";
 import { SemanticException } from "../SemanticException";
 import { isDefined } from "../../util/TypeChecking";

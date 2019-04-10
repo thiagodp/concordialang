@@ -1,4 +1,4 @@
-import { NLPResult, NLPEntity, Entities } from 'concordialang-types/nlp';
+import { NLPResult, NLPEntity, Entities } from 'concordialang-types';
 
 /**
  * Entity handler

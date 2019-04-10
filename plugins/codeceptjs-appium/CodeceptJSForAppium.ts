@@ -1,5 +1,5 @@
 import { join } from 'path';
-import { TestScriptExecutionOptions } from "concordialang-types/testscript";
+import { TestScriptExecutionOptions } from "concordialang-types";
 import { CodeceptJS } from "../codeceptjs/CodeceptJS";
 import { TestScriptExecutor } from "../codeceptjs/TestScriptExecutor";
 import { ConfigMaker } from "../codeceptjs/ConfigMaker";

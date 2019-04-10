@@ -1,4 +1,4 @@
-import { Document } from "concordialang-types/ast";
+import { Document } from "concordialang-types";
 import { SingleFileProcessor, FileData, ProcessedFileData } from "./SingleFileProcessor";
 import { Lexer } from "../lexer/Lexer";
 import { SingleDocumentProcessor } from "./SingleDocumentProcessor";

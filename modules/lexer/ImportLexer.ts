@@ -1,4 +1,4 @@
-import { Import } from 'concordialang-types/ast';
+import { Import } from 'concordialang-types';
 import { QuotedNodeLexer } from './QuotedNodeLexer';
 import { NodeTypes } from "../req/NodeTypes";
 

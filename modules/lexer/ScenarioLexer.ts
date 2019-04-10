@@ -1,4 +1,4 @@
-import { Scenario } from "concordialang-types/ast";
+import { Scenario } from "concordialang-types";
 import { NamedNodeLexer } from "./NamedNodeLexer";
 import { NodeTypes } from "../req/NodeTypes";
 

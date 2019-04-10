@@ -1,4 +1,4 @@
-import { Entities, NLPResult } from 'concordialang-types/nlp';
+import { Entities, NLPResult } from 'concordialang-types';
 import { Intents } from '../../modules/nlp/Intents';
 import { NLPTrainer } from '../../modules/nlp/NLPTrainer';
 import { NLP } from '../../modules/nlp/NLP';

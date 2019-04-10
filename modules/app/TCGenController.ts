@@ -1,6 +1,6 @@
 import Graph = require( 'graph.js/dist/graph.full.js' );
-import { Document, TestCase, Variant } from "concordialang-types/ast";
-import { LocatedException } from "concordialang-types/req";
+import { Document, TestCase, Variant } from "concordialang-types";
+import { LocatedException } from "concordialang-types";
 import { GivenWhenThenSentenceRecognizer } from "../nlp/GivenWhenThenSentenceRecognizer";
 import { LanguageContentLoader } from "../dict/LanguageContentLoader";
 import { Options } from "./Options";

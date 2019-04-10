@@ -1,5 +1,5 @@
 import { resolve } from 'path';
-import { Document } from 'concordialang-types/ast';
+import { Document } from 'concordialang-types';
 import { NodeTypes } from '../../modules/req/NodeTypes';
 import { Lexer } from '../../modules/lexer/Lexer';
 import { Parser } from '../../modules/parser/Parser';

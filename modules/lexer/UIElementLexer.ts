@@ -1,4 +1,4 @@
-import { UIElement } from "concordialang-types/ast";
+import { UIElement } from "concordialang-types";
 import { NamedNodeLexer } from "./NamedNodeLexer";
 import { NodeTypes } from "../req/NodeTypes";
 

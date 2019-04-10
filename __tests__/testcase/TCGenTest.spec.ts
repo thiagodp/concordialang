@@ -1,8 +1,8 @@
 import { TCGen } from "../../modules/testcase/TCGen";
 import { SimpleCompiler } from "../../modules/util/SimpleCompiler";
 import { AugmentedSpec } from "../../modules/ast/AugmentedSpec";
-import { Document, FileInfo, Variant, TestCase } from "concordialang-types/ast";
-import { LocatedException } from "concordialang-types/req";
+import { Document, FileInfo, Variant, TestCase } from "concordialang-types";
+import { LocatedException } from "concordialang-types";
 import { PreTestCaseGenerator, GenContext } from "../../modules/testscenario/PreTestCaseGenerator";
 import { SpecFilter } from "../../modules/selection/SpecFilter";
 import { BatchSpecificationAnalyzer } from "../../modules/semantic/BatchSpecificationAnalyzer";

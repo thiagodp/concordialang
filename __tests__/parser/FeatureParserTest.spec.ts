@@ -1,5 +1,5 @@
 import { resolve } from 'path';
-import { Feature } from 'concordialang-types/ast';
+import { Feature } from 'concordialang-types';
 import { NodeIterator } from '../../modules/parser/NodeIterator';
 import { ParsingContext } from '../../modules/parser/ParsingContext';
 import { NodeTypes } from '../../modules/req/NodeTypes';

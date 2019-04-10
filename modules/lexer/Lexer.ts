@@ -1,4 +1,4 @@
-import { Language, Node } from 'concordialang-types/ast';
+import { Language, Node } from 'concordialang-types';
 import { VariantLexer } from './VariantLexer';
 import { BeforeAllLexer, AfterAllLexer, BeforeFeatureLexer, AfterFeatureLexer, BeforeEachScenarioLexer, AfterEachScenarioLexer } from '../lexer/TestEventLexer';
 import { DatabasePropertyLexer } from './DatabasePropertyLexer';

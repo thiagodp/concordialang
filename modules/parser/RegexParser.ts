@@ -1,4 +1,4 @@
-import { Regex, ListItem } from 'concordialang-types/ast';
+import { Regex, ListItem } from 'concordialang-types';
 import { SyntaticException } from '../req/SyntaticException';
 import { ParsingContext } from './ParsingContext';
 import { NodeTypes} from '../req/NodeTypes';

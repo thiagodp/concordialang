@@ -1,4 +1,4 @@
-import { ContentNode } from 'concordialang-types/ast';
+import { ContentNode } from 'concordialang-types';
 import { NodeLexer, LexicalAnalysisResult } from "./NodeLexer";
 import { Expressions } from "../req/Expressions";
 import { Symbols } from "../req/Symbols";

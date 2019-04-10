@@ -1,7 +1,7 @@
 
-import { NLPResult, Entities } from 'concordialang-types/nlp';
-import { ContentNode, UIProperty, EntityValue } from 'concordialang-types/ast';
-import { LocatedException } from 'concordialang-types/req';
+import { NLPResult, Entities } from 'concordialang-types';
+import { ContentNode, UIProperty, EntityValue } from 'concordialang-types';
+import { LocatedException } from 'concordialang-types';
 import { isDefined } from '../util/TypeChecking';
 import { adjustValueToTheRightType, ValueTypeDetector } from '../util/ValueTypeDetector';
 import { Intents } from './Intents';

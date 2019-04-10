@@ -1,5 +1,5 @@
-import { Document, FileInfo, Variant } from "concordialang-types/ast";
-import { LocatedException } from "concordialang-types/req";
+import { Document, FileInfo, Variant } from "concordialang-types";
+import { LocatedException } from "concordialang-types";
 import { PreTestCaseGenerator, GenContext } from "../../modules/testscenario/PreTestCaseGenerator";
 import { SimpleCompiler } from "../../modules/util/SimpleCompiler";
 import { AugmentedSpec } from "../../modules/ast/AugmentedSpec";

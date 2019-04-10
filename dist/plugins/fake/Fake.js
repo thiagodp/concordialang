@@ -8,7 +8,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const testscript_1 = require("concordialang-types/testscript");
+const concordialang_types_1 = require("concordialang-types");
 /**
  * Fake plugin.
  *
@@ -18,7 +18,7 @@ class Fake {
     constructor() {
         /** @inheritDoc */
         this.executeCode = (options) => __awaiter(this, void 0, void 0, function* () {
-            let r = new testscript_1.TestScriptExecutionResult();
+            let r = new concordialang_types_1.TestScriptExecutionResult();
             r.sourceFile = 'nofile.json';
             r.schemaVersion = '1.0';
             r.started = (new Date()).toUTCString();

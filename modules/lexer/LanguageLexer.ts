@@ -1,4 +1,4 @@
-import { Language } from 'concordialang-types/ast';
+import { Language } from 'concordialang-types';
 import { KeywordBasedLexer } from './KeywordBasedLexer';
 import { Expressions } from '../req/Expressions';
 import { NodeTypes } from '../req/NodeTypes';

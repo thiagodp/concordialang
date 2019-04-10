@@ -1,4 +1,4 @@
-import { ConstantBlock } from 'concordialang-types/ast';
+import { ConstantBlock } from 'concordialang-types';
 import { ConstantBlockLexer } from '../../modules/lexer/ConstantBlockLexer';
 import { NodeTypes } from '../../modules/req/NodeTypes';
 

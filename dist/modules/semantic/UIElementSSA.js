@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const deepcopy = require("deepcopy");
-const nlp_1 = require("concordialang-types/nlp");
+const concordialang_types_1 = require("concordialang-types");
 const QueryParser_1 = require("../db/QueryParser");
 const TypeChecking_1 = require("../util/TypeChecking");
 const SemanticException_1 = require("./SemanticException");
@@ -76,15 +76,15 @@ class UIElementSSA extends SpecificationAnalyzer_1.SpecificationAnalyzer {
             const content = propValue.value.toString();
             // We will just deal with references to declarations!
             switch (propValue.entity) {
-                case nlp_1.Entities.CONSTANT: {
+                case concordialang_types_1.Entities.CONSTANT: {
                     this.analyzeConstant(content, uiProperty, doc, spec, propValue.references, errors);
                     break;
                 }
-                case nlp_1.Entities.UI_ELEMENT: {
+                case concordialang_types_1.Entities.UI_ELEMENT: {
                     this.analyzeUIElement(content, uiProperty, doc, spec, propValue.references, errors);
                     break;
                 }
-                case nlp_1.Entities.QUERY: {
+                case concordialang_types_1.Entities.QUERY: {
                     this.analyzeQuery(content, uiProperty, doc, spec, propValue.references, errors);
                     break;
                 }

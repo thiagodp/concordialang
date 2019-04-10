@@ -1,5 +1,5 @@
 import { join } from "path";
-import { FileInfo } from 'concordialang-types/ast';
+import { FileInfo } from 'concordialang-types';
 import { AugmentedSpec } from "../../modules/ast/AugmentedSpec";
 import { SimpleCompiler } from "../../modules/util/SimpleCompiler";
 

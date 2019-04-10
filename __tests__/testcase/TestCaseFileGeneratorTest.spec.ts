@@ -1,5 +1,5 @@
 import { resolve } from "path";
-import { Document } from 'concordialang-types/ast';
+import { Document } from 'concordialang-types';
 import { TestCaseFileGenerator } from "../../modules/testcase/TestCaseFileGenerator";
 import { JsonLanguageContentLoader, LanguageContentLoader } from "../../modules/dict/LanguageContentLoader";
 import { Options } from "../../modules/app/Options";

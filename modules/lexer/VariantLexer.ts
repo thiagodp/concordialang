@@ -1,4 +1,4 @@
-import { Variant } from 'concordialang-types/ast';
+import { Variant } from 'concordialang-types';
 import { NodeTypes } from "../req/NodeTypes";
 import { NamePlusNumberNodeLexer } from "./NamePlusNumberNodeLexer";
 

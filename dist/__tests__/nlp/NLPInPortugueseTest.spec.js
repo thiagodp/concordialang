@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const nlp_1 = require("concordialang-types/nlp");
+const concordialang_types_1 = require("concordialang-types");
 const Intents_1 = require("../../modules/nlp/Intents");
 const NLPTrainer_1 = require("../../modules/nlp/NLPTrainer");
 const NLP_1 = require("../../modules/nlp/NLP");
@@ -16,22 +16,22 @@ describe('NLPInPortugueseTest', () => {
     const options = new Options_1.Options(path_1.resolve(process.cwd(), 'dist/'));
     const langLoader = new LanguageContentLoader_1.JsonLanguageContentLoader(options.languageDir, {}, options.encoding);
     // entities
-    const UI_ELEMENT = nlp_1.Entities.UI_ELEMENT;
-    const UI_LITERAL = nlp_1.Entities.UI_LITERAL;
-    const VALUE = nlp_1.Entities.VALUE;
-    const NUMBER = nlp_1.Entities.NUMBER;
-    const CONSTANT = nlp_1.Entities.CONSTANT;
-    const QUERY = nlp_1.Entities.QUERY;
-    const STATE = nlp_1.Entities.STATE;
-    const COMMAND = nlp_1.Entities.COMMAND;
-    const UI_ACTION = nlp_1.Entities.UI_ACTION;
-    const UI_ACTION_MODIFIER = nlp_1.Entities.UI_ACTION_MODIFIER;
-    const UI_ACTION_OPTION = nlp_1.Entities.UI_ACTION_OPTION;
-    const UI_ELEMENT_TYPE = nlp_1.Entities.UI_ELEMENT_TYPE;
-    const UI_PROPERTY = nlp_1.Entities.UI_PROPERTY;
-    const UI_CONNECTOR = nlp_1.Entities.UI_CONNECTOR;
-    const UI_DATA_TYPE = nlp_1.Entities.UI_DATA_TYPE;
-    const EXEC_ACTION = nlp_1.Entities.EXEC_ACTION;
+    const UI_ELEMENT = concordialang_types_1.Entities.UI_ELEMENT;
+    const UI_LITERAL = concordialang_types_1.Entities.UI_LITERAL;
+    const VALUE = concordialang_types_1.Entities.VALUE;
+    const NUMBER = concordialang_types_1.Entities.NUMBER;
+    const CONSTANT = concordialang_types_1.Entities.CONSTANT;
+    const QUERY = concordialang_types_1.Entities.QUERY;
+    const STATE = concordialang_types_1.Entities.STATE;
+    const COMMAND = concordialang_types_1.Entities.COMMAND;
+    const UI_ACTION = concordialang_types_1.Entities.UI_ACTION;
+    const UI_ACTION_MODIFIER = concordialang_types_1.Entities.UI_ACTION_MODIFIER;
+    const UI_ACTION_OPTION = concordialang_types_1.Entities.UI_ACTION_OPTION;
+    const UI_ELEMENT_TYPE = concordialang_types_1.Entities.UI_ELEMENT_TYPE;
+    const UI_PROPERTY = concordialang_types_1.Entities.UI_PROPERTY;
+    const UI_CONNECTOR = concordialang_types_1.Entities.UI_CONNECTOR;
+    const UI_DATA_TYPE = concordialang_types_1.Entities.UI_DATA_TYPE;
+    const EXEC_ACTION = concordialang_types_1.Entities.EXEC_ACTION;
     beforeEach(() => {
         nlp = new NLP_1.NLP();
         const ok = (new NLPTrainer_1.NLPTrainer(langLoader)).trainNLP(nlp, LANGUAGE);

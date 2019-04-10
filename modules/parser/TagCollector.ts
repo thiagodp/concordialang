@@ -1,4 +1,4 @@
-import { Tag } from "concordialang-types/ast";
+import { Tag } from "concordialang-types";
 import { NodeIterator } from './NodeIterator';
 import { NodeTypes } from "../req/NodeTypes";
 

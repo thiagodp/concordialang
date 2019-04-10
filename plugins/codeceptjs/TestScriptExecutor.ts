@@ -5,7 +5,7 @@ import * as fse from 'node-fs-extra';
 import * as childProcess from 'child_process';
 import chalk from 'chalk';
 import { arrowRight, info, cross, warning } from 'figures';
-import { TestScriptExecutionOptions } from 'concordialang-types/testscript';
+import { TestScriptExecutionOptions } from 'concordialang-types';
 import { ConfigMaker } from './ConfigMaker';
 
 /**

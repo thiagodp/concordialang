@@ -1,6 +1,6 @@
-import { LocatedException } from 'concordialang-types/req';
-import { ContentNode, Step } from 'concordialang-types/ast';
-import { NLPResult, Entities } from 'concordialang-types/nlp';
+import { LocatedException } from 'concordialang-types';
+import { ContentNode, Step } from 'concordialang-types';
+import { NLPResult, Entities } from 'concordialang-types';
 import { NLPTrainer } from './NLPTrainer';
 import { Intents } from './Intents';
 import { NodeSentenceRecognizer, NLPResultProcessor } from "./NodeSentenceRecognizer";

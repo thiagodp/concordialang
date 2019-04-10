@@ -1,6 +1,6 @@
 import * as enumUtil from 'enum-util';
-import { UIElement, UIProperty } from 'concordialang-types/ast';
-import { Entities, NLPEntity, NLPUtil } from 'concordialang-types/nlp';
+import { UIElement, UIProperty } from 'concordialang-types';
+import { Entities, NLPEntity, NLPUtil } from 'concordialang-types';
 import { CaseType } from '../app/CaseType';
 import { EditableActionTargets } from './ActionTargets';
 import { convertCase } from './CaseConversor';

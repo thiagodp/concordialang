@@ -1,4 +1,4 @@
-import { NamedNode } from 'concordialang-types/ast';
+import { NamedNode } from 'concordialang-types';
 import { Expressions } from '../req/Expressions';
 import { NamedNodeLexer } from './NamedNodeLexer';
 

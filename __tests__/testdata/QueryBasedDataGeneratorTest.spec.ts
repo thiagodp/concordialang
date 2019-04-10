@@ -1,4 +1,4 @@
-import { Queryable } from "concordialang-types/req";
+import { Queryable } from "concordialang-types";
 import { QueryBasedDataGenerator } from "../../modules/testdata/QueryBasedDataGenerator";
 import { RandomLong } from "../../modules/testdata/random/RandomLong";
 import { Random } from "../../modules/testdata/random/Random";

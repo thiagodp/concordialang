@@ -11,7 +11,7 @@ import {
     UIProperty,
     Variant,
     VariantBackground
- } from 'concordialang-types/ast';
+ } from 'concordialang-types';
 
 /**
  * Parsing context.

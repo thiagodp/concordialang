@@ -1,4 +1,4 @@
-import { Tag } from 'concordialang-types/ast';
+import { Tag } from 'concordialang-types';
 import { FilterCriterion } from './FilterCriterion';
 import { ReservedTags } from '../req/ReservedTags';
 import { Defaults } from '../app/Defaults';

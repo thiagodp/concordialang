@@ -3,7 +3,7 @@ import {
     TestScriptGenerationOptions,
     TestScriptExecutionOptions,
     TestScriptExecutionResult
-} from 'concordialang-types/testscript';
+} from 'concordialang-types';
 import { Plugin } from 'concordialang-plugin';
 
 /**

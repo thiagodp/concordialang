@@ -1,6 +1,6 @@
 import dbjs = require( 'database-js' );
-import { DatabaseInterface } from 'concordialang-types/req';
-import { Database } from 'concordialang-types/ast';
+import { DatabaseInterface } from 'concordialang-types';
+import { Database } from 'concordialang-types';
 import { isPathBasedDatabaseType } from './DatabaseTypes';
 import { DatabaseToAbstractDatabase } from './DatabaseToAbstractDatabase';
 

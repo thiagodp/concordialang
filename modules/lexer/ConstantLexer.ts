@@ -1,4 +1,4 @@
-import { Constant } from 'concordialang-types/ast';
+import { Constant } from 'concordialang-types';
 import { LexicalException} from '../req/LexicalException';
 import { LineChecker} from '../req/LineChecker';
 import { KeywordBasedLexer } from './KeywordBasedLexer';

@@ -1,4 +1,4 @@
-import { ListItem, DatabaseProperty } from "concordialang-types/ast";
+import { ListItem, DatabaseProperty } from "concordialang-types";
 import { ListItemNodeParser } from "./ListItemNodeParser";
 import { NodeIterator } from './NodeIterator';
 import { ParsingContext } from './ParsingContext';

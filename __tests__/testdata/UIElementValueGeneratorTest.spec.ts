@@ -1,4 +1,4 @@
-import { FileInfo, EntityValueType } from "concordialang-types/ast";
+import { FileInfo, EntityValueType } from "concordialang-types";
 import { UIElementValueGenerator, ValueGenContext } from "../../modules/testdata/UIElementValueGenerator";
 import { SimpleCompiler } from "../../modules/util/SimpleCompiler";
 import { AugmentedSpec } from "../../modules/ast/AugmentedSpec";

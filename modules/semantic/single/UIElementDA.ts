@@ -1,4 +1,4 @@
-import { Document, UIElement, UIProperty } from "concordialang-types/ast";
+import { Document, UIElement, UIProperty } from "concordialang-types";
 import { DocumentAnalyzer } from "./DocumentAnalyzer";
 import { SemanticException } from "../SemanticException";
 import { DuplicationChecker } from "../../util/DuplicationChecker";

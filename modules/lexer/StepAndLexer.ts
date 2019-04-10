@@ -1,4 +1,4 @@
-import { StepAnd } from "concordialang-types/ast";
+import { StepAnd } from "concordialang-types";
 import { StartingKeywordLexer } from './StartingKeywordLexer';
 import { NodeTypes } from "../req/NodeTypes";
 

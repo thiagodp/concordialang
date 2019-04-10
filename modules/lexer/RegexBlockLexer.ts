@@ -1,4 +1,4 @@
-import { RegexBlock } from "concordialang-types/ast";
+import { RegexBlock } from "concordialang-types";
 import { BlockLexer } from "./BlockLexer";
 import { NodeTypes } from "../req/NodeTypes";
 

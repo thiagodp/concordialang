@@ -1,4 +1,4 @@
-import { Queryable } from "concordialang-types/req";
+import { Queryable } from "concordialang-types";
 import { RawDataGenerator } from "./raw/RawDataGenerator";
 import { RandomLong } from "./random/RandomLong";
 import { QueryCache } from "../db/QueryCache";

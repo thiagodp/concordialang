@@ -1,5 +1,5 @@
 import { render } from "mustache";
-import { ATSCommand } from "concordialang-types/testscript";
+import { ATSCommand } from "concordialang-types";
 
 /**
  * Command comparison

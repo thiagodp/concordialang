@@ -1,7 +1,7 @@
 import * as arrayDiff from 'arr-diff';
 import * as enumUtil from 'enum-util';
-import { Constant, Step, UIElement, UIProperty } from 'concordialang-types/ast';
-import { Entities, NLPUtil } from 'concordialang-types/nlp';
+import { Constant, Step, UIElement, UIProperty } from 'concordialang-types';
+import { Entities, NLPUtil } from 'concordialang-types';
 import { RuntimeException } from '../req/RuntimeException';
 import { isDefined } from '../util/TypeChecking';
 import { UIElementPropertyExtractor } from '../util/UIElementPropertyExtractor';

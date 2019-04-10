@@ -1,6 +1,6 @@
 import Graph = require( 'graph.js/dist/graph.full.js' );
 import { EventEmitter } from "events";
-import { Document } from "concordialang-types/ast";
+import { Document } from "concordialang-types";
 
 
 export enum GraphFilterEvent {

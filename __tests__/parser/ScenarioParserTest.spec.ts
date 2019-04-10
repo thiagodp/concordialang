@@ -1,4 +1,4 @@
-import { Scenario, Node, Feature } from 'concordialang-types/ast';
+import { Scenario, Node, Feature } from 'concordialang-types';
 import { ScenarioParser } from '../../modules/parser/ScenarioParser';
 import { NodeIterator } from '../../modules/parser/NodeIterator';
 import { ParsingContext } from '../../modules/parser/ParsingContext';

@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const Bravey = require("../../lib/bravey"); // .js file
-const nlp_1 = require("concordialang-types/nlp");
+const concordialang_types_1 = require("concordialang-types");
 const ValueTypeDetector_1 = require("../util/ValueTypeDetector");
 /**
  * Natural Language Processor
@@ -16,32 +16,32 @@ class NLP {
         this._additionalRecognizers = [];
         const erMaker = new EntityRecognizerMaker();
         // Add an entity named "value" and its recognizer
-        this._additionalEntities.push(nlp_1.Entities.VALUE);
-        this._additionalRecognizers.push(erMaker.makeValue(nlp_1.Entities.VALUE));
+        this._additionalEntities.push(concordialang_types_1.Entities.VALUE);
+        this._additionalRecognizers.push(erMaker.makeValue(concordialang_types_1.Entities.VALUE));
         // Add an entity named "ui_element" and its recognizer
-        this._additionalEntities.push(nlp_1.Entities.UI_ELEMENT);
-        this._additionalRecognizers.push(erMaker.makeUIElement(nlp_1.Entities.UI_ELEMENT));
+        this._additionalEntities.push(concordialang_types_1.Entities.UI_ELEMENT);
+        this._additionalRecognizers.push(erMaker.makeUIElement(concordialang_types_1.Entities.UI_ELEMENT));
         // Add an entity named "ui_element_literal" and its recognizer
-        this._additionalEntities.push(nlp_1.Entities.UI_LITERAL);
-        this._additionalRecognizers.push(erMaker.makeUILiteral(nlp_1.Entities.UI_LITERAL));
+        this._additionalEntities.push(concordialang_types_1.Entities.UI_LITERAL);
+        this._additionalRecognizers.push(erMaker.makeUILiteral(concordialang_types_1.Entities.UI_LITERAL));
         // Add an entity named "number" and its recognizer
-        this._additionalEntities.push(nlp_1.Entities.NUMBER);
-        this._additionalRecognizers.push(erMaker.makeNumber(nlp_1.Entities.NUMBER));
+        this._additionalEntities.push(concordialang_types_1.Entities.NUMBER);
+        this._additionalRecognizers.push(erMaker.makeNumber(concordialang_types_1.Entities.NUMBER));
         // Add an entity named "query" and its recognizer
-        this._additionalEntities.push(nlp_1.Entities.QUERY);
-        this._additionalRecognizers.push(erMaker.makeQuery(nlp_1.Entities.QUERY));
+        this._additionalEntities.push(concordialang_types_1.Entities.QUERY);
+        this._additionalRecognizers.push(erMaker.makeQuery(concordialang_types_1.Entities.QUERY));
         // Add an entity named "constant" and its recognizer
-        this._additionalEntities.push(nlp_1.Entities.CONSTANT);
-        this._additionalRecognizers.push(erMaker.makeConstant(nlp_1.Entities.CONSTANT));
+        this._additionalEntities.push(concordialang_types_1.Entities.CONSTANT);
+        this._additionalRecognizers.push(erMaker.makeConstant(concordialang_types_1.Entities.CONSTANT));
         // Add an entity named "value_list" and its recognizer
-        this._additionalEntities.push(nlp_1.Entities.VALUE_LIST);
-        this._additionalRecognizers.push(erMaker.makeValueList(nlp_1.Entities.VALUE_LIST));
+        this._additionalEntities.push(concordialang_types_1.Entities.VALUE_LIST);
+        this._additionalRecognizers.push(erMaker.makeValueList(concordialang_types_1.Entities.VALUE_LIST));
         // Add an entity named "state" and its recognizer
-        this._additionalEntities.push(nlp_1.Entities.STATE);
-        this._additionalRecognizers.push(erMaker.makeState(nlp_1.Entities.STATE));
+        this._additionalEntities.push(concordialang_types_1.Entities.STATE);
+        this._additionalRecognizers.push(erMaker.makeState(concordialang_types_1.Entities.STATE));
         // Add an entity named "command" and its recognizer
-        this._additionalEntities.push(nlp_1.Entities.COMMAND);
-        this._additionalRecognizers.push(erMaker.makeCommand(nlp_1.Entities.COMMAND));
+        this._additionalEntities.push(concordialang_types_1.Entities.COMMAND);
+        this._additionalRecognizers.push(erMaker.makeCommand(concordialang_types_1.Entities.COMMAND));
     }
     /**
      * Train the recognizer.

@@ -8,8 +8,8 @@ import {
     NamedNode,
     Table,
     UIElement
-} from 'concordialang-types/ast';
-import { DatabaseInterface, InMemoryTableInterface } from 'concordialang-types/req';
+} from 'concordialang-types';
+import { DatabaseInterface, InMemoryTableInterface } from 'concordialang-types';
 import { CaseType } from '../app/CaseType';
 import { DocumentUtil } from '../util/DocumentUtil';
 import { isDefined, valueOrNull } from '../util/TypeChecking';

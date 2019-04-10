@@ -1,4 +1,4 @@
-import { Queryable } from "concordialang-types/req";
+import { Queryable } from "concordialang-types";
 import { ValueType } from "../util/ValueTypeDetector";
 import { RawDataGenerator } from "./raw/RawDataGenerator";
 import { StringGenerator } from "./raw/StringGenerator";

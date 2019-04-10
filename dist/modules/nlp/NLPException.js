@@ -1,12 +1,12 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const req_1 = require("concordialang-types/req");
+const concordialang_types_1 = require("concordialang-types");
 /**
  * Natural Language Processing Exception
  *
  * @author Thiago Delgado Pinto
  */
-class NLPException extends req_1.LocatedException {
+class NLPException extends concordialang_types_1.LocatedException {
     constructor() {
         super(...arguments);
         this.name = 'NLPError';

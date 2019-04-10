@@ -1,5 +1,5 @@
 import * as path from 'path';
-import { Location, Database, DatabaseProperties, DatabaseProperty } from 'concordialang-types/ast';
+import { Location, Database, DatabaseProperties, DatabaseProperty } from 'concordialang-types';
 import { NodeTypes } from '../../modules/req/NodeTypes';
 import { DatabaseWrapper } from '../../modules/db/DatabaseWrapper';
 

@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const nlp_1 = require("concordialang-types/nlp");
+const concordialang_types_1 = require("concordialang-types");
 const UIElementOperator_1 = require("./UIElementOperator");
 /**
  * UI Element operator checker.
@@ -9,7 +9,7 @@ const UIElementOperator_1 = require("./UIElementOperator");
  */
 class UIElementOperatorChecker {
     constructor() {
-        this.nlpUtil = new nlp_1.NLPUtil();
+        this.nlpUtil = new concordialang_types_1.NLPUtil();
     }
     isEqualTo(uip) {
         return this.hasOperator(uip, UIElementOperator_1.UIElementOperator.EQUAL_TO) && !this.hasNot(uip);
@@ -31,11 +31,11 @@ class UIElementOperatorChecker {
         return this.hasOperator(uip, UIElementOperator_1.UIElementOperator.COMPUTED_BY) && this.hasNot(uip);
     }
     hasOperator(uip, operator) {
-        return this.nlpUtil.valuesOfEntitiesNamed(nlp_1.Entities.UI_CONNECTOR, uip.nlpResult)
+        return this.nlpUtil.valuesOfEntitiesNamed(concordialang_types_1.Entities.UI_CONNECTOR, uip.nlpResult)
             .indexOf(operator) >= 0;
     }
     hasNot(uip) {
-        return this.nlpUtil.valuesOfEntitiesNamed(nlp_1.Entities.UI_CONNECTOR_MODIFIER, uip.nlpResult)
+        return this.nlpUtil.valuesOfEntitiesNamed(concordialang_types_1.Entities.UI_CONNECTOR_MODIFIER, uip.nlpResult)
             .indexOf(UIElementOperator_1.UIElementOperatorModifier.NOT) >= 0;
     }
 }

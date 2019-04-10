@@ -1,4 +1,4 @@
-import { AfterFeature } from 'concordialang-types/ast';
+import { AfterFeature } from 'concordialang-types';
 import { SyntaticException } from '../req/SyntaticException';
 import { isDefined } from '../util/TypeChecking';
 import { NodeIterator } from './NodeIterator';

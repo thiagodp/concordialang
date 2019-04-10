@@ -1,4 +1,4 @@
-import { Feature, Document, UIElement } from "concordialang-types/ast";
+import { Feature, Document, UIElement } from "concordialang-types";
 import { DocumentUtil } from "../../modules/util/DocumentUtil";
 
 

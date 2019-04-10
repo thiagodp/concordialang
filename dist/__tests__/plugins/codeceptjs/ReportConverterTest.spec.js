@@ -10,7 +10,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const path_1 = require("path");
 const memfs_1 = require("memfs");
-const testscript_1 = require("concordialang-types/testscript");
+const concordialang_types_1 = require("concordialang-types");
 const ReportConverter_1 = require("../../../plugins/codeceptjs/ReportConverter");
 /**
  * @author Matheus Eller Fagundes
@@ -147,11 +147,11 @@ describe('ReportConverterTest', () => {
     it('succefully converts a CodeceptJS report', () => __awaiter(this, void 0, void 0, function* () {
         let converter = new ReportConverter_1.ReportConverter(memfs_1.fs); // under test
         let received = yield converter.convertFrom(reportFilePath, pluginConfigPath);
-        let expectedMethod1 = new testscript_1.TestMethodResult();
+        let expectedMethod1 = new concordialang_types_1.TestMethodResult();
         expectedMethod1.durationMs = 1723;
         expectedMethod1.name = 'successful login';
         expectedMethod1.status = 'passed';
-        let expectedMethod2 = new testscript_1.TestMethodResult();
+        let expectedMethod2 = new concordialang_types_1.TestMethodResult();
         expectedMethod2.durationMs = 1655;
         expectedMethod2.name = 'unsuccessful login';
         expectedMethod2.status = 'failed';
@@ -170,10 +170,10 @@ describe('ReportConverterTest', () => {
                 column: 1
             }
         };
-        let expectedSuite = new testscript_1.TestSuiteResult();
+        let expectedSuite = new concordialang_types_1.TestSuiteResult();
         expectedSuite.suite = 'login';
         expectedSuite.methods = [expectedMethod1, expectedMethod2];
-        let expected = new testscript_1.TestScriptExecutionResult();
+        let expected = new concordialang_types_1.TestScriptExecutionResult();
         expected.sourceFile = reportFilePath;
         expected.started = '2017-11-06T00:20:32.304Z';
         expected.finished = '2017-11-06T00:20:38.977Z';

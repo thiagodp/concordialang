@@ -1,6 +1,6 @@
 import { parse, resolve, relative, join, dirname, basename, normalize } from "path";
 import * as deepcopy from 'deepcopy';
-import { Document, TestCase, FileInfo, Language, Import } from "concordialang-types/ast";
+import { Document, TestCase, FileInfo, Language, Import } from "concordialang-types";
 import { NodeTypes } from "../req/NodeTypes";
 
 /**

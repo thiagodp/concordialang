@@ -1,4 +1,4 @@
-import { Location } from 'concordialang-types/ast';
+import { Location } from 'concordialang-types';
 import { LongStringLexer } from "../../modules/lexer/LongStringLexer";
 import { NodeTypes } from "../../modules/req/NodeTypes";
 

@@ -1,4 +1,4 @@
-import { Database } from 'concordialang-types/ast';
+import { Database } from 'concordialang-types';
 import { NamedNodeLexer } from "./NamedNodeLexer";
 import { NodeTypes } from "../req/NodeTypes";
 

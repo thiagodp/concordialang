@@ -1,4 +1,4 @@
-import { StepAnd } from 'concordialang-types/ast';
+import { StepAnd } from 'concordialang-types';
 import { NodeTypes } from '../req/NodeTypes';
 import { SyntaticException } from '../req/SyntaticException';
 import { NodeIterator } from './NodeIterator';

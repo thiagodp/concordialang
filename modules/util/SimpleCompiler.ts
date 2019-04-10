@@ -1,5 +1,5 @@
 import { resolve } from 'path';
-import { Document, FileInfo } from "concordialang-types/ast";
+import { Document, FileInfo } from "concordialang-types";
 import { Options } from "../app/Options";
 import { LanguageContentLoader, JsonLanguageContentLoader } from "../dict/LanguageContentLoader";
 import { LexerBuilder } from "../lexer/LexerBuilder";

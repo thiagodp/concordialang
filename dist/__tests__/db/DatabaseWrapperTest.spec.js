@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const path = require("path");
-const ast_1 = require("concordialang-types/ast");
+const concordialang_types_1 = require("concordialang-types");
 const NodeTypes_1 = require("../../modules/req/NodeTypes");
 const DatabaseWrapper_1 = require("../../modules/db/DatabaseWrapper");
 /**
@@ -27,14 +27,14 @@ describe('DatabaseWrapperTest', () => {
                 {
                     nodeType: NodeTypes_1.NodeTypes.DATABASE_PROPERTY,
                     location: { line: 1, column: 1 },
-                    property: ast_1.DatabaseProperties.TYPE,
+                    property: concordialang_types_1.DatabaseProperties.TYPE,
                     value: 'json',
                     content: 'type is json'
                 },
                 {
                     nodeType: NodeTypes_1.NodeTypes.DATABASE_PROPERTY,
                     location: { line: 2, column: 1 },
-                    property: ast_1.DatabaseProperties.PATH,
+                    property: concordialang_types_1.DatabaseProperties.PATH,
                     value: path,
                     content: 'path is "' + path + '"'
                 }

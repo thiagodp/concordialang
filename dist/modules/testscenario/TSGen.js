@@ -9,8 +9,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const deepcopy = require("deepcopy");
-const ast_1 = require("concordialang-types/ast");
-const nlp_1 = require("concordialang-types/nlp");
+const concordialang_types_1 = require("concordialang-types");
+const concordialang_types_2 = require("concordialang-types");
 const NodeTypes_1 = require("../req/NodeTypes");
 const RuntimeException_1 = require("../req/RuntimeException");
 const DataTestCaseMix_1 = require("../testcase/DataTestCaseMix");
@@ -139,7 +139,7 @@ class TSGen {
                             // Adjust step index (precondition or state call)
                             let stepIndex = 0;
                             for (let tsStep of ts.steps) {
-                                let tsState = tsStep.nlpResult.entities.find(e => e.entity === nlp_1.Entities.STATE);
+                                let tsState = tsStep.nlpResult.entities.find(e => e.entity === concordialang_types_2.Entities.STATE);
                                 if (tsState && state.nameEquals(tsState.value)) {
                                     state.stepIndex = stepIndex;
                                     break;
@@ -305,7 +305,7 @@ class TSGen {
         // Prepare eventual GIVEN AND steps that *do not have* States to become GIVEN steps,
         //     and eventual WHEN AND  steps that *do not have* States to become WHEN  steps,
         // since they will be replaced later
-        const nlpUtil = new nlp_1.NLPUtil();
+        const nlpUtil = new concordialang_types_2.NLPUtil();
         const stepWhenKeyword = (keywords.stepWhen || ['when'])[0];
         const stepGivenKeyword = (keywords.stepGiven || ['given'])[0];
         let index = 0, priorWasGiven = false, priorWasWhen = false, priorHasState = false;
@@ -313,16 +313,16 @@ class TSGen {
             if (step.nodeType === NodeTypes_1.NodeTypes.STEP_GIVEN) {
                 priorWasGiven = true;
                 priorWasWhen = false;
-                priorHasState = nlpUtil.hasEntityNamed(nlp_1.Entities.STATE, step.nlpResult);
+                priorHasState = nlpUtil.hasEntityNamed(concordialang_types_2.Entities.STATE, step.nlpResult);
             }
             else if (step.nodeType === NodeTypes_1.NodeTypes.STEP_WHEN) {
                 priorWasGiven = false;
                 priorWasWhen = true;
-                priorHasState = nlpUtil.hasEntityNamed(nlp_1.Entities.STATE, step.nlpResult);
+                priorHasState = nlpUtil.hasEntityNamed(concordialang_types_2.Entities.STATE, step.nlpResult);
             }
             else if (step.nodeType === NodeTypes_1.NodeTypes.STEP_AND
                 && priorHasState && (priorWasGiven || priorWasWhen)
-                && !nlpUtil.hasEntityNamed(nlp_1.Entities.STATE, step.nlpResult)) { // current does not have state
+                && !nlpUtil.hasEntityNamed(concordialang_types_2.Entities.STATE, step.nlpResult)) { // current does not have state
                 if (priorWasGiven) {
                     // Change node type
                     step.nodeType = NodeTypes_1.NodeTypes.STEP_GIVEN;
@@ -343,7 +343,7 @@ class TSGen {
         return ts;
     }
     containsIgnoreTag(tags, ignoreKeywords) {
-        return ast_1.tagsWithAnyOfTheNames(tags, ignoreKeywords).length > 0;
+        return concordialang_types_1.tagsWithAnyOfTheNames(tags, ignoreKeywords).length > 0;
     }
     replaceStepWithTestScenario(ts, state, tsToReplaceStep, isPrecondition) {
         let stepsToReplace = deepcopy(isPrecondition ? tsToReplaceStep.steps : tsToReplaceStep.stepsWithoutPreconditions());

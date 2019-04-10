@@ -1,5 +1,5 @@
 const XRegExp = require( 'xregexp' );
-import { ValuedNode } from 'concordialang-types/ast';
+import { ValuedNode } from 'concordialang-types';
 import { KeywordBasedLexer } from './KeywordBasedLexer';
 import { NodeLexer, LexicalAnalysisResult } from './NodeLexer';
 import { Expressions } from '../req/Expressions';

@@ -1,4 +1,4 @@
-import { Document, Scenario } from 'concordialang-types/ast';
+import { Document, Scenario } from 'concordialang-types';
 import { DocumentAnalyzer } from './DocumentAnalyzer';
 import { DuplicationChecker } from "../../util/DuplicationChecker";
 import { SemanticException } from "../SemanticException";

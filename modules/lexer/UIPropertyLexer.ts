@@ -1,4 +1,4 @@
-import { UIProperty } from "concordialang-types/ast";
+import { UIProperty } from "concordialang-types";
 import { ListItemLexer } from './ListItemLexer';
 import { NodeTypes } from '../req/NodeTypes';
 

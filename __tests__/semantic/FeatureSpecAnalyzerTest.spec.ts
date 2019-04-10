@@ -1,4 +1,4 @@
-import { Document } from 'concordialang-types/ast';
+import { Document } from 'concordialang-types';
 import { FeatureSSA } from '../../modules/semantic/FeatureSSA';
 import { Parser } from '../../modules/parser/Parser';
 import { Lexer } from '../../modules/lexer/Lexer';

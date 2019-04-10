@@ -1,4 +1,4 @@
-import { Document } from 'concordialang-types/ast';
+import { Document } from 'concordialang-types';
 import { NLPBasedSentenceRecognizer } from '../../modules/nlp/NLPBasedSentenceRecognizer';
 import { SingleDocumentProcessor } from '../../modules/app/SingleDocumentProcessor';
 import { Parser } from '../../modules/parser/Parser';

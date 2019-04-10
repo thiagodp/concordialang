@@ -1,4 +1,4 @@
-import { LongString } from 'concordialang-types/ast';
+import { LongString } from 'concordialang-types';
 import { NodeTypes } from '../req/NodeTypes';
 import { Symbols } from '../req/Symbols';
 import { LexicalAnalysisResult, NodeLexer } from './NodeLexer';

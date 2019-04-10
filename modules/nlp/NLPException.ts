@@ -1,4 +1,4 @@
-import { LocatedException } from 'concordialang-types/req';
+import { LocatedException } from 'concordialang-types';
 
 /**
  * Natural Language Processing Exception

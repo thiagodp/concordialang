@@ -1,4 +1,4 @@
-import { Node, Feature, Tag, Import } from 'concordialang-types/ast';
+import { Node, Feature, Tag, Import } from 'concordialang-types';
 import { NodeIterator } from '../../modules/parser/NodeIterator';
 import { TagCollector } from '../../modules/parser/TagCollector';
 import { NodeTypes } from "../../modules/req/NodeTypes";
