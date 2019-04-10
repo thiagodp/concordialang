@@ -2,7 +2,7 @@
     "isFake": false,
     "name": "codeceptjs",
     "description": "Generates test scripts for CodeceptJS with WebDriverIO",
-    "version": "0.12.0",
+    "version": "0.12.1",
     "targets": [ "CodeceptJS", "WebDriverIO" ],
     "authors": [
         "Thiago Delgado Pinto (thiago-dp@bol.com.br)",
@@ -10,7 +10,7 @@
     ],
     "file": "codeceptjs/CodeceptJS.js",
     "class": "CodeceptJS",
-    "install": "npm install -g codeceptjs webdriverio selenium-standalone && selenium-standalone install",
+    "install": "npm install -g codeceptjs@1.2.1 webdriverio@v4.14.0 selenium-standalone && selenium-standalone install",
     "uninstall": "npm uninstall -g codeceptjs webdriverio selenium-standalone",
     "serve": "selenium-standalone start"
 }
