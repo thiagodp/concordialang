@@ -31,9 +31,12 @@ class PackageBasedPluginFinder {
     find() {
         return __awaiter(this, void 0, void 0, function* () {
             const localPackagesDir = path_1.resolve(this._processPath, this.NODE_MODULES);
+            // console.log( ' Finding at', localPackagesDir, '...' );
             const localPluginData = yield this.findOnDir(localPackagesDir);
             const globalPackagesDir = globalDirs.npm.packages;
+            // console.log( ' Finding at', globalPackagesDir, '...' );
             const globalPluginData = yield this.findOnDir(globalPackagesDir);
+            // console.log( 'Local', localPluginData.length, 'found. Global', globalPluginData.length, 'found.' );
             // Removes local packages from the global ones
             const globalNotInLocal = globalPluginData.filter(globalData => !localPluginData.find(localData => localData.name == globalData.name));
             return localPluginData.concat(globalNotInLocal);
@@ -55,23 +58,37 @@ class PackageBasedPluginFinder {
      */
     findOnDir(dir) {
         return __awaiter(this, void 0, void 0, function* () {
-            const packageDirectories = yield this.detectPluginPackageDirectories(dir);
+            let packageDirectories = [];
+            try {
+                packageDirectories = yield this.detectPluginPackageDirectories(dir);
+            }
+            catch (err) {
+                if ('ENOENT' === err.code) {
+                    return [];
+                }
+            }
+            // console.log( 'Detected directories to analyze:', packageDirectories );
             const conversor = new PackageToPluginData_1.PackageToPluginData(PluginData_1.PLUGIN_PROPERTY);
             const readFile = util_1.promisify(this._fs.readFile);
             let allPluginData = [];
             for (const pkgDir of packageDirectories) {
                 const pkgFile = path_1.join(pkgDir, this.PACKAGE_FILE);
+                // console.log( 'Reading', pkgFile, '...' );
                 let content;
                 try {
                     content = yield readFile(pkgFile);
                 }
                 catch (err) {
+                    if ('ENOENT' === err.code) {
+                        continue; // Ignores a file that does not exist
+                    }
                     throw new Error(`Cannot read plugin data from "${pkgFile}" because the file cannot be read. Details: ` + err.message);
                 }
                 const pkg = JSON.parse(content);
                 // Ignores a package that does not have the expected property,
                 // because it is not supposed to be a Concordia plugin.
                 if (!pkg[PluginData_1.PLUGIN_PROPERTY]) {
+                    // console.log( 'Current plug-in does not have the property "' + PLUGIN_PROPERTY + '".' );
                     continue;
                 }
                 const pluginData = conversor.convert(pkg);

@@ -28,10 +28,14 @@ export class PackageBasedPluginFinder implements PluginFinder {
     public async find(): Promise< PluginData[] > {
 
         const localPackagesDir = resolve( this._processPath, this.NODE_MODULES );
+        // console.log( ' Finding at', localPackagesDir, '...' );
         const localPluginData: PluginData[] = await this.findOnDir( localPackagesDir );
 
         const globalPackagesDir = globalDirs.npm.packages;
+        // console.log( ' Finding at', globalPackagesDir, '...' );
         const globalPluginData: PluginData[] = await this.findOnDir( globalPackagesDir );
+
+        // console.log( 'Local', localPluginData.length, 'found. Global', globalPluginData.length, 'found.' );
 
         // Removes local packages from the global ones
         const globalNotInLocal: PluginData[] = globalPluginData.filter(
@@ -54,7 +58,15 @@ export class PackageBasedPluginFinder implements PluginFinder {
      */
     private async findOnDir( dir: string ): Promise< PluginData[] > {
 
-        const packageDirectories: string[] = await this.detectPluginPackageDirectories( dir );
+        let packageDirectories: string[] = [];
+        try {
+            packageDirectories = await this.detectPluginPackageDirectories( dir );
+        } catch ( err ) {
+            if ( 'ENOENT' === err.code ) {
+                return [];
+            }
+        }
+        // console.log( 'Detected directories to analyze:', packageDirectories );
         const conversor = new PackageToPluginData( PLUGIN_PROPERTY );
 
         const readFile = promisify( this._fs.readFile );
@@ -63,11 +75,15 @@ export class PackageBasedPluginFinder implements PluginFinder {
         for ( const pkgDir of packageDirectories ) {
 
             const pkgFile: string = join( pkgDir, this.PACKAGE_FILE );
+            // console.log( 'Reading', pkgFile, '...' );
 
             let content: string;
             try {
                 content = await readFile( pkgFile );
             } catch ( err ) {
+                if ( 'ENOENT' === err.code ) {
+                    continue; // Ignores a file that does not exist
+                }
                 throw new Error( `Cannot read plugin data from "${pkgFile}" because the file cannot be read. Details: ` + err.message );
             }
             const pkg: any = JSON.parse( content );
@@ -75,6 +91,7 @@ export class PackageBasedPluginFinder implements PluginFinder {
             // Ignores a package that does not have the expected property,
             // because it is not supposed to be a Concordia plugin.
             if ( ! pkg[ PLUGIN_PROPERTY ] ) {
+                // console.log( 'Current plug-in does not have the property "' + PLUGIN_PROPERTY + '".' );
                 continue;
             }
 

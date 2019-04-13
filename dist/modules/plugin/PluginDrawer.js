@@ -35,7 +35,7 @@ class PluginDrawer {
         const highlight = this._cli.colorHighlight;
         const format = "  - %-12s: %s"; // util.format does not support padding :(
         const authors = p.authors.map((a, idx) => 0 === idx ? a : sprintf_js_1.sprintf('%-17s %s', '', a));
-        this.write(this._cli.symbolInfo, 'Plugin ' + highlight(p.name));
+        this.write(this._cli.symbolInfo, sprintf_js_1.sprintf('Plugin %s', highlight(p.name)));
         this.write(sprintf_js_1.sprintf(format, 'version', p.version));
         this.write(sprintf_js_1.sprintf(format, 'description', p.description));
         this.write(sprintf_js_1.sprintf(format, 'targets', p.targets.join(', ')));
@@ -44,29 +44,50 @@ class PluginDrawer {
         this.write(sprintf_js_1.sprintf(format, 'file', p.file));
         this.write(sprintf_js_1.sprintf(format, 'class', p.class));
     }
-    showMessageOnNoPluginFound(name) {
+    showMessagePluginNotFound(name) {
         const highlight = this._cli.colorHighlight;
-        this.write(this._cli.symbolError, 'No plugins found with the name "' + highlight(name) + '".'
-            + '\nTry ' + highlight('--plugin-list') + ' to see the available plugins.');
+        this.write(this._cli.symbolError, sprintf_js_1.sprintf('No plugins installed with the name "%s".', highlight(name)));
+    }
+    showMessagePluginAlreadyInstalled(name) {
+        const highlight = this._cli.colorHighlight;
+        this.write(this._cli.symbolInfo, sprintf_js_1.sprintf('The plugin %s is already installed.', highlight(name)));
+    }
+    showMessageTryingToInstall(name, tool) {
+        const highlight = this._cli.colorHighlight;
+        this.write(this._cli.symbolInfo, sprintf_js_1.sprintf('Trying to install %s with %s.', highlight(name), tool));
+    }
+    showMessageTryingToUninstall(name, tool) {
+        const highlight = this._cli.colorHighlight;
+        this.write(this._cli.symbolInfo, sprintf_js_1.sprintf('Trying to uninstall %s with %s.', highlight(name), tool));
+    }
+    showMessageCouldNoFindInstalledPlugin(name) {
+        const highlight = this._cli.colorHighlight;
+        this.write(this._cli.symbolInfo, sprintf_js_1.sprintf('Could not find installed plug-in %s. Please try again.', highlight(name)));
+    }
+    showMessagePackageFileNotFound(file) {
+        const highlight = this._cli.colorHighlight;
+        this.write(this._cli.symbolWarning, sprintf_js_1.sprintf('Could not find %s. I will create it for you.', highlight(file)));
     }
     showPluginInstallStart(name) {
         const highlight = this._cli.colorHighlight;
-        this.write(this._cli.symbolInfo, 'Installing the plugin ' + highlight(name) + '...');
+        this.write(this._cli.symbolInfo, sprintf_js_1.sprintf('Installing the plugin %s...', highlight(name)));
     }
     showPluginUninstallStart(name) {
         const highlight = this._cli.colorHighlight;
-        this.write(this._cli.symbolInfo, 'Uninstalling the plugin ' + highlight(name) + '...');
+        this.write(this._cli.symbolInfo, sprintf_js_1.sprintf('Uninstalling the plugin %s...', highlight(name)));
     }
     showPluginServeStart(name) {
         const highlight = this._cli.colorHighlight;
-        this.write(this._cli.symbolInfo, 'Serving ' + highlight(name) + '...');
+        this.write(this._cli.symbolInfo, sprintf_js_1.sprintf('Serving %s...', highlight(name)));
     }
     showCommand(command) {
         this.write('  Running', this._cli.colorHighlight(command));
     }
-    showCommandCode(code) {
+    showCommandCode(code, showIfSuccess = true) {
         if (0 === code) {
-            this.write(this._cli.symbolSuccess, 'Success');
+            if (showIfSuccess) {
+                this.write(this._cli.symbolSuccess, 'Success');
+            }
         }
         else {
             this.write(this._cli.symbolError, 'Error during command execution.');

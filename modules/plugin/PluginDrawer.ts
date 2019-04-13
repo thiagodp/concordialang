@@ -39,7 +39,7 @@ export class PluginDrawer {
         const highlight = this._cli.colorHighlight;
         const format = "  - %-12s: %s"; // util.format does not support padding :(
         const authors = p.authors.map( ( a, idx ) => 0 === idx ? a : sprintf( '%-17s %s', '', a ) );
-        this.write( this._cli.symbolInfo, 'Plugin ' + highlight( p.name ) );
+        this.write( this._cli.symbolInfo, sprintf( 'Plugin %s', highlight( p.name ) ) );
         this.write( sprintf( format, 'version', p.version ) );
         this.write( sprintf( format, 'description', p.description ) );
         this.write( sprintf( format, 'targets', p.targets.join( ', ' ) ) );
@@ -49,34 +49,78 @@ export class PluginDrawer {
         this.write( sprintf( format, 'class', p.class ) );
     }
 
-    public showMessageOnNoPluginFound( name: string ): void {
+    public showMessagePluginNotFound( name: string ): void {
         const highlight = this._cli.colorHighlight;
-        this.write( this._cli.symbolError, 'No plugins found with the name "' + highlight( name ) + '".'
-            + '\nTry ' + highlight( '--plugin-list' ) + ' to see the available plugins.' );
+        this.write( this._cli.symbolError,
+            sprintf( 'No plugins installed with the name "%s".', highlight( name ) )
+            );
+    }
+
+    public showMessagePluginAlreadyInstalled( name: string ): void {
+        const highlight = this._cli.colorHighlight;
+        this.write( this._cli.symbolInfo,
+            sprintf( 'The plugin %s is already installed.', highlight( name ) )
+            );
+    }
+
+    public showMessageTryingToInstall( name: string, tool: string ): void {
+        const highlight = this._cli.colorHighlight;
+        this.write( this._cli.symbolInfo,
+            sprintf( 'Trying to install %s with %s.', highlight( name ), tool )
+            );
+    }
+
+    public showMessageTryingToUninstall( name: string, tool: string ): void {
+        const highlight = this._cli.colorHighlight;
+        this.write( this._cli.symbolInfo,
+            sprintf( 'Trying to uninstall %s with %s.', highlight( name ), tool )
+            );
+    }
+
+    public showMessageCouldNoFindInstalledPlugin( name: string ): void {
+        const highlight = this._cli.colorHighlight;
+        this.write( this._cli.symbolInfo,
+            sprintf( 'Could not find installed plug-in %s. Please try again.', highlight( name ) )
+            );
+    }
+
+    public showMessagePackageFileNotFound( file: string ): void {
+        const highlight = this._cli.colorHighlight;
+        this.write( this._cli.symbolWarning,
+            sprintf( 'Could not find %s. I will create it for you.', highlight( file ) )
+            );
     }
 
     public showPluginInstallStart( name: string ): void {
         const highlight = this._cli.colorHighlight;
-        this.write( this._cli.symbolInfo, 'Installing the plugin ' + highlight( name ) + '...' );
+        this.write( this._cli.symbolInfo,
+            sprintf( 'Installing the plugin %s...', highlight( name ) )
+            );
     }
 
     public showPluginUninstallStart( name: string ): void {
         const highlight = this._cli.colorHighlight;
-        this.write( this._cli.symbolInfo, 'Uninstalling the plugin ' + highlight( name ) + '...' );
+        this.write( this._cli.symbolInfo,
+            sprintf( 'Uninstalling the plugin %s...', highlight( name ) )
+            );
     }
 
     public showPluginServeStart( name: string ): void {
         const highlight = this._cli.colorHighlight;
-        this.write( this._cli.symbolInfo, 'Serving ' + highlight( name ) + '...' );
+        this.write( this._cli.symbolInfo,
+            sprintf( 'Serving %s...', highlight( name ) )
+            );
     }
 
     public showCommand( command: string ): void {
         this.write( '  Running', this._cli.colorHighlight( command ) );
     }
 
-    public showCommandCode( code: number ): void {
+    public showCommandCode( code: number, showIfSuccess: boolean = true ): void {
         if ( 0 === code ) {
-            this.write( this._cli.symbolSuccess, 'Success' );
+            if ( showIfSuccess ) {
+                this.write( this._cli.symbolSuccess, 'Success' );
+            }
         } else {
             this.write( this._cli.symbolError, 'Error during command execution.' );
         }

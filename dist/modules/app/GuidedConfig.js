@@ -21,7 +21,8 @@ class GuidedConfig {
                 q.language(),
                 q.dirScript(),
                 q.dirResult(),
-                q.plugin()
+                q.plugin(),
+                q.pluginInstall()
             ];
             let r = yield inquirer.prompt(questions);
             options.directory = r.directory;
@@ -29,13 +30,14 @@ class GuidedConfig {
             options.dirScript = r.dirScript;
             options.dirResult = r.dirResult;
             options.plugin = r.plugin;
+            options.pluginInstall = r.pluginInstall;
             return options;
         });
     }
 }
 exports.GuidedConfig = GuidedConfig;
 class ConcordiaQuestions {
-    // TO-DO: load options dynamically
+    // TO-DO: load language options dynamically
     language() {
         return {
             type: 'list',
@@ -71,16 +73,23 @@ class ConcordiaQuestions {
             default: './output'
         };
     }
-    // TO-DO: load options dynamically
+    // TO-DO: load plug-in options dynamically
     plugin() {
         return {
             type: 'list',
             name: 'plugin',
             message: 'Which plug-in do you want to use?',
             choices: [
-                { value: 'codeceptjs', short: 'codeceptjs', name: 'CodeceptJS with WebDriverIO (web applications)' },
+                { value: 'codeceptjs-webdriverio', short: 'codeceptjs-webdriverio', name: 'CodeceptJS with WebDriverIO (web applications)' },
                 { value: 'codeceptjs-appium', short: 'codeceptjs-appium', name: 'CodeceptJS with Appium (mobile or desktop applications)' }
             ]
+        };
+    }
+    pluginInstall() {
+        return {
+            type: 'confirm',
+            name: 'pluginInstall',
+            message: 'Do you want to install the plug-in?'
         };
     }
 }

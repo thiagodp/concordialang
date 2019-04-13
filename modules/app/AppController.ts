@@ -85,7 +85,7 @@ export class AppController {
             return true;
         }
 
-        if ( options.init ) {
+        if ( options.init && ! options.pluginInstall ) {
             return true;
         }
 

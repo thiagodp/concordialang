@@ -9,16 +9,21 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const childProcess = require("child_process");
+const inquirer = require("inquirer");
+const fs = require("fs");
+const path_1 = require("path");
 const PluginData_1 = require("./PluginData");
 const JsonBasedPluginFinder_1 = require("./JsonBasedPluginFinder");
+const read_file_1 = require("../util/read-file");
 /**
  * Plug-in manager
  *
  * @author Thiago Delgado Pinto
  */
 class PluginManager {
-    constructor(_pluginDir, finder) {
+    constructor(_pluginDir, finder, _fs = fs) {
         this._pluginDir = _pluginDir;
+        this._fs = _fs;
         this._finder = finder || new JsonBasedPluginFinder_1.JsonBasedPluginFinder(this._pluginDir);
     }
     findAll() {
@@ -40,24 +45,102 @@ class PluginManager {
             return withName.length > 0 ? withName[0] : null;
         });
     }
+    installByName(name, drawer) {
+        return __awaiter(this, void 0, void 0, function* () {
+            if (!name.includes(PluginData_1.PLUGIN_PREFIX)) {
+                name = PluginData_1.PLUGIN_PREFIX + name;
+            }
+            let pluginData = yield this.pluginWithName(name, false);
+            let r;
+            if (pluginData) {
+                r = yield inquirer.prompt([
+                    {
+                        type: 'confirm',
+                        name: 'install',
+                        message: 'Plug-in already installed. Do you want to try to install it again?'
+                    }
+                ]);
+                if (!r.install) {
+                    return;
+                }
+            }
+            else {
+                const PACKAGE_FILE = 'package.json';
+                const PACKAGE_CREATION_CMD = 'npm init --yes';
+                let mustGeneratePackageFile = false;
+                try {
+                    const path = path_1.join(process.cwd(), PACKAGE_FILE);
+                    const content = yield read_file_1.readFileAsync(path, { fs: this._fs, silentIfNotExists: true });
+                    if (!content) { // No package.json
+                        mustGeneratePackageFile = true;
+                        drawer.showMessagePackageFileNotFound(PACKAGE_FILE);
+                    }
+                }
+                catch (err) {
+                    mustGeneratePackageFile = true;
+                }
+                if (mustGeneratePackageFile) {
+                    const code = yield this.runPluginCommand(PACKAGE_CREATION_CMD, drawer);
+                    drawer.showCommandCode(code, false);
+                }
+            }
+            const PACKAGE_MANAGER = 'NPM';
+            const INSTALL_DEV_CMD = 'npm install --save-dev ' + name + ' --color=always';
+            drawer.showMessageTryingToInstall(name, PACKAGE_MANAGER);
+            const code = yield this.runPluginCommand(INSTALL_DEV_CMD, drawer);
+            drawer.showCommandCode(code, false);
+            if (code !== 0) { // unsuccessful
+                return;
+            }
+            pluginData = yield this.pluginWithName(name, false);
+            if (!pluginData) {
+                drawer.showMessageCouldNoFindInstalledPlugin(name);
+                return;
+            }
+            yield this.install(pluginData, drawer);
+        });
+    }
+    uninstallByName(name, drawer) {
+        return __awaiter(this, void 0, void 0, function* () {
+            if (!name.includes(PluginData_1.PLUGIN_PREFIX)) {
+                name = PluginData_1.PLUGIN_PREFIX + name;
+            }
+            let pluginData = yield this.pluginWithName(name, false);
+            if (!pluginData) {
+                drawer.showMessagePluginNotFound(name);
+                return;
+            }
+            // Call "uninstall" command
+            let code = yield this.uninstall(pluginData, drawer, false);
+            if (code !== 0) {
+                return;
+            }
+            // Remove with a package manager
+            drawer.showMessageTryingToUninstall(name, 'NPM');
+            code = yield this.runPluginCommand('npm uninstall --save-dev ' + name + ' --color=always', drawer);
+            drawer.showCommandCode(code);
+        });
+    }
     install(pluginData, drawer) {
         return __awaiter(this, void 0, void 0, function* () {
             if (!pluginData.install) {
                 throw new Error('No "install" property found in the plugin file. Can\'t install it.');
             }
             drawer.showPluginInstallStart(pluginData.name);
-            // const code = await this.runPluginCommand( pluginData.install, drawer );
-            yield this.runPluginCommand(pluginData.install, drawer);
+            const code = yield this.runPluginCommand(pluginData.install, drawer);
+            drawer.showCommandCode(code);
+            return code;
         });
     }
-    uninstall(pluginData, drawer) {
+    uninstall(pluginData, drawer, showCodeIfSuccess = true) {
         return __awaiter(this, void 0, void 0, function* () {
             if (!pluginData.uninstall) {
                 throw new Error('No "uninstall" property found in the plugin file. Can\'t uninstall it.');
             }
             drawer.showPluginUninstallStart(pluginData.name);
             const code = yield this.runPluginCommand(pluginData.uninstall, drawer);
-            drawer.showCommandCode(code);
+            drawer.showCommandCode(code, showCodeIfSuccess);
+            return code;
         });
     }
     serve(pluginData, drawer) {

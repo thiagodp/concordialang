@@ -36,19 +36,9 @@ class PluginController {
                 this._drawer.showError(new Error('Empty plugin name.'));
                 return false;
             }
-            const pluginData = yield pm.pluginWithName(options.plugin);
-            // plugin name not available?
-            if (!pluginData) {
-                this._drawer.showMessageOnNoPluginFound(options.plugin);
-                return false;
-            }
-            if (options.pluginAbout) {
-                this._drawer.drawSinglePlugin(pluginData);
-                return true;
-            }
             if (options.pluginInstall) {
                 try {
-                    yield pm.install(pluginData, this._drawer);
+                    yield pm.installByName(options.plugin, this._drawer);
                 }
                 catch (e) {
                     this._drawer.showError(e);
@@ -57,11 +47,21 @@ class PluginController {
             }
             if (options.pluginUninstall) {
                 try {
-                    yield pm.uninstall(pluginData, this._drawer);
+                    yield pm.uninstallByName(options.plugin, this._drawer);
                 }
                 catch (e) {
                     this._drawer.showError(e);
                 }
+                return true;
+            }
+            const pluginData = yield pm.pluginWithName(options.plugin);
+            // plugin name not available?
+            if (!pluginData) {
+                this._drawer.showMessagePluginNotFound(options.plugin);
+                return false;
+            }
+            if (options.pluginAbout) {
+                this._drawer.drawSinglePlugin(pluginData);
                 return true;
             }
             if (options.pluginServe) {

@@ -9,10 +9,10 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const path_1 = require("path");
-const util_1 = require("util");
 const fs = require("fs");
 const fwalker = require("fwalker");
 const JsonSchemaValidator_1 = require("../schema/JsonSchemaValidator");
+const read_file_1 = require("../util/read-file");
 /**
  * JSON-based test script plug-in finder.
  *
@@ -60,8 +60,7 @@ class JsonBasedPluginFinder {
     }
     loadConfigFile(filePath) {
         return __awaiter(this, void 0, void 0, function* () {
-            const read = util_1.promisify(this._fs.readFile);
-            const content = yield read(filePath);
+            const content = yield read_file_1.readFileAsync(filePath, { fs: this._fs });
             return this.processConfigFileData(content);
         });
     }

@@ -1,10 +1,10 @@
 import { resolve } from 'path';
-import { promisify } from 'util';
 import * as fs from 'fs';
 import * as fwalker from 'fwalker';
 import { PluginFinder } from './PluginFinder';
 import { PluginData } from './PluginData';
 import { JsonSchemaValidator } from '../schema/JsonSchemaValidator';
+import { readFileAsync } from '../util/read-file';
 
 /**
  * JSON-based test script plug-in finder.
@@ -55,8 +55,7 @@ export class JsonBasedPluginFinder implements PluginFinder {
     };
 
     public async loadConfigFile( filePath: string ): Promise< PluginData > {
-        const read = promisify( this._fs.readFile );
-        const content = await read( filePath );
+        const content = await readFileAsync( filePath, { fs: this._fs } );
         return this.processConfigFileData( content );
     }
 

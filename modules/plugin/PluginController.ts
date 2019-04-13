@@ -38,21 +38,9 @@ export class PluginController {
             return false;
         }
 
-        const pluginData = await pm.pluginWithName( options.plugin );
-        // plugin name not available?
-        if ( ! pluginData ) {
-            this._drawer.showMessageOnNoPluginFound( options.plugin );
-            return false;
-        }
-
-        if ( options.pluginAbout ) {
-            this._drawer.drawSinglePlugin( pluginData );
-            return true;
-        }
-
         if ( options.pluginInstall ) {
             try {
-                await pm.install( pluginData, this._drawer );
+                await pm.installByName( options.plugin, this._drawer );
             } catch ( e ) {
                 this._drawer.showError( e );
             }
@@ -61,10 +49,22 @@ export class PluginController {
 
         if ( options.pluginUninstall ) {
             try {
-                await pm.uninstall( pluginData, this._drawer );
+                await pm.uninstallByName( options.plugin, this._drawer );
             } catch ( e ) {
                 this._drawer.showError( e );
             }
+            return true;
+        }
+
+        const pluginData = await pm.pluginWithName( options.plugin );
+        // plugin name not available?
+        if ( ! pluginData ) {
+            this._drawer.showMessagePluginNotFound( options.plugin );
+            return false;
+        }
+
+        if ( options.pluginAbout ) {
+            this._drawer.drawSinglePlugin( pluginData );
             return true;
         }
 

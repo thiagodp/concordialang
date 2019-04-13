@@ -80,7 +80,7 @@ class AppController {
                 ui.showVersion();
                 return true;
             }
-            if (options.init) {
+            if (options.init && !options.pluginInstall) {
                 return true;
             }
             const pkg = meowInstance.pkg; // require( './package.json' );

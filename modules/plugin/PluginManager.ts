@@ -1,9 +1,13 @@
 import * as childProcess from 'child_process';
+import * as inquirer from 'inquirer';
+import * as fs from 'fs';
+import { join } from 'path';
 import { Plugin } from "concordialang-plugin";
 import { PluginData, PLUGIN_PREFIX } from "./PluginData";
 import { JsonBasedPluginFinder } from "./JsonBasedPluginFinder";
 import { PluginDrawer } from "./PluginDrawer";
 import { PluginFinder } from "./PluginFinder";
+import { readFileAsync } from '../util/read-file';
 
 /**
  * Plug-in manager
@@ -16,7 +20,8 @@ export class PluginManager {
 
     constructor(
         private _pluginDir: string,
-        finder?: PluginFinder
+        finder?: PluginFinder,
+        private _fs: any = fs
         ) {
         this._finder = finder || new JsonBasedPluginFinder( this._pluginDir );
     }
@@ -42,18 +47,118 @@ export class PluginManager {
         return withName.length > 0 ? withName[ 0 ] : null;
     }
 
-    public async install( pluginData: PluginData, drawer: PluginDrawer ): Promise< void > {
+    public async installByName( name: string, drawer: PluginDrawer ): Promise< void > {
+
+        if ( ! name.includes( PLUGIN_PREFIX ) ) {
+            name = PLUGIN_PREFIX + name;
+        }
+
+        let pluginData: PluginData = await this.pluginWithName( name, false );
+        let r;
+
+        if ( pluginData ) {
+
+            r = await inquirer.prompt( [
+                {
+                    type: 'confirm',
+                    name: 'install',
+                    message: 'Plug-in already installed. Do you want to try to install it again?'
+                }
+            ] );
+
+            if ( ! r.install ) {
+                return;
+            }
+
+        } else {
+
+            const PACKAGE_FILE = 'package.json';
+            const PACKAGE_CREATION_CMD = 'npm init --yes';
+
+            let mustGeneratePackageFile: boolean = false;
+
+            try {
+                const path = join( process.cwd(), PACKAGE_FILE );
+
+                const content: string | null = await readFileAsync(
+                    path,
+                    { fs: this._fs, silentIfNotExists: true }
+                );
+
+                if ( ! content ) { // No package.json
+                    mustGeneratePackageFile = true;
+                    drawer.showMessagePackageFileNotFound( PACKAGE_FILE );
+                }
+            } catch ( err ) {
+                mustGeneratePackageFile = true;
+            }
+
+            if ( mustGeneratePackageFile ) {
+                const code: number = await this.runPluginCommand( PACKAGE_CREATION_CMD, drawer );
+                drawer.showCommandCode( code, false );
+            }
+        }
+
+        const PACKAGE_MANAGER = 'NPM';
+        const INSTALL_DEV_CMD = 'npm install --save-dev ' + name + ' --color=always';
+
+        drawer.showMessageTryingToInstall( name, PACKAGE_MANAGER );
+        const code: number = await this.runPluginCommand( INSTALL_DEV_CMD, drawer );
+        drawer.showCommandCode( code, false );
+        if ( code !== 0 ) { // unsuccessful
+            return;
+        }
+        pluginData = await this.pluginWithName( name, false );
+        if ( ! pluginData ) {
+            drawer.showMessageCouldNoFindInstalledPlugin( name );
+            return;
+        }
+        await this.install( pluginData, drawer );
+    }
+
+
+    public async uninstallByName( name: string, drawer: PluginDrawer ): Promise< void > {
+
+        if ( ! name.includes( PLUGIN_PREFIX ) ) {
+            name = PLUGIN_PREFIX + name;
+        }
+
+        let pluginData: PluginData = await this.pluginWithName( name, false );
+        if ( ! pluginData ) {
+            drawer.showMessagePluginNotFound( name );
+            return;
+        }
+
+        // Call "uninstall" command
+        let code: number = await this.uninstall( pluginData, drawer, false );
+        if ( code !== 0 ) {
+            return;
+        }
+
+        // Remove with a package manager
+        drawer.showMessageTryingToUninstall( name, 'NPM' );
+        code = await this.runPluginCommand( 'npm uninstall --save-dev ' + name + ' --color=always', drawer );
+        drawer.showCommandCode( code );
+    }
+
+
+    public async install( pluginData: PluginData, drawer: PluginDrawer ): Promise< number > {
 
         if ( ! pluginData.install ) {
             throw new Error( 'No "install" property found in the plugin file. Can\'t install it.' );
         }
 
         drawer.showPluginInstallStart( pluginData.name );
-        // const code = await this.runPluginCommand( pluginData.install, drawer );
-        await this.runPluginCommand( pluginData.install, drawer );
+        const code: number = await this.runPluginCommand( pluginData.install, drawer );
+        drawer.showCommandCode( code );
+        return code;
     }
 
-    public async uninstall( pluginData: PluginData, drawer: PluginDrawer ): Promise< void > {
+    public async uninstall(
+        pluginData: PluginData,
+        drawer: PluginDrawer,
+        showCodeIfSuccess: boolean = true
+    ): Promise< number > {
 
         if ( ! pluginData.uninstall ) {
             throw new Error( 'No "uninstall" property found in the plugin file. Can\'t uninstall it.' );
@@ -61,7 +166,8 @@ export class PluginManager {
 
         drawer.showPluginUninstallStart( pluginData.name );
         const code = await this.runPluginCommand( pluginData.uninstall, drawer );
-        drawer.showCommandCode( code );
+        drawer.showCommandCode( code, showCodeIfSuccess );
+        return code;
     }
 
     public async serve( pluginData: PluginData, drawer: PluginDrawer ): Promise< void > {
