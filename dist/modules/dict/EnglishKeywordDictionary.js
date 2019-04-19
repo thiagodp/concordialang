@@ -16,7 +16,7 @@ class EnglishKeywordDictionary {
         this.variant = ['variant'];
         this.variantBackground = ['variant background'];
         this.testCase = ['test case'];
-        this.uiElement = ['ui element'];
+        this.uiElement = ['ui element', 'user interface element'];
         this.database = ['database'];
         this.beforeAll = ['before all'];
         this.afterAll = ['after all'];
@@ -26,11 +26,11 @@ class EnglishKeywordDictionary {
         this.afterEachScenario = ['after each scenario'];
         this.i = ['i'];
         this.is = ['is'];
-        this.with = ["with"];
-        this.valid = ["valid"];
-        this.invalid = ["invalid"];
-        this.random = ["random"];
-        this.from = ["from"];
+        this.with = ['with'];
+        this.valid = ['valid'];
+        this.invalid = ['invalid'];
+        this.random = ['random'];
+        this.from = ['from'];
         this.tagGlobal = ['global'];
         this.tagFeature = ['feature'];
         this.tagScenario = ['scenario'];
@@ -47,7 +47,7 @@ class EnglishKeywordDictionary {
         this.stepWhen = ['when'];
         this.stepThen = ['then'];
         this.stepAnd = ['and', 'but'];
-        this.stepOtherwise = ['otherwise', 'when invalid', 'if invalid'];
+        this.stepOtherwise = ['otherwise', 'when invalid', 'if invalid', 'whether invalid']; // not in Gherkin
         this.table = ['table'];
     }
 }
