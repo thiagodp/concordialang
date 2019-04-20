@@ -315,6 +315,10 @@ class Options {
             this.plugin = obj.pluginAbout.trim().toLowerCase();
             this.pluginAbout = true;
         }
+        if (TypeChecking_1.isString(obj.pluginInfo)) { // Same as plugin about !
+            this.plugin = obj.pluginInfo.trim().toLowerCase();
+            this.pluginAbout = true;
+        }
         if (TypeChecking_1.isString(obj.pluginInstall)) {
             this.plugin = obj.pluginInstall.trim().toLowerCase();
             this.pluginInstall = true;
