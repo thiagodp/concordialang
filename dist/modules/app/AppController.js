@@ -26,6 +26,7 @@ const TestResultAnalyzer_1 = require("../testscript/TestResultAnalyzer");
 const GuidedConfig_1 = require("./GuidedConfig");
 const fs_1 = require("fs");
 const util_1 = require("util");
+const path_1 = require("path");
 /**
  * Application controller
  *
@@ -243,12 +244,20 @@ class AppController {
                 cli.newLine(cli.symbolInfo, 'Script execution disabled.');
             }
             if (options.analyzeResult) { // Requires a plugin
+                let reportFile;
                 if (!executionResult) {
-                    cli.newLine(cli.symbolError, 'Could not retrieve execution results.');
-                    return false;
+                    const defaultReportFile = path_1.join(options.dirResult, yield plugin.defaultReportFile());
+                    if (!fs_1.existsSync(defaultReportFile)) {
+                        cli.newLine(cli.symbolError, 'Could not retrieve execution results.');
+                        return false;
+                    }
+                    reportFile = defaultReportFile;
+                }
+                else {
+                    reportFile = executionResult.sourceFile;
                 }
                 try {
-                    let reportedResult = yield plugin.convertReportFile(executionResult.sourceFile);
+                    let reportedResult = yield plugin.convertReportFile(reportFile);
                     (new TestResultAnalyzer_1.TestResultAnalyzer()).adjustResult(reportedResult, abstractTestScripts);
                     (new CliScriptExecutionReporter_1.CliScriptExecutionReporter(cli)).scriptExecuted(reportedResult);
                 }

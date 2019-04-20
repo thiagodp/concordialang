@@ -20,8 +20,9 @@ import * as updateNotifier from 'update-notifier';
 import { AbstractTestScript } from '../testscript/AbstractTestScript';
 import { TestResultAnalyzer } from '../testscript/TestResultAnalyzer';
 import { GuidedConfig } from './GuidedConfig';
-import { writeFile } from 'fs';
+import { writeFile, existsSync } from 'fs';
 import { promisify } from 'util';
+import { join } from 'path';
 
 /**
  * Application controller
@@ -276,12 +277,25 @@ export class AppController {
         }
 
         if ( options.analyzeResult ) { // Requires a plugin
+
+            let reportFile: string;
             if ( ! executionResult  ) {
-                cli.newLine( cli.symbolError, 'Could not retrieve execution results.' );
-                return false;
+
+                const defaultReportFile: string = join(
+                    options.dirResult, await plugin.defaultReportFile() );
+
+                if ( ! existsSync( defaultReportFile ) ) {
+                    cli.newLine( cli.symbolError, 'Could not retrieve execution results.' );
+                    return false;
+                }
+
+                reportFile = defaultReportFile;
+            } else {
+                reportFile = executionResult.sourceFile;
             }
+
             try {
-                let reportedResult = await plugin.convertReportFile( executionResult.sourceFile );
+                let reportedResult = await plugin.convertReportFile( reportFile );
                 ( new TestResultAnalyzer() ).adjustResult( reportedResult, abstractTestScripts );
                 ( new CliScriptExecutionReporter( cli ) ).scriptExecuted( reportedResult );
             } catch ( err ) {

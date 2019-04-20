@@ -15,9 +15,16 @@ const TestScriptExecution_1 = require("../../modules/testscript/TestScriptExecut
  * @author Thiago Delgado Pinto
  */
 class Fake {
-    constructor() {
-        /** @inheritDoc */
-        this.executeCode = (options) => __awaiter(this, void 0, void 0, function* () {
+    /** @inheritDoc */
+    generateCode(abstractTestScripts, options, errors) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return []; // No files
+        });
+    }
+    ;
+    /** @inheritDoc */
+    executeCode(options) {
+        return __awaiter(this, void 0, void 0, function* () {
             let r = new TestScriptExecution_1.TestScriptExecutionResult();
             r.sourceFile = 'nofile.json';
             r.schemaVersion = '1.0';
@@ -36,16 +43,18 @@ class Fake {
             return r;
         });
     }
-    /** @inheritDoc */
-    generateCode(abstractTestScripts, options, errors) {
-        return __awaiter(this, void 0, void 0, function* () {
-            return []; // No files
-        });
-    }
     ;
     /** @inheritDoc */
     convertReportFile(filePath) {
-        throw new Error("Method not implemented: convertReportFile.");
+        return __awaiter(this, void 0, void 0, function* () {
+            throw new Error("Method not implemented: convertReportFile.");
+        });
+    }
+    /** @inheritDoc */
+    defaultReportFile() {
+        return __awaiter(this, void 0, void 0, function* () {
+            return 'fake-output.json';
+        });
     }
 }
 exports.Fake = Fake;

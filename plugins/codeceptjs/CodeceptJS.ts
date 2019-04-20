@@ -69,6 +69,11 @@ export class CodeceptJS implements Plugin {
         return await reportConverter.convertFrom( filePath, this._descriptorPath );
     }
 
+    /** @inheritDoc */
+    public async defaultReportFile(): Promise< string > {
+        return 'output.json';
+    }
+
     /**
      * Tries to generate a source code file from an abstract test script.
      *
