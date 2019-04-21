@@ -1,10 +1,10 @@
 var glob = require( 'glob' );
 //var copyFile = require( 'fs' ).copyFile;
-var copyFile = require( 'fs-extra' ).copy;
+var copyFile = require( 'node-fs-extra' ).copy;
 var basename = require( 'path' ).basename;
 
 // Copy JSON files from the following folders to 'dist/'
-[ 'data/', '__tests__/db/' ].forEach( function( dir ) {
+[ 'data/' ].forEach( function( dir ) {
     glob( dir + '*.json', function( globErr, matches ) {
         if ( globErr ) return console.error( globErr );
         matches.forEach( function( from ) {

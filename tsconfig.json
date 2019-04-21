@@ -17,14 +17,13 @@
         "keyofStringsOnly": true
     },
     "include": [
-        "__tests__",
         "data",
         "lib",
         "modules",
-        "plugins",
         "main.ts"
     ],
     "exclude": [
+        "__tests__",
         "node_modules",
         "typings/globals",
         "dist",
