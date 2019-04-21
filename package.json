@@ -120,7 +120,6 @@
     "log-update": "^2.3.0",
     "meow": "^5.0.0",
     "moment": "^2.22.1",
-    "mustache": "^2.3.0",
     "node-fs-extra": "^0.8.2",
     "node-glob": "^1.2.0",
     "object-to-array": "^2.0.1",
