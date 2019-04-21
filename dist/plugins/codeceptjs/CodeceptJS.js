@@ -66,6 +66,12 @@ class CodeceptJS {
             return yield reportConverter.convertFrom(filePath, this._descriptorPath);
         });
     }
+    /** @inheritDoc */
+    defaultReportFile() {
+        return __awaiter(this, void 0, void 0, function* () {
+            return 'output.json';
+        });
+    }
     /**
      * Tries to generate a source code file from an abstract test script.
      *

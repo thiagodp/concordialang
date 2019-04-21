@@ -9,6 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const fs_1 = require("fs");
+const path_1 = require("path");
 const util_1 = require("util");
 const meow = require("meow");
 const updateNotifier = require("update-notifier");
@@ -244,12 +245,20 @@ class AppController {
                 cli.newLine(cli.symbolInfo, 'Script execution disabled.');
             }
             if (options.analyzeResult) { // Requires a plugin
+                let reportFile;
                 if (!executionResult) {
-                    cli.newLine(cli.symbolError, 'Could not retrieve execution results.');
-                    return false;
+                    const defaultReportFile = path_1.join(options.dirResult, yield plugin.defaultReportFile());
+                    if (!fs_1.existsSync(defaultReportFile)) {
+                        cli.newLine(cli.symbolError, 'Could not retrieve execution results.');
+                        return false;
+                    }
+                    reportFile = defaultReportFile;
+                }
+                else {
+                    reportFile = executionResult.sourceFile;
                 }
                 try {
-                    let reportedResult = yield plugin.convertReportFile(executionResult.sourceFile);
+                    let reportedResult = yield plugin.convertReportFile(reportFile);
                     (new TestResultAnalyzer_1.TestResultAnalyzer()).adjustResult(reportedResult, abstractTestScripts);
                     (new CliScriptExecutionReporter_1.CliScriptExecutionReporter(cli)).scriptExecuted(reportedResult);
                 }

@@ -23,7 +23,7 @@ export class Fake implements Plugin {
     };
 
     /** @inheritDoc */
-    public executeCode = async (options: TestScriptExecutionOptions): Promise< TestScriptExecutionResult > => {
+    public async executeCode(options: TestScriptExecutionOptions): Promise< TestScriptExecutionResult > {
 
         let r = new TestScriptExecutionResult();
         r.sourceFile = 'nofile.json';
@@ -45,8 +45,13 @@ export class Fake implements Plugin {
     };
 
     /** @inheritDoc */
-    public convertReportFile(filePath: string): Promise< TestScriptExecutionResult > {
+    public async convertReportFile(filePath: string): Promise< TestScriptExecutionResult > {
         throw new Error("Method not implemented: convertReportFile.");
+    }
+
+    /** @inheritDoc */
+    public async defaultReportFile(): Promise< string > {
+        return 'fake-output.json';
     }
 
 }

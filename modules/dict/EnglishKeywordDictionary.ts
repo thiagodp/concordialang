@@ -18,7 +18,7 @@ export class EnglishKeywordDictionary implements KeywordDictionary {
     variant: string[] = [ 'variant' ];
     variantBackground: string[] = [ 'variant background' ];
     testCase: string[] = [ 'test case' ];
-    uiElement: string[] = [ 'ui element' ];
+    uiElement: string[] = [ 'ui element', 'user interface element' ];
     database: string[] = [ 'database' ];
 
     beforeAll: string[] = [ 'before all' ];
@@ -30,11 +30,11 @@ export class EnglishKeywordDictionary implements KeywordDictionary {
 
     i: string[] = [ 'i' ];
     is: string[] = [ 'is' ];
-    with: string[] = [ "with" ];
-    valid: string[] = [ "valid" ];
-    invalid: string[] = [ "invalid" ];
-    random: string[] = [ "random" ];
-    from: string[] = [ "from" ];
+    with: string[] = [ 'with' ];
+    valid: string[] = [ 'valid' ];
+    invalid: string[] = [ 'invalid' ];
+    random: string[] = [ 'random' ];
+    from: string[] = [ 'from' ];
 
     tagGlobal: string[] = [ 'global' ];
     tagFeature: string[] = [ 'feature' ];
@@ -56,7 +56,7 @@ export class EnglishKeywordDictionary implements KeywordDictionary {
     stepWhen: string[] = [ 'when' ];
     stepThen: string[] = [ 'then' ];
     stepAnd: string[] = [ 'and', 'but' ];
-    stepOtherwise: string[] = [ 'otherwise', 'when invalid', 'if invalid' ];
+    stepOtherwise: string[] = [ 'otherwise', 'when invalid', 'if invalid', 'whether invalid' ]; // not in Gherkin
 
     table: string[] = [ 'table' ];
 
