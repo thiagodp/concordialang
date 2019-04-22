@@ -3,6 +3,7 @@ import * as enumUtil from 'enum-util';
 import { Defaults, VariantSelectionOptions, CombinationOptions } from './Defaults';
 import { CaseType } from './CaseType';
 import { isString, isNumber, isDefined } from '../util/TypeChecking';
+import { isBoolean } from 'util';
 
 /**
  * Application options
@@ -376,6 +377,8 @@ export class Options {
 
         // PLUG-IN
 
+        // console.log( obj );
+
         if ( isString( obj.plugin ) ) {
             this.plugin = obj.plugin.trim().toLowerCase();
         }
@@ -383,23 +386,29 @@ export class Options {
         this.pluginList = isDefined( obj.pluginList );
 
         if ( isString( obj.pluginAbout ) ) {
-            this.plugin = obj.pluginAbout.trim().toLowerCase();
+            if ( obj.pluginAbout != '' ) {
+                this.plugin = obj.pluginAbout.trim().toLowerCase();
+            }
             this.pluginAbout = true;
-        }
-        if ( isString( obj.pluginInfo ) ) { // Same as plugin about !
-            this.plugin = obj.pluginInfo.trim().toLowerCase();
+        } else if ( isString( obj.pluginInfo ) ) { // Same as plugin about
+            if ( obj.pluginInfo != '' ) {
+                this.plugin = obj.pluginInfo.trim().toLowerCase();
+            }
             this.pluginAbout = true;
-        }
-        if ( isString( obj.pluginInstall ) ) {
-            this.plugin = obj.pluginInstall.trim().toLowerCase();
+        } else if ( isString( obj.pluginInstall ) ) {
+            if ( obj.pluginInstall != '' ) {
+                this.plugin = obj.pluginInstall.trim().toLowerCase();
+            }
             this.pluginInstall = true;
-        }
-        if ( isString( obj.pluginUninstall ) ) {
-            this.plugin = obj.pluginUninstall.trim().toLowerCase();
+        } else if ( isString( obj.pluginUninstall ) ) {
+            if ( obj.pluginUninstall != '' ) {
+                this.plugin = obj.pluginUninstall.trim().toLowerCase();
+            }
             this.pluginUninstall = true;
-        }
-        if ( isString( obj.pluginServe ) ) {
-            this.plugin = obj.pluginServe.trim().toLowerCase();
+        } else if ( isString( obj.pluginServe ) ) {
+            if ( obj.pluginServe != '' ) {
+                this.plugin = obj.pluginServe.trim().toLowerCase();
+            }
             this.pluginServe = true;
         }
 

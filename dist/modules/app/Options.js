@@ -307,28 +307,39 @@ class Options {
         }
         this.languageList = TypeChecking_1.isDefined(obj.languageList);
         // PLUG-IN
+        // console.log( obj );
         if (TypeChecking_1.isString(obj.plugin)) {
             this.plugin = obj.plugin.trim().toLowerCase();
         }
         this.pluginList = TypeChecking_1.isDefined(obj.pluginList);
         if (TypeChecking_1.isString(obj.pluginAbout)) {
-            this.plugin = obj.pluginAbout.trim().toLowerCase();
+            if (obj.pluginAbout != '') {
+                this.plugin = obj.pluginAbout.trim().toLowerCase();
+            }
             this.pluginAbout = true;
         }
-        if (TypeChecking_1.isString(obj.pluginInfo)) { // Same as plugin about !
-            this.plugin = obj.pluginInfo.trim().toLowerCase();
+        else if (TypeChecking_1.isString(obj.pluginInfo)) { // Same as plugin about
+            if (obj.pluginInfo != '') {
+                this.plugin = obj.pluginInfo.trim().toLowerCase();
+            }
             this.pluginAbout = true;
         }
-        if (TypeChecking_1.isString(obj.pluginInstall)) {
-            this.plugin = obj.pluginInstall.trim().toLowerCase();
+        else if (TypeChecking_1.isString(obj.pluginInstall)) {
+            if (obj.pluginInstall != '') {
+                this.plugin = obj.pluginInstall.trim().toLowerCase();
+            }
             this.pluginInstall = true;
         }
-        if (TypeChecking_1.isString(obj.pluginUninstall)) {
-            this.plugin = obj.pluginUninstall.trim().toLowerCase();
+        else if (TypeChecking_1.isString(obj.pluginUninstall)) {
+            if (obj.pluginUninstall != '') {
+                this.plugin = obj.pluginUninstall.trim().toLowerCase();
+            }
             this.pluginUninstall = true;
         }
-        if (TypeChecking_1.isString(obj.pluginServe)) {
-            this.plugin = obj.pluginServe.trim().toLowerCase();
+        else if (TypeChecking_1.isString(obj.pluginServe)) {
+            if (obj.pluginServe != '') {
+                this.plugin = obj.pluginServe.trim().toLowerCase();
+            }
             this.pluginServe = true;
         }
         // PROCESSING
