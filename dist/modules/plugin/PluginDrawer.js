@@ -40,7 +40,9 @@ class PluginDrawer {
         this.write(sprintf_js_1.sprintf(format, 'description', p.description));
         this.write(sprintf_js_1.sprintf(format, 'targets', p.targets.join(', ')));
         this.write(sprintf_js_1.sprintf(format, 'authors', authors.join('\n')));
-        this.write(sprintf_js_1.sprintf(format, 'fake', p.isFake ? 'yes' : 'no'));
+        if (p.isFake) {
+            this.write(sprintf_js_1.sprintf(format, 'fake', p.isFake ? 'yes' : 'no'));
+        }
         this.write(sprintf_js_1.sprintf(format, 'file', p.file));
         this.write(sprintf_js_1.sprintf(format, 'class', p.class));
     }

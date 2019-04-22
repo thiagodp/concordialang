@@ -91,7 +91,7 @@ class ConcordiaQuestions {
         return {
             type: 'confirm',
             name: 'pluginInstall',
-            message: 'Do you want to install the plug-in?'
+            message: 'Do you want to download and install the plug-in?'
         };
     }
 
