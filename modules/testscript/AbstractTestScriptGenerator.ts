@@ -1,5 +1,3 @@
-import { Document, Location, Step, TestEvent } from 'concordialang-types';
-import { Entities } from 'concordialang-types';
 import {
     AbstractTestScript,
     ATSCommand,
@@ -8,7 +6,9 @@ import {
     ATSEvent,
     ATSTestCase,
     NamedATSElement,
-} from 'concordialang-types';
+} from 'concordialang-plugin';
+import { Document, Location, Step, TestEvent, Entities } from 'concordialang-types';
+
 import { AugmentedSpec } from '../ast/AugmentedSpec';
 import { DatabaseToAbstractDatabase } from '../db/DatabaseToAbstractDatabase';
 import { supportTablesInQueries } from '../db/DatabaseTypes';

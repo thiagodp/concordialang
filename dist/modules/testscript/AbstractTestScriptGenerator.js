@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+const concordialang_plugin_1 = require("concordialang-plugin");
 const concordialang_types_1 = require("concordialang-types");
-const concordialang_types_2 = require("concordialang-types");
 const DatabaseToAbstractDatabase_1 = require("../db/DatabaseToAbstractDatabase");
 const DatabaseTypes_1 = require("../db/DatabaseTypes");
 const Symbols_1 = require("../req/Symbols");
@@ -65,21 +65,21 @@ class AbstractTestScriptGenerator {
             : feature.location;
         const featureName = !feature ? 'Unknown feature' : feature.name;
         // ASTRACT TEST SCRIPT
-        let ats = new concordialang_types_2.AbstractTestScript();
+        let ats = new concordialang_plugin_1.AbstractTestScript();
         // feature, location, sourceFile
         ats.sourceFile = doc.fileInfo.path;
-        ats.feature = new concordialang_types_2.NamedATSElement(location, featureName);
+        ats.feature = new concordialang_plugin_1.NamedATSElement(location, featureName);
         // scenarios
         let scenarioNames = [];
         if (TypeChecking_1.isDefined(feature)) {
             for (let s of feature.scenarios || []) {
-                ats.scenarios.push(new concordialang_types_2.NamedATSElement(s.location, s.name));
+                ats.scenarios.push(new concordialang_plugin_1.NamedATSElement(s.location, s.name));
                 scenarioNames.push(s.name);
             }
         }
         // testCases
         for (let tc of doc.testCases || []) {
-            let absTC = new concordialang_types_2.ATSTestCase(tc.location, tc.name);
+            let absTC = new concordialang_plugin_1.ATSTestCase(tc.location, tc.name);
             absTC.scenario = scenarioNames[(tc.declaredScenarioIndex || 1) - 1] || 'Unknown scenario';
             absTC.invalid = tc.shoudFail;
             for (let sentence of tc.sentences) {
@@ -104,13 +104,13 @@ class AbstractTestScriptGenerator {
                 event.sentences.length < 1) {
                 continue;
             }
-            ats[e] = new concordialang_types_2.ATSEvent();
+            ats[e] = new concordialang_plugin_1.ATSEvent();
             ats[e].commands = this.convertTestEventSentencesToCommands(event, spec);
         }
         // console.log( ats );
         return ats;
     }
-    sentenceToCommand(sentence, obj = new concordialang_types_2.ATSCommand(), valuesOverwrite) {
+    sentenceToCommand(sentence, obj = new concordialang_plugin_1.ATSCommand(), valuesOverwrite) {
         let cmd = obj;
         cmd.location = sentence.location;
         cmd.action = sentence.action;
@@ -152,12 +152,12 @@ class AbstractTestScriptGenerator {
                     }
                     const absDB = dbConversor.convertFromNode(db, spec.basePath);
                     const values = [dbName, absDB];
-                    const cmd = this.sentenceToCommand(s, new concordialang_types_2.ATSDatabaseCommand(), values);
+                    const cmd = this.sentenceToCommand(s, new concordialang_plugin_1.ATSDatabaseCommand(), values);
                     cmd.db = absDB;
                     commands.push(cmd);
                 }
                 else {
-                    commands.push(this.sentenceToCommand(s, new concordialang_types_2.ATSCommand(), [dbName]));
+                    commands.push(this.sentenceToCommand(s, new concordialang_plugin_1.ATSCommand(), [dbName]));
                 }
                 continue;
             }
@@ -173,7 +173,7 @@ class AbstractTestScriptGenerator {
             const options = s.actionOptions || [];
             // options have "command"
             if (options.indexOf(COMMAND_OPTION) >= 0) {
-                let cmd = this.sentenceToCommand(s, new concordialang_types_2.ATSConsoleCommand());
+                let cmd = this.sentenceToCommand(s, new concordialang_plugin_1.ATSConsoleCommand());
                 commands.push(cmd);
                 continue;
             }
@@ -210,7 +210,7 @@ class AbstractTestScriptGenerator {
                     }
                 }
                 // Transforms to a command
-                let cmd = this.sentenceToCommand(s, new concordialang_types_2.ATSDatabaseCommand(), [dbName, sqlCommand]);
+                let cmd = this.sentenceToCommand(s, new concordialang_plugin_1.ATSDatabaseCommand(), [dbName, sqlCommand]);
                 commands.push(cmd);
                 break;
             }

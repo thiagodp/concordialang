@@ -13,7 +13,7 @@ const path_1 = require("path");
 const util_1 = require("util");
 const meow = require("meow");
 const updateNotifier = require("update-notifier");
-const concordialang_types_1 = require("concordialang-types");
+const concordialang_plugin_1 = require("concordialang-plugin");
 const UI_1 = require("./UI");
 const PluginController_1 = require("../plugin/PluginController");
 const CLI_1 = require("./CLI");
@@ -204,7 +204,7 @@ class AppController {
                         let errors = [];
                         let files = [];
                         try {
-                            files = yield plugin.generateCode(abstractTestScripts, new concordialang_types_1.TestScriptGenerationOptions(options.plugin, options.dirScript), errors);
+                            files = yield plugin.generateCode(abstractTestScripts, new concordialang_plugin_1.TestScriptGenerationOptions(options.plugin, options.dirScript), errors);
                         }
                         catch (err) {
                             hasErrors = true;
@@ -228,7 +228,7 @@ class AppController {
             }
             let executionResult = null;
             if (options.executeScript) { // Requires a plugin
-                let tseo = new concordialang_types_1.TestScriptExecutionOptions(options.dirScript, options.dirResult);
+                let tseo = new concordialang_plugin_1.TestScriptExecutionOptions(options.dirScript, options.dirResult);
                 cli.newLine(cli.symbolInfo, 'Executing test scripts...');
                 const LINE_SIZE = 80;
                 const SEPARATION_LINE = '_'.repeat(LINE_SIZE);

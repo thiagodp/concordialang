@@ -4,8 +4,7 @@ import { promisify } from 'util';
 import * as meow from 'meow';
 import * as updateNotifier from 'update-notifier';
 import Graph = require( 'graph.js/dist/graph.full.js' );
-import { TestScriptExecutionOptions, TestScriptExecutionResult, TestScriptGenerationOptions, AbstractTestScript } from 'concordialang-types';
-import { Plugin } from 'concordialang-plugin';
+import { Plugin, TestScriptExecutionOptions, TestScriptExecutionResult, TestScriptGenerationOptions, AbstractTestScript } from 'concordialang-plugin';
 
 import { UI } from './UI';
 import { Options } from "./Options";

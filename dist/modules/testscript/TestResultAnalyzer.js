@@ -1,5 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+/**
+ * Test Result Analyzer
+ */
 class TestResultAnalyzer {
     adjustResult(executionResult, abstractTestScripts) {
         for (let r of executionResult.results || []) {

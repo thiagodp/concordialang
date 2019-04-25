@@ -3,9 +3,11 @@ import {
     ATSTestCase,
     TestMethodResult,
     TestScriptExecutionResult
-} from 'concordialang-types';
+} from 'concordialang-plugin';
 
-
+/**
+ * Test Result Analyzer
+ */
 export class TestResultAnalyzer {
 
     adjustResult(

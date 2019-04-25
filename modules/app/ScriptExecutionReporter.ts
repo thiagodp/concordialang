@@ -1,4 +1,4 @@
-import { TestScriptExecutionResult } from "concordialang-types";
+import { TestScriptExecutionResult } from "concordialang-plugin";
 
 /**
  * Script execution reporter

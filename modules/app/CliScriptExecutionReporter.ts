@@ -1,4 +1,5 @@
-import { TestScriptExecutionResult } from "concordialang-types";
+import { TestScriptExecutionResult } from "concordialang-plugin";
+
 import { ScriptExecutionReporter } from "./ScriptExecutionReporter";
 import { CLI } from "./CLI";
 import { millisToString } from "../util/TimeFormat";

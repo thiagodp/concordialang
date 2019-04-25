@@ -39,7 +39,6 @@ class DatabaseConnectionChecker {
                         databaseName: db.name,
                         dbi: dbi
                     };
-                    db.connectionResult = cr;
                     r.resultsMap[db.name] = cr;
                     // connect
                     try {

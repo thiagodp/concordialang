@@ -37,7 +37,6 @@ export class DatabaseConnectionChecker {
                     dbi: dbi
                 } as ConnectionResult;
 
-                ( db as Database ).connectionResult = cr;
                 r.resultsMap[ db.name ] = cr;
 
                 // connect

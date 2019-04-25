@@ -1,4 +1,5 @@
-import { AbstractTestScript } from "concordialang-types";
+import { AbstractTestScript } from "concordialang-plugin";
+
 import { AugmentedSpec } from "../ast/AugmentedSpec";
 import { AbstractTestScriptGenerator } from "../testscript/AbstractTestScriptGenerator";
 import { isDefined } from "../util/TypeChecking";
