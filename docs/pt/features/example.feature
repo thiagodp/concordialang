@@ -1,7 +1,7 @@
 # EXEMPLOS DE AÇÕES
 #
 # Execute com:
-# docs/features --plugin codeceptjs --no-run --no-result --file="example-pt.feature"
+# docs/features --plugin codeceptjs --no-run --no-result --file="example.feature"
 
 #language: pt
 Funcionalidade: Teste de Conversão de Ações

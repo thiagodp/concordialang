@@ -5,8 +5,8 @@ Last update: June 8th, 2018
 ## Names
 
 1. Use PascalCase for type names.
-2. Do not use "I" as a prefix for interface names.
-3. Use uppercased DASHED_CASE for enum values.
+2. Do *not* use "I" as a prefix for interface names.
+3. Use both uppercase and dashed case for enum values (*e.g.*, `SOME_ENUM_VALUE`).
 4. Use camelCase for function names.
 5. Use camelCase for property names and local variables.
 6. Use "_" as a prefix for private properties.

@@ -4,7 +4,7 @@
 
 *An example may demonstrate different variations of the same action.*
 
-Translations: [Português](actions-pt.md) 🌎
+Translations: [Português](../pt/actions.md) 🌎
 
 ## `accept`
 
@@ -135,7 +135,7 @@ When I close the app
 
 ## `connect`
 
-The next sentence is for [Test Events](language/en.md#test-events) only:
+The next sentence is for [Test Events](language.md#test-events) only:
 ### connect + database
 ```
 When I connect to the database [TestDB]
@@ -143,7 +143,7 @@ When I connect to the database [TestDB]
 
 ## `disconnect`
 
-The next sentence is for [Test Events](language/en.md#test-events) only:
+The next sentence is for [Test Events](language.md#test-events) only:
 ### disconnect + database
 ```
 When I disconnect from the database [TestDB]
@@ -337,7 +337,7 @@ When I right click "Foo"
 
 👉 *Commands should be declared between single quotes (`'`) and must stay in a single line*
 
-The next sentence is for [Test Events](language/en.md#test-events) only:
+The next sentence is for [Test Events](language.md#test-events) only:
 ```gherkin
 When I run the command 'rmdir foo'
   and I run the command './script.sh'
@@ -347,7 +347,7 @@ When I run the command 'rmdir foo'
 
 *Run SQL commands in a database*
 
-The next sentence is for [Test Events](language/en.md#test-events) only:
+The next sentence is for [Test Events](language.md#test-events) only:
 ```gherkin
 When I run the script 'INSERT INTO [MyDB].product ( name, price ) VALUES ( "Soda", 1.50 )'
   and I run the script 'INSERT INTO [MyDB].Users( UserName, UserSex, UserAge ) VALUES ( "Newton", "Male", 25 )'
@@ -386,7 +386,7 @@ Normal syntax, like the aforementioned. Access through ADO currently works only 
 
 #### Excel and Firebase databases
 
-Syntax similar to [JSON and CSV databases](json-and-csv-databases). However, it has some limitations, as pointed out in [its documentation](https://github.com/mlaanderson/database-js-firebase) :
+Syntax similar to [JSON and CSV databases](#json-and-csv-databases). However, it has some limitations, as pointed out in [its documentation](https://github.com/mlaanderson/database-js-firebase) :
 
 > *SQL commands are limited to SELECT, UPDATE, INSERT and DELETE. WHERE works well. JOINs are not allowed. GROUP BY is not supported. LIMIT and OFFSET are combined into a single LIMIT syntax: LIMIT [offset,]number*
 

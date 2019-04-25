@@ -124,7 +124,7 @@ Quando eu fecho o app
 
 ### connect + database
 
-A próxima sentença é somente para [Eventos de Teste](language/pt.md#eventos-de-teste):
+A próxima sentença é somente para [Eventos de Teste](language.md#eventos-de-teste):
 ```
 Quando eu conecto ao banco de dados [TestDB]
 ```
@@ -133,7 +133,7 @@ Quando eu conecto ao banco de dados [TestDB]
 
 ### disconnect + database
 
-A próxima sentença é somente para [Eventos de Teste](language/pt.md#eventos-de-teste):
+A próxima sentença é somente para [Eventos de Teste](language.md#eventos-de-teste):
 ```
 Quando eu desconecto do banco de dados [TestDB]
 ```
@@ -272,7 +272,7 @@ Quando eu clico com o botão direito em {Foo}
 
 👉 *Comandos devem ser declarados entre aspas simples (`'`) e devem ficar em uma linha*
 
-A próxima sentença é somente para [Eventos de Teste](language/pt.md#eventos-de-teste):
+A próxima sentença é somente para [Eventos de Teste](language.md#eventos-de-teste):
 ```gherkin
 Quando eu executo o comando 'rmdir foo'
   e rodo o comando './script.sh'
@@ -282,7 +282,7 @@ Quando eu executo o comando 'rmdir foo'
 
 *Executa comandos SQL em um banco de dados*
 
-A próxima sentença é somente para [Eventos de Teste](language/pt.md#eventos-de-teste):
+A próxima sentença é somente para [Eventos de Teste](language.md#eventos-de-teste):
 ```gherkin
 Quando eu executo o script 'INSERT INTO [MyDB].product ( name, price ) VALUES ( "Soda", 1.50 )'
   e eu executo o script 'INSERT INTO [MyDB].Users( UserName, UserSex, UserAge ) VALUES ( "Newton", "Male", 25 )'
@@ -321,7 +321,7 @@ Sintaxe normal, como a exemplificada anteriormente. O acesso através de ADO atu
 
 #### Excel e Firebase
 
-Sintaxe similar à de [JSON e CSV](json-e-csv). Contudo, tem limitações, como apontado em [sua documentação](https://github.com/mlaanderson/database-js-firebase) :
+Sintaxe similar à de [JSON e CSV](#json-e-csv). Contudo, tem limitações, como apontado em [sua documentação](https://github.com/mlaanderson/database-js-firebase) :
 
 > *Comandos SQL estão limitados a SELECT, UPDATE, INSERT e DELETE. WHERE funciona bem. JOINs não são permitidos. GROUP BY não é suportado. LIMIT e OFFSET são combinados em uma única sintaxe: LIMIT [offset,]number*
 

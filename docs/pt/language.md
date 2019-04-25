@@ -291,8 +291,8 @@ Propriedade `tipo`:
     - `span`
     - `tabela` ou `table`
 	- `tela` ou `screen`
-    - `texto` ou `text`	
-    - `título` ou `title`    
+    - `texto` ou `text`
+    - `título` ou `title`
     - `url` ou `address` ou `ip` ou `site`
 
 Propriedade `editável`:
@@ -478,7 +478,7 @@ Propriedades permitidas:
   - `usuario`
   - `senha`
   - `opções`
-  - ou as suas equivalentes [em inglês](en.md#database)
+  - ou as suas equivalentes [em inglês](../en/language.md#database)
 
 Valores atualmente suportados para `tipo`:
   - `"adodb"`  para conectar a bancos de dados como [MS Access](https://pt.wikipedia.org/wiki/Microsoft_Access) e [MS SQL Server](https://en.wikipedia.org/wiki/Microsoft_SQL_Server) através de [ActiveX Data Objects](https://en.wikipedia.org/wiki/ActiveX_Data_Objects) - *Somente para Windows*
@@ -532,7 +532,7 @@ Variante: Login com sucesso
     e eu vejo a url da [Página Principal]
 ```
 
-Veja também: [Exemplos of Ações](../actions-pt.md)
+Veja também: [Exemplos of Ações](actions.md)
 
 
 ### Caso de Teste
@@ -569,7 +569,7 @@ Um Caso de Teste gerado irá:
 - Manter quaisuqe [Literais de IU](#literais-de-iu) declarados;
 - Gerar valores aleatórios para [Literais de IU](#literais-de-iu) sem valor;
 - Manter valores ou números declarados;
-- Gerar valores para [Elementos de IU](#elemento-de-interface-de-usuário) de acordo com suas propriedades e os valores aplicáveis conforme os casos de teste - veja [reame-pt.md](../../readme-pt.md) para saber mais.
+- Gerar valores para [Elementos de IU](#elemento-de-interface-de-usuário) de acordo com suas propriedades e os valores aplicáveis conforme os [casos de teste](test-cases.md).
 
 Exemplo:
 ```gherkin
@@ -585,7 +585,7 @@ Test Case: Login com sucesso - 1
     e eu vejo o botão <#logout>
 ```
 
-Veja [Exemplos de Ações](../actions-pt.md).
+Veja [Exemplos de Ações](actions.md).
 
 
 ### Eventos de Teste
@@ -606,7 +606,7 @@ Eles são:
 
 Esses eventos suportam três tipos de comandos:
 
-1. **Scripts SQL**: executa um script em um Banco de Dados declarado. Veja as ações [connect](../actions-pt.md#connect), [disconnect](../actions-pt.md#disconnect) e [run](../actions-pt.md#run).
+1. **Scripts SQL**: executa um script em um Banco de Dados declarado. Veja as ações [connect](actions.md#connect), [disconnect](actions.md#disconnect) e [run](actions.md#run).
 
 2. **Comando de console**: executa um comando no console e aguarda seu término.
 

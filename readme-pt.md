@@ -14,7 +14,7 @@ O *Compilador Concordia* é uma ferramenta que permite gerar [testes funcionais]
 
 2. Gerar e executar [casos de teste functional](https://en.wikipedia.org/wiki/Functional_testing) automaticamente. Não *esqueletos de scripts de teste.*, mas [casos de teste](https://pt.wikipedia.org/wiki/Caso_de_teste) e scripts de teste (código-fonte) *completos*. Não é preciso escrever código!
 
-3. Gerar scripts de teste para diferentes frameworks de teste, como [CodeceptJS](https://codecept.io/), através de [plug-ins](plugins/README.md).
+3. Gerar scripts de teste para diferentes frameworks de teste, como [CodeceptJS](https://codecept.io/), através de [plug-ins](docs/pt/plugins.md).
 
 4. Escrever casos de teste adicionais quando necessário, usando *Linguagem Concordia* - atualmente disponível em  *Inglês* (`en`) e *Português* (`pt`). Esses casos de teste são convertidos em scripts de teste usando plug-ins.
 
@@ -27,7 +27,7 @@ A *Linguagem Concordia* é uma meta linguagem de especificação [Ágil](https:/
 ## Conteúdo
 
 - [Últimas novidades](https://github.com/thiagodp/concordialang/releases) 🔥
-- [Documentação](docs/readme-pt.md) 📖
+- [Documentação](docs/pt/readme.md) 📖
 - [Por que usar Concordia?](#por-que-usar-concordia)
 - [Instalação](#instalação)
 - [Execução](#execução)
@@ -40,7 +40,7 @@ A *Linguagem Concordia* é uma meta linguagem de especificação [Ágil](https:/
 
 ## ❓ Por que usar Concordia?
 
-- [Sintaxe](docs/language/pt.md) simples
+- [Sintaxe](docs/pt/language.md) simples
 
 - Não é preciso escrever código
 
@@ -203,7 +203,7 @@ Scenario("Busca retorna resultado esperado | Busca ao teclar Enter - 1", (I) => 
 e também irá **executar os testes**.
 
 
-Veja mais na [Documentação](docs/readme-pt.md). 👀
+Veja mais na [Documentação](docs/pt/readme.md). 👀
 
 
 ## 💻 CLI
@@ -373,7 +373,7 @@ concordia --help
 7. Lê e apresenta os resultados da execução. Esses resultados relacionam testes que falharam com a especificação, de forma a ajudar a você a decidir as possíveis razões.
 
 
-👉 Veja os [tipos de casos de teste gerados](docs/test-cases-pt.md).
+👉 Veja os [tipos de casos de teste gerados](docs/pt/test-cases.md).
 
 
 ## 🍻 Contribuindo
@@ -383,10 +383,10 @@ concordia --help
 - *Dê uma estrela* (⭐) - Quem segue você fica sabendo do projeto
 - *Dê feedback* em nosso [chat](https://concordialang.slack.com)
 - Estenda a documentação, a traduza para outros idiomas ou [relate erros](https://github.com/thiagodp/concordialang/issues/new) no texto
-- [Crie um plug-in](plugins/README.md) para sua linguagem ou framework de testes preferidos
+- [Crie um plug-in](docs/pt/plugins.md) para sua linguagem ou framework de testes preferidos
 - [Relate um bug](https://github.com/thiagodp/concordialang/issues/new)
 - [Sugira](https://github.com/thiagodp/concordialang/issues/new) uma melhoria ou uma nova funcionalidade
-- [Desenvolva](docs/development.md) conosco
+- [Desenvolva](docs/en/development.md) conosco
 
 
 ### Badge

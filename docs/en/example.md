@@ -2,7 +2,7 @@
 
 > *Example with generation of test cases and test data, but without the combination of test scenarios and states.*
 
-Translations: [Português](example-pt.md) 🌎
+Translations: [Português](../pt/example.md) 🌎
 
 ## 1. Writing a specification file
 
@@ -44,7 +44,7 @@ Scenario: Successful login
     Then I see "Welcome"
 ```
 
-The `Variant`'s sentences has [actions](actions.md) that will be transformed to code by a [plug-in](../plugins/README.md).
+The `Variant`'s sentences has [actions](actions.md) that will be transformed to code by a [plug-in](plugins.md).
 
 ```gherkin
 Feature: Login
@@ -289,5 +289,5 @@ Now keeping your specification updated has a new clear benefit: you can use it t
 
 ## See also
 
-- [Language syntax](language/en.md)
+- [Language syntax](language.md)
 - [Available actions](actions.md)

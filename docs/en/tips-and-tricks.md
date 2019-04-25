@@ -1,5 +1,9 @@
 # Tips and Tricks
 
+## How to ignore a certain Feature, Scenario, Variant or Test Case for Test Script generation.
+
+Add the tag `@ignore` to a Feature, Scenario, Variant or Test Case, in order to ignore it for test script generation.
+
 ## How to show the steps from CodeceptJS in Portuguese:
 
 1. Edit `codecept.json` and add the key `translation` with the value `pt-BR`:

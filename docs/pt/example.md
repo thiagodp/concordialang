@@ -2,7 +2,7 @@
 
 > Apresentamos aqui um exemplo simples e curto, com objetivo de dar uma ideia do funcionamento básico de Concordia.
 
-Indicamos que leia o exemplo do início ao fim, mesmo sem estar familiarizado com sua [sintaxe](language/pt.md).
+Indicamos que leia o exemplo do início ao fim, mesmo sem estar familiarizado com sua [sintaxe](language.md).
 
 ## 1. Escreva uma funcionalidade
 

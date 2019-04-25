@@ -7,7 +7,7 @@
 - `__tests__` - test scripts
 - `bin` - executable script
 - `data` - data files used by the tool
-- `dist` - output directory - contains generared js and json files
+- `dist` - output directory - contains generated js and json files
 - `docs` - documentation files
 - `lib` - adapted third party libraries
 - `media` - images or any other multimedia files
@@ -22,22 +22,17 @@
 $ npm install
 ```
 
-### Install tools
-```shell
-$ npm install -g typescript@3.0.1 jest ts-jest
-```
-
-### Running
-```shell
-npm run start
-```
-
-### Building (when needed)
+### Build
 ```shell
 npm run build
 ```
 
-### How to run the tests
+### Run
+```shell
+npm run start
+```
+
+### Test
 ```shell
 $ npm run test
 ```
@@ -62,10 +57,10 @@ Before submitting a Pull Request, make sure that:
 2. All the test pass.
 3. You have updated the language files, if the language changed.
 4. You have updated the language documentation files, if the language changed:
-  - Language file `en.md` is updated, if the language changed.
-    - Please update translations (e.g., `pt.md`) if you can.
+  - Language file `language.md` is updated, if the language changed.
+    - Please update translations (e.g., `docs/pt/language.md`) if you can.
   - Actions file `actions.md` is updated, if some action was added.
-    - Please update translations (e.g., `actions-pt.md`) if you can.
+    - Please update translations (e.g., `docs/pt/actions.md`) if you can.
 5. You have updated all the corresponding JavaScript and JSON files to `/dist`.
 6. You have prepared a high-level description of the changes made and referenced any corresponding Issues.
 

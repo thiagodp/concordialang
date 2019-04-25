@@ -12,138 +12,137 @@ Translations: [Português](readme-pt.md) 🌎
 
 ![Example](media/example-en.gif)
 
-*Concordia Compiler* is a tool that allows you to generate functional tests from a requirements specification written in *Concordia Language*.  You can use them for:
 
-1. Writing [business-readable](https://martinfowler.com/bliki/BusinessReadableDSL.html) specifications.
+**Raise your applications' quality. Start now.**
 
-2. Generating and executing [functional test cases](https://en.wikipedia.org/wiki/Functional_testing) automatically. *No just test script skeletons!* It generates complete test cases and test scripts - with *test data* and *oracles*. You don't even need to know how to write code!
+1. Write your specifications in Concordia Language. It's easier than you think. Seriously.
 
-3. Generating test scripts for different testing frameworks, such as [CodeceptJS](https://codecept.io/), through [plug-ins](plugins/README.md).
+2. Use Concordia Compiler to do all the environment/testing setup for you.
 
-4. Writing additional test cases when needed, using *Concordia Language* - currently available in **English** (`en`) and **Portuguese** (`pt`). These test cases are converted to test scripts using plugins.
-
-5. Analyzing test results to help evaluating failures.
-
-*Concordia Language* is an [Agile](https://en.wikipedia.org/wiki/Agile_software_development) requirements specification metalanguage inspired in [Gherkin](https://github.com/cucumber/cucumber/wiki/Gherkin).
+3. Use Concordia Compiler to generate functional test scripts from your specifications and to execute them. *No coding required.*
 
 
 ## Contents
 
 - [Latest news](https://github.com/thiagodp/concordialang/releases) 🔥
 - [Documentation](docs/README.md) 📖
-- [Why Concordia ?](#why-concordia)
-- [Install](#install)
-- [Execution](#execution)
-- [Very basic example](#very-basic-example)
-- [CLI](#cli)
-- [Recommended usage cycle](#recommended-usage-cycle)
-- [How it works](#how-it-works)
-- [Contributing to Concordia](#contributing-to-concordia)
-- [See also](#see-also)
+- [About](#about)
+- [Getting Started](#getting-started)
+- [See Also](#see-also)
+- [Related Projects](#related-projects)
 
 
-## ❓ Why Concordia ?
+## 💡 About
 
-- Simple [syntax](docs/language/en.md)
+**Concordia** is a [business-readable](https://martinfowler.com/bliki/BusinessReadableDSL.html), [agile](https://en.wikipedia.org/wiki/Agile_software_development) requirements specification metalanguage inspired in [Gherkin](https://github.com/cucumber/cucumber/wiki/Gherkin). Currently it supports [English](/docs/language/en.md) and [Portuguese](/docs/language/pt.md). New languages can be added easily.
 
-- No need to write code
+**Concordia Compiler** generates and executes [functional](https://en.wikipedia.org/wiki/Functional_testing) test cases and test scripts from documents written in *Concordia Language*.
 
-- Separate high-level, **business language** declarations from medium-low-level, **computing language** declarations
+Both **test cases** and **test scripts** also receive *test data* and *test oracles*. Yes, you read that right - you don't have to produce them manually. They are inferred from your specification written with Concordia Language - using [NLP](https://en.wikipedia.org/wiki/Natural_language_processing) and many other techniques.
 
-- Have complete and relevant tests in few seconds
+Concordia Compiler uses [plug-ins](docs/plugins.md) to produce test scripts and to set up the test environment.
 
-- High coverage of business rules at a small declaration effort
+Every **plug-in** can generate test scripts for a different programming language and testing framework, for **web**, **mobile**, or **desktop** applications.
 
-- Let you describe complex, dynamic business rules, including those related to data from databases
 
-- Have test cases declared in a high-level language
+### Why using it ?
 
-- Create additional test cases without coding
+1. Simple, flexible [syntax](docs/language/en.md).
 
-- Generated test cases and test scripts receive comments with related specification, so you can track them
+2. **Separate** high-level, **business language** declarations **from** medium-low-level, **computing language** declarations, **improving the communication** between your team, customers, and other stakeholders. **Use a same document to discuss features** with stakeholders, analysts, testers, and developers, and make the adoption of [BDD](https://en.wikipedia.org/wiki/Behavior-driven_development)/[ATDD](https://en.wikipedia.org/wiki/Acceptance_test%E2%80%93driven_development)/[SbE](https://en.wikipedia.org/wiki/Specification_by_example) easier.
 
-- Available in more than one spoken language
+3. Make **your specifications more useful**. Get automated functional tests from them easily and **drive your development covered by tests**.
 
-- No special text editor required - use your favorite UTF-8 editor
+4. Add test automation to **new or legacy applications** without having to code.
 
-- Use your favorite [version control system](https://en.wikipedia.org/wiki/Version_control) to manage changes
+5. Generate **relevant test cases and test scripts** in a few milliseconds. Get tests that adopt techniques such as [equivalence partitioning](https://en.wikipedia.org/wiki/Equivalence_partitioning), [boundary value analysis](https://en.wikipedia.org/wiki/Boundary-value_analysis), [combinatorial testing](https://en.wikipedia.org/wiki/All-pairs_testing) (*n-wise*), and [random testing](https://en.wikipedia.org/wiki/Random_testing) without having to think about (and invest your time in) them all.
 
-- Batteries included (install and use)
+6. **Reduce the need of writing failing scenarios** by describing system rules of user interface elements. Concordia lets you to describe complex, dynamic system rules.
 
-- Works on Windows, Linux, and Mac
+7. Let you use **test data from files or databases**.
+
+8.  **Track your specification** from the produced test cases and test scripts. They receive special line comments that refer to the specification and inform adopted techniques.
+
+9.  Define **additional test cases without coding**. Write them with Concordia and let the compiler convert them into code.
+
+10.  **Plain text** specification. Use your favorite text editor and version control system to manage changes, and keep the specification with your application.
 
 
 ## 💿 Installation
 
-Concordia Compiler requires [NodeJS](https://nodejs.org/) version `8` or above.
+Concordia Compiler works on **Windows**, **Linux**, and **MacOS**, and requires [NodeJS](https://nodejs.org/) version `8` or above. If you want to test  *web-based* applications, you also need to install [Java Runtime Environment (JRE)](http://www.oracle.com/technetwork/java/javase/downloads/index.html).
 
-> Whether you wish to install the plugin CodeceptJS for testing web applications (CodeceptJS + WebDriverIO), it is also needed to install the [Java Runtime Environment (JRE)](http://www.oracle.com/technetwork/java/javase/downloads/index.html).
-
-After NodeJS is installed, run the following command:
+After installing the dependencies, open the console/terminal and execute the following command:
 ```bash
 npm install -g concordialang
 ```
 
-You can test the installation as follows:
+You can check if the installation was successful by running:
 ```bash
 concordia --version
 ```
-Whether a version number is displayed, the installation was successful.
 
-### 🔌 Installing a plugin
+## 🚀 Getting Started
 
-List the available plugins:
-```bash
-concordia --plugin-list
-```
+Let's create a basic, "hello world"-like example. To execute its tests, you will need an Internet connection and the [Google Chrome](https://www.google.com/chrome/) web browser installed.
 
-Then install the desired one. For instance:
-```bash
-concordia --plugin-install codeceptjs
-```
+**Step 1: *Create a directory***
 
-Concordia and its plug-ins install all the needed dependencies by default, in order to make the setup process simpler.
-
-
-## 🚀 Execution
-
-### 🖥 Starting a testing server
-
-Sometimes when we run tests against a user interface, it is needed to control the execution through a testing server. For instance, `CodeceptJS` may have to use a `Selenium` server to control the execution of tests for web applications. Without such server, it is not able to work.
-
-Run the following command to start a testing server:
+Create a directory named `search` and then enter it:
 
 ```bash
-concordia --plugin-serve <plugin-name>
+mkdir search
+cd search
 ```
 
-After the server is started, you probably have to run Concordia Compiler in another terminal (console).
+**Step 2: *Configure***
 
-### 🗲 Running
+Execute the following command to guide the setup process:
 
 ```bash
-concordia path/to/your/features --plugin <plugin-name>
+concordia --init
 ```
 
-For example, the following command will search for feature files recursively from the current directory.
+You'll be asked about your preferences and they will be stored in a configuration file named `.concordiarc`. **LET ALL THE DEFAULT VALUES**, by typing <kbd>Enter</kbd> for all the questions.
+
+Plug-ins will also be installed during the process. If you want to install them *manually*, please take a look at the [plugins page](./docs/en/plugins.md).
+
+
+**Step 3: *Start the test server***
+
+Test automation tools often use a test server to control a *browser*, a *device emulator* or a *real device*. So, first you start a test server, then you start running all your tests.
+
+
+Concordia Compiler facilitates that by giving you a parameter `--plugin-serve`, which will open the needed test server.
+
+Since **a test server usually blocks** the current terminal/console, **open a new terminal/console** then execute:
+
 ```bash
-concordia --plugin codeceptjs
+concordia --plugin-serve
 ```
 
-### 🖥 Stopping a testing server
+> *Quick tip*: On Windows, you can start a new terminal from you current directory by running:
+> ```bash
+> start cmd .
+> ```
 
-It is likely that your testing server remain open after executing all the tests.
 
-Type <kbd>Ctrl</kbd> + <kbd>C</kbd> to close it.
+It is likely that your testing server remain open after executing all the tests. To stop it later (not now, please), just type <kbd>Ctrl</kbd> + <kbd>C</kbd>.
 
 
-## 📑 Very basic example
+**Step 4: *Create a directory `features`***
 
-> *Example without test data generation, test scenario combination, or most language capabilities.*
+That's the directory where we will put any `.feature` files.
 
-**Input**
+In the directory `search`, execute:
 
-*search.feature* :
+```bash
+mkdir features
+```
+
+**Step 5: *Create a feature***
+
+Use your favorite (UTF-8) text editor to create a file named `search.feature` **inside the `features` directory**:
 
 ```gherkin
 Feature: Google Search
@@ -156,20 +155,20 @@ Scenario: Search returns expected result
       And I press "Enter"
     Then I see "npm"
 ```
-**Run**
 
-*Start the test server (once)*
+**Step 6: *Make the magic happen!***
+
+In the `search` folder, just execute:
 ```bash
-$ concordia --plugin-serve codeceptjs
-```
-*Generate and run*
-```bash
-$ concordia --plugin codeceptjs
+concordia
 ```
 
-**Output**
+It will generate some files, setup the environment, and then **execute your tests**. Your browser should open automatically during this process. Finally, the console should show the execution results.
 
-*search.testcase* :
+**Some generated files:**
+
+`features/search.testcase`, that will contain the produced test case:
+
 ```gherkin
 # Generated with ❤ by Concordia
 #
@@ -187,7 +186,8 @@ Test case: Search content on pressing Enter - 1
   Then I see "npm"
 ```
 
-*search.js* :
+`test/search.js`, that will contain the produced test script:
+
 ```javascript
 // Generated with ❤ by Concordia
 // source: search.testcase
@@ -204,205 +204,40 @@ Scenario("Search returns expected result | Search content on pressing Enter - 1"
 });
 ```
 
-and it will also **run the tests**.
+*That's it.*  To generate and run the test again, just repeat the last command.
 
-See more in [Documentation](docs/README.md). 👀
-
-
-## 💻 CLI
-
-```
-concordia --help
-
-  Concordia Language Compiler
-
-  Usage: concordia [<dir>] [options]
-
-  where <dir> is the directory that contains your specification files.
-
-  Options:
-
-  Input directories and files
-
-  -d,  --directory <value>               Directory to search.
-  -nr, --no-recursive                    Disable recursive search.
-  -e,  --encoding <value>                File encoding. Default is "utf8".
-  -x,  --extensions <".ext1,.ext2,...">  File extensions to consider (when <dir> is informed).
-  -i,  --ignore <"file1,file2,...">      Files to ignore, when <dir> is informed.
-  -f,  --files <"file1,file2,...">       Files to consider, instead of <dir>.
-
-  -l,  --language <code>                 Default language. Default is "en" (english).
-  -ll, --language-list                   List available languages.
-
-  Plug-in
-
-  -p,  --plugin <name>                   Plug-in to use.
-  -pa, --plugin-about <name>             About a plug-in.
-  -pi, --plugin-install <name>           Install a plug-in.
-  -pu, --plugin-uninstall <name>         Uninstall a plug-in.
-  -ps, --plugin-serve <name>             Starts a test server with a plugin.
-  -pl, --plugin-list                     List available plug-ins.
-
-  Processing and output
-
-  --init                                 Init a guided, basic configuration.
-
-  --save-config                          Save/overwrite a configuration file
-                                         with the other command line options.
-
-  -b,  --verbose                         Verbose output.
-
-  -np, --no-spec                         Do not process specification files.
-  -nt, --no-test-case                    Do not generate test cases.
-  -ns, --no-script                       Do not generate test scripts.
-  -nx, --no-run                          Do not run test scripts.
-  -nu, --no-result                       Do not process execution results.
-
-  -jp, --just-spec                       Just process specification files.
-  -jt, --just-test-case                  Just generate test cases.
-  -js, --just-script                     Just generate test scripts.
-  -jx, --just-run                        Just execute test scripts.
-
-  -dt, --dir-test-case                   Output directory for test cases.
-  -ds, --dir-script                      Output directory for test scripts.
-  -du, --dir-result                      Output directory for result files.
-
-  -ef, --ext-feature                     File extension for Feature files.
-                                         Default is .feature.
-  -et, --ext-test-case                   File extension for Test Case files.
-                                         Default is .testcase.
-  -lb, --line-breaker                    Character used for breaking lines.
-
-  Content generation
-
-  --case-ui (camel|pascal|snake|kebab|none)
-                                         String case to use for UI Element names
-                                         when they are not defined (default is camel).
-  --case-method (camel|pascal|snake|kebab|none)
-                                         String case to use for test script methods
-                                         (default is snake).
-  --tc-suppress-header                   Suppress header in generated Test Case files.
-  --tc-indenter <value>                  String used as indenter in generated Test Case
-                                         files (default is double spaces).
-
-  Randomic value generation
-
-  --seed <value>                         Use the given random seed. Default is current
-                                         date and time.
-  --random-min-string-size <number>      Minimum random string size. Default is 0.
-  --random-max-string-size <number>      Minimum random string size. Default is 500.
-  --random-tries <number>                Random tries to generate invalid values.
-                                         Default is 5.
-
-  Combination strategies
-
-  --comb-variant (random|first|fmi|all)  Strategy to select variants to combine,
-                                         by their states.
-        random  = random variant that has the state (default)
-        first   = first variant that has the state
-        fmi     = first most important variant that has the state
-        all     = all variants that have the state
-
-  --comb-state (sre|sow|onewise|all)     Strategy to combine states of a
-                                         same variant.
-        sre     = single random of each (default)
-        sow     = shuffled one-wise
-        ow      = one-wise
-        all     = all
-
-  --comb-invalid (node|0|1|smart|random|all)
-                                         How many input data will be invalid
-                                         in each test case.
-        0,none  = no invalid data
-        1       = one invalid data per test case
-        smart   = use algorithm to decide (default)
-        random  = random invalid data per test case
-        all     = all invalid
-
-  --comb-data (sre|sow|onewise|all)     Strategy to combine data test cases
-                                        of a variant.
-        sre     = single random of each (default)
-        sow     = shuffled one-wise
-        ow      = one-wise
-        all     = all
-
-  Information
-
-  -v,  --version                         Show current version.
-  -a,  --about                           Show information about this application.
-  -h,  --help                            Show this help.
-
-  Examples
-
-   $ concordia --plugin some-plugin
-   $ concordia path/to/dir --no-test-case --no-script -p some-plugin
-   $ concordia --files "file1.feature,path/to/file2.feature" -p some-plugin -l pt
-```
+> Remember, this is just a "hello word". Concordia has much, much more to offer!
 
 
-## ♺ Recommended usage cycle
+## 👁 See Also
 
-1. Write or update your requirements specification with the *Concordia Language* and validate it with users or stakeholders;
-
-2. Use *Concordia Compiler* to generate tests from the specification and to run them;
-
-3. If the tests **failed**, there are some possibilities:
-
-    1. You still haven't implemented the corresponding behavior in your application. In this case, just implement it and run the tests again.
-
-    2. Your application is behaving differently from the specification. In this case, it may have bugs or you or your team haven't implemented the behavior exactly like described in the specification.   - Whether the application has a bug, we are happy to have discovered it! Just fix it and run the tests again to make sure that the bug is gone.
-      - Otherwise, you can decide between **changing your application** to behave exactly like the specification describes, or **changing the specification** to match your application behavior. In the latter case, back to step `1`.
-
-4. If the tests **passed**, *great job!* Now you can write new requirements or add more test cases, so just back to step `1`.
+- [Documentation](docs/en/readme.md)
+- [Plug-ins](docs/en/plugins.md)
 
 
-## 🧠 How it works
+## 💪 Related Projects
 
-![Process](media/process.png)
+- [katalon-concordia](https://github.com/thiagodp/katalon-concordia):  plug-in for Chrome and Firefox that converts recordings from [Katalon Recorder](https://chrome.google.com/webstore/detail/katalon-recorder-selenium/ljdobmomdgdljniojadhoplhkpialdid) to Concordia Language. **Very useful for**:
+  - Discovering the elements' identification in web applications (*e.g.*, their `id` properties or their [XPath](https://en.wikipedia.org/wiki/XPath))
+  - Creating a test case without having to type anything.
 
-1. It reads your `.feature` and `.testcase` files, and uses a [lexer](https://en.wikipedia.org/wiki/Lexical_analysis) and a [parser](https://en.wikipedia.org/wiki/Parsing#Computer_languages) to identify and check documents' structure.
-
-2. It uses [Natural Language Processing](https://en.wikipedia.org/wiki/Natural-language_processing) (NLP) to identify sentences' [intent](http://mrbot.ai/blog/natural-language-processing/understanding-intent-classification/). This increases the chances of recognizing sentences written in different styles.
-
-3. It performs [semantic analysis](https://en.wikipedia.org/wiki/Semantic_analysis_(compilers)) to check recognized declarations.
-
-4. It uses the specification to infer the most suitable *test cases*, *test data*, and *test oracles*, and then generates `.testcase` files in Concordia Language.
-
-5. It transforms all the test cases into test scripts (that is, source code) using a plug-in.
-
-6. It executes the test scripts with the plug-in. These test scripts will check your application's behavior through its user interface.
-
-7. It reads and presents execution results. These results relate failing tests to the specification, in order to help you understanding the possible reasons of a failure.
-
-
-👉 See the [set of generated test cases](docs/test-cases.md).
-
+- [Appium Desktop](https://github.com/appium/appium-desktop/): Inspector of desktop GUIs (Windows, Linux, and MacOS) and Appium Server
 
 ## 🍻 Contributing
 
-*There are lot of ways to contribute. Many of them are a piece of cake!* 😉
+- Did you liked it? Give it a star ⭐
+- [Chat with us](https://concordialang.slack.com) on Slack or [open an Issue](https://github.com/thiagodp/concordialang/issues/new) with a question
+- [Suggest](https://github.com/thiagodp/concordialang/issues/new) improvements
+- [Report](https://github.com/thiagodp/concordialang/issues/new) bugs or  typos
+- [Create a new plug-in](docs/en/plugins/plugin-creation.md) for your favorite programming language or testing framework or [develop Concordia](docs/development.md) with us
 
-- Give it a star (⭐) - people that follows you will know about it
-- Give feedback using our [chat](https://concordialang.slack.com)
-- Improve the documentation, translate it or [report](https://github.com/thiagodp/concordialang/issues/new) typos
-- [Create a new plug-in](plugins/README.md) for your favorite programming language and testing framework
-- [Report a bug](https://github.com/thiagodp/concordialang/issues/new)
-- Suggest [improvement or new features](https://github.com/thiagodp/concordialang/issues/new)
-- [Develop it](docs/development.md) with us
+#### Badge
 
-
-### Badge
-
-Show that your project is using Concordia → [![Concordia e2e](https://img.shields.io/badge/e2e-concordia-brightgreen.svg)](http://concordialang.org)
+Show to the world that your project is using Concordia → [![Concordia e2e](https://img.shields.io/badge/e2e-concordia-brightgreen.svg)](http://concordialang.org)
 
 ```
 [![Concordia e2e](https://img.shields.io/badge/e2e-concordia-brightgreen.svg)](http://concordialang.org)
 ```
-
-## 👁 See also
-
-- [katalon-concordia](https://github.com/thiagodp/katalon-concordia) - converts test scripts recorded with [Katalon Recorder](https://chrome.google.com/webstore/detail/katalon-recorder-selenium/ljdobmomdgdljniojadhoplhkpialdid) into sentences in Concordia Language.
-
 
 ## License
 

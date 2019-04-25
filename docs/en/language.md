@@ -1,24 +1,41 @@
 # Overview of the Concordia Language
 
-Translations: [Português](pt.md)
+Translations: [Português](../pt/language.md) 🌎
 
 ## Index
 
 Language constructions
-- [Comments](#comments)
-- [Language](#language)
-- [Import](#import)
-- [Tag](#tag)
-- [Feature](#feature)
-- [State](#state)
-- [Scenario](#scenario)
-- [Constants](#constants)
-- [User Interface Element](#user-interface-element)
-- [Table](#table)
-- [Database](#database)
-- [Variant](#variant)
-- [Test Case](#test-case)
-- [Test Events](#test-events)
+- [Overview of the Concordia Language](#overview-of-the-concordia-language)
+  - [Index](#index)
+  - [Language constructions](#language-constructions)
+    - [Comments](#comments)
+    - [Language](#language)
+    - [Import](#import)
+    - [Tag](#tag)
+    - [Feature](#feature)
+    - [State](#state)
+    - [Scenario](#scenario)
+    - [Constants](#constants)
+    - [User Interface Element](#user-interface-element)
+      - [Examples of UI Elements](#examples-of-ui-elements)
+    - [Table](#table)
+    - [Database](#database)
+    - [Variant](#variant)
+    - [Test Case](#test-case)
+    - [Test Events](#test-events)
+  - [Literals](#literals)
+    - [User Interface Literal](#user-interface-literal)
+    - [Value](#value)
+    - [Number](#number)
+    - [List of values](#list-of-values)
+    - [Query](#query)
+  - [References to declarations](#references-to-declarations)
+    - [User Interface Elements](#user-interface-elements)
+      - [Inside queries](#inside-queries)
+    - [Constants](#constants-1)
+    - [Tables](#tables)
+    - [Databases](#databases)
+  - [States](#states)
 
 Literals
 - [User Interface Literal](#user-interface-literal)
@@ -532,7 +549,7 @@ Variant: Successful login
     And I see {Logout}
 ```
 
-See also: [Examples of Actions](../actions.md)
+See also: [Examples of Actions](actions.md)
 
 
 ### Test Case
@@ -566,7 +583,7 @@ A generated test case will:
 - Keep any declared `UI Literals`;
 - Generate random values for `UI Literals` without value;
 - Keep any declared values or numbers;
-- Generate values for `UI Elements` according to their properties and the applicable test cases - see [reame-pt.md](../../README.md) for more information.
+- Generate values for `UI Elements` according to their properties and the applicable [test cases](test-cases.md).
 
 Example:
 ```gherkin
@@ -582,7 +599,7 @@ Test Case: Successful login - 1
     And I see a button <#logout>
 ```
 
-See [examples of actions](../actions.md)
+See [examples of actions](actions.md)
 
 ### Test Events
 
@@ -602,7 +619,7 @@ They are:
 
 These events support three type of commands:
 
-1. **SQL script**: runs a SQL script into a declared database. See the actions [connect](../actions.md#connect), [disconnect](../actions.md#disconnect), and [run](../actions.md#run).
+1. **SQL script**: runs a SQL script into a declared database. See the actions [connect](actions.md#connect), [disconnect](actions.md#disconnect), and [run](actions.md#run).
 
 2. **Console command**: runs a command in the console and waits for its termination.
 

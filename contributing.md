@@ -4,15 +4,13 @@
 
 Please note that this project is released with a [Contributor Code of Conduct](code-of-conduct.md). By participating in this project you agree to abide by its terms.
 
-Translations: [Português](https://github.com/concordialang/concordia-docs/blob/master/pt_BR/contributing.md)
-
 ## How can I contribute?
 
 ### Improve documentation
 
-As a user of Concordia you're the perfect candidate to help us improve our documentation. Typo corrections, error fixes, better explanations, more examples, etc. Open issues for things that could be improved. [Help translate our docs.](https://github.com/concordialang/concordia-docs) Anything. Even improvements to this document.
+As a user of Concordia you're the perfect candidate to help us improve our documentation. Typo corrections, error fixes, better explanations, more examples, etc. Open issues for things that could be improved. Help translate our docs. Anything. Even improvements to this document.
 
-Use the [`docs` label](https://github.com/concordialang/concordialang/labels/docs) to find suggestions for what we'd love to see more documentation on.
+Use the [`docs` label](https://github.com/thiagodp/concordialang/labels/docs) to find suggestions for what we'd love to see more documentation on.
 
 ### Improve issues
 
@@ -22,24 +20,24 @@ Some issues are created with missing information, not reproducible, or plain inv
 
 We're always looking for more opinions on discussions in the issue tracker. It's a good opportunity to influence the future direction of Concordia.
 
-The [`question` label](https://github.com/concordialang/concordialang/labels/question) is a good place to find ongoing discussions.
+The [`question` label](https://github.com/thiagodp/concordialang/labels/question) is a good place to find ongoing discussions.
 
 ### Write code
 
 You can use issue labels to discover issues you could help out with:
 
-* [`blocked` issues](https://github.com/concordialang/concordialang/labels/blocked) need help getting unstuck
-* [`bug` issues](https://github.com/concordialang/concordialang/labels/bug) are known bugs we'd like to fix
-* [`enhancement` issues](https://github.com/concordialang/concordialang/labels/enhancement) are features we're open to including
-* [`performance` issues](https://github.com/concordialang/concordialang/labels/performance) track ideas on how to improve AVA's performance
+* [`blocked` issues](https://github.com/thiagodp/concordialang/labels/blocked) need help getting unstuck
+* [`bug` issues](https://github.com/thiagodp/concordialang/labels/bug) are known bugs we'd like to fix
+* [`enhancement` issues](https://github.com/thiagodp/concordialang/labels/enhancement) are features we're open to including
+* [`performance` issues](https://github.com/thiagodp/concordialang/labels/performance) track ideas on how to improve Concordia's performance
 
-The [`help wanted`](https://github.com/concordialang/concordialang/labels/help%20wanted) and [`good for beginner`](https://github.com/concordialang/concordialang/labels/good%20for%20beginner) labels are especially useful.
+The [`help wanted`](https://github.com/thiagodp/concordialang/labels/help%20wanted) and [`good for beginner`](https://github.com/thiagodp/concordialang/labels/good%20for%20beginner) labels are especially useful.
 
-You may find an issue is assigned, or has the [`assigned` label](https://github.com/concordialang/concordialang/labels/assigned). Please double-check before starting on this issue because somebody else is likely already working on it.
+You may find an issue is assigned, or has the [`assigned` label](https://github.com/thiagodp/concordialang/labels/assigned). Please double-check before starting on this issue because somebody else is likely already working on it.
 
-We'd like to fix [`priority` issues](https://github.com/concordialang/concordialang/labels/priority) first. We'd love to see progress on [`low-priority` issues](https://github.com/concordialang/concordialang/labels/low%20priority) too. [`future` issues](https://github.com/concordialang/concordialang/labels/future) are those that we'd like to get to, but not anytime soon. Please check before working on these since we may not yet want to take on the burden of supporting those features.
+We'd like to fix [`priority` issues](https://github.com/thiagodp/concordialang/labels/priority) first. We'd love to see progress on [`low-priority` issues](https://github.com/thiagodp/concordialang/labels/low%20priority) too. [`future` issues](https://github.com/thiagodp/concordialang/labels/future) are those that we'd like to get to, but not anytime soon. Please check before working on these since we may not yet want to take on the burden of supporting those features.
 
-If you're updating dependencies, please make sure you use npm@5.6.0 and commit the updated `package-lock.json` file.
+If you're updating dependencies, please make sure you commit the updated `package-lock.json` file.
 
 
 ## Submitting an issue
@@ -65,4 +63,4 @@ If you're updating dependencies, please make sure you use npm@5.6.0 and commit t
 - You might be asked to do changes to your pull request. There's never a need to open another pull request. [Just update the existing one.](https://github.com/RichardLitt/knowledge/blob/master/github/amending-a-commit-guide.md)
 
 
-*The first version of this document was inspired on [AVA](https://github.com/avajs/ava/blob/master/contributing.md)'s contribution guide.*
+> The first version of this document was inspired on [AVA](https://github.com/avajs/ava/blob/master/contributing.md)'s contribution guide.
