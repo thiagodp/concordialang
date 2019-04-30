@@ -7,6 +7,7 @@ const Symbols_1 = require("../req/Symbols");
 const CaseConversor_1 = require("./CaseConversor");
 const TypeChecking_1 = require("./TypeChecking");
 const ValueTypeDetector_1 = require("./ValueTypeDetector");
+const TargetTypeUtil_1 = require("./TargetTypeUtil");
 /**
  * Replaces references to Concordia constructions - such as named databases,
  * named tables, ui element names, and constants - with their corresponding values.
@@ -61,15 +62,18 @@ class ReferenceReplacer {
      * The comment has all the UI Element variables (with their symbols),
      * separated by comma and space (", ").
      *
-     * @param sentence
-     * @param nlpResult
+     * @param step
      * @param doc
      * @param spec
+     * @param langContent
      * @param uiLiteralCaseOption
      */
-    replaceUIElementsWithUILiterals(sentence, nlpResult, doc, spec, uiLiteralCaseOption) {
+    replaceUIElementsWithUILiterals(step, hasInputAction, doc, spec, langContent, uiLiteralCaseOption) {
+        let sentence = step.content;
+        let nlpResult = step.nlpResult;
         let newSentence = sentence;
         let uiElements = [];
+        const targetTypeUtil = new TargetTypeUtil_1.TargetTypeUtil();
         for (let e of nlpResult.entities || []) {
             if (Entities_1.Entities.UI_ELEMENT != e.entity) {
                 continue;
@@ -79,9 +83,15 @@ class ReferenceReplacer {
             let literalName = TypeChecking_1.isDefined(ui) && TypeChecking_1.isDefined(ui.info)
                 ? ui.info.uiLiteral
                 : CaseConversor_1.convertCase(e.value, uiLiteralCaseOption); // Uses the UI_ELEMENT name as the literal name, when it is not found.
+            const uiLiteral = Symbols_1.Symbols.UI_LITERAL_PREFIX + literalName + Symbols_1.Symbols.UI_LITERAL_SUFFIX;
+            let targetType = '';
+            if (!hasInputAction && !targetTypeUtil.hasInputTargetInTheSentence(step.content, langContent)) {
+                targetType = targetTypeUtil.analyzeInputTargetTypes(step, langContent);
+            }
+            const prefixedUILiteral = targetType.length > 0 ? targetType + ' ' + uiLiteral : uiLiteral;
             // Replace
             newSentence = this.replaceAtPosition(newSentence, e.position, Symbols_1.Symbols.UI_ELEMENT_PREFIX + e.value + Symbols_1.Symbols.UI_ELEMENT_SUFFIX, // e.g., {Foo}
-            Symbols_1.Symbols.UI_LITERAL_PREFIX + literalName + Symbols_1.Symbols.UI_LITERAL_SUFFIX // e.g., <foo>
+            prefixedUILiteral // e.g., <foo>
             );
             uiElements.push(Symbols_1.Symbols.UI_ELEMENT_PREFIX + e.value + Symbols_1.Symbols.UI_ELEMENT_SUFFIX);
         }

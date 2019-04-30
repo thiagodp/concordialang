@@ -4,7 +4,7 @@ import { CaseType } from '../app/CaseType';
 import { UIElement, UIProperty } from '../ast/UIElement';
 import { Entities } from '../nlp/Entities';
 import { NLPEntity, NLPUtil } from '../nlp/NLPResult';
-import { EditableActionTargets } from './ActionTargets';
+import { EditableActionTargets, ActionTargets } from './ActionTargets';
 import { convertCase } from './CaseConversor';
 import { isDefined } from './TypeChecking';
 import { UIPropertyTypes } from './UIPropertyTypes';
@@ -46,7 +46,7 @@ export class UIElementPropertyExtractor {
     extractType( uie: UIElement ): string {
         const nlpEntity = this.extractPropertyValueAsEntity( this.extractProperty( uie, UIPropertyTypes.TYPE ) );
         if ( ! isDefined( nlpEntity ) ) {
-            return 'textbox'; // TODO: refactor
+            return ActionTargets.TEXTBOX;
         }
         return nlpEntity.value;
     }

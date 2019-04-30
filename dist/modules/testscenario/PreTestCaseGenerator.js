@@ -27,15 +27,14 @@ const DataTestCaseAnalyzer_1 = require("../testdata/DataTestCaseAnalyzer");
 const Random_1 = require("../testdata/random/Random");
 const RandomString_1 = require("../testdata/random/RandomString");
 const UIElementValueGenerator_1 = require("../testdata/UIElementValueGenerator");
-const ActionMap_1 = require("../util/ActionMap");
 const Actions_1 = require("../util/Actions");
-const ActionTargets_1 = require("../util/ActionTargets");
 const CaseConversor_1 = require("../util/CaseConversor");
 const ReferenceReplacer_1 = require("../util/ReferenceReplacer");
 const TypeChecking_1 = require("../util/TypeChecking");
 const UIElementNameHandler_1 = require("../util/UIElementNameHandler");
 const UIElementPropertyExtractor_1 = require("../util/UIElementPropertyExtractor");
 const PreTestCase_1 = require("./PreTestCase");
+const TargetTypeUtil_1 = require("../util/TargetTypeUtil");
 class GenContext {
     constructor(spec, doc, errors, warnings) {
         this.spec = spec;
@@ -69,6 +68,7 @@ class PreTestCaseGenerator {
         this._nlpUtil = new NLPResult_1.NLPUtil();
         this._uiePropExtractor = new UIElementPropertyExtractor_1.UIElementPropertyExtractor();
         this._lineChecker = new LineChecker_1.LineChecker();
+        this._targetTypeUtil = new TargetTypeUtil_1.TargetTypeUtil();
         const random = new Random_1.Random(seed);
         this._randomString = new RandomString_1.RandomString(random);
         this._dtcAnalyzer = new DataTestCaseAnalyzer_1.DataTestCaseAnalyzer(seed);
@@ -127,7 +127,7 @@ class PreTestCaseGenerator {
             for (let step of newSteps) {
                 const inputDataActionEntity = this.extractDataInputActionEntity(step); // 'fill'-like entity
                 if (TypeChecking_1.isDefined(inputDataActionEntity) && (this.hasValue(step) || this.hasNumber(step))) {
-                    this.replaceUIElementsWithUILiterals([step], language, ctx, UIElementReplacementOption.JUST_INPUT_ACTIONS);
+                    this.replaceUIElementsWithUILiterals([step], language, langContent, ctx, UIElementReplacementOption.JUST_INPUT_ACTIONS);
                 }
             }
             // console.log( 'AFTER' );
@@ -395,13 +395,13 @@ class PreTestCaseGenerator {
         }
         return Array.from(uniqueNames);
     }
-    replaceUIElementsWithUILiterals(steps, language, ctx, option) {
+    replaceUIElementsWithUILiterals(steps, language, langContent, ctx, option) {
         const refReplacer = new ReferenceReplacer_1.ReferenceReplacer();
         for (let step of steps) {
+            let dataInputActionEntity = this.extractDataInputActionEntity(step);
+            let hasInputAction = TypeChecking_1.isDefined(dataInputActionEntity);
             if (UIElementReplacementOption.ALL !== option) {
                 // Ignore steps with an input data action - i.e., 'fill' like steps
-                const dataInputActionEntity = this.extractDataInputActionEntity(step);
-                const hasInputAction = TypeChecking_1.isDefined(dataInputActionEntity);
                 if (hasInputAction && UIElementReplacementOption.NO_INPUT_ACTIONS === option
                     || !hasInputAction && UIElementReplacementOption.JUST_INPUT_ACTIONS === option) {
                     continue;
@@ -411,15 +411,15 @@ class PreTestCaseGenerator {
             // -> Needed because there is a conversion of AND steps in GIVEN to GIVEN and this changes the position
             this._variantSentenceRec.recognizeSentences(language, [step], ctx.errors, ctx.warnings);
             let before = step.content;
-            let [newContent, comment] = refReplacer.replaceUIElementsWithUILiterals(step.content, step.nlpResult, ctx.doc, ctx.spec, this.uiLiteralCaseOption);
+            // Add target types
+            step.targetTypes = this._targetTypeUtil.extractTargetTypes(step, ctx.doc, ctx.spec, this._uiePropExtractor);
+            let [newContent, comment] = refReplacer.replaceUIElementsWithUILiterals(step, hasInputAction, ctx.doc, ctx.spec, langContent, this.uiLiteralCaseOption);
             // Replace content
             step.content = newContent;
             // Add comment if non empty
             if (comment.length > 0) {
                 step.comment = ' ' + comment + (step.comment || '');
             }
-            // Add target types
-            step.targetTypes = this.extractTargetTypes(step, ctx.doc, ctx.spec);
             if (before != newContent) {
                 // console.log( 'BEFORE', before, "\nNEW   ", newContent);
                 // Update NLP !
@@ -427,44 +427,17 @@ class PreTestCaseGenerator {
             }
         }
     }
-    extractTargetTypes(step, doc, spec) {
-        if (!step.nlpResult) {
-            return [];
-        }
-        let targetTypes = step.targetTypes.slice(0);
-        for (let e of step.nlpResult.entities || []) {
-            switch (e.entity) {
-                case Entities_1.Entities.UI_ELEMENT: {
-                    const uie = spec.uiElementByVariable(e.value, doc);
-                    if (TypeChecking_1.isDefined(uie)) {
-                        const uieType = this._uiePropExtractor.extractType(uie);
-                        targetTypes.push(uieType);
-                        break;
-                    }
-                    // continue as UI_LITERAL
-                }
-                case Entities_1.Entities.UI_LITERAL: {
-                    let action = step.action || null;
-                    if (TypeChecking_1.isDefined(action)) {
-                        targetTypes.push(ActionMap_1.ACTION_TARGET_MAP.get(action) || ActionTargets_1.ActionTargets.NONE);
-                    }
-                    break;
-                }
-            }
-        }
-        return targetTypes;
-    }
     fillUIElementWithValueAndReplaceByUILiteralInStep(inputStep, langContent, uieVariableToUIETestPlanMap, uieVariableToValueMap, language, ctx) {
         let step = deepcopy(inputStep);
         const dataInputActionEntity = this.extractDataInputActionEntity(step);
         if (null === dataInputActionEntity || this.hasValue(step) || this.hasNumber(step)) {
             let steps = [step];
-            this.replaceUIElementsWithUILiterals(steps, language, ctx, UIElementReplacementOption.ALL);
+            this.replaceUIElementsWithUILiterals(steps, language, langContent, ctx, UIElementReplacementOption.ALL);
             // console.log( "EXIT 1" );
             return [steps, []];
         }
         // Add target types
-        step.targetTypes = this.extractTargetTypes(step, ctx.doc, ctx.spec);
+        step.targetTypes = this._targetTypeUtil.extractTargetTypes(step, ctx.doc, ctx.spec, this._uiePropExtractor);
         // Check UI Elements
         let uiElements = this._nlpUtil.entitiesNamed(Entities_1.Entities.UI_ELEMENT, step.nlpResult);
         const uiElementsCount = uiElements.length;
@@ -535,13 +508,22 @@ class PreTestCaseGenerator {
             else if (value instanceof js_joda_1.LocalDateTime) {
                 formattedValue = value.format(js_joda_1.DateTimeFormatter.ofPattern('dd/MM/yyyy HH:mm')).toString();
             }
+            // Analyze whether it is an input target type
+            let targetType = '';
+            if (!dataInputActionEntity) {
+                targetType = this._targetTypeUtil.analyzeInputTargetTypes(step, langContent) + ' ';
+            }
             // Generate the sentence
             let sentence = prefix + ' ' + keywordI + ' ' + dataInputActionEntity.string + ' ' +
+                targetType +
                 Symbols_1.Symbols.UI_LITERAL_PREFIX + uieLiteral + Symbols_1.Symbols.UI_LITERAL_SUFFIX +
                 ' ' + keywordWith + ' ' +
                 ('number' === typeof formattedValue
                     ? formattedValue
                     : Symbols_1.Symbols.VALUE_WRAPPER + formattedValue + Symbols_1.Symbols.VALUE_WRAPPER);
+            // if ( targetType != '' ) {
+            //     console.log( sentence );
+            // }
             const uieTestPlan = uieVariableToUIETestPlanMap.get(variable) || null;
             let expectedResult, dtc;
             // console.log( 'uieTestPlan', uieTestPlan );
@@ -554,7 +536,7 @@ class PreTestCaseGenerator {
                 if (DataTestCaseAnalyzer_1.DTCAnalysisResult.INVALID === uieTestPlan.result) {
                     expectedResult = keywordInvalid;
                     // Process ORACLES as steps
-                    let oraclesClone = this.processOracles(uieTestPlan.otherwiseSteps, language, keywords, ctx);
+                    let oraclesClone = this.processOracles(uieTestPlan.otherwiseSteps, language, langContent, keywords, ctx);
                     // Add comments in them
                     for (let o of oraclesClone) {
                         o.comment = (o.comment || '') + ' ' + keywordFrom + ' ' +
@@ -610,7 +592,7 @@ class PreTestCaseGenerator {
         }
         return [steps, oracles];
     }
-    processOracles(steps, language, keywords, ctx) {
+    processOracles(steps, language, langContent, keywords, ctx) {
         if (steps.length < 1) {
             return steps;
         }
@@ -620,7 +602,7 @@ class PreTestCaseGenerator {
         // UI LITERALS
         stepsClone = this.fillUILiteralsWithoutValueInSteps(stepsClone, language, keywords, ctx);
         // UI ELEMENTS
-        this.replaceUIElementsWithUILiterals(stepsClone, language, ctx, UIElementReplacementOption.ALL);
+        this.replaceUIElementsWithUILiterals(stepsClone, language, langContent, ctx, UIElementReplacementOption.ALL);
         // Note: Oracle steps cannot have 'fill' steps
         return stepsClone;
     }
