@@ -1,13 +1,13 @@
 import * as enumUtil from 'enum-util';
 import { UIElement, UIProperty } from 'concordialang-types';
 import { Entities, NLPEntity, NLPUtil } from 'concordialang-types';
+
 import { CaseType } from '../app/CaseType';
-import { EditableActionTargets } from './ActionTargets';
+import { EditableActionTargets, ActionTargets } from './ActionTargets';
 import { convertCase } from './CaseConversor';
 import { isDefined } from './TypeChecking';
 import { UIPropertyTypes } from './UIPropertyTypes';
 import { ValueType } from './ValueTypeDetector';
-
 /**
  * Extract properties from UI Elements.
  *
@@ -44,7 +44,7 @@ export class UIElementPropertyExtractor {
     extractType( uie: UIElement ): string {
         const nlpEntity = this.extractPropertyValueAsEntity( this.extractProperty( uie, UIPropertyTypes.TYPE ) );
         if ( ! isDefined( nlpEntity ) ) {
-            return 'textbox'; // TODO: refactor
+            return ActionTargets.TEXTBOX;
         }
         return nlpEntity.value;
     }

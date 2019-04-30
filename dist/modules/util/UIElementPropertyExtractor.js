@@ -43,7 +43,7 @@ class UIElementPropertyExtractor {
     extractType(uie) {
         const nlpEntity = this.extractPropertyValueAsEntity(this.extractProperty(uie, UIPropertyTypes_1.UIPropertyTypes.TYPE));
         if (!TypeChecking_1.isDefined(nlpEntity)) {
-            return 'textbox'; // TODO: refactor
+            return ActionTargets_1.ActionTargets.TEXTBOX;
         }
         return nlpEntity.value;
     }

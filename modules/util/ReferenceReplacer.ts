@@ -1,6 +1,5 @@
 import { escape, escapeId } from 'sqlstring';
-import { Document } from "concordialang-types";
-import { Entities, NLPResult } from "concordialang-types";
+import { Step, Document, Entities, NLPResult } from "concordialang-types";
 import { CaseType } from '../app/CaseType';
 import { AugmentedSpec } from '../ast/AugmentedSpec';
 import { QueryParser } from '../db/QueryParser';
@@ -8,6 +7,8 @@ import { Symbols } from '../req/Symbols';
 import { convertCase } from './CaseConversor';
 import { isDefined } from './TypeChecking';
 import { ValueTypeDetector } from './ValueTypeDetector';
+import { LanguageContent } from '../dict/LanguageContent';
+import { TargetTypeUtil } from './TargetTypeUtil';
 
 /**
  * Replaces references to Concordia constructions - such as named databases,
@@ -81,21 +82,28 @@ export class ReferenceReplacer {
      * The comment has all the UI Element variables (with their symbols),
      * separated by comma and space (", ").
      *
-     * @param sentence
-     * @param nlpResult
+     * @param step
      * @param doc
      * @param spec
+     * @param langContent
      * @param uiLiteralCaseOption
      */
     replaceUIElementsWithUILiterals(
-        sentence: string,
-        nlpResult: NLPResult,
+        step: Step,
+        hasInputAction: boolean,
         doc: Document,
         spec: AugmentedSpec,
+        langContent: LanguageContent,
         uiLiteralCaseOption: CaseType
     ): [ string, string ] {
+        let sentence: string = step.content;
+        let nlpResult: NLPResult = step.nlpResult;
+
         let newSentence: string = sentence;
         let uiElements: string[] = [];
+
+        const targetTypeUtil = new TargetTypeUtil();
+
         for ( let e of nlpResult.entities || [] ) {
 
             if ( Entities.UI_ELEMENT != e.entity ) {
@@ -109,12 +117,21 @@ export class ReferenceReplacer {
                 ? ui.info.uiLiteral
                 : convertCase( e.value, uiLiteralCaseOption ); // Uses the UI_ELEMENT name as the literal name, when it is not found.
 
+            const uiLiteral = Symbols.UI_LITERAL_PREFIX + literalName + Symbols.UI_LITERAL_SUFFIX;
+
+            let targetType: string = '';
+            if ( ! hasInputAction && ! targetTypeUtil.hasInputTargetInTheSentence( step.content, langContent ) ) {
+                targetType = targetTypeUtil.analyzeInputTargetTypes( step, langContent );
+            }
+
+            const prefixedUILiteral = targetType.length > 0 ? targetType + ' ' + uiLiteral : uiLiteral;
+
             // Replace
             newSentence = this.replaceAtPosition(
                 newSentence,
                 e.position,
                 Symbols.UI_ELEMENT_PREFIX + e.value + Symbols.UI_ELEMENT_SUFFIX, // e.g., {Foo}
-                Symbols.UI_LITERAL_PREFIX + literalName + Symbols.UI_LITERAL_SUFFIX // e.g., <foo>
+                prefixedUILiteral // e.g., <foo>
             );
 
             uiElements.push( Symbols.UI_ELEMENT_PREFIX + e.value + Symbols.UI_ELEMENT_SUFFIX );
