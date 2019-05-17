@@ -3,20 +3,38 @@
 ## Índice
 
 Construções da linguagem
-- [Comentários](#comentários)
-- [Definição da Língua](#language)
-- [Importe](#importe)
-- [Tag](#tag)
-- [Funcionalidade](#funcionalidade)
-- [Estado](#estado)
-- [Cenário](#cenário)
-- [Constantes](#constantes)
-- [Elemento de Interface de Usuário](#elemento-de-interface-de-usuário)
-- [Tabela](#tabela)
-- [Banco de Dados](#banco-de-dados)
-- [Variante](#variante)
-- [Caso de Teste](#caso-de-teste)
-- [Eventos de Teste](#eventos-de-teste)
+- [Visão Geral da Linguagem Concordia](#vis%C3%A3o-geral-da-linguagem-concordia)
+  - [Índice](#%C3%ADndice)
+  - [Construções da linguagem](#constru%C3%A7%C3%B5es-da-linguagem)
+    - [Comentários](#coment%C3%A1rios)
+    - [Language](#language)
+    - [Importe](#importe)
+    - [Tag](#tag)
+    - [Funcionalidade](#funcionalidade)
+    - [Estado](#estado)
+    - [Cenário](#cen%C3%A1rio)
+    - [Constantes](#constantes)
+    - [Elemento de Interface de Usuário](#elemento-de-interface-de-usu%C3%A1rio)
+      - [Exemplos de Elementos de IU](#exemplos-de-elementos-de-iu)
+    - [Tabela](#tabela)
+    - [Banco de Dados](#banco-de-dados)
+      - [Examplos de bancos de dados](#examplos-de-bancos-de-dados)
+    - [Variante](#variante)
+    - [Caso de Teste](#caso-de-teste)
+    - [Eventos de Teste](#eventos-de-teste)
+  - [Literais](#literais)
+    - [Literal de Interface de Usuário](#literal-de-interface-de-usu%C3%A1rio)
+    - [Valor](#valor)
+    - [Número](#n%C3%BAmero)
+    - [Lista de valores](#lista-de-valores)
+    - [Consulta](#consulta)
+  - [Referências para declarações](#refer%C3%AAncias-para-declara%C3%A7%C3%B5es)
+    - [Elementos de Interface de Usuário](#elementos-de-interface-de-usu%C3%A1rio)
+      - [Em consultas](#em-consultas)
+    - [Constantes](#constantes-1)
+    - [Tabelas](#tabelas)
+    - [Bancos de Dados](#bancos-de-dados)
+  - [Estados](#estados)
 
 Literais
 - [Literal de Interface de Usuário](#literal-de-interface-de-usuário)
@@ -480,18 +498,25 @@ Propriedades permitidas:
   - `opções`
   - ou as suas equivalentes [em inglês](../en/language.md#database)
 
-Valores atualmente suportados para `tipo`:
-  - `"adodb"`  para conectar a bancos de dados como [MS Access](https://pt.wikipedia.org/wiki/Microsoft_Access) e [MS SQL Server](https://en.wikipedia.org/wiki/Microsoft_SQL_Server) através de [ActiveX Data Objects](https://en.wikipedia.org/wiki/ActiveX_Data_Objects) - *Somente para Windows*
-  - `"csv"` para conectar a arquivos no formato de [Valores Separados por Vírgula](https://pt.wikipedia.org/wiki/Comma-separated_values)
-  - `"firebase"` para conectar a bancos de dados [Firebase](https://firebase.google.com)
-  - `"ini"` para conectar a [arquivos INI](https://en.wikipedia.org/wiki/INI_file)
-  - `"json"` para conectar a arquivos [JSON](https://en.wikipedia.org/wiki/JSON)
-  - `"mysql"` para conectar a bancos de dados [MySQL](https://www.mysql.com/)
-  - `"mssql"` para conectar a bancos de dados [MS SQL Server](https://www.microsoft.com/pt-br/sql-server/)
-  - `"postgres"` para conectar a bancos de dados [PostgreSQL](https://www.postgresql.org/)
-  - `"sqlite"` para conectar a banco de dados [SQLite](https://www.sqlite.org/)
-  - `"xlsx"` para conectar a arquivos [Excel](https://en.wikipedia.org/wiki/Microsoft_Excel)
 
+Valores atualmente suportados para `tipo`:
+
+| Valor        | Banco de Dados  | Comando de Instalação* | Observação |
+| ------------ | --------------- | ---------------------- | ---------- |
+| `"adodb"`    | [MS Access](https://pt.wikipedia.org/wiki/Microsoft_Access) e [MS SQL Server](https://en.wikipedia.org/wiki/Microsoft_SQL_Server) através de [ActiveX Data Objects](https://en.wikipedia.org/wiki/ActiveX_Data_Objects) | `npm install database-js-adodb` | *Somente para MS Windows* |
+| `"csv"`      | [Arquivos CSV](https://en.wikipedia.org/wiki/Comma-separated_values) | `npm install database-js-csv` | |
+| `"firebase"` | [Firebase](https://firebase.google.com) | `npm install database-js-firebase` | |
+| `"ini"`      | [Arquivos INI](https://en.wikipedia.org/wiki/INI_file) |`npm install database-js-ini` | |
+| `"json"`     | [Arquivos JSON](https://en.wikipedia.org/wiki/JSON) | `npm install database-js-json` | Já instalado por padrão |
+| `"mysql"`    | [MySQL](https://www.mysql.com/) | `npm install database-js-mysql` | |
+| `"mssql"`    | [MS SQL Server](https://www.microsoft.com/en-us/sql-server) | `npm install database-js-mssql` | |
+| `"postgres"` | [PostgreSQL](https://www.postgresql.org/) | `npm install database-js-postgres` | |
+| `"sqlite"`   | [SQLite](https://www.sqlite.org/) | `npm install database-js-sqlite` | |
+| `"xlsx"`     | [Planilhas Excel](https://en.wikipedia.org/wiki/Microsoft_Excel) | `npm install database-js-xlsx`  | |
+
+***Para conectar e manipular bancos de dados, é preciso instalar os pacotes NPM correspondentes.** Acesse o diretório raiz de sua aplicaçãoe digite o *Comando de Instalação* correspondente.
+
+#### Examplos de bancos de dados
 
 Exemplo 1:
 ```
