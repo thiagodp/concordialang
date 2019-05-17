@@ -169,7 +169,6 @@ Tabela: Profissoes
 Então, mudaremos as regras para obter valores da tabela:
 
 ```gherkin
-UI Element: Salary
 Elemento de IU: Salario
   - tipo de dado é double
   - valor mínimo vem da consulta "SELECT salario_min FROM [Profissoes] WHERE nome = {Profissao}"

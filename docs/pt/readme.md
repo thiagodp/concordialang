@@ -1,16 +1,29 @@
-# Documentação do Concordia
+# 📖 Documentação
 
-- [Visão geral da Linguagem](language.md)
+## Abordagem
+
+- [Como funciona](how-it-works.md)
+- [Ciclo de uso recomendado](cycle.md)
+
+## Linguagem e ferramenta
+
+- [Visão geral da linguagem](language.md)
 - [Ações](actions.md)
 - [Exemplo](example.md)
-- [Arquivo de configuração](../en/config.md) *(inglês)* 🔥
-- [Dicas e Truques](../en/tips-and-tricks.md) *(inglês)* 🔥
-- [Plug-ins](../en/plugins.md) *(inglês)*
 - [Casos de Teste gerados](test-cases.md)
-- [Roadmap](../en/roadmap.md) *(inglês)*
-- [FAQ](../en/faq.md) *(inglês)*
 
-## Anotações técnicas
+## Compilador e plug-ins
+
+- [Plug-ins](plugins.md)
+- [Arquivo de configuração](config.md)
+- [Dicas e truques](tips-and-tricks.md)
+
+## Desenvolvimento
+
+- [Roadmap](../roadmap.md)
+- [Diretrizes de desenvolvimento](development.md) *(inglês)*
+
+#### Anotações técnicas
 
 - [Propriedades de Elementos de Interface de Usuário](../en/dev/properties.md) *(inglês)*
 - [Consultas](../en/dev/queries.md) *(inglês)*
@@ -19,6 +32,6 @@
 - [Cenários de Teste](../en/dev/test-scenarios.md) *(inglês)*
 - [Geração de dados](../en/dev/data-generation.md) *(inglês)*
 
-## Desenvolvimento
+## Outros
 
-- [Diretrizes de desenvolvimento](../en/development.md) *(inglês)*
+- [FAQ](faq.md)

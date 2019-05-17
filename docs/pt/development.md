@@ -1,5 +1,7 @@
 # Development guidelines
 
+> Esse arquivo necessita de tradução para Português.
+
 ## Directories
 
 - `__tests__` - test scripts

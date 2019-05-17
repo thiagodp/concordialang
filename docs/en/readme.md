@@ -1,23 +1,30 @@
 # 📖 Documentation
 
-### Approach
+## Approach
 
 - [How it works](how-it-works.md)
 - [Recommended usage cycle](cycle.md)
 
-### Language and tool
+## Language
 
 - [Overview of the Language](language.md)
-- [Available Actions](actions.md)
+- [Actions](actions.md)
 - [Example](example.md)
-- [Configuration file](config.md) 🔥
-- [Tips and Tricks](tips-and-tricks.md) 🔥
 - [Generated Test Cases](test-cases.md)
-- [Plug-ins](plugins.md)
-- [Roadmap](roadmap.md)
-- [FAQ](faq.md)
 
-### Technical notes
+## Tool
+
+- [Plug-ins](plugins.md)
+- [Configuration file](config.md)
+- [Tips and tricks](tips-and-tricks.md)
+
+
+## Development
+
+- [Roadmap](../roadmap.md)
+- [Development guidelines](development.md)
+
+#### Technical notes
 
 - [User Interface Elements' Properties](dev/properties.md)
 - [Queries](dev/queries.md)
@@ -26,6 +33,6 @@
 - [Test Scenarios](dev/test-scenarios.md)
 - [Data generation](dev/data-generation.md)
 
-### Development
+## Other
 
-- [Development guidelines](development.md)
+- [FAQ](faq.md)

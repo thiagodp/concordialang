@@ -38,3 +38,12 @@
 
 - Since Test Cases are both read and generated, **repeated test cases are prune**.
 - Comparison to prune Test Cases must consider properties that identify them uniquely and ignore properties that vary according to the random seed (*e.g.,* values attributed to UI Elements).
+
+
+
+
+## Generated Data Test Cases
+
+- Since we are simulating min value and max value when they come from a QUERY or a UI_ELEMENT, in order to not generate their values, the data test VALUE_ZERO will be considered:
+  - INVALID when min is defined and greater than 0 OR when max is defined and less than 0
+  - INCOMPATIBLE in any other case when min or max needs to be faked

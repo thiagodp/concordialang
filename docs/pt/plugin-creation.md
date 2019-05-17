@@ -1,5 +1,7 @@
 # Creating a plugin
 
+> Esse arquivo necessita de tradução para Português.
+
 A plug-in can **generate** test scripts (source code) for *any* programming language or testing framework.
 
 A plug-in can be **developed** with JavaScript or [any other language](https://github.com/jashkenas/coffeescript/wiki/list-of-languages-that-compile-to-js) that "transpiles" to JavaScript, such as [TypeScript](https://typescriptlang.org) (recommended), [Dart](https://dartlang.org), or [CoffeeScript](http://coffeescript.org).

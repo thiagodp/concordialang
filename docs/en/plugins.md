@@ -24,6 +24,26 @@ Please tell us whether you [created a new plug-in](plugin-creation.md) by [openi
 
 For the following commands, please consider that `<plugin>` is the plug-in name and that **it is optional** if you set the `plugin` property in the [configuration file](config.md).
 
+You may omit `concordialang-` from a plug-in name.
+
+### plugin
+
+Uses an installed plug-in to generate and run test scripts.
+
+```bash
+concordia --plugin <plugin>
+```
+
+To avoid generating test scripts:
+```bash
+concordia --plugin <plugin> --no-script
+```
+
+To avoid running test scripts:
+```bash
+concordia --plugin <plugin> --no-run
+```
+
 ### plugin-install
 
 Installs a plug-in available at [NPM](https://www.npmjs.com/).
@@ -58,6 +78,8 @@ We recommend to run it in a separate terminal/console since it usually blocks th
 concordia --plugin-serve <plugin>
 ```
 
+*Note*: To stop the test server later, type <kbd>Ctrl</kbd> + <kbd>C</kbd>.
+
 ### plugin-uninstall
 
 Uninstall a plug-in.
@@ -69,15 +91,9 @@ concordia --plugin-uninstall <plugin>
 
 ## Roadmap
 
-Planned plug-ins:
+Please see the [Issue #39](https://github.com/thiagodp/concordialang/issues/39) for a list of desired plug-ins.
 
-| Issue | Plug-in                   | Target Applications | Frameworks | Generated Language |
-| ----- | ------------------------ | ------------------- | ---------- |---------- |
-| [#32](https://github.com/thiagodp/concordialang/issues/32) | `cypress` | web | [Cypress](https://cypress.io) | JavaScript |
-| [#33](https://github.com/thiagodp/concordialang/issues/33) | `testcafe` | web, mobile, desktop | [TestCafe](https://devexpress.github.io/testcafe/) | JavaScript |
-| [#28](https://github.com/thiagodp/concordialang/issues/28) | `macacajs` | web, mobile, desktop | [MacacaJS](https://macacajs.com) | JavaScript |
-
-Would you like to create a plug-in for **another framework** or **programming language**? We would love it! 💖
+Would you like to create a plug-in for a **different framework** or **programming language**? We would love it! 💖
 
 See [how to create a plug-in](plugin-creation.md).
 
