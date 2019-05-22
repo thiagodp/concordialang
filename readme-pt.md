@@ -142,9 +142,16 @@ Então, use seu editor de textos favorito para criar o arquivo `busca.feature`, 
 
 ```gherkin
 #language: pt
-Funcionalidade: Busca no Google
+Funcionalidade: Busca
+  Como um visitante
+  Eu desejo fazer uma busca usando palavras-chave
+  Para encontrar o que preciso
 
 Cenário: Busca retorna resultado esperado
+  Dado que estou na tela de busca
+  Quando eu informo o conteúdo da busca
+    e aciono a opção de buscar
+  Então eu consigo ver um resultado condizente com o que pesquisei
 
   Variante: Busca ao teclar Enter
     Dado que estou em "https://google.com.br"
@@ -152,6 +159,10 @@ Cenário: Busca retorna resultado esperado
       e eu pressiono "Enter"
     Então eu vejo "npm"
 ```
+
+No exemplo acima, a Funcionalidade e o Cenário são descrições de alto nível do problema, sem detalhes sobre a tecnologia empregada. Já a Variante, descreve uma expectativa de interação com a aplicação (que inclui vocabulário tecnológico) para realizar um Cenário. É somente ela que será transformada em um ou mais Casos de Teste (dependendo de seu conteúdo). No exemplo, a busca do Google foi utilizada no lugar de uma aplicação real.
+
+> 👉 Em Concordia, as interações com a aplicação são sempre feitas usando a primeira pessoa do singular ("eu"). Esse "eu" representa o ator que está interagindo com o sistema (no exemplo acima, um *visitante*).
 
 **Passo 5: *Execute***
 
@@ -187,7 +198,9 @@ Caso de teste: Busca ao teclar Enter - 1
   Então eu vejo "npm"
 ```
 
-`test/busca.js`, que conterá o script de teste produzido a partir de  `features/busca.testcase`:
+No exemplo acima, temos um Caso de Teste gerado a partir da Variante declarada em `busca.feature`. O `importe` importa o conteúdo daquele arquivo. A tag `@generated` indica que o Caso de Teste foi gerado automaticamente, enquanto as tags `@scenario` e `@variant` referenciam o Cenário e a Variante a qual pertence, pela suas posições (índices).
+
+`test/busca.js`, que conterá o script de teste produzido a partir de  `features/busca.testcase`, para o framework CodeceptJS com WebDriverIO:
 
 ```javascript
 // Generated with ❤ by Concordia
@@ -195,7 +208,7 @@ Caso de teste: Busca ao teclar Enter - 1
 //
 // THIS IS A GENERATED FILE - MODIFICATIONS CAN BE LOST !
 
-Feature("Busca no Google");
+Feature("Busca");
 
 Scenario("Busca retorna resultado esperado | Busca ao teclar Enter - 1", (I) => {
     I.amOnPage("https://google.com.br"); // (10,5)
@@ -207,7 +220,7 @@ Scenario("Busca retorna resultado esperado | Busca ao teclar Enter - 1", (I) => 
 
 Para gerar e executar os teses novamente, basta executar o último comando.
 
-> 👉 Lembre-se que isso é só um "olá mundo". Concordia tem muito, muito mais a lhe oferecer!
+> 👉 Lembre-se que isso é só um "olá mundo". Concordia tem *muito* mais a oferecer!
 
 
 ## 👁 Veja Também

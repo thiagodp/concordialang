@@ -141,9 +141,16 @@ mkdir features
 Now use your favorite (UTF-8) text editor to create a file named `search.feature`, inside the directory `features`, with the following content:
 
 ```gherkin
-Feature: Google Search
+Feature: Search
+  As a visitor
+  I would like to search using keywords
+  In order to find what I need
 
-Scenario: Search returns expected result
+Scenario: Search returns the expected result
+  Given that I am in the search screen
+  When I enter with the search content
+    and I choose the search option
+  Then I see a result that matches the search content
 
   Variant: Search content on pressing Enter
     Given that I am on "https://google.com"
@@ -151,6 +158,10 @@ Scenario: Search returns expected result
       And I press "Enter"
     Then I see "npm"
 ```
+
+In the example above, the Feature and the Scenario are high level descriptions about the problem, without relation with the technology used to solve it. On the other hand, the Variant describes an expectation of interaction with application's user interface (which includes technological vocabulary) to perform a Scenario. Only the Variant is transformed into one or more Test Cases (depending on its content). In the example, a Google search was used instead of a real application.
+
+> 👉 In Concordia, all the interactions with the application's user interface use first person singular ("I"). That "I" represents the actor that is interacting with the application (in the example above, a *visitor*).
 
 **Step 5: *Execute***
 
@@ -184,7 +195,9 @@ Test case: Search content on pressing Enter - 1
   Then I see "npm"
 ```
 
-`test/search.js`, that will contain the test script produced from `features/search.testcase`:
+In the example above, there is a Test Case generated from the Variant declared in `search.feature`. The `import` clause imports that file's content. The tag `@generated` indicates that the Test Case was produced automatically, while the tags `@scenario` and `@variant` refers to its Scenario and Variant by their positions (indexes).
+
+`test/search.js`, that will contain the test script produced from `features/search.testcase` for the framework CodeceptJS with WebDriverIO:
 
 ```javascript
 // Generated with ❤ by Concordia
@@ -192,9 +205,9 @@ Test case: Search content on pressing Enter - 1
 //
 // THIS IS A GENERATED FILE - MODIFICATIONS CAN BE LOST !
 
-Feature("Google Search");
+Feature("Search");
 
-Scenario("Search returns expected result | Search content on pressing Enter - 1", (I) => {
+Scenario("Search returns the expected result | Search content on pressing Enter - 1", (I) => {
     I.amOnPage("https://google.com"); // (10,5)
     I.fillField("q", "concordialang.org"); // (11,5)
     I.pressKey("Enter"); // (12,7)
@@ -204,7 +217,7 @@ Scenario("Search returns expected result | Search content on pressing Enter - 1"
 
 To generate and run the test again, just repeat the last command.
 
-> 👉 Remember, this is just a "hello word". Concordia has much, much more to offer!
+> 👉 Remember, this is just a "hello word". Concordia has *much more* to offer!
 
 
 ## 👁 See Also
