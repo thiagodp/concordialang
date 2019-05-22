@@ -11,7 +11,9 @@
 
 ✨ **Eleve a qualidade da sua aplicação** ✨
 
-1. Escreva especificações de requisitos com a Linguagem Concordia.
+Visão rápida:
+
+1. Escreva especificações ágeis de requisitos com a Linguagem Concordia.
 
 2. Use o Compilador Concordia para configurar o ambiente de teste para você.
 

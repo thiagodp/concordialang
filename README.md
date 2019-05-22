@@ -12,7 +12,9 @@ Translations: [Português](readme-pt.md) 🌎
 
 ✨ **Raise your applications' quality** ✨
 
-1. Write requirements specifications with Concordia Language.
+At a glance:
+
+1. Write agile requirements specifications with Concordia Language.
 
 2. Use Concordia Compiler to setup the testing environment for you.
 
