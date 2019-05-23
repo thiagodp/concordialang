@@ -1,53 +1,36 @@
-# Visão Geral da Linguagem Concordia
+# Visão Geral da Linguagem Concordia <!-- omit in toc -->
 
-## Índice
+## Índice  <!-- omit in toc -->
 
-Construções da linguagem
-- [Visão Geral da Linguagem Concordia](#vis%C3%A3o-geral-da-linguagem-concordia)
-  - [Índice](#%C3%ADndice)
-  - [Construções da linguagem](#constru%C3%A7%C3%B5es-da-linguagem)
-    - [Comentários](#coment%C3%A1rios)
-    - [Language](#language)
-    - [Importe](#importe)
-    - [Tag](#tag)
-    - [Funcionalidade](#funcionalidade)
-    - [Estado](#estado)
-    - [Cenário](#cen%C3%A1rio)
-    - [Constantes](#constantes)
-    - [Elemento de Interface de Usuário](#elemento-de-interface-de-usu%C3%A1rio)
-      - [Exemplos de Elementos de IU](#exemplos-de-elementos-de-iu)
-    - [Tabela](#tabela)
-    - [Banco de Dados](#banco-de-dados)
-      - [Examplos de bancos de dados](#examplos-de-bancos-de-dados)
-    - [Variante](#variante)
-    - [Caso de Teste](#caso-de-teste)
-    - [Eventos de Teste](#eventos-de-teste)
-  - [Literais](#literais)
-    - [Literal de Interface de Usuário](#literal-de-interface-de-usu%C3%A1rio)
-    - [Valor](#valor)
-    - [Número](#n%C3%BAmero)
-    - [Lista de valores](#lista-de-valores)
-    - [Consulta](#consulta)
-  - [Referências para declarações](#refer%C3%AAncias-para-declara%C3%A7%C3%B5es)
-    - [Elementos de Interface de Usuário](#elementos-de-interface-de-usu%C3%A1rio)
-      - [Em consultas](#em-consultas)
-    - [Constantes](#constantes-1)
-    - [Tabelas](#tabelas)
-    - [Bancos de Dados](#bancos-de-dados)
-  - [Estados](#estados)
-
-Literais
-- [Literal de Interface de Usuário](#literal-de-interface-de-usuário)
-- [Valor](#valor)
-- [Número](#numero)
-- [Lista de valores](#lista-de-valores)
-- [Consulta](#consulta)
-
-Referências para declarações
-- [Elementos de Interface de Usuário](#elementos-de-interface-de-usuário)
-- [Constantes](#constantes-1)
-- [Tabelas](#tabelas)
-- [Bancos de Dados](#bancos-de-dados)
+- [Construções da linguagem](#constru%C3%A7%C3%B5es-da-linguagem)
+  - [Comentários](#coment%C3%A1rios)
+  - [Language](#language)
+  - [Importe](#importe)
+  - [Tag](#tag)
+  - [Funcionalidade](#funcionalidade)
+  - [Estado](#estado)
+  - [Cenário](#cen%C3%A1rio)
+  - [Constantes](#constantes)
+  - [Elemento de Interface de Usuário](#elemento-de-interface-de-usu%C3%A1rio)
+    - [Exemplos de Elementos de IU](#exemplos-de-elementos-de-iu)
+  - [Tabela](#tabela)
+  - [Banco de Dados](#banco-de-dados)
+    - [Exemplos de bancos de dados](#exemplos-de-bancos-de-dados)
+  - [Variante](#variante)
+  - [Caso de Teste](#caso-de-teste)
+  - [Eventos de Teste](#eventos-de-teste)
+- [Literais](#literais)
+  - [Literal de Interface de Usuário](#literal-de-interface-de-usu%C3%A1rio)
+  - [Valor](#valor)
+  - [Número](#n%C3%BAmero)
+  - [Lista de valores](#lista-de-valores)
+  - [Consulta](#consulta)
+- [Referências para declarações](#refer%C3%AAncias-para-declara%C3%A7%C3%B5es)
+  - [Elementos de Interface de Usuário](#elementos-de-interface-de-usu%C3%A1rio)
+    - [Em consultas](#em-consultas)
+  - [Constantes](#constantes-1)
+  - [Tabelas](#tabelas)
+  - [Bancos de Dados](#bancos-de-dados)
 - [Estados](#estados)
 
 
@@ -162,7 +145,7 @@ Funcionalidade: Login de Administrador
 
 Exemplo 3:
 ```gherkin
-Funcionalidade: Admininistrator Login
+Funcionalidade: Login de Administrador
   Para poder acessar o sistema
   Como um administrador
   Eu gostaria de me autenticar
@@ -342,7 +325,7 @@ Propriedade `tipo de dado`:
     - `date`
     - `time`
     - `datetime`
-  - Precisisão de valores `double` são inferidas a partir da declaração, *e.g.*, `12.50` faz Concordia saber que a precisão é `2`
+  - Precisão de valores `double` são inferidas a partir da declaração, *e.g.*, `12.50` faz Concordia saber que a precisão é `2`
 
 Propriedade `valor`:
   - Valores aceitos:
@@ -428,7 +411,7 @@ Propriedade `obrigatório`:
 
 Exemplo 1:
 ```gherkin
-Elemento de IU: Usuario
+Elemento de IU: Usuário
   - id é "#usuario"
   - comprimento mínimo é 2
     Caso contrário eu devo ver [msg_comprimento_min]
@@ -442,13 +425,13 @@ Elemento de IU: Entrar
 
 Exemplo 2:
 ```gherkin
-Elemento de IU: Profissao
+Elemento de IU: Profissão
   - tipo é select
-  - valor está na consulta "SELECT nome FROM [Profissoes]"
+  - valor está na consulta "SELECT nome FROM [Profissões]"
 
-Elemento de IU: Salario
+Elemento de IU: Salário
   - tipo de dado é double
-  - valor mínimo está na consulta "SELECT salario_min FROM [Profissoes] WHERE nome = {Profissao}"
+  - valor mínimo está na consulta "SELECT salario_min FROM [Profissões] WHERE nome = {Profissão}"
 ```
 
 Exemplo 3:
@@ -514,9 +497,9 @@ Valores atualmente suportados para `tipo`:
 | `"sqlite"`   | [SQLite](https://www.sqlite.org/) | `npm install database-js-sqlite` | |
 | `"xlsx"`     | [Planilhas Excel](https://en.wikipedia.org/wiki/Microsoft_Excel) | `npm install database-js-xlsx`  | |
 
-***Para conectar e manipular bancos de dados, é preciso instalar os pacotes NPM correspondentes.** Acesse o diretório raiz de sua aplicaçãoe digite o *Comando de Instalação* correspondente.
+***Para conectar e manipular bancos de dados, é preciso instalar os pacotes NPM correspondentes.** Acesse o diretório raiz de sua aplicação e digite o *Comando de Instalação* correspondente.
 
-#### Examplos de bancos de dados
+#### Exemplos de bancos de dados
 
 Exemplo 1:
 ```
@@ -557,7 +540,7 @@ Variante: Login com sucesso
     e eu vejo a url da [Página Principal]
 ```
 
-Veja também: [Exemplos of Ações](actions.md)
+Veja também: [Exemplos de Ações](actions.md)
 
 
 ### Caso de Teste
@@ -591,7 +574,7 @@ Um Caso de Teste gerado irá:
 
 - Substituir todas as `Constantes` por seus valores;
 - Substituir todas as referências para [Elementos de IU](#elemento-de-interface-de-usuário) por seus [Literais de IU](#literais-de-iu), isso é, seus `id`s;
-- Manter quaisuqe [Literais de IU](#literais-de-iu) declarados;
+- Manter quaisquer [Literais de IU](#literais-de-iu) declarados;
 - Gerar valores aleatórios para [Literais de IU](#literais-de-iu) sem valor;
 - Manter valores ou números declarados;
 - Gerar valores para [Elementos de IU](#elemento-de-interface-de-usuário) de acordo com suas propriedades e os valores aplicáveis conforme os [casos de teste](test-cases.md).
@@ -603,7 +586,7 @@ Exemplo:
 @variant( 1 )
 Test Case: Login com sucesso - 1
   Dado que estou na página "/login"
-  Quando eu preecho <#usuario> com "Bob"
+  Quando eu preencho <#usuario> com "Bob"
     e eu preencho <#senha> com "bobp4ss"
     e eu clico em "Entrar"
   Então eu vejo "Welcome"
@@ -687,7 +670,7 @@ Alguns plugins podem não suportar certos eventos:
 
 > Sempre entre `<` e `>`
 
-Um Literal de IU é uma identificação de um Elemento de IU. Essa identificação será usada pelo script de teste para localizar o elemento na aplicação durante a execução os testes. Por exemplo, em uma aplicação web, um campo de entrada de dados pode ser identificado pelo teste de diferentes maneiras. Em uma declaração HTML como `<input id="foo" ></input>`, pode-se usar `#foo` como Literal de IU:
+Um Literal de IU é uma identificação de um Elemento de IU. Essa identificação será usada pelo script de teste para localizar o elemento na aplicação durante a execução os testes. Por exemplo, em uma aplicação web, um campo de entrada de dados pode ser identificado pelo teste de diferentes maneiras. Em uma declaração HTML como `<input id="foo" >`, pode-se usar `#foo` como Literal de IU:
 
 ```gherkin
 Quando eu preencho <#foo> com "Bob"
@@ -752,7 +735,7 @@ Elemento de IU: Idade
 Exemplo 3:
 
 ```gherkin
-Elemento de IU: Preco
+Elemento de IU: Preço
   - valor vem de [ 12.50, 20.00 ]
 ```
 
@@ -781,7 +764,7 @@ Observações sobre consultas:
 
 1. Deve usar crase para se referir a nomes com espaços, como em ANSI-SQL. *E.g.*, \`minha tabela\`
 
-2. Deve usar apóstrofos para denorar valores não numéricos. Exemplo:
+2. Deve usar apóstrofos para denotar valores não numéricos. Exemplo:
    ```sql
    SELECT * FROM usuarios WHERE login = 'bob'
    ```
@@ -805,7 +788,7 @@ Observações sobre consultas:
    SELECT coluna1 FROM [Alguma Tabela Excel$] WHERE coluna2 = [Minha Constante]
    ```
 
-4. Pode referecar um Elemento de IU usando o formato `{Nome da Funcionalidade:Nome do Elemento de IU}`,
+4. Pode referenciar um Elemento de IU usando o formato `{Nome da Funcionalidade:Nome do Elemento de IU}`,
 em que `Nome da Funcionalidade:` é opcional. Se o nome da funcionalidade não for informado, é assumido
 que o Elemento de IU pertence à funcionalidade atual.
    Exemplo:
@@ -840,20 +823,20 @@ Quando eu preencho {Adicionar Funcionário:Profissao} com "Dentista"
 
 #### Em consultas
 
-No exemplo a seguir, `{Profissao}` é uma referência para um Elemento de IU:
+No exemplo a seguir, `{Profissão}` é uma referência para um Elemento de IU:
 ```gherkin
-Funcionalidade: Add an Employee
+Funcionalidade: Adicionar Funcionário
 
 ...
 
-Elemento de IU: Profissao
+Elemento de IU: Profissão
   - valor vem da consulta "SELECT nome FROM [Profissoes]"
 
-Elemento de IU: Salario
-  - valor mínimo vem de "SELECT salario_min FROM [Profissoes] WHERE nome = {Profissao}"
+Elemento de IU: Salário
+  - valor mínimo vem de "SELECT salario_min FROM [Profissoes] WHERE nome = {Profissão}"
 ```
 
-Se desejado, essa referência poderia ser declarada como `{Adicionar Funcionário:Profissao}`.
+Se desejado, essa referência poderia ser declarada como `{Adicionar Funcionário:Profissão}`.
 
 
 ### Constantes
@@ -880,7 +863,7 @@ Referências para tabelas são somente permitidas dentro de [Consultas](#consult
 
 No exemplo a seguir, `[Profissoes]` é uma referência para uma tabela:
 ```gherkin
-Elemento de IU: Profissao
+Elemento de IU: Profissão
   - valor vem da consulta "SELECT nome FROM [Profissoes]"
 
 Tabela: Profissoes
@@ -900,7 +883,7 @@ Referências para bancos de dados são somente permitidas dentro de [Consultas](
 
 No exemplo a seguir, `[Profissoes]` é uma referência para um banco de dados:
 ```gherkin
-Elemento de IU: Profissao
+Elemento de IU: Profissão
   - valor vem da consulta "SELECT nome FROM [Profissoes]"
 
 Banco de Dados: Profissoes
@@ -911,7 +894,7 @@ Banco de Dados: Profissoes
 Nesse outro exemplo, `[Meu BD de Teste]` é uma referência para um outro banco de dados.
 
 ```gherkin
-Elemento de IU: Profissao
+Elemento de IU: Profissão
   - valor vem da consulta "SELECT nome FROM [Meu BD de Teste].`profissao`"
 
 Banco de Dados: Meu BD de Teste

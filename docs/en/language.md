@@ -1,55 +1,38 @@
-# Overview of the Concordia Language
+# Overview of the Concordia Language <!-- omit in toc -->
 
 Translations: [Português](../pt/language.md) 🌎
 
-## Index
+## Index <!-- omit in toc -->
 
-Language constructions
-- [Overview of the Concordia Language](#overview-of-the-concordia-language)
-  - [Index](#index)
-  - [Language constructions](#language-constructions)
-    - [Comments](#comments)
-    - [Language](#language)
-    - [Import](#import)
-    - [Tag](#tag)
-    - [Feature](#feature)
-    - [State](#state)
-    - [Scenario](#scenario)
-    - [Constants](#constants)
-    - [User Interface Element](#user-interface-element)
-      - [Examples of UI Elements](#examples-of-ui-elements)
-    - [Table](#table)
-    - [Database](#database)
-      - [Examples of databases](#examples-of-databases)
-    - [Variant](#variant)
-    - [Test Case](#test-case)
-    - [Test Events](#test-events)
-  - [Literals](#literals)
-    - [User Interface Literal](#user-interface-literal)
-    - [Value](#value)
-    - [Number](#number)
-    - [List of values](#list-of-values)
-    - [Query](#query)
-  - [References to declarations](#references-to-declarations)
-    - [User Interface Elements](#user-interface-elements)
-      - [Inside queries](#inside-queries)
-    - [Constants](#constants-1)
-    - [Tables](#tables)
-    - [Databases](#databases)
-  - [States](#states)
-
-Literals
-- [User Interface Literal](#user-interface-literal)
-- [Value](#value)
-- [Number](#number)
-- [List of values](#list-of-values)
-- [Query](#query)
-
-References to declarations
-- [User Interface Elements](#user-interface-elements)
-- [Constants](#constants-1)
-- [Tables](#tables)
-- [Databases](#databases)
+- [Language constructions](#language-constructions)
+  - [Comments](#comments)
+  - [Language](#language)
+  - [Import](#import)
+  - [Tag](#tag)
+  - [Feature](#feature)
+  - [State](#state)
+  - [Scenario](#scenario)
+  - [Constants](#constants)
+  - [User Interface Element](#user-interface-element)
+    - [Examples of UI Elements](#examples-of-ui-elements)
+  - [Table](#table)
+  - [Database](#database)
+    - [Examples of databases](#examples-of-databases)
+  - [Variant](#variant)
+  - [Test Case](#test-case)
+  - [Test Events](#test-events)
+- [Literals](#literals)
+  - [User Interface Literal](#user-interface-literal)
+  - [Value](#value)
+  - [Number](#number)
+  - [List of values](#list-of-values)
+  - [Query](#query)
+- [References to declarations](#references-to-declarations)
+  - [User Interface Elements](#user-interface-elements)
+    - [Inside queries](#inside-queries)
+  - [Constants](#constants-1)
+  - [Tables](#tables)
+  - [Databases](#databases)
 - [States](#states)
 
 
@@ -682,7 +665,7 @@ Some plug-ins may not support some Test Events:
 
 > Always between `<` and `>`
 
-A UI Literal is an identification (id) of a User Interface element. This identification will be used by the test script to locate the element in the application during the test. For instance, in a web application, an input declared using HTML as `<input id="foo" ></input>` has `#foo` as its identification.
+A UI Literal is an identification (id) of a User Interface element. This identification will be used by the test script to locate the element in the application during the test. For instance, in a web application, an input declared using HTML as `<input id="foo" >` has `#foo` as its identification.
 
 In the following example, `#foo` is a UI Literal.
 
