@@ -27,6 +27,8 @@ const GuidedConfig_1 = require("./GuidedConfig");
 const fs_1 = require("fs");
 const util_1 = require("util");
 const path_1 = require("path");
+const semverDiff = require("semver-diff");
+const terminalLink = require("terminal-link");
 /**
  * Application controller
  *
@@ -90,6 +92,19 @@ class AppController {
                 updateCheckInterval: 1000 * 60 * 60 * 12 // 12 hours
             });
             notifier.notify();
+            if (!!notifier.update) {
+                const url = 'https://github.com/thiagodp/concordialang/releases';
+                const link = terminalLink('RELEASE NOTES', url);
+                const diff = semverDiff(notifier.update.current, notifier.update.latest);
+                const hasBreakingChange = 'major' === diff;
+                if (hasBreakingChange) {
+                    cli.newLine(cli.colorHighlight('→'), cli.bgHighlight('PLEASE READ THE RELEASE NOTES BEFORE UPDATING'));
+                    cli.newLine(cli.colorHighlight('→'), link);
+                }
+                else {
+                    cli.newLine(cli.colorHighlight('→'), 'See the', link, 'for details.');
+                }
+            }
             if (options.newer) {
                 if (!notifier.update) {
                     cli.newLine(cli.symbolInfo, 'No update available');

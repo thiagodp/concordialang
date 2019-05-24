@@ -23,6 +23,8 @@ import { GuidedConfig } from './GuidedConfig';
 import { writeFile, existsSync } from 'fs';
 import { promisify } from 'util';
 import { join } from 'path';
+import * as semverDiff from 'semver-diff';
+import * as terminalLink from 'terminal-link';
 
 /**
  * Application controller
@@ -99,6 +101,21 @@ export class AppController {
             }
         );
         notifier.notify();
+
+        if ( !! notifier.update ) {
+            const url = 'https://github.com/thiagodp/concordialang/releases';
+            const link = terminalLink( 'RELEASE NOTES', url );
+
+            const diff = semverDiff( notifier.update.current, notifier.update.latest );
+            const hasBreakingChange: boolean = 'major' === diff;
+
+            if ( hasBreakingChange ) {
+                cli.newLine( cli.colorHighlight( '→' ), cli.bgHighlight( 'PLEASE READ THE RELEASE NOTES BEFORE UPDATING' ) );
+                cli.newLine( cli.colorHighlight( '→' ), link );
+            } else {
+                cli.newLine( cli.colorHighlight( '→' ), 'See the', link, 'for details.' );
+            }
+        }
 
         if ( options.newer ) {
             if ( ! notifier.update ) {
