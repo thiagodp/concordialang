@@ -5,6 +5,8 @@ import * as meow from 'meow';
 import * as updateNotifier from 'update-notifier';
 import Graph = require( 'graph.js/dist/graph.full.js' );
 import { Plugin, TestScriptExecutionOptions, TestScriptExecutionResult, TestScriptGenerationOptions, AbstractTestScript } from 'concordialang-plugin';
+import * as semverDiff from 'semver-diff';
+import * as terminalLink from 'terminal-link';
 
 import { UI } from './UI';
 import { Options } from "./Options";
@@ -98,7 +100,28 @@ export class AppController {
                 updateCheckInterval: 1000 * 60 * 60 * 12 // 12 hours
             }
         );
-        notifier.notify();
+        notifier.notify(); // display a message only if an update is available
+
+        if ( !! notifier.update ) {
+
+            // When the terminal does not support links
+            const fallback = ( text: string, url: string ): string => {
+                return url;
+            };
+
+            const url = 'https://github.com/thiagodp/concordialang/releases';
+            const link = terminalLink( url, url, { fallback: fallback } ); // clickable URL
+
+            const diff = semverDiff( notifier.update.current, notifier.update.latest );
+            const hasBreakingChange: boolean = 'major' === diff;
+
+            if ( hasBreakingChange ) {
+                cli.newLine( cli.colorHighlight( '→' ), cli.bgHighlight( 'PLEASE READ THE RELEASE NOTES BEFORE UPDATING' ) );
+                cli.newLine( cli.colorHighlight( '→' ), link );
+            } else {
+                cli.newLine( cli.colorHighlight( '→' ), 'See', link, 'for details.' );
+            }
+        }
 
         if ( options.newer ) {
             if ( ! notifier.update ) {

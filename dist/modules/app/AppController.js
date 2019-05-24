@@ -14,6 +14,8 @@ const util_1 = require("util");
 const meow = require("meow");
 const updateNotifier = require("update-notifier");
 const concordialang_plugin_1 = require("concordialang-plugin");
+const semverDiff = require("semver-diff");
+const terminalLink = require("terminal-link");
 const UI_1 = require("./UI");
 const PluginController_1 = require("../plugin/PluginController");
 const CLI_1 = require("./CLI");
@@ -89,7 +91,24 @@ class AppController {
                 pkg,
                 updateCheckInterval: 1000 * 60 * 60 * 12 // 12 hours
             });
-            notifier.notify();
+            notifier.notify(); // display a message only if an update is available
+            if (!!notifier.update) {
+                // When the terminal does not support links
+                const fallback = (text, url) => {
+                    return url;
+                };
+                const url = 'https://github.com/thiagodp/concordialang/releases';
+                const link = terminalLink(url, url, { fallback: fallback }); // clickable URL
+                const diff = semverDiff(notifier.update.current, notifier.update.latest);
+                const hasBreakingChange = 'major' === diff;
+                if (hasBreakingChange) {
+                    cli.newLine(cli.colorHighlight('→'), cli.bgHighlight('PLEASE READ THE RELEASE NOTES BEFORE UPDATING'));
+                    cli.newLine(cli.colorHighlight('→'), link);
+                }
+                else {
+                    cli.newLine(cli.colorHighlight('→'), 'See', link, 'for details.');
+                }
+            }
             if (options.newer) {
                 if (!notifier.update) {
                     cli.newLine(cli.symbolInfo, 'No update available');
