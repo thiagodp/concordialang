@@ -1,10 +1,12 @@
+import * as isValidPath from 'is-valid-path';
+
 import { Import } from '../ast/Import';
-import { QuotedNodeLexer } from './QuotedNodeLexer';
 import { NodeTypes } from "../req/NodeTypes";
+import { QuotedNodeLexer } from './QuotedNodeLexer';
 
 /**
  * Detects an Import.
- * 
+ *
  * @author Thiago Delgado Pinto
  */
 export class ImportLexer extends QuotedNodeLexer< Import > {
@@ -16,6 +18,13 @@ export class ImportLexer extends QuotedNodeLexer< Import > {
     /** @inheritDoc */
     suggestedNextNodeTypes(): string[] {
         return [ NodeTypes.FEATURE, NodeTypes.VARIANT ];
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public isValidName( name: string ): boolean {
+        return isValidPath( name );
     }
 
 }

@@ -5,31 +5,78 @@ import { ImportLexer } from '../../modules/lexer/ImportLexer';
  */
 describe( 'ImportLexerTest', () => {
 
-    // IMPORTANT: since ImportLexer inherits from QuotedNodeLexer and does not add any
-    // behavior, the QuotedNodeLexerTest already covers most test cases.
+    // IMPORTANT: ImportLexer inherits from QuotedNodeLexer and the latter has tests.
 
-    let keyword = 'import';
-    let word = 'import';
-    let words = [ word ];
+    const keyword = 'import';
+    const word = 'import';
 
-    let lexer = new ImportLexer( words ); // under test
+    let lexer = new ImportLexer( [ word ] ); // under test
 
-    it( 'ignores a comment after the value', () => {
-        let line = "  \t \t" + word + " \t " + '"Hello world"#comment';
-
-        let r = lexer.analyze( line, 1 );
+    function expectNodeWithValue( line: string, value: string ): void {
+        const r = lexer.analyze( line, 1 );
         expect( r ).toBeDefined();
         expect( r.errors ).toHaveLength( 0 );
         expect( r.nodes ).toHaveLength( 1 );
 
-        let node = r.nodes[ 0 ];
+        const node = r.nodes[ 0 ];
         expect( node ).toEqual(
             {
                 nodeType: keyword,
-                location: { line: 1, column: 6 },
-                value: "Hello world"
+                location: { line: 1, column: 1 + line.length - line.trim().length },
+                value: value
             }
         );
+    }
+
+    it( 'ignores a comment after the value', () => {
+        const value = 'Hello world';
+        const line = `  \t \t${word} \t "${value}"#comment`;
+        expectNodeWithValue( line, value );
+    } );
+
+    describe( 'consider a unix file path as a valid name', () => {
+
+        it( 'full path', () => {
+           const value = "/foo/bar/foo.bar";
+           const line = `${word} "${value}"`;
+           expectNodeWithValue( line, value );
+        } );
+
+        it( 'current path', () => {
+            const value = "./foo.bar";
+            const line = `${word} "${value}"`;
+            expectNodeWithValue( line, value );
+         } );
+
+        it( 'parent path', () => {
+            const value = "../../bar/foo.bar";
+            const line = `${word} "${value}"`;
+            expectNodeWithValue( line, value );
+         } );
+
+    } );
+
+
+    describe( 'consider a windows file path as a valid name', () => {
+
+        it( 'full path', () => {
+           const value = "C:\\foo\\bar\\foo.bar";
+           const line = `${word} "${value}"`;
+           expectNodeWithValue( line, value );
+        } );
+
+        it( 'current path', () => {
+            const value = ".\\foo.bar";
+            const line = `${word} "${value}"`;
+            expectNodeWithValue( line, value );
+         } );
+
+        it( 'parent path', () => {
+            const value = "..\\..\\bar\\foo.bar";
+            const line = `${word} "${value}"`;
+            expectNodeWithValue( line, value );
+         } );
+
     } );
 
 } );
