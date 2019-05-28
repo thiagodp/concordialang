@@ -1,6 +1,8 @@
+import * as isValidPath from 'is-valid-path';
+
 import { Import } from 'concordialang-types';
-import { QuotedNodeLexer } from './QuotedNodeLexer';
 import { NodeTypes } from "../req/NodeTypes";
+import { QuotedNodeLexer } from './QuotedNodeLexer';
 
 /**
  * Detects an Import.
@@ -16,6 +18,11 @@ export class ImportLexer extends QuotedNodeLexer< Import > {
     /** @inheritDoc */
     suggestedNextNodeTypes(): string[] {
         return [ NodeTypes.FEATURE, NodeTypes.VARIANT ];
+    }
+
+    /** @inheritdoc */
+    public isValidName( name: string ): boolean {
+        return isValidPath( name );
     }
 
 }

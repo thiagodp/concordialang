@@ -105,6 +105,7 @@
     "he": "^1.1.1",
     "inquirer": "^6.2.2",
     "is-my-json-valid": "^2.17.2",
+    "is-valid-path": "^0.1.1",
     "jl-sql-api": "^2.8.1",
     "js-joda": "^1.8.2",
     "json-schema-generator": "^2.0.6",
