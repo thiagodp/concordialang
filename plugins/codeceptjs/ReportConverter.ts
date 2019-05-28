@@ -30,7 +30,12 @@ export class ReportConverter {
         pluginConfigFilePath: string
     ): Promise< TestScriptExecutionResult > {
 
-        const source: any = await this.readJsonFile( resultFilePath );
+        let source: any;
+        try {
+            source = await this.readJsonFile( resultFilePath );
+        } catch ( e ) {
+            throw new Error( 'Cannot read the test report file. ' + e.message );
+        }
 
         let pluginConfig = {};
         try {
@@ -248,8 +253,15 @@ export class ReportConverter {
     }
 
     private async readJsonFile( path: string ): Promise< any > {
+        const fileExists: boolean = this._fs.existsSync( path );
+        if ( ! fileExists ) {
+            throw new Error( 'File not found: ' + path );
+        }
         const readFileAsync = promisify( this._fs.readFile );
         const content = await readFileAsync( path, this._encoding );
+        if ( ! content || content.length < 1  ) {
+            throw new Error( 'Empty JSON file: ' + path );
+        }
         return JSON.parse( content.toString() );
     }
 

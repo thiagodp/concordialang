@@ -32,7 +32,13 @@ class ReportConverter {
      */
     convertFrom(resultFilePath, pluginConfigFilePath) {
         return __awaiter(this, void 0, void 0, function* () {
-            const source = yield this.readJsonFile(resultFilePath);
+            let source;
+            try {
+                source = yield this.readJsonFile(resultFilePath);
+            }
+            catch (e) {
+                throw new Error('Cannot read the test report file. ' + e.message);
+            }
             let pluginConfig = {};
             try {
                 pluginConfig = yield this.readJsonFile(pluginConfigFilePath);
@@ -217,8 +223,15 @@ class ReportConverter {
     }
     readJsonFile(path) {
         return __awaiter(this, void 0, void 0, function* () {
+            const fileExists = this._fs.existsSync(path);
+            if (!fileExists) {
+                throw new Error('File not found: ' + path);
+            }
             const readFileAsync = util_1.promisify(this._fs.readFile);
             const content = yield readFileAsync(path, this._encoding);
+            if (!content || content.length < 1) {
+                throw new Error('Empty JSON file: ' + path);
+            }
             return JSON.parse(content.toString());
         });
     }
