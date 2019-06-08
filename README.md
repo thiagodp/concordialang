@@ -1,7 +1,3 @@
-# Concordia
-
-> Generate functional tests automatically from your Agile specification.
-
 [![Build Status](https://travis-ci.org/thiagodp/concordialang.svg?branch=master)](https://travis-ci.org/thiagodp/concordialang)
 [![npm version](https://badge.fury.io/js/concordialang.svg)](https://badge.fury.io/js/concordialang)
 [![GitHub last commit](https://img.shields.io/github/last-commit/thiagodp/concordialang.svg)](https://github.com/thiagodp/concordialang/releases)
@@ -9,6 +5,10 @@
 [![slack](https://img.shields.io/badge/slack-chat-blue.svg)](https://bit.ly/2u2vKJX)
 
 Translations: [Português](readme-pt.md) 🌎
+
+# Concordia
+
+> Generate functional tests automatically from your Agile specification.
 
 ![Example](media/example-en.gif)
 
@@ -101,6 +101,8 @@ Then install the desired one. For instance:
 ```bash
 concordia --plugin-install codeceptjs
 ```
+
+> 👉 On Linux, we recommend using `sudo` with the above command since Concordia Compiler may need to install some dependencies globally.
 
 Concordia and its plug-ins install all the needed dependencies by default, in order to make the setup process simpler.
 

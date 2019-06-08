@@ -1,12 +1,12 @@
-# Concordia
-
-> Gere testes funcionais automaticamente a partir de sua especificação Ágil
-
 [![Build Status](https://travis-ci.org/thiagodp/concordialang.svg?branch=master)](https://travis-ci.org/thiagodp/concordialang)
 [![npm version](https://badge.fury.io/js/concordialang.svg)](https://badge.fury.io/js/concordialang)
 [![GitHub last commit](https://img.shields.io/github/last-commit/thiagodp/concordialang.svg)](https://github.com/thiagodp/concordialang/releases)
 [![npm](https://img.shields.io/npm/l/concordialang.svg)](https://github.com/thiagodp/concordialang/blob/master/LICENSE.txt)
 [![slack](https://img.shields.io/badge/slack-chat-blue.svg)](https://bit.ly/2u2vKJX)
+
+# Concordia
+
+> Gere testes funcionais automaticamente a partir de sua especificação Ágil
 
 O *Compilador Concordia* é uma ferramenta que permite gerar [testes funcionais](https://en.wikipedia.org/wiki/Functional_testing) a partir de uma especificação de requisitos escrita em *Linguagem Concordia*. Você pode usá-las para:
 
@@ -95,6 +95,8 @@ Então instale o plugin desejado. Por exemplo:
 ```bash
 concordia --plugin-install codeceptjs
 ```
+
+> 👉 No Linux, recomendamos usar `sudo` junto com o comando acima, já que o Compilador Concordia pode precisar instalar algumas dependências globalmente.
 
 Concordia e seus plug-ins procuram instalar todas as dependências necessárias por padrão, para que seja mais simples iniciar o processo de teste.
 
