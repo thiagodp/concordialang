@@ -1,15 +1,12 @@
-# Concordia
-
-> Gere testes funcionais automaticamente a partir de sua especificação Ágil
-
 [![Build Status](https://travis-ci.org/thiagodp/concordialang.svg?branch=master)](https://travis-ci.org/thiagodp/concordialang)
 [![npm version](https://badge.fury.io/js/concordialang.svg)](https://badge.fury.io/js/concordialang)
 [![GitHub last commit](https://img.shields.io/github/last-commit/thiagodp/concordialang.svg)](https://github.com/thiagodp/concordialang/releases)
 [![npm](https://img.shields.io/npm/l/concordialang.svg)](https://github.com/thiagodp/concordialang/blob/master/LICENSE.txt)
 [![slack](https://img.shields.io/badge/slack-chat-blue.svg)](https://bit.ly/2u2vKJX)
 
+# Concordia
 
-✨ **Eleve a qualidade da sua aplicação** ✨
+> Gere testes funcionais automaticamente a partir de sua especificação Ágil
 
 Visão rápida:
 
@@ -19,18 +16,21 @@ Visão rápida:
 
 3. Use o Compilador Concordia para gerar e executar scripts de teste funcional a partir de especificações em Concordia. *Não é necessário escrever código.*
 
+### 👉 Migrando da versão `0.x` para `1.x`? Leia nosso [Guia de Migração](./docs/pt/migration.md).
+
 
 ## Conteúdo
 
 - [ÚLTIMAS NOVIDADES](https://github.com/thiagodp/concordialang/releases) 🔥
-- [Documentação](docs/README.md) 📖
+- [Documentação](docs/pt/readme.md)
 - [Sobre](#sobre)
-- [Começando](#comecando)
-- [Veja Também](#veja-tambem)
+- [Instalação](#instalação) 📀
+- [Começando](#começando)
+- [Veja a Seguir](#veja-a-seguir)
 - [Projetos Relacionados](#projetos-relacionados)
 
 
-## 💡 Sobre
+## Sobre
 
 **Concordia** é uma linguagem para especificação [Ágil](https://en.wikipedia.org/wiki/Agile_software_development) de requisitos, inspirada em [Gherkin](https://github.com/cucumber/cucumber/wiki/Gherkin) e [legível para pessoas de negócio](https://martinfowler.com/bliki/BusinessReadableDSL.html). Atualmente ela suporta [Inglês](./docs/en/language.md) e [Português](./docs/pt/language.md). Novas línguas podem ser adicionadas facilmente.
 
@@ -65,26 +65,53 @@ Cada **plug-in** pode gerar scripts de teste para uma linguagem de programação
 10. Use uma especificação em **texto simples** que é amigável para uso com sistemas de controle de versão e pode evoluir junto com o código da sua aplicação.
 
 
-## 💿 Instalação
+## Instalação
 
 O Compilador Concordia funciona em **Windows**, **Linux**, e **MacOS**, e requer [NodeJS](https://nodejs.org/) versão `8` ou superior. Se você deseja testar aplicações *baseadas em web*, também será preciso instalar o [Java Runtime Environment (JRE)](http://www.oracle.com/technetwork/java/javase/downloads/index.html).
 
-Após instalar as dependências, abra o console/terminal e execute o seguinte comando:
+Após instalar as dependências, abra o console/terminal para executar o comando de instalação.
+
+### 1. Instalação Recomendada
+
+**Windows**
 ```bash
 npm install -g concordialang
 ```
 
-> 👉 O Compilador Concordia também pode ser instalado localmente (sem `-g`) e executado usando o [NPX](https://www.npmjs.com/package/npx). NPX já é incluso no NodeJS na versão `8.2.0` ou superior.
+**Linux** ou **MacOS**
+```bash
+sudo npm install -g concordialang
+```
 
-Você pode checar se a instalação teve êxito executando o comando abaixo, que informa o número da versão atual:
+*Dica Avançada*: [Como instalar aplicações NPM globalmente no Linux ou no MacOS sem usar sudo](https://github.com/sindresorhus/guides/blob/master/npm-global-without-sudo.md)
+
+**Checando a instalação**
+
 ```bash
 concordia --version
 ```
 
 > 👉 Note que `concordia` é o comando que você usará a partir de agora, que é diferente de `concordialang`, que você usou na instalação.
 
+### 2. Instalação Local
 
-## 🚀 Começando
+O Compilador Concordia também pode ser instalado localmente, dentro do diretório da sua aplicação, e executado com o [NPX](https://www.npmjs.com/package/npx). NPX já é incluso no NodeJS na versão `8.2.0` ou superior.
+
+**Windows**, **Linux** ou **MacOS**
+
+```bash
+cd minha-aplicacao
+npm install concordialang
+```
+
+*Entretanto*, você precisará usar `npx ` antes de *todos* os comandos do Concordia e ele irá rodar um pouco mais lento:
+
+```bash
+npx concordia --version
+```
+
+
+## Começando
 
 Vamos criar um exemplo básico, similar a um "olá mundo". Para poder executar os testes dele, você precisará de conexão com a Internet e ter o navegador [Google Chrome](https://www.google.com/chrome/) instalado.
 
@@ -97,7 +124,7 @@ mkdir busca
 cd busca
 ```
 
-> 👉 Se você estiver no Windows, você também pode criar uma pasta vazia pelo Windows Explorer, entrar nela, depois digitar `cmd` na barra de endereço.
+> 💬 *Dica Rápida*: Se você estiver no Windows, você também pode criar uma pasta vazia pelo Windows Explorer, entrar nela, depois digitar `cmd` na barra de endereço.
 
 **Passo 2: *Configure***
 
@@ -106,6 +133,7 @@ Execute o seguinte comando para guiar o processo de configuração:
 ```bash
 concordia --init
 ```
+👉 No **Linux** ou **MacOS**, use `sudo` antes do comando, pois deve ser preciso instalar aplicações de forma global.
 
 Serão feitas algumas perguntas sobre suas preferências e elas serão armazenadas em um arquivo chamado `.concordiarc`. **DEIXE TODOS OS VALORES PADRÃO** teclando <kbd>Enter</kbd> em todas as perguntas.
 
@@ -117,7 +145,7 @@ Ferramentas de teste automatizado geralmente usam um servidor de testes para con
 
 Uma vez que um **servidor de testes geralmente bloqueia** o terminal/console atual, **abra um novo terminal/console**.
 
-> 👉 Se você estiver usando Windows, você pode iniciar um novo terminal a partir do diretório atual executando:
+> 💬 *Dica Rápida*: Se você estiver usando Windows, você pode iniciar um novo terminal a partir do diretório atual executando:
 > ```bash
 > start cmd .
 > ```
@@ -204,7 +232,7 @@ No exemplo acima, temos um Caso de Teste gerado a partir da Variante declarada e
 
 ```javascript
 // Generated with ❤ by Concordia
-// source: search-pt.testcase
+// source: busca.testcase
 //
 // THIS IS A GENERATED FILE - MODIFICATIONS CAN BE LOST !
 
@@ -218,42 +246,37 @@ Scenario("Busca retorna resultado esperado | Busca ao teclar Enter - 1", (I) => 
 });
 ```
 
-Para gerar e executar os teses novamente, basta executar o último comando.
+Para gerar e executar os testes novamente, basta repetir o último comando.
 
 > 👉 Lembre-se que isso é só um "olá mundo". Concordia tem *muito* mais a oferecer!
 
 
-## 👁 Veja Também
+## Veja a Seguir
 
 - [Documentação](docs/pt/readme.md)
 - [Plug-ins](docs/pt/plugins.md)
 
 
-## 💪 Projetos Relacionados
+## Projetos Relacionados
 
-- [katalon-concordia](https://github.com/thiagodp/katalon-concordia):  plug-in para Chrome e Firefox que converte gravações feitas com [Katalon Recorder](https://chrome.google.com/webstore/detail/katalon-recorder-selenium/ljdobmomdgdljniojadhoplhkpialdid) em Linguagem Concordia Language. **Muito útil** para:
-  - Descobrir a identificação de elementos da interface de usuário em aplicações web (*e.g.*, propriedade `id` ou o [XPath](https://en.wikipedia.org/wiki/XPath) dos elementos)
-  - Criar um caso de teste que reproduz exatamente o que você gravou.
+- [katalon-concordia](https://github.com/thiagodp/katalon-concordia):  extensão para os navegadores Chrome e Firefox que converte gravações feitas com [Katalon Recorder](https://chrome.google.com/webstore/detail/katalon-recorder-selenium/ljdobmomdgdljniojadhoplhkpialdid) em Linguagem Concordia Language. **Muito útil** para  descobrir a identificação de elementos da interface de usuário em aplicações web (*e.g.*, propriedade `id` ou o [XPath](https://en.wikipedia.org/wiki/XPath) dos elementos).
 
-- [Appium Desktop](https://github.com/appium/appium-desktop/): Inspetor de interface gráficas para desktop (Windows, Linux, e MacOS) e Servidor Appium
+- [concordialang-codeceptjs-webdriverio](https://github.com/thiagodp/concordialang-codeceptjs-webdriverio): plug-in para gerar e executar scripts de teste para CodeceptJS e WebDriverIO. Use-o para testar aplicações web.
+
+- [concordialang-codeceptjs-appium](https://github.com/thiagodp/concordialang-codeceptjs-appium): plug-in para gerar e executar scripts de teste para CodeceptJS e Appium. Use-o para testar aplicações para dispositivos móveis ou desktop.
 
 
-## 🍻 Contribuindo
+## Contribuindo
 
-- Curtiu? Dê uma estrela ⭐
-- Traduza a documentação. Crie um Fork e submeta um Merge Request com quaisquer arquivos traduzidos. Mesmo uma tradução parcial já ajuda!
-- [Bata um papo conosco](https://concordialang.slack.com) no Slack ou [abra uma Issue](https://github.com/thiagodp/concordialang/issues/new) com uma pergunta ou sugestão.
+- Curtiu? Dê uma estrela ⭐ no GitHub.
+- Traduza a documentação. Você pode criar um Fork e submeter um Pull Request com quaisquer arquivos traduzidos. Mesmo uma tradução parcial ajuda!
+- [Bata um papo com a gente](https://concordialang.slack.com) no Slack ou [abra uma Issue](https://github.com/thiagodp/concordialang/issues/new) com uma pergunta ou sugestão.
 - [Reporte](https://github.com/thiagodp/concordialang/issues/new) bugs ou quaisquer erros tipográficos.
 - [Crie um novo plug-in](docs/pt/plugin-creation.md) para sua linguagem de programação ou framework de testes favorito, ou [desenvolva Concordia](docs/pt/development.md) com a gente.
-
-#### Badge
-
-Mostre para o mundo que seu projeto usa Concordia → [![Concordia e2e](https://img.shields.io/badge/e2e-concordia-brightgreen.svg)](http://concordialang.org)
-
-```
-[![Concordia e2e](https://img.shields.io/badge/e2e-concordia-brightgreen.svg)](http://concordialang.org)
-```
-
+- Inclua esse emblema na página do seu projeto → [![Concordia e2e](https://img.shields.io/badge/e2e-concordia-brightgreen.svg)](http://concordialang.org)
+  ```
+  [![Concordia e2e](https://img.shields.io/badge/e2e-concordia-brightgreen.svg)](http://concordialang.org)
+  ```
 
 ## Licença
 

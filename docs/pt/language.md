@@ -589,7 +589,7 @@ Test Case: Login com sucesso - 1
   Quando eu preencho <#usuario> com "Bob"
     e eu preencho <#senha> com "bobp4ss"
     e eu clico em "Entrar"
-  Então eu vejo "Welcome"
+  Então eu vejo "Bem-vindo(a)"
     e eu vejo o botão <#logout>
 ```
 

@@ -1,37 +1,38 @@
-# Concordia
-
-> Generate functional tests automatically from your Agile specification.
-
 [![Build Status](https://travis-ci.org/thiagodp/concordialang.svg?branch=master)](https://travis-ci.org/thiagodp/concordialang)
 [![npm version](https://badge.fury.io/js/concordialang.svg)](https://badge.fury.io/js/concordialang)
 [![GitHub last commit](https://img.shields.io/github/last-commit/thiagodp/concordialang.svg)](https://github.com/thiagodp/concordialang/releases)
 [![npm](https://img.shields.io/npm/l/concordialang.svg)](https://github.com/thiagodp/concordialang/blob/master/LICENSE.txt)
 [![slack](https://img.shields.io/badge/slack-chat-blue.svg)](https://bit.ly/2u2vKJX)
 
-Translations: [Português](readme-pt.md) 🌎
+🌎 Translations: [Português](readme-pt.md)
 
-✨ **Raise your applications' quality** ✨
+# Concordia
+
+> Generate functional tests automatically from your Agile specification.
 
 At a glance:
 
-1. Write agile requirements specifications with Concordia Language.
+1. Write agile requirements specifications using the Concordia Language.
 
-2. Use Concordia Compiler to setup the testing environment for you.
+2. Use the Concordia Compiler to setup the testing environment for you.
 
-3. Use Concordia Compiler to generate and execute functional test scripts from your Concordia specification. *No coding required.*
+3. Use the Concordia Compiler to generate and execute functional test scripts from your Concordia specification. *No coding required.*
 
+
+### 👉 Are you migrating from version `0.x` to `1.x`? Please read the [Migration Guide](./docs/en/migration.md).
 
 ## Contents
 
 - [LATEST NEWS](https://github.com/thiagodp/concordialang/releases) 🔥
-- [Documentation](docs/README.md) 📖
+- [Documentation](docs/en/readme.md)
 - [About](#about)
+- [Installation](#installation) 📀
 - [Getting Started](#getting-started)
-- [See Also](#see-also)
+- [See Next](#see-next)
 - [Related Projects](#related-projects)
 
 
-## 💡 About
+## About
 
 **Concordia** is a [business-readable](https://martinfowler.com/bliki/BusinessReadableDSL.html), [agile](https://en.wikipedia.org/wiki/Agile_software_development) requirements specification metalanguage inspired in [Gherkin](https://github.com/cucumber/cucumber/wiki/Gherkin). Currently it supports [English](./docs/en/language.md) and [Portuguese](./docs/pt/language.md). New languages can be added easily.
 
@@ -65,26 +66,50 @@ Concordia Compiler uses [plug-ins](docs/en/plugins.md) to transform abstract tes
 10.  Use a **plain text** specification that is version control-friendly and can evolve with your application.
 
 
-## 💿 Installation
+## Installation
 
 Concordia Compiler works on **Windows**, **Linux**, and **MacOS**, and requires [NodeJS](https://nodejs.org/) version `8` or above. If you want to test  *web-based* applications, you also need to install [Java Runtime Environment (JRE)](http://www.oracle.com/technetwork/java/javase/downloads/index.html).
 
-After installing the dependencies, open the console/terminal and execute the following command:
+After installing the dependencies, open the console/terminal to execute the installation command.
+
+### 1. Recommend Installation
+
+**Windows**
 ```bash
 npm install -g concordialang
 ```
 
-> 👉 Concordia Compiler can also be installed locally and executed with [NPX](https://www.npmjs.com/package/npx). NPX is already included in NodeJS `8.2.0` or above.
+**Linux** or **MacOS**
+```bash
+sudo npm install -g concordialang
+```
 
-You can check if the installation was successful by running:
+*Advanced tip*: [How to install globally with NPM on Linux or MacOS without sudo](https://github.com/sindresorhus/guides/blob/master/npm-global-without-sudo.md)
+
+**Checking the installation**
 ```bash
 concordia --version
 ```
 
-> 👉 Note that `concordia` is the command to be used from now on, which is different from `concordialang` (used to install).
+👉 Note that `concordia` is the command to be used from now on, which is different from `concordialang` (used to install).
 
+### 2. Local Installation
 
-## 🚀 Getting Started
+Concordia Compiler can also be installed locally, inside your application's directory, and executed with [NPX](https://www.npmjs.com/package/npx). NPX is already included in NodeJS `8.2.0` or above.
+
+**Windows**, **Linux** or **MacOS**
+
+```bash
+cd my-application
+npm install concordialang
+```
+
+*However*, you will need to use `npx ` before *all* the Concordia commands and it will run a little slower:
+```bash
+npx concordia --version
+```
+
+## Getting Started
 
 Let's create a basic, "hello world"-like example. To execute its tests, you will need an Internet connection and the [Google Chrome](https://www.google.com/chrome/) web browser installed.
 
@@ -97,7 +122,7 @@ mkdir search
 cd search
 ```
 
-👉 If you are using Windows, you may also to create a empty folder using  Windows Explorer, access it, and then type `cmd` in the address bar.
+> 💬 *Quick Tip*: If you are using Windows, you may also to create a empty folder using  Windows Explorer, access it, and then type `cmd` in the address bar.
 
 **Step 2: *Configure***
 
@@ -106,6 +131,7 @@ Execute the following command to guide the setup process:
 ```bash
 concordia --init
 ```
+👉 On **Linux** or **MacOS**, you need to use `sudo` before the command, since it may be needed to install some applications globally.
 
 You'll be asked about your preferences and they will be stored in a configuration file named `.concordiarc`. **LET ALL THE DEFAULT VALUES**, by typing <kbd>Enter</kbd> for all the questions.
 
@@ -117,7 +143,7 @@ Test automation tools often use a test server to control a *browser*, a *device 
 
 Since **a test server usually blocks** the current terminal/console, **open a new terminal/console**.
 
-> 👉 If you are using Windows, you can start a new terminal from you current directory by running:
+> 💬 *Quick Tip*: If you are using Windows, you can start a new terminal from you current directory by running:
 > ```bash
 > start cmd .
 > ```
@@ -220,36 +246,32 @@ To generate and run the test again, just repeat the last command.
 > 👉 Remember, this is just a "hello word". Concordia has *much more* to offer!
 
 
-## 👁 See Also
+## See Next
 
 - [Documentation](docs/en/readme.md)
 - [Plug-ins](docs/en/plugins.md)
 
 
-## 💪 Related Projects
+## Related Projects
 
-- [katalon-concordia](https://github.com/thiagodp/katalon-concordia):  plug-in for Chrome and Firefox that converts recordings from [Katalon Recorder](https://chrome.google.com/webstore/detail/katalon-recorder-selenium/ljdobmomdgdljniojadhoplhkpialdid) to Concordia Language. It's **very useful** for:
-  - Discovering the elements' identification in web applications (*e.g.*, their `id` properties or their [XPath](https://en.wikipedia.org/wiki/XPath))
-  - Creating a test case that reproduces exactly what you have recorded.
+- [katalon-concordia](https://github.com/thiagodp/katalon-concordia):  browser extension for Chrome and Firefox that converts recordings from [Katalon Recorder](https://chrome.google.com/webstore/detail/katalon-recorder-selenium/ljdobmomdgdljniojadhoplhkpialdid) to Concordia Language. It's **very useful** for discovering the elements' identification in web applications (*e.g.*, their `id` properties or their [XPath](https://en.wikipedia.org/wiki/XPath)).
 
-- [Appium Desktop](https://github.com/appium/appium-desktop/): Inspector of desktop GUIs (Windows, Linux, and MacOS) and Appium Server
+- [concordialang-codeceptjs-webdriverio](https://github.com/thiagodp/concordialang-codeceptjs-webdriverio): plug-in to generate and execute test scripts for CodeceptJS and WebDriverIO. Use it to test web applications.
+
+- [concordialang-codeceptjs-appium](https://github.com/thiagodp/concordialang-codeceptjs-appium): plug-in to generate and execute test scripts for CodeceptJS and Appium. Use it to test mobile or desktop applications.
 
 
-## 🍻 Contributing
+## Contributing
 
-- Did you liked it? Give it a star ⭐
-- Translate the documentation. Create a Fork and submit a Merge Request with any translated documents. Partial translations also help us a lot!
+- Did you liked it? Give it a Star ⭐ on GitHub
+- Help translating the documentation. You may create a Fork and submit a Pull Request with any translated documents. Partial translations also help us a lot!
 - [Chat with us](https://concordialang.slack.com) on Slack or [open an Issue](https://github.com/thiagodp/concordialang/issues/new) with a question or suggestion.
 - [Report](https://github.com/thiagodp/concordialang/issues/new) bugs or  typos.
 - [Create a new plug-in](docs/en/plugin-creation.md) for your favorite programming language or testing framework or [develop Concordia](docs/en/development.md) with us.
-
-#### Badge
-
-Show to the world that your project is using Concordia → [![Concordia e2e](https://img.shields.io/badge/e2e-concordia-brightgreen.svg)](http://concordialang.org)
-
-```
-[![Concordia e2e](https://img.shields.io/badge/e2e-concordia-brightgreen.svg)](http://concordialang.org)
-```
+- Include this badge in your project's page → [![Concordia e2e](https://img.shields.io/badge/e2e-concordia-brightgreen.svg)](http://concordialang.org)
+  ```
+  [![Concordia e2e](https://img.shields.io/badge/e2e-concordia-brightgreen.svg)](http://concordialang.org)
+  ```
 
 
 ## License

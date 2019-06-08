@@ -10,14 +10,13 @@
 - `lib` - adapted third party libraries
 - `media` - images or any other multimedia files
 - `modules` - modules of the project
-- `plugins` - plugins
 
 
 ## Getting started
 
 ### Install dependencies
 ```shell
-$ npm install
+npm install
 ```
 
 ### Build
@@ -32,12 +31,12 @@ npm run start
 
 ### Test
 ```shell
-$ npm run test
+npm run test
 ```
 
-## Pointing the CLI to the source code
+## Linking the command to the source code
 
-Whether you wish the `concordia` command to execute directly from **your** source code, go to the project root folder then run
+Whether you wish the command `concordia` to execute directly from **your** source code, go to the project root folder then run
 ```shell
 npm link
 ```

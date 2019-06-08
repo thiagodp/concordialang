@@ -17,10 +17,13 @@
 - [Plug-ins](plugins.md)
 - [Arquivo de configuração](config.md)
 - [Dicas e truques](tips-and-tricks.md)
+- [Guia de Migração](migration.md)
+- [Quebras de Compatibilidade](breaking-changes.md)
+- [Numeração de Versões](versioning.md)
 
 ## Desenvolvimento
 
-- [Roadmap](../roadmap.md)
+- [Roadmap](../roadmap.md) *(inglês)*
 - [Diretrizes de desenvolvimento](development.md) *(inglês)*
 
 #### Anotações técnicas

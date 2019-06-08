@@ -17,7 +17,9 @@
 - [Plug-ins](plugins.md)
 - [Configuration file](config.md)
 - [Tips and tricks](tips-and-tricks.md)
-
+- [Migration Guide](migration.md)
+- [Breaking Changes](breaking-changes.md)
+- [Version Numbering](versioning.md)
 
 ## Development
 
