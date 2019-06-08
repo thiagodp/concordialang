@@ -71,7 +71,7 @@
   },
   "jest": {
     "transform": {
-      ".(ts|tsx)": "./node_modules/ts-jest/preprocessor.js"
+      "^.+\\.tsx?$": "ts-jest"
     },
     "testRegex": "(/__tests__/.*|(\\.|/)(test|spec))\\.(tsx?)$",
     "moduleFileExtensions": [
@@ -153,9 +153,9 @@
     "@types/meow": "^4.0.1",
     "@types/node": "^8.10.17",
     "@types/ora": "^1.3.4",
-    "jest": "^21.2.1",
+    "jest": "^24.8.0",
     "memfs": "^2.9.0",
-    "ts-jest": "^21.2.4",
+    "ts-jest": "^24.0.2",
     "typescript": "^3.0.1"
   },
   "engines": {

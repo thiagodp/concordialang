@@ -1,6 +1,7 @@
 var glob = require( 'glob' );
 //var copyFile = require( 'fs' ).copyFile;
-var copyFile = require( 'fs-extra' ).copy;
+// var copyFile = require( 'fs-extra' ).copy;
+var copyFile = require( './node_modules/node-fs-extra/lib/copy.js' ).copy;
 var basename = require( 'path' ).basename;
 
 // Copy JSON files from the following folders to 'dist/'
