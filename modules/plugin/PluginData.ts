@@ -40,12 +40,6 @@ export interface PluginData {
     /** main class */
     class: string;
 
-    /** install command */
-    install: string;
-
-    /** uninstall command */
-    uninstall: string;
-
     /** serve command, usually to start a server */
     serve: string;
 }

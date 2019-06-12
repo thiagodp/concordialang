@@ -93,20 +93,6 @@ export class PluginDrawer {
             );
     }
 
-    public showPluginInstallStart( name: string ): void {
-        const highlight = this._cli.colorHighlight;
-        this.write( this._cli.symbolInfo,
-            sprintf( 'Installing the plugin %s...', highlight( name ) )
-            );
-    }
-
-    public showPluginUninstallStart( name: string ): void {
-        const highlight = this._cli.colorHighlight;
-        this.write( this._cli.symbolInfo,
-            sprintf( 'Uninstalling the plugin %s...', highlight( name ) )
-            );
-    }
-
     public showPluginServeStart( name: string ): void {
         const highlight = this._cli.colorHighlight;
         this.write( this._cli.symbolInfo,

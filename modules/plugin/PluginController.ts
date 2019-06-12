@@ -13,14 +13,13 @@ export class PluginController {
 
     private readonly _drawer: PluginDrawer;
 
-    constructor( cli: CLI ) {
-        this._drawer = new PluginDrawer( cli );
+    constructor( private readonly _cli: CLI ) {
+        this._drawer = new PluginDrawer( _cli );
     }
 
     public process = async ( options: Options ): Promise< boolean > => {
 
-        // const pm = new PluginManager( options.pluginDir );
-        const pm = new PluginManager( options.pluginDir, new PackageBasedPluginFinder( options.processPath ) );
+        const pm = new PluginManager( this._cli, new PackageBasedPluginFinder( options.processPath ) );
 
         if ( options.pluginList ) {
             try {

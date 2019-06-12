@@ -70,14 +70,6 @@ class PluginDrawer {
         const highlight = this._cli.colorHighlight;
         this.write(this._cli.symbolWarning, sprintf_js_1.sprintf('Could not find %s. I will create it for you.', highlight(file)));
     }
-    showPluginInstallStart(name) {
-        const highlight = this._cli.colorHighlight;
-        this.write(this._cli.symbolInfo, sprintf_js_1.sprintf('Installing the plugin %s...', highlight(name)));
-    }
-    showPluginUninstallStart(name) {
-        const highlight = this._cli.colorHighlight;
-        this.write(this._cli.symbolInfo, sprintf_js_1.sprintf('Uninstalling the plugin %s...', highlight(name)));
-    }
     showPluginServeStart(name) {
         const highlight = this._cli.colorHighlight;
         this.write(this._cli.symbolInfo, sprintf_js_1.sprintf('Serving %s...', highlight(name)));

@@ -14,12 +14,13 @@ class CliScriptExecutionReporter {
     scriptExecuted(r) {
         const LINE_SIZE = 80;
         const SEPARATION_LINE = '_'.repeat(LINE_SIZE);
-        this._cli.newLine(SEPARATION_LINE, "\n\n", this._cli.symbolInfo, 'Test execution results:', "\n");
+        this._cli.newLine(SEPARATION_LINE);
         let t = r.total;
         if (!t.tests) {
             this._cli.newLine(this._cli.symbolInfo, 'No tests executed.');
             return;
         }
+        this._cli.newLine(this._cli.symbolInfo, 'Test execution results:', "\n");
         const passedStr = t.passed ? this._cli.bgSuccess(t.passed + ' passed') : '';
         const failedStr = t.failed ? this._cli.bgWarning(t.failed + ' failed') : '';
         const adjustedStr = t.adjusted ? this._cli.colors.bgCyan(t.adjusted + ' adjusted') : '';

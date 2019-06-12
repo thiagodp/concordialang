@@ -3,8 +3,8 @@ import * as inquirer from 'inquirer';
 import * as fs from 'fs';
 import { join } from 'path';
 import { Plugin } from "concordialang-plugin";
+import { CLI } from 'modules/app/CLI';
 import { PluginData, PLUGIN_PREFIX } from "./PluginData";
-import { JsonBasedPluginFinder } from "./JsonBasedPluginFinder";
 import { PluginDrawer } from "./PluginDrawer";
 import { PluginFinder } from "./PluginFinder";
 import { readFileAsync } from '../util/read-file';
@@ -16,14 +16,11 @@ import { readFileAsync } from '../util/read-file';
  */
 export class PluginManager {
 
-    private readonly _finder: PluginFinder;
-
     constructor(
-        private _pluginDir: string,
-        finder?: PluginFinder,
+        private readonly _cli: CLI,
+        private readonly _finder?: PluginFinder,
         private _fs: any = fs
         ) {
-        this._finder = finder || new JsonBasedPluginFinder( this._pluginDir );
     }
 
     public async findAll(): Promise< PluginData[] > {
@@ -33,10 +30,31 @@ export class PluginManager {
 
     public async pluginWithName( name: string, partialComparison: boolean = false ): Promise< PluginData | null > {
 
+        const usualComparison = ( from: string, to: string ) => {
+            return ( from === to )
+                || ( from === PLUGIN_PREFIX + to )
+                || ( PLUGIN_PREFIX + from === to );
+        };
+
+        const removeVersionFromName = ( name: string ) => {
+            const index = name.lastIndexOf( '@' );
+            if ( index < 0 ) {
+                return name;
+            }
+            return name.substring( 0, index );
+        };
+
         const compareNames = ( from: string, to: string, partialComparison: boolean ): boolean => {
-            return partialComparison
-                ? from.includes( to )
-                : ( from === to || from === PLUGIN_PREFIX + to || PLUGIN_PREFIX + from === to );
+
+            if ( partialComparison ) {
+                return from.includes( to );
+            }
+
+            if ( usualComparison( from, to ) ) {
+                return true;
+            }
+
+            return usualComparison( removeVersionFromName( from ), removeVersionFromName( to ) );
         };
 
         const all: PluginData[] = await this.findAll();
@@ -54,11 +72,10 @@ export class PluginManager {
         }
 
         let pluginData: PluginData = await this.pluginWithName( name, false );
-        let r;
 
-        if ( pluginData ) {
+        if ( pluginData ) { // already exists
 
-            r = await inquirer.prompt( [
+            let answer = await inquirer.prompt( [
                 {
                     type: 'confirm',
                     name: 'install',
@@ -66,11 +83,13 @@ export class PluginManager {
                 }
             ] );
 
-            if ( ! r.install ) {
+            if ( ! answer.install ) {
                 return;
             }
 
-        } else {
+        } else { // plug-in does not exist
+
+            // Check if package.json exists
 
             const PACKAGE_FILE = 'package.json';
             const PACKAGE_CREATION_CMD = 'npm init --yes';
@@ -93,27 +112,33 @@ export class PluginManager {
                 mustGeneratePackageFile = true;
             }
 
+            // Create package.json if it does not exist
+
             if ( mustGeneratePackageFile ) {
-                const code: number = await this.runPluginCommand( PACKAGE_CREATION_CMD, drawer );
+                const code: number = await this.runCommand( PACKAGE_CREATION_CMD );
                 drawer.showCommandCode( code, false );
             }
         }
+
+        // Install the plug-in as a DEVELOPMENT dependency using NPM
 
         const PACKAGE_MANAGER = 'NPM';
         const INSTALL_DEV_CMD = 'npm install --save-dev ' + name + ' --color=always';
 
         drawer.showMessageTryingToInstall( name, PACKAGE_MANAGER );
-        const code: number = await this.runPluginCommand( INSTALL_DEV_CMD, drawer );
+        const code: number = await this.runCommand( INSTALL_DEV_CMD );
         drawer.showCommandCode( code, false );
         if ( code !== 0 ) { // unsuccessful
             return;
         }
+
+        // Check if the plug-in is installed
+
         pluginData = await this.pluginWithName( name, false );
         if ( ! pluginData ) {
             drawer.showMessageCouldNoFindInstalledPlugin( name );
             return;
         }
-        await this.install( pluginData, drawer );
     }
 
 
@@ -129,45 +154,10 @@ export class PluginManager {
             return;
         }
 
-        // Call "uninstall" command
-        let code: number = await this.uninstall( pluginData, drawer, false );
-        if ( code !== 0 ) {
-            return;
-        }
-
         // Remove with a package manager
         drawer.showMessageTryingToUninstall( name, 'NPM' );
-        code = await this.runPluginCommand( 'npm uninstall --save-dev ' + name + ' --color=always', drawer );
+        let code: number = await this.runCommand( 'npm uninstall --save-dev ' + name + ' --color=always' );
         drawer.showCommandCode( code );
-    }
-
-
-    public async install( pluginData: PluginData, drawer: PluginDrawer ): Promise< number > {
-
-        if ( ! pluginData.install ) {
-            throw new Error( 'No "install" property found in the plugin file. Can\'t install it.' );
-        }
-
-        drawer.showPluginInstallStart( pluginData.name );
-        const code: number = await this.runPluginCommand( pluginData.install, drawer );
-        drawer.showCommandCode( code );
-        return code;
-    }
-
-    public async uninstall(
-        pluginData: PluginData,
-        drawer: PluginDrawer,
-        showCodeIfSuccess: boolean = true
-    ): Promise< number > {
-
-        if ( ! pluginData.uninstall ) {
-            throw new Error( 'No "uninstall" property found in the plugin file. Can\'t uninstall it.' );
-        }
-
-        drawer.showPluginUninstallStart( pluginData.name );
-        const code = await this.runPluginCommand( pluginData.uninstall, drawer );
-        drawer.showCommandCode( code, showCodeIfSuccess );
-        return code;
     }
 
     public async serve( pluginData: PluginData, drawer: PluginDrawer ): Promise< void > {
@@ -177,7 +167,7 @@ export class PluginManager {
         }
 
         drawer.showPluginServeStart( pluginData.name );
-        const code = await this.runPluginCommand( pluginData.serve, drawer );
+        const code = await this.runCommand( pluginData.serve );
         drawer.showCommandCode( code );
     }
 
@@ -201,12 +191,12 @@ export class PluginManager {
     }
 
 
-    private async runPluginCommand( command: string, drawer: PluginDrawer ): Promise< number > {
+    private async runCommand( command: string ): Promise< number > {
 
         const separationLine = '  ' + '_'.repeat( 78 );
 
-        drawer.showCommand( command );
-        drawer.write( separationLine );
+        this._cli.newLine( '  Running', this._cli.colorHighlight( command ) );
+        this._cli.newLine( separationLine );
 
         let options = {
             // detached: true, // main process can terminate

@@ -33,8 +33,6 @@ describe( 'PackageBasedPluginFinder', () => {
         targets: [ 'foo', 'bar' ],
         file: 'path/to/main.js',
         class: 'Main',
-        install: 'npm --version',
-        uninstall: 'npm --version',
         serve: 'npm --version'
     } as PluginData;
 

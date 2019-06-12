@@ -13,7 +13,6 @@ const inquirer = require("inquirer");
 const fs = require("fs");
 const path_1 = require("path");
 const PluginData_1 = require("./PluginData");
-const JsonBasedPluginFinder_1 = require("./JsonBasedPluginFinder");
 const read_file_1 = require("../util/read-file");
 /**
  * Plug-in manager
@@ -21,10 +20,10 @@ const read_file_1 = require("../util/read-file");
  * @author Thiago Delgado Pinto
  */
 class PluginManager {
-    constructor(_pluginDir, finder, _fs = fs) {
-        this._pluginDir = _pluginDir;
+    constructor(_cli, _finder, _fs = fs) {
+        this._cli = _cli;
+        this._finder = _finder;
         this._fs = _fs;
-        this._finder = finder || new JsonBasedPluginFinder_1.JsonBasedPluginFinder(this._pluginDir);
     }
     findAll() {
         return __awaiter(this, void 0, void 0, function* () {
@@ -34,10 +33,26 @@ class PluginManager {
     }
     pluginWithName(name, partialComparison = false) {
         return __awaiter(this, void 0, void 0, function* () {
+            const usualComparison = (from, to) => {
+                return (from === to)
+                    || (from === PluginData_1.PLUGIN_PREFIX + to)
+                    || (PluginData_1.PLUGIN_PREFIX + from === to);
+            };
+            const removeVersionFromName = (name) => {
+                const index = name.lastIndexOf('@');
+                if (index < 0) {
+                    return name;
+                }
+                return name.substring(0, index);
+            };
             const compareNames = (from, to, partialComparison) => {
-                return partialComparison
-                    ? from.includes(to)
-                    : (from === to || from === PluginData_1.PLUGIN_PREFIX + to || PluginData_1.PLUGIN_PREFIX + from === to);
+                if (partialComparison) {
+                    return from.includes(to);
+                }
+                if (usualComparison(from, to)) {
+                    return true;
+                }
+                return usualComparison(removeVersionFromName(from), removeVersionFromName(to));
             };
             const all = yield this.findAll();
             const lowerCasedName = name.toLowerCase();
@@ -51,20 +66,20 @@ class PluginManager {
                 name = PluginData_1.PLUGIN_PREFIX + name;
             }
             let pluginData = yield this.pluginWithName(name, false);
-            let r;
-            if (pluginData) {
-                r = yield inquirer.prompt([
+            if (pluginData) { // already exists
+                let answer = yield inquirer.prompt([
                     {
                         type: 'confirm',
                         name: 'install',
                         message: 'Plug-in already installed. Do you want to try to install it again?'
                     }
                 ]);
-                if (!r.install) {
+                if (!answer.install) {
                     return;
                 }
             }
-            else {
+            else { // plug-in does not exist
+                // Check if package.json exists
                 const PACKAGE_FILE = 'package.json';
                 const PACKAGE_CREATION_CMD = 'npm init --yes';
                 let mustGeneratePackageFile = false;
@@ -79,25 +94,27 @@ class PluginManager {
                 catch (err) {
                     mustGeneratePackageFile = true;
                 }
+                // Create package.json if it does not exist
                 if (mustGeneratePackageFile) {
-                    const code = yield this.runPluginCommand(PACKAGE_CREATION_CMD, drawer);
+                    const code = yield this.runCommand(PACKAGE_CREATION_CMD);
                     drawer.showCommandCode(code, false);
                 }
             }
+            // Install the plug-in as a DEVELOPMENT dependency using NPM
             const PACKAGE_MANAGER = 'NPM';
             const INSTALL_DEV_CMD = 'npm install --save-dev ' + name + ' --color=always';
             drawer.showMessageTryingToInstall(name, PACKAGE_MANAGER);
-            const code = yield this.runPluginCommand(INSTALL_DEV_CMD, drawer);
+            const code = yield this.runCommand(INSTALL_DEV_CMD);
             drawer.showCommandCode(code, false);
             if (code !== 0) { // unsuccessful
                 return;
             }
+            // Check if the plug-in is installed
             pluginData = yield this.pluginWithName(name, false);
             if (!pluginData) {
                 drawer.showMessageCouldNoFindInstalledPlugin(name);
                 return;
             }
-            yield this.install(pluginData, drawer);
         });
     }
     uninstallByName(name, drawer) {
@@ -110,37 +127,10 @@ class PluginManager {
                 drawer.showMessagePluginNotFound(name);
                 return;
             }
-            // Call "uninstall" command
-            let code = yield this.uninstall(pluginData, drawer, false);
-            if (code !== 0) {
-                return;
-            }
             // Remove with a package manager
             drawer.showMessageTryingToUninstall(name, 'NPM');
-            code = yield this.runPluginCommand('npm uninstall --save-dev ' + name + ' --color=always', drawer);
+            let code = yield this.runCommand('npm uninstall --save-dev ' + name + ' --color=always');
             drawer.showCommandCode(code);
-        });
-    }
-    install(pluginData, drawer) {
-        return __awaiter(this, void 0, void 0, function* () {
-            if (!pluginData.install) {
-                throw new Error('No "install" property found in the plugin file. Can\'t install it.');
-            }
-            drawer.showPluginInstallStart(pluginData.name);
-            const code = yield this.runPluginCommand(pluginData.install, drawer);
-            drawer.showCommandCode(code);
-            return code;
-        });
-    }
-    uninstall(pluginData, drawer, showCodeIfSuccess = true) {
-        return __awaiter(this, void 0, void 0, function* () {
-            if (!pluginData.uninstall) {
-                throw new Error('No "uninstall" property found in the plugin file. Can\'t uninstall it.');
-            }
-            drawer.showPluginUninstallStart(pluginData.name);
-            const code = yield this.runPluginCommand(pluginData.uninstall, drawer);
-            drawer.showCommandCode(code, showCodeIfSuccess);
-            return code;
         });
     }
     serve(pluginData, drawer) {
@@ -149,7 +139,7 @@ class PluginManager {
                 throw new Error('No "serve" property found in the plugin file. Can\'t serve.');
             }
             drawer.showPluginServeStart(pluginData.name);
-            const code = yield this.runPluginCommand(pluginData.serve, drawer);
+            const code = yield this.runCommand(pluginData.serve);
             drawer.showCommandCode(code);
         });
     }
@@ -168,11 +158,11 @@ class PluginManager {
             return obj;
         });
     }
-    runPluginCommand(command, drawer) {
+    runCommand(command) {
         return __awaiter(this, void 0, void 0, function* () {
             const separationLine = '  ' + '_'.repeat(78);
-            drawer.showCommand(command);
-            drawer.write(separationLine);
+            this._cli.newLine('  Running', this._cli.colorHighlight(command));
+            this._cli.newLine(separationLine);
             let options = {
                 // detached: true, // main process can terminate
                 // stdio: 'ignore', // ignore stdio since detache is active

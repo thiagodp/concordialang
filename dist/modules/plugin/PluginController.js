@@ -17,10 +17,10 @@ const PackageBasedPluginFinder_1 = require("./PackageBasedPluginFinder");
  * @author Thiago Delgado Pinto
  */
 class PluginController {
-    constructor(cli) {
+    constructor(_cli) {
+        this._cli = _cli;
         this.process = (options) => __awaiter(this, void 0, void 0, function* () {
-            // const pm = new PluginManager( options.pluginDir );
-            const pm = new PluginManager_1.PluginManager(options.pluginDir, new PackageBasedPluginFinder_1.PackageBasedPluginFinder(options.processPath));
+            const pm = new PluginManager_1.PluginManager(this._cli, new PackageBasedPluginFinder_1.PackageBasedPluginFinder(options.processPath));
             if (options.pluginList) {
                 try {
                     this._drawer.drawPluginList(yield pm.findAll());
@@ -75,7 +75,7 @@ class PluginController {
             }
             return true;
         });
-        this._drawer = new PluginDrawer_1.PluginDrawer(cli);
+        this._drawer = new PluginDrawer_1.PluginDrawer(_cli);
     }
 }
 exports.PluginController = PluginController;

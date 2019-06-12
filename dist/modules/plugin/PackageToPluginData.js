@@ -27,8 +27,6 @@ class PackageToPluginData {
             targets: prop.targets,
             file: prop.file,
             class: prop.class,
-            install: prop.install,
-            uninstall: prop.uninstall,
             serve: prop.serve
         };
         return data;

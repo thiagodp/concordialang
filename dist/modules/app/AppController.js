@@ -116,8 +116,7 @@ class AppController {
                 return true;
             }
             let pluginData = null;
-            // let pluginManager: PluginManager = new PluginManager( options.pluginDir );
-            let pluginManager = new PluginManager_1.PluginManager(options.pluginDir, new PackageBasedPluginFinder_1.PackageBasedPluginFinder(options.processPath));
+            let pluginManager = new PluginManager_1.PluginManager(cli, new PackageBasedPluginFinder_1.PackageBasedPluginFinder(options.processPath));
             let plugin = null;
             if (options.somePluginOption()) {
                 let pluginController = new PluginController_1.PluginController(cli);
@@ -238,7 +237,7 @@ class AppController {
                         }
                     }
                     else {
-                        cli.newLine(cli.symbolInfo, 'No generated abstract test scripts.');
+                        // cli.newLine( cli.symbolInfo, 'No generated abstract test scripts.' ); // no needed
                     }
                 }
                 else {
@@ -258,6 +257,7 @@ class AppController {
                 catch (err) {
                     hasErrors = true;
                     this.showException(err, options, cli);
+                    cli.newLine(SEPARATION_LINE);
                 }
             }
             else {
@@ -268,7 +268,7 @@ class AppController {
                 if (!executionResult) {
                     const defaultReportFile = path_1.join(options.dirResult, yield plugin.defaultReportFile());
                     if (!fs_1.existsSync(defaultReportFile)) {
-                        cli.newLine(cli.symbolError, 'Could not retrieve execution results.');
+                        cli.newLine(cli.symbolWarning, 'Could not retrieve execution results.');
                         return false;
                     }
                     reportFile = defaultReportFile;

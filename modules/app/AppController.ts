@@ -131,9 +131,8 @@ export class AppController {
         }
 
         let pluginData: PluginData = null;
-        // let pluginManager: PluginManager = new PluginManager( options.pluginDir );
         let pluginManager: PluginManager = new PluginManager(
-            options.pluginDir, new PackageBasedPluginFinder( options.processPath ) );
+            cli, new PackageBasedPluginFinder( options.processPath ) );
         let plugin: Plugin = null;
 
         if ( options.somePluginOption() ) {
@@ -273,7 +272,7 @@ export class AppController {
                     }
 
                 } else {
-                    cli.newLine( cli.symbolInfo, 'No generated abstract test scripts.' );
+                    // cli.newLine( cli.symbolInfo, 'No generated abstract test scripts.' ); // no needed
                 }
 
             } else {
@@ -296,6 +295,7 @@ export class AppController {
             } catch ( err ) {
                 hasErrors = true;
                 this.showException( err, options, cli );
+                cli.newLine( SEPARATION_LINE );
             }
         } else {
             cli.newLine( cli.symbolInfo, 'Script execution disabled.' );
@@ -310,7 +310,7 @@ export class AppController {
                     options.dirResult, await plugin.defaultReportFile() );
 
                 if ( ! existsSync( defaultReportFile ) ) {
-                    cli.newLine( cli.symbolError, 'Could not retrieve execution results.' );
+                    cli.newLine( cli.symbolWarning, 'Could not retrieve execution results.' );
                     return false;
                 }
 
