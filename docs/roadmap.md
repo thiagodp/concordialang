@@ -1,36 +1,153 @@
-  # Roadmap
+# Roadmap <!-- omit in toc -->
 
-> No release planning yet. This document describes some desired features to be included soon.
+> This document describes some desired features.
 
-*The following features are **not** yet registered as Issues on purpose, since they require more planning or detailing.*
+DISCLAIMER:
+
+1. No release planning yet.
+2. Many features are **not** yet registered as Issues on purpose, since they require more planning or detailing.
+
+
+Contents:
+
+- [Compiler](#compiler)
+  - [CLI Options](#cli-options)
+    - [Filter Features to execute by file name without having to include dependencies](#filter-features-to-execute-by-file-name-without-having-to-include-dependencies)
+    - [Filter the Feature to execute by its name](#filter-the-feature-to-execute-by-its-name)
+    - [Filter the Scenario to execute by its name](#filter-the-scenario-to-execute-by-its-name)
+    - [Filter Test Cases by importance number for test script generation](#filter-test-cases-by-importance-number-for-test-script-generation)
+    - [Filter Test Cases by importance number for test script execution](#filter-test-cases-by-importance-number-for-test-script-execution)
+  - [Language Support](#language-support)
+    - [Support Variant Background](#support-variant-background)
+  - [Approach](#approach)
+    - [Generate test cases that explore SQL Injection](#generate-test-cases-that-explore-sql-injection)
+    - [Add a test case that uses naughty strings as test data](#add-a-test-case-that-uses-naughty-strings-as-test-data)
+  - [UI and Report](#ui-and-report)
+    - [Show precessing icons while waiting](#show-precessing-icons-while-waiting)
+    - [Show percentage being processed](#show-percentage-being-processed)
+    - [Generate an HTML report](#generate-an-html-report)
+  - [Tool integration](#tool-integration)
+    - [Integration with text editors](#integration-with-text-editors)
+    - [Integration with reporting tools](#integration-with-reporting-tools)
+  - [Performance](#performance)
+    - [Do not regenerate tests when a feature file and its dependencies have not changed their hash](#do-not-regenerate-tests-when-a-feature-file-and-its-dependencies-have-not-changed-their-hash)
+- [Language](#language)
+  - [Create a tag to disable invalid data generation for a certain UI Element property](#create-a-tag-to-disable-invalid-data-generation-for-a-certain-ui-element-property)
+  - [Add language support to represent the current date and time](#add-language-support-to-represent-the-current-date-and-time)
+  - [Add locale support to date and time types](#add-locale-support-to-date-and-time-types)
+  - [Add support to visual comparison](#add-support-to-visual-comparison)
+  - [Accept UI Element properties inside strings of UI Element properties](#accept-ui-element-properties-inside-strings-of-ui-element-properties)
+  - [Accept UI Element properties inside strings from Variant steps](#accept-ui-element-properties-inside-strings-from-variant-steps)
+  - [Accept UI Element properties in Variant steps](#accept-ui-element-properties-in-variant-steps)
+  - [Support dynamic States, produced from UI Element values](#support-dynamic-states-produced-from-ui-element-values)
+  - [Consider global UI Elements](#consider-global-ui-elements)
+  - [Allow inheritance of UI Elements](#allow-inheritance-of-ui-elements)
+  - [Allow table matching](#allow-table-matching)
+  - [Multi-line queries](#multi-line-queries)
+  - [Multiple declared Tables per query](#multiple-declared-tables-per-query)
+  - [Multiple declared Databases per query](#multiple-declared-databases-per-query)
+- [Internal](#internal)
+  - [Security](#security)
+    - [Sanitize all input file names](#sanitize-all-input-file-names)
+  - [Use a linter](#use-a-linter)
+
 
 ## Compiler
 
-1. Being able to filter files by name for test execution.
-2. Being able to filter files by name for test generation without having to include dependencies.
-3. Being able to filter test cases by importance number for test execution.
-4. Being able to filter test cases by importance number for test generation.
+
+### CLI Options
+
+#### Filter Features to execute by file name without having to include dependencies
+
+To-Detail
+
+#### Filter the Feature to execute by its name
+
+To-Detail
+
+#### Filter the Scenario to execute by its name
+
+To-Detail
+
+#### Filter Test Cases by importance number for test script generation
+
+To-Detail
+
+#### Filter Test Cases by importance number for test script execution
+
+To-Detail
+
+
+### Language Support
+
+#### Support Variant Background
+
+Implement `Variant Background`, which is part of the Concordia Language but was not implemented yet by the Concordia Compiler.
+
+
+### Approach
+
+#### Generate test cases that explore SQL Injection
+
+Use declared Databases and Queries to formulate Test Cases that generate strings with SQL Injection commands.
+
+#### Add a test case that uses naughty strings as test data
+
+Use a [list of naughty strings](https://github.com/minimaxir/big-list-of-naughty-strings) as test data.
+
+
+### UI and Report
+
+#### Show precessing icons while waiting
+
+> Useful to give feedback
+
+#### Show percentage being processed
+
+> According to the number of feature files
+
+#### Generate an HTML report
+
+> *E.g.*, `--report html`
+
+### Tool integration
+
+#### Integration with text editors
+
+Create new projects for auto-completion plug-ins for text editors such as VS Code, Sublime Text, Atom, etc.
+
+*Add here some inspiring projects.*:
+- VS Code: [gherkin-autocomplete](https://github.com/silverbulleters/gherkin-autocomplete)
+
+
+#### Integration with reporting tools
+
+Create integration with reporting tools, such as:
+- [Allure](https://github.com/allure-framework/allure2/)
+- [Macaca Reporter](https://github.com/macacajs/macaca-reporter)
+- (add others here)
+
+### Performance
+
+#### Do not regenerate tests when a feature file and its dependencies have not changed their hash
+
+Maybe it could be used a config file with the hashes, similar (but simpler) to what `package-lock.json` does, to control features' hashes.
+
+Example:
+```json
+{
+  "hashes": {
+    "feature1.feature": "ox10JBprHtu5c8822XooloNKUfk=",
+    "subdir/feature2.feature": "DMcj5b67Albe4KhpzyvphC5nVDHn1oCO",
+  }
+}
+```
+
 
 
 ## Language
 
-1. Create a tag to disable invalid data generation for a certain UI Element property
-2. Add the datetime related properties to UI Elements
-3. Accept UI Element properties inside strings of UI Element properties
-4. Accept UI Element properties inside strings from Variant steps
-5. Accept UI Element properties in Variant steps
-6. Support dynamic States, produced from UI Element values
-7.  Support Variant Background
-8.  Consider global UI Elements
-9.  Allow inheritance of UI Elements
-10. Allow table matching
-11. Multi-line queries
-12. Multiple declared Tables per query
-13. Multiple declared Databases per query
-
-**Details:**
-
-### 1. Create a tag to disable invalid data generation for a certain UI Element property
+### Create a tag to disable invalid data generation for a certain UI Element property
 
 This is needed when the User Interface uses a mask and blocks any invalid input value.
 In such case, an invalid value is never accepted and the behavior described in a `Otherwise` sentence never happens.
@@ -56,33 +173,19 @@ UI Element: Age
 
 This will avoid generating invalid data test cases for the target property.
 
+### Add language support to represent the current date and time
 
-### 2. Add the datetime related properties to UI Elements
+See Issue #40
 
-- Add "localization" as a UI Element property
-- Add "date format" as a UI Element property
-- Add "time format" as a UI Element property
-- Add "datetime format" as a UI Element property
+### Add locale support to date and time types
 
-Note: Use PHP datetime string format
+See Issue #30
 
-Example:
-```concordia
-Elemento de IU: Nascimento
-  - tipo de dado é data
-  - localização é "pt" # dd/mm/yyyy <-
+### Add support to visual comparison
 
+See Issue #27
 
-Elemento de IU: Hora
-  - tipo de dado é datahora
-  - localização é "pt" # hh:nn:ss
-  @valid-values-only
-  - formato de datahora é "hh:nn"
-  Caso contrário, eu vejo "Por favor, digite uma hora válida."
-```
-
-
-### 3. Accept UI Element properties inside strings of UI Element properties
+### Accept UI Element properties inside strings of UI Element properties
 
 Example:
 ```concordia
@@ -107,21 +210,22 @@ Properties that could be allowed, in the format `${something}`:
 - `value`, which will receive the value generated by the test case;
 
 
-### 4. Accept UI Element properties inside strings from Variant steps
+### Accept UI Element properties inside strings from Variant steps
 
-#### Example
+Example:
 
 ```gherkin
 Then I see "The password \"${Password|value}\" is weak."
 ```
+
 which is equivalent to
 ```gherkin
 Then I see "The password \"${Password}\" is weak."
 ```
 
-### 5. Accept UI Element properties in Variant steps
+### Accept UI Element properties in Variant steps
 
-#### Example
+Example:
 
 ```gherkin
 Then I see that {Age} is ${Age|minvalue}.
@@ -130,7 +234,7 @@ Then I see that {Age} is ${Age|minvalue}.
 In the above step, `${Age|minvalue}` will be replaced by its minimum value, *e.g.*, `21`.
 
 
-### 6. Support dynamic States, produced from UI Element values
+### Support dynamic States, produced from UI Element values
 
 Example:
 ```gherkin
@@ -158,17 +262,12 @@ Table: Users
 
 ```
 
-### 7. Support Variant Background
-
-Implement `Variant Background`, which is included in Concordia Language but was not implemented yet by the Concordia Compiler.
-
-
-### 8. Consider global UI Elements
+### Consider global UI Elements
 
 Make the tool processing UI Elements tagged with `@global`.
 
 
-### 9. Allow inheritance of UI Elements
+### Allow inheritance of UI Elements
 
 Use `@extends( <name> )` to extend another UI Element.
 
@@ -184,7 +283,7 @@ UI Element: Emergency Contact Name
 # Emergency Contact Name inherits the properties from Name
 ```
 
-### 10. Allow table matching
+### Allow table matching
 
 Allow a given UI Element or UI Literal to match a certain Table.
 
@@ -207,8 +306,7 @@ Table: Some Table
 
 It should make target table's rows to match the declared ones.
 
-
-### 11. Multi-line queries
+### Multi-line queries
 
 Currently:
 ```
@@ -228,51 +326,20 @@ FROM [MyDB].profession
 """
 ```
 
-### 12. Multiple declared Tables per query
+### Multiple declared Tables per query
+
+To-Detail
+
+### Multiple declared Databases per query
+
+To-Detail
 
 
-### 13. Multiple declared Databases per query
+## Internal
 
+### Security
 
-# UI and Report
-
-- Show precessing icons while waiting
-
-- Show percentage (bar?) being processed, according to the number of feature files
-
-- Generate a proper report in HTML, *e.g.*, `--report html`
-
-
-
-## Performance
-
-### Do not regenerate tests when a feature file and its dependencies have not changed their hash
-
-Maybe it could be used a config file with the hashes, similar (but simpler) to what `package-lock.json` does, to control features' hashes.
-
-Example:
-```json
-{
-  "hashes": {
-    "feature1.feature": "ox10JBprHtu5c8822XooloNKUfk=",
-    "subdir/feature2.feature": "DMcj5b67Albe4KhpzyvphC5nVDHn1oCO",
-  }
-}
-```
-
-
-
-## Security
-
-### Generate test cases that explore SQL Injection
-
-Use declared Databases and Queries to formulate Test Cases that generate strings with SQL Injection commands.
-
-### Add a test case that uses naughty strings as test data
-
-Use a [list of naughty strings](https://github.com/minimaxir/big-list-of-naughty-strings) as test data.
-
-### Sanitize all input file names
+#### Sanitize all input file names
 
 Sanitize files such as:
 - CLI input files
@@ -282,27 +349,7 @@ Sanitize files such as:
 Perhaps to use [this sanitizer](https://github.com/parshap/node-sanitize-filename)
 
 
-
-## Tool integration
-
-### Integration with text editors
-
-Create new projects for auto-completion plug-ins for text editors such as VS Code, Sublime Text, Atom, etc.
-
-*Add here some inspiring projects.*:
-- VS Code: [gherkin-autocomplete](https://github.com/silverbulleters/gherkin-autocomplete)
-
-
-### Integration with reporting tools
-
-Create integration with reporting tools, such as:
-- [Allure](https://github.com/allure-framework/allure2/)
-- [Macaca Reporter](https://github.com/macacajs/macaca-reporter)
-- (add others here)
-
-
-## Internal
-
 ### Use a linter
 
 Configure the project to use [tslint](https://github.com/palantir/tslint) or another linter with more configuration options.
+

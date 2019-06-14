@@ -4,6 +4,9 @@ Before reading, you may wish to know [how the Concordia project numbers its vers
 
 - [From version `0.x` to `1.x`](#from-version-0x-to-1x)
   - [What did break the compatibility?](#what-did-break-the-compatibility)
+    - [Concordia Compiler](#concordia-compiler)
+    - [Concordia Language](#concordia-language)
+    - [Other relevant changes](#other-relevant-changes)
   - [FAQ](#faq)
   - [How to migrate](#how-to-migrate)
 
@@ -11,7 +14,7 @@ Before reading, you may wish to know [how the Concordia project numbers its vers
 
 ### What did break the compatibility?
 
-In the **Concordia Compiler**:
+#### Concordia Compiler
 
 1. It changed the way that all the plug-in operations are handled. See [Issue #34](https://github.com/thiagodp/concordialang/issues/34) for details.
 2. The behavior of the following plug-in commands:
@@ -26,8 +29,13 @@ In the **Concordia Compiler**:
 
 👉 See the [Command Documentation](./commands.md) to know the commands' syntax.
 
+#### Concordia Language
 
-No compatibility breaks in the **Concordia Language**.
+No compatibility breaks.
+
+#### Other relevant changes
+
+External tools used by plug-ins are now installed locally, per project, instead of installed globally. Their direct execution (without using Concordia) is now possible through NPX. For example, the command `codeceptjs run test.js` must now be executed as `npx codeceptjs run test.js`. This change also allows the installation of different versions of external tools, when needed.
 
 ### FAQ
 

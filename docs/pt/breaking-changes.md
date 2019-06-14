@@ -4,6 +4,9 @@ Antes de ler, pode ser útil entender [como o projeto Concordia numera suas vers
 
 - [Versão `0.x` para `1.x`](#vers%C3%A3o-0x-para-1x)
   - [O que quebrou a compatibilidade?](#o-que-quebrou-a-compatibilidade)
+    - [Compilador Concordia](#compilador-concordia)
+    - [Linguagem Concordia](#linguagem-concordia)
+    - [Outras mudanças relevantes](#outras-mudan%C3%A7as-relevantes)
   - [FAQ](#faq)
   - [Como migrar](#como-migrar)
 
@@ -11,7 +14,7 @@ Antes de ler, pode ser útil entender [como o projeto Concordia numera suas vers
 
 ### O que quebrou a compatibilidade?
 
-No **Compilador Concordia**:
+#### Compilador Concordia
 
 1. Mudou a forma como ele realiza todas as operações com plug-ins. Veja a [Issue #34](https://github.com/thiagodp/concordialang/issues/34) para detalhes.
 2. O comportamento dos seguintes comandos de plug-in:
@@ -27,7 +30,13 @@ No **Compilador Concordia**:
 👉 Consulte a [Documentação dos Comandos](./commands.md) para saber a sintaxe dos comandos acima.
 
 
-Na **Linguagem Concordia** não houve quebras de compatibilidade.
+#### Linguagem Concordia
+
+Nenhuma quebra de compatibilidade.
+
+#### Outras mudanças relevantes
+
+Ferramentas externas utilizadas por plug-ins agora são instaladas de forma local, para o projeto, em vez de instaladas de forma global. A execução direta delas (sem usar o Concordia) passa a ser realizada através do NPX.  Por exemplo, quem antes executava `codeceptjs run teste.js`, deve passar a executar `npx codeceptjs run teste.js`. Essa novidade também possibilita usar versões diferentes das ferramentas externas, caso necessário.
 
 ### FAQ
 

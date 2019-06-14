@@ -133,7 +133,7 @@ Execute o seguinte comando para guiar o processo de configuração:
 ```bash
 concordia --init
 ```
-👉 No **Linux** ou **MacOS**, use `sudo` antes do comando, pois deve ser preciso instalar aplicações de forma global.
+👉 No **Linux** ou **MacOS**, você pode precisar usar `sudo` antes do comando, caso sua **versão do NodeJS for menor que `8.2`**, ou se você está usando Concordia `0.x`.
 
 Serão feitas algumas perguntas sobre suas preferências e elas serão armazenadas em um arquivo chamado `.concordiarc`. **DEIXE TODOS OS VALORES PADRÃO** teclando <kbd>Enter</kbd> em todas as perguntas.
 
