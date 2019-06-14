@@ -41,7 +41,7 @@ No compatibility breaks in the **Concordia Language**.
 
 3. *Is it possible now to install or uninstall a plug-in with NPM ?*
 
-    It is possible, but not recommended. Currently, every plug-in has a custom install procedure that is only performed by the Concordia Compiler. By using NPM to install a plug-in, its dependencies are not installed automatically.
+    Yes, it is possible to do both now.
 
 ### How to migrate
 

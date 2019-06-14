@@ -41,7 +41,7 @@ Na **Linguagem Concordia** não houve quebras de compatibilidade.
 
 3. *Agora também é possível instalar ou desinstalar plug-ins com o NPM ?*
 
-    Possível é, mas não é recomendado. Os plug-ins possuem um procedimento de instalação próprio, que só é executado pelo Compilador Concordia. Ao instalar com o NPM, as dependências de ferramentas externas, usadas pelo plug-in, não serão instaladas.
+    Sim, agora é possível fazer ambos.
 
 ### Como migrar
 
