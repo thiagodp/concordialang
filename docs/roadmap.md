@@ -10,46 +10,45 @@ DISCLAIMER:
 
 Contents:
 
-- [Compiler](#compiler)
-  - [CLI Options](#cli-options)
-    - [Filter Features to execute by file name without having to include dependencies](#filter-features-to-execute-by-file-name-without-having-to-include-dependencies)
-    - [Filter the Feature to execute by its name](#filter-the-feature-to-execute-by-its-name)
-    - [Filter the Scenario to execute by its name](#filter-the-scenario-to-execute-by-its-name)
-    - [Filter Test Cases by importance number for test script generation](#filter-test-cases-by-importance-number-for-test-script-generation)
-    - [Filter Test Cases by importance number for test script execution](#filter-test-cases-by-importance-number-for-test-script-execution)
-  - [Language Support](#language-support)
-    - [Support Variant Background](#support-variant-background)
-  - [Approach](#approach)
-    - [Generate test cases that explore SQL Injection](#generate-test-cases-that-explore-sql-injection)
-    - [Add a test case that uses naughty strings as test data](#add-a-test-case-that-uses-naughty-strings-as-test-data)
-  - [UI and Report](#ui-and-report)
-    - [Show precessing icons while waiting](#show-precessing-icons-while-waiting)
-    - [Show percentage being processed](#show-percentage-being-processed)
-    - [Generate an HTML report](#generate-an-html-report)
-  - [Tool integration](#tool-integration)
-    - [Integration with text editors](#integration-with-text-editors)
-    - [Integration with reporting tools](#integration-with-reporting-tools)
-  - [Performance](#performance)
-    - [Do not regenerate tests when a feature file and its dependencies have not changed their hash](#do-not-regenerate-tests-when-a-feature-file-and-its-dependencies-have-not-changed-their-hash)
-- [Language](#language)
-  - [Create a tag to disable invalid data generation for a certain UI Element property](#create-a-tag-to-disable-invalid-data-generation-for-a-certain-ui-element-property)
-  - [Add language support to represent the current date and time](#add-language-support-to-represent-the-current-date-and-time)
-  - [Add locale support to date and time types](#add-locale-support-to-date-and-time-types)
-  - [Add support to visual comparison](#add-support-to-visual-comparison)
-  - [Accept UI Element properties inside strings of UI Element properties](#accept-ui-element-properties-inside-strings-of-ui-element-properties)
-  - [Accept UI Element properties inside strings from Variant steps](#accept-ui-element-properties-inside-strings-from-variant-steps)
-  - [Accept UI Element properties in Variant steps](#accept-ui-element-properties-in-variant-steps)
-  - [Support dynamic States, produced from UI Element values](#support-dynamic-states-produced-from-ui-element-values)
-  - [Consider global UI Elements](#consider-global-ui-elements)
-  - [Allow inheritance of UI Elements](#allow-inheritance-of-ui-elements)
-  - [Allow table matching](#allow-table-matching)
-  - [Multi-line queries](#multi-line-queries)
-  - [Multiple declared Tables per query](#multiple-declared-tables-per-query)
-  - [Multiple declared Databases per query](#multiple-declared-databases-per-query)
-- [Internal](#internal)
-  - [Security](#security)
-    - [Sanitize all input file names](#sanitize-all-input-file-names)
-  - [Use a linter](#use-a-linter)
+- [Compiler](#Compiler)
+  - [CLI Options](#CLI-Options)
+    - [Filter Features to execute by file name without having to include dependencies](#Filter-Features-to-execute-by-file-name-without-having-to-include-dependencies)
+    - [Filter the Feature to execute by its name](#Filter-the-Feature-to-execute-by-its-name)
+    - [Filter the Scenario to execute by its name](#Filter-the-Scenario-to-execute-by-its-name)
+    - [Filter Test Cases by importance number for test script generation](#Filter-Test-Cases-by-importance-number-for-test-script-generation)
+    - [Filter Test Cases by importance number for test script execution](#Filter-Test-Cases-by-importance-number-for-test-script-execution)
+  - [Language Support](#Language-Support)
+    - [Support Variant Background](#Support-Variant-Background)
+  - [Approach](#Approach)
+    - [Generate test cases that explore SQL Injection](#Generate-test-cases-that-explore-SQL-Injection)
+    - [Add a test case that uses naughty strings as test data](#Add-a-test-case-that-uses-naughty-strings-as-test-data)
+  - [UI and Report](#UI-and-Report)
+    - [Show precessing icons while waiting](#Show-precessing-icons-while-waiting)
+    - [Show percentage being processed](#Show-percentage-being-processed)
+    - [Generate an HTML report](#Generate-an-HTML-report)
+  - [Tool integration](#Tool-integration)
+    - [Integration with text editors](#Integration-with-text-editors)
+    - [Integration with reporting tools](#Integration-with-reporting-tools)
+  - [Performance](#Performance)
+    - [Do not regenerate tests when a feature file and its dependencies have not changed their hash](#Do-not-regenerate-tests-when-a-feature-file-and-its-dependencies-have-not-changed-their-hash)
+- [Language](#Language)
+  - [Add language support to represent the current date and time](#Add-language-support-to-represent-the-current-date-and-time)
+  - [Add locale support to date and time types](#Add-locale-support-to-date-and-time-types)
+  - [Add support to visual comparison](#Add-support-to-visual-comparison)
+  - [Accept UI Element properties inside strings of UI Element properties](#Accept-UI-Element-properties-inside-strings-of-UI-Element-properties)
+  - [Accept UI Element properties inside strings from Variant steps](#Accept-UI-Element-properties-inside-strings-from-Variant-steps)
+  - [Accept UI Element properties in Variant steps](#Accept-UI-Element-properties-in-Variant-steps)
+  - [Support dynamic States, produced from UI Element values](#Support-dynamic-States-produced-from-UI-Element-values)
+  - [Consider global UI Elements](#Consider-global-UI-Elements)
+  - [Allow inheritance of UI Elements](#Allow-inheritance-of-UI-Elements)
+  - [Allow table matching](#Allow-table-matching)
+  - [Multi-line queries](#Multi-line-queries)
+  - [Multiple declared Tables per query](#Multiple-declared-Tables-per-query)
+  - [Multiple declared Databases per query](#Multiple-declared-Databases-per-query)
+- [Internal](#Internal)
+  - [Security](#Security)
+    - [Sanitize all input file names](#Sanitize-all-input-file-names)
+  - [Use a linter](#Use-a-linter)
 
 
 ## Compiler
@@ -146,32 +145,6 @@ Example:
 
 
 ## Language
-
-### Create a tag to disable invalid data generation for a certain UI Element property
-
-This is needed when the User Interface uses a mask and blocks any invalid input value.
-In such case, an invalid value is never accepted and the behavior described in a `Otherwise` sentence never happens.
-
-Example:
-```concordia
-UI Element: Age
-  - format is "[0-9]{1,3}"
-    Otherwise I see "Please inform a number"
-```
-
-In this case, whether the UI blocks invalid input values, all the test cases that produces them could fail.
-
-Therefore, a tag that indicates that could be used:
-
-Example (`@valid-values-only`):
-```concordia
-UI Element: Age
-  @valid-values-only
-  - format is "[0-9]{1,3}"
-    Otherwise I see "Please inform a number"
-```
-
-This will avoid generating invalid data test cases for the target property.
 
 ### Add language support to represent the current date and time
 

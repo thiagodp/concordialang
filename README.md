@@ -104,7 +104,7 @@ cd my-application
 npm install concordialang
 ```
 
-*However*, you will need to use `npx ` before *all* the Concordia commands and it will run a little slower:
+*However*, you will need to use `npx ` before *all* the Concordia commands. Example:
 ```bash
 npx concordia --version
 ```

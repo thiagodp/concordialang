@@ -2,36 +2,36 @@
 
 ## Índice  <!-- omit in toc -->
 
-- [Construções da linguagem](#constru%C3%A7%C3%B5es-da-linguagem)
-  - [Comentários](#coment%C3%A1rios)
-  - [Language](#language)
-  - [Importe](#importe)
-  - [Tag](#tag)
-  - [Funcionalidade](#funcionalidade)
-  - [Estado](#estado)
-  - [Cenário](#cen%C3%A1rio)
-  - [Constantes](#constantes)
-  - [Elemento de Interface de Usuário](#elemento-de-interface-de-usu%C3%A1rio)
-    - [Exemplos de Elementos de IU](#exemplos-de-elementos-de-iu)
-  - [Tabela](#tabela)
-  - [Banco de Dados](#banco-de-dados)
-    - [Exemplos de bancos de dados](#exemplos-de-bancos-de-dados)
-  - [Variante](#variante)
-  - [Caso de Teste](#caso-de-teste)
-  - [Eventos de Teste](#eventos-de-teste)
-- [Literais](#literais)
-  - [Literal de Interface de Usuário](#literal-de-interface-de-usu%C3%A1rio)
-  - [Valor](#valor)
-  - [Número](#n%C3%BAmero)
-  - [Lista de valores](#lista-de-valores)
-  - [Consulta](#consulta)
-- [Referências para declarações](#refer%C3%AAncias-para-declara%C3%A7%C3%B5es)
-  - [Elementos de Interface de Usuário](#elementos-de-interface-de-usu%C3%A1rio)
-    - [Em consultas](#em-consultas)
-  - [Constantes](#constantes-1)
-  - [Tabelas](#tabelas)
-  - [Bancos de Dados](#bancos-de-dados)
-- [Estados](#estados)
+- [Construções da linguagem](#Constru%C3%A7%C3%B5es-da-linguagem)
+  - [Comentários](#Coment%C3%A1rios)
+  - [Language](#Language)
+  - [Importe](#Importe)
+  - [Tag](#Tag)
+  - [Funcionalidade](#Funcionalidade)
+  - [Estado](#Estado)
+  - [Cenário](#Cen%C3%A1rio)
+  - [Constantes](#Constantes)
+  - [Elemento de Interface de Usuário](#Elemento-de-Interface-de-Usu%C3%A1rio)
+    - [Exemplos de Elementos de IU](#Exemplos-de-Elementos-de-IU)
+  - [Tabela](#Tabela)
+  - [Banco de Dados](#Banco-de-Dados)
+    - [Exemplos de bancos de dados](#Exemplos-de-bancos-de-dados)
+  - [Variante](#Variante)
+  - [Caso de Teste](#Caso-de-Teste)
+  - [Eventos de Teste](#Eventos-de-Teste)
+- [Literais](#Literais)
+  - [Literal de Interface de Usuário](#Literal-de-Interface-de-Usu%C3%A1rio)
+  - [Valor](#Valor)
+  - [Número](#N%C3%BAmero)
+  - [Lista de valores](#Lista-de-valores)
+  - [Consulta](#Consulta)
+- [Referências para declarações](#Refer%C3%AAncias-para-declara%C3%A7%C3%B5es)
+  - [Elementos de Interface de Usuário](#Elementos-de-Interface-de-Usu%C3%A1rio)
+    - [Em consultas](#Em-consultas)
+  - [Constantes](#Constantes-1)
+  - [Tabelas](#Tabelas)
+  - [Bancos de Dados](#Bancos-de-Dados)
+- [Estados](#Estados)
 
 
 ## Construções da linguagem
@@ -115,6 +115,15 @@ Tags reservadas:
 - `@fail`: indica que um Caso de Teste deve falhar.
 - `@global`: define um Elemento de Interface de Usuário como global. *Ainda não disponível na ferramenta.*
 - `@ignore`: se aplicada em uma Variante, ela será ignorada para gerar Casos de Teste; se aplicada em um Caso de Teste, ele não produzirá scripts de teste.
+- `@generate-only-valid-values`: evita que uma propriedade de um Elemento de IU seja usada para gerar valores considerados inválidos. Útil para uso em campos com máscara de edição, em que o próprio sistema impede que dados inválidos sejam digitados. Por exemplo:
+    ```concordia
+    Elemento de UI: Ano
+      - tipo de dado é inteiro
+      @generate-only-valid-values
+      - formato é "/^[0-9]{1-3}$/"
+      Caso contrário, eu devo ver "Ano deve ser um número."
+     ```
+    O exemplo acima irá evitar gerar valores de entrada incorretos (*e.g.,*, "A") para testar o formato do Ano.
 
 Reservado para uso futuro:
 - `@extends( <nome> )` permite herança de Elementos de Interface de Usuário.

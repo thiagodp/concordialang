@@ -4,36 +4,36 @@ Translations: [Português](../pt/language.md) 🌎
 
 ## Index <!-- omit in toc -->
 
-- [Language constructions](#language-constructions)
-  - [Comments](#comments)
-  - [Language](#language)
-  - [Import](#import)
-  - [Tag](#tag)
-  - [Feature](#feature)
-  - [State](#state)
-  - [Scenario](#scenario)
-  - [Constants](#constants)
-  - [User Interface Element](#user-interface-element)
-    - [Examples of UI Elements](#examples-of-ui-elements)
-  - [Table](#table)
-  - [Database](#database)
-    - [Examples of databases](#examples-of-databases)
-  - [Variant](#variant)
-  - [Test Case](#test-case)
-  - [Test Events](#test-events)
-- [Literals](#literals)
-  - [User Interface Literal](#user-interface-literal)
-  - [Value](#value)
-  - [Number](#number)
-  - [List of values](#list-of-values)
-  - [Query](#query)
-- [References to declarations](#references-to-declarations)
-  - [User Interface Elements](#user-interface-elements)
-    - [Inside queries](#inside-queries)
-  - [Constants](#constants-1)
-  - [Tables](#tables)
-  - [Databases](#databases)
-- [States](#states)
+- [Language constructions](#Language-constructions)
+  - [Comments](#Comments)
+  - [Language](#Language)
+  - [Import](#Import)
+  - [Tag](#Tag)
+  - [Feature](#Feature)
+  - [State](#State)
+  - [Scenario](#Scenario)
+  - [Constants](#Constants)
+  - [User Interface Element](#User-Interface-Element)
+    - [Examples of UI Elements](#Examples-of-UI-Elements)
+  - [Table](#Table)
+  - [Database](#Database)
+    - [Examples of databases](#Examples-of-databases)
+  - [Variant](#Variant)
+  - [Test Case](#Test-Case)
+  - [Test Events](#Test-Events)
+- [Literals](#Literals)
+  - [User Interface Literal](#User-Interface-Literal)
+  - [Value](#Value)
+  - [Number](#Number)
+  - [List of values](#List-of-values)
+  - [Query](#Query)
+- [References to declarations](#References-to-declarations)
+  - [User Interface Elements](#User-Interface-Elements)
+    - [Inside queries](#Inside-queries)
+  - [Constants](#Constants-1)
+  - [Tables](#Tables)
+  - [Databases](#Databases)
+- [States](#States)
 
 
 ## Language constructions
@@ -117,6 +117,15 @@ Reserved tags:
 - `@fail`: indicates that a Test Case should fail.
 - `@global`: defines a [User Interface Element](#user-interface-element) as global. **Yet not available in the tool*
 - `@ignore`: whether applied to a Variant, it will not produce Test Cases; whether applied to a Test Case, it will not produce test scripts.
+- `@generate-only-valid-values`: avoids that a UI Element's property be used for generating values considered invalid. This is specially useful for using with masked input fields, in which the system does not let a user to type invalid characters on it. For instance:
+    ```concordia
+    UI Element: Year
+      - data type is integer
+      @generate-only-valid-values
+      - format is "/^[0-9]{1-3}$/"
+      Otherwise I must see "Year must be a number."
+     ```
+    The above example will avoid generating invalid input values (*e.g.,*, "A") for testing the format of the Year.
 
 Reserved for future use:
 - `@extends( <name> )` allows inheritance of [User Interface Elements](#user-interface-element).
