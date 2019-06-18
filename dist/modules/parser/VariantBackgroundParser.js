@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const SyntaticException_1 = require("../req/SyntaticException");
+const SyntacticException_1 = require("../req/SyntacticException");
 /**
  * Variant Background parser
  *
@@ -11,7 +11,7 @@ class VariantBackgroundParser {
     analyze(node, context, it, errors) {
         // Checks if a feature has been declared before it
         if (!context.doc.feature) {
-            let e = new SyntaticException_1.SyntaticException('A background must be declared after a feature.', node.location);
+            let e = new SyntacticException_1.SyntacticException('A background must be declared after a feature.', node.location);
             errors.push(e);
             return false;
         }
@@ -19,13 +19,13 @@ class VariantBackgroundParser {
         const wasDeclaredForTheFeature = !!feature.variantBackground;
         const doesNotHaveScenarios = !feature.scenarios || feature.scenarios.length < 1;
         if (wasDeclaredForTheFeature && doesNotHaveScenarios) {
-            let e = new SyntaticException_1.SyntaticException('A feature cannot have more than one variant background.', node.location);
+            let e = new SyntacticException_1.SyntacticException('A feature cannot have more than one variant background.', node.location);
             errors.push(e);
             return false;
         }
         let target = doesNotHaveScenarios ? feature : context.currentScenario;
         if (!target) { // Only when currentScenario is not defined
-            let e = new SyntaticException_1.SyntaticException('Could not determine the current scenario for the variant background.', node.location);
+            let e = new SyntacticException_1.SyntacticException('Could not determine the current scenario for the variant background.', node.location);
             errors.push(e);
             return false;
         }

@@ -38,6 +38,8 @@ class EnglishKeywordDictionary {
         this.tagImportance = ['importance'];
         this.tagIgnore = ['ignore'];
         this.tagGenerated = ['generated'];
+        this.tagFail = ['fail'];
+        this.tagGenerateOnlyValidValues = ['generate-only-valid-values'];
         // Also available in Gherkin
         this.language = ['language'];
         this.feature = ['feature', 'story', 'user story'];

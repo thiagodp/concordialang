@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const SyntaticException_1 = require("../req/SyntaticException");
+const SyntacticException_1 = require("../req/SyntacticException");
 /**
  * Constant block parser
  *
@@ -10,7 +10,7 @@ class ConstantBlockParser {
     /** @inheritDoc */
     analyze(node, context, it, errors) {
         if (context.doc.constantBlock) {
-            let e = new SyntaticException_1.SyntaticException('Just one constant block declaration is allowed.', node.location);
+            let e = new SyntacticException_1.SyntacticException('Just one constant block declaration is allowed.', node.location);
             errors.push(e);
             return false;
         }

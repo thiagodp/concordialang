@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+const concordialang_types_1 = require("concordialang-types");
 const VariantLexer_1 = require("./VariantLexer");
 const TestEventLexer_1 = require("../lexer/TestEventLexer");
 const DatabasePropertyLexer_1 = require("./DatabasePropertyLexer");
@@ -52,16 +53,28 @@ class Lexer {
         this._lexers = [];
         this._lexersMap = new Map(); // iterable in insertion order
         this._lastLexer = null;
+        this._subLexers = [];
         this._inLongString = false;
         this._mustRecognizeAsText = false;
         const dictionary = this.loadDictionary(_defaultLanguage); // may throw Error
         if (!dictionary) {
             throw new Error('Cannot load a dictionary for the language: ' + _defaultLanguage);
         }
+        this._subLexers = [
+            new TagLexer_1.TagSubLexer(concordialang_types_1.ReservedTags.IGNORE, dictionary.tagIgnore),
+            new TagLexer_1.TagSubLexer(concordialang_types_1.ReservedTags.GENERATED, dictionary.tagGenerated),
+            new TagLexer_1.TagSubLexer(concordialang_types_1.ReservedTags.FAIL, dictionary.tagFail),
+            new TagLexer_1.TagSubLexer(concordialang_types_1.ReservedTags.SCENARIO, dictionary.tagScenario),
+            new TagLexer_1.TagSubLexer(concordialang_types_1.ReservedTags.VARIANT, dictionary.tagVariant),
+            new TagLexer_1.TagSubLexer(concordialang_types_1.ReservedTags.FEATURE, dictionary.tagFeature),
+            new TagLexer_1.TagSubLexer(concordialang_types_1.ReservedTags.GENERATE_ONLY_VALID_VALUES, dictionary.tagGenerateOnlyValidValues),
+            new TagLexer_1.TagSubLexer(concordialang_types_1.ReservedTags.IMPORTANCE, dictionary.tagImportance),
+            new TagLexer_1.TagSubLexer(concordialang_types_1.ReservedTags.GLOBAL, dictionary.tagGlobal)
+        ];
         this._lexers = [
             new LongStringLexer_1.LongStringLexer(),
             new LanguageLexer_1.LanguageLexer(dictionary.language),
-            new TagLexer_1.TagLexer(),
+            new TagLexer_1.TagLexer(this._subLexers),
             new ImportLexer_1.ImportLexer(dictionary.import),
             new FeatureLexer_1.FeatureLexer(dictionary.feature),
             new BackgroundLexer_1.BackgroundLexer(dictionary.background),
@@ -160,7 +173,6 @@ class Lexer {
             return false;
         }
         let result;
-        let node;
         // Analyze with lexers of the suggested node types
         if (this._lastLexer !== null) {
             const suggestedNodeTypes = this._lastLexer.suggestedNextNodeTypes();
@@ -251,12 +263,11 @@ class Lexer {
             || {};
         for (let lexer of this._lexers) {
             if (this.isAWordBasedLexer(lexer)) {
-                let nodeType = lexer.affectedKeyword();
-                let words = dict[nodeType];
-                if (words) {
-                    lexer.updateWords(words);
-                }
+                this.updateKeywordBasedLexer(lexer, dict);
             }
+        }
+        for (let subLexer of this._subLexers) {
+            this.updateKeywordBasedLexer(subLexer, dict);
         }
         return dict;
     }
@@ -272,6 +283,13 @@ class Lexer {
     }
     isAWordBasedLexer(obj) {
         return obj.updateWords !== undefined;
+    }
+    updateKeywordBasedLexer(kbl, dict) {
+        const nodeType = kbl.affectedKeyword();
+        const words = dict[nodeType];
+        if (words) {
+            kbl.updateWords(words);
+        }
     }
 }
 exports.Lexer = Lexer;

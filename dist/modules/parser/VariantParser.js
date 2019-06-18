@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const SyntaticException_1 = require("../req/SyntaticException");
+const SyntacticException_1 = require("../req/SyntacticException");
 const TagCollector_1 = require("./TagCollector");
 /**
  * Variant parser
@@ -14,7 +14,7 @@ class VariantParser {
         if (!context.doc.feature
             || !context.doc.feature.scenarios
             || context.doc.feature.scenarios.length < 1) {
-            let e = new SyntaticException_1.SyntaticException('A variant must be declared after a scenario.', node.location);
+            let e = new SyntacticException_1.SyntacticException('A variant must be declared after a scenario.', node.location);
             errors.push(e);
             return false;
         }

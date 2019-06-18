@@ -1,5 +1,5 @@
 import { TableRow } from "concordialang-types";
-import { SyntaticException } from '../req/SyntaticException';
+import { SyntacticException } from '../req/SyntacticException';
 import { NodeParser } from "./NodeParser";
 import { ParsingContext } from "./ParsingContext";
 import { NodeIterator } from './NodeIterator';
@@ -15,7 +15,7 @@ export class TableRowParser implements NodeParser< TableRow > {
     public analyze( node: TableRow, context: ParsingContext, it: NodeIterator, errors: Error[] ): boolean {
 
         if ( ! context.inTable || ! context.currentTable ) {
-            let e = new SyntaticException(
+            let e = new SyntacticException(
                 'A table row should be declared after a Table declaration.', node.location );
             errors.push( e );
             return false;

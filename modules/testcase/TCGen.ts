@@ -1,10 +1,9 @@
-import { TestCase, Tag } from "concordialang-types";
+import { TestCase, Tag, ReservedTags } from "concordialang-types";
 import { PreTestCaseGenerator, GenContext } from "../testscenario/PreTestCaseGenerator";
 import { TestScenario } from "../testscenario/TestScenario";
 import { TestPlanner } from "./TestPlanner";
 import { PreTestCase } from "../testscenario/PreTestCase";
 import { NodeTypes } from "../req/NodeTypes";
-import { ReservedTags } from "../req/ReservedTags";
 
 /**
  * Generates Test Cases from Test Scenarios and parameters.
@@ -100,7 +99,7 @@ export class TCGen {
             notRead: true
         } as TestCase;
 
-        tc.shoudFail = preTestCase.shouldFail();
+        tc.shouldFail = preTestCase.shouldFail();
 
         tc.tags = this.makeTags( tc );
 
@@ -130,8 +129,8 @@ export class TCGen {
             tags.push( this.makeTag( ReservedTags.GENERATED ) );
         }
 
-        if ( tc.shoudFail ) {
-            tags.push( this.makeTag( ReservedTags.SHOULD_FAIL ) );
+        if ( tc.shouldFail ) {
+            tags.push( this.makeTag( ReservedTags.FAIL ) );
         }
 
         return tags;

@@ -1,6 +1,6 @@
 import { UIProperty, StepOtherwise } from 'concordialang-types';
 import { NodeTypes } from '../req/NodeTypes';
-import { SyntaticException } from '../req/SyntaticException';
+import { SyntacticException } from '../req/SyntacticException';
 import { NodeIterator } from './NodeIterator';
 import { NodeParser } from './NodeParser';
 import { ParsingContext } from "./ParsingContext";
@@ -23,7 +23,7 @@ export class StepOtherwiseParser implements NodeParser< StepOtherwise > {
         ];
 
         if ( ! it.hasPrior() || allowedPriorNodes.indexOf( it.spyPrior().nodeType ) < 0 ) {
-            let e = new SyntaticException(
+            let e = new SyntacticException(
                 'The "' + node.nodeType + '" clause must be declared after a UI Element Property.',
                 node.location
                 );

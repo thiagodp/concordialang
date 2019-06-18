@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const ReservedTags_1 = require("../req/ReservedTags");
-const SyntaticException_1 = require("../req/SyntaticException");
+const concordialang_types_1 = require("concordialang-types");
+const SyntacticException_1 = require("../req/SyntacticException");
 const TagCollector_1 = require("./TagCollector");
 /**
  * UI element parser.
@@ -11,15 +11,16 @@ const TagCollector_1 = require("./TagCollector");
 class UIElementParser {
     /** @inheritDoc */
     analyze(node, context, it, errors) {
-        const GLOBAL_TAG_NAME = ReservedTags_1.ReservedTags.GLOBAL;
         // Adds backward tags
         if (!node.tags) {
             node.tags = [];
         }
         (new TagCollector_1.TagCollector()).addBackwardTags(it, node.tags);
         // Checks for a "global" tag
+        // const hasGlobalTag = node.tags.length > 0
+        //     && node.tags.filter( tag => tag.name.toLowerCase() == ReservedTags.GLOBAL ).length > 0;
         const hasGlobalTag = node.tags.length > 0
-            && node.tags.filter(tag => tag.name.toLowerCase() == GLOBAL_TAG_NAME).length > 0;
+            && node.tags.filter(tag => tag.subType === concordialang_types_1.ReservedTags.GLOBAL).length > 0;
         let owner = hasGlobalTag ? context.doc : context.doc.feature;
         // Adjust the context
         context.resetInValues();
@@ -30,7 +31,7 @@ class UIElementParser {
         }
         // If it is NOT global, a feature must have been declared
         if (!hasGlobalTag && !context.doc.feature) {
-            let e = new SyntaticException_1.SyntaticException('A non-global UI Element must be declared after a Feature.', node.location);
+            let e = new SyntacticException_1.SyntacticException('A non-global UI Element must be declared after a Feature.', node.location);
             errors.push(e);
             return false;
         }

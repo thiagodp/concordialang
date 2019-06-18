@@ -81,7 +81,7 @@ class AbstractTestScriptGenerator {
         for (let tc of doc.testCases || []) {
             let absTC = new concordialang_plugin_1.ATSTestCase(tc.location, tc.name);
             absTC.scenario = scenarioNames[(tc.declaredScenarioIndex || 1) - 1] || 'Unknown scenario';
-            absTC.invalid = tc.shoudFail;
+            absTC.invalid = tc.shouldFail;
             for (let sentence of tc.sentences) {
                 let cmd = this.sentenceToCommand(sentence);
                 absTC.commands.push(cmd);

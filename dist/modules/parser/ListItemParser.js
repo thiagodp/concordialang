@@ -23,7 +23,7 @@ class ListItemParser {
         }
         for (let p of this._nodeParsers) {
             if (p.isAccepted(node, it)) {
-                p.handle(node, context, errors);
+                p.handle(node, context, it, errors);
             }
         }
         // Stay as a ListItem

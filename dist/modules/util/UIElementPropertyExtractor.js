@@ -94,7 +94,11 @@ class UIElementPropertyExtractor {
         return TypeChecking_1.isDefined(this.extractProperty(uie, prop));
     }
     isPropertyConsideredTrue(uie, property) {
-        const nlpEntity = this.extractPropertyValueAsEntity(this.extractProperty(uie, property));
+        const uip = this.extractProperty(uie, property);
+        const nlpEntity = this.extractPropertyValueAsEntity(uip);
+        if (uip && !nlpEntity) {
+            return true;
+        }
         return TypeChecking_1.isDefined(nlpEntity) && this.isEntityConsideredTrue(nlpEntity);
     }
     isEntityConsideredTrue(nlpEntity) {
@@ -161,7 +165,7 @@ class UIElementPropertyExtractor {
         }
         return map;
     }
-    mapFirstProperty(uie) {
+    mapFirstPropertyOfEachType(uie) {
         let map = new Map();
         const allPropertyTypes = enumUtil.getValues(UIPropertyTypes_1.UIPropertyTypes);
         for (let propType of allPropertyTypes) {

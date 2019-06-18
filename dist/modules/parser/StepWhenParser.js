@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const NodeTypes_1 = require("../req/NodeTypes");
-const SyntaticException_1 = require("../req/SyntaticException");
+const SyntacticException_1 = require("../req/SyntacticException");
 /**
  * Step When node parser.
  *
@@ -31,7 +31,7 @@ class StepWhenParser {
             allowedPriorNodes.push(NodeTypes_1.NodeTypes.STEP_THEN);
         }
         if (!it.hasPrior() || allowedPriorNodes.indexOf(it.spyPrior().nodeType) < 0) {
-            let e = new SyntaticException_1.SyntaticException('The "' + node.nodeType + '" clause must be declared after: ' + allowedPriorNodes.join(', '), node.location);
+            let e = new SyntacticException_1.SyntacticException('The "' + node.nodeType + '" clause must be declared after: ' + allowedPriorNodes.join(', '), node.location);
             errors.push(e);
             return false;
         }
@@ -64,12 +64,12 @@ class StepWhenParser {
         else {
             const lastBlock = allowedPriorNodes.indexOf(NodeTypes_1.NodeTypes.STEP_GIVEN);
             const blocks = allowedPriorNodes.filter((v, index) => index < lastBlock);
-            let e = new SyntaticException_1.SyntaticException('The "' + node.nodeType + '" clause must be declared after:' + blocks.join(','), node.location);
+            let e = new SyntacticException_1.SyntacticException('The "' + node.nodeType + '" clause must be declared after:' + blocks.join(','), node.location);
             errors.push(e);
             return false;
         }
         if (!owner) {
-            let e = new SyntaticException_1.SyntaticException('Invalid context for the step "' + node.nodeType + '".', node.location);
+            let e = new SyntacticException_1.SyntacticException('Invalid context for the step "' + node.nodeType + '".', node.location);
             errors.push(e);
             return false;
         }

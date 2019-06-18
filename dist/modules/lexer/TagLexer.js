@@ -11,13 +11,23 @@ const XRegExp = require('xregexp');
  * @author Thiago Delgado Pinto
  */
 class TagLexer {
+    constructor(_subLexers = []) {
+        this._subLexers = _subLexers;
+    }
     /** @inheritDoc */
     nodeType() {
         return NodeTypes_1.NodeTypes.TAG;
     }
     /** @inheritDoc */
     suggestedNextNodeTypes() {
-        return [NodeTypes_1.NodeTypes.TAG, NodeTypes_1.NodeTypes.VARIANT, NodeTypes_1.NodeTypes.FEATURE, NodeTypes_1.NodeTypes.SCENARIO];
+        return [
+            NodeTypes_1.NodeTypes.TAG,
+            NodeTypes_1.NodeTypes.VARIANT,
+            NodeTypes_1.NodeTypes.FEATURE,
+            NodeTypes_1.NodeTypes.SCENARIO,
+            NodeTypes_1.NodeTypes.UI_ELEMENT,
+            NodeTypes_1.NodeTypes.UI_PROPERTY
+        ];
     }
     /** @inheritDoc */
     analyze(line, lineNumber) {
@@ -67,9 +77,44 @@ class TagLexer {
                 name: result[1],
                 content: content
             };
+            // Try to decide what subtype the tag has.
+            // An undefined subtype is valid and it means that the tag is not a reserved tag.
+            for (let subLexer of this._subLexers) {
+                if (subLexer.containsName(node.name)) {
+                    node.subType = subLexer.affectedKeyword();
+                }
+            }
             nodes.push(node);
         }
         return { nodes: nodes, errors: errors };
     }
 }
 exports.TagLexer = TagLexer;
+/**
+ * Allows to compare a tag name against a set of words in order to detect its subtype.
+ *
+ * @author Thiago Delgado Pinto
+ */
+class TagSubLexer {
+    constructor(_affectedKeyword, _words) {
+        this._affectedKeyword = _affectedKeyword;
+        this._words = _words;
+    }
+    /** @inheritDoc */
+    affectedKeyword() {
+        return this._affectedKeyword;
+    }
+    /** @inheritDoc */
+    updateWords(words) {
+        this._words = words.map(w => w.toLowerCase());
+    }
+    /**
+     * Compares if the tag's name is in the set of words.
+     *
+     * @param name Name to compare
+     */
+    containsName(name) {
+        return this._words.indexOf(name.toLowerCase()) >= 0;
+    }
+}
+exports.TagSubLexer = TagSubLexer;

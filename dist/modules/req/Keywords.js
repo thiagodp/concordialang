@@ -40,6 +40,7 @@ Keywords.TAG_VARIANT = 'tagVariant';
 Keywords.TAG_IMPORTANCE = 'tagImportance';
 Keywords.TAG_IGNORE = 'tagIgnore';
 Keywords.TAG_GENERATED = 'tagGenerated';
+Keywords.TAG_FAIL = 'tagFail';
 // Also available in Gherkin
 Keywords.LANGUAGE = 'language';
 Keywords.FEATURE = 'feature';

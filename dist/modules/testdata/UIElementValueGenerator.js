@@ -81,7 +81,7 @@ class UIElementValueGenerator {
             // Note: assumes that properties were validated previously, and conflicting properties were already solved.
             const groupDef = new DataTestCase_1.DataTestCaseGroupDef();
             const group = groupDef.groupOf(dtc);
-            const propertiesMap = this._uiePropExtractor.mapFirstProperty(uie);
+            const propertiesMap = this._uiePropExtractor.mapFirstPropertyOfEachType(uie);
             const msgPropertyValueError = 'Could not resolve the value of the following property: ';
             let cfg = new DataGenerator_1.DataGenConfig();
             // console.log( 'BEFORE cfg >>>>>>>>>>', cfg );

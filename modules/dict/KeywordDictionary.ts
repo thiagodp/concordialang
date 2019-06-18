@@ -40,6 +40,8 @@ export interface KeywordDictionary { // properties should exist in Keywords
     tagImportance: string[];
     tagIgnore: string[];
     tagGenerated: string[];
+    tagFail: string[];
+    tagGenerateOnlyValidValues: string[];
 
     // Also available in Gherkin
 

@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const SyntaticException_1 = require("../req/SyntaticException");
+const SyntacticException_1 = require("../req/SyntacticException");
 const TagCollector_1 = require("./TagCollector");
 const TextCollector_1 = require("./TextCollector");
 /**
@@ -13,7 +13,7 @@ class FeatureParser {
     analyze(node, context, it, errors) {
         // Checks if it is already declared
         if (context.doc.feature) {
-            let e = new SyntaticException_1.SyntaticException('Just one feature declaration is allowed.', node.location);
+            let e = new SyntacticException_1.SyntacticException('Just one feature declaration is allowed.', node.location);
             errors.push(e);
             return false;
         }

@@ -1,5 +1,5 @@
 import { TestCase } from 'concordialang-types';
-import { SyntaticException } from '../req/SyntaticException';
+import { SyntacticException } from '../req/SyntacticException';
 import { NodeIterator } from './NodeIterator';
 import { NodeParser } from './NodeParser';
 import { ParsingContext } from './ParsingContext';
@@ -18,7 +18,7 @@ export class TestCaseParser implements NodeParser< TestCase > {
         // Has no feature and has no imports?
         if ( ! context.doc.feature
             && ( ! context.doc.imports || context.doc.imports.length < 1 ) ) {
-            let e = new SyntaticException(
+            let e = new SyntacticException(
                 'A Test Case must be declared after a Feature. Please declare or import a Feature and then declare the Test Case.', node.location );
             errors.push( e );
             return false;

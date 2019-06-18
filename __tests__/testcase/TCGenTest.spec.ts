@@ -103,7 +103,7 @@ describe( 'TCGenTest', () => {
             ]
         );
 
-        expect( tc.shoudFail ).toBeFalsy();
+        expect( tc.shouldFail ).toBeFalsy();
 
     } );
 
@@ -168,7 +168,7 @@ describe( 'TCGenTest', () => {
             ]
         );
 
-        expect( tc.shoudFail ).toBeTruthy();
+        expect( tc.shouldFail ).toBeTruthy();
 
         // ---
 

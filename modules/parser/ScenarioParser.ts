@@ -1,5 +1,5 @@
 import { Scenario } from 'concordialang-types';
-import { SyntaticException } from '../req/SyntaticException';
+import { SyntacticException } from '../req/SyntacticException';
 import { NodeIterator } from './NodeIterator';
 import { NodeParser } from './NodeParser';
 import { ParsingContext } from './ParsingContext';
@@ -16,7 +16,7 @@ export class ScenarioParser implements NodeParser< Scenario > {
 
         // Checks if a feature has been declared before it
         if ( ! context.doc.feature ) {
-            let e = new SyntaticException(
+            let e = new SyntacticException(
                 'A scenario must be declared after a feature.', node.location );
             errors.push( e );
             return false;

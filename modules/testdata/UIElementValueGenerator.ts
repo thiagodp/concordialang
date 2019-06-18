@@ -98,7 +98,7 @@ export class UIElementValueGenerator {
 
         const groupDef = new DataTestCaseGroupDef();
         const group = groupDef.groupOf( dtc );
-        const propertiesMap = this._uiePropExtractor.mapFirstProperty( uie );
+        const propertiesMap = this._uiePropExtractor.mapFirstPropertyOfEachType( uie );
         const msgPropertyValueError = 'Could not resolve the value of the following property: ';
 
         let cfg = new DataGenConfig();

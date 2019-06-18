@@ -1,5 +1,5 @@
 import Graph = require( 'graph.js/dist/graph.full.js' );
-import { Document, TestCase, Variant } from "concordialang-types";
+import { Document, TestCase, Variant, ReservedTags } from "concordialang-types";
 import { LocatedException } from "concordialang-types";
 import { GivenWhenThenSentenceRecognizer } from "../nlp/GivenWhenThenSentenceRecognizer";
 import { LanguageContentLoader } from "../dict/LanguageContentLoader";
@@ -18,7 +18,6 @@ import { promisify } from "util";
 import { RuntimeException } from "../req/RuntimeException";
 import { writeFile } from 'fs';
 import { VariantSelectionOptions, CombinationOptions, InvalidSpecialOptions } from "./Defaults";
-import { ReservedTags } from "../req/ReservedTags";
 import { Warning } from "../req/Warning";
 import { DataTestCaseMix, OnlyValidMix, JustOneInvalidMix, OnlyInvalidMix, UnfilteredMix } from "../testcase/DataTestCaseMix";
 import { TCGenListener } from "./TCGenListener";

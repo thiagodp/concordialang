@@ -1,6 +1,6 @@
 import * as arrayDiff from 'arr-diff';
 import * as enumUtil from 'enum-util';
-import { Constant, Step, UIElement, UIProperty } from 'concordialang-types';
+import { Constant, Step, UIElement, UIProperty, ReservedTags } from 'concordialang-types';
 import { Entities, NLPUtil } from 'concordialang-types';
 import { RuntimeException } from '../req/RuntimeException';
 import { isDefined } from '../util/TypeChecking';
@@ -138,7 +138,7 @@ export class DataTestCaseAnalyzer {
         const groupDef = new DataTestCaseGroupDef();
         const group = groupDef.groupOf( dtc );
 
-        const propertiesMap = this._uiePropExtractor.mapFirstProperty( uie );
+        const propertiesMap = this._uiePropExtractor.mapFirstPropertyOfEachType( uie );
 
         // Properties
         const pRequired = propertiesMap.get( UIPropertyTypes.REQUIRED ) || null;
@@ -149,6 +149,20 @@ export class DataTestCaseAnalyzer {
         const pMaxValue = propertiesMap.get( UIPropertyTypes.MAX_VALUE ) || null;
         const pFormat = propertiesMap.get( UIPropertyTypes.FORMAT ) || null;
 
+        // Tags
+        const propertyHasTagGenerateOnlyValidValues = ( p: UIProperty ): boolean => {
+            return p.tags && p.tags.length > 0
+                && p.tags.findIndex( tag => tag.subType === ReservedTags.GENERATE_ONLY_VALID_VALUES ) >= 0;
+        };
+        const pRequiredHasTagGenerateOnlyValidValues = pRequired && propertyHasTagGenerateOnlyValidValues( pRequired );
+        const pValueHasTagGenerateOnlyValidValues = pValue && propertyHasTagGenerateOnlyValidValues( pValue );
+        const pMinLengthHasTagGenerateOnlyValidValues = pMinLength && propertyHasTagGenerateOnlyValidValues( pMinLength );
+        const pMaxLengthHasTagGenerateOnlyValidValues = pMaxLength && propertyHasTagGenerateOnlyValidValues( pMaxLength );
+        const pMinValueHasTagGenerateOnlyValidValues = pMinValue && propertyHasTagGenerateOnlyValidValues( pMinValue );
+        const pMaxValueHasTagGenerateOnlyValidValues = pMaxValue && propertyHasTagGenerateOnlyValidValues( pMaxValue );
+        const pFormatHasTagGenerateOnlyValidValues = pFormat && propertyHasTagGenerateOnlyValidValues( pFormat );
+
+        // Data type
         let valueType = ValueType.STRING;
         if ( propertiesMap.has( UIPropertyTypes.DATA_TYPE ) ) {
             valueType = this._uiePropExtractor.extractDataType( uie );
@@ -184,8 +198,12 @@ export class DataTestCaseAnalyzer {
 
                         return hasAnyValueOrLengthProperty ? incompatiblePair : validPair;
                     }
-                    case DataTestCase.FORMAT_INVALID:
+                    case DataTestCase.FORMAT_INVALID: {
+                        if ( pFormatHasTagGenerateOnlyValidValues ) {
+                            return incompatiblePair;
+                        }
                         return new DTCAnalysisData( DTCAnalysisResult.INVALID, pFormat.otherwiseSentences || [] );
+                    }
                 }
                 return incompatiblePair;
             }
@@ -215,6 +233,10 @@ export class DataTestCaseAnalyzer {
                         //     && this._nlpUtil.hasEntityNamed( Entities.QUERY, pValue.nlpResult ) ) {
                         //     return incompatiblePair;
                         // }
+
+                        if ( isRequired && pRequiredHasTagGenerateOnlyValidValues ) {
+                            return incompatiblePair;
+                        }
 
                         return isRequired
                             ? new DTCAnalysisData( DTCAnalysisResult.INVALID, pRequired.otherwiseSentences || [] )
@@ -250,12 +272,31 @@ export class DataTestCaseAnalyzer {
 
                 const invalidPair = new DTCAnalysisData( DTCAnalysisResult.INVALID, pValue.otherwiseSentences || [] );
 
-                // Diminush the number of applicable test cases if it is a value or a constant
+                // Diminish the number of applicable test cases if it is a value or a constant
                 if ( hasValue || hasConstant ) {
                     if (  DataTestCase.SET_FIRST_ELEMENT === dtc ) {
-                        return hasNegation ? invalidPair : validPair;
+
+                        if ( hasNegation ) {
+
+                            if ( pValueHasTagGenerateOnlyValidValues ) {
+                                return incompatiblePair;
+                            }
+                            return invalidPair;
+                        }
+
+                        return validPair;
+
                     } else if ( DataTestCase.SET_NOT_IN_SET === dtc ) {
-                        return hasNegation ? validPair : invalidPair;
+
+                        if ( hasNegation ) {
+                            return validPair;
+                        }
+
+                        if ( pValueHasTagGenerateOnlyValidValues ) {
+                            return incompatiblePair;
+                        }
+
+                        return invalidPair;
                     }
                     return incompatiblePair;
                 }
@@ -277,8 +318,31 @@ export class DataTestCaseAnalyzer {
                 switch ( dtc ) {
                     case DataTestCase.SET_FIRST_ELEMENT  : ; // next
                     case DataTestCase.SET_LAST_ELEMENT   : ; // next
-                    case DataTestCase.SET_RANDOM_ELEMENT : return hasNegation ? invalidPair : validPair;
-                    case DataTestCase.SET_NOT_IN_SET     : return hasNegation ? validPair : invalidPair;
+                    case DataTestCase.SET_RANDOM_ELEMENT : {
+
+                        if ( hasNegation ) {
+
+                            if ( pValueHasTagGenerateOnlyValidValues ) {
+                                return incompatiblePair;
+                            }
+                            return invalidPair;
+                        }
+
+                        return validPair;
+                    }
+
+                    case DataTestCase.SET_NOT_IN_SET: {
+
+                        if ( hasNegation ) {
+                            return validPair;
+                        }
+
+                        if ( pValueHasTagGenerateOnlyValidValues ) {
+                            return incompatiblePair;
+                        }
+
+                        return invalidPair;
+                    }
                 }
 
                 return incompatiblePair;
@@ -335,10 +399,19 @@ export class DataTestCaseAnalyzer {
                     case DataTestCase.VALUE_LOWEST: ; // next
                     case DataTestCase.VALUE_RANDOM_BELOW_MIN: ; // next
                     case DataTestCase.VALUE_JUST_BELOW_MIN: {
+
                         if ( hasMinValue || isToFakeMinValue ) {
-                            return analyzer.hasValuesBelowMin()
-                                ? invalidMinPair
-                                : shouldGenerateValid ? validPair : incompatiblePair;
+
+                            if ( analyzer.hasValuesBelowMin() ) {
+
+                                if ( pMinValueHasTagGenerateOnlyValidValues ) {
+                                    return incompatiblePair;
+                                }
+
+                                return invalidMinPair;
+                            } else {
+                                return shouldGenerateValid ? validPair : incompatiblePair;
+                            }
                         }
                         return incompatiblePair;
                     }
@@ -372,6 +445,11 @@ export class DataTestCaseAnalyzer {
                             if ( analyzer.isZeroBetweenMinAndMax()  ) {
                                 return shouldGenerateValid ? validPair : incompatiblePair;
                             }
+
+                            if ( pMinValueHasTagGenerateOnlyValidValues || pMaxValueHasTagGenerateOnlyValidValues ) {
+                                return incompatiblePair;
+                            }
+
                             return analyzer.isZeroBelowMin() ? invalidMinPair : invalidMaxPair;
                         }
                         return incompatiblePair;
@@ -381,9 +459,17 @@ export class DataTestCaseAnalyzer {
                     case DataTestCase.VALUE_RANDOM_ABOVE_MAX: ; // next
                     case DataTestCase.VALUE_GREATEST: {
                         if ( hasMaxValue || isToFakeMaxValue ) {
-                            return analyzer.hasValuesAboveMax()
-                                ? invalidMaxPair
-                                : shouldGenerateValid ? validPair : incompatiblePair;
+
+                            if ( analyzer.hasValuesAboveMax() ) {
+
+                                if ( pMaxValueHasTagGenerateOnlyValidValues ) {
+                                    return incompatiblePair;
+                                }
+
+                                return invalidMaxPair;
+                            }
+
+                            return shouldGenerateValid ? validPair : incompatiblePair;
                         }
                         return incompatiblePair;
                     }
@@ -467,9 +553,17 @@ export class DataTestCaseAnalyzer {
                         }
 
                         if ( hasMinLength || isToFakeMinLength ) {
-                            return analyzer.hasValuesBelowMin()
-                                ? invalidMinPair
-                                : shouldGenerateValid ? validPair : incompatiblePair;
+
+                            if ( analyzer.hasValuesBelowMin() ) {
+
+                                if ( pMinLengthHasTagGenerateOnlyValidValues ) {
+                                    return incompatiblePair;
+                                }
+
+                                return invalidMinPair;
+                            }
+
+                            return shouldGenerateValid ? validPair : incompatiblePair;
                         }
                         return incompatiblePair;
                     }
@@ -502,9 +596,16 @@ export class DataTestCaseAnalyzer {
                     case DataTestCase.LENGTH_RANDOM_ABOVE_MAX: ; // next
                     case DataTestCase.LENGTH_GREATEST: {
                         if ( hasMaxLength || isToFakeMaxLength ) {
-                            return analyzer.hasValuesAboveMax()
-                                ? invalidMaxPair
-                                : shouldGenerateValid ? validPair : incompatiblePair;
+
+                            if ( analyzer.hasValuesAboveMax() ) {
+
+                                if ( pMaxLengthHasTagGenerateOnlyValidValues ) {
+                                    return incompatiblePair;
+                                }
+                                return invalidMaxPair;
+                            }
+
+                            return shouldGenerateValid ? validPair : incompatiblePair;
                         }
                         return incompatiblePair;
                     }

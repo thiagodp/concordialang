@@ -3,7 +3,7 @@ import { ListItemNodeParser } from "./ListItemNodeParser";
 import { NodeIterator } from './NodeIterator';
 import { ParsingContext } from './ParsingContext';
 import { NodeTypes } from "../req/NodeTypes";
-import { SyntaticException } from "../req/SyntaticException";
+import { SyntacticException } from "../req/SyntacticException";
 
 /**
  * Database property parser.
@@ -23,14 +23,14 @@ export class DatabasePropertyParser implements ListItemNodeParser {
 
 
     /** @inheritDoc */
-    handle( node: ListItem, context: ParsingContext, errors: Error[] ): boolean {
+    handle( node: ListItem, context: ParsingContext, it: NodeIterator, errors: Error[] ): boolean {
 
         // Adjusts the node type
         node.nodeType = NodeTypes.DATABASE_PROPERTY;
 
         // Checks the context
         if ( ! context.currentDatabase ) {
-            let e = new SyntaticException(
+            let e = new SyntacticException(
                 'The "' + node.nodeType + '" clause must be declared for a Database.',
                 node.location
                 );

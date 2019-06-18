@@ -2,7 +2,7 @@ import { RegexBlock } from "concordialang-types";
 import { NodeParser } from "./NodeParser";
 import { ParsingContext } from "./ParsingContext";
 import { NodeIterator } from './NodeIterator';
-import { SyntaticException } from "../req/SyntaticException";
+import { SyntacticException } from "../req/SyntacticException";
 
 /**
  * Regex block parser
@@ -15,7 +15,7 @@ export class RegexBlockParser implements NodeParser< RegexBlock > {
     public analyze( node: RegexBlock, context: ParsingContext, it: NodeIterator, errors: Error[] ): boolean {
 
         if ( context.doc.regexBlock ) {
-            let e = new SyntaticException( 'Just one regex block declaration is allowed.', node.location );
+            let e = new SyntacticException( 'Just one regex block declaration is allowed.', node.location );
             errors.push( e );
             return false;
         }

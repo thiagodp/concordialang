@@ -31,6 +31,7 @@ export abstract class Keywords {
     static TAG_IMPORTANCE = 'tagImportance';
     static TAG_IGNORE = 'tagIgnore';
     static TAG_GENERATED = 'tagGenerated';
+    static TAG_FAIL = 'tagFail';
 
     // Also available in Gherkin
 

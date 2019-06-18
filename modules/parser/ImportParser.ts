@@ -2,7 +2,7 @@ import { Import } from 'concordialang-types';
 import { NodeParser } from "./NodeParser";
 import { ParsingContext } from "./ParsingContext";
 import { NodeIterator } from './NodeIterator';
-import { SyntaticException } from "../req/SyntaticException";
+import { SyntacticException } from "../req/SyntacticException";
 
 /**
  * Import parser.
@@ -26,7 +26,7 @@ export class ImportParser implements NodeParser< Import > {
 
         // Checks if a feature is declared before it
         if ( context.doc.feature ) {
-            let e = new SyntaticException( 'An import must be declared before a feature.', node.location );
+            let e = new SyntacticException( 'An import must be declared before a feature.', node.location );
             errors.push( e );
             return false;
         }

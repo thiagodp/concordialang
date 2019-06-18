@@ -31,9 +31,9 @@ import { VariantBackgroundParser } from './VariantBackgroundParser';
 import { VariantParser } from './VariantParser';
 
 /**
- * Builds an AST from the nodes detected by the lexer. It checks syntatic properties
- * of the model (e.g. the order of appearance), but it does not check semantic properties
- * (e.g. check if a import file exists).
+ * Builds an AST from the nodes detected by the lexer. It checks syntactic properties
+ * of the model (e.g., the order of appearance), but it does not check semantic properties
+ * (e.g., check if a import file exists).
  *
  * @author Thiago Delgado Pinto
  */

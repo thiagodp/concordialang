@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const SyntaticException_1 = require("../req/SyntaticException");
+const SyntacticException_1 = require("../req/SyntacticException");
 const TagCollector_1 = require("./TagCollector");
 /**
  * TestCase parser
@@ -13,7 +13,7 @@ class TestCaseParser {
         // Has no feature and has no imports?
         if (!context.doc.feature
             && (!context.doc.imports || context.doc.imports.length < 1)) {
-            let e = new SyntaticException_1.SyntaticException('A Test Case must be declared after a Feature. Please declare or import a Feature and then declare the Test Case.', node.location);
+            let e = new SyntacticException_1.SyntacticException('A Test Case must be declared after a Feature. Please declare or import a Feature and then declare the Test Case.', node.location);
             errors.push(e);
             return false;
         }

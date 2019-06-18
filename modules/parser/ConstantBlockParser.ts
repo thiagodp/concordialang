@@ -2,7 +2,7 @@ import { ConstantBlock } from "concordialang-types";
 import { NodeParser } from "./NodeParser";
 import { ParsingContext } from "./ParsingContext";
 import { NodeIterator } from './NodeIterator';
-import { SyntaticException } from "../req/SyntaticException";
+import { SyntacticException } from "../req/SyntacticException";
 
 /**
  * Constant block parser
@@ -15,7 +15,7 @@ export class ConstantBlockParser implements NodeParser< ConstantBlock > {
     public analyze( node: ConstantBlock, context: ParsingContext, it: NodeIterator, errors: Error[] ): boolean {
 
         if ( context.doc.constantBlock ) {
-            let e = new SyntaticException( 'Just one constant block declaration is allowed.', node.location );
+            let e = new SyntacticException( 'Just one constant block declaration is allowed.', node.location );
             errors.push( e );
             return false;
         }

@@ -11,6 +11,6 @@ export interface ListItemNodeParser {
 
     isAccepted( node: ListItem, it: NodeIterator ): boolean;
 
-    handle( node: ListItem, context: ParsingContext, errors: Error[] ): boolean;
+    handle( node: ListItem, context: ParsingContext, it: NodeIterator, errors: Error[] ): boolean;
 
 }

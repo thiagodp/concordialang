@@ -1,5 +1,6 @@
-import { TagLexer } from "../../modules/lexer/TagLexer";
+import { TagLexer, TagSubLexer } from "../../modules/lexer/TagLexer";
 import { NodeTypes } from "../../modules/req/NodeTypes";
+import { ReservedTags } from "concordialang-types/dist";
 
 /**
  * @author Thiago Delgado Pinto
@@ -36,7 +37,7 @@ describe( 'TagLexerTest', () => {
         let names = lexer.analyze( line ).nodes.map( ( node ) => node.name );
         expect( names ).toEqual( [ "hello", "world" ] );
     } );
-    
+
     it( 'detects a tag with content', () => {
         let line = '@hello( world )';
         let r = lexer.analyze( line );
@@ -100,7 +101,23 @@ describe( 'TagLexerTest', () => {
         expect( nodeOne.content ).toEqual( [ 'bar' ] );
         let nodeTwo = r.nodes[ 1 ];
         expect( nodeTwo.name ).toEqual( 'a' );
-        expect( nodeTwo.content ).toEqual( [ 'b', 'c' ] );        
+        expect( nodeTwo.content ).toEqual( [ 'b', 'c' ] );
+    } );
+
+
+
+    it( 'detects subtypes', () => {
+
+        const l = new TagLexer( [
+            new TagSubLexer( ReservedTags.IGNORE, [ ReservedTags.IGNORE ] )
+        ] );
+
+        const r = l.analyze( '@ignore' );
+        expect( r ).toBeDefined();
+        expect( r.errors ).toHaveLength( 0 );
+        expect( r.nodes ).toHaveLength( 1 );
+
+        expect( r.nodes[ 0 ].subType ).toEqual( ReservedTags.IGNORE );
     } );
 
 } );

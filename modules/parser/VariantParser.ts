@@ -1,5 +1,5 @@
 import { Variant } from 'concordialang-types';
-import { SyntaticException } from '../req/SyntaticException';
+import { SyntacticException } from '../req/SyntacticException';
 import { NodeIterator } from './NodeIterator';
 import { NodeParser } from './NodeParser';
 import { ParsingContext } from './ParsingContext';
@@ -20,7 +20,7 @@ export class VariantParser implements NodeParser< Variant > {
             || ! context.doc.feature.scenarios
             || context.doc.feature.scenarios.length < 1
         ) {
-            let e = new SyntaticException(
+            let e = new SyntacticException(
                 'A variant must be declared after a scenario.', node.location );
             errors.push( e );
             return false;

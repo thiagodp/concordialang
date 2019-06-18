@@ -1,10 +1,10 @@
 import { LocatedException } from "concordialang-types";
 
 /**
- * Syntatic exception
+ * Syntactic exception
  *
  * @author Thiago Delgado Pinto
  */
-export class SyntaticException extends LocatedException {
+export class SyntacticException extends LocatedException {
     name = 'SyntaxError'
 }

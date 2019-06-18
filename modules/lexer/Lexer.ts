@@ -1,4 +1,4 @@
-import { Language, Node } from 'concordialang-types';
+import { Language, Node, ReservedTags } from 'concordialang-types';
 import { VariantLexer } from './VariantLexer';
 import { BeforeAllLexer, AfterAllLexer, BeforeFeatureLexer, AfterFeatureLexer, BeforeEachScenarioLexer, AfterEachScenarioLexer } from '../lexer/TestEventLexer';
 import { DatabasePropertyLexer } from './DatabasePropertyLexer';
@@ -10,7 +10,7 @@ import { NodeTypes } from '../req/NodeTypes';
 import { TestCaseLexer } from './TestCaseLexer';
 import { NodeLexer, LexicalAnalysisResult } from './NodeLexer';
 import { LanguageLexer } from "./LanguageLexer";
-import { TagLexer } from "./TagLexer";
+import { TagLexer, TagSubLexer } from "./TagLexer";
 import { ImportLexer } from './ImportLexer';
 import { FeatureLexer } from './FeatureLexer';
 import { BackgroundLexer } from './BackgroundLexer';
@@ -47,6 +47,7 @@ export class Lexer {
     private _lexersMap: Map< string, NodeLexer< any > > =
         new Map< string, NodeLexer< any > >(); // iterable in insertion order
     private _lastLexer: NodeLexer< any > = null;
+    private _subLexers: TagSubLexer[] = [];
 
     private _inLongString: boolean = false;
     private _mustRecognizeAsText: boolean = false;
@@ -70,10 +71,26 @@ export class Lexer {
             throw new Error( 'Cannot load a dictionary for the language: ' + _defaultLanguage );
         }
 
+        this._subLexers = [
+            new TagSubLexer( ReservedTags.IGNORE, dictionary.tagIgnore ),
+
+            new TagSubLexer( ReservedTags.GENERATED, dictionary.tagGenerated ),
+            new TagSubLexer( ReservedTags.FAIL, dictionary.tagFail ),
+
+            new TagSubLexer( ReservedTags.SCENARIO, dictionary.tagScenario ),
+            new TagSubLexer( ReservedTags.VARIANT, dictionary.tagVariant ),
+            new TagSubLexer( ReservedTags.FEATURE, dictionary.tagFeature ),
+
+            new TagSubLexer( ReservedTags.GENERATE_ONLY_VALID_VALUES, dictionary.tagGenerateOnlyValidValues ),
+
+            new TagSubLexer( ReservedTags.IMPORTANCE, dictionary.tagImportance ),
+            new TagSubLexer( ReservedTags.GLOBAL, dictionary.tagGlobal )
+        ];
+
         this._lexers = [
             new LongStringLexer()
             , new LanguageLexer( dictionary.language )
-            , new TagLexer()
+            , new TagLexer( this._subLexers )
             , new ImportLexer( dictionary.import )
             , new FeatureLexer( dictionary.feature )
             , new BackgroundLexer( dictionary.background )
@@ -188,7 +205,6 @@ export class Lexer {
         }
 
         let result: LexicalAnalysisResult< Node >;
-        let node: Node;
 
         // Analyze with lexers of the suggested node types
         if ( this._lastLexer !== null ) {
@@ -285,17 +301,20 @@ export class Lexer {
      * @throws Error In case of the language is not available.
      */
     public changeLanguage( language: string ): KeywordDictionary {
+
         let dict = this.loadDictionary( language ) // may throw Error
             || {} as KeywordDictionary;
+
         for ( let lexer of this._lexers ) {
             if ( this.isAWordBasedLexer( lexer ) ) {
-                let nodeType = lexer.affectedKeyword();
-                let words = dict[ nodeType ];
-                if ( words ) {
-                    lexer.updateWords( words );
-                }
+                this.updateKeywordBasedLexer( lexer, dict );
             }
         }
+
+        for ( let subLexer of this._subLexers ) {
+            this.updateKeywordBasedLexer( subLexer, dict );
+        }
+
         return dict;
     }
 
@@ -312,5 +331,13 @@ export class Lexer {
 
     private isAWordBasedLexer( obj: any ): obj is KeywordBasedLexer {
         return ( < KeywordBasedLexer > obj ).updateWords !== undefined;
+    }
+
+    private updateKeywordBasedLexer( kbl: KeywordBasedLexer, dict: KeywordDictionary ): void {
+        const nodeType = kbl.affectedKeyword();
+        const words = dict[ nodeType ];
+        if ( words ) {
+            kbl.updateWords( words );
+        }
     }
 }

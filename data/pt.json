@@ -31,6 +31,8 @@
         "tagImportance": [ "importance" ],
         "tagIgnore": [ "ignore" ],
         "tagGenerated": [ "generated" ],
+        "tagFail": [ "fail" ],
+        "tagGenerateOnlyValidValues": [ "generate-only-valid-values" ],
 
         "language": [ "language" ],
 

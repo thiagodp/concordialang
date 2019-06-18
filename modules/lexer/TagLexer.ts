@@ -1,9 +1,12 @@
-import { Tag } from 'concordialang-types';
+
+import { Tag, ReservedTags } from 'concordialang-types';
+import * as enumUtil from 'enum-util';
 import { LexicalException } from '../req/LexicalException';
 import { NodeTypes } from '../req/NodeTypes';
 import { Symbols } from '../req/Symbols';
 import { CommentHandler } from './CommentHandler';
 import { LexicalAnalysisResult, NodeLexer } from './NodeLexer';
+import { KeywordBasedLexer } from './KeywordBasedLexer';
 
 const XRegExp = require( 'xregexp' );
 
@@ -14,6 +17,9 @@ const XRegExp = require( 'xregexp' );
  */
 export class TagLexer implements NodeLexer< Tag > {
 
+    constructor( private readonly _subLexers: TagSubLexer[] = [] ) {
+    }
+
 
     /** @inheritDoc */
     public nodeType(): string {
@@ -22,7 +28,14 @@ export class TagLexer implements NodeLexer< Tag > {
 
     /** @inheritDoc */
     suggestedNextNodeTypes(): string[] {
-        return [ NodeTypes.TAG, NodeTypes.VARIANT, NodeTypes.FEATURE, NodeTypes.SCENARIO ];
+        return [
+            NodeTypes.TAG,
+            NodeTypes.VARIANT,
+            NodeTypes.FEATURE,
+            NodeTypes.SCENARIO,
+            NodeTypes.UI_ELEMENT,
+            NodeTypes.UI_PROPERTY
+        ];
     }
 
     /** @inheritDoc */
@@ -86,10 +99,52 @@ export class TagLexer implements NodeLexer< Tag > {
                 content: content
             } as Tag;
 
+            // Try to decide what subtype the tag has.
+            // An undefined subtype is valid and it means that the tag is not a reserved tag.
+            for ( let subLexer of this._subLexers ) {
+                if ( subLexer.containsName( node.name ) ) {
+                    node.subType = <ReservedTags> subLexer.affectedKeyword();
+                }
+            }
+
             nodes.push( node );
         }
 
         return { nodes: nodes, errors: errors };
     }
 
+}
+
+
+/**
+ * Allows to compare a tag name against a set of words in order to detect its subtype.
+ *
+ * @author Thiago Delgado Pinto
+ */
+export class TagSubLexer implements KeywordBasedLexer {
+
+    constructor(
+        private _affectedKeyword: string,
+        private _words: string[]
+    ) {
+    }
+
+    /** @inheritDoc */
+    affectedKeyword(): string {
+        return this._affectedKeyword;
+    }
+
+    /** @inheritDoc */
+    updateWords( words: string[] ) {
+        this._words = words.map( w => w.toLowerCase() );
+    }
+
+    /**
+     * Compares if the tag's name is in the set of words.
+     *
+     * @param name Name to compare
+     */
+    containsName( name: string ): boolean {
+        return this._words.indexOf( name.toLowerCase() ) >= 0;
+    }
 }

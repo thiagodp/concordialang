@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const SyntaticException_1 = require("../req/SyntaticException");
+const SyntacticException_1 = require("../req/SyntacticException");
 /**
  * Import parser.
  *
@@ -15,7 +15,7 @@ class ImportParser {
         }
         // Checks if a feature is declared before it
         if (context.doc.feature) {
-            let e = new SyntaticException_1.SyntaticException('An import must be declared before a feature.', node.location);
+            let e = new SyntacticException_1.SyntacticException('An import must be declared before a feature.', node.location);
             errors.push(e);
             return false;
         }

@@ -1,6 +1,5 @@
-import { UIElement } from 'concordialang-types';
-import { ReservedTags } from '../req/ReservedTags';
-import { SyntaticException } from '../req/SyntaticException';
+import { UIElement, ReservedTags } from 'concordialang-types';
+import { SyntacticException } from '../req/SyntacticException';
 import { NodeIterator } from './NodeIterator';
 import { NodeParser } from './NodeParser';
 import { ParsingContext } from './ParsingContext';
@@ -16,8 +15,6 @@ export class UIElementParser implements NodeParser< UIElement > {
     /** @inheritDoc */
     public analyze( node: UIElement, context: ParsingContext, it: NodeIterator, errors: Error[] ): boolean {
 
-        const GLOBAL_TAG_NAME = ReservedTags.GLOBAL;
-
         // Adds backward tags
         if ( ! node.tags ) {
             node.tags = [];
@@ -25,8 +22,10 @@ export class UIElementParser implements NodeParser< UIElement > {
         ( new TagCollector() ).addBackwardTags( it, node.tags );
 
         // Checks for a "global" tag
+        // const hasGlobalTag = node.tags.length > 0
+        //     && node.tags.filter( tag => tag.name.toLowerCase() == ReservedTags.GLOBAL ).length > 0;
         const hasGlobalTag = node.tags.length > 0
-            && node.tags.filter( tag => tag.name.toLowerCase() == GLOBAL_TAG_NAME ).length > 0;
+            && node.tags.filter( tag => tag.subType === ReservedTags.GLOBAL ).length > 0;
 
         let owner = hasGlobalTag ? context.doc : context.doc.feature;
 
@@ -41,7 +40,7 @@ export class UIElementParser implements NodeParser< UIElement > {
 
         // If it is NOT global, a feature must have been declared
         if ( ! hasGlobalTag && ! context.doc.feature ) {
-            let e = new SyntaticException(
+            let e = new SyntacticException(
                 'A non-global UI Element must be declared after a Feature.', node.location );
             errors.push( e );
             return false;

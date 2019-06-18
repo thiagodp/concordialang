@@ -1,5 +1,5 @@
 import { Constant, ListItem } from 'concordialang-types'
-import { SyntaticException } from '../req/SyntaticException';
+import { SyntacticException } from '../req/SyntacticException';
 import { ParsingContext } from './ParsingContext';
 import { NodeTypes } from '../req/NodeTypes';
 import { ListItemNodeParser } from './ListItemNodeParser';
@@ -22,7 +22,7 @@ export class ConstantParser implements ListItemNodeParser {
     }
 
     /** @inheritDoc */
-    public handle( node: ListItem, context: ParsingContext, errors: Error[] ): boolean {
+    public handle( node: ListItem, context: ParsingContext, it: NodeIterator, errors: Error[] ): boolean {
 
         // Adjusts the node type
         node.nodeType = NodeTypes.CONSTANT;
@@ -30,7 +30,7 @@ export class ConstantParser implements ListItemNodeParser {
         // Checks the context
         if ( ! context.currentConstantBlock
             || ( ! context.inConstantBlock && ! context.inConstant ) ) {
-            let e = new SyntaticException(
+            let e = new SyntacticException(
                 'The "' + node.nodeType + '" clause must be declared inside a Constants block.',
                 node.location
                 );

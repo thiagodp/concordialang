@@ -43,6 +43,8 @@ export class EnglishKeywordDictionary implements KeywordDictionary {
     tagImportance: string[] = [ 'importance' ];
     tagIgnore: string[] = [ 'ignore' ];
     tagGenerated: string[] = [ 'generated' ];
+    tagFail: string[] = [ 'fail' ];
+    tagGenerateOnlyValidValues: string[] = [ 'generate-only-valid-values' ];
 
     // Also available in Gherkin
 

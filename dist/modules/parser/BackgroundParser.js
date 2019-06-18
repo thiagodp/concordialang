@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const SyntaticException_1 = require("../req/SyntaticException");
+const SyntacticException_1 = require("../req/SyntacticException");
 const TypeChecking_1 = require("../util/TypeChecking");
 /**
  * Background parser
@@ -12,18 +12,18 @@ class BackgroundParser {
     analyze(node, context, it, errors) {
         // Checks if a feature has been declared before it
         if (!context.doc.feature) {
-            let e = new SyntaticException_1.SyntaticException('A background must be declared after a feature.', node.location);
+            let e = new SyntacticException_1.SyntacticException('A background must be declared after a feature.', node.location);
             errors.push(e);
             return false;
         }
         let feature = context.doc.feature;
         if (feature.background) {
-            let e = new SyntaticException_1.SyntaticException('A feature cannot have more than one background.', node.location);
+            let e = new SyntacticException_1.SyntacticException('A feature cannot have more than one background.', node.location);
             errors.push(e);
             return false;
         }
         if (TypeChecking_1.isDefined(feature.scenarios) && feature.scenarios.length > 0) {
-            let e = new SyntaticException_1.SyntaticException('A background must be declared before a scenario.', node.location);
+            let e = new SyntacticException_1.SyntacticException('A background must be declared before a scenario.', node.location);
             errors.push(e);
             return false;
         }

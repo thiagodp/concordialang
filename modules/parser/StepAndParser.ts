@@ -1,6 +1,6 @@
 import { StepAnd } from 'concordialang-types';
 import { NodeTypes } from '../req/NodeTypes';
-import { SyntaticException } from '../req/SyntaticException';
+import { SyntacticException } from '../req/SyntacticException';
 import { NodeIterator } from './NodeIterator';
 import { NodeParser } from './NodeParser';
 import { ParsingContext } from "./ParsingContext";
@@ -25,7 +25,7 @@ export class StepAndParser implements NodeParser< StepAnd > {
         ];
 
         if ( ! it.hasPrior() || allowedPriorNodes.indexOf( it.spyPrior().nodeType ) < 0 ) {
-            let e = new SyntaticException(
+            let e = new SyntacticException(
                 'The "' + node.nodeType + '" clause must be declared after a Given, When, Then, And, or Otherwise.',
                 node.location
                 );
@@ -57,7 +57,7 @@ export class StepAndParser implements NodeParser< StepAnd > {
             else if ( context.inBeforeEachScenario ) owner = context.doc.beforeEachScenario;
             else if ( context.inAfterEachScenario ) owner = context.doc.afterEachScenario;
             else {
-                let e = new SyntaticException(
+                let e = new SyntacticException(
                     'The "' + node.nodeType + '" clause must be declared after a Background, Scenario, Variant Background, Variant, Test Case, Before All, After All, Before Feature, After Feature, Before Each Scenario, AfterEachScenario or UI Element Property.',
                     node.location
                     );
@@ -66,7 +66,7 @@ export class StepAndParser implements NodeParser< StepAnd > {
             }
 
             if ( ! owner ) {
-                let e = new SyntaticException(
+                let e = new SyntacticException(
                     'Invalid context for the step "' + node.nodeType + '".',
                     node.location
                     );

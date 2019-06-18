@@ -30,9 +30,9 @@ const UIElementParser_1 = require("./UIElementParser");
 const VariantBackgroundParser_1 = require("./VariantBackgroundParser");
 const VariantParser_1 = require("./VariantParser");
 /**
- * Builds an AST from the nodes detected by the lexer. It checks syntatic properties
- * of the model (e.g. the order of appearance), but it does not check semantic properties
- * (e.g. check if a import file exists).
+ * Builds an AST from the nodes detected by the lexer. It checks syntactic properties
+ * of the model (e.g., the order of appearance), but it does not check semantic properties
+ * (e.g., check if a import file exists).
  *
  * @author Thiago Delgado Pinto
  */

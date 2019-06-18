@@ -112,7 +112,11 @@ export class UIElementPropertyExtractor {
 
 
     isPropertyConsideredTrue( uie: UIElement, property: string ): boolean {
-        const nlpEntity = this.extractPropertyValueAsEntity( this.extractProperty( uie, property ) );
+        const uip: UIProperty = this.extractProperty( uie, property );
+        const nlpEntity = this.extractPropertyValueAsEntity( uip );
+        if ( uip && ! nlpEntity ) {
+            return true;
+        }
         return isDefined( nlpEntity ) && this.isEntityConsideredTrue( nlpEntity );
     }
 
@@ -189,7 +193,7 @@ export class UIElementPropertyExtractor {
         return map;
     }
 
-    mapFirstProperty( uie: UIElement ): Map< UIPropertyTypes, UIProperty > {
+    mapFirstPropertyOfEachType( uie: UIElement ): Map< UIPropertyTypes, UIProperty > {
         let map = new Map< UIPropertyTypes, UIProperty >();
         const allPropertyTypes = enumUtil.getValues( UIPropertyTypes );
         for ( let propType of allPropertyTypes ) {

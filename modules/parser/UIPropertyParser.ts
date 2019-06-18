@@ -3,7 +3,8 @@ import { ListItemNodeParser } from "./ListItemNodeParser";
 import { NodeIterator } from './NodeIterator';
 import { ParsingContext } from './ParsingContext';
 import { NodeTypes } from "../req/NodeTypes";
-import { SyntaticException } from "../req/SyntaticException";
+import { SyntacticException } from "../req/SyntacticException";
+import { TagCollector } from './TagCollector';
 
 /**
  * UI property parser.
@@ -15,6 +16,7 @@ export class UIPropertyParser implements ListItemNodeParser {
     /** @inheritDoc */
     isAccepted( node: ListItem, it: NodeIterator ): boolean {
         const allowedPriorNodes = [
+            NodeTypes.TAG,
             NodeTypes.UI_ELEMENT,
             NodeTypes.UI_PROPERTY,
             NodeTypes.STEP_OTHERWISE,
@@ -25,14 +27,14 @@ export class UIPropertyParser implements ListItemNodeParser {
 
 
     /** @inheritDoc */
-    handle( node: ListItem, context: ParsingContext, errors: Error[] ): boolean {
+    handle( node: ListItem, context: ParsingContext, it: NodeIterator, errors: Error[] ): boolean {
 
         // Adjusts the node type
         node.nodeType = NodeTypes.UI_PROPERTY;
 
         // Checks the context
         if ( ! context.currentUIElement ) {
-            let e = new SyntaticException(
+            let e = new SyntacticException(
                 'The "' + node.nodeType + '" clause must be declared for a UI Element.',
                 node.location
                 );
@@ -50,6 +52,12 @@ export class UIPropertyParser implements ListItemNodeParser {
         if ( ! context.currentUIElement.items ) {
             context.currentUIElement.items = [];
         }
+
+        // Adds backward tags
+        if ( ! uiProperty.tags ) {
+            uiProperty.tags = [];
+        }
+        ( new TagCollector() ).addBackwardTags( it, uiProperty.tags );
 
         // Adds the node
         context.currentUIElement.items.push( uiProperty );

@@ -3,6 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const arrayDiff = require("arr-diff");
 const enumUtil = require("enum-util");
 const concordialang_types_1 = require("concordialang-types");
+const concordialang_types_2 = require("concordialang-types");
 const TypeChecking_1 = require("../util/TypeChecking");
 const UIElementPropertyExtractor_1 = require("../util/UIElementPropertyExtractor");
 const UIPropertyTypes_1 = require("../util/UIPropertyTypes");
@@ -36,7 +37,7 @@ exports.DTCAnalysisData = DTCAnalysisData;
 class DataTestCaseAnalyzer {
     constructor(seed) {
         this._uiePropExtractor = new UIElementPropertyExtractor_1.UIElementPropertyExtractor();
-        this._nlpUtil = new concordialang_types_1.NLPUtil();
+        this._nlpUtil = new concordialang_types_2.NLPUtil();
         this._dataGenBuilder = new DataGeneratorBuilder_1.DataGeneratorBuilder(seed);
     }
     /**
@@ -102,7 +103,7 @@ class DataTestCaseAnalyzer {
         // Note: assumes that properties were validated previously, and conflicting properties were already solved.
         const groupDef = new DataTestCase_1.DataTestCaseGroupDef();
         const group = groupDef.groupOf(dtc);
-        const propertiesMap = this._uiePropExtractor.mapFirstProperty(uie);
+        const propertiesMap = this._uiePropExtractor.mapFirstPropertyOfEachType(uie);
         // Properties
         const pRequired = propertiesMap.get(UIPropertyTypes_1.UIPropertyTypes.REQUIRED) || null;
         const pValue = propertiesMap.get(UIPropertyTypes_1.UIPropertyTypes.VALUE) || null;
@@ -111,6 +112,19 @@ class DataTestCaseAnalyzer {
         const pMinValue = propertiesMap.get(UIPropertyTypes_1.UIPropertyTypes.MIN_VALUE) || null;
         const pMaxValue = propertiesMap.get(UIPropertyTypes_1.UIPropertyTypes.MAX_VALUE) || null;
         const pFormat = propertiesMap.get(UIPropertyTypes_1.UIPropertyTypes.FORMAT) || null;
+        // Tags
+        const propertyHasTagGenerateOnlyValidValues = (p) => {
+            return p.tags && p.tags.length > 0
+                && p.tags.findIndex(tag => tag.subType === concordialang_types_1.ReservedTags.GENERATE_ONLY_VALID_VALUES) >= 0;
+        };
+        const pRequiredHasTagGenerateOnlyValidValues = pRequired && propertyHasTagGenerateOnlyValidValues(pRequired);
+        const pValueHasTagGenerateOnlyValidValues = pValue && propertyHasTagGenerateOnlyValidValues(pValue);
+        const pMinLengthHasTagGenerateOnlyValidValues = pMinLength && propertyHasTagGenerateOnlyValidValues(pMinLength);
+        const pMaxLengthHasTagGenerateOnlyValidValues = pMaxLength && propertyHasTagGenerateOnlyValidValues(pMaxLength);
+        const pMinValueHasTagGenerateOnlyValidValues = pMinValue && propertyHasTagGenerateOnlyValidValues(pMinValue);
+        const pMaxValueHasTagGenerateOnlyValidValues = pMaxValue && propertyHasTagGenerateOnlyValidValues(pMaxValue);
+        const pFormatHasTagGenerateOnlyValidValues = pFormat && propertyHasTagGenerateOnlyValidValues(pFormat);
+        // Data type
         let valueType = ValueTypeDetector_1.ValueType.STRING;
         if (propertiesMap.has(UIPropertyTypes_1.UIPropertyTypes.DATA_TYPE)) {
             valueType = this._uiePropExtractor.extractDataType(uie);
@@ -141,8 +155,12 @@ class DataTestCaseAnalyzer {
                             TypeChecking_1.isDefined(pMinLength) || TypeChecking_1.isDefined(pMaxLength);
                         return hasAnyValueOrLengthProperty ? incompatiblePair : validPair;
                     }
-                    case DataTestCase_1.DataTestCase.FORMAT_INVALID:
+                    case DataTestCase_1.DataTestCase.FORMAT_INVALID: {
+                        if (pFormatHasTagGenerateOnlyValidValues) {
+                            return incompatiblePair;
+                        }
                         return new DTCAnalysisData(DTCAnalysisResult.INVALID, pFormat.otherwiseSentences || []);
+                    }
                 }
                 return incompatiblePair;
             }
@@ -152,7 +170,7 @@ class DataTestCaseAnalyzer {
                     case DataTestCase_1.DataTestCase.REQUIRED_FILLED: {
                         // Check whether the value has a reference to another UI Element
                         if (TypeChecking_1.isDefined(pValue)) {
-                            const hasQuery = this._nlpUtil.hasEntityNamed(concordialang_types_1.Entities.QUERY, pValue.nlpResult);
+                            const hasQuery = this._nlpUtil.hasEntityNamed(concordialang_types_2.Entities.QUERY, pValue.nlpResult);
                             if (hasQuery) {
                                 // return new Pair( DTCAnalysisResult.INVALID, pRequired.otherwiseSentences || [] );
                                 return incompatiblePair;
@@ -166,6 +184,9 @@ class DataTestCaseAnalyzer {
                         //     && this._nlpUtil.hasEntityNamed( Entities.QUERY, pValue.nlpResult ) ) {
                         //     return incompatiblePair;
                         // }
+                        if (isRequired && pRequiredHasTagGenerateOnlyValidValues) {
+                            return incompatiblePair;
+                        }
                         return isRequired
                             ? new DTCAnalysisData(DTCAnalysisResult.INVALID, pRequired.otherwiseSentences || [])
                             : validPair;
@@ -180,23 +201,35 @@ class DataTestCaseAnalyzer {
                 if (!pValue) {
                     return incompatiblePair;
                 }
-                const hasValue = this._nlpUtil.hasEntityNamed(concordialang_types_1.Entities.VALUE, pValue.nlpResult);
-                const hasConstant = this._nlpUtil.hasEntityNamed(concordialang_types_1.Entities.CONSTANT, pValue.nlpResult);
+                const hasValue = this._nlpUtil.hasEntityNamed(concordialang_types_2.Entities.VALUE, pValue.nlpResult);
+                const hasConstant = this._nlpUtil.hasEntityNamed(concordialang_types_2.Entities.CONSTANT, pValue.nlpResult);
                 if (!hasValue
                     && !hasConstant
-                    && !this._nlpUtil.hasEntityNamed(concordialang_types_1.Entities.QUERY, pValue.nlpResult)
-                    && !this._nlpUtil.hasEntityNamed(concordialang_types_1.Entities.VALUE_LIST, pValue.nlpResult)) {
+                    && !this._nlpUtil.hasEntityNamed(concordialang_types_2.Entities.QUERY, pValue.nlpResult)
+                    && !this._nlpUtil.hasEntityNamed(concordialang_types_2.Entities.VALUE_LIST, pValue.nlpResult)) {
                     return incompatiblePair;
                 }
                 const hasNegation = this.hasNegation(pValue); // e.g., "value NOT IN ..."
                 const invalidPair = new DTCAnalysisData(DTCAnalysisResult.INVALID, pValue.otherwiseSentences || []);
-                // Diminush the number of applicable test cases if it is a value or a constant
+                // Diminish the number of applicable test cases if it is a value or a constant
                 if (hasValue || hasConstant) {
                     if (DataTestCase_1.DataTestCase.SET_FIRST_ELEMENT === dtc) {
-                        return hasNegation ? invalidPair : validPair;
+                        if (hasNegation) {
+                            if (pValueHasTagGenerateOnlyValidValues) {
+                                return incompatiblePair;
+                            }
+                            return invalidPair;
+                        }
+                        return validPair;
                     }
                     else if (DataTestCase_1.DataTestCase.SET_NOT_IN_SET === dtc) {
-                        return hasNegation ? validPair : invalidPair;
+                        if (hasNegation) {
+                            return validPair;
+                        }
+                        if (pValueHasTagGenerateOnlyValidValues) {
+                            return incompatiblePair;
+                        }
+                        return invalidPair;
                     }
                     return incompatiblePair;
                 }
@@ -213,8 +246,24 @@ class DataTestCaseAnalyzer {
                 switch (dtc) {
                     case DataTestCase_1.DataTestCase.SET_FIRST_ELEMENT: ; // next
                     case DataTestCase_1.DataTestCase.SET_LAST_ELEMENT: ; // next
-                    case DataTestCase_1.DataTestCase.SET_RANDOM_ELEMENT: return hasNegation ? invalidPair : validPair;
-                    case DataTestCase_1.DataTestCase.SET_NOT_IN_SET: return hasNegation ? validPair : invalidPair;
+                    case DataTestCase_1.DataTestCase.SET_RANDOM_ELEMENT: {
+                        if (hasNegation) {
+                            if (pValueHasTagGenerateOnlyValidValues) {
+                                return incompatiblePair;
+                            }
+                            return invalidPair;
+                        }
+                        return validPair;
+                    }
+                    case DataTestCase_1.DataTestCase.SET_NOT_IN_SET: {
+                        if (hasNegation) {
+                            return validPair;
+                        }
+                        if (pValueHasTagGenerateOnlyValidValues) {
+                            return incompatiblePair;
+                        }
+                        return invalidPair;
+                    }
                 }
                 return incompatiblePair;
             }
@@ -258,9 +307,15 @@ class DataTestCaseAnalyzer {
                     case DataTestCase_1.DataTestCase.VALUE_RANDOM_BELOW_MIN: ; // next
                     case DataTestCase_1.DataTestCase.VALUE_JUST_BELOW_MIN: {
                         if (hasMinValue || isToFakeMinValue) {
-                            return analyzer.hasValuesBelowMin()
-                                ? invalidMinPair
-                                : shouldGenerateValid ? validPair : incompatiblePair;
+                            if (analyzer.hasValuesBelowMin()) {
+                                if (pMinValueHasTagGenerateOnlyValidValues) {
+                                    return incompatiblePair;
+                                }
+                                return invalidMinPair;
+                            }
+                            else {
+                                return shouldGenerateValid ? validPair : incompatiblePair;
+                            }
                         }
                         return incompatiblePair;
                     }
@@ -290,6 +345,9 @@ class DataTestCaseAnalyzer {
                             if (analyzer.isZeroBetweenMinAndMax()) {
                                 return shouldGenerateValid ? validPair : incompatiblePair;
                             }
+                            if (pMinValueHasTagGenerateOnlyValidValues || pMaxValueHasTagGenerateOnlyValidValues) {
+                                return incompatiblePair;
+                            }
                             return analyzer.isZeroBelowMin() ? invalidMinPair : invalidMaxPair;
                         }
                         return incompatiblePair;
@@ -298,9 +356,13 @@ class DataTestCaseAnalyzer {
                     case DataTestCase_1.DataTestCase.VALUE_RANDOM_ABOVE_MAX: ; // next
                     case DataTestCase_1.DataTestCase.VALUE_GREATEST: {
                         if (hasMaxValue || isToFakeMaxValue) {
-                            return analyzer.hasValuesAboveMax()
-                                ? invalidMaxPair
-                                : shouldGenerateValid ? validPair : incompatiblePair;
+                            if (analyzer.hasValuesAboveMax()) {
+                                if (pMaxValueHasTagGenerateOnlyValidValues) {
+                                    return incompatiblePair;
+                                }
+                                return invalidMaxPair;
+                            }
+                            return shouldGenerateValid ? validPair : incompatiblePair;
                         }
                         return incompatiblePair;
                     }
@@ -358,9 +420,13 @@ class DataTestCaseAnalyzer {
                             }
                         }
                         if (hasMinLength || isToFakeMinLength) {
-                            return analyzer.hasValuesBelowMin()
-                                ? invalidMinPair
-                                : shouldGenerateValid ? validPair : incompatiblePair;
+                            if (analyzer.hasValuesBelowMin()) {
+                                if (pMinLengthHasTagGenerateOnlyValidValues) {
+                                    return incompatiblePair;
+                                }
+                                return invalidMinPair;
+                            }
+                            return shouldGenerateValid ? validPair : incompatiblePair;
                         }
                         return incompatiblePair;
                     }
@@ -389,9 +455,13 @@ class DataTestCaseAnalyzer {
                     case DataTestCase_1.DataTestCase.LENGTH_RANDOM_ABOVE_MAX: ; // next
                     case DataTestCase_1.DataTestCase.LENGTH_GREATEST: {
                         if (hasMaxLength || isToFakeMaxLength) {
-                            return analyzer.hasValuesAboveMax()
-                                ? invalidMaxPair
-                                : shouldGenerateValid ? validPair : incompatiblePair;
+                            if (analyzer.hasValuesAboveMax()) {
+                                if (pMaxLengthHasTagGenerateOnlyValidValues) {
+                                    return incompatiblePair;
+                                }
+                                return invalidMaxPair;
+                            }
+                            return shouldGenerateValid ? validPair : incompatiblePair;
                         }
                         return incompatiblePair;
                     }
@@ -417,7 +487,7 @@ class DataTestCaseAnalyzer {
             return [null, false];
         }
         switch (uip.value.entity) {
-            case concordialang_types_1.Entities.CONSTANT: {
+            case concordialang_types_2.Entities.CONSTANT: {
                 const constant = uip.value.references[0];
                 if (TypeChecking_1.isDefined(constant)) {
                     return [ValueTypeDetector_1.adjustValueToTheRightType(constant.value), false];
@@ -425,15 +495,15 @@ class DataTestCaseAnalyzer {
                 return [null, false];
             }
             // case Entities.COMPUTATION: ; // next
-            case concordialang_types_1.Entities.QUERY: ; // next
-            case concordialang_types_1.Entities.UI_ELEMENT: {
+            case concordialang_types_2.Entities.QUERY: ; // next
+            case concordialang_types_2.Entities.UI_ELEMENT: {
                 return [null, true]; // << FAKED !
             }
             default: return [uip.value.value, false];
         }
     }
     hasNegation(uip) {
-        return this._nlpUtil.hasEntityNamed(concordialang_types_1.Entities.UI_CONNECTOR_MODIFIER, uip.nlpResult);
+        return this._nlpUtil.hasEntityNamed(concordialang_types_2.Entities.UI_CONNECTOR_MODIFIER, uip.nlpResult);
     }
 }
 exports.DataTestCaseAnalyzer = DataTestCaseAnalyzer;

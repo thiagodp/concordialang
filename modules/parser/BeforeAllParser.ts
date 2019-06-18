@@ -1,5 +1,5 @@
 import { BeforeAll } from 'concordialang-types';
-import { SyntaticException } from '../req/SyntaticException';
+import { SyntacticException } from '../req/SyntacticException';
 import { isDefined } from '../util/TypeChecking';
 import { NodeIterator } from './NodeIterator';
 import { NodeParser } from './NodeParser';
@@ -17,7 +17,7 @@ export class BeforeAllParser implements NodeParser< BeforeAll > {
 
         // Check whether a similar node was already declared
         if ( isDefined( context.doc.beforeAll ) ) {
-            let e = new SyntaticException(
+            let e = new SyntacticException(
                 'Event already declared: Before All', node.location );
             errors.push( e );
             return false;

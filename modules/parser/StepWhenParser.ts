@@ -1,6 +1,6 @@
 import { StepWhen } from 'concordialang-types';
 import { NodeTypes } from '../req/NodeTypes';
-import { SyntaticException } from '../req/SyntaticException';
+import { SyntacticException } from '../req/SyntacticException';
 import { NodeIterator } from './NodeIterator';
 import { NodeParser } from './NodeParser';
 import { ParsingContext } from "./ParsingContext";
@@ -41,7 +41,7 @@ export class StepWhenParser implements NodeParser< StepWhen > {
         }
 
         if ( ! it.hasPrior() || allowedPriorNodes.indexOf( it.spyPrior().nodeType ) < 0 ) {
-            let e = new SyntaticException(
+            let e = new SyntacticException(
                 'The "' + node.nodeType + '" clause must be declared after: ' + allowedPriorNodes.join( ', ' ),
                 node.location
                 );
@@ -67,7 +67,7 @@ export class StepWhenParser implements NodeParser< StepWhen > {
         else {
             const lastBlock = allowedPriorNodes.indexOf( NodeTypes.STEP_GIVEN );
             const blocks = allowedPriorNodes.filter( ( v, index ) => index < lastBlock );
-            let e = new SyntaticException(
+            let e = new SyntacticException(
                 'The "' + node.nodeType + '" clause must be declared after:' + blocks.join( ',' ),
                 node.location
                 );
@@ -76,7 +76,7 @@ export class StepWhenParser implements NodeParser< StepWhen > {
         }
 
         if ( ! owner ) {
-            let e = new SyntaticException(
+            let e = new SyntacticException(
                 'Invalid context for the step "' + node.nodeType + '".',
                 node.location
                 );

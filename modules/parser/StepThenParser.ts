@@ -1,6 +1,6 @@
 import { StepThen } from 'concordialang-types';
 import { NodeTypes } from '../req/NodeTypes';
-import { SyntaticException } from '../req/SyntaticException';
+import { SyntacticException } from '../req/SyntacticException';
 import { NodeIterator } from './NodeIterator';
 import { NodeParser } from './NodeParser';
 import { ParsingContext } from "./ParsingContext";
@@ -24,7 +24,7 @@ export class StepThenParser implements NodeParser< StepThen > {
         ];
 
         if ( ! it.hasPrior() || allowedPriorNodes.indexOf( it.spyPrior().nodeType ) < 0 ) {
-            let e = new SyntaticException(
+            let e = new SyntacticException(
                 'The "' + node.nodeType + '" clause must be declared after: ' + allowedPriorNodes.join( ', ' ),
                 node.location
                 );
@@ -33,7 +33,7 @@ export class StepThenParser implements NodeParser< StepThen > {
         }
 
         if ( context.inVariantBackground || context.inScenarioVariantBackground ) {
-            let e = new SyntaticException(
+            let e = new SyntacticException(
                 'The "' + node.nodeType + '" clause cannot be declared for a Variant Background.',
                 node.location
                 );
@@ -57,7 +57,7 @@ export class StepThenParser implements NodeParser< StepThen > {
         else if ( context.inBeforeEachScenario ) owner = context.doc.beforeEachScenario;
         else if ( context.inAfterEachScenario ) owner = context.doc.afterEachScenario;
         else {
-            let e = new SyntaticException(
+            let e = new SyntacticException(
                 'The "' + node.nodeType + '" clause must be declared after a Background, Scenario, Variant Background, Variant, Test Case, Before All, After All, Before Feature, After Feature, Before Each Scenario, AfterEachScenario or UI Element Property.',
                 node.location
                 );
@@ -66,7 +66,7 @@ export class StepThenParser implements NodeParser< StepThen > {
         }
 
         if ( ! owner ) {
-            let e = new SyntaticException(
+            let e = new SyntacticException(
                 'Invalid context for the step "' + node.nodeType + '".',
                 node.location
                 );

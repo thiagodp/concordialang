@@ -1,5 +1,5 @@
 import { Feature } from 'concordialang-types';
-import { SyntaticException } from '../req/SyntaticException';
+import { SyntacticException } from '../req/SyntacticException';
 import { NodeIterator } from './NodeIterator';
 import { NodeParser } from './NodeParser';
 import { ParsingContext } from './ParsingContext';
@@ -18,7 +18,7 @@ export class FeatureParser implements NodeParser< Feature > {
 
         // Checks if it is already declared
         if ( context.doc.feature ) {
-            let e = new SyntaticException( 'Just one feature declaration is allowed.', node.location );
+            let e = new SyntacticException( 'Just one feature declaration is allowed.', node.location );
             errors.push( e );
             return false;
         }

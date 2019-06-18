@@ -8,6 +8,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+const concordialang_types_1 = require("concordialang-types");
 const PreTestCaseGenerator_1 = require("../testscenario/PreTestCaseGenerator");
 const TSGen_1 = require("../testscenario/TSGen");
 const VariantSelectionStrategy_1 = require("../selection/VariantSelectionStrategy");
@@ -20,7 +21,6 @@ const util_1 = require("util");
 const RuntimeException_1 = require("../req/RuntimeException");
 const fs_1 = require("fs");
 const Defaults_1 = require("./Defaults");
-const ReservedTags_1 = require("../req/ReservedTags");
 const Warning_1 = require("../req/Warning");
 const DataTestCaseMix_1 = require("../testcase/DataTestCaseMix");
 class TCGenController {
@@ -154,7 +154,7 @@ class TCGenController {
             case Defaults_1.VariantSelectionOptions.FIRST:
                 return new VariantSelectionStrategy_1.FirstVariantSelectionStrategy();
             case Defaults_1.VariantSelectionOptions.FIRST_MOST_IMPORTANT:
-                return new VariantSelectionStrategy_1.FirstMostImportantVariantSelectionStrategy(options.importance, [ReservedTags_1.ReservedTags.IMPORTANCE]);
+                return new VariantSelectionStrategy_1.FirstMostImportantVariantSelectionStrategy(options.importance, [concordialang_types_1.ReservedTags.IMPORTANCE]);
             case Defaults_1.VariantSelectionOptions.ALL:
                 return new VariantSelectionStrategy_1.AllVariantsSelectionStrategy();
             default: {
