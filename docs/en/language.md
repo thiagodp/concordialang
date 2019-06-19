@@ -14,10 +14,22 @@ Translations: [Português](../pt/language.md) 🌎
   - [Scenario](#Scenario)
   - [Constants](#Constants)
   - [User Interface Element](#User-Interface-Element)
+    - [Property `id`](#Property-id)
+    - [Property `type`](#Property-type)
+    - [Property `editable`](#Property-editable)
+    - [Property `data type`](#Property-data-type)
+    - [Property `value`](#Property-value)
+    - [Property `minimum value`](#Property-minimum-value)
+    - [Property `maximum value`](#Property-maximum-value)
+    - [Property `minimum length`](#Property-minimum-length)
+    - [Property `maximum length`](#Property-maximum-length)
+    - [Property `format`](#Property-format)
+    - [Property `required`](#Property-required)
     - [Examples of UI Elements](#Examples-of-UI-Elements)
   - [Table](#Table)
   - [Database](#Database)
-    - [Examples of databases](#Examples-of-databases)
+    - [Properties](#Properties)
+    - [Examples](#Examples)
   - [Variant](#Variant)
   - [Test Case](#Test-Case)
   - [Test Events](#Test-Events)
@@ -260,7 +272,7 @@ Allowed properties:
 - `format`
 - `required`, defaults to `false`
 
-Property `id`:
+#### Property `id`
   - Example: `- id is "name"`
   - Default value is the element name in camel case and without spaces, *e.g.*, `"Some Name"` becomes `"someName"`
   - Value must be declared between quotes (`"`)
@@ -274,7 +286,7 @@ Property `id`:
   - Multiple identifiers are denoted by `id in [ "<value1>", "<value2>", ... ]` **Yet not supported by the tool**
     - Example: `id in [ "birthDate", "~birthDate" ]`
 
-Property `type`:
+#### Property `type`
   - Example: `- type is button`
   - Default value is `textbox`
   - Does not need quotes (`"`)
@@ -306,7 +318,7 @@ Property `type`:
     - `unordered list` or `ul`
     - `url` or `address` or `ip` or `site`
 
-Property `editable`:
+#### Property `editable`
   - Example: `- editable is true`
   - Allowed values are `true` and `false`
   - Does not need quotes (`"`)
@@ -325,7 +337,7 @@ Property `editable`:
       - `maximum value`
       - `value`
 
-Property `data type`:
+#### Property `data type`
   - Example: `- data type is double`
   - Does not need quotes (`"`)
   - Allowed types are:
@@ -337,7 +349,7 @@ Property `data type`:
     - `datetime`
   - Precision of `double` values is inferred from declared rules, *e.g.*, `12.50` makes Concordia to know that the precision is `2`
 
-Property `value`:
+#### Property `value`
   - Accepted values:
     - [Value](#value)
     - [Number](#number)
@@ -357,7 +369,7 @@ Property `value`:
     - `- value is not in "SELECT ..."`
     - `- value is not equal to {Other UI Element}`
 
-Property `minimum value`:
+#### Property `minimum value`
   - Accepted values:
     - [Number](#number)
     - [Constant](#constants)
@@ -371,7 +383,7 @@ Property `minimum value`:
     - `- minimum value comes from "SELECT ..."`
     - `- minimum value is equal to {Other UI Element}`
 
-Property `maximum value`:
+#### Property `maximum value`
   - Same syntax as `minimum length`
   - Examples:
     - `- maximum value is 5`
@@ -381,7 +393,7 @@ Property `maximum value`:
     - `- maximum value is equal to {Other UI Element}`
 
 
-Property `minimum length`:
+#### Property `minimum length`
   - Same syntax as `minimum value`
   - Examples:
     - `- minimum length is 5`
@@ -390,7 +402,7 @@ Property `minimum length`:
     - `- minimum length comes from "SELECT ..."`
     - `- minimum length is equal to {Other UI Element}`
 
-Property `maximum length`:
+#### Property `maximum length`
   - Same syntax as `minimum length`
   - Examples:
     - `- maximum length is 50`
@@ -400,7 +412,7 @@ Property `maximum length`:
     - `- maximum length is equal to {Other UI Element}`
 
 
-Property `format`:
+#### Property `format`
   - Accepted values:
     - [Value](#value)
     - [Constant](#constants)
@@ -410,11 +422,15 @@ Property `format`:
     - `- format is "/^[0-9]{2}\.[0-9]{3}\-[0-9]{3}$/"`
     - `- format is [Some Constant with RegEx]`
 
-Property `required`:
-  - Accepted values are `true` and `false`
-  - Default value is `false`
+#### Property `required`
+  - Accepted values are `true` or `false`
+  - When not declared, the property assumes `false` (that is, not required)
+  - The value `true` is optional. For example, the following declaration is accepted as `true`:
+    - `- required`
   - Examples:
+    - `- required`
     - `- required is true`
+    - `- required is false`
 
 
 #### Examples of UI Elements
@@ -480,20 +496,23 @@ Notes:
 - Allowed more than one declaration per file.
 - Property values must be declared between quotes (`"`).
 
-Allowed properties:
-  - `type`
-  - `host`
-  - `port`
-  - `name`
-  - `path`
-  - `username`
-  - `password`
-  - `options`
+#### Properties
+
+| Property   | Description | Required |
+| ---------- | ----------- | -------- |
+| `type`     | Database type. See supported values ahead. | Yes |
+| `host`     | URL that indicates where the database is hosted. | Vary |
+| `port`     | Network communication port used to connect to the database. Whether not defined, the default database port will be used, according to the property `type`.| No |
+| `name`     | Database name. Used when there is a database server (whose location is defined by the property `host`) and the database is accessible by its name. | Vary |
+| `path`     | Database path. Used when the database is accessed through the file system, such as the types `csv`, `ini`, `json`, `sqlite` and `xlsx`. | Vary |
+| `username` | Username used to connect to the database. When not defined, the database's default user will be used, according to the property `type`. | No |
+| `password` | Password used to connect to the database. When not defined, the database's default password will be used, according to the property `type`. | No |
+| `options`  | Database-specific connection options. | No |
 
 Currently supported values for `type`:
 
 | Value        | Database    | Installation command* | Note |
-| ------------ | ----------- | ------------------- | ---- |
+| ------------ | ----------- | --------------------- | ---- |
 | `"adodb"`    | [MS Access](https://pt.wikipedia.org/wiki/Microsoft_Access) and [MS SQL Server](https://en.wikipedia.org/wiki/Microsoft_SQL_Server) through [ActiveX Data Objects](https://en.wikipedia.org/wiki/ActiveX_Data_Objects) | `npm install database-js-adodb`    | *MS Windows Only* |
 | `"csv"`      | [CSV](https://en.wikipedia.org/wiki/Comma-separated_values) files | `npm install database-js-csv`      | |
 | `"firebase"` | [Firebase](https://firebase.google.com) databases | `npm install database-js-firebase` | |
@@ -505,9 +524,12 @@ Currently supported values for `type`:
 | `"sqlite"`   | [SQLite](https://www.sqlite.org/) databases | `npm install database-js-sqlite`   | |
 | `"xlsx"`     | [Excel](https://en.wikipedia.org/wiki/Microsoft_Excel) spreadsheets | `npm install database-js-xlsx`     | |
 
-***In order to connect and handle databases, you have to install their corresponding NPM packages.** Go to your application's root folder and type the corresponding *Installation command*.
+**Notes** (*)
+ - To connect and handle databases during test executions, you have to install their corresponding NPM packages.
+ - Go to your application's root folder and type the corresponding *Installation command* (see above).
 
-#### Examples of databases
+
+#### Examples
 
 Example 1:
 ```

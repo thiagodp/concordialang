@@ -12,10 +12,22 @@
   - [Cenário](#Cen%C3%A1rio)
   - [Constantes](#Constantes)
   - [Elemento de Interface de Usuário](#Elemento-de-Interface-de-Usu%C3%A1rio)
+    - [Propriedade `id`](#Propriedade-id)
+    - [Propriedade `tipo`](#Propriedade-tipo)
+    - [Propriedade `editável`](#Propriedade-edit%C3%A1vel)
+    - [Propriedade `tipo de dado`:](#Propriedade-tipo-de-dado)
+    - [Propriedade `valor`](#Propriedade-valor)
+    - [Propriedade `valor mínimo`](#Propriedade-valor-m%C3%ADnimo)
+    - [Propriedade `valor máximo`](#Propriedade-valor-m%C3%A1ximo)
+    - [Propriedade `comprimento mínimo`](#Propriedade-comprimento-m%C3%ADnimo)
+    - [Propriedade `comprimento máximo`](#Propriedade-comprimento-m%C3%A1ximo)
+    - [Propriedade `formato`](#Propriedade-formato)
+    - [Propriedade `obrigatório`](#Propriedade-obrigat%C3%B3rio)
     - [Exemplos de Elementos de IU](#Exemplos-de-Elementos-de-IU)
   - [Tabela](#Tabela)
   - [Banco de Dados](#Banco-de-Dados)
-    - [Exemplos de bancos de dados](#Exemplos-de-bancos-de-dados)
+    - [Propriedades](#Propriedades)
+    - [Exemplos](#Exemplos)
   - [Variante](#Variante)
   - [Caso de Teste](#Caso-de-Teste)
   - [Eventos de Teste](#Eventos-de-Teste)
@@ -260,7 +272,7 @@ Propriedades permitidas:
 - `formato`
 - `obrigatório`, por *default* é `false`
 
-Propriedade `id`:
+#### Propriedade `id`
   - Exemplo: `- id é "nome"`
   - O valor *default* é o nome do elemento em *camel case* (primeira letra minúscula) e sem espaços, *e.g.*, `"Algum Nome"` se torna `"algumNome"`
   - Valor deve ser declarado entre aspas (`"`)
@@ -273,7 +285,7 @@ Propriedade `id`:
   - Múltiplos identificadores são denotados por `id em [ "<valor1>", "<valor2>", ... ]` **Ainda não suportada pela ferramenta**
     - Exemplo: `id em [ "nascimento", "~nascimento" ]`
 
-Propriedade `tipo`:
+#### Propriedade `tipo`
   - Exemplo: `- tipo é botão`
   - O valor *default* é `caixa de texto`
   - Valores não usam aspas (`"`)
@@ -305,7 +317,7 @@ Propriedade `tipo`:
     - `título` ou `title`
     - `url` ou `address` ou `ip` ou `site`
 
-Propriedade `editável`:
+#### Propriedade `editável`
   - Exemplo: `- editável é true`
   - Valores permitidos são `true` e `false`
   - Valores não usam aspas (`"`)
@@ -324,7 +336,7 @@ Propriedade `editável`:
       - `valor máximo`
       - `valor`
 
-Propriedade `tipo de dado`:
+#### Propriedade `tipo de dado`:
   - Exemplo: `- tipo de dado é double`
   - Valores não usam aspas (`"`)
   - Tipos permitidos são:
@@ -336,7 +348,7 @@ Propriedade `tipo de dado`:
     - `datetime`
   - Precisão de valores `double` são inferidas a partir da declaração, *e.g.*, `12.50` faz Concordia saber que a precisão é `2`
 
-Propriedade `valor`:
+#### Propriedade `valor`
   - Valores aceitos:
     - [Valor](#valor)
     - [Número](#número)
@@ -356,7 +368,7 @@ Propriedade `valor`:
     - `- valor não está em "SELECT ..."`
     - `- valor não é igual a {Outro Elemento de IU}`
 
-Propriedade `valor mínimo`:
+#### Propriedade `valor mínimo`
   - Valores aceitos:
     - [Número](#número)
     - [Constante](#constantes)
@@ -370,7 +382,7 @@ Propriedade `valor mínimo`:
     - `- valor mínimo vem da consulta "SELECT ..."`
     - `- valor mínimo é igual a {Outro Elemento de IU}`
 
-Propriedade `valor máximo`:
+#### Propriedade `valor máximo`
   - Mesma sintaxe que `comprimento mínimo`
   - Exemplos:
     - `- valor máximo é 5`
@@ -380,7 +392,7 @@ Propriedade `valor máximo`:
     - `- valor máximo é igual a {Outro Elemento de IU}`
 
 
-Propriedade `comprimento mínimo`:
+#### Propriedade `comprimento mínimo`
   - Mesma sintaxe que `valor mínimo`
   - Exemplos:
     - `- comprimento mínimo é 5`
@@ -389,7 +401,7 @@ Propriedade `comprimento mínimo`:
     - `- comprimento mínimo vem da consulta "SELECT ..."`
     - `- comprimento mínimo  é igual a {Outro Elemento de IU}`
 
-Propriedade `comprimento máximo`:
+#### Propriedade `comprimento máximo`
   - Mesma sintaxe que `comprimento mínimo`
   - Exemplos:
     - `- comprimento máximo é 50`
@@ -399,7 +411,7 @@ Propriedade `comprimento máximo`:
     - `- comprimento máximo é igual a {Outro Elemento de IU}`
 
 
-Propriedade `formato`:
+#### Propriedade `formato`
   - Valores aceitos:
     - [Valor](#valor)
     - [Constant](#constantes)
@@ -409,11 +421,15 @@ Propriedade `formato`:
     - `- formato é "/^[0-9]{2}\.[0-9]{3}\-[0-9]{3}$/"`
     - `- formato é [Alguma Constante com Expressão Regular]`
 
-Propriedade `obrigatório`:
-  - Valores aceitos são `true` e `false`
-  - O valor *default* é `false`
+#### Propriedade `obrigatório`
+  - Valores aceitos são `verdadeiro` ou `falso` (e também `true` ou `false`)
+  - Quando não declarada, a propriedade assume o valor `falso` (ou seja, não obrigatório)
+  - O valor `verdadeiro` é opcional. Por exemplo, a seguinte declaração é aceita como `verdadeiro`:
+    - `- obrigatório`
   - Exemplos:
-    - `- obrigatório é true`
+    - `- obrigatório`
+    - `- obrigatório é verdadeiro`
+    - `- obrigatório é falso`
 
 
 #### Exemplos de Elementos de IU
@@ -477,21 +493,25 @@ Observações:
 - Declaração global.
 - Espaço de nomes é compartilhado com Constantes e Tabelas.
 - Permitida mais de uma declaração por arquivo.
-- Valores das propriedades devem ser declarados entre aspas (`"`).
+- Valores declarados nas propriedades devem conter aspas (`"`).
 
-Propriedades permitidas:
-  - `tipo`
-  - `hospedeiro`
-  - `porta`
-  - `nome`
-  - `caminho`
-  - `usuario`
-  - `senha`
-  - `opções`
-  - ou as suas equivalentes [em inglês](../en/language.md#database)
+#### Propriedades
+
+| Propriedade  | Descrição | Obrigatória |
+| ------------ | --------- | ----------- |
+| `tipo`       | Tipo do banco de dados. Veja os valores suportados abaixo. | Sim |
+| `hospedeiro` | Uma URL que indica o local onde o banco de dados está hospedado. | Varia |
+| `porta`      | Porta de comunicação de rede utilizada para conectar ao banco de dados. Caso não definida, se tentará usar a porta padrão do banco de dados, de acordo com a propriedade `tipo`.| Não |
+| `nome`       | Nome do banco de dados. Geralmente necessário quando o existe um servidor de banco de dados, cujo local é indicado na propriedade `hospedeiro`, e o banco de dados é acessível pelo nome. | Varia |
+| `caminho`    | Caminho do banco de dados. Usado quando seu acesso ocorre pelo sistema de arquivos, como nos tipos `csv`, `ini`, `json`, `sqlite` e `xlsx`. | Varia |
+| `usuario`    | Usuário para conexão com o banco de dados. Caso não for definido, se tentará usar o usuário padrão do banco de dados, de acordo com a propriedade `tipo`. | Não |
+| `senha`      | Senha para conexão com o banco de dados. Caso não for definida, se tentará usar a senha padrão do banco de dados, de acordo com a propriedade `tipo`. | Não |
+| `opções`     | Opções de conexão específicas do banco de dados. | Não |
+
+Também são suportadas as propriedades equivalentes [em inglês](../en/language.md#database).
 
 
-Valores atualmente suportados para `tipo`:
+Valores atualmente suportados para `tipo` são:
 
 | Valor        | Banco de Dados  | Comando de Instalação* | Observação |
 | ------------ | --------------- | ---------------------- | ---------- |
@@ -506,9 +526,12 @@ Valores atualmente suportados para `tipo`:
 | `"sqlite"`   | [SQLite](https://www.sqlite.org/) | `npm install database-js-sqlite` | |
 | `"xlsx"`     | [Planilhas Excel](https://en.wikipedia.org/wiki/Microsoft_Excel) | `npm install database-js-xlsx`  | |
 
-***Para conectar e manipular bancos de dados, é preciso instalar os pacotes NPM correspondentes.** Acesse o diretório raiz de sua aplicação e digite o *Comando de Instalação* correspondente.
+**Observações** (*)
+- Para conectar e manipular bancos de dados durante os testes, é preciso instalar os pacotes NPM correspondentes.
+- Acesse o diretório raiz de sua aplicação e digite o *Comando de Instalação* correspondente (ver acima).
 
-#### Exemplos de bancos de dados
+
+#### Exemplos
 
 Exemplo 1:
 ```
@@ -524,7 +547,7 @@ Exemplo 2:
 ```
 Banco de Dados: Outro BD
   - tipo é "json"
-  - caminho é "C:\caminho\to\db.json"
+  - caminho é "C:\caminho\para\db.json"
 ```
 
 
