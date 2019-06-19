@@ -128,6 +128,10 @@ class PreTestCaseGenerator {
                 if (TypeChecking_1.isDefined(inputDataActionEntity) && (this.hasValue(step) || this.hasNumber(step))) {
                     this.replaceUIElementsWithUILiterals([step], language, langContent, ctx, UIElementReplacementOption.JUST_INPUT_ACTIONS);
                 }
+                // # (NEW-2019-06-19) Replace UI ELEMENTS without input actions and values by UI LITERALS
+                else {
+                    this.replaceUIElementsWithUILiterals([step], language, langContent, ctx, UIElementReplacementOption.NO_INPUT_ACTIONS);
+                }
             }
             // console.log( 'AFTER' );
             // console.log( newSteps.map( ( e ) => e.content ) );
