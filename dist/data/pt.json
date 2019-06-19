@@ -162,7 +162,7 @@
                 "ol": [ "lista ordenada", "ordered list", "ol" ],
                 "page": [ "pagina", "page" ],
                 "paragraph": [ "paragrafo", "paragraph" ],
-                "radio": [ "radio" ],
+                "radio": [ "radio", "botao de radio", "radio button" ],
                 "screen": [ "tela", "screen" ],
                 "select": [ "caixa de selecao", "select", "combo", "combobox" ],
                 "slider": [ "deslizador", "slider" ],
