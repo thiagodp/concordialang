@@ -160,7 +160,7 @@ export class MultiFileProcessor {
     };
 
     private extensionsToRegExp = ( extensions: string[] ): RegExp => {
-        const exp = '(' + extensions.map( e => e.indexOf( '.' ) >= 0 ? '\\' + e : '\\.' + e ).join( '|' ) + ')';
+        const exp = '(' + extensions.map( e => e.indexOf( '.' ) >= 0 ? '\\' + e : '\\.' + e ).join( '|' ) + ')$';
         return new RegExp( exp, 'ui' );
     };
 
