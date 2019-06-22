@@ -1,5 +1,4 @@
-import { Step } from "concordialang-types";
-// import * as deepcopy from 'deepcopy';
+import { Step } from "../ast/Step";
 
 /**
  * Test Scenario

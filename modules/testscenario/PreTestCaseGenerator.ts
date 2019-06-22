@@ -2,11 +2,13 @@ import * as arrayDiff from 'arr-diff';
 import * as deepcopy from 'deepcopy';
 import { DateTimeFormatter, LocalDate, LocalDateTime, LocalTime } from 'js-joda';
 import { basename } from 'path';
-import { Document, Location, Step, EntityValueType, UIElement } from 'concordialang-types';
-import { Entities, NLPEntity, NLPUtil } from 'concordialang-types';
-import { LocatedException } from 'concordialang-types';
+import { Location } from 'concordialang-types';
+
+import { Document, Step, EntityValueType, UIElement } from '../ast';
+import { Entities, NLPEntity, NLPUtil } from '../nlp';
+import { LocatedException } from '../dbi/LocatedException';
 import { CaseType } from '../app/CaseType';
-import { AugmentedSpec } from '../ast/AugmentedSpec';
+import { AugmentedSpec } from '../req/AugmentedSpec';
 import { EnglishKeywordDictionary } from '../dict/EnglishKeywordDictionary';
 import { KeywordDictionary } from '../dict/KeywordDictionary';
 import { LanguageContent } from '../dict/LanguageContent';
@@ -25,16 +27,14 @@ import { DataTestCaseAnalyzer, DTCAnalysisResult, DTCMap, UIEVariableToDTCMap } 
 import { Random } from '../testdata/random/Random';
 import { RandomString } from '../testdata/random/RandomString';
 import { UIElementValueGenerator, ValueGenContext } from '../testdata/UIElementValueGenerator';
-import { ACTION_TARGET_MAP } from '../util/ActionMap';
 import { Actions } from '../util/Actions';
-import { ActionTargets } from '../util/ActionTargets';
 import { convertCase, upperFirst } from '../util/CaseConversor';
 import { ReferenceReplacer } from '../util/ReferenceReplacer';
 import { isDefined } from '../util/TypeChecking';
 import { UIElementNameHandler } from '../util/UIElementNameHandler';
 import { UIElementPropertyExtractor } from '../util/UIElementPropertyExtractor';
-import { PreTestCase } from './PreTestCase';
 import { TargetTypeUtil } from '../util/TargetTypeUtil';
+import { PreTestCase } from './PreTestCase';
 
 
 export class GenContext {

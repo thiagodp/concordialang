@@ -1,8 +1,13 @@
-import { Database } from 'concordialang-types';
-import { DatabaseInterface, LocatedException, ConnectionCheckResult, ConnectionResult } from 'concordialang-types';
+import { Database } from '../ast/Database';
+import { AugmentedSpec } from "../req/AugmentedSpec";
+import {
+    DatabaseInterface,
+    LocatedException,
+    ConnectionCheckResult,
+    ConnectionResult
+} from '../dbi';
 import { RuntimeException } from '../req/RuntimeException';
 import { DatabaseWrapper } from './DatabaseWrapper';
-import { AugmentedSpec } from '../ast/AugmentedSpec';
 
 /**
  * Checks all the connections of a specification.

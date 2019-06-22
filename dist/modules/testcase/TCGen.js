@@ -8,7 +8,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const concordialang_types_1 = require("concordialang-types");
+const ast_1 = require("../ast");
 const NodeTypes_1 = require("../req/NodeTypes");
 /**
  * Generates Test Cases from Test Scenarios and parameters.
@@ -59,16 +59,16 @@ class TCGen {
         }
         let hasScenarioTag = false, hasVariantTag = false;
         for (let tag of tc.tags) {
-            if (concordialang_types_1.ReservedTags.SCENARIO === tag.name)
+            if (ast_1.ReservedTags.SCENARIO === tag.name)
                 hasScenarioTag = true;
-            else if (concordialang_types_1.ReservedTags.VARIANT === tag.name)
+            else if (ast_1.ReservedTags.VARIANT === tag.name)
                 hasVariantTag = true;
         }
         if (!hasScenarioTag) {
-            tc.tags.push(this.makeTag(concordialang_types_1.ReservedTags.SCENARIO, scenarioIndex));
+            tc.tags.push(this.makeTag(ast_1.ReservedTags.SCENARIO, scenarioIndex));
         }
         if (!hasVariantTag) {
-            tc.tags.push(this.makeTag(concordialang_types_1.ReservedTags.VARIANT, variantIndex));
+            tc.tags.push(this.makeTag(ast_1.ReservedTags.VARIANT, variantIndex));
         }
     }
     /**
@@ -113,10 +113,10 @@ class TCGen {
     makeTags(tc) {
         let tags = [];
         if (tc.generated) {
-            tags.push(this.makeTag(concordialang_types_1.ReservedTags.GENERATED));
+            tags.push(this.makeTag(ast_1.ReservedTags.GENERATED));
         }
         if (tc.shouldFail) {
-            tags.push(this.makeTag(concordialang_types_1.ReservedTags.FAIL));
+            tags.push(this.makeTag(ast_1.ReservedTags.FAIL));
         }
         return tags;
     }

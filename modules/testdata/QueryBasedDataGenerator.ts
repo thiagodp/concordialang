@@ -1,4 +1,4 @@
-import { Queryable } from "concordialang-types";
+import { Queryable } from "../dbi/Queryable";
 import { RawDataGenerator } from "./raw/RawDataGenerator";
 import { RandomLong } from "./random/RandomLong";
 import { QueryCache } from "../db/QueryCache";

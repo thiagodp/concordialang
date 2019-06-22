@@ -1,6 +1,6 @@
-import { Feature } from "concordialang-types";
-import { NamedNodeLexer } from "./NamedNodeLexer";
+import { Feature } from "../ast/Feature";
 import { NodeTypes } from "../req/NodeTypes";
+import { NamedNodeLexer } from "./NamedNodeLexer";
 
 /**
  * Detects a Feature.

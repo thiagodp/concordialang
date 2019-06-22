@@ -2,8 +2,8 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const prettyBytes = require("pretty-bytes");
 const ErrorSorting_1 = require("../util/ErrorSorting");
-const ProcessingInfo_1 = require("./ProcessingInfo");
 const TypeChecking_1 = require("../util/TypeChecking");
+const ProcessingInfo_1 = require("./ProcessingInfo");
 class VerboseAppEventsListener {
     constructor(_cli, _debug = false) {
         this._cli = _cli;

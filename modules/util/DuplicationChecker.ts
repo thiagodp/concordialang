@@ -1,8 +1,10 @@
 // TO-DO: remove the following dependencies:
 import chalk from 'chalk';
 import * as logSymbols from 'log-symbols';
-// ---
-import { NamedNode, Location } from "concordialang-types";
+// --
+import { Location } from "concordialang-types";
+
+import { NamedNode } from "../ast/Node";
 import { SemanticException } from "../semantic/SemanticException";
 
 /**

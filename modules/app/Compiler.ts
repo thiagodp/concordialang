@@ -1,12 +1,13 @@
 import Graph = require( 'graph.js/dist/graph.full.js' );
-import { Document } from "concordialang-types";
-import { LocatedException } from "concordialang-types";
+
+import { Document } from "../ast/Document";
+import { LocatedException } from "../dbi/LocatedException";
+import { BatchSpecificationAnalyzer } from "../semantic/BatchSpecificationAnalyzer";
+import { AugmentedSpec } from "../req/AugmentedSpec";
+import { SpecFilter } from "../selection/SpecFilter";
 import { MultiFileProcessor, MultiFileProcessedData } from "./MultiFileProcessor";
 import { Options } from "./Options";
-import { BatchSpecificationAnalyzer } from "../semantic/BatchSpecificationAnalyzer";
-import { AugmentedSpec } from "../ast/AugmentedSpec";
 import { CompilerListener } from "./CompilerListener";
-import { SpecFilter } from "../selection/SpecFilter";
 import { ProcessingInfo } from "./ProcessingInfo";
 
 /**

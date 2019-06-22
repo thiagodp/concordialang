@@ -1,11 +1,15 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const concordialang_types_1 = require("concordialang-types");
+const LocatedException_1 = require("../dbi/LocatedException");
 /**
  * Lexical exception.
  *
  * @author Thiago Delgado Pinto
  */
-class LexicalException extends concordialang_types_1.LocatedException {
+class LexicalException extends LocatedException_1.LocatedException {
+    constructor() {
+        super(...arguments);
+        this.name = 'LexicalError';
+    }
 }
 exports.LexicalException = LexicalException;

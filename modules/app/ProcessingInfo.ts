@@ -1,4 +1,4 @@
-import { LocatedException } from "concordialang-types";
+import { LocatedException } from "../dbi/LocatedException";
 
 export class ProcessingInfo {
     constructor(

@@ -1,4 +1,4 @@
-import { BeforeAll } from 'concordialang-types';
+import { BeforeAll } from '../ast/TestEvent';
 import { SyntacticException } from '../req/SyntacticException';
 import { isDefined } from '../util/TypeChecking';
 import { NodeIterator } from './NodeIterator';

@@ -1,4 +1,6 @@
-import { Document, Location } from "concordialang-types";
+import { Location } from "concordialang-types";
+
+import { Document } from "../ast/Document";
 import { LanguageContentLoader } from "../dict/LanguageContentLoader";
 import { KeywordDictionary } from "../dict/KeywordDictionary";
 import { EnglishKeywordDictionary } from "../dict/EnglishKeywordDictionary";

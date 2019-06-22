@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const enumUtil = require("enum-util");
-const concordialang_types_1 = require("concordialang-types");
+const nlp_1 = require("../nlp");
 const CaseType_1 = require("../app/CaseType");
 const ActionTargets_1 = require("./ActionTargets");
 const CaseConversor_1 = require("./CaseConversor");
@@ -29,9 +29,9 @@ class UIElementPropertyExtractor {
         const item = this.extractProperty(uie, UIPropertyTypes_1.UIPropertyTypes.ID);
         if (TypeChecking_1.isDefined(item)) {
             // Find an entity "value" in the NLP result
-            let entity = item.nlpResult.entities.find((e) => concordialang_types_1.Entities.VALUE === e.entity);
+            let entity = item.nlpResult.entities.find((e) => nlp_1.Entities.VALUE === e.entity);
             if (!TypeChecking_1.isDefined(entity)) { // Let's try as command
-                entity = item.nlpResult.entities.find((e) => concordialang_types_1.Entities.COMMAND === e.entity);
+                entity = item.nlpResult.entities.find((e) => nlp_1.Entities.COMMAND === e.entity);
             }
             if (TypeChecking_1.isDefined(entity)) {
                 return entity.value;
@@ -102,8 +102,8 @@ class UIElementPropertyExtractor {
         return TypeChecking_1.isDefined(nlpEntity) && this.isEntityConsideredTrue(nlpEntity);
     }
     isEntityConsideredTrue(nlpEntity) {
-        return (concordialang_types_1.Entities.BOOL_VALUE === nlpEntity.entity && 'true' == nlpEntity.value)
-            || (concordialang_types_1.Entities.NUMBER === nlpEntity.entity && Number(nlpEntity.value) != 0);
+        return (nlp_1.Entities.BOOL_VALUE === nlpEntity.entity && 'true' == nlpEntity.value)
+            || (nlp_1.Entities.NUMBER === nlpEntity.entity && Number(nlpEntity.value) != 0);
     }
     /**
      * Returns the extract UI Property or null if not found.
@@ -138,14 +138,14 @@ class UIElementPropertyExtractor {
         }
         // fallbacks
         const acceptedValueEntities = [
-            concordialang_types_1.Entities.UI_DATA_TYPE,
-            concordialang_types_1.Entities.UI_ELEMENT_TYPE,
-            concordialang_types_1.Entities.BOOL_VALUE,
-            concordialang_types_1.Entities.VALUE,
-            concordialang_types_1.Entities.NUMBER,
-            concordialang_types_1.Entities.CONSTANT,
-            concordialang_types_1.Entities.VALUE_LIST,
-            concordialang_types_1.Entities.QUERY
+            nlp_1.Entities.UI_DATA_TYPE,
+            nlp_1.Entities.UI_ELEMENT_TYPE,
+            nlp_1.Entities.BOOL_VALUE,
+            nlp_1.Entities.VALUE,
+            nlp_1.Entities.NUMBER,
+            nlp_1.Entities.CONSTANT,
+            nlp_1.Entities.VALUE_LIST,
+            nlp_1.Entities.QUERY
         ];
         for (let entity of prop.nlpResult.entities) {
             if (acceptedValueEntities.indexOf(entity.entity) >= 0) {
@@ -274,7 +274,7 @@ class UIElementPropertyExtractor {
     incompatibleOperators(propertiesMap) {
         let incompatible = [];
         const valueBasedPropertyTypes = this.valueBasedPropertyTypes();
-        const nlpUtil = new concordialang_types_1.NLPUtil();
+        const nlpUtil = new nlp_1.NLPUtil();
         for (let propType of valueBasedPropertyTypes) {
             let properties = propertiesMap.get(propType);
             if (!properties || properties.length < 2) { // << 2 because 1 has no conflict
@@ -283,7 +283,7 @@ class UIElementPropertyExtractor {
             // Operators are not compatible, so if there are more than one operator
             // in the properties, there is a problem.
             const operatorSet = new Set(properties
-                .map(p => nlpUtil.entityNamed(concordialang_types_1.Entities.UI_CONNECTOR, p.nlpResult))
+                .map(p => nlpUtil.entityNamed(nlp_1.Entities.UI_CONNECTOR, p.nlpResult))
                 .map(entity => entity.entity));
             if (operatorSet.size > 1) {
                 incompatible.push(properties);
@@ -291,7 +291,7 @@ class UIElementPropertyExtractor {
             }
             // Same operator without modifier -> problem
             const modifiers = properties
-                .map(p => nlpUtil.entityNamed(concordialang_types_1.Entities.UI_CONNECTOR_MODIFIER, p.nlpResult))
+                .map(p => nlpUtil.entityNamed(nlp_1.Entities.UI_CONNECTOR_MODIFIER, p.nlpResult))
                 .map(entity => entity.entity);
             if (modifiers.length != 1) { // e.g., 0 or 2
                 incompatible.push(properties);

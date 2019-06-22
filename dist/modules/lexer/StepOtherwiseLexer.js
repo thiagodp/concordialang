@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const StartingKeywordLexer_1 = require("./StartingKeywordLexer");
 const NodeTypes_1 = require("../req/NodeTypes");
+const StartingKeywordLexer_1 = require("./StartingKeywordLexer");
 /**
  * Detects an Otherwise node.
  *

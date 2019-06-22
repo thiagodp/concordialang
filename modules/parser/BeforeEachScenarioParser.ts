@@ -1,4 +1,4 @@
-import { BeforeEachScenario } from 'concordialang-types';
+import { BeforeEachScenario } from '../ast/TestEvent';
 import { SyntacticException } from '../req/SyntacticException';
 import { isDefined } from '../util/TypeChecking';
 import { NodeIterator } from './NodeIterator';

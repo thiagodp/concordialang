@@ -2,9 +2,10 @@ import { EventEmitter } from 'events';
 import { basename, dirname, join, parse, relative } from 'path';
 import { deepcopy } from 'deepcopy';
 import Graph = require('graph.js/dist/graph.full.js');
-import { Document, FileInfo, Import, Language, Scenario, TestCase, Variant } from 'concordialang-types';
+
+import { Document, FileInfo, Import, Language, Scenario, TestCase, Variant } from '../../ast';
 import { Options } from '../../app/Options';
-import { AugmentedSpec } from '../../ast/AugmentedSpec';
+import { AugmentedSpec } from '../../req/AugmentedSpec';
 import { NodeTypes } from '../../req/NodeTypes';
 import { DocumentUtil } from '../../util/DocumentUtil';
 

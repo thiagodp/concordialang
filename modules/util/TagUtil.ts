@@ -1,4 +1,4 @@
-import { Tag } from "concordialang-types";
+import { Tag } from "../ast/Tag";
 
 /**
  * Tag utilities

@@ -1,9 +1,9 @@
-import { ContentNode } from 'concordialang-types';
-import { NodeLexer, LexicalAnalysisResult } from "./NodeLexer";
+import { ContentNode } from '../ast/Node';
 import { Expressions } from "../req/Expressions";
 import { Symbols } from "../req/Symbols";
 import { LineChecker } from "../req/LineChecker";
 import { LexicalException } from "../req/LexicalException";
+import { NodeLexer, LexicalAnalysisResult } from "./NodeLexer";
 import { CommentHandler } from './CommentHandler';
 
 /**

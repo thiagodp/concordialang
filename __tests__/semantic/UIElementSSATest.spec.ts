@@ -1,9 +1,10 @@
 import { join } from 'path';
-import { Document, FileInfo } from "concordialang-types";
-import { LocatedException } from "concordialang-types";
+
+import { Document, FileInfo } from "../../modules/ast";
+import { AugmentedSpec } from "../../modules/req/AugmentedSpec";
+import { LocatedException } from '../../modules/dbi';
 import { UIElementSSA } from "../../modules/semantic/UIElementSSA";
 import { SimpleCompiler } from "../../modules/util/SimpleCompiler";
-import { AugmentedSpec } from "../../modules/ast/AugmentedSpec";
 import { SpecFilter } from "../../modules/selection/SpecFilter";
 import { BatchSpecificationAnalyzer } from "../../modules/semantic/BatchSpecificationAnalyzer";
 

@@ -1,5 +1,5 @@
-import { ConstantBlock } from "concordialang-types";
 import { BlockLexer } from "./BlockLexer";
+import { ConstantBlock } from "../ast/ConstantBlock";
 import { NodeTypes } from "../req/NodeTypes";
 
 /**

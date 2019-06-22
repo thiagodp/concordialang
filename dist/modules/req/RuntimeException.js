@@ -1,12 +1,12 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const concordialang_types_1 = require("concordialang-types");
+const LocatedException_1 = require("../dbi/LocatedException");
 /**
  * Runtime exception
  *
  * @author Thiago Delgado Pinto
  */
-class RuntimeException extends concordialang_types_1.LocatedException {
+class RuntimeException extends LocatedException_1.LocatedException {
     constructor() {
         super(...arguments);
         this.name = 'RuntimeError';

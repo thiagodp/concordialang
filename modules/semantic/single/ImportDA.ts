@@ -1,9 +1,10 @@
 import * as fs from 'fs';
 import { dirname, join } from 'path';
-import { Import, Document } from 'concordialang-types';
-import { DocumentAnalyzer } from './DocumentAnalyzer';
+
+import { Import, Document } from '../../ast';
 import { DuplicationChecker } from '../../util/DuplicationChecker';
 import { SemanticException } from "../SemanticException";
+import { DocumentAnalyzer } from './DocumentAnalyzer';
 
 /**
  * Import analyzer for a single document.

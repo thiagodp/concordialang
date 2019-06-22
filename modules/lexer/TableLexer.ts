@@ -1,6 +1,6 @@
-import { Table } from "concordialang-types";
-import { NamedNodeLexer } from "./NamedNodeLexer";
+import { Table } from "../ast/Table";
 import { NodeTypes } from "../req/NodeTypes";
+import { NamedNodeLexer } from "./NamedNodeLexer";
 
 /**
  * Detects a Table.

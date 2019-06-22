@@ -1,11 +1,12 @@
-import { Document } from 'concordialang-types';
+import { resolve } from 'path';
+
+import { Document } from '../../modules/ast/Document';
+import { AugmentedSpec } from '../../modules/req/AugmentedSpec';
 import { FeatureSSA } from '../../modules/semantic/FeatureSSA';
 import { Parser } from '../../modules/parser/Parser';
 import { Lexer } from '../../modules/lexer/Lexer';
-import { AugmentedSpec } from '../../modules/ast/AugmentedSpec';
 import { Options } from '../../modules/app/Options';
 import { LexerBuilder } from '../../modules/lexer/LexerBuilder';
-import { resolve } from 'path';
 import { SpecFilter } from '../../modules/selection/SpecFilter';
 
 /**

@@ -1,6 +1,6 @@
-import { StepGiven } from "concordialang-types";
-import { StartingKeywordLexer } from './StartingKeywordLexer';
+import { StepGiven } from "../ast/Step";
 import { NodeTypes } from "../req/NodeTypes";
+import { StartingKeywordLexer } from './StartingKeywordLexer';
 
 /**
  * Detects a Given node.

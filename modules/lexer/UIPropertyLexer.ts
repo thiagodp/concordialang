@@ -1,6 +1,6 @@
-import { UIProperty } from "concordialang-types";
-import { ListItemLexer } from './ListItemLexer';
+import { UIProperty } from "../ast/UIElement";
 import { NodeTypes } from '../req/NodeTypes';
+import { ListItemLexer } from './ListItemLexer';
 
 /**
  * Detects a UIProperty node.

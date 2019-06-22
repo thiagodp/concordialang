@@ -1,4 +1,4 @@
-import { DatabaseProperty } from 'concordialang-types';
+import { DatabaseProperty } from '../ast/Database';
 import { NodeTypes } from '../req/NodeTypes';
 import { ListItemLexer } from './ListItemLexer';
 

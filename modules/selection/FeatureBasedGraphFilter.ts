@@ -1,5 +1,6 @@
 import Graph = require('graph.js/dist/graph.full.js');
-import { Document } from 'concordialang-types';
+
+import { Document } from '../ast/Document';
 import { isDefined } from '../util/TypeChecking';
 import { CriteriaMatcher } from './CriteriaMatcher';
 import { FilterCriterion } from './FilterCriterion';

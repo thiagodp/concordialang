@@ -1,26 +1,46 @@
 import Graph = require( 'graph.js/dist/graph.full.js' );
-import { Document, TestCase, Variant, ReservedTags } from "concordialang-types";
-import { LocatedException } from "concordialang-types";
+import { writeFile } from 'fs';
+import { promisify } from "util";
+
+import { Document, TestCase, Variant, ReservedTags } from "../ast";
+import { LocatedException } from "../dbi/LocatedException";
 import { GivenWhenThenSentenceRecognizer } from "../nlp/GivenWhenThenSentenceRecognizer";
 import { LanguageContentLoader } from "../dict/LanguageContentLoader";
-import { Options } from "./Options";
 import { PreTestCaseGenerator, GenContext } from "../testscenario/PreTestCaseGenerator";
-import { AugmentedSpec } from "../ast/AugmentedSpec";
+import { AugmentedSpec } from "../req/AugmentedSpec";
 import { TSGen } from "../testscenario/TSGen";
-import { VariantSelectionStrategy, AllVariantsSelectionStrategy, FirstVariantSelectionStrategy, FirstMostImportantVariantSelectionStrategy, SingleRandomVariantSelectionStrategy } from '../selection/VariantSelectionStrategy';
-import { CombinationStrategy, ShuffledOneWiseStrategy, OneWiseStrategy, SingleRandomOfEachStrategy, CartesianProductStrategy } from "../selection/CombinationStrategy";
+import {
+    VariantSelectionStrategy,
+    AllVariantsSelectionStrategy,
+    FirstVariantSelectionStrategy,
+    FirstMostImportantVariantSelectionStrategy,
+    SingleRandomVariantSelectionStrategy
+} from '../selection/VariantSelectionStrategy';
+import {
+    CombinationStrategy,
+    ShuffledOneWiseStrategy,
+    OneWiseStrategy,
+    SingleRandomOfEachStrategy,
+    CartesianProductStrategy
+} from "../selection/CombinationStrategy";
 import { TestScenario } from "../testscenario/TestScenario";
 import { TCGen } from "../testcase/TCGen";
 import { TestPlanner } from "../testcase/TestPlanner";
 import { TCDocGen } from "../testcase/TCDocGen";
 import { TestCaseFileGenerator } from "../testcase/TestCaseFileGenerator";
-import { promisify } from "util";
 import { RuntimeException } from "../req/RuntimeException";
-import { writeFile } from 'fs';
-import { VariantSelectionOptions, CombinationOptions, InvalidSpecialOptions } from "./Defaults";
 import { Warning } from "../req/Warning";
-import { DataTestCaseMix, OnlyValidMix, JustOneInvalidMix, OnlyInvalidMix, UnfilteredMix } from "../testcase/DataTestCaseMix";
+import {
+    DataTestCaseMix,
+    OnlyValidMix,
+    JustOneInvalidMix,
+    OnlyInvalidMix,
+    UnfilteredMix
+} from "../testcase/DataTestCaseMix";
+
 import { TCGenListener } from "./TCGenListener";
+import { Options } from "./Options";
+import { VariantSelectionOptions, CombinationOptions, InvalidSpecialOptions } from "./Defaults";
 
 export class TCGenController {
 

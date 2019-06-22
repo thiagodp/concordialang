@@ -1,9 +1,9 @@
-import { ListItem, DatabaseProperty } from "concordialang-types";
+import { ListItem, DatabaseProperty } from "../ast";
+import { NodeTypes } from "../req/NodeTypes";
+import { SyntacticException } from "../req/SyntacticException";
 import { ListItemNodeParser } from "./ListItemNodeParser";
 import { NodeIterator } from './NodeIterator';
 import { ParsingContext } from './ParsingContext';
-import { NodeTypes } from "../req/NodeTypes";
-import { SyntacticException } from "../req/SyntacticException";
 
 /**
  * Database property parser.

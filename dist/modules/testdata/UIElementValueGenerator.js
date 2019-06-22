@@ -8,7 +8,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const concordialang_types_1 = require("concordialang-types");
+const nlp_1 = require("../nlp");
 const DatabaseToAbstractDatabase_1 = require("../db/DatabaseToAbstractDatabase");
 const DatabaseTypes_1 = require("../db/DatabaseTypes");
 const DatabaseWrapper_1 = require("../db/DatabaseWrapper");
@@ -232,14 +232,14 @@ class UIElementValueGenerator {
             switch (propertyValue.entity) {
                 // References - Entities CONSTANT and UI_ELEMENT.
                 //              The entities STATE and UI_LITERAL are not allowed for UI Properties.
-                case concordialang_types_1.Entities.CONSTANT: {
+                case nlp_1.Entities.CONSTANT: {
                     const constant = propertyValue.references[0];
                     if (TypeChecking_1.isDefined(constant)) {
                         return ValueTypeDetector_1.adjustValueToTheRightType(constant.value);
                     }
                     return null;
                 }
-                case concordialang_types_1.Entities.UI_ELEMENT: {
+                case nlp_1.Entities.UI_ELEMENT: {
                     const uie = propertyValue.references[0];
                     if (TypeChecking_1.isDefined(uie) && TypeChecking_1.isDefined(uie.info) && TypeChecking_1.isDefined(uie.info.fullVariableName)) {
                         // In cache?
@@ -259,7 +259,7 @@ class UIElementValueGenerator {
                 }
                 // Values - Entity QUERY only.
                 //          The entities VALUE, NUMBER, and VALUE_LIST were already processed by the UIPropertyRecognizer.
-                case concordialang_types_1.Entities.QUERY: {
+                case nlp_1.Entities.QUERY: {
                     //
                     // Resolve query's references to execute it.
                     //

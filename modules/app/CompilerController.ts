@@ -4,7 +4,7 @@ import { SingleFileCompiler } from "./SingleFileCompiler";
 import { MultiFileProcessor } from "./MultiFileProcessor";
 import { VerboseAppEventsListener } from "./VerboseAppEventsListener";
 import { SimpleAppEventsListener } from "./SimpleAppEventsListener";
-import { AugmentedSpec } from "../ast/AugmentedSpec";
+import { AugmentedSpec } from "../req/AugmentedSpec";
 import { Lexer } from "../lexer/Lexer";
 import { Parser } from "../parser/Parser";
 import { NLPTrainer } from "../nlp/NLPTrainer";

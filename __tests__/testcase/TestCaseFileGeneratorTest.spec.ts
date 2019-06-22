@@ -1,14 +1,15 @@
 import { resolve } from "path";
-import { Document } from 'concordialang-types';
+
+import { Document } from '../../modules/ast/Document';
 import { TestCaseFileGenerator } from "../../modules/testcase/TestCaseFileGenerator";
 import { JsonLanguageContentLoader, LanguageContentLoader } from "../../modules/dict/LanguageContentLoader";
 import { Options } from "../../modules/app/Options";
+import { FileData, FileMeta } from "../../modules/app/SingleFileProcessor";
 import { SingleFileCompiler } from "../../modules/app/SingleFileCompiler";
 import { LexerBuilder } from "../../modules/lexer/LexerBuilder";
 import { Parser } from "../../modules/parser/Parser";
 import { NLPBasedSentenceRecognizer } from "../../modules/nlp/NLPBasedSentenceRecognizer";
 import { NLPTrainer } from "../../modules/nlp/NLPTrainer";
-import { FileData, FileMeta } from "../../modules/app/SingleFileProcessor";
 
 /**
  * @author Thiago Delgado Pinto

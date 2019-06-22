@@ -1,5 +1,5 @@
-import { RegexBlock } from "concordialang-types";
 import { BlockLexer } from "./BlockLexer";
+import { RegexBlock } from "../ast/RegexBlock";
 import { NodeTypes } from "../req/NodeTypes";
 
 /**

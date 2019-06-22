@@ -1,10 +1,10 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+const XRegExp = require('xregexp');
 const LexicalException_1 = require("../req/LexicalException");
 const NodeTypes_1 = require("../req/NodeTypes");
 const Symbols_1 = require("../req/Symbols");
 const CommentHandler_1 = require("./CommentHandler");
-const XRegExp = require('xregexp');
 /**
  * Detects a Tag.
  *

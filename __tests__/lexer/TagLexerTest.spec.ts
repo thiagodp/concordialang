@@ -1,6 +1,6 @@
 import { TagLexer, TagSubLexer } from "../../modules/lexer/TagLexer";
 import { NodeTypes } from "../../modules/req/NodeTypes";
-import { ReservedTags } from "concordialang-types/dist";
+import { ReservedTags } from "../../modules/ast";
 
 /**
  * @author Thiago Delgado Pinto

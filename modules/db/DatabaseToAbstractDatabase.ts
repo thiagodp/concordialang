@@ -1,5 +1,7 @@
 import { resolve } from 'path';
-import { Database, DatabaseProperties, AbstractDatabase } from "concordialang-types";
+import { AbstractDatabase } from 'concordialang-types';
+
+import { Database, DatabaseProperties } from "../ast/Database";
 import { stringToDatabaseTypeString, isPathBasedDatabaseType } from "./DatabaseTypes";
 
 /**

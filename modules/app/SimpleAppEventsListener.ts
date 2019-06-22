@@ -1,5 +1,6 @@
 import * as prettyBytes from 'pretty-bytes';
-import { LocatedException } from 'concordialang-types';
+
+import { LocatedException } from '../dbi/LocatedException';
 import { FileReadListener, DirectoryReadListener, DirectoryReadResult } from './Listeners';
 import { SingleFileProcessorListener, FileMeta, ProcessedFileData } from './SingleFileProcessor';
 import { MultiFileProcessListener } from './MultiFileProcessor';

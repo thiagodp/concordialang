@@ -1,4 +1,4 @@
-import { UIProperty, StepOtherwise } from 'concordialang-types';
+import { UIProperty, StepOtherwise } from '../ast';
 import { NodeTypes } from '../req/NodeTypes';
 import { SyntacticException } from '../req/SyntacticException';
 import { NodeIterator } from './NodeIterator';

@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const concordialang_types_1 = require("concordialang-types");
+const Entities_1 = require("../nlp/Entities");
 const TypeChecking_1 = require("./TypeChecking");
 const ActionMap_1 = require("./ActionMap");
 const ActionTargets_1 = require("./ActionTargets");
@@ -51,7 +51,7 @@ class TargetTypeUtil {
         let targetTypes = step.targetTypes.slice(0);
         for (let e of step.nlpResult.entities || []) {
             switch (e.entity) {
-                case concordialang_types_1.Entities.UI_ELEMENT: {
+                case Entities_1.Entities.UI_ELEMENT: {
                     const uie = spec.uiElementByVariable(e.value, doc);
                     if (TypeChecking_1.isDefined(uie)) {
                         const uieType = extractor.extractType(uie);
@@ -60,7 +60,7 @@ class TargetTypeUtil {
                     }
                     // continue as UI_LITERAL
                 }
-                case concordialang_types_1.Entities.UI_LITERAL: {
+                case Entities_1.Entities.UI_LITERAL: {
                     let action = step.action || null;
                     if (TypeChecking_1.isDefined(action)) {
                         targetTypes.push(ActionMap_1.ACTION_TARGET_MAP.get(action) || ActionTargets_1.ActionTargets.NONE);

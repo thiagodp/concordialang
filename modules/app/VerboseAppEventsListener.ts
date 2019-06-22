@@ -1,16 +1,18 @@
 import * as prettyBytes from 'pretty-bytes';
-import { LocatedException } from 'concordialang-types';
+
+import { LocatedException } from '../dbi/LocatedException';
+import { sortErrorsByLocation } from '../util/ErrorSorting';
+import { Warning } from '../req/Warning';
+import { isDefined } from '../util/TypeChecking';
 import { FileReadListener, DirectoryReadListener, DirectoryReadResult } from './Listeners';
 import { SingleFileProcessorListener, FileMeta, ProcessedFileData } from './SingleFileProcessor';
 import { MultiFileProcessListener } from './MultiFileProcessor';
 import { CLI } from './CLI';
 import { CompilerListener } from './CompilerListener';
 import { Options } from './Options';
-import { sortErrorsByLocation } from '../util/ErrorSorting';
 import { ProcessingInfo } from './ProcessingInfo';
 import { TCGenListener } from './TCGenListener';
-import { Warning } from '../req/Warning';
-import { isDefined } from '../util/TypeChecking';
+
 
 export class VerboseAppEventsListener implements
     FileReadListener,

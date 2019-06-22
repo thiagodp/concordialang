@@ -7,9 +7,11 @@ import {
     ATSTestCase,
     NamedATSElement,
 } from 'concordialang-plugin';
-import { Document, Location, Step, TestEvent, Entities } from 'concordialang-types';
+import { Location } from 'concordialang-types';
 
-import { AugmentedSpec } from '../ast/AugmentedSpec';
+import { Document, Step, TestEvent } from '../ast';
+import { AugmentedSpec } from "../req/AugmentedSpec";
+import { Entities } from '../nlp/Entities';
 import { DatabaseToAbstractDatabase } from '../db/DatabaseToAbstractDatabase';
 import { supportTablesInQueries } from '../db/DatabaseTypes';
 import { Symbols } from '../req/Symbols';

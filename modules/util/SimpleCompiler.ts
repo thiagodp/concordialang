@@ -1,5 +1,6 @@
 import { resolve } from 'path';
-import { Document, FileInfo } from "concordialang-types";
+
+import { Document, FileInfo } from "../ast";
 import { Options } from "../app/Options";
 import { LanguageContentLoader, JsonLanguageContentLoader } from "../dict/LanguageContentLoader";
 import { LexerBuilder } from "../lexer/LexerBuilder";
@@ -8,7 +9,7 @@ import { Parser } from "../parser/Parser";
 import { NLPTrainer } from "../nlp/NLPTrainer";
 import { NLPBasedSentenceRecognizer } from "../nlp/NLPBasedSentenceRecognizer";
 import { SingleDocumentProcessor } from "../app/SingleDocumentProcessor";
-import { AugmentedSpec } from "../ast/AugmentedSpec";
+import { AugmentedSpec } from "../req/AugmentedSpec";
 
 
 /**

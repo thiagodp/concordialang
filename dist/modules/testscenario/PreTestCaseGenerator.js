@@ -12,7 +12,7 @@ const arrayDiff = require("arr-diff");
 const deepcopy = require("deepcopy");
 const js_joda_1 = require("js-joda");
 const path_1 = require("path");
-const concordialang_types_1 = require("concordialang-types");
+const nlp_1 = require("../nlp");
 const CaseType_1 = require("../app/CaseType");
 const EnglishKeywordDictionary_1 = require("../dict/EnglishKeywordDictionary");
 const LineChecker_1 = require("../req/LineChecker");
@@ -32,8 +32,8 @@ const ReferenceReplacer_1 = require("../util/ReferenceReplacer");
 const TypeChecking_1 = require("../util/TypeChecking");
 const UIElementNameHandler_1 = require("../util/UIElementNameHandler");
 const UIElementPropertyExtractor_1 = require("../util/UIElementPropertyExtractor");
-const PreTestCase_1 = require("./PreTestCase");
 const TargetTypeUtil_1 = require("../util/TargetTypeUtil");
+const PreTestCase_1 = require("./PreTestCase");
 class GenContext {
     constructor(spec, doc, errors, warnings) {
         this.spec = spec;
@@ -64,7 +64,7 @@ class PreTestCaseGenerator {
         this.minRandomStringSize = minRandomStringSize;
         this.maxRandomStringSize = maxRandomStringSize;
         this.randomTriesToInvalidValues = randomTriesToInvalidValues;
-        this._nlpUtil = new concordialang_types_1.NLPUtil();
+        this._nlpUtil = new nlp_1.NLPUtil();
         this._uiePropExtractor = new UIElementPropertyExtractor_1.UIElementPropertyExtractor();
         this._lineChecker = new LineChecker_1.LineChecker();
         this._targetTypeUtil = new TargetTypeUtil_1.TargetTypeUtil();
@@ -306,12 +306,12 @@ class PreTestCaseGenerator {
         if (null === inputDataActionEntity || this.hasValue(step) || this.hasNumber(step)) {
             return [step];
         }
-        let uiLiterals = this._nlpUtil.entitiesNamed(concordialang_types_1.Entities.UI_LITERAL, step.nlpResult);
+        let uiLiterals = this._nlpUtil.entitiesNamed(nlp_1.Entities.UI_LITERAL, step.nlpResult);
         const uiLiteralsCount = uiLiterals.length;
         if (uiLiteralsCount < 1) {
             return [step]; // nothing to do
         }
-        let uiElements = this._nlpUtil.entitiesNamed(concordialang_types_1.Entities.UI_ELEMENT, step.nlpResult);
+        let uiElements = this._nlpUtil.entitiesNamed(nlp_1.Entities.UI_ELEMENT, step.nlpResult);
         // Create a step with 'fill' step for every UI_LITERAL
         // console.log( step.nodeType, '<'.repeat( 20 ) );
         let nodeType = step.nodeType;
@@ -341,7 +341,7 @@ class PreTestCaseGenerator {
             }
             let sentence = prefix + ' ' + keywordI + ' ' + inputDataActionEntity.string + ' ';
             let comment = null;
-            if (concordialang_types_1.Entities.UI_LITERAL === entity.entity) {
+            if (nlp_1.Entities.UI_LITERAL === entity.entity) {
                 sentence += Symbols_1.Symbols.UI_LITERAL_PREFIX + entity.value + Symbols_1.Symbols.UI_LITERAL_SUFFIX +
                     ' ' + keywordWith + ' ' +
                     Symbols_1.Symbols.VALUE_WRAPPER + this.randomString() + Symbols_1.Symbols.VALUE_WRAPPER;
@@ -391,7 +391,7 @@ class PreTestCaseGenerator {
     extractUIElementNamesFromSteps(steps) {
         let uniqueNames = new Set();
         for (let step of steps) {
-            let entities = this._nlpUtil.entitiesNamed(concordialang_types_1.Entities.UI_ELEMENT, step.nlpResult);
+            let entities = this._nlpUtil.entitiesNamed(nlp_1.Entities.UI_ELEMENT, step.nlpResult);
             for (let e of entities) {
                 uniqueNames.add(e.value);
             }
@@ -442,7 +442,7 @@ class PreTestCaseGenerator {
         // Add target types
         step.targetTypes = this._targetTypeUtil.extractTargetTypes(step, ctx.doc, ctx.spec, this._uiePropExtractor);
         // Check UI Elements
-        let uiElements = this._nlpUtil.entitiesNamed(concordialang_types_1.Entities.UI_ELEMENT, step.nlpResult);
+        let uiElements = this._nlpUtil.entitiesNamed(nlp_1.Entities.UI_ELEMENT, step.nlpResult);
         const uiElementsCount = uiElements.length;
         if (uiElementsCount < 1) {
             // console.log( "EXIT 2" );
@@ -657,7 +657,7 @@ class PreTestCaseGenerator {
     //
     extractDataInputActionEntity(step) {
         return step.nlpResult.entities
-            .find(e => e.entity === concordialang_types_1.Entities.UI_ACTION && this.isDataInputAction(e.value)) || null;
+            .find(e => e.entity === nlp_1.Entities.UI_ACTION && this.isDataInputAction(e.value)) || null;
     }
     isDataInputAction(action) {
         return Actions_1.Actions.FILL === action ||
@@ -669,13 +669,13 @@ class PreTestCaseGenerator {
         if (!step || !step.nlpResult) {
             return false;
         }
-        return this._nlpUtil.hasEntityNamed(concordialang_types_1.Entities.VALUE, step.nlpResult);
+        return this._nlpUtil.hasEntityNamed(nlp_1.Entities.VALUE, step.nlpResult);
     }
     hasNumber(step) {
         if (!step || !step.nlpResult) {
             return false;
         }
-        return this._nlpUtil.hasEntityNamed(concordialang_types_1.Entities.NUMBER, step.nlpResult);
+        return this._nlpUtil.hasEntityNamed(nlp_1.Entities.NUMBER, step.nlpResult);
     }
     randomString() {
         return this._randomString.between(this.minRandomStringSize, this.maxRandomStringSize);

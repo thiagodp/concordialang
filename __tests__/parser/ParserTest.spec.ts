@@ -1,10 +1,11 @@
 import { resolve } from 'path';
-import { Document } from 'concordialang-types';
+
+import { Document } from '../../modules/ast/Document';
 import { NodeTypes } from '../../modules/req/NodeTypes';
 import { Lexer } from '../../modules/lexer/Lexer';
+import { LexerBuilder } from '../../modules/lexer/LexerBuilder';
 import { Parser } from '../../modules/parser/Parser';
 import { Options } from '../../modules/app/Options';
-import { LexerBuilder } from '../../modules/lexer/LexerBuilder';
 
 /**
  * @author Thiago Delgado Pinto

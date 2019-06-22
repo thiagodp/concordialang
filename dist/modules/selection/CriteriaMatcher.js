@@ -1,12 +1,12 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const concordialang_types_1 = require("concordialang-types");
-const FilterCriterion_1 = require("./FilterCriterion");
+const Tag_1 = require("../ast/Tag");
 const Defaults_1 = require("../app/Defaults");
 const TypeChecking_1 = require("../util/TypeChecking");
 const TagUtil_1 = require("../util/TagUtil");
+const FilterCriterion_1 = require("./FilterCriterion");
 class CriteriaMatcher {
-    constructor(_ignoreKeywords = [concordialang_types_1.ReservedTags.IGNORE], _importanceKeywords = [concordialang_types_1.ReservedTags.IMPORTANCE], _defaultImportanceValue = (new Defaults_1.Defaults()).IMPORTANCE) {
+    constructor(_ignoreKeywords = [Tag_1.ReservedTags.IGNORE], _importanceKeywords = [Tag_1.ReservedTags.IMPORTANCE], _defaultImportanceValue = (new Defaults_1.Defaults()).IMPORTANCE) {
         this._ignoreKeywords = _ignoreKeywords;
         this._importanceKeywords = _importanceKeywords;
         this._defaultImportanceValue = _defaultImportanceValue;

@@ -1,14 +1,12 @@
+const XRegExp = require( 'xregexp' );
 
-import { Tag, ReservedTags } from 'concordialang-types';
-import * as enumUtil from 'enum-util';
+import { Tag, ReservedTags } from '../ast/Tag';
 import { LexicalException } from '../req/LexicalException';
 import { NodeTypes } from '../req/NodeTypes';
 import { Symbols } from '../req/Symbols';
 import { CommentHandler } from './CommentHandler';
 import { LexicalAnalysisResult, NodeLexer } from './NodeLexer';
 import { KeywordBasedLexer } from './KeywordBasedLexer';
-
-const XRegExp = require( 'xregexp' );
 
 /**
  * Detects a Tag.

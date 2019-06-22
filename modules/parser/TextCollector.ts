@@ -1,6 +1,6 @@
-import { Text } from 'concordialang-types';
-import { NodeIterator } from './NodeIterator';
+import { Text } from '../ast/Text';
 import { NodeTypes } from '../req/NodeTypes';
+import { NodeIterator } from './NodeIterator';
 
 /**
  * Text collector

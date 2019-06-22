@@ -1,4 +1,4 @@
-import { Node, Feature, TestCase } from 'concordialang-types';
+import { Node, Feature, TestCase } from '../../modules/ast';
 import { NodeIterator } from '../../modules/parser/NodeIterator';
 import { ParsingContext } from '../../modules/parser/ParsingContext';
 import { NodeTypes } from '../../modules/req/NodeTypes';

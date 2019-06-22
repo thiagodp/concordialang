@@ -1,8 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const concordialang_types_1 = require("concordialang-types");
-const VariantLexer_1 = require("./VariantLexer");
+const ast_1 = require("../ast");
 const TestEventLexer_1 = require("../lexer/TestEventLexer");
+const VariantLexer_1 = require("./VariantLexer");
 const DatabasePropertyLexer_1 = require("./DatabasePropertyLexer");
 const DatabaseLexer_1 = require("./DatabaseLexer");
 const UIPropertyLexer_1 = require("./UIPropertyLexer");
@@ -61,15 +61,15 @@ class Lexer {
             throw new Error('Cannot load a dictionary for the language: ' + _defaultLanguage);
         }
         this._subLexers = [
-            new TagLexer_1.TagSubLexer(concordialang_types_1.ReservedTags.IGNORE, dictionary.tagIgnore),
-            new TagLexer_1.TagSubLexer(concordialang_types_1.ReservedTags.GENERATED, dictionary.tagGenerated),
-            new TagLexer_1.TagSubLexer(concordialang_types_1.ReservedTags.FAIL, dictionary.tagFail),
-            new TagLexer_1.TagSubLexer(concordialang_types_1.ReservedTags.SCENARIO, dictionary.tagScenario),
-            new TagLexer_1.TagSubLexer(concordialang_types_1.ReservedTags.VARIANT, dictionary.tagVariant),
-            new TagLexer_1.TagSubLexer(concordialang_types_1.ReservedTags.FEATURE, dictionary.tagFeature),
-            new TagLexer_1.TagSubLexer(concordialang_types_1.ReservedTags.GENERATE_ONLY_VALID_VALUES, dictionary.tagGenerateOnlyValidValues),
-            new TagLexer_1.TagSubLexer(concordialang_types_1.ReservedTags.IMPORTANCE, dictionary.tagImportance),
-            new TagLexer_1.TagSubLexer(concordialang_types_1.ReservedTags.GLOBAL, dictionary.tagGlobal)
+            new TagLexer_1.TagSubLexer(ast_1.ReservedTags.IGNORE, dictionary.tagIgnore),
+            new TagLexer_1.TagSubLexer(ast_1.ReservedTags.GENERATED, dictionary.tagGenerated),
+            new TagLexer_1.TagSubLexer(ast_1.ReservedTags.FAIL, dictionary.tagFail),
+            new TagLexer_1.TagSubLexer(ast_1.ReservedTags.SCENARIO, dictionary.tagScenario),
+            new TagLexer_1.TagSubLexer(ast_1.ReservedTags.VARIANT, dictionary.tagVariant),
+            new TagLexer_1.TagSubLexer(ast_1.ReservedTags.FEATURE, dictionary.tagFeature),
+            new TagLexer_1.TagSubLexer(ast_1.ReservedTags.GENERATE_ONLY_VALID_VALUES, dictionary.tagGenerateOnlyValidValues),
+            new TagLexer_1.TagSubLexer(ast_1.ReservedTags.IMPORTANCE, dictionary.tagImportance),
+            new TagLexer_1.TagSubLexer(ast_1.ReservedTags.GLOBAL, dictionary.tagGlobal)
         ];
         this._lexers = [
             new LongStringLexer_1.LongStringLexer(),

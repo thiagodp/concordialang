@@ -1,4 +1,4 @@
-import { AugmentedSpec } from "../ast/AugmentedSpec";
+import { AugmentedSpec } from "../req/AugmentedSpec";
 //const Graph = require( 'graph.js/dist/graph.full.js' );
 import  Graph = require( 'graph.js/dist/graph.full.js' );
 

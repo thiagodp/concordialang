@@ -1,7 +1,17 @@
-import { Constant, Database, Document, Node, Table, UIElement, EntityValue, EntityValueType, UIProperty } from 'concordialang-types';
-import { Entities } from 'concordialang-types';
-import { LocatedException, Queryable } from 'concordialang-types';
-import { AugmentedSpec } from '../ast/AugmentedSpec';
+import {
+    Constant,
+    Database,
+    Document,
+    Node,
+    Table,
+    UIElement,
+    EntityValue,
+    EntityValueType,
+    UIProperty
+} from '../ast';
+import { AugmentedSpec } from '../req/AugmentedSpec';
+import { Entities } from '../nlp';
+import { LocatedException, Queryable } from '../dbi';
 import { DatabaseToAbstractDatabase } from '../db/DatabaseToAbstractDatabase';
 import { supportTablesInQueries } from '../db/DatabaseTypes';
 import { DatabaseWrapper } from '../db/DatabaseWrapper';

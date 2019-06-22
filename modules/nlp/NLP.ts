@@ -1,7 +1,11 @@
 import Bravey = require('../../lib/bravey'); // .js file
-import { NLPResult, Entities } from 'concordialang-types';
-import { NLPTrainingData } from "./NLPTrainingData";
+
 import { adjustValueToTheRightType } from '../util/ValueTypeDetector';
+import {
+    NLPResult,
+    Entities,
+    NLPTrainingData
+} from "../nlp";
 
 /**
  * Natural Language Processor
@@ -24,7 +28,7 @@ export class NLP {
 
         // Add an entity named "ui_element" and its recognizer
         this._additionalEntities.push( Entities.UI_ELEMENT );
-        this._additionalRecognizers.push( erMaker.makeUIElement( Entities.UI_ELEMENT ) );
+        this._additionalRecognizers.push( erMaker.makeUIElementReference( Entities.UI_ELEMENT ) );
 
         // Add an entity named "ui_element_literal" and its recognizer
         this._additionalEntities.push( Entities.UI_LITERAL );
@@ -218,17 +222,44 @@ class EntityRecognizerMaker {
     }
 
     /**
-     * Creates a recognizer for values between { and }.
+     * Creates a recognizer for references to UI Elements.
      *
-     * Example: I fill {Name} with "Bob"
-     * --> The word "Name" is recognized (without quotes).
+     * Example 1: I fill {Name} with "Bob"
+     *        --> The text "Name" is recognized (without quotes).
+     *
+     * Example 2: I fill {My Feature:Year} with "Bob"
+     *        --> The text "My Feature:Year" is recognized (without quotes).
      *
      * @param entityName Entity name.
      * @return Bravey.EntityRecognizer
      */
-    public makeUIElement( entityName: string ): any {
+    public makeUIElementReference( entityName: string ): any {
         var valueRec = new Bravey.RegexEntityRecognizer( entityName, 10 );
-        const regex = new RegExp( '\{[a-zA-ZÀ-ÖØ-öø-ÿ][^<\r\n\>\}]*\}', "g" );
+        const regex = new RegExp( '\{[a-zA-ZÀ-ÖØ-öø-ÿ][^|<\r\n\>\}]*\}', "g" );
+        valueRec.addMatch(
+            regex,
+            function( match ) {
+                //console.log( 'match: ', match );
+                return match.toString().replace( '{', '' ).replace( '}', '' );
+            },
+            100 // priority
+        );
+        return valueRec;
+    }
+
+    /**
+     * Creates a recognizer for references to UI Properties.
+     *
+     * Example: I fill {Description} with {Name|value}
+     *
+     *  --> The ext "Name|value" is recognized (without quotes).
+     *
+     * @param entityName Entity name.
+     * @return Bravey.EntityRecognizer
+     */
+    public makeUIPropertyReference( entityName: string ): any {
+        var valueRec = new Bravey.RegexEntityRecognizer( entityName, 10 );
+        const regex = new RegExp( '\{[a-zA-ZÀ-ÖØ-öø-ÿ]+\|[a-zA-ZÀ-ÖØ-öø-ÿ]+[^|<\r\n\>\}]*\}', "g" );
         valueRec.addMatch(
             regex,
             function( match ) {

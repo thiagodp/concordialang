@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const arrayMove = require("array-move");
 const deepcopy = require("deepcopy");
-const concordialang_types_1 = require("concordialang-types");
+const nlp_1 = require("../nlp");
 const NodeTypes_1 = require("../req/NodeTypes");
 const TypeChecking_1 = require("../util/TypeChecking");
 const CaseConversor_1 = require("../util/CaseConversor");
@@ -16,7 +16,7 @@ class StepUtil {
      * @param steps Steps to analyze
      */
     movePreconditionStepsToTheBeginning(steps, keywords) {
-        const nlpUtil = new concordialang_types_1.NLPUtil();
+        const nlpUtil = new nlp_1.NLPUtil();
         let lastWasGiven = null;
         let index = 0, preconditionCount = 0;
         const stepCount = steps.length;
@@ -25,7 +25,7 @@ class StepUtil {
             if (NodeTypes_1.NodeTypes.STEP_GIVEN === step.nodeType
                 || (NodeTypes_1.NodeTypes.STEP_AND == step.nodeType && true === lastWasGiven)) {
                 const hasPrecondition = TypeChecking_1.isDefined(step.nlpResult)
-                    && nlpUtil.hasEntityNamed(concordialang_types_1.Entities.STATE, step.nlpResult);
+                    && nlpUtil.hasEntityNamed(nlp_1.Entities.STATE, step.nlpResult);
                 if (hasPrecondition) {
                     // Does not have prior GIVEN ? -> Make it a GIVEN
                     if (preconditionCount < 1) {

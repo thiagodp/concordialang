@@ -1,12 +1,13 @@
 import * as deepcopy from 'deepcopy';
-import { EntityValueType } from 'concordialang-types';
+
+import { EntityValueType } from '../ast';
 import { isDefined } from '../util/TypeChecking';
 import { ValueType, ValueTypeDetector } from '../util/ValueTypeDetector';
+import { RawDataGenerator } from './raw/RawDataGenerator';
 import { DataGeneratorBuilder } from './DataGeneratorBuilder';
 import { DataTestCase } from './DataTestCase';
 import { InvertedLogicListBasedDataGenerator } from './InvertedLogicListBasedDataGenerator';
 import { ListBasedDataGenerator } from './ListBasedDataGenerator';
-import { RawDataGenerator } from './raw/RawDataGenerator';
 import { RegexBasedDataGenerator } from './RegexBasedDataGenerator';
 
 /**

@@ -1,13 +1,18 @@
-import { NLPResult, Entities } from 'concordialang-types';
-import { DatabaseProperty, ContentNode } from 'concordialang-types';
-import { LocatedException } from 'concordialang-types';
-import { Intents } from './Intents';
-import { NLP } from './NLP';
-import { NLPException } from './NLPException';
-import { NLPTrainer } from './NLPTrainer';
-import { NLPResultProcessor, NodeSentenceRecognizer } from './NodeSentenceRecognizer';
-import { RuleBuilder } from './RuleBuilder';
-import { DATABASE_PROPERTY_SYNTAX_RULES, DEFAULT_DATABASE_PROPERTY_SYNTAX_RULE } from './SyntaxRules';
+import { DatabaseProperty, ContentNode } from '../ast';
+import { LocatedException } from '../dbi/LocatedException';
+import {
+    NLPResult,
+    Entities,
+    Intents,
+    NLP,
+    NLPException,
+    NLPTrainer,
+    NLPResultProcessor,
+    NodeSentenceRecognizer,
+    RuleBuilder,
+    DATABASE_PROPERTY_SYNTAX_RULES,
+    DEFAULT_DATABASE_PROPERTY_SYNTAX_RULE
+} from '.';
 
 /**
  * Database property sentence recognizer.

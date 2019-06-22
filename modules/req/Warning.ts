@@ -1,4 +1,4 @@
-import { LocatedException } from "concordialang-types";
+import { LocatedException } from "../dbi/LocatedException";
 
 /**
  * Provides an exception that should be handled as a warning.

@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const ListItemLexer_1 = require("./ListItemLexer");
 const NodeTypes_1 = require("../req/NodeTypes");
+const ListItemLexer_1 = require("./ListItemLexer");
 /**
  * Detects a UIProperty node.
  *

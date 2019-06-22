@@ -1,9 +1,10 @@
-import { Document } from 'concordialang-types';
+import { resolve } from 'path';
+
+import { Document } from '../../modules/ast/Document';
 import { NLPBasedSentenceRecognizer } from '../../modules/nlp/NLPBasedSentenceRecognizer';
 import { SingleDocumentProcessor } from '../../modules/app/SingleDocumentProcessor';
 import { Parser } from '../../modules/parser/Parser';
 import { Lexer } from '../../modules/lexer/Lexer';
-import { resolve } from 'path';
 import { NLPTrainer } from '../../modules/nlp/NLPTrainer';
 import { Options } from '../../modules/app/Options';
 import { LanguageContentLoader, JsonLanguageContentLoader } from '../../modules/dict/LanguageContentLoader';

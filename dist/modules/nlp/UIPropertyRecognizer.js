@@ -1,15 +1,15 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const concordialang_types_1 = require("concordialang-types");
-const concordialang_types_2 = require("concordialang-types");
+const nlp_1 = require("../nlp");
+const ast_1 = require("../ast");
 const TypeChecking_1 = require("../util/TypeChecking");
 const ValueTypeDetector_1 = require("../util/ValueTypeDetector");
+const UIPropertyTypes_1 = require("../util/UIPropertyTypes");
 const Intents_1 = require("./Intents");
 const NLPException_1 = require("./NLPException");
 const NodeSentenceRecognizer_1 = require("./NodeSentenceRecognizer");
 const RuleBuilder_1 = require("./RuleBuilder");
 const SyntaxRules_1 = require("./SyntaxRules");
-const UIPropertyTypes_1 = require("../util/UIPropertyTypes");
 /**
  * UI element property sentence recognizer.
  *
@@ -49,7 +49,7 @@ class UIPropertyRecognizer {
             const recognizedEntityNames = r.entities.map(e => e.entity);
             // console.log( r.entities );
             // Must have a UI Property
-            const propertyIndex = recognizedEntityNames.indexOf(concordialang_types_1.Entities.UI_PROPERTY);
+            const propertyIndex = recognizedEntityNames.indexOf(nlp_1.Entities.UI_PROPERTY);
             if (propertyIndex < 0) {
                 const msg = 'Unrecognized (' + language + '): ' + node.content;
                 warnings.push(new NLPException_1.NLPException(msg, node.location));
@@ -67,31 +67,31 @@ class UIPropertyRecognizer {
                 //
                 let uiv;
                 switch (e.entity) {
-                    case concordialang_types_1.Entities.VALUE: ; // go to next
-                    case concordialang_types_1.Entities.NUMBER:
-                        uiv = new concordialang_types_2.EntityValue(e.entity, ValueTypeDetector_1.adjustValueToTheRightType(e.value));
+                    case nlp_1.Entities.VALUE: ; // go to next
+                    case nlp_1.Entities.NUMBER:
+                        uiv = new ast_1.EntityValue(e.entity, ValueTypeDetector_1.adjustValueToTheRightType(e.value));
                         break;
                     // case Entities.VALUE_LIST    : uiv = new EntityValue( e.entity, _this.makeValueList( e.value ) ); break;
-                    case concordialang_types_1.Entities.VALUE_LIST:
-                        uiv = new concordialang_types_2.EntityValue(e.entity, e.value);
+                    case nlp_1.Entities.VALUE_LIST:
+                        uiv = new ast_1.EntityValue(e.entity, e.value);
                         break;
-                    case concordialang_types_1.Entities.QUERY:
-                        uiv = new concordialang_types_2.EntityValue(e.entity, e.value);
+                    case nlp_1.Entities.QUERY:
+                        uiv = new ast_1.EntityValue(e.entity, e.value);
                         break;
-                    case concordialang_types_1.Entities.UI_ELEMENT:
-                        uiv = new concordialang_types_2.EntityValue(e.entity, e.value);
+                    case nlp_1.Entities.UI_ELEMENT:
+                        uiv = new ast_1.EntityValue(e.entity, e.value);
                         break;
-                    case concordialang_types_1.Entities.UI_LITERAL:
-                        uiv = new concordialang_types_2.EntityValue(e.entity, e.value);
+                    case nlp_1.Entities.UI_LITERAL:
+                        uiv = new ast_1.EntityValue(e.entity, e.value);
                         break;
-                    case concordialang_types_1.Entities.CONSTANT:
-                        uiv = new concordialang_types_2.EntityValue(e.entity, e.value);
+                    case nlp_1.Entities.CONSTANT:
+                        uiv = new ast_1.EntityValue(e.entity, e.value);
                         break;
-                    case concordialang_types_1.Entities.UI_DATA_TYPE:
-                        uiv = new concordialang_types_2.EntityValue(e.entity, e.value);
+                    case nlp_1.Entities.UI_DATA_TYPE:
+                        uiv = new ast_1.EntityValue(e.entity, e.value);
                         break;
-                    case concordialang_types_1.Entities.BOOL_VALUE:
-                        uiv = new concordialang_types_2.EntityValue(e.entity, 'true' === e.value);
+                    case nlp_1.Entities.BOOL_VALUE:
+                        uiv = new ast_1.EntityValue(e.entity, 'true' === e.value);
                         break;
                     default: uiv = null;
                 }
@@ -103,8 +103,8 @@ class UIPropertyRecognizer {
             // A boolean property without value ?
             const booleanProperties = [UIPropertyTypes_1.UIPropertyTypes.REQUIRED, UIPropertyTypes_1.UIPropertyTypes.EDITABLE];
             if (booleanProperties.indexOf(property) >= 0 &&
-                !r.entities.find(e => e.entity === concordialang_types_1.Entities.BOOL_VALUE)) {
-                item.value = new concordialang_types_2.EntityValue(concordialang_types_1.Entities.BOOL_VALUE, true);
+                !r.entities.find(e => e.entity === nlp_1.Entities.BOOL_VALUE)) {
+                item.value = new ast_1.EntityValue(nlp_1.Entities.BOOL_VALUE, true);
             }
             return item;
         };

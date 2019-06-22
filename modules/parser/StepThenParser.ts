@@ -1,4 +1,4 @@
-import { StepThen } from 'concordialang-types';
+import { StepThen } from '../ast/Step';
 import { NodeTypes } from '../req/NodeTypes';
 import { SyntacticException } from '../req/SyntacticException';
 import { NodeIterator } from './NodeIterator';

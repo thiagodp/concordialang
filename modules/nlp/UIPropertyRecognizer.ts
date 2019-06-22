@@ -1,9 +1,10 @@
 
-import { NLPResult, Entities } from 'concordialang-types';
-import { ContentNode, UIProperty, EntityValue } from 'concordialang-types';
-import { LocatedException } from 'concordialang-types';
+import { NLPResult, Entities } from '../nlp';
+import { ContentNode, UIProperty, EntityValue } from '../ast';
+import { LocatedException } from '../dbi/LocatedException';
 import { isDefined } from '../util/TypeChecking';
 import { adjustValueToTheRightType, ValueTypeDetector } from '../util/ValueTypeDetector';
+import { UIPropertyTypes } from '../util/UIPropertyTypes';
 import { Intents } from './Intents';
 import { NLP } from './NLP';
 import { NLPException } from './NLPException';
@@ -11,7 +12,6 @@ import { NLPTrainer } from './NLPTrainer';
 import { NLPResultProcessor, NodeSentenceRecognizer } from './NodeSentenceRecognizer';
 import { RuleBuilder } from './RuleBuilder';
 import { DEFAULT_UI_PROPERTY_SYNTAX_RULE, UI_PROPERTY_SYNTAX_RULES } from './SyntaxRules';
-import { UIPropertyTypes } from '../util/UIPropertyTypes';
 
 /**
  * UI element property sentence recognizer.

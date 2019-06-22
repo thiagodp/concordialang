@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const concordialang_plugin_1 = require("concordialang-plugin");
-const concordialang_types_1 = require("concordialang-types");
+const Entities_1 = require("../nlp/Entities");
 const DatabaseToAbstractDatabase_1 = require("../db/DatabaseToAbstractDatabase");
 const DatabaseTypes_1 = require("../db/DatabaseTypes");
 const Symbols_1 = require("../req/Symbols");
@@ -138,7 +138,7 @@ class AbstractTestScriptGenerator {
         for (let s of event.sentences || []) {
             // Action is "connect" or "disconnect"
             if (s.action === Actions_1.Actions.CONNECT || s.action === Actions_1.Actions.DISCONNECT) {
-                let dbRef = s.nlpResult.entities.find(e => e.entity === concordialang_types_1.Entities.CONSTANT);
+                let dbRef = s.nlpResult.entities.find(e => e.entity === Entities_1.Entities.CONSTANT);
                 if (!dbRef) {
                     console.log('ERROR: database reference not found in:', s.content);
                     continue;

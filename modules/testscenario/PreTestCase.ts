@@ -1,4 +1,4 @@
-import { Step } from "concordialang-types";
+import { Step } from "../ast/Step";
 import { NodeTypes } from "../req/NodeTypes";
 import { TestPlan } from "../testcase/TestPlan";
 

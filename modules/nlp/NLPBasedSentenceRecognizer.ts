@@ -1,5 +1,5 @@
-import { LocatedException } from 'concordialang-types';
-import { Document } from 'concordialang-types';
+import { LocatedException } from '../dbi/LocatedException';
+import { Document } from '../ast/Document';
 import { Warning } from '../req/Warning';
 import { isDefined } from '../util/TypeChecking';
 import { DatabasePropertyRecognizer } from './DatabasePropertyRecognizer';

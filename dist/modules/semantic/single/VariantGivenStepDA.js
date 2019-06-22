@@ -1,9 +1,9 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const concordialang_types_1 = require("concordialang-types");
-const SemanticException_1 = require("../SemanticException");
+const nlp_1 = require("../../nlp");
 const TypeChecking_1 = require("../../util/TypeChecking");
 const NodeTypes_1 = require("../../req/NodeTypes");
+const SemanticException_1 = require("../SemanticException");
 /**
  * Variant's Given step analyzer for a single document.
  *
@@ -15,7 +15,7 @@ const NodeTypes_1 = require("../../req/NodeTypes");
  */
 class VariantGivenStepDA {
     constructor() {
-        this._nlpUtil = new concordialang_types_1.NLPUtil();
+        this._nlpUtil = new nlp_1.NLPUtil();
     }
     analyze(doc, errors) {
         if (!doc.feature) {
@@ -72,7 +72,7 @@ class VariantGivenStepDA {
         }
     }
     hasState(step) {
-        return this._nlpUtil.hasEntityNamed(concordialang_types_1.Entities.STATE, step.nlpResult);
+        return this._nlpUtil.hasEntityNamed(nlp_1.Entities.STATE, step.nlpResult);
     }
     makeStateError(step) {
         const msg = 'Given steps with state must be declared before other Given steps.';

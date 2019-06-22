@@ -1,4 +1,4 @@
-import { TestCase } from 'concordialang-types';
+import { TestCase } from '../ast/TestCase';
 import { SyntacticException } from '../req/SyntacticException';
 import { NodeIterator } from './NodeIterator';
 import { NodeParser } from './NodeParser';

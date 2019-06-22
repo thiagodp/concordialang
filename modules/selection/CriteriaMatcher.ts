@@ -1,8 +1,8 @@
-import { Tag, ReservedTags } from 'concordialang-types';
-import { FilterCriterion } from './FilterCriterion';
+import { Tag, ReservedTags } from '../ast/Tag';
 import { Defaults } from '../app/Defaults';
 import { isString } from '../util/TypeChecking';
 import { TagUtil } from '../util/TagUtil';
+import { FilterCriterion } from './FilterCriterion';
 
 export class CriteriaMatcher {
 

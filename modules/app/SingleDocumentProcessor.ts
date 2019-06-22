@@ -1,4 +1,4 @@
-import { Node, Document } from "concordialang-types";
+import { Node, Document } from "../ast";
 import { NLPBasedSentenceRecognizer } from '../nlp/NLPBasedSentenceRecognizer';
 import { Parser } from '../parser/Parser';
 import { Lexer } from "../lexer/Lexer";

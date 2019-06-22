@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const NamedNodeLexer_1 = require("./NamedNodeLexer");
 const NodeTypes_1 = require("../req/NodeTypes");
+const NamedNodeLexer_1 = require("./NamedNodeLexer");
 /**
  * Detects a UI Element.
  *

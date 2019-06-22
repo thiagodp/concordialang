@@ -1,4 +1,4 @@
-import { Variant } from 'concordialang-types';
+import { Variant } from '../ast/Variant';
 import { SyntacticException } from '../req/SyntacticException';
 import { NodeIterator } from './NodeIterator';
 import { NodeParser } from './NodeParser';

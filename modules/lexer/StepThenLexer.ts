@@ -1,6 +1,6 @@
-import { StepThen } from "concordialang-types";
-import { StartingKeywordLexer } from './StartingKeywordLexer';
+import { StepThen } from "../ast/Step";
 import { NodeTypes } from "../req/NodeTypes";
+import { StartingKeywordLexer } from './StartingKeywordLexer';
 
 /**
  * Detects a Then node.

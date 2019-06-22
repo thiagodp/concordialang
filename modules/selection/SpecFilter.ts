@@ -1,7 +1,8 @@
 import { EventEmitter } from 'events';
 import Graph = require('graph.js/dist/graph.full.js');
-import { Document } from 'concordialang-types';
-import { AugmentedSpec } from '../ast/AugmentedSpec';
+
+import { Document } from '../ast/Document';
+import { AugmentedSpec } from '../req/AugmentedSpec';
 import { GraphFilter, GraphFilterEvent } from './GraphFilter';
 import { ImportBasedGraphBuilder } from './ImportBasedGraphBuilder';
 

@@ -66,6 +66,7 @@
   "scripts": {
     "build": "rimraf dist && node copy.js && tsc",
     "test": "node copy.js && jest --runInBand",
+    "all": "npm run build && jest --runInBand",
     "start": "node bin/concordia.js",
     "postversion": "git push && git push --tags"
   },
@@ -89,8 +90,8 @@
     "case": "^1.5.5",
     "chalk": "^2.4.1",
     "cli-truncate": "^1.1.0",
-    "concordialang-plugin": "^0.5.0",
-    "concordialang-types": "^1.0.0",
+    "concordialang-plugin": "^0.6.0",
+    "concordialang-types": "^2.0.0",
     "cosmiconfig": "^4.0.0",
     "database-js": "^3.0.2",
     "database-js-json": "^1.2.1",

@@ -1,9 +1,8 @@
 import { resolve } from 'path';
-import { UIProperty } from 'concordialang-types';
+
+import { UIProperty } from '../../modules/ast/UIElement';
 import { NodeTypes } from '../../modules/req/NodeTypes';
-import { NLPTrainer } from '../../modules/nlp/NLPTrainer';
-import { NLP } from '../../modules/nlp/NLP';
-import { UIPropertyRecognizer } from "../../modules/nlp/UIPropertyRecognizer";
+import { NLP, NLPTrainer, UIPropertyRecognizer } from '../../modules/nlp';
 import { Options } from '../../modules/app/Options';
 import { LanguageContentLoader, JsonLanguageContentLoader } from '../../modules/dict/LanguageContentLoader';
 

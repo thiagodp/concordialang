@@ -1,6 +1,6 @@
-import { Database } from 'concordialang-types';
-import { NamedNodeLexer } from "./NamedNodeLexer";
+import { Database } from '../ast/Database';
 import { NodeTypes } from "../req/NodeTypes";
+import { NamedNodeLexer } from "./NamedNodeLexer";
 
 /**
  * Detects a Database node.

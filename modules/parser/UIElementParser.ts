@@ -1,4 +1,4 @@
-import { UIElement, ReservedTags } from 'concordialang-types';
+import { UIElement, ReservedTags } from '../ast';
 import { SyntacticException } from '../req/SyntacticException';
 import { NodeIterator } from './NodeIterator';
 import { NodeParser } from './NodeParser';

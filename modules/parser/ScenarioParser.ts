@@ -1,4 +1,4 @@
-import { Scenario } from 'concordialang-types';
+import { Scenario } from '../ast/Scenario';
 import { SyntacticException } from '../req/SyntacticException';
 import { NodeIterator } from './NodeIterator';
 import { NodeParser } from './NodeParser';

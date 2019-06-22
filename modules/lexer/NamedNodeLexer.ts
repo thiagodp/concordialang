@@ -1,4 +1,4 @@
-import { NamedNode } from 'concordialang-types';
+import { NamedNode } from '../ast/Node';
 import { Expressions } from '../req/Expressions';
 import { LexicalException } from '../req/LexicalException';
 import { LineChecker } from '../req/LineChecker';

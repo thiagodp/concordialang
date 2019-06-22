@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const path_1 = require("path");
-const concordialang_types_1 = require("concordialang-types");
+const ast_1 = require("../ast");
 const CaseType_1 = require("../app/CaseType");
 const DocumentUtil_1 = require("../util/DocumentUtil");
 const TypeChecking_1 = require("../util/TypeChecking");
@@ -20,7 +20,7 @@ class MappedContent {
  *
  * @author Thiago Delgado Pinto
  */
-class AugmentedSpec extends concordialang_types_1.Spec {
+class AugmentedSpec extends ast_1.Spec {
     constructor(basePath) {
         super(basePath);
         this._docFullyMapped = new Map();

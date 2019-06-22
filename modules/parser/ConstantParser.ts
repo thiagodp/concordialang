@@ -1,4 +1,4 @@
-import { Constant, ListItem } from 'concordialang-types'
+import { Constant, ListItem } from '../ast'
 import { SyntacticException } from '../req/SyntacticException';
 import { ParsingContext } from './ParsingContext';
 import { NodeTypes } from '../req/NodeTypes';

@@ -1,6 +1,15 @@
-import { Language, Node, ReservedTags } from 'concordialang-types';
+import { Language, Node, ReservedTags } from '../ast';
+import { LanguageContentLoader } from '../dict/LanguageContentLoader';
+import { LanguageContent } from '../dict/LanguageContent';
+import {
+    BeforeAllLexer,
+    AfterAllLexer,
+    BeforeFeatureLexer,
+    AfterFeatureLexer,
+    BeforeEachScenarioLexer,
+    AfterEachScenarioLexer
+} from '../lexer/TestEventLexer';
 import { VariantLexer } from './VariantLexer';
-import { BeforeAllLexer, AfterAllLexer, BeforeFeatureLexer, AfterFeatureLexer, BeforeEachScenarioLexer, AfterEachScenarioLexer } from '../lexer/TestEventLexer';
 import { DatabasePropertyLexer } from './DatabasePropertyLexer';
 import { DatabaseLexer } from './DatabaseLexer';
 import { UIPropertyLexer } from './UIPropertyLexer';
@@ -29,8 +38,6 @@ import { KeywordDictionary } from '../dict/KeywordDictionary';
 import { TableLexer } from './TableLexer';
 import { TableRowLexer } from './TableRowLexer';
 import { LongStringLexer } from './LongStringLexer';
-import { LanguageContentLoader } from '../dict/LanguageContentLoader';
-import { LanguageContent } from '../dict/LanguageContent';
 import { VariantBackgroundLexer } from './VariantBackgroundLexer';
 
 /**

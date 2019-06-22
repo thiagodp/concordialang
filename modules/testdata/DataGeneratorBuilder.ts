@@ -1,4 +1,4 @@
-import { Queryable } from "concordialang-types";
+import { Queryable } from "../dbi/Queryable";
 import { ValueType } from "../util/ValueTypeDetector";
 import { RawDataGenerator } from "./raw/RawDataGenerator";
 import { StringGenerator } from "./raw/StringGenerator";
@@ -15,10 +15,10 @@ import { RandomDate } from "./random/RandomDate";
 import { RandomTime } from "./random/RandomTime";
 import { RandomDateTime } from "./random/RandomDateTime";
 import { RangeAnalyzer } from "./raw/RangeAnalyzer";
+import { QueryCache } from "../db/QueryCache";
 import { RegexBasedDataGenerator } from "./RegexBasedDataGenerator";
 import { ListBasedDataGenerator } from "./ListBasedDataGenerator";
 import { QueryBasedDataGenerator } from "./QueryBasedDataGenerator";
-import { QueryCache } from "../db/QueryCache";
 import { InvertedLogicListBasedDataGenerator } from "./InvertedLogicListBasedDataGenerator";
 import { InvertedLogicQueryBasedDataGenerator } from "./InvertedLogicQueryBasedDataGenerator";
 

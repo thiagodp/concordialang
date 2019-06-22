@@ -8,7 +8,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const concordialang_types_1 = require("concordialang-types");
+const ConnectionResult_1 = require("../dbi/ConnectionResult");
 const DatabaseWrapper_1 = require("./DatabaseWrapper");
 const InMemoryTableWrapper_1 = require("./InMemoryTableWrapper");
 /**
@@ -24,9 +24,9 @@ class Connector {
                 yield intf.connect(db, basePath);
             }
             catch (err) {
-                return concordialang_types_1.ConnectionResult_.forDatabase(intf, err);
+                return ConnectionResult_1.ConnectionResult_.forDatabase(intf, err);
             }
-            return concordialang_types_1.ConnectionResult_.forDatabase(intf);
+            return ConnectionResult_1.ConnectionResult_.forDatabase(intf);
         });
     }
     connectToTable(table) {
@@ -36,9 +36,9 @@ class Connector {
                 intf.connect(table);
             }
             catch (err) {
-                return concordialang_types_1.ConnectionResult_.forTable(intf, err);
+                return ConnectionResult_1.ConnectionResult_.forTable(intf, err);
             }
-            return concordialang_types_1.ConnectionResult_.forTable(intf);
+            return ConnectionResult_1.ConnectionResult_.forTable(intf);
         });
     }
 }

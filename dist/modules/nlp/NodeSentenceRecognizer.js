@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const Warning_1 = require("../req/Warning");
 const TypeChecking_1 = require("../util/TypeChecking");
-const NLPException_1 = require("./NLPException");
+const _1 = require(".");
 /**
  * Node sentence recognizer
  *
@@ -33,7 +33,7 @@ class NodeSentenceRecognizer {
         }
         if (!this._nlp.isTrained(language)) {
             let msg = 'The NLP is not trained in ' + language;
-            errors.push(new NLPException_1.NLPException(msg, { line: 1, column: 1 }));
+            errors.push(new _1.NLPException(msg, { line: 1, column: 1 }));
             return false;
         }
         // for ( let node of nodes ) {
@@ -52,7 +52,7 @@ class NodeSentenceRecognizer {
             // Not recognized?
             if (!r) {
                 let msg = 'Unrecognized: "' + node.content + '". Intents: ' + targetIntents.join(',');
-                warnings.push(new NLPException_1.NLPException(msg, node.location));
+                warnings.push(new _1.NLPException(msg, node.location));
                 // continue;
                 return;
             }
@@ -62,7 +62,7 @@ class NodeSentenceRecognizer {
             if (TypeChecking_1.isDefined(r) && TypeChecking_1.isDefined(r.intent) && targetIntents.indexOf(r.intent) < 0) {
                 //let msg = 'Unrecognized as part of a ' + targetDisplayName + ': ' + node.content;
                 let msg = 'Different intent recognized for: ' + node.content + '. Intent: ' + r.intent;
-                warnings.push(new NLPException_1.NLPException(msg, node.location));
+                warnings.push(new _1.NLPException(msg, node.location));
                 // continue;
                 return;
             }

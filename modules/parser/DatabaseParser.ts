@@ -1,4 +1,4 @@
-import { Database } from 'concordialang-types';
+import { Database } from '../ast/Database';
 import { NodeParser } from './NodeParser';
 import { ParsingContext } from './ParsingContext';
 import { NodeIterator } from './NodeIterator';

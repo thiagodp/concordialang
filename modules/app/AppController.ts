@@ -13,7 +13,7 @@ import { Options } from "./Options";
 import { PluginController } from '../plugin/PluginController';
 import { CLI } from './CLI';
 import { CompilerController } from './CompilerController';
-import { AugmentedSpec } from '../ast/AugmentedSpec';
+import { AugmentedSpec } from '../req/AugmentedSpec';
 import { LanguageController } from './LanguageController';
 import { PluginData } from '../plugin/PluginData';
 import { PluginManager } from '../plugin/PluginManager';

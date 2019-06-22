@@ -1,5 +1,5 @@
-import { ConnectionResult_ } from "concordialang-types";
-import { Database, Table } from "concordialang-types";
+import { ConnectionResult_ } from "../dbi/ConnectionResult";
+import { Database, Table } from "../ast";
 import { DatabaseWrapper } from "./DatabaseWrapper";
 import { InMemoryTableWrapper } from "./InMemoryTableWrapper";
 

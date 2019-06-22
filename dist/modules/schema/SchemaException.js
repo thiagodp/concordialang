@@ -8,7 +8,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 class SchemaException extends Error {
     constructor() {
         super(...arguments);
-        this.name = 'SchemaException';
+        this.name = 'SchemaError';
     }
 }
 exports.SchemaException = SchemaException;

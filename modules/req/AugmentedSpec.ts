@@ -1,4 +1,5 @@
 import { dirname, resolve } from 'path';
+
 import {
     Spec,
     Constant,
@@ -8,8 +9,8 @@ import {
     NamedNode,
     Table,
     UIElement
-} from 'concordialang-types';
-import { DatabaseInterface, InMemoryTableInterface } from 'concordialang-types';
+} from '../ast';
+import { DatabaseInterface, InMemoryTableInterface } from '../dbi';
 import { CaseType } from '../app/CaseType';
 import { DocumentUtil } from '../util/DocumentUtil';
 import { isDefined, valueOrNull } from '../util/TypeChecking';

@@ -1,10 +1,11 @@
-import { DatabaseProperty } from 'concordialang-types';
+import { resolve } from 'path';
+
+import { DatabaseProperty } from '../../modules/ast';
 import { DatabasePropertyRecognizer } from '../../modules/nlp/DatabasePropertyRecognizer';
 import { NodeTypes } from '../../modules/req/NodeTypes';
 import { NLPTrainer } from '../../modules/nlp/NLPTrainer';
 import { NLP } from '../../modules/nlp/NLP';
 import { Options } from '../../modules/app/Options';
-import { resolve } from 'path';
 import { LanguageContentLoader, JsonLanguageContentLoader } from '../../modules/dict/LanguageContentLoader';
 
 describe( 'DatabasePropertyRecognizerTest', () => {

@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const concordialang_types_1 = require("concordialang-types");
+const ast_1 = require("../ast");
 const SyntacticException_1 = require("../req/SyntacticException");
 const TagCollector_1 = require("./TagCollector");
 /**
@@ -20,7 +20,7 @@ class UIElementParser {
         // const hasGlobalTag = node.tags.length > 0
         //     && node.tags.filter( tag => tag.name.toLowerCase() == ReservedTags.GLOBAL ).length > 0;
         const hasGlobalTag = node.tags.length > 0
-            && node.tags.filter(tag => tag.subType === concordialang_types_1.ReservedTags.GLOBAL).length > 0;
+            && node.tags.filter(tag => tag.subType === ast_1.ReservedTags.GLOBAL).length > 0;
         let owner = hasGlobalTag ? context.doc : context.doc.feature;
         // Adjust the context
         context.resetInValues();

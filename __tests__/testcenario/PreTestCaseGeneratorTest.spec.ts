@@ -1,8 +1,8 @@
-import { Document, FileInfo, Variant } from "concordialang-types";
-import { LocatedException } from "concordialang-types";
+import { Document, FileInfo, Variant } from "../../modules/ast";
+import { AugmentedSpec } from "../../modules/req/AugmentedSpec";
+import { LocatedException } from "../../modules/dbi/LocatedException";
 import { PreTestCaseGenerator, GenContext } from "../../modules/testscenario/PreTestCaseGenerator";
 import { SimpleCompiler } from "../../modules/util/SimpleCompiler";
-import { AugmentedSpec } from "../../modules/ast/AugmentedSpec";
 import { SpecFilter } from "../../modules/selection/SpecFilter";
 import { BatchSpecificationAnalyzer } from "../../modules/semantic/BatchSpecificationAnalyzer";
 import { TestPlanner } from "../../modules/testcase/TestPlanner";
@@ -11,7 +11,6 @@ import { SingleRandomOfEachStrategy, IndexOfEachStrategy } from "../../modules/s
 import { RandomString } from "../../modules/testdata/random/RandomString";
 import { Random } from "../../modules/testdata/random/Random";
 import { LongLimits } from "../../modules/testdata/limits/LongLimits";
-
 
 describe( 'PreTestCaseGeneratorTest', () => {
 

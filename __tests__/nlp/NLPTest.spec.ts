@@ -1,7 +1,10 @@
-import { Entities, NLPResult } from 'concordialang-types';
-import { NLPTrainingDataConversor } from '../../modules/nlp/NLPTrainingDataConversor';
-import { NLPTrainingData } from '../../modules/nlp/NLPTrainingData';
-import { NLP } from '../../modules/nlp/NLP';
+import {
+    Entities,
+    NLP,
+    NLPResult,
+    NLPTrainingDataConversor,
+    NLPTrainingData
+} from '../../modules/nlp';
 
 /**
  * @author Thiago Delgado Pinto

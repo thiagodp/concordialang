@@ -1,13 +1,15 @@
 import { escape, escapeId } from 'sqlstring';
-import { Step, Document, Entities, NLPResult } from "concordialang-types";
+
+import { Step, Document} from "../ast";
+import { Entities, NLPResult } from "../nlp";
 import { CaseType } from '../app/CaseType';
-import { AugmentedSpec } from '../ast/AugmentedSpec';
+import { AugmentedSpec } from '../req/AugmentedSpec';
 import { QueryParser } from '../db/QueryParser';
 import { Symbols } from '../req/Symbols';
+import { LanguageContent } from '../dict/LanguageContent';
 import { convertCase } from './CaseConversor';
 import { isDefined } from './TypeChecking';
 import { ValueTypeDetector } from './ValueTypeDetector';
-import { LanguageContent } from '../dict/LanguageContent';
 import { TargetTypeUtil } from './TargetTypeUtil';
 
 /**

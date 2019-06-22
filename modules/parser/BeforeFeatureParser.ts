@@ -1,4 +1,4 @@
-import { BeforeFeature } from 'concordialang-types';
+import { BeforeFeature } from '../ast/TestEvent';
 import { SyntacticException } from '../req/SyntacticException';
 import { isDefined } from '../util/TypeChecking';
 import { NodeIterator } from './NodeIterator';

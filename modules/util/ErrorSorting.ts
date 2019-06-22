@@ -1,4 +1,4 @@
-import { LocatedException } from 'concordialang-types';
+import { LocatedException } from '../dbi/LocatedException';
 import { Warning } from '../req/Warning';
 
 export function sortErrorsByLocation( errors: LocatedException[] ): LocatedException[] {

@@ -1,4 +1,4 @@
-import { LocatedException } from "concordialang-types";
+import { LocatedException } from "../dbi/LocatedException";
 
 /**
  * Lexical exception.
@@ -6,4 +6,5 @@ import { LocatedException } from "concordialang-types";
  * @author Thiago Delgado Pinto
  */
 export class LexicalException extends LocatedException {
+    name = 'LexicalError'
 }

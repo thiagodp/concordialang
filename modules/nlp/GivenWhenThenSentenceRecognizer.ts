@@ -1,13 +1,18 @@
-import { LocatedException } from 'concordialang-types';
-import { ContentNode, Step } from 'concordialang-types';
-import { NLPResult, Entities } from 'concordialang-types';
-import { NLPTrainer } from './NLPTrainer';
-import { Intents } from './Intents';
-import { NodeSentenceRecognizer, NLPResultProcessor } from "./NodeSentenceRecognizer";
-import { NLP } from "./NLP";
-import { NLPException } from "./NLPException";
-import { RuleBuilder } from './RuleBuilder';
-import { UI_ACTION_SYNTAX_RULES, DEFAULT_UI_ACTION_SYNTAX_RULE } from './SyntaxRules';
+import { ContentNode, Step } from '../ast';
+import { LocatedException } from '../dbi/LocatedException';
+import {
+    NLPResult,
+    Entities,
+    NLPTrainer,
+    Intents,
+    NodeSentenceRecognizer,
+    NLPResultProcessor,
+    NLP,
+    NLPException,
+    RuleBuilder,
+    UI_ACTION_SYNTAX_RULES,
+    DEFAULT_UI_ACTION_SYNTAX_RULE
+} from '.';
 
 /**
  * Given-When-Then sentence recognizer.

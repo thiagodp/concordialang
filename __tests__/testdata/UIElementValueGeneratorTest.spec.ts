@@ -1,13 +1,14 @@
-import { FileInfo, EntityValueType } from "concordialang-types";
+import { join } from "path";
+
+import { FileInfo, EntityValueType } from "../../modules/ast";
 import { UIElementValueGenerator, ValueGenContext } from "../../modules/testdata/UIElementValueGenerator";
 import { SimpleCompiler } from "../../modules/util/SimpleCompiler";
-import { AugmentedSpec } from "../../modules/ast/AugmentedSpec";
+import { AugmentedSpec } from "../../modules/req/AugmentedSpec";
 import { UIETestPlan } from "../../modules/testcase/UIETestPlan";
 import { DataTestCase } from "../../modules/testdata/DataTestCase";
 import { DTCAnalysisResult } from "../../modules/testdata/DataTestCaseAnalyzer";
 import { BatchSpecificationAnalyzer } from "../../modules/semantic/BatchSpecificationAnalyzer";
 import { SpecFilter } from "../../modules/selection/SpecFilter";
-import { join } from "path";
 import { DataGenerator } from "../../modules/testdata/DataGenerator";
 import { DataGeneratorBuilder } from "../../modules/testdata/DataGeneratorBuilder";
 

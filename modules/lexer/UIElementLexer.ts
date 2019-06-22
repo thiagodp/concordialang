@@ -1,6 +1,6 @@
-import { UIElement } from "concordialang-types";
-import { NamedNodeLexer } from "./NamedNodeLexer";
+import { UIElement } from "../ast/UIElement";
 import { NodeTypes } from "../req/NodeTypes";
+import { NamedNodeLexer } from "./NamedNodeLexer";
 
 /**
  * Detects a UI Element.

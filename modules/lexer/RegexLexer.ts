@@ -1,11 +1,11 @@
-import { Regex } from 'concordialang-types';
+import { Regex } from '../ast/Regex';
 import { NodeTypes } from "../req/NodeTypes";
-import { NodeLexer, LexicalAnalysisResult } from './NodeLexer';
-import { KeywordBasedLexer } from './KeywordBasedLexer';
 import { LineChecker } from '../req/LineChecker';
 import { Expressions } from '../req/Expressions';
 import { Symbols } from '../req/Symbols';
 import { LexicalException } from '../req/LexicalException';
+import { NodeLexer, LexicalAnalysisResult } from './NodeLexer';
+import { KeywordBasedLexer } from './KeywordBasedLexer';
 import { CommentHandler } from './CommentHandler';
 
 /**

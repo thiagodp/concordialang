@@ -1,10 +1,14 @@
-import { LocatedException } from 'concordialang-types';
-import { NLPResult } from 'concordialang-types';
-import { ContentNode, Location } from 'concordialang-types';
+import { Location } from 'concordialang-types'
+
+import { LocatedException } from '../dbi/LocatedException';
+import { ContentNode } from '../ast/Node';
 import { Warning } from '../req/Warning';
 import { isDefined } from '../util/TypeChecking';
-import { NLP } from './NLP';
-import { NLPException } from './NLPException';
+import {
+    NLPResult,
+    NLP,
+    NLPException
+} from '.';
 
 /**
  * NLP result processor

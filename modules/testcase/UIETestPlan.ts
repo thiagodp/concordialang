@@ -1,4 +1,4 @@
-import { Step } from "concordialang-types";
+import { Step } from "../ast/Step";
 import { DataTestCase } from "../testdata/DataTestCase";
 import { DTCAnalysisResult } from "../testdata/DataTestCaseAnalyzer";
 

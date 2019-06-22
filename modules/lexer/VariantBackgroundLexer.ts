@@ -1,6 +1,6 @@
-import { VariantBackground } from "concordialang-types";
-import { BlockLexer } from "./BlockLexer";
+import { VariantBackground } from "../ast/VariantBackground";
 import { NodeTypes } from "../req/NodeTypes";
+import { BlockLexer } from "./BlockLexer";
 
 /**
  * Detects a Variant Background block.

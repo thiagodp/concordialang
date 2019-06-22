@@ -1,6 +1,6 @@
 import * as isValidPath from 'is-valid-path';
 
-import { Import } from 'concordialang-types';
+import { Import } from '../ast/Import';
 import { NodeTypes } from "../req/NodeTypes";
 import { QuotedNodeLexer } from './QuotedNodeLexer';
 

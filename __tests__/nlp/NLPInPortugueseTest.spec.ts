@@ -1,9 +1,13 @@
-import { Entities, NLPResult } from 'concordialang-types';
-import { Intents } from '../../modules/nlp/Intents';
-import { NLPTrainer } from '../../modules/nlp/NLPTrainer';
-import { NLP } from '../../modules/nlp/NLP';
-import { Options } from '../../modules/app/Options';
 import { resolve } from 'path';
+
+import {
+    Entities,
+    Intents,
+    NLP,
+    NLPResult,
+    NLPTrainer
+} from '../../modules/nlp';
+import { Options } from '../../modules/app/Options';
 import { LanguageContentLoader, JsonLanguageContentLoader } from '../../modules/dict/LanguageContentLoader';
 
 

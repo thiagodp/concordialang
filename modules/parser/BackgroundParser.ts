@@ -1,4 +1,4 @@
-import { Background } from 'concordialang-types';
+import { Background } from '../ast/Background';
 import { SyntacticException } from '../req/SyntacticException';
 import { isDefined } from '../util/TypeChecking';
 import { NodeIterator } from './NodeIterator';

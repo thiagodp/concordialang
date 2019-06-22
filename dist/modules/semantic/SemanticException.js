@@ -1,12 +1,12 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const concordialang_types_1 = require("concordialang-types");
+const LocatedException_1 = require("../dbi/LocatedException");
 /**
  * Semantic exception.
  *
  * @author Thiago Delgado Pinto
  */
-class SemanticException extends concordialang_types_1.LocatedException {
+class SemanticException extends LocatedException_1.LocatedException {
     constructor() {
         super(...arguments);
         this.name = 'SemanticError';

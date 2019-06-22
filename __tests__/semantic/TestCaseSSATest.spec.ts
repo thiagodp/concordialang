@@ -1,7 +1,17 @@
 import { join } from 'path';
-import { FileInfo, Import, Location, Feature, Document, TestCase, Tag, ReservedTags } from 'concordialang-types';
+import { Location } from 'concordialang-types';
+
+import {
+    FileInfo,
+    Import,
+    Feature,
+    Document,
+    TestCase,
+    Tag,
+    ReservedTags
+} from '../../modules/ast/';
+import { AugmentedSpec } from '../../modules/req/AugmentedSpec';
 import { NodeTypes } from '../../modules/req/NodeTypes';
-import { AugmentedSpec } from '../../modules/ast/AugmentedSpec';
 import { TestCaseSSA } from '../../modules/semantic/TestCaseSSA';
 
 /**

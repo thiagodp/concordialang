@@ -1,9 +1,9 @@
-import { Table } from "concordialang-types";
+import { Table } from "../ast/Table";
+import { convertCase } from "../util/CaseConversor";
+import { CaseType } from "../app/CaseType";
 import { NodeParser } from "./NodeParser";
 import { ParsingContext } from "./ParsingContext";
 import { NodeIterator } from './NodeIterator';
-import { convertCase } from "../util/CaseConversor";
-import { CaseType } from "../app/CaseType";
 
 /**
  * Table parser

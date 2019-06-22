@@ -1,9 +1,9 @@
-import { Document } from "concordialang-types";
-import { SingleFileProcessor, FileData, ProcessedFileData } from "./SingleFileProcessor";
+import { Document } from "../ast/Document";
 import { Lexer } from "../lexer/Lexer";
-import { SingleDocumentProcessor } from "./SingleDocumentProcessor";
 import { Parser } from "../parser/Parser";
 import { NLPBasedSentenceRecognizer } from "../nlp/NLPBasedSentenceRecognizer";
+import { SingleFileProcessor, FileData, ProcessedFileData } from "./SingleFileProcessor";
+import { SingleDocumentProcessor } from "./SingleDocumentProcessor";
 
 export class SingleFileCompiler implements SingleFileProcessor {
 

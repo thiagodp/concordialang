@@ -8,7 +8,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const AugmentedSpec_1 = require("../ast/AugmentedSpec");
+const AugmentedSpec_1 = require("../req/AugmentedSpec");
 const SpecFilter_1 = require("../selection/SpecFilter");
 const ProcessingInfo_1 = require("./ProcessingInfo");
 /**

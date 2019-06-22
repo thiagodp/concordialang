@@ -1,4 +1,4 @@
-import { TestCase } from "concordialang-types";
+import { TestCase } from "../ast/TestCase";
 import { NodeTypes } from "../req/NodeTypes";
 import { NamedNodeLexer } from "./NamedNodeLexer";
 

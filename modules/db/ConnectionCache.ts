@@ -1,4 +1,4 @@
-import { DatabaseInterface } from "concordialang-types";
+import { DatabaseInterface } from "../dbi/DatabaseInterface";
 
 /**
  * Connection cache.

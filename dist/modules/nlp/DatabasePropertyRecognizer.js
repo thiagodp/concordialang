@@ -1,11 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const concordialang_types_1 = require("concordialang-types");
-const Intents_1 = require("./Intents");
-const NLPException_1 = require("./NLPException");
-const NodeSentenceRecognizer_1 = require("./NodeSentenceRecognizer");
-const RuleBuilder_1 = require("./RuleBuilder");
-const SyntaxRules_1 = require("./SyntaxRules");
+const _1 = require(".");
 /**
  * Database property sentence recognizer.
  *
@@ -23,7 +18,7 @@ class DatabasePropertyRecognizer {
         return this._nlp.isTrained(language);
     }
     trainMe(trainer, language) {
-        return trainer.trainNLP(this._nlp, language, Intents_1.Intents.DATABASE);
+        return trainer.trainNLP(this._nlp, language, _1.Intents.DATABASE);
     }
     /**
      * Recognize sentences of UI Elements using NLP.
@@ -36,15 +31,15 @@ class DatabasePropertyRecognizer {
      * @throws Error If the NLP is not trained.
      */
     recognizeSentences(language, nodes, errors, warnings) {
-        const recognizer = new NodeSentenceRecognizer_1.NodeSentenceRecognizer(this._nlp);
+        const recognizer = new _1.NodeSentenceRecognizer(this._nlp);
         const syntaxRules = this._syntaxRules;
         let processor = function (node, r, errors, warnings) {
             const recognizedEntityNames = r.entities.map(e => e.entity);
             // Must have a DS Property
-            const propertyIndex = recognizedEntityNames.indexOf(concordialang_types_1.Entities.DB_PROPERTY);
+            const propertyIndex = recognizedEntityNames.indexOf(_1.Entities.DB_PROPERTY);
             if (propertyIndex < 0) {
                 const msg = 'Unrecognized: ' + node.content;
-                warnings.push(new NLPException_1.NLPException(msg, node.location));
+                warnings.push(new _1.NLPException(msg, node.location));
                 return;
             }
             const property = r.entities[propertyIndex].value;
@@ -52,11 +47,11 @@ class DatabasePropertyRecognizer {
             recognizer.validate(node, recognizedEntityNames, syntaxRules, property, errors, warnings);
             // Getting the values
             let values = r.entities
-                .filter(e => e.entity == concordialang_types_1.Entities.VALUE || e.entity == concordialang_types_1.Entities.NUMBER)
+                .filter(e => e.entity == _1.Entities.VALUE || e.entity == _1.Entities.NUMBER)
                 .map(e => e.value);
             if (values.length < 1) {
                 const msg = 'Value expected in the sentence "' + node.content + '".';
-                errors.push(new NLPException_1.NLPException(msg, node.location));
+                errors.push(new _1.NLPException(msg, node.location));
                 return;
             }
             let item = node;
@@ -64,10 +59,10 @@ class DatabasePropertyRecognizer {
             item.value = values[0];
             return item;
         };
-        recognizer.recognize(language, nodes, [Intents_1.Intents.DATABASE], 'Database Property', errors, warnings, processor);
+        recognizer.recognize(language, nodes, [_1.Intents.DATABASE], 'Database Property', errors, warnings, processor);
     }
     buildSyntaxRules() {
-        return (new RuleBuilder_1.RuleBuilder()).build(SyntaxRules_1.DATABASE_PROPERTY_SYNTAX_RULES, SyntaxRules_1.DEFAULT_DATABASE_PROPERTY_SYNTAX_RULE);
+        return (new _1.RuleBuilder()).build(_1.DATABASE_PROPERTY_SYNTAX_RULES, _1.DEFAULT_DATABASE_PROPERTY_SYNTAX_RULE);
     }
 }
 exports.DatabasePropertyRecognizer = DatabasePropertyRecognizer;

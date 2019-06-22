@@ -1,11 +1,11 @@
 const XRegExp = require( 'xregexp' );
-import { ValuedNode } from 'concordialang-types';
-import { KeywordBasedLexer } from './KeywordBasedLexer';
-import { NodeLexer, LexicalAnalysisResult } from './NodeLexer';
+import { ValuedNode } from '../ast/Node';
 import { Expressions } from '../req/Expressions';
 import { LineChecker } from '../req/LineChecker';
 import { Symbols } from "../req/Symbols";
 import { LexicalException } from "../req/LexicalException";
+import { KeywordBasedLexer } from './KeywordBasedLexer';
+import { NodeLexer, LexicalAnalysisResult } from './NodeLexer';
 import { CommentHandler } from './CommentHandler';
 
 /**

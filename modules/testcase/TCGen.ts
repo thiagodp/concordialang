@@ -1,9 +1,9 @@
-import { TestCase, Tag, ReservedTags } from "concordialang-types";
+import { TestCase, Tag, ReservedTags } from "../ast";
 import { PreTestCaseGenerator, GenContext } from "../testscenario/PreTestCaseGenerator";
 import { TestScenario } from "../testscenario/TestScenario";
-import { TestPlanner } from "./TestPlanner";
 import { PreTestCase } from "../testscenario/PreTestCase";
 import { NodeTypes } from "../req/NodeTypes";
+import { TestPlanner } from "./TestPlanner";
 
 /**
  * Generates Test Cases from Test Scenarios and parameters.

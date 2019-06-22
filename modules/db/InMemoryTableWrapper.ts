@@ -1,10 +1,12 @@
-import { Table } from 'concordialang-types';
-import { InMemoryTableInterface } from 'concordialang-types';
+import * as alasql from 'alasql';
+
+import { Table } from '../ast/Table';
+import { InMemoryTableInterface } from '../dbi/InMemoryTableInterface';
 import { RuntimeException } from '../req/RuntimeException';
 import { isDefined } from '../util/TypeChecking';
 import { ValueType, ValueTypeDetector } from '../util/ValueTypeDetector';
 import { SqlHelper } from './SqlHelper';
-import * as alasql from 'alasql';
+
 
 // @ts-ignore
 type TargetInMemoryDB = alasql.Database;

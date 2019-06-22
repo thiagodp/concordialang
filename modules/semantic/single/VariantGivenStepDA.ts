@@ -1,9 +1,9 @@
-import { Document, Step } from "concordialang-types";
-import { NLPUtil, Entities } from "concordialang-types";
-import { DocumentAnalyzer } from "./DocumentAnalyzer";
-import { SemanticException } from "../SemanticException";
+import { Document, Step } from "../../ast";
+import { NLPUtil, Entities } from "../../nlp";
 import { isDefined } from "../../util/TypeChecking";
 import { NodeTypes } from "../../req/NodeTypes";
+import { DocumentAnalyzer } from "./DocumentAnalyzer";
+import { SemanticException } from "../SemanticException";
 
 /**
  * Variant's Given step analyzer for a single document.

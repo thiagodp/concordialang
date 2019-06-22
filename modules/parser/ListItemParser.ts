@@ -1,4 +1,4 @@
-import { ListItem } from 'concordialang-types';
+import { ListItem } from '../ast/ListItem';
 import { RegexParser } from './RegexParser';
 import { ConstantParser } from './ConstantParser';
 import { NodeParser } from './NodeParser';

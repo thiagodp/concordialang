@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const concordialang_types_1 = require("concordialang-types");
+const ast_1 = require("../../ast");
 const SemanticException_1 = require("../SemanticException");
 /**
  * Database analyzer for a single document.
@@ -31,13 +31,13 @@ class DatabaseDA {
         }
         const properties = db.items.map(item => item.property);
         // Has no type?
-        if (properties.indexOf(concordialang_types_1.DatabaseProperties.TYPE) < 0) {
+        if (properties.indexOf(ast_1.DatabaseProperties.TYPE) < 0) {
             let msg = 'Database "' + db.name + '" should have a type.';
             let err = new SemanticException_1.SemanticException(msg, db.location);
             errors.push(err);
         }
         // Has no path?
-        if (!db.name && properties.indexOf(concordialang_types_1.DatabaseProperties.PATH) < 0) {
+        if (!db.name && properties.indexOf(ast_1.DatabaseProperties.PATH) < 0) {
             let msg = 'Database should have a name or a path.';
             let err = new SemanticException_1.SemanticException(msg, db.location);
             errors.push(err);

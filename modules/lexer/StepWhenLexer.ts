@@ -1,6 +1,6 @@
-import { StepWhen } from "concordialang-types";
-import { StartingKeywordLexer } from './StartingKeywordLexer';
+import { StepWhen } from "../ast/Step";
 import { NodeTypes } from "../req/NodeTypes";
+import { StartingKeywordLexer } from './StartingKeywordLexer';
 
 /**
  * Detects a When node.

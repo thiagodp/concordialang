@@ -1,8 +1,8 @@
-import { Text } from 'concordialang-types';
+import { Text } from '../ast/Text';
 import { Symbols } from '../req/Symbols';
 import { NodeTypes } from '../req/NodeTypes';
-import { NodeLexer, LexicalAnalysisResult } from "./NodeLexer";
 import { LineChecker } from "../req/LineChecker";
+import { NodeLexer, LexicalAnalysisResult } from "./NodeLexer";
 
 /**
  * Detects anything not empty.

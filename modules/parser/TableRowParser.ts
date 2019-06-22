@@ -1,4 +1,4 @@
-import { TableRow } from "concordialang-types";
+import { TableRow } from "../ast/Table";
 import { SyntacticException } from '../req/SyntacticException';
 import { NodeParser } from "./NodeParser";
 import { ParsingContext } from "./ParsingContext";

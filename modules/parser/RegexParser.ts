@@ -1,7 +1,7 @@
-import { Regex, ListItem } from 'concordialang-types';
+import { Regex, ListItem } from '../ast';
 import { SyntacticException } from '../req/SyntacticException';
-import { ParsingContext } from './ParsingContext';
 import { NodeTypes} from '../req/NodeTypes';
+import { ParsingContext } from './ParsingContext';
 import { ListItemNodeParser } from './ListItemNodeParser';
 import { NodeIterator } from './NodeIterator';
 

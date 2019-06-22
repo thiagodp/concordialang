@@ -1,4 +1,4 @@
-import { ListItem } from 'concordialang-types';
+import { ListItem } from '../ast/ListItem';
 import { NodeIterator } from './NodeIterator';
 import { ParsingContext } from './ParsingContext';
 

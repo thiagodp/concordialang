@@ -14,10 +14,10 @@ const RandomDouble_1 = require("./random/RandomDouble");
 const RandomDate_1 = require("./random/RandomDate");
 const RandomTime_1 = require("./random/RandomTime");
 const RandomDateTime_1 = require("./random/RandomDateTime");
+const QueryCache_1 = require("../db/QueryCache");
 const RegexBasedDataGenerator_1 = require("./RegexBasedDataGenerator");
 const ListBasedDataGenerator_1 = require("./ListBasedDataGenerator");
 const QueryBasedDataGenerator_1 = require("./QueryBasedDataGenerator");
-const QueryCache_1 = require("../db/QueryCache");
 const InvertedLogicListBasedDataGenerator_1 = require("./InvertedLogicListBasedDataGenerator");
 const InvertedLogicQueryBasedDataGenerator_1 = require("./InvertedLogicQueryBasedDataGenerator");
 /**

@@ -1,9 +1,9 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const SemanticException_1 = require("../SemanticException");
 const DuplicationChecker_1 = require("../../util/DuplicationChecker");
 const TypeChecking_1 = require("../../util/TypeChecking");
 const UIElementPropertyExtractor_1 = require("../../util/UIElementPropertyExtractor");
+const SemanticException_1 = require("../SemanticException");
 /**
  * UI Element analyzer for a single document.
  *

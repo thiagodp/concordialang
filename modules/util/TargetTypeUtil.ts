@@ -1,11 +1,11 @@
-import { Step, Document, Entities } from 'concordialang-types';
-
+import { Step, Document } from '../ast';
+import { AugmentedSpec } from "../req/AugmentedSpec";
+import { Entities } from '../nlp/Entities';
 import { LanguageContent } from "../dict/LanguageContent";
 import { isDefined } from "./TypeChecking";
 import { ACTION_TARGET_MAP } from "./ActionMap";
 import { EditableActionTargets, ActionTargets } from "./ActionTargets";
 import { UIElementPropertyExtractor } from "./UIElementPropertyExtractor";
-import { AugmentedSpec } from 'modules/ast/AugmentedSpec';
 
 export class TargetTypeUtil {
 
