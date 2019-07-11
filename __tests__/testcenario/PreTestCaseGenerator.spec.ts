@@ -1,6 +1,6 @@
 import { Document, FileInfo, Variant } from "../../modules/ast";
 import { AugmentedSpec } from "../../modules/req/AugmentedSpec";
-import { LocatedException } from "../../modules/dbi/LocatedException";
+import { LocatedException } from "../../modules/error/LocatedException";
 import { PreTestCaseGenerator, GenContext } from "../../modules/testscenario/PreTestCaseGenerator";
 import { SimpleCompiler } from "../../modules/util/SimpleCompiler";
 import { SpecFilter } from "../../modules/selection/SpecFilter";
@@ -12,7 +12,7 @@ import { RandomString } from "../../modules/testdata/random/RandomString";
 import { Random } from "../../modules/testdata/random/Random";
 import { LongLimits } from "../../modules/testdata/limits/LongLimits";
 
-describe( 'PreTestCaseGeneratorTest', () => {
+describe( 'PreTestCaseGenerator', () => {
 
     let gen: PreTestCaseGenerator; // under test
 
@@ -467,6 +467,67 @@ describe( 'PreTestCaseGeneratorTest', () => {
             'Então eu devo ver a mensagem "bar" # de <a>' // << Otherwise is replaced by Then
         ] );
 
+    } );
+
+
+
+
+
+    it( 'replaces UIE Property references by their generated value', async () => {
+
+        let spec = new AugmentedSpec( '.' );
+
+        let doc1: Document = cp.addToSpec( spec,
+            [
+                '#language:pt',
+                'Feature: Feature 1',
+                'Scenario: Foo',
+                'Variant: Foo',
+                '  Quando eu preencho {A}',
+                '    E eu preencho <b> com {A|value}',
+                ' Então eu devo ver "x"',
+                '    E vejo {A|value}',
+                'Elemento de IU: A',
+                ' - valor é 5'
+            ],
+            { path: 'doc1.feature', hash: 'doc1' } as FileInfo
+        );
+
+        const specFilter = new SpecFilter( spec );
+        const batchSpecAnalyzer = new BatchSpecificationAnalyzer();
+        let errors: LocatedException[] = [],
+        warnings: LocatedException[] = [];
+
+        await batchSpecAnalyzer.analyze( specFilter.graph(), spec, errors );
+
+        // expect( doc1.fileErrors ).toEqual( [] );
+        // expect( doc2.fileErrors ).toEqual( [] );
+
+        const testPlanMakers: TestPlanner[] = [
+            new TestPlanner( new OnlyValidMix(), new IndexOfEachStrategy( 0 ), SEED )
+        ];
+
+        const ctx1 = new GenContext( spec, doc1, errors, warnings );
+        const variant1: Variant = doc1.feature.scenarios[ 0 ].variants[ 0 ];
+        const preTestCases = await gen.generate( variant1.sentences, ctx1, testPlanMakers );
+        expect( errors ).toHaveLength( 0 );
+        expect( preTestCases ).toHaveLength( 1 );
+
+        const preTC = preTestCases[ 0 ];
+
+        // Content + Comment
+        const lines = preTC.steps.map( s => s.content + ( ! s.comment ? '' : ' #' + s.comment ) );
+        const value1 = 5;
+        const comment = '# {A}, válido: preenchido';
+
+        expect( lines ).toEqual(
+            [
+                `Quando eu preencho <a> com ${value1} ${comment}`,
+                `E eu preencho <b> com ${value1}`,
+                'Então eu devo ver "x"',
+                `E vejo ${value1}`
+            ]
+        );
     } );
 
 

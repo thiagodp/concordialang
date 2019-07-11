@@ -2,7 +2,7 @@ import { TCGen } from "../../modules/testcase/TCGen";
 import { SimpleCompiler } from "../../modules/util/SimpleCompiler";
 import { Document, FileInfo, Variant, TestCase } from "../../modules/ast";
 import { AugmentedSpec } from "../../modules/req/AugmentedSpec";
-import { LocatedException } from "../../modules/dbi/LocatedException";
+import { LocatedException } from "../../modules/error/LocatedException";
 import { PreTestCaseGenerator, GenContext } from "../../modules/testscenario/PreTestCaseGenerator";
 import { SpecFilter } from "../../modules/selection/SpecFilter";
 import { BatchSpecificationAnalyzer } from "../../modules/semantic/BatchSpecificationAnalyzer";

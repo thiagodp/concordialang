@@ -15,8 +15,9 @@ var Entities;
     // Value entities (no specific intent)
     Entities["VALUE"] = "value";
     Entities["NUMBER"] = "number";
-    Entities["UI_ELEMENT"] = "ui_element";
+    Entities["UI_ELEMENT_REF"] = "ui_element";
     Entities["UI_LITERAL"] = "ui_literal";
+    Entities["UI_PROPERTY_REF"] = "ui_property_ref";
     Entities["QUERY"] = "query";
     Entities["CONSTANT"] = "constant";
     Entities["VALUE_LIST"] = "value_list";

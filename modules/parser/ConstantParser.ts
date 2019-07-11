@@ -1,5 +1,5 @@
 import { Constant, ListItem } from '../ast'
-import { SyntacticException } from '../req/SyntacticException';
+import { SyntacticException } from './SyntacticException';
 import { ParsingContext } from './ParsingContext';
 import { NodeTypes } from '../req/NodeTypes';
 import { ListItemNodeParser } from './ListItemNodeParser';

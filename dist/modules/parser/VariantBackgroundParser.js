@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const SyntacticException_1 = require("../req/SyntacticException");
+const SyntacticException_1 = require("./SyntacticException");
 /**
  * Variant Background parser
  *

@@ -1,6 +1,6 @@
 import { Document, Variant, FileInfo } from "../../modules/ast";
 import { AugmentedSpec } from "../../modules/req/AugmentedSpec";
-import { LocatedException } from "../../modules/dbi/LocatedException";
+import { LocatedException } from "../../modules/error/LocatedException";
 import { TSGen } from "../../modules/testscenario/TSGen";
 import { TestScenario } from "../../modules/testscenario/TestScenario";
 import { SimpleCompiler } from "../../modules/util/SimpleCompiler";
@@ -10,7 +10,7 @@ import { SpecFilter } from "../../modules/selection/SpecFilter";
 import { CartesianProductStrategy } from "../../modules/selection/CombinationStrategy";
 import { PreTestCaseGenerator, GenContext } from "../../modules/testscenario/PreTestCaseGenerator";
 
-describe( 'TSGenTest', () => {
+describe( 'TSGen', () => {
 
     let gen: TSGen = null; // under test
 
@@ -59,9 +59,9 @@ describe( 'TSGenTest', () => {
         let doc1: Document = cp.addToSpec( spec,
             [
                 '#language:pt',
-                'Feature: Feature 1',
-                'Scenario: Foo',
-                'Variant: Foo',
+                'Funcionalidade: Feature 1',
+                'Cenário: Foo',
+                'Variante: Foo',
                 '  Quando eu preencho <a> com [ipsum]',
                 '    E eu preencho <b> com [pi]',
                 ' Então eu tenho ~foo~',
@@ -98,9 +98,9 @@ describe( 'TSGenTest', () => {
         let doc1: Document = cp.addToSpec( spec,
             [
                 '#language:pt',
-                'Feature: Feature 1',
-                'Scenario: Foo',
-                'Variant: Foo',
+                'Funcionalidade: Feature 1',
+                'Cenário: Foo',
+                'Variante: Foo',
                 '  Quando eu preencho <a> com [ipsum]',
                 '    E eu preencho <b> com [pi]',
                 ' Então eu tenho ~foo~',
@@ -114,10 +114,10 @@ describe( 'TSGenTest', () => {
         let doc2: Document = cp.addToSpec( spec,
             [
                 '#language:pt',
-                'Import "doc1.feature"',
-                'Feature: Feature 2',
-                'Scenario: Bar',
-                'Variant: Bar',
+                'Importe "doc1.feature"',
+                'Funcionalidade: Feature 2',
+                'Cenário: Bar',
+                'Variante: Bar',
                 '  Dado que eu tenho ~foo~',
                 '  Quando eu preencho <c> com "c"',
                 '    E eu preencho <d> com "d"'
@@ -166,9 +166,9 @@ describe( 'TSGenTest', () => {
         let doc: Document = cp.addToSpec( spec,
             [
                 '#language:pt',
-                'Feature: Feature 2',
-                'Scenario: Bar',
-                'Variant: Bar',
+                'Funcionalidade: Feature 2',
+                'Cenário: Bar',
+                'Variante: Bar',
                 '  Dado que eu tenho ~foo~',
                 '  Quando eu preencho <c> com "c"',
                 '    E eu preencho <d> com "d"'
@@ -192,16 +192,16 @@ describe( 'TSGenTest', () => {
 
 
 
-    it( 'replaces orfan postcondition AND steps with THEN', async () => {
+    it( 'replaces orphan postcondition AND steps with THEN', async () => {
 
         let spec = new AugmentedSpec( '.' );
 
         let doc1: Document = cp.addToSpec( spec,
             [
                 '#language:pt',
-                'Feature: Feature 1',
-                'Scenario: Foo',
-                'Variant: Foo',
+                'Funcionalidade: Feature 1',
+                'Cenário: Foo',
+                'Variante: Foo',
                 '  Quando eu preencho <a> com [ipsum]',
                 '    E eu preencho <b> com [pi]',
                 ' Então eu tenho ~foo~',
@@ -216,10 +216,10 @@ describe( 'TSGenTest', () => {
         let doc2: Document = cp.addToSpec( spec,
             [
                 '#language:pt',
-                'Import "doc1.feature"',
-                'Feature: Feature 2',
-                'Scenario: Bar',
-                'Variant: Bar',
+                'Importe "doc1.feature"',
+                'Funcionalidade: Feature 2',
+                'Cenário: Bar',
+                'Variante: Bar',
                 '  Dado que eu tenho ~foo~',
                 '  Quando eu preencho <c> com "c"',
                 '    E eu preencho <d> com "d"'
@@ -261,16 +261,16 @@ describe( 'TSGenTest', () => {
 
 
 
-    it( 'replaces orfan precondition AND steps with GIVEN', async () => {
+    it( 'replaces orphan precondition AND steps with GIVEN', async () => {
 
         let spec = new AugmentedSpec( '.' );
 
         let doc1: Document = cp.addToSpec( spec,
             [
                 '#language:pt',
-                'Feature: Feature 1',
-                'Scenario: Foo',
-                'Variant: Foo',
+                'Funcionalidade: Feature 1',
+                'Cenário: Foo',
+                'Variante: Foo',
                 '  Quando eu preencho <a> com [ipsum]',
                 '    E eu preencho <b> com [pi]',
                 ' Então eu tenho ~foo~',
@@ -284,10 +284,10 @@ describe( 'TSGenTest', () => {
         let doc2: Document = cp.addToSpec( spec,
             [
                 '#language:pt',
-                'Import "doc1.feature"',
-                'Feature: Feature 2',
-                'Scenario: Bar',
-                'Variant: Bar',
+                'Importe "doc1.feature"',
+                'Funcionalidade: Feature 2',
+                'Cenário: Bar',
+                'Variante: Bar',
                 '  Dado que eu tenho ~foo~',
                 '    E eu vejo "bar"', // <<<<<<<<<<<<<<<<<<<<<<<<
                 '  Quando eu preencho <c> com "c"',
@@ -340,9 +340,9 @@ describe( 'TSGenTest', () => {
         let doc1: Document = cp.addToSpec( spec,
             [
                 '#language:pt',
-                'Feature: Feature 1',
-                'Scenario: Foo',
-                'Variant: Foo',
+                'Funcionalidade: Feature 1',
+                'Cenário: Foo',
+                'Variante: Foo',
                 '  Quando eu preencho <a> com [ipsum]',
                 '    E eu preencho <b> com [pi]',
                 ' Então eu tenho ~foo~',
@@ -356,10 +356,10 @@ describe( 'TSGenTest', () => {
         let doc2: Document = cp.addToSpec( spec,
             [
                 '#language:pt',
-                'Import "doc1.feature"',
-                'Feature: Feature 2',
-                'Scenario: Bar',
-                'Variant: Bar',
+                'Importe "doc1.feature"',
+                'Funcionalidade: Feature 2',
+                'Cenário: Bar',
+                'Variante: Bar',
                 '  Dado que eu vejo "bar"',
                 '  Quando eu preencho <c> com "c"',
                 '    E eu preencho <d> com "d"',
@@ -412,9 +412,9 @@ describe( 'TSGenTest', () => {
         let doc1: Document = cp.addToSpec( spec,
             [
                 '#language:pt',
-                'Feature: Feature 1',
-                'Scenario: Foo',
-                'Variant: Foo',
+                'Funcionalidade: Feature 1',
+                'Cenário: Foo',
+                'Variante: Foo',
                 '  Quando eu preencho <a> com [ipsum]',
                 '    E eu preencho <b> com [pi]',
                 ' Então eu tenho ~foo~',
@@ -428,10 +428,10 @@ describe( 'TSGenTest', () => {
         let doc2: Document = cp.addToSpec( spec,
             [
                 '#language:pt',
-                'Import "doc1.feature"',
-                'Feature: Feature 2',
-                'Scenario: Bar',
-                'Variant: Bar',
+                'Importe "doc1.feature"',
+                'Funcionalidade: Feature 2',
+                'Cenário: Bar',
+                'Variante: Bar',
                 '  Dado que eu tenho ~foo~',
                 '    E eu vejo "bar"',
                 '  Quando eu preencho <c> com "c"',
@@ -445,10 +445,10 @@ describe( 'TSGenTest', () => {
         let doc3: Document = cp.addToSpec( spec,
             [
                 '#language:pt',
-                'Import "doc2.feature"',
-                'Feature: Feature 3',
-                'Scenario: Zoo',
-                'Variant: Zoo',
+                'Importe "doc2.feature"',
+                'Funcionalidade: Feature 3',
+                'Cenário: Zoo',
+                'Variante: Zoo',
                 '  Dado que eu tenho ~bar~',
                 '    E eu vejo "zoo"',
                 '  Quando eu preencho <x> com "x"',
@@ -511,9 +511,9 @@ describe( 'TSGenTest', () => {
         let doc1: Document = cp.addToSpec( spec,
             [
                 '#language:pt',
-                'Feature: Feature 1',
-                'Scenario: Foo',
-                'Variant: Foo',
+                'Funcionalidade: Feature 1',
+                'Cenário: Foo',
+                'Variante: Foo',
                 '  Quando eu preencho <a> com [ipsum]',
                 '    E eu preencho <b> com [pi]',
                 ' Então eu tenho ~foo~',
@@ -527,10 +527,10 @@ describe( 'TSGenTest', () => {
         let doc2: Document = cp.addToSpec( spec,
             [
                 '#language:pt',
-                'Import "doc1.feature"',
-                'Feature: Feature 2',
-                'Scenario: Bar',
-                'Variant: Bar',
+                'Importe "doc1.feature"',
+                'Funcionalidade: Feature 2',
+                'Cenário: Bar',
+                'Variante: Bar',
                 '  Dado que eu tenho ~foo~',
                 '    E eu vejo "bar"',
                 '  Quando eu preencho <c> com "c"',
@@ -544,10 +544,10 @@ describe( 'TSGenTest', () => {
         let doc3: Document = cp.addToSpec( spec,
             [
                 '#language:pt',
-                'Import "doc2.feature"',
-                'Feature: Feature 3',
-                'Scenario: Zoo',
-                'Variant: Zoo',
+                'Importe "doc2.feature"',
+                'Funcionalidade: Feature 3',
+                'Cenário: Zoo',
+                'Variante: Zoo',
                 '  Dado que eu vejo "zoo"',
                 '  Quando eu tenho ~bar~', // <<<
                 '    E eu preencho <x> com "x"',

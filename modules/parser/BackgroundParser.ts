@@ -1,5 +1,5 @@
 import { Background } from '../ast/Background';
-import { SyntacticException } from '../req/SyntacticException';
+import { SyntacticException } from './SyntacticException';
 import { isDefined } from '../util/TypeChecking';
 import { NodeIterator } from './NodeIterator';
 import { NodeParser } from './NodeParser';

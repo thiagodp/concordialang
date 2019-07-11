@@ -108,7 +108,7 @@ export class ReferenceReplacer {
 
         for ( let e of nlpResult.entities || [] ) {
 
-            if ( Entities.UI_ELEMENT != e.entity ) {
+            if ( Entities.UI_ELEMENT_REF != e.entity ) {
                 continue;
             }
 
@@ -129,11 +129,16 @@ export class ReferenceReplacer {
             const prefixedUILiteral = targetType.length > 0 ? targetType + ' ' + uiLiteral : uiLiteral;
 
             // Replace
-            newSentence = this.replaceAtPosition(
-                newSentence,
-                e.position,
-                Symbols.UI_ELEMENT_PREFIX + e.value + Symbols.UI_ELEMENT_SUFFIX, // e.g., {Foo}
-                prefixedUILiteral // e.g., <foo>
+            // newSentence = this.replaceAtPosition(
+            //     newSentence,
+            //     e.position,
+            //     Symbols.UI_ELEMENT_PREFIX + e.value + Symbols.UI_ELEMENT_SUFFIX, // e.g., {Foo}
+            //     prefixedUILiteral // e.g., <foo>
+            // );
+            // E.g. {Foo} -> <foo>
+            newSentence = newSentence.replace(
+                Symbols.UI_ELEMENT_PREFIX + e.value + Symbols.UI_ELEMENT_SUFFIX,
+                prefixedUILiteral
             );
 
             uiElements.push( Symbols.UI_ELEMENT_PREFIX + e.value + Symbols.UI_ELEMENT_SUFFIX );
@@ -167,7 +172,7 @@ export class ReferenceReplacer {
     }
 
 
-    private replaceAtPosition(
+    public replaceAtPosition(
         sentence: string,
         position: number,
         from: string,

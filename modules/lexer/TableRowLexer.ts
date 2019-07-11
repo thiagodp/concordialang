@@ -2,7 +2,7 @@ import { Location } from 'concordialang-types';
 
 import { TableRow } from '../ast/Table';
 import { Expressions } from '../req/Expressions';
-import { LexicalException } from '../req/LexicalException';
+import { LexicalException } from './LexicalException';
 import { NodeTypes } from '../req/NodeTypes';
 import { Symbols } from '../req/Symbols';
 import { LexicalAnalysisResult, NodeLexer } from './NodeLexer';

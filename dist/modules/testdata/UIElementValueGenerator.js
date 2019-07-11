@@ -8,20 +8,20 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+const ast_1 = require("../ast");
 const nlp_1 = require("../nlp");
+const error_1 = require("../error");
 const DatabaseToAbstractDatabase_1 = require("../db/DatabaseToAbstractDatabase");
 const DatabaseTypes_1 = require("../db/DatabaseTypes");
 const DatabaseWrapper_1 = require("../db/DatabaseWrapper");
 const InMemoryTableWrapper_1 = require("../db/InMemoryTableWrapper");
 const QueryParser_1 = require("../db/QueryParser");
 const NodeTypes_1 = require("../req/NodeTypes");
-const RuntimeException_1 = require("../req/RuntimeException");
 const QueryReferenceReplacer_1 = require("../util/QueryReferenceReplacer");
 const TypeChecking_1 = require("../util/TypeChecking");
 const UIElementNameHandler_1 = require("../util/UIElementNameHandler");
 const UIElementOperatorChecker_1 = require("../util/UIElementOperatorChecker");
 const UIElementPropertyExtractor_1 = require("../util/UIElementPropertyExtractor");
-const UIPropertyTypes_1 = require("../util/UIPropertyTypes");
 const ValueTypeDetector_1 = require("../util/ValueTypeDetector");
 const DataGenerator_1 = require("./DataGenerator");
 const DataTestCase_1 = require("./DataTestCase");
@@ -60,7 +60,7 @@ class UIElementValueGenerator {
             let uie = spec.uiElementByVariable(uieName, doc);
             if (!uie) {
                 const msg = 'Could not find UI Element: ' + uieName + '. It was referenced in "' + doc.fileInfo.path + '".';
-                const err = new RuntimeException_1.RuntimeException(msg);
+                const err = new error_1.RuntimeException(msg);
                 errors.push(err);
                 return null;
             }
@@ -72,7 +72,7 @@ class UIElementValueGenerator {
             const plan = context.uieVariableToPlanMap.get(fullVariableName);
             if (!plan) {
                 const msg = 'Could not find Plan for the UI Element: ' + fullVariableName;
-                const err = new RuntimeException_1.RuntimeException(msg);
+                const err = new error_1.RuntimeException(msg);
                 errors.push(err);
                 return null;
             }
@@ -89,69 +89,69 @@ class UIElementValueGenerator {
             // DATA TYPE
             cfg.valueType = this._uiePropExtractor.extractDataType(uie) || ValueTypeDetector_1.ValueType.STRING;
             // FORMAT
-            const pFormat = propertiesMap.get(UIPropertyTypes_1.UIPropertyTypes.FORMAT) || null;
+            const pFormat = propertiesMap.get(ast_1.UIPropertyTypes.FORMAT) || null;
             if (TypeChecking_1.isDefined(pFormat)) {
                 try {
-                    cfg.format = (yield this.resolvePropertyValue(UIPropertyTypes_1.UIPropertyTypes.FORMAT, pFormat, pFormat.value, context, doc, spec, errors)).toString();
+                    cfg.format = (yield this.resolvePropertyValue(ast_1.UIPropertyTypes.FORMAT, pFormat, pFormat.value, context, doc, spec, errors)).toString();
                 }
                 catch (e) {
-                    const msg = msgPropertyValueError + UIPropertyTypes_1.UIPropertyTypes.FORMAT;
-                    errors.push(new RuntimeException_1.RuntimeException(msg));
+                    const msg = msgPropertyValueError + ast_1.UIPropertyTypes.FORMAT;
+                    errors.push(new error_1.RuntimeException(msg));
                 }
             }
             // REQUIRED
             cfg.required = this._uiePropExtractor.extractIsRequired(uie);
             // VALUE
-            const pValue = propertiesMap.get(UIPropertyTypes_1.UIPropertyTypes.VALUE) || null;
+            const pValue = propertiesMap.get(ast_1.UIPropertyTypes.VALUE) || null;
             if (TypeChecking_1.isDefined(pValue)) {
                 try {
-                    cfg.value = yield this.resolvePropertyValue(UIPropertyTypes_1.UIPropertyTypes.VALUE, pValue, pValue.value, context, doc, spec, errors);
+                    cfg.value = yield this.resolvePropertyValue(ast_1.UIPropertyTypes.VALUE, pValue, pValue.value, context, doc, spec, errors);
                 }
                 catch (e) {
-                    const msg = msgPropertyValueError + UIPropertyTypes_1.UIPropertyTypes.VALUE;
-                    errors.push(new RuntimeException_1.RuntimeException(msg));
+                    const msg = msgPropertyValueError + ast_1.UIPropertyTypes.VALUE;
+                    errors.push(new error_1.RuntimeException(msg));
                 }
             }
             // MIN VALUE / MAX VALUE
-            const pMinValue = propertiesMap.get(UIPropertyTypes_1.UIPropertyTypes.MIN_VALUE) || null;
+            const pMinValue = propertiesMap.get(ast_1.UIPropertyTypes.MIN_VALUE) || null;
             if (TypeChecking_1.isDefined(pMinValue)) {
                 try {
-                    cfg.minValue = yield this.resolvePropertyValue(UIPropertyTypes_1.UIPropertyTypes.MIN_VALUE, pMinValue, pMinValue.value, context, doc, spec, errors);
+                    cfg.minValue = yield this.resolvePropertyValue(ast_1.UIPropertyTypes.MIN_VALUE, pMinValue, pMinValue.value, context, doc, spec, errors);
                 }
                 catch (e) {
-                    const msg = msgPropertyValueError + UIPropertyTypes_1.UIPropertyTypes.MIN_VALUE;
-                    errors.push(new RuntimeException_1.RuntimeException(msg));
+                    const msg = msgPropertyValueError + ast_1.UIPropertyTypes.MIN_VALUE;
+                    errors.push(new error_1.RuntimeException(msg));
                 }
             }
-            const pMaxValue = propertiesMap.get(UIPropertyTypes_1.UIPropertyTypes.MAX_VALUE) || null;
+            const pMaxValue = propertiesMap.get(ast_1.UIPropertyTypes.MAX_VALUE) || null;
             if (TypeChecking_1.isDefined(pMaxValue)) {
                 try {
-                    cfg.maxValue = yield this.resolvePropertyValue(UIPropertyTypes_1.UIPropertyTypes.MAX_VALUE, pMaxValue, pMaxValue.value, context, doc, spec, errors);
+                    cfg.maxValue = yield this.resolvePropertyValue(ast_1.UIPropertyTypes.MAX_VALUE, pMaxValue, pMaxValue.value, context, doc, spec, errors);
                 }
                 catch (e) {
-                    const msg = msgPropertyValueError + UIPropertyTypes_1.UIPropertyTypes.MAX_VALUE;
-                    errors.push(new RuntimeException_1.RuntimeException(msg));
+                    const msg = msgPropertyValueError + ast_1.UIPropertyTypes.MAX_VALUE;
+                    errors.push(new error_1.RuntimeException(msg));
                 }
             }
             // MIN LENGTH / MAX LENGTH
-            const pMinLength = propertiesMap.get(UIPropertyTypes_1.UIPropertyTypes.MIN_LENGTH) || null;
+            const pMinLength = propertiesMap.get(ast_1.UIPropertyTypes.MIN_LENGTH) || null;
             if (TypeChecking_1.isDefined(pMinLength)) {
                 try {
-                    cfg.minLength = Number(yield this.resolvePropertyValue(UIPropertyTypes_1.UIPropertyTypes.MIN_LENGTH, pMinLength, pMinLength.value, context, doc, spec, errors));
+                    cfg.minLength = Number(yield this.resolvePropertyValue(ast_1.UIPropertyTypes.MIN_LENGTH, pMinLength, pMinLength.value, context, doc, spec, errors));
                 }
                 catch (e) {
-                    const msg = msgPropertyValueError + UIPropertyTypes_1.UIPropertyTypes.MIN_LENGTH;
-                    errors.push(new RuntimeException_1.RuntimeException(msg));
+                    const msg = msgPropertyValueError + ast_1.UIPropertyTypes.MIN_LENGTH;
+                    errors.push(new error_1.RuntimeException(msg));
                 }
             }
-            const pMaxLength = propertiesMap.get(UIPropertyTypes_1.UIPropertyTypes.MAX_LENGTH) || null;
+            const pMaxLength = propertiesMap.get(ast_1.UIPropertyTypes.MAX_LENGTH) || null;
             if (TypeChecking_1.isDefined(pMaxLength)) {
                 try {
-                    cfg.maxLength = Number(yield this.resolvePropertyValue(UIPropertyTypes_1.UIPropertyTypes.MAX_LENGTH, pMaxLength, pMaxLength.value, context, doc, spec, errors));
+                    cfg.maxLength = Number(yield this.resolvePropertyValue(ast_1.UIPropertyTypes.MAX_LENGTH, pMaxLength, pMaxLength.value, context, doc, spec, errors));
                 }
                 catch (e) {
-                    const msg = msgPropertyValueError + UIPropertyTypes_1.UIPropertyTypes.MAX_LENGTH;
-                    errors.push(new RuntimeException_1.RuntimeException(msg));
+                    const msg = msgPropertyValueError + ast_1.UIPropertyTypes.MAX_LENGTH;
+                    errors.push(new error_1.RuntimeException(msg));
                 }
             }
             // console.log( 'cfg >>>>>>>>>>', cfg, '\nerrors:', errors.map( e => e.message ) );
@@ -215,7 +215,7 @@ class UIElementValueGenerator {
                 if (!uie.location.filePath) {
                     uie.location.filePath = doc.fileInfo.path;
                 }
-                errors.push(new RuntimeException_1.RuntimeException(msg, uie.location));
+                errors.push(new error_1.RuntimeException(msg, uie.location));
             }
             // console.log( '--------------> ', value );
             // Save in the map
@@ -239,7 +239,7 @@ class UIElementValueGenerator {
                     }
                     return null;
                 }
-                case nlp_1.Entities.UI_ELEMENT: {
+                case nlp_1.Entities.UI_ELEMENT_REF: {
                     const uie = propertyValue.references[0];
                     if (TypeChecking_1.isDefined(uie) && TypeChecking_1.isDefined(uie.info) && TypeChecking_1.isDefined(uie.info.fullVariableName)) {
                         // In cache?
@@ -329,7 +329,7 @@ class UIElementValueGenerator {
                         msg = 'Query must have a Database reference or a Table reference.';
                     }
                     if (TypeChecking_1.isDefined(msg)) {
-                        const err = new RuntimeException_1.RuntimeException(msg, owner.location);
+                        const err = new error_1.RuntimeException(msg, owner.location);
                         errors.push(err);
                         return null;
                     }
@@ -530,7 +530,7 @@ class UIElementValueGenerator {
         return values;
     }
     properDataFor(propType, data) {
-        if (UIPropertyTypes_1.UIPropertyTypes.VALUE === propType) {
+        if (ast_1.UIPropertyTypes.VALUE === propType) {
             return data;
         }
         return !data ? null : data[0] || null;

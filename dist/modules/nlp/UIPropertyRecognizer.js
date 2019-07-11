@@ -4,7 +4,7 @@ const nlp_1 = require("../nlp");
 const ast_1 = require("../ast");
 const TypeChecking_1 = require("../util/TypeChecking");
 const ValueTypeDetector_1 = require("../util/ValueTypeDetector");
-const UIPropertyTypes_1 = require("../util/UIPropertyTypes");
+const UIPropertyTypes_1 = require("../ast/UIPropertyTypes");
 const Intents_1 = require("./Intents");
 const NLPException_1 = require("./NLPException");
 const NodeSentenceRecognizer_1 = require("./NodeSentenceRecognizer");
@@ -44,7 +44,7 @@ class UIPropertyRecognizer {
     recognizeSentences(language, nodes, errors, warnings) {
         const recognizer = new NodeSentenceRecognizer_1.NodeSentenceRecognizer(this._nlp);
         const syntaxRules = this._syntaxRules;
-        let _this = this;
+        // let _this = this;
         let processor = function (node, r, errors, warnings) {
             const recognizedEntityNames = r.entities.map(e => e.entity);
             // console.log( r.entities );
@@ -71,17 +71,20 @@ class UIPropertyRecognizer {
                     case nlp_1.Entities.NUMBER:
                         uiv = new ast_1.EntityValue(e.entity, ValueTypeDetector_1.adjustValueToTheRightType(e.value));
                         break;
-                    // case Entities.VALUE_LIST    : uiv = new EntityValue( e.entity, _this.makeValueList( e.value ) ); break;
+                    // case Entities.VALUE_LIST     : uiv = new EntityValue( e.entity, _this.makeValueList( e.value ) ); break;
                     case nlp_1.Entities.VALUE_LIST:
                         uiv = new ast_1.EntityValue(e.entity, e.value);
                         break;
                     case nlp_1.Entities.QUERY:
                         uiv = new ast_1.EntityValue(e.entity, e.value);
                         break;
-                    case nlp_1.Entities.UI_ELEMENT:
+                    case nlp_1.Entities.UI_ELEMENT_REF:
                         uiv = new ast_1.EntityValue(e.entity, e.value);
                         break;
                     case nlp_1.Entities.UI_LITERAL:
+                        uiv = new ast_1.EntityValue(e.entity, e.value);
+                        break;
+                    case nlp_1.Entities.UI_PROPERTY_REF:
                         uiv = new ast_1.EntityValue(e.entity, e.value);
                         break;
                     case nlp_1.Entities.CONSTANT:

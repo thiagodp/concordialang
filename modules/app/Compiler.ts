@@ -1,7 +1,7 @@
 import Graph = require( 'graph.js/dist/graph.full.js' );
 
 import { Document } from "../ast/Document";
-import { LocatedException } from "../dbi/LocatedException";
+import { LocatedException } from "../error/LocatedException";
 import { BatchSpecificationAnalyzer } from "../semantic/BatchSpecificationAnalyzer";
 import { AugmentedSpec } from "../req/AugmentedSpec";
 import { SpecFilter } from "../selection/SpecFilter";

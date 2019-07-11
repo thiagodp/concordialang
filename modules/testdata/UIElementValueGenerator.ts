@@ -7,25 +7,25 @@ import {
     UIElement,
     EntityValue,
     EntityValueType,
-    UIProperty
+    UIProperty,
+    UIPropertyTypes
 } from '../ast';
 import { AugmentedSpec } from '../req/AugmentedSpec';
 import { Entities } from '../nlp';
-import { LocatedException, Queryable } from '../dbi';
+import { Queryable } from '../dbi';
+import { LocatedException, RuntimeException } from '../error';
 import { DatabaseToAbstractDatabase } from '../db/DatabaseToAbstractDatabase';
 import { supportTablesInQueries } from '../db/DatabaseTypes';
 import { DatabaseWrapper } from '../db/DatabaseWrapper';
 import { InMemoryTableWrapper } from '../db/InMemoryTableWrapper';
 import { QueryParser } from '../db/QueryParser';
 import { NodeTypes } from '../req/NodeTypes';
-import { RuntimeException } from '../req/RuntimeException';
 import { UIETestPlan } from '../testcase/UIETestPlan';
 import { QueryReferenceReplacer } from '../util/QueryReferenceReplacer';
 import { isDefined, valueOrNull } from '../util/TypeChecking';
 import { UIElementNameHandler } from '../util/UIElementNameHandler';
 import { UIElementOperatorChecker } from '../util/UIElementOperatorChecker';
 import { UIElementPropertyExtractor } from '../util/UIElementPropertyExtractor';
-import { UIPropertyTypes } from '../util/UIPropertyTypes';
 import { adjustValueToTheRightType, ValueType } from '../util/ValueTypeDetector';
 import { DataGenConfig, DataGenerator } from './DataGenerator';
 import { DataTestCaseGroup, DataTestCaseGroupDef } from './DataTestCase';
@@ -309,7 +309,7 @@ export class UIElementValueGenerator {
                 return null;
             }
 
-            case Entities.UI_ELEMENT: {
+            case Entities.UI_ELEMENT_REF: {
                 const uie = propertyValue.references[ 0 ] as UIElement;
                 if ( isDefined( uie ) && isDefined( uie.info ) && isDefined( uie.info.fullVariableName ) ) {
 

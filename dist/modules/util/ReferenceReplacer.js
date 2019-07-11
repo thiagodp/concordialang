@@ -75,7 +75,7 @@ class ReferenceReplacer {
         let uiElements = [];
         const targetTypeUtil = new TargetTypeUtil_1.TargetTypeUtil();
         for (let e of nlpResult.entities || []) {
-            if (nlp_1.Entities.UI_ELEMENT != e.entity) {
+            if (nlp_1.Entities.UI_ELEMENT_REF != e.entity) {
                 continue;
             }
             // Get the UI_LITERAL name by the UI_ELEMENT name
@@ -90,9 +90,14 @@ class ReferenceReplacer {
             }
             const prefixedUILiteral = targetType.length > 0 ? targetType + ' ' + uiLiteral : uiLiteral;
             // Replace
-            newSentence = this.replaceAtPosition(newSentence, e.position, Symbols_1.Symbols.UI_ELEMENT_PREFIX + e.value + Symbols_1.Symbols.UI_ELEMENT_SUFFIX, // e.g., {Foo}
-            prefixedUILiteral // e.g., <foo>
-            );
+            // newSentence = this.replaceAtPosition(
+            //     newSentence,
+            //     e.position,
+            //     Symbols.UI_ELEMENT_PREFIX + e.value + Symbols.UI_ELEMENT_SUFFIX, // e.g., {Foo}
+            //     prefixedUILiteral // e.g., <foo>
+            // );
+            // E.g. {Foo} -> <foo>
+            newSentence = newSentence.replace(Symbols_1.Symbols.UI_ELEMENT_PREFIX + e.value + Symbols_1.Symbols.UI_ELEMENT_SUFFIX, prefixedUILiteral);
             uiElements.push(Symbols_1.Symbols.UI_ELEMENT_PREFIX + e.value + Symbols_1.Symbols.UI_ELEMENT_SUFFIX);
         }
         return [newSentence, uiElements.join(', ')];

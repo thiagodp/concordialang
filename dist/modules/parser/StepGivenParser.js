@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const NodeTypes_1 = require("../req/NodeTypes");
-const SyntacticException_1 = require("../req/SyntacticException");
+const SyntacticException_1 = require("./SyntacticException");
 /**
  * Step Given node parser.
  *

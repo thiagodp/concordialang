@@ -51,7 +51,7 @@ class TargetTypeUtil {
         let targetTypes = step.targetTypes.slice(0);
         for (let e of step.nlpResult.entities || []) {
             switch (e.entity) {
-                case Entities_1.Entities.UI_ELEMENT: {
+                case Entities_1.Entities.UI_ELEMENT_REF: {
                     const uie = spec.uiElementByVariable(e.value, doc);
                     if (TypeChecking_1.isDefined(uie)) {
                         const uieType = extractor.extractType(uie);

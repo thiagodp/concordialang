@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const LexicalException_1 = require("../req/LexicalException");
+const LexicalException_1 = require("./LexicalException");
 const LineChecker_1 = require("../req/LineChecker");
 const NodeTypes_1 = require("../req/NodeTypes");
 const Expressions_1 = require("../req/Expressions");

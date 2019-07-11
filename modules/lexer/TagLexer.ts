@@ -1,7 +1,7 @@
 const XRegExp = require( 'xregexp' );
 
 import { Tag, ReservedTags } from '../ast/Tag';
-import { LexicalException } from '../req/LexicalException';
+import { LexicalException } from './LexicalException';
 import { NodeTypes } from '../req/NodeTypes';
 import { Symbols } from '../req/Symbols';
 import { CommentHandler } from './CommentHandler';

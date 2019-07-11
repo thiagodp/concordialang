@@ -3,7 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const Expressions_1 = require("../req/Expressions");
 const Symbols_1 = require("../req/Symbols");
 const LineChecker_1 = require("../req/LineChecker");
-const LexicalException_1 = require("../req/LexicalException");
+const LexicalException_1 = require("./LexicalException");
 const CommentHandler_1 = require("./CommentHandler");
 /**
  * Detects a node with the format "- anything".

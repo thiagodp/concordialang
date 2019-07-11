@@ -1,12 +1,11 @@
 import * as arrayDiff from 'arr-diff';
 import * as deepcopy from 'deepcopy';
-import { DateTimeFormatter, LocalDate, LocalDateTime, LocalTime } from 'js-joda';
 import { basename } from 'path';
 import { Location } from 'concordialang-types';
 
-import { Document, Step, EntityValueType, UIElement } from '../ast';
+import { Document, Step, EntityValueType, UIElement, UIPropertyReference, UIPropertyTypes } from '../ast';
 import { Entities, NLPEntity, NLPUtil } from '../nlp';
-import { LocatedException } from '../dbi/LocatedException';
+import { LocatedException } from '../error/LocatedException';
 import { CaseType } from '../app/CaseType';
 import { AugmentedSpec } from '../req/AugmentedSpec';
 import { EnglishKeywordDictionary } from '../dict/EnglishKeywordDictionary';
@@ -16,7 +15,7 @@ import { LanguageContentLoader } from '../dict/LanguageContentLoader';
 import { GivenWhenThenSentenceRecognizer } from '../nlp/GivenWhenThenSentenceRecognizer';
 import { LineChecker } from '../req/LineChecker';
 import { NodeTypes } from '../req/NodeTypes';
-import { RuntimeException } from '../req/RuntimeException';
+import { RuntimeException } from '../error/RuntimeException';
 import { Symbols } from '../req/Symbols';
 import { TestPlan } from '../testcase/TestPlan';
 import { TestPlanner } from '../testcase/TestPlanner';
@@ -35,6 +34,8 @@ import { UIElementNameHandler } from '../util/UIElementNameHandler';
 import { UIElementPropertyExtractor } from '../util/UIElementPropertyExtractor';
 import { TargetTypeUtil } from '../util/TargetTypeUtil';
 import { PreTestCase } from './PreTestCase';
+import { formatValueToUseInASentence } from './value-formater';
+import { UIPropertyReferenceReplacer } from './UIPropertyReferenceReplacer';
 
 
 export class GenContext {
@@ -273,7 +274,7 @@ export class PreTestCaseGenerator {
             for ( let [ uieVar, uieTestPlan ] of plan.dataTestCases ) {
                 // console.log( 'uieVar', uieVar, '\nuieTestPlan', uieTestPlan, "\n" );
 
-                let generatedValue;
+                let generatedValue: EntityValueType;
                 try {
                     generatedValue = await this._uieValueGen.generate( uieVar, context, ctx.doc, ctx.spec, ctx.errors );
                 } catch ( e ) {
@@ -406,7 +407,11 @@ export class PreTestCaseGenerator {
 
         const inputDataActionEntity = this.extractDataInputActionEntity( step ); // 'fill'-like entity
 
-        if ( null === inputDataActionEntity || this.hasValue( step ) || this.hasNumber( step ) ) {
+        if ( null === inputDataActionEntity
+            || this.hasValue( step )
+            || this.hasNumber( step )
+            || this.hasUIPropertyReference( step )
+        ) {
             return [ step ];
         }
 
@@ -416,7 +421,7 @@ export class PreTestCaseGenerator {
             return [ step ]; // nothing to do
         }
 
-        let uiElements = this._nlpUtil.entitiesNamed( Entities.UI_ELEMENT, step.nlpResult );
+        let uiElements = this._nlpUtil.entitiesNamed( Entities.UI_ELEMENT_REF, step.nlpResult );
 
         // Create a step with 'fill' step for every UI_LITERAL
 
@@ -517,7 +522,7 @@ export class PreTestCaseGenerator {
     extractUIElementNamesFromSteps( steps: Step[] ): string[] {
         let uniqueNames = new Set< string >();
         for ( let step of steps ) {
-            let entities: NLPEntity[] = this._nlpUtil.entitiesNamed( Entities.UI_ELEMENT, step.nlpResult );
+            let entities: NLPEntity[] = this._nlpUtil.entitiesNamed( Entities.UI_ELEMENT_REF, step.nlpResult );
             for ( let e of entities ) {
                 uniqueNames.add( e.value );
             }
@@ -585,9 +590,18 @@ export class PreTestCaseGenerator {
 
         let step = deepcopy( inputStep );
 
-        const dataInputActionEntity = this.extractDataInputActionEntity( step );
-        if ( null === dataInputActionEntity || this.hasValue( step ) || this.hasNumber( step ) ) {
+        const dataInputActionEntity: NLPEntity = this.extractDataInputActionEntity( step );
 
+        if ( this.hasUIPropertyReference( step ) ) {
+
+            const uipRefReplacer = new UIPropertyReferenceReplacer();
+
+            step.content = uipRefReplacer.replaceUIPropertyReferencesByTheirValue( step, uieVariableToValueMap, ctx );
+            // Update NLP !
+            this._variantSentenceRec.recognizeSentences( language, [ step ], ctx.errors, ctx.warnings );
+
+
+        } else if ( null === dataInputActionEntity || this.hasValue( step ) || this.hasNumber( step ) ) {
             let steps = [ step ];
             this.replaceUIElementsWithUILiterals( steps, language, langContent, ctx, UIElementReplacementOption.ALL );
             // console.log( "EXIT 1" );
@@ -597,10 +611,9 @@ export class PreTestCaseGenerator {
         // Add target types
         step.targetTypes = this._targetTypeUtil.extractTargetTypes( step, ctx.doc, ctx.spec, this._uiePropExtractor );
 
-        // Check UI Elements
-        let uiElements = this._nlpUtil.entitiesNamed( Entities.UI_ELEMENT, step.nlpResult );
-        const uiElementsCount = uiElements.length;
-        if ( uiElementsCount < 1 ) {
+        // Check for UIE entities
+        let uieEntities: NLPEntity[] = this._nlpUtil.entitiesNamed( Entities.UI_ELEMENT_REF, step.nlpResult );
+        if ( uieEntities.length < 1 ) {
             // console.log( "EXIT 2" );
             return [ [ step ], [] ]; // nothing to do
         }
@@ -626,7 +639,7 @@ export class PreTestCaseGenerator {
 
         const uieNameHandler = new UIElementNameHandler();
 
-        for ( let entity of uiElements ) {
+        for ( let entity of uieEntities ) {
 
             // Change to "AND" when more than one entity is available
             if ( count > 0 ) {
@@ -634,11 +647,11 @@ export class PreTestCaseGenerator {
                 prefix = prefixAnd;
             }
 
-            const uieName = entity.value;
+            const uieName: string = entity.value;
 
             let [ featureName, uieNameWithoutFeature ] = uieNameHandler.extractNamesOf( uieName );
             let variable: string;
-            let uie;
+            let uie: UIElement;
             if ( isDefined( featureName ) ) {
                 variable = uieName;
                 uie = ctx.spec.uiElementByVariable( uieName );
@@ -662,23 +675,12 @@ export class PreTestCaseGenerator {
 
             let uieLiteral = isDefined( uie ) && isDefined( uie.info ) ? uie.info.uiLiteral : null;
             // console.log( 'uieName', uieName, 'uieLiteral', uieLiteral, 'variable', variable, 'doc', ctx.doc.fileInfo.path );
-
-            if ( null === uieLiteral ) { // Should never happer since Spec defines Literals for mapped UI Elements
+            if ( null === uieLiteral ) { // Should never happen since Spec defines Literals for mapped UI Elements
                 uieLiteral = convertCase( variable, this.uiLiteralCaseOption );
                 const msg = 'Could not retrieve a literal from ' +
                     Symbols.UI_ELEMENT_PREFIX + variable +
                     Symbols.UI_ELEMENT_SUFFIX + '. Generating the identification "' + uieLiteral + '"';
                 ctx.warnings.push( new RuntimeException( msg, step.location ) );
-            }
-
-            // TODO: l10n / i18n
-            let formattedValue = value;
-            if ( value instanceof LocalTime ) {
-                formattedValue = value.format( DateTimeFormatter.ofPattern( 'HH:mm' ) ).toString();
-            } else if ( value instanceof LocalDate ) {
-                formattedValue = value.format( DateTimeFormatter.ofPattern( 'dd/MM/yyyy' ) ).toString();
-            } else if ( value instanceof LocalDateTime ) {
-                formattedValue = value.format( DateTimeFormatter.ofPattern( 'dd/MM/yyyy HH:mm' ) ).toString();
             }
 
             // Analyze whether it is an input target type
@@ -687,14 +689,13 @@ export class PreTestCaseGenerator {
                 targetType = this._targetTypeUtil.analyzeInputTargetTypes( step, langContent ) + ' ';
             }
 
+            const formattedValue = formatValueToUseInASentence( value );
+
             // Generate the sentence
             let sentence = prefix + ' ' + keywordI + ' ' + dataInputActionEntity.string + ' ' +
                 targetType +
                 Symbols.UI_LITERAL_PREFIX + uieLiteral + Symbols.UI_LITERAL_SUFFIX +
-                ' ' + keywordWith + ' ' +
-                ( 'number' === typeof formattedValue
-                    ? formattedValue
-                    : Symbols.VALUE_WRAPPER + formattedValue + Symbols.VALUE_WRAPPER );
+                ' ' + keywordWith + ' ' + formattedValue;
 
             // if ( targetType != '' ) {
             //     console.log( sentence );
@@ -784,7 +785,6 @@ export class PreTestCaseGenerator {
 
         return [ steps, oracles ];
     }
-
 
     processOracles(
         steps: Step[],
@@ -881,6 +881,14 @@ export class PreTestCaseGenerator {
     }
 
     //
+    // UI PROPERTY REFERENCES
+    //
+
+    // extractUIPropertyReferencesFromSteps( steps: Step[] ): UIPropertyReference[] {
+
+    // }
+
+    //
     // OTHER
     //
 
@@ -908,6 +916,13 @@ export class PreTestCaseGenerator {
             return false;
         }
         return this._nlpUtil.hasEntityNamed( Entities.NUMBER, step.nlpResult );
+    }
+
+    hasUIPropertyReference( step: Step ): boolean {
+        if ( ! step || ! step.nlpResult ) {
+            return false;
+        }
+        return this._nlpUtil.hasEntityNamed( Entities.UI_PROPERTY_REF, step.nlpResult );
     }
 
     randomString(): string {

@@ -1,5 +1,5 @@
 import { Constant } from '../ast/Constant';
-import { LexicalException} from '../req/LexicalException';
+import { LexicalException} from './LexicalException';
 import { LineChecker} from '../req/LineChecker';
 import { KeywordBasedLexer } from './KeywordBasedLexer';
 import { LexicalAnalysisResult, NodeLexer } from './NodeLexer';

@@ -5,7 +5,7 @@ import { Entities, NLPUtil } from '../nlp';
 import { KeywordDictionary } from '../dict/KeywordDictionary';
 import { LanguageContentLoader } from '../dict/LanguageContentLoader';
 import { NodeTypes } from '../req/NodeTypes';
-import { RuntimeException } from '../req/RuntimeException';
+import { RuntimeException } from '../error/RuntimeException';
 import { CombinationStrategy } from '../selection/CombinationStrategy';
 import { VariantSelectionStrategy } from '../selection/VariantSelectionStrategy';
 import { OnlyValidMix } from '../testcase/DataTestCaseMix';

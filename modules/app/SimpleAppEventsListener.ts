@@ -1,6 +1,6 @@
 import * as prettyBytes from 'pretty-bytes';
 
-import { LocatedException } from '../dbi/LocatedException';
+import { LocatedException } from '../error/LocatedException';
 import { FileReadListener, DirectoryReadListener, DirectoryReadResult } from './Listeners';
 import { SingleFileProcessorListener, FileMeta, ProcessedFileData } from './SingleFileProcessor';
 import { MultiFileProcessListener } from './MultiFileProcessor';

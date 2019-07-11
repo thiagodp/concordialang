@@ -1,13 +1,11 @@
 import * as enumUtil from 'enum-util';
 
-import { UIElement, UIProperty } from '../ast/UIElement';
+import { UIElement, UIProperty, UIPropertyTypes } from '../ast';
 import { Entities, NLPEntity, NLPUtil } from '../nlp';
-
 import { CaseType } from '../app/CaseType';
 import { EditableActionTargets, ActionTargets } from './ActionTargets';
 import { convertCase } from './CaseConversor';
 import { isDefined } from './TypeChecking';
-import { UIPropertyTypes } from './UIPropertyTypes';
 import { ValueType } from './ValueTypeDetector';
 
 /**

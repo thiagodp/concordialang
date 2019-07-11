@@ -70,7 +70,7 @@ export class TargetTypeUtil {
         let targetTypes: string[] = step.targetTypes.slice( 0 );
         for ( let e of step.nlpResult.entities || [] ) {
             switch ( e.entity ) {
-                case Entities.UI_ELEMENT: {
+                case Entities.UI_ELEMENT_REF: {
                     const uie = spec.uiElementByVariable( e.value, doc );
                     if ( isDefined( uie ) ) {
                         const uieType = extractor.extractType( uie );

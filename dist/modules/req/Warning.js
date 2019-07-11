@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const LocatedException_1 = require("../dbi/LocatedException");
+const LocatedException_1 = require("../error/LocatedException");
 /**
  * Provides an exception that should be handled as a warning.
  *

@@ -1,4 +1,4 @@
-import { LocatedException } from "../dbi/LocatedException";
+import { LocatedException } from "./LocatedException";
 
 /**
  * Runtime exception

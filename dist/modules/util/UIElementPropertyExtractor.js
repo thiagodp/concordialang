@@ -1,12 +1,12 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const enumUtil = require("enum-util");
+const ast_1 = require("../ast");
 const nlp_1 = require("../nlp");
 const CaseType_1 = require("../app/CaseType");
 const ActionTargets_1 = require("./ActionTargets");
 const CaseConversor_1 = require("./CaseConversor");
 const TypeChecking_1 = require("./TypeChecking");
-const UIPropertyTypes_1 = require("./UIPropertyTypes");
 const ValueTypeDetector_1 = require("./ValueTypeDetector");
 /**
  * Extract properties from UI Elements.
@@ -26,7 +26,7 @@ class UIElementPropertyExtractor {
      */
     extractId(uie, caseOption = CaseType_1.CaseType.CAMEL) {
         // Find a property "id" in the UI element
-        const item = this.extractProperty(uie, UIPropertyTypes_1.UIPropertyTypes.ID);
+        const item = this.extractProperty(uie, ast_1.UIPropertyTypes.ID);
         if (TypeChecking_1.isDefined(item)) {
             // Find an entity "value" in the NLP result
             let entity = item.nlpResult.entities.find((e) => nlp_1.Entities.VALUE === e.entity);
@@ -41,14 +41,14 @@ class UIElementPropertyExtractor {
         return CaseConversor_1.convertCase(uie.name, caseOption);
     }
     extractType(uie) {
-        const nlpEntity = this.extractPropertyValueAsEntity(this.extractProperty(uie, UIPropertyTypes_1.UIPropertyTypes.TYPE));
+        const nlpEntity = this.extractPropertyValueAsEntity(this.extractProperty(uie, ast_1.UIPropertyTypes.TYPE));
         if (!TypeChecking_1.isDefined(nlpEntity)) {
             return ActionTargets_1.ActionTargets.TEXTBOX;
         }
         return nlpEntity.value;
     }
     extractDataType(uie) {
-        const nlpEntity = this.extractPropertyValueAsEntity(this.extractProperty(uie, UIPropertyTypes_1.UIPropertyTypes.DATA_TYPE));
+        const nlpEntity = this.extractPropertyValueAsEntity(this.extractProperty(uie, ast_1.UIPropertyTypes.DATA_TYPE));
         if (TypeChecking_1.isDefined(nlpEntity)) {
             const dataType = nlpEntity.value.toString().toLowerCase();
             if (enumUtil.isValue(ValueTypeDetector_1.ValueType, dataType)) {
@@ -63,12 +63,12 @@ class UIElementPropertyExtractor {
             return true;
         }
         // Evaluate property 'editable' if defined
-        const nlpEntity = this.extractPropertyValueAsEntity(this.extractProperty(uie, UIPropertyTypes_1.UIPropertyTypes.EDITABLE));
+        const nlpEntity = this.extractPropertyValueAsEntity(this.extractProperty(uie, ast_1.UIPropertyTypes.EDITABLE));
         if (TypeChecking_1.isDefined(nlpEntity)) {
             return this.isEntityConsideredTrue(nlpEntity);
         }
         // Evaluate property 'type' (widget) if defined
-        const typeNlpEntity = this.extractPropertyValueAsEntity(this.extractProperty(uie, UIPropertyTypes_1.UIPropertyTypes.TYPE));
+        const typeNlpEntity = this.extractPropertyValueAsEntity(this.extractProperty(uie, ast_1.UIPropertyTypes.TYPE));
         if (TypeChecking_1.isDefined(typeNlpEntity)) {
             return enumUtil.isValue(ActionTargets_1.EditableActionTargets, typeNlpEntity.value);
         }
@@ -88,7 +88,7 @@ class UIElementPropertyExtractor {
         return true; // don't change this
     }
     extractIsRequired(uie) {
-        return this.isPropertyConsideredTrue(uie, UIPropertyTypes_1.UIPropertyTypes.REQUIRED);
+        return this.isPropertyConsideredTrue(uie, ast_1.UIPropertyTypes.REQUIRED);
     }
     isPropertyDefined(uie, prop) {
         return TypeChecking_1.isDefined(this.extractProperty(uie, prop));
@@ -156,7 +156,7 @@ class UIElementPropertyExtractor {
     }
     mapProperties(uie) {
         let map = new Map();
-        const allPropertyTypes = enumUtil.getValues(UIPropertyTypes_1.UIPropertyTypes);
+        const allPropertyTypes = enumUtil.getValues(ast_1.UIPropertyTypes);
         for (let propType of allPropertyTypes) {
             let properties = this.extractProperties(uie, propType);
             if (properties !== null) {
@@ -167,7 +167,7 @@ class UIElementPropertyExtractor {
     }
     mapFirstPropertyOfEachType(uie) {
         let map = new Map();
-        const allPropertyTypes = enumUtil.getValues(UIPropertyTypes_1.UIPropertyTypes);
+        const allPropertyTypes = enumUtil.getValues(ast_1.UIPropertyTypes);
         for (let propType of allPropertyTypes) {
             let property = this.extractProperty(uie, propType);
             if (property !== null) {
@@ -184,12 +184,12 @@ class UIElementPropertyExtractor {
     nonRepeatableProperties(propertiesMap) {
         let nonRepeatable = [];
         const nonRepeatablePropertyTypes = [
-            UIPropertyTypes_1.UIPropertyTypes.ID,
-            UIPropertyTypes_1.UIPropertyTypes.TYPE,
-            UIPropertyTypes_1.UIPropertyTypes.EDITABLE,
-            UIPropertyTypes_1.UIPropertyTypes.DATA_TYPE,
-            UIPropertyTypes_1.UIPropertyTypes.FORMAT,
-            UIPropertyTypes_1.UIPropertyTypes.REQUIRED
+            ast_1.UIPropertyTypes.ID,
+            ast_1.UIPropertyTypes.TYPE,
+            ast_1.UIPropertyTypes.EDITABLE,
+            ast_1.UIPropertyTypes.DATA_TYPE,
+            ast_1.UIPropertyTypes.FORMAT,
+            ast_1.UIPropertyTypes.REQUIRED
         ];
         for (let propType of nonRepeatablePropertyTypes) {
             let properties = propertiesMap.get(propType) || [];
@@ -207,11 +207,11 @@ class UIElementPropertyExtractor {
     nonTriplicatableProperties(propertiesMap) {
         let nonTriplicatable = [];
         const nonTriplicatablePropertyTypes = [
-            UIPropertyTypes_1.UIPropertyTypes.VALUE,
-            UIPropertyTypes_1.UIPropertyTypes.MIN_LENGTH,
-            UIPropertyTypes_1.UIPropertyTypes.MAX_LENGTH,
-            UIPropertyTypes_1.UIPropertyTypes.MIN_VALUE,
-            UIPropertyTypes_1.UIPropertyTypes.MAX_VALUE
+            ast_1.UIPropertyTypes.VALUE,
+            ast_1.UIPropertyTypes.MIN_LENGTH,
+            ast_1.UIPropertyTypes.MAX_LENGTH,
+            ast_1.UIPropertyTypes.MIN_VALUE,
+            ast_1.UIPropertyTypes.MAX_VALUE
         ];
         for (let propType of nonTriplicatablePropertyTypes) {
             let properties = propertiesMap.get(propType) || [];
@@ -223,12 +223,12 @@ class UIElementPropertyExtractor {
     }
     valueBasedPropertyTypes() {
         return [
-            UIPropertyTypes_1.UIPropertyTypes.VALUE,
-            UIPropertyTypes_1.UIPropertyTypes.MIN_LENGTH,
-            UIPropertyTypes_1.UIPropertyTypes.MAX_LENGTH,
-            UIPropertyTypes_1.UIPropertyTypes.MIN_VALUE,
-            UIPropertyTypes_1.UIPropertyTypes.MAX_VALUE,
-            UIPropertyTypes_1.UIPropertyTypes.FORMAT
+            ast_1.UIPropertyTypes.VALUE,
+            ast_1.UIPropertyTypes.MIN_LENGTH,
+            ast_1.UIPropertyTypes.MAX_LENGTH,
+            ast_1.UIPropertyTypes.MIN_VALUE,
+            ast_1.UIPropertyTypes.MAX_VALUE,
+            ast_1.UIPropertyTypes.FORMAT
         ];
     }
     /**
@@ -308,35 +308,35 @@ class UIElementPropertyExtractor {
         }
         // Fill
         let map = this._incompatiblePropertiesMap;
-        map.set(UIPropertyTypes_1.UIPropertyTypes.VALUE, [
-            UIPropertyTypes_1.UIPropertyTypes.MIN_VALUE,
-            UIPropertyTypes_1.UIPropertyTypes.MAX_VALUE,
-            UIPropertyTypes_1.UIPropertyTypes.MIN_LENGTH,
-            UIPropertyTypes_1.UIPropertyTypes.MAX_LENGTH,
-            UIPropertyTypes_1.UIPropertyTypes.FORMAT
+        map.set(ast_1.UIPropertyTypes.VALUE, [
+            ast_1.UIPropertyTypes.MIN_VALUE,
+            ast_1.UIPropertyTypes.MAX_VALUE,
+            ast_1.UIPropertyTypes.MIN_LENGTH,
+            ast_1.UIPropertyTypes.MAX_LENGTH,
+            ast_1.UIPropertyTypes.FORMAT
         ]);
-        map.set(UIPropertyTypes_1.UIPropertyTypes.MIN_VALUE, [
-            UIPropertyTypes_1.UIPropertyTypes.VALUE,
-            UIPropertyTypes_1.UIPropertyTypes.MIN_LENGTH,
-            UIPropertyTypes_1.UIPropertyTypes.MAX_LENGTH
+        map.set(ast_1.UIPropertyTypes.MIN_VALUE, [
+            ast_1.UIPropertyTypes.VALUE,
+            ast_1.UIPropertyTypes.MIN_LENGTH,
+            ast_1.UIPropertyTypes.MAX_LENGTH
         ]);
-        map.set(UIPropertyTypes_1.UIPropertyTypes.MAX_VALUE, [
-            UIPropertyTypes_1.UIPropertyTypes.VALUE,
-            UIPropertyTypes_1.UIPropertyTypes.MIN_LENGTH,
-            UIPropertyTypes_1.UIPropertyTypes.MAX_LENGTH
+        map.set(ast_1.UIPropertyTypes.MAX_VALUE, [
+            ast_1.UIPropertyTypes.VALUE,
+            ast_1.UIPropertyTypes.MIN_LENGTH,
+            ast_1.UIPropertyTypes.MAX_LENGTH
         ]);
-        map.set(UIPropertyTypes_1.UIPropertyTypes.MIN_LENGTH, [
-            UIPropertyTypes_1.UIPropertyTypes.VALUE,
-            UIPropertyTypes_1.UIPropertyTypes.MIN_VALUE,
-            UIPropertyTypes_1.UIPropertyTypes.MAX_VALUE
+        map.set(ast_1.UIPropertyTypes.MIN_LENGTH, [
+            ast_1.UIPropertyTypes.VALUE,
+            ast_1.UIPropertyTypes.MIN_VALUE,
+            ast_1.UIPropertyTypes.MAX_VALUE
         ]);
-        map.set(UIPropertyTypes_1.UIPropertyTypes.MAX_LENGTH, [
-            UIPropertyTypes_1.UIPropertyTypes.VALUE,
-            UIPropertyTypes_1.UIPropertyTypes.MIN_VALUE,
-            UIPropertyTypes_1.UIPropertyTypes.MAX_VALUE
+        map.set(ast_1.UIPropertyTypes.MAX_LENGTH, [
+            ast_1.UIPropertyTypes.VALUE,
+            ast_1.UIPropertyTypes.MIN_VALUE,
+            ast_1.UIPropertyTypes.MAX_VALUE
         ]);
-        map.set(UIPropertyTypes_1.UIPropertyTypes.FORMAT, [
-            UIPropertyTypes_1.UIPropertyTypes.VALUE
+        map.set(ast_1.UIPropertyTypes.FORMAT, [
+            ast_1.UIPropertyTypes.VALUE
         ]);
         return map;
     }

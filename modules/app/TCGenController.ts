@@ -3,7 +3,7 @@ import { writeFile } from 'fs';
 import { promisify } from "util";
 
 import { Document, TestCase, Variant, ReservedTags } from "../ast";
-import { LocatedException } from "../dbi/LocatedException";
+import { LocatedException } from "../error/LocatedException";
 import { GivenWhenThenSentenceRecognizer } from "../nlp/GivenWhenThenSentenceRecognizer";
 import { LanguageContentLoader } from "../dict/LanguageContentLoader";
 import { PreTestCaseGenerator, GenContext } from "../testscenario/PreTestCaseGenerator";
@@ -28,7 +28,7 @@ import { TCGen } from "../testcase/TCGen";
 import { TestPlanner } from "../testcase/TestPlanner";
 import { TCDocGen } from "../testcase/TCDocGen";
 import { TestCaseFileGenerator } from "../testcase/TestCaseFileGenerator";
-import { RuntimeException } from "../req/RuntimeException";
+import { RuntimeException } from "../error/RuntimeException";
 import { Warning } from "../req/Warning";
 import {
     DataTestCaseMix,

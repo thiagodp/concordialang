@@ -6,7 +6,7 @@ const ast_1 = require("../ast");
 const nlp_1 = require("../nlp");
 const TypeChecking_1 = require("../util/TypeChecking");
 const UIElementPropertyExtractor_1 = require("../util/UIElementPropertyExtractor");
-const UIPropertyTypes_1 = require("../util/UIPropertyTypes");
+const UIPropertyTypes_1 = require("../ast/UIPropertyTypes");
 const ValueTypeDetector_1 = require("../util/ValueTypeDetector");
 const DataGeneratorBuilder_1 = require("./DataGeneratorBuilder");
 const DataTestCase_1 = require("./DataTestCase");
@@ -496,7 +496,7 @@ class DataTestCaseAnalyzer {
             }
             // case Entities.COMPUTATION: ; // next
             case nlp_1.Entities.QUERY: ; // next
-            case nlp_1.Entities.UI_ELEMENT: {
+            case nlp_1.Entities.UI_ELEMENT_REF: {
                 return [null, true]; // << FAKED !
             }
             default: return [uip.value.value, false];

@@ -32,6 +32,7 @@ Symbols.REGEX_SEPARATOR = ':';
 Symbols.TAG_VALUE_SEPARATOR = ',';
 Symbols.VALUE_SEPARATOR = ',';
 Symbols.FEATURE_TO_UI_ELEMENT_SEPARATOR = ':';
+Symbols.UI_PROPERTY_REF_SEPARATOR = '|';
 // wrappers
 Symbols.VALUE_WRAPPER = '"';
 Symbols.COMMAND_WRAPPER = "'";

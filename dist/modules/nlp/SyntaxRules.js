@@ -22,6 +22,7 @@ exports.DEFAULT_UI_ACTION_SYNTAX_RULE = {
     //     - max > maxTargets
     ui_element: { min: 1, max: 999 },
     ui_literal: { min: 1, max: 999 },
+    ui_property_ref: { min: 1, max: 999 },
     value: { min: 1, max: 999 },
     number: { min: 1, max: 999 },
     constant: { min: 1, max: 999 },
@@ -39,30 +40,38 @@ exports.DEFAULT_UI_ACTION_SYNTAX_RULE = {
  */
 exports.UI_ACTION_SYNTAX_RULES = [
     { name: "accept", minTargets: 0, maxTargets: 0 },
-    { name: "amOn", minTargets: 1, maxTargets: 1, targets: ["ui_element", "ui_literal", "value", "number", "constant"] },
-    { name: "append", targets: ["ui_element", "ui_literal", "value", "number", "constant"],
+    { name: "amOn", minTargets: 1, maxTargets: 1, targets: [
+            "ui_element", "ui_literal", "value", "number", "constant", "ui_property_ref"
+        ] },
+    { name: "append", targets: ["ui_element", "ui_literal", "value", "number", "constant", "ui_property_ref"],
         minTargets: 1, maxTargets: 999,
         value: { min: 0, max: 1 },
-        number: { min: 0, max: 1 }
+        number: { min: 0, max: 1 },
+        constant: { min: 0, max: 1 },
+        ui_property_ref: { min: 0, max: 1 }
     },
-    { name: "attachFile", minTargets: 1, maxTargets: 2, targets: ["ui_element", "ui_literal", "value", "number", "constant"] },
+    { name: "attachFile", minTargets: 1, maxTargets: 2, targets: [
+            "ui_element", "ui_literal", "value", "number", "constant", "ui_property_ref"
+        ] },
     { name: "cancel", minTargets: 0, maxTargets: 0 },
     { name: "check", minTargets: 1, maxTargets: 2,
-        targets: ["ui_element", "ui_literal", "value", "number", "constant"],
+        targets: ["ui_element", "ui_literal", "value", "number", "constant", "ui_property_ref"],
         ui_element: { min: 0, max: 2 },
         ui_literal: { min: 0, max: 2 },
         value: { min: 0, max: 1 },
         number: { min: 0, max: 1 },
-        constant: { min: 0, max: 1 }
+        constant: { min: 0, max: 1 },
+        ui_property_ref: { min: 0, max: 1 }
     },
     { name: "clear", minTargets: 1, maxTargets: 999, targets: ["ui_element", "ui_literal", "value", "number", "constant"] },
     { name: "click", minTargets: 1, maxTargets: 999,
-        targets: ["ui_element", "ui_literal", "value", "number", "constant"],
+        targets: ["ui_element", "ui_literal", "value", "number", "constant", "ui_property_ref"],
         ui_element: { min: 0, max: 999 },
         ui_literal: { min: 0, max: 999 },
         value: { min: 0, max: 1 },
         number: { min: 0, max: 1 },
-        constant: { min: 0, max: 1 }
+        constant: { min: 0, max: 1 },
+        ui_property_ref: { min: 0, max: 1 }
     },
     { name: "close", minTargets: 0 },
     { name: "connect", minTargets: 0, maxTargets: 1,
@@ -74,40 +83,45 @@ exports.UI_ACTION_SYNTAX_RULES = [
         constant: { min: 1, max: 1 }
     },
     { name: "doubleClick", minTargets: 1, maxTargets: 999,
-        targets: ["ui_element", "ui_literal", "value", "number", "constant"],
+        targets: ["ui_element", "ui_literal", "value", "number", "constant", "ui_property_ref"],
         ui_element: { min: 0, max: 999 },
         ui_literal: { min: 0, max: 999 },
         value: { min: 0, max: 1 },
         number: { min: 0, max: 1 },
-        constant: { min: 0, max: 1 }
+        constant: { min: 0, max: 1 },
+        ui_property_ref: { min: 0, max: 1 }
     },
     { name: "drag", minTargets: 2, maxTargets: 2, targets: ["ui_element", "ui_literal"] },
     { name: "fill", minTargets: 0, maxTargets: 999,
-        targets: ["ui_element", "ui_literal", "value", "number", "constant"],
+        targets: ["ui_element", "ui_literal", "value", "number", "constant", "ui_property_ref"],
         ui_element: { min: 0, max: 999 },
         ui_literal: { min: 0, max: 999 },
         value: { min: 0, max: 1 },
         number: { min: 0, max: 1 },
-        constant: { min: 0, max: 1 }
+        constant: { min: 0, max: 1 },
+        ui_property_ref: { min: 0, max: 1 }
     },
     { name: "hide", minTargets: 0 },
-    { name: "install", minTargets: 1, maxTargets: 1, targets: ["value", "constant"] },
+    { name: "install", minTargets: 1, maxTargets: 1, targets: ["value", "constant", "ui_property_ref"] },
     { name: "maximize", minTargets: 0 },
     { name: "move", minTargets: 1, maxTargets: 3,
-        targets: ["ui_element", "ui_literal", "value", "number", "constant"],
+        targets: ["ui_element", "ui_literal", "value", "number", "constant", "ui_property_ref"],
         ui_element: { min: 0, max: 1 },
         ui_literal: { min: 0, max: 1 },
         value: { min: 0, max: 2 },
         number: { min: 0, max: 2 },
-        constant: { min: 0, max: 2 }
+        constant: { min: 0, max: 2 },
+        ui_property_ref: { min: 0, max: 2 }
     },
     { name: "open", minTargets: 0 },
     { name: "press", minTargets: 1, maxTargets: 6, targets: ["value", "number", "constant"] },
     { name: "pull", minTargets: 2, maxTargets: 2, targets: ["value", "constant"] },
     { name: "refresh", minTargets: 0 },
-    { name: "remove", minTargets: 1, maxTargets: 1, targets: ["value", "constant"] },
+    { name: "remove", minTargets: 1, maxTargets: 1, targets: ["value", "number", "constant", "ui_property_ref"] },
     { name: "resize", minTargets: 2, maxTargets: 2, targets: ["value", "number", "constant"] },
-    { name: "rightClick", minTargets: 1, maxTargets: 999, targets: ["ui_element", "ui_literal", "value", "number", "constant"] },
+    { name: "rightClick", minTargets: 1, maxTargets: 999, targets: [
+            "ui_element", "ui_literal", "value", "number", "constant", "ui_property_ref"
+        ] },
     { name: "rotate", minTargets: 2, maxTargets: 2, targets: ["value", "number", "constant"] },
     { name: "run", minTargets: 1, maxTargets: 2,
         targets: ["value", "constant", "command"],
@@ -115,63 +129,69 @@ exports.UI_ACTION_SYNTAX_RULES = [
         constant: { min: 0, max: 1 },
         command: { min: 0, max: 1 }
     },
-    { name: "saveScreenshot", minTargets: 1, maxTargets: 1, targets: ["value", "constant"] },
+    { name: "saveScreenshot", minTargets: 1, maxTargets: 1, targets: ["value", "constant", "ui_property_ref"] },
     { name: "scrollTo", minTargets: 1, maxTargets: 1,
-        targets: ["ui_element", "ui_literal", "value", "number", "constant"],
+        targets: ["ui_element", "ui_literal", "value", "number", "constant", "ui_property_ref"],
         ui_element: { min: 0, max: 1 },
         ui_literal: { min: 0, max: 1 },
         value: { min: 0, max: 1 },
         number: { min: 0, max: 1 },
-        constant: { min: 0, max: 1 }
+        constant: { min: 0, max: 1 },
+        ui_property_ref: { min: 0, max: 1 }
     },
     { name: "see", minTargets: 0, maxTargets: 2,
-        targets: ["ui_element", "ui_literal", "value", "number", "constant"],
+        targets: ["ui_element", "ui_literal", "value", "number", "constant", "ui_property_ref"],
         ui_element: { min: 0, max: 1 },
         ui_literal: { min: 0, max: 1 },
         value: { min: 0, max: 1 },
         number: { min: 0, max: 1 },
-        constant: { min: 0, max: 1 }
+        constant: { min: 0, max: 1 },
+        ui_property_ref: { min: 0, max: 1 }
     },
     { name: "select", minTargets: 1, maxTargets: 2,
-        targets: ["ui_element", "ui_literal", "value", "number", "constant"],
+        targets: ["ui_element", "ui_literal", "value", "number", "constant", "ui_property_ref"],
         ui_element: { min: 0, max: 1 },
         ui_literal: { min: 0, max: 1 },
         value: { min: 0, max: 1 },
         number: { min: 0, max: 1 },
-        constant: { min: 0, max: 1 }
+        constant: { min: 0, max: 1 },
+        ui_property_ref: { min: 0, max: 1 }
     },
     { name: "shake", minTargets: 0 },
     { name: "swipe", minTargets: 1, maxTargets: 5,
-        targets: ["ui_element", "ui_literal", "value", "number", "constant"],
+        targets: ["ui_element", "ui_literal", "value", "number", "constant", "ui_property_ref"],
         ui_element: { min: 0, max: 2 },
         ui_literal: { min: 0, max: 2 },
         value: { min: 0, max: 3 },
         number: { min: 0, max: 3 },
-        constant: { min: 0, max: 3 }
+        constant: { min: 0, max: 3 },
+        ui_property_ref: { min: 0, max: 3 }
     },
     { name: "switch", minTargets: 0, maxTargets: 1,
-        targets: ["value", "number", "constant"]
+        targets: ["value", "number", "constant", "ui_property_ref"]
     },
     { name: "tap", minTargets: 1, maxTargets: 999,
-        targets: ["ui_element", "ui_literal", "value", "number", "constant"]
+        targets: ["ui_element", "ui_literal", "value", "number", "constant", "ui_property_ref"]
     },
     { name: "uncheck", minTargets: 1, maxTargets: 2,
-        targets: ["ui_element", "ui_literal", "value", "number", "constant"],
+        targets: ["ui_element", "ui_literal", "value", "number", "constant", "ui_property_ref"],
         ui_element: { min: 0, max: 2 },
         ui_literal: { min: 0, max: 2 },
         value: { min: 0, max: 1 },
         number: { min: 0, max: 1 },
-        constant: { min: 0, max: 1 }
+        constant: { min: 0, max: 1 },
+        ui_property_ref: { min: 0, max: 1 }
     },
-    { name: "uninstall", minTargets: 1, maxTargets: 1, targets: ["value", "constant"] },
+    { name: "uninstall", minTargets: 1, maxTargets: 1, targets: ["value", "constant", "ui_property_ref"] },
     { name: "wait",
         minTargets: 1, maxTargets: 3,
-        targets: ["ui_element", "ui_literal", "value", "number", "constant"],
+        targets: ["ui_element", "ui_literal", "value", "number", "constant", "ui_property_ref"],
         ui_element: { min: 0, max: 1 },
         ui_literal: { min: 0, max: 1 },
         value: { min: 0, max: 2 },
         number: { min: 0, max: 2 },
-        constant: { min: 0, max: 2 }
+        constant: { min: 0, max: 2 },
+        ui_property_ref: { min: 0, max: 2 }
     }
 ];
 //#endregion

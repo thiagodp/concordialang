@@ -1,4 +1,4 @@
-import { LocatedException } from '../dbi/LocatedException';
+import { LocatedException } from '../error/LocatedException';
 import { Document } from '../ast/Document';
 import { Warning } from '../req/Warning';
 import { isDefined } from '../util/TypeChecking';

@@ -2,7 +2,7 @@ import * as alasql from 'alasql';
 
 import { Table } from '../ast/Table';
 import { InMemoryTableInterface } from '../dbi/InMemoryTableInterface';
-import { RuntimeException } from '../req/RuntimeException';
+import { RuntimeException } from '../error/RuntimeException';
 import { isDefined } from '../util/TypeChecking';
 import { ValueType, ValueTypeDetector } from '../util/ValueTypeDetector';
 import { SqlHelper } from './SqlHelper';

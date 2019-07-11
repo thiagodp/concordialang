@@ -1,5 +1,5 @@
 import { TestCase } from '../ast/TestCase';
-import { SyntacticException } from '../req/SyntacticException';
+import { SyntacticException } from './SyntacticException';
 import { NodeIterator } from './NodeIterator';
 import { NodeParser } from './NodeParser';
 import { ParsingContext } from './ParsingContext';

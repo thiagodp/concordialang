@@ -1,4 +1,4 @@
-import { LocatedException } from "../dbi/LocatedException";
+import { LocatedException } from "../error/LocatedException";
 import { Warning } from "../req/Warning";
 
 export interface TCGenListener {

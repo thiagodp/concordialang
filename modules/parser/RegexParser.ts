@@ -1,5 +1,5 @@
 import { Regex, ListItem } from '../ast';
-import { SyntacticException } from '../req/SyntacticException';
+import { SyntacticException } from './SyntacticException';
 import { NodeTypes} from '../req/NodeTypes';
 import { ParsingContext } from './ParsingContext';
 import { ListItemNodeParser } from './ListItemNodeParser';

@@ -23,7 +23,7 @@ describe( 'NLPInPortugueseTest', () => {
         new JsonLanguageContentLoader( options.languageDir, {}, options.encoding );
 
     // entities
-    const UI_ELEMENT: string = Entities.UI_ELEMENT;
+    const UI_ELEMENT: string = Entities.UI_ELEMENT_REF;
     const UI_LITERAL: string = Entities.UI_LITERAL;
     const VALUE: string = Entities.VALUE;
     const NUMBER: string = Entities.NUMBER;

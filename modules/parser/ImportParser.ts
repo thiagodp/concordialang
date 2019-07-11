@@ -1,5 +1,5 @@
 import { Import } from '../ast/Import';
-import { SyntacticException } from "../req/SyntacticException";
+import { SyntacticException } from "./SyntacticException";
 import { NodeParser } from "./NodeParser";
 import { ParsingContext } from "./ParsingContext";
 import { NodeIterator } from './NodeIterator';

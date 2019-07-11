@@ -1,6 +1,6 @@
 import { Location } from 'concordialang-types'
 
-import { LocatedException } from '../dbi/LocatedException';
+import { LocatedException } from '../error/LocatedException';
 import { ContentNode } from '../ast/Node';
 import { Warning } from '../req/Warning';
 import { isDefined } from '../util/TypeChecking';

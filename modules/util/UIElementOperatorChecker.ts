@@ -1,4 +1,4 @@
-import { UIProperty } from '../ast/UIElement';
+import { UIProperty } from '../ast';
 import { Entities, NLPUtil } from '../nlp';
 import { UIElementOperator, UIElementOperatorModifier } from './UIElementOperator';
 

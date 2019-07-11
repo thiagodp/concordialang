@@ -3,7 +3,7 @@ import { NodeTypes } from "../req/NodeTypes";
 import { LineChecker } from '../req/LineChecker';
 import { Expressions } from '../req/Expressions';
 import { Symbols } from '../req/Symbols';
-import { LexicalException } from '../req/LexicalException';
+import { LexicalException } from './LexicalException';
 import { NodeLexer, LexicalAnalysisResult } from './NodeLexer';
 import { KeywordBasedLexer } from './KeywordBasedLexer';
 import { CommentHandler } from './CommentHandler';

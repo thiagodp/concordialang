@@ -5,7 +5,7 @@ import { Location } from 'concordialang-types';
 
 import { Document, Feature, Import, Tag, TestCase } from '../ast';
 import { AugmentedSpec } from "../req/AugmentedSpec";
-import { LocatedException } from '../dbi/LocatedException';
+import { LocatedException } from '../error/LocatedException';
 import { EnglishKeywordDictionary } from '../dict/EnglishKeywordDictionary';
 import { KeywordDictionary } from '../dict/KeywordDictionary';
 import { isDefined } from '../util/TypeChecking';

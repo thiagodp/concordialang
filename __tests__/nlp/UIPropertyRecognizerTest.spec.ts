@@ -1,6 +1,6 @@
 import { resolve } from 'path';
 
-import { UIProperty } from '../../modules/ast/UIElement';
+import { UIProperty } from '../../modules/ast/UIProperty';
 import { NodeTypes } from '../../modules/req/NodeTypes';
 import { NLP, NLPTrainer, UIPropertyRecognizer } from '../../modules/nlp';
 import { Options } from '../../modules/app/Options';

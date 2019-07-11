@@ -1,4 +1,5 @@
 import Bravey = require('../../lib/bravey'); // .js file
+import * as enumUtil from 'enum-util';
 
 import { adjustValueToTheRightType } from '../util/ValueTypeDetector';
 import {
@@ -6,6 +7,7 @@ import {
     Entities,
     NLPTrainingData
 } from "../nlp";
+import { UIPropertyTypes } from '../ast/UIPropertyTypes';
 
 /**
  * Natural Language Processor
@@ -27,8 +29,12 @@ export class NLP {
         this._additionalRecognizers.push( erMaker.makeValue( Entities.VALUE ) );
 
         // Add an entity named "ui_element" and its recognizer
-        this._additionalEntities.push( Entities.UI_ELEMENT );
-        this._additionalRecognizers.push( erMaker.makeUIElementReference( Entities.UI_ELEMENT ) );
+        this._additionalEntities.push( Entities.UI_ELEMENT_REF );
+        this._additionalRecognizers.push( erMaker.makeUIElementReference( Entities.UI_ELEMENT_REF ) );
+
+        // Add an entity named "ui_property_ref" and its recognizer
+        this._additionalEntities.push( Entities.UI_PROPERTY_REF );
+        this._additionalRecognizers.push( erMaker.makeUIPropertyReference( Entities.UI_PROPERTY_REF ) );
 
         // Add an entity named "ui_element_literal" and its recognizer
         this._additionalEntities.push( Entities.UI_LITERAL );
@@ -250,21 +256,27 @@ class EntityRecognizerMaker {
     /**
      * Creates a recognizer for references to UI Properties.
      *
-     * Example: I fill {Description} with {Name|value}
+     * Example 1: I fill {Foo} with {Name|value}
      *
      *  --> The ext "Name|value" is recognized (without quotes).
+     *
+     * Example 2: I fill {Foo} with {My Feature:Name|value}
+     *
+     *  --> The ext "My Feature:Name|value" is recognized (without quotes).
      *
      * @param entityName Entity name.
      * @return Bravey.EntityRecognizer
      */
     public makeUIPropertyReference( entityName: string ): any {
+        const values: string[] = enumUtil.getValues( UIPropertyTypes );
         var valueRec = new Bravey.RegexEntityRecognizer( entityName, 10 );
-        const regex = new RegExp( '\{[a-zA-ZÀ-ÖØ-öø-ÿ]+\|[a-zA-ZÀ-ÖØ-öø-ÿ]+[^|<\r\n\>\}]*\}', "g" );
+        const regexStr: string = '\\{[a-zA-ZÀ-ÖØ-öø-ÿ]+\\:?[a-zA-ZÀ-ÖØ-öø-ÿ]*\\|(' + values.join( '|' ) + ')\\}';
+        const regex = new RegExp( regexStr, "g" );
         valueRec.addMatch(
             regex,
             function( match ) {
-                //console.log( 'match: ', match );
-                return match.toString().replace( '{', '' ).replace( '}', '' );
+                const value = match[ 0 ] || '';
+                return value.substring( 1, value.length - 1 ); // exclude { and }
             },
             100 // priority
         );

@@ -1,5 +1,5 @@
 import { DatabaseProperty, ContentNode } from '../ast';
-import { LocatedException } from '../dbi/LocatedException';
+import { LocatedException } from '../error/LocatedException';
 import {
     NLPResult,
     Entities,

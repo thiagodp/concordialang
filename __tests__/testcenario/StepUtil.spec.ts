@@ -9,7 +9,7 @@ import { KeywordDictionary } from '../../modules/dict/KeywordDictionary';
 import { EnglishKeywordDictionary } from '../../modules/dict/EnglishKeywordDictionary';
 
 
-describe( 'StepUtilTest', () => {
+describe( 'StepUtil', () => {
 
     let util: StepUtil = null;
     let keywords: KeywordDictionary = new EnglishKeywordDictionary();

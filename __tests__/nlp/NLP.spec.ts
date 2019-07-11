@@ -1,3 +1,5 @@
+import * as enumUtil from 'enum-util';
+
 import {
     Entities,
     NLP,
@@ -5,11 +7,12 @@ import {
     NLPTrainingDataConversor,
     NLPTrainingData
 } from '../../modules/nlp';
+import { UIPropertyTypes } from '../../modules/ast';
 
 /**
  * @author Thiago Delgado Pinto
  */
-describe( 'NLPTest', () => {
+describe( 'NLP', () => {
 
     let nlp: NLP; // under test
 
@@ -43,30 +46,31 @@ describe( 'NLPTest', () => {
         nlp = new NLP();
     } );
 
+    describe( 'training', () => {
 
-    it( 'starts untrained in any language', () => {
-        expect( nlp.isTrained( 'en' ) ).toBeFalsy();
-        expect( nlp.isTrained( 'pt' ) ).toBeFalsy();
+        it( 'starts untrained in any language', () => {
+            expect( nlp.isTrained( 'en' ) ).toBeFalsy();
+            expect( nlp.isTrained( 'pt' ) ).toBeFalsy();
+        } );
+
+        it( 'can be trained in a language', () => {
+            nlp.train( 'en', fakeTrainingData() );
+            expect( nlp.isTrained( 'en' ) ).toBeTruthy();
+
+            nlp.train( 'pt', fakeTrainingData() );
+            expect( nlp.isTrained( 'pt' ) ).toBeTruthy();
+        } );
+
+        it( 'cannot recognize any entity if not trained', () => {
+            expect( nlp.isTrained( 'en' ) ).toBeFalsy();
+            let r: NLPResult = nlp.recognize( 'en', ' "hello" ' );
+            expect( r.entities ).toHaveLength( 0 );
+        } );
+
     } );
 
 
-    it( 'can be trained in a language', () => {
-        nlp.train( 'en', fakeTrainingData() );
-        expect( nlp.isTrained( 'en' ) ).toBeTruthy();
-
-        nlp.train( 'pt', fakeTrainingData() );
-        expect( nlp.isTrained( 'pt' ) ).toBeTruthy();
-    } );
-
-
-    it( 'cannot recognize any entity if not trained', () => {
-        expect( nlp.isTrained( 'en' ) ).toBeFalsy();
-        let r: NLPResult = nlp.recognize( 'en', ' "hello" ' );
-        expect( r.entities ).toHaveLength( 0 );
-    } );
-
-
-    describe( 'simple entities', () => {
+    describe( 'entity recognition', () => {
 
         beforeEach( () => {
             nlp.train( 'en', fakeTrainingData() );
@@ -173,7 +177,7 @@ describe( 'NLPTest', () => {
         describe( 'ui_element', () => {
 
             function recogElement( text: string, expected: string | null, debug: boolean = false  ): NLPResult | null {
-                return recog( text, expected, Entities.UI_ELEMENT, debug );
+                return recog( text, expected, Entities.UI_ELEMENT_REF, debug );
             }
 
             describe( 'recognizes', () => {
@@ -390,6 +394,54 @@ describe( 'NLPTest', () => {
                     ' [ 1, "alice", 2, "bob", 3, 4, "bob", "joe" ] ',
                     [1, "alice", 2, "bob", 3, 4, "bob", "joe"]
                 );
+
+            } );
+
+        } );
+
+
+        describe( 'ui_element_ref', () => {
+
+            function recogUIPropertyRef( text: string, expected: string | null, debug: boolean = false  ): NLPResult | null {
+                return recog( text, expected, Entities.UI_PROPERTY_REF, debug );
+            }
+
+            describe( 'recognizes', () => {
+
+                it( 'with value', () => {
+                    recogUIPropertyRef( ' {A|value} ', 'A|value' );
+                } );
+
+                it( 'with all the UI Properties', () => {
+                    const properties: string[] = enumUtil.getValues( UIPropertyTypes );
+                    for ( let p of properties ) {
+                        recogUIPropertyRef( '{A|' + p + '}', 'A|' + p );
+                    }
+                } );
+
+                it( 'with Feature', () => {
+                    recogUIPropertyRef( ' {F:A|value} ', 'F:A|value' );
+                } );
+
+            } );
+
+            describe( 'does not recognize', () => {
+
+                it( 'without a property', () => {
+                    recogUIPropertyRef( ' {A} ', null );
+                } );
+
+                it( 'with an empty feature', () => {
+                    recogUIPropertyRef( ' {|value} ', null );
+                } );
+
+                it( 'with a space instead of a feature ', () => {
+                    recogUIPropertyRef( ' { |value} ', null );
+                } );
+
+                it( 'with an unsupported property', () => {
+                    recogUIPropertyRef( ' {A|foo} ', null );
+                } );
 
             } );
 

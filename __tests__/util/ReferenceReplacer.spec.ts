@@ -3,7 +3,7 @@ import { ReferenceReplacer } from '../../modules/util/ReferenceReplacer';
 /**
  * @author Thiago Delgado Pinto
  */
-describe( 'ReferenceReplacerTest', () => {
+describe( 'ReferenceReplacer', () => {
 
     let replacer = new ReferenceReplacer(); // under test
 

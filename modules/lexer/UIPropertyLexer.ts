@@ -1,4 +1,4 @@
-import { UIProperty } from "../ast/UIElement";
+import { UIProperty } from "../ast/UIProperty";
 import { NodeTypes } from '../req/NodeTypes';
 import { ListItemLexer } from './ListItemLexer';
 

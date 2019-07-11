@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const dbi_1 = require("../dbi");
-const RuntimeException_1 = require("../req/RuntimeException");
+const error_1 = require("../error");
 const DatabaseWrapper_1 = require("./DatabaseWrapper");
 /**
  * Checks all the connections of a specification.
@@ -48,7 +48,7 @@ class DatabaseConnectionChecker {
                         r.success = false;
                         cr.success = false;
                         const msg = 'Could not connect to the database "' + db.name + '". Reason: ' + err.message;
-                        let e = new RuntimeException_1.RuntimeException(msg, db.location);
+                        let e = new error_1.RuntimeException(msg, db.location);
                         cr.errors.push(e);
                         errors.push(e);
                         doc.fileWarnings.push(e);
@@ -66,7 +66,7 @@ class DatabaseConnectionChecker {
                     catch (err) {
                         const msg = 'Error while disconnecting from database "' +
                             db.name + '". Details: ' + err.message + ' at ' + err.stack;
-                        let e = new RuntimeException_1.RuntimeException(msg, db.location);
+                        let e = new error_1.RuntimeException(msg, db.location);
                         cr.errors.push(e);
                         errors.push(e);
                         doc.fileWarnings.push(e);

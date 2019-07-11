@@ -4,7 +4,7 @@ const NodeTypes_1 = require("../req/NodeTypes");
 const LineChecker_1 = require("../req/LineChecker");
 const Expressions_1 = require("../req/Expressions");
 const Symbols_1 = require("../req/Symbols");
-const LexicalException_1 = require("../req/LexicalException");
+const LexicalException_1 = require("./LexicalException");
 const CommentHandler_1 = require("./CommentHandler");
 /**
  * Detects a Regex.

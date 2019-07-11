@@ -1,5 +1,5 @@
 import { ContentNode, Step } from '../ast';
-import { LocatedException } from '../dbi/LocatedException';
+import { LocatedException } from '../error/LocatedException';
 import {
     NLPResult,
     Entities,

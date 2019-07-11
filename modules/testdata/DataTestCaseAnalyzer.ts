@@ -3,10 +3,10 @@ import * as enumUtil from 'enum-util';
 
 import { Constant, Step, UIElement, UIProperty, ReservedTags } from '../ast';
 import { Entities, NLPUtil } from '../nlp';
-import { RuntimeException } from '../req/RuntimeException';
+import { RuntimeException } from '../error/RuntimeException';
 import { isDefined } from '../util/TypeChecking';
 import { UIElementPropertyExtractor } from '../util/UIElementPropertyExtractor';
-import { UIPropertyTypes } from '../util/UIPropertyTypes';
+import { UIPropertyTypes } from '../ast/UIPropertyTypes';
 import { adjustValueToTheRightType, ValueType } from '../util/ValueTypeDetector';
 import { RangeAnalyzer } from './raw/RangeAnalyzer';
 import { DataGeneratorBuilder } from './DataGeneratorBuilder';
@@ -652,7 +652,7 @@ export class DataTestCaseAnalyzer {
 
             // case Entities.COMPUTATION: ; // next
             case Entities.QUERY: ; // next
-            case Entities.UI_ELEMENT: {
+            case Entities.UI_ELEMENT_REF: {
                 return [ null, true ]; // << FAKED !
             }
 

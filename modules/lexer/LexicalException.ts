@@ -1,4 +1,4 @@
-import { LocatedException } from "../dbi/LocatedException";
+import { LocatedException } from "../error/LocatedException";
 
 /**
  * Lexical exception.

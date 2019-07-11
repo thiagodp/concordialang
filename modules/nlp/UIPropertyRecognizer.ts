@@ -1,10 +1,10 @@
 
 import { NLPResult, Entities } from '../nlp';
 import { ContentNode, UIProperty, EntityValue } from '../ast';
-import { LocatedException } from '../dbi/LocatedException';
+import { LocatedException } from '../error/LocatedException';
 import { isDefined } from '../util/TypeChecking';
 import { adjustValueToTheRightType, ValueTypeDetector } from '../util/ValueTypeDetector';
-import { UIPropertyTypes } from '../util/UIPropertyTypes';
+import { UIPropertyTypes } from '../ast/UIPropertyTypes';
 import { Intents } from './Intents';
 import { NLP } from './NLP';
 import { NLPException } from './NLPException';
@@ -59,7 +59,7 @@ export class UIPropertyRecognizer {
         const recognizer = new NodeSentenceRecognizer( this._nlp );
         const syntaxRules = this._syntaxRules;
 
-        let _this = this;
+        // let _this = this;
 
         let processor: NLPResultProcessor = function(
             node: ContentNode,
@@ -92,17 +92,18 @@ export class UIPropertyRecognizer {
                 //
                 let uiv: EntityValue;
                 switch ( e.entity ) {
-                    case Entities.VALUE         : ; // go to next
-                    case Entities.NUMBER        : uiv = new EntityValue( e.entity, adjustValueToTheRightType( e.value ) ); break;
-                    // case Entities.VALUE_LIST    : uiv = new EntityValue( e.entity, _this.makeValueList( e.value ) ); break;
-                    case Entities.VALUE_LIST    : uiv = new EntityValue( e.entity, e.value ); break;
-                    case Entities.QUERY         : uiv = new EntityValue( e.entity, e.value ); break;
-                    case Entities.UI_ELEMENT    : uiv = new EntityValue( e.entity, e.value ); break;
-                    case Entities.UI_LITERAL    : uiv = new EntityValue( e.entity, e.value ); break;
-                    case Entities.CONSTANT      : uiv = new EntityValue( e.entity, e.value ); break;
-                    case Entities.UI_DATA_TYPE  : uiv = new EntityValue( e.entity, e.value ); break;
-                    case Entities.BOOL_VALUE    : uiv = new EntityValue( e.entity, 'true' === e.value ); break;
-                    default                     : uiv = null;
+                    case Entities.VALUE             : ; // go to next
+                    case Entities.NUMBER            : uiv = new EntityValue( e.entity, adjustValueToTheRightType( e.value ) ); break;
+                    // case Entities.VALUE_LIST     : uiv = new EntityValue( e.entity, _this.makeValueList( e.value ) ); break;
+                    case Entities.VALUE_LIST        : uiv = new EntityValue( e.entity, e.value ); break;
+                    case Entities.QUERY             : uiv = new EntityValue( e.entity, e.value ); break;
+                    case Entities.UI_ELEMENT_REF    : uiv = new EntityValue( e.entity, e.value ); break;
+                    case Entities.UI_LITERAL        : uiv = new EntityValue( e.entity, e.value ); break;
+                    case Entities.UI_PROPERTY_REF   : uiv = new EntityValue( e.entity, e.value ); break;
+                    case Entities.CONSTANT          : uiv = new EntityValue( e.entity, e.value ); break;
+                    case Entities.UI_DATA_TYPE      : uiv = new EntityValue( e.entity, e.value ); break;
+                    case Entities.BOOL_VALUE        : uiv = new EntityValue( e.entity, 'true' === e.value ); break;
+                    default                         : uiv = null;
                 }
                 if ( isDefined( uiv ) ) {
                     item.value = uiv;

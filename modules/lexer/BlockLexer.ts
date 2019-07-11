@@ -1,6 +1,6 @@
 import { Node } from '../ast/Node';
 import { Expressions } from '../req/Expressions';
-import { LexicalException } from '../req/LexicalException';
+import { LexicalException } from './LexicalException';
 import { LineChecker } from '../req/LineChecker';
 import { Symbols } from '../req/Symbols';
 import { CommentHandler } from './CommentHandler';

@@ -80,7 +80,7 @@ class UIElementSSA extends SpecificationAnalyzer_1.SpecificationAnalyzer {
                     this.analyzeConstant(content, uiProperty, doc, spec, propValue.references, errors);
                     break;
                 }
-                case Entities_1.Entities.UI_ELEMENT: {
+                case Entities_1.Entities.UI_ELEMENT_REF: {
                     this.analyzeUIElement(content, uiProperty, doc, spec, propValue.references, errors);
                     break;
                 }

@@ -35,6 +35,7 @@ export abstract class Symbols {
     static VALUE_SEPARATOR = ',';
 
     static FEATURE_TO_UI_ELEMENT_SEPARATOR = ':';
+    static UI_PROPERTY_REF_SEPARATOR = '|';
 
     // wrappers
 

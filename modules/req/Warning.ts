@@ -1,4 +1,4 @@
-import { LocatedException } from "../dbi/LocatedException";
+import { LocatedException } from "../error/LocatedException";
 
 /**
  * Provides an exception that should be handled as a warning.

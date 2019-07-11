@@ -1,8 +1,10 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const Bravey = require("../../lib/bravey"); // .js file
+const enumUtil = require("enum-util");
 const ValueTypeDetector_1 = require("../util/ValueTypeDetector");
 const nlp_1 = require("../nlp");
+const UIPropertyTypes_1 = require("../ast/UIPropertyTypes");
 /**
  * Natural Language Processor
  *
@@ -19,8 +21,11 @@ class NLP {
         this._additionalEntities.push(nlp_1.Entities.VALUE);
         this._additionalRecognizers.push(erMaker.makeValue(nlp_1.Entities.VALUE));
         // Add an entity named "ui_element" and its recognizer
-        this._additionalEntities.push(nlp_1.Entities.UI_ELEMENT);
-        this._additionalRecognizers.push(erMaker.makeUIElementReference(nlp_1.Entities.UI_ELEMENT));
+        this._additionalEntities.push(nlp_1.Entities.UI_ELEMENT_REF);
+        this._additionalRecognizers.push(erMaker.makeUIElementReference(nlp_1.Entities.UI_ELEMENT_REF));
+        // Add an entity named "ui_property_ref" and its recognizer
+        this._additionalEntities.push(nlp_1.Entities.UI_PROPERTY_REF);
+        this._additionalRecognizers.push(erMaker.makeUIPropertyReference(nlp_1.Entities.UI_PROPERTY_REF));
         // Add an entity named "ui_element_literal" and its recognizer
         this._additionalEntities.push(nlp_1.Entities.UI_LITERAL);
         this._additionalRecognizers.push(erMaker.makeUILiteral(nlp_1.Entities.UI_LITERAL));
@@ -200,19 +205,25 @@ class EntityRecognizerMaker {
     /**
      * Creates a recognizer for references to UI Properties.
      *
-     * Example: I fill {Description} with {Name|value}
+     * Example 1: I fill {Foo} with {Name|value}
      *
      *  --> The ext "Name|value" is recognized (without quotes).
+     *
+     * Example 2: I fill {Foo} with {My Feature:Name|value}
+     *
+     *  --> The ext "My Feature:Name|value" is recognized (without quotes).
      *
      * @param entityName Entity name.
      * @return Bravey.EntityRecognizer
      */
     makeUIPropertyReference(entityName) {
+        const values = enumUtil.getValues(UIPropertyTypes_1.UIPropertyTypes);
         var valueRec = new Bravey.RegexEntityRecognizer(entityName, 10);
-        const regex = new RegExp('\{[a-zA-ZÀ-ÖØ-öø-ÿ]+\|[a-zA-ZÀ-ÖØ-öø-ÿ]+[^|<\r\n\>\}]*\}', "g");
+        const regexStr = '\\{[a-zA-ZÀ-ÖØ-öø-ÿ]+\\:?[a-zA-ZÀ-ÖØ-öø-ÿ]*\\|(' + values.join('|') + ')\\}';
+        const regex = new RegExp(regexStr, "g");
         valueRec.addMatch(regex, function (match) {
-            //console.log( 'match: ', match );
-            return match.toString().replace('{', '').replace('}', '');
+            const value = match[0] || '';
+            return value.substring(1, value.length - 1); // exclude { and }
         }, 100 // priority
         );
         return valueRec;

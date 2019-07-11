@@ -102,7 +102,7 @@ export class UIElementSSA extends SpecificationAnalyzer {
                     break;
                 }
 
-                case Entities.UI_ELEMENT: {
+                case Entities.UI_ELEMENT_REF: {
                     this.analyzeUIElement( content, uiProperty, doc, spec, propValue.references, errors );
                     break;
                 }
