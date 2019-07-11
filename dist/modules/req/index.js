@@ -9,4 +9,3 @@ __export(require("./Keywords"));
 __export(require("./LineChecker"));
 __export(require("./NodeTypes"));
 __export(require("./Symbols"));
-__export(require("./Warning"));

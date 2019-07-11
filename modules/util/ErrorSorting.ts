@@ -1,5 +1,5 @@
 import { LocatedException } from '../error/LocatedException';
-import { Warning } from '../req/Warning';
+import { Warning } from '../error/Warning';
 
 export function sortErrorsByLocation( errors: LocatedException[] ): LocatedException[] {
     return Array.sort( errors, ( a: LocatedException, b: LocatedException ) => {

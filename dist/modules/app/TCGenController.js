@@ -20,7 +20,7 @@ const TestPlanner_1 = require("../testcase/TestPlanner");
 const TCDocGen_1 = require("../testcase/TCDocGen");
 const TestCaseFileGenerator_1 = require("../testcase/TestCaseFileGenerator");
 const RuntimeException_1 = require("../error/RuntimeException");
-const Warning_1 = require("../req/Warning");
+const Warning_1 = require("../error/Warning");
 const DataTestCaseMix_1 = require("../testcase/DataTestCaseMix");
 const Defaults_1 = require("./Defaults");
 class TCGenController {

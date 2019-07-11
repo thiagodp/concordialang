@@ -1,6 +1,6 @@
 import { LocatedException } from '../error/LocatedException';
 import { Document } from '../ast/Document';
-import { Warning } from '../req/Warning';
+import { Warning } from '../error/Warning';
 import { isDefined } from '../util/TypeChecking';
 import { DatabasePropertyRecognizer } from './DatabasePropertyRecognizer';
 import { GivenWhenThenSentenceRecognizer } from './GivenWhenThenSentenceRecognizer';

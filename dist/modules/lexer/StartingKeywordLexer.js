@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const Expressions_1 = require("../req/Expressions");
 const LineChecker_1 = require("../req/LineChecker");
-const Warning_1 = require("../req/Warning");
+const Warning_1 = require("../error/Warning");
 const CommentHandler_1 = require("./CommentHandler");
 /**
  * Detects a node in the format "keyword anything".

@@ -2,7 +2,7 @@ import * as prettyBytes from 'pretty-bytes';
 
 import { LocatedException } from '../error/LocatedException';
 import { sortErrorsByLocation } from '../util/ErrorSorting';
-import { Warning } from '../req/Warning';
+import { Warning } from '../error/Warning';
 import { isDefined } from '../util/TypeChecking';
 import { FileReadListener, DirectoryReadListener, DirectoryReadResult } from './Listeners';
 import { SingleFileProcessorListener, FileMeta, ProcessedFileData } from './SingleFileProcessor';

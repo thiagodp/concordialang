@@ -11,7 +11,7 @@ import { Options } from './Options';
 import { sortErrorsByLocation } from '../util/ErrorSorting';
 import { ProcessingInfo } from './ProcessingInfo';
 import { TCGenListener } from './TCGenListener';
-import { Warning } from '../req/Warning';
+import { Warning } from '../error/Warning';
 import { isDefined } from '../util/TypeChecking';
 
 export class SimpleAppEventsListener implements

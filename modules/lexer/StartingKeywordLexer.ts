@@ -1,7 +1,7 @@
 import { ContentNode } from '../ast/Node';
 import { Expressions } from '../req/Expressions';
 import { LineChecker } from '../req/LineChecker';
-import { Warning } from '../req/Warning';
+import { Warning } from '../error/Warning';
 import { CommentHandler } from './CommentHandler';
 import { KeywordBasedLexer } from './KeywordBasedLexer';
 import { LexicalAnalysisResult, NodeLexer } from './NodeLexer';

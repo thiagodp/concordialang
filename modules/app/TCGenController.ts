@@ -29,7 +29,7 @@ import { TestPlanner } from "../testcase/TestPlanner";
 import { TCDocGen } from "../testcase/TCDocGen";
 import { TestCaseFileGenerator } from "../testcase/TestCaseFileGenerator";
 import { RuntimeException } from "../error/RuntimeException";
-import { Warning } from "../req/Warning";
+import { Warning } from "../error/Warning";
 import {
     DataTestCaseMix,
     OnlyValidMix,

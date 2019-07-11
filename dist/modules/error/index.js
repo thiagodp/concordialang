@@ -5,3 +5,4 @@ function __export(m) {
 Object.defineProperty(exports, "__esModule", { value: true });
 __export(require("./LocatedException"));
 __export(require("./RuntimeException"));
+__export(require("./Warning"));

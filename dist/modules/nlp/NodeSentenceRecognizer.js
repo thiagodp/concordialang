@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const Warning_1 = require("../req/Warning");
+const Warning_1 = require("../error/Warning");
 const TypeChecking_1 = require("../util/TypeChecking");
 const _1 = require(".");
 /**

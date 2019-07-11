@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const Warning_1 = require("../req/Warning");
+const Warning_1 = require("../error/Warning");
 function sortErrorsByLocation(errors) {
     return Array.sort(errors, (a, b) => {
         if (a.location && b.location) {
