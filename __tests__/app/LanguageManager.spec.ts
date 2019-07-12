@@ -1,11 +1,12 @@
 import { resolve } from 'path';
+
 import { LanguageManager } from "../../modules/app/LanguageManager";
 import { Options } from "../../modules/app/Options";
 
 /**
  * @author Thiago Delgado Pinto
  */
-describe( 'LanguageManagerTest', () => {
+describe( 'LanguageManager', () => {
 
     const langDir: string = new Options( resolve( process.cwd(), 'dist/' ) ).languageDir;
 

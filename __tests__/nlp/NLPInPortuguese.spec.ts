@@ -7,14 +7,14 @@ import {
     NLPResult,
     NLPTrainer
 } from '../../modules/nlp';
+import { LanguageContentLoader, JsonLanguageContentLoader } from '../../modules/dict';
 import { Options } from '../../modules/app/Options';
-import { LanguageContentLoader, JsonLanguageContentLoader } from '../../modules/dict/LanguageContentLoader';
 
 
 /**
  * @author Thiago Delgado Pinto
  */
-describe( 'NLPInPortugueseTest', () => {
+describe( 'NLPInPortuguese', () => {
 
     let nlp: NLP; // under test
     const LANGUAGE = 'pt';
@@ -95,7 +95,7 @@ describe( 'NLPInPortugueseTest', () => {
 
     describe( 'testcase entities', () => {
 
-        describe( 'structure', () => {
+        describe( 'structured', () => {
 
             it( '{ui_action} {ui_element}', () => {
                 let results = [];
@@ -261,6 +261,23 @@ describe( 'NLPInPortugueseTest', () => {
             //     results.push( recognizeInTestCase( 'eu vejo a janela com cor [Cor Padrão]' ) );
             //     shouldHaveTestCaseEntities( results, [ UI_ACTION, UI_ELEMENT_TYPE, UI_PROPERTY, CONSTANT ] );
             // } );
+
+            it( '{ui_action} {ui_property} {ui_element}', () => {
+                let results = [];
+                results.push( recognizeInTestCase( 'eu vejo o valor de {Foo}' ) );
+                results.push( recognizeInTestCase( 'eu vejo o valor mínimo de {Foo}' ) );
+                results.push( recognizeInTestCase( 'eu vejo o valor máximo de {Foo}' ) );
+                results.push( recognizeInTestCase( 'eu vejo o comprimento mínimo de {Foo}' ) );
+                results.push( recognizeInTestCase( 'eu vejo o comprimento máximo de {Foo}' ) );
+                results.push( recognizeInTestCase( 'eu vejo o formato de {Foo}' ) );
+                shouldHaveTestCaseEntities( results, [ UI_ACTION, UI_PROPERTY, UI_ELEMENT ] );
+            } );
+
+            it( '{ui_action} {ui_property} {ui_element} {ui_action_option} {ui_element}', () => {
+                let results = [];
+                results.push( recognizeInTestCase( 'eu vejo o valor de {Foo} dentro de {Foo}' ) );
+                shouldHaveTestCaseEntities( results, [ UI_ACTION, UI_PROPERTY, UI_ELEMENT, UI_ACTION_OPTION, UI_ELEMENT ] );
+            } );
 
             // ...
 

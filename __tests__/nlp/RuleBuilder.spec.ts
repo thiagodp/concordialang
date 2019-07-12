@@ -3,7 +3,7 @@ import { RuleBuilder } from '../../modules/nlp/RuleBuilder';
 /**
  * @author Thiago Delgado Pinto
  */
-describe( 'RuleBuilderTest', () => {
+describe( 'RuleBuilder', () => {
 
     let builder = new RuleBuilder(); // under test
 
@@ -20,6 +20,6 @@ describe( 'RuleBuilderTest', () => {
         expect( r ).toHaveLength( 1 );
         let first = r[ 0 ];
         expect( first ).toHaveProperty( 'one', 2 );
-    } );    
+    } );
 
 } );

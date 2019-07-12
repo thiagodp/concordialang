@@ -2,7 +2,7 @@ import { resolve } from 'path';
 
 import { Document, FileInfo } from "../ast";
 import { Options } from "../app/Options";
-import { LanguageContentLoader, JsonLanguageContentLoader } from "../dict/LanguageContentLoader";
+import { LanguageContentLoader, JsonLanguageContentLoader } from "../dict";
 import { LexerBuilder } from "../lexer/LexerBuilder";
 import { Lexer } from "../lexer/Lexer";
 import { Parser } from "../parser/Parser";
@@ -10,7 +10,6 @@ import { NLPTrainer } from "../nlp/NLPTrainer";
 import { NLPBasedSentenceRecognizer } from "../nlp/NLPBasedSentenceRecognizer";
 import { SingleDocumentProcessor } from "../app/SingleDocumentProcessor";
 import { AugmentedSpec } from "../req/AugmentedSpec";
-
 
 /**
  * Useful for testing purposes.

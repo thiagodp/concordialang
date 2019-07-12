@@ -1,19 +1,19 @@
 import { resolve } from 'path';
 
+import { LanguageContentLoader, JsonLanguageContentLoader } from '../../modules/dict';
 import { Document } from '../../modules/ast/Document';
 import { NLPBasedSentenceRecognizer } from '../../modules/nlp/NLPBasedSentenceRecognizer';
 import { SingleDocumentProcessor } from '../../modules/app/SingleDocumentProcessor';
 import { Parser } from '../../modules/parser/Parser';
 import { Lexer } from '../../modules/lexer/Lexer';
+import { LexerBuilder } from '../../modules/lexer/LexerBuilder';
 import { NLPTrainer } from '../../modules/nlp/NLPTrainer';
 import { Options } from '../../modules/app/Options';
-import { LanguageContentLoader, JsonLanguageContentLoader } from '../../modules/dict/LanguageContentLoader';
-import { LexerBuilder } from '../../modules/lexer/LexerBuilder';
 
 /**
  * @author Thiago Delgado Pinto
  */
-describe( 'SingleDocumentProcessorTest', () => {
+describe( 'SingleDocumentProcessor', () => {
 
     const LANGUAGE = 'pt';
 

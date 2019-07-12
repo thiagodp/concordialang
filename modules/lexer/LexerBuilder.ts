@@ -1,7 +1,6 @@
-import { Lexer } from "./Lexer";
-import { LanguageContentLoader, JsonLanguageContentLoader } from "../dict/LanguageContentLoader";
+import { LanguageContentLoader, JsonLanguageContentLoader, EnglishKeywordDictionary } from "../dict";
 import { Options } from "../app/Options";
-import { EnglishKeywordDictionary } from "../dict/EnglishKeywordDictionary";
+import { Lexer } from "./Lexer";
 
 export class LexerBuilder {
 
@@ -20,9 +19,9 @@ export class LexerBuilder {
 
         // If keywords are not defined, use the default dictionary
         if ( englishContent && ! englishContent.keywords ) {
-            englishContent.keywords = new EnglishKeywordDictionary();   
+            englishContent.keywords = new EnglishKeywordDictionary();
         }
 
-        return new Lexer( language, langLoader );        
+        return new Lexer( language, langLoader );
     }
 }

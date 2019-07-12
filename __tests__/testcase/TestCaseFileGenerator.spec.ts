@@ -1,8 +1,8 @@
 import { resolve } from "path";
 
+import { JsonLanguageContentLoader, LanguageContentLoader } from "../../modules/dict";
 import { Document } from '../../modules/ast/Document';
 import { TestCaseFileGenerator } from "../../modules/testcase/TestCaseFileGenerator";
-import { JsonLanguageContentLoader, LanguageContentLoader } from "../../modules/dict/LanguageContentLoader";
 import { Options } from "../../modules/app/Options";
 import { FileData, FileMeta } from "../../modules/app/SingleFileProcessor";
 import { SingleFileCompiler } from "../../modules/app/SingleFileCompiler";
@@ -14,7 +14,7 @@ import { NLPTrainer } from "../../modules/nlp/NLPTrainer";
 /**
  * @author Thiago Delgado Pinto
  */
-describe( 'TestCaseFileGeneratorTest', () => {
+describe( 'TestCaseFileGenerator', () => {
 
     const LANGUAGE = 'en';
     const options: Options = new Options( resolve( process.cwd(), 'dist/' ) );

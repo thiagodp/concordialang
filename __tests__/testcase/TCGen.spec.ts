@@ -12,7 +12,7 @@ import { IndexOfEachStrategy } from "../../modules/selection/CombinationStrategy
 import { TestScenario } from "../../modules/testscenario/TestScenario";
 import { LongLimits } from "../../modules/testdata/limits/LongLimits";
 
-describe( 'TCGenTest', () => {
+describe( 'TCGen', () => {
 
     let gen: TCGen; // under test
 

@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const path_1 = require("path");
 const Options_1 = require("../app/Options");
-const LanguageContentLoader_1 = require("../dict/LanguageContentLoader");
+const dict_1 = require("../dict");
 const LexerBuilder_1 = require("../lexer/LexerBuilder");
 const Parser_1 = require("../parser/Parser");
 const NLPTrainer_1 = require("../nlp/NLPTrainer");
@@ -15,7 +15,7 @@ class SimpleCompiler {
     constructor(language = 'pt') {
         this.language = language;
         this.options = new Options_1.Options(path_1.resolve(process.cwd(), 'dist/'));
-        this.langLoader = new LanguageContentLoader_1.JsonLanguageContentLoader(this.options.languageDir, {}, this.options.encoding);
+        this.langLoader = new dict_1.JsonLanguageContentLoader(this.options.languageDir, {}, this.options.encoding);
         this.lexer = (new LexerBuilder_1.LexerBuilder(this.langLoader)).build(this.options, this.language);
         this.parser = new Parser_1.Parser();
         this.nlpTrainer = new NLPTrainer_1.NLPTrainer(this.langLoader);

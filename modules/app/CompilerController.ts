@@ -1,20 +1,21 @@
+import Graph = require( 'graph.js/dist/graph.full.js' );
+
+import { SimpleAppEventsListener } from "./SimpleAppEventsListener";
+import { AugmentedSpec } from "../req/AugmentedSpec";
+import { Lexer } from "../lexer/Lexer";
+import { LexerBuilder } from "../lexer/LexerBuilder";
+import { Parser } from "../parser/Parser";
+import { NLPTrainer } from "../nlp/NLPTrainer";
+import { NLPBasedSentenceRecognizer } from "../nlp/NLPBasedSentenceRecognizer";
+import { BatchSpecificationAnalyzer } from "../semantic/BatchSpecificationAnalyzer";
+import { LanguageContentLoader, JsonLanguageContentLoader } from "../dict";
 import { Options } from "./Options";
 import { CLI } from "./CLI";
 import { SingleFileCompiler } from "./SingleFileCompiler";
 import { MultiFileProcessor } from "./MultiFileProcessor";
 import { VerboseAppEventsListener } from "./VerboseAppEventsListener";
-import { SimpleAppEventsListener } from "./SimpleAppEventsListener";
-import { AugmentedSpec } from "../req/AugmentedSpec";
-import { Lexer } from "../lexer/Lexer";
-import { Parser } from "../parser/Parser";
-import { NLPTrainer } from "../nlp/NLPTrainer";
-import { NLPBasedSentenceRecognizer } from "../nlp/NLPBasedSentenceRecognizer";
-import { BatchSpecificationAnalyzer } from "../semantic/BatchSpecificationAnalyzer";
 import { Compiler } from "./Compiler";
 import { LanguageManager } from "./LanguageManager";
-import { LexerBuilder } from "../lexer/LexerBuilder";
-import { LanguageContentLoader, JsonLanguageContentLoader } from "../dict/LanguageContentLoader";
-import Graph = require( 'graph.js/dist/graph.full.js' );
 import { TCGenController } from "./TCGenController";
 
 /**

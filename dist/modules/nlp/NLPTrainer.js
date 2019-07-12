@@ -72,12 +72,21 @@ class NLPTrainer {
                 this._trainedIntents.push(this.joinLanguageAndIntent(language, baseEx.intent));
             }
         }
-        // Copy "ui_element_type" from "testcase" to "ui"
-        if (TypeChecking_1.isDefined(content.nlp["testcase"])
-            && TypeChecking_1.isDefined(content.nlp["testcase"]["ui_element_type"])
-            && TypeChecking_1.isDefined(content.nlp["ui"]
-                && !TypeChecking_1.isDefined(content.nlp["ui"]["ui_element_type"]))) {
-            content.nlp["ui"]["ui_element_type"] = content.nlp["testcase"]["ui_element_type"];
+        // COPY SOME PARTS TO OTHERS
+        if (TypeChecking_1.isDefined(content.nlp["testcase"]) && TypeChecking_1.isDefined(content.nlp["ui"])) {
+            // Copy "ui_element_type" from "testcase" to "ui"
+            if (TypeChecking_1.isDefined(content.nlp["testcase"]["ui_element_type"])
+                && !TypeChecking_1.isDefined(content.nlp["ui"]["ui_element_type"])) {
+                content.nlp["ui"]["ui_element_type"] = content.nlp["testcase"]["ui_element_type"];
+            }
+            // Add items of "ui_property" from "ui" to "testcase"
+            if (TypeChecking_1.isDefined(content.nlp["testcase"]["ui_property"])
+                && !TypeChecking_1.isDefined(content.nlp["ui"]["ui_property"])) {
+                const uiProperties = content.nlp["ui"]["ui_property"];
+                for (const p in uiProperties) {
+                    content.nlp["testcase"]["ui_property"][p] = content.nlp["ui"]["ui_property"][p];
+                }
+            }
         }
         let conversor = new NLPTrainingDataConversor_1.NLPTrainingDataConversor();
         let converted = conversor.convert(content.nlp || {}, content.training || []);

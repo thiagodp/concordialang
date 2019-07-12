@@ -8,18 +8,18 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const SingleFileCompiler_1 = require("./SingleFileCompiler");
-const MultiFileProcessor_1 = require("./MultiFileProcessor");
-const VerboseAppEventsListener_1 = require("./VerboseAppEventsListener");
 const SimpleAppEventsListener_1 = require("./SimpleAppEventsListener");
+const LexerBuilder_1 = require("../lexer/LexerBuilder");
 const Parser_1 = require("../parser/Parser");
 const NLPTrainer_1 = require("../nlp/NLPTrainer");
 const NLPBasedSentenceRecognizer_1 = require("../nlp/NLPBasedSentenceRecognizer");
 const BatchSpecificationAnalyzer_1 = require("../semantic/BatchSpecificationAnalyzer");
+const dict_1 = require("../dict");
+const SingleFileCompiler_1 = require("./SingleFileCompiler");
+const MultiFileProcessor_1 = require("./MultiFileProcessor");
+const VerboseAppEventsListener_1 = require("./VerboseAppEventsListener");
 const Compiler_1 = require("./Compiler");
 const LanguageManager_1 = require("./LanguageManager");
-const LexerBuilder_1 = require("../lexer/LexerBuilder");
-const LanguageContentLoader_1 = require("../dict/LanguageContentLoader");
 const TCGenController_1 = require("./TCGenController");
 /**
  * Compiler controller
@@ -29,7 +29,7 @@ const TCGenController_1 = require("./TCGenController");
 class CompilerController {
     compile(options, cli) {
         return __awaiter(this, void 0, void 0, function* () {
-            const langLoader = new LanguageContentLoader_1.JsonLanguageContentLoader(options.languageDir, {}, options.encoding);
+            const langLoader = new dict_1.JsonLanguageContentLoader(options.languageDir, {}, options.encoding);
             let lexer = (new LexerBuilder_1.LexerBuilder(langLoader)).build(options, options.language);
             let parser = new Parser_1.Parser();
             let nlpTrainer = new NLPTrainer_1.NLPTrainer(langLoader);

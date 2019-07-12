@@ -3,10 +3,10 @@ import { resolve } from 'path';
 import { UIProperty } from '../../modules/ast/UIProperty';
 import { NodeTypes } from '../../modules/req/NodeTypes';
 import { NLP, NLPTrainer, UIPropertyRecognizer } from '../../modules/nlp';
+import { LanguageContentLoader, JsonLanguageContentLoader } from '../../modules/dict';
 import { Options } from '../../modules/app/Options';
-import { LanguageContentLoader, JsonLanguageContentLoader } from '../../modules/dict/LanguageContentLoader';
 
-describe( 'UIPropertyRecognizerTest', () => {
+describe( 'UIPropertyRecognizer', () => {
 
     let nodes = [];
     let errors = [];

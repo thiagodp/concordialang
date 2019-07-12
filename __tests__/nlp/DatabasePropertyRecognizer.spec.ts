@@ -1,14 +1,16 @@
 import { resolve } from 'path';
 
 import { DatabaseProperty } from '../../modules/ast';
-import { DatabasePropertyRecognizer } from '../../modules/nlp/DatabasePropertyRecognizer';
+import { LanguageContentLoader, JsonLanguageContentLoader } from '../../modules/dict';
+import {
+    DatabasePropertyRecognizer,
+    NLPTrainer,
+    NLP
+} from '../../modules/nlp';
 import { NodeTypes } from '../../modules/req/NodeTypes';
-import { NLPTrainer } from '../../modules/nlp/NLPTrainer';
-import { NLP } from '../../modules/nlp/NLP';
 import { Options } from '../../modules/app/Options';
-import { LanguageContentLoader, JsonLanguageContentLoader } from '../../modules/dict/LanguageContentLoader';
 
-describe( 'DatabasePropertyRecognizerTest', () => {
+describe( 'DatabasePropertyRecognizer', () => {
 
     let nodes = [];
     let errors = [];

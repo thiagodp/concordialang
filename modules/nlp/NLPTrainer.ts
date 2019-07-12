@@ -1,11 +1,9 @@
 import * as deepcopy from 'deepcopy';
 
-import { LanguageContent } from '../dict/LanguageContent';
-import { LanguageContentLoader } from '../dict/LanguageContentLoader';
+import { LanguageContent, LanguageContentLoader } from '../dict';
 import { isDefined } from '../util/TypeChecking';
-
 import { NLP } from './NLP';
-import { NLPTrainingData, NLPTrainingIntentExample } from './NLPTrainingData';
+import { NLPTrainingData } from './NLPTrainingData';
 import { NLPTrainingDataConversor } from './NLPTrainingDataConversor';
 import { BASE_TRAINING_EXAMPLES } from './BaseTrainingExamples';
 
@@ -105,14 +103,24 @@ export class NLPTrainer {
             }
         }
 
-        // Copy "ui_element_type" from "testcase" to "ui"
-        if ( isDefined( content.nlp[ "testcase" ] )
-            && isDefined( content.nlp[ "testcase" ][ "ui_element_type" ] )
-            && isDefined( content.nlp[ "ui" ]
-            && ! isDefined( content.nlp[ "ui" ][ "ui_element_type" ] )
-        )
-        ) {
-            content.nlp[ "ui" ][ "ui_element_type" ] = content.nlp[ "testcase" ][ "ui_element_type" ];
+        // COPY SOME PARTS TO OTHERS
+        if ( isDefined( content.nlp[ "testcase" ] ) && isDefined( content.nlp[ "ui" ] ) ) {
+
+            // Copy "ui_element_type" from "testcase" to "ui"
+            if ( isDefined( content.nlp[ "testcase" ][ "ui_element_type" ] )
+                && ! isDefined( content.nlp[ "ui" ][ "ui_element_type" ] ) ) {
+                content.nlp[ "ui" ][ "ui_element_type" ] = content.nlp[ "testcase" ][ "ui_element_type" ];
+            }
+
+            // Add items of "ui_property" from "ui" to "testcase"
+            if ( isDefined( content.nlp[ "testcase" ][ "ui_property" ] )
+                && ! isDefined( content.nlp[ "ui" ][ "ui_property" ] ) ) {
+                const uiProperties = content.nlp[ "ui" ][ "ui_property" ];
+                for ( const p in uiProperties ) {
+                    content.nlp[ "testcase" ][ "ui_property" ][ p ] = content.nlp[ "ui" ][ "ui_property" ][ p ];
+                }
+            }
+
         }
 
         let conversor: NLPTrainingDataConversor = new NLPTrainingDataConversor();
