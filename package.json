@@ -65,8 +65,8 @@
   },
   "scripts": {
     "build": "rimraf dist && node copy.js && tsc",
-    "test": "node copy.js && jest --runInBand",
-    "all": "npm run build && jest --runInBand",
+    "test": "node copy.js && jest",
+    "all": "npm run build && npm run test",
     "start": "node bin/concordia.js",
     "postversion": "git push && git push --tags"
   },
