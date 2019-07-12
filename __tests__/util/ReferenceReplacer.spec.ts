@@ -1,8 +1,5 @@
 import { ReferenceReplacer } from '../../modules/util/ReferenceReplacer';
 
-/**
- * @author Thiago Delgado Pinto
- */
 describe( 'ReferenceReplacer', () => {
 
     let replacer = new ReferenceReplacer(); // under test

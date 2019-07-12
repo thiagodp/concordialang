@@ -1,8 +1,5 @@
 import { RuleBuilder } from '../../modules/nlp/RuleBuilder';
 
-/**
- * @author Thiago Delgado Pinto
- */
 describe( 'RuleBuilder', () => {
 
     let builder = new RuleBuilder(); // under test

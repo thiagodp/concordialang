@@ -1,9 +1,6 @@
 import { NLPTrainingDataConversor } from "../../modules/nlp/NLPTrainingDataConversor";
 import { NLPTrainingIntentExample } from '../../modules/nlp/NLPTrainingData';
 
-/**
- * @author Thiago Delgado Pinto
- */
 describe( 'NLPTrainingDataConversor', () => {
 
     let conversor: NLPTrainingDataConversor = new NLPTrainingDataConversor();

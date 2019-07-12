@@ -10,10 +10,6 @@ import {
 import { LanguageContentLoader, JsonLanguageContentLoader } from '../../modules/dict';
 import { Options } from '../../modules/app/Options';
 
-
-/**
- * @author Thiago Delgado Pinto
- */
 describe( 'NLPInPortuguese', () => {
 
     let nlp: NLP; // under test

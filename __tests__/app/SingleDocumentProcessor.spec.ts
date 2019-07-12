@@ -10,9 +10,6 @@ import { LexerBuilder } from '../../modules/lexer/LexerBuilder';
 import { NLPTrainer } from '../../modules/nlp/NLPTrainer';
 import { Options } from '../../modules/app/Options';
 
-/**
- * @author Thiago Delgado Pinto
- */
 describe( 'SingleDocumentProcessor', () => {
 
     const LANGUAGE = 'pt';

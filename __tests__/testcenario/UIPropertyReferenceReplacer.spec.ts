@@ -1,4 +1,4 @@
-import { Location } from "concordialang-types";
+import { LocalDate, LocalTime, LocalDateTime } from "js-joda";
 
 import { UIPropertyReferenceReplacer } from '../../modules/testscenario/UIPropertyReferenceReplacer';
 import { Step, EntityValueType } from '../../modules/ast';
@@ -6,7 +6,6 @@ import { SimpleCompiler, UIPropertyReferenceExtractor } from "../../modules/util
 import { AugmentedSpec } from "../../modules/req";
 import { LocatedException } from "../../modules/error/LocatedException";
 import { GenContext } from "../../modules/testscenario/PreTestCaseGenerator";
-import { LocalDate, LocalTime, LocalDateTime } from "js-joda";
 
 describe( 'UIPropertyReferenceReplacer', () => {
 

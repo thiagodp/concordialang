@@ -11,9 +11,6 @@ import { Parser } from "../../modules/parser/Parser";
 import { NLPBasedSentenceRecognizer } from "../../modules/nlp/NLPBasedSentenceRecognizer";
 import { NLPTrainer } from "../../modules/nlp/NLPTrainer";
 
-/**
- * @author Thiago Delgado Pinto
- */
 describe( 'TestCaseFileGenerator', () => {
 
     const LANGUAGE = 'en';

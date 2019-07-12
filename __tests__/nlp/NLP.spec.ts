@@ -9,9 +9,6 @@ import {
 } from '../../modules/nlp';
 import { UIPropertyTypes } from '../../modules/ast';
 
-/**
- * @author Thiago Delgado Pinto
- */
 describe( 'NLP', () => {
 
     let nlp: NLP; // under test

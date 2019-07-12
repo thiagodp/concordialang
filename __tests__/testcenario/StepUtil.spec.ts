@@ -8,7 +8,6 @@ import { NodeTypes } from '../../modules/req/NodeTypes';
 import { KeywordDictionary } from '../../modules/dict/KeywordDictionary';
 import { EnglishKeywordDictionary } from '../../modules/dict/EnglishKeywordDictionary';
 
-
 describe( 'StepUtil', () => {
 
     let util: StepUtil = null;
