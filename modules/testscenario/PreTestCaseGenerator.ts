@@ -1,11 +1,13 @@
 import * as arrayDiff from 'arr-diff';
 import * as deepcopy from 'deepcopy';
 import { basename } from 'path';
+import * as enumUtil from 'enum-util';
 import { Location } from 'concordialang-types';
 
 import { Document, Step, EntityValueType, UIElement, UIPropertyReference, UIPropertyTypes } from '../ast';
 import { Entities, NLPEntity, NLPUtil } from '../nlp';
-import { LocatedException } from '../error/LocatedException';
+import { LocatedException, RuntimeException, Warning } from '../error';
+import { SyntacticException } from '../parser/SyntacticException';
 import { CaseType } from '../app/CaseType';
 import { AugmentedSpec } from '../req/AugmentedSpec';
 import { EnglishKeywordDictionary } from '../dict/EnglishKeywordDictionary';
@@ -15,7 +17,6 @@ import { LanguageContentLoader } from '../dict/LanguageContentLoader';
 import { GivenWhenThenSentenceRecognizer } from '../nlp/GivenWhenThenSentenceRecognizer';
 import { LineChecker } from '../req/LineChecker';
 import { NodeTypes } from '../req/NodeTypes';
-import { RuntimeException } from '../error/RuntimeException';
 import { Symbols } from '../req/Symbols';
 import { TestPlan } from '../testcase/TestPlan';
 import { TestPlanner } from '../testcase/TestPlanner';
@@ -26,13 +27,16 @@ import { DataTestCaseAnalyzer, DTCAnalysisResult, DTCMap, UIEVariableToDTCMap } 
 import { Random } from '../testdata/random/Random';
 import { RandomString } from '../testdata/random/RandomString';
 import { UIElementValueGenerator, ValueGenContext } from '../testdata/UIElementValueGenerator';
-import { Actions } from '../util/Actions';
-import { convertCase, upperFirst } from '../util/CaseConversor';
-import { ReferenceReplacer } from '../util/ReferenceReplacer';
-import { isDefined } from '../util/TypeChecking';
-import { UIElementNameHandler } from '../util/UIElementNameHandler';
-import { UIElementPropertyExtractor } from '../util/UIElementPropertyExtractor';
-import { TargetTypeUtil } from '../util/TargetTypeUtil';
+import {
+    Actions,
+    convertCase, upperFirst,
+    ReferenceReplacer,
+    isDefined,
+    UIElementNameHandler,
+    UIElementPropertyExtractor,
+    UIPropertyReferenceExtractor,
+    TargetTypeUtil
+} from '../util';
 import { PreTestCase } from './PreTestCase';
 import { formatValueToUseInASentence } from './value-formater';
 import { UIPropertyReferenceReplacer } from './UIPropertyReferenceReplacer';
@@ -148,6 +152,12 @@ export class PreTestCaseGenerator {
         // # Replace CONSTANTS with VALUES
         this.replaceConstantsWithTheirValues( clonedSteps, language, ctx );
 
+        // # (NEW-2019-07-11) Check UI Property References
+        for ( let step of clonedSteps ) {
+            this.checkUIPropertyReferencesOfStep( step, langContent, ctx );
+        }
+        // ---
+
         // # Replace UI LITERALS without VALUES with VALUES
         let newSteps: Step[] = this.fillUILiteralsWithoutValueInSteps(
             clonedSteps, language, langContent.keywords, ctx
@@ -159,6 +169,7 @@ export class PreTestCaseGenerator {
         // console.log( newSteps.map( ( e ) => e.content ) );
 
         for ( let step of newSteps ) {
+
             const inputDataActionEntity = this.extractDataInputActionEntity( step ); // 'fill'-like entity
             if ( isDefined( inputDataActionEntity ) && ( this.hasValue( step ) || this.hasNumber( step ) ) ) {
                 this.replaceUIElementsWithUILiterals(
@@ -596,7 +607,9 @@ export class PreTestCaseGenerator {
 
             const uipRefReplacer = new UIPropertyReferenceReplacer();
 
-            step.content = uipRefReplacer.replaceUIPropertyReferencesByTheirValue( step, uieVariableToValueMap, ctx );
+            step.content = uipRefReplacer.replaceUIPropertyReferencesByTheirValue(
+                step, step.uiePropertyReferences, uieVariableToValueMap, ctx );
+
             // Update NLP !
             this._variantSentenceRec.recognizeSentences( language, [ step ], ctx.errors, ctx.warnings );
 
@@ -884,9 +897,72 @@ export class PreTestCaseGenerator {
     // UI PROPERTY REFERENCES
     //
 
-    // extractUIPropertyReferencesFromSteps( steps: Step[] ): UIPropertyReference[] {
+    hasUIPropertyReference( step: Step ): boolean {
+        if ( ! step || ! step.nlpResult ) {
+            return false;
+        }
+        return this._nlpUtil.hasEntityNamed( Entities.UI_PROPERTY_REF, step.nlpResult );
+    }
 
-    // }
+    checkUIPropertyReferencesOfStep( step: Step, langContent: LanguageContent, ctx: GenContext ): void {
+        const extractor = new UIPropertyReferenceExtractor();
+        const references: UIPropertyReference[] = extractor.extractReferences(
+            step.nlpResult.entities, step.location.line );
+
+        for ( let uipRef of references ) {
+
+            if ( uipRef.location && ! uipRef.location.filePath ) {
+                uipRef.location.filePath = ctx.doc.fileInfo.path;
+            }
+
+            this.adjustPropertyOfUIPropertyReference( uipRef, langContent );
+
+            if ( ! this.hasUIPropertyReferenceACorrectProperty( uipRef ) ) {
+                const msg: string = 'Incorrect reference to a UI Element property: ' + uipRef.content;
+                const e = new SyntacticException( msg, uipRef.location );
+                ctx.errors.push( e );
+                continue;
+
+            } else {
+                if ( ! step.uiePropertyReferences ) {
+                    step.uiePropertyReferences = [];
+                }
+                step.uiePropertyReferences.push( uipRef );
+            }
+
+            // CURRENTLY, only the property `value` is supported <<<
+            if ( ! this.isUIPropertyReferenceToValue( uipRef, langContent ) ) {
+                const msg: string = 'Unsupported reference to a UI Element property: ' + uipRef.content;
+                const e = new Warning( msg, uipRef.location );
+                ctx.warnings.push( e );
+            }
+        }
+    }
+
+    adjustPropertyOfUIPropertyReference( uipRef: UIPropertyReference, langContent: LanguageContent ): void {
+        // TO-DO: refactor magic values
+        const langUIProperties = ( ( langContent.nlp[ "ui" ] || {} )[ "ui_property" ] || {} );
+        const uipRefProp = uipRef.property.toLowerCase();
+        for ( let prop in langUIProperties ) {
+            const propValues = langUIProperties[ prop ] || [];
+            if ( uipRefProp == prop || propValues.indexOf( uipRefProp ) >= 0 ) {
+                uipRef.property = <UIPropertyTypes> prop;
+            }
+        }
+    }
+
+    hasUIPropertyReferenceACorrectProperty( uipRef: UIPropertyReference ): boolean {
+        const values: string[] = enumUtil.getValues( UIPropertyTypes );
+        return values.indexOf( uipRef.property.toLowerCase() ) >= 0;
+    }
+
+    isUIPropertyReferenceToValue( uipRef: UIPropertyReference, langContent: LanguageContent ): boolean {
+        const VALUE = 'value';
+        // TO-DO: refactor magic values
+        const valuesOfThePropertyValue: string[] = ( ( langContent.nlp[ "ui" ] || {} )[ "ui_property" ] || {} )[ VALUE ] || {};
+        const uipRefProp = uipRef.property.toLowerCase();
+        return VALUE === uipRefProp || valuesOfThePropertyValue.indexOf( uipRefProp ) >= 0;
+    }
 
     //
     // OTHER
@@ -916,13 +992,6 @@ export class PreTestCaseGenerator {
             return false;
         }
         return this._nlpUtil.hasEntityNamed( Entities.NUMBER, step.nlpResult );
-    }
-
-    hasUIPropertyReference( step: Step ): boolean {
-        if ( ! step || ! step.nlpResult ) {
-            return false;
-        }
-        return this._nlpUtil.hasEntityNamed( Entities.UI_PROPERTY_REF, step.nlpResult );
     }
 
     randomString(): string {

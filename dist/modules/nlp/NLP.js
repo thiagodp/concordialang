@@ -1,10 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const Bravey = require("../../lib/bravey"); // .js file
-const enumUtil = require("enum-util");
 const ValueTypeDetector_1 = require("../util/ValueTypeDetector");
 const nlp_1 = require("../nlp");
-const UIPropertyTypes_1 = require("../ast/UIPropertyTypes");
 /**
  * Natural Language Processor
  *
@@ -217,13 +215,12 @@ class EntityRecognizerMaker {
      * @return Bravey.EntityRecognizer
      */
     makeUIPropertyReference(entityName) {
-        const values = enumUtil.getValues(UIPropertyTypes_1.UIPropertyTypes);
         var valueRec = new Bravey.RegexEntityRecognizer(entityName, 10);
-        const regexStr = '\\{[a-zA-ZÀ-ÖØ-öø-ÿ]+\\:?[a-zA-ZÀ-ÖØ-öø-ÿ]*\\|(' + values.join('|') + ')\\}';
+        const regexStr = '\\{[ ]*[a-zA-ZÀ-ÖØ-öø-ÿ]+[a-zA-ZÀ-ÖØ-öø-ÿ ]*\\:?[a-zA-ZÀ-ÖØ-öø-ÿ ]*\\|[a-zA-ZÀ-ÖØ-öø-ÿ ]+\\}';
         const regex = new RegExp(regexStr, "g");
         valueRec.addMatch(regex, function (match) {
             const value = match[0] || '';
-            return value.substring(1, value.length - 1); // exclude { and }
+            return value.substring(1, value.length - 1).trim(); // exclude { and } and trim
         }, 100 // priority
         );
         return valueRec;

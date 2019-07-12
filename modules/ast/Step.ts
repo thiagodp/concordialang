@@ -1,5 +1,6 @@
 import { ContentNode } from "./Node";
 import { NLPResult } from "../nlp/NLPResult";
+import { UIPropertyReference } from "./UIPropertyReference";
 
 export interface Step extends ContentNode {
 
@@ -74,6 +75,13 @@ export interface Step extends ContentNode {
      * e.g., drag "foo" from <#a> to <#b>   <-- "foo" is the value
      */
     values?: string[] | number[];
+
+    /**
+     * References to UI Elements' properties.
+     *
+     * e.g., see {Foo|value}
+     */
+    uiePropertyReferences?: UIPropertyReference[];
 
 }
 

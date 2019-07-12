@@ -18,7 +18,6 @@ const SyntaxRules_1 = require("./SyntaxRules");
 class UIPropertyRecognizer {
     constructor(_nlp) {
         this._nlp = _nlp;
-        this._valueTypeDetector = new ValueTypeDetector_1.ValueTypeDetector();
         this._syntaxRules = this.buildSyntaxRules();
     }
     nlp() {

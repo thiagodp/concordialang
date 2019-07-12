@@ -1,7 +1,7 @@
 import { basename } from 'path';
 
-import { Step, EntityValueType, UIPropertyReference, UIPropertyTypes, UIElement } from "../ast";
-import { UIPropertyReferenceExtractor, UIElementNameHandler, ReferenceReplacer, isDefined } from "../util";
+import { Step, EntityValueType, UIPropertyTypes, UIElement, UIPropertyReference } from "../ast";
+import { UIElementNameHandler, isDefined } from "../util";
 import { RuntimeException } from '../error/RuntimeException';
 import { Symbols } from '../req/Symbols';
 import { GenContext } from "./PreTestCaseGenerator";
@@ -13,26 +13,22 @@ export class UIPropertyReferenceReplacer {
     /**
      * Returns the step content with all the UIProperty references replaced by their value.
      *
-     * @param step Input step
+     * @param step Input step.
+     * @param uiePropertyReferences References to replace.
      * @param uieVariableToValueMap Map that contains the value of all UIElement variables.
      * @param ctx Generation context.
      */
     replaceUIPropertyReferencesByTheirValue(
         step: Step,
+        uiePropertyReferences: UIPropertyReference[],
         uieVariableToValueMap: Map< string, EntityValueType >,
         ctx: GenContext
     ): string {
 
-        const extractor = new UIPropertyReferenceExtractor();
-        const uipReferences: UIPropertyReference[] = extractor.extractReferences(
-            step.nlpResult, step.location.line );
-
         const uieNameHandler = new UIElementNameHandler();
-        const referenceReplacer = new ReferenceReplacer();
-
         let content = step.content;
 
-        for ( let uipRef of uipReferences ) {
+        for ( let uipRef of uiePropertyReferences || [] ) {
 
             // Properties different from VALUE are not supported yet
             if ( uipRef.property != UIPropertyTypes.VALUE ) {

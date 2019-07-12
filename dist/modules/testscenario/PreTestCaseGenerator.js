@@ -11,12 +11,15 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const arrayDiff = require("arr-diff");
 const deepcopy = require("deepcopy");
 const path_1 = require("path");
+const enumUtil = require("enum-util");
+const ast_1 = require("../ast");
 const nlp_1 = require("../nlp");
+const error_1 = require("../error");
+const SyntacticException_1 = require("../parser/SyntacticException");
 const CaseType_1 = require("../app/CaseType");
 const EnglishKeywordDictionary_1 = require("../dict/EnglishKeywordDictionary");
 const LineChecker_1 = require("../req/LineChecker");
 const NodeTypes_1 = require("../req/NodeTypes");
-const RuntimeException_1 = require("../error/RuntimeException");
 const Symbols_1 = require("../req/Symbols");
 const TestPlan_1 = require("../testcase/TestPlan");
 const DataGenerator_1 = require("../testdata/DataGenerator");
@@ -25,13 +28,7 @@ const DataTestCaseAnalyzer_1 = require("../testdata/DataTestCaseAnalyzer");
 const Random_1 = require("../testdata/random/Random");
 const RandomString_1 = require("../testdata/random/RandomString");
 const UIElementValueGenerator_1 = require("../testdata/UIElementValueGenerator");
-const Actions_1 = require("../util/Actions");
-const CaseConversor_1 = require("../util/CaseConversor");
-const ReferenceReplacer_1 = require("../util/ReferenceReplacer");
-const TypeChecking_1 = require("../util/TypeChecking");
-const UIElementNameHandler_1 = require("../util/UIElementNameHandler");
-const UIElementPropertyExtractor_1 = require("../util/UIElementPropertyExtractor");
-const TargetTypeUtil_1 = require("../util/TargetTypeUtil");
+const util_1 = require("../util");
 const PreTestCase_1 = require("./PreTestCase");
 const value_formater_1 = require("./value-formater");
 const UIPropertyReferenceReplacer_1 = require("./UIPropertyReferenceReplacer");
@@ -66,9 +63,9 @@ class PreTestCaseGenerator {
         this.maxRandomStringSize = maxRandomStringSize;
         this.randomTriesToInvalidValues = randomTriesToInvalidValues;
         this._nlpUtil = new nlp_1.NLPUtil();
-        this._uiePropExtractor = new UIElementPropertyExtractor_1.UIElementPropertyExtractor();
+        this._uiePropExtractor = new util_1.UIElementPropertyExtractor();
         this._lineChecker = new LineChecker_1.LineChecker();
-        this._targetTypeUtil = new TargetTypeUtil_1.TargetTypeUtil();
+        this._targetTypeUtil = new util_1.TargetTypeUtil();
         const random = new Random_1.Random(seed);
         this._randomString = new RandomString_1.RandomString(random);
         this._dtcAnalyzer = new DataTestCaseAnalyzer_1.DataTestCaseAnalyzer(seed);
@@ -119,6 +116,11 @@ class PreTestCaseGenerator {
             let clonedSteps = this.cloneSteps(steps);
             // # Replace CONSTANTS with VALUES
             this.replaceConstantsWithTheirValues(clonedSteps, language, ctx);
+            // # (NEW-2019-07-11) Check UI Property References
+            for (let step of clonedSteps) {
+                this.checkUIPropertyReferencesOfStep(step, langContent, ctx);
+            }
+            // ---
             // # Replace UI LITERALS without VALUES with VALUES
             let newSteps = this.fillUILiteralsWithoutValueInSteps(clonedSteps, language, langContent.keywords, ctx);
             // # (NEW-2019-03-16) Replace UI ELEMENTS with VALUES by UI LITERALS
@@ -126,7 +128,7 @@ class PreTestCaseGenerator {
             // console.log( newSteps.map( ( e ) => e.content ) );
             for (let step of newSteps) {
                 const inputDataActionEntity = this.extractDataInputActionEntity(step); // 'fill'-like entity
-                if (TypeChecking_1.isDefined(inputDataActionEntity) && (this.hasValue(step) || this.hasNumber(step))) {
+                if (util_1.isDefined(inputDataActionEntity) && (this.hasValue(step) || this.hasNumber(step))) {
                     this.replaceUIElementsWithUILiterals([step], language, langContent, ctx, UIElementReplacementOption.JUST_INPUT_ACTIONS);
                 }
                 // # (NEW-2019-06-19) Replace UI ELEMENTS without input actions and values by UI LITERALS
@@ -255,7 +257,7 @@ class PreTestCaseGenerator {
     // CONSTANTS
     //
     replaceConstantsWithTheirValues(steps, language, ctx) {
-        const refReplacer = new ReferenceReplacer_1.ReferenceReplacer();
+        const refReplacer = new util_1.ReferenceReplacer();
         // # Replace CONSTANTS with VALUES
         for (let step of steps) {
             if (!step.nlpResult) {
@@ -320,7 +322,7 @@ class PreTestCaseGenerator {
         // console.log( step.nodeType, '<'.repeat( 20 ) );
         let nodeType = step.nodeType;
         let prefix = this.stepPrefixNodeType(nodeType, keywords);
-        const prefixAnd = CaseConversor_1.upperFirst(!keywords.stepAnd ? 'And' : (keywords.stepAnd[0] || 'And'));
+        const prefixAnd = util_1.upperFirst(!keywords.stepAnd ? 'And' : (keywords.stepAnd[0] || 'And'));
         const keywordI = !keywords.i ? 'I' : (keywords.i[0] || 'I');
         const keywordWith = !keywords.with ? 'with' : (keywords.with[0] || 'with');
         const keywordValid = !keywords.valid ? 'valid' : (keywords.valid[0] || 'valid');
@@ -387,7 +389,7 @@ class PreTestCaseGenerator {
         }
         if (namesNotFound.length > 0) {
             const msg = 'Referenced UI Elements not found: ' + namesNotFound.join(', ');
-            const err = new RuntimeException_1.RuntimeException(msg);
+            const err = new error_1.RuntimeException(msg);
             ctx.errors.push(err);
         }
         return all;
@@ -403,10 +405,10 @@ class PreTestCaseGenerator {
         return Array.from(uniqueNames);
     }
     replaceUIElementsWithUILiterals(steps, language, langContent, ctx, option) {
-        const refReplacer = new ReferenceReplacer_1.ReferenceReplacer();
+        const refReplacer = new util_1.ReferenceReplacer();
         for (let step of steps) {
             let dataInputActionEntity = this.extractDataInputActionEntity(step);
-            let hasInputAction = TypeChecking_1.isDefined(dataInputActionEntity);
+            let hasInputAction = util_1.isDefined(dataInputActionEntity);
             if (UIElementReplacementOption.ALL !== option) {
                 // Ignore steps with an input data action - i.e., 'fill' like steps
                 if (hasInputAction && UIElementReplacementOption.NO_INPUT_ACTIONS === option
@@ -439,7 +441,7 @@ class PreTestCaseGenerator {
         const dataInputActionEntity = this.extractDataInputActionEntity(step);
         if (this.hasUIPropertyReference(step)) {
             const uipRefReplacer = new UIPropertyReferenceReplacer_1.UIPropertyReferenceReplacer();
-            step.content = uipRefReplacer.replaceUIPropertyReferencesByTheirValue(step, uieVariableToValueMap, ctx);
+            step.content = uipRefReplacer.replaceUIPropertyReferencesByTheirValue(step, step.uiePropertyReferences, uieVariableToValueMap, ctx);
             // Update NLP !
             this._variantSentenceRec.recognizeSentences(language, [step], ctx.errors, ctx.warnings);
         }
@@ -460,7 +462,7 @@ class PreTestCaseGenerator {
         const keywords = langContent.keywords || new EnglishKeywordDictionary_1.EnglishKeywordDictionary();
         let nodeType = step.nodeType;
         let prefix = this.stepPrefixNodeType(nodeType, keywords);
-        const prefixAnd = CaseConversor_1.upperFirst(!keywords ? 'And' : (keywords.stepAnd[0] || 'And'));
+        const prefixAnd = util_1.upperFirst(!keywords ? 'And' : (keywords.stepAnd[0] || 'And'));
         const keywordI = !keywords.i ? 'I' : (keywords.i[0] || 'I');
         const keywordWith = !keywords.with ? 'with' : (keywords.with[0] || 'with');
         const keywordValid = !keywords.valid ? 'valid' : (keywords.valid[0] || 'valid');
@@ -469,7 +471,7 @@ class PreTestCaseGenerator {
         const keywordFrom = !keywords.from ? 'from' : (keywords.from[0] || 'from');
         let steps = [], oracles = [], line = step.location.line, count = 0;
         // console.log( 'step', step.content );
-        const uieNameHandler = new UIElementNameHandler_1.UIElementNameHandler();
+        const uieNameHandler = new util_1.UIElementNameHandler();
         for (let entity of uieEntities) {
             // Change to "AND" when more than one entity is available
             if (count > 0) {
@@ -480,7 +482,7 @@ class PreTestCaseGenerator {
             let [featureName, uieNameWithoutFeature] = uieNameHandler.extractNamesOf(uieName);
             let variable;
             let uie;
-            if (TypeChecking_1.isDefined(featureName)) {
+            if (util_1.isDefined(featureName)) {
                 variable = uieName;
                 uie = ctx.spec.uiElementByVariable(uieName);
             }
@@ -489,7 +491,7 @@ class PreTestCaseGenerator {
                 variable = !uie ? uieName : (!uie.info ? uieName : uie.info.fullVariableName);
             }
             let value = uieVariableToValueMap.get(variable);
-            if (!TypeChecking_1.isDefined(value)) {
+            if (!util_1.isDefined(value)) {
                 const fileName = path_1.basename(ctx.doc.fileInfo.path);
                 const locStr = '(' + step.location.line + ',' + step.location.column + ')';
                 const msg = 'Could not retrieve a value from ' +
@@ -497,17 +499,17 @@ class PreTestCaseGenerator {
                     ' in ' + fileName + ' ' + locStr + '. It will receive an empty value.';
                 // console.log( uieVariableToValueMap );
                 // console.log( variable, '<'.repeat( 10 ) );
-                ctx.warnings.push(new RuntimeException_1.RuntimeException(msg));
+                ctx.warnings.push(new error_1.RuntimeException(msg));
                 value = '';
             }
-            let uieLiteral = TypeChecking_1.isDefined(uie) && TypeChecking_1.isDefined(uie.info) ? uie.info.uiLiteral : null;
+            let uieLiteral = util_1.isDefined(uie) && util_1.isDefined(uie.info) ? uie.info.uiLiteral : null;
             // console.log( 'uieName', uieName, 'uieLiteral', uieLiteral, 'variable', variable, 'doc', ctx.doc.fileInfo.path );
             if (null === uieLiteral) { // Should never happen since Spec defines Literals for mapped UI Elements
-                uieLiteral = CaseConversor_1.convertCase(variable, this.uiLiteralCaseOption);
+                uieLiteral = util_1.convertCase(variable, this.uiLiteralCaseOption);
                 const msg = 'Could not retrieve a literal from ' +
                     Symbols_1.Symbols.UI_ELEMENT_PREFIX + variable +
                     Symbols_1.Symbols.UI_ELEMENT_SUFFIX + '. Generating the identification "' + uieLiteral + '"';
-                ctx.warnings.push(new RuntimeException_1.RuntimeException(msg, step.location));
+                ctx.warnings.push(new error_1.RuntimeException(msg, step.location));
             }
             // Analyze whether it is an input target type
             let targetType = '';
@@ -547,7 +549,7 @@ class PreTestCaseGenerator {
                 else {
                     expectedResult = keywordValid;
                 }
-                if (TypeChecking_1.isDefined(langContent.testCaseNames)) {
+                if (util_1.isDefined(langContent.testCaseNames)) {
                     dtc = langContent.testCaseNames[uieTestPlan.dtc] || (uieTestPlan.dtc || '??? (no data test case)').toString();
                 }
                 else {
@@ -570,7 +572,7 @@ class PreTestCaseGenerator {
                 line: line++,
                 filePath: step.location.filePath
             };
-            newStep.isInvalidValue = (TypeChecking_1.isDefined(uieTestPlan) && uieTestPlan.result === DataTestCaseAnalyzer_1.DTCAnalysisResult.INVALID);
+            newStep.isInvalidValue = (util_1.isDefined(uieTestPlan) && uieTestPlan.result === DataTestCaseAnalyzer_1.DTCAnalysisResult.INVALID);
             // console.log( newStep );
             // let newStep = {
             //     nodeType: nodeType,
@@ -618,7 +620,7 @@ class PreTestCaseGenerator {
         // const keywordRandom = ! keywords.random ? 'random' : ( keywords.random[ 0 ] || 'random' );
         let oracles = [], line = steps[0].location.line, count = 0;
         for (let step of steps) {
-            if (TypeChecking_1.isDefined(step.location)) {
+            if (util_1.isDefined(step.location)) {
                 step.location.line = line;
             }
             if (step.nodeType === NodeTypes_1.NodeTypes.STEP_OTHERWISE) {
@@ -651,8 +653,62 @@ class PreTestCaseGenerator {
     //
     // UI PROPERTY REFERENCES
     //
-    // extractUIPropertyReferencesFromSteps( steps: Step[] ): UIPropertyReference[] {
-    // }
+    hasUIPropertyReference(step) {
+        if (!step || !step.nlpResult) {
+            return false;
+        }
+        return this._nlpUtil.hasEntityNamed(nlp_1.Entities.UI_PROPERTY_REF, step.nlpResult);
+    }
+    checkUIPropertyReferencesOfStep(step, langContent, ctx) {
+        const extractor = new util_1.UIPropertyReferenceExtractor();
+        const references = extractor.extractReferences(step.nlpResult.entities, step.location.line);
+        for (let uipRef of references) {
+            if (uipRef.location && !uipRef.location.filePath) {
+                uipRef.location.filePath = ctx.doc.fileInfo.path;
+            }
+            this.adjustPropertyOfUIPropertyReference(uipRef, langContent);
+            if (!this.hasUIPropertyReferenceACorrectProperty(uipRef)) {
+                const msg = 'Incorrect reference to a UI Element property: ' + uipRef.content;
+                const e = new SyntacticException_1.SyntacticException(msg, uipRef.location);
+                ctx.errors.push(e);
+                continue;
+            }
+            else {
+                if (!step.uiePropertyReferences) {
+                    step.uiePropertyReferences = [];
+                }
+                step.uiePropertyReferences.push(uipRef);
+            }
+            // CURRENTLY, only the property `value` is supported <<<
+            if (!this.isUIPropertyReferenceToValue(uipRef, langContent)) {
+                const msg = 'Unsupported reference to a UI Element property: ' + uipRef.content;
+                const e = new error_1.Warning(msg, uipRef.location);
+                ctx.warnings.push(e);
+            }
+        }
+    }
+    adjustPropertyOfUIPropertyReference(uipRef, langContent) {
+        // TO-DO: refactor magic values
+        const langUIProperties = ((langContent.nlp["ui"] || {})["ui_property"] || {});
+        const uipRefProp = uipRef.property.toLowerCase();
+        for (let prop in langUIProperties) {
+            const propValues = langUIProperties[prop] || [];
+            if (uipRefProp == prop || propValues.indexOf(uipRefProp) >= 0) {
+                uipRef.property = prop;
+            }
+        }
+    }
+    hasUIPropertyReferenceACorrectProperty(uipRef) {
+        const values = enumUtil.getValues(ast_1.UIPropertyTypes);
+        return values.indexOf(uipRef.property.toLowerCase()) >= 0;
+    }
+    isUIPropertyReferenceToValue(uipRef, langContent) {
+        const VALUE = 'value';
+        // TO-DO: refactor magic values
+        const valuesOfThePropertyValue = ((langContent.nlp["ui"] || {})["ui_property"] || {})[VALUE] || {};
+        const uipRefProp = uipRef.property.toLowerCase();
+        return VALUE === uipRefProp || valuesOfThePropertyValue.indexOf(uipRefProp) >= 0;
+    }
     //
     // OTHER
     //
@@ -661,10 +717,10 @@ class PreTestCaseGenerator {
             .find(e => e.entity === nlp_1.Entities.UI_ACTION && this.isDataInputAction(e.value)) || null;
     }
     isDataInputAction(action) {
-        return Actions_1.Actions.FILL === action ||
-            Actions_1.Actions.SELECT === action ||
-            Actions_1.Actions.APPEND === action ||
-            Actions_1.Actions.ATTACH_FILE === action;
+        return util_1.Actions.FILL === action ||
+            util_1.Actions.SELECT === action ||
+            util_1.Actions.APPEND === action ||
+            util_1.Actions.ATTACH_FILE === action;
     }
     hasValue(step) {
         if (!step || !step.nlpResult) {
@@ -677,12 +733,6 @@ class PreTestCaseGenerator {
             return false;
         }
         return this._nlpUtil.hasEntityNamed(nlp_1.Entities.NUMBER, step.nlpResult);
-    }
-    hasUIPropertyReference(step) {
-        if (!step || !step.nlpResult) {
-            return false;
-        }
-        return this._nlpUtil.hasEntityNamed(nlp_1.Entities.UI_PROPERTY_REF, step.nlpResult);
     }
     randomString() {
         return this._randomString.between(this.minRandomStringSize, this.maxRandomStringSize);
@@ -708,7 +758,7 @@ class PreTestCaseGenerator {
             default:
                 prefix = !nodeType ? '???' : nodeType.toString();
         }
-        return CaseConversor_1.upperFirst(prefix);
+        return util_1.upperFirst(prefix);
     }
 }
 exports.PreTestCaseGenerator = PreTestCaseGenerator;

@@ -2,7 +2,7 @@ import { Location } from "concordialang-types";
 
 import { UIPropertyReferenceReplacer } from '../../modules/testscenario/UIPropertyReferenceReplacer';
 import { Step, EntityValueType } from '../../modules/ast';
-import { SimpleCompiler } from "../../modules/util";
+import { SimpleCompiler, UIPropertyReferenceExtractor } from "../../modules/util";
 import { AugmentedSpec } from "../../modules/req";
 import { LocatedException } from "../../modules/error/LocatedException";
 import { GenContext } from "../../modules/testscenario/PreTestCaseGenerator";
@@ -16,6 +16,7 @@ describe( 'UIPropertyReferenceReplacer', () => {
 
         function chk( line: string, key: string, value: any, expected: string ): void {
 
+            const extractor = new UIPropertyReferenceExtractor();
             const replacer = new UIPropertyReferenceReplacer(); // immutable
 
             const compiler = new SimpleCompiler( 'en' );
@@ -38,7 +39,9 @@ describe( 'UIPropertyReferenceReplacer', () => {
             uieVarToValue.set( key, value );
 
             let step: Step = doc.feature.scenarios[ 0 ].variants[ 0 ].sentences[ 1 ]; // Then...
-            const sentence = replacer.replaceUIPropertyReferencesByTheirValue( step, uieVarToValue, ctx );
+            let references = extractor.extractReferences( step.nlpResult.entities, step.location.line );
+
+            const sentence = replacer.replaceUIPropertyReferencesByTheirValue( step, references, uieVarToValue, ctx );
             expect( sentence ).toEqual( expected );
         }
 

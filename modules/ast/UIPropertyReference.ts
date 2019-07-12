@@ -1,13 +1,15 @@
+import { Location } from "concordialang-types";
+
 import { UIPropertyTypes } from "./UIPropertyTypes";
 import { ContentNode } from "./Node";
 
 export class UIPropertyReference implements ContentNode {
 
-    nodeType = 'ui_property_ref';
-    location = null;
+    nodeType: string = 'ui_property_ref';
+    location: Location = null;
     content: string;
 
     uiElementName: string;
-    property: UIPropertyTypes;
-    propertyValue?: string | number | boolean; // possibly dynamic
+    property: UIPropertyTypes | string;
+
 }

@@ -10,17 +10,15 @@ class UIPropertyReferenceReplacer {
     /**
      * Returns the step content with all the UIProperty references replaced by their value.
      *
-     * @param step Input step
+     * @param step Input step.
+     * @param uiePropertyReferences References to replace.
      * @param uieVariableToValueMap Map that contains the value of all UIElement variables.
      * @param ctx Generation context.
      */
-    replaceUIPropertyReferencesByTheirValue(step, uieVariableToValueMap, ctx) {
-        const extractor = new util_1.UIPropertyReferenceExtractor();
-        const uipReferences = extractor.extractReferences(step.nlpResult, step.location.line);
+    replaceUIPropertyReferencesByTheirValue(step, uiePropertyReferences, uieVariableToValueMap, ctx) {
         const uieNameHandler = new util_1.UIElementNameHandler();
-        const referenceReplacer = new util_1.ReferenceReplacer();
         let content = step.content;
-        for (let uipRef of uipReferences) {
+        for (let uipRef of uiePropertyReferences || []) {
             // Properties different from VALUE are not supported yet
             if (uipRef.property != ast_1.UIPropertyTypes.VALUE) {
                 const fileName = path_1.basename(ctx.doc.fileInfo.path);

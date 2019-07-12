@@ -1,13 +1,10 @@
 import Bravey = require('../../lib/bravey'); // .js file
-import * as enumUtil from 'enum-util';
-
 import { adjustValueToTheRightType } from '../util/ValueTypeDetector';
 import {
     NLPResult,
     Entities,
     NLPTrainingData
 } from "../nlp";
-import { UIPropertyTypes } from '../ast/UIPropertyTypes';
 
 /**
  * Natural Language Processor
@@ -268,15 +265,14 @@ class EntityRecognizerMaker {
      * @return Bravey.EntityRecognizer
      */
     public makeUIPropertyReference( entityName: string ): any {
-        const values: string[] = enumUtil.getValues( UIPropertyTypes );
         var valueRec = new Bravey.RegexEntityRecognizer( entityName, 10 );
-        const regexStr: string = '\\{[a-zA-ZÀ-ÖØ-öø-ÿ]+\\:?[a-zA-ZÀ-ÖØ-öø-ÿ]*\\|(' + values.join( '|' ) + ')\\}';
+        const regexStr: string = '\\{[ ]*[a-zA-ZÀ-ÖØ-öø-ÿ]+[a-zA-ZÀ-ÖØ-öø-ÿ ]*\\:?[a-zA-ZÀ-ÖØ-öø-ÿ ]*\\|[a-zA-ZÀ-ÖØ-öø-ÿ ]+\\}';
         const regex = new RegExp( regexStr, "g" );
         valueRec.addMatch(
             regex,
             function( match ) {
                 const value = match[ 0 ] || '';
-                return value.substring( 1, value.length - 1 ); // exclude { and }
+                return value.substring( 1, value.length - 1 ).trim(); // exclude { and } and trim
             },
             100 // priority
         );

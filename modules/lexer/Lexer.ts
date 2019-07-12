@@ -54,7 +54,7 @@ export class Lexer {
     private _lexersMap: Map< string, NodeLexer< any > > =
         new Map< string, NodeLexer< any > >(); // iterable in insertion order
     private _lastLexer: NodeLexer< any > = null;
-    private _subLexers: TagSubLexer[] = [];
+    private _tagSubLexers: TagSubLexer[] = [];
 
     private _inLongString: boolean = false;
     private _mustRecognizeAsText: boolean = false;
@@ -78,7 +78,7 @@ export class Lexer {
             throw new Error( 'Cannot load a dictionary for the language: ' + _defaultLanguage );
         }
 
-        this._subLexers = [
+        this._tagSubLexers = [
             new TagSubLexer( ReservedTags.IGNORE, dictionary.tagIgnore ),
 
             new TagSubLexer( ReservedTags.GENERATED, dictionary.tagGenerated ),
@@ -97,7 +97,7 @@ export class Lexer {
         this._lexers = [
             new LongStringLexer()
             , new LanguageLexer( dictionary.language )
-            , new TagLexer( this._subLexers )
+            , new TagLexer( this._tagSubLexers )
             , new ImportLexer( dictionary.import )
             , new FeatureLexer( dictionary.feature )
             , new BackgroundLexer( dictionary.background )
@@ -318,7 +318,7 @@ export class Lexer {
             }
         }
 
-        for ( let subLexer of this._subLexers ) {
+        for ( let subLexer of this._tagSubLexers ) {
             this.updateKeywordBasedLexer( subLexer, dict );
         }
 

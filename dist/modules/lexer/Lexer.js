@@ -53,14 +53,14 @@ class Lexer {
         this._lexers = [];
         this._lexersMap = new Map(); // iterable in insertion order
         this._lastLexer = null;
-        this._subLexers = [];
+        this._tagSubLexers = [];
         this._inLongString = false;
         this._mustRecognizeAsText = false;
         const dictionary = this.loadDictionary(_defaultLanguage); // may throw Error
         if (!dictionary) {
             throw new Error('Cannot load a dictionary for the language: ' + _defaultLanguage);
         }
-        this._subLexers = [
+        this._tagSubLexers = [
             new TagLexer_1.TagSubLexer(ast_1.ReservedTags.IGNORE, dictionary.tagIgnore),
             new TagLexer_1.TagSubLexer(ast_1.ReservedTags.GENERATED, dictionary.tagGenerated),
             new TagLexer_1.TagSubLexer(ast_1.ReservedTags.FAIL, dictionary.tagFail),
@@ -74,7 +74,7 @@ class Lexer {
         this._lexers = [
             new LongStringLexer_1.LongStringLexer(),
             new LanguageLexer_1.LanguageLexer(dictionary.language),
-            new TagLexer_1.TagLexer(this._subLexers),
+            new TagLexer_1.TagLexer(this._tagSubLexers),
             new ImportLexer_1.ImportLexer(dictionary.import),
             new FeatureLexer_1.FeatureLexer(dictionary.feature),
             new BackgroundLexer_1.BackgroundLexer(dictionary.background),
@@ -266,7 +266,7 @@ class Lexer {
                 this.updateKeywordBasedLexer(lexer, dict);
             }
         }
-        for (let subLexer of this._subLexers) {
+        for (let subLexer of this._tagSubLexers) {
             this.updateKeywordBasedLexer(subLexer, dict);
         }
         return dict;

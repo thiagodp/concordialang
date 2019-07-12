@@ -8,27 +8,40 @@ const Symbols_1 = require("../req/Symbols");
  */
 class UIPropertyReferenceExtractor {
     /**
-     * Extract references from a NLP result.
+     * Extracts references from a NLP result.
      *
      * @param nlpResult Result of a NLP
      * @param line Line of a text file. Optional, defaults to 1.
      */
-    extractReferences(nlpResult, line = 1) {
+    extractReferences(entities, line = 1) {
+        //return entities.map( e => this.extractFromEntity( e, line ) ).filter( r => !! r );
         let references = [];
-        for (let e of nlpResult.entities) {
-            if (e.entity != nlp_1.Entities.UI_PROPERTY_REF) {
+        for (let e of entities || []) {
+            let ref = this.extractFromEntity(e, line);
+            if (!ref) {
                 continue;
             }
-            const [uieName, prop] = e.value.split(Symbols_1.Symbols.UI_PROPERTY_REF_SEPARATOR);
-            let ref = new UIPropertyReference_1.UIPropertyReference();
-            ref.content = e.value;
-            ref.uiElementName = uieName;
-            ref.property = prop;
-            ref.location = { column: e.position, line: line };
-            // no value yet
             references.push(ref);
         }
         return references;
+    }
+    /**
+     * Extracts a reference from an entity. Returns `null` whether the entity is not a UI Property Reference.
+     *
+     * @param nlpEntity NLP Entity
+     * @param line Line of a text file. Optional, defaults to 1.
+     */
+    extractFromEntity(nlpEntity, line = 1) {
+        if (nlpEntity.entity != nlp_1.Entities.UI_PROPERTY_REF) {
+            return null;
+        }
+        const [uieName, prop] = nlpEntity.value.split(Symbols_1.Symbols.UI_PROPERTY_REF_SEPARATOR);
+        let ref = new UIPropertyReference_1.UIPropertyReference();
+        ref.uiElementName = uieName.trim();
+        ref.property = prop.trim();
+        ref.content = ref.uiElementName + Symbols_1.Symbols.UI_PROPERTY_REF_SEPARATOR + ref.property;
+        ref.location = { column: nlpEntity.position, line: line };
+        return ref;
     }
 }
 exports.UIPropertyReferenceExtractor = UIPropertyReferenceExtractor;

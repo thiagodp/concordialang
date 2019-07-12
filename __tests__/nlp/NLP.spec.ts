@@ -423,6 +423,22 @@ describe( 'NLP', () => {
                     recogUIPropertyRef( ' {F:A|value} ', 'F:A|value' );
                 } );
 
+                it( 'with property that contain spaces', () => {
+                    recogUIPropertyRef( '{D:A|comprimento mínimo}', 'D:A|comprimento mínimo' );
+                } );
+
+                it( 'with spaces in the left', () => {
+                    recogUIPropertyRef( '{ D:A|comprimento mínimo}', 'D:A|comprimento mínimo' );
+                } );
+
+                it( 'with spaces in the right', () => {
+                    recogUIPropertyRef( '{D:A|comprimento mínimo }', 'D:A|comprimento mínimo' );
+                } );
+
+                it( 'with spaces around', () => {
+                    recogUIPropertyRef( '{ D:A|comprimento mínimo }', 'D:A|comprimento mínimo' );
+                } );
+
             } );
 
             describe( 'does not recognize', () => {
@@ -439,9 +455,9 @@ describe( 'NLP', () => {
                     recogUIPropertyRef( ' { |value} ', null );
                 } );
 
-                it( 'with an unsupported property', () => {
-                    recogUIPropertyRef( ' {A|foo} ', null );
-                } );
+                // it( 'with an unsupported property', () => {
+                //     recogUIPropertyRef( ' {A|foo} ', null );
+                // } );
 
             } );
 

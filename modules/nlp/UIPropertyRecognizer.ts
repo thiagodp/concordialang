@@ -3,7 +3,7 @@ import { NLPResult, Entities } from '../nlp';
 import { ContentNode, UIProperty, EntityValue } from '../ast';
 import { LocatedException } from '../error/LocatedException';
 import { isDefined } from '../util/TypeChecking';
-import { adjustValueToTheRightType, ValueTypeDetector } from '../util/ValueTypeDetector';
+import { adjustValueToTheRightType } from '../util/ValueTypeDetector';
 import { UIPropertyTypes } from '../ast/UIPropertyTypes';
 import { Intents } from './Intents';
 import { NLP } from './NLP';
@@ -21,7 +21,6 @@ import { DEFAULT_UI_PROPERTY_SYNTAX_RULE, UI_PROPERTY_SYNTAX_RULES } from './Syn
 export class UIPropertyRecognizer {
 
     private _syntaxRules: any[];
-    private readonly _valueTypeDetector: ValueTypeDetector = new ValueTypeDetector();
 
     constructor( private _nlp: NLP ) {
         this._syntaxRules = this.buildSyntaxRules();

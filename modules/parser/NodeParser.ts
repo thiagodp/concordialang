@@ -10,7 +10,7 @@ import { ParsingContext } from './ParsingContext';
 export interface NodeParser< T extends Node > {
 
     /**
-     * Perform a syntatic analysis of the given node. ???
+     * Perform a syntactic analysis of the given node.
      *
      * @param node Node to be analyzed.
      * @param context Parsing context.
