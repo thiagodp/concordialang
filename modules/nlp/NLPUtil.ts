@@ -1,6 +1,11 @@
 import { NLPResult } from "./NLPResult";
 import { NLPEntity } from "./NLPEntity";
 
+/**
+ * NLP utilities.
+ *
+ * @author Thiago Delgado Pinto
+ */
 export class NLPUtil {
 
     entitiesNamed( name: string, nlpResult: NLPResult ): NLPEntity[] {
