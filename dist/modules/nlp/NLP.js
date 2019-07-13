@@ -262,7 +262,9 @@ class EntityRecognizerMaker {
         const regex = /(-?[0-9]+(?:\.[0-9]+)?)/g;
         valueRec.addMatch(regex, function (match) {
             // console.log( 'match ', match );
-            return match[0].toString().trim();
+            // return match[ 0 ].toString().trim();
+            const value = match[0].toString().trim();
+            return Number(value);
         }, 10 // priority
         );
         return valueRec;

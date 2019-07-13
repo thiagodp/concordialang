@@ -1,5 +1,10 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+/**
+ * NLP utilities.
+ *
+ * @author Thiago Delgado Pinto
+ */
 class NLPUtil {
     entitiesNamed(name, nlpResult) {
         return nlpResult.entities.filter(e => name === e.entity);

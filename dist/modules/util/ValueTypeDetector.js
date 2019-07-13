@@ -134,7 +134,7 @@ exports.ValueTypeDetector = ValueTypeDetector;
  * @param valueType Desired value type. Optional. If not informed, the type is detected.
  */
 function adjustValueToTheRightType(v, valueType) {
-    const vType = valueType || (new ValueTypeDetector()).detect(v.trim());
+    const vType = valueType || (new ValueTypeDetector()).detect(v.toString().trim());
     let valueAfter;
     switch (vType) {
         case ValueType.INTEGER: ; // continue
