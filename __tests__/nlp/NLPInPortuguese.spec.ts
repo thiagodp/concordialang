@@ -451,7 +451,7 @@ describe( 'NLPInPortuguese', () => {
                 let uiLiterals = r.entities.filter( e => e.entity === UI_LITERAL );
                 let numbers = r.entities.filter( e => e.entity === NUMBER );
                 expect( uiLiterals[ 0 ].value ).toEqual( 'bar' );
-                expect( numbers[ 0 ].value ).toEqual( '-53358731722743' );
+                expect( numbers[ 0 ].value ).toEqual( -53358731722743 );
             } );
 
         });

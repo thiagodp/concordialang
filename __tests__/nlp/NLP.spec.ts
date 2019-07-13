@@ -116,28 +116,28 @@ describe( 'NLP', () => {
 
         describe( 'number', () => {
 
-            function recogNumber( text: string, expected: string | null, debug: boolean = false ): NLPResult | null {
+            function recogNumber( text: string, expected: string | number | null, debug: boolean = false ): NLPResult | null {
                 return recog( text, expected, Entities.NUMBER, debug );
             }
 
             it( 'positive integer', () => {
-                recogNumber( ' 3 ', '3' );
+                recogNumber( ' 3 ', 3 );
             } );
 
             it( 'positive double', () => {
-                recogNumber( ' 3.14159 ', '3.14159' );
+                recogNumber( ' 3.14159 ', 3.14159 );
             } );
 
             it( 'negative integer', () => {
-                recogNumber( ' -3 ', '-3' );
+                recogNumber( ' -3 ', -3 );
             } );
 
             it( 'longer negative integer', () => {
-                recogNumber( ' -53358731722743 ', '-53358731722743' );
+                recogNumber( ' -53358731722743 ', -53358731722743 );
             } );
 
             it( 'negative double', () => {
-                recogNumber( ' -3.14159 ', '-3.14159' );
+                recogNumber( ' -3.14159 ', -3.14159 );
             } );
 
             describe( 'does not recognize inside a string', () => {

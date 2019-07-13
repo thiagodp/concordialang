@@ -322,7 +322,9 @@ class EntityRecognizerMaker {
             regex,
             function( match ) {
                 // console.log( 'match ', match );
-                return match[ 0 ].toString().trim();
+                // return match[ 0 ].toString().trim();
+                const value = match[ 0 ].toString().trim();
+                return Number( value );
             },
             10 // priority
         );
