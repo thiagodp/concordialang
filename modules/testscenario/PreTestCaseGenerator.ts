@@ -152,11 +152,20 @@ export class PreTestCaseGenerator {
         // # Replace CONSTANTS with VALUES
         this.replaceConstantsWithTheirValues( clonedSteps, language, ctx );
 
-        // # (NEW-2019-07-11) Check UI Property References
+        // # Check UI Property References
+        const referenceExtractor = new UIPropertyReferenceExtractor();
         for ( let step of clonedSteps ) {
-            this.checkUIPropertyReferencesOfStep( step, langContent, ctx );
+
+            const references: UIPropertyReference[] = referenceExtractor.extractReferences(
+                step.nlpResult.entities, step.location.line );
+
+            let languageIndependentReferences: UIPropertyReference[] =
+                this.checkUIPropertyReferences( references, langContent, ctx );
+
+            if ( ! step.uiePropertyReferences ) {
+                step.uiePropertyReferences = languageIndependentReferences;
+            }
         }
-        // ---
 
         // # Replace UI LITERALS without VALUES with VALUES
         let newSteps: Step[] = this.fillUILiteralsWithoutValueInSteps(
@@ -317,7 +326,7 @@ export class PreTestCaseGenerator {
             this.normalizeOracleSentences( stepOracles, langContent.keywords );
 
             // # (2019-07-13)
-            // this.replaceUIPropertyReferencesInsideValues( completeSteps, stepOracles, uieVariableToValueMap );
+            this.replaceUIPropertyReferencesInsideValues( completeSteps, stepOracles, uieVariableToValueMap, language, langContent, ctx );
             // ---
 
             all.push( new PreTestCase( plan, completeSteps, stepOracles ) );
@@ -907,26 +916,62 @@ export class PreTestCaseGenerator {
      * @param steps Steps.
      * @param oracles Oracles.
      * @param uieVariableToValueMap Value map.
+     * @param language Language.
      */
     replaceUIPropertyReferencesInsideValues(
         steps: Step[],
         oracles: Step[],
-        uieVariableToValueMap: Map< string, EntityValueType >
+        uieVariableToValueMap: Map< string, EntityValueType >,
+        language: string,
+        langContent: LanguageContent,
+        ctx: GenContext
     ): void {
-        // const uipRefReplacer = new UIPropertyReferenceReplacer();
+        for ( let step of steps ) {
+            this.replaceUIPropertyReferencesInsideValuesOfStep( step, uieVariableToValueMap, language, langContent, ctx );
+        }
 
-        // for ( let step of steps ) {
-        //     const valueEntities = this._nlpUtil.entitiesNamed( Entities.VALUE, step.nlpResult );
-        //     for ( let entity of valueEntities ) {
-        //         const before: string = entity.value;
-        //         // const after: string = uipRefReplacer.replaceUIPropertyReferencesByTheirValue(
-        //         //     step, before,
-        //     }
-        // }
+        for ( let step of oracles ) {
+            this.replaceUIPropertyReferencesInsideValuesOfStep( step, uieVariableToValueMap, language, langContent, ctx );
+        }
+    }
 
-        // for ( let step of oracles ) {
+    replaceUIPropertyReferencesInsideValuesOfStep(
+        step: Step,
+        uieVariableToValueMap: Map< string, EntityValueType >,
+        language: string,
+        langContent: LanguageContent,
+        ctx: GenContext
+    ): void {
+        const extractor = new UIPropertyReferenceExtractor();
+        const replacer = new UIPropertyReferenceReplacer();
+        const valueEntities = this._nlpUtil.entitiesNamed( Entities.VALUE, step.nlpResult );
 
-        // }
+        const contentBefore: string = step.content;
+
+        // For all the values in the step
+        for ( let entity of valueEntities ) {
+
+            const before: string = entity.value; // Assumes that it is a language-independent value (!)
+            const references: UIPropertyReference[] = extractor.extractReferencesFromValue( before, step.location.line );
+
+            this.checkUIPropertyReferences( references, langContent, ctx ); // Also transforms into language-independent format
+
+            const after: string = replacer.replaceUIPropertyReferencesByTheirValue(
+                step, before, references, uieVariableToValueMap, ctx, true );
+            if ( after == before ) {
+                continue;
+            }
+            // Change the value of the step
+            step.content = step.content.replace(
+                Symbols.VALUE_WRAPPER + before + Symbols.VALUE_WRAPPER,
+                Symbols.VALUE_WRAPPER + after + Symbols.VALUE_WRAPPER
+                )
+        }
+
+        // Updates NLP if needed
+        if ( contentBefore != step.content ) {
+            this._variantSentenceRec.recognizeSentences( language, [ step ], ctx.errors, ctx.warnings );
+        }
     }
 
     //
@@ -946,19 +991,16 @@ export class PreTestCaseGenerator {
     }
 
     /**
-     * Checks whether the UIE property references of a given Step are correct and supported.
+     * Checks whether the given UIE property references are correct and supported.
      * Errors or warning are added to the generation context.
      *
-     * @param step Step.
+     * @param references References to check.
      * @param langContent Language content.
      * @param ctx Generation context.
      */
-    checkUIPropertyReferencesOfStep( step: Step, langContent: LanguageContent, ctx: GenContext ): void {
+    checkUIPropertyReferences( references: UIPropertyReference[], langContent: LanguageContent, ctx: GenContext ): UIPropertyReference[] {
 
-        const referenceExtractor = new UIPropertyReferenceExtractor();
-        const references: UIPropertyReference[] = referenceExtractor.extractReferences(
-            step.nlpResult.entities, step.location.line );
-
+        let languageIndependentReferences: UIPropertyReference[] = [];
         for ( let uipRef of references ) {
 
             if ( uipRef.location && ! uipRef.location.filePath ) {
@@ -974,10 +1016,7 @@ export class PreTestCaseGenerator {
                 continue;
 
             } else {
-                if ( ! step.uiePropertyReferences ) {
-                    step.uiePropertyReferences = [];
-                }
-                step.uiePropertyReferences.push( uipRef );
+                languageIndependentReferences.push( uipRef );
             }
 
             // CURRENTLY, only the property `value` is supported <<<
@@ -987,6 +1026,8 @@ export class PreTestCaseGenerator {
                 ctx.warnings.push( e );
             }
         }
+
+        return languageIndependentReferences;
     }
 
     /**
