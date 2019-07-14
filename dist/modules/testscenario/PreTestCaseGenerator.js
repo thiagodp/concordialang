@@ -445,14 +445,14 @@ class PreTestCaseGenerator {
     }
     fillUIElementWithValueAndReplaceByUILiteralInStep(inputStep, langContent, uieVariableToUIETestPlanMap, uieVariableToValueMap, language, ctx) {
         let step = deepcopy(inputStep);
-        const dataInputActionEntity = this.extractDataInputActionEntity(step);
         if (this.hasUIPropertyReference(step)) {
             const uipRefReplacer = new UIPropertyReferenceReplacer_1.UIPropertyReferenceReplacer();
             step.content = uipRefReplacer.replaceUIPropertyReferencesByTheirValue(step, step.content, step.uiePropertyReferences, uieVariableToValueMap, ctx);
             // Update NLP !
             this._variantSentenceRec.recognizeSentences(language, [step], ctx.errors, ctx.warnings);
         }
-        else if (null === dataInputActionEntity || this.hasValue(step) || this.hasNumber(step)) {
+        const dataInputActionEntity = this.extractDataInputActionEntity(step);
+        if (null === dataInputActionEntity || this.hasValue(step) || this.hasNumber(step)) {
             let steps = [step];
             this.replaceUIElementsWithUILiterals(steps, language, langContent, ctx, UIElementReplacementOption.ALL);
             // console.log( "EXIT 1" );

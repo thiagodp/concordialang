@@ -614,8 +614,6 @@ export class PreTestCaseGenerator {
 
         let step = deepcopy( inputStep );
 
-        const dataInputActionEntity: NLPEntity = this.extractDataInputActionEntity( step );
-
         if ( this.hasUIPropertyReference( step ) ) {
 
             const uipRefReplacer = new UIPropertyReferenceReplacer();
@@ -625,9 +623,10 @@ export class PreTestCaseGenerator {
 
             // Update NLP !
             this._variantSentenceRec.recognizeSentences( language, [ step ], ctx.errors, ctx.warnings );
+        }
 
-
-        } else if ( null === dataInputActionEntity || this.hasValue( step ) || this.hasNumber( step ) ) {
+        const dataInputActionEntity: NLPEntity = this.extractDataInputActionEntity( step );
+        if ( null === dataInputActionEntity || this.hasValue( step ) || this.hasNumber( step ) ) {
             let steps = [ step ];
             this.replaceUIElementsWithUILiterals( steps, language, langContent, ctx, UIElementReplacementOption.ALL );
             // console.log( "EXIT 1" );
