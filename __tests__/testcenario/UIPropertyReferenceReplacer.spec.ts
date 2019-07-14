@@ -40,7 +40,8 @@ describe( 'UIPropertyReferenceReplacer', () => {
             let step: Step = doc.feature.scenarios[ 0 ].variants[ 0 ].sentences[ 1 ]; // Then...
             let references = extractor.extractReferences( step.nlpResult.entities, step.location.line );
 
-            const sentence = replacer.replaceUIPropertyReferencesByTheirValue( step, references, uieVarToValue, ctx );
+            const sentence = replacer.replaceUIPropertyReferencesByTheirValue(
+                step, step.content, references, uieVarToValue, ctx );
             expect( sentence ).toEqual( expected );
         }
 

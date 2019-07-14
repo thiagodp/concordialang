@@ -8,8 +8,9 @@ const Symbols_1 = require("../req/Symbols");
  * TO-DO: l10n
  *
  * @param value Value to format
+ * @param insideStringValue Indicates if the value is already inside a string. Optional, defaults to `false`.
  */
-function formatValueToUseInASentence(value) {
+function formatValueToUseInASentence(value, insideStringValue = false) {
     let formattedValue = value;
     // TODO: l10n / i18n
     if (value instanceof js_joda_1.LocalTime) {
@@ -21,7 +22,7 @@ function formatValueToUseInASentence(value) {
     else if (value instanceof js_joda_1.LocalDateTime) {
         formattedValue = value.format(js_joda_1.DateTimeFormatter.ofPattern('dd/MM/yyyy HH:mm')).toString();
     }
-    return 'number' === typeof formattedValue
+    return insideStringValue || 'number' === typeof formattedValue
         ? formattedValue
         : Symbols_1.Symbols.VALUE_WRAPPER + formattedValue + Symbols_1.Symbols.VALUE_WRAPPER;
 }

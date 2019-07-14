@@ -1,6 +1,7 @@
+import * as cloneRegExp from 'clone-regexp';
 import { Location } from 'concordialang-types';
 
-import { Entities, NLPEntity } from "../nlp";
+import { Entities, NLPEntity, UI_PROPERTY_REF_REGEX } from "../nlp";
 import { UIPropertyReference } from '../ast/UIPropertyReference';
 import { Symbols } from '../req/Symbols';
 
@@ -47,16 +48,54 @@ export class UIPropertyReferenceExtractor {
             return null;
         }
 
-        const [ uieName, prop ] = nlpEntity.value.split( Symbols.UI_PROPERTY_REF_SEPARATOR );
+        return this.makeReferenceFromString(
+            nlpEntity.value,
+            { column: nlpEntity.position, line: line } as Location
+        );
+    }
 
+    /**
+     * Extracts references from a Concordia value.
+     *
+     * @param text Text containing one or more references.
+     * @param line Line. Optional, defaults to 1.
+     */
+    extractReferencesFromValue(
+        text: string,
+        line: number = 1
+    ): UIPropertyReference[] {
+        let regex: RegExp = cloneRegExp( UI_PROPERTY_REF_REGEX );
+        let references: UIPropertyReference[] = [];
+        let result: RegExpExecArray;
+        while ( ( result = regex.exec( text ) ) !== null ) {
+            const value = result[ 0 ] || '';
+            let ref = this.makeReferenceFromString(
+                value,
+                { column: result.index, line: line } as Location
+            );
+            references.push( ref );
+        }
+        return references;
+    }
+
+
+    /**
+     * Creates a UIE property reference from a string.
+     *
+     * @param reference String with the reference, e.g., "{Feature 1:Age|value}"
+     * @param location Location
+     */
+    makeReferenceFromString( reference: string, location: Location ): UIPropertyReference {
+        let value = reference;
+        if ( value.indexOf( Symbols.UI_ELEMENT_PREFIX ) >= 0 ) {
+            value = value.substring( 1, value.length - 1 ).trim(); // exclude { and } and trim
+        }
+        const [ uieName, prop ] = value.split( Symbols.UI_PROPERTY_REF_SEPARATOR );
         let ref = new UIPropertyReference();
         ref.uiElementName = uieName.trim();
         ref.property = prop.trim();
         ref.content = ref.uiElementName + Symbols.UI_PROPERTY_REF_SEPARATOR + ref.property;
-
-        ref.location = { column: nlpEntity.position, line: line } as Location;
-
+        ref.location = location;
         return ref;
     }
-
 }

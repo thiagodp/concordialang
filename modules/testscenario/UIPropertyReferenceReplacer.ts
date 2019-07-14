@@ -5,28 +5,36 @@ import { UIElementNameHandler, isDefined } from "../util";
 import { RuntimeException } from '../error/RuntimeException';
 import { Symbols } from '../req/Symbols';
 import { GenContext } from "./PreTestCaseGenerator";
-import { formatValueToUseInASentence } from './value-formater';
+import { formatValueToUseInASentence } from './value-formatter';
 
-
+/**
+ * Replaces UIE property references.
+ *
+ * @author Thiago Delgado Pinto
+ */
 export class UIPropertyReferenceReplacer {
 
     /**
-     * Returns the step content with all the UIProperty references replaced by their value.
+     * Returns the content with all the UIProperty references replaced by their value.
      *
      * @param step Input step.
+     * @param content Input content.
      * @param uiePropertyReferences References to replace.
      * @param uieVariableToValueMap Map that contains the value of all UIElement variables.
      * @param ctx Generation context.
+     * @param insideStringValue Indicates if the value is already inside a string. Optional, defaults to `false`.
      */
     replaceUIPropertyReferencesByTheirValue(
         step: Step,
+        content: string,
         uiePropertyReferences: UIPropertyReference[],
         uieVariableToValueMap: Map< string, EntityValueType >,
-        ctx: GenContext
+        ctx: GenContext,
+        insideStringValue: boolean = false
     ): string {
 
         const uieNameHandler = new UIElementNameHandler();
-        let content = step.content;
+        let newContent = content;
 
         for ( let uipRef of uiePropertyReferences || [] ) {
 
@@ -66,13 +74,12 @@ export class UIPropertyReferenceReplacer {
                 ctx.warnings.push( new RuntimeException( msg ) );
                 value = '';
             }
-            const formattedValue = formatValueToUseInASentence( value );
+            const formattedValue = formatValueToUseInASentence( value, insideStringValue );
             const refStr: string = Symbols.UI_ELEMENT_PREFIX + uipRef.content + Symbols.UI_ELEMENT_SUFFIX;
-            content = content.replace( refStr, formattedValue );
+            newContent = newContent.replace( refStr, formattedValue );
         }
 
-        return content;
+        return newContent;
     }
-
 
 }

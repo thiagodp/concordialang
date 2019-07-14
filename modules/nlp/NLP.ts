@@ -1,4 +1,6 @@
 import Bravey = require('../../lib/bravey'); // .js file
+import * as cloneRegExp from 'clone-regexp';
+
 import { adjustValueToTheRightType } from '../util/ValueTypeDetector';
 import {
     NLPResult,
@@ -193,6 +195,30 @@ interface MappedNLP {
     isTrained: boolean;
 }
 
+//
+// REGEXES
+//  - all of them have /g
+//  - It is recommended to clone before using, because of lastIndex when using exec()
+//
+
+export const VALUE_REGEX = /"(?:[^"\\]|\\.)*"/g;
+// export const UI_ELEMENT_REF_REGEX = new RegExp( '\{[a-zA-ZÀ-ÖØ-öø-ÿ][^|<\r\n\>\}]*\}', 'g' );
+export const UI_ELEMENT_REF_REGEX = /\{[a-zA-ZÀ-ÖØ-öø-ÿ][^|<\r\n\>\}]*\}/g;
+// export const UI_PROPERTY_REF_REGEX = new RegExp( '\\{[ ]*[a-zA-ZÀ-ÖØ-öø-ÿ]+[a-zA-ZÀ-ÖØ-öø-ÿ ]*\\:?[a-zA-ZÀ-ÖØ-öø-ÿ ]*\\|[a-zA-ZÀ-ÖØ-öø-ÿ ]+\\}', 'g' );
+export const UI_PROPERTY_REF_REGEX = /\{[ ]*[a-zA-ZÀ-ÖØ-öø-ÿ][a-zA-ZÀ-ÖØ-öø-ÿ0-9 _-]*(\:[a-zA-ZÀ-ÖØ-öø-ÿ][a-zA-ZÀ-ÖØ-öø-ÿ0-9 _-]*)?\|[a-zA-ZÀ-ÖØ-öø-ÿ][a-zA-ZÀ-ÖØ-öø-ÿ ]+\}/g;
+// export const UI_LITERAL_REGEX = /(?:\<)((?:#|@|\.|\/\/|~|[a-zA-ZÀ-ÖØ-öø-ÿ])[^<\r\n\>]*)(?:\>)/g;
+// export const UI_LITERAL_REGEX = /(?:\<)((?:#|@|\.|\/\/|~|[a-zA-ZÀ-ÖØ-öø-ÿ])[^<\r\n]*)(?:\>)/g; // Issue #19
+export const UI_LITERAL_REGEX = /(?:\<)((?:#|@|\.|\/\/|~|[a-zA-ZÀ-ÖØ-öø-ÿ0-9 ]?)[^<\r\n]*[^\\>])(?:\>)/g;
+export const NUMBER_REGEX = /(-?[0-9]+(?:\.[0-9]+)?)/g;
+// export const QUERY_REGEX = new RegExp( '"(?:\t| )*SELECT[^"]+"', "gi" );
+export const QUERY_REGEX = /"(?:\t| )*SELECT[^"]+"/gi;
+export const CONSTANT_REGEX = /\[[a-zA-ZÀ-ÖØ-öø-ÿ_][a-zA-ZÀ-ÖØ-öø-ÿ0-9 _-]*\]/g;
+// export const VALUE_LIST_REGEX = /\[(?: )*((?:,) ?|([0-9]+(\.[0-9]+)?|\"(.*[^\\])\"))+(?: )*\]/g;
+// export const VALUE_LIST_REGEX = /(\[[\t ]*([^\]])*[\t ]*[^\\]\])+/g; // only [ anything ]
+// export const VALUE_LIST_REGEX = /(?:\[[\t ]*)(("[^"]*"|(-?[0-9]+(\.[0-9]+)?))*,?[\t ]?)+[^\]]?(?:\])/g; // [ value or number ]
+export const VALUE_LIST_REGEX = /(?:\[[\t ]*)(("(\\"|[^"])+"|(-?[0-9]+(\.[0-9]+)?))+,?[\t ]?)+[^\]]?(?:\])/g; // [ value or number ]
+export const STATE_REGEX = /\~[a-zA-ZÀ-ÖØ-öø-ÿ_][a-zA-ZÀ-ÖØ-öø-ÿ0-9 _-]*\~/g;
+export const COMMAND_REGEX = /'(?:[^'\\]|\\.)*'/g;
 
 /**
  * EntityRecognizer maker
@@ -212,7 +238,7 @@ class EntityRecognizerMaker {
      */
     public makeValue( entityName: string ): any {
         let valueRec = new Bravey.RegexEntityRecognizer( entityName, 10 );
-        const regex = /"(?:[^"\\]|\\.)*"/g;
+        let regex = cloneRegExp( VALUE_REGEX );
         valueRec.addMatch(
             regex,
             function( match ) {
@@ -237,8 +263,8 @@ class EntityRecognizerMaker {
      * @return Bravey.EntityRecognizer
      */
     public makeUIElementReference( entityName: string ): any {
-        var valueRec = new Bravey.RegexEntityRecognizer( entityName, 10 );
-        const regex = new RegExp( '\{[a-zA-ZÀ-ÖØ-öø-ÿ][^|<\r\n\>\}]*\}', "g" );
+        let valueRec = new Bravey.RegexEntityRecognizer( entityName, 10 );
+        let regex = cloneRegExp( UI_ELEMENT_REF_REGEX );
         valueRec.addMatch(
             regex,
             function( match ) {
@@ -265,9 +291,8 @@ class EntityRecognizerMaker {
      * @return Bravey.EntityRecognizer
      */
     public makeUIPropertyReference( entityName: string ): any {
-        var valueRec = new Bravey.RegexEntityRecognizer( entityName, 10 );
-        const regexStr: string = '\\{[ ]*[a-zA-ZÀ-ÖØ-öø-ÿ]+[a-zA-ZÀ-ÖØ-öø-ÿ ]*\\:?[a-zA-ZÀ-ÖØ-öø-ÿ ]*\\|[a-zA-ZÀ-ÖØ-öø-ÿ ]+\\}';
-        const regex = new RegExp( regexStr, "g" );
+        let valueRec = new Bravey.RegexEntityRecognizer( entityName, 10 );
+        let regex = cloneRegExp( UI_PROPERTY_REF_REGEX );
         valueRec.addMatch(
             regex,
             function( match ) {
@@ -291,10 +316,8 @@ class EntityRecognizerMaker {
      * @return Bravey.EntityRecognizer
      */
     public makeUILiteral( entityName: string ): any {
-        var valueRec = new Bravey.RegexEntityRecognizer( entityName, 10 );
-        // const regex = /(?:\<)((?:#|@|\.|\/\/|~|[a-zA-ZÀ-ÖØ-öø-ÿ])[^<\r\n\>]*)(?:\>)/g;
-        // const regex = /(?:\<)((?:#|@|\.|\/\/|~|[a-zA-ZÀ-ÖØ-öø-ÿ])[^<\r\n]*)(?:\>)/g; // Issue #19
-        const regex = /(?:\<)((?:#|@|\.|\/\/|~|[a-zA-ZÀ-ÖØ-öø-ÿ0-9 ]?)[^<\r\n]*[^\\>])(?:\>)/g;
+        let valueRec = new Bravey.RegexEntityRecognizer( entityName, 10 );
+        let regex = cloneRegExp( UI_LITERAL_REGEX );
         valueRec.addMatch(
             regex,
             function( match ) {
@@ -316,8 +339,8 @@ class EntityRecognizerMaker {
      * @return Bravey.EntityRecognizer
      */
     public makeNumber( entityName: string ): any {
-        var valueRec = new Bravey.RegexEntityRecognizer( entityName, 10 );
-        const regex = /(-?[0-9]+(?:\.[0-9]+)?)/g;
+        let valueRec = new Bravey.RegexEntityRecognizer( entityName, 10 );
+        let regex = cloneRegExp( NUMBER_REGEX );
         valueRec.addMatch(
             regex,
             function( match ) {
@@ -342,7 +365,7 @@ class EntityRecognizerMaker {
      */
     public makeQuery( entityName: string ): any {
         let valueRec = new Bravey.RegexEntityRecognizer( entityName, 10 );
-        const regex = new RegExp( '"(?:\t| )*SELECT[^"]+"', "gi" );
+        let regex = cloneRegExp( QUERY_REGEX );
         valueRec.addMatch(
             regex,
             function( match ) {
@@ -367,8 +390,8 @@ class EntityRecognizerMaker {
      * @returns Bravey.EntityRecognizer
      */
     public makeConstant( entityName: string ): any {
-        var valueRec = new Bravey.RegexEntityRecognizer( entityName, 10 );
-        const regex = /\[[a-zA-ZÀ-ÖØ-öø-ÿ_][a-zA-ZÀ-ÖØ-öø-ÿ0-9 _-]*\]/g;
+        let valueRec = new Bravey.RegexEntityRecognizer( entityName, 10 );
+        let regex = cloneRegExp( CONSTANT_REGEX );
         valueRec.addMatch(
             regex,
             function( match ) {
@@ -387,11 +410,8 @@ class EntityRecognizerMaker {
      * @returns Bravey.EntityRecognizer
      */
     public makeValueList( entityName: string ): any {
-        var valueRec = new Bravey.RegexEntityRecognizer( entityName, 10 );
-        // const regex = /\[(?: )*((?:,) ?|([0-9]+(\.[0-9]+)?|\"(.*[^\\])\"))+(?: )*\]/g;
-        // const regex = /(\[[\t ]*([^\]])*[\t ]*[^\\]\])+/g; // only [ anything ]
-        // const regex = /(?:\[[\t ]*)(("[^"]*"|(-?[0-9]+(\.[0-9]+)?))*,?[\t ]?)+[^\]]?(?:\])/g; // [ value or number ]
-        const regex = /(?:\[[\t ]*)(("(\\"|[^"])+"|(-?[0-9]+(\.[0-9]+)?))+,?[\t ]?)+[^\]]?(?:\])/g; // [ value or number ]
+        let valueRec = new Bravey.RegexEntityRecognizer( entityName, 10 );
+        let regex = cloneRegExp( VALUE_LIST_REGEX );
         valueRec.addMatch(
             regex,
             function( match ) {
@@ -436,8 +456,8 @@ class EntityRecognizerMaker {
      * @returns Bravey.EntityRecognizer
      */
     public makeState( entityName: string ): any {
-        var valueRec = new Bravey.RegexEntityRecognizer( entityName, 10 );
-        const regex = /\~[a-zA-ZÀ-ÖØ-öø-ÿ_][a-zA-ZÀ-ÖØ-öø-ÿ0-9 _-]*\~/g;
+        let valueRec = new Bravey.RegexEntityRecognizer( entityName, 10 );
+        let regex = cloneRegExp( STATE_REGEX );
         valueRec.addMatch(
             regex,
             function( match ) {
@@ -460,7 +480,7 @@ class EntityRecognizerMaker {
      */
     public makeCommand( entityName: string ): any {
         let valueRec = new Bravey.RegexEntityRecognizer( entityName, 10 );
-        const regex = /'(?:[^'\\]|\\.)*'/g;
+        let regex = cloneRegExp( COMMAND_REGEX );
         valueRec.addMatch(
             regex,
             function( match ) {

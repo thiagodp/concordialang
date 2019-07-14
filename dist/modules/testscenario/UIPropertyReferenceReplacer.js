@@ -5,19 +5,26 @@ const ast_1 = require("../ast");
 const util_1 = require("../util");
 const RuntimeException_1 = require("../error/RuntimeException");
 const Symbols_1 = require("../req/Symbols");
-const value_formater_1 = require("./value-formater");
+const value_formatter_1 = require("./value-formatter");
+/**
+ * Replaces UIE property references.
+ *
+ * @author Thiago Delgado Pinto
+ */
 class UIPropertyReferenceReplacer {
     /**
-     * Returns the step content with all the UIProperty references replaced by their value.
+     * Returns the content with all the UIProperty references replaced by their value.
      *
      * @param step Input step.
+     * @param content Input content.
      * @param uiePropertyReferences References to replace.
      * @param uieVariableToValueMap Map that contains the value of all UIElement variables.
      * @param ctx Generation context.
+     * @param insideStringValue Indicates if the value is already inside a string. Optional, defaults to `false`.
      */
-    replaceUIPropertyReferencesByTheirValue(step, uiePropertyReferences, uieVariableToValueMap, ctx) {
+    replaceUIPropertyReferencesByTheirValue(step, content, uiePropertyReferences, uieVariableToValueMap, ctx, insideStringValue = false) {
         const uieNameHandler = new util_1.UIElementNameHandler();
-        let content = step.content;
+        let newContent = content;
         for (let uipRef of uiePropertyReferences || []) {
             // Properties different from VALUE are not supported yet
             if (uipRef.property != ast_1.UIPropertyTypes.VALUE) {
@@ -53,11 +60,11 @@ class UIPropertyReferenceReplacer {
                 ctx.warnings.push(new RuntimeException_1.RuntimeException(msg));
                 value = '';
             }
-            const formattedValue = value_formater_1.formatValueToUseInASentence(value);
+            const formattedValue = value_formatter_1.formatValueToUseInASentence(value, insideStringValue);
             const refStr = Symbols_1.Symbols.UI_ELEMENT_PREFIX + uipRef.content + Symbols_1.Symbols.UI_ELEMENT_SUFFIX;
-            content = content.replace(refStr, formattedValue);
+            newContent = newContent.replace(refStr, formattedValue);
         }
-        return content;
+        return newContent;
     }
 }
 exports.UIPropertyReferenceReplacer = UIPropertyReferenceReplacer;

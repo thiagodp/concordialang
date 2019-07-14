@@ -405,56 +405,108 @@ describe( 'NLP', () => {
 
             describe( 'recognizes', () => {
 
-                it( 'with value', () => {
-                    recogUIPropertyRef( ' {A|value} ', 'A|value' );
+                describe( 'Feature', () => {
+
+                    it( 'single letter', () => {
+                        recogUIPropertyRef( ' {F:A|value} ', 'F:A|value' );
+                    } );
+
+                    it( 'with number', () => {
+                        recogUIPropertyRef( ' {F1:A|value} ', 'F1:A|value' );
+                    } );
+
+                    it( 'with underline', () => {
+                        recogUIPropertyRef( ' {My_Feature:A|value} ', 'My_Feature:A|value' );
+                    } );
+
+                    it( 'with dash', () => {
+                        recogUIPropertyRef( ' {My-Feature:A|value} ', 'My-Feature:A|value' );
+                    } );
+
                 } );
 
-                it( 'with all the UI Properties', () => {
-                    const properties: string[] = enumUtil.getValues( UIPropertyTypes );
-                    for ( let p of properties ) {
-                        recogUIPropertyRef( '{A|' + p + '}', 'A|' + p );
-                    }
+                describe( 'UI Element', () => {
+
+                    it( 'single letter', () => {
+                        recogUIPropertyRef( ' {A|value} ', 'A|value' );
+                    } );
+
+                    it( 'with number', () => {
+                        recogUIPropertyRef( ' {F:A1|value} ', 'F:A1|value' );
+                    } );
+
+                    it( 'with underline', () => {
+                        recogUIPropertyRef( ' {F:A_B|value} ', 'F:A_B|value' );
+                    } );
+
+                    it( 'with dash', () => {
+                        recogUIPropertyRef( ' {F:A-B|value} ', 'F:A-B|value' );
+                    } );
+
                 } );
 
-                it( 'with Feature', () => {
-                    recogUIPropertyRef( ' {F:A|value} ', 'F:A|value' );
-                } );
+                describe( 'property', () => {
 
-                it( 'with property that contain spaces', () => {
-                    recogUIPropertyRef( '{D:A|comprimento mínimo}', 'D:A|comprimento mínimo' );
-                } );
+                    it( 'with all the language-independent properties', () => {
+                        const properties: string[] = enumUtil.getValues( UIPropertyTypes );
+                        for ( let p of properties ) {
+                            recogUIPropertyRef( '{A|' + p + '}', 'A|' + p );
+                        }
+                    } );
 
-                it( 'with spaces in the left', () => {
-                    recogUIPropertyRef( '{ D:A|comprimento mínimo}', 'D:A|comprimento mínimo' );
-                } );
+                    it( 'with spaces', () => {
+                        recogUIPropertyRef( '{D:A|comprimento mínimo}', 'D:A|comprimento mínimo' );
+                    } );
 
-                it( 'with spaces in the right', () => {
-                    recogUIPropertyRef( '{D:A|comprimento mínimo }', 'D:A|comprimento mínimo' );
-                } );
+                    it( 'with spaces in the left', () => {
+                        recogUIPropertyRef( '{ D:A|comprimento mínimo}', 'D:A|comprimento mínimo' );
+                    } );
 
-                it( 'with spaces around', () => {
-                    recogUIPropertyRef( '{ D:A|comprimento mínimo }', 'D:A|comprimento mínimo' );
+                    it( 'with spaces in the right', () => {
+                        recogUIPropertyRef( '{D:A|comprimento mínimo }', 'D:A|comprimento mínimo' );
+                    } );
+
+                    it( 'with spaces around', () => {
+                        recogUIPropertyRef( '{ D:A|comprimento mínimo }', 'D:A|comprimento mínimo' );
+                    } );
+
                 } );
 
             } );
 
             describe( 'does not recognize', () => {
 
-                it( 'without a property', () => {
+                it( 'without separator', () => {
                     recogUIPropertyRef( ' {A} ', null );
                 } );
 
-                it( 'with an empty feature', () => {
+                it( 'without left side', () => {
                     recogUIPropertyRef( ' {|value} ', null );
                 } );
 
-                it( 'with a space instead of a feature ', () => {
+                it( 'with only a space in the left side', () => {
                     recogUIPropertyRef( ' { |value} ', null );
                 } );
 
-                // it( 'with an unsupported property', () => {
-                //     recogUIPropertyRef( ' {A|foo} ', null );
-                // } );
+                it( 'without right side', () => {
+                    recogUIPropertyRef( ' {A|} ', null );
+                } );
+
+                it( 'with only a space in the right side', () => {
+                    recogUIPropertyRef( ' {A| } ', null );
+                } );
+
+                it( 'with a property that contains number', () => {
+                    recogUIPropertyRef( ' {A|foo1} ', null );
+                } );
+
+                it( 'with a property that contains dash', () => {
+                    recogUIPropertyRef( ' {A|foo-bar} ', null );
+                } );
+
+                it( 'with a property that contains underline', () => {
+                    recogUIPropertyRef( ' {A|foo_bar} ', null );
+                } );
 
             } );
 

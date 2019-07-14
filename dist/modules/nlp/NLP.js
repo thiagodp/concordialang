@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const Bravey = require("../../lib/bravey"); // .js file
+const cloneRegExp = require("clone-regexp");
 const ValueTypeDetector_1 = require("../util/ValueTypeDetector");
 const nlp_1 = require("../nlp");
 /**
@@ -153,6 +154,29 @@ class NLP {
     }
 }
 exports.NLP = NLP;
+//
+// REGEXES
+//  - all of them have /g
+//  - It is recommended to clone before using, because of lastIndex when using exec()
+//
+exports.VALUE_REGEX = /"(?:[^"\\]|\\.)*"/g;
+// export const UI_ELEMENT_REF_REGEX = new RegExp( '\{[a-zA-ZÀ-ÖØ-öø-ÿ][^|<\r\n\>\}]*\}', 'g' );
+exports.UI_ELEMENT_REF_REGEX = /\{[a-zA-ZÀ-ÖØ-öø-ÿ][^|<\r\n\>\}]*\}/g;
+// export const UI_PROPERTY_REF_REGEX = new RegExp( '\\{[ ]*[a-zA-ZÀ-ÖØ-öø-ÿ]+[a-zA-ZÀ-ÖØ-öø-ÿ ]*\\:?[a-zA-ZÀ-ÖØ-öø-ÿ ]*\\|[a-zA-ZÀ-ÖØ-öø-ÿ ]+\\}', 'g' );
+exports.UI_PROPERTY_REF_REGEX = /\{[ ]*[a-zA-ZÀ-ÖØ-öø-ÿ][a-zA-ZÀ-ÖØ-öø-ÿ0-9 _-]*(\:[a-zA-ZÀ-ÖØ-öø-ÿ][a-zA-ZÀ-ÖØ-öø-ÿ0-9 _-]*)?\|[a-zA-ZÀ-ÖØ-öø-ÿ][a-zA-ZÀ-ÖØ-öø-ÿ ]+\}/g;
+// export const UI_LITERAL_REGEX = /(?:\<)((?:#|@|\.|\/\/|~|[a-zA-ZÀ-ÖØ-öø-ÿ])[^<\r\n\>]*)(?:\>)/g;
+// export const UI_LITERAL_REGEX = /(?:\<)((?:#|@|\.|\/\/|~|[a-zA-ZÀ-ÖØ-öø-ÿ])[^<\r\n]*)(?:\>)/g; // Issue #19
+exports.UI_LITERAL_REGEX = /(?:\<)((?:#|@|\.|\/\/|~|[a-zA-ZÀ-ÖØ-öø-ÿ0-9 ]?)[^<\r\n]*[^\\>])(?:\>)/g;
+exports.NUMBER_REGEX = /(-?[0-9]+(?:\.[0-9]+)?)/g;
+// export const QUERY_REGEX = new RegExp( '"(?:\t| )*SELECT[^"]+"', "gi" );
+exports.QUERY_REGEX = /"(?:\t| )*SELECT[^"]+"/gi;
+exports.CONSTANT_REGEX = /\[[a-zA-ZÀ-ÖØ-öø-ÿ_][a-zA-ZÀ-ÖØ-öø-ÿ0-9 _-]*\]/g;
+// export const VALUE_LIST_REGEX = /\[(?: )*((?:,) ?|([0-9]+(\.[0-9]+)?|\"(.*[^\\])\"))+(?: )*\]/g;
+// export const VALUE_LIST_REGEX = /(\[[\t ]*([^\]])*[\t ]*[^\\]\])+/g; // only [ anything ]
+// export const VALUE_LIST_REGEX = /(?:\[[\t ]*)(("[^"]*"|(-?[0-9]+(\.[0-9]+)?))*,?[\t ]?)+[^\]]?(?:\])/g; // [ value or number ]
+exports.VALUE_LIST_REGEX = /(?:\[[\t ]*)(("(\\"|[^"])+"|(-?[0-9]+(\.[0-9]+)?))+,?[\t ]?)+[^\]]?(?:\])/g; // [ value or number ]
+exports.STATE_REGEX = /\~[a-zA-ZÀ-ÖØ-öø-ÿ_][a-zA-ZÀ-ÖØ-öø-ÿ0-9 _-]*\~/g;
+exports.COMMAND_REGEX = /'(?:[^'\\]|\\.)*'/g;
 /**
  * EntityRecognizer maker
  *
@@ -170,7 +194,7 @@ class EntityRecognizerMaker {
      */
     makeValue(entityName) {
         let valueRec = new Bravey.RegexEntityRecognizer(entityName, 10);
-        const regex = /"(?:[^"\\]|\\.)*"/g;
+        let regex = cloneRegExp(exports.VALUE_REGEX);
         valueRec.addMatch(regex, function (match) {
             const value = match[0] || '';
             return value.substring(1, value.length - 1); // exclude quotes
@@ -191,8 +215,8 @@ class EntityRecognizerMaker {
      * @return Bravey.EntityRecognizer
      */
     makeUIElementReference(entityName) {
-        var valueRec = new Bravey.RegexEntityRecognizer(entityName, 10);
-        const regex = new RegExp('\{[a-zA-ZÀ-ÖØ-öø-ÿ][^|<\r\n\>\}]*\}', "g");
+        let valueRec = new Bravey.RegexEntityRecognizer(entityName, 10);
+        let regex = cloneRegExp(exports.UI_ELEMENT_REF_REGEX);
         valueRec.addMatch(regex, function (match) {
             //console.log( 'match: ', match );
             return match.toString().replace('{', '').replace('}', '');
@@ -215,9 +239,8 @@ class EntityRecognizerMaker {
      * @return Bravey.EntityRecognizer
      */
     makeUIPropertyReference(entityName) {
-        var valueRec = new Bravey.RegexEntityRecognizer(entityName, 10);
-        const regexStr = '\\{[ ]*[a-zA-ZÀ-ÖØ-öø-ÿ]+[a-zA-ZÀ-ÖØ-öø-ÿ ]*\\:?[a-zA-ZÀ-ÖØ-öø-ÿ ]*\\|[a-zA-ZÀ-ÖØ-öø-ÿ ]+\\}';
-        const regex = new RegExp(regexStr, "g");
+        let valueRec = new Bravey.RegexEntityRecognizer(entityName, 10);
+        let regex = cloneRegExp(exports.UI_PROPERTY_REF_REGEX);
         valueRec.addMatch(regex, function (match) {
             const value = match[0] || '';
             return value.substring(1, value.length - 1).trim(); // exclude { and } and trim
@@ -237,10 +260,8 @@ class EntityRecognizerMaker {
      * @return Bravey.EntityRecognizer
      */
     makeUILiteral(entityName) {
-        var valueRec = new Bravey.RegexEntityRecognizer(entityName, 10);
-        // const regex = /(?:\<)((?:#|@|\.|\/\/|~|[a-zA-ZÀ-ÖØ-öø-ÿ])[^<\r\n\>]*)(?:\>)/g;
-        // const regex = /(?:\<)((?:#|@|\.|\/\/|~|[a-zA-ZÀ-ÖØ-öø-ÿ])[^<\r\n]*)(?:\>)/g; // Issue #19
-        const regex = /(?:\<)((?:#|@|\.|\/\/|~|[a-zA-ZÀ-ÖØ-öø-ÿ0-9 ]?)[^<\r\n]*[^\\>])(?:\>)/g;
+        let valueRec = new Bravey.RegexEntityRecognizer(entityName, 10);
+        let regex = cloneRegExp(exports.UI_LITERAL_REGEX);
         valueRec.addMatch(regex, function (match) {
             //console.log( 'match: ', match );
             return match[1].toString();
@@ -258,8 +279,8 @@ class EntityRecognizerMaker {
      * @return Bravey.EntityRecognizer
      */
     makeNumber(entityName) {
-        var valueRec = new Bravey.RegexEntityRecognizer(entityName, 10);
-        const regex = /(-?[0-9]+(?:\.[0-9]+)?)/g;
+        let valueRec = new Bravey.RegexEntityRecognizer(entityName, 10);
+        let regex = cloneRegExp(exports.NUMBER_REGEX);
         valueRec.addMatch(regex, function (match) {
             // console.log( 'match ', match );
             // return match[ 0 ].toString().trim();
@@ -280,7 +301,7 @@ class EntityRecognizerMaker {
      */
     makeQuery(entityName) {
         let valueRec = new Bravey.RegexEntityRecognizer(entityName, 10);
-        const regex = new RegExp('"(?:\t| )*SELECT[^"]+"', "gi");
+        let regex = cloneRegExp(exports.QUERY_REGEX);
         valueRec.addMatch(regex, function (match) {
             // return match.toString().replace( /["]+/g, '' ).trim();
             const content = match.toString();
@@ -301,8 +322,8 @@ class EntityRecognizerMaker {
      * @returns Bravey.EntityRecognizer
      */
     makeConstant(entityName) {
-        var valueRec = new Bravey.RegexEntityRecognizer(entityName, 10);
-        const regex = /\[[a-zA-ZÀ-ÖØ-öø-ÿ_][a-zA-ZÀ-ÖØ-öø-ÿ0-9 _-]*\]/g;
+        let valueRec = new Bravey.RegexEntityRecognizer(entityName, 10);
+        let regex = cloneRegExp(exports.CONSTANT_REGEX);
         valueRec.addMatch(regex, function (match) {
             const value = match[0].toString();
             return value.substring(1, value.length - 1); // exclude '[' and ']'
@@ -317,11 +338,8 @@ class EntityRecognizerMaker {
      * @returns Bravey.EntityRecognizer
      */
     makeValueList(entityName) {
-        var valueRec = new Bravey.RegexEntityRecognizer(entityName, 10);
-        // const regex = /\[(?: )*((?:,) ?|([0-9]+(\.[0-9]+)?|\"(.*[^\\])\"))+(?: )*\]/g;
-        // const regex = /(\[[\t ]*([^\]])*[\t ]*[^\\]\])+/g; // only [ anything ]
-        // const regex = /(?:\[[\t ]*)(("[^"]*"|(-?[0-9]+(\.[0-9]+)?))*,?[\t ]?)+[^\]]?(?:\])/g; // [ value or number ]
-        const regex = /(?:\[[\t ]*)(("(\\"|[^"])+"|(-?[0-9]+(\.[0-9]+)?))+,?[\t ]?)+[^\]]?(?:\])/g; // [ value or number ]
+        let valueRec = new Bravey.RegexEntityRecognizer(entityName, 10);
+        let regex = cloneRegExp(exports.VALUE_LIST_REGEX);
         valueRec.addMatch(regex, function (match) {
             // console.log( 'match: ', match );
             // return match[ 0 ].toString().trim();
@@ -360,8 +378,8 @@ class EntityRecognizerMaker {
      * @returns Bravey.EntityRecognizer
      */
     makeState(entityName) {
-        var valueRec = new Bravey.RegexEntityRecognizer(entityName, 10);
-        const regex = /\~[a-zA-ZÀ-ÖØ-öø-ÿ_][a-zA-ZÀ-ÖØ-öø-ÿ0-9 _-]*\~/g;
+        let valueRec = new Bravey.RegexEntityRecognizer(entityName, 10);
+        let regex = cloneRegExp(exports.STATE_REGEX);
         valueRec.addMatch(regex, function (match) {
             const value = match[0].toString();
             return value.substring(1, value.length - 1); // exclude '~' and '~'
@@ -380,7 +398,7 @@ class EntityRecognizerMaker {
      */
     makeCommand(entityName) {
         let valueRec = new Bravey.RegexEntityRecognizer(entityName, 10);
-        const regex = /'(?:[^'\\]|\\.)*'/g;
+        let regex = cloneRegExp(exports.COMMAND_REGEX);
         valueRec.addMatch(regex, function (match) {
             const content = match.toString();
             return content.substring(1, content.length - 1).trim();

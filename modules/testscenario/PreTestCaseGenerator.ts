@@ -38,7 +38,7 @@ import {
     TargetTypeUtil
 } from '../util';
 import { PreTestCase } from './PreTestCase';
-import { formatValueToUseInASentence } from './value-formater';
+import { formatValueToUseInASentence } from './value-formatter';
 import { UIPropertyReferenceReplacer } from './UIPropertyReferenceReplacer';
 
 
@@ -315,6 +315,10 @@ export class PreTestCaseGenerator {
             }
 
             this.normalizeOracleSentences( stepOracles, langContent.keywords );
+
+            // # (2019-07-13)
+            // this.replaceUIPropertyReferencesInsideValues( completeSteps, stepOracles, uieVariableToValueMap );
+            // ---
 
             all.push( new PreTestCase( plan, completeSteps, stepOracles ) );
         }
@@ -608,7 +612,7 @@ export class PreTestCaseGenerator {
             const uipRefReplacer = new UIPropertyReferenceReplacer();
 
             step.content = uipRefReplacer.replaceUIPropertyReferencesByTheirValue(
-                step, step.uiePropertyReferences, uieVariableToValueMap, ctx );
+                step, step.content, step.uiePropertyReferences, uieVariableToValueMap, ctx );
 
             // Update NLP !
             this._variantSentenceRec.recognizeSentences( language, [ step ], ctx.errors, ctx.warnings );
@@ -832,7 +836,12 @@ export class PreTestCaseGenerator {
         return stepsClone;
     }
 
-
+    /**
+     * Transforms Otherwise steps into Then steps.
+     *
+     * @param steps Oracle steps.
+     * @param keywords Keywords.
+     */
     normalizeOracleSentences( steps: Step[], keywords: KeywordDictionary ): void {
 
         if ( steps.length < 1 ) {
@@ -850,9 +859,8 @@ export class PreTestCaseGenerator {
 
         // const keywordRandom = ! keywords.random ? 'random' : ( keywords.random[ 0 ] || 'random' );
 
-        let oracles: Step[] = [],
-            line = steps[ 0 ].location.line,
-            count = 0;
+        let line: number = steps[ 0 ].location.line;
+        let count: number = 0;
 
         for ( let step of steps ) {
 
@@ -893,10 +901,43 @@ export class PreTestCaseGenerator {
         }
     }
 
+    /**
+     * Replace UIE property references inside values.
+     *
+     * @param steps Steps.
+     * @param oracles Oracles.
+     * @param uieVariableToValueMap Value map.
+     */
+    replaceUIPropertyReferencesInsideValues(
+        steps: Step[],
+        oracles: Step[],
+        uieVariableToValueMap: Map< string, EntityValueType >
+    ): void {
+        // const uipRefReplacer = new UIPropertyReferenceReplacer();
+
+        // for ( let step of steps ) {
+        //     const valueEntities = this._nlpUtil.entitiesNamed( Entities.VALUE, step.nlpResult );
+        //     for ( let entity of valueEntities ) {
+        //         const before: string = entity.value;
+        //         // const after: string = uipRefReplacer.replaceUIPropertyReferencesByTheirValue(
+        //         //     step, before,
+        //     }
+        // }
+
+        // for ( let step of oracles ) {
+
+        // }
+    }
+
     //
     // UI PROPERTY REFERENCES
     //
 
+    /**
+     * Returns `true` if the given step has a UIE property reference, or false otherwise.
+     *
+     * @param step Step
+     */
     hasUIPropertyReference( step: Step ): boolean {
         if ( ! step || ! step.nlpResult ) {
             return false;
@@ -904,9 +945,18 @@ export class PreTestCaseGenerator {
         return this._nlpUtil.hasEntityNamed( Entities.UI_PROPERTY_REF, step.nlpResult );
     }
 
+    /**
+     * Checks whether the UIE property references of a given Step are correct and supported.
+     * Errors or warning are added to the generation context.
+     *
+     * @param step Step.
+     * @param langContent Language content.
+     * @param ctx Generation context.
+     */
     checkUIPropertyReferencesOfStep( step: Step, langContent: LanguageContent, ctx: GenContext ): void {
-        const extractor = new UIPropertyReferenceExtractor();
-        const references: UIPropertyReference[] = extractor.extractReferences(
+
+        const referenceExtractor = new UIPropertyReferenceExtractor();
+        const references: UIPropertyReference[] = referenceExtractor.extractReferences(
             step.nlpResult.entities, step.location.line );
 
         for ( let uipRef of references ) {
@@ -915,9 +965,9 @@ export class PreTestCaseGenerator {
                 uipRef.location.filePath = ctx.doc.fileInfo.path;
             }
 
-            this.adjustPropertyOfUIPropertyReference( uipRef, langContent );
+            this.transformLanguageDependentIntoLanguageIndependent( uipRef, langContent );
 
-            if ( ! this.hasUIPropertyReferenceACorrectProperty( uipRef ) ) {
+            if ( ! this.hasLanguageIndependentProperty( uipRef ) ) {
                 const msg: string = 'Incorrect reference to a UI Element property: ' + uipRef.content;
                 const e = new SyntacticException( msg, uipRef.location );
                 ctx.errors.push( e );
@@ -939,7 +989,13 @@ export class PreTestCaseGenerator {
         }
     }
 
-    adjustPropertyOfUIPropertyReference( uipRef: UIPropertyReference, langContent: LanguageContent ): void {
+    /**
+     * Adjusts the given UIE property reference' property to have a language-independent property.
+     *
+     * @param uipRef UIE property reference.
+     * @param langContent Language content.
+     */
+    transformLanguageDependentIntoLanguageIndependent( uipRef: UIPropertyReference, langContent: LanguageContent ): void {
         // TO-DO: refactor magic values
         const langUIProperties = ( ( langContent.nlp[ "ui" ] || {} )[ "ui_property" ] || {} );
         const uipRefProp = uipRef.property.toLowerCase();
@@ -951,11 +1007,22 @@ export class PreTestCaseGenerator {
         }
     }
 
-    hasUIPropertyReferenceACorrectProperty( uipRef: UIPropertyReference ): boolean {
+    /**
+     * Returns `true` if the given UIE property reference is language-independent property, or `false` otherwise.
+     *
+     * @param uipRef UIE property reference.
+     */
+    hasLanguageIndependentProperty( uipRef: UIPropertyReference ): boolean {
         const values: string[] = enumUtil.getValues( UIPropertyTypes );
         return values.indexOf( uipRef.property.toLowerCase() ) >= 0;
     }
 
+    /**
+     * Returns `true` if the given UIE property reference is a value property, or `false` otherwise.
+     *
+     * @param uipRef UIE property reference.
+     * @param langContent Language content.
+     */
     isUIPropertyReferenceToValue( uipRef: UIPropertyReference, langContent: LanguageContent ): boolean {
         const VALUE = 'value';
         // TO-DO: refactor magic values

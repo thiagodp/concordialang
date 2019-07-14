@@ -16,7 +16,7 @@ export enum Entities {
     NUMBER = 'number', //                               e.g., -3.12
     UI_ELEMENT_REF = 'ui_element', //                   e.g., {Username}, {My Feature 1:Full Name}
     UI_LITERAL = 'ui_literal', //                       e.g., <id> or <#id> or <@name> or <//xpath> or <~mobilename>
-    UI_PROPERTY_REF = 'ui_property_ref', //             e.g., {Username|value} or {Name|minlength}
+    UI_PROPERTY_REF = 'ui_property_ref', //             e.g., {Name|minlength}, {My Feature 1:Full Name|value}
     QUERY = 'query', //                                 e.g., "SELECT * FROM someTable"
     CONSTANT = 'constant', //                           e.g., [hello]
     VALUE_LIST = 'value_list', //                       e.g., [ 1, "hello", 2 ]

@@ -30,7 +30,7 @@ const RandomString_1 = require("../testdata/random/RandomString");
 const UIElementValueGenerator_1 = require("../testdata/UIElementValueGenerator");
 const util_1 = require("../util");
 const PreTestCase_1 = require("./PreTestCase");
-const value_formater_1 = require("./value-formater");
+const value_formatter_1 = require("./value-formatter");
 const UIPropertyReferenceReplacer_1 = require("./UIPropertyReferenceReplacer");
 class GenContext {
     constructor(spec, doc, errors, warnings) {
@@ -236,6 +236,9 @@ class PreTestCaseGenerator {
                     }
                 }
                 this.normalizeOracleSentences(stepOracles, langContent.keywords);
+                // # (2019-07-13)
+                // this.replaceUIPropertyReferencesInsideValues( completeSteps, stepOracles, uieVariableToValueMap );
+                // ---
                 all.push(new PreTestCase_1.PreTestCase(plan, completeSteps, stepOracles));
             }
             // console.log( all.map( ptc => ptc.steps.map( s => s.content ) ) );
@@ -441,7 +444,7 @@ class PreTestCaseGenerator {
         const dataInputActionEntity = this.extractDataInputActionEntity(step);
         if (this.hasUIPropertyReference(step)) {
             const uipRefReplacer = new UIPropertyReferenceReplacer_1.UIPropertyReferenceReplacer();
-            step.content = uipRefReplacer.replaceUIPropertyReferencesByTheirValue(step, step.uiePropertyReferences, uieVariableToValueMap, ctx);
+            step.content = uipRefReplacer.replaceUIPropertyReferencesByTheirValue(step, step.content, step.uiePropertyReferences, uieVariableToValueMap, ctx);
             // Update NLP !
             this._variantSentenceRec.recognizeSentences(language, [step], ctx.errors, ctx.warnings);
         }
@@ -516,7 +519,7 @@ class PreTestCaseGenerator {
             if (!dataInputActionEntity) {
                 targetType = this._targetTypeUtil.analyzeInputTargetTypes(step, langContent) + ' ';
             }
-            const formattedValue = value_formater_1.formatValueToUseInASentence(value);
+            const formattedValue = value_formatter_1.formatValueToUseInASentence(value);
             // Generate the sentence
             let sentence = prefix + ' ' + keywordI + ' ' + dataInputActionEntity.string + ' ' +
                 targetType +
@@ -607,6 +610,12 @@ class PreTestCaseGenerator {
         // Note: Oracle steps cannot have 'fill' steps
         return stepsClone;
     }
+    /**
+     * Transforms Otherwise steps into Then steps.
+     *
+     * @param steps Oracle steps.
+     * @param keywords Keywords.
+     */
     normalizeOracleSentences(steps, keywords) {
         if (steps.length < 1) {
             return;
@@ -618,7 +627,8 @@ class PreTestCaseGenerator {
         const prefixAnd = this.stepPrefixNodeType(NodeTypes_1.NodeTypes.STEP_AND, keywords);
         const prefixThen = this.stepPrefixNodeType(NodeTypes_1.NodeTypes.STEP_THEN, keywords);
         // const keywordRandom = ! keywords.random ? 'random' : ( keywords.random[ 0 ] || 'random' );
-        let oracles = [], line = steps[0].location.line, count = 0;
+        let line = steps[0].location.line;
+        let count = 0;
         for (let step of steps) {
             if (util_1.isDefined(step.location)) {
                 step.location.line = line;
@@ -650,24 +660,57 @@ class PreTestCaseGenerator {
             ++count;
         }
     }
+    /**
+     * Replace UIE property references inside values.
+     *
+     * @param steps Steps.
+     * @param oracles Oracles.
+     * @param uieVariableToValueMap Value map.
+     */
+    replaceUIPropertyReferencesInsideValues(steps, oracles, uieVariableToValueMap) {
+        // const uipRefReplacer = new UIPropertyReferenceReplacer();
+        // for ( let step of steps ) {
+        //     const valueEntities = this._nlpUtil.entitiesNamed( Entities.VALUE, step.nlpResult );
+        //     for ( let entity of valueEntities ) {
+        //         const before: string = entity.value;
+        //         // const after: string = uipRefReplacer.replaceUIPropertyReferencesByTheirValue(
+        //         //     step, before,
+        //     }
+        // }
+        // for ( let step of oracles ) {
+        // }
+    }
     //
     // UI PROPERTY REFERENCES
     //
+    /**
+     * Returns `true` if the given step has a UIE property reference, or false otherwise.
+     *
+     * @param step Step
+     */
     hasUIPropertyReference(step) {
         if (!step || !step.nlpResult) {
             return false;
         }
         return this._nlpUtil.hasEntityNamed(nlp_1.Entities.UI_PROPERTY_REF, step.nlpResult);
     }
+    /**
+     * Checks whether the UIE property references of a given Step are correct and supported.
+     * Errors or warning are added to the generation context.
+     *
+     * @param step Step.
+     * @param langContent Language content.
+     * @param ctx Generation context.
+     */
     checkUIPropertyReferencesOfStep(step, langContent, ctx) {
-        const extractor = new util_1.UIPropertyReferenceExtractor();
-        const references = extractor.extractReferences(step.nlpResult.entities, step.location.line);
+        const referenceExtractor = new util_1.UIPropertyReferenceExtractor();
+        const references = referenceExtractor.extractReferences(step.nlpResult.entities, step.location.line);
         for (let uipRef of references) {
             if (uipRef.location && !uipRef.location.filePath) {
                 uipRef.location.filePath = ctx.doc.fileInfo.path;
             }
-            this.adjustPropertyOfUIPropertyReference(uipRef, langContent);
-            if (!this.hasUIPropertyReferenceACorrectProperty(uipRef)) {
+            this.transformLanguageDependentIntoLanguageIndependent(uipRef, langContent);
+            if (!this.hasLanguageIndependentProperty(uipRef)) {
                 const msg = 'Incorrect reference to a UI Element property: ' + uipRef.content;
                 const e = new SyntacticException_1.SyntacticException(msg, uipRef.location);
                 ctx.errors.push(e);
@@ -687,7 +730,13 @@ class PreTestCaseGenerator {
             }
         }
     }
-    adjustPropertyOfUIPropertyReference(uipRef, langContent) {
+    /**
+     * Adjusts the given UIE property reference' property to have a language-independent property.
+     *
+     * @param uipRef UIE property reference.
+     * @param langContent Language content.
+     */
+    transformLanguageDependentIntoLanguageIndependent(uipRef, langContent) {
         // TO-DO: refactor magic values
         const langUIProperties = ((langContent.nlp["ui"] || {})["ui_property"] || {});
         const uipRefProp = uipRef.property.toLowerCase();
@@ -698,10 +747,21 @@ class PreTestCaseGenerator {
             }
         }
     }
-    hasUIPropertyReferenceACorrectProperty(uipRef) {
+    /**
+     * Returns `true` if the given UIE property reference is language-independent property, or `false` otherwise.
+     *
+     * @param uipRef UIE property reference.
+     */
+    hasLanguageIndependentProperty(uipRef) {
         const values = enumUtil.getValues(ast_1.UIPropertyTypes);
         return values.indexOf(uipRef.property.toLowerCase()) >= 0;
     }
+    /**
+     * Returns `true` if the given UIE property reference is a value property, or `false` otherwise.
+     *
+     * @param uipRef UIE property reference.
+     * @param langContent Language content.
+     */
     isUIPropertyReferenceToValue(uipRef, langContent) {
         const VALUE = 'value';
         // TO-DO: refactor magic values
