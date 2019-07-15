@@ -42,6 +42,8 @@ Translations: [Português](../pt/language.md) 🌎
 - [References to declarations](#References-to-declarations)
   - [User Interface Elements](#User-Interface-Elements)
     - [Inside queries](#Inside-queries)
+  - [User Interface Element Properties](#User-Interface-Element-Properties)
+    - [Properties inside values](#Properties-inside-values)
   - [Constants](#Constants-1)
   - [Tables](#Tables)
   - [Databases](#Databases)
@@ -871,6 +873,41 @@ UI Element: Salary
 
 If desired, the reference could also be declared as `{Add an Employee:Profession}`.
 
+
+### User Interface Element Properties
+
+> Added in version `1.2.0`
+
+- Syntax similar to references to User Interface Elements
+- Must use `|` to denote a property
+- A property can be one of the properties of a [User Interface Element](#User-Interface-Element). **See the currently supported properties in [#44](https://github.com/thiagodp/concordialang/issues/44) and [#45](https://github.com/thiagodp/concordialang/issues/45)**.
+
+In the following example, `{Password|value}` is a reference to the property `value` of a UI Element called `Password` :
+
+```gherkin
+When I fill {Password Confirmation} with {Password|value}
+```
+
+Feature is **optional** when the referenced UI Element belongs to the Feature. It is **mandatory** otherwise. A Feature must be separated from a UI Element name by a colon (`:`).
+
+In the following example, `New User` is the Feature name, `Password` is the UI Element name, and `value` is the property.
+
+```gherkin
+When I fill {Password Confirmation} with {New User:Password|value}
+```
+
+#### Properties inside values
+
+> Added in version `1.3.0`
+
+- Declared inside `Variant` sentences and `Otherwise` sentences.
+- **See supported properties at [#44](https://github.com/thiagodp/concordialang/issues/44) and [#45](https://github.com/thiagodp/concordialang/issues/45)**.
+
+A UI Element property can be declared inside a value. For example:
+
+```gherkin
+Then I see "Welcome, {Username|value}."
+```
 
 ### Constants
 

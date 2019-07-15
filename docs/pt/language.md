@@ -40,6 +40,8 @@
 - [Referências para declarações](#Refer%C3%AAncias-para-declara%C3%A7%C3%B5es)
   - [Elementos de Interface de Usuário](#Elementos-de-Interface-de-Usu%C3%A1rio)
     - [Em consultas](#Em-consultas)
+  - [Propriedades de Elementos de Interface de Usuário](#Propriedades-de-Elementos-de-Interface-de-Usu%C3%A1rio)
+    - [Propriedades dentro de valores](#Propriedades-dentro-de-valores)
   - [Constantes](#Constantes-1)
   - [Tabelas](#Tabelas)
   - [Bancos de Dados](#Bancos-de-Dados)
@@ -846,9 +848,8 @@ No exemplo a seguir, `{Nome}` é a uma referência para um Elemento de IU chamad
 Quando eu preencho {Nome} com "bob"
 ```
 
-O nome da funcionalidade é **opcional** quando declarada na mesma funcionalidade e **obrigatória** caso contrário.
+A Funcionalidade é **opcional** quando o Elemento de IU referenciado pertence à ela. Do contrário, a declaração da Funcionalidade se torna obrigatória. Uma Funcionalidade deve ser separada de seu Elemento de IU por dois pontos (`:`). Exemplo:
 
-Referências a uma Funcionalidade deve ser separada de um Elemento de IU por dois pontos (`:`). Exemplo:
 ```gherkin
 Quando eu preencho {Adicionar Funcionário:Profissao} com "Dentista"
 ```
@@ -870,6 +871,42 @@ Elemento de IU: Salário
 
 Se desejado, essa referência poderia ser declarada como `{Adicionar Funcionário:Profissão}`.
 
+
+### Propriedades de Elementos de Interface de Usuário
+
+> Disponível desde a versão `1.2.0`
+
+- Pode ser declarada em sentenças de uma `Variante`.
+- Sintaxe similar à references para Elementos de Interface de Usuário
+- Deve usar `|` para denotar uma propriedade
+- A propriedade deve ser uma das propriedades de um [Elemento de IU](#Elemento-de-Interface-de-Usu%C3%A1rio).
+- **Veja as propriedades atualmente suportadas em [#35](https://github.com/thiagodp/concordialang/issues/35)**.
+
+No exemplo a seguir, `{Senha|valor}` é uma referência para o Elemento de IU `Senha` e a propriedade `valor`:
+
+```gherkin
+Quando eu preencho {Confirmação de Senha} com {Senha|valor}
+```
+A Funcionalidade é **opcional** quando o Elemento de IU referenciado pertence à ela. Do contrário, a declaração da Funcionalidade se torna obrigatória. Uma Funcionalidade deve ser separada de seu Elemento de IU por dois pontos (`:`).
+
+No exemplo a seguir, `Novo Usuário` é uma Funcionalidade, `Senha` é um Elemento de IU e `valor` é uma propriedade:
+
+```gherkin
+Quando eu preencho {Confirmação de Senha} com {Novo Usuário:Senha|valor}
+```
+
+#### Propriedades dentro de valores
+
+> Disponível desde a versão `1.3.0`
+
+- Pode ser declarada em sentenças de uma `Variante` e em sentenças de uma construção `Caso Contrário` (em propriedades de um Elemento de IU).
+- **Veja as atualmente suportadas em [#44](https://github.com/thiagodp/concordialang/issues/44) e [#45](https://github.com/thiagodp/concordialang/issues/45)**.
+
+Uma propriedade de um Elemento de IU pode ser declarada dentro de um valor. Exemplo:
+
+```gherkin
+Então eu vejo "Bem vindo, {Usuário|valor}."
+```
 
 ### Constantes
 
