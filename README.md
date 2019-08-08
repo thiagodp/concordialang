@@ -34,7 +34,7 @@ At a glance:
 
 ## About
 
-**Concordia** is a [business-readable](https://martinfowler.com/bliki/BusinessReadableDSL.html), [agile](https://en.wikipedia.org/wiki/Agile_software_development) requirements specification metalanguage inspired in [Gherkin](https://github.com/cucumber/cucumber/wiki/Gherkin). Currently it supports [English](./docs/en/language.md) and [Portuguese](./docs/pt/language.md). New languages can be added easily.
+**Concordia** is a [business-readable](https://martinfowler.com/bliki/BusinessReadableDSL.html), [agile](https://en.wikipedia.org/wiki/Agile_software_development) requirements specification metalanguage inspired by [Gherkin](https://github.com/cucumber/cucumber/wiki/Gherkin). Currently it supports [English](./docs/en/language.md) and [Portuguese](./docs/pt/language.md). New languages can be added easily.
 
 **Concordia Compiler** generates and executes [functional](https://en.wikipedia.org/wiki/Functional_testing) test cases and test scripts from documents written in *Concordia Language*. It uses [NLP](https://en.wikipedia.org/wiki/Natural_language_processing) and many other techniques in the process.
 

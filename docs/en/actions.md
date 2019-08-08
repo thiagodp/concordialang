@@ -1,12 +1,13 @@
 # Actions
 
-> Examples of Variant sentences with actions
-
-*An example may demonstrate different variations of the same action.*
+*Examples of Variant sentences with actions. An example may demonstrate variations of a same action.*
 
 Translations: [Português](../pt/actions.md) 🌎
 
+
 ## `accept`
+
+> Accepts a browser message or app message.
 
 ### accept + alert
 ```gherkin
@@ -28,14 +29,20 @@ When I accept the popup
 When I accept the prompt
 ```
 
+
 ## `amOn`
+
+> Indicates a webpage or screen in which it is expected to be at.
 
 ### amOn + value
 ```gherkin
 Given that I am on "http://concordialang.org"
 ```
 
+
 ## `append`
+
+> Adds a value to a widget (UI Element or UI Literal).
 
 ### append + number + target
 ```gherkin
@@ -49,9 +56,10 @@ When I append 100 to {Bar}
   and I append 200 to <#foo>
 ```
 
+
 ## `attachFile`
 
-This action selects the given file and confirm (*e.g.*, clicks OK).
+> Attaches a file. It selects the file and confirm its choice (i.e., clicks OK).
 
 ### attach + file + value + target
 ```gherkin
@@ -59,7 +67,10 @@ When I attach the file "/path/to/file" to {Foo}
   and I attach the file "/path/to/file" to <#bar>
 ```
 
+
 ## `cancel`
+
+> Cancels a browser message or app message.
 
 ### cancel + alert
 ```gherkin
@@ -81,7 +92,10 @@ When I cancel the popup
 When I cancel the prompt
 ```
 
+
 ## `check`
+
+> Checks a checkbox.
 
 ### check + target
 ```gherkin
@@ -89,20 +103,30 @@ When I check {Foo}
   and I check <#bar>
 ```
 
+
 ## `clear`
 
 ### clear + target
+
+> Empties an input field.
+
 ```gherkin
 When I clear {Foo}
   and I clear <#bar>
 ```
 
 ### clear + cookie + value
+
+> Clears a cookie by its name.
+
 ```gherkin
 When I clear the cookie "foo"
 ```
 
+
 ## `click`
+
+> Clicks on something in the screen.
 
 ### click + target
 ```gherkin
@@ -115,7 +139,10 @@ When I click {Foo}
 When I click "Foo"
 ```
 
+
 ## `close`
+
+> Closes a tab or an app.
 
 ### close + current tab
 ```gherkin
@@ -133,23 +160,31 @@ The next sentence is for *mobile* only:
 When I close the app
 ```
 
+
 ## `connect`
 
+> Connects to a database.
+
 The next sentence is for [Test Events](language.md#test-events) only:
-### connect + database
+
 ```
 When I connect to the database [TestDB]
 ```
 
 ## `disconnect`
 
+> Disconnects from a database.
+
 The next sentence is for [Test Events](language.md#test-events) only:
-### disconnect + database
+
 ```
 When I disconnect from the database [TestDB]
 ```
 
+
 ## `doubleClick`
+
+> Performs a double click on something.
 
 ### doubleClick + target
 ```gherkin
@@ -162,14 +197,20 @@ When I double click {Foo}
 When I double click "Foo"
 ```
 
+
 ## `drag`
+
+> Drags and drops something to a widget.
 
 ### drag + target + target
 ```gherkin
 When I drag {Foo} to <#bar>
 ```
 
+
 ## `fill`
+
+> Indicates that a field is being filled. If desired, a value can be given. Otherwise, a value will be generated for the corresponding Test Case.
 
 ### fill + target
 ```gherkin
@@ -194,13 +235,21 @@ When I type "bar" in {Foo}
 
 ## `hide`
 
+> Hides something.
+
 ### hide + keyboard
+
+> Hides the device's keyboard.
+
 The next sentence is for *mobile* only:
 ```gherkin
 When I hide the keyboard
 ```
 
+
 ## `install`
+
+> Installs an app.
 
 ### install + app + value
 The next sentence is for *mobile* only:
@@ -208,7 +257,10 @@ The next sentence is for *mobile* only:
 When I install the app "com.example.android.myapp"
 ```
 
+
 ## `maximize`
+
+> Maximizes a window or the browser.
 
 ### maximize + window
 ```gherkin
@@ -216,6 +268,8 @@ When I maximize the window
 ```
 
 ## `move`
+
+> Moves the mouse cursor to a place or element.
 
 ### move + cursor + target
 ```gherkin
@@ -230,6 +284,8 @@ When I move the cursor to {Foo} at 100, 200
 
 ## `open`
 
+> Opens the device's notifications panel.
+
 ### open + notificationsPanel
 The next sentence is for *mobile* only:
 ```gherkin
@@ -238,7 +294,7 @@ When I open the notifications panel
 
 ## `press`
 
-Press a key or key combination, separated by comma.
+> Presses a key or key combination, separated by comma.
 
 ### press + value
 ```gherkin
@@ -282,13 +338,18 @@ Some special keys (*case sensitive!*):
 
 ## `pull`
 
+> Extracts a device's resource from a path.
+
 ### pull + value + value
 The next sentence is for *mobile* only:
 ```gherkin
 When I pull "/storage/emulated/0/DCIM/logo.png" to "some/path"
 ```
 
+
 ## `refresh`
+
+> Refreshes the current page.
 
 ### refresh + page or currentPage or url
 ```gherkin
@@ -298,7 +359,10 @@ When I refresh the page
   and I reload the current page
 ```
 
+
 ## `remove`
+
+> Removes an app by its internal name.
 
 ### remove + app + value
 
@@ -309,14 +373,20 @@ The next sentence is for *mobile* only:
 When I remove the app "com.example.android.myapp"
 ```
 
+
 ## `resize`
+
+> Resizes a window.
 
 ### resize + window + value + value
 ```gherkin
 When I resize the window to 600, 400
 ```
 
+
 ## `rightClick`
+
+> Performs a right click on something.
 
 ### rightClick + target
 ```gherkin
@@ -331,9 +401,11 @@ When I right click "Foo"
 
 ## `run`
 
+> Runs a console command or a database script (SQL command).
+
 ### run + command
 
-*Run command in the console/terminal*
+> Run a command in the console/terminal.
 
 👉 *Commands should be declared between single quotes (`'`) and must stay in a single line*
 
@@ -345,7 +417,7 @@ When I run the command 'rmdir foo'
 
 ### run + script
 
-*Run SQL commands in a database*
+> Runs a database script (SQL command).
 
 The next sentence is for [Test Events](language.md#test-events) only:
 ```gherkin
@@ -411,12 +483,17 @@ Currently [database-js-sqlite](https://github.com/mlaanderson/database-js-sqlite
 
 ## `saveScreenshot`
 
+> Takes a screenshot an saves into a file.
+
 ```gherkin
 When I save a screenshot to "foo.png"
   and I take a photo to "bar.png"
 ```
 
+
 ## `scrollTo`
+
+> Scrolls to a certain element.
 
 ```gherkin
 When I scroll to <#foo>
@@ -424,6 +501,8 @@ When I scroll to <#foo>
 ```
 
 ## `see`
+
+> Indicates that something can be seen.
 
 ### see + value
 ```gherkin
@@ -519,17 +598,6 @@ Then I do not see the cookie "foo"
   and I don't see the cookie "bar"
 ```
 
-### see + url + value
-```gherkin
-Then I see the url "/foo"
-```
-
-### see + not + url + value
-```gherkin
-Then I do not see the url "/foo"
-  and I don't see the url "/bar"
-```
-
 ### see + value + inside + title
 ```gherkin
 Then I see "foo" in the title
@@ -564,18 +632,6 @@ Then I do not see {Foo}
   and I don't see <#bar>
 ```
 
-### see + target + checked
-```gherkin
-Then I see {Foo} is checked
-  and I see <#bar> is checked
-```
-
-### see + not + target + checked
-```gherkin
-Then I do not see {Foo} is checked
-  and I don't see <#bar> is checked
-```
-
 ### see + orientation + landscape
 The next sentence is for *mobile* only:
 ```gherkin
@@ -588,10 +644,28 @@ The next sentence is for *mobile* only:
 Then I see that the orientation is portrait
 ```
 
-### see + text + value
+### see + target + enabled
+```gherkin
+Then I see {Foo} is enabled
+  and I see <#bar> is enabled
+```
+
+### see + not + target + enabled
+```gherkin
+Then I don't see {Foo} that is enabled
+  and I do not see <#bar> that is enabled
+```
+
+### see + text + value or number
 ```gherkin
 Then I see the text "foo"
   and I see the text 1000
+```
+
+### see + not + text + value or number
+```gherkin
+Then I don't see the text "foo"
+  and I do not see the text 1000
 ```
 
 ### see + url + value
@@ -599,13 +673,16 @@ Then I see the text "foo"
 Then I see the url "/foo"
 ```
 
-### see + target + enabled
+### see + not + url + value
 ```gherkin
-Then I see {Foo} is enabled
-  and I see <#bar> is enabled
+Then I do not see the url "/foo"
+  and I don't see the url "/bar"
 ```
 
+
 ## `select`
+
+> Selects a value for an element.
 
 ### select + value + inside + target
 ```gherkin
@@ -614,6 +691,8 @@ When I select "foo" in {Foo}
 ```
 
 ## `shake`
+
+> Shakes the device.
 
 ### shake + device
 The next sentence is for *mobile* only:
@@ -624,6 +703,8 @@ When I shake the device
 ```
 
 ## `swipe`
+
+> Performs a swipe action.
 
 ### swipe + value + number + number
 The next sentence is for *mobile* only:
@@ -663,6 +744,8 @@ When I swipe <#foo> to <#bar>
 
 ## `switch`
 
+> Switches an app to native mode or web mode, or switches to a certain tab.
+
 ### switch + native
 The next sentence is for *mobile* only:
 ```gherkin
@@ -692,6 +775,8 @@ When I switch to the previous tab
 
 ## `tap`
 
+> Performs a tap on an element.
+
 ### tap + target
 The next sentence is for *mobile* only:
 ```gherkin
@@ -699,7 +784,10 @@ When I tap <~ok>
   and I tap {Confirm}
 ```
 
+
 ## `uncheck`
+
+> Unchecks a checkbox.
 
 ### uncheck + target
 ```gherkin
@@ -708,71 +796,86 @@ When I unckeck {Foo}
 ```
 
 ### uncheck + target + target
+> Unchecks a checkbox which is inside an element.
 ```gherkin
-When I unckeck {Foo} in <#bar>
+When I uncheck {Foo} in <#bar>
 ```
+
 
 ## `wait`
 
+> Wait for something.
+
 ### wait + seconds
+> Wait the given seconds.
 ```gherkin
 When I wait 2 seconds
 ```
 
 ### wait + target
+> Wait for a certain element.
 ```gherkin
 When I wait for {Foo}
   and I wait for <#bar>
 ```
 
 ### wait + seconds + target
+> Wait the given seconds for a certain element.
 ```gherkin
 When I wait 3 seconds for {Foo}
   and I wait 5 seconds for <#bar>
 ```
 
 ### wait + target + hide
+> Waits for an element to hide.
 ```gherkin
 When I wait {Foo} to hide
   and I wait <#bar> to hide
 ```
 
 ### wait + seconds + target + hide
+> Waits the given seconds for an element to hide.
 ```gherkin
 When I wait 3 seconds for {Foo} to hide
   and I wait 5 seconds for <#bar> to hide
 ```
 
 ### wait + target + enabled
+> Waits for an element to become enabled.
 ```gherkin
 When I wait {Foo} to be enabled
   and I wait <#bar> to be enabled
 ```
 
 ### wait + seconds + target + enabled
+> Waits the given seconds for an element to become enabled.
 ```gherkin
 When I wait 3 seconds for {Foo} to be enabled
   and I wait 5 seconds for <#bar> to be enabled
 ```
 
 ### wait + target + invisible
+> Waits for an element to become invisible.
 ```gherkin
 When I wait {Foo} is invisible
   and I wait <#bar> is invisible
 ```
 
 ### wait + seconds + target + invisible
+> Waits the given seconds for an element to become invisible.
 ```gherkin
 When I wait 3 seconds {Foo} to be invisible
   and I wait 5 seconds <#bar> to be invisible
 ```
 
 ### wait + target + visible
+> Waits for an element to become visible.
 ```gherkin
 When I wait {Foo} to be visible
   and I wait <#bar> to be visible
 ```
 
+> Waits the given seconds for an element to become visible.
 ### wait + seconds + target + visible
 ```gherkin
 When I wait 3 seconds for {Foo} to be visible
@@ -780,31 +883,37 @@ When I wait 3 seconds for {Foo} to be visible
 ```
 
 ### wait + text + value
+> Waits for a text.
 ```gherkin
 When I wait for the text "Foo"
 ```
 
 ### wait + seconds + text + value
+> Waits the given seconds for a text.
 ```gherkin
 When I wait 3 seconds for the text "Foo"
 ```
 
 ### wait + url + value
+> Waits for a url.
 ```gherkin
 When I wait for the url "/foo"
 ```
 
 ### wait + seconds + url + value
+> Waits the given seconds for a url.
 ```gherkin
 When I wait 3 seconds for the url "/bar"
 ```
 
 ### wait + option value + value + target
+> Waits for a value inside an element.
 ```gherkin
 When I wait for the value "foo" in <#bar>
 ```
 
 ### wait + seconds + option value + value + target
+> Waits the given seconds for a value inside an element.
 ```gherkin
 When I wait 5 seconds for the value "foo" in <#bar>
 ```
