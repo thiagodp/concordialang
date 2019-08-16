@@ -4,6 +4,7 @@
 
 Translations: [Português](../pt/actions.md) 🌎
 
+---
 
 ## `accept`
 
@@ -42,7 +43,7 @@ Given that I am on "http://concordialang.org"
 
 ## `append`
 
-> Adds a value to a widget (UI Element or UI Literal).
+> Adds a value to an element.
 
 ### append + number + target
 ```gherkin
@@ -59,7 +60,7 @@ When I append 100 to {Bar}
 
 ## `attachFile`
 
-> Attaches a file. It selects the file and confirm its choice (i.e., clicks OK).
+> Attaches a file. It selects a file and confirms its choice (e.g., clicks Open).
 
 ### attach + file + value + target
 ```gherkin

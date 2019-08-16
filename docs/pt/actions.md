@@ -2,10 +2,77 @@
 
 *Exemplos de sentenças de Variantes com ações. Um exemplo pode demonstrar variações de uma mesma ação.*
 
+## O que você deseja fazer?
+
+> Aqui estão *algumas* opções, não todas.
+
+- [Abrir painel de notificações de um dispositivo](#open)
+- [Aceitar uma mensagem do navegador ou do app](#accept)
+- [Adicionar um valor em um elemento](#append)
+- [Anexar um arquivo](#attachfile)
+- [Apagar um cookie](#clear--cookie)
+- [Arrastar e soltar algo para um determinado elemento](#drag)
+- [Atualizar a página atual](#refresh)
+- [Balançar ou fazer um dispositivo tremer](#shake)
+- [Cancelar uma mensagem do navegador ou do app](#cancel)
+- [Clicar em algo na tela](#click)
+- [Clicar com o botão direito em algo](#rightclick)
+- [Conectar a um banco de dados](#connect)
+- [Dar um duplo clique em algo](#doubleclick)
+- [Desconectar de um banco de dados](#disconnect)
+- [Desmarcar um elemento](#uncheck)
+- [Deslizar a tela em um dispositivo](#swipe)
+- [Deslizar um elemento, na tela em um dispositivo](#swipe)
+- [Deslizar um elemento para outro, na tela em um dispositivo](#swipe--from--to)
+- [Desinstalar um app pelo seu nome interno](#remove)
+- [Esperar por um elemento](#wait--target)
+- [Esperar por um elemento estar dentro de outro](#wait--option-value--value--target)
+- [Esperar por um texto](#wait--text--value)
+- [Esperar por uma URL](#wait--url--value)
+- [Esperar um tempo](#wait)
+- [Esperar um elemento ficar habilitado](#wait--target--enabled)
+- [Esperar um elemento ficar invisível](#wait--target--invisible)
+- [Esperar um elemento ficar visível](#wait--target--visible)
+- [Executar um comando no console/terminal ou um script de banco de dados (comando SQL)](#run)
+- [Extrair um recurso de um dispositivo para um determinado local](#pull)
+- [Fechar uma aba ou janela do navegador, ou um app](#close)
+- [Indicar uma página ou tela do app em que se espera estar](#amon)
+- [Indicar que algo pode ou não ser visto](#see)
+- [Instalar um app](#install)
+- [Limpar o conteúdo de um campo de entrada](#clear)
+- [Marcar uma caixa de marcação (checkbox)](#check)
+- [Maximizar uma janela ou o navegador](#maximize)
+- [Mover o cursor do mouse para um local ou elemento](#move)
+- [Ocultar o teclado do dispositivo](#hide)
+- [Preencher um campo](#fill)
+- [Pressionar uma tecla ou uma combinação de teclas](#press)
+- [Redimensionar uma janela](#resize)
+- [Rolar a tela até um certo elemento](#scrollto)
+- [Selecionar o valor de um elemento](#select)
+- [Tirar uma foto da tela](#savescreenshot)
+- [Tocar em um elemento da tela de um dispositivo](#tap)
+- [Trocar o modo de um dispositivo de nativo para web ou vice-versa](#switch)
+- [Verificar se a orientação do dispositivo é paisagem](#see--orientation--landscape)
+- [Verificar se a orientação do dispositivo é retrato](#see--orientation--portrait)
+- [Verificar seu um app está instalado](#see--app--value--installed)
+- [Verificar seu uma atividade o app está ativa](#see--currentactivity--value)
+- [Verificar se elemento está visível](#see--target)
+- [Verificar se elemento está habilitado](#see--target--enabled)
+- [Verificar se elemento está marcado](#see--target--checked)
+- [Verificar a url do navegador](#see--url--value)
+- [Verificar se o título da janela/aba do navegador tem um certo valor](#see--value--inside--title)
+- [Verificar se um dispositivo está com a tela bloqueada](#see--device--locked)
+- [Verificar se um valor está visível](#see--text--value-or-number)
+- [Verificar se um valor está dentro de um elemento](#see--value--inside--target)
+- [Verificar se um valor está em um título](#see--value--inside--title)
+- [Verificar se um valor está visível](#see--value)
+- [Verificar se um cookie existe](#see--cookie--value)
+
+---
 
 ## `accept`
 
-> Aceita uma mensagem do navegador ou do app
+> Aceita uma mensagem do navegador ou do app.
 
 ### accept + alert
 ```gherkin
@@ -30,7 +97,7 @@ Quando eu aceito o prompt
 
 ## `amOn`
 
-> Indica uma página ou tela do app em que se espera estar
+> Indica uma página ou tela do app em que se espera estar.
 
 ```gherkin
 Dado que estou em "http://concordialang.org"
@@ -39,7 +106,7 @@ Dado que estou em "http://concordialang.org"
 
 ## `append`
 
-> Adiciona um valor em um widget (Elemento de IU ou Literal de IU)
+> Adiciona um valor em um elemento.
 
 ```gherkin
 Quando eu adiciono "Conteúdo" em {Foo}
@@ -88,7 +155,7 @@ Quando eu cancelo o prompt
 
 ## `check`
 
-> Marca uma caixa de seleção (checkbox).
+> Marca uma caixa de marcação (checkbox).
 
 ### check + target
 
@@ -99,7 +166,7 @@ Quando eu marco {Foo}
 
 ### check + target + target
 
-Marca um elemento que está dentro de outro:
+> Marca uma caixa de marcação (checkbox) que está dentro de outro
 ```gherkin
 Então eu marco {Foo} em <#bar>
 ```
@@ -145,7 +212,7 @@ Quando eu clico em "Foo"
 
 ## `close`
 
-> Fecha uma aba ou um app.
+> Fecha uma aba ou janela do navegador, ou um app.
 
 ```gherkin
 Quando eu fecho a aba atual
@@ -199,7 +266,7 @@ Quando eu clico duas vezes em "Foo"
 
 ## `drag`
 
-> Arrasta e solta algo para um determinado widget.
+> Arrasta e solta algo para um determinado elemento.
 
 ```gherkin
 Quando eu arrasto {Foo} para <#bar>
@@ -504,16 +571,16 @@ Quando eu rolo para <#foo>
 
 ## `see`
 
-> Indica que algo pode ser visto.
+> Indica que algo pode ou não ser visto.
 
 ### see + value
 ```gherkin
-Então eu não vejo "Foo Bar"
+Então eu vejo "Foo Bar"
 ```
 
 ### see + not + value
 ```gherkin
-Então eu não vejo que {Foo} está marcado
+Então eu não vejo "Foo Bar"
 ```
 
 ### see + app + value + installed

@@ -20,10 +20,10 @@ Add the tag `@ignore` to a Feature, Scenario, Variant or Test Case, in order to 
 
 ## How to generate HTML reports with CodeceptJS:
 
-1. Install **mochawesome** as a *development* dependency:
+1. Install **mochawesome** and **mochawesome-report-generator** as *development* dependencies:
 
     ```bash
-    npm install --save-dev mochawesome
+    npm install --save-dev mochawesome mochawesome-report-generator
     ```
 
 2. Edit `codecept.json` and add **mochawesome** to `reporterOptions`:
@@ -40,7 +40,7 @@ Add the tag `@ignore` to a Feature, Scenario, Variant or Test Case, in order to 
 				"options": {
 					"reportDir": "./output",
 					"reportFilename": "report",
-					"timestamp": true,
+					"overwrite": true,
 					"autoOpen": true
 				}
 			}
@@ -49,12 +49,11 @@ Add the tag `@ignore` to a Feature, Scenario, Variant or Test Case, in order to 
     ...
     ```
 
-The reports will be generared to the folder `output`.
-
-Extra tips:
-- Option `timestamp` makes it to generate a different report name on every execution. This is fine when you have to keep all the reports for historical reasons or audit. You may remove this option or turn it to `false` if it is not the case.
+*Notes:*
+- Option `overwrite` makes it to avoid overwriting the generated file. This usually generates a different file names each time, such as `mochawesome_001.html`, `mochawesome_002.html` and so on.
 - Option `autoOpen` makes it to open the generated report with the default browser after the tests are finished.
-- See [additional report options](https://github.com/adamgruber/mochawesome-report-generator).
+
+👉 **See the [Mochawesome Report Generator's documentation](https://github.com/adamgruber/mochawesome-report-generator/) for more details.**
 
 
 # How to speed up your browser tests
