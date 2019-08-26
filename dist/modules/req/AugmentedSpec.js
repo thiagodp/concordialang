@@ -15,6 +15,7 @@ class MappedContent {
         this.table = false;
     }
 }
+exports.IN_MEMORY_DATABASE_NAME = '___concordia___';
 /**
  * Augmented specification
  *
@@ -33,8 +34,7 @@ class AugmentedSpec extends ast_1.Spec {
         this._nonFeatureNamesCache = null;
         this._constantNameToValueMap = new Map();
         this._uiElementVariableMap = new Map(); // *all* UI Elements
-        this._databaseNameToInterfaceMap = new Map(); // Null means it could not connect
-        this._tableNameToInterfaceMap = new Map(); // Null means it could not connect
+        this._databaseNameToInterfaceMap = new Map();
         this._uiLiteralCaseOption = CaseType_1.CaseType.CAMEL; // defined by setter
         this._docToAcessibleUIElementsCache = new Map();
         this.databaseNames = (rebuildCache = false) => {
@@ -58,7 +58,6 @@ class AugmentedSpec extends ast_1.Spec {
         this._constantNameToValueMap.clear();
         this._uiElementVariableMap.clear();
         this._databaseNameToInterfaceMap.clear();
-        this._tableNameToInterfaceMap.clear();
         this._docFullyMapped.clear();
     }
     mapAllDocuments() {
@@ -79,9 +78,6 @@ class AugmentedSpec extends ast_1.Spec {
     //
     databaseNameToInterfaceMap() {
         return this._databaseNameToInterfaceMap;
-    }
-    tableNameToInterfaceMap() {
-        return this._tableNameToInterfaceMap;
     }
     //
     // CACHE FOR DOCUMENTS

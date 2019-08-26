@@ -1,31 +1,5 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var ConnectionType;
-(function (ConnectionType) {
-    ConnectionType[ConnectionType["IN_MEMORY_TABLE"] = 0] = "IN_MEMORY_TABLE";
-    ConnectionType[ConnectionType["DATABASE"] = 1] = "DATABASE";
-})(ConnectionType = exports.ConnectionType || (exports.ConnectionType = {}));
-class ConnectionResult_ {
-    constructor(type, intf, error) {
-        this.type = type;
-        this.intf = intf;
-        this.error = error;
-    }
-    static forTable(intf, error = null) {
-        return new ConnectionResult_(ConnectionType.IN_MEMORY_TABLE, intf, error);
-    }
-    static forDatabase(intf, error = null) {
-        return new ConnectionResult_(ConnectionType.DATABASE, intf, error);
-    }
-}
-exports.ConnectionResult_ = ConnectionResult_;
-class ConnectionContext {
-    constructor() {
-        // Maps a database name or a table name to its connection result
-        this.map = new Map();
-    }
-}
-exports.ConnectionContext = ConnectionContext;
 /**
  * Connection check result.
  *
@@ -58,4 +32,3 @@ class ConnectionCheckResult {
     }
 }
 exports.ConnectionCheckResult = ConnectionCheckResult;
-// ---

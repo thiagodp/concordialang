@@ -12,14 +12,17 @@ const dbjs = require("database-js");
 const DatabaseTypes_1 = require("./DatabaseTypes");
 const DatabaseToAbstractDatabase_1 = require("./DatabaseToAbstractDatabase");
 /**
- * A simple database wrapper.
+ * Handles databases using DatabaseJS.
  *
  * @author Thiago Delgado Pinto
  */
-class DatabaseWrapper {
+class DatabaseJSDatabaseInterface {
     constructor() {
-        this._dbi = null; // internal database interface
+        this._dbConnection = null;
         this._db = null;
+        //
+        // FROM DatabaseInterface
+        //
         /** @inheritDoc */
         this.hasFileBasedDriver = (databaseType) => {
             return DatabaseTypes_1.isPathBasedDatabaseType(databaseType);
@@ -28,25 +31,26 @@ class DatabaseWrapper {
     /** @inheritDoc */
     isConnected() {
         return __awaiter(this, void 0, void 0, function* () {
-            return !!this._dbi;
+            return !!this._dbConnection;
         });
     }
     /** @inheritDoc */
     connect(db, basePath) {
         return __awaiter(this, void 0, void 0, function* () {
             this._db = db;
-            this._dbi = this.createConnectionFromNode(db, basePath); // may throw an Error
+            this._basePath = basePath;
+            this._dbConnection = this.createConnectionFromNode(db, basePath); // may throw an Error
             return true;
         });
     }
     /** @inheritDoc */
     disconnect() {
         return __awaiter(this, void 0, void 0, function* () {
-            if (!this._dbi) {
+            if (!this._dbConnection) {
                 throw this.dbiError();
             }
-            if (!!this._dbi.close) {
-                return yield this._dbi.close();
+            if (!!this._dbConnection.close) {
+                return yield this._dbConnection.close();
             }
             return true;
         });
@@ -54,35 +58,44 @@ class DatabaseWrapper {
     /** @inheritDoc */
     reconnect() {
         return __awaiter(this, void 0, void 0, function* () {
-            if (!this._dbi) {
+            if (!this._dbConnection) {
                 throw this.dbiError();
             }
             if (yield this.isConnected()) {
                 yield this.disconnect();
             }
-            return yield this.connect(this._db);
+            return yield this.connect(this._db, this._basePath);
         });
     }
     /** @inheritDoc */
     exec(cmd, params) {
         return __awaiter(this, void 0, void 0, function* () {
             if (!params) {
-                return this._dbi.prepareStatement(cmd).execute();
+                return this._dbConnection.prepareStatement(cmd).execute();
             }
-            return this._dbi.prepareStatement(cmd).execute(...params);
+            return this._dbConnection.prepareStatement(cmd).execute(...params);
         });
     }
+    /** @inheritDoc */
+    createTable(table) {
+        return __awaiter(this, void 0, void 0, function* () {
+            throw new Error('Table creation not supported for the DatabaseJS interface.');
+        });
+    }
+    //
+    // FROM Queryable
+    //
     /** @inheritDoc */
     query(cmd, params) {
         return __awaiter(this, void 0, void 0, function* () {
             if (!params) {
-                return this._dbi.prepareStatement(cmd).query();
+                return this._dbConnection.prepareStatement(cmd).query();
             }
-            return this._dbi.prepareStatement(cmd).query(...params);
+            return this._dbConnection.prepareStatement(cmd).query(...params);
         });
     }
     //
-    // private
+    // PRIVATE
     //
     /**
      * Returns a database connection from the given database node.
@@ -102,4 +115,4 @@ class DatabaseWrapper {
         return new Error('Internal database interface not instantied.');
     }
 }
-exports.DatabaseWrapper = DatabaseWrapper;
+exports.DatabaseJSDatabaseInterface = DatabaseJSDatabaseInterface;

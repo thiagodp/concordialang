@@ -24,6 +24,8 @@ class MappedContent {
     table: boolean = false;
 }
 
+export const IN_MEMORY_DATABASE_NAME: string = '___concordia___';
+
 /**
  * Augmented specification
  *
@@ -45,8 +47,7 @@ export class AugmentedSpec extends Spec {
     private _constantNameToValueMap: Map< string, string | number > = new Map< string, string | number >();
     private _uiElementVariableMap: Map< string, UIElement > = new Map< string, UIElement >(); // *all* UI Elements
 
-    private _databaseNameToInterfaceMap = new Map< string, DatabaseInterface | null >(); // Null means it could not connect
-    private _tableNameToInterfaceMap = new Map< string, InMemoryTableInterface | null >(); // Null means it could not connect
+    private _databaseNameToInterfaceMap = new Map< string, DatabaseInterface | null >();
 
     private _uiLiteralCaseOption: CaseType = CaseType.CAMEL; // defined by setter
 
@@ -80,7 +81,6 @@ export class AugmentedSpec extends Spec {
         this._uiElementVariableMap.clear();
 
         this._databaseNameToInterfaceMap.clear();
-        this._tableNameToInterfaceMap.clear();
 
         this._docFullyMapped.clear();
     }
@@ -108,10 +108,6 @@ export class AugmentedSpec extends Spec {
 
     databaseNameToInterfaceMap(): Map< string, DatabaseInterface | null > {
         return this._databaseNameToInterfaceMap;
-    }
-
-    tableNameToInterfaceMap(): Map< string, InMemoryTableInterface | null > {
-        return this._tableNameToInterfaceMap;
     }
 
     //

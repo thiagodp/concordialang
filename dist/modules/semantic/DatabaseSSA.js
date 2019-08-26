@@ -15,7 +15,7 @@ const SpecificationAnalyzer_1 = require("./SpecificationAnalyzer");
  *
  * Checkings:
  * - duplicated names
- * - connection to the defined databases <<< NEDDED HERE ???
+ * - connection to the defined databases <<< NEEDED HERE ???
  *
  * @author Thiago Delgado Pinto
  */

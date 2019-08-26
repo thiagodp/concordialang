@@ -1,8 +1,26 @@
 import { RandomLong } from "./RandomLong";
 import { Random } from "./Random";
 import { isDefined } from '../../util/TypeChecking';
-import { randstr } from 'better-randstr';
+import { randstr, Options } from 'better-randstr';
 import { escapeChar } from "../util/escape";
+
+export interface RandomStringOptions {
+    escapeChars?: boolean
+    avoidDatabaseChars?: boolean
+}
+
+const DEFAULT_RANDOM_STRING_OPTIONS: RandomStringOptions = < RandomStringOptions > {
+    escapeChars: true,
+    avoidDatabaseChars: false
+};
+
+function avoidDatabaseChar( char ) {
+    const DATABASE_CHARS = "\"'%`";
+    if ( DATABASE_CHARS.indexOf( char ) >= 0 ) {
+        return ' '; // Return an empty space instead
+    }
+    return escapeChar( char );
+}
 
 /**
  * Random string generator, compatible with Unicode. Defaults to the ASCII range,
@@ -23,9 +41,12 @@ export class RandomString {
      * Constructor
      *
      * @param _random
-     * @param escaped Whether wants to generate escape strings. Defaults to true.
+     * @param options Random string options.
      */
-    constructor( private _random: Random, public escaped: boolean = true ) {
+    constructor(
+        private _random: Random,
+        public options: RandomStringOptions = Object.assign( {}, DEFAULT_RANDOM_STRING_OPTIONS )
+    ) {
         this._randomLong = new RandomLong( _random  );
         this._minCharCode = this.MIN_PRINTABLE_ASCII;
         this._maxCharCode = this.MAX_PRINTABLE_ASCII;
@@ -41,12 +62,21 @@ export class RandomString {
             return self._random.generate();
         };
 
-        return randstr( {
+        let opt: Options = {
             random: fn,
             length: length,
-            replacer: escapeChar,
             chars: [ this._minCharCode, this._maxCharCode ]
-        } );
+        };
+
+        if ( this.options.escapeChars ) {
+            opt.replacer = escapeChar;
+        }
+
+        if ( this.options.avoidDatabaseChars ) {
+            opt.replacer = avoidDatabaseChar;
+        }
+
+        return randstr( opt );
     }
 
     public between( minimum: number, maximum: number ): string {

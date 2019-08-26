@@ -25,7 +25,7 @@ import { DataGenerator } from '../testdata/DataGenerator';
 import { DataGeneratorBuilder } from '../testdata/DataGeneratorBuilder';
 import { DataTestCaseAnalyzer, DTCAnalysisResult, DTCMap, UIEVariableToDTCMap } from '../testdata/DataTestCaseAnalyzer';
 import { Random } from '../testdata/random/Random';
-import { RandomString } from '../testdata/random/RandomString';
+import { RandomString, RandomStringOptions } from '../testdata/random/RandomString';
 import { UIElementValueGenerator, ValueGenContext } from '../testdata/UIElementValueGenerator';
 import {
     Actions,
@@ -85,10 +85,14 @@ export class PreTestCaseGenerator {
         public readonly uiLiteralCaseOption: CaseType = CaseType.CAMEL,
         public readonly minRandomStringSize = 0,
         public readonly maxRandomStringSize = 100,
-        public readonly randomTriesToInvalidValues = 5
+        public readonly randomTriesToInvalidValues = 5,
+        public readonly randomStringOptions: RandomStringOptions = { escapeChars: true, avoidDatabaseChars: true }
     ) {
         const random = new Random( seed );
-        this._randomString = new RandomString( random );
+        this._randomString = new RandomString(
+            random,
+            randomStringOptions
+            );
         this._dtcAnalyzer = new DataTestCaseAnalyzer( seed );
         this._uieValueGen = new UIElementValueGenerator(
             new DataGenerator(

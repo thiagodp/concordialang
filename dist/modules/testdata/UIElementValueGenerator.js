@@ -9,13 +9,10 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const ast_1 = require("../ast");
+const AugmentedSpec_1 = require("../req/AugmentedSpec");
 const nlp_1 = require("../nlp");
 const error_1 = require("../error");
-const DatabaseToAbstractDatabase_1 = require("../db/DatabaseToAbstractDatabase");
-const DatabaseTypes_1 = require("../db/DatabaseTypes");
-const DatabaseWrapper_1 = require("../db/DatabaseWrapper");
-const InMemoryTableWrapper_1 = require("../db/InMemoryTableWrapper");
-const QueryParser_1 = require("../db/QueryParser");
+const db_1 = require("../db");
 const NodeTypes_1 = require("../req/NodeTypes");
 const QueryReferenceReplacer_1 = require("../util/QueryReferenceReplacer");
 const TypeChecking_1 = require("../util/TypeChecking");
@@ -352,7 +349,7 @@ class UIElementValueGenerator {
     }
     resolveUIElementsInQuery(query, currentFeatureName, owner, context, doc, spec, errors) {
         return __awaiter(this, void 0, void 0, function* () {
-            const variables = (new QueryParser_1.QueryParser()).parseAnyVariables(query);
+            const variables = (new db_1.QueryParser()).parseAnyVariables(query);
             if (variables.length < 1) { // No variables
                 return query;
             }
@@ -395,8 +392,8 @@ class UIElementValueGenerator {
     }
     resolveDatabaseReferenceInQuery(propType, query, database, spec, errors) {
         return __awaiter(this, void 0, void 0, function* () {
-            const absDB = (new DatabaseToAbstractDatabase_1.DatabaseToAbstractDatabase()).convertFromNode(database);
-            const supportTables = DatabaseTypes_1.supportTablesInQueries(absDB.driverName);
+            const absDB = (new db_1.DatabaseToAbstractDatabase()).convertFromNode(database);
+            const supportTables = db_1.supportTablesInQueries(absDB.driverName);
             // console.log( 'before', query );
             // Remove database reference from the query
             const newQuery = this._queryRefReplacer.replaceDatabaseInQuery(query, database.name, !supportTables);
@@ -405,11 +402,11 @@ class UIElementValueGenerator {
                 // console.log( 'query', newQuery, 'dbQueryCache', this._dbQueryCache.get( newQuery ) );
                 return this.properDataFor(propType, this._dbQueryCache.get(newQuery));
             }
-            // Retrieve connection interface
+            // Retrieve database interface
             let intf = spec.databaseNameToInterfaceMap().get(database.name);
             // Create the connection interface if not available
             if (!intf) {
-                intf = new DatabaseWrapper_1.DatabaseWrapper();
+                intf = new db_1.DatabaseJSDatabaseInterface();
                 try {
                     yield intf.connect(database, spec.basePath);
                 }
@@ -444,20 +441,42 @@ class UIElementValueGenerator {
                 return this.properDataFor(propType, this._tblQueryCache.get(newQuery));
             }
             // console.log( 'after', newQuery );
-            // Retrieve table interface
-            let intf = spec.tableNameToInterfaceMap().get(table.name);
+            // Retrieve database interface
+            let intf = spec.databaseNameToInterfaceMap().get(AugmentedSpec_1.IN_MEMORY_DATABASE_NAME);
             // Create the table interface if not available
             if (!intf) {
-                intf = new InMemoryTableWrapper_1.InMemoryTableWrapper();
+                const database = {
+                    name: AugmentedSpec_1.IN_MEMORY_DATABASE_NAME,
+                    nodeType: NodeTypes_1.NodeTypes.DATABASE,
+                    location: { column: 1, line: 1 },
+                    items: [
+                        {
+                            nodeType: NodeTypes_1.NodeTypes.DATABASE_PROPERTY,
+                            location: { column: 1, line: 2 },
+                            property: ast_1.DatabaseProperties.TYPE,
+                            value: 'alasql',
+                            content: 'type is alasql'
+                        }
+                    ]
+                };
+                intf = new db_1.AlaSqlDatabaseInterface();
                 try {
-                    yield intf.connect(table);
+                    yield intf.connect(database, spec.basePath);
                 }
                 catch (err) {
                     errors.push(err);
                     return null;
                 }
-                spec.tableNameToInterfaceMap().set(table.name, intf);
+                spec.databaseNameToInterfaceMap().set(AugmentedSpec_1.IN_MEMORY_DATABASE_NAME, intf);
             }
+            try {
+                yield intf.createTable(table);
+            }
+            catch (err) {
+                errors.push(err);
+                return null;
+            }
+            // console.log( 'INTF', intf );
             let returnedData;
             try {
                 returnedData = yield this.queryResult(newQuery, intf, errors);

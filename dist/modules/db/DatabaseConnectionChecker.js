@@ -10,7 +10,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const dbi_1 = require("../dbi");
 const error_1 = require("../error");
-const DatabaseWrapper_1 = require("./DatabaseWrapper");
+const DatabaseJSDatabaseInterface_1 = require("./DatabaseJSDatabaseInterface");
 /**
  * Checks all the connections of a specification.
  *
@@ -20,7 +20,7 @@ class DatabaseConnectionChecker {
     constructor() {
         this.createDBI = (db) => {
             // In the future, other implementation could be selected, according to the database type
-            return new DatabaseWrapper_1.DatabaseWrapper();
+            return new DatabaseJSDatabaseInterface_1.DatabaseJSDatabaseInterface();
         };
     }
     check(spec, errors, disconnectAfterConnecting = false) {

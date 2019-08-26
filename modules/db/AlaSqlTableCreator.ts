@@ -1,74 +1,29 @@
 import * as alasql from 'alasql';
 
-import { Table } from '../ast/Table';
-import { InMemoryTableInterface } from '../dbi/InMemoryTableInterface';
-import { RuntimeException } from '../error/RuntimeException';
-import { isDefined } from '../util/TypeChecking';
-import { ValueType, ValueTypeDetector } from '../util/ValueTypeDetector';
-import { SqlHelper } from './SqlHelper';
+import { Table } from "../ast";
+import { RuntimeException } from "../error";
+import { ValueType, isDefined, ValueTypeDetector } from "../util";
 
-
-// @ts-ignore
-type TargetInMemoryDB = alasql.Database;
+import { SqlHelper } from "./SqlHelper";
+import { AlaSqlDatabase } from './AlaSqlTypes';
 
 /**
- * In-memory table wrapper
+ * Creates database tables from Table nodes.
  *
  * @author Thiago Delgado Pinto
  */
-export class InMemoryTableWrapper implements InMemoryTableInterface {
+export class AlaSqlTableCreator {
 
-    private readonly _db: TargetInMemoryDB;
-
-    private readonly _valueTypeDetector: ValueTypeDetector = new ValueTypeDetector();
     private readonly _sqlHelper: SqlHelper = new SqlHelper();
+    private readonly _valueTypeDetector: ValueTypeDetector = new ValueTypeDetector();
 
-    constructor(
-        private _internalDatabaseName = 'concordia'
-    ) {
-        // @ts-ignore
-        this._db = new alasql.Database( _internalDatabaseName );
-        alasql( this._sqlHelper.generateUse( _internalDatabaseName ) );
-    }
-
-    /** @inheritDoc */
-    async isConnected(): Promise< boolean > {
-        return true; // currently always true
-    }
-
-    /** @inheritDoc */
-    async connect( table: Table ): Promise< void > {
-        await this.createFromNode( table );
-    }
-
-    /** @inheritDoc */
-    async disconnect(): Promise< void > {
-        // Currently does nothing
-    }
-
-    /** @inheritDoc */
-    async query( cmd: string, params?: any ): Promise< any[] > {
-
-        return new Promise< any[] >( ( resolve, reject ) => {
-            try {
-                this._db.exec(
-                    cmd,
-                    params,
-                    ( data ) => resolve( data )
-                );
-                // // @ts-ignore
-                // let select = alasql.compile( cmd );
-                // let data = select( params );
-                // resolve( data );
-            } catch ( e ) {
-                reject( e );
-            }
-
-        } );
-    }
-
-
-    async createFromNode( table: Table ): Promise< void > {
+    /**
+     * Creates a table from a database connection and a table node.
+     *
+     * @param dbConnection Database connection
+     * @param table Table node
+     */
+    async createTableFromNode( dbConnection: AlaSqlDatabase, table: Table ): Promise< boolean > {
 
         const rowCount = table.rows.length;
         if ( rowCount < 2 ) {
@@ -87,7 +42,8 @@ export class InMemoryTableWrapper implements InMemoryTableInterface {
         const sqlColumns = this._sqlHelper.generateSqlColumns( columnRow.cells, sqlTypes );
         const createCommand = this._sqlHelper.generateCreateWithTypes( table.internalName, sqlColumns );
         try {
-            this._db.exec( createCommand ); // Creates the table if it does not exist
+            // console.log( 'TABLE CREATION COMMAND: ', createCommand );
+            dbConnection.exec( createCommand ); // Creates the table if it does not exist
         } catch ( e ) {
             const msg = `Error creating the table "${table.name}": ${e.message}`;
             throw new RuntimeException( msg, table.location );
@@ -120,6 +76,7 @@ export class InMemoryTableWrapper implements InMemoryTableInterface {
         }
 
         // console.log( createCommand, "\n", insertCommand );
+        return true;
     }
 
     detectTableColumnTypes( table: Table ): ValueType[] {
@@ -172,5 +129,6 @@ export class InMemoryTableWrapper implements InMemoryTableInterface {
             default: return value;
         }
     }
+
 
 }

@@ -46,7 +46,7 @@ export class DataGeneratorBuilder {
         private readonly _maxPossibleStringLength?: number
     ) {
         this._random = new Random( this._seed );
-        this._randomString = new RandomString( this._random );
+        this._randomString = new RandomString( this._random, { escapeChars: true, avoidDatabaseChars: true } );
         this._randomLong = new RandomLong( this._random );
         this._randomDouble = new RandomDouble( this._random );
         this._randomDate = new RandomDate( this._randomLong );

@@ -6,7 +6,7 @@ import {
     ConnectionResult
 } from '../dbi';
 import { RuntimeException, LocatedException } from '../error';
-import { DatabaseWrapper } from './DatabaseWrapper';
+import { DatabaseJSDatabaseInterface } from './DatabaseJSDatabaseInterface';
 
 /**
  * Checks all the connections of a specification.
@@ -86,7 +86,7 @@ export class DatabaseConnectionChecker {
 
     createDBI = ( db: Database ): DatabaseInterface => {
         // In the future, other implementation could be selected, according to the database type
-        return new DatabaseWrapper();
+        return new DatabaseJSDatabaseInterface();
     };
 
 }

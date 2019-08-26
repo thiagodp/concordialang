@@ -1,19 +1,25 @@
 import dbjs = require( 'database-js' );
 
-import { Database } from '../ast/Database';
+import { Database, Table } from '../ast';
 import { DatabaseInterface } from '../dbi/DatabaseInterface';
 import { isPathBasedDatabaseType } from './DatabaseTypes';
 import { DatabaseToAbstractDatabase } from './DatabaseToAbstractDatabase';
 
 /**
- * A simple database wrapper.
+ * Handles databases using DatabaseJS.
  *
  * @author Thiago Delgado Pinto
  */
-export class DatabaseWrapper implements DatabaseInterface {
+export class DatabaseJSDatabaseInterface implements DatabaseInterface {
 
-    private _dbi: dbjs.Connection = null; // internal database interface
+    private _dbConnection: dbjs.Connection = null;
+
     private _db: Database = null;
+    private _basePath: string;
+
+    //
+    // FROM DatabaseInterface
+    //
 
     /** @inheritDoc */
     public hasFileBasedDriver = ( databaseType: string ): boolean => {
@@ -22,60 +28,67 @@ export class DatabaseWrapper implements DatabaseInterface {
 
     /** @inheritDoc */
     public async isConnected(): Promise< boolean > {
-        return !! this._dbi;
+        return !! this._dbConnection;
     }
-
 
     /** @inheritDoc */
     public async connect( db: Database, basePath?: string ): Promise< boolean > {
         this._db = db;
-        this._dbi = this.createConnectionFromNode( db, basePath ); // may throw an Error
+        this._basePath = basePath;
+        this._dbConnection = this.createConnectionFromNode( db, basePath ); // may throw an Error
         return true;
     }
-
 
     /** @inheritDoc */
     public async disconnect(): Promise< boolean > {
-        if ( ! this._dbi ) {
+        if ( ! this._dbConnection ) {
             throw this.dbiError();
         }
-        if ( !! this._dbi.close ) {
-            return await this._dbi.close();
+        if ( !! this._dbConnection.close ) {
+            return await this._dbConnection.close();
         }
         return true;
     }
 
-
     /** @inheritDoc */
     public async reconnect(): Promise< boolean > {
-        if ( ! this._dbi ) {
+        if ( ! this._dbConnection ) {
             throw this.dbiError();
         }
         if ( await this.isConnected() ) {
             await this.disconnect();
         }
-        return await this.connect( this._db );
+        return await this.connect( this._db, this._basePath );
     }
 
 
     /** @inheritDoc */
     public async exec( cmd: string, params?: any[] ): Promise< any[] > {
         if ( ! params ) {
-            return this._dbi.prepareStatement( cmd ).execute();
+            return this._dbConnection.prepareStatement( cmd ).execute();
         }
-        return this._dbi.prepareStatement( cmd ).execute( ... params );
+        return this._dbConnection.prepareStatement( cmd ).execute( ... params );
     }
+
+    /** @inheritDoc */
+    public async createTable( table: Table ): Promise< boolean > {
+        throw new Error( 'Table creation not supported for the DatabaseJS interface.' );
+    }
+
+    //
+    // FROM Queryable
+    //
 
     /** @inheritDoc */
     public async query( cmd: string, params?: any[] ): Promise< any[] > {
         if ( ! params ) {
-            return this._dbi.prepareStatement( cmd ).query();
+            return this._dbConnection.prepareStatement( cmd ).query();
         }
-        return this._dbi.prepareStatement( cmd ).query( ... params );
+        return this._dbConnection.prepareStatement( cmd ).query( ... params );
     }
 
     //
-    // private
+    // PRIVATE
     //
 
     /**

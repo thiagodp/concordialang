@@ -3,11 +3,12 @@ import { Location } from 'concordialang-types';
 
 import { Database, DatabaseProperties, DatabaseProperty } from '../../modules/ast';
 import { NodeTypes } from '../../modules/req/NodeTypes';
-import { DatabaseWrapper } from '../../modules/db/DatabaseWrapper';
+import { DatabaseJSDatabaseInterface } from '../../modules/db';
 
-describe( 'DatabaseWrapper', () => {
+describe( 'DatabaseJSDatabaseInterface', () => {
 
-    let wrapper: DatabaseWrapper = null;
+    let dbi: DatabaseJSDatabaseInterface = null; // under test
+
     const testDatabasePath: string = path.join( process.cwd(), '/__tests__/db/users.json' );
 
     let makeDB = ( name, path ): Database => {
@@ -51,12 +52,12 @@ describe( 'DatabaseWrapper', () => {
 
 
     beforeEach( () => {
-        wrapper = new DatabaseWrapper();
+        dbi = new DatabaseJSDatabaseInterface();
     } );
 
     afterEach( async () => {
-        if ( await wrapper.isConnected() ) {
-            await wrapper.disconnect();
+        if ( await dbi.isConnected() ) {
+            await dbi.disconnect();
         }
     } );
 
@@ -64,9 +65,9 @@ describe( 'DatabaseWrapper', () => {
     it( 'is able to connect to an existing database', async () => {
         let db = makeValidDB();
         try {
-            let ok = await wrapper.connect( db );
+            let ok = await dbi.connect( db );
             expect( ok ).toBeTruthy();
-            let isConnected = await wrapper.isConnected();
+            let isConnected = await dbi.isConnected();
             expect( isConnected ).toBeTruthy();
         } catch ( e ) {
             fail( e );
@@ -88,7 +89,7 @@ describe( 'DatabaseWrapper', () => {
 
     it( 'is able to verify whether is connected', async () => {
         try {
-            let isConnected = await wrapper.isConnected();
+            let isConnected = await dbi.isConnected();
             expect( isConnected ).toBeFalsy();
         } catch ( e ) {
             fail( e );
@@ -98,8 +99,8 @@ describe( 'DatabaseWrapper', () => {
     it( 'is able to query', async () => {
         let db = makeValidDB();
         try {
-            await wrapper.connect( db );
-            let results = await wrapper.query(
+            await dbi.connect( db );
+            let results = await dbi.query(
                 'SELECT * WHERE name LIKE ?',
                 [ 'Bob' ]
                 );

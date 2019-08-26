@@ -1,7 +1,7 @@
 import { DatabaseInterface } from './DatabaseInterface';
 import { LocatedException } from '../error/LocatedException';
-import { InMemoryTableInterface } from './InMemoryTableInterface';
 
+/**
 
 export enum ConnectionType {
     IN_MEMORY_TABLE,
@@ -46,7 +46,7 @@ export class ConnectionContext {
     public map = new Map< string, ConnectionResult_ >();
 }
 
-// ---
+**/
 
 /**
  * Connection result.
@@ -95,5 +95,3 @@ export class ConnectionCheckResult {
     }
 
 }
-
-// ---

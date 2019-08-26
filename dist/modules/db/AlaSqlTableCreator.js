@@ -9,65 +9,31 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const alasql = require("alasql");
-const RuntimeException_1 = require("../error/RuntimeException");
-const TypeChecking_1 = require("../util/TypeChecking");
-const ValueTypeDetector_1 = require("../util/ValueTypeDetector");
+const error_1 = require("../error");
+const util_1 = require("../util");
 const SqlHelper_1 = require("./SqlHelper");
 /**
- * In-memory table wrapper
+ * Creates database tables from Table nodes.
  *
  * @author Thiago Delgado Pinto
  */
-class InMemoryTableWrapper {
-    constructor(_internalDatabaseName = 'concordia') {
-        this._internalDatabaseName = _internalDatabaseName;
-        this._valueTypeDetector = new ValueTypeDetector_1.ValueTypeDetector();
+class AlaSqlTableCreator {
+    constructor() {
         this._sqlHelper = new SqlHelper_1.SqlHelper();
-        // @ts-ignore
-        this._db = new alasql.Database(_internalDatabaseName);
-        alasql(this._sqlHelper.generateUse(_internalDatabaseName));
+        this._valueTypeDetector = new util_1.ValueTypeDetector();
     }
-    /** @inheritDoc */
-    isConnected() {
-        return __awaiter(this, void 0, void 0, function* () {
-            return true; // currently always true
-        });
-    }
-    /** @inheritDoc */
-    connect(table) {
-        return __awaiter(this, void 0, void 0, function* () {
-            yield this.createFromNode(table);
-        });
-    }
-    /** @inheritDoc */
-    disconnect() {
-        return __awaiter(this, void 0, void 0, function* () {
-            // Currently does nothing
-        });
-    }
-    /** @inheritDoc */
-    query(cmd, params) {
-        return __awaiter(this, void 0, void 0, function* () {
-            return new Promise((resolve, reject) => {
-                try {
-                    this._db.exec(cmd, params, (data) => resolve(data));
-                    // // @ts-ignore
-                    // let select = alasql.compile( cmd );
-                    // let data = select( params );
-                    // resolve( data );
-                }
-                catch (e) {
-                    reject(e);
-                }
-            });
-        });
-    }
-    createFromNode(table) {
+    /**
+     * Creates a table from a database connection and a table node.
+     *
+     * @param dbConnection Database connection
+     * @param table Table node
+     */
+    createTableFromNode(dbConnection, table) {
         return __awaiter(this, void 0, void 0, function* () {
             const rowCount = table.rows.length;
             if (rowCount < 2) {
                 const msg = `Table "${table.name}" must have at least two rows: the first one with column names and second one with values.`;
-                throw new RuntimeException_1.RuntimeException(msg, table.location);
+                throw new error_1.RuntimeException(msg, table.location);
             }
             // Detect value types in the first data row, to create the table
             const columnRow = table.rows[0];
@@ -78,19 +44,20 @@ class InMemoryTableWrapper {
             const sqlColumns = this._sqlHelper.generateSqlColumns(columnRow.cells, sqlTypes);
             const createCommand = this._sqlHelper.generateCreateWithTypes(table.internalName, sqlColumns);
             try {
-                this._db.exec(createCommand); // Creates the table if it does not exist
+                // console.log( 'TABLE CREATION COMMAND: ', createCommand );
+                dbConnection.exec(createCommand); // Creates the table if it does not exist
             }
             catch (e) {
                 const msg = `Error creating the table "${table.name}": ${e.message}`;
-                throw new RuntimeException_1.RuntimeException(msg, table.location);
+                throw new error_1.RuntimeException(msg, table.location);
             }
             // Prepares a parameterized insert
             const insertCommand = this._sqlHelper.generateParameterizedInsert(table.internalName, columnRow.cells);
             // @ts-ignore
             let insert = alasql.compile(insertCommand);
-            if (!TypeChecking_1.isDefined(insert)) {
+            if (!util_1.isDefined(insert)) {
                 const msg = `Error compiling the insert command at the table "${table.name}".`;
-                throw new RuntimeException_1.RuntimeException(msg, table.location);
+                throw new error_1.RuntimeException(msg, table.location);
             }
             // Inserts the values
             for (let i = 1; i < rowCount; ++i) { // starts at the second row
@@ -103,10 +70,11 @@ class InMemoryTableWrapper {
                 }
                 catch (e) {
                     const msg = `Error inserting values in the table "${table.name}": ${e.message}`;
-                    throw new RuntimeException_1.RuntimeException(msg, table.location);
+                    throw new error_1.RuntimeException(msg, table.location);
                 }
             }
             // console.log( createCommand, "\n", insertCommand );
+            return true;
         });
     }
     detectTableColumnTypes(table) {
@@ -125,7 +93,7 @@ class InMemoryTableWrapper {
                     continue;
                 }
                 // Different -> string prevails
-                if (currentTypes[j] === ValueTypeDetector_1.ValueType.STRING) {
+                if (currentTypes[j] === util_1.ValueType.STRING) {
                     valTypes[j] = currentTypes[j];
                 }
             }
@@ -150,11 +118,11 @@ class InMemoryTableWrapper {
         let detectedType = this._valueTypeDetector.detect(value);
         // switch ( type ) {
         switch (detectedType) {
-            case ValueTypeDetector_1.ValueType.BOOLEAN: return this._valueTypeDetector.isTrue(value);
-            case ValueTypeDetector_1.ValueType.INTEGER: return parseInt(value);
-            case ValueTypeDetector_1.ValueType.DOUBLE: return parseFloat(value);
+            case util_1.ValueType.BOOLEAN: return this._valueTypeDetector.isTrue(value);
+            case util_1.ValueType.INTEGER: return parseInt(value);
+            case util_1.ValueType.DOUBLE: return parseFloat(value);
             default: return value;
         }
     }
 }
-exports.InMemoryTableWrapper = InMemoryTableWrapper;
+exports.AlaSqlTableCreator = AlaSqlTableCreator;

@@ -3,7 +3,8 @@ import { Random } from "../../../modules/testdata/random/Random";
 
 describe( 'RandomString', () => {
 
-    let random = new RandomString( new Random() );
+    const _r = new Random();
+    let random = new RandomString( _r );
 
     it( 'can generate an empty string', () => {
         expect( random.exactly( 0 ) ).toBe( '' );
@@ -20,6 +21,15 @@ describe( 'RandomString', () => {
         expect( random.between( 1, 1 ) ).toHaveLength( 1 );
         expect( random.between( 10, 60 ).length ).toBeLessThanOrEqual( 60 );
         expect( random.between( 10, 60 ).length ).toBeGreaterThanOrEqual( 10 );
+    } );
+
+    it( 'can avoid database characters', () => {
+        let random = new RandomString( _r, { avoidDatabaseChars: true } );
+        const result = random.exactly( 10000 );
+        expect( result.indexOf( "'" ) ).toBeLessThan( 0 );
+        expect( result.indexOf( "\"" ) ).toBeLessThan( 0 );
+        expect( result.indexOf( "%" ) ).toBeLessThan( 0 );
+        expect( result.indexOf( "`" ) ).toBeLessThan( 0 );
     } );
 
 } );

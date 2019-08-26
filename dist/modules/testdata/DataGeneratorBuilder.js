@@ -32,7 +32,7 @@ class DataGeneratorBuilder {
         this._maxPossibleStringLength = _maxPossibleStringLength;
         this._queryCache = new QueryCache_1.QueryCache();
         this._random = new Random_1.Random(this._seed);
-        this._randomString = new RandomString_1.RandomString(this._random);
+        this._randomString = new RandomString_1.RandomString(this._random, { escapeChars: true, avoidDatabaseChars: true });
         this._randomLong = new RandomLong_1.RandomLong(this._random);
         this._randomDouble = new RandomDouble_1.RandomDouble(this._random);
         this._randomDate = new RandomDate_1.RandomDate(this._randomLong);

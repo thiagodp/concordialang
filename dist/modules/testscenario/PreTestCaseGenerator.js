@@ -53,7 +53,7 @@ var UIElementReplacementOption;
  * @author Thiago Delgado Pinto
  */
 class PreTestCaseGenerator {
-    constructor(_variantSentenceRec, langContentLoader, defaultLanguage, seed, uiLiteralCaseOption = CaseType_1.CaseType.CAMEL, minRandomStringSize = 0, maxRandomStringSize = 100, randomTriesToInvalidValues = 5) {
+    constructor(_variantSentenceRec, langContentLoader, defaultLanguage, seed, uiLiteralCaseOption = CaseType_1.CaseType.CAMEL, minRandomStringSize = 0, maxRandomStringSize = 100, randomTriesToInvalidValues = 5, randomStringOptions = { escapeChars: true, avoidDatabaseChars: true }) {
         this._variantSentenceRec = _variantSentenceRec;
         this.langContentLoader = langContentLoader;
         this.defaultLanguage = defaultLanguage;
@@ -62,12 +62,13 @@ class PreTestCaseGenerator {
         this.minRandomStringSize = minRandomStringSize;
         this.maxRandomStringSize = maxRandomStringSize;
         this.randomTriesToInvalidValues = randomTriesToInvalidValues;
+        this.randomStringOptions = randomStringOptions;
         this._nlpUtil = new nlp_1.NLPUtil();
         this._uiePropExtractor = new util_1.UIElementPropertyExtractor();
         this._lineChecker = new LineChecker_1.LineChecker();
         this._targetTypeUtil = new util_1.TargetTypeUtil();
         const random = new Random_1.Random(seed);
-        this._randomString = new RandomString_1.RandomString(random);
+        this._randomString = new RandomString_1.RandomString(random, randomStringOptions);
         this._dtcAnalyzer = new DataTestCaseAnalyzer_1.DataTestCaseAnalyzer(seed);
         this._uieValueGen = new UIElementValueGenerator_1.UIElementValueGenerator(new DataGenerator_1.DataGenerator(new DataGeneratorBuilder_1.DataGeneratorBuilder(seed, randomTriesToInvalidValues, maxRandomStringSize)));
     }

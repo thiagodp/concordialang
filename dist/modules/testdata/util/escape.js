@@ -14,15 +14,14 @@ function escapeChar(char) {
         case '\x1a': return '\\z';
         case '\n': return '\\n';
         case '\r': return '\\r';
-        // symbols
+        // ui literals symbols
+        case '<': ; // escape because of ui literals
+        case '>': ; // escape because of ui literals
+        // other symbols
         case '"': ; // continue
-        case "'": ; // escape "single quotes" because of database values
-        // database-related
-        case '%': ; // escape "percent" because of database values
-        case '`': ; // escape "x" because of database values
-        // ui literals
-        case '<': ; // escape "less than" because of ui literals
-        case '>': ; // escape "greater than" because of ui literals
+        case "'": ; // escape because of database values
+        case '%': ; // escape because of database values
+        case '`': ; // escape because of database values
         case '\\': return '\\' + char;
     }
     return char;

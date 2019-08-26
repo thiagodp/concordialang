@@ -8,17 +8,21 @@ import {
     EntityValue,
     EntityValueType,
     UIProperty,
-    UIPropertyTypes
+    UIPropertyTypes,
+    DatabaseProperty,
+    DatabaseProperties
 } from '../ast';
-import { AugmentedSpec } from '../req/AugmentedSpec';
+import { AugmentedSpec, IN_MEMORY_DATABASE_NAME } from '../req/AugmentedSpec';
 import { Entities } from '../nlp';
-import { Queryable } from '../dbi';
+import { Queryable, DatabaseInterface } from '../dbi';
 import { LocatedException, RuntimeException } from '../error';
-import { DatabaseToAbstractDatabase } from '../db/DatabaseToAbstractDatabase';
-import { supportTablesInQueries } from '../db/DatabaseTypes';
-import { DatabaseWrapper } from '../db/DatabaseWrapper';
-import { InMemoryTableWrapper } from '../db/InMemoryTableWrapper';
-import { QueryParser } from '../db/QueryParser';
+import {
+    DatabaseToAbstractDatabase,
+    supportTablesInQueries,
+    AlaSqlDatabaseInterface,
+    DatabaseJSDatabaseInterface,
+    QueryParser
+} from '../db';
 import { NodeTypes } from '../req/NodeTypes';
 import { UIETestPlan } from '../testcase/UIETestPlan';
 import { QueryReferenceReplacer } from '../util/QueryReferenceReplacer';
@@ -508,12 +512,12 @@ export class UIElementValueGenerator {
             return this.properDataFor( propType, this._dbQueryCache.get( newQuery ) );
         }
 
-        // Retrieve connection interface
-        let intf = spec.databaseNameToInterfaceMap().get( database.name );
+        // Retrieve database interface
+        let intf: DatabaseInterface = spec.databaseNameToInterfaceMap().get( database.name );
 
         // Create the connection interface if not available
         if ( ! intf ) {
-            intf = new DatabaseWrapper();
+            intf = new DatabaseJSDatabaseInterface();
             try {
                 await intf.connect( database, spec.basePath );
             } catch ( err ) {
@@ -556,20 +560,45 @@ export class UIElementValueGenerator {
         }
         // console.log( 'after', newQuery );
 
-        // Retrieve table interface
-        let intf = spec.tableNameToInterfaceMap().get( table.name );
+        // Retrieve database interface
+        let intf = spec.databaseNameToInterfaceMap().get( IN_MEMORY_DATABASE_NAME );
 
         // Create the table interface if not available
         if ( ! intf ) {
-            intf = new InMemoryTableWrapper();
+
+            const database: Database = < Database > {
+                name: IN_MEMORY_DATABASE_NAME,
+                nodeType: NodeTypes.DATABASE,
+                location: { column: 1, line: 1 },
+                items: [
+                    {
+                        nodeType: NodeTypes.DATABASE_PROPERTY,
+                        location: { column: 1, line: 2 },
+                        property: DatabaseProperties.TYPE,
+                        value: 'alasql',
+                        content: 'type is alasql'
+                    } as DatabaseProperty
+                ]
+            };
+
+            intf = new AlaSqlDatabaseInterface();
             try {
-                await intf.connect( table );
+                await intf.connect( database, spec.basePath );
             } catch ( err ) {
                 errors.push( err );
                 return null;
             }
-            spec.tableNameToInterfaceMap().set( table.name, intf );
+            spec.databaseNameToInterfaceMap().set( IN_MEMORY_DATABASE_NAME, intf );
         }
+
+        try {
+            await intf.createTable( table );
+        } catch ( err ) {
+            errors.push( err );
+            return null;
+        }
+
+        // console.log( 'INTF', intf );
 
         let returnedData;
         try {

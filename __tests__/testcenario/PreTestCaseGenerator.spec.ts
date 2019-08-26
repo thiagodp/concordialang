@@ -257,7 +257,7 @@ describe( 'PreTestCaseGenerator', () => {
         // Content + Comment
         const lines = preTC.steps.map( s => s.content + ( ! s.comment ? '' : ' #' + s.comment ) );
 
-        const rand = new RandomString( new Random( SEED ) );
+        const rand = new RandomString( new Random( SEED ), gen.randomStringOptions );
         const value1 = rand.between( gen.minRandomStringSize, gen.maxRandomStringSize );
         const value2 = rand.between( gen.minRandomStringSize, gen.maxRandomStringSize );
         const comment1 = '# válido: aleatório';
@@ -386,7 +386,7 @@ describe( 'PreTestCaseGenerator', () => {
         const value2 = '';
         const comment1Value = '# {A}, válido: não preenchido';
         const comment2Value = '# {C}, válido: não preenchido';
-        const randStr = new RandomString( new Random( SEED ) );
+        const randStr = new RandomString( new Random( SEED ), gen.randomStringOptions );
         const random1 = randStr.between( gen.minRandomStringSize, gen.maxRandomStringSize );
         const random2 = randStr.between( gen.minRandomStringSize, gen.maxRandomStringSize );
         const commentRandom = '# válido: aleatório';
