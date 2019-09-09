@@ -201,7 +201,14 @@ concordia
 
 *Parabéns!*
 
-O Compilador Concordia irá gerar alguns arquivos, configurar o ambiente, então **gerar e executar os scripts de teste**. Seu navegador deverá abrir automaticamente durante o processo e o terminal mostrará o resultado da execução do teste.
+O Compilador Concordia irá
+  - configurar o ambiente de teste;
+  - gerar um caso de teste;
+  - transformar o caso de teste em script de teste;
+  - executar o script de teste; e
+  - reportar o resultado da execução.
+
+Seu navegador deverá abrir automaticamente durante o processo e o terminal mostrará o resultado da execução do teste.
 
 **Alguns arquivos gerados:**
 
