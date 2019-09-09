@@ -1,67 +1,144 @@
-# Generated test cases
+# Generated test cases <!-- omit in toc -->
 
 Translations: [Português](../pt/test-cases.md) 🌎
 
+
+- [Covered features](#covered-features)
+  - [State-based combination](#state-based-combination)
+    - [Example 1](#example-1)
+    - [Example 2](#example-2)
+- [Data Test Cases](#data-test-cases)
+  - [Examples](#examples)
+    - [Example 1](#example-1-1)
+    - [Example 2](#example-2-1)
+    - [Example 3](#example-3)
+
 Concordia can generate test cases from [functional requirements](https://en.wikipedia.org/wiki/Functional_requirement) written in Concordia Language. Although it is not able to generate test cases for [non-functional requirements](https://en.wikipedia.org/wiki/Non-functional_requirement) automatically, you can create them manually with traditional *Behavior-Driven Development* (BDD) tools based on [Gherkin](https://github.com/cucumber/cucumber/wiki/Gherkin), such as [Cucumber](https://docs.cucumber.io/).
 
-## Covered states
+## Covered features
 
-> *description soon*
+- **All the features are covered by default.**
+- Features can receive an importance value by using the tag `@importance`. Example: `@importance( 8 )`.
+- By default, all the features receive an importance with value `5`.
+- You can filter the features by importance with the parameters `--sel-min-feature` and `--sel-max-feature`. Example: `concordia --sel-min-feature 7` will consider only the features with importance `7` or above.
 
-## Covered scenarios
+### State-based combination
 
-> *description soon*
+- **The generated Test Cases combine Features automatically, whether you declared corresponding States.**
+- States are sentences between tilde (~), *e.g.*, `Then I have ~User is Logged In~`.
+- A Feature can produce a state, called *post-condition*, by declaring it in a `Then` step, like in the example above.
+- A Feature can depend on a state, called *precondition*, by declaring it in a `Given` step. Example: `Given that ~User is Logged In~`.
+- A Feature can also invoke a given a state by declaring it in a `When` step. Example: `When I have ~New Customer Saved~`.
+- A Feature should import the Feature file that produces the State that it depends on. Example: `import "Login.feature"`.
 
-## Covered rules
+#### Example 1
+
+```concordia
+Feature: Login
+  ...
+  Variant: Successful Login
+    ...
+    Then I have ~User is Logged In~
+```
+
+```concordia
+import "login.feature"
+
+Feature: Generate Sales Report
+  ...
+  Variant: Generate Default Report
+    Given that ~User is Logged In~
+    ...
+```
+
+The Test Cases for the Variant "Generate Default Report" will execute a successful path of the Variant "Successful Login" before any other steps.
+
+#### Example 2
+
+```concordia
+Feature: New Customer
+  ...
+  Variant: Customer with Basic Contact Info
+    ...
+    Then I have ~New Customer Saved~
+
+  Variant: Customer with Full Contact Info
+    ...
+    Then I have ~New Customer Saved~
+```
+
+```concordia
+import "new-customer.feature"
+
+Feature: New Sale
+  ...
+  Variant: Pay in Cash
+    ...
+    When I have ~New Customer Saved~
+    ...
+```
+
+Test Cases for the Variant `Pay in Cash` may execute a successful path of both the Variants `Customer with Basic Contact Info` and `Customer with Full Contact Info`, since they produce the needed State, `New Customer Saved`.
+
+
+## Data Test Cases
 
 Every input data may receive values according to its business rules.
 These business rules are classified in the following groups:
 `VALUE`, `LENGTH`, `FORMAT`, `SET`, `REQUIRED`, and `COMPUTED`.
 All but `COMPUTED` are currently available.
 
-Every group has related test cases, applied according to the declared business rules:
+Every group has related data test cases, applied according to the declared business rules:
 
-| Group    | Test Case                      |
-|----------|--------------------------------|
-| VALUE    | LOWEST_VALUE                   |
-|          | RANDOM_BELOW_MIN_VALUE         |
-|          | JUST_BELOW_MIN_VALUE           |
-|          | MIN_VALUE	                    |
-|          | JUST_ABOVE_MIN_VALUE           |
-|          | ZERO_VALUE	                    |
-|          | MEDIAN_VALUE                   |
-|          | RANDOM_BETWEEN_MIN_MAX_VALUES  |
-|          | JUST_BELOW_MAX_VALUE           |
-|          | MAX_VALUE	                    |
-|          | JUST_ABOVE_MAX_VALUE           |
-|          | RANDOM_ABOVE_MAX_VALUE         |
-|          | GREATEST_VALUE                 |
-| LENGTH   | LOWEST_LENGTH                  |
-|          | RANDOM_BELOW_MIN_LENGTH        |
-|          | JUST_BELOW_MIN_LENGTH          |
-|          | MIN_LENGTH                     |
-|          | JUST_ABOVE_MIN_LENGTH          |
-|          | MEDIAN_LENGTH                  |
-|          | RANDOM_BETWEEN_MIN_MAX_LENGTHS |
-|          | JUST_BELOW_MAX_LENGTH          |
-|          | MAX_LENGTH	                    |
-|          | JUST_ABOVE_MAX_LENGTH          |
-|          | RANDOM_ABOVE_MAX_LENGTH        |
-|          | GREATEST_LENGTH                |
-| FORMAT   | VALID_FORMAT                   |
-|          | INVALID_FORMAT                 |
-| SET      | FIRST_ELEMENT                  |
-|          | RANDOM_ELEMENT                 |
-|          | LAST_ELEMENT                   |
-|          | NOT_IN_SET                     |
-| REQUIRED | FILLED                         |
-|          | NOT_FILLED                     |
-| COMPUTED | RIGHT_COMPUTATION	            |
-|          | WRONG_COMPUTATION	            |
-|          |                                |
+| Group    | Data Test Case                 | Description |
+|----------|--------------------------------| ----------- |
+| VALUE    | LOWEST_VALUE                   | The lowest value for the data type, *e.g.*, lowest integer |
+|          | RANDOM_BELOW_MIN_VALUE         | A random value below the minimum value |
+|          | JUST_BELOW_MIN_VALUE           | The value just below the minimum value, considering the data type and decimal places if applicable |
+|          | MIN_VALUE	                    | Exactly the minimum value |
+|          | JUST_ABOVE_MIN_VALUE           | The value just above the minimum value, considering the data type and decimal places if applicable |
+|          | ZERO_VALUE	                    | Zero (`0`) |
+|          | MEDIAN_VALUE                   | The median between the minimum value and the maximum value |
+|          | RANDOM_BETWEEN_MIN_MAX_VALUES  | A random value between the minimum value and the maximum value |
+|          | JUST_BELOW_MAX_VALUE           | The value just below the maximum value, considering the data type and decimal places if applicable |
+|          | MAX_VALUE	                    | Exactly the maximum value |
+|          | JUST_ABOVE_MAX_VALUE           | The value just above the maximum value, considering the data type and decimal places if applicable |
+|          | RANDOM_ABOVE_MAX_VALUE         | A random value above the maximum value |
+|          | GREATEST_VALUE                 | The greatest value for the data type, *e.g.*, greatest integer |
+| LENGTH   | LOWEST_LENGTH                  | An empty string |
+|          | RANDOM_BELOW_MIN_LENGTH        | A string with random characters and random length, less than the minimum length |
+|          | JUST_BELOW_MIN_LENGTH          | A string with random characters and length exactly below the minimum length |
+|          | MIN_LENGTH                     | A string with random characters and length exactly equal to the minimum length |
+|          | JUST_ABOVE_MIN_LENGTH          | A string with random characters and length exactly above the minimum length |
+|          | MEDIAN_LENGTH                  | A string with random characters and length equal to the median between the minimum length and the maximum length |
+|          | RANDOM_BETWEEN_MIN_MAX_LENGTHS | A string with random characters and random length, between the minimum length and the maximum length |
+|          | JUST_BELOW_MAX_LENGTH          | A string with random characters and length exactly below the maximum length |
+|          | MAX_LENGTH	                    | A string with random characters and length exactly equal to the maximum length |
+|          | JUST_ABOVE_MAX_LENGTH          | A string with random characters and length exactly above the maximum length |
+|          | RANDOM_ABOVE_MAX_LENGTH        | A string with random characters and random length, greater than the maximum length |
+|          | GREATEST_LENGTH                | The greatest length supported for a string (*see Notes*) |
+| FORMAT   | VALID_FORMAT                   | A value that matches the defined regular expression |
+|          | INVALID_FORMAT                 | A value that does not match the defined regular expression |
+| SET      | FIRST_ELEMENT                  | The first element in the defined set or query result |
+|          | RANDOM_ELEMENT                 | A random element in the defined set or query result |
+|          | LAST_ELEMENT                   | The last element in the defined set or query result |
+|          | NOT_IN_SET                     | A value that does not belong to the defined set or query result |
+| REQUIRED | FILLED                         | A random value |
+|          | NOT_FILLED                     | Empty value |
+| COMPUTED | RIGHT_COMPUTATION	            | A value generated by the defined algorithm |
+|          | WRONG_COMPUTATION	            | A value different from that generated by the defined algorithm |
 
 
-## Example 1
+**NOTES**
+- The greatest length for a string defaults to `500` for performance reasons when running the tests, but it can be set by the CLI parameter `--random-max-string-size`. Example: `concordia --random-max-string-size 1000`. You can also set it in the configuration file (`.concordiarc`) by adding the property  `randomMaxStringSize`. Example:
+  ```json
+  "randomMaxStringSize": 1000
+  ```
+- The test cases in the group `COMPUTED` are not available. However, using such algorithms to generate values for test cases is risky since the algorithm itself can have failures. Thus, we recommend you to cover test cases with tricky or complex calculations by defining the expected input and output values. You can define Variants or Test Cases for that purpose.
+
+### Examples
+
+#### Example 1
 
 Let's describe a rule for a user interface element `Salary` :
 
@@ -123,7 +200,7 @@ All the tests of the group `VALUE` are now applicable. That is, the following te
 
 The tests from `5` to `7` will produce values considered **invalid**.
 
-## Example 2
+#### Example 2
 
 Let's define a user interface element named `Profession` and a table named `Professions` from which the values come from:
 
@@ -154,7 +231,7 @@ The first two tests are in the group `REQUIRED`. Since we declared `Profession` 
 
 The last four tests are in the group `SET`. Only the last one, `NOT_IN_SET`, will produce a value considered **invalid**.
 
-## Example 3
+#### Example 3
 
 In this example, let's adjust the past two examples to make `Salary` rules *dynamic*, and change according to the `Profession`.
 

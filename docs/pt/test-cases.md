@@ -1,6 +1,14 @@
-# Casos de teste gerados
+# Casos de teste gerados <!-- omit in toc -->
 
-Concordia pode gerar casos de teste a partir de [requisitos funcionais](https://pt.wikipedia.org/wiki/Requisito_funcional) escritos em Linguagem Concordia. Apesar de não ser capaz de gerar casos de testes para [requisitos não funcionais](https://pt.wikipedia.org/wiki/Requisito_n%C3%A3o_funcional) automaticamente, você pode criá-los manualmente usando as ferramentas de *Behavior-Driven Development* (BDD) baseadas em [Gherkin](https://github.com/cucumber/cucumber/wiki/Gherkin), como a [Cucumber](https://docs.cucumber.io/).
+- [Estados cobertos](#estados-cobertos)
+- [Cenários cobertos](#cen%c3%a1rios-cobertos)
+- [Cobertura de regras](#cobertura-de-regras)
+- [Exemplos](#exemplos)
+  - [Exemplo 1](#exemplo-1)
+  - [Exemplo 2](#exemplo-2)
+  - [Exemplo 3](#exemplo-3)
+
+Concordia pode gerar casos de teste a partir de [requisitos funcionais](https://pt.wikipedia.org/wiki/Requisito_funcional) escritos em Linguagem Concordia. Apesar de não ser capaz de gerar automaticamente casos de testes para [requisitos não funcionais](https://pt.wikipedia.org/wiki/Requisito_n%C3%A3o_funcional), você pode criá-los manualmente usando as ferramentas de *Behavior-Driven Development* (BDD) baseadas em [Gherkin](https://github.com/cucumber/cucumber/wiki/Gherkin), como a [Cucumber](https://docs.cucumber.io/).
 
 ## Estados cobertos
 
@@ -17,11 +25,11 @@ Todas exceto `COMPUTED` estão disponíveis atualmente.
 
 Para cada grupo, uma bateria de testes pode ser executada, dependendo das regras declaradas:
 
-| Group    | Test Case                      |
-|----------|--------------------------------|
-| VALUE    | LOWEST_VALUE                   |
-|          | RANDOM_BELOW_MIN_VALUE         |
-|          | JUST_BELOW_MIN_VALUE           |
+| Grupo    | Dado para Caso de Teste        | Descrição |
+|----------|--------------------------------| --------- |
+| VALUE    | LOWEST_VALUE                   | Lowest possible value for the data type, *e.g.*, lowest integer |
+|          | RANDOM_BELOW_MIN_VALUE         | Random value below the minimum value |
+|          | JUST_BELOW_MIN_VALUE           | The value just below the minimum value, considering the data type and decimal places |
 |          | MIN_VALUE	                    |
 |          | JUST_ABOVE_MIN_VALUE           |
 |          | ZERO_VALUE	                    |
@@ -56,23 +64,25 @@ Para cada grupo, uma bateria de testes pode ser executada, dependendo das regras
 |          | WRONG_COMPUTATION	            |
 |          |                                |
 
-## Exemplo 1
+## Exemplos
 
-Vamos descrever uma regra para o elemento de interface `Salario`:
+### Exemplo 1
+
+Vamos descrever uma regra para o elemento de interface `Salário`:
 
 ```gherkin
-Elemento de IU: Salario
+Elemento de IU: Salário
   - tipo de dado é double
 ```
 
-Como poucas restrições foram feitas, `Salario` será testado com os casos de teste do grupo `REQUIRED`:
+Como poucas restrições foram feitas, `Salário` será testado com os casos de teste do grupo `REQUIRED`:
 1. `FILLED`: um número flutuante *pseudo-aleatório* será gerado
 2. `NOT_FILLED`: um valor vazio será usado
 
 Agora, vamos adicionar uma restrição de **valor mínimo**.
 
 ```gherkin
-Elemento de IU: Salario
+Elemento de IU: Salário
   - tipo de dado é double
   - valor mínimo é 1000.00
     Caso contrário, eu devo ver "Salário deve ser maior ou igual a 1000"
@@ -99,7 +109,7 @@ Diferente deste exemplo, se o comportamento do sistema para valores inválidos n
 Agora, vamos adicionar uma restrição de **valor máximo**:
 
 ```gherkin
-Elemento de IU: Salario
+Elemento de IU: Salário
   - tipo de dado é double
   - valor mínimo é 1000.00
     Caso contrário, eu devo ver "Salário deve ser maior ou igual a 1000"
@@ -119,17 +129,17 @@ Todos os testes do grupo `VALUE` são agora aplicáveis. Isso é, os seguintes t
 
 Os testes de `5` a `7` vão produzir valores considerados **inválidos**.
 
-## Exemplo 2
+### Exemplo 2
 
-Vamos definir um elemento de interface de usuário chamado`Profissao` e uma tabela chamada `Profissoes` da qual seus valores virão:
+Vamos definir um elemento de interface de usuário chamado`Profissão` e uma tabela chamada `Profissões` da qual seus valores virão:
 
 ```gherkin
-Elemento de IU: Profissao
+Elemento de IU: Profissão
   - tipo é select
-  - valor vem de "SELECT nome FROM [Profissoes]"
+  - valor vem de "SELECT nome FROM [Profissões]"
   - obrigatório é true
 
-Tabela: Profissoes
+Tabela: Profissões
   | nome       |
   | Advogado   |
   | Contador   |
@@ -146,18 +156,18 @@ Os testes aplicáveis são:
   - `LAST_ELEMENT`
   - `NOT_IN_SET`
 
-Os primeiros dois testes são do grupo `REQUIRED`. Dado que declaramos `Profissao` como tendo valor obrigatório, o teste `FILLED` é considerado **válido**, mas `NOT_FILLED` não. É importante lembrar de declarar entradas obrigatórias quando for o caso.
+Os primeiros dois testes são do grupo `REQUIRED`. Dado que declaramos `Profissão` como tendo valor obrigatório, o teste `FILLED` é considerado **válido**, mas `NOT_FILLED` não. É importante lembrar de declarar entradas obrigatórias quando for o caso.
 
 Os últimos quatro testes estão no grupo `SET`. Somente o último, `NOT_IN_SET`, produzirá um valor considerado **inválido**.
 
-## Examplo 3
+### Exemplo 3
 
-Nesse exemplo, vamos ajustar os dois exemplos anteriores para tornar as regras de `Salario` dinâmicas e mudarem de acordo com o valor de `Profissao`.
+Nesse exemplo, vamos ajustar os dois exemplos anteriores para tornar as regras de `Salário` dinâmicas e mudarem de acordo com o valor de `Profissão`.
 
-Primeiro, vamos adicionar duas colunas à tabela `Profissoes`:
+Primeiro, vamos adicionar duas colunas à tabela `Profissões`:
 
 ```gherkin
-Tabela: Profissoes
+Tabela: Profissões
   | nome       | salario_min | salario_max |
   | Advogado   | 3000        | 30000       |
   | Contador   | 3000        | 10000       |
@@ -169,12 +179,12 @@ Tabela: Profissoes
 Então, mudaremos as regras para obter valores da tabela:
 
 ```gherkin
-Elemento de IU: Salario
+Elemento de IU: Salário
   - tipo de dado é double
-  - valor mínimo vem da consulta "SELECT salario_min FROM [Profissoes] WHERE nome = {Profissao}"
+  - valor mínimo vem da consulta "SELECT salario_min FROM [Profissões] WHERE nome = {Profissão}"
     Caso contrário eu devo ver "O salário informado é menor que o valor mínimo permitido."
-  - valor máximo vem da consulta "SELECT salario_max FROM [Profissoes] WHERE nome = {Profissao}"
+  - valor máximo vem da consulta "SELECT salario_max FROM [Profissões] WHERE nome = {Profissão}"
     Caso contrário eu devo ver "O salário informado é maior que o valor máximo permitido."
 ```
 
-A referência para o elemento de IU `{Profissao}` dentro da consulta faz as regras de `Salario` dependerem de `Profissao`. Cada vez que uma `Profissao` é selecionada, o **valor mínimo** e **valor máximo** de `Salario` mudam de acordo com as colunas `salario_min` e `salario_max` da tabela `Profissoes`.
+A referência para o elemento de IU `{Profissão}` dentro da consulta faz as regras de `Salário` dependerem de `Profissão`. Cada vez que uma `Profissão` é selecionada, o **valor mínimo** e **valor máximo** de `Salário` mudam de acordo com as colunas `salario_min` e `salario_max` da tabela `Profissões`.
