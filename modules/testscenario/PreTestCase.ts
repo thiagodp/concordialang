@@ -2,6 +2,12 @@ import { Step } from "../ast/Step";
 import { NodeTypes } from "../req/NodeTypes";
 import { TestPlan } from "../testcase/TestPlan";
 
+
+export interface CorrespondingOtherwiseSteps {
+    step: Step;
+    otherwiseSteps: Step[];
+}
+
 /**
  * Pre Test Case
  *
@@ -12,7 +18,8 @@ export class PreTestCase {
     constructor(
         public testPlan: TestPlan,
         public steps: Step[] = [],
-        public oracles: Step[] = []
+        public oracles: Step[] = [], // Otherwise steps
+        public correspondingOracles: Array< CorrespondingOtherwiseSteps > = []
     ) {
     }
 
@@ -31,7 +38,7 @@ export class PreTestCase {
         return null;
     }
 
-    hasThenStep(): boolean {
+    hasAnyThenStep(): boolean {
         return this.lastThenStep() !== null;
     }
 
@@ -55,9 +62,26 @@ export class PreTestCase {
     }
 
     shouldFail(): boolean {
-        return this.hasThenStep()
-            && this.hasAnyInvalidValue()
-            && ! this.hasOracles();
+        // return this.hasAnyThenStep()
+        //     && this.hasAnyInvalidValue()
+        //     && ! this.hasOracles();
+
+        if ( ! this.hasAnyThenStep ) {
+            return false;
+        }
+
+        for ( let step of this.steps ) {
+            // Is it invalid && it does not have otherwise steps
+            if ( step.isInvalidValue && ! this.hasCorrespondingOracles( step ) ) {
+                return true;
+            }
+        }
+        return false;
+
+    }
+
+    hasCorrespondingOracles( step: Step ): boolean {
+        return !! this.correspondingOracles.find( c => c.step === step );
     }
 
 

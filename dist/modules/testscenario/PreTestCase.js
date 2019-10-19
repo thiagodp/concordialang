@@ -7,10 +7,12 @@ const NodeTypes_1 = require("../req/NodeTypes");
  * @author Thiago Delgado Pinto
  */
 class PreTestCase {
-    constructor(testPlan, steps = [], oracles = []) {
+    constructor(testPlan, steps = [], oracles = [], // Otherwise steps
+    correspondingOracles = []) {
         this.testPlan = testPlan;
         this.steps = steps;
         this.oracles = oracles;
+        this.correspondingOracles = correspondingOracles;
     }
     hasAnyInvalidValue() {
         return this.testPlan.hasAnyInvalidResult();
@@ -25,7 +27,7 @@ class PreTestCase {
         }
         return null;
     }
-    hasThenStep() {
+    hasAnyThenStep() {
         return this.lastThenStep() !== null;
     }
     stepsBeforeTheLastThenStep() {
@@ -46,9 +48,22 @@ class PreTestCase {
         return (this.oracles || []).length > 0;
     }
     shouldFail() {
-        return this.hasThenStep()
-            && this.hasAnyInvalidValue()
-            && !this.hasOracles();
+        // return this.hasAnyThenStep()
+        //     && this.hasAnyInvalidValue()
+        //     && ! this.hasOracles();
+        if (!this.hasAnyThenStep) {
+            return false;
+        }
+        for (let step of this.steps) {
+            // Is it invalid && it does not have otherwise steps
+            if (step.isInvalidValue && !this.hasCorrespondingOracles(step)) {
+                return true;
+            }
+        }
+        return false;
+    }
+    hasCorrespondingOracles(step) {
+        return !!this.correspondingOracles.find(c => c.step === step);
     }
 }
 exports.PreTestCase = PreTestCase;

@@ -230,21 +230,28 @@ class PreTestCaseGenerator {
                 }
                 // console.log( 'uieVariableToValueMap', uieVariableToValueMap );
                 // Steps & Oracles
-                let completeSteps = [], stepOracles = [];
+                let filledSteps = [];
+                let filledOtherwiseSteps = [];
+                let filledCorrespondingOtherwiseSteps = [];
                 for (let step of newSteps) {
-                    // Resulting oracles are also processed
-                    let [resultingSteps, resultingOracles] = this.fillUIElementWithValueAndReplaceByUILiteralInStep(step, langContent, plan.dataTestCases, uieVariableToValueMap, language, ctx);
+                    // Resulting otherwiseSteps are also processed
+                    let [resultingSteps, correspondingOtherwiseSteps] = this.fillUIElementWithValueAndReplaceByUILiteralInStep(step, langContent, plan.dataTestCases, uieVariableToValueMap, language, ctx);
                     // console.log( 'ORACLES', '>'.repeat(10), resultingOracles );
-                    completeSteps.push.apply(completeSteps, resultingSteps);
-                    if (resultingOracles.length > 0) {
-                        stepOracles.push.apply(stepOracles, resultingOracles);
+                    filledSteps.push.apply(filledSteps, resultingSteps);
+                    if (correspondingOtherwiseSteps.length > 0) {
+                        let allOracles = [];
+                        for (let c of correspondingOtherwiseSteps) {
+                            allOracles.push.apply(allOracles, c.otherwiseSteps);
+                        }
+                        filledOtherwiseSteps.push.apply(filledOtherwiseSteps, allOracles);
+                        filledCorrespondingOtherwiseSteps.push.apply(filledCorrespondingOtherwiseSteps, correspondingOtherwiseSteps);
                     }
                 }
-                this.normalizeOracleSentences(stepOracles, langContent.keywords);
+                this.normalizeOracleSentences(filledOtherwiseSteps, langContent.keywords);
                 // # (2019-07-13)
-                this.replaceUIPropertyReferencesInsideValues(completeSteps, stepOracles, uieVariableToValueMap, language, langContent, ctx);
+                this.replaceUIPropertyReferencesInsideValues(filledSteps, filledOtherwiseSteps, uieVariableToValueMap, language, langContent, ctx);
                 // ---
-                all.push(new PreTestCase_1.PreTestCase(plan, completeSteps, stepOracles));
+                all.push(new PreTestCase_1.PreTestCase(plan, filledSteps, filledOtherwiseSteps, filledCorrespondingOtherwiseSteps));
             }
             // console.log( all.map( ptc => ptc.steps.map( s => s.content ) ) );
             return all;
@@ -362,7 +369,7 @@ class PreTestCaseGenerator {
                 comment = ' ' + keywordValid + Symbols_1.Symbols.TITLE_SEPARATOR + ' ' + keywordRandom;
             }
             else {
-                sentence += entity.string; // UI Element currently doesn't need prefix/sufix
+                sentence += entity.string; // UI Element currently doesn't need prefix/suffix
             }
             let newStep = deepcopy(step);
             newStep.nodeType = nodeType;
@@ -477,7 +484,10 @@ class PreTestCaseGenerator {
         const keywordInvalid = !keywords.invalid ? 'invalid' : (keywords.invalid[0] || 'invalid');
         // const keywordRandom = ! keywords.random ? 'random' : ( keywords.random[ 0 ] || 'random' );
         const keywordFrom = !keywords.from ? 'from' : (keywords.from[0] || 'from');
-        let steps = [], oracles = [], line = step.location.line, count = 0;
+        let steps = [];
+        let oracles = [];
+        let line = step.location.line;
+        let count = 0;
         // console.log( 'step', step.content );
         const uieNameHandler = new util_1.UIElementNameHandler();
         for (let entity of uieEntities) {
@@ -535,6 +545,7 @@ class PreTestCaseGenerator {
             // }
             const uieTestPlan = uieVariableToUIETestPlanMap.get(variable) || null;
             let expectedResult, dtc;
+            let oraclesToAdd = [];
             // console.log( 'uieTestPlan', uieTestPlan );
             // Evaluate the test plan and oracles
             if (null === uieTestPlan) { // not expected
@@ -552,7 +563,8 @@ class PreTestCaseGenerator {
                             Symbols_1.Symbols.UI_LITERAL_PREFIX + uieLiteral + Symbols_1.Symbols.UI_LITERAL_SUFFIX;
                     }
                     // Add oracles
-                    oracles.push.apply(oracles, oraclesClone);
+                    // oracles.push.apply( oracles, oraclesClone );
+                    oraclesToAdd = oraclesClone; // Save to add later
                 }
                 else {
                     expectedResult = keywordValid;
@@ -597,6 +609,9 @@ class PreTestCaseGenerator {
             // Update NLP !
             this._variantSentenceRec.recognizeSentences(language, [newStep], ctx.errors, ctx.warnings);
             steps.push(newStep);
+            if (oraclesToAdd.length > 0) {
+                oracles.push({ step: newStep, otherwiseSteps: oraclesToAdd });
+            }
             ++count;
         }
         return [steps, oracles];

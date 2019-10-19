@@ -27,7 +27,7 @@ class TestPlanner {
      * Produces test plans, i.e., maps from UI Elements variables to UIETestPlan, in which
      * the expected result and oracles are embedded.
      *
-     * @param map   A map from UI Element Variables to anoher map containing all
+     * @param map   A map from UI Element Variables to another map containing all
      *              available DataTestCases and their respective expected result
      *              (valid, invalid or incompatible) and Oracle steps (if applicable).
      *

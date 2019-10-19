@@ -37,7 +37,7 @@ import {
     UIPropertyReferenceExtractor,
     TargetTypeUtil
 } from '../util';
-import { PreTestCase } from './PreTestCase';
+import { PreTestCase, CorrespondingOtherwiseSteps } from './PreTestCase';
 import { formatValueToUseInASentence } from './value-formatter';
 import { UIPropertyReferenceReplacer } from './UIPropertyReferenceReplacer';
 
@@ -312,28 +312,38 @@ export class PreTestCaseGenerator {
 
             // Steps & Oracles
 
-            let completeSteps: Step[] = [], stepOracles: Step[] = [];
+            let filledSteps: Step[] = [];
+            let filledOtherwiseSteps: Step[] = [];
+            let filledCorrespondingOtherwiseSteps: Array< CorrespondingOtherwiseSteps > = [];
             for ( let step of newSteps ) {
 
-                // Resulting oracles are also processed
-                let [ resultingSteps, resultingOracles ] = this.fillUIElementWithValueAndReplaceByUILiteralInStep(
+                // Resulting otherwiseSteps are also processed
+                let [ resultingSteps, correspondingOtherwiseSteps ] = this.fillUIElementWithValueAndReplaceByUILiteralInStep(
                     step, langContent, plan.dataTestCases, uieVariableToValueMap, language, ctx );
 
                 // console.log( 'ORACLES', '>'.repeat(10), resultingOracles );
 
-                completeSteps.push.apply( completeSteps, resultingSteps );
-                if ( resultingOracles.length > 0 ) {
-                    stepOracles.push.apply( stepOracles, resultingOracles );
+                filledSteps.push.apply( filledSteps, resultingSteps );
+
+                if ( correspondingOtherwiseSteps.length > 0 ) {
+                    let allOracles: Step[] = [];
+                    for ( let c of correspondingOtherwiseSteps ) {
+                        allOracles.push.apply( allOracles, c.otherwiseSteps );
+                    }
+
+                    filledOtherwiseSteps.push.apply( filledOtherwiseSteps, allOracles );
+
+                    filledCorrespondingOtherwiseSteps.push.apply( filledCorrespondingOtherwiseSteps, correspondingOtherwiseSteps );
                 }
             }
 
-            this.normalizeOracleSentences( stepOracles, langContent.keywords );
+            this.normalizeOracleSentences( filledOtherwiseSteps, langContent.keywords );
 
             // # (2019-07-13)
-            this.replaceUIPropertyReferencesInsideValues( completeSteps, stepOracles, uieVariableToValueMap, language, langContent, ctx );
+            this.replaceUIPropertyReferencesInsideValues( filledSteps, filledOtherwiseSteps, uieVariableToValueMap, language, langContent, ctx );
             // ---
 
-            all.push( new PreTestCase( plan, completeSteps, stepOracles ) );
+            all.push( new PreTestCase( plan, filledSteps, filledOtherwiseSteps, filledCorrespondingOtherwiseSteps ) );
         }
 
         // console.log( all.map( ptc => ptc.steps.map( s => s.content ) ) );
@@ -494,7 +504,7 @@ export class PreTestCaseGenerator {
 
                 comment = ' ' + keywordValid + Symbols.TITLE_SEPARATOR + ' ' + keywordRandom;
             } else {
-                sentence += entity.string; // UI Element currently doesn't need prefix/sufix
+                sentence += entity.string; // UI Element currently doesn't need prefix/suffix
             }
 
             let newStep: Step = deepcopy( step ) as Step;
@@ -614,7 +624,7 @@ export class PreTestCaseGenerator {
         uieVariableToValueMap: Map< string, EntityValueType >,
         language: string,
         ctx: GenContext
-    ): [ Step[], Step[] ] {  // [ steps, oracles ]
+    ): [ Step[], Array< CorrespondingOtherwiseSteps > ] {
 
         let step = deepcopy( inputStep );
 
@@ -660,10 +670,10 @@ export class PreTestCaseGenerator {
         // const keywordRandom = ! keywords.random ? 'random' : ( keywords.random[ 0 ] || 'random' );
         const keywordFrom = ! keywords.from ? 'from' : ( keywords.from[ 0 ] || 'from' );
 
-        let steps: Step[] = [],
-            oracles: Step[] = [],
-            line = step.location.line,
-            count = 0;
+        let steps: Step[] = [];
+        let oracles: Array< CorrespondingOtherwiseSteps > = [];
+        let line: number = step.location.line;
+        let count: number = 0;
         // console.log( 'step', step.content );
 
         const uieNameHandler = new UIElementNameHandler();
@@ -732,6 +742,7 @@ export class PreTestCaseGenerator {
 
             const uieTestPlan = uieVariableToUIETestPlanMap.get( variable ) || null;
             let expectedResult, dtc;
+            let oraclesToAdd: Step[] = [];
 
             // console.log( 'uieTestPlan', uieTestPlan );
 
@@ -755,7 +766,9 @@ export class PreTestCaseGenerator {
                     }
 
                     // Add oracles
-                    oracles.push.apply( oracles, oraclesClone );
+                    // oracles.push.apply( oracles, oraclesClone );
+
+                    oraclesToAdd = oraclesClone; // Save to add later
 
                 } else {
                     expectedResult = keywordValid;
@@ -808,6 +821,10 @@ export class PreTestCaseGenerator {
             this._variantSentenceRec.recognizeSentences( language, [ newStep ], ctx.errors, ctx.warnings );
 
             steps.push( newStep );
+
+            if ( oraclesToAdd.length > 0 ) {
+                oracles.push( { step: newStep, otherwiseSteps: oraclesToAdd } );
+            }
 
             ++count;
         }
