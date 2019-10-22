@@ -466,7 +466,7 @@ Elemento de IU: Salário
 Exemplo 3:
 ```gherkin
 Elemento de IU: CEP
-  - formato é "/^[0-9]{2}\.[0-9]{3}\-\.[0-9]{3}$/"
+  - formato é "/^[0-9]{2}\.[0-9]{3}\-[0-9]{3}$/"
 ```
 
 

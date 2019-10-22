@@ -467,7 +467,7 @@ UI Element: Salary
 Example 3:
 ```gherkin
 UI Element: Brazilian Zip Code
-  - format is "/^[0-9]{2}\.[0-9]{3}\-\.[0-9]{3}$/"
+  - format is "/^[0-9]{2}\.[0-9]{3}\-[0-9]{3}$/"
 ```
 
 
