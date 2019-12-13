@@ -158,7 +158,7 @@
                 "image": [ "imagem", "figura", "foto", "image" ],
                 "label": [ "rotulo", "label" ],
                 "li": [ "item de lista", "item da lista", "list item", "li" ],
-                "link": [ "ligacao", "link" ],
+                "link": [ "ligacao", "ancora", "link" ],
                 "ol": [ "lista ordenada", "ordered list", "ol" ],
                 "page": [ "pagina", "page" ],
                 "paragraph": [ "paragrafo", "paragraph" ],
