@@ -34,9 +34,10 @@ export class AbstractTestScriptGenerator {
         // console.log( 'DOC is', doc.fileInfo.path );
         // console.log( 'Test cases', doc.testCases );
 
-        if ( ! doc.testCases || doc.testCases.length < 1 ) {
-            return null;
-        }
+        // @issue(50) - 13/12/2019
+        // if ( ! doc.testCases || doc.testCases.length < 1 ) {
+        //     return null;
+        // }
 
         let beforeAll = doc.beforeAll;
         let afterAll = doc.afterAll;
