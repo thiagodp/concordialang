@@ -139,13 +139,13 @@ exports.UI_ACTION_SYNTAX_RULES = [
         constant: { min: 0, max: 1 },
         ui_property_ref: { min: 0, max: 1 }
     },
-    { name: "see", minTargets: 0, maxTargets: 2,
+    { name: "see", minTargets: 0, maxTargets: 3,
         targets: ["ui_element", "ui_literal", "value", "number", "constant", "ui_property_ref"],
         ui_element: { min: 0, max: 1 },
         ui_literal: { min: 0, max: 1 },
-        value: { min: 0, max: 1 },
-        number: { min: 0, max: 1 },
-        constant: { min: 0, max: 1 },
+        value: { min: 0, max: 2 },
+        number: { min: 0, max: 2 },
+        constant: { min: 0, max: 2 },
         ui_property_ref: { min: 0, max: 1 }
     },
     { name: "select", minTargets: 1, maxTargets: 2,
