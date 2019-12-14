@@ -110,7 +110,7 @@
                 "image": [ "image", "picture", "figure", "photo" ],
                 "label": [ "label" ],
                 "li": [ "list item", "li" ],
-                "link": [ "link" ],
+                "link": [ "link", "anchor" ],
                 "ol": [ "ordered list", "ol" ],
                 "page": [ "page" ],
                 "paragraph": [ "paragraph" ],
