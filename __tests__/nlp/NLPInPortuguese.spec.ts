@@ -162,6 +162,44 @@ describe( 'NLPInPortuguese', () => {
                 shouldHaveTestCaseEntities( results, [ UI_ACTION, UI_ELEMENT, UI_ACTION_OPTION, UI_LITERAL ] );
             } );
 
+            it( '{ui_action} {ui_element} {ui_action_option} {value}', () => {
+                let results = [];
+                results.push( recognizeInTestCase( 'eu vejo {Foo} com classe "ativo"' ) );
+                shouldHaveTestCaseEntities( results, [ UI_ACTION, UI_ELEMENT, UI_ACTION_OPTION, VALUE ] );
+            } );
+
+            it( '{ui_action} {ui_element} {ui_action_option} {value} {value}', () => {
+                let results = [];
+                results.push( recognizeInTestCase( 'eu vejo {Foo} com atributo "name" sendo "bar"' ) );
+                shouldHaveTestCaseEntities( results, [ UI_ACTION, UI_ELEMENT, UI_ACTION_OPTION, VALUE, VALUE ] );
+            } );
+
+            it( '{ui_action} {ui_element} {ui_action_option} {value} {value}', () => {
+                let results = [];
+                results.push( recognizeInTestCase( 'eu vejo {Foo} com atributo "name" igual "bar"' ) );
+                shouldHaveTestCaseEntities( results, [ UI_ACTION, UI_ELEMENT, UI_ACTION_OPTION, VALUE, VALUE ] );
+            } );
+
+            it( '{ui_action} {ui_element} {ui_action_option} {value} {constant}', () => {
+                let results = [];
+                results.push( recognizeInTestCase( 'eu vejo {Foo} com atributo "name" igual [BAR]' ) );
+                shouldHaveTestCaseEntities( results, [ UI_ACTION, UI_ELEMENT, UI_ACTION_OPTION, VALUE, CONSTANT ] );
+            } );
+
+            it( '{ui_action} {ui_element} {ui_action_option} {value} {ui_action_option} {value}', () => {
+                let results = [];
+                results.push( recognizeInTestCase( 'eu vejo {Foo} com atributo "name" com valor "bar"' ) );
+                shouldHaveTestCaseEntities( results, [ UI_ACTION, UI_ELEMENT, UI_ACTION_OPTION, VALUE, UI_ACTION_OPTION, VALUE ] );
+            } );
+
+
+            it( '{ui_action} {ui_literal} {ui_action_option} {value} {ui_action_option} {value}', () => {
+                let results = [];
+                results.push( recognizeInTestCase( 'eu vejo <#foo> com atributo "name" com valor "bar"' ) );
+                shouldHaveTestCaseEntities( results, [ UI_ACTION, UI_LITERAL, UI_ACTION_OPTION, VALUE, UI_ACTION_OPTION, VALUE ] );
+            } );
+
+
             it( '{ui_action} {value} {ui_element}', () => {
                 let results = [];
                 results.push( recognizeInTestCase( 'eu digito "Jane" em {Nome}' ) );

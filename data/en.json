@@ -140,7 +140,9 @@
             "ui_action_option": {
                 "alert": [ "alert" ],
                 "app": [ "application", "app" ],
+                "attribute": [ "attribute", "property" ],
                 "checked": [ "checked" ],
+                "class": [ "class" ],
                 "command": [ "command" ],
                 "confirm": [ "confirmation", "confirm" ],
                 "cookie": [ "cookie" ],
@@ -180,6 +182,7 @@
                 "script": [ "script" ],
                 "second": [ "second", "seconds" ],
                 "slowly": [ "slowly", "leisurely" ],
+                "style": [ "style" ],
                 "tab": [ "tab" ],
                 "title": [ "title" ],
                 "unchecked": [ "unchecked" ],

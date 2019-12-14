@@ -188,7 +188,9 @@
             "ui_action_option": {
                 "alert": [ "alerta" ],
                 "app": [ "aplicação", "aplicativo", "app" ],
+                "attribute": [ "atributo", "propriedade", "attribute" ],
                 "checked": [ "marcado", "marcada", "ticado", "ticada", "checked" ],
+                "class": [ "classe", "class" ],
                 "confirm": [ "confirmação", "confirm" ],
                 "command": [ "comando" ],
                 "cookie": [ "cookie" ],
@@ -227,6 +229,7 @@
                 "script": [ "script" ],
                 "second": [ "segundo" ],
                 "slowly": [ "lentamente", "vagarosamente", "devagar" ],
+                "style": [ "estilo", "style" ],
                 "tab": [ "aba" ],
                 "title": [ "título", "title" ],
                 "unchecked": [ "desmarcado", "desmarcada", "desticado", "desticada", "unchecked" ],
