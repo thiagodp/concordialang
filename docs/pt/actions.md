@@ -59,6 +59,9 @@
 - [Verificar se elemento está visível](#see--target)
 - [Verificar se elemento está habilitado](#see--target--enabled)
 - [Verificar se elemento está marcado](#see--target--checked)
+- [Verificar se um elemento possui um atributo](#see--target--attribute--value)
+- [Verificar se um elemento possui uma classe](#see--target--class--value)
+- [Verificar se um elemento possui um estilo](#see--target--style--value)
 - [Verificar a url do navegador](#see--url--value)
 - [Verificar se o título da janela/aba do navegador tem um certo valor](#see--value--inside--title)
 - [Verificar se um dispositivo está com a tela bloqueada](#see--device--locked)
@@ -653,6 +656,26 @@ Então eu vejo {Foo} marcado
 ```gherkin
 Então eu não vejo {Foo} marcado
   e não vejo <#bar> marcado
+```
+
+### see + target + attribute + value
+```gherkin
+Então eu vejo {Foo} com o atributo "maxlength" no valor "200"
+  e eu vejo o atributo "type" de <#bar> com valor "text"
+```
+
+### see + target + class + value
+
+*Obs.: somente para aplicações baseadas em web*
+```gherkin
+Então eu vejo {Foo} com a classe "primary-button"
+```
+
+### see + target + style + value
+
+*Obs.: somente para aplicações baseadas em web*
+```gherkin
+Então eu vejo {Foo} com o estilo "color: blue"
 ```
 
 ### see + cookie + value

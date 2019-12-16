@@ -588,6 +588,24 @@ Then I do not see {Foo} is checked
   and I don't see <#bar> is checked
 ```
 
+### see + target + attribute + value
+```gherkin
+Then I see {Foo} with the attribute "maxlength" valued "200"
+  and I see the attribute "type" of <#bar> to be "text"
+```
+
+### see + target + class + value
+*Note: only for web-based applications*
+```gherkin
+Then I see {Foo} with the class "primary-button"
+```
+
+### see + target + style + value
+*Note: only for web-based applications*
+```gherkin
+Then I see {Foo} with the style "color: blue"
+```
+
 ### see + cookie + value
 ```gherkin
 Then I see the cookie "foo"
