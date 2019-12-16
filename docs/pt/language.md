@@ -14,17 +14,17 @@
   - [Cenário](#cen%c3%a1rio)
   - [Constantes](#constantes)
   - [Elemento de Interface de Usuário](#elemento-de-interface-de-usu%c3%a1rio)
-    - [Propriedade `id`](#propriedade-id)
-    - [Propriedade `tipo`](#propriedade-tipo)
-    - [Propriedade `editável`](#propriedade-edit%c3%a1vel)
-    - [Propriedade `tipo de dado`:](#propriedade-tipo-de-dado)
-    - [Propriedade `valor`](#propriedade-valor)
-    - [Propriedade `valor mínimo`](#propriedade-valor-m%c3%adnimo)
-    - [Propriedade `valor máximo`](#propriedade-valor-m%c3%a1ximo)
-    - [Propriedade `comprimento mínimo`](#propriedade-comprimento-m%c3%adnimo)
-    - [Propriedade `comprimento máximo`](#propriedade-comprimento-m%c3%a1ximo)
-    - [Propriedade `formato`](#propriedade-formato)
-    - [Propriedade `obrigatório`](#propriedade-obrigat%c3%b3rio)
+    - [Propriedade id](#propriedade-id)
+    - [Propriedade tipo](#propriedade-tipo)
+    - [Propriedade editável](#propriedade-edit%c3%a1vel)
+    - [Propriedade tipo de dado:](#propriedade-tipo-de-dado)
+    - [Propriedade valor](#propriedade-valor)
+    - [Propriedade valor mínimo](#propriedade-valor-m%c3%adnimo)
+    - [Propriedade valor máximo](#propriedade-valor-m%c3%a1ximo)
+    - [Propriedade comprimento mínimo](#propriedade-comprimento-m%c3%adnimo)
+    - [Propriedade comprimento máximo](#propriedade-comprimento-m%c3%a1ximo)
+    - [Propriedade formato](#propriedade-formato)
+    - [Propriedade obrigatório](#propriedade-obrigat%c3%b3rio)
     - [Exemplos de Elementos de IU](#exemplos-de-elementos-de-iu)
   - [Tabela](#tabela)
   - [Banco de Dados](#banco-de-dados)
@@ -351,6 +351,7 @@ Propriedades permitidas:
     - `time`
     - `datetime`
   - Precisão de valores `double` são inferidas a partir da declaração, *e.g.*, `12.50` faz Concordia saber que a precisão é `2`
+  - Por padrão, datas assumem o formato `AAAA-MM-DD` (ou seja, ano-mês-dia).
 
 #### Propriedade `valor`
   - Valores aceitos:
@@ -364,6 +365,7 @@ Propriedades permitidas:
     - `- valor é "olá"`
     - `- valor é 5`
     - `- valor é [PI]`
+    - `- valor é "2019-12-25"`
     - `- valor está em [ "Masculino", "Feminino", "Outro" ]`
     - `- valor vem da consulta "SELECT ..."`
     - `- valor é igual a {Outro Elemento de IU}`

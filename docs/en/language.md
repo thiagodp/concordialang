@@ -16,17 +16,17 @@ Translations: [Português](../pt/language.md) 🌎
   - [Scenario](#scenario)
   - [Constants](#constants)
   - [User Interface Element](#user-interface-element)
-    - [Property `id`](#property-id)
-    - [Property `type`](#property-type)
-    - [Property `editable`](#property-editable)
-    - [Property `data type`](#property-data-type)
-    - [Property `value`](#property-value)
-    - [Property `minimum value`](#property-minimum-value)
-    - [Property `maximum value`](#property-maximum-value)
-    - [Property `minimum length`](#property-minimum-length)
-    - [Property `maximum length`](#property-maximum-length)
-    - [Property `format`](#property-format)
-    - [Property `required`](#property-required)
+    - [Property id](#property-id)
+    - [Property type](#property-type)
+    - [Property editable](#property-editable)
+    - [Property data type](#property-data-type)
+    - [Property value](#property-value)
+    - [Property minimum value](#property-minimum-value)
+    - [Property maximum value](#property-maximum-value)
+    - [Property minimum length](#property-minimum-length)
+    - [Property maximum length](#property-maximum-length)
+    - [Property format](#property-format)
+    - [Property required](#property-required)
     - [Examples of UI Elements](#examples-of-ui-elements)
   - [Table](#table)
   - [Database](#database)
@@ -351,7 +351,8 @@ Allowed properties:
     - `date`
     - `time`
     - `datetime`
-  - Precision of `double` values is inferred from declared rules, *e.g.*, `12.50` makes Concordia to know that the precision is `2`
+  - Precision of `double` values is inferred from declared rules, *e.g.*, `12.50` makes Concordia to know that the precision is `2`.
+  - By default, `date` values assume the format `YYYY-MM-DD` (that is, year-month-day).
 
 #### Property `value`
   - Accepted values:
@@ -365,6 +366,7 @@ Allowed properties:
     - `- value is "hello"`
     - `- value is 5`
     - `- value is [PI]`
+    - `- value is "2019-12-25"`
     - `- value is in [ "Male", "Female", "Other" ]`
     - `- value comes from "SELECT ..."`
     - `- value is equal to {Other UI Element}`
@@ -372,6 +374,7 @@ Allowed properties:
     - `- value is not in [ 10, 20, 30 ]`
     - `- value is not in "SELECT ..."`
     - `- value is not equal to {Other UI Element}`
+
 
 #### Property `minimum value`
   - Accepted values:
