@@ -56,7 +56,6 @@ export class TestCaseFileGenerator {
         if ( ! ignoreHeader ) {
             lines.push.apply( lines, this.fileHeader );
         }
-        let lineNumber = 1 + lines.length;
 
         // Generate language, if declared
         if ( doc.language ) {
@@ -68,14 +67,13 @@ export class TestCaseFileGenerator {
 
             // Adjust location
             doc.language.location = {
-                line: lineNumber++,
+                line: lines.length + 1,
                 column: 1 + line.length - line.trimLeft().length
             } as Location;
 
             lines.push( line );
             lines.push( '' ); // empty line
         }
-        lineNumber++;
 
         // Imports
         for ( let imp of doc.imports || [] ) {
@@ -85,13 +83,12 @@ export class TestCaseFileGenerator {
 
             // Adjust location
             imp.location = {
-                line: lineNumber++,
+                line: lines.length + 1,
                 column: 1 + line.length - line.trimLeft().length
             } as Location;
 
             lines.push( line );
         }
-        let lastLineNumber = lineNumber;
 
         // Test Cases
         let lastTagsContent: string = '';
@@ -116,7 +113,7 @@ export class TestCaseFileGenerator {
 
                 // Adjust location
                 tag.location = {
-                    line: lineNumber++,
+                    line: lines.length + 1,
                     column: 1 + line.length - line.trimLeft().length
                 } as Location;
 
@@ -127,22 +124,14 @@ export class TestCaseFileGenerator {
             let line = this.generateTestCaseHeader( testCase.name, dict );
             lines.push( line );
 
-            // Adjust location
-            if ( ( testCase.tags || [] ).length < 1 ) {
-                testCase.location = {
-                    line: lineNumber++,
-                    column: 1 + line.length - line.trimLeft().length
-                } as Location;
-            } else {
-                testCase.location = {
-                    line: testCase.tags[ testCase.tags.length - 1 ].location.line - 1,
-                    column: 1 + line.length - line.trimLeft().length
-                } as Location;
-
-                lineNumber++
+            if ( ! testCase.location ) {
+                testCase.location = {} as any;
             }
+            testCase.location.column = line.length - line.trimLeft.length;
+            testCase.location.line = lines.length;
 
-            lineNumber++;
+            const baseLineNumber = testCase.location.line;
+            let lineNumber = 1 + baseLineNumber;
 
             // Sentences
             for ( let sentence of testCase.sentences || [] ) {
@@ -151,20 +140,18 @@ export class TestCaseFileGenerator {
                     continue;
                 }
 
-                // Transform to text
-
+                // Transform into text
                 let ind = indentation;
                 if ( NodeTypes.STEP_AND === sentence.nodeType ) {
                     ind += indentation;
                 }
-
                 let line = ind + sentence.content +
                     ( ! sentence.comment ? '' : '  ' + Symbols.COMMENT_PREFIX + sentence.comment );
 
                 // Adjust location
                 sentence.location = {
                     line: lineNumber++,
-                    column: 1 + line.length - line.trimLeft().length
+                    column: line.length - line.trimLeft().length
                 } as Location;
 
                 lines.push( line );

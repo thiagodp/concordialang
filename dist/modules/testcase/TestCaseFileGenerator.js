@@ -38,7 +38,6 @@ class TestCaseFileGenerator {
         if (!ignoreHeader) {
             lines.push.apply(lines, this.fileHeader);
         }
-        let lineNumber = 1 + lines.length;
         // Generate language, if declared
         if (doc.language) {
             // Get dictionary
@@ -47,25 +46,23 @@ class TestCaseFileGenerator {
             let line = this.generateLanguageLine(doc.language.value, dict);
             // Adjust location
             doc.language.location = {
-                line: lineNumber++,
+                line: lines.length + 1,
                 column: 1 + line.length - line.trimLeft().length
             };
             lines.push(line);
             lines.push(''); // empty line
         }
-        lineNumber++;
         // Imports
         for (let imp of doc.imports || []) {
             // Transform to text
             let line = this.generateImportLine(imp.value, dict);
             // Adjust location
             imp.location = {
-                line: lineNumber++,
+                line: lines.length + 1,
                 column: 1 + line.length - line.trimLeft().length
             };
             lines.push(line);
         }
-        let lastLineNumber = lineNumber;
         // Test Cases
         let lastTagsContent = '';
         for (let testCase of doc.testCases || []) {
@@ -84,7 +81,7 @@ class TestCaseFileGenerator {
                 let line = this.generateTagLine(tag.name, tag.content);
                 // Adjust location
                 tag.location = {
-                    line: lineNumber++,
+                    line: lines.length + 1,
                     column: 1 + line.length - line.trimLeft().length
                 };
                 lines.push(line);
@@ -92,27 +89,19 @@ class TestCaseFileGenerator {
             // Header
             let line = this.generateTestCaseHeader(testCase.name, dict);
             lines.push(line);
-            // Adjust location
-            if ((testCase.tags || []).length < 1) {
-                testCase.location = {
-                    line: lineNumber++,
-                    column: 1 + line.length - line.trimLeft().length
-                };
+            if (!testCase.location) {
+                testCase.location = {};
             }
-            else {
-                testCase.location = {
-                    line: testCase.tags[testCase.tags.length - 1].location.line - 1,
-                    column: 1 + line.length - line.trimLeft().length
-                };
-                lineNumber++;
-            }
-            lineNumber++;
+            testCase.location.column = line.length - line.trimLeft.length;
+            testCase.location.line = lines.length;
+            const baseLineNumber = testCase.location.line;
+            let lineNumber = 1 + baseLineNumber;
             // Sentences
             for (let sentence of testCase.sentences || []) {
                 if (!sentence) {
                     continue;
                 }
-                // Transform to text
+                // Transform into text
                 let ind = indentation;
                 if (NodeTypes_1.NodeTypes.STEP_AND === sentence.nodeType) {
                     ind += indentation;
@@ -122,7 +111,7 @@ class TestCaseFileGenerator {
                 // Adjust location
                 sentence.location = {
                     line: lineNumber++,
-                    column: 1 + line.length - line.trimLeft().length
+                    column: line.length - line.trimLeft().length
                 };
                 lines.push(line);
             }
