@@ -65,6 +65,7 @@
   },
   "scripts": {
     "build": "rimraf dist && node copy.js && tsc",
+    "watch": "npm run build && tsc --watch",
     "test": "node copy.js && jest",
     "all": "npm run build && npm run test",
     "start": "node bin/concordia.js",
