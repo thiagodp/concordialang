@@ -34,10 +34,9 @@ export class AbstractTestScriptGenerator {
         // console.log( 'DOC is', doc.fileInfo.path );
         // console.log( 'Test cases', doc.testCases );
 
-        // @issue(50) - 13/12/2019
-        // if ( ! doc.testCases || doc.testCases.length < 1 ) {
-        //     return null;
-        // }
+        if ( isDefined( doc.feature ) ) { // Only consider test case files
+            return null;
+        }
 
         let beforeAll = doc.beforeAll;
         let afterAll = doc.afterAll;

@@ -20,10 +20,9 @@ class AbstractTestScriptGenerator {
     generateFromDocument(doc, spec) {
         // console.log( 'DOC is', doc.fileInfo.path );
         // console.log( 'Test cases', doc.testCases );
-        // @issue(50) - 13/12/2019
-        // if ( ! doc.testCases || doc.testCases.length < 1 ) {
-        //     return null;
-        // }
+        if (TypeChecking_1.isDefined(doc.feature)) { // Only consider test case files
+            return null;
+        }
         let beforeAll = doc.beforeAll;
         let afterAll = doc.afterAll;
         let beforeFeature = doc.beforeFeature;
