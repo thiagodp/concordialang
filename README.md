@@ -4,7 +4,7 @@
 [![npm](https://img.shields.io/npm/l/concordialang.svg)](https://github.com/thiagodp/concordialang/blob/master/LICENSE.txt)
 [![slack](https://img.shields.io/badge/slack-chat-blue.svg)](https://bit.ly/2u2vKJX)
 
-🌎 Translations: [Português](readme-pt.md)
+🌎 Translations: [Português](https://github.com/thiagodp/concordialang/blob/master/readme-pt.md)
 
 # Concordia
 
@@ -24,7 +24,7 @@ At a glance:
 ## Contents
 
 - [LATEST NEWS](https://github.com/thiagodp/concordialang/releases) 🔥
-- [Documentation](docs/en/readme.md)
+- [Documentation](https://github.com/thiagodp/concordialang/blob/master/docs/en/readme.md)
 - [About](#about)
 - [Installation](#installation) 📀
 - [Getting Started](#getting-started)
@@ -34,18 +34,18 @@ At a glance:
 
 ## About
 
-**Concordia** is a [business-readable](https://martinfowler.com/bliki/BusinessReadableDSL.html), [agile](https://en.wikipedia.org/wiki/Agile_software_development) requirements specification metalanguage inspired by [Gherkin](https://github.com/cucumber/cucumber/wiki/Gherkin). Currently it supports [English](./docs/en/language.md) and [Portuguese](./docs/pt/language.md). New languages can be added easily.
+**Concordia** is a [business-readable](https://martinfowler.com/bliki/BusinessReadableDSL.html), [agile](https://en.wikipedia.org/wiki/Agile_software_development) requirements specification metalanguage inspired by [Gherkin](https://github.com/cucumber/cucumber/wiki/Gherkin). Currently it supports [English](https://github.com/thiagodp/concordialang/blob/master/docs/en/language.md) and [Portuguese](https://github.com/thiagodp/concordialang/blob/master/docs/pt/language.md). New languages can be added easily.
 
 **Concordia Compiler** generates and executes [functional](https://en.wikipedia.org/wiki/Functional_testing) test cases and test scripts from documents written in *Concordia Language*. It uses [NLP](https://en.wikipedia.org/wiki/Natural_language_processing) and many other techniques in the process.
 
 Both **test cases** and **test scripts** receive *test data* and *test oracles*. You don't have to produce them manually - they are inferred from your specification.
 
-Concordia Compiler uses [plug-ins](docs/en/plugins.md) for transforming test cases (`.testcase` files) into test scripts, *i.e.* source code, and for setting the test environment up for you. Every **plug-in** can generate test scripts for a different programming language and testing framework, for **web**, **mobile**, or **desktop** applications.
+Concordia Compiler uses [plug-ins](https://github.com/thiagodp/concordialang/blob/master/docs/en/plugins.md) for transforming test cases (`.testcase` files) into test scripts, *i.e.* source code, and for setting the test environment up for you. Every **plug-in** can generate test scripts for a different programming language and testing framework, for **web**, **mobile**, or **desktop** applications.
 
 
 ### Why using it ?
 
-1. Simple, flexible [syntax](docs/en/language.md).
+1. Simple, flexible [syntax](https://github.com/thiagodp/concordialang/blob/master/docs/en/language.md).
 
 2. Separate high-level, business language declarations from medium-low-level, computing language declarations, **improving the communication** between your team, customers, and other stakeholders. Thus, you can **use a same document** to discuss features with stakeholders, analysts, testers, and developers, and facilitate the adoption of [BDD](https://en.wikipedia.org/wiki/Behavior-driven_development)/[ATDD](https://en.wikipedia.org/wiki/Acceptance_test%E2%80%93driven_development)/[SbE](https://en.wikipedia.org/wiki/Specification_by_example).
 
@@ -135,7 +135,7 @@ concordia --init
 
 You'll be asked about your preferences and they will be stored in a configuration file named `.concordiarc`. **LET ALL THE DEFAULT VALUES**, by typing <kbd>Enter</kbd> for all the questions.
 
-Plug-ins will also be installed during the process. If you want to install them *manually*, please take a look at the [plugins page](./docs/en/plugins.md).
+Plug-ins will also be installed during the process. If you want to install them *manually*, please take a look at the [plugins page](https://github.com/thiagodp/concordialang/blob/master/docs/en//plugins.md).
 
 **Step 3: *Start the test server***
 
@@ -255,8 +255,8 @@ To generate and run the test again, just repeat the last command.
 
 ## See Next
 
-- [Documentation](docs/en/readme.md)
-- [Plug-ins](docs/en/plugins.md)
+- [Documentation](https://github.com/thiagodp/concordialang/blob/master/docs/en/readme.md)
+- [Plug-ins](https://github.com/thiagodp/concordialang/blob/master/docs/en/plugins.md)
 
 
 ## Related Projects
@@ -274,12 +274,11 @@ To generate and run the test again, just repeat the last command.
 - Help translating the documentation. You may create a Fork and submit a Pull Request with any translated documents. Partial translations also help us a lot!
 - [Chat with us](https://concordialang.slack.com) on Slack or [open an Issue](https://github.com/thiagodp/concordialang/issues/new) with a question or suggestion.
 - [Report](https://github.com/thiagodp/concordialang/issues/new) bugs or  typos.
-- [Create a new plug-in](docs/en/plugin-creation.md) for your favorite programming language or testing framework or [develop Concordia](docs/en/development.md) with us.
+- [Create a new plug-in](https://github.com/thiagodp/concordialang/blob/master/docs/en/plugin-creation.md) for your favorite programming language or testing framework or [develop Concordia](https://github.com/thiagodp/concordialang/blob/master/docs/en/development.md) with us.
 - Include this badge in your project's page → [![Concordia e2e](https://img.shields.io/badge/e2e-concordia-brightgreen.svg)](http://concordialang.org)
   ```
   [![Concordia e2e](https://img.shields.io/badge/e2e-concordia-brightgreen.svg)](http://concordialang.org)
   ```
-
 
 ## License
 
