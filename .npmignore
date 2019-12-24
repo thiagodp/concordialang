@@ -1,0 +1,5 @@
+## blacklist all
+**
+
+## whitelist dist
+!dist/**

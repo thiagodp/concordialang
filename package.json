@@ -59,17 +59,24 @@
     "name": "Thiago Delgado Pinto",
     "email": "thiago-dp@bol.com.br"
   },
-  "main": "./dist/main.js",
+  "main": "./main.js",
   "bin": {
-    "concordia": "./bin/concordia.js"
+    "concordia": "./concordia.js"
   },
   "scripts": {
-    "build": "rimraf dist && node copy.js && tsc",
+    "copy-dict": "node copy.js -- --no-deploy",
+    "copy-all": "node copy.js",
+    "test": "npm run copy-dict && jest",
+    "clear": "rimraf dist",
+    "build": "npm run clear && npm run copy-dict && tsc",
     "watch": "npm run build && tsc --watch",
-    "test": "node copy.js && jest",
-    "all": "npm run build && npm run test",
-    "start": "node bin/concordia.js",
-    "postversion": "git push && git push --tags"
+    "start": "node ./dist/main.js",
+    "build:deploy": "npm run clear && npm run copy-all && tsc && jest",
+    "preversion": "npm run build:deploy",
+    "postversion": "git push && git push --tags",
+
+    "deploy:check": "cd dist && npm shrinkwrap && node concordia --about && npm publish --dry-run && cd ..",
+    "deploy:run": "cd dist && npm shrinkwrap && node concordia --about && npm publish && cd .."
   },
   "jest": {
     "transform": {
