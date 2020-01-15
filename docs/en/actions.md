@@ -763,7 +763,36 @@ When I swipe <#foo> to <#bar>
 
 ## `switch`
 
-> Switches an app to native mode or web mode, or switches to a certain tab.
+> Switches an app to native mode or web mode, or switches to a certain tab or iframe.
+
+### switch + iframe
+
+NOTES:
+  1. **It makes all the following commands be applied to the selected iframe**.
+  2. To switch back to the application, see `switch + currentPage` or `switch + app`.
+
+```gherkin
+When I switch to the iframe  # Switches to the first iframe
+```
+```gherkin
+When I switch to the iframe '#foo' # Switches to the iframe with id 'foo'
+```
+
+### switch + currentPage
+
+Switches from an iframe back to the application page.
+
+```gherkin
+When I switch to the page
+```
+
+### switch + app
+
+Switches from an iframe back to the application page. Same as `switch + currentPage`.
+
+```gherkin
+When I switch to the application
+```
 
 ### switch + native
 The next sentence is for *mobile* only:

@@ -835,7 +835,36 @@ Quando eu deslizo <#foo> para <#bar>
 
 ## `switch`
 
-> Troca um app para modo nativo ou modo web, ou troca para uma determinada aba.
+> Troca um app para modo nativo ou modo web, ou troca para uma determinada aba ou iframe.
+
+### switch + iframe
+
+OBSERVAÇÕES:
+  1. **Faz todos os comandos seguintes serem aplicados ao _iframe_ selecionado**.
+  2. Para trocar de volta para aplicação, veka `switch + currentPage` ou `switch + app`.
+
+```gherkin
+Quando eu troco para o iframe  # Troca para o primeiro iframe
+```
+```gherkin
+Quando eu troco para o iframe '#foo' # Troca para o iframe com id 'foo'
+```
+
+### switch + currentPage
+
+Troca de um iframe de volta para a página da aplicação.
+
+```gherkin
+Quando eu troco para a página
+```
+
+### switch + app
+
+Troca de um iframe de volta para a página da aplicação. É o mesmo que `switch + currentPage`.
+
+```gherkin
+Quando eu troco para a aplicação
+```
 
 ### switch + native
 A próxima sentença é somente para *mobile*:

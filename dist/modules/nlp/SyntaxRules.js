@@ -168,7 +168,7 @@ exports.UI_ACTION_SYNTAX_RULES = [
         ui_property_ref: { min: 0, max: 3 }
     },
     { name: "switch", minTargets: 0, maxTargets: 1,
-        targets: ["value", "number", "constant", "ui_property_ref"]
+        targets: ["ui_element", "ui_literal", "value", "number", "constant", "ui_property_ref"],
     },
     { name: "tap", minTargets: 1, maxTargets: 999,
         targets: ["ui_element", "ui_literal", "value", "number", "constant", "ui_property_ref"]
