@@ -63,7 +63,7 @@ export class DatabaseJSDatabaseInterface implements DatabaseInterface {
 
 
     /** @inheritDoc */
-    public async exec( cmd: string, params?: any[] ): Promise< any[] > {
+    public async exec( cmd: string, params?: any[] ): Promise< void | any[] > {
         if ( ! params ) {
             return this._dbConnection.prepareStatement( cmd ).execute();
         }
@@ -100,7 +100,7 @@ export class DatabaseJSDatabaseInterface implements DatabaseInterface {
     private createConnectionFromNode( db: Database, basePath?: string ): dbjs.Connection {
         let conversor = new DatabaseToAbstractDatabase();
         let absDB = conversor.convertFromNode( db, basePath );
-        return new dbjs.Connection( absDB );
+        return new dbjs.Connection( absDB as dbjs.ConnectionStruct );
     }
 
     /**
