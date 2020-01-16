@@ -97,7 +97,11 @@ export class NLP {
             // Add entity recognizers with matches. Each match have sample values, that
             // are added to the recognizer.
             for ( let e of intent.entities ) {
-                let entityRec = new Bravey.StringEntityRecognizer( e.name );
+                let priority = undefined;
+                if ( data.priorities && data.priorities[ intent.name ] && data.priorities[ intent.name ][ e.name ] ) {
+                    priority = data.priorities[ intent.name ][ e.name ];
+                }
+                let entityRec = new Bravey.StringEntityRecognizer( e.name, priority );
                 for ( let m of e.matches ) {
                     for ( let sample of m.samples ) {
                         entityRec.addMatch( m.id, sample );

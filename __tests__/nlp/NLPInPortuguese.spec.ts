@@ -492,6 +492,18 @@ describe( 'NLPInPortuguese', () => {
                 expect( numbers[ 0 ].value ).toEqual( -53358731722743 );
             } );
 
+            it( 'switch to iframe', () => {
+                let results = [];
+                let r: NLPResult;
+                results.push( r = recognizeInTestCase(
+                    'Quando eu troco para iframe'
+                ) );
+
+                shouldHaveTestCaseEntities( results, [ UI_ELEMENT_TYPE ] );
+                let actionOption = r.entities.filter( e => e.entity === UI_ELEMENT_TYPE );
+                expect( actionOption[ 0 ].value ).toEqual( 'frame' );
+            } );
+
         });
 
     } );

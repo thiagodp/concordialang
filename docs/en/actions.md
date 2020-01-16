@@ -765,14 +765,14 @@ When I swipe <#foo> to <#bar>
 
 > Switches an app to native mode or web mode, or switches to a certain tab or iframe.
 
-### switch + iframe
+### switch + frame
 
 NOTES:
   1. **It makes all the following commands be applied to the selected iframe**.
   2. To switch back to the application, see `switch + currentPage` or `switch + app`.
 
 ```gherkin
-When I switch to the iframe  # Switches to the first iframe
+When I switch to the iframe  # Switches to the first frame
 ```
 ```gherkin
 When I switch to the iframe '#foo' # Switches to the iframe with id 'foo'

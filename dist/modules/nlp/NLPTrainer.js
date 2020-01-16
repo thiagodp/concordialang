@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const deepcopy = require("deepcopy");
 const TypeChecking_1 = require("../util/TypeChecking");
+const NLPTrainingData_1 = require("./NLPTrainingData");
 const NLPTrainingDataConversor_1 = require("./NLPTrainingDataConversor");
 const BaseTrainingExamples_1 = require("./BaseTrainingExamples");
 /**
@@ -90,6 +91,7 @@ class NLPTrainer {
         }
         let conversor = new NLPTrainingDataConversor_1.NLPTrainingDataConversor();
         let converted = conversor.convert(content.nlp || {}, content.training || []);
+        converted.priorities = NLPTrainingData_1.NLP_PRIORITIES;
         nlp.train(language, converted, intentNameFilter);
         return true;
     }

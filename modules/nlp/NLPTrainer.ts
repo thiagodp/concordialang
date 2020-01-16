@@ -3,7 +3,7 @@ import * as deepcopy from 'deepcopy';
 import { LanguageContent, LanguageContentLoader } from '../dict';
 import { isDefined } from '../util/TypeChecking';
 import { NLP } from './NLP';
-import { NLPTrainingData } from './NLPTrainingData';
+import { NLPTrainingData, NLP_PRIORITIES } from './NLPTrainingData';
 import { NLPTrainingDataConversor } from './NLPTrainingDataConversor';
 import { BASE_TRAINING_EXAMPLES } from './BaseTrainingExamples';
 
@@ -125,6 +125,7 @@ export class NLPTrainer {
 
         let conversor: NLPTrainingDataConversor = new NLPTrainingDataConversor();
         let converted: NLPTrainingData = conversor.convert( content.nlp || {}, content.training || [] );
+        converted.priorities = NLP_PRIORITIES;
 
         nlp.train( language, converted, intentNameFilter );
 

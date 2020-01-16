@@ -52,6 +52,7 @@
 - [Tirar uma foto da tela](#savescreenshot)
 - [Tocar em um elemento da tela de um dispositivo](#tap)
 - [Trocar o modo de um dispositivo de nativo para web ou vice-versa](#switch)
+- [Trocar a execução dos comandos para dentro de um iframe](#switch--frame)
 - [Verificar se a orientação do dispositivo é paisagem](#see--orientation--landscape)
 - [Verificar se a orientação do dispositivo é retrato](#see--orientation--portrait)
 - [Verificar seu um app está instalado](#see--app--value--installed)
@@ -220,9 +221,11 @@ Quando eu clico em "Foo"
 ```gherkin
 Quando eu fecho a aba atual
 ```
+
 ```gherkin
 Quando eu fecho as outras abas
 ```
+
 A próxima sentença é somente para *mobile*:
 ```gherkin
 Quando eu fecho o app
@@ -837,7 +840,7 @@ Quando eu deslizo <#foo> para <#bar>
 
 > Troca um app para modo nativo ou modo web, ou troca para uma determinada aba ou iframe.
 
-### switch + iframe
+### switch + frame
 
 OBSERVAÇÕES:
   1. **Faz todos os comandos seguintes serem aplicados ao _iframe_ selecionado**.
