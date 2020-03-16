@@ -1,4 +1,6 @@
 node_modules
-coverage
 test
 docs/features/*.testcase
+.scannerwork
+coverage
+sonar-report.xml
