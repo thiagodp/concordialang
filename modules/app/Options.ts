@@ -1,9 +1,9 @@
-import { resolve } from 'path';
 import * as enumUtil from 'enum-util';
-import { Defaults, VariantSelectionOptions, CombinationOptions } from './Defaults';
+import { resolve } from 'path';
+
+import { isDefined, isNumber, isString } from '../util/TypeChecking';
 import { CaseType } from './CaseType';
-import { isString, isNumber, isDefined } from '../util/TypeChecking';
-import { isBoolean } from 'util';
+import { CombinationOptions, Defaults, VariantSelectionOptions } from './Defaults';
 
 /**
  * Application options

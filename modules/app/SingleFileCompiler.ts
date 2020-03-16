@@ -46,7 +46,7 @@ export class SingleFileCompiler implements SingleFileProcessor {
             const startTime = Date.now();
 
             const lines: string[] = data.content.split( lineBreaker );
-            lines.map( ( line, index ) => this._lexer.addNodeFromLine( line, index + 1 ) );
+            lines.forEach( ( line, index ) => this._lexer.addNodeFromLine( line, index + 1 ) );
 
             let doc: Document = {
                 fileErrors: [],

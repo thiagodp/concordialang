@@ -17,7 +17,7 @@ export class TestPlan {
      * This can determine if oracles should exist to replace Then steps.
      */
     hasAnyInvalidResult(): boolean {
-        for ( let [ uieVar, uiePlan ] of this.dataTestCases ) {
+        for ( let [ /* uieVar */, uiePlan ] of this.dataTestCases ) {
             if ( uiePlan.isResultInvalid() ) {
                 return true;
             }

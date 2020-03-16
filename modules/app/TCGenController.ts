@@ -112,7 +112,7 @@ export class TCGenController {
 
         let newTestCaseDocuments: Document[] = [];
 
-        for ( let [ key, value ] of vertices ) {
+        for ( let [ /* key */, value ] of vertices ) {
 
             let doc: Document = value;
             if ( ! doc || ! doc.feature || ! doc.feature.scenarios ) {
@@ -337,7 +337,7 @@ export class TCGenController {
         const desired = String( options.combInvalid );
         switch ( desired ) {
 
-            case '0': ; // next
+            case '0': // next
             case none:
                 mixStrategy = new OnlyValidMix();
                 break;
@@ -350,7 +350,7 @@ export class TCGenController {
                 mixStrategy = new OnlyInvalidMix();
                 break;
 
-            case random: ; // next
+            case random: // next
             case default_:
                 mixStrategy = new UnfilteredMix();
                 break;

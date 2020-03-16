@@ -317,8 +317,8 @@ export class DataTestCaseAnalyzer {
                 // }
 
                 switch ( dtc ) {
-                    case DataTestCase.SET_FIRST_ELEMENT  : ; // next
-                    case DataTestCase.SET_LAST_ELEMENT   : ; // next
+                    case DataTestCase.SET_FIRST_ELEMENT  : // next
+                    case DataTestCase.SET_LAST_ELEMENT   : // next
                     case DataTestCase.SET_RANDOM_ELEMENT : {
 
                         if ( hasNegation ) {
@@ -397,8 +397,8 @@ export class DataTestCaseAnalyzer {
 
                 switch ( dtc ) {
 
-                    case DataTestCase.VALUE_LOWEST: ; // next
-                    case DataTestCase.VALUE_RANDOM_BELOW_MIN: ; // next
+                    case DataTestCase.VALUE_LOWEST: // next
+                    case DataTestCase.VALUE_RANDOM_BELOW_MIN: // next
                     case DataTestCase.VALUE_JUST_BELOW_MIN: {
 
                         if ( hasMinValue || isToFakeMinValue ) {
@@ -417,7 +417,7 @@ export class DataTestCaseAnalyzer {
                         return incompatiblePair;
                     }
 
-                    case DataTestCase.VALUE_JUST_ABOVE_MIN: ; // next
+                    case DataTestCase.VALUE_JUST_ABOVE_MIN: // next
                     case DataTestCase.VALUE_MIN: {
                         if ( hasMinValue || isToFakeMinValue ) {
                             return shouldGenerateValid ? validPair : incompatiblePair;
@@ -425,7 +425,7 @@ export class DataTestCaseAnalyzer {
                         return incompatiblePair;
                     }
 
-                    case DataTestCase.VALUE_RANDOM_BETWEEN_MIN_MAX: ; // next
+                    case DataTestCase.VALUE_RANDOM_BETWEEN_MIN_MAX: // next
                     case DataTestCase.VALUE_MEDIAN: {
                         if ( ( hasMinValue || isToFakeMinValue ) && ( hasMaxValue || isToFakeMaxValue ) ) {
                             return shouldGenerateValid ? validPair : incompatiblePair;
@@ -433,7 +433,7 @@ export class DataTestCaseAnalyzer {
                         return incompatiblePair;
                     }
 
-                    case DataTestCase.VALUE_JUST_BELOW_MAX: ; // next
+                    case DataTestCase.VALUE_JUST_BELOW_MAX: // next
                     case DataTestCase.VALUE_MAX: {
                         if ( hasMaxValue || isToFakeMaxValue ) {
                             return shouldGenerateValid ? validPair : incompatiblePair;
@@ -456,8 +456,8 @@ export class DataTestCaseAnalyzer {
                         return incompatiblePair;
                     }
 
-                    case DataTestCase.VALUE_JUST_ABOVE_MAX: ; // next
-                    case DataTestCase.VALUE_RANDOM_ABOVE_MAX: ; // next
+                    case DataTestCase.VALUE_JUST_ABOVE_MAX: // next
+                    case DataTestCase.VALUE_RANDOM_ABOVE_MAX: // next
                     case DataTestCase.VALUE_GREATEST: {
                         if ( hasMaxValue || isToFakeMaxValue ) {
 
@@ -532,8 +532,8 @@ export class DataTestCaseAnalyzer {
 
                 switch ( dtc ) {
 
-                    case DataTestCase.LENGTH_LOWEST: ; // next
-                    case DataTestCase.LENGTH_RANDOM_BELOW_MIN: ; // next
+                    case DataTestCase.LENGTH_LOWEST: // next
+                    case DataTestCase.LENGTH_RANDOM_BELOW_MIN: // next
                     case DataTestCase.LENGTH_JUST_BELOW_MIN: {
 
                         if ( isRequired ) {
@@ -569,7 +569,7 @@ export class DataTestCaseAnalyzer {
                         return incompatiblePair;
                     }
 
-                    case DataTestCase.LENGTH_JUST_ABOVE_MIN: ; // next
+                    case DataTestCase.LENGTH_JUST_ABOVE_MIN: // next
                     case DataTestCase.LENGTH_MIN: {
                         if ( hasMinLength || isToFakeMinLength ) {
                             return shouldGenerateValid ? validPair : incompatiblePair;
@@ -577,7 +577,7 @@ export class DataTestCaseAnalyzer {
                         return incompatiblePair;
                     }
 
-                    case DataTestCase.LENGTH_RANDOM_BETWEEN_MIN_MAX: ; // next
+                    case DataTestCase.LENGTH_RANDOM_BETWEEN_MIN_MAX: // next
                     case DataTestCase.LENGTH_MEDIAN: {
                         if ( ( hasMinLength || isToFakeMinLength ) && ( hasMaxLength || isToFakeMaxLength ) ) {
                             return shouldGenerateValid ? validPair : incompatiblePair;
@@ -585,7 +585,7 @@ export class DataTestCaseAnalyzer {
                         return incompatiblePair;
                     }
 
-                    case DataTestCase.LENGTH_JUST_BELOW_MAX: ; // next
+                    case DataTestCase.LENGTH_JUST_BELOW_MAX: // next
                     case DataTestCase.LENGTH_MAX: {
                         if ( hasMaxLength || isToFakeMaxLength ) {
                             return shouldGenerateValid ? validPair : incompatiblePair;
@@ -593,8 +593,8 @@ export class DataTestCaseAnalyzer {
                         return incompatiblePair;
                     }
 
-                    case DataTestCase.LENGTH_JUST_ABOVE_MAX: ; // next
-                    case DataTestCase.LENGTH_RANDOM_ABOVE_MAX: ; // next
+                    case DataTestCase.LENGTH_JUST_ABOVE_MAX: // next
+                    case DataTestCase.LENGTH_RANDOM_ABOVE_MAX: // next
                     case DataTestCase.LENGTH_GREATEST: {
                         if ( hasMaxLength || isToFakeMaxLength ) {
 
@@ -650,8 +650,8 @@ export class DataTestCaseAnalyzer {
                 return [ null, false ];
             }
 
-            // case Entities.COMPUTATION: ; // next
-            case Entities.QUERY: ; // next
+            // case Entities.COMPUTATION: // next
+            case Entities.QUERY: // next
             case Entities.UI_ELEMENT_REF: {
                 return [ null, true ]; // << FAKED !
             }

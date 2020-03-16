@@ -51,7 +51,7 @@ export class UIPropertyReferenceReplacer {
             }
 
             const uieName = uipRef.uiElementName;
-            const [ featureName, uieNameWithoutFeature ] = uieNameHandler.extractNamesOf( uieName );
+            const [ featureName, /* uieNameWithoutFeature */ ] = uieNameHandler.extractNamesOf( uieName );
             let variable: string;
             let uie: UIElement;
 

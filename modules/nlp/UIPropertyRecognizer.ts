@@ -91,7 +91,7 @@ export class UIPropertyRecognizer {
                 //
                 let uiv: EntityValue;
                 switch ( e.entity ) {
-                    case Entities.VALUE             : ; // go to next
+                    case Entities.VALUE             : // next
                     case Entities.NUMBER            : uiv = new EntityValue( e.entity, adjustValueToTheRightType( e.value ) ); break;
                     // case Entities.VALUE_LIST     : uiv = new EntityValue( e.entity, _this.makeValueList( e.value ) ); break;
                     case Entities.VALUE_LIST        : uiv = new EntityValue( e.entity, e.value ); break;

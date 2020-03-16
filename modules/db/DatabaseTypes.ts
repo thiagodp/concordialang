@@ -45,7 +45,7 @@ export function stringToDatabaseTypeString( dbType: string ): string {
         case 'postgresql'   : return DatabaseType.POSTGRESQL
         case 'ado'          : return DatabaseType.ADO;
         case 'xls'          : return DatabaseType.EXCEL;
-        case 'sqlserver'    : ; // continue
+        case 'sqlserver'    : // next
         case 'mssqlserver'  : return DatabaseType.MSSQL;
         default             : return 'unknown';
     }

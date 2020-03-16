@@ -182,14 +182,14 @@ export class AppController {
 
         let hasErrors: boolean = false;
         let spec: AugmentedSpec = null;
-        let graph: Graph = null;
+        // let graph: Graph = null;
         if ( options.compileSpecification ) {
             if ( ! options.generateTestCase ) {
                 cli.newLine( cli.symbolInfo, 'Test Case generation disabled.' );
             }
             let compilerController: CompilerController = new CompilerController();
             try {
-                [ spec, graph ] = await compilerController.compile( options, cli );
+                [ spec, /* graph */ ] = await compilerController.compile( options, cli );
             } catch ( err ) {
                 hasErrors = true;
                 this.showException( err, options, cli );

@@ -296,7 +296,7 @@ export class UIElementPropertyExtractor {
             return [];
         }
 
-        const incompatibleMap = this.incompatiblePropertyTypes();
+        // const incompatibleMap = this.incompatiblePropertyTypes();
         let incompatible: UIProperty[][] = [];
 
         for ( let i = 0; i < declaredCount; ++i ) {

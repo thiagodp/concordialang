@@ -115,7 +115,7 @@ export class JustOneInvalidMix implements DataTestCaseMix {
     /** @inheritDoc */
     select( map: UIEVariableToDTCMap, alwaysValidVariables: string[] ): object[] {
         let all = [];
-        for ( let [ uieName, dtcMap ] of map ) {
+        for ( let [ uieName, /* dtcMap */ ] of map ) {
             let obj = this.oneUIEWithInvalidDataTestCasesAndTheOthersWithValid(
                 map, uieName, alwaysValidVariables );
             all.push( obj );
@@ -185,9 +185,9 @@ export class OnlyInvalidMix implements DataTestCaseMix {
             obj[ uieName ] = [];
             let currentMustBeValid = alwaysValidVariables.indexOf( uieName ) >= 0;
             for ( let [ dtc, data ] of dtcMap ) {
-                if ( DTCAnalysisResult.INVALID === data.result && ! currentMustBeValid ) {
-                    obj[ uieName ].push( new UIETestPlan( dtc, data.result, data.oracles ) );
-                } else if ( DTCAnalysisResult.VALID === data.result && currentMustBeValid ) {
+                if ( ( DTCAnalysisResult.INVALID === data.result && ! currentMustBeValid )
+                    || ( DTCAnalysisResult.VALID === data.result && currentMustBeValid ) ) {
+
                     obj[ uieName ].push( new UIETestPlan( dtc, data.result, data.oracles ) );
                 }
             }

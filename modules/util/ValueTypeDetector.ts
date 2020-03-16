@@ -49,7 +49,9 @@ export class ValueTypeDetector {
 
     isDouble( val: any ): boolean {
         const t = typeof val;
-        if ( 'number' === t ) { return true };
+        if ( 'number' === t ) {
+            return true;
+        }
         if ( 'string' === t  ) {
             return ( new RegExp( '^(-?[0-9]+(?:.[0-9]+)?)$' ) ).test( val );
         }
@@ -58,7 +60,9 @@ export class ValueTypeDetector {
 
     isDate( val: any ): boolean {
         const t = typeof val;
-        if ( 'object' === t && ( val instanceof Date || val instanceof LocalDate ) ) { return true };
+        if ( 'object' === t && ( val instanceof Date || val instanceof LocalDate ) ) {
+            return true;
+        }
         if ( 'string' === t  ) {
             return moment( val, 'YYYY-MM-DD', true ).isValid()
                 || moment( val, 'YYYY/MM/DD', true ).isValid()
@@ -70,7 +74,9 @@ export class ValueTypeDetector {
 
     isTime( val: any ): boolean {
         const t = typeof val;
-        if ( 'object' === t && ( val instanceof Date || val instanceof LocalTime ) ) { return true };
+        if ( 'object' === t && ( val instanceof Date || val instanceof LocalTime ) ) {
+            return true;
+        }
         if ( 'string' === t  ) {
             return moment( val, 'HH:mm', true ).isValid()
                 || moment( val, 'HH:mm:ss', true ).isValid()
@@ -82,7 +88,9 @@ export class ValueTypeDetector {
 
     isDateTime( val: any ): boolean {
         const t = typeof val;
-        if ( 'object' === t && ( val instanceof Date || val instanceof LocalDateTime ) ) { return true };
+        if ( 'object' === t && ( val instanceof Date || val instanceof LocalDateTime ) ) {
+            return true;
+        }
         if ( 'string' === t  ) {
             const v = val.toString().trim();
             if ( ! v.indexOf( ' ' ) ) {
@@ -134,16 +142,49 @@ export function adjustValueToTheRightType( v: string, valueType?: ValueType ): a
     const vType: ValueType = valueType || ( new ValueTypeDetector() ).detect( v.toString().trim() );
     let valueAfter: any;
     switch ( vType ) {
-        case ValueType.INTEGER  : ; // continue
-        case ValueType.DOUBLE   : valueAfter = Number( v ) || 0; break;
-        case ValueType.DATE     : valueAfter = LocalDate.parse( v ) || LocalDate.now(); break;
-        case ValueType.TIME     : valueAfter = LocalTime.parse( v ) || LocalTime.now(); break;
-        case ValueType.DATETIME : valueAfter = LocalDateTime.parse( v ) || LocalDateTime.now(); break;
+
+        case ValueType.INTEGER: // next
+
+        case ValueType.DOUBLE: {
+            valueAfter = Number( v ) || 0;
+            break;
+        }
+
+        case ValueType.DATE: {
+            try {
+                valueAfter = LocalDate.parse( v );
+            } catch {
+                valueAfter = LocalDate.now();
+            }
+            break;
+        }
+
+        case ValueType.TIME: {
+            try {
+                valueAfter = LocalTime.parse( v );
+            } catch {
+                valueAfter = LocalTime.now();
+            }
+            break;
+        }
+
+        case ValueType.DATETIME: {
+            try {
+                valueAfter = LocalDateTime.parse( v );
+            } catch {
+                valueAfter = LocalDateTime.now();
+            }
+            break;
+        }
+
         // Boolean should not be handle here, because there is an NLP entity for it.
         // Anyway, we will provide a basic case.
-        case ValueType.BOOLEAN  : valueAfter = [ 'true', 'yes' ].indexOf( v.toLowerCase() ) >= 0; break;
+        case ValueType.BOOLEAN: {
+            valueAfter = [ 'true', 'yes' ].indexOf( v.toLowerCase() ) >= 0;
+            break;
+        }
 
-        default                 : valueAfter = v;
+        default: valueAfter = v;
     }
     return valueAfter;
 }

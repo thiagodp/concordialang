@@ -10,7 +10,7 @@ import {
     Table,
     UIElement
 } from '../ast';
-import { DatabaseInterface, InMemoryTableInterface } from '../dbi';
+import { DatabaseInterface } from '../dbi';
 import { CaseType } from '../app/CaseType';
 import { DocumentUtil } from '../util/DocumentUtil';
 import { isDefined, valueOrNull } from '../util/TypeChecking';
@@ -462,7 +462,7 @@ export class AugmentedSpec extends Spec {
      */
     public uiElementsVariableMap( rebuildCache: boolean = false ): Map< string, UIElement > {
         if ( this._uiElementCache !== null && ! rebuildCache ) {
-            this._uiElementVariableMap;
+            return this._uiElementVariableMap;
         }
         this.uiElements( rebuildCache );
         return this._uiElementVariableMap;
@@ -482,7 +482,7 @@ export class AugmentedSpec extends Spec {
         }
 
         const uieNameHandler = new UIElementNameHandler()
-        const [ featureName, uiElementName ] = uieNameHandler.extractNamesOf( variable );
+        const [ featureName, /* uiElementName */ ] = uieNameHandler.extractNamesOf( variable );
         if ( ! isDefined( featureName ) && doc.imports.length > 1 ) {
             return null;
         }

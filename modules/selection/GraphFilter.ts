@@ -31,7 +31,7 @@ export class GraphFilter extends EventEmitter {
         let newGraph = new Graph();
 
         // Iterates the original graph in topological order
-        for ( let [ key, value ] of graph.vertices_topologically() ) {
+        for ( let [ /* key */, value ] of graph.vertices_topologically() ) {
 
             const doc: Document = value as Document;
             if ( ! shouldBeIncluded( doc, graph ) ) {

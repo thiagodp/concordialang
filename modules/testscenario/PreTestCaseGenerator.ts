@@ -295,7 +295,7 @@ export class PreTestCaseGenerator {
             let uieVariableToValueMap = new Map< string, EntityValueType >();
             let context = new ValueGenContext( plan.dataTestCases, uieVariableToValueMap );
 
-            for ( let [ uieVar, uieTestPlan ] of plan.dataTestCases ) {
+            for ( let [ uieVar, /* uieTestPlan */ ] of plan.dataTestCases ) {
                 // console.log( 'uieVar', uieVar, '\nuieTestPlan', uieTestPlan, "\n" );
 
                 let generatedValue: EntityValueType;

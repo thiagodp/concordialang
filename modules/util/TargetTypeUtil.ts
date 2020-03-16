@@ -77,7 +77,7 @@ export class TargetTypeUtil {
                         targetTypes.push( uieType );
                         break;
                     }
-                    // continue as UI_LITERAL
+                    // proceed to Entities.UI_LITERAL
                 }
                 case Entities.UI_LITERAL: {
                     let action = step.action || null;

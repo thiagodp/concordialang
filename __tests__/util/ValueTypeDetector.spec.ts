@@ -1,8 +1,9 @@
-import { ValueTypeDetector } from "../../modules/util/ValueTypeDetector";
+import { ValueTypeDetector, adjustValueToTheRightType } from "../../modules/util/ValueTypeDetector";
+// import { LocalTime, LocalDate, LocalDateTime } from "js-joda";
 
 describe( 'ValueTypeDetector', () => {
 
-    let d: ValueTypeDetector = new ValueTypeDetector(); // under test
+    const d: ValueTypeDetector = new ValueTypeDetector(); // under test
 
 
     it( 'detects boolean values', () => {
@@ -101,6 +102,44 @@ describe( 'ValueTypeDetector', () => {
         // invalid values
         expect( d.isDateTime( '2017-12-32 23:59:59.999' ) ).toBeFalsy(); // invalid date
         expect( d.isDateTime( '2017-12-31 24:59:59.999' ) ).toBeFalsy(); // invalid time
+    } );
+
+
+
+    describe( 'adjusts values to the right type', () => {
+
+        it( 'number', () => {
+            expect( adjustValueToTheRightType( '0' ) ).toBe( 0 );
+            expect( adjustValueToTheRightType( '10' ) ).toBe( 10 );
+            expect( adjustValueToTheRightType( '-10' ) ).toBe( -10 );
+            expect( adjustValueToTheRightType( '2.5' ) ).toBeCloseTo( 2.5, 5 );
+            expect( adjustValueToTheRightType( '-2.5' ) ).toBeCloseTo( -2.5, 5 );
+        } );
+
+        it( 'boolean', () => {
+            expect( adjustValueToTheRightType( 'true' ) ).toBe( true );
+            expect( adjustValueToTheRightType( 'false' ) ).toBe( false );
+        } );
+
+        // it( 'time', () => {
+        //     const value: string = '00:00';
+        //     const received = adjustValueToTheRightType( value );
+        //     const expected = LocalTime.parse( value );
+        //     expect( received ).toEqual( expected );
+        // } );
+
+        // it( 'date', () => {
+        //     const value = '12/31/2020';
+        //     const received = adjustValueToTheRightType( value );
+        //     expect( received ).toBe( LocalDate.parse( value ) );
+        // } );
+
+        // it( 'datetime', () => {
+        //     const value = '12/31/2020 00:00';
+        //     const received = adjustValueToTheRightType( value );
+        //     expect( received ).toBe( LocalDateTime.parse( value ) );
+        // } );
+
     } );
 
 } );

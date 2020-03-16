@@ -46,7 +46,7 @@ export class UIElementSSA extends SpecificationAnalyzer {
         // UI elements with properties that may refer to already mapped UI Elements.
         // Otherwise, errors must are registred.
 
-        for ( let [ key, value ] of graph.vertices_topologically() ) {
+        for ( let [ /* key */, value ] of graph.vertices_topologically() ) {
             let doc: Document = value as Document;
 
             // Maps documents' declarations

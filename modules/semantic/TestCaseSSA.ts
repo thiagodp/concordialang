@@ -1,6 +1,5 @@
 import * as deepcopy from 'deepcopy';
 import Graph = require('graph.js/dist/graph.full.js');
-import * as path from 'path';
 import { Location } from 'concordialang-types';
 
 import { Document, Feature, Import, Tag, TestCase } from '../ast';
@@ -228,7 +227,8 @@ export class TestCaseSSA extends SpecificationAnalyzer {
         availableFeatureNames: string[],
         availableFeaturePaths: string[],
         errors: LocatedException[]
-    ) {
+    ): boolean {
+
         // Sanity checking
         if ( ! testCases.tags ) {
             testCases.tags = [];
@@ -279,12 +279,12 @@ export class TestCaseSSA extends SpecificationAnalyzer {
             return false;
         }
 
-        let featureFilePath = availableFeaturePaths[ featureIndex ];
+        // let featureFilePath = availableFeaturePaths[ featureIndex ];
 
-        if ( spec.basePath ) {
-            // Normalizes the path, according to the base path
-            featureFilePath = path.join( spec.basePath, featureFilePath );
-        }
+        // if ( spec.basePath ) {
+        //     // Normalizes the path, according to the base path
+        //     featureFilePath = path.join( spec.basePath, featureFilePath );
+        // }
 
         return true;
     }
@@ -351,7 +351,7 @@ export class TestCaseSSA extends SpecificationAnalyzer {
                 let docs: Document[];
 
                 if ( hasFeatureTag ) {
-                    docs = docs = spec.importedDocumentsOf( doc )
+                    docs = spec.importedDocumentsOf( doc )
                         .filter( impDoc => isDefined( impDoc.feature )
                             && impDoc.feature.name.toLowerCase() == tc.declaredFeatureName.toLowerCase() );
                 } else {

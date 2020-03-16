@@ -42,7 +42,7 @@ export class PackageBasedPluginFinder implements PluginFinder {
             globalData => ! localPluginData.find( localData => localData.name == globalData.name ) );
 
         return localPluginData.concat( globalNotInLocal );
-    };
+    }
 
     /** @inheritdoc */
     public async classFileFor( pluginData: PluginData ): Promise< string > {

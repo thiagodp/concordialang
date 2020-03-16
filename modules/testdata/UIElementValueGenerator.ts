@@ -409,6 +409,7 @@ export class UIElementValueGenerator {
                     return null;
                 }
 
+                return propertyValue.value;
             }
 
             default: {
@@ -447,9 +448,9 @@ export class UIElementValueGenerator {
             return query;
         }
 
-        const featureName = isDefined( currentFeatureName )
-            ? currentFeatureName
-            : '';
+        // const featureName = isDefined( currentFeatureName )
+        //     ? currentFeatureName
+        //     : '';
 
         const uieNameHandler = new UIElementNameHandler();
 
