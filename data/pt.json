@@ -6,7 +6,7 @@
         "variant": [ "variante", "variação", "variant" ],
         "variantBackground": [ "contexto de variante", "contexto de variação", "cenário de variação", "variant background" ],
         "testCase": [ "caso de teste", "test case" ],
-        "uiElement": [ "elemento da iu", "elemento de iu", "elemento de interface de usuário", "ui element" ],
+        "uiElement": [ "elemento da iu", "elemento de iu", "elemento de ui", "elemento de interface de usuário", "ui element" ],
         "database": [ "banco de dados", "database" ],
 
         "beforeAll": [ "antes de todas", "antes de todos", "antes de tudo", "before all" ],
