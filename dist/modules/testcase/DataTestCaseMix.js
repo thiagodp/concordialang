@@ -70,7 +70,7 @@ class JustOneInvalidMix {
     /** @inheritDoc */
     select(map, alwaysValidVariables) {
         let all = [];
-        for (let [uieName, dtcMap] of map) {
+        for (let [uieName,] of map) {
             let obj = this.oneUIEWithInvalidDataTestCasesAndTheOthersWithValid(map, uieName, alwaysValidVariables);
             all.push(obj);
         }
@@ -127,10 +127,8 @@ class OnlyInvalidMix {
             obj[uieName] = [];
             let currentMustBeValid = alwaysValidVariables.indexOf(uieName) >= 0;
             for (let [dtc, data] of dtcMap) {
-                if (DataTestCaseAnalyzer_1.DTCAnalysisResult.INVALID === data.result && !currentMustBeValid) {
-                    obj[uieName].push(new UIETestPlan_1.UIETestPlan(dtc, data.result, data.oracles));
-                }
-                else if (DataTestCaseAnalyzer_1.DTCAnalysisResult.VALID === data.result && currentMustBeValid) {
+                if ((DataTestCaseAnalyzer_1.DTCAnalysisResult.INVALID === data.result && !currentMustBeValid)
+                    || (DataTestCaseAnalyzer_1.DTCAnalysisResult.VALID === data.result && currentMustBeValid)) {
                     obj[uieName].push(new UIETestPlan_1.UIETestPlan(dtc, data.result, data.oracles));
                 }
             }

@@ -8,6 +8,7 @@ const Keywords_1 = require("./Keywords");
  */
 class NodeTypes extends Keywords_1.Keywords {
 }
+exports.NodeTypes = NodeTypes;
 // Not available in Gherkin
 NodeTypes.REGEX = 'regex';
 NodeTypes.CONSTANT = 'constant';
@@ -18,4 +19,3 @@ NodeTypes.TAG = 'tag';
 NodeTypes.TABLE_ROW = 'tableRow';
 NodeTypes.LONG_STRING = 'longString'; // a.k.a. py string
 NodeTypes.TEXT = 'text'; // not empty content
-exports.NodeTypes = NodeTypes;

@@ -80,11 +80,12 @@ export class TargetTypeUtil {
                     // proceed to Entities.UI_LITERAL
                 }
                 case Entities.UI_LITERAL: {
-                    let action = step.action || null;
+                    const action = step.action || null;
                     if ( isDefined( action ) ) {
-                        targetTypes.push(
-                            ACTION_TARGET_MAP.get( action ) || ActionTargets.NONE
-                        );
+                        const defaultAction = ACTION_TARGET_MAP.get( action );
+                        if ( defaultAction ) {
+                            targetTypes.push( defaultAction );
+                        }
                     }
                     break;
                 }

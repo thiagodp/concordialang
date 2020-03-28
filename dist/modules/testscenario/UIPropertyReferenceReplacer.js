@@ -38,7 +38,7 @@ class UIPropertyReferenceReplacer {
                 continue;
             }
             const uieName = uipRef.uiElementName;
-            const [featureName, uieNameWithoutFeature] = uieNameHandler.extractNamesOf(uieName);
+            const [featureName,] = uieNameHandler.extractNamesOf(uieName);
             let variable;
             let uie;
             if (util_1.isDefined(featureName)) {

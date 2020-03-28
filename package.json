@@ -71,6 +71,7 @@
     "test:sonar": "node copy.js && jest --coverage --coverageDirectory=\"coverage\" --reporters=\"default\" --reporters=\"jest-sonar\"",
     "all": "npm run build && npm run test",
     "start": "node bin/concordia.js",
+    "preversion": "npm run build && npm run test",
     "postversion": "git push && git push --tags"
   },
   "jest": {

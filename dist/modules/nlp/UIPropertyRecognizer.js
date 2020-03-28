@@ -66,7 +66,7 @@ class UIPropertyRecognizer {
                 //
                 let uiv;
                 switch (e.entity) {
-                    case nlp_1.Entities.VALUE: ; // go to next
+                    case nlp_1.Entities.VALUE: // next
                     case nlp_1.Entities.NUMBER:
                         uiv = new ast_1.EntityValue(e.entity, ValueTypeDetector_1.adjustValueToTheRightType(e.value));
                         break;

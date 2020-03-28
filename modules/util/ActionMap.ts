@@ -43,7 +43,7 @@ export const ACTION_TARGET_MAP = new Map< string, string >(
         [ Actions.SHAKE           , ActionTargets.NONE         ],
         [ Actions.SHOW            , ActionTargets.WINDOW       ],
         [ Actions.SWIPE           , ActionTargets.SCREEN       ],
-        [ Actions.SWITCH          , ActionTargets.NATIVE       ],
+        [ Actions.SWITCH          , ActionTargets.FRAME        ],
         [ Actions.TAP             , ActionTargets.BUTTON       ],
         [ Actions.UNCHECK         , ActionTargets.CHECKBOX     ],
         [ Actions.WAIT            , ActionTargets.TEXT         ]

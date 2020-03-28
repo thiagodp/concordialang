@@ -244,8 +244,8 @@ class DataTestCaseAnalyzer {
                 //     }
                 // }
                 switch (dtc) {
-                    case DataTestCase_1.DataTestCase.SET_FIRST_ELEMENT: ; // next
-                    case DataTestCase_1.DataTestCase.SET_LAST_ELEMENT: ; // next
+                    case DataTestCase_1.DataTestCase.SET_FIRST_ELEMENT: // next
+                    case DataTestCase_1.DataTestCase.SET_LAST_ELEMENT: // next
                     case DataTestCase_1.DataTestCase.SET_RANDOM_ELEMENT: {
                         if (hasNegation) {
                             if (pValueHasTagGenerateOnlyValidValues) {
@@ -303,8 +303,8 @@ class DataTestCaseAnalyzer {
                 }
                 let analyzer = this._dataGenBuilder.rawAnalyzer(valueType, minValue, maxValue);
                 switch (dtc) {
-                    case DataTestCase_1.DataTestCase.VALUE_LOWEST: ; // next
-                    case DataTestCase_1.DataTestCase.VALUE_RANDOM_BELOW_MIN: ; // next
+                    case DataTestCase_1.DataTestCase.VALUE_LOWEST: // next
+                    case DataTestCase_1.DataTestCase.VALUE_RANDOM_BELOW_MIN: // next
                     case DataTestCase_1.DataTestCase.VALUE_JUST_BELOW_MIN: {
                         if (hasMinValue || isToFakeMinValue) {
                             if (analyzer.hasValuesBelowMin()) {
@@ -319,21 +319,21 @@ class DataTestCaseAnalyzer {
                         }
                         return incompatiblePair;
                     }
-                    case DataTestCase_1.DataTestCase.VALUE_JUST_ABOVE_MIN: ; // next
+                    case DataTestCase_1.DataTestCase.VALUE_JUST_ABOVE_MIN: // next
                     case DataTestCase_1.DataTestCase.VALUE_MIN: {
                         if (hasMinValue || isToFakeMinValue) {
                             return shouldGenerateValid ? validPair : incompatiblePair;
                         }
                         return incompatiblePair;
                     }
-                    case DataTestCase_1.DataTestCase.VALUE_RANDOM_BETWEEN_MIN_MAX: ; // next
+                    case DataTestCase_1.DataTestCase.VALUE_RANDOM_BETWEEN_MIN_MAX: // next
                     case DataTestCase_1.DataTestCase.VALUE_MEDIAN: {
                         if ((hasMinValue || isToFakeMinValue) && (hasMaxValue || isToFakeMaxValue)) {
                             return shouldGenerateValid ? validPair : incompatiblePair;
                         }
                         return incompatiblePair;
                     }
-                    case DataTestCase_1.DataTestCase.VALUE_JUST_BELOW_MAX: ; // next
+                    case DataTestCase_1.DataTestCase.VALUE_JUST_BELOW_MAX: // next
                     case DataTestCase_1.DataTestCase.VALUE_MAX: {
                         if (hasMaxValue || isToFakeMaxValue) {
                             return shouldGenerateValid ? validPair : incompatiblePair;
@@ -352,8 +352,8 @@ class DataTestCaseAnalyzer {
                         }
                         return incompatiblePair;
                     }
-                    case DataTestCase_1.DataTestCase.VALUE_JUST_ABOVE_MAX: ; // next
-                    case DataTestCase_1.DataTestCase.VALUE_RANDOM_ABOVE_MAX: ; // next
+                    case DataTestCase_1.DataTestCase.VALUE_JUST_ABOVE_MAX: // next
+                    case DataTestCase_1.DataTestCase.VALUE_RANDOM_ABOVE_MAX: // next
                     case DataTestCase_1.DataTestCase.VALUE_GREATEST: {
                         if (hasMaxValue || isToFakeMaxValue) {
                             if (analyzer.hasValuesAboveMax()) {
@@ -403,8 +403,8 @@ class DataTestCaseAnalyzer {
                 const invalidMinPair = new DTCAnalysisData(DTCAnalysisResult.INVALID, hasMinLength ? pMinLength.otherwiseSentences || [] : []);
                 const invalidMaxPair = new DTCAnalysisData(DTCAnalysisResult.INVALID, hasMaxLength ? pMaxLength.otherwiseSentences || [] : []);
                 switch (dtc) {
-                    case DataTestCase_1.DataTestCase.LENGTH_LOWEST: ; // next
-                    case DataTestCase_1.DataTestCase.LENGTH_RANDOM_BELOW_MIN: ; // next
+                    case DataTestCase_1.DataTestCase.LENGTH_LOWEST: // next
+                    case DataTestCase_1.DataTestCase.LENGTH_RANDOM_BELOW_MIN: // next
                     case DataTestCase_1.DataTestCase.LENGTH_JUST_BELOW_MIN: {
                         if (isRequired) {
                             if (dtc === DataTestCase_1.DataTestCase.LENGTH_LOWEST) {
@@ -430,29 +430,29 @@ class DataTestCaseAnalyzer {
                         }
                         return incompatiblePair;
                     }
-                    case DataTestCase_1.DataTestCase.LENGTH_JUST_ABOVE_MIN: ; // next
+                    case DataTestCase_1.DataTestCase.LENGTH_JUST_ABOVE_MIN: // next
                     case DataTestCase_1.DataTestCase.LENGTH_MIN: {
                         if (hasMinLength || isToFakeMinLength) {
                             return shouldGenerateValid ? validPair : incompatiblePair;
                         }
                         return incompatiblePair;
                     }
-                    case DataTestCase_1.DataTestCase.LENGTH_RANDOM_BETWEEN_MIN_MAX: ; // next
+                    case DataTestCase_1.DataTestCase.LENGTH_RANDOM_BETWEEN_MIN_MAX: // next
                     case DataTestCase_1.DataTestCase.LENGTH_MEDIAN: {
                         if ((hasMinLength || isToFakeMinLength) && (hasMaxLength || isToFakeMaxLength)) {
                             return shouldGenerateValid ? validPair : incompatiblePair;
                         }
                         return incompatiblePair;
                     }
-                    case DataTestCase_1.DataTestCase.LENGTH_JUST_BELOW_MAX: ; // next
+                    case DataTestCase_1.DataTestCase.LENGTH_JUST_BELOW_MAX: // next
                     case DataTestCase_1.DataTestCase.LENGTH_MAX: {
                         if (hasMaxLength || isToFakeMaxLength) {
                             return shouldGenerateValid ? validPair : incompatiblePair;
                         }
                         return incompatiblePair;
                     }
-                    case DataTestCase_1.DataTestCase.LENGTH_JUST_ABOVE_MAX: ; // next
-                    case DataTestCase_1.DataTestCase.LENGTH_RANDOM_ABOVE_MAX: ; // next
+                    case DataTestCase_1.DataTestCase.LENGTH_JUST_ABOVE_MAX: // next
+                    case DataTestCase_1.DataTestCase.LENGTH_RANDOM_ABOVE_MAX: // next
                     case DataTestCase_1.DataTestCase.LENGTH_GREATEST: {
                         if (hasMaxLength || isToFakeMaxLength) {
                             if (analyzer.hasValuesAboveMax()) {
@@ -494,8 +494,8 @@ class DataTestCaseAnalyzer {
                 }
                 return [null, false];
             }
-            // case Entities.COMPUTATION: ; // next
-            case nlp_1.Entities.QUERY: ; // next
+            // case Entities.COMPUTATION: // next
+            case nlp_1.Entities.QUERY: // next
             case nlp_1.Entities.UI_ELEMENT_REF: {
                 return [null, true]; // << FAKED !
             }

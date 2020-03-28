@@ -58,12 +58,15 @@ class TargetTypeUtil {
                         targetTypes.push(uieType);
                         break;
                     }
-                    // continue as UI_LITERAL
+                    // proceed to Entities.UI_LITERAL
                 }
                 case Entities_1.Entities.UI_LITERAL: {
-                    let action = step.action || null;
+                    const action = step.action || null;
                     if (TypeChecking_1.isDefined(action)) {
-                        targetTypes.push(ActionMap_1.ACTION_TARGET_MAP.get(action) || ActionTargets_1.ActionTargets.NONE);
+                        const defaultAction = ActionMap_1.ACTION_TARGET_MAP.get(action);
+                        if (defaultAction) {
+                            targetTypes.push(defaultAction);
+                        }
                     }
                     break;
                 }

@@ -30,7 +30,7 @@ class FeatureBasedGraphFilter {
         // Iterates over all outgoing edges of the `from` vertex
         const fromKey = doc.fileInfo.path;
         let shouldBeIncluded = false;
-        for (let [toKey, vertexValue] of graph.verticesFrom(fromKey)) {
+        for (let [/* toKey */ , vertexValue] of graph.verticesFrom(fromKey)) {
             // Examine the included document (recursively)
             if (this.shouldBeIncluded(vertexValue, graph)) {
                 shouldBeIncluded = true;

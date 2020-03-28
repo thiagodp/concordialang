@@ -1,9 +1,10 @@
 "use strict";
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
         function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
@@ -330,6 +331,7 @@ class UIElementValueGenerator {
                         errors.push(err);
                         return null;
                     }
+                    return propertyValue.value;
                 }
                 default: {
                     return propertyValue.value;
@@ -353,9 +355,9 @@ class UIElementValueGenerator {
             if (variables.length < 1) { // No variables
                 return query;
             }
-            const featureName = TypeChecking_1.isDefined(currentFeatureName)
-                ? currentFeatureName
-                : '';
+            // const featureName = isDefined( currentFeatureName )
+            //     ? currentFeatureName
+            //     : '';
             const uieNameHandler = new UIElementNameHandler_1.UIElementNameHandler();
             let newQuery = query;
             for (let variable of variables) {

@@ -1,15 +1,15 @@
 "use strict";
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
         function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const deepcopy = require("deepcopy");
-const path = require("path");
 const EnglishKeywordDictionary_1 = require("../dict/EnglishKeywordDictionary");
 const TypeChecking_1 = require("../util/TypeChecking");
 const SemanticException_1 = require("./SemanticException");
@@ -213,11 +213,11 @@ class TestCaseSSA extends SpecificationAnalyzer_1.SpecificationAnalyzer {
             errors.push(err);
             return false;
         }
-        let featureFilePath = availableFeaturePaths[featureIndex];
-        if (spec.basePath) {
-            // Normalizes the path, according to the base path
-            featureFilePath = path.join(spec.basePath, featureFilePath);
-        }
+        // let featureFilePath = availableFeaturePaths[ featureIndex ];
+        // if ( spec.basePath ) {
+        //     // Normalizes the path, according to the base path
+        //     featureFilePath = path.join( spec.basePath, featureFilePath );
+        // }
         return true;
     }
     makeLocationWithPath(location, path) {
@@ -267,7 +267,7 @@ class TestCaseSSA extends SpecificationAnalyzer_1.SpecificationAnalyzer {
             if (!feature) {
                 let docs;
                 if (hasFeatureTag) {
-                    docs = docs = spec.importedDocumentsOf(doc)
+                    docs = spec.importedDocumentsOf(doc)
                         .filter(impDoc => TypeChecking_1.isDefined(impDoc.feature)
                         && impDoc.feature.name.toLowerCase() == tc.declaredFeatureName.toLowerCase());
                 }

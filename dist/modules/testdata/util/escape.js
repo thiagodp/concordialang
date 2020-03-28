@@ -15,13 +15,13 @@ function escapeChar(char) {
         case '\n': return '\\n';
         case '\r': return '\\r';
         // ui literals symbols
-        case '<': ; // escape because of ui literals
-        case '>': ; // escape because of ui literals
+        case '<': // escape because of ui literals
+        case '>': // escape because of ui literals
         // other symbols
-        case '"': ; // continue
-        case "'": ; // escape because of database values
-        case '%': ; // escape because of database values
-        case '`': ; // escape because of database values
+        case '"': // continue
+        case "'": // escape because of database values
+        case '%': // escape because of database values
+        case '`': // escape because of database values
         case '\\': return '\\' + char;
     }
     return char;

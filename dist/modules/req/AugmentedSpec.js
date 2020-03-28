@@ -355,7 +355,7 @@ class AugmentedSpec extends ast_1.Spec {
      */
     uiElementsVariableMap(rebuildCache = false) {
         if (this._uiElementCache !== null && !rebuildCache) {
-            this._uiElementVariableMap;
+            return this._uiElementVariableMap;
         }
         this.uiElements(rebuildCache);
         return this._uiElementVariableMap;
@@ -371,7 +371,7 @@ class AugmentedSpec extends ast_1.Spec {
             return null;
         }
         const uieNameHandler = new UIElementNameHandler_1.UIElementNameHandler();
-        const [featureName, uiElementName] = uieNameHandler.extractNamesOf(variable);
+        const [featureName,] = uieNameHandler.extractNamesOf(variable);
         if (!TypeChecking_1.isDefined(featureName) && doc.imports.length > 1) {
             return null;
         }

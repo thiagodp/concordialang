@@ -7,6 +7,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
  */
 class LongLimits {
 }
+exports.LongLimits = LongLimits;
 LongLimits.MIN = Number.MIN_SAFE_INTEGER;
 LongLimits.MAX = Number.MAX_SAFE_INTEGER;
-exports.LongLimits = LongLimits;

@@ -34,6 +34,12 @@ npm run start
 npm run test
 ```
 
+### Sonar
+
+* Install [sonar](https://www.sonarqube.org/)
+* Start sonar server
+* Run `sonar-scanner` in the projects' root
+
 ## Linking the command to the source code
 
 Whether you wish the command `concordia` to execute directly from **your** source code, go to the project root folder then run

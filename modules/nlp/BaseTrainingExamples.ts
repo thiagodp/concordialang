@@ -36,6 +36,7 @@ export const BASE_TRAINING_EXAMPLES: NLPTrainingIntentExample[] = [
             "{ui_action} {ui_element} {ui_action_option} {ui_action_option} {value} {ui_action_option} {number}",
             "{ui_action} {ui_element} {ui_action_option} {ui_action_option} {value} {ui_action_option} {constant}",
 
+
             "{ui_action} {ui_action_option} {value} {ui_element}",
             "{ui_action} {ui_action_option} {value} {ui_element} {value}",
             "{ui_action} {ui_action_option} {value} {ui_element} {number}",
@@ -59,6 +60,16 @@ export const BASE_TRAINING_EXAMPLES: NLPTrainingIntentExample[] = [
             "{ui_action} {ui_action_option} {constant} {ui_element} {ui_action_option} {value}",
             "{ui_action} {ui_action_option} {constant} {ui_element} {ui_action_option} {number}",
             "{ui_action} {ui_action_option} {constant} {ui_element} {ui_action_option} {constant}",
+
+            "{ui_action} {ui_action_option} {ui_element} {ui_action_option} {ui_element}",
+            "{ui_action} {ui_action_option} {ui_element} {ui_action_option} {ui_element} {ui_action_option} {ui_element}",
+            "{ui_action} {ui_action_option} {ui_element} {ui_action_option} {ui_element} {ui_action_option} {ui_literal}",
+            "{ui_action} {ui_action_option} {ui_element} {ui_action_option} {ui_literal} {ui_action_option} {ui_literal}",
+            "{ui_action} {ui_action_option} {ui_element} {ui_action_option} {ui_literal}",
+            "{ui_action} {ui_action_option} {ui_literal} {ui_action_option} {ui_literal}",
+            "{ui_action} {ui_action_option} {ui_literal} {ui_action_option} {ui_literal} {ui_action_option} {ui_literal}",
+            "{ui_action} {ui_action_option} {ui_literal} {ui_action_option} {ui_literal} {ui_action_option} {ui_element}",
+            "{ui_action} {ui_action_option} {ui_literal} {ui_action_option} {ui_element} {ui_action_option} {ui_element}",
 
             "{ui_action} {value} {ui_element}",
             "{ui_action} {number} {ui_element}",

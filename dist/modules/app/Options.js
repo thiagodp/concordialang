@@ -1,10 +1,10 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const path_1 = require("path");
 const enumUtil = require("enum-util");
-const Defaults_1 = require("./Defaults");
-const CaseType_1 = require("./CaseType");
+const path_1 = require("path");
 const TypeChecking_1 = require("../util/TypeChecking");
+const CaseType_1 = require("./CaseType");
+const Defaults_1 = require("./Defaults");
 /**
  * Application options
  *

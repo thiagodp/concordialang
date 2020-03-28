@@ -23,7 +23,7 @@ class GraphFilter extends events_1.EventEmitter {
         // Creates a new graph
         let newGraph = new Graph();
         // Iterates the original graph in topological order
-        for (let [key, value] of graph.vertices_topologically()) {
+        for (let [/* key */ , value] of graph.vertices_topologically()) {
             const doc = value;
             if (!shouldBeIncluded(doc, graph)) {
                 this.emit(GraphFilterEvent.DOCUMENT_NOT_INCLUDED, doc);

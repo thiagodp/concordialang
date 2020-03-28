@@ -7,7 +7,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
  */
 var ActionTargets;
 (function (ActionTargets) {
-    ActionTargets["NONE"] = "none";
+    ActionTargets["NONE"] = "";
     ActionTargets["APP"] = "app";
     ActionTargets["BUTTON"] = "button";
     ActionTargets["CHECKBOX"] = "checkbox";
@@ -18,6 +18,7 @@ var ActionTargets;
     ActionTargets["DATABASE"] = "database";
     ActionTargets["DIV"] = "div";
     ActionTargets["FILE_INPUT"] = "fileInput";
+    ActionTargets["FRAME"] = "frame";
     ActionTargets["IMAGE"] = "image";
     ActionTargets["KEY"] = "key";
     ActionTargets["KEYBOARD"] = "keyboard";

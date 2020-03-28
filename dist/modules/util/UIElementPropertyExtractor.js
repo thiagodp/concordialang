@@ -254,7 +254,7 @@ class UIElementPropertyExtractor {
         if (declaredCount <= 1) {
             return [];
         }
-        const incompatibleMap = this.incompatiblePropertyTypes();
+        // const incompatibleMap = this.incompatiblePropertyTypes();
         let incompatible = [];
         for (let i = 0; i < declaredCount; ++i) {
             let a = declaredPropertyTypes[i];

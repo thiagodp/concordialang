@@ -17,6 +17,7 @@ class Keywords {
         return set;
     }
 }
+exports.Keywords = Keywords;
 // Not available in Gherkin
 Keywords.IMPORT = 'import';
 Keywords.REGEX_BLOCK = 'regexBlock';
@@ -52,4 +53,3 @@ Keywords.STEP_THEN = 'stepThen';
 Keywords.STEP_AND = 'stepAnd';
 Keywords.STEP_OTHERWISE = 'stepOtherwise';
 Keywords.TABLE = 'table';
-exports.Keywords = Keywords;

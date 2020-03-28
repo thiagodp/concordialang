@@ -8,6 +8,6 @@ const js_joda_1 = require("js-joda");
  */
 class TimeLimits {
 }
+exports.TimeLimits = TimeLimits;
 TimeLimits.MIN = js_joda_1.LocalTime.of(0, 0, 0, 0); // 00:00:00.000
 TimeLimits.MAX = js_joda_1.LocalTime.of(23, 59, 59, 999); // 23:59:59.999
-exports.TimeLimits = TimeLimits;

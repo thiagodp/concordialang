@@ -43,7 +43,7 @@ exports.ACTION_TARGET_MAP = new Map([
     [Actions_1.Actions.SHAKE, ActionTargets_1.ActionTargets.NONE],
     [Actions_1.Actions.SHOW, ActionTargets_1.ActionTargets.WINDOW],
     [Actions_1.Actions.SWIPE, ActionTargets_1.ActionTargets.SCREEN],
-    [Actions_1.Actions.SWITCH, ActionTargets_1.ActionTargets.NATIVE],
+    [Actions_1.Actions.SWITCH, ActionTargets_1.ActionTargets.FRAME],
     [Actions_1.Actions.TAP, ActionTargets_1.ActionTargets.BUTTON],
     [Actions_1.Actions.UNCHECK, ActionTargets_1.ActionTargets.CHECKBOX],
     [Actions_1.Actions.WAIT, ActionTargets_1.ActionTargets.TEXT]

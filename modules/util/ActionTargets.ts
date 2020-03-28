@@ -5,7 +5,7 @@
  */
 export enum ActionTargets {
 
-    NONE         = "none"        , // web, mobile web, mobile native, desktop
+    NONE         = ""            , // web, mobile web, mobile native, desktop
 
     APP          = "app"         , // mobile web, mobile native
     BUTTON       = "button"      , // web, mobile web, mobile native, desktop
@@ -17,6 +17,7 @@ export enum ActionTargets {
     DATABASE     = "database"    , // any
     DIV          = "div"         , // web, mobile web
     FILE_INPUT   = "fileInput"   , // web, mobile web
+    FRAME        = "frame"       , // web, mobile web
     IMAGE        = "image"       , // web, mobile web, mobile native, desktop
     KEY          = "key"         , // web, mobile web, mobile native, desktop
     KEYBOARD     = "keyboard"    , // mobile web, mobile native

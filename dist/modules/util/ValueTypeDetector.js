@@ -47,7 +47,6 @@ class ValueTypeDetector {
         if ('number' === t) {
             return true;
         }
-        ;
         if ('string' === t) {
             return (new RegExp('^(-?[0-9]+(?:.[0-9]+)?)$')).test(val);
         }
@@ -58,7 +57,6 @@ class ValueTypeDetector {
         if ('object' === t && (val instanceof Date || val instanceof js_joda_1.LocalDate)) {
             return true;
         }
-        ;
         if ('string' === t) {
             return moment(val, 'YYYY-MM-DD', true).isValid()
                 || moment(val, 'YYYY/MM/DD', true).isValid()
@@ -71,7 +69,6 @@ class ValueTypeDetector {
         if ('object' === t && (val instanceof Date || val instanceof js_joda_1.LocalTime)) {
             return true;
         }
-        ;
         if ('string' === t) {
             return moment(val, 'HH:mm', true).isValid()
                 || moment(val, 'HH:mm:ss', true).isValid()
@@ -84,7 +81,6 @@ class ValueTypeDetector {
         if ('object' === t && (val instanceof Date || val instanceof js_joda_1.LocalDateTime)) {
             return true;
         }
-        ;
         if ('string' === t) {
             const v = val.toString().trim();
             if (!v.indexOf(' ')) {
@@ -137,24 +133,44 @@ function adjustValueToTheRightType(v, valueType) {
     const vType = valueType || (new ValueTypeDetector()).detect(v.toString().trim());
     let valueAfter;
     switch (vType) {
-        case ValueType.INTEGER: ; // continue
-        case ValueType.DOUBLE:
+        case ValueType.INTEGER: // next
+        case ValueType.DOUBLE: {
             valueAfter = Number(v) || 0;
             break;
-        case ValueType.DATE:
-            valueAfter = js_joda_1.LocalDate.parse(v) || js_joda_1.LocalDate.now();
+        }
+        case ValueType.DATE: {
+            try {
+                valueAfter = js_joda_1.LocalDate.parse(v);
+            }
+            catch (_a) {
+                valueAfter = js_joda_1.LocalDate.now();
+            }
             break;
-        case ValueType.TIME:
-            valueAfter = js_joda_1.LocalTime.parse(v) || js_joda_1.LocalTime.now();
+        }
+        case ValueType.TIME: {
+            try {
+                valueAfter = js_joda_1.LocalTime.parse(v);
+            }
+            catch (_b) {
+                valueAfter = js_joda_1.LocalTime.now();
+            }
             break;
-        case ValueType.DATETIME:
-            valueAfter = js_joda_1.LocalDateTime.parse(v) || js_joda_1.LocalDateTime.now();
+        }
+        case ValueType.DATETIME: {
+            try {
+                valueAfter = js_joda_1.LocalDateTime.parse(v);
+            }
+            catch (_c) {
+                valueAfter = js_joda_1.LocalDateTime.now();
+            }
             break;
+        }
         // Boolean should not be handle here, because there is an NLP entity for it.
         // Anyway, we will provide a basic case.
-        case ValueType.BOOLEAN:
+        case ValueType.BOOLEAN: {
             valueAfter = ['true', 'yes'].indexOf(v.toLowerCase()) >= 0;
             break;
+        }
         default: valueAfter = v;
     }
     return valueAfter;

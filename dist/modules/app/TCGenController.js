@@ -1,9 +1,10 @@
 "use strict";
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
         function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
@@ -51,7 +52,7 @@ class TCGenController {
             this._listener.testCaseGenerationStarted(strategyWarnings);
             let vertices = graph.vertices_topologically();
             let newTestCaseDocuments = [];
-            for (let [key, value] of vertices) {
+            for (let [/* key */ , value] of vertices) {
                 let doc = value;
                 if (!doc || !doc.feature || !doc.feature.scenarios) {
                     continue;
@@ -197,7 +198,7 @@ class TCGenController {
         let mixStrategy;
         const desired = String(options.combInvalid);
         switch (desired) {
-            case '0': ; // next
+            case '0': // next
             case none:
                 mixStrategy = new DataTestCaseMix_1.OnlyValidMix();
                 break;
@@ -207,7 +208,7 @@ class TCGenController {
             case all:
                 mixStrategy = new DataTestCaseMix_1.OnlyInvalidMix();
                 break;
-            case random: ; // next
+            case random: // next
             case default_:
                 mixStrategy = new DataTestCaseMix_1.UnfilteredMix();
                 break;

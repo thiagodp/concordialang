@@ -492,16 +492,168 @@ describe( 'NLPInPortuguese', () => {
                 expect( numbers[ 0 ].value ).toEqual( -53358731722743 );
             } );
 
-            it( 'switch to iframe', () => {
+            it( 'switch to an iframe', () => {
                 let results = [];
                 let r: NLPResult;
                 results.push( r = recognizeInTestCase(
-                    'Quando eu troco para iframe'
+                    'Quando eu troco para o iframe'
                 ) );
 
                 shouldHaveTestCaseEntities( results, [ UI_ELEMENT_TYPE ] );
                 let actionOption = r.entities.filter( e => e.entity === UI_ELEMENT_TYPE );
                 expect( actionOption[ 0 ].value ).toEqual( 'frame' );
+            } );
+
+            it( 'switch to an iframe with a UI Literal', () => {
+                let results = [];
+                let r: NLPResult;
+                results.push( r = recognizeInTestCase(
+                    'Quando eu troco para o iframe <#foo>'
+                ) );
+
+                shouldHaveTestCaseEntities( results, [ UI_ELEMENT_TYPE, UI_LITERAL ] );
+                const actionOption = r.entities.filter( e => e.entity === UI_ELEMENT_TYPE );
+                expect( actionOption[ 0 ].value ).toEqual( 'frame' );
+                const uiLiterals = r.entities.filter( e => e.entity === UI_LITERAL );
+                expect( uiLiterals[ 0 ].value ).toEqual( '#foo' );
+            } );
+
+            it( 'switch to an iframe with a UI Element', () => {
+                let results = [];
+                let r: NLPResult;
+                results.push( r = recognizeInTestCase(
+                    'Quando eu troco para o iframe {Foo}'
+                ) );
+
+                shouldHaveTestCaseEntities( results, [ UI_ELEMENT_TYPE, UI_ELEMENT ] );
+                const actionOption = r.entities.filter( e => e.entity === UI_ELEMENT_TYPE );
+                expect( actionOption[ 0 ].value ).toEqual( 'frame' );
+                const uiElement = r.entities.filter( e => e.entity === UI_ELEMENT );
+                expect( uiElement[ 0 ].value ).toEqual( 'Foo' );
+            } );
+
+            it( 'switch to iframe UI Literal inside UI Literal', () => {
+                let results = [];
+                let r: NLPResult;
+                results.push( r = recognizeInTestCase(
+                    'Quando eu troco para o iframe <#subframe1> dentro de <#frame>'
+                ) );
+
+                shouldHaveTestCaseEntities( results, [ UI_ELEMENT_TYPE, UI_LITERAL, UI_LITERAL ] );
+                const actionOption = r.entities.filter( e => e.entity === UI_ELEMENT_TYPE );
+                expect( actionOption[ 0 ].value ).toEqual( 'frame' );
+                const uiLiterals = r.entities.filter( e => e.entity === UI_LITERAL );
+                expect( uiLiterals[ 0 ].value ).toEqual( '#subframe1' );
+                expect( uiLiterals[ 1 ].value ).toEqual( '#frame' );
+            } );
+
+            it( 'switch to iframe UI Literal inside UI Literal inside UI Literal', () => {
+                let results = [];
+                let r: NLPResult;
+                results.push( r = recognizeInTestCase(
+                    'Quando eu troco para o iframe <#subframe2> dentro de <#subframe1> dentro de <#frame>'
+                ) );
+
+                shouldHaveTestCaseEntities( results, [ UI_ELEMENT_TYPE, UI_LITERAL, UI_LITERAL ] );
+                const actionOption = r.entities.filter( e => e.entity === UI_ELEMENT_TYPE );
+                expect( actionOption[ 0 ].value ).toEqual( 'frame' );
+                const uiLiterals = r.entities.filter( e => e.entity === UI_LITERAL );
+                expect( uiLiterals[ 0 ].value ).toEqual( '#subframe2' );
+                expect( uiLiterals[ 1 ].value ).toEqual( '#subframe1' );
+                expect( uiLiterals[ 2 ].value ).toEqual( '#frame' );
+            } );
+
+            it( 'switch to iframe UI Element inside UI Element', () => {
+                let results = [];
+                let r: NLPResult;
+                results.push( r = recognizeInTestCase(
+                    'Quando eu troco para o iframe {Subframe1} dentro de {Frame1}'
+                ) );
+
+                shouldHaveTestCaseEntities( results, [ UI_ELEMENT_TYPE, UI_ELEMENT, UI_ELEMENT ] );
+                const actionOption = r.entities.filter( e => e.entity === UI_ELEMENT_TYPE );
+                expect( actionOption[ 0 ].value ).toEqual( 'frame' );
+                const uiElements = r.entities.filter( e => e.entity === UI_ELEMENT );
+                expect( uiElements[ 0 ].value ).toEqual( 'Subframe1' );
+                expect( uiElements[ 1 ].value ).toEqual( 'Frame1' );
+            } );
+
+            it( 'switch to iframe UI Element inside UI Element inside UI Element', () => {
+                let results = [];
+                let r: NLPResult;
+                results.push( r = recognizeInTestCase(
+                    'Quando eu troco para o iframe {Subframe2} dentro de {Subframe1} dentro de {Frame1}'
+                ) );
+
+                shouldHaveTestCaseEntities( results, [ UI_ELEMENT_TYPE, UI_ELEMENT, UI_ELEMENT ] );
+                const actionOption = r.entities.filter( e => e.entity === UI_ELEMENT_TYPE );
+                expect( actionOption[ 0 ].value ).toEqual( 'frame' );
+                const uiElements = r.entities.filter( e => e.entity === UI_ELEMENT );
+                expect( uiElements[ 0 ].value ).toEqual( 'Subframe2' );
+                expect( uiElements[ 1 ].value ).toEqual( 'Subframe1' );
+                expect( uiElements[ 2 ].value ).toEqual( 'Frame1' );
+            } );
+
+            it( 'switch to UI Literal inside UI Element', () => {
+                let results = [];
+                let r: NLPResult;
+                results.push( r = recognizeInTestCase(
+                    'Quando eu troco para o iframe <#subframe> dentro de {Frame1}'
+                ) );
+                shouldHaveTestCaseEntities( results, [ UI_ELEMENT_TYPE, UI_LITERAL, UI_ELEMENT ] );
+                const actionOption = r.entities.filter( e => e.entity === UI_ELEMENT_TYPE );
+                expect( actionOption[ 0 ].value ).toEqual( 'frame' );
+                const uiLiterals = r.entities.filter( e => e.entity === UI_LITERAL );
+                expect( uiLiterals[ 0 ].value ).toEqual( '#subframe' );
+                const uiElements = r.entities.filter( e => e.entity === UI_ELEMENT );
+                expect( uiElements[ 0 ].value ).toEqual( 'Frame1' );
+            } );
+
+            it( 'switch to UI Literal inside UI Element inside UI Literal', () => {
+                let results = [];
+                let r: NLPResult;
+                results.push( r = recognizeInTestCase(
+                    'Quando eu troco para o iframe <#subframe2> dentro de {SubFrame 1} dentro de <#frame1>'
+                ) );
+                shouldHaveTestCaseEntities( results, [ UI_ELEMENT_TYPE, UI_LITERAL, UI_ELEMENT, UI_LITERAL ] );
+                const actionOption = r.entities.filter( e => e.entity === UI_ELEMENT_TYPE );
+                expect( actionOption[ 0 ].value ).toEqual( 'frame' );
+                const uiLiterals = r.entities.filter( e => e.entity === UI_LITERAL );
+                expect( uiLiterals[ 0 ].value ).toEqual( '#subframe2' );
+                expect( uiLiterals[ 1 ].value ).toEqual( '#frame1' );
+                const uiElements = r.entities.filter( e => e.entity === UI_ELEMENT );
+                expect( uiElements[ 0 ].value ).toEqual( 'SubFrame 1' );
+            } );
+
+            it( 'switch to UI Element inside UI Literal', () => {
+                let results = [];
+                let r: NLPResult;
+                results.push( r = recognizeInTestCase(
+                    'Quando eu troco para o iframe {SubFrame} dentro de <#frame1>'
+                ) );
+                shouldHaveTestCaseEntities( results, [ UI_ELEMENT_TYPE, UI_ELEMENT, UI_LITERAL ] );
+                const actionOption = r.entities.filter( e => e.entity === UI_ELEMENT_TYPE );
+                expect( actionOption[ 0 ].value ).toEqual( 'frame' );
+                const uiElements = r.entities.filter( e => e.entity === UI_ELEMENT );
+                expect( uiElements[ 0 ].value ).toEqual( 'SubFrame' );
+                const uiLiterals = r.entities.filter( e => e.entity === UI_LITERAL );
+                expect( uiLiterals[ 0 ].value ).toEqual( '#frame1' );
+            } );
+
+            it( 'switch to UI Element inside UI Literal inside UI Element', () => {
+                let results = [];
+                let r: NLPResult;
+                results.push( r = recognizeInTestCase(
+                    'Quando eu troco para o iframe {SubFrame 2} dentro de <#subframe1> dentro de {Frame1}'
+                ) );
+                shouldHaveTestCaseEntities( results, [ UI_ELEMENT_TYPE, UI_ELEMENT, UI_LITERAL ] );
+                const actionOption = r.entities.filter( e => e.entity === UI_ELEMENT_TYPE );
+                expect( actionOption[ 0 ].value ).toEqual( 'frame' );
+                const uiElements = r.entities.filter( e => e.entity === UI_ELEMENT );
+                expect( uiElements[ 0 ].value ).toEqual( 'SubFrame 2' );
+                expect( uiElements[ 1 ].value ).toEqual( 'Frame1' );
+                const uiLiterals = r.entities.filter( e => e.entity === UI_LITERAL );
+                expect( uiLiterals[ 0 ].value ).toEqual( '#subframe1' );
             } );
 
         });

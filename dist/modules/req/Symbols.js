@@ -7,6 +7,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
  */
 class Symbols {
 }
+exports.Symbols = Symbols;
 // prefixes
 Symbols.COMMENT_PREFIX = '#';
 Symbols.IMPORT_PREFIX = '"';
@@ -36,4 +37,3 @@ Symbols.UI_PROPERTY_REF_SEPARATOR = '|';
 // wrappers
 Symbols.VALUE_WRAPPER = '"';
 Symbols.COMMAND_WRAPPER = "'";
-exports.Symbols = Symbols;
