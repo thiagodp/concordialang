@@ -99,6 +99,7 @@ export class OptionsHandler {
             && ! options.newer
             && ! options.init
             && ! options.ast
+            && ! options.languageList
             && ! options.somePluginOption();
 
         if ( shouldShow ) {

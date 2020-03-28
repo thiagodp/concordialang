@@ -85,6 +85,7 @@ class OptionsHandler {
             && !options.newer
             && !options.init
             && !options.ast
+            && !options.languageList
             && !options.somePluginOption();
         if (shouldShow) {
             cli.newLine(cli.symbolInfo, options.isGeneratedSeed ? 'Generated seed' : 'Seed', cli.colorHighlight(options.seed));
