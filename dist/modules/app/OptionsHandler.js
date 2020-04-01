@@ -105,15 +105,26 @@ class OptionsHandler {
             cli.newLine(cli.symbolInfo, 'Real seed', cli.colorHighlight(options.realSeed));
         }
     }
+    hasOptionAffectedByConfigurationFile(options) {
+        return !options.help
+            && !options.about
+            && !options.version
+            && !options.newer
+            && !options.languageList
+            && !options.pluginList;
+    }
     loadOptionsInfo() {
         return __awaiter(this, void 0, void 0, function* () {
             // CLI options are read firstly in order to eventually consider
             // some parameter before loading a configuration file, i.e., pass
             // some argument to `optionsFromConfigFile`.
             const cliOptions = this.optionsFromCLI();
-            const cfg = yield this.optionsFromConfigFile();
-            if (!!cfg) {
-                this._wasLoaded = true;
+            let cfg = null;
+            if (this.hasOptionAffectedByConfigurationFile(cliOptions)) {
+                cfg = yield this.optionsFromConfigFile();
+                if (!!cfg) {
+                    this._wasLoaded = true;
+                }
             }
             const cfgFileOptions = !cfg ? {} : cfg.config;
             const finalObj = Object.assign(cfgFileOptions, cliOptions);

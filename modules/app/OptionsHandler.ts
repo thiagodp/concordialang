@@ -126,6 +126,16 @@ export class OptionsHandler {
         }
     }
 
+    private hasOptionAffectedByConfigurationFile( options ): boolean {
+        return ! options.help
+            && ! options.about
+            && ! options.version
+            && ! options.newer
+            && ! options.languageList
+            && ! options.pluginList
+            ;
+    }
+
 
     private async loadOptionsInfo(): Promise< OptionsInfo > {
 
@@ -135,11 +145,13 @@ export class OptionsHandler {
 
         const cliOptions = this.optionsFromCLI();
 
-        const cfg: { config: any, filepath: string } | null =
-            await this.optionsFromConfigFile();
+        let cfg: { config: any, filepath: string } | null = null;
 
-        if ( !! cfg ) {
-            this._wasLoaded = true;
+        if ( this.hasOptionAffectedByConfigurationFile( cliOptions ) ) {
+            cfg = await this.optionsFromConfigFile();
+            if ( !! cfg ) {
+                this._wasLoaded = true;
+            }
         }
 
         const cfgFileOptions = ! cfg ? {} : cfg.config;
