@@ -13,7 +13,7 @@ describe( 'AugmentedSpec', () => {
     beforeEach( () => spec = new AugmentedSpec( basePath ) );
     afterEach( () => spec = null );
 
-    describe( 'findUIElementInDocumentImports', () => {
+    describe( '#findUIElementInDocumentImports', () => {
 
         describe( 'found', () => {
 

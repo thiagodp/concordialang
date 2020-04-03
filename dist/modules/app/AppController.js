@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const fs_1 = require("fs");
+const fs = require("fs");
 const path_1 = require("path");
 const util_1 = require("util");
 const meow = require("meow");
@@ -171,7 +171,7 @@ class AppController {
                 if (!options.generateTestCase) {
                     cli.newLine(cli.symbolInfo, 'Test Case generation disabled.');
                 }
-                let compilerController = new CompilerController_1.CompilerController();
+                const compilerController = new CompilerController_1.CompilerController(fs);
                 try {
                     [spec,] = yield compilerController.compile(options, cli);
                 }
@@ -199,7 +199,7 @@ class AppController {
                     };
                 };
                 try {
-                    const write = util_1.promisify(fs_1.writeFile);
+                    const write = util_1.promisify(fs.writeFile);
                     yield write(options.ast, JSON.stringify(spec, getCircularReplacer(), "  "));
                 }
                 catch (e) {
@@ -268,7 +268,7 @@ class AppController {
                 let reportFile;
                 if (!executionResult) {
                     const defaultReportFile = path_1.join(options.dirResult, yield plugin.defaultReportFile());
-                    if (!fs_1.existsSync(defaultReportFile)) {
+                    if (!fs.existsSync(defaultReportFile)) {
                         cli.newLine(cli.symbolWarning, 'Could not retrieve execution results.');
                         return false;
                     }

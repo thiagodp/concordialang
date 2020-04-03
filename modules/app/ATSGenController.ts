@@ -13,8 +13,13 @@ export class ATSGenController {
         let all: AbstractTestScript[] = [];
         const gen = new AbstractTestScriptGenerator();
         for ( let doc of spec.docs || [] ) {
+            // Only test cases allowed
+            if ( ! doc.testCases || doc.testCases.length < 1 ) {
+                continue;
+            }
             let ats = gen.generateFromDocument( doc, spec );
             if ( isDefined( ats ) ) {
+                // console.log( 'CREATED ATS from', ats.sourceFile );
                 all.push( ats );
             }
         }

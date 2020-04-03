@@ -30,7 +30,7 @@ describe( 'UIElementSSA', () => {
 
     it( 'detect all references', async () => {
 
-        let spec = new AugmentedSpec( path );
+        const spec = new AugmentedSpec( path );
 
         const mydbPath = join( __dirname, '../db/users.json' );
 

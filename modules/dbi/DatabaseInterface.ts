@@ -1,6 +1,6 @@
 import { Database } from "../ast/Database";
+import { Table } from "../ast/Table";
 import { Queryable } from "./Queryable";
-import { Table } from "modules/ast";
 
 /**
  * Database interface

@@ -54,7 +54,7 @@ export class SingleFileCompiler implements SingleFileProcessor {
                 fileInfo: { hash: data.meta.hash, path: data.meta.fullPath }
                 //, meta: data.meta
             };
-            // console.log( 'NEW', doc.fileInfo.path );
+            // console.log( '-[ NEW ]-', doc.fileInfo.path );
 
             let sdp = new SingleDocumentProcessor();
             sdp.analyzeNodes(

@@ -21,7 +21,7 @@ describe( 'FeatureSpecAnalyzer', () => {
         lexer.reset();
     } );
 
-    it( 'does not critize when it is all right', () => {
+    it( 'does not criticize when everything is ok', () => {
         [
             'feature: my feature 1',
         ].forEach( ( val, index ) => lexer.addNodeFromLine( val, index + 1 ) );
@@ -38,7 +38,8 @@ describe( 'FeatureSpecAnalyzer', () => {
 
 
         let spec = new AugmentedSpec( '.' );
-        spec.docs.push( doc1, doc2 );
+        spec.addDocument( doc1 );
+        spec.addDocument( doc2 );
         const graph = ( new SpecFilter( spec ) ).graph();
 
         let errors = [];
@@ -47,11 +48,18 @@ describe( 'FeatureSpecAnalyzer', () => {
     } );
 
 
-    it( 'critizes duplicated names', () => {
+    it( 'criticizes duplicated names', () => {
+
         [
             'feature: my feature 1',
         ].forEach( ( val, index ) => lexer.addNodeFromLine( val, index + 1 ) );
-        let doc1: Document = {};
+
+        const doc1: Document = {
+            fileInfo: {
+                path: 'f1.feature',
+                hash: ''
+            }
+        };
         parser.analyze( lexer.nodes(), doc1 );
 
         lexer.reset();
@@ -59,12 +67,20 @@ describe( 'FeatureSpecAnalyzer', () => {
         [
             'feature: my feature 1',
         ].forEach( ( val, index ) => lexer.addNodeFromLine( val, index + 1 ) );
-        let doc2: Document = {};
+
+        const doc2: Document = {
+            fileInfo: {
+                path: 'f2.feature',
+                hash: ''
+            }
+        };
+
         parser.analyze( lexer.nodes(), doc2 );
 
 
         let spec = new AugmentedSpec( '.' );
-        spec.docs.push( doc1, doc2 );
+        spec.addDocument( doc1 );
+        spec.addDocument( doc2 );
         const graph = ( new SpecFilter( spec ) ).graph();
 
         let errors = [];

@@ -163,7 +163,7 @@ describe( 'TestCaseSSA', () => {
             ]
         };
 
-        spec.docs.push( docA, docB, docC, docD, docE1, docE2, docF, docG );
+        spec.addDocument( docA, docB, docC, docD, docE1, docE2, docF, docG );
     } );
 
 

@@ -1,14 +1,13 @@
 import * as fs from 'fs';
 import { promisify } from 'util';
+import { ReadFileAsyncOptions } from './ReadFileAsyncOptions';
 
-interface ReadFileAsyncOptions {
-    fs?: any;
-    encoding?: string;
-    flag?: string;
-    silentIfNotExists?: boolean;
-}
-
-const DEFAULT_OPTIONS: ReadFileAsyncOptions = { fs: fs, encoding: 'utf8', flag: 'r', silentIfNotExists: false };
+export const DEFAULT_OPTIONS: ReadFileAsyncOptions = {
+	fs: fs,
+	encoding: "utf8",
+	flag: "r",
+	silentIfNotExists: false
+};
 
 export async function readFileAsync(
     path: string,

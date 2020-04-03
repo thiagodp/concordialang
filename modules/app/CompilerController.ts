@@ -15,8 +15,13 @@ import { SingleFileCompiler } from "./SingleFileCompiler";
 import { MultiFileProcessor } from "./MultiFileProcessor";
 import { VerboseAppEventsListener } from "./VerboseAppEventsListener";
 import { Compiler } from "./Compiler";
+import { MultiFileProcessor as MultiFileProcessor2 } from "../compiler/MultiFileProcessor2";
+import { Compiler as Compiler2 } from "../compiler/Compiler2";
 import { LanguageManager } from "./LanguageManager";
 import { TCGenController } from "./TCGenController";
+import { FSFileReader } from '../compiler/FSFileReader';
+import { GlobFileSearcher } from '../util/file-search';
+import { FileCompiler } from '../compiler/FileCompiler';
 
 /**
  * Compiler controller
@@ -24,6 +29,9 @@ import { TCGenController } from "./TCGenController";
  * @author Thiago Delgado Pinto
  */
 export class CompilerController {
+
+    constructor( private _fs: any ) {
+    }
 
     public async compile( options: Options, cli: CLI ): Promise< [ AugmentedSpec, Graph ] > {
 
@@ -56,12 +64,18 @@ export class CompilerController {
             options.language
         );
 
-        let mfp = new MultiFileProcessor( singleFileCompiler, listener, listener, listener, listener );
+        // let mfp = new MultiFileProcessor( singleFileCompiler, listener, listener, listener, listener );
 
-        let compiler = new Compiler(
-            mfp,
-            specAnalyzer
-        );
+        // let compiler = new Compiler(
+        //     mfp,
+        //     specAnalyzer
+        // );
+
+        const fileReader = new FSFileReader( this._fs );
+        const fileCompiler = new FileCompiler( fileReader, singleFileCompiler, options.lineBreaker );
+        const mfp = new MultiFileProcessor2( fileCompiler );
+        const fileSearcher = new GlobFileSearcher( this._fs );
+        const compiler = new Compiler2( fileSearcher, mfp, specAnalyzer );
 
         let [ spec, graph ] = await compiler.compile( options, listener );
 

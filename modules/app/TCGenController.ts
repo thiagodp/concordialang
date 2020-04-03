@@ -41,6 +41,8 @@ import {
 import { TCGenListener } from "./TCGenListener";
 import { Options } from "./Options";
 import { VariantSelectionOptions, CombinationOptions, InvalidSpecialOptions } from "./Defaults";
+import { normalize, relative, dirname } from 'path';
+import { toUnixPath } from '../util/file-search';
 
 export class TCGenController {
 
@@ -109,6 +111,9 @@ export class TCGenController {
         this._listener.testCaseGenerationStarted( strategyWarnings );
 
         let vertices = graph.vertices_topologically();
+        // for ( let [ key,  ] of vertices ) {
+        //     console.log( key );
+        // }
 
         let newTestCaseDocuments: Document[] = [];
 
@@ -188,8 +193,8 @@ export class TCGenController {
 
             // Adding the generated documents to the graph
             // > This shall allow the test script generator to include all the needed test cases.
-            const from = newDoc.fileInfo.path;
-            const to = doc.fileInfo.path;
+            const from = toUnixPath( newDoc.fileInfo.path );
+            const to = toUnixPath( doc.fileInfo.path );
             graph.addVertex( from, newDoc ); // Overwrites if exist!
             graph.addEdge( to, from ); // order is this way...
 
@@ -202,7 +207,7 @@ export class TCGenController {
             );
 
             // Announce produced
-            this._listener.testCaseProduced( from, errors, warnings );
+            this._listener.testCaseProduced( relative( dirname( options.directory ), newDoc.fileInfo.path ), errors, warnings );
 
             // Generating file
             try {
@@ -222,13 +227,16 @@ export class TCGenController {
         // Adds or replaces generated documents to the specification
         for ( let newDoc of newTestCaseDocuments ) {
             // console.log( 'NEW is', newDoc.fileInfo.path );
-            let index = spec.docs.findIndex( doc => doc.fileInfo.path.toLowerCase() === newDoc.fileInfo.path.toLowerCase() );
+
+            const index = spec.indexOfDocWithPath( newDoc.fileInfo.path );
             if ( index < 0 ) {
                 // console.log( ' ADD', newDoc.fileInfo.path );
-                spec.docs.push( newDoc );
+                // spec.docs.push( newDoc );
+                spec.addDocument( newDoc );
             } else {
                 // console.log( ' REPLACE', newDoc.fileInfo.path );
-                spec.docs.splice( index, 1, newDoc ); // Replace
+                // spec.docs.splice( index, 1, newDoc ); // Replace
+                spec.replaceDocByIndex( index, newDoc );
             }
         }
 

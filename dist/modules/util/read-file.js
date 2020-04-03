@@ -11,10 +11,15 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const fs = require("fs");
 const util_1 = require("util");
-const DEFAULT_OPTIONS = { fs: fs, encoding: 'utf8', flag: 'r', silentIfNotExists: false };
+exports.DEFAULT_OPTIONS = {
+    fs: fs,
+    encoding: "utf8",
+    flag: "r",
+    silentIfNotExists: false
+};
 function readFileAsync(path, options) {
     return __awaiter(this, void 0, void 0, function* () {
-        const opt = Object.assign(DEFAULT_OPTIONS, options || {});
+        const opt = Object.assign(exports.DEFAULT_OPTIONS, options || {});
         const readF = util_1.promisify(opt.fs.readFile);
         try {
             return yield readF(path, { encoding: opt.encoding, flag: opt.flag });

@@ -24,6 +24,8 @@ const RuntimeException_1 = require("../error/RuntimeException");
 const Warning_1 = require("../error/Warning");
 const DataTestCaseMix_1 = require("../testcase/DataTestCaseMix");
 const Defaults_1 = require("./Defaults");
+const path_1 = require("path");
+const file_search_1 = require("../util/file-search");
 class TCGenController {
     constructor(_listener) {
         this._listener = _listener;
@@ -51,6 +53,9 @@ class TCGenController {
             //
             this._listener.testCaseGenerationStarted(strategyWarnings);
             let vertices = graph.vertices_topologically();
+            // for ( let [ key,  ] of vertices ) {
+            //     console.log( key );
+            // }
             let newTestCaseDocuments = [];
             for (let [/* key */ , value] of vertices) {
                 let doc = value;
@@ -107,14 +112,14 @@ class TCGenController {
                 newTestCaseDocuments.push(newDoc);
                 // Adding the generated documents to the graph
                 // > This shall allow the test script generator to include all the needed test cases.
-                const from = newDoc.fileInfo.path;
-                const to = doc.fileInfo.path;
+                const from = file_search_1.toUnixPath(newDoc.fileInfo.path);
+                const to = file_search_1.toUnixPath(doc.fileInfo.path);
                 graph.addVertex(from, newDoc); // Overwrites if exist!
                 graph.addEdge(to, from); // order is this way...
                 // Generating file content
                 const lines = tcDocFileGen.createLinesFromDoc(newDoc, errors, options.tcSuppressHeader, options.tcIndenter);
                 // Announce produced
-                this._listener.testCaseProduced(from, errors, warnings);
+                this._listener.testCaseProduced(path_1.relative(path_1.dirname(options.directory), newDoc.fileInfo.path), errors, warnings);
                 // Generating file
                 try {
                     yield writeFileAsync(newDoc.fileInfo.path, lines.join(options.lineBreaker));
@@ -131,14 +136,16 @@ class TCGenController {
             // Adds or replaces generated documents to the specification
             for (let newDoc of newTestCaseDocuments) {
                 // console.log( 'NEW is', newDoc.fileInfo.path );
-                let index = spec.docs.findIndex(doc => doc.fileInfo.path.toLowerCase() === newDoc.fileInfo.path.toLowerCase());
+                const index = spec.indexOfDocWithPath(newDoc.fileInfo.path);
                 if (index < 0) {
                     // console.log( ' ADD', newDoc.fileInfo.path );
-                    spec.docs.push(newDoc);
+                    // spec.docs.push( newDoc );
+                    spec.addDocument(newDoc);
                 }
                 else {
                     // console.log( ' REPLACE', newDoc.fileInfo.path );
-                    spec.docs.splice(index, 1, newDoc); // Replace
+                    // spec.docs.splice( index, 1, newDoc ); // Replace
+                    spec.replaceDocByIndex(index, newDoc);
                 }
             }
             // Show errors and warnings if they exist

@@ -17,17 +17,23 @@ const NLPBasedSentenceRecognizer_1 = require("../nlp/NLPBasedSentenceRecognizer"
 const BatchSpecificationAnalyzer_1 = require("../semantic/BatchSpecificationAnalyzer");
 const dict_1 = require("../dict");
 const SingleFileCompiler_1 = require("./SingleFileCompiler");
-const MultiFileProcessor_1 = require("./MultiFileProcessor");
 const VerboseAppEventsListener_1 = require("./VerboseAppEventsListener");
-const Compiler_1 = require("./Compiler");
+const MultiFileProcessor2_1 = require("../compiler/MultiFileProcessor2");
+const Compiler2_1 = require("../compiler/Compiler2");
 const LanguageManager_1 = require("./LanguageManager");
 const TCGenController_1 = require("./TCGenController");
+const FSFileReader_1 = require("../compiler/FSFileReader");
+const file_search_1 = require("../util/file-search");
+const FileCompiler_1 = require("../compiler/FileCompiler");
 /**
  * Compiler controller
  *
  * @author Thiago Delgado Pinto
  */
 class CompilerController {
+    constructor(_fs) {
+        this._fs = _fs;
+    }
     compile(options, cli) {
         return __awaiter(this, void 0, void 0, function* () {
             const langLoader = new dict_1.JsonLanguageContentLoader(options.languageDir, {}, options.encoding);
@@ -46,8 +52,16 @@ class CompilerController {
                 ? new VerboseAppEventsListener_1.VerboseAppEventsListener(cli, options.debug)
                 : new SimpleAppEventsListener_1.SimpleAppEventsListener(cli, options.debug);
             let singleFileCompiler = new SingleFileCompiler_1.SingleFileCompiler(lexer, parser, nlpBasedSentenceRecognizer, options.language);
-            let mfp = new MultiFileProcessor_1.MultiFileProcessor(singleFileCompiler, listener, listener, listener, listener);
-            let compiler = new Compiler_1.Compiler(mfp, specAnalyzer);
+            // let mfp = new MultiFileProcessor( singleFileCompiler, listener, listener, listener, listener );
+            // let compiler = new Compiler(
+            //     mfp,
+            //     specAnalyzer
+            // );
+            const fileReader = new FSFileReader_1.FSFileReader(this._fs);
+            const fileCompiler = new FileCompiler_1.FileCompiler(fileReader, singleFileCompiler, options.lineBreaker);
+            const mfp = new MultiFileProcessor2_1.MultiFileProcessor(fileCompiler);
+            const fileSearcher = new file_search_1.GlobFileSearcher(this._fs);
+            const compiler = new Compiler2_1.Compiler(fileSearcher, mfp, specAnalyzer);
             let [spec, graph] = yield compiler.compile(options, listener);
             if (!options.generateTestCase || !spec.docs || spec.docs.length < 1) {
                 return [spec, graph];

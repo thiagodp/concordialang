@@ -50,7 +50,7 @@ class SingleFileCompiler {
                     fileInfo: { hash: data.meta.hash, path: data.meta.fullPath }
                     //, meta: data.meta
                 };
-                // console.log( 'NEW', doc.fileInfo.path );
+                // console.log( '-[ NEW ]-', doc.fileInfo.path );
                 let sdp = new SingleDocumentProcessor_1.SingleDocumentProcessor();
                 sdp.analyzeNodes(doc, this._lexer, this._parser, this._nlpRec, this._defaultLanguage, this._ignoreSemanticAnalysis);
                 const durationMs = Date.now() - startTime;

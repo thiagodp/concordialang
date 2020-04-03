@@ -39,7 +39,7 @@ describe( 'PackageBasedPluginFinder', () => {
 
 
     beforeEach( () => {
-        vol.mkdirpSync( currentDir, { recursive: true } ); // Synchronize - IMPORTANT! - mkdirpSync, not mkdirSync
+        vol.mkdirpSync( currentDir, { recursive: true } as any ); // Synchronize - IMPORTANT! - mkdirpSync, not mkdirSync
         vol.mkdirpSync( localModulesDir );
         vol.mkdirpSync( globalModulesDir ); // Global modules directory
     } );

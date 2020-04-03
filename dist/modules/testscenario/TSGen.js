@@ -218,20 +218,24 @@ class TSGen {
                 // console.log( 'GENERATED', newTestScenarios.length, 'scenarios for reusing' );
             }
             // Add the variant to the postconditions map
-            for (let postc of variant.postconditions) {
-                if (this._postconditionNameToVariantsMap.has(postc.name)) {
-                    let variants = this._postconditionNameToVariantsMap.get(postc.name);
-                    // Add only if it does not exist
-                    if (variants.indexOf(variant) < 0) {
-                        variants.push(variant);
-                    }
-                }
-                else {
-                    this._postconditionNameToVariantsMap.set(postc.name, [variant]);
-                }
-            }
+            this.mapPostconditionsOf(variant);
             return testScenarios;
         });
+    }
+    mapPostconditionsOf(variant) {
+        // Add the variant to the postconditions map
+        for (let postc of variant.postconditions) {
+            if (this._postconditionNameToVariantsMap.has(postc.name)) {
+                let variants = this._postconditionNameToVariantsMap.get(postc.name);
+                // Add only if it does not exist
+                if (variants.indexOf(variant) < 0) {
+                    variants.push(variant);
+                }
+            }
+            else {
+                this._postconditionNameToVariantsMap.set(postc.name, [variant]);
+            }
+        }
     }
     detectVariantStates(variant, errors) {
         const detector = new VariantStateDetector_1.VariantStateDetector();

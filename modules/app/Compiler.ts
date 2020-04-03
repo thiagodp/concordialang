@@ -38,7 +38,8 @@ export class Compiler {
         // Add the documents
         for ( let file of r.compiledFiles ) {
             let doc: Document = file.content as Document;
-            spec.docs.push( doc );
+            // spec.docs.push( doc );
+            spec.addDocument( doc );
         }
 
         // Then filter the specification

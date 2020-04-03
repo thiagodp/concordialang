@@ -1,4 +1,5 @@
-import { writeFile, existsSync } from 'fs';
+import * as fs from "fs";
+
 import { join } from 'path';
 import { promisify } from 'util';
 import * as meow from 'meow';
@@ -187,7 +188,7 @@ export class AppController {
             if ( ! options.generateTestCase ) {
                 cli.newLine( cli.symbolInfo, 'Test Case generation disabled.' );
             }
-            let compilerController: CompilerController = new CompilerController();
+            const compilerController: CompilerController = new CompilerController( fs );
             try {
                 [ spec, /* graph */ ] = await compilerController.compile( options, cli );
             } catch ( err ) {
@@ -216,7 +217,7 @@ export class AppController {
             };
 
             try {
-                const write = promisify( writeFile );
+                const write = promisify( fs.writeFile );
                 await write( options.ast, JSON.stringify( spec, getCircularReplacer(), "  " ) );
             } catch ( e ) {
                 cli.newLine( cli.symbolError, 'Error saving', cli.colorHighlight( options.ast ), ': ' + e.message );
@@ -309,7 +310,7 @@ export class AppController {
                 const defaultReportFile: string = join(
                     options.dirResult, await plugin.defaultReportFile() );
 
-                if ( ! existsSync( defaultReportFile ) ) {
+                if ( ! fs.existsSync( defaultReportFile ) ) {
                     cli.newLine( cli.symbolWarning, 'Could not retrieve execution results.' );
                     return false;
                 }

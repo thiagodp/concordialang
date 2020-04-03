@@ -300,6 +300,13 @@ export class TSGen {
         }
 
         // Add the variant to the postconditions map
+        this.mapPostconditionsOf( variant );
+
+        return testScenarios;
+    }
+
+    private mapPostconditionsOf( variant: Variant ): void {
+        // Add the variant to the postconditions map
         for ( let postc of variant.postconditions ) {
             if ( this._postconditionNameToVariantsMap.has( postc.name ) ) {
                 let variants = this._postconditionNameToVariantsMap.get( postc.name );
@@ -311,8 +318,6 @@ export class TSGen {
                 this._postconditionNameToVariantsMap.set( postc.name, [ variant ] );
             }
         }
-
-        return testScenarios;
     }
 
 

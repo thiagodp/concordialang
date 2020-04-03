@@ -31,7 +31,8 @@ class Compiler {
             // Add the documents
             for (let file of r.compiledFiles) {
                 let doc = file.content;
-                spec.docs.push(doc);
+                // spec.docs.push( doc );
+                spec.addDocument(doc);
             }
             // Then filter the specification
             const specFilter = new SpecFilter_1.SpecFilter(spec);

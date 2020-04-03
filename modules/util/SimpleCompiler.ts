@@ -36,7 +36,7 @@ export class SimpleCompiler {
     addToSpec( spec: AugmentedSpec, lines: string[], fileInfo?: FileInfo ): Document {
         lines.forEach( ( val, index ) => this.lexer.addNodeFromLine( val, index + 1 ) );
         let doc: Document = {} as Document;
-        doc.fileInfo = fileInfo;
+        doc.fileInfo = fileInfo || ( {} as FileInfo );
 
         let language = this.language;
         if ( doc.language ) {
@@ -44,7 +44,7 @@ export class SimpleCompiler {
         }
 
         this.singleDocProcessor.analyzeNodes( doc, this.lexer, this.parser, this.nlpRec, language );
-        spec.docs.push( doc );
+        spec.addDocument( doc );
         return doc;
     }
 

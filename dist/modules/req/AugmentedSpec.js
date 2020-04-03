@@ -6,6 +6,7 @@ const CaseType_1 = require("../app/CaseType");
 const DocumentUtil_1 = require("../util/DocumentUtil");
 const TypeChecking_1 = require("../util/TypeChecking");
 const UIElementNameHandler_1 = require("../util/UIElementNameHandler");
+const file_search_1 = require("../util/file-search");
 class MappedContent {
     constructor() {
         this.feature = false;
@@ -19,13 +20,15 @@ exports.IN_MEMORY_DATABASE_NAME = '___concordia___';
 /**
  * Augmented specification
  *
+ * TO-DO: Refactor !
+ *
  * @author Thiago Delgado Pinto
  */
 class AugmentedSpec extends ast_1.Spec {
     constructor(basePath) {
         super(basePath);
         this._docFullyMapped = new Map();
-        this._relPathToDocumentCache = null;
+        this._pathToDocCache = new Map();
         this._databaseCache = null;
         this._constantCache = null;
         this._tableCache = null;
@@ -47,8 +50,10 @@ class AugmentedSpec extends ast_1.Spec {
     set uiLiteralCaseOption(option) {
         this._uiLiteralCaseOption = option;
     }
-    clearCache() {
-        this._relPathToDocumentCache = null;
+    clearCache(clearPathToDocCache = false) {
+        if (clearPathToDocCache) {
+            this._pathToDocCache.clear();
+        }
         this._databaseCache = null;
         this._constantCache = null;
         this._tableCache = null;
@@ -63,6 +68,51 @@ class AugmentedSpec extends ast_1.Spec {
     mapAllDocuments() {
         for (let doc of this.docs) {
             this.mapEverythingFromDocument(doc);
+        }
+    }
+    addDocument(...docs) {
+        for (const doc of docs) {
+            if (this.addToDocPath(doc)) {
+                this.docs.push(doc);
+                this.mapEverythingFromDocument(doc);
+            }
+        }
+    }
+    indexOfDocWithPath(path) {
+        const formattedPath = this.formatPath(path);
+        const doc = this._pathToDocCache.get(formattedPath) || null;
+        return doc ? this.docs.indexOf(doc) : -1;
+    }
+    replaceDocByIndex(index, newDoc) {
+        const path = newDoc.fileInfo.path;
+        const pathIndex = this.indexOfDocWithPath(path);
+        if (pathIndex != index) {
+            return false;
+        }
+        this.docs.splice(index, 1, newDoc); // Replace
+        const formattedPath = this.formatPath(path);
+        this._pathToDocCache.set(formattedPath, newDoc); // Overwrite cache
+        return true;
+    }
+    extractDocPath(doc) {
+        var _a;
+        return this.formatPath(((_a = doc === null || doc === void 0 ? void 0 : doc.fileInfo) === null || _a === void 0 ? void 0 : _a.path) || '');
+    }
+    formatPath(path) {
+        return file_search_1.toUnixPath(path_1.resolve(path_1.dirname(this.basePath), path)).toLowerCase();
+    }
+    addToDocPath(doc) {
+        const path = this.extractDocPath(doc);
+        if (this._pathToDocCache.has(path)) {
+            return false;
+        }
+        this._pathToDocCache.set(path, doc);
+        return true;
+    }
+    rebuildDocPath() {
+        this._pathToDocCache.clear();
+        for (const doc of this.docs) {
+            this.addToDocPath(doc);
         }
     }
     assureDoc(doc) {
@@ -209,15 +259,13 @@ class AugmentedSpec extends ast_1.Spec {
      */
     docWithPath(filePath, referencePath = '.', rebuildCache = false) {
         // Rebuild cache ?
-        if (!TypeChecking_1.isDefined(this._relPathToDocumentCache) || rebuildCache) {
-            this._relPathToDocumentCache = new Map();
-            for (let doc of this.docs) {
-                this._relPathToDocumentCache.set(doc.fileInfo.path.toLowerCase(), doc);
-            }
+        if (!TypeChecking_1.isDefined(this._pathToDocCache) || rebuildCache) {
+            this.rebuildDocPath();
         }
-        const targetFile = path_1.resolve(path_1.dirname(referencePath), filePath).toLowerCase();
-        let doc = this._relPathToDocumentCache.get(targetFile);
-        return undefined === doc ? null : doc;
+        const path = path_1.resolve(path_1.dirname(referencePath), filePath);
+        const targetFile = this.formatPath(path);
+        let doc = this._pathToDocCache.get(targetFile);
+        return doc || null;
     }
     constantWithName(name, rebuildCache = false) {
         return this.findByName(name, this.constants(rebuildCache));
@@ -379,8 +427,11 @@ class AugmentedSpec extends ast_1.Spec {
         for (let impDoc of doc.imports) {
             let otherDoc = this.docWithPath(impDoc.value, doc.fileInfo.path);
             if (!otherDoc) {
-                // console.log( 'WARN: Imported document not found:', impDoc.value );
-                // console.log( 'Base path is', this.basePath || '.' );
+                // console.log(
+                //     'WARNING - Imported document not found:', impDoc.value, "\n",
+                //     'doc path:', doc.fileInfo.path, "\n",
+                //     'Base path is', this.basePath || '.'
+                // );
                 continue;
             }
             let uie = docUtil.findUIElementInTheDocument(variable, otherDoc);
