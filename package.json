@@ -105,7 +105,6 @@
     "dedent-js": "^1.0.1",
     "deepcopy": "^0.6.3",
     "enum-util": "^1.7.1",
-    "fast-glob": "^3.2.2",
     "figures": "^2.0.0",
     "fwalker": "^1.0.2",
     "glob": "^7.1.6",

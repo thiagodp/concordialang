@@ -1,29 +1,26 @@
 import Graph = require( 'graph.js/dist/graph.full.js' );
 
-import { SimpleAppEventsListener } from "./SimpleAppEventsListener";
-import { AugmentedSpec } from "../req/AugmentedSpec";
+import { Compiler as Compiler2 } from "../compiler/Compiler2";
+import { FileCompiler } from '../compiler/FileCompiler';
+import { MultiFileProcessor as MultiFileProcessor2 } from "../compiler/MultiFileProcessor2";
+import { JsonLanguageContentLoader, LanguageContentLoader } from "../dict";
 import { Lexer } from "../lexer/Lexer";
 import { LexerBuilder } from "../lexer/LexerBuilder";
-import { Parser } from "../parser/Parser";
-import { NLPTrainer } from "../nlp/NLPTrainer";
 import { NLPBasedSentenceRecognizer } from "../nlp/NLPBasedSentenceRecognizer";
+import { NLPTrainer } from "../nlp/NLPTrainer";
+import { Parser } from "../parser/Parser";
+import { AugmentedSpec } from "../req/AugmentedSpec";
 import { BatchSpecificationAnalyzer } from "../semantic/BatchSpecificationAnalyzer";
-import { LanguageContentLoader, JsonLanguageContentLoader } from "../dict";
-import { Options } from "./Options";
-import { CLI } from "./CLI";
-import { SingleFileCompiler } from "./SingleFileCompiler";
-import { MultiFileProcessor } from "./MultiFileProcessor";
-import { VerboseAppEventsListener } from "./VerboseAppEventsListener";
-import { Compiler } from "./Compiler";
-import { MultiFileProcessor as MultiFileProcessor2 } from "../compiler/MultiFileProcessor2";
-import { Compiler as Compiler2 } from "../compiler/Compiler2";
-import { LanguageManager } from "./LanguageManager";
-import { TCGenController } from "./TCGenController";
-
-import { GlobFileSearcher } from '../util/file';
-import { FileCompiler } from '../compiler/FileCompiler';
-import { FSFileSearcher } from '../util/file/FSFileSearcher';
 import { FSFileReader } from '../util/file/FSFileReader';
+import { FSFileSearcher } from '../util/file/FSFileSearcher';
+import { CLI } from "./CLI";
+import { LanguageManager } from "./LanguageManager";
+import { Options } from "./Options";
+import { SimpleAppEventsListener } from "./SimpleAppEventsListener";
+import { SingleFileCompiler } from "./SingleFileCompiler";
+import { TCGenController } from "./TCGenController";
+import { VerboseAppEventsListener } from "./VerboseAppEventsListener";
+
 
 /**
  * Compiler controller

@@ -9,22 +9,22 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const SimpleAppEventsListener_1 = require("./SimpleAppEventsListener");
-const LexerBuilder_1 = require("../lexer/LexerBuilder");
-const Parser_1 = require("../parser/Parser");
-const NLPTrainer_1 = require("../nlp/NLPTrainer");
-const NLPBasedSentenceRecognizer_1 = require("../nlp/NLPBasedSentenceRecognizer");
-const BatchSpecificationAnalyzer_1 = require("../semantic/BatchSpecificationAnalyzer");
-const dict_1 = require("../dict");
-const SingleFileCompiler_1 = require("./SingleFileCompiler");
-const VerboseAppEventsListener_1 = require("./VerboseAppEventsListener");
-const MultiFileProcessor2_1 = require("../compiler/MultiFileProcessor2");
 const Compiler2_1 = require("../compiler/Compiler2");
-const LanguageManager_1 = require("./LanguageManager");
-const TCGenController_1 = require("./TCGenController");
 const FileCompiler_1 = require("../compiler/FileCompiler");
-const FSFileSearcher_1 = require("../util/file/FSFileSearcher");
+const MultiFileProcessor2_1 = require("../compiler/MultiFileProcessor2");
+const dict_1 = require("../dict");
+const LexerBuilder_1 = require("../lexer/LexerBuilder");
+const NLPBasedSentenceRecognizer_1 = require("../nlp/NLPBasedSentenceRecognizer");
+const NLPTrainer_1 = require("../nlp/NLPTrainer");
+const Parser_1 = require("../parser/Parser");
+const BatchSpecificationAnalyzer_1 = require("../semantic/BatchSpecificationAnalyzer");
 const FSFileReader_1 = require("../util/file/FSFileReader");
+const FSFileSearcher_1 = require("../util/file/FSFileSearcher");
+const LanguageManager_1 = require("./LanguageManager");
+const SimpleAppEventsListener_1 = require("./SimpleAppEventsListener");
+const SingleFileCompiler_1 = require("./SingleFileCompiler");
+const TCGenController_1 = require("./TCGenController");
+const VerboseAppEventsListener_1 = require("./VerboseAppEventsListener");
 /**
  * Compiler controller
  *
