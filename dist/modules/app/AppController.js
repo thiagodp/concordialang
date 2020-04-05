@@ -9,27 +9,29 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const fs = require("fs");
-const path_1 = require("path");
-const util_1 = require("util");
-const meow = require("meow");
-const updateNotifier = require("update-notifier");
 const concordialang_plugin_1 = require("concordialang-plugin");
+const fs = require("fs");
+const meow = require("meow");
+const path_1 = require("path");
 const semverDiff = require("semver-diff");
 const terminalLink = require("terminal-link");
-const UI_1 = require("./UI");
-const PluginController_1 = require("../plugin/PluginController");
-const CLI_1 = require("./CLI");
-const CompilerController_1 = require("./CompilerController");
-const LanguageController_1 = require("./LanguageController");
-const PluginManager_1 = require("../plugin/PluginManager");
-const CliScriptExecutionReporter_1 = require("./CliScriptExecutionReporter");
-const ATSGenController_1 = require("./ATSGenController");
-const CliHelp_1 = require("./CliHelp");
-const OptionsHandler_1 = require("./OptionsHandler");
-const TestResultAnalyzer_1 = require("../testscript/TestResultAnalyzer");
-const GuidedConfig_1 = require("./GuidedConfig");
+const updateNotifier = require("update-notifier");
+const util_1 = require("util");
 const PackageBasedPluginFinder_1 = require("../plugin/PackageBasedPluginFinder");
+const PluginController_1 = require("../plugin/PluginController");
+const PluginDrawer_1 = require("../plugin/PluginDrawer");
+const PluginManager_1 = require("../plugin/PluginManager");
+const TestResultAnalyzer_1 = require("../testscript/TestResultAnalyzer");
+const FSFileReader_1 = require("../util/file/FSFileReader");
+const ATSGenController_1 = require("./ATSGenController");
+const CLI_1 = require("./CLI");
+const CliHelp_1 = require("./CliHelp");
+const CliScriptExecutionReporter_1 = require("./CliScriptExecutionReporter");
+const CompilerController_1 = require("./CompilerController");
+const GuidedConfig_1 = require("./GuidedConfig");
+const LanguageController_1 = require("./LanguageController");
+const OptionsHandler_1 = require("./OptionsHandler");
+const UI_1 = require("./UI");
 /**
  * Application controller
  *
@@ -117,12 +119,13 @@ class AppController {
                 return true;
             }
             let pluginData = null;
-            let pluginManager = new PluginManager_1.PluginManager(cli, new PackageBasedPluginFinder_1.PackageBasedPluginFinder(options.processPath));
+            const pluginManager = new PluginManager_1.PluginManager(cli, new PackageBasedPluginFinder_1.PackageBasedPluginFinder(options.processPath), new FSFileReader_1.FSFileReader(fs, options.encoding));
             let plugin = null;
             if (options.somePluginOption()) {
-                let pluginController = new PluginController_1.PluginController(cli);
+                const pluginController = new PluginController_1.PluginController();
+                const pluginDrawer = new PluginDrawer_1.PluginDrawer(cli);
                 try {
-                    yield pluginController.process(options);
+                    yield pluginController.process(options, pluginManager, pluginDrawer);
                 }
                 catch (err) {
                     this.showException(err, options, cli);

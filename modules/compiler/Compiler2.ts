@@ -1,6 +1,6 @@
 import Graph = require( 'graph.js/dist/graph.full.js' );
 
-import { FileSearcher } from 'modules/util/file-search';
+import { FileSearcher } from '../util/file';
 import { CompilerListener } from "../app/CompilerListener";
 import { Options } from "../app/Options";
 import { ProcessingInfo } from "../app/ProcessingInfo";

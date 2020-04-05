@@ -7,7 +7,7 @@ export * from './DuplicationChecker';
 export * from './ErrorSorting';
 export * from './LanguageBasedJsonFileLoader';
 export * from './QueryReferenceReplacer';
-export * from './read-file';
+export * from './ReadFileAsyncOptions';
 export * from './ReferenceReplacer';
 export * from './RegexUtil';
 export * from './SimpleCompiler';

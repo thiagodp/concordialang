@@ -25,7 +25,7 @@ const Warning_1 = require("../error/Warning");
 const DataTestCaseMix_1 = require("../testcase/DataTestCaseMix");
 const Defaults_1 = require("./Defaults");
 const path_1 = require("path");
-const file_search_1 = require("../util/file-search");
+const file_1 = require("../util/file");
 class TCGenController {
     constructor(_listener) {
         this._listener = _listener;
@@ -112,8 +112,8 @@ class TCGenController {
                 newTestCaseDocuments.push(newDoc);
                 // Adding the generated documents to the graph
                 // > This shall allow the test script generator to include all the needed test cases.
-                const from = file_search_1.toUnixPath(newDoc.fileInfo.path);
-                const to = file_search_1.toUnixPath(doc.fileInfo.path);
+                const from = file_1.toUnixPath(newDoc.fileInfo.path);
+                const to = file_1.toUnixPath(doc.fileInfo.path);
                 graph.addVertex(from, newDoc); // Overwrites if exist!
                 graph.addEdge(to, from); // order is this way...
                 // Generating file content

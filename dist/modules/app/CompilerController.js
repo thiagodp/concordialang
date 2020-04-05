@@ -22,9 +22,9 @@ const MultiFileProcessor2_1 = require("../compiler/MultiFileProcessor2");
 const Compiler2_1 = require("../compiler/Compiler2");
 const LanguageManager_1 = require("./LanguageManager");
 const TCGenController_1 = require("./TCGenController");
-const FSFileReader_1 = require("../compiler/FSFileReader");
-const file_search_1 = require("../util/file-search");
 const FileCompiler_1 = require("../compiler/FileCompiler");
+const FSFileSearcher_1 = require("../util/file/FSFileSearcher");
+const FSFileReader_1 = require("../util/file/FSFileReader");
 /**
  * Compiler controller
  *
@@ -60,7 +60,7 @@ class CompilerController {
             const fileReader = new FSFileReader_1.FSFileReader(this._fs);
             const fileCompiler = new FileCompiler_1.FileCompiler(fileReader, singleFileCompiler, options.lineBreaker);
             const mfp = new MultiFileProcessor2_1.MultiFileProcessor(fileCompiler);
-            const fileSearcher = new file_search_1.GlobFileSearcher(this._fs);
+            const fileSearcher = new FSFileSearcher_1.FSFileSearcher(this._fs);
             const compiler = new Compiler2_1.Compiler(fileSearcher, mfp, specAnalyzer);
             let [spec, graph] = yield compiler.compile(options, listener);
             if (!options.generateTestCase || !spec.docs || spec.docs.length < 1) {

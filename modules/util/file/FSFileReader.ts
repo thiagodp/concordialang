@@ -1,4 +1,4 @@
-import { readFileAsync } from "../util/read-file";
+import { readFileAsync } from "./read-file";
 import { FileReader } from "./FileReader";
 
 export class FSFileReader implements FileReader {

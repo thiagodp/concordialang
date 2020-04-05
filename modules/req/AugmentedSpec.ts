@@ -15,7 +15,7 @@ import { CaseType } from '../app/CaseType';
 import { DocumentUtil } from '../util/DocumentUtil';
 import { isDefined, valueOrNull } from '../util/TypeChecking';
 import { UIElementNameHandler } from '../util/UIElementNameHandler';
-import { toUnixPath } from '../util/file-search';
+import { toUnixPath } from '../util/file';
 
 class MappedContent {
     feature: boolean = false;

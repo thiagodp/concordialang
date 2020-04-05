@@ -9,74 +9,68 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const PluginDrawer_1 = require("./PluginDrawer");
-const PluginManager_1 = require("./PluginManager");
-const PackageBasedPluginFinder_1 = require("./PackageBasedPluginFinder");
 /**
  * Plugin controller
  *
  * @author Thiago Delgado Pinto
  */
 class PluginController {
-    constructor(_cli) {
-        this._cli = _cli;
-        this.process = (options) => __awaiter(this, void 0, void 0, function* () {
-            const pm = new PluginManager_1.PluginManager(this._cli, new PackageBasedPluginFinder_1.PackageBasedPluginFinder(options.processPath));
+    constructor() {
+        this.process = (options, pluginManager, drawer) => __awaiter(this, void 0, void 0, function* () {
             if (options.pluginList) {
                 try {
-                    this._drawer.drawPluginList(yield pm.findAll());
+                    drawer.drawPluginList(yield pluginManager.findAll());
                     return true;
                 }
                 catch (e) {
-                    this._drawer.showError(e);
+                    drawer.showError(e);
                     return false;
                 }
             }
             // empty plugin name?
             if (!options.plugin || options.plugin.trim().length < 1) {
-                this._drawer.showError(new Error('Empty plugin name.'));
+                drawer.showError(new Error('Empty plugin name.'));
                 return false;
             }
             if (options.pluginInstall) {
                 try {
-                    yield pm.installByName(options.plugin, this._drawer);
+                    yield pluginManager.installByName(options.plugin, drawer);
                 }
                 catch (e) {
-                    this._drawer.showError(e);
+                    drawer.showError(e);
                 }
                 return true;
             }
             if (options.pluginUninstall) {
                 try {
-                    yield pm.uninstallByName(options.plugin, this._drawer);
+                    yield pluginManager.uninstallByName(options.plugin, drawer);
                 }
                 catch (e) {
-                    this._drawer.showError(e);
+                    drawer.showError(e);
                 }
                 return true;
             }
-            const pluginData = yield pm.pluginWithName(options.plugin);
+            const pluginData = yield pluginManager.pluginWithName(options.plugin);
             // plugin name not available?
             if (!pluginData) {
-                this._drawer.showMessagePluginNotFound(options.plugin);
+                drawer.showMessagePluginNotFound(options.plugin);
                 return false;
             }
             if (options.pluginAbout) {
-                this._drawer.drawSinglePlugin(pluginData);
+                drawer.drawSinglePlugin(pluginData);
                 return true;
             }
             if (options.pluginServe) {
                 try {
-                    yield pm.serve(pluginData, this._drawer);
+                    yield pluginManager.serve(pluginData, drawer);
                 }
                 catch (e) {
-                    this._drawer.showError(e);
+                    drawer.showError(e);
                 }
                 return true;
             }
             return true;
         });
-        this._drawer = new PluginDrawer_1.PluginDrawer(_cli);
     }
 }
 exports.PluginController = PluginController;

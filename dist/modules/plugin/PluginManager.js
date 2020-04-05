@@ -11,20 +11,18 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const childProcess = require("child_process");
 const inquirer = require("inquirer");
-const fs = require("fs");
 const path_1 = require("path");
 const PluginData_1 = require("./PluginData");
-const read_file_1 = require("../util/read-file");
 /**
  * Plug-in manager
  *
  * @author Thiago Delgado Pinto
  */
 class PluginManager {
-    constructor(_cli, _finder, _fs = fs) {
+    constructor(_cli, _finder, _fileReader) {
         this._cli = _cli;
         this._finder = _finder;
-        this._fs = _fs;
+        this._fileReader = _fileReader;
     }
     findAll() {
         return __awaiter(this, void 0, void 0, function* () {
@@ -86,7 +84,7 @@ class PluginManager {
                 let mustGeneratePackageFile = false;
                 try {
                     const path = path_1.join(process.cwd(), PACKAGE_FILE);
-                    const content = yield read_file_1.readFileAsync(path, { fs: this._fs, silentIfNotExists: true });
+                    const content = yield this._fileReader.read(path);
                     if (!content) { // No package.json
                         mustGeneratePackageFile = true;
                         drawer.showMessagePackageFileNotFound(PACKAGE_FILE);

@@ -2,8 +2,8 @@ import { SingleFileCompiler } from "../app/SingleFileCompiler";
 import { FileData, FileMeta, ProcessedFileData } from "../app/SingleFileProcessor";
 import { Document } from "../ast";
 import { AugmentedSpec } from "../req";
-import { toUnixPath } from "../util/file-search";
-import { FileReader } from "./FileReader";
+import { toUnixPath } from "../util/file";
+import { FileReader } from "../util/file/FileReader";
 import { normalize, dirname, join, resolve } from "path";
 
 enum FileStatus {

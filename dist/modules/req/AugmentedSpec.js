@@ -6,7 +6,7 @@ const CaseType_1 = require("../app/CaseType");
 const DocumentUtil_1 = require("../util/DocumentUtil");
 const TypeChecking_1 = require("../util/TypeChecking");
 const UIElementNameHandler_1 = require("../util/UIElementNameHandler");
-const file_search_1 = require("../util/file-search");
+const file_1 = require("../util/file");
 class MappedContent {
     constructor() {
         this.feature = false;
@@ -99,7 +99,7 @@ class AugmentedSpec extends ast_1.Spec {
         return this.formatPath(((_a = doc === null || doc === void 0 ? void 0 : doc.fileInfo) === null || _a === void 0 ? void 0 : _a.path) || '');
     }
     formatPath(path) {
-        return file_search_1.toUnixPath(path_1.resolve(path_1.dirname(this.basePath), path)).toLowerCase();
+        return file_1.toUnixPath(path_1.resolve(path_1.dirname(this.basePath), path)).toLowerCase();
     }
     addToDocPath(doc) {
         const path = this.extractDocPath(doc);

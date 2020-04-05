@@ -12,7 +12,6 @@ __export(require("./DuplicationChecker"));
 __export(require("./ErrorSorting"));
 __export(require("./LanguageBasedJsonFileLoader"));
 __export(require("./QueryReferenceReplacer"));
-__export(require("./read-file"));
 __export(require("./ReferenceReplacer"));
 __export(require("./RegexUtil"));
 __export(require("./SimpleCompiler"));

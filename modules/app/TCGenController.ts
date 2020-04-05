@@ -42,7 +42,7 @@ import { TCGenListener } from "./TCGenListener";
 import { Options } from "./Options";
 import { VariantSelectionOptions, CombinationOptions, InvalidSpecialOptions } from "./Defaults";
 import { normalize, relative, dirname } from 'path';
-import { toUnixPath } from '../util/file-search';
+import { toUnixPath } from '../util/file';
 
 export class TCGenController {
 

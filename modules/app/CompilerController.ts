@@ -19,9 +19,11 @@ import { MultiFileProcessor as MultiFileProcessor2 } from "../compiler/MultiFile
 import { Compiler as Compiler2 } from "../compiler/Compiler2";
 import { LanguageManager } from "./LanguageManager";
 import { TCGenController } from "./TCGenController";
-import { FSFileReader } from '../compiler/FSFileReader';
-import { GlobFileSearcher } from '../util/file-search';
+
+import { GlobFileSearcher } from '../util/file';
 import { FileCompiler } from '../compiler/FileCompiler';
+import { FSFileSearcher } from '../util/file/FSFileSearcher';
+import { FSFileReader } from '../util/file/FSFileReader';
 
 /**
  * Compiler controller
@@ -74,7 +76,7 @@ export class CompilerController {
         const fileReader = new FSFileReader( this._fs );
         const fileCompiler = new FileCompiler( fileReader, singleFileCompiler, options.lineBreaker );
         const mfp = new MultiFileProcessor2( fileCompiler );
-        const fileSearcher = new GlobFileSearcher( this._fs );
+        const fileSearcher = new FSFileSearcher( this._fs );
         const compiler = new Compiler2( fileSearcher, mfp, specAnalyzer );
 
         let [ spec, graph ] = await compiler.compile( options, listener );

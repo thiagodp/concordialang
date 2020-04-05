@@ -1,31 +1,31 @@
+import { AbstractTestScript, Plugin, TestScriptExecutionOptions, TestScriptExecutionResult, TestScriptGenerationOptions } from 'concordialang-plugin';
 import * as fs from "fs";
-
-import { join } from 'path';
-import { promisify } from 'util';
 import * as meow from 'meow';
-import * as updateNotifier from 'update-notifier';
-import Graph = require( 'graph.js/dist/graph.full.js' );
-import { Plugin, TestScriptExecutionOptions, TestScriptExecutionResult, TestScriptGenerationOptions, AbstractTestScript } from 'concordialang-plugin';
+import { join } from 'path';
 import * as semverDiff from 'semver-diff';
 import * as terminalLink from 'terminal-link';
-
-import { UI } from './UI';
-import { Options } from "./Options";
-import { PluginController } from '../plugin/PluginController';
-import { CLI } from './CLI';
-import { CompilerController } from './CompilerController';
-import { AugmentedSpec } from '../req/AugmentedSpec';
-import { LanguageController } from './LanguageController';
-import { PluginData } from '../plugin/PluginData';
-import { PluginManager } from '../plugin/PluginManager';
-import { CliScriptExecutionReporter } from './CliScriptExecutionReporter';
-import { ATSGenController } from './ATSGenController';
-import { CliHelp } from './CliHelp';
-import { OptionsHandler } from './OptionsHandler';
-import { TestResultAnalyzer } from '../testscript/TestResultAnalyzer';
-import { GuidedConfig } from './GuidedConfig';
+import * as updateNotifier from 'update-notifier';
+import { promisify } from 'util';
 import { PackageBasedPluginFinder } from '../plugin/PackageBasedPluginFinder';
+import { PluginController } from '../plugin/PluginController';
+import { PluginData } from '../plugin/PluginData';
+import { PluginDrawer } from '../plugin/PluginDrawer';
+import { PluginManager } from '../plugin/PluginManager';
+import { AugmentedSpec } from '../req/AugmentedSpec';
+import { TestResultAnalyzer } from '../testscript/TestResultAnalyzer';
+import { FSFileReader } from "../util/file/FSFileReader";
+import { ATSGenController } from './ATSGenController';
+import { CLI } from './CLI';
+import { CliHelp } from './CliHelp';
+import { CliScriptExecutionReporter } from './CliScriptExecutionReporter';
+import { CompilerController } from './CompilerController';
+import { GuidedConfig } from './GuidedConfig';
+import { LanguageController } from './LanguageController';
+import { Options } from "./Options";
+import { OptionsHandler } from './OptionsHandler';
+import { UI } from './UI';
 
+import Graph = require( 'graph.js/dist/graph.full.js' );
 
 /**
  * Application controller
@@ -132,14 +132,20 @@ export class AppController {
         }
 
         let pluginData: PluginData = null;
-        let pluginManager: PluginManager = new PluginManager(
-            cli, new PackageBasedPluginFinder( options.processPath ) );
+
+        const pluginManager: PluginManager = new PluginManager(
+            cli,
+            new PackageBasedPluginFinder( options.processPath ),
+            new FSFileReader( fs, options.encoding )
+            );
+
         let plugin: Plugin = null;
 
         if ( options.somePluginOption() ) {
-            let pluginController: PluginController = new PluginController( cli );
+            const pluginController: PluginController = new PluginController();
+            const pluginDrawer = new PluginDrawer( cli );
             try {
-                await pluginController.process( options );
+                await pluginController.process( options, pluginManager, pluginDrawer );
             } catch ( err ) {
                 this.showException( err, options, cli );
                 return false;

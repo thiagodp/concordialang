@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const file_search_1 = require("../util/file-search");
+const file_1 = require("../util/file");
 const path_1 = require("path");
 var FileStatus;
 (function (FileStatus) {
@@ -80,7 +80,7 @@ class FileCompiler {
             const fileData = {
                 content: content,
                 meta: {
-                    fullPath: file_search_1.toUnixPath(path_1.resolve(path_1.dirname(basePath), filePath))
+                    fullPath: file_1.toUnixPath(path_1.resolve(path_1.dirname(basePath), filePath))
                 }
             };
             return yield this._singleFileCompiler.process(fileData, this._lineBreaker);

@@ -1,6 +1,6 @@
 import * as fs from 'fs';
 import { promisify } from 'util';
-import { ReadFileAsyncOptions } from './ReadFileAsyncOptions';
+import { ReadFileAsyncOptions } from '../ReadFileAsyncOptions';
 
 export const DEFAULT_OPTIONS: ReadFileAsyncOptions = {
 	fs: fs,

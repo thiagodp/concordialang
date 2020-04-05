@@ -1,8 +1,6 @@
-import { PluginDrawer } from "./PluginDrawer";
 import { Options } from "../app/Options";
+import { PluginDrawer } from "./PluginDrawer";
 import { PluginManager } from "./PluginManager";
-import { CLI } from "../app/CLI";
-import { PackageBasedPluginFinder } from "./PackageBasedPluginFinder";
 
 /**
  * Plugin controller
@@ -11,67 +9,63 @@ import { PackageBasedPluginFinder } from "./PackageBasedPluginFinder";
  */
 export class PluginController {
 
-    private readonly _drawer: PluginDrawer;
-
-    constructor( private readonly _cli: CLI ) {
-        this._drawer = new PluginDrawer( _cli );
-    }
-
-    public process = async ( options: Options ): Promise< boolean > => {
-
-        const pm = new PluginManager( this._cli, new PackageBasedPluginFinder( options.processPath ) );
+    public process = async (
+        options: Options,
+        pluginManager: PluginManager,
+        drawer: PluginDrawer
+        ): Promise< boolean > => {
 
         if ( options.pluginList ) {
             try {
-                this._drawer.drawPluginList( await pm.findAll() );
+                drawer.drawPluginList( await pluginManager.findAll() );
                 return true;
             } catch ( e ) {
-                this._drawer.showError( e );
+                drawer.showError( e );
                 return false;
             }
         }
 
         // empty plugin name?
         if ( ! options.plugin || options.plugin.trim().length < 1 ) {
-            this._drawer.showError( new Error( 'Empty plugin name.' ) );
+            drawer.showError( new Error( 'Empty plugin name.' ) );
             return false;
         }
 
         if ( options.pluginInstall ) {
             try {
-                await pm.installByName( options.plugin, this._drawer );
+                await pluginManager.installByName( options.plugin, drawer );
             } catch ( e ) {
-                this._drawer.showError( e );
+                drawer.showError( e );
             }
             return true;
         }
 
         if ( options.pluginUninstall ) {
             try {
-                await pm.uninstallByName( options.plugin, this._drawer );
+                await pluginManager.uninstallByName( options.plugin, drawer );
             } catch ( e ) {
-                this._drawer.showError( e );
+                drawer.showError( e );
             }
             return true;
         }
 
-        const pluginData = await pm.pluginWithName( options.plugin );
+        const pluginData = await pluginManager.pluginWithName( options.plugin );
         // plugin name not available?
         if ( ! pluginData ) {
-            this._drawer.showMessagePluginNotFound( options.plugin );
+            drawer.showMessagePluginNotFound( options.plugin );
             return false;
         }
 
         if ( options.pluginAbout ) {
-            this._drawer.drawSinglePlugin( pluginData );
+            drawer.drawSinglePlugin( pluginData );
             return true;
         }
 
         if ( options.pluginServe ) {
             try {
-                await pm.serve( pluginData, this._drawer );
+                await pluginManager.serve( pluginData, drawer );
             } catch ( e ) {
-                this._drawer.showError( e );
+                drawer.showError( e );
             }
             return true;
         }

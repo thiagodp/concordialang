@@ -1,13 +1,12 @@
 import * as childProcess from 'child_process';
-import * as inquirer from 'inquirer';
-import * as fs from 'fs';
-import { join } from 'path';
 import { Plugin } from "concordialang-plugin";
-import { CLI } from 'modules/app/CLI';
+import * as inquirer from 'inquirer';
+import { join } from 'path';
+import { CLI } from '../app/CLI';
+import { FileReader } from '../util/file/FileReader';
 import { PluginData, PLUGIN_PREFIX } from "./PluginData";
 import { PluginDrawer } from "./PluginDrawer";
 import { PluginFinder } from "./PluginFinder";
-import { readFileAsync } from '../util/read-file';
 
 /**
  * Plug-in manager
@@ -18,8 +17,8 @@ export class PluginManager {
 
     constructor(
         private readonly _cli: CLI,
-        private readonly _finder?: PluginFinder,
-        private _fs: any = fs
+        private readonly _finder: PluginFinder,
+        private readonly _fileReader: FileReader
         ) {
     }
 
@@ -99,10 +98,7 @@ export class PluginManager {
             try {
                 const path = join( process.cwd(), PACKAGE_FILE );
 
-                const content: string | null = await readFileAsync(
-                    path,
-                    { fs: this._fs, silentIfNotExists: true }
-                );
+                const content: string | null = await this._fileReader.read( path );
 
                 if ( ! content ) { // No package.json
                     mustGeneratePackageFile = true;

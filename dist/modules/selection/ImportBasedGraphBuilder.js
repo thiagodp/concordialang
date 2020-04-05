@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 //const Graph = require( 'graph.js/dist/graph.full.js' );
 const Graph = require("graph.js/dist/graph.full.js");
-const file_search_1 = require("../util/file-search");
+const file_1 = require("../util/file");
 /**
  * Import-based graph builder
  *
@@ -22,13 +22,13 @@ class ImportBasedGraphBuilder {
         let graph = new Graph();
         for (let doc of spec.docs) {
             // Use the file path as the key
-            let fromKey = file_search_1.toUnixPath(!doc.fileInfo ? '' : doc.fileInfo.path || '');
+            let fromKey = file_1.toUnixPath(!doc.fileInfo ? '' : doc.fileInfo.path || '');
             // console.log( 'fromKey', fromKey );
             // Add the document as a vertex. If the key already exists, the value is overwriten.
             graph.addVertex(fromKey, doc); // key, value
             // Make each imported file a vertex, but not overwrite the value if it already exists.
             for (let imp of doc.imports || []) {
-                let toKey = file_search_1.toUnixPath(imp.resolvedPath); // key
+                let toKey = file_1.toUnixPath(imp.resolvedPath); // key
                 // console.log( 'toKey', toKey );
                 graph.ensureVertex(toKey); // no value
                 // Make an edge from the doc to the imported file.
