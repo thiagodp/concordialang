@@ -34,6 +34,8 @@ export class CompilerController {
 
     public async compile( options: Options, cli: CLI ): Promise< [ AugmentedSpec, Graph ] > {
 
+        const fileSearcher = new FSFileSearcher( this._fs );
+
         const langLoader: LanguageContentLoader =
             new JsonLanguageContentLoader( options.languageDir, {}, options.encoding );
 
@@ -45,7 +47,7 @@ export class CompilerController {
 
         let specAnalyzer: BatchSpecificationAnalyzer = new BatchSpecificationAnalyzer();
 
-        const lm = new LanguageManager( options.languageDir );
+        const lm = new LanguageManager( fileSearcher, options.languageDir );
         const availableLanguages: string[] = await lm.availableLanguages();
         if ( availableLanguages.indexOf( options.language ) < 0 ) { // not found
             throw new Error( 'Informed language is not available: ' + options.language );
@@ -73,7 +75,7 @@ export class CompilerController {
         const fileReader = new FSFileReader( this._fs );
         const fileCompiler = new FileCompiler( fileReader, singleFileCompiler, options.lineBreaker );
         const mfp = new MultiFileProcessor2( fileCompiler );
-        const fileSearcher = new FSFileSearcher( this._fs );
+
         const compiler = new Compiler2( fileSearcher, mfp, specAnalyzer );
 
         let [ spec, graph ] = await compiler.compile( options, listener );

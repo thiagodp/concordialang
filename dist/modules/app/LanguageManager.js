@@ -9,9 +9,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const fwalker = require("fwalker");
-const path = require("path");
 const EnglishKeywordDictionary_1 = require("../dict/EnglishKeywordDictionary");
+const path_1 = require("path");
 /**
  * Language manager
  *
@@ -23,16 +22,19 @@ class LanguageManager {
      *
      * @param _languageDir Directory to search language files.
      */
-    constructor(_languageDir, _languageCache = new Map()) {
+    constructor(_fileSearcher, _languageDir, _languageCache = new Map()) {
+        this._fileSearcher = _fileSearcher;
         this._languageDir = _languageDir;
         this._languageCache = _languageCache;
         this.ENGLISH_LANGUAGE = 'en';
-        /**
-         * Returns available languages.
-         *
-         * @param ignoreCache Whether it should ignore cached content. Defaults to false.
-         */
-        this.availableLanguages = (ignoreCache = false) => __awaiter(this, void 0, void 0, function* () {
+    }
+    /**
+     * Returns available languages.
+     *
+     * @param ignoreCache Whether it should ignore cached content. Defaults to false.
+     */
+    availableLanguages(ignoreCache = false) {
+        return __awaiter(this, void 0, void 0, function* () {
             if (!ignoreCache && this._languageCache.size > 0) {
                 return [...this._languageCache.keys()];
             }
@@ -42,59 +44,31 @@ class LanguageManager {
             // Add file names, without content
             const files = yield this.languageFiles();
             for (let file of files) {
-                const language = file.substring(file.lastIndexOf(path.sep), file.lastIndexOf('.'));
+                const language = path_1.parse(file).name;
                 this._languageCache.set(language, null); // No content yet - will be loaded on demand
             }
             return [...this._languageCache.keys()];
         });
-        /**
-         * Returns available language files.
-         */
-        this.languageFiles = () => __awaiter(this, void 0, void 0, function* () {
-            return new Promise((resolve, reject) => {
-                const options = {
-                    maxPending: -1,
-                    maxAttempts: 0,
-                    attemptTimeout: 1000,
-                    matchRegExp: new RegExp('\\.json$'),
-                    recursive: false
-                };
-                let files = [];
-                fwalker(this._languageDir, options)
-                    .on('file', (relPath, stats, absPath) => files.push(relPath))
-                    .on('error', (err) => reject(err))
-                    .on('done', () => resolve(files))
-                    .walk();
+    }
+    /**
+     * Returns available language files.
+     */
+    languageFiles() {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield this._fileSearcher.searchFrom({
+                directory: this._languageDir,
+                recursive: true,
+                extensions: ['.json'],
+                files: [],
+                ignore: []
             });
         });
-        /**
-         * Returns a content of a language.
-         *
-         * @param language Language to load.
-         * @return Promise to the content, null or undefined.
-         */
-        /*
-        public contentOf = async ( language: string, ignoreCache: boolean = false ): Promise< object | null | undefined > => {
-            if ( ignoreCache ) {
-                await this.availableLanguages( true );
-            }
-            if ( ! this._languageCache.has( language ) ) {
-                return null;
-            }
-            let content = this._languageCache.get( language );
-            if ( ! content ) {
-                content = fse.readJson( this.makeLanguageFilePath( language ) );
-                this._languageCache.set( language, content );
-            }
-            return content;
-        };
-        */
-        /**
-         * Returns the directory used to search files.
-         */
-        this.dir = () => {
-            return this._languageDir;
-        };
+    }
+    /**
+     * Returns the directory used to search files.
+     */
+    dir() {
+        return this._languageDir;
     }
 }
 exports.LanguageManager = LanguageManager;

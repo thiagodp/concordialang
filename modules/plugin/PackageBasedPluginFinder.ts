@@ -1,11 +1,10 @@
-import { resolve, join } from 'path';
-import * as fs from 'fs';
-import { promisify } from 'util';
 import * as globalDirs from 'global-dirs';
-import * as fwalker from 'fwalker';
-import { PluginFinder } from "./PluginFinder";
-import { PluginData, PLUGIN_PROPERTY, PLUGIN_PREFIX } from "./PluginData";
+import { join, resolve } from 'path';
+import { DirSearcher } from '../util/file/DirSearcher';
+import { FileReader } from '../util/file/FileReader';
 import { PackageToPluginData } from './PackageToPluginData';
+import { PluginData, PLUGIN_PREFIX, PLUGIN_PROPERTY } from "./PluginData";
+import { PluginFinder } from "./PluginFinder";
 
 /**
  * Finds plugins based on installed NodeJS packages.
@@ -19,7 +18,8 @@ export class PackageBasedPluginFinder implements PluginFinder {
 
     constructor(
         private readonly _processPath: string,
-        private readonly _fs: any = fs
+        private readonly _fileReader: FileReader,
+        private readonly _dirSearcher: DirSearcher
         ) {
     }
 
@@ -62,14 +62,13 @@ export class PackageBasedPluginFinder implements PluginFinder {
         try {
             packageDirectories = await this.detectPluginPackageDirectories( dir );
         } catch ( err ) {
-            if ( 'ENOENT' === err.code ) {
-                return [];
-            }
+            // if ( 'ENOENT' === err.code ) {
+            //     return [];
+            // }
+            return [];
         }
         // console.log( 'Detected directories to analyze:', packageDirectories );
         const conversor = new PackageToPluginData( PLUGIN_PROPERTY );
-
-        const readFile = promisify( this._fs.readFile );
 
         let allPluginData: PluginData[] = [];
         for ( const pkgDir of packageDirectories ) {
@@ -79,7 +78,10 @@ export class PackageBasedPluginFinder implements PluginFinder {
 
             let content: string;
             try {
-                content = await readFile( pkgFile );
+                content = await this._fileReader.read( pkgFile );
+                if ( ! content ) {
+                    continue; // Ignores a file that does not exist
+                }
             } catch ( err ) {
                 if ( 'ENOENT' === err.code ) {
                     continue; // Ignores a file that does not exist
@@ -126,34 +128,45 @@ export class PackageBasedPluginFinder implements PluginFinder {
      *
      * @param dir Directory to find.
      */
-    private detectPluginPackageDirectories( dir: string ): Promise< string[] > {
+    private async detectPluginPackageDirectories( dir: string ): Promise< string[] > {
 
-        return new Promise< string[] >( ( resolve, reject ) => {
+        const o = {
+            directory: dir,
+            recursive: false,
+            regexp: new RegExp( PLUGIN_PREFIX )
+        };
 
-            let directories: string[] = [];
-            const dirRegExp = new RegExp( PLUGIN_PREFIX );
+        return await this._dirSearcher.search( o );
 
-            const onDir = ( path, stats, absPath ) => {
-                // Ignore directories that do not match the prefix
-                if ( ! dirRegExp.test( path ) ) {
-                    return;
-                }
-                directories.push( absPath );
-            };
+        // return new Promise< string[] >( ( resolve, reject ) => {
 
-            const options = {
-                recursive: false,
-                maxAttempts: 1,
-                fs: this._fs
-            };
+        //     let directories: string[] = [];
+        //     const dirRegExp = new RegExp( PLUGIN_PREFIX );
 
-            fwalker( dir, options )
-                .on( 'dir', onDir )
-                .on( 'error', ( err ) => reject( err ) )
-                .on( 'done', () => resolve( directories ) )
-                .walk();
+        //     const onDir = ( path, stats, absPath ) => {
+        //         // Ignore directories that do not match the prefix
+        //         if ( ! dirRegExp.test( path ) ) {
+        //             return;
+        //         }
+        //         directories.push( absPath );
+        //     };
 
-        } );
+        //     const options = {
+        //         recursive: false,
+        //         maxAttempts: 1,
+        //         fs: this._fs
+        //     };
+
+        //     fwalker( dir, options )
+        //         .on( 'dir', onDir )
+        //         .on( 'error', ( err ) => reject( err ) )
+        //         .on( 'done', () => resolve( directories ) )
+        //         .walk();
+
+        // } );
+
+
+
     }
 
 }

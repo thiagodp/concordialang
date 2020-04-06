@@ -36,13 +36,14 @@ class CompilerController {
     }
     compile(options, cli) {
         return __awaiter(this, void 0, void 0, function* () {
+            const fileSearcher = new FSFileSearcher_1.FSFileSearcher(this._fs);
             const langLoader = new dict_1.JsonLanguageContentLoader(options.languageDir, {}, options.encoding);
             let lexer = (new LexerBuilder_1.LexerBuilder(langLoader)).build(options, options.language);
             let parser = new Parser_1.Parser();
             let nlpTrainer = new NLPTrainer_1.NLPTrainer(langLoader);
             let nlpBasedSentenceRecognizer = new NLPBasedSentenceRecognizer_1.NLPBasedSentenceRecognizer(nlpTrainer);
             let specAnalyzer = new BatchSpecificationAnalyzer_1.BatchSpecificationAnalyzer();
-            const lm = new LanguageManager_1.LanguageManager(options.languageDir);
+            const lm = new LanguageManager_1.LanguageManager(fileSearcher, options.languageDir);
             const availableLanguages = yield lm.availableLanguages();
             if (availableLanguages.indexOf(options.language) < 0) { // not found
                 throw new Error('Informed language is not available: ' + options.language);
@@ -60,7 +61,6 @@ class CompilerController {
             const fileReader = new FSFileReader_1.FSFileReader(this._fs);
             const fileCompiler = new FileCompiler_1.FileCompiler(fileReader, singleFileCompiler, options.lineBreaker);
             const mfp = new MultiFileProcessor2_1.MultiFileProcessor(fileCompiler);
-            const fileSearcher = new FSFileSearcher_1.FSFileSearcher(this._fs);
             const compiler = new Compiler2_1.Compiler(fileSearcher, mfp, specAnalyzer);
             let [spec, graph] = yield compiler.compile(options, listener);
             if (!options.generateTestCase || !spec.docs || spec.docs.length < 1) {

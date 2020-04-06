@@ -22,7 +22,7 @@ const PluginController_1 = require("../plugin/PluginController");
 const PluginDrawer_1 = require("../plugin/PluginDrawer");
 const PluginManager_1 = require("../plugin/PluginManager");
 const TestResultAnalyzer_1 = require("../testscript/TestResultAnalyzer");
-const FSFileReader_1 = require("../util/file/FSFileReader");
+const file_1 = require("../util/file");
 const ATSGenController_1 = require("./ATSGenController");
 const CLI_1 = require("./CLI");
 const CliHelp_1 = require("./CliHelp");
@@ -119,7 +119,10 @@ class AppController {
                 return true;
             }
             let pluginData = null;
-            const pluginManager = new PluginManager_1.PluginManager(cli, new PackageBasedPluginFinder_1.PackageBasedPluginFinder(options.processPath), new FSFileReader_1.FSFileReader(fs, options.encoding));
+            const dirSearcher = new file_1.FSDirSearcher(fs);
+            const fileSearcher = new file_1.FSFileSearcher(fs);
+            const fileReader = new file_1.FSFileReader(fs, options.encoding);
+            const pluginManager = new PluginManager_1.PluginManager(cli, new PackageBasedPluginFinder_1.PackageBasedPluginFinder(options.processPath, fileReader, dirSearcher), fileReader);
             let plugin = null;
             if (options.somePluginOption()) {
                 const pluginController = new PluginController_1.PluginController();
@@ -157,7 +160,7 @@ class AppController {
                 // can continue
             }
             if (options.languageList) {
-                let langController = new LanguageController_1.LanguageController(cli);
+                let langController = new LanguageController_1.LanguageController(cli, fileSearcher);
                 try {
                     yield langController.process(options);
                 }

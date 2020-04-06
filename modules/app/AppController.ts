@@ -13,7 +13,7 @@ import { PluginDrawer } from '../plugin/PluginDrawer';
 import { PluginManager } from '../plugin/PluginManager';
 import { AugmentedSpec } from '../req/AugmentedSpec';
 import { TestResultAnalyzer } from '../testscript/TestResultAnalyzer';
-import { FSFileReader } from "../util/file/FSFileReader";
+import { FileSearcher, FSFileSearcher, FileReader, FSFileReader, DirSearcher, FSDirSearcher } from '../util/file';
 import { ATSGenController } from './ATSGenController';
 import { CLI } from './CLI';
 import { CliHelp } from './CliHelp';
@@ -133,10 +133,14 @@ export class AppController {
 
         let pluginData: PluginData = null;
 
+        const dirSearcher: DirSearcher = new FSDirSearcher( fs );
+        const fileSearcher: FileSearcher = new FSFileSearcher( fs );
+        const fileReader: FileReader = new FSFileReader( fs, options.encoding );
+
         const pluginManager: PluginManager = new PluginManager(
             cli,
-            new PackageBasedPluginFinder( options.processPath ),
-            new FSFileReader( fs, options.encoding )
+            new PackageBasedPluginFinder( options.processPath, fileReader, dirSearcher ),
+            fileReader
             );
 
         let plugin: Plugin = null;
@@ -177,7 +181,7 @@ export class AppController {
         }
 
         if ( options.languageList ) {
-            let langController: LanguageController = new LanguageController( cli );
+            let langController: LanguageController = new LanguageController( cli, fileSearcher );
             try {
                 await langController.process( options );
             } catch ( err ) {

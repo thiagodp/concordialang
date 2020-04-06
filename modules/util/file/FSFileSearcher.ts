@@ -6,7 +6,7 @@ import { FileSearcher, FileSearchOptions } from "./FileSearcher";
 
 export class FSFileSearcher implements FileSearcher {
 
-    constructor( private _fs: any ) {
+    constructor( private readonly _fs: any ) {
     }
 
     async searchFrom( options: FileSearchOptions ): Promise< string[] > {

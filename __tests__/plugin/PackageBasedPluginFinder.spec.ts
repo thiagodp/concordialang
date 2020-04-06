@@ -1,9 +1,11 @@
-import { join, normalize } from 'path';
-import { vol, fs } from 'memfs';
 import * as globalDirs from 'global-dirs';
-
+import { fs, vol } from 'memfs';
+import { join, normalize } from 'path';
+import { FSFileReader } from '../../modules//util/file/FSFileReader';
 import { PackageBasedPluginFinder } from '../../modules/plugin/PackageBasedPluginFinder';
 import { PluginData, PLUGIN_PROPERTY } from '../../modules/plugin/PluginData';
+import { FSDirSearcher } from '../../modules/util/file/FSDirSearcher';
+
 
 describe( 'PackageBasedPluginFinder', () => {
 
@@ -37,6 +39,16 @@ describe( 'PackageBasedPluginFinder', () => {
         serve: 'npm --version'
     } as PluginData;
 
+    const makeFinder = () => {
+        const fileReader = new FSFileReader( fs );
+        const dirSearcher = new FSDirSearcher( fs );
+
+        const finder: PackageBasedPluginFinder = new PackageBasedPluginFinder(
+            currentDir, fileReader, dirSearcher );
+
+        return finder;
+    };
+
 
     beforeEach( () => {
         vol.mkdirpSync( currentDir, { recursive: true } as any ); // Synchronize - IMPORTANT! - mkdirpSync, not mkdirSync
@@ -53,7 +65,7 @@ describe( 'PackageBasedPluginFinder', () => {
         vol.mkdirpSync( localPluginDir );
         vol.writeFileSync( localPluginPackageFile, JSON.stringify( pkg ) );
 
-        const finder: PackageBasedPluginFinder = new PackageBasedPluginFinder( currentDir, fs );
+        const finder: PackageBasedPluginFinder = makeFinder();
         const pluginData: PluginData[] = await finder.find();
         expect( pluginData ).toHaveLength( 1 );
 
@@ -67,7 +79,8 @@ describe( 'PackageBasedPluginFinder', () => {
         vol.mkdirpSync( globalPluginDir );
         vol.writeFileSync( globalPluginPackageFile, JSON.stringify( pkg ) );
 
-        const finder: PackageBasedPluginFinder = new PackageBasedPluginFinder( currentDir, fs );
+        const finder: PackageBasedPluginFinder = makeFinder();
+
         const pluginData: PluginData[] = await finder.find();
         expect( pluginData ).toHaveLength( 1 );
 
@@ -86,7 +99,7 @@ describe( 'PackageBasedPluginFinder', () => {
         vol.mkdirpSync( globalPluginDir ); // global
         vol.writeFileSync( globalPluginPackageFile, JSON.stringify( pkg2 ) ); // global
 
-        const finder: PackageBasedPluginFinder = new PackageBasedPluginFinder( currentDir, fs );
+        const finder: PackageBasedPluginFinder = makeFinder();
         const pluginData: PluginData[] = await finder.find();
         expect( pluginData ).toHaveLength( 1 );
 
@@ -107,7 +120,7 @@ describe( 'PackageBasedPluginFinder', () => {
         vol.mkdirpSync( globalPluginDir ); // global
         vol.writeFileSync( globalPluginPackageFile, JSON.stringify( pkg2 ) ); // global
 
-        const finder: PackageBasedPluginFinder = new PackageBasedPluginFinder( currentDir, fs );
+        const finder: PackageBasedPluginFinder = makeFinder();
         const pluginData: PluginData[] = await finder.find();
         expect( pluginData ).toHaveLength( 2 );
 
@@ -129,7 +142,7 @@ describe( 'PackageBasedPluginFinder', () => {
         vol.mkdirpSync( join( localModulesDir, pkg2.name ) );
         vol.writeFileSync( join( localModulesDir, pkg2.name, PKG_FILENAME ), JSON.stringify( pkg2 ) );
 
-        const finder: PackageBasedPluginFinder = new PackageBasedPluginFinder( currentDir, fs );
+        const finder: PackageBasedPluginFinder = makeFinder();
         const pluginData: PluginData[] = await finder.find();
         expect( pluginData ).toHaveLength( 1 );
     } );

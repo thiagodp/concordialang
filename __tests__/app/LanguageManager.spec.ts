@@ -1,20 +1,47 @@
-import { resolve } from 'path';
-
+import { fs, vol } from 'memfs';
+import { join, resolve } from "path";
 import { LanguageManager } from "../../modules/app/LanguageManager";
 import { Options } from "../../modules/app/Options";
+import { FSFileSearcher } from "../../modules/util/file/FSFileSearcher";
+
 
 describe( 'LanguageManager', () => {
 
-    const langDir: string = new Options( resolve( process.cwd(), 'dist/' ) ).languageDir;
+    let m: LanguageManager; // under test
+
+    const fileSearcher = new FSFileSearcher( fs );
+    const dir = resolve( process.cwd(), 'dist/' );
+    const langDir: string = new Options( dir ).languageDir;
+
+    beforeAll( () => {
+        // Create in-memory file structure
+        vol.mkdirpSync( dir, { recursive: true } as any ); // Synchronize - IMPORTANT! - mkdirpSync, not mkdirSync
+        vol.mkdirpSync( langDir );
+        vol.writeFileSync( join( langDir, 'pt.json' ), '{}' );
+        vol.writeFileSync( join( langDir, 'en.json' ), '{}' );
+        vol.writeFileSync( join( langDir, 'readme.txt' ), 'readme!' );
+    } );
+
+    afterAll( () => {
+        vol.reset(); // erase in-memory structure
+    } );
+
+
+    beforeEach( () => {
+        m = new LanguageManager( fileSearcher, langDir );
+    } );
+
+    afterEach( () => {
+        m = null;
+    } );
 
     it( 'detects files correctly', async () => {
-        const m = new LanguageManager( langDir );
         const files: string[] = await m.languageFiles();
-        expect( files ).toContain( 'pt.json' );
+        expect( files.find( f => f.endsWith( 'pt.json' ) ) ).toBeTruthy();
+        expect( files.find( f => f.endsWith( 'en.json' ) ) ).toBeTruthy();
     } );
 
     it( 'detects available correctly', async () => {
-        const m = new LanguageManager( langDir );
         const languages: string[] = await m.availableLanguages();
         expect( languages ).toContain( 'en' );
     } );

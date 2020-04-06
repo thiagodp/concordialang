@@ -65,6 +65,26 @@ describe( 'FileSearcher', () => {
             expect( result ).toHaveLength( 4 );
         } );
 
+
+        it( 'default extensions, recursive, one directory up', async () => {
+            o.directory = resolve( currentDir, '../' );
+            const result: string[] = await s.searchFrom( o );
+            expect( result ).toHaveLength( 7 );
+        } );
+
+        it( 'default extensions, recursive, two directories up', async () => {
+            o.directory = resolve( currentDir, '../../' );
+            const result: string[] = await s.searchFrom( o );
+            expect( result ).toHaveLength( 7 );
+        } );
+
+        it( 'default extensions, not recursive, two directories up', async () => {
+            o.directory = resolve( currentDir, '../../' );
+            o.recursive = false;
+            const result: string[] = await s.searchFrom( o );
+            expect( result ).toHaveLength( 0 );
+        } );
+
         it( 'single extension, subdirectory only', async () => {
             o.directory = subDir;
             o.extensions = [ '.feature' ];
@@ -176,8 +196,5 @@ describe( 'FileSearcher', () => {
         } );
 
     } );
-
-
-
 
 } );

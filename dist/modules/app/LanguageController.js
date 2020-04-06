@@ -12,11 +12,14 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const LanguageDrawer_1 = require("./LanguageDrawer");
 const LanguageManager_1 = require("./LanguageManager");
 class LanguageController {
-    constructor(_cli) {
+    constructor(_cli, _fileSearcher) {
         this._cli = _cli;
-        this.process = (options) => __awaiter(this, void 0, void 0, function* () {
+        this._fileSearcher = _fileSearcher;
+    }
+    process(options) {
+        return __awaiter(this, void 0, void 0, function* () {
             if (options.languageList) {
-                const lm = new LanguageManager_1.LanguageManager(options.languageDir);
+                const lm = new LanguageManager_1.LanguageManager(this._fileSearcher, options.languageDir);
                 const languages = yield lm.availableLanguages();
                 const ld = new LanguageDrawer_1.LanguageDrawer(this._cli);
                 ld.drawLanguages(languages);

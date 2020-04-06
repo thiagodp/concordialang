@@ -1,22 +1,26 @@
-import { Options } from "./Options";
+import { FileSearcher } from '../util/file/FileSearcher';
+import { CLI } from "./CLI";
 import { LanguageDrawer } from "./LanguageDrawer";
 import { LanguageManager } from "./LanguageManager";
-import { CLI } from "./CLI";
+import { Options } from "./Options";
 
 export class LanguageController {
 
-    constructor( private _cli: CLI ) {        
-    }    
+    constructor(
+        private readonly _cli: CLI,
+        private readonly _fileSearcher: FileSearcher,
+        ) {
+    }
 
-    public process = async ( options: Options ): Promise< void > => {
+    public async process( options: Options ): Promise< void > {
 
         if ( options.languageList ) {
-            const lm = new LanguageManager( options.languageDir );
+            const lm = new LanguageManager( this._fileSearcher, options.languageDir );
             const languages: string[] = await lm.availableLanguages();
             const ld = new LanguageDrawer( this._cli );
             ld.drawLanguages( languages );
         }
 
-    };
+    }
 
 }

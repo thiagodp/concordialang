@@ -9,22 +9,20 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const path_1 = require("path");
-const fs = require("fs");
-const util_1 = require("util");
 const globalDirs = require("global-dirs");
-const fwalker = require("fwalker");
-const PluginData_1 = require("./PluginData");
+const path_1 = require("path");
 const PackageToPluginData_1 = require("./PackageToPluginData");
+const PluginData_1 = require("./PluginData");
 /**
  * Finds plugins based on installed NodeJS packages.
  *
  * @author Thiago Delgado Pinto
  */
 class PackageBasedPluginFinder {
-    constructor(_processPath, _fs = fs) {
+    constructor(_processPath, _fileReader, _dirSearcher) {
         this._processPath = _processPath;
-        this._fs = _fs;
+        this._fileReader = _fileReader;
+        this._dirSearcher = _dirSearcher;
         this.NODE_MODULES = 'node_modules';
         this.PACKAGE_FILE = 'package.json';
     }
@@ -63,20 +61,23 @@ class PackageBasedPluginFinder {
                 packageDirectories = yield this.detectPluginPackageDirectories(dir);
             }
             catch (err) {
-                if ('ENOENT' === err.code) {
-                    return [];
-                }
+                // if ( 'ENOENT' === err.code ) {
+                //     return [];
+                // }
+                return [];
             }
             // console.log( 'Detected directories to analyze:', packageDirectories );
             const conversor = new PackageToPluginData_1.PackageToPluginData(PluginData_1.PLUGIN_PROPERTY);
-            const readFile = util_1.promisify(this._fs.readFile);
             let allPluginData = [];
             for (const pkgDir of packageDirectories) {
                 const pkgFile = path_1.join(pkgDir, this.PACKAGE_FILE);
                 // console.log( 'Reading', pkgFile, '...' );
                 let content;
                 try {
-                    content = yield readFile(pkgFile);
+                    content = yield this._fileReader.read(pkgFile);
+                    if (!content) {
+                        continue; // Ignores a file that does not exist
+                    }
                 }
                 catch (err) {
                     if ('ENOENT' === err.code) {
@@ -119,26 +120,34 @@ class PackageBasedPluginFinder {
      * @param dir Directory to find.
      */
     detectPluginPackageDirectories(dir) {
-        return new Promise((resolve, reject) => {
-            let directories = [];
-            const dirRegExp = new RegExp(PluginData_1.PLUGIN_PREFIX);
-            const onDir = (path, stats, absPath) => {
-                // Ignore directories that do not match the prefix
-                if (!dirRegExp.test(path)) {
-                    return;
-                }
-                directories.push(absPath);
-            };
-            const options = {
+        return __awaiter(this, void 0, void 0, function* () {
+            const o = {
+                directory: dir,
                 recursive: false,
-                maxAttempts: 1,
-                fs: this._fs
+                regexp: new RegExp(PluginData_1.PLUGIN_PREFIX)
             };
-            fwalker(dir, options)
-                .on('dir', onDir)
-                .on('error', (err) => reject(err))
-                .on('done', () => resolve(directories))
-                .walk();
+            return yield this._dirSearcher.search(o);
+            // return new Promise< string[] >( ( resolve, reject ) => {
+            //     let directories: string[] = [];
+            //     const dirRegExp = new RegExp( PLUGIN_PREFIX );
+            //     const onDir = ( path, stats, absPath ) => {
+            //         // Ignore directories that do not match the prefix
+            //         if ( ! dirRegExp.test( path ) ) {
+            //             return;
+            //         }
+            //         directories.push( absPath );
+            //     };
+            //     const options = {
+            //         recursive: false,
+            //         maxAttempts: 1,
+            //         fs: this._fs
+            //     };
+            //     fwalker( dir, options )
+            //         .on( 'dir', onDir )
+            //         .on( 'error', ( err ) => reject( err ) )
+            //         .on( 'done', () => resolve( directories ) )
+            //         .walk();
+            // } );
         });
     }
 }
