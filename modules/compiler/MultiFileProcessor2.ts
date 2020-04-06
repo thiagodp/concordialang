@@ -1,5 +1,8 @@
+import pMap = require( 'p-map' );
 import { AugmentedSpec } from '../req';
 import { FileCompiler } from './FileCompiler';
+
+const pAll = ( iterable, options ) => pMap( iterable, ( element: any )  => element(), options );
 
 export class MultiFileProcessor {
 
@@ -20,7 +23,9 @@ export class MultiFileProcessor {
             filePromises.push( promise );
         }
         // Compile
-        await Promise.all( filePromises );
+        // await Promise.all( filePromises );
+        const tasks = filePromises.map( p => () => p );
+        await pAll( tasks, { concurrency: 4, stopOnError: false } );
 
         // Compile imports
         for ( const path of files ) {

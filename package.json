@@ -118,6 +118,7 @@
     "node-fs-extra": "^0.8.2",
     "object-to-array": "^2.0.1",
     "one-wise": "^1.0.3",
+    "p-map": "^3.0.0",
     "pretty-bytes": "^4.0.2",
     "randexp": "^0.4.9",
     "seedrandom": "^2.4.4",

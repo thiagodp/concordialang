@@ -9,7 +9,9 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+const pMap = require("p-map");
 const req_1 = require("../req");
+const pAll = (iterable, options) => pMap(iterable, (element) => element(), options);
 class MultiFileProcessor {
     constructor(_fileProcessor) {
         this._fileProcessor = _fileProcessor;
@@ -25,7 +27,9 @@ class MultiFileProcessor {
                 filePromises.push(promise);
             }
             // Compile
-            yield Promise.all(filePromises);
+            // await Promise.all( filePromises );
+            const tasks = filePromises.map(p => () => p);
+            yield pAll(tasks, { concurrency: 4, stopOnError: false });
             // Compile imports
             for (const path of files) {
                 yield this._fileProcessor.processImports(path, status, spec);
