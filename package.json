@@ -85,7 +85,11 @@
       "tsx",
       "js"
     ],
-    "testEnvironment": "node"
+    "testEnvironment": "node",
+    "watchPlugins": [
+      "jest-watch-typeahead/filename",
+      "jest-watch-typeahead/testname"
+    ]
   },
   "dependencies": {
     "@nodelib/fs.walk": "^1.2.4",
@@ -161,6 +165,7 @@
     "glob": "^7.1.6",
     "jest": "^25.2.4",
     "jest-sonar": "^0.2.5",
+    "jest-watch-typeahead": "^0.5.0",
     "memfs": "^2.17.1",
     "rimraf": "^2.7.1",
     "ts-jest": "^25.3.0",
