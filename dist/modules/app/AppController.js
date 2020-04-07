@@ -16,7 +16,6 @@ const path_1 = require("path");
 const semverDiff = require("semver-diff");
 const terminalLink = require("terminal-link");
 const updateNotifier = require("update-notifier");
-const util_1 = require("util");
 const PackageBasedPluginFinder_1 = require("../plugin/PackageBasedPluginFinder");
 const PluginController_1 = require("../plugin/PluginController");
 const PluginDrawer_1 = require("../plugin/PluginDrawer");
@@ -121,8 +120,8 @@ class AppController {
             let pluginData = null;
             const dirSearcher = new file_1.FSDirSearcher(fs);
             const fileSearcher = new file_1.FSFileSearcher(fs);
-            const fileReader = new file_1.FSFileReader(fs, options.encoding);
-            const pluginManager = new PluginManager_1.PluginManager(cli, new PackageBasedPluginFinder_1.PackageBasedPluginFinder(options.processPath, fileReader, dirSearcher), fileReader);
+            const fileHandler = new file_1.FSFileHandler(fs, options.encoding);
+            const pluginManager = new PluginManager_1.PluginManager(cli, new PackageBasedPluginFinder_1.PackageBasedPluginFinder(options.processPath, fileHandler, dirSearcher), fileHandler);
             let plugin = null;
             if (options.somePluginOption()) {
                 const pluginController = new PluginController_1.PluginController();
@@ -205,8 +204,7 @@ class AppController {
                     };
                 };
                 try {
-                    const write = util_1.promisify(fs.writeFile);
-                    yield write(options.ast, JSON.stringify(spec, getCircularReplacer(), "  "));
+                    yield fileHandler.write(options.ast, JSON.stringify(spec, getCircularReplacer(), "  "));
                 }
                 catch (e) {
                     cli.newLine(cli.symbolError, 'Error saving', cli.colorHighlight(options.ast), ': ' + e.message);

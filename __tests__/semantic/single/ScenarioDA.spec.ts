@@ -1,11 +1,12 @@
+import * as fs from 'fs';
 import { resolve } from 'path';
-
+import { Options } from '../../../modules/app/Options';
 import { Document } from '../../../modules/ast/Document';
+import { Lexer } from '../../../modules/lexer/Lexer';
 import { Parser } from '../../../modules/parser/Parser';
 import { ScenarioDA } from '../../../modules/semantic/single/ScenarioDA';
-import { Lexer } from '../../../modules/lexer/Lexer';
-import { LexerBuilder } from '../../../modules/lexer/LexerBuilder';
-import { Options } from '../../../modules/app/Options';
+import { JsonLanguageContentLoader, LanguageContentLoader, EnglishKeywordDictionary } from '../../../modules/dict';
+import { FSFileHandler } from '../../../modules/util/file/FSFileHandler';
 
 describe( 'ScenarioDA', () => {
 
@@ -13,7 +14,10 @@ describe( 'ScenarioDA', () => {
 
     let parser = new Parser();
     const options: Options = new Options( resolve( process.cwd(), 'dist/' ) );
-    let lexer: Lexer = ( new LexerBuilder() ).build( options );
+    const fileHandler = new FSFileHandler( fs );
+    const langLoader: LanguageContentLoader =
+        new JsonLanguageContentLoader( options.languageDir, {}, fileHandler, fileHandler );
+    const lexer: Lexer = new Lexer( options.language, langLoader );
 
 
     beforeEach( () => {

@@ -4,7 +4,6 @@ function __export(m) {
 }
 Object.defineProperty(exports, "__esModule", { value: true });
 __export(require("./FSDirSearcher"));
-__export(require("./FSFileReader"));
+__export(require("./FSFileHandler"));
 __export(require("./FSFileSearcher"));
 __export(require("./path-transformer"));
-__export(require("./read-file"));

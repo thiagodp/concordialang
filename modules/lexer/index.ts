@@ -10,7 +10,6 @@ export * from './ImportLexer';
 export * from './KeywordBasedLexer';
 export * from './LanguageLexer';
 export * from './Lexer';
-export * from './LexerBuilder';
 export * from './LexerProcessor';
 export * from './LexicalException';
 export * from './ListItemLexer';

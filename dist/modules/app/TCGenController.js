@@ -9,34 +9,35 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const fs_1 = require("fs");
-const util_1 = require("util");
+const path_1 = require("path");
 const ast_1 = require("../ast");
-const PreTestCaseGenerator_1 = require("../testscenario/PreTestCaseGenerator");
-const TSGen_1 = require("../testscenario/TSGen");
-const VariantSelectionStrategy_1 = require("../selection/VariantSelectionStrategy");
-const CombinationStrategy_1 = require("../selection/CombinationStrategy");
-const TCGen_1 = require("../testcase/TCGen");
-const TestPlanner_1 = require("../testcase/TestPlanner");
-const TCDocGen_1 = require("../testcase/TCDocGen");
-const TestCaseFileGenerator_1 = require("../testcase/TestCaseFileGenerator");
 const RuntimeException_1 = require("../error/RuntimeException");
 const Warning_1 = require("../error/Warning");
+const CombinationStrategy_1 = require("../selection/CombinationStrategy");
+const VariantSelectionStrategy_1 = require("../selection/VariantSelectionStrategy");
 const DataTestCaseMix_1 = require("../testcase/DataTestCaseMix");
-const Defaults_1 = require("./Defaults");
-const path_1 = require("path");
+const TCDocGen_1 = require("../testcase/TCDocGen");
+const TCGen_1 = require("../testcase/TCGen");
+const TestCaseFileGenerator_1 = require("../testcase/TestCaseFileGenerator");
+const TestPlanner_1 = require("../testcase/TestPlanner");
+const PreTestCaseGenerator_1 = require("../testscenario/PreTestCaseGenerator");
+const TSGen_1 = require("../testscenario/TSGen");
 const file_1 = require("../util/file");
+const Defaults_1 = require("./Defaults");
 class TCGenController {
-    constructor(_listener) {
+    constructor(_variantSentenceRec, _langLoader, _listener, _fileWriter) {
+        this._variantSentenceRec = _variantSentenceRec;
+        this._langLoader = _langLoader;
         this._listener = _listener;
+        this._fileWriter = _fileWriter;
     }
-    execute(variantSentenceRec, langLoader, options, spec, graph) {
+    execute(options, spec, graph) {
         return __awaiter(this, void 0, void 0, function* () {
             const startTime = Date.now();
             //
             // setup
             //
-            const preTCGen = new PreTestCaseGenerator_1.PreTestCaseGenerator(variantSentenceRec, langLoader, options.language, options.realSeed, options.typedCaseUI(), options.randomMinStringSize, options.randomMaxStringSize, options.randomTriesToInvalidValue);
+            const preTCGen = new PreTestCaseGenerator_1.PreTestCaseGenerator(this._variantSentenceRec, this._langLoader, options.language, options.realSeed, options.typedCaseUI(), options.randomMinStringSize, options.randomMaxStringSize, options.randomTriesToInvalidValue);
             let strategyWarnings = [];
             const variantSelectionStrategy = this.variantSelectionStrategyFromOptions(options, strategyWarnings);
             const stateCombinationStrategy = this.stateCombinationStrategyFromOptions(options, strategyWarnings);
@@ -46,8 +47,7 @@ class TCGenController {
             const tcGen = new TCGen_1.TCGen(preTCGen);
             const testPlanMakers = this.testPlanMakersFromOptions(options, strategyWarnings);
             const tcDocGen = new TCDocGen_1.TCDocGen(options.extensionTestCase, options.directory);
-            const tcDocFileGen = new TestCaseFileGenerator_1.TestCaseFileGenerator(langLoader, options.language);
-            const writeFileAsync = util_1.promisify(fs_1.writeFile);
+            const tcDocFileGen = new TestCaseFileGenerator_1.TestCaseFileGenerator(this._langLoader, options.language);
             //
             // generation
             //
@@ -122,7 +122,7 @@ class TCGenController {
                 this._listener.testCaseProduced(path_1.relative(path_1.dirname(options.directory), newDoc.fileInfo.path), errors, warnings);
                 // Generating file
                 try {
-                    yield writeFileAsync(newDoc.fileInfo.path, lines.join(options.lineBreaker));
+                    yield this._fileWriter.write(newDoc.fileInfo.path, lines.join(options.lineBreaker));
                 }
                 catch (err) {
                     const msg = 'Error generating the file "' + newDoc.fileInfo.path + '": ' + err.message;

@@ -5,7 +5,6 @@ import { join } from 'path';
 import * as semverDiff from 'semver-diff';
 import * as terminalLink from 'terminal-link';
 import * as updateNotifier from 'update-notifier';
-import { promisify } from 'util';
 import { PackageBasedPluginFinder } from '../plugin/PackageBasedPluginFinder';
 import { PluginController } from '../plugin/PluginController';
 import { PluginData } from '../plugin/PluginData';
@@ -13,7 +12,7 @@ import { PluginDrawer } from '../plugin/PluginDrawer';
 import { PluginManager } from '../plugin/PluginManager';
 import { AugmentedSpec } from '../req/AugmentedSpec';
 import { TestResultAnalyzer } from '../testscript/TestResultAnalyzer';
-import { FileSearcher, FSFileSearcher, FileReader, FSFileReader, DirSearcher, FSDirSearcher } from '../util/file';
+import { DirSearcher, FileSearcher, FSDirSearcher, FSFileHandler, FSFileSearcher } from '../util/file';
 import { ATSGenController } from './ATSGenController';
 import { CLI } from './CLI';
 import { CliHelp } from './CliHelp';
@@ -135,12 +134,12 @@ export class AppController {
 
         const dirSearcher: DirSearcher = new FSDirSearcher( fs );
         const fileSearcher: FileSearcher = new FSFileSearcher( fs );
-        const fileReader: FileReader = new FSFileReader( fs, options.encoding );
+        const fileHandler = new FSFileHandler( fs, options.encoding );
 
         const pluginManager: PluginManager = new PluginManager(
             cli,
-            new PackageBasedPluginFinder( options.processPath, fileReader, dirSearcher ),
-            fileReader
+            new PackageBasedPluginFinder( options.processPath, fileHandler, dirSearcher ),
+            fileHandler
             );
 
         let plugin: Plugin = null;
@@ -227,8 +226,7 @@ export class AppController {
             };
 
             try {
-                const write = promisify( fs.writeFile );
-                await write( options.ast, JSON.stringify( spec, getCircularReplacer(), "  " ) );
+                await fileHandler.write( options.ast, JSON.stringify( spec, getCircularReplacer(), "  " ) );
             } catch ( e ) {
                 cli.newLine( cli.symbolError, 'Error saving', cli.colorHighlight( options.ast ), ': ' + e.message );
                 return false;

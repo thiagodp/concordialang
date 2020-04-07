@@ -1,57 +1,39 @@
 import Graph = require( 'graph.js/dist/graph.full.js' );
-import { writeFile } from 'fs';
-import { promisify } from "util";
-
-import { Document, TestCase, Variant, ReservedTags } from "../ast";
-import { LocatedException } from "../error/LocatedException";
-import { GivenWhenThenSentenceRecognizer } from "../nlp/GivenWhenThenSentenceRecognizer";
+import { dirname, relative } from 'path';
+import { Document, ReservedTags, TestCase, Variant } from "../ast";
 import { LanguageContentLoader } from "../dict/LanguageContentLoader";
-import { PreTestCaseGenerator, GenContext } from "../testscenario/PreTestCaseGenerator";
-import { AugmentedSpec } from "../req/AugmentedSpec";
-import { TSGen } from "../testscenario/TSGen";
-import {
-    VariantSelectionStrategy,
-    AllVariantsSelectionStrategy,
-    FirstVariantSelectionStrategy,
-    FirstMostImportantVariantSelectionStrategy,
-    SingleRandomVariantSelectionStrategy
-} from '../selection/VariantSelectionStrategy';
-import {
-    CombinationStrategy,
-    ShuffledOneWiseStrategy,
-    OneWiseStrategy,
-    SingleRandomOfEachStrategy,
-    CartesianProductStrategy
-} from "../selection/CombinationStrategy";
-import { TestScenario } from "../testscenario/TestScenario";
-import { TCGen } from "../testcase/TCGen";
-import { TestPlanner } from "../testcase/TestPlanner";
-import { TCDocGen } from "../testcase/TCDocGen";
-import { TestCaseFileGenerator } from "../testcase/TestCaseFileGenerator";
+import { LocatedException } from "../error/LocatedException";
 import { RuntimeException } from "../error/RuntimeException";
 import { Warning } from "../error/Warning";
-import {
-    DataTestCaseMix,
-    OnlyValidMix,
-    JustOneInvalidMix,
-    OnlyInvalidMix,
-    UnfilteredMix
-} from "../testcase/DataTestCaseMix";
-
-import { TCGenListener } from "./TCGenListener";
+import { GivenWhenThenSentenceRecognizer } from "../nlp/GivenWhenThenSentenceRecognizer";
+import { AugmentedSpec } from "../req/AugmentedSpec";
+import { CartesianProductStrategy, CombinationStrategy, OneWiseStrategy, ShuffledOneWiseStrategy, SingleRandomOfEachStrategy } from "../selection/CombinationStrategy";
+import { AllVariantsSelectionStrategy, FirstMostImportantVariantSelectionStrategy, FirstVariantSelectionStrategy, SingleRandomVariantSelectionStrategy, VariantSelectionStrategy } from '../selection/VariantSelectionStrategy';
+import { DataTestCaseMix, JustOneInvalidMix, OnlyInvalidMix, OnlyValidMix, UnfilteredMix } from "../testcase/DataTestCaseMix";
+import { TCDocGen } from "../testcase/TCDocGen";
+import { TCGen } from "../testcase/TCGen";
+import { TestCaseFileGenerator } from "../testcase/TestCaseFileGenerator";
+import { TestPlanner } from "../testcase/TestPlanner";
+import { GenContext, PreTestCaseGenerator } from "../testscenario/PreTestCaseGenerator";
+import { TestScenario } from "../testscenario/TestScenario";
+import { TSGen } from "../testscenario/TSGen";
+import { FileWriter, toUnixPath } from '../util/file';
+import { CombinationOptions, InvalidSpecialOptions, VariantSelectionOptions } from "./Defaults";
 import { Options } from "./Options";
-import { VariantSelectionOptions, CombinationOptions, InvalidSpecialOptions } from "./Defaults";
-import { normalize, relative, dirname } from 'path';
-import { toUnixPath } from '../util/file';
+import { TCGenListener } from "./TCGenListener";
+
 
 export class TCGenController {
 
-    constructor( private _listener: TCGenListener ) {
+    constructor(
+        private _variantSentenceRec: GivenWhenThenSentenceRecognizer,
+        private _langLoader: LanguageContentLoader,
+        private _listener: TCGenListener,
+        private _fileWriter: FileWriter,
+        ) {
     }
 
     async execute(
-        variantSentenceRec: GivenWhenThenSentenceRecognizer,
-        langLoader: LanguageContentLoader,
         options: Options,
         spec: AugmentedSpec,
         graph: Graph,
@@ -64,8 +46,8 @@ export class TCGenController {
         //
 
         const preTCGen = new PreTestCaseGenerator(
-            variantSentenceRec,
-            langLoader,
+            this._variantSentenceRec,
+            this._langLoader,
             options.language,
             options.realSeed,
             options.typedCaseUI(),
@@ -100,9 +82,7 @@ export class TCGenController {
 
         const tcDocGen = new TCDocGen( options.extensionTestCase, options.directory );
 
-        const tcDocFileGen = new TestCaseFileGenerator( langLoader, options.language );
-
-        const writeFileAsync = promisify( writeFile );
+        const tcDocFileGen = new TestCaseFileGenerator( this._langLoader, options.language );
 
         //
         // generation
@@ -211,7 +191,7 @@ export class TCGenController {
 
             // Generating file
             try {
-                await writeFileAsync( newDoc.fileInfo.path, lines.join( options.lineBreaker ) )
+                await this._fileWriter.write( newDoc.fileInfo.path, lines.join( options.lineBreaker ) )
             } catch ( err ) {
                 const msg = 'Error generating the file "' + newDoc.fileInfo.path + '": ' + err.message;
                 errors.push( new RuntimeException( msg ) );

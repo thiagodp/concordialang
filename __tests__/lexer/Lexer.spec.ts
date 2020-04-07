@@ -1,14 +1,25 @@
+import * as fs from 'fs';
 import { resolve } from 'path';
-
+import { Options } from '../../modules/app/Options';
+import { JsonLanguageContentLoader, LanguageContentLoader, EnglishKeywordDictionary } from '../../modules/dict';
 import { Lexer } from "../../modules/lexer/Lexer";
 import { NodeTypes } from "../../modules/req/NodeTypes";
-import { Options } from '../../modules/app/Options';
-import { LexerBuilder } from '../../modules/lexer/LexerBuilder';
+import { FSFileHandler } from '../../modules/util/file/FSFileHandler';
 
 describe( 'Lexer', () => {
 
     const options: Options = new Options( resolve( process.cwd(), 'dist/' ) );
-    let lexer: Lexer = ( new LexerBuilder() ).build( options, 'en' );
+
+    const fileHandler = new FSFileHandler( fs );
+
+    const langLoader: LanguageContentLoader = new JsonLanguageContentLoader(
+        options.languageDir,
+        {},
+        fileHandler,
+        fileHandler
+        );
+
+    const lexer: Lexer = new Lexer( options.language, langLoader ); // under test
 
     // Helper function
     function assertLineExpectations( lines: any[] ) {

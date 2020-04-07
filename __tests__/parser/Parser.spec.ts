@@ -1,18 +1,26 @@
+import * as fs from 'fs';
 import { resolve } from 'path';
-
-import { Document } from '../../modules/ast/Document';
-import { NodeTypes } from '../../modules/req/NodeTypes';
-import { Lexer } from '../../modules/lexer/Lexer';
-import { LexerBuilder } from '../../modules/lexer/LexerBuilder';
-import { Parser } from '../../modules/parser/Parser';
 import { Options } from '../../modules/app/Options';
+import { Document } from '../../modules/ast/Document';
+import { JsonLanguageContentLoader, LanguageContentLoader } from '../../modules/dict';
+import { Lexer } from "../../modules/lexer/Lexer";
+import { Parser } from '../../modules/parser/Parser';
+import { NodeTypes } from '../../modules/req/NodeTypes';
+import { FSFileHandler } from '../../modules/util/file/FSFileHandler';
 
 describe( 'Parser', () => {
 
     let parser = new Parser(); // under test
 
     const options: Options = new Options( resolve( process.cwd(), 'dist/' ) );
-    let lexer: Lexer = ( new LexerBuilder() ).build( options, 'en' );
+    const fileHandler = new FSFileHandler( fs );
+    const langLoader: LanguageContentLoader = new JsonLanguageContentLoader(
+        options.languageDir,
+        {},
+        fileHandler,
+        fileHandler
+        );
+    const lexer: Lexer = new Lexer( options.language, langLoader );
 
 
     beforeEach( () => {

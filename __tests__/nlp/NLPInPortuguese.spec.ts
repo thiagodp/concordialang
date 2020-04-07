@@ -1,22 +1,23 @@
+import * as fs from 'fs';
 import { resolve } from 'path';
-
-import {
-    Entities,
-    Intents,
-    NLP,
-    NLPResult,
-    NLPTrainer
-} from '../../modules/nlp';
-import { LanguageContentLoader, JsonLanguageContentLoader } from '../../modules/dict';
 import { Options } from '../../modules/app/Options';
+import { JsonLanguageContentLoader, LanguageContentLoader } from '../../modules/dict';
+import { Entities, Intents, NLP, NLPResult, NLPTrainer } from '../../modules/nlp';
+import { FSFileHandler } from '../../modules/util/file/FSFileHandler';
 
 describe( 'NLPInPortuguese', () => {
 
     let nlp: NLP; // under test
+
     const LANGUAGE = 'pt';
     const options: Options = new Options( resolve( process.cwd(), 'dist/' ) );
-    const langLoader: LanguageContentLoader =
-        new JsonLanguageContentLoader( options.languageDir, {}, options.encoding );
+    const fileHandler = new FSFileHandler( fs );
+    const langLoader: LanguageContentLoader = new JsonLanguageContentLoader(
+        options.languageDir,
+        {},
+        fileHandler,
+        fileHandler
+        );
 
     // entities
     const UI_ELEMENT: string = Entities.UI_ELEMENT_REF;

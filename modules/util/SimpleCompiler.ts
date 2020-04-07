@@ -1,15 +1,16 @@
+import * as fs from 'fs';
 import { resolve } from 'path';
-
-import { Document, FileInfo } from "../ast";
 import { Options } from "../app/Options";
-import { LanguageContentLoader, JsonLanguageContentLoader } from "../dict";
-import { LexerBuilder } from "../lexer/LexerBuilder";
-import { Lexer } from "../lexer/Lexer";
-import { Parser } from "../parser/Parser";
-import { NLPTrainer } from "../nlp/NLPTrainer";
-import { NLPBasedSentenceRecognizer } from "../nlp/NLPBasedSentenceRecognizer";
 import { SingleDocumentProcessor } from "../app/SingleDocumentProcessor";
+import { Document, FileInfo } from "../ast";
+import { JsonLanguageContentLoader, LanguageContentLoader } from "../dict";
+import { EnglishKeywordDictionary } from "../dict/EnglishKeywordDictionary";
+import { Lexer } from "../lexer/Lexer";
+import { NLPBasedSentenceRecognizer } from "../nlp/NLPBasedSentenceRecognizer";
+import { NLPTrainer } from "../nlp/NLPTrainer";
+import { Parser } from "../parser/Parser";
 import { AugmentedSpec } from "../req/AugmentedSpec";
+import { FSFileHandler } from "./file/FSFileHandler";
 
 /**
  * Useful for testing purposes.
@@ -21,10 +22,16 @@ export class SimpleCompiler {
 
     options: Options = new Options( resolve( process.cwd(), 'dist/' ) );
 
-    langLoader: LanguageContentLoader =
-        new JsonLanguageContentLoader( this.options.languageDir, {}, this.options.encoding );
+    fileHandler = new FSFileHandler( fs, this.options.encoding );
 
-    lexer: Lexer = ( new LexerBuilder( this.langLoader ) ).build( this.options, this.language );
+    langLoader: LanguageContentLoader = new JsonLanguageContentLoader(
+        this.options.languageDir,
+        {},
+        this.fileHandler,
+        this.fileHandler
+        );
+
+    lexer: Lexer = new Lexer( this.language, this.langLoader );
 
     parser = new Parser();
 

@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const path_1 = require("path");
-const fs = require("fs");
+const EnglishKeywordDictionary_1 = require("../dict/EnglishKeywordDictionary");
 /**
  * Language-based JSON file loader.
  *
@@ -13,13 +13,14 @@ class LanguageBasedJsonFileLoader {
      *
      * @param _baseDir Base directory to load the files.
      * @param _map Map with each language ( string => object ). Defaults to {}.
-     * @param _encoding File encoding. Defaults to 'utf8'.
+     * @param _fileReader File reader to use
+     * @param _fileChecker File checker to use
      */
-    constructor(_baseDir, _map = {}, _encoding = 'utf8', _fs = fs) {
+    constructor(_baseDir, _map = {}, _fileReader, _fileChecker) {
         this._baseDir = _baseDir;
         this._map = _map;
-        this._encoding = _encoding;
-        this._fs = _fs;
+        this._fileReader = _fileReader;
+        this._fileChecker = _fileChecker;
     }
     /**
      * Returns true whether the language file exists.
@@ -31,7 +32,7 @@ class LanguageBasedJsonFileLoader {
         if (!!this._map[language]) {
             return true;
         }
-        return this._fs.existsSync(this.makeLanguageFilePath(language));
+        return this._fileChecker.existsSync(this.makeLanguageFilePath(language));
     }
     /**
      * Loads, caches and returns a content for the given language.
@@ -47,18 +48,21 @@ class LanguageBasedJsonFileLoader {
         if (!!this._map[language]) {
             return this._map[language];
         }
-        let filePath = this.makeLanguageFilePath(language);
-        let fileExists = this._fs.existsSync(filePath);
+        const filePath = this.makeLanguageFilePath(language);
+        const fileExists = this._fileChecker.existsSync(filePath);
         if (!fileExists) {
             throw new Error('File not found: ' + filePath);
         }
-        return this._map[language] = JSON.parse(this.readFileContent(filePath));
+        const content = this._fileReader.readSync(filePath);
+        this._map[language] = JSON.parse(content);
+        // Add keywords for English
+        if ('en' === language && !this._map[language]['keywords']) {
+            this._map[language]['keywords'] = new EnglishKeywordDictionary_1.EnglishKeywordDictionary();
+        }
+        return this._map[language];
     }
     makeLanguageFilePath(language) {
         return path_1.join(this._baseDir, language + '.json');
-    }
-    readFileContent(filePath) {
-        return this._fs.readFileSync(filePath, this._encoding);
     }
 }
 exports.LanguageBasedJsonFileLoader = LanguageBasedJsonFileLoader;

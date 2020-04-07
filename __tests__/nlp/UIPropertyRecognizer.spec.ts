@@ -1,10 +1,11 @@
+import * as fs from 'fs';
 import { resolve } from 'path';
-
-import { UIProperty } from '../../modules/ast/UIProperty';
-import { NodeTypes } from '../../modules/req/NodeTypes';
-import { NLP, NLPTrainer, UIPropertyRecognizer } from '../../modules/nlp';
-import { LanguageContentLoader, JsonLanguageContentLoader } from '../../modules/dict';
 import { Options } from '../../modules/app/Options';
+import { UIProperty } from '../../modules/ast/UIProperty';
+import { JsonLanguageContentLoader, LanguageContentLoader } from '../../modules/dict';
+import { NLP, NLPTrainer, UIPropertyRecognizer } from '../../modules/nlp';
+import { NodeTypes } from '../../modules/req/NodeTypes';
+import { FSFileHandler } from '../../modules/util/file/FSFileHandler';
 
 describe( 'UIPropertyRecognizer', () => {
 
@@ -13,8 +14,9 @@ describe( 'UIPropertyRecognizer', () => {
     let warnings = [];
 
     const options: Options = new Options( resolve( process.cwd(), 'dist/' ) );
+    const fileHandler = new FSFileHandler( fs );
     const langLoader: LanguageContentLoader =
-        new JsonLanguageContentLoader( options.languageDir, {}, options.encoding );
+        new JsonLanguageContentLoader( options.languageDir, {}, fileHandler, fileHandler );
 
     // helper
     function makeNode( content: string, line = 1, column = 1 ): UIProperty {

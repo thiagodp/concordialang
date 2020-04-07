@@ -1,25 +1,31 @@
+import * as fs from 'fs';
 import { resolve } from "path";
-
-import { JsonLanguageContentLoader, LanguageContentLoader } from "../../modules/dict";
-import { Document } from '../../modules/ast/Document';
-import { TestCaseFileGenerator } from "../../modules/testcase/TestCaseFileGenerator";
 import { Options } from "../../modules/app/Options";
-import { FileData, FileMeta } from "../../modules/app/SingleFileProcessor";
 import { SingleFileCompiler } from "../../modules/app/SingleFileCompiler";
-import { LexerBuilder } from "../../modules/lexer/LexerBuilder";
-import { Parser } from "../../modules/parser/Parser";
+import { FileData, FileMeta } from "../../modules/app/SingleFileProcessor";
+import { Document } from '../../modules/ast/Document';
+import { JsonLanguageContentLoader, LanguageContentLoader, EnglishKeywordDictionary } from "../../modules/dict";
+import { Lexer } from "../../modules/lexer/Lexer";
 import { NLPBasedSentenceRecognizer } from "../../modules/nlp/NLPBasedSentenceRecognizer";
 import { NLPTrainer } from "../../modules/nlp/NLPTrainer";
+import { Parser } from "../../modules/parser/Parser";
+import { TestCaseFileGenerator } from "../../modules/testcase/TestCaseFileGenerator";
+import { FSFileHandler } from '../../modules/util/file/FSFileHandler';
 
 describe( 'TestCaseFileGenerator', () => {
 
     const LANGUAGE = 'en';
     const options: Options = new Options( resolve( process.cwd(), 'dist/' ) );
-    const langLoader: LanguageContentLoader =
-        new JsonLanguageContentLoader( options.languageDir, {}, options.encoding );
+    const fileHandler = new FSFileHandler( fs );
+    const langLoader: LanguageContentLoader = new JsonLanguageContentLoader(
+        options.languageDir,
+        {},
+        fileHandler,
+        fileHandler
+        );
 
     let sfc = new SingleFileCompiler(
-        ( new LexerBuilder() ).build( options, LANGUAGE ),
+        new Lexer( options.language, langLoader ),
         new Parser(),
         new NLPBasedSentenceRecognizer( new NLPTrainer( langLoader ) ),
         LANGUAGE,

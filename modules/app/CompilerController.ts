@@ -5,13 +5,12 @@ import { FileCompiler } from '../compiler/FileCompiler';
 import { MultiFileProcessor as MultiFileProcessor2 } from "../compiler/MultiFileProcessor2";
 import { JsonLanguageContentLoader, LanguageContentLoader } from "../dict";
 import { Lexer } from "../lexer/Lexer";
-import { LexerBuilder } from "../lexer/LexerBuilder";
 import { NLPBasedSentenceRecognizer } from "../nlp/NLPBasedSentenceRecognizer";
 import { NLPTrainer } from "../nlp/NLPTrainer";
 import { Parser } from "../parser/Parser";
 import { AugmentedSpec } from "../req/AugmentedSpec";
 import { BatchSpecificationAnalyzer } from "../semantic/BatchSpecificationAnalyzer";
-import { FSFileReader } from '../util/file/FSFileReader';
+import { FSFileHandler } from '../util/file/FSFileHandler';
 import { FSFileSearcher } from '../util/file/FSFileSearcher';
 import { CLI } from "./CLI";
 import { LanguageManager } from "./LanguageManager";
@@ -20,7 +19,6 @@ import { SimpleAppEventsListener } from "./SimpleAppEventsListener";
 import { SingleFileCompiler } from "./SingleFileCompiler";
 import { TCGenController } from "./TCGenController";
 import { VerboseAppEventsListener } from "./VerboseAppEventsListener";
-
 
 /**
  * Compiler controller
@@ -34,12 +32,13 @@ export class CompilerController {
 
     public async compile( options: Options, cli: CLI ): Promise< [ AugmentedSpec, Graph ] > {
 
+        const fileHandler = new FSFileHandler( this._fs );
         const fileSearcher = new FSFileSearcher( this._fs );
 
         const langLoader: LanguageContentLoader =
-            new JsonLanguageContentLoader( options.languageDir, {}, options.encoding );
+            new JsonLanguageContentLoader( options.languageDir, {}, fileHandler, fileHandler );
 
-        let lexer: Lexer = ( new LexerBuilder( langLoader ) ).build( options, options.language );
+        let lexer: Lexer = new Lexer( options.language, langLoader );
         let parser: Parser = new Parser();
 
         let nlpTrainer: NLPTrainer = new NLPTrainer( langLoader );
@@ -72,8 +71,7 @@ export class CompilerController {
         //     specAnalyzer
         // );
 
-        const fileReader = new FSFileReader( this._fs );
-        const fileCompiler = new FileCompiler( fileReader, singleFileCompiler, options.lineBreaker );
+        const fileCompiler = new FileCompiler( fileHandler, singleFileCompiler, options.lineBreaker );
         const mfp = new MultiFileProcessor2( fileCompiler );
 
         const compiler = new Compiler2( fileSearcher, mfp, specAnalyzer );
@@ -84,15 +82,14 @@ export class CompilerController {
             return [ spec, graph ];
         }
 
-        const tcGenCtrl = new TCGenController( listener );
-
-        return await tcGenCtrl.execute(
+        const tcGenCtrl = new TCGenController(
             nlpBasedSentenceRecognizer.variantSentenceRec,
             langLoader,
-            options,
-            spec,
-            graph
-        );
+            listener,
+            fileHandler
+            );
+
+        return await tcGenCtrl.execute( options, spec, graph );
     }
 
 }

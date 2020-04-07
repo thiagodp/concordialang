@@ -1,12 +1,13 @@
+import * as fs from 'fs';
 import { resolve } from 'path';
-
-import { Document, Table, Database, DatabaseProperties, DatabaseProperty } from '../../modules/ast';
-import { AlaSqlDatabaseInterface } from '../../modules/db';
-import { Parser } from '../../modules/parser/Parser';
-import { Lexer } from '../../modules/lexer/Lexer';
-import { LexerBuilder } from '../../modules/lexer/LexerBuilder';
 import { Options } from '../../modules/app/Options';
+import { Database, DatabaseProperties, DatabaseProperty, Document, Table } from '../../modules/ast';
+import { AlaSqlDatabaseInterface } from '../../modules/db';
+import { JsonLanguageContentLoader, LanguageContentLoader, EnglishKeywordDictionary } from '../../modules/dict';
+import { Lexer } from '../../modules/lexer/Lexer';
+import { Parser } from '../../modules/parser/Parser';
 import { NodeTypes } from '../../modules/req/NodeTypes';
+import { FSFileHandler } from '../../modules/util/file/FSFileHandler';
 
 describe( 'AlaSqlDatabaseInterface', () => {
 
@@ -14,7 +15,10 @@ describe( 'AlaSqlDatabaseInterface', () => {
 
     let parser = new Parser();
     const options: Options = new Options( resolve( process.cwd(), 'dist/' ) );
-    let lexer: Lexer = ( new LexerBuilder() ).build( options, 'en' );
+    const fileHandler = new FSFileHandler( fs );
+    const langLoader: LanguageContentLoader =
+        new JsonLanguageContentLoader( options.languageDir, {}, fileHandler, fileHandler );
+    let lexer: Lexer = new Lexer( options.language, langLoader );
 
     beforeAll( () => {
         dbi = new AlaSqlDatabaseInterface();

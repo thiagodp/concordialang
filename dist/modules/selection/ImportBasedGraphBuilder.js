@@ -24,7 +24,7 @@ class ImportBasedGraphBuilder {
             // Use the file path as the key
             let fromKey = file_1.toUnixPath(!doc.fileInfo ? '' : doc.fileInfo.path || '');
             // console.log( 'fromKey', fromKey );
-            // Add the document as a vertex. If the key already exists, the value is overwriten.
+            // Add the document as a vertex. If the key already exists, the value is overwritten.
             graph.addVertex(fromKey, doc); // key, value
             // Make each imported file a vertex, but not overwrite the value if it already exists.
             for (let imp of doc.imports || []) {

@@ -1,21 +1,25 @@
+import * as fs from 'fs';
 import { resolve } from 'path';
-
-import { Document } from '../../modules/ast/Document';
-import { AugmentedSpec } from '../../modules/req/AugmentedSpec';
-import { FeatureSSA } from '../../modules/semantic/FeatureSSA';
-import { Parser } from '../../modules/parser/Parser';
-import { Lexer } from '../../modules/lexer/Lexer';
 import { Options } from '../../modules/app/Options';
-import { LexerBuilder } from '../../modules/lexer/LexerBuilder';
+import { Document } from '../../modules/ast/Document';
+import { JsonLanguageContentLoader, LanguageContentLoader, EnglishKeywordDictionary } from '../../modules/dict';
+import { Lexer } from '../../modules/lexer/Lexer';
+import { Parser } from '../../modules/parser/Parser';
+import { AugmentedSpec } from '../../modules/req/AugmentedSpec';
 import { SpecFilter } from '../../modules/selection/SpecFilter';
+import { FeatureSSA } from '../../modules/semantic/FeatureSSA';
+import { FSFileHandler } from '../../modules/util/file/FSFileHandler';
 
 describe( 'FeatureSpecAnalyzer', () => {
 
     const analyzer = new FeatureSSA(); // under test
 
-    let parser = new Parser();
+    const parser = new Parser();
     const options: Options = new Options( resolve( process.cwd(), 'dist/' ) );
-    let lexer: Lexer = ( new LexerBuilder() ).build( options, 'en' );
+    const fileHandler = new FSFileHandler( fs );
+    const langLoader: LanguageContentLoader =
+        new JsonLanguageContentLoader( options.languageDir, {}, fileHandler, fileHandler );
+    const lexer: Lexer = new Lexer( options.language, langLoader );
 
     beforeEach( () => {
         lexer.reset();

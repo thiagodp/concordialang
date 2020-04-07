@@ -14,7 +14,6 @@ __export(require("./FeatureLexer"));
 __export(require("./ImportLexer"));
 __export(require("./LanguageLexer"));
 __export(require("./Lexer"));
-__export(require("./LexerBuilder"));
 __export(require("./LexerProcessor"));
 __export(require("./LexicalException"));
 __export(require("./ListItemLexer"));

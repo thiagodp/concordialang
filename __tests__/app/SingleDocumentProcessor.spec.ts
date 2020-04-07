@@ -1,24 +1,25 @@
+import * as fs from 'fs';
 import { resolve } from 'path';
-
-import { LanguageContentLoader, JsonLanguageContentLoader } from '../../modules/dict';
-import { Document } from '../../modules/ast/Document';
-import { NLPBasedSentenceRecognizer } from '../../modules/nlp/NLPBasedSentenceRecognizer';
-import { SingleDocumentProcessor } from '../../modules/app/SingleDocumentProcessor';
-import { Parser } from '../../modules/parser/Parser';
-import { Lexer } from '../../modules/lexer/Lexer';
-import { LexerBuilder } from '../../modules/lexer/LexerBuilder';
-import { NLPTrainer } from '../../modules/nlp/NLPTrainer';
 import { Options } from '../../modules/app/Options';
+import { SingleDocumentProcessor } from '../../modules/app/SingleDocumentProcessor';
+import { Document } from '../../modules/ast/Document';
+import { JsonLanguageContentLoader, LanguageContentLoader, EnglishKeywordDictionary } from '../../modules/dict';
+import { Lexer } from '../../modules/lexer/Lexer';
+import { NLPBasedSentenceRecognizer } from '../../modules/nlp/NLPBasedSentenceRecognizer';
+import { NLPTrainer } from '../../modules/nlp/NLPTrainer';
+import { Parser } from '../../modules/parser/Parser';
+import { FSFileHandler } from '../../modules/util/file/FSFileHandler';
 
 describe( 'SingleDocumentProcessor', () => {
 
     const LANGUAGE = 'pt';
 
     const options: Options = new Options( resolve( process.cwd(), 'dist/' ) );
+    const fileHandler = new FSFileHandler( fs );
     const langLoader: LanguageContentLoader =
-        new JsonLanguageContentLoader( options.languageDir, {}, options.encoding );
+        new JsonLanguageContentLoader( options.languageDir, {}, fileHandler, fileHandler );
 
-    let lexer: Lexer = ( new LexerBuilder( langLoader ) ).build( options, LANGUAGE );
+    let lexer: Lexer = new Lexer( LANGUAGE, langLoader );
 
     let parser = new Parser();
 

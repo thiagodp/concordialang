@@ -13,12 +13,12 @@ const Compiler2_1 = require("../compiler/Compiler2");
 const FileCompiler_1 = require("../compiler/FileCompiler");
 const MultiFileProcessor2_1 = require("../compiler/MultiFileProcessor2");
 const dict_1 = require("../dict");
-const LexerBuilder_1 = require("../lexer/LexerBuilder");
+const Lexer_1 = require("../lexer/Lexer");
 const NLPBasedSentenceRecognizer_1 = require("../nlp/NLPBasedSentenceRecognizer");
 const NLPTrainer_1 = require("../nlp/NLPTrainer");
 const Parser_1 = require("../parser/Parser");
 const BatchSpecificationAnalyzer_1 = require("../semantic/BatchSpecificationAnalyzer");
-const FSFileReader_1 = require("../util/file/FSFileReader");
+const FSFileHandler_1 = require("../util/file/FSFileHandler");
 const FSFileSearcher_1 = require("../util/file/FSFileSearcher");
 const LanguageManager_1 = require("./LanguageManager");
 const SimpleAppEventsListener_1 = require("./SimpleAppEventsListener");
@@ -36,9 +36,10 @@ class CompilerController {
     }
     compile(options, cli) {
         return __awaiter(this, void 0, void 0, function* () {
+            const fileHandler = new FSFileHandler_1.FSFileHandler(this._fs);
             const fileSearcher = new FSFileSearcher_1.FSFileSearcher(this._fs);
-            const langLoader = new dict_1.JsonLanguageContentLoader(options.languageDir, {}, options.encoding);
-            let lexer = (new LexerBuilder_1.LexerBuilder(langLoader)).build(options, options.language);
+            const langLoader = new dict_1.JsonLanguageContentLoader(options.languageDir, {}, fileHandler, fileHandler);
+            let lexer = new Lexer_1.Lexer(options.language, langLoader);
             let parser = new Parser_1.Parser();
             let nlpTrainer = new NLPTrainer_1.NLPTrainer(langLoader);
             let nlpBasedSentenceRecognizer = new NLPBasedSentenceRecognizer_1.NLPBasedSentenceRecognizer(nlpTrainer);
@@ -58,16 +59,15 @@ class CompilerController {
             //     mfp,
             //     specAnalyzer
             // );
-            const fileReader = new FSFileReader_1.FSFileReader(this._fs);
-            const fileCompiler = new FileCompiler_1.FileCompiler(fileReader, singleFileCompiler, options.lineBreaker);
+            const fileCompiler = new FileCompiler_1.FileCompiler(fileHandler, singleFileCompiler, options.lineBreaker);
             const mfp = new MultiFileProcessor2_1.MultiFileProcessor(fileCompiler);
             const compiler = new Compiler2_1.Compiler(fileSearcher, mfp, specAnalyzer);
             let [spec, graph] = yield compiler.compile(options, listener);
             if (!options.generateTestCase || !spec.docs || spec.docs.length < 1) {
                 return [spec, graph];
             }
-            const tcGenCtrl = new TCGenController_1.TCGenController(listener);
-            return yield tcGenCtrl.execute(nlpBasedSentenceRecognizer.variantSentenceRec, langLoader, options, spec, graph);
+            const tcGenCtrl = new TCGenController_1.TCGenController(nlpBasedSentenceRecognizer.variantSentenceRec, langLoader, listener, fileHandler);
+            return yield tcGenCtrl.execute(options, spec, graph);
         });
     }
 }

@@ -1,31 +1,34 @@
 import { join } from 'path';
-import * as fs from 'fs';
+import { FileChecker } from '../util/file/FileChecker';
+import { FileReader } from '../util/file/FileReader';
+import { EnglishKeywordDictionary } from "../dict/EnglishKeywordDictionary";
 
 /**
  * Language-based JSON file loader.
- * 
+ *
  * @author  Thiago Delgado Pinto
  */
 export class LanguageBasedJsonFileLoader {
 
     /**
      * Constructs the loader.
-     * 
+     *
      * @param _baseDir Base directory to load the files.
      * @param _map Map with each language ( string => object ). Defaults to {}.
-     * @param _encoding File encoding. Defaults to 'utf8'.
+     * @param _fileReader File reader to use
+     * @param _fileChecker File checker to use
      */
     constructor(
         private _baseDir: string,
         private _map: Object = {},
-        private _encoding: string = 'utf8',
-        private _fs = fs
+        private _fileReader: FileReader,
+        private _fileChecker: FileChecker,
     ) {
     }
 
     /**
      * Returns true whether the language file exists.
-     * 
+     *
      * @param language Language
      * @throws Error
      */
@@ -33,16 +36,16 @@ export class LanguageBasedJsonFileLoader {
         if ( !! this._map[ language ] ) {
             return true;
         }
-        return this._fs.existsSync( this.makeLanguageFilePath( language ) );        
+        return this._fileChecker.existsSync( this.makeLanguageFilePath( language ) );
     }
 
     /**
      * Loads, caches and returns a content for the given language.
      * If the language was already used, just returns its cached content.
-     * 
+     *
      * @param language Language
      * @returns The content.
-     * 
+     *
      * @throws Error If cannot load the file.
      */
     public load( language: string ): any {
@@ -52,21 +55,24 @@ export class LanguageBasedJsonFileLoader {
             return this._map[ language ];
         }
 
-        let filePath = this.makeLanguageFilePath( language );
-        let fileExists: boolean = this._fs.existsSync( filePath );
+        const filePath = this.makeLanguageFilePath( language );
+        const fileExists: boolean = this._fileChecker.existsSync( filePath );
         if ( ! fileExists ) {
             throw new Error( 'File not found: ' + filePath );
         }
+        const content = this._fileReader.readSync( filePath );
+        this._map[ language ] = JSON.parse( content );
 
-        return this._map[ language ] = JSON.parse( this.readFileContent( filePath ) );
+        // Add keywords for English
+        if ( 'en' === language && ! this._map[ language ][ 'keywords' ] ) {
+            this._map[ language ][ 'keywords' ] = new EnglishKeywordDictionary();
+        }
+
+        return this._map[ language ];
     }
 
     private makeLanguageFilePath( language: string ): string {
         return join( this._baseDir, language + '.json' );
-    }
-
-    private readFileContent( filePath ): string {
-        return this._fs.readFileSync( filePath, this._encoding );
     }
 
 }
