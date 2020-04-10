@@ -5,7 +5,7 @@
             "type": "node",
             "request": "launch",
             "name": "Jest All",
-            "program": "${workspaceFolder}/node_modules/.bin/jest",
+            "program": "${workspaceFolder}/node_modules/jest/bin/jest",
             "args": [
                 "--runInBand"
             ],
@@ -20,7 +20,7 @@
             "type": "node",
             "request": "launch",
             "name": "Jest Current File",
-            "program": "/node_modules/.bin/jest",
+            "program": "${workspaceFolder}/node_modules/jest/bin/jest",
             "args": [
                 "${fileBasenameNoExtension}"
             ],

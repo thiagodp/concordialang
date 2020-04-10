@@ -12,8 +12,8 @@ describe( 'DirSearcher', () => {
     const currentDir: string = normalize( resolve( dir, 'dist/' ) );
     const subDir1 = join( currentDir, 'sub/' );
     const subDir2 = join( currentDir, 'concordia' );
-    const subDir3 = join( currentDir, 'concordia-foo' );
-    const subDir4 = join( currentDir, 'concordia-bar' );
+    const subDir3 = join( currentDir, 'concordia-bar' );
+    const subDir4 = join( currentDir, 'concordia-foo' );
     const subDir5 = join( currentDir, 'x' );
     const subDir5Sub1 = join( subDir5, 'concordia-zoo' );
     const subDir5Sub2 = join( subDir5, 'zoo' );
@@ -53,14 +53,14 @@ describe( 'DirSearcher', () => {
         o = null;
     } );
 
-    it( 'finds directories that matches the regexp', async () => {
+    it( 'finds directories that match the regexp', async () => {
         const r = await s.search( o );
         expect( r ).toHaveLength( 2 );
-        expect( r[ 0 ].endsWith( 'concordia-foo' ) ).toBeTruthy();
-        expect( r[ 1 ].endsWith( 'concordia-bar' ) ).toBeTruthy();
+        expect( r[ 0 ].endsWith( 'concordia-bar' ) ).toBeTruthy();
+        expect( r[ 1 ].endsWith( 'concordia-foo' ) ).toBeTruthy();
     } );
 
-    it( 'finds directories that matches the regexp, recursive', async () => {
+    it( 'finds directories that match the regexp, recursive', async () => {
         o.recursive = true;
         const r = await s.search( o );
         expect( r ).toHaveLength( 3 );
