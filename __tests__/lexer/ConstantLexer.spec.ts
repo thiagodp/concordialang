@@ -1,5 +1,5 @@
-import { NodeTypes } from "../../modules/req/NodeTypes";
 import { ConstantLexer } from "../../modules/lexer/ConstantLexer";
+import { NodeTypes } from "../../modules/req/NodeTypes";
 
 describe( 'ConstantLexer', () => {
 

@@ -1,11 +1,11 @@
 import * as deepcopy from 'deepcopy';
-
-import { LanguageContent, LanguageContentLoader } from '../dict';
+import { LanguageContent, LanguageContentLoader } from '../language';
 import { isDefined } from '../util/TypeChecking';
+import { BASE_TRAINING_EXAMPLES } from './BaseTrainingExamples';
 import { NLP } from './NLP';
 import { NLPTrainingData, NLP_PRIORITIES } from './NLPTrainingData';
 import { NLPTrainingDataConversor } from './NLPTrainingDataConversor';
-import { BASE_TRAINING_EXAMPLES } from './BaseTrainingExamples';
+
 
 /**
  * NLP trainer.

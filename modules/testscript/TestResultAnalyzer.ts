@@ -1,9 +1,4 @@
-import {
-    AbstractTestScript,
-    ATSTestCase,
-    TestMethodResult,
-    TestScriptExecutionResult
-} from 'concordialang-plugin';
+import { AbstractTestScript, ATSTestCase, TestMethodResult, TestScriptExecutionResult } from 'concordialang-plugin';
 
 /**
  * Test Result Analyzer

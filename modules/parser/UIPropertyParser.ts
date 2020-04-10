@@ -1,9 +1,9 @@
 import { ListItem, UIProperty } from '../ast';
 import { NodeTypes } from "../req/NodeTypes";
-import { SyntacticException } from "./SyntacticException";
 import { ListItemNodeParser } from "./ListItemNodeParser";
 import { NodeIterator } from './NodeIterator';
 import { ParsingContext } from './ParsingContext';
+import { SyntacticException } from "./SyntacticException";
 import { TagCollector } from './TagCollector';
 
 /**

@@ -1,8 +1,7 @@
 import { join } from "path";
-
 import { FileInfo } from '../../modules/ast/FileInfo';
+import { SimpleCompiler } from "../SimpleCompiler";
 import { AugmentedSpec } from "../../modules/req/AugmentedSpec";
-import { SimpleCompiler } from "../../modules/util/SimpleCompiler";
 
 describe( 'AugmentedSpec', () => {
 
@@ -17,10 +16,11 @@ describe( 'AugmentedSpec', () => {
 
         describe( 'found', () => {
 
-            it( 'in the same level', () => {
+            it( 'in the same level', async () => {
+
                 const sc = new SimpleCompiler( 'pt' );
 
-                let doc1 = sc.addToSpec(
+                let doc1 = await sc.addToSpec(
                     spec,
                     [
                         '#language: pt',
@@ -32,7 +32,7 @@ describe( 'AugmentedSpec', () => {
                     } as FileInfo
                 );
 
-                let doc2 = sc.addToSpec(
+                let doc2 = await sc.addToSpec(
                     spec,
                     [
                         '#language: pt',
@@ -49,10 +49,11 @@ describe( 'AugmentedSpec', () => {
             } );
 
 
-            it( 'in a level up', () => {
+            it( 'in a level up', async () => {
+
                 const sc = new SimpleCompiler( 'pt' );
 
-                let doc1 = sc.addToSpec(
+                let doc1 = await sc.addToSpec(
                     spec,
                     [
                         '#language: pt',
@@ -64,7 +65,7 @@ describe( 'AugmentedSpec', () => {
                     } as FileInfo
                 );
 
-                let doc2 = sc.addToSpec(
+                let doc2 = await sc.addToSpec(
                     spec,
                     [
                         '#language: pt',
@@ -81,11 +82,11 @@ describe( 'AugmentedSpec', () => {
             } );
 
 
-            it( 'in a level down', () => {
+            it( 'in a level down', async () => {
 
                 const sc = new SimpleCompiler( 'pt' );
 
-                let doc1 = sc.addToSpec(
+                let doc1 = await sc.addToSpec(
                     spec,
                     [
                         '#language: pt',
@@ -97,7 +98,7 @@ describe( 'AugmentedSpec', () => {
                     } as FileInfo
                 );
 
-                let doc2 = sc.addToSpec(
+                let doc2 = await sc.addToSpec(
                     spec,
                     [
                         '#language: pt',
@@ -117,11 +118,11 @@ describe( 'AugmentedSpec', () => {
 
         describe( 'not found', () => {
 
-            it( 'when not declared', () => {
+            it( 'when not declared', async () => {
 
                 const sc = new SimpleCompiler( 'pt' );
 
-                let doc1 = sc.addToSpec(
+                let doc1 = await sc.addToSpec(
                     spec,
                     [
                         '#language: pt',
@@ -132,7 +133,7 @@ describe( 'AugmentedSpec', () => {
                     } as FileInfo
                 );
 
-                let doc2 = sc.addToSpec(
+                let doc2 = await sc.addToSpec(
                     spec,
                     [
                         '#language: pt',
@@ -158,11 +159,11 @@ describe( 'AugmentedSpec', () => {
 
         describe( 'found', () => {
 
-            it( 'same file, with feature name', () => {
+            it( 'same file, with feature name', async () => {
 
                 const sc = new SimpleCompiler( 'pt' );
 
-                let doc1 = sc.addToSpec(
+                let doc1 = await sc.addToSpec(
                     spec,
                     [
                         '#language: pt',
@@ -179,11 +180,11 @@ describe( 'AugmentedSpec', () => {
             } );
 
 
-            it( 'same file, without feature name', () => {
+            it( 'same file, without feature name', async () => {
 
                 const sc = new SimpleCompiler( 'pt' );
 
-                let doc1 = sc.addToSpec(
+                let doc1 = await sc.addToSpec(
                     spec,
                     [
                         '#language: pt',
@@ -200,11 +201,11 @@ describe( 'AugmentedSpec', () => {
             } );
 
 
-            it( 'in an import file, with feature name', () => {
+            it( 'in an import file, with feature name', async () => {
 
                 const sc = new SimpleCompiler( 'pt' );
 
-                let doc1 = sc.addToSpec(
+                let doc1 = await sc.addToSpec(
                     spec,
                     [
                         '#language: pt',
@@ -216,7 +217,7 @@ describe( 'AugmentedSpec', () => {
                     } as FileInfo
                 );
 
-                let doc2 = sc.addToSpec(
+                let doc2 = await sc.addToSpec(
                     spec,
                     [
                         '#language: pt',
@@ -237,11 +238,11 @@ describe( 'AugmentedSpec', () => {
 
         describe( 'not found', () => {
 
-            it( 'in the same file, when not declared', () => {
+            it( 'in the same file, when not declared', async () => {
 
                 const sc = new SimpleCompiler( 'pt' );
 
-                let doc1 = sc.addToSpec(
+                let doc1 = await sc.addToSpec(
                     spec,
                     [
                         '#language: pt',
@@ -257,11 +258,11 @@ describe( 'AugmentedSpec', () => {
             } );
 
 
-            it( 'in an import file, when not declared', () => {
+            it( 'in an import file, when not declared', async () => {
 
                 const sc = new SimpleCompiler( 'pt' );
 
-                let doc1 = sc.addToSpec(
+                let doc1 = await sc.addToSpec(
                     spec,
                     [
                         '#language: pt',
@@ -272,7 +273,7 @@ describe( 'AugmentedSpec', () => {
                     } as FileInfo
                 );
 
-                let doc2 = sc.addToSpec(
+                let doc2 = await sc.addToSpec(
                     spec,
                     [
                         '#language: pt',
@@ -293,7 +294,7 @@ describe( 'AugmentedSpec', () => {
 
             //     const sc = new SimpleCompiler( 'pt' );
 
-            //     let doc1 = sc.addToSpec(
+            //     let doc1 = await sc.addToSpec(
             //         spec,
             //         [
             //             '#language: pt',
@@ -305,7 +306,7 @@ describe( 'AugmentedSpec', () => {
             //         } as FileInfo
             //     );
 
-            //     let doc2 = sc.addToSpec(
+            //     let doc2 = await sc.addToSpec(
             //         spec,
             //         [
             //             '#language: pt',

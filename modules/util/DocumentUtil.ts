@@ -1,5 +1,5 @@
-import { Document, Scenario, UIElement, UIElementInfo, Variant } from '../ast';
 import { CaseType } from '../app/CaseType';
+import { Document, Scenario, UIElement, UIElementInfo, Variant } from '../ast';
 import { isDefined } from './TypeChecking';
 import { UIElementNameHandler } from './UIElementNameHandler';
 import { UIElementPropertyExtractor } from './UIElementPropertyExtractor';

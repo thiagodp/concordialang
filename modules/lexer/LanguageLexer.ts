@@ -1,8 +1,8 @@
 import { Language } from '../ast/Language';
 import { Expressions } from '../req/Expressions';
+import { LineChecker } from '../req/LineChecker';
 import { NodeTypes } from '../req/NodeTypes';
 import { Symbols } from '../req/Symbols';
-import { LineChecker } from '../req/LineChecker';
 import { KeywordBasedLexer } from './KeywordBasedLexer';
 import { LexicalAnalysisResult, NodeLexer } from './NodeLexer';
 

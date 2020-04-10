@@ -1,10 +1,10 @@
 
-import { NLPResult, Entities } from '../nlp';
-import { ContentNode, UIProperty, EntityValue } from '../ast';
+import { ContentNode, EntityValue, UIProperty } from '../ast';
+import { UIPropertyTypes } from '../ast/UIPropertyTypes';
 import { LocatedException } from '../error/LocatedException';
+import { Entities, NLPResult } from '../nlp';
 import { isDefined } from '../util/TypeChecking';
 import { adjustValueToTheRightType } from '../util/ValueTypeDetector';
-import { UIPropertyTypes } from '../ast/UIPropertyTypes';
 import { Intents } from './Intents';
 import { NLP } from './NLP';
 import { NLPException } from './NLPException';

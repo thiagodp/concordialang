@@ -1,8 +1,8 @@
-import { RawDataGenerator } from "./RawDataGenerator";
+import { StringLimits } from "../limits/StringLimits";
 import { RandomString } from "../random/RandomString";
 import { MinMaxChecker } from "../util/MinMaxChecker";
-import { StringLimits } from "../limits/StringLimits";
 import { RangeAnalyzer } from "./RangeAnalyzer";
+import { RawDataGenerator } from "./RawDataGenerator";
 
 /**
  * String generator.
@@ -33,7 +33,7 @@ export class StringGenerator implements RawDataGenerator< string >, RangeAnalyze
     ) {
         ( new MinMaxChecker() ).check( minLength, maxLength ); // may throw Error
 
-        // Aditional checkings
+        // Additional verifications
         if ( minLength && minLength < StringLimits.MIN ) {
             throw Error( 'Minimum string length is ' + StringLimits.MIN );
         }

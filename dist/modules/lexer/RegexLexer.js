@@ -1,11 +1,11 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const NodeTypes_1 = require("../req/NodeTypes");
-const LineChecker_1 = require("../req/LineChecker");
 const Expressions_1 = require("../req/Expressions");
+const LineChecker_1 = require("../req/LineChecker");
+const NodeTypes_1 = require("../req/NodeTypes");
 const Symbols_1 = require("../req/Symbols");
-const LexicalException_1 = require("./LexicalException");
 const CommentHandler_1 = require("./CommentHandler");
+const LexicalException_1 = require("./LexicalException");
 /**
  * Detects a Regex.
  *

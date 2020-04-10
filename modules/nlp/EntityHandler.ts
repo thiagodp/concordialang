@@ -1,4 +1,4 @@
-import { NLPResult, NLPEntity, Entities } from '.';
+import { Entities, NLPEntity, NLPResult } from '.';
 
 /**
  * Entity handler

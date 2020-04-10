@@ -1,44 +1,37 @@
 import { Language, Node, ReservedTags } from '../ast';
-import { LanguageContentLoader } from '../dict/LanguageContentLoader';
-import { LanguageContent } from '../dict/LanguageContent';
-import {
-    BeforeAllLexer,
-    AfterAllLexer,
-    BeforeFeatureLexer,
-    AfterFeatureLexer,
-    BeforeEachScenarioLexer,
-    AfterEachScenarioLexer
-} from '../lexer/TestEventLexer';
-import { VariantLexer } from './VariantLexer';
-import { DatabasePropertyLexer } from './DatabasePropertyLexer';
-import { DatabaseLexer } from './DatabaseLexer';
-import { UIPropertyLexer } from './UIPropertyLexer';
-import { UIElementLexer } from './UIElementLexer';
-import { KeywordBasedLexer } from './KeywordBasedLexer';
+import { KeywordDictionary } from '../language/KeywordDictionary';
+import { LanguageContent } from '../language/LanguageContent';
+import { LanguageContentLoader } from '../language/LanguageContentLoader';
+import { AfterAllLexer, AfterEachScenarioLexer, AfterFeatureLexer, BeforeAllLexer, BeforeEachScenarioLexer, BeforeFeatureLexer } from '../lexer/TestEventLexer';
 import { NodeTypes } from '../req/NodeTypes';
-import { TestCaseLexer } from './TestCaseLexer';
-import { NodeLexer, LexicalAnalysisResult } from './NodeLexer';
-import { LanguageLexer } from "./LanguageLexer";
-import { TagLexer, TagSubLexer } from "./TagLexer";
-import { ImportLexer } from './ImportLexer';
-import { FeatureLexer } from './FeatureLexer';
 import { BackgroundLexer } from './BackgroundLexer';
-import { ScenarioLexer } from './ScenarioLexer';
-import { StepGivenLexer } from "./StepGivenLexer";
-import { StepWhenLexer } from "./StepWhenLexer";
-import { StepThenLexer } from "./StepThenLexer";
-import { StepAndLexer } from "./StepAndLexer";
-import { StepOtherwiseLexer } from './StepOtherwiseLexer';
-import { TextLexer } from "./TextLexer";
-import { RegexBlockLexer } from './RegexBlockLexer';
-import { RegexLexer } from './RegexLexer';
 import { ConstantBlockLexer } from './ConstantBlockLexer';
 import { ConstantLexer } from './ConstantLexer';
-import { KeywordDictionary } from '../dict/KeywordDictionary';
+import { DatabaseLexer } from './DatabaseLexer';
+import { DatabasePropertyLexer } from './DatabasePropertyLexer';
+import { FeatureLexer } from './FeatureLexer';
+import { ImportLexer } from './ImportLexer';
+import { KeywordBasedLexer } from './KeywordBasedLexer';
+import { LanguageLexer } from "./LanguageLexer";
+import { LongStringLexer } from './LongStringLexer';
+import { LexicalAnalysisResult, NodeLexer } from './NodeLexer';
+import { RegexBlockLexer } from './RegexBlockLexer';
+import { RegexLexer } from './RegexLexer';
+import { ScenarioLexer } from './ScenarioLexer';
+import { StepAndLexer } from "./StepAndLexer";
+import { StepGivenLexer } from "./StepGivenLexer";
+import { StepOtherwiseLexer } from './StepOtherwiseLexer';
+import { StepThenLexer } from "./StepThenLexer";
+import { StepWhenLexer } from "./StepWhenLexer";
 import { TableLexer } from './TableLexer';
 import { TableRowLexer } from './TableRowLexer';
-import { LongStringLexer } from './LongStringLexer';
+import { TagLexer, TagSubLexer } from "./TagLexer";
+import { TestCaseLexer } from './TestCaseLexer';
+import { TextLexer } from "./TextLexer";
+import { UIElementLexer } from './UIElementLexer';
+import { UIPropertyLexer } from './UIPropertyLexer';
 import { VariantBackgroundLexer } from './VariantBackgroundLexer';
+import { VariantLexer } from './VariantLexer';
 
 /**
  * Lexer

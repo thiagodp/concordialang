@@ -1,8 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const EnglishKeywordDictionary_1 = require("../dict/EnglishKeywordDictionary");
-const Symbols_1 = require("../req/Symbols");
+const EnglishKeywordDictionary_1 = require("../language/EnglishKeywordDictionary");
 const NodeTypes_1 = require("../req/NodeTypes");
+const Symbols_1 = require("../req/Symbols");
 const CaseConversor_1 = require("../util/CaseConversor");
 /**
  * Generates files for Documents with Test Cases.

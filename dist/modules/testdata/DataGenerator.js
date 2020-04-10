@@ -28,12 +28,12 @@ class DataGenConfig {
         this.maxLength = null;
         this.format = null; // regex
         // public query: string = null;
-        // public queryable: Queryable = null; // queriable to use to query the value - db or memory
+        // public queryable: Queryable = null; // queryable to use to query the value - db or memory
         this.value = null; // for value and list-based generation
         this.invertedLogic = false; // for list-based generation, when operator "not in" is used
         this.computedBy = null; // expression
     }
-    // mininum value or length
+    // minimum value or length
     get min() {
         return TypeChecking_1.isDefined(this.minValue) ? this.minValue : this.minLength;
     }

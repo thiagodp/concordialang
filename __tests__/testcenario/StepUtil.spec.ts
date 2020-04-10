@@ -1,12 +1,12 @@
 import * as arrayMove from 'array-move';
 import * as deepcopy from 'deepcopy';
-
 import { Step } from '../../modules/ast/Step';
+import { EnglishKeywordDictionary } from '../../modules/language/EnglishKeywordDictionary';
+import { KeywordDictionary } from '../../modules/language/KeywordDictionary';
 import { Entities } from '../../modules/nlp/Entities';
-import { StepUtil } from "../../modules/testscenario/StepUtil";
 import { NodeTypes } from '../../modules/req/NodeTypes';
-import { KeywordDictionary } from '../../modules/dict/KeywordDictionary';
-import { EnglishKeywordDictionary } from '../../modules/dict/EnglishKeywordDictionary';
+import { StepUtil } from "../../modules/testscenario/StepUtil";
+
 
 describe( 'StepUtil', () => {
 

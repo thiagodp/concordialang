@@ -1,7 +1,7 @@
 import * as fs from 'fs';
 import { resolve } from 'path';
 import { Options } from '../../modules/app/Options';
-import { JsonLanguageContentLoader, LanguageContentLoader } from '../../modules/dict';
+import { JsonLanguageContentLoader, LanguageContentLoader } from '../../modules/language';
 import { Entities, Intents, NLP, NLPResult, NLPTrainer } from '../../modules/nlp';
 import { FSFileHandler } from '../../modules/util/file/FSFileHandler';
 

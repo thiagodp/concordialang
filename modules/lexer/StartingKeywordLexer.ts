@@ -1,7 +1,7 @@
 import { ContentNode } from '../ast/Node';
+import { Warning } from '../error/Warning';
 import { Expressions } from '../req/Expressions';
 import { LineChecker } from '../req/LineChecker';
-import { Warning } from '../error/Warning';
 import { CommentHandler } from './CommentHandler';
 import { KeywordBasedLexer } from './KeywordBasedLexer';
 import { LexicalAnalysisResult, NodeLexer } from './NodeLexer';
@@ -54,10 +54,10 @@ export class StartingKeywordLexer< T extends ContentNode > implements NodeLexer<
             return null;
         }
 
-        const commmentHandler = new CommentHandler();
+        const commentHandler = new CommentHandler();
 
-        let value = commmentHandler.removeComment( result[ 1 ] );
-        let content = commmentHandler.removeComment( line );
+        let value = commentHandler.removeComment( result[ 1 ] );
+        let content = commentHandler.removeComment( line );
 
         let pos = this._lineChecker.countLeftSpacesAndTabs( line );
 

@@ -1,22 +1,14 @@
-import {
-    AbstractTestScript,
-    ATSCommand,
-    ATSConsoleCommand,
-    ATSDatabaseCommand,
-    ATSEvent,
-    ATSTestCase,
-    NamedATSElement,
-} from 'concordialang-plugin';
+import { AbstractTestScript, ATSCommand, ATSConsoleCommand, ATSDatabaseCommand, ATSEvent, ATSTestCase, NamedATSElement } from 'concordialang-plugin';
 import { Location } from 'concordialang-types';
-
 import { Document, Step, TestEvent } from '../ast';
-import { AugmentedSpec } from "../req/AugmentedSpec";
-import { Entities } from '../nlp/Entities';
 import { DatabaseToAbstractDatabase } from '../db/DatabaseToAbstractDatabase';
 import { supportTablesInQueries } from '../db/DatabaseTypes';
+import { Entities } from '../nlp/Entities';
+import { AugmentedSpec } from "../req/AugmentedSpec";
 import { Symbols } from '../req/Symbols';
 import { Actions } from '../util/Actions';
 import { isDefined } from '../util/TypeChecking';
+
 
 /**
  * Generates Abstract Test Script
@@ -94,7 +86,7 @@ export class AbstractTestScriptGenerator {
             : feature.location;
         const featureName: string = ! feature ? 'Unknown feature' : feature.name;
 
-        // ASTRACT TEST SCRIPT
+        // ABSTRACT TEST SCRIPT
 
         let ats = new AbstractTestScript();
 

@@ -1,16 +1,16 @@
 import { join } from "path";
-
-import { FileInfo, EntityValueType } from "../../modules/ast";
-import { UIElementValueGenerator, ValueGenContext } from "../../modules/testdata/UIElementValueGenerator";
-import { SimpleCompiler } from "../../modules/util/SimpleCompiler";
+import { EntityValueType, FileInfo } from "../../modules/ast";
+import { FileProblemMapper } from "../../modules/error/FileProblemMapper";
 import { AugmentedSpec } from "../../modules/req/AugmentedSpec";
-import { UIETestPlan } from "../../modules/testcase/UIETestPlan";
-import { DataTestCase } from "../../modules/testdata/DataTestCase";
-import { DTCAnalysisResult } from "../../modules/testdata/DataTestCaseAnalyzer";
-import { BatchSpecificationAnalyzer } from "../../modules/semantic/BatchSpecificationAnalyzer";
 import { SpecFilter } from "../../modules/selection/SpecFilter";
+import { BatchSpecificationAnalyzer } from "../../modules/semantic2/BatchSpecificationAnalyzer";
+import { UIETestPlan } from "../../modules/testcase/UIETestPlan";
 import { DataGenerator } from "../../modules/testdata/DataGenerator";
 import { DataGeneratorBuilder } from "../../modules/testdata/DataGeneratorBuilder";
+import { DataTestCase } from "../../modules/testdata/DataTestCase";
+import { DTCAnalysisResult } from "../../modules/testdata/DataTestCaseAnalyzer";
+import { UIElementValueGenerator, ValueGenContext } from "../../modules/testdata/UIElementValueGenerator";
+import { SimpleCompiler } from "../SimpleCompiler";
 
 describe( 'UIElementValueGenerator', () => {
 
@@ -45,7 +45,7 @@ describe( 'UIElementValueGenerator', () => {
 
         it( 'min value - integer', async () => {
 
-            let doc1 = cp.addToSpec(
+            let doc1 = await cp.addToSpec(
                 spec,
                 [
                     'Feature: A',
@@ -69,7 +69,7 @@ describe( 'UIElementValueGenerator', () => {
 
         it( 'max value - integer', async () => {
 
-            let doc1 = cp.addToSpec(
+            let doc1 = await cp.addToSpec(
                 spec,
                 [
                     'Feature: A',
@@ -93,7 +93,7 @@ describe( 'UIElementValueGenerator', () => {
 
         it( 'min length', async () => {
 
-            let doc1 = cp.addToSpec(
+            let doc1 = await cp.addToSpec(
                 spec,
                 [
                     'Feature: A',
@@ -117,7 +117,7 @@ describe( 'UIElementValueGenerator', () => {
 
         it( 'max length', async () => {
 
-            let doc1 = cp.addToSpec(
+            let doc1 = await cp.addToSpec(
                 spec,
                 [
                     'Feature: A',
@@ -142,7 +142,7 @@ describe( 'UIElementValueGenerator', () => {
 
         it( 'min and max length', async () => {
 
-            let doc1 = cp.addToSpec(
+            let doc1 = await cp.addToSpec(
                 spec,
                 [
                     'Feature: A',
@@ -168,7 +168,7 @@ describe( 'UIElementValueGenerator', () => {
 
         it( 'format', async () => {
 
-            let doc1 = cp.addToSpec(
+            let doc1 = await cp.addToSpec(
                 spec,
                 [
                     'Feature: A',
@@ -193,7 +193,7 @@ describe( 'UIElementValueGenerator', () => {
 
         it( 'value - integer', async () => {
 
-            let doc1 = cp.addToSpec(
+            let doc1 = await cp.addToSpec(
                 spec,
                 [
                     'Feature: A',
@@ -226,7 +226,7 @@ describe( 'UIElementValueGenerator', () => {
 
                 it( 'first', async () => {
 
-                    let doc1 = cp.addToSpec(
+                    let doc1 = await cp.addToSpec(
                         spec,
                         [
                             'Feature: A',
@@ -250,7 +250,7 @@ describe( 'UIElementValueGenerator', () => {
 
                 it( 'random', async () => {
 
-                    let doc1 = cp.addToSpec(
+                    let doc1 = await cp.addToSpec(
                         spec,
                         [
                             'Feature: A',
@@ -274,7 +274,7 @@ describe( 'UIElementValueGenerator', () => {
 
                 it( 'last', async () => {
 
-                    let doc1 = cp.addToSpec(
+                    let doc1 = await cp.addToSpec(
                         spec,
                         [
                             'Feature: A',
@@ -299,7 +299,7 @@ describe( 'UIElementValueGenerator', () => {
 
                 it( 'not in', async () => {
 
-                    let doc1 = cp.addToSpec(
+                    let doc1 = await cp.addToSpec(
                         spec,
                         [
                             'Feature: A',
@@ -337,7 +337,7 @@ describe( 'UIElementValueGenerator', () => {
                 let doc1;
 
                 beforeEach( async () => {
-                    doc1 = cp.addToSpec(
+                    doc1 = await cp.addToSpec(
                         spec,
                         [
                             'Feature: A',
@@ -352,7 +352,7 @@ describe( 'UIElementValueGenerator', () => {
                         { } as FileInfo
                     );
 
-                    await bsa.analyze( new SpecFilter( spec ).graph(), spec, errors );
+                    await bsa.analyze( new FileProblemMapper(), spec, new SpecFilter( spec ).graph() );
                 } );
 
                 it( 'first', async () => {
@@ -421,7 +421,7 @@ describe( 'UIElementValueGenerator', () => {
             let doc1;
 
             beforeEach( async () => {
-                doc1 = cp.addToSpec(
+                doc1 = await cp.addToSpec(
                     spec,
                     [
                         'Feature: A',
@@ -438,7 +438,7 @@ describe( 'UIElementValueGenerator', () => {
                     { } as FileInfo
                 );
 
-                await bsa.analyze( new SpecFilter( spec ).graph(), spec, errors );
+                await bsa.analyze( new FileProblemMapper(), spec, new SpecFilter( spec ).graph() );
             } );
 
             it( 'first', async () => {
@@ -463,7 +463,7 @@ describe( 'UIElementValueGenerator', () => {
             let doc1;
 
             beforeEach( async () => {
-                doc1 = cp.addToSpec(
+                doc1 = await cp.addToSpec(
                     spec,
                     [
                         'Feature: A',
@@ -480,7 +480,7 @@ describe( 'UIElementValueGenerator', () => {
                     { } as FileInfo
                 );
 
-                await bsa.analyze( new SpecFilter( spec ).graph(), spec, errors );
+                await bsa.analyze( new FileProblemMapper(), spec, new SpecFilter( spec ).graph() );
             } );
 
             it( 'first', async () => {
@@ -515,7 +515,7 @@ describe( 'UIElementValueGenerator', () => {
                 let doc1;
 
                 beforeEach( async () => {
-                    doc1 = cp.addToSpec(
+                    doc1 = await cp.addToSpec(
                         spec,
                         [
                             'Feature: A',
@@ -528,7 +528,7 @@ describe( 'UIElementValueGenerator', () => {
                         { } as FileInfo
                     );
 
-                    await bsa.analyze( new SpecFilter( spec ).graph(), spec, errors );
+                    await bsa.analyze( new FileProblemMapper(), spec, new SpecFilter( spec ).graph() );
                 } );
 
                 it( 'first', async () => {
@@ -595,7 +595,7 @@ describe( 'UIElementValueGenerator', () => {
                 let doc1;
 
                 beforeEach( async () => {
-                    doc1 = cp.addToSpec(
+                    doc1 = await cp.addToSpec(
                         spec,
                         [
                             'Feature: A',
@@ -610,7 +610,7 @@ describe( 'UIElementValueGenerator', () => {
                         { } as FileInfo
                     );
 
-                    await bsa.analyze( new SpecFilter( spec ).graph(), spec, errors );
+                    await bsa.analyze( new FileProblemMapper(), spec, new SpecFilter( spec ).graph() );
                 } );
 
                 it( 'first', async () => {
@@ -635,7 +635,7 @@ describe( 'UIElementValueGenerator', () => {
                 let doc1;
 
                 beforeEach( async () => {
-                    doc1 = cp.addToSpec(
+                    doc1 = await cp.addToSpec(
                         spec,
                         [
                             'Feature: A',
@@ -650,7 +650,7 @@ describe( 'UIElementValueGenerator', () => {
                         { } as FileInfo
                     );
 
-                    await bsa.analyze( new SpecFilter( spec ).graph(), spec, errors );
+                    await bsa.analyze( new FileProblemMapper(), spec, new SpecFilter( spec ).graph() );
                 } );
 
                 it( 'first', async () => {
@@ -676,7 +676,7 @@ describe( 'UIElementValueGenerator', () => {
 
             it( 'min length', async () => {
 
-                let doc1 = cp.addToSpec(
+                let doc1 = await cp.addToSpec(
                     spec,
                     [
                         'Feature: A',
@@ -689,7 +689,7 @@ describe( 'UIElementValueGenerator', () => {
                     { } as FileInfo
                 );
 
-                await bsa.analyze( new SpecFilter( spec ).graph(), spec, errors );
+                await bsa.analyze( new FileProblemMapper(), spec, new SpecFilter( spec ).graph() );
 
                 let plans = new Map( [
                     [ 'A:foo', new UIETestPlan( DataTestCase.LENGTH_MIN, DTCAnalysisResult.VALID, [] ) ]
@@ -706,7 +706,7 @@ describe( 'UIElementValueGenerator', () => {
 
             it( 'max length', async () => {
 
-                let doc1 = cp.addToSpec(
+                let doc1 = await cp.addToSpec(
                     spec,
                     [
                         'Feature: A',
@@ -719,7 +719,7 @@ describe( 'UIElementValueGenerator', () => {
                     { } as FileInfo
                 );
 
-                await bsa.analyze( new SpecFilter( spec ).graph(), spec, errors );
+                await bsa.analyze( new FileProblemMapper(), spec, new SpecFilter( spec ).graph() );
 
                 let plans = new Map( [
                     [ 'A:foo', new UIETestPlan( DataTestCase.LENGTH_MAX, DTCAnalysisResult.VALID, [] ) ]
@@ -740,7 +740,7 @@ describe( 'UIElementValueGenerator', () => {
 
             it( 'min value', async () => {
 
-                let doc1 = cp.addToSpec(
+                let doc1 = await cp.addToSpec(
                     spec,
                     [
                         'Feature: A',
@@ -753,7 +753,7 @@ describe( 'UIElementValueGenerator', () => {
                     { } as FileInfo
                 );
 
-                await bsa.analyze( new SpecFilter( spec ).graph(), spec, errors );
+                await bsa.analyze( new FileProblemMapper(), spec, new SpecFilter( spec ).graph() );
 
                 let plans = new Map( [
                     [ 'A:foo', new UIETestPlan( DataTestCase.VALUE_MIN, DTCAnalysisResult.VALID, [] ) ]
@@ -770,7 +770,7 @@ describe( 'UIElementValueGenerator', () => {
 
             it( 'max value', async () => {
 
-                let doc1 = cp.addToSpec(
+                let doc1 = await cp.addToSpec(
                     spec,
                     [
                         'Feature: A',
@@ -783,7 +783,7 @@ describe( 'UIElementValueGenerator', () => {
                     { } as FileInfo
                 );
 
-                await bsa.analyze( new SpecFilter( spec ).graph(), spec, errors );
+                await bsa.analyze( new FileProblemMapper(), spec, new SpecFilter( spec ).graph() );
 
                 let plans = new Map( [
                     [ 'A:foo', new UIETestPlan( DataTestCase.VALUE_MAX, DTCAnalysisResult.VALID, [] ) ]

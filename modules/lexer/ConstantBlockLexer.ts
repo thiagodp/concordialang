@@ -1,6 +1,6 @@
-import { BlockLexer } from "./BlockLexer";
 import { ConstantBlock } from "../ast/ConstantBlock";
 import { NodeTypes } from "../req/NodeTypes";
+import { BlockLexer } from "./BlockLexer";
 
 /**
  * Detects a Contant Block.

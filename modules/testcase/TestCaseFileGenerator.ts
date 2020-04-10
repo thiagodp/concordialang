@@ -1,12 +1,12 @@
 import { Location } from "concordialang-types";
-
 import { Document } from "../ast/Document";
-import { LanguageContentLoader } from "../dict/LanguageContentLoader";
-import { KeywordDictionary } from "../dict/KeywordDictionary";
-import { EnglishKeywordDictionary } from "../dict/EnglishKeywordDictionary";
-import { Symbols } from "../req/Symbols";
+import { EnglishKeywordDictionary } from "../language/EnglishKeywordDictionary";
+import { KeywordDictionary } from "../language/KeywordDictionary";
+import { LanguageContentLoader } from "../language/LanguageContentLoader";
 import { NodeTypes } from "../req/NodeTypes";
+import { Symbols } from "../req/Symbols";
 import { upperFirst } from "../util/CaseConversor";
+
 
 /**
  * Generates files for Documents with Test Cases.

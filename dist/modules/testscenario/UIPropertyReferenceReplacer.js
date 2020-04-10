@@ -2,9 +2,10 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const path_1 = require("path");
 const ast_1 = require("../ast");
-const util_1 = require("../util");
 const RuntimeException_1 = require("../error/RuntimeException");
 const Symbols_1 = require("../req/Symbols");
+const util_1 = require("../util");
+const remove_duplicated_1 = require("../util/remove-duplicated");
 const value_formatter_1 = require("./value-formatter");
 /**
  * Replaces UIE property references.
@@ -34,7 +35,8 @@ class UIPropertyReferenceReplacer {
                     Symbols_1.Symbols.UI_ELEMENT_PREFIX + uipRef.uiElementName +
                     Symbols_1.Symbols.UI_PROPERTY_REF_SEPARATOR + uipRef.property + Symbols_1.Symbols.UI_ELEMENT_SUFFIX +
                     ' in ' + fileName + ' ' + locStr + '. Not supported yet.';
-                ctx.warnings.push(new RuntimeException_1.RuntimeException(msg));
+                const err = new RuntimeException_1.RuntimeException(msg);
+                ctx.warnings.push(err);
                 continue;
             }
             const uieName = uipRef.uiElementName;
@@ -57,13 +59,15 @@ class UIPropertyReferenceReplacer {
                 const msg = 'Could not retrieve a value from ' +
                     Symbols_1.Symbols.UI_ELEMENT_PREFIX + variable + Symbols_1.Symbols.UI_ELEMENT_SUFFIX +
                     ' in ' + fileName + ' ' + locStr + '. It will receive an empty value.';
-                ctx.warnings.push(new RuntimeException_1.RuntimeException(msg));
+                const err = new RuntimeException_1.RuntimeException(msg);
+                ctx.warnings.push(err);
                 value = '';
             }
             const formattedValue = value_formatter_1.formatValueToUseInASentence(value, insideStringValue);
             const refStr = Symbols_1.Symbols.UI_ELEMENT_PREFIX + uipRef.content + Symbols_1.Symbols.UI_ELEMENT_SUFFIX;
             newContent = newContent.replace(refStr, formattedValue);
         }
+        remove_duplicated_1.removeDuplicated(ctx.warnings, (a, b) => a.message == b.message);
         return newContent;
     }
 }

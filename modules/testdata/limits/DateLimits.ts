@@ -2,7 +2,7 @@ import { LocalDate } from 'js-joda';
 
 /**
  * Limits for date values.
- * 
+ *
  * @author Thiago Delgado Pinto
  */
 export abstract class DateLimits {

@@ -3,7 +3,7 @@ import { Lexer } from "./Lexer";
 
 /**
  * Lexer processor
- * 
+ *
  * @author Thiago Delgado Pinto
  */
 export class LexerProcessor implements DocumentProcessor {

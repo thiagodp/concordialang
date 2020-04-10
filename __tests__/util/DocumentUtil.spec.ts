@@ -1,4 +1,4 @@
-import { Feature, Document, UIElement } from "../../modules/ast";
+import { Document, Feature, UIElement } from "../../modules/ast";
 import { DocumentUtil } from "../../modules/util/DocumentUtil";
 
 describe( 'DocumentUtil', () => {

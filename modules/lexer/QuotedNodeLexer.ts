@@ -3,10 +3,10 @@ import { ValuedNode } from '../ast/Node';
 import { Expressions } from '../req/Expressions';
 import { LineChecker } from '../req/LineChecker';
 import { Symbols } from "../req/Symbols";
-import { LexicalException } from "./LexicalException";
-import { KeywordBasedLexer } from './KeywordBasedLexer';
-import { NodeLexer, LexicalAnalysisResult } from './NodeLexer';
 import { CommentHandler } from './CommentHandler';
+import { KeywordBasedLexer } from './KeywordBasedLexer';
+import { LexicalException } from "./LexicalException";
+import { LexicalAnalysisResult, NodeLexer } from './NodeLexer';
 
 /**
  * Detects a node in the format "keyword "value"".

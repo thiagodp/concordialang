@@ -1,13 +1,7 @@
 import * as enumUtil from 'enum-util';
-
-import {
-    Entities,
-    NLP,
-    NLPResult,
-    NLPTrainingDataConversor,
-    NLPTrainingData
-} from '../../modules/nlp';
 import { UIPropertyTypes } from '../../modules/ast';
+import { Entities, NLP, NLPResult, NLPTrainingData, NLPTrainingDataConversor } from '../../modules/nlp';
+
 
 describe( 'NLP', () => {
 

@@ -164,7 +164,7 @@ class PluginManager {
             this._cli.newLine(separationLine);
             let options = {
                 // detached: true, // main process can terminate
-                // stdio: 'ignore', // ignore stdio since detache is active
+                // stdio: 'ignore', // ignore stdio since detach is active
                 shell: true,
             };
             // Splits the command into pieces to pass to the process;
@@ -200,7 +200,7 @@ class PluginManager {
      * Returns an instance of a given class name.
      *
      * @param context Object used as context.
-     * @param className Class to be instantied.
+     * @param className Class to be instantiated.
      * @param args Constructor arguments.
      * @return An instance of the given class.
      */

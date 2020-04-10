@@ -1,5 +1,5 @@
-import { NLPTrainingDataConversor } from "../../modules/nlp/NLPTrainingDataConversor";
 import { NLPTrainingIntentExample } from '../../modules/nlp/NLPTrainingData';
+import { NLPTrainingDataConversor } from "../../modules/nlp/NLPTrainingDataConversor";
 
 describe( 'NLPTrainingDataConversor', () => {
 

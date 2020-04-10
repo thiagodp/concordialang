@@ -1,8 +1,8 @@
 import { RegexBlock } from "../ast/RegexBlock";
-import { SyntacticException } from "./SyntacticException";
+import { NodeIterator } from './NodeIterator';
 import { NodeParser } from "./NodeParser";
 import { ParsingContext } from "./ParsingContext";
-import { NodeIterator } from './NodeIterator';
+import { SyntacticException } from "./SyntacticException";
 
 /**
  * Regex block parser

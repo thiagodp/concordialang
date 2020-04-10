@@ -2,7 +2,7 @@ import * as childProcess from 'child_process';
 import { Plugin } from "concordialang-plugin";
 import * as inquirer from 'inquirer';
 import { join } from 'path';
-import { CLI } from '../app/CLI';
+import { CLI } from '../cli/CLI';
 import { FileReader } from '../util/file/FileReader';
 import { PluginData, PLUGIN_PREFIX } from "./PluginData";
 import { PluginDrawer } from "./PluginDrawer";
@@ -196,7 +196,7 @@ export class PluginManager {
 
         let options = {
             // detached: true, // main process can terminate
-            // stdio: 'ignore', // ignore stdio since detache is active
+            // stdio: 'ignore', // ignore stdio since detach is active
             shell: true, // allow parameters in the command
             // stdio: 'inherit', // <<< not working on windows
         };
@@ -243,7 +243,7 @@ export class PluginManager {
      * Returns an instance of a given class name.
      *
      * @param context Object used as context.
-     * @param className Class to be instantied.
+     * @param className Class to be instantiated.
      * @param args Constructor arguments.
      * @return An instance of the given class.
      */

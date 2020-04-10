@@ -1,9 +1,9 @@
 import * as cloneRegExp from 'clone-regexp';
 import { Location } from 'concordialang-types';
-
-import { Entities, NLPEntity, UI_PROPERTY_REF_REGEX } from "../nlp";
 import { UIPropertyReference } from '../ast/UIPropertyReference';
+import { Entities, NLPEntity, UI_PROPERTY_REF_REGEX } from "../nlp";
 import { Symbols } from '../req/Symbols';
+
 
 /**
  * Extracts references to UIProperties.

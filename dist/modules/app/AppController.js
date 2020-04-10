@@ -16,6 +16,14 @@ const path_1 = require("path");
 const semverDiff = require("semver-diff");
 const terminalLink = require("terminal-link");
 const updateNotifier = require("update-notifier");
+const CLI_1 = require("../cli/CLI");
+const CliHelp_1 = require("../cli/CliHelp");
+const GuidedConfig_1 = require("../cli/GuidedConfig");
+const LanguageDrawer_1 = require("../cli/LanguageDrawer");
+const OptionsHandler_1 = require("../cli/OptionsHandler");
+const UI_1 = require("../cli/UI");
+const CompilerFacade_1 = require("../compiler/CompilerFacade");
+const LanguageManager_1 = require("../language/LanguageManager");
 const PackageBasedPluginFinder_1 = require("../plugin/PackageBasedPluginFinder");
 const PluginController_1 = require("../plugin/PluginController");
 const PluginDrawer_1 = require("../plugin/PluginDrawer");
@@ -23,16 +31,12 @@ const PluginManager_1 = require("../plugin/PluginManager");
 const TestResultAnalyzer_1 = require("../testscript/TestResultAnalyzer");
 const file_1 = require("../util/file");
 const ATSGenController_1 = require("./ATSGenController");
-const CLI_1 = require("./CLI");
-const CliHelp_1 = require("./CliHelp");
-const CliScriptExecutionReporter_1 = require("./CliScriptExecutionReporter");
-const CompilerController_1 = require("./CompilerController");
-const GuidedConfig_1 = require("./GuidedConfig");
-const LanguageController_1 = require("./LanguageController");
-const OptionsHandler_1 = require("./OptionsHandler");
-const UI_1 = require("./UI");
+const SimpleAppUI_1 = require("./listeners/SimpleAppUI");
+const VerboseAppUI_1 = require("./listeners/VerboseAppUI");
 /**
  * Application controller
+ *
+ * TO-DO: Refactor!
  *
  * @author Thiago Delgado Pinto
  */
@@ -44,13 +48,18 @@ class AppController {
             const meowInstance = meow(cliHelp.content(), cliHelp.meowOptions());
             const optionsHandler = new OptionsHandler_1.OptionsHandler(appPath, processPath, cli, meowInstance);
             let options;
+            let appListener = new SimpleAppUI_1.SimpleAppUI(cli);
             // Load options
             try {
                 options = yield optionsHandler.load();
+                appListener.setDebugMode(options.debug);
             }
             catch (err) {
-                this.showException(err, options, cli);
+                appListener.showError(err);
                 return false; // exit
+            }
+            if (options.verbose) {
+                appListener = new VerboseAppUI_1.VerboseAppUI(cli, options.debug);
             }
             if (options.init) {
                 if (optionsHandler.wasLoaded()) {
@@ -67,7 +76,7 @@ class AppController {
                     yield optionsHandler.save();
                 }
                 catch (err) {
-                    this.showException(err, options, cli);
+                    appListener.showError(err);
                     // continue!
                 }
             }
@@ -130,7 +139,7 @@ class AppController {
                     yield pluginController.process(options, pluginManager, pluginDrawer);
                 }
                 catch (err) {
-                    this.showException(err, options, cli);
+                    appListener.showError(err);
                     return false;
                 }
                 return true;
@@ -145,7 +154,7 @@ class AppController {
                     plugin = yield pluginManager.load(pluginData);
                 }
                 catch (err) {
-                    this.showException(err, options, cli);
+                    appListener.showError(err);
                     return false;
                 }
                 if (!pluginData) { // needed?
@@ -159,30 +168,28 @@ class AppController {
                 // can continue
             }
             if (options.languageList) {
-                let langController = new LanguageController_1.LanguageController(cli, fileSearcher);
                 try {
-                    yield langController.process(options);
+                    yield this.listLanguages(options, cli, fileSearcher);
                 }
                 catch (err) {
-                    this.showException(err, options, cli);
+                    appListener.showError(err);
                     return false;
                 }
                 return true;
             }
             let hasErrors = false;
             let spec = null;
-            // let graph: Graph = null;
             if (options.compileSpecification) {
                 if (!options.generateTestCase) {
                     cli.newLine(cli.symbolInfo, 'Test Case generation disabled.');
                 }
-                const compilerController = new CompilerController_1.CompilerController(fs);
+                const compiler = new CompilerFacade_1.CompilerFacade(fs, appListener, appListener);
                 try {
-                    [spec,] = yield compilerController.compile(options, cli);
+                    [spec,] = yield compiler.compile(options);
                 }
                 catch (err) {
                     hasErrors = true;
-                    this.showException(err, options, cli);
+                    appListener.showError(err);
                 }
             }
             else {
@@ -231,14 +238,14 @@ class AppController {
                         }
                         catch (err) {
                             hasErrors = true;
-                            this.showException(err, options, cli);
+                            appListener.showError(err);
                         }
                         for (let file of files) {
                             cli.newLine(cli.symbolSuccess, 'Generated script', cli.colorHighlight(file));
                         }
                         for (let err of errors) {
                             // cli.newLine( cli.symbolError, err.message );
-                            this.showException(err, options, cli);
+                            appListener.showError(err);
                         }
                     }
                     else {
@@ -251,22 +258,18 @@ class AppController {
             }
             let executionResult = null;
             if (options.executeScript) { // Requires a plugin
-                let tseo = new concordialang_plugin_1.TestScriptExecutionOptions(options.dirScript, options.dirResult);
-                cli.newLine(cli.symbolInfo, 'Executing test scripts...');
-                const LINE_SIZE = 80;
-                const SEPARATION_LINE = '_'.repeat(LINE_SIZE);
-                cli.newLine(SEPARATION_LINE);
+                const tseo = new concordialang_plugin_1.TestScriptExecutionOptions(options.dirScript, options.dirResult);
+                appListener.testScriptExecutionStarted();
                 try {
                     executionResult = yield plugin.executeCode(tseo);
                 }
                 catch (err) {
                     hasErrors = true;
-                    this.showException(err, options, cli);
-                    cli.newLine(SEPARATION_LINE);
+                    appListener.testScriptExecutionError(err);
                 }
             }
             else {
-                cli.newLine(cli.symbolInfo, 'Script execution disabled.');
+                appListener.testScriptExecutionDisabled();
             }
             if (options.analyzeResult) { // Requires a plugin
                 let reportFile;
@@ -284,11 +287,11 @@ class AppController {
                 try {
                     let reportedResult = yield plugin.convertReportFile(reportFile);
                     (new TestResultAnalyzer_1.TestResultAnalyzer()).adjustResult(reportedResult, abstractTestScripts);
-                    (new CliScriptExecutionReporter_1.CliScriptExecutionReporter(cli)).scriptExecuted(reportedResult);
+                    appListener.testScriptExecutionFinished(reportedResult);
                 }
                 catch (err) {
                     hasErrors = true;
-                    this.showException(err, options, cli);
+                    appListener.showError(err);
                 }
             }
             else {
@@ -304,13 +307,13 @@ class AppController {
             return !hasErrors;
         });
     }
-    showException(err, options, cli) {
-        (!options ? true : options.debug)
-            ? cli.newLine(cli.symbolError, err.message, this.formattedStackOf(err))
-            : cli.newLine(cli.symbolError, err.message);
-    }
-    formattedStackOf(err) {
-        return "\n  DETAILS: " + err.stack.substring(err.stack.indexOf("\n"));
+    listLanguages(options, cli, fileSearcher) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const lm = new LanguageManager_1.LanguageManager(fileSearcher, options.languageDir);
+            const languages = yield lm.availableLanguages();
+            const ld = new LanguageDrawer_1.LanguageDrawer(cli);
+            ld.drawLanguages(languages);
+        });
     }
 }
 exports.AppController = AppController;

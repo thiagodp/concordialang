@@ -1,9 +1,9 @@
-import * as path from 'path';
 import { Location } from 'concordialang-types';
-
+import * as path from 'path';
 import { Database, DatabaseProperties, DatabaseProperty } from '../../modules/ast';
-import { NodeTypes } from '../../modules/req/NodeTypes';
 import { DatabaseJSDatabaseInterface } from '../../modules/db';
+import { NodeTypes } from '../../modules/req/NodeTypes';
+
 
 describe( 'DatabaseJSDatabaseInterface', () => {
 

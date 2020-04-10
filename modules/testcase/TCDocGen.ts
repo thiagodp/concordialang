@@ -1,8 +1,8 @@
-import { parse, resolve, relative, join, dirname, basename, normalize } from "path";
 import * as deepcopy from 'deepcopy';
-
-import { Document, TestCase, FileInfo, Language, Import } from "../ast";
+import { basename, dirname, join, normalize, parse, relative, resolve } from "path";
+import { Document, FileInfo, Import, Language, TestCase } from "../ast";
 import { NodeTypes } from "../req/NodeTypes";
+
 
 /**
  * Document (object) generator for Test Cases.
@@ -14,7 +14,7 @@ export class TCDocGen {
     /**
      * Constructor
      *
-     * @param _extensionTestCase Extension to use in the file. Fullfils Document's `fileInfo`.
+     * @param _extensionTestCase Extension to use in the file. It fulfils Document's `fileInfo`.
      */
     constructor(
         private readonly _extensionTestCase: string,
@@ -54,7 +54,7 @@ export class TCDocGen {
         // # Generate language
         newDoc.language = this.createLanguage( fromDoc, ++line );
 
-        // # Generate the nedded imports
+        // # Generate the needed imports
         newDoc.imports = this.createImports( fromDoc, ++line, outputDir );
         line += newDoc.imports.length;
 

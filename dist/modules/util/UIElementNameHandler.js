@@ -69,7 +69,7 @@ class UIElementNameHandler {
      *
      * @param featureName Feature name
      * @param uiElementName UI Element name
-     * @param surroundVariable Whether it should surroung the variable with its symbol (brackets).
+     * @param surroundVariable Whether it should surround the variable with its symbol (brackets).
      */
     makeVariableName(featureName, uiElementName, surroundVariable = false) {
         const variable = (TypeChecking_1.isDefined(featureName) ? featureName + Symbols_1.Symbols.FEATURE_TO_UI_ELEMENT_SEPARATOR : '') +

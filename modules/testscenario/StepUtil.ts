@@ -1,13 +1,13 @@
 import * as arrayMove from 'array-move';
 import * as deepcopy from 'deepcopy';
-
-import { Step } from '../ast/Step';
-import { NLPUtil, Entities } from '../nlp'
-import { NodeTypes } from "../req/NodeTypes";
-import { isDefined } from "../util/TypeChecking";
-import { KeywordDictionary } from "../dict/KeywordDictionary";
-import { convertCase } from "../util/CaseConversor";
 import { CaseType } from "../app/CaseType";
+import { Step } from '../ast/Step';
+import { KeywordDictionary } from "../language/KeywordDictionary";
+import { Entities, NLPUtil } from '../nlp';
+import { NodeTypes } from "../req/NodeTypes";
+import { convertCase } from "../util/CaseConversor";
+import { isDefined } from "../util/TypeChecking";
+
 
 
 export class StepUtil {

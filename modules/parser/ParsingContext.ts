@@ -1,17 +1,4 @@
-import {
-    Background,
-    ConstantBlock,
-    Database,
-    Document,
-    RegexBlock,
-    Scenario,
-    Table,
-    TestCase,
-    UIElement,
-    UIProperty,
-    Variant,
-    VariantBackground
- } from '../ast';
+import { Background, ConstantBlock, Database, Document, RegexBlock, Scenario, Table, TestCase, UIElement, UIProperty, Variant, VariantBackground } from '../ast';
 
 
 /**

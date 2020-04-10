@@ -1,9 +1,9 @@
-import { Constant, ListItem } from '../ast'
-import { SyntacticException } from './SyntacticException';
-import { ParsingContext } from './ParsingContext';
+import { Constant, ListItem } from '../ast';
 import { NodeTypes } from '../req/NodeTypes';
 import { ListItemNodeParser } from './ListItemNodeParser';
 import { NodeIterator } from './NodeIterator';
+import { ParsingContext } from './ParsingContext';
+import { SyntacticException } from './SyntacticException';
 
 /**
  * Constant parser.

@@ -1,7 +1,7 @@
 import Graph = require( 'graph.js/dist/graph.full.js' );
 import { EventEmitter } from "events";
-
 import { Document } from "../ast/Document";
+
 
 
 export enum GraphFilterEvent {

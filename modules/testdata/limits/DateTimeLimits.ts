@@ -2,7 +2,7 @@ import { LocalDateTime } from 'js-joda';
 
 /**
  * Limits for datetime values.
- * 
+ *
  * @author Thiago Delgado Pinto
  */
 export abstract class DateTimeLimits {

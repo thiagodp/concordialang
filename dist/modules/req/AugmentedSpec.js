@@ -1,12 +1,12 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const path_1 = require("path");
-const ast_1 = require("../ast");
 const CaseType_1 = require("../app/CaseType");
+const ast_1 = require("../ast");
 const DocumentUtil_1 = require("../util/DocumentUtil");
+const file_1 = require("../util/file");
 const TypeChecking_1 = require("../util/TypeChecking");
 const UIElementNameHandler_1 = require("../util/UIElementNameHandler");
-const file_1 = require("../util/file");
 class MappedContent {
     constructor() {
         this.feature = false;
@@ -39,7 +39,7 @@ class AugmentedSpec extends ast_1.Spec {
         this._uiElementVariableMap = new Map(); // *all* UI Elements
         this._databaseNameToInterfaceMap = new Map();
         this._uiLiteralCaseOption = CaseType_1.CaseType.CAMEL; // defined by setter
-        this._docToAcessibleUIElementsCache = new Map();
+        this._docToAccessibleUIElementsCache = new Map();
         this.databaseNames = (rebuildCache = false) => {
             return this.databases(rebuildCache).map(db => db.name);
         };
@@ -478,7 +478,7 @@ class AugmentedSpec extends ast_1.Spec {
      * @param includeGlobals Whether globals should be included
      */
     extractUIElementsFromDocumentAndImports(doc, includeGlobals = false) {
-        let elements = this._docToAcessibleUIElementsCache.get(doc) || null;
+        let elements = this._docToAccessibleUIElementsCache.get(doc) || null;
         if (TypeChecking_1.isDefined(elements)) {
             return elements;
         }

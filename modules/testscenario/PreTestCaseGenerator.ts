@@ -1,20 +1,19 @@
 import * as arrayDiff from 'arr-diff';
-import * as deepcopy from 'deepcopy';
-import { basename } from 'path';
-import * as enumUtil from 'enum-util';
 import { Location } from 'concordialang-types';
-
-import { Document, Step, EntityValueType, UIElement, UIPropertyReference, UIPropertyTypes } from '../ast';
-import { Entities, NLPEntity, NLPUtil } from '../nlp';
-import { LocatedException, RuntimeException, Warning } from '../error';
-import { SyntacticException } from '../parser/SyntacticException';
+import * as deepcopy from 'deepcopy';
+import * as enumUtil from 'enum-util';
+import { basename } from 'path';
 import { CaseType } from '../app/CaseType';
-import { AugmentedSpec } from '../req/AugmentedSpec';
-import { EnglishKeywordDictionary } from '../dict/EnglishKeywordDictionary';
-import { KeywordDictionary } from '../dict/KeywordDictionary';
-import { LanguageContent } from '../dict/LanguageContent';
-import { LanguageContentLoader } from '../dict/LanguageContentLoader';
+import { Document, EntityValueType, Step, UIElement, UIPropertyReference, UIPropertyTypes } from '../ast';
+import { LocatedException, RuntimeException, Warning } from '../error';
+import { EnglishKeywordDictionary } from '../language/EnglishKeywordDictionary';
+import { KeywordDictionary } from '../language/KeywordDictionary';
+import { LanguageContent } from '../language/LanguageContent';
+import { LanguageContentLoader } from '../language/LanguageContentLoader';
+import { Entities, NLPEntity, NLPUtil } from '../nlp';
 import { GivenWhenThenSentenceRecognizer } from '../nlp/GivenWhenThenSentenceRecognizer';
+import { SyntacticException } from '../parser/SyntacticException';
+import { AugmentedSpec } from '../req/AugmentedSpec';
 import { LineChecker } from '../req/LineChecker';
 import { NodeTypes } from '../req/NodeTypes';
 import { Symbols } from '../req/Symbols';
@@ -27,19 +26,11 @@ import { DataTestCaseAnalyzer, DTCAnalysisResult, DTCMap, UIEVariableToDTCMap } 
 import { Random } from '../testdata/random/Random';
 import { RandomString, RandomStringOptions } from '../testdata/random/RandomString';
 import { UIElementValueGenerator, ValueGenContext } from '../testdata/UIElementValueGenerator';
-import {
-    Actions,
-    convertCase, upperFirst,
-    ReferenceReplacer,
-    isDefined,
-    UIElementNameHandler,
-    UIElementPropertyExtractor,
-    UIPropertyReferenceExtractor,
-    TargetTypeUtil
-} from '../util';
-import { PreTestCase, CorrespondingOtherwiseSteps } from './PreTestCase';
-import { formatValueToUseInASentence } from './value-formatter';
+import { Actions, convertCase, isDefined, ReferenceReplacer, TargetTypeUtil, UIElementNameHandler, UIElementPropertyExtractor, UIPropertyReferenceExtractor, upperFirst } from '../util';
+import { CorrespondingOtherwiseSteps, PreTestCase } from './PreTestCase';
 import { UIPropertyReferenceReplacer } from './UIPropertyReferenceReplacer';
+import { formatValueToUseInASentence } from './value-formatter';
+
 
 
 export class GenContext {

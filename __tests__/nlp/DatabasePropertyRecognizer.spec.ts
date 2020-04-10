@@ -1,15 +1,10 @@
-import { resolve } from 'path';
 import * as fs from 'fs';
-
-import { DatabaseProperty } from '../../modules/ast';
-import { LanguageContentLoader, JsonLanguageContentLoader, EnglishKeywordDictionary } from '../../modules/dict';
-import {
-    DatabasePropertyRecognizer,
-    NLPTrainer,
-    NLP
-} from '../../modules/nlp';
-import { NodeTypes } from '../../modules/req/NodeTypes';
+import { resolve } from 'path';
 import { Options } from '../../modules/app/Options';
+import { DatabaseProperty } from '../../modules/ast';
+import { JsonLanguageContentLoader, LanguageContentLoader } from '../../modules/language';
+import { DatabasePropertyRecognizer, NLP, NLPTrainer } from '../../modules/nlp';
+import { NodeTypes } from '../../modules/req/NodeTypes';
 import { FSFileHandler } from '../../modules/util/file/FSFileHandler';
 
 describe( 'DatabasePropertyRecognizer', () => {

@@ -1,10 +1,4 @@
-import {
-    NLPTrainingEntity,
-    NLPTrainingIntent,
-    NLPTrainingMatch,
-    NLPTrainingData,
-    NLPTrainingIntentExample
-} from './NLPTrainingData';
+import { NLPTrainingData, NLPTrainingEntity, NLPTrainingIntent, NLPTrainingIntentExample, NLPTrainingMatch } from './NLPTrainingData';
 
 /**
  * Training data conversor.

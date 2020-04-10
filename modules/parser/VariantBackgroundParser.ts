@@ -1,8 +1,8 @@
 import { VariantBackground } from "../ast/VariantBackground";
-import { SyntacticException } from "./SyntacticException";
+import { NodeIterator } from './NodeIterator';
 import { NodeParser } from "./NodeParser";
 import { ParsingContext } from "./ParsingContext";
-import { NodeIterator } from './NodeIterator';
+import { SyntacticException } from "./SyntacticException";
 
 /**
  * Variant Background parser

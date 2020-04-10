@@ -1,5 +1,5 @@
-import { LocatedException } from '../error/LocatedException';
 import { Document } from '../ast/Document';
+import { LocatedException } from '../error/LocatedException';
 import { Warning } from '../error/Warning';
 import { isDefined } from '../util/TypeChecking';
 import { DatabasePropertyRecognizer } from './DatabasePropertyRecognizer';

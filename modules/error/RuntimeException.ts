@@ -6,5 +6,5 @@ import { LocatedException } from "./LocatedException";
  * @author Thiago Delgado Pinto
  */
 export class RuntimeException extends LocatedException {
-    name = 'RuntimeError'
+    name = 'RuntimeException'
 }

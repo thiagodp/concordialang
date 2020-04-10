@@ -1,28 +1,9 @@
-import {
-    Constant,
-    Database,
-    Document,
-    Node,
-    Table,
-    UIElement,
-    EntityValue,
-    EntityValueType,
-    UIProperty,
-    UIPropertyTypes,
-    DatabaseProperty,
-    DatabaseProperties
-} from '../ast';
-import { AugmentedSpec, IN_MEMORY_DATABASE_NAME } from '../req/AugmentedSpec';
-import { Entities } from '../nlp';
-import { Queryable, DatabaseInterface } from '../dbi';
+import { Constant, Database, DatabaseProperties, DatabaseProperty, Document, EntityValue, EntityValueType, Node, Table, UIElement, UIProperty, UIPropertyTypes } from '../ast';
+import { AlaSqlDatabaseInterface, DatabaseJSDatabaseInterface, DatabaseToAbstractDatabase, QueryParser, supportTablesInQueries } from '../db';
+import { DatabaseInterface, Queryable } from '../dbi';
 import { LocatedException, RuntimeException } from '../error';
-import {
-    DatabaseToAbstractDatabase,
-    supportTablesInQueries,
-    AlaSqlDatabaseInterface,
-    DatabaseJSDatabaseInterface,
-    QueryParser
-} from '../db';
+import { Entities } from '../nlp';
+import { AugmentedSpec, IN_MEMORY_DATABASE_NAME } from '../req/AugmentedSpec';
 import { NodeTypes } from '../req/NodeTypes';
 import { UIETestPlan } from '../testcase/UIETestPlan';
 import { QueryReferenceReplacer } from '../util/QueryReferenceReplacer';
@@ -405,7 +386,12 @@ export class UIElementValueGenerator {
 
                 if ( isDefined( msg ) ) {
                     const err = new RuntimeException( msg, owner.location );
-                    errors.push( err );
+                    // Errors may have duplicated messages. Comparisons should
+                    // be made after creating the error, since the exception
+                    // could change it (like LocationException does).
+                    if ( ! errors.find( e => e.message === err.message ) ) {
+                        errors.push( err );
+                    }
                     return null;
                 }
 

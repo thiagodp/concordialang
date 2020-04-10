@@ -1,6 +1,6 @@
+import { ReservedTags } from "../../modules/ast";
 import { TagLexer, TagSubLexer } from "../../modules/lexer/TagLexer";
 import { NodeTypes } from "../../modules/req/NodeTypes";
-import { ReservedTags } from "../../modules/ast";
 
 describe( 'TagLexer', () => {
 

@@ -2,9 +2,9 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const deepcopy = require("deepcopy");
 const TypeChecking_1 = require("../util/TypeChecking");
+const BaseTrainingExamples_1 = require("./BaseTrainingExamples");
 const NLPTrainingData_1 = require("./NLPTrainingData");
 const NLPTrainingDataConversor_1 = require("./NLPTrainingDataConversor");
-const BaseTrainingExamples_1 = require("./BaseTrainingExamples");
 /**
  * NLP trainer.
  *

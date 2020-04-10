@@ -1,9 +1,9 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const RegexParser_1 = require("./RegexParser");
 const ConstantParser_1 = require("./ConstantParser");
-const UIPropertyParser_1 = require("./UIPropertyParser");
 const DatabasePropertyParser_1 = require("./DatabasePropertyParser");
+const RegexParser_1 = require("./RegexParser");
+const UIPropertyParser_1 = require("./UIPropertyParser");
 /**
  * Parses a ListItem node and decide what node type it will be.
  *

@@ -10,10 +10,10 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const ast_1 = require("../ast");
-const AugmentedSpec_1 = require("../req/AugmentedSpec");
-const nlp_1 = require("../nlp");
-const error_1 = require("../error");
 const db_1 = require("../db");
+const error_1 = require("../error");
+const nlp_1 = require("../nlp");
+const AugmentedSpec_1 = require("../req/AugmentedSpec");
 const NodeTypes_1 = require("../req/NodeTypes");
 const QueryReferenceReplacer_1 = require("../util/QueryReferenceReplacer");
 const TypeChecking_1 = require("../util/TypeChecking");
@@ -328,7 +328,12 @@ class UIElementValueGenerator {
                     }
                     if (TypeChecking_1.isDefined(msg)) {
                         const err = new error_1.RuntimeException(msg, owner.location);
-                        errors.push(err);
+                        // Errors may have duplicated messages. Comparisons should
+                        // be made after creating the error, since the exception
+                        // could change it (like LocationException does).
+                        if (!errors.find(e => e.message === err.message)) {
+                            errors.push(err);
+                        }
                         return null;
                     }
                     return propertyValue.value;

@@ -1,5 +1,5 @@
-import { NodeTypes } from "../../modules/req/NodeTypes";
 import { RegexLexer } from "../../modules/lexer/RegexLexer";
+import { NodeTypes } from "../../modules/req/NodeTypes";
 
 describe( 'RegexLexer', () => {
 

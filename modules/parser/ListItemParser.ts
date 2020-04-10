@@ -1,12 +1,12 @@
 import { ListItem } from '../ast/ListItem';
-import { RegexParser } from './RegexParser';
 import { ConstantParser } from './ConstantParser';
+import { DatabasePropertyParser } from './DatabasePropertyParser';
+import { ListItemNodeParser } from './ListItemNodeParser';
+import { NodeIterator } from './NodeIterator';
 import { NodeParser } from './NodeParser';
 import { ParsingContext } from './ParsingContext';
-import { NodeIterator } from './NodeIterator';
-import { ListItemNodeParser } from './ListItemNodeParser';
+import { RegexParser } from './RegexParser';
 import { UIPropertyParser } from './UIPropertyParser';
-import { DatabasePropertyParser } from './DatabasePropertyParser';
 
 /**
  * Parses a ListItem node and decide what node type it will be.

@@ -1,16 +1,16 @@
 import { Document, FileInfo, Variant } from "../../modules/ast";
+import { FileProblemMapper } from "../../modules/error/FileProblemMapper";
 import { AugmentedSpec } from "../../modules/req/AugmentedSpec";
-import { LocatedException } from "../../modules/error/LocatedException";
-import { PreTestCaseGenerator, GenContext } from "../../modules/testscenario/PreTestCaseGenerator";
-import { SimpleCompiler } from "../../modules/util/SimpleCompiler";
+import { IndexOfEachStrategy, SingleRandomOfEachStrategy } from "../../modules/selection/CombinationStrategy";
 import { SpecFilter } from "../../modules/selection/SpecFilter";
-import { BatchSpecificationAnalyzer } from "../../modules/semantic/BatchSpecificationAnalyzer";
+import { BatchSpecificationAnalyzer } from "../../modules/semantic2/BatchSpecificationAnalyzer";
+import { JustOneInvalidMix, OnlyValidMix } from "../../modules/testcase/DataTestCaseMix";
 import { TestPlanner } from "../../modules/testcase/TestPlanner";
-import { OnlyValidMix, JustOneInvalidMix } from "../../modules/testcase/DataTestCaseMix";
-import { SingleRandomOfEachStrategy, IndexOfEachStrategy } from "../../modules/selection/CombinationStrategy";
-import { RandomString } from "../../modules/testdata/random/RandomString";
-import { Random } from "../../modules/testdata/random/Random";
 import { LongLimits } from "../../modules/testdata/limits/LongLimits";
+import { Random } from "../../modules/testdata/random/Random";
+import { RandomString } from "../../modules/testdata/random/RandomString";
+import { GenContext, PreTestCaseGenerator } from "../../modules/testscenario/PreTestCaseGenerator";
+import { SimpleCompiler } from "../SimpleCompiler";
 
 describe( 'PreTestCaseGenerator', () => {
 
@@ -42,7 +42,7 @@ describe( 'PreTestCaseGenerator', () => {
 
         let spec = new AugmentedSpec( '.' );
 
-        let doc1: Document = cp.addToSpec( spec,
+        let doc1: Document = await cp.addToSpec( spec,
             [
                 '#language:pt',
                 'Feature: Feature 1',
@@ -59,11 +59,12 @@ describe( 'PreTestCaseGenerator', () => {
         );
 
         const specFilter = new SpecFilter( spec );
-        const batchSpecAnalyzer = new BatchSpecificationAnalyzer();
-        let errors: LocatedException[] = [],
-        warnings: LocatedException[] = [];
+        const analyzer = new BatchSpecificationAnalyzer();
 
-        await batchSpecAnalyzer.analyze( specFilter.graph(), spec, errors );
+        const problems = new FileProblemMapper();
+        await analyzer.analyze( problems, spec, specFilter.graph() );
+        const errors = problems.getAllErrors();
+        const warnings = [];
 
         // expect( doc1.fileErrors ).toEqual( [] );
         // expect( doc2.fileErrors ).toEqual( [] );
@@ -98,7 +99,7 @@ describe( 'PreTestCaseGenerator', () => {
 
         let spec = new AugmentedSpec( '.' );
 
-        let doc1: Document = cp.addToSpec( spec,
+        let doc1: Document = await cp.addToSpec( spec,
             [
                 '#language:pt',
                 'Feature: Feature 1',
@@ -116,11 +117,12 @@ describe( 'PreTestCaseGenerator', () => {
         );
 
         const specFilter = new SpecFilter( spec );
-        const batchSpecAnalyzer = new BatchSpecificationAnalyzer();
-        let errors: LocatedException[] = [],
-        warnings: LocatedException[] = [];
+        const analyzer = new BatchSpecificationAnalyzer();
 
-        await batchSpecAnalyzer.analyze( specFilter.graph(), spec, errors );
+        const problems = new FileProblemMapper();
+        await analyzer.analyze( problems, spec, specFilter.graph() );
+        const errors = problems.getAllErrors();
+        const warnings = [];
 
         // expect( doc1.fileErrors ).toEqual( [] );
         // expect( doc2.fileErrors ).toEqual( [] );
@@ -157,7 +159,7 @@ describe( 'PreTestCaseGenerator', () => {
 
         let spec = new AugmentedSpec( '.' );
 
-        let doc1: Document = cp.addToSpec( spec,
+        let doc1: Document = await cp.addToSpec( spec,
             [
                 '#language:pt',
                 'Feature: Feature 1',
@@ -178,11 +180,12 @@ describe( 'PreTestCaseGenerator', () => {
         );
 
         const specFilter = new SpecFilter( spec );
-        const batchSpecAnalyzer = new BatchSpecificationAnalyzer();
-        let errors: LocatedException[] = [],
-        warnings: LocatedException[] = [];
+        const analyzer = new BatchSpecificationAnalyzer();
 
-        await batchSpecAnalyzer.analyze( specFilter.graph(), spec, errors );
+        const problems = new FileProblemMapper();
+        await analyzer.analyze( problems, spec, specFilter.graph() );
+        const errors = problems.getAllErrors();
+        const warnings = [];
 
         // expect( doc1.fileErrors ).toEqual( [] );
         // expect( doc2.fileErrors ).toEqual( [] );
@@ -218,7 +221,7 @@ describe( 'PreTestCaseGenerator', () => {
 
         let spec = new AugmentedSpec( '.' );
 
-        let doc1: Document = cp.addToSpec( spec,
+        let doc1: Document = await cp.addToSpec( spec,
             [
                 '#language:pt',
                 'Feature: Feature 1',
@@ -233,11 +236,12 @@ describe( 'PreTestCaseGenerator', () => {
         );
 
         const specFilter = new SpecFilter( spec );
-        const batchSpecAnalyzer = new BatchSpecificationAnalyzer();
-        let errors: LocatedException[] = [],
-        warnings: LocatedException[] = [];
+        const analyzer = new BatchSpecificationAnalyzer();
 
-        await batchSpecAnalyzer.analyze( specFilter.graph(), spec, errors );
+        const problems = new FileProblemMapper();
+        await analyzer.analyze( problems, spec, specFilter.graph() );
+        const errors = problems.getAllErrors();
+        const warnings = [];
 
         // expect( doc1.fileErrors ).toEqual( [] );
         // expect( doc2.fileErrors ).toEqual( [] );
@@ -280,7 +284,7 @@ describe( 'PreTestCaseGenerator', () => {
 
         let spec = new AugmentedSpec( '.' );
 
-        let doc1: Document = cp.addToSpec( spec,
+        let doc1: Document = await cp.addToSpec( spec,
             [
                 '#language:pt',
                 'Feature: Feature 1',
@@ -297,11 +301,12 @@ describe( 'PreTestCaseGenerator', () => {
         );
 
         const specFilter = new SpecFilter( spec );
-        const batchSpecAnalyzer = new BatchSpecificationAnalyzer();
-        let errors: LocatedException[] = [],
-        warnings: LocatedException[] = [];
+        const analyzer = new BatchSpecificationAnalyzer();
 
-        await batchSpecAnalyzer.analyze( specFilter.graph(), spec, errors );
+        const problems = new FileProblemMapper();
+        await analyzer.analyze( problems, spec, specFilter.graph() );
+        const errors = problems.getAllErrors();
+        const warnings = [];
 
         // expect( doc1.fileErrors ).toEqual( [] );
         // expect( doc2.fileErrors ).toEqual( [] );
@@ -343,7 +348,7 @@ describe( 'PreTestCaseGenerator', () => {
 
         let spec = new AugmentedSpec( '.' );
 
-        let doc1: Document = cp.addToSpec( spec,
+        let doc1: Document = await cp.addToSpec( spec,
             [
                 '#language:pt',
                 'Feature: Feature 1',
@@ -358,11 +363,12 @@ describe( 'PreTestCaseGenerator', () => {
         );
 
         const specFilter = new SpecFilter( spec );
-        const batchSpecAnalyzer = new BatchSpecificationAnalyzer();
-        let errors: LocatedException[] = [],
-        warnings: LocatedException[] = [];
+        const analyzer = new BatchSpecificationAnalyzer();
 
-        await batchSpecAnalyzer.analyze( specFilter.graph(), spec, errors );
+        const problems = new FileProblemMapper();
+        await analyzer.analyze( problems, spec, specFilter.graph() );
+        const errors = problems.getAllErrors();
+        const warnings = [];
 
         // expect( doc1.fileErrors ).toEqual( [] );
         // expect( doc2.fileErrors ).toEqual( [] );
@@ -409,7 +415,7 @@ describe( 'PreTestCaseGenerator', () => {
 
         let spec = new AugmentedSpec( '.' );
 
-        let doc1: Document = cp.addToSpec( spec,
+        let doc1: Document = await cp.addToSpec( spec,
             [
                 '#language:pt',
                 'Feature: Feature 1',
@@ -426,11 +432,12 @@ describe( 'PreTestCaseGenerator', () => {
         );
 
         const specFilter = new SpecFilter( spec );
-        const batchSpecAnalyzer = new BatchSpecificationAnalyzer();
-        let errors: LocatedException[] = [],
-        warnings: LocatedException[] = [];
+        const analyzer = new BatchSpecificationAnalyzer();
 
-        await batchSpecAnalyzer.analyze( specFilter.graph(), spec, errors );
+        const problems = new FileProblemMapper();
+        await analyzer.analyze( problems, spec, specFilter.graph() );
+        const errors = problems.getAllErrors();
+        const warnings = [];
 
         // expect( doc1.fileErrors ).toEqual( [] );
         // expect( doc2.fileErrors ).toEqual( [] );
@@ -477,7 +484,7 @@ describe( 'PreTestCaseGenerator', () => {
 
         let spec = new AugmentedSpec( '.' );
 
-        let doc1: Document = cp.addToSpec( spec,
+        let doc1: Document = await cp.addToSpec( spec,
             [
                 '#language:pt',
                 'Feature: Feature 1',
@@ -494,11 +501,12 @@ describe( 'PreTestCaseGenerator', () => {
         );
 
         const specFilter = new SpecFilter( spec );
-        const batchSpecAnalyzer = new BatchSpecificationAnalyzer();
-        let errors: LocatedException[] = [],
-        warnings: LocatedException[] = [];
+        const analyzer = new BatchSpecificationAnalyzer();
 
-        await batchSpecAnalyzer.analyze( specFilter.graph(), spec, errors );
+        const problems = new FileProblemMapper();
+        await analyzer.analyze( problems, spec, specFilter.graph() );
+        const errors = problems.getAllErrors();
+        const warnings = [];
 
         // expect( doc1.fileErrors ).toEqual( [] );
         // expect( doc2.fileErrors ).toEqual( [] );

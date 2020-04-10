@@ -1,5 +1,5 @@
-import { NodeTypes } from '../../modules/req/NodeTypes';
 import { DatabaseLexer } from '../../modules/lexer/DatabaseLexer';
+import { NodeTypes } from '../../modules/req/NodeTypes';
 
 describe( 'DatabaseLexer', () => {
 

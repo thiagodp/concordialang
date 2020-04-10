@@ -2,8 +2,8 @@ import dbjs = require( 'database-js' );
 
 import { Database, Table } from '../ast';
 import { DatabaseInterface } from '../dbi/DatabaseInterface';
-import { isPathBasedDatabaseType } from './DatabaseTypes';
 import { DatabaseToAbstractDatabase } from './DatabaseToAbstractDatabase';
+import { isPathBasedDatabaseType } from './DatabaseTypes';
 
 /**
  * Handles databases using DatabaseJS.

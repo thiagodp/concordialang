@@ -1,4 +1,4 @@
-import { Node, NamedNode } from './Node';
+import { NamedNode, Node } from './Node';
 
 /**
  * Table node.

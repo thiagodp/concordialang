@@ -3,7 +3,7 @@ import { Step } from './Step';
 
 /**
  * Background node.
- * 
+ *
  * @author Thiago Delgado Pinto
  */
 export interface Background extends Node {

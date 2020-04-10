@@ -2,7 +2,7 @@ import { ValuedNode } from './Node';
 
 /**
  * Import node.
- * 
+ *
  * @author Thiago Delgado Pinto
  * @see /doc/langspec/asl-en.md
  */

@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const MinMaxChecker_1 = require("../util/MinMaxChecker");
 const DoubleLimits_1 = require("../limits/DoubleLimits");
+const MinMaxChecker_1 = require("../util/MinMaxChecker");
 /**
  * Double generator.
  *

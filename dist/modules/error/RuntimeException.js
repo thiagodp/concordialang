@@ -9,7 +9,7 @@ const LocatedException_1 = require("./LocatedException");
 class RuntimeException extends LocatedException_1.LocatedException {
     constructor() {
         super(...arguments);
-        this.name = 'RuntimeError';
+        this.name = 'RuntimeException';
     }
 }
 exports.RuntimeException = RuntimeException;

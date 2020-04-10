@@ -1,10 +1,10 @@
 import { Node } from '../ast/Node';
 import { Expressions } from '../req/Expressions';
-import { LexicalException } from './LexicalException';
 import { LineChecker } from '../req/LineChecker';
 import { Symbols } from '../req/Symbols';
 import { CommentHandler } from './CommentHandler';
 import { KeywordBasedLexer } from './KeywordBasedLexer';
+import { LexicalException } from './LexicalException';
 import { LexicalAnalysisResult, NodeLexer } from './NodeLexer';
 
 /**

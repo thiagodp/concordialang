@@ -1,10 +1,10 @@
 import * as alasql from 'alasql';
-
-import { DatabaseInterface } from "../dbi";
 import { Database, Table } from '../ast';
-import { SqlHelper } from './SqlHelper';
+import { DatabaseInterface } from "../dbi";
 import { AlaSqlTableCreator } from './AlaSqlTableCreator';
 import { AlaSqlDatabase } from './AlaSqlTypes';
+import { SqlHelper } from './SqlHelper';
+
 
 
 /**

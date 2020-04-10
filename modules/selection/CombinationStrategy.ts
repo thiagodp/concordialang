@@ -1,7 +1,7 @@
-import { Random } from '../testdata/random/Random';
 import * as cartesian from 'cartesian';
 import * as oneWise from 'one-wise';
-import * as suffleObjArrays from 'shuffle-obj-arrays';
+import * as shuffleObjArrays from 'shuffle-obj-arrays';
+import { Random } from '../testdata/random/Random';
 import { RandomLong } from '../testdata/random/RandomLong';
 
 /**
@@ -23,7 +23,7 @@ export interface CombinationStrategy {
 
 
 /**
- * Performs a cartezian product of the elements.
+ * Performs a cartesian product of the elements.
  *
  * @author Thiago Delgado Pinto
  */
@@ -75,7 +75,7 @@ export class ShuffledOneWiseStrategy implements CombinationStrategy {
     combine( map: object ): object[] {
         const rng = () => this._random.generate();
         const options = { copy: true, rng: rng };
-        return oneWise( suffleObjArrays( map, options ), rng );
+        return oneWise( shuffleObjArrays( map, options ), rng );
     }
 
 }

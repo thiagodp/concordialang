@@ -1,7 +1,7 @@
 import { Location } from "concordialang-types";
-
-import { UIPropertyTypes } from "./UIPropertyTypes";
 import { ContentNode } from "./Node";
+import { UIPropertyTypes } from "./UIPropertyTypes";
+
 
 export class UIPropertyReference implements ContentNode {
 

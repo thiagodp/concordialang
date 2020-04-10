@@ -1,11 +1,4 @@
-import {
-    AfterAll,
-    AfterEachScenario,
-    AfterFeature,
-    BeforeAll,
-    BeforeEachScenario,
-    BeforeFeature
-} from '../ast';
+import { AfterAll, AfterEachScenario, AfterFeature, BeforeAll, BeforeEachScenario, BeforeFeature } from '../ast';
 import { NodeTypes } from '../req/NodeTypes';
 import { BlockLexer } from './BlockLexer';
 

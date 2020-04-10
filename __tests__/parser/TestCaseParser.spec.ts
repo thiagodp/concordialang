@@ -1,8 +1,8 @@
-import { Node, Feature, TestCase } from '../../modules/ast';
+import { Feature, Node, TestCase } from '../../modules/ast';
 import { NodeIterator } from '../../modules/parser/NodeIterator';
 import { ParsingContext } from '../../modules/parser/ParsingContext';
-import { NodeTypes } from '../../modules/req/NodeTypes';
 import { TestCaseParser } from "../../modules/parser/TestCaseParser";
+import { NodeTypes } from '../../modules/req/NodeTypes';
 
 describe( 'TestCaseParser', () => {
 

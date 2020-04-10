@@ -1,9 +1,9 @@
 import { LocalTime } from "js-joda";
-
-import { TimeGenerator } from "../../../modules/testdata/raw/TimeGenerator";
-import { RandomLong } from "../../../modules/testdata/random/RandomLong";
 import { Random } from "../../../modules/testdata/random/Random";
+import { RandomLong } from "../../../modules/testdata/random/RandomLong";
 import { RandomTime } from "../../../modules/testdata/random/RandomTime";
+import { TimeGenerator } from "../../../modules/testdata/raw/TimeGenerator";
+
 
 describe( 'TimeGenerator', () => {
 

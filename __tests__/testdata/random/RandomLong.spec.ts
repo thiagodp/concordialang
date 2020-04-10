@@ -1,5 +1,5 @@
-import { RandomLong } from '../../../modules/testdata/random/RandomLong';
 import { Random } from '../../../modules/testdata/random/Random';
+import { RandomLong } from '../../../modules/testdata/random/RandomLong';
 
 describe( 'RandomLong', () => {
 

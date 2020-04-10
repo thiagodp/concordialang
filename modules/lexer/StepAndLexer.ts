@@ -1,6 +1,6 @@
-import { StartingKeywordLexer } from './StartingKeywordLexer';
 import { StepAnd } from "../ast/Step";
 import { NodeTypes } from "../req/NodeTypes";
+import { StartingKeywordLexer } from './StartingKeywordLexer';
 
 /**
  * Detects an And node.

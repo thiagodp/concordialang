@@ -11,9 +11,9 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const deepcopy = require("deepcopy");
 const ast_1 = require("../ast");
+const RuntimeException_1 = require("../error/RuntimeException");
 const nlp_1 = require("../nlp");
 const NodeTypes_1 = require("../req/NodeTypes");
-const RuntimeException_1 = require("../error/RuntimeException");
 const DataTestCaseMix_1 = require("../testcase/DataTestCaseMix");
 const TestPlanner_1 = require("../testcase/TestPlanner");
 const Random_1 = require("../testdata/random/Random");

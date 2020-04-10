@@ -1,8 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+const Warning_1 = require("../error/Warning");
 const Expressions_1 = require("../req/Expressions");
 const LineChecker_1 = require("../req/LineChecker");
-const Warning_1 = require("../error/Warning");
 const CommentHandler_1 = require("./CommentHandler");
 /**
  * Detects a node in the format "keyword anything".
@@ -44,9 +44,9 @@ class StartingKeywordLexer {
         if (!result) {
             return null;
         }
-        const commmentHandler = new CommentHandler_1.CommentHandler();
-        let value = commmentHandler.removeComment(result[1]);
-        let content = commmentHandler.removeComment(line);
+        const commentHandler = new CommentHandler_1.CommentHandler();
+        let value = commentHandler.removeComment(result[1]);
+        let content = commentHandler.removeComment(line);
         let pos = this._lineChecker.countLeftSpacesAndTabs(line);
         let node = {
             nodeType: this._nodeType,

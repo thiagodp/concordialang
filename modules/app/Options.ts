@@ -1,9 +1,9 @@
 import * as enumUtil from 'enum-util';
 import { resolve } from 'path';
-
 import { isDefined, isNumber, isString } from '../util/TypeChecking';
 import { CaseType } from './CaseType';
 import { CombinationOptions, Defaults, VariantSelectionOptions } from './Defaults';
+
 
 /**
  * Application options
@@ -252,7 +252,7 @@ export class Options {
                 && ! this.wantToGenerateScripts
                 && ! this.wantToExecuteScripts
                 && ! this.wantToReadResults )
-                // or want to do somethng with a plugin but its name is not defined
+                // or want to do something with a plugin but its name is not defined
                 ||
                 ( ! this.pluginName &&
                     ( this.wantToGenerateScripts

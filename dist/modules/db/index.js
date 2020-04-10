@@ -6,6 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 __export(require("./AlaSqlDatabaseInterface"));
 __export(require("./AlaSqlTableCreator"));
 __export(require("./DatabaseConnectionChecker"));
+__export(require("./DatabaseConnectionChecker2"));
 __export(require("./DatabaseJSDatabaseInterface"));
 __export(require("./DatabaseToAbstractDatabase"));
 __export(require("./DatabaseTypes"));

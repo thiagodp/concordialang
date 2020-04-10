@@ -1,4 +1,4 @@
-import { Node, Feature, Tag, Import } from '../../modules/ast';
+import { Feature, Import, Node, Tag } from '../../modules/ast';
 import { NodeIterator } from '../../modules/parser/NodeIterator';
 import { TagCollector } from '../../modules/parser/TagCollector';
 import { NodeTypes } from "../../modules/req/NodeTypes";

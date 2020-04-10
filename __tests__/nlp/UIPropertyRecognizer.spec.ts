@@ -2,7 +2,7 @@ import * as fs from 'fs';
 import { resolve } from 'path';
 import { Options } from '../../modules/app/Options';
 import { UIProperty } from '../../modules/ast/UIProperty';
-import { JsonLanguageContentLoader, LanguageContentLoader } from '../../modules/dict';
+import { JsonLanguageContentLoader, LanguageContentLoader } from '../../modules/language';
 import { NLP, NLPTrainer, UIPropertyRecognizer } from '../../modules/nlp';
 import { NodeTypes } from '../../modules/req/NodeTypes';
 import { FSFileHandler } from '../../modules/util/file/FSFileHandler';

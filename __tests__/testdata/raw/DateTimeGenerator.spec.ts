@@ -1,9 +1,9 @@
 import { LocalDateTime } from "js-joda";
-
-import { DateTimeGenerator } from "../../../modules/testdata/raw/DateTimeGenerator";
-import { RandomLong } from "../../../modules/testdata/random/RandomLong";
 import { Random } from "../../../modules/testdata/random/Random";
 import { RandomDateTime } from "../../../modules/testdata/random/RandomDateTime";
+import { RandomLong } from "../../../modules/testdata/random/RandomLong";
+import { DateTimeGenerator } from "../../../modules/testdata/raw/DateTimeGenerator";
+
 
 describe( 'DateTimeGenerator', () => {
 

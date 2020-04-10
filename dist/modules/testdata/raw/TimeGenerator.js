@@ -1,8 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const TimeLimits_1 = require("../limits/TimeLimits");
-const TypeChecking_1 = require("../../util/TypeChecking");
 const js_joda_1 = require("js-joda");
+const TypeChecking_1 = require("../../util/TypeChecking");
+const TimeLimits_1 = require("../limits/TimeLimits");
 class TimeGenerator {
     /**
      * Constructor.

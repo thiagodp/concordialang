@@ -1,12 +1,12 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const Random_1 = require("../testdata/random/Random");
 const cartesian = require("cartesian");
 const oneWise = require("one-wise");
-const suffleObjArrays = require("shuffle-obj-arrays");
+const shuffleObjArrays = require("shuffle-obj-arrays");
+const Random_1 = require("../testdata/random/Random");
 const RandomLong_1 = require("../testdata/random/RandomLong");
 /**
- * Performs a cartezian product of the elements.
+ * Performs a cartesian product of the elements.
  *
  * @author Thiago Delgado Pinto
  */
@@ -46,7 +46,7 @@ class ShuffledOneWiseStrategy {
     combine(map) {
         const rng = () => this._random.generate();
         const options = { copy: true, rng: rng };
-        return oneWise(suffleObjArrays(map, options), rng);
+        return oneWise(shuffleObjArrays(map, options), rng);
     }
 }
 exports.ShuffledOneWiseStrategy = ShuffledOneWiseStrategy;

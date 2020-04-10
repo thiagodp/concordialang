@@ -1,5 +1,5 @@
-import { NodeTypes } from '../../modules/req/NodeTypes';
 import { LanguageLexer } from "../../modules/lexer/LanguageLexer";
+import { NodeTypes } from '../../modules/req/NodeTypes';
 
 describe( 'LanguageLexer', () => {
 

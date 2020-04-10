@@ -69,7 +69,7 @@ class TestPlanner {
         //         for ( let obj of objects ) {
         //             let validPlans = obj[ uieVar ];
         //             // console.log( 'Plans of', uieVar, ':', validPlans );
-        //             // Chooses only one, ramdomly
+        //             // Chooses only one, randomly
         //             const max = validPlans.length;
         //             if ( max > 0 ) {
         //                 if ( 1 === max ) {
@@ -88,7 +88,7 @@ class TestPlanner {
             let combinations = this.combinationStrategy.combine(obj);
             // console.log( 'combinations ', combinations, 'by', this.combinationStrategy.constructor.name );
             // Each combination now is a map uieName => UIEPlan
-            // Thet will be transformed in a TestPlan
+            // It will be transformed in a TestPlan
             for (let combObj of combinations) {
                 let plan = new TestPlan_1.TestPlan();
                 plan.dataTestCases = new Map(objectToArray(combObj));

@@ -1,16 +1,17 @@
 import * as fs from 'fs';
 import { resolve } from 'path';
 import { Options } from '../../modules/app/Options';
-import { SingleDocumentProcessor } from '../../modules/app/SingleDocumentProcessor';
+import { SingleFileCompiler } from '../../modules/compiler/SingleFileCompiler';
 import { Document } from '../../modules/ast/Document';
-import { JsonLanguageContentLoader, LanguageContentLoader, EnglishKeywordDictionary } from '../../modules/dict';
+import { JsonLanguageContentLoader, LanguageContentLoader } from '../../modules/language';
 import { Lexer } from '../../modules/lexer/Lexer';
 import { NLPBasedSentenceRecognizer } from '../../modules/nlp/NLPBasedSentenceRecognizer';
 import { NLPTrainer } from '../../modules/nlp/NLPTrainer';
 import { Parser } from '../../modules/parser/Parser';
 import { FSFileHandler } from '../../modules/util/file/FSFileHandler';
+import { ProblemMapper, FileProblemMapper } from '../../modules/error';
 
-describe( 'SingleDocumentProcessor', () => {
+describe( 'SingleFileCompiler', () => {
 
     const LANGUAGE = 'pt';
 
@@ -19,21 +20,25 @@ describe( 'SingleDocumentProcessor', () => {
     const langLoader: LanguageContentLoader =
         new JsonLanguageContentLoader( options.languageDir, {}, fileHandler, fileHandler );
 
-    let lexer: Lexer = new Lexer( LANGUAGE, langLoader );
+    const lexer: Lexer = new Lexer( LANGUAGE, langLoader );
 
-    let parser = new Parser();
+    const parser = new Parser();
 
-    let nlpTrainer = new NLPTrainer( langLoader );
-    let nlpRec: NLPBasedSentenceRecognizer = new NLPBasedSentenceRecognizer( nlpTrainer );
+    const nlpTrainer = new NLPTrainer( langLoader );
+    const nlpRec: NLPBasedSentenceRecognizer = new NLPBasedSentenceRecognizer( nlpTrainer );
 
-    let singleDocProcessor: SingleDocumentProcessor = new SingleDocumentProcessor();
+    const singleDocProcessor: SingleFileCompiler = new SingleFileCompiler(
+        lexer, parser, nlpRec, LANGUAGE
+    );
 
-    let analyze = ( doc, lexer ) => {
-        singleDocProcessor.analyzeNodes( doc, lexer, parser, nlpRec, LANGUAGE );
+    const analyze = ( doc ): Error[] => {
+        const problems = new FileProblemMapper();
+        singleDocProcessor.analyzeNodes( problems, doc );
+        return problems.getAllErrors();
     };
 
 
-    it( 'is able to recognize a defined database', () => {
+    it( 'recognizes a database', () => {
         [
             'Banco de dados: acme',
             '- tipo é "mysql"',
@@ -43,8 +48,8 @@ describe( 'SingleDocumentProcessor', () => {
         ].forEach( ( val, index ) => lexer.addNodeFromLine( val, index + 1 ) );
         let doc: Document = {};
 
-        analyze( doc, lexer );
-        expect( doc.fileErrors ).toHaveLength( 0 );
+        const errors = analyze( doc );
+        expect( errors ).toHaveLength( 0 );
         expect( doc.databases ).toHaveLength( 1 );
     } );
 

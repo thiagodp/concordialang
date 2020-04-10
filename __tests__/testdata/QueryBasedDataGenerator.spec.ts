@@ -1,10 +1,10 @@
+import { QueryCache } from "../../modules/db/QueryCache";
 import { Queryable } from "../../modules/dbi";
 import { QueryBasedDataGenerator } from "../../modules/testdata/QueryBasedDataGenerator";
-import { RandomLong } from "../../modules/testdata/random/RandomLong";
 import { Random } from "../../modules/testdata/random/Random";
-import { StringGenerator } from "../../modules/testdata/raw/StringGenerator";
+import { RandomLong } from "../../modules/testdata/random/RandomLong";
 import { RandomString } from "../../modules/testdata/random/RandomString";
-import { QueryCache } from "../../modules/db/QueryCache";
+import { StringGenerator } from "../../modules/testdata/raw/StringGenerator";
 
 describe( 'QueryBasedDataGenerator', () => {
 

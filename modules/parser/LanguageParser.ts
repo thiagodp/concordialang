@@ -1,8 +1,8 @@
 import { Language } from '../ast/Language';
-import { SyntacticException } from './SyntacticException';
 import { NodeIterator } from './NodeIterator';
 import { NodeParser } from './NodeParser';
 import { ParsingContext } from './ParsingContext';
+import { SyntacticException } from './SyntacticException';
 
 /**
  * Language parser

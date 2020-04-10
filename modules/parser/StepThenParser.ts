@@ -1,9 +1,9 @@
 import { StepThen } from '../ast/Step';
 import { NodeTypes } from '../req/NodeTypes';
-import { SyntacticException } from './SyntacticException';
 import { NodeIterator } from './NodeIterator';
 import { NodeParser } from './NodeParser';
 import { ParsingContext } from "./ParsingContext";
+import { SyntacticException } from './SyntacticException';
 
 /**
  * Step Then node parser.

@@ -1,9 +1,9 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const RandomLong_1 = require("./RandomLong");
-const TypeChecking_1 = require("../../util/TypeChecking");
 const better_randstr_1 = require("better-randstr");
+const TypeChecking_1 = require("../../util/TypeChecking");
 const escape_1 = require("../util/escape");
+const RandomLong_1 = require("./RandomLong");
 const DEFAULT_RANDOM_STRING_OPTIONS = {
     escapeChars: true,
     avoidDatabaseChars: false

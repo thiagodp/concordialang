@@ -1,10 +1,10 @@
-import { Step, Document } from '../ast';
-import { AugmentedSpec } from "../req/AugmentedSpec";
+import { Document, Step } from '../ast';
+import { LanguageContent } from "../language/LanguageContent";
 import { Entities } from '../nlp/Entities';
-import { LanguageContent } from "../dict/LanguageContent";
-import { isDefined } from "./TypeChecking";
+import { AugmentedSpec } from "../req/AugmentedSpec";
 import { ACTION_TARGET_MAP } from "./ActionMap";
-import { EditableActionTargets, ActionTargets } from "./ActionTargets";
+import { EditableActionTargets } from "./ActionTargets";
+import { isDefined } from "./TypeChecking";
 import { UIElementPropertyExtractor } from "./UIElementPropertyExtractor";
 
 export class TargetTypeUtil {

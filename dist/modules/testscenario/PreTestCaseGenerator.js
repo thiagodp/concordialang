@@ -11,14 +11,14 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const arrayDiff = require("arr-diff");
 const deepcopy = require("deepcopy");
-const path_1 = require("path");
 const enumUtil = require("enum-util");
-const ast_1 = require("../ast");
-const nlp_1 = require("../nlp");
-const error_1 = require("../error");
-const SyntacticException_1 = require("../parser/SyntacticException");
+const path_1 = require("path");
 const CaseType_1 = require("../app/CaseType");
-const EnglishKeywordDictionary_1 = require("../dict/EnglishKeywordDictionary");
+const ast_1 = require("../ast");
+const error_1 = require("../error");
+const EnglishKeywordDictionary_1 = require("../language/EnglishKeywordDictionary");
+const nlp_1 = require("../nlp");
+const SyntacticException_1 = require("../parser/SyntacticException");
 const LineChecker_1 = require("../req/LineChecker");
 const NodeTypes_1 = require("../req/NodeTypes");
 const Symbols_1 = require("../req/Symbols");
@@ -31,8 +31,8 @@ const RandomString_1 = require("../testdata/random/RandomString");
 const UIElementValueGenerator_1 = require("../testdata/UIElementValueGenerator");
 const util_1 = require("../util");
 const PreTestCase_1 = require("./PreTestCase");
-const value_formatter_1 = require("./value-formatter");
 const UIPropertyReferenceReplacer_1 = require("./UIPropertyReferenceReplacer");
+const value_formatter_1 = require("./value-formatter");
 class GenContext {
     constructor(spec, doc, errors, warnings) {
         this.spec = spec;

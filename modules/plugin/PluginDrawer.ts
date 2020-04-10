@@ -1,6 +1,6 @@
-import { CLI } from "../app/CLI";
-import { PluginData } from "./PluginData";
 import { sprintf } from 'sprintf-js';
+import { CLI } from "../cli/CLI";
+import { PluginData } from "./PluginData";
 
 /**
  * Draws plug-in related data.

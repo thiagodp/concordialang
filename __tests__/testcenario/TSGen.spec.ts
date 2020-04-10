@@ -1,14 +1,14 @@
-import { Document, Variant, FileInfo } from "../../modules/ast";
+import { Document, FileInfo, Variant } from "../../modules/ast";
+import { FileProblemMapper } from "../../modules/error";
 import { AugmentedSpec } from "../../modules/req/AugmentedSpec";
-import { LocatedException } from "../../modules/error/LocatedException";
-import { TSGen } from "../../modules/testscenario/TSGen";
-import { TestScenario } from "../../modules/testscenario/TestScenario";
-import { SimpleCompiler } from "../../modules/util/SimpleCompiler";
-import { AllVariantsSelectionStrategy } from "../../modules/selection/VariantSelectionStrategy";
-import { BatchSpecificationAnalyzer } from "../../modules/semantic/BatchSpecificationAnalyzer";
-import { SpecFilter } from "../../modules/selection/SpecFilter";
 import { CartesianProductStrategy } from "../../modules/selection/CombinationStrategy";
-import { PreTestCaseGenerator, GenContext } from "../../modules/testscenario/PreTestCaseGenerator";
+import { SpecFilter } from "../../modules/selection/SpecFilter";
+import { AllVariantsSelectionStrategy } from "../../modules/selection/VariantSelectionStrategy";
+import { BatchSpecificationAnalyzer } from "../../modules/semantic2/BatchSpecificationAnalyzer";
+import { GenContext, PreTestCaseGenerator } from "../../modules/testscenario/PreTestCaseGenerator";
+import { TestScenario } from "../../modules/testscenario/TestScenario";
+import { TSGen } from "../../modules/testscenario/TSGen";
+import { SimpleCompiler } from "../SimpleCompiler";
 
 describe( 'TSGen', () => {
 
@@ -56,7 +56,7 @@ describe( 'TSGen', () => {
 
         let spec = new AugmentedSpec( '.' );
 
-        let doc1: Document = cp.addToSpec( spec,
+        let doc1: Document = await cp.addToSpec( spec,
             [
                 '#language:pt',
                 'Funcionalidade: Feature 1',
@@ -73,11 +73,12 @@ describe( 'TSGen', () => {
         );
 
         const specFilter = new SpecFilter( spec );
-        const batchSpecAnalyzer = new BatchSpecificationAnalyzer();
-        let errors: LocatedException[] = [];
-        let warnings: LocatedException[] = [];
+        const analyzer = new BatchSpecificationAnalyzer();
 
-        await batchSpecAnalyzer.analyze( specFilter.graph(), spec, errors );
+        const problems = new FileProblemMapper();
+        await analyzer.analyze( problems, spec, specFilter.graph() );
+        const errors = problems.getAllErrors();
+        const warnings = [];
 
         // expect( doc1.fileErrors ).toEqual( [] );
         // expect( doc2.fileErrors ).toEqual( [] );
@@ -95,7 +96,7 @@ describe( 'TSGen', () => {
 
         let spec = new AugmentedSpec( '.' );
 
-        let doc1: Document = cp.addToSpec( spec,
+        let doc1: Document = await cp.addToSpec( spec,
             [
                 '#language:pt',
                 'Funcionalidade: Feature 1',
@@ -111,7 +112,7 @@ describe( 'TSGen', () => {
             { path: 'doc1.feature', hash: 'doc1' } as FileInfo
         );
 
-        let doc2: Document = cp.addToSpec( spec,
+        let doc2: Document = await cp.addToSpec( spec,
             [
                 '#language:pt',
                 'Importe "doc1.feature"',
@@ -126,10 +127,12 @@ describe( 'TSGen', () => {
         );
 
         const specFilter = new SpecFilter( spec );
-        const batchSpecAnalyzer = new BatchSpecificationAnalyzer();
-        let errors: LocatedException[] = [], warnings: LocatedException[] = [];
+        const analyzer = new BatchSpecificationAnalyzer();
 
-        await batchSpecAnalyzer.analyze( specFilter.graph(), spec, errors );
+        const problems = new FileProblemMapper();
+        await analyzer.analyze( problems, spec, specFilter.graph() );
+        const errors = problems.getAllErrors();
+        const warnings = [];
 
         // expect( doc1.fileErrors ).toEqual( [] );
         // expect( doc2.fileErrors ).toEqual( [] );
@@ -163,7 +166,7 @@ describe( 'TSGen', () => {
 
         let spec = new AugmentedSpec( '.' );
 
-        let doc: Document = cp.addToSpec( spec,
+        let doc: Document = await cp.addToSpec( spec,
             [
                 '#language:pt',
                 'Funcionalidade: Feature 2',
@@ -177,10 +180,12 @@ describe( 'TSGen', () => {
         );
 
         const specFilter = new SpecFilter( spec );
-        const batchSpecAnalyzer = new BatchSpecificationAnalyzer();
-        let errors: LocatedException[] = [], warnings = [];
+        const analyzer = new BatchSpecificationAnalyzer();
 
-        await batchSpecAnalyzer.analyze( specFilter.graph(), spec, errors );
+        const problems = new FileProblemMapper();
+        await analyzer.analyze( problems, spec, specFilter.graph() );
+        const errors = problems.getAllErrors();
+        const warnings = [];
 
         let ctx = new GenContext( spec, doc, errors, warnings );
 
@@ -196,7 +201,7 @@ describe( 'TSGen', () => {
 
         let spec = new AugmentedSpec( '.' );
 
-        let doc1: Document = cp.addToSpec( spec,
+        let doc1: Document = await cp.addToSpec( spec,
             [
                 '#language:pt',
                 'Funcionalidade: Feature 1',
@@ -213,7 +218,7 @@ describe( 'TSGen', () => {
             { path: 'doc1.feature', hash: 'doc1' } as FileInfo
         );
 
-        let doc2: Document = cp.addToSpec( spec,
+        let doc2: Document = await cp.addToSpec( spec,
             [
                 '#language:pt',
                 'Importe "doc1.feature"',
@@ -228,10 +233,12 @@ describe( 'TSGen', () => {
         );
 
         const specFilter = new SpecFilter( spec );
-        const batchSpecAnalyzer = new BatchSpecificationAnalyzer();
-        let errors: LocatedException[] = [], warnings = [];
+        const analyzer = new BatchSpecificationAnalyzer();
 
-        await batchSpecAnalyzer.analyze( specFilter.graph(), spec, errors );
+        const problems = new FileProblemMapper();
+        await analyzer.analyze( problems, spec, specFilter.graph() );
+        const errors = problems.getAllErrors();
+        const warnings = [];
 
         // expect( doc1.fileErrors ).toEqual( [] );
         // expect( doc2.fileErrors ).toEqual( [] );
@@ -265,7 +272,7 @@ describe( 'TSGen', () => {
 
         let spec = new AugmentedSpec( '.' );
 
-        let doc1: Document = cp.addToSpec( spec,
+        let doc1: Document = await cp.addToSpec( spec,
             [
                 '#language:pt',
                 'Funcionalidade: Feature 1',
@@ -281,7 +288,7 @@ describe( 'TSGen', () => {
             { path: 'doc1.feature', hash: 'doc1' } as FileInfo
         );
 
-        let doc2: Document = cp.addToSpec( spec,
+        let doc2: Document = await cp.addToSpec( spec,
             [
                 '#language:pt',
                 'Importe "doc1.feature"',
@@ -298,10 +305,12 @@ describe( 'TSGen', () => {
         );
 
         const specFilter = new SpecFilter( spec );
-        const batchSpecAnalyzer = new BatchSpecificationAnalyzer();
-        let errors: LocatedException[] = [], warnings = [];
+        const analyzer = new BatchSpecificationAnalyzer();
 
-        await batchSpecAnalyzer.analyze( specFilter.graph(), spec, errors );
+        const problems = new FileProblemMapper();
+        await analyzer.analyze( problems, spec, specFilter.graph() );
+        const errors = problems.getAllErrors();
+        const warnings = [];
 
         // expect( doc1.fileErrors ).toEqual( [] );
         // expect( doc2.fileErrors ).toEqual( [] );
@@ -337,7 +346,7 @@ describe( 'TSGen', () => {
 
         let spec = new AugmentedSpec( '.' );
 
-        let doc1: Document = cp.addToSpec( spec,
+        let doc1: Document = await cp.addToSpec( spec,
             [
                 '#language:pt',
                 'Funcionalidade: Feature 1',
@@ -353,7 +362,7 @@ describe( 'TSGen', () => {
             { path: 'doc1.feature', hash: 'doc1' } as FileInfo
         );
 
-        let doc2: Document = cp.addToSpec( spec,
+        let doc2: Document = await cp.addToSpec( spec,
             [
                 '#language:pt',
                 'Importe "doc1.feature"',
@@ -370,10 +379,12 @@ describe( 'TSGen', () => {
         );
 
         const specFilter = new SpecFilter( spec );
-        const batchSpecAnalyzer = new BatchSpecificationAnalyzer();
-        let errors: LocatedException[] = [], warnings = [];
+        const analyzer = new BatchSpecificationAnalyzer();
 
-        await batchSpecAnalyzer.analyze( specFilter.graph(), spec, errors );
+        const problems = new FileProblemMapper();
+        await analyzer.analyze( problems, spec, specFilter.graph() );
+        const errors = problems.getAllErrors();
+        const warnings = [];
 
         // expect( doc1.fileErrors ).toEqual( [] );
         // expect( doc2.fileErrors ).toEqual( [] );
@@ -409,7 +420,7 @@ describe( 'TSGen', () => {
 
         let spec = new AugmentedSpec( '.' );
 
-        let doc1: Document = cp.addToSpec( spec,
+        let doc1: Document = await cp.addToSpec( spec,
             [
                 '#language:pt',
                 'Funcionalidade: Feature 1',
@@ -425,7 +436,7 @@ describe( 'TSGen', () => {
             { path: 'doc1.feature', hash: 'doc1' } as FileInfo
         );
 
-        let doc2: Document = cp.addToSpec( spec,
+        let doc2: Document = await cp.addToSpec( spec,
             [
                 '#language:pt',
                 'Importe "doc1.feature"',
@@ -442,7 +453,7 @@ describe( 'TSGen', () => {
             { path: 'doc2.feature', hash: 'doc2' } as FileInfo
         );
 
-        let doc3: Document = cp.addToSpec( spec,
+        let doc3: Document = await cp.addToSpec( spec,
             [
                 '#language:pt',
                 'Importe "doc2.feature"',
@@ -459,10 +470,12 @@ describe( 'TSGen', () => {
         );
 
         const specFilter = new SpecFilter( spec );
-        const batchSpecAnalyzer = new BatchSpecificationAnalyzer();
-        let errors: LocatedException[] = [], warnings = [];
+        const analyzer = new BatchSpecificationAnalyzer();
 
-        await batchSpecAnalyzer.analyze( specFilter.graph(), spec, errors );
+        const problems = new FileProblemMapper();
+        await analyzer.analyze( problems, spec, specFilter.graph() );
+        const errors = problems.getAllErrors();
+        const warnings = [];
 
         // expect( doc1.fileErrors ).toEqual( [] );
         // expect( doc2.fileErrors ).toEqual( [] );
@@ -508,7 +521,7 @@ describe( 'TSGen', () => {
 
         let spec = new AugmentedSpec( '.' );
 
-        let doc1: Document = cp.addToSpec( spec,
+        let doc1: Document = await cp.addToSpec( spec,
             [
                 '#language:pt',
                 'Funcionalidade: Feature 1',
@@ -524,7 +537,7 @@ describe( 'TSGen', () => {
             { path: 'doc1.feature', hash: 'doc1' } as FileInfo
         );
 
-        let doc2: Document = cp.addToSpec( spec,
+        let doc2: Document = await cp.addToSpec( spec,
             [
                 '#language:pt',
                 'Importe "doc1.feature"',
@@ -541,7 +554,7 @@ describe( 'TSGen', () => {
             { path: 'doc2.feature', hash: 'doc2' } as FileInfo
         );
 
-        let doc3: Document = cp.addToSpec( spec,
+        let doc3: Document = await cp.addToSpec( spec,
             [
                 '#language:pt',
                 'Importe "doc2.feature"',
@@ -558,10 +571,12 @@ describe( 'TSGen', () => {
         );
 
         const specFilter = new SpecFilter( spec );
-        const batchSpecAnalyzer = new BatchSpecificationAnalyzer();
-        let errors: LocatedException[] = [], warnings = [];
+        const analyzer = new BatchSpecificationAnalyzer();
 
-        await batchSpecAnalyzer.analyze( specFilter.graph(), spec, errors );
+        const problems = new FileProblemMapper();
+        await analyzer.analyze( problems, spec, specFilter.graph() );
+        const errors = problems.getAllErrors();
+        const warnings = [];
 
         // expect( doc1.fileErrors ).toEqual( [] );
         // expect( doc2.fileErrors ).toEqual( [] );

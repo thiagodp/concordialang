@@ -1,8 +1,8 @@
-import { RandomLong } from "./RandomLong";
-import { Random } from "./Random";
+import { Options, randstr } from 'better-randstr';
 import { isDefined } from '../../util/TypeChecking';
-import { randstr, Options } from 'better-randstr';
 import { escapeChar } from "../util/escape";
+import { Random } from "./Random";
+import { RandomLong } from "./RandomLong";
 
 export interface RandomStringOptions {
     escapeChars?: boolean

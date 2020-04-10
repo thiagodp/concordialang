@@ -1,6 +1,6 @@
 import { NamedNode } from "./Node";
-import { MayHaveTags } from "./Tag";
 import { Step } from "./Step";
+import { MayHaveTags } from "./Tag";
 
 /**
  * Test Case

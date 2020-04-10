@@ -1,6 +1,6 @@
 import { NamedNode } from './Node';
 import { MayHaveTags } from './Tag';
-import { UIProperty, UIElementInfo } from './UIProperty';
+import { UIElementInfo, UIProperty } from './UIProperty';
 
 /**
  * UI element node.

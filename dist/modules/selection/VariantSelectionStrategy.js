@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const RandomLong_1 = require("../testdata/random/RandomLong");
 const Random_1 = require("../testdata/random/Random");
+const RandomLong_1 = require("../testdata/random/RandomLong");
 const TagUtil_1 = require("../util/TagUtil");
 /**
  * Variant selection strategy in which all variants are selected

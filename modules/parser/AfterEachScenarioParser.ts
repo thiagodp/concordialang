@@ -1,9 +1,9 @@
 import { AfterEachScenario } from '../ast/TestEvent';
-import { SyntacticException } from './SyntacticException';
 import { isDefined } from '../util/TypeChecking';
 import { NodeIterator } from './NodeIterator';
 import { NodeParser } from './NodeParser';
 import { ParsingContext } from './ParsingContext';
+import { SyntacticException } from './SyntacticException';
 
 /**
  * AfterEachScenario parser

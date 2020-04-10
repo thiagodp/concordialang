@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const path_1 = require("path");
 const deepcopy = require("deepcopy");
+const path_1 = require("path");
 const NodeTypes_1 = require("../req/NodeTypes");
 /**
  * Document (object) generator for Test Cases.
@@ -12,7 +12,7 @@ class TCDocGen {
     /**
      * Constructor
      *
-     * @param _extensionTestCase Extension to use in the file. Fullfils Document's `fileInfo`.
+     * @param _extensionTestCase Extension to use in the file. It fulfils Document's `fileInfo`.
      */
     constructor(_extensionTestCase, _basePath) {
         this._extensionTestCase = _extensionTestCase;
@@ -40,7 +40,7 @@ class TCDocGen {
         };
         // # Generate language
         newDoc.language = this.createLanguage(fromDoc, ++line);
-        // # Generate the nedded imports
+        // # Generate the needed imports
         newDoc.imports = this.createImports(fromDoc, ++line, outputDir);
         line += newDoc.imports.length;
         // # Update lines then add the test cases

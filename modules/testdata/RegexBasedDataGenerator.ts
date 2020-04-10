@@ -1,8 +1,8 @@
 import * as RandExp from 'randexp';
-import { RandomString } from './random/RandomString';
+import { adjustValueToTheRightType, ValueType } from '../util/ValueTypeDetector';
 import { StringLimits } from './limits/StringLimits';
 import { RandomLong } from './random/RandomLong';
-import { ValueType, adjustValueToTheRightType } from '../util/ValueTypeDetector';
+import { RandomString } from './random/RandomString';
 
 /**
  * Regular Expression -based data generator.

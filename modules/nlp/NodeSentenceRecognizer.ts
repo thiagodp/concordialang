@@ -1,14 +1,10 @@
-import { Location } from 'concordialang-types'
-
-import { LocatedException } from '../error/LocatedException';
+import { Location } from 'concordialang-types';
+import { NLP, NLPException, NLPResult } from '.';
 import { ContentNode } from '../ast/Node';
+import { LocatedException } from '../error/LocatedException';
 import { Warning } from '../error/Warning';
 import { isDefined } from '../util/TypeChecking';
-import {
-    NLPResult,
-    NLP,
-    NLPException
-} from '.';
+
 
 /**
  * NLP result processor
@@ -138,7 +134,7 @@ export class NodeSentenceRecognizer {
 
         // Let's check the rules!
         const rule: any = syntaxRules[ propertyRuleIndex ];
-        //console.log( 'recogized are', recognizedEntityNames );
+        //console.log( 'recognized are', recognizedEntityNames );
         //console.log( 'targets of', rule.name, 'are', rule.targets );
 
         // Count the expected targets, ignores the other ones - like verbs

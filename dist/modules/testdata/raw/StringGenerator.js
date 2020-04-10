@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const MinMaxChecker_1 = require("../util/MinMaxChecker");
 const StringLimits_1 = require("../limits/StringLimits");
+const MinMaxChecker_1 = require("../util/MinMaxChecker");
 /**
  * String generator.
  *
@@ -21,7 +21,7 @@ class StringGenerator {
     constructor(_randomString, minLength, maxLength, maxPossibleLength) {
         this._randomString = _randomString;
         (new MinMaxChecker_1.MinMaxChecker()).check(minLength, maxLength); // may throw Error
-        // Aditional checkings
+        // Additional verifications
         if (minLength && minLength < StringLimits_1.StringLimits.MIN) {
             throw Error('Minimum string length is ' + StringLimits_1.StringLimits.MIN);
         }

@@ -1,5 +1,5 @@
-import { NodeTypes } from '../../modules/req/NodeTypes';
 import { VariantLexer } from "../../modules/lexer/VariantLexer";
+import { NodeTypes } from '../../modules/req/NodeTypes';
 
 describe( 'VariantLexer', () => {
 

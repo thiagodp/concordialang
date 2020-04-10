@@ -1,13 +1,13 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const sqlstring_1 = require("sqlstring");
-const nlp_1 = require("../nlp");
 const QueryParser_1 = require("../db/QueryParser");
+const nlp_1 = require("../nlp");
 const Symbols_1 = require("../req/Symbols");
 const CaseConversor_1 = require("./CaseConversor");
+const TargetTypeUtil_1 = require("./TargetTypeUtil");
 const TypeChecking_1 = require("./TypeChecking");
 const ValueTypeDetector_1 = require("./ValueTypeDetector");
-const TargetTypeUtil_1 = require("./TargetTypeUtil");
 /**
  * Replaces references to Concordia constructions - such as named databases,
  * named tables, ui element names, and constants - with their corresponding values.

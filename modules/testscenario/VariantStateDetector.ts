@@ -1,4 +1,4 @@
-import { Variant, State } from '../ast';
+import { State, Variant } from '../ast';
 import { Entities, NLPUtil } from '../nlp';
 import { NodeTypes } from '../req/NodeTypes';
 

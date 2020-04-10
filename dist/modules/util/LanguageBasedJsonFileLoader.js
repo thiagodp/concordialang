@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const path_1 = require("path");
-const EnglishKeywordDictionary_1 = require("../dict/EnglishKeywordDictionary");
+const EnglishKeywordDictionary_1 = require("../language/EnglishKeywordDictionary");
 /**
  * Language-based JSON file loader.
  *

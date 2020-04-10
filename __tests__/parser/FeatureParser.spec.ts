@@ -2,7 +2,7 @@ import * as fs from 'fs';
 import { resolve } from 'path';
 import { Options } from '../../modules/app/Options';
 import { Feature } from '../../modules/ast/Feature';
-import { JsonLanguageContentLoader, LanguageContentLoader, EnglishKeywordDictionary } from '../../modules/dict';
+import { JsonLanguageContentLoader, LanguageContentLoader } from '../../modules/language';
 import { Lexer } from "../../modules/lexer/Lexer";
 import { FeatureParser } from '../../modules/parser/FeatureParser';
 import { NodeIterator } from '../../modules/parser/NodeIterator';

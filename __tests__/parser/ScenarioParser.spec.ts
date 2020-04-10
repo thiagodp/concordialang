@@ -1,7 +1,7 @@
-import { Scenario, Node, Feature } from '../../modules/ast';
-import { ScenarioParser } from '../../modules/parser/ScenarioParser';
+import { Feature, Node, Scenario } from '../../modules/ast';
 import { NodeIterator } from '../../modules/parser/NodeIterator';
 import { ParsingContext } from '../../modules/parser/ParsingContext';
+import { ScenarioParser } from '../../modules/parser/ScenarioParser';
 import { NodeTypes } from '../../modules/req/NodeTypes';
 
 describe( 'ScenarioParser', () => {

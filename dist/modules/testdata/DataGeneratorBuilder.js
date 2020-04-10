@@ -1,25 +1,25 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const ValueTypeDetector_1 = require("../util/ValueTypeDetector");
-const StringGenerator_1 = require("./raw/StringGenerator");
-const LongGenerator_1 = require("./raw/LongGenerator");
-const DoubleGenerator_1 = require("./raw/DoubleGenerator");
-const DateGenerator_1 = require("./raw/DateGenerator");
-const TimeGenerator_1 = require("./raw/TimeGenerator");
-const DateTimeGenerator_1 = require("./raw/DateTimeGenerator");
-const RandomString_1 = require("./random/RandomString");
-const Random_1 = require("./random/Random");
-const RandomLong_1 = require("./random/RandomLong");
-const RandomDouble_1 = require("./random/RandomDouble");
-const RandomDate_1 = require("./random/RandomDate");
-const RandomTime_1 = require("./random/RandomTime");
-const RandomDateTime_1 = require("./random/RandomDateTime");
 const QueryCache_1 = require("../db/QueryCache");
-const RegexBasedDataGenerator_1 = require("./RegexBasedDataGenerator");
-const ListBasedDataGenerator_1 = require("./ListBasedDataGenerator");
-const QueryBasedDataGenerator_1 = require("./QueryBasedDataGenerator");
+const ValueTypeDetector_1 = require("../util/ValueTypeDetector");
 const InvertedLogicListBasedDataGenerator_1 = require("./InvertedLogicListBasedDataGenerator");
 const InvertedLogicQueryBasedDataGenerator_1 = require("./InvertedLogicQueryBasedDataGenerator");
+const ListBasedDataGenerator_1 = require("./ListBasedDataGenerator");
+const QueryBasedDataGenerator_1 = require("./QueryBasedDataGenerator");
+const Random_1 = require("./random/Random");
+const RandomDate_1 = require("./random/RandomDate");
+const RandomDateTime_1 = require("./random/RandomDateTime");
+const RandomDouble_1 = require("./random/RandomDouble");
+const RandomLong_1 = require("./random/RandomLong");
+const RandomString_1 = require("./random/RandomString");
+const RandomTime_1 = require("./random/RandomTime");
+const DateGenerator_1 = require("./raw/DateGenerator");
+const DateTimeGenerator_1 = require("./raw/DateTimeGenerator");
+const DoubleGenerator_1 = require("./raw/DoubleGenerator");
+const LongGenerator_1 = require("./raw/LongGenerator");
+const StringGenerator_1 = require("./raw/StringGenerator");
+const TimeGenerator_1 = require("./raw/TimeGenerator");
+const RegexBasedDataGenerator_1 = require("./RegexBasedDataGenerator");
 /**
  * Data generator builder
  *
@@ -62,8 +62,8 @@ class DataGeneratorBuilder {
     invertedLogicList(valueType, listValues) {
         return new InvertedLogicListBasedDataGenerator_1.InvertedLogicListBasedDataGenerator(this.list(valueType, listValues));
     }
-    query(valueType, query, queriable) {
-        return new QueryBasedDataGenerator_1.QueryBasedDataGenerator(this._randomLong, this.raw(valueType), queriable, this.queryCache, query, this._randomTriesToInvalidValues);
+    query(valueType, query, queryable) {
+        return new QueryBasedDataGenerator_1.QueryBasedDataGenerator(this._randomLong, this.raw(valueType), queryable, this.queryCache, query, this._randomTriesToInvalidValues);
     }
     invertedLogicQuery(valueType, query, queriable) {
         return new InvertedLogicQueryBasedDataGenerator_1.InvertedLogicQueryBasedDataGenerator(this.query(valueType, query, queriable));

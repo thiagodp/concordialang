@@ -1,10 +1,10 @@
 import { EventEmitter } from 'events';
-import Graph = require('graph.js/dist/graph.full.js');
-
 import { Document } from '../ast/Document';
+import { ImportBasedGraphBuilder } from '../compiler/ImportBasedGraphBuilder';
 import { AugmentedSpec } from '../req/AugmentedSpec';
 import { GraphFilter, GraphFilterEvent } from './GraphFilter';
-import { ImportBasedGraphBuilder } from './ImportBasedGraphBuilder';
+import Graph = require('graph.js/dist/graph.full.js');
+
 
 /**
  * Specification filter
@@ -60,7 +60,7 @@ export class SpecFilter extends EventEmitter {
     private createGraph() {
         // Build a graph from the documents and its Imports, since it is expected
         // that references to another document's declarations need Imports.
-        // Cyclic references are validated previosly, by the ImportSSA.
+        // Cyclic references are validated previously, by the ImportSSA.
         return ( new ImportBasedGraphBuilder() ).buildFrom( this._spec );
     }
 

@@ -5,6 +5,14 @@ import { join } from 'path';
 import * as semverDiff from 'semver-diff';
 import * as terminalLink from 'terminal-link';
 import * as updateNotifier from 'update-notifier';
+import { CLI } from '../cli/CLI';
+import { CliHelp } from '../cli/CliHelp';
+import { GuidedConfig } from '../cli/GuidedConfig';
+import { LanguageDrawer } from '../cli/LanguageDrawer';
+import { OptionsHandler } from '../cli/OptionsHandler';
+import { UI } from '../cli/UI';
+import { CompilerFacade } from '../compiler/CompilerFacade';
+import { LanguageManager } from '../language/LanguageManager';
 import { PackageBasedPluginFinder } from '../plugin/PackageBasedPluginFinder';
 import { PluginController } from '../plugin/PluginController';
 import { PluginData } from '../plugin/PluginData';
@@ -14,20 +22,14 @@ import { AugmentedSpec } from '../req/AugmentedSpec';
 import { TestResultAnalyzer } from '../testscript/TestResultAnalyzer';
 import { DirSearcher, FileSearcher, FSDirSearcher, FSFileHandler, FSFileSearcher } from '../util/file';
 import { ATSGenController } from './ATSGenController';
-import { CLI } from './CLI';
-import { CliHelp } from './CliHelp';
-import { CliScriptExecutionReporter } from './CliScriptExecutionReporter';
-import { CompilerController } from './CompilerController';
-import { GuidedConfig } from './GuidedConfig';
-import { LanguageController } from './LanguageController';
+import { SimpleAppUI } from './listeners/SimpleAppUI';
+import { VerboseAppUI } from './listeners/VerboseAppUI';
 import { Options } from "./Options";
-import { OptionsHandler } from './OptionsHandler';
-import { UI } from './UI';
-
-import Graph = require( 'graph.js/dist/graph.full.js' );
 
 /**
  * Application controller
+ *
+ * TO-DO: Refactor!
  *
  * @author Thiago Delgado Pinto
  */
@@ -42,13 +44,21 @@ export class AppController {
         const optionsHandler = new OptionsHandler( appPath, processPath, cli, meowInstance );
         let options: Options;
 
+        let appListener = new SimpleAppUI( cli );
+
         // Load options
         try {
             options = await optionsHandler.load();
+            appListener.setDebugMode( options.debug );
         } catch ( err ) {
-            this.showException( err, options, cli );
+            appListener.showError( err  );
             return false; // exit
         }
+
+        if ( options.verbose ) {
+            appListener = new VerboseAppUI( cli, options.debug );
+        }
+
 
         if ( options.init ) {
             if ( optionsHandler.wasLoaded() ) {
@@ -64,7 +74,7 @@ export class AppController {
             try {
                 await optionsHandler.save();
             } catch ( err ) {
-                this.showException( err, options, cli );
+                appListener.showError( err  );
                 // continue!
             }
         }
@@ -150,7 +160,7 @@ export class AppController {
             try {
                 await pluginController.process( options, pluginManager, pluginDrawer );
             } catch ( err ) {
-                this.showException( err, options, cli );
+                appListener.showError( err );
                 return false;
             }
             return true;
@@ -164,7 +174,7 @@ export class AppController {
                 }
                 plugin = await pluginManager.load( pluginData );
             } catch ( err ) {
-                this.showException( err, options, cli );
+                appListener.showError( err );
                 return false;
             }
             if ( ! pluginData ) { // needed?
@@ -180,11 +190,10 @@ export class AppController {
         }
 
         if ( options.languageList ) {
-            let langController: LanguageController = new LanguageController( cli, fileSearcher );
             try {
-                await langController.process( options );
+                await this.listLanguages( options, cli, fileSearcher );
             } catch ( err ) {
-                this.showException( err, options, cli );
+                appListener.showError( err );
                 return false;
             }
             return true;
@@ -192,17 +201,19 @@ export class AppController {
 
         let hasErrors: boolean = false;
         let spec: AugmentedSpec = null;
-        // let graph: Graph = null;
+
         if ( options.compileSpecification ) {
+
             if ( ! options.generateTestCase ) {
                 cli.newLine( cli.symbolInfo, 'Test Case generation disabled.' );
             }
-            const compilerController: CompilerController = new CompilerController( fs );
+
+            const compiler = new CompilerFacade( fs, appListener, appListener );
             try {
-                [ spec, /* graph */ ] = await compilerController.compile( options, cli );
+                [ spec, /* graph */ ] = await compiler.compile( options );
             } catch ( err ) {
                 hasErrors = true;
-                this.showException( err, options, cli );
+                appListener.showError( err );
             }
         } else {
             cli.newLine( cli.symbolInfo, 'Specification compilation disabled.' );
@@ -268,7 +279,7 @@ export class AppController {
                         );
                     } catch ( err ) {
                         hasErrors = true;
-                        this.showException( err, options, cli );
+                        appListener.showError( err );
                     }
 
                     for ( let file of files ) {
@@ -277,7 +288,7 @@ export class AppController {
 
                     for ( let err of errors ) {
                         // cli.newLine( cli.symbolError, err.message );
-                        this.showException( err, options, cli );
+                        appListener.showError( err );
                     }
 
                 } else {
@@ -291,23 +302,22 @@ export class AppController {
 
         let executionResult: TestScriptExecutionResult = null;
         if ( options.executeScript ) { // Requires a plugin
-            let tseo: TestScriptExecutionOptions = new TestScriptExecutionOptions(
+
+            const tseo: TestScriptExecutionOptions = new TestScriptExecutionOptions(
                 options.dirScript,
                 options.dirResult
             );
-            cli.newLine( cli.symbolInfo, 'Executing test scripts...' );
-            const LINE_SIZE = 80;
-            const SEPARATION_LINE = '_'.repeat( LINE_SIZE );
-            cli.newLine( SEPARATION_LINE );
+
+            appListener.testScriptExecutionStarted();
+
             try {
                 executionResult = await plugin.executeCode( tseo );
             } catch ( err ) {
                 hasErrors = true;
-                this.showException( err, options, cli );
-                cli.newLine( SEPARATION_LINE );
+                appListener.testScriptExecutionError( err );
             }
         } else {
-            cli.newLine( cli.symbolInfo, 'Script execution disabled.' );
+            appListener.testScriptExecutionDisabled();
         }
 
         if ( options.analyzeResult ) { // Requires a plugin
@@ -331,10 +341,10 @@ export class AppController {
             try {
                 let reportedResult = await plugin.convertReportFile( reportFile );
                 ( new TestResultAnalyzer() ).adjustResult( reportedResult, abstractTestScripts );
-                ( new CliScriptExecutionReporter( cli ) ).scriptExecuted( reportedResult );
+                appListener.testScriptExecutionFinished( reportedResult );
             } catch ( err ) {
                 hasErrors = true;
-                this.showException( err, options, cli );
+                appListener.showError( err );
             }
 
         } else {
@@ -354,14 +364,11 @@ export class AppController {
     }
 
 
-    private showException( err: Error, options: Options, cli: CLI ): void {
-        ( ! options ? true : options.debug )
-            ? cli.newLine( cli.symbolError, err.message, this.formattedStackOf( err ) )
-            : cli.newLine( cli.symbolError, err.message );
-    }
-
-    private formattedStackOf( err: Error ): string {
-        return "\n  DETAILS: " + err.stack.substring( err.stack.indexOf( "\n" ) );
+    async listLanguages( options: Options, cli: CLI, fileSearcher: FileSearcher ) {
+        const lm = new LanguageManager( fileSearcher, options.languageDir );
+        const languages: string[] = await lm.availableLanguages();
+        const ld = new LanguageDrawer( cli );
+        ld.drawLanguages( languages );
     }
 
 }

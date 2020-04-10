@@ -1,6 +1,6 @@
 import { Variant } from "../ast/Variant";
-import { RandomLong } from "../testdata/random/RandomLong";
 import { Random } from "../testdata/random/Random";
+import { RandomLong } from "../testdata/random/RandomLong";
 import { TagUtil } from "../util/TagUtil";
 
 /**

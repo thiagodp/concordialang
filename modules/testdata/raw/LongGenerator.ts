@@ -1,8 +1,8 @@
+import { LongLimits } from '../limits/LongLimits';
 import { RandomLong } from '../random/RandomLong';
 import { MinMaxChecker } from '../util/MinMaxChecker';
-import { LongLimits } from '../limits/LongLimits';
-import { RawDataGenerator } from './RawDataGenerator';
 import { RangeAnalyzer } from './RangeAnalyzer';
+import { RawDataGenerator } from './RawDataGenerator';
 
 /**
  * Long generator.

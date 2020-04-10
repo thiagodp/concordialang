@@ -1,10 +1,10 @@
 import { ContentNode } from '../ast/Node';
 import { Expressions } from "../req/Expressions";
-import { Symbols } from "../req/Symbols";
 import { LineChecker } from "../req/LineChecker";
-import { LexicalException } from "./LexicalException";
-import { NodeLexer, LexicalAnalysisResult } from "./NodeLexer";
+import { Symbols } from "../req/Symbols";
 import { CommentHandler } from './CommentHandler';
+import { LexicalException } from "./LexicalException";
+import { LexicalAnalysisResult, NodeLexer } from "./NodeLexer";
 
 /**
  * Detects a node with the format "- anything".

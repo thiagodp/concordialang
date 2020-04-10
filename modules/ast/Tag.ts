@@ -1,4 +1,4 @@
-import { Node, HasName, HasContent } from './Node';
+import { HasContent, HasName, Node } from './Node';
 
 // TAG
 //

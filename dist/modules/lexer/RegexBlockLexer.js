@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const BlockLexer_1 = require("./BlockLexer");
 const NodeTypes_1 = require("../req/NodeTypes");
+const BlockLexer_1 = require("./BlockLexer");
 /**
  * Detects a Regex Block.
  *

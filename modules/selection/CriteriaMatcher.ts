@@ -1,7 +1,7 @@
-import { Tag, ReservedTags } from '../ast/Tag';
 import { Defaults } from '../app/Defaults';
-import { isString } from '../util/TypeChecking';
+import { ReservedTags, Tag } from '../ast/Tag';
 import { TagUtil } from '../util/TagUtil';
+import { isString } from '../util/TypeChecking';
 import { FilterCriterion } from './FilterCriterion';
 
 export class CriteriaMatcher {

@@ -1,9 +1,8 @@
 import { fs, vol } from 'memfs';
 import { join, resolve } from "path";
-import { LanguageManager } from "../../modules/app/LanguageManager";
 import { Options } from "../../modules/app/Options";
+import { LanguageManager } from "../../modules/language/LanguageManager";
 import { FSFileSearcher } from "../../modules/util/file/FSFileSearcher";
-
 
 describe( 'LanguageManager', () => {
 

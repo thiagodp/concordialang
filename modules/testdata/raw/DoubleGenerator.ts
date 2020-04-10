@@ -1,8 +1,8 @@
+import { DoubleLimits } from '../limits/DoubleLimits';
 import { RandomDouble } from '../random/RandomDouble';
 import { MinMaxChecker } from '../util/MinMaxChecker';
-import { DoubleLimits } from '../limits/DoubleLimits';
-import { RawDataGenerator } from './RawDataGenerator';
 import { RangeAnalyzer } from './RangeAnalyzer';
+import { RawDataGenerator } from './RawDataGenerator';
 
 /**
  * Double generator.

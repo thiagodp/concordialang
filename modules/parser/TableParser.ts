@@ -1,9 +1,9 @@
+import { CaseType } from "../app/CaseType";
 import { Table } from "../ast/Table";
 import { convertCase } from "../util/CaseConversor";
-import { CaseType } from "../app/CaseType";
+import { NodeIterator } from './NodeIterator';
 import { NodeParser } from "./NodeParser";
 import { ParsingContext } from "./ParsingContext";
-import { NodeIterator } from './NodeIterator';
 
 /**
  * Table parser

@@ -1,8 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const RandExp = require("randexp");
-const StringLimits_1 = require("./limits/StringLimits");
 const ValueTypeDetector_1 = require("../util/ValueTypeDetector");
+const StringLimits_1 = require("./limits/StringLimits");
 /**
  * Regular Expression -based data generator.
  *

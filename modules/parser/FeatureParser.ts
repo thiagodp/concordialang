@@ -1,8 +1,8 @@
 import { Feature } from '../ast/Feature';
-import { SyntacticException } from './SyntacticException';
 import { NodeIterator } from './NodeIterator';
 import { NodeParser } from './NodeParser';
 import { ParsingContext } from './ParsingContext';
+import { SyntacticException } from './SyntacticException';
 import { TagCollector } from './TagCollector';
 import { TextCollector } from './TextCollector';
 

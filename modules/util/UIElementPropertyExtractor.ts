@@ -1,12 +1,12 @@
 import * as enumUtil from 'enum-util';
-
+import { CaseType } from '../app/CaseType';
 import { UIElement, UIProperty, UIPropertyTypes } from '../ast';
 import { Entities, NLPEntity, NLPUtil } from '../nlp';
-import { CaseType } from '../app/CaseType';
-import { EditableActionTargets, ActionTargets } from './ActionTargets';
+import { ActionTargets, EditableActionTargets } from './ActionTargets';
 import { convertCase } from './CaseConversor';
 import { isDefined } from './TypeChecking';
 import { ValueType } from './ValueTypeDetector';
+
 
 /**
  * Extract properties from UI Elements.
@@ -283,7 +283,7 @@ export class UIElementPropertyExtractor {
         for ( let propType of valueBasedPropertyTypes ) {
 
             let properties = propertiesMap.get( propType );
-            if ( ! properties || properties.length < 2 ) { // << 2 because 1 has no conflit
+            if ( ! properties || properties.length < 2 ) { // << 2 because 1 has no conflict
                 continue;
             }
             let uiProperty = properties[ 0 ];

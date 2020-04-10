@@ -1,6 +1,6 @@
-import { RandomLong } from "./RandomLong";
-import { LocalTime, ChronoUnit } from "js-joda";
+import { ChronoUnit, LocalTime } from "js-joda";
 import { TimeLimits } from "../limits/TimeLimits";
+import { RandomLong } from "./RandomLong";
 
 /**
  * Generates random time values.

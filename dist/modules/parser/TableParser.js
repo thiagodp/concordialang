@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const CaseConversor_1 = require("../util/CaseConversor");
 const CaseType_1 = require("../app/CaseType");
+const CaseConversor_1 = require("../util/CaseConversor");
 /**
  * Table parser
  *

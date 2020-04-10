@@ -1,10 +1,10 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const nlp_1 = require("../nlp");
 const ast_1 = require("../ast");
+const UIPropertyTypes_1 = require("../ast/UIPropertyTypes");
+const nlp_1 = require("../nlp");
 const TypeChecking_1 = require("../util/TypeChecking");
 const ValueTypeDetector_1 = require("../util/ValueTypeDetector");
-const UIPropertyTypes_1 = require("../ast/UIPropertyTypes");
 const Intents_1 = require("./Intents");
 const NLPException_1 = require("./NLPException");
 const NodeSentenceRecognizer_1 = require("./NodeSentenceRecognizer");

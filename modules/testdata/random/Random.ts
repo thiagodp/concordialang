@@ -2,7 +2,7 @@ import * as seedrandom from 'seedrandom';
 
 /**
  * Predictable random number generator.
- * 
+ *
  * @author  Thiago Delgado Pinto
  * @see     https://github.com/davidbau/seedrandom
  * @see     https://github.com/nquinlan/better-random-numbers-for-javascript-mirror

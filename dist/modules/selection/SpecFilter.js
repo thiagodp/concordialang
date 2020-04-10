@@ -1,8 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const events_1 = require("events");
+const ImportBasedGraphBuilder_1 = require("../compiler/ImportBasedGraphBuilder");
 const GraphFilter_1 = require("./GraphFilter");
-const ImportBasedGraphBuilder_1 = require("./ImportBasedGraphBuilder");
 /**
  * Specification filter
  *
@@ -43,7 +43,7 @@ class SpecFilter extends events_1.EventEmitter {
     createGraph() {
         // Build a graph from the documents and its Imports, since it is expected
         // that references to another document's declarations need Imports.
-        // Cyclic references are validated previosly, by the ImportSSA.
+        // Cyclic references are validated previously, by the ImportSSA.
         return (new ImportBasedGraphBuilder_1.ImportBasedGraphBuilder()).buildFrom(this._spec);
     }
     removeDocumentFromSpecification(doc) {

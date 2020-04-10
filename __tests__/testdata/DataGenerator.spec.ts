@@ -1,12 +1,12 @@
-import { LocalDate, LocalTime, LocalDateTime } from "js-joda";
-
-import { DataGenerator, DataGenConfig } from "../../modules/testdata/DataGenerator";
-import { DataTestCase, DataTestCaseGroupDef, DataTestCaseGroup } from "../../modules/testdata/DataTestCase";
-import { ValueType } from "../../modules/util/ValueTypeDetector";
-import { DateLimits } from "../../modules/testdata/limits/DateLimits";
-import { TimeLimits } from "../../modules/testdata/limits/TimeLimits";
-import { DateTimeLimits } from "../../modules/testdata/limits/DateTimeLimits";
+import { LocalDate, LocalDateTime, LocalTime } from "js-joda";
+import { DataGenConfig, DataGenerator } from "../../modules/testdata/DataGenerator";
 import { DataGeneratorBuilder } from "../../modules/testdata/DataGeneratorBuilder";
+import { DataTestCase, DataTestCaseGroup, DataTestCaseGroupDef } from "../../modules/testdata/DataTestCase";
+import { DateLimits } from "../../modules/testdata/limits/DateLimits";
+import { DateTimeLimits } from "../../modules/testdata/limits/DateTimeLimits";
+import { TimeLimits } from "../../modules/testdata/limits/TimeLimits";
+import { ValueType } from "../../modules/util/ValueTypeDetector";
+
 
 describe( 'DataGenerator', () => {
 

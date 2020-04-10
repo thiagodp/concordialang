@@ -1,18 +1,6 @@
-import { DatabaseProperty, ContentNode } from '../ast';
+import { DATABASE_PROPERTY_SYNTAX_RULES, DEFAULT_DATABASE_PROPERTY_SYNTAX_RULE, Entities, Intents, NLP, NLPException, NLPResult, NLPResultProcessor, NLPTrainer, NodeSentenceRecognizer, RuleBuilder } from '.';
+import { ContentNode, DatabaseProperty } from '../ast';
 import { LocatedException } from '../error/LocatedException';
-import {
-    NLPResult,
-    Entities,
-    Intents,
-    NLP,
-    NLPException,
-    NLPTrainer,
-    NLPResultProcessor,
-    NodeSentenceRecognizer,
-    RuleBuilder,
-    DATABASE_PROPERTY_SYNTAX_RULES,
-    DEFAULT_DATABASE_PROPERTY_SYNTAX_RULE
-} from '.';
 
 /**
  * Database property sentence recognizer.

@@ -1,9 +1,9 @@
+import { Background } from './Background';
 import { NamedNode } from './Node';
+import { Scenario } from './Scenario';
 import { MayHaveTags } from './Tag';
 import { Text } from './Text';
-import { Scenario } from './Scenario';
 import { UIElement } from './UIElement';
-import { Background } from './Background';
 import { VariantBackground } from './VariantBackground';
 
 /**

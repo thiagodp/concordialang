@@ -206,7 +206,7 @@ class Options {
                 && ! this.wantToGenerateScripts
                 && ! this.wantToExecuteScripts
                 && ! this.wantToReadResults )
-                // or want to do somethng with a plugin but its name is not defined
+                // or want to do something with a plugin but its name is not defined
                 ||
                 ( ! this.pluginName &&
                     ( this.wantToGenerateScripts

@@ -1,8 +1,8 @@
-import { TestCase, Tag, ReservedTags } from "../ast";
-import { PreTestCaseGenerator, GenContext } from "../testscenario/PreTestCaseGenerator";
-import { TestScenario } from "../testscenario/TestScenario";
-import { PreTestCase } from "../testscenario/PreTestCase";
+import { ReservedTags, Tag, TestCase } from "../ast";
 import { NodeTypes } from "../req/NodeTypes";
+import { PreTestCase } from "../testscenario/PreTestCase";
+import { GenContext, PreTestCaseGenerator } from "../testscenario/PreTestCaseGenerator";
+import { TestScenario } from "../testscenario/TestScenario";
 import { TestPlanner } from "./TestPlanner";
 
 /**

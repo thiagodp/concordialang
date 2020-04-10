@@ -1,11 +1,7 @@
 import { Database } from '../ast/Database';
+import { ConnectionCheckResult, ConnectionResult, DatabaseInterface } from '../dbi';
+import { LocatedException, RuntimeException } from '../error';
 import { AugmentedSpec } from "../req/AugmentedSpec";
-import {
-    DatabaseInterface,
-    ConnectionCheckResult,
-    ConnectionResult
-} from '../dbi';
-import { RuntimeException, LocatedException } from '../error';
 import { DatabaseJSDatabaseInterface } from './DatabaseJSDatabaseInterface';
 
 /**

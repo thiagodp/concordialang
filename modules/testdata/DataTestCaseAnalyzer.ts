@@ -1,16 +1,16 @@
 import * as arrayDiff from 'arr-diff';
 import * as enumUtil from 'enum-util';
-
-import { Constant, Step, UIElement, UIProperty, ReservedTags } from '../ast';
-import { Entities, NLPUtil } from '../nlp';
+import { Constant, ReservedTags, Step, UIElement, UIProperty } from '../ast';
+import { UIPropertyTypes } from '../ast/UIPropertyTypes';
 import { RuntimeException } from '../error/RuntimeException';
+import { Entities, NLPUtil } from '../nlp';
 import { isDefined } from '../util/TypeChecking';
 import { UIElementPropertyExtractor } from '../util/UIElementPropertyExtractor';
-import { UIPropertyTypes } from '../ast/UIPropertyTypes';
 import { adjustValueToTheRightType, ValueType } from '../util/ValueTypeDetector';
-import { RangeAnalyzer } from './raw/RangeAnalyzer';
 import { DataGeneratorBuilder } from './DataGeneratorBuilder';
 import { DataTestCase, DataTestCaseGroup, DataTestCaseGroupDef } from './DataTestCase';
+import { RangeAnalyzer } from './raw/RangeAnalyzer';
+
 
 /**
  * Data test case analysis result
@@ -35,7 +35,7 @@ export class DTCAnalysisData {
 export type DTCMap = Map< DataTestCase, DTCAnalysisData >;
 
 /**
- * A map from UI Element Variables to anoher map containing all available DataTestCases
+ * A map from UI Element Variables to another map containing all available DataTestCases
  * and their respective expected result (valid, invalid or incompatible) plus the eventual
  * Oracle steps applicable in case of a invalid result.
  */

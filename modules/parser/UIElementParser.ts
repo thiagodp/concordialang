@@ -1,8 +1,8 @@
-import { UIElement, ReservedTags } from '../ast';
-import { SyntacticException } from './SyntacticException';
+import { ReservedTags, UIElement } from '../ast';
 import { NodeIterator } from './NodeIterator';
 import { NodeParser } from './NodeParser';
 import { ParsingContext } from './ParsingContext';
+import { SyntacticException } from './SyntacticException';
 import { TagCollector } from './TagCollector';
 
 /**

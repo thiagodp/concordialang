@@ -1,6 +1,6 @@
-import { Variant } from './Variant';
 import { NamedNode } from './Node';
 import { Step } from './Step';
+import { Variant } from './Variant';
 import { VariantBackground } from './VariantBackground';
 
 /**

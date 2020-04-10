@@ -1,10 +1,10 @@
 import Graph = require( 'graph.js/dist/graph.full.js' );
 import { dirname, relative } from 'path';
 import { Document, ReservedTags, TestCase, Variant } from "../ast";
-import { LanguageContentLoader } from "../dict/LanguageContentLoader";
 import { LocatedException } from "../error/LocatedException";
 import { RuntimeException } from "../error/RuntimeException";
 import { Warning } from "../error/Warning";
+import { LanguageContentLoader } from "../language/LanguageContentLoader";
 import { GivenWhenThenSentenceRecognizer } from "../nlp/GivenWhenThenSentenceRecognizer";
 import { AugmentedSpec } from "../req/AugmentedSpec";
 import { CartesianProductStrategy, CombinationStrategy, OneWiseStrategy, ShuffledOneWiseStrategy, SingleRandomOfEachStrategy } from "../selection/CombinationStrategy";
@@ -19,8 +19,8 @@ import { TestScenario } from "../testscenario/TestScenario";
 import { TSGen } from "../testscenario/TSGen";
 import { FileWriter, toUnixPath } from '../util/file';
 import { CombinationOptions, InvalidSpecialOptions, VariantSelectionOptions } from "./Defaults";
+import { TCGenListener } from "./listeners/TCGenListener";
 import { Options } from "./Options";
-import { TCGenListener } from "./TCGenListener";
 
 
 export class TCGenController {

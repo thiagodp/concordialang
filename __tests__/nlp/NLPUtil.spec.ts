@@ -1,4 +1,4 @@
-import { NLPUtil, NLP, NLPTrainingDataConversor, NLPResult, Entities } from '../../modules/nlp';
+import { Entities, NLP, NLPResult, NLPTrainingDataConversor, NLPUtil } from '../../modules/nlp';
 
 describe( 'NLPUtil', () => {
 

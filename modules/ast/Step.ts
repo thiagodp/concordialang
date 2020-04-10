@@ -1,5 +1,5 @@
-import { ContentNode } from "./Node";
 import { NLPResult } from "../nlp/NLPResult";
+import { ContentNode } from "./Node";
 import { UIPropertyReference } from "./UIPropertyReference";
 
 export interface Step extends ContentNode {

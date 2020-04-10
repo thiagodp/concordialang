@@ -29,7 +29,7 @@ export interface DataTestCaseMix {
      * Selects the mixes of DataTestCases to use in a test case.
      *
      *
-     * @param map   A map from UI Element Variables to anoher map containing all
+     * @param map   A map from UI Element Variables to another map containing all
      *              available DataTestCases and their respective expected result
      *              (valid, invalid or incompatible) and Oracle steps (if applicable).
      *

@@ -1,7 +1,7 @@
 import { LocatedException } from "./LocatedException";
 
 /**
- * Provides an exception that should be handled as a warning.
+ * Warning
  *
  * @author Thiago Delgado Pinto
  */

@@ -1,9 +1,9 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const Entities_1 = require("../nlp/Entities");
-const TypeChecking_1 = require("./TypeChecking");
 const ActionMap_1 = require("./ActionMap");
 const ActionTargets_1 = require("./ActionTargets");
+const TypeChecking_1 = require("./TypeChecking");
 class TargetTypeUtil {
     /**
      * Returns an empty string if the target type is not an input,

@@ -1,12 +1,12 @@
 const XRegExp = require( 'xregexp' );
 
-import { Tag, ReservedTags } from '../ast/Tag';
-import { LexicalException } from './LexicalException';
+import { ReservedTags, Tag } from '../ast/Tag';
 import { NodeTypes } from '../req/NodeTypes';
 import { Symbols } from '../req/Symbols';
 import { CommentHandler } from './CommentHandler';
-import { LexicalAnalysisResult, NodeLexer } from './NodeLexer';
 import { KeywordBasedLexer } from './KeywordBasedLexer';
+import { LexicalException } from './LexicalException';
+import { LexicalAnalysisResult, NodeLexer } from './NodeLexer';
 
 /**
  * Detects a Tag.

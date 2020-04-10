@@ -1,9 +1,9 @@
-import { Regex, ListItem } from '../ast';
-import { SyntacticException } from './SyntacticException';
-import { NodeTypes} from '../req/NodeTypes';
-import { ParsingContext } from './ParsingContext';
+import { ListItem, Regex } from '../ast';
+import { NodeTypes } from '../req/NodeTypes';
 import { ListItemNodeParser } from './ListItemNodeParser';
 import { NodeIterator } from './NodeIterator';
+import { ParsingContext } from './ParsingContext';
+import { SyntacticException } from './SyntacticException';
 
 /**
  * Regex parser.

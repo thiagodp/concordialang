@@ -1,14 +1,14 @@
-import { TestCase } from './TestCase';
-import { Database } from './Database';
-import { Table } from './Table';
 import { ConstantBlock } from './ConstantBlock';
-import { FileInfo } from './FileInfo';
+import { Database } from './Database';
 import { Feature } from './Feature';
-import { UIElement } from "./UIElement";
+import { FileInfo } from './FileInfo';
 import { Import } from "./Import";
 import { Language } from "./Language";
 import { RegexBlock } from "./RegexBlock";
-import { BeforeAll, AfterAll, BeforeFeature, AfterFeature, BeforeEachScenario, AfterEachScenario } from './TestEvent';
+import { Table } from './Table';
+import { TestCase } from './TestCase';
+import { AfterAll, AfterEachScenario, AfterFeature, BeforeAll, BeforeEachScenario, BeforeFeature } from './TestEvent';
+import { UIElement } from "./UIElement";
 
 /**
  * Document

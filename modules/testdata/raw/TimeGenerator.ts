@@ -1,9 +1,9 @@
-import { RawDataGenerator } from "./RawDataGenerator";
+import { ChronoUnit, LocalTime } from "js-joda";
+import { isDefined } from '../../util/TypeChecking';
 import { TimeLimits } from "../limits/TimeLimits";
 import { RandomTime } from "../random/RandomTime";
-import { isDefined } from '../../util/TypeChecking';
-import { LocalTime, ChronoUnit } from "js-joda";
 import { RangeAnalyzer } from "./RangeAnalyzer";
+import { RawDataGenerator } from "./RawDataGenerator";
 
 export class TimeGenerator implements RawDataGenerator< LocalTime >, RangeAnalyzer {
 

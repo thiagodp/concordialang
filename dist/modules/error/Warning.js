@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const LocatedException_1 = require("./LocatedException");
 /**
- * Provides an exception that should be handled as a warning.
+ * Warning
  *
  * @author Thiago Delgado Pinto
  */

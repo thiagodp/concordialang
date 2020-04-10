@@ -1,5 +1,5 @@
-import { NLPResult } from "./NLPResult";
 import { NLPEntity } from "./NLPEntity";
+import { NLPResult } from "./NLPResult";
 
 /**
  * NLP utilities.

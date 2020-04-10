@@ -2,8 +2,8 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const Bravey = require("../../lib/bravey"); // .js file
 const cloneRegExp = require("clone-regexp");
-const ValueTypeDetector_1 = require("../util/ValueTypeDetector");
 const nlp_1 = require("../nlp");
+const ValueTypeDetector_1 = require("../util/ValueTypeDetector");
 /**
  * Natural Language Processor
  *
@@ -110,7 +110,7 @@ class NLP {
         return this._nlpMap[language].isTrained;
     }
     /**
-     * Recognizes a sentece.
+     * Recognizes a sentence.
      *
      * @param language Language to be used in the recognition.
      * @param sentence Sentence to be recognized.

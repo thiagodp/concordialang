@@ -1,9 +1,9 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const Tag_1 = require("../ast/Tag");
 const Defaults_1 = require("../app/Defaults");
-const TypeChecking_1 = require("../util/TypeChecking");
+const Tag_1 = require("../ast/Tag");
 const TagUtil_1 = require("../util/TagUtil");
+const TypeChecking_1 = require("../util/TypeChecking");
 const FilterCriterion_1 = require("./FilterCriterion");
 class CriteriaMatcher {
     constructor(_ignoreKeywords = [Tag_1.ReservedTags.IGNORE], _importanceKeywords = [Tag_1.ReservedTags.IMPORTANCE], _defaultImportanceValue = (new Defaults_1.Defaults()).IMPORTANCE) {

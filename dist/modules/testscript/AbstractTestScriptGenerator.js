@@ -1,9 +1,9 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const concordialang_plugin_1 = require("concordialang-plugin");
-const Entities_1 = require("../nlp/Entities");
 const DatabaseToAbstractDatabase_1 = require("../db/DatabaseToAbstractDatabase");
 const DatabaseTypes_1 = require("../db/DatabaseTypes");
+const Entities_1 = require("../nlp/Entities");
 const Symbols_1 = require("../req/Symbols");
 const Actions_1 = require("../util/Actions");
 const TypeChecking_1 = require("../util/TypeChecking");
@@ -64,7 +64,7 @@ class AbstractTestScriptGenerator {
             ? { column: 1, line: 1, filePath: doc.fileInfo.path }
             : feature.location;
         const featureName = !feature ? 'Unknown feature' : feature.name;
-        // ASTRACT TEST SCRIPT
+        // ABSTRACT TEST SCRIPT
         let ats = new concordialang_plugin_1.AbstractTestScript();
         // feature, location, sourceFile
         ats.sourceFile = doc.fileInfo.path;

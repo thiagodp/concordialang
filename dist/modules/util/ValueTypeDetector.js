@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const moment = require("moment");
 const js_joda_1 = require("js-joda");
+const moment = require("moment");
 /**
  * Value type.
  *

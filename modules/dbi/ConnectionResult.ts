@@ -1,5 +1,5 @@
-import { DatabaseInterface } from './DatabaseInterface';
 import { LocatedException } from '../error/LocatedException';
+import { DatabaseInterface } from './DatabaseInterface';
 
 /**
 

@@ -10,7 +10,7 @@ import { Node } from './Node';
 // ```
 
 export interface TaskContent extends Node {
-    
+
     action: 'script' | 'command';
     // name or content is used, bot not both
     name?: string;
@@ -20,10 +20,10 @@ export interface TaskContent extends Node {
 export interface Task extends Node {
 
     // When:
-    // 'BAT' = before all the tests, 
+    // 'BAT' = before all the tests,
     // 'BET' = before each test,
     // 'AET' = after each test,
-    // 'AAT' = after all the tests    
+    // 'AAT' = after all the tests
     when: 'BAT' | 'BET' | 'AAT' | 'AET';
 
     content: Array< TaskContent >;

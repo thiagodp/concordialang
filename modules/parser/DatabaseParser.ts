@@ -1,7 +1,7 @@
 import { Database } from '../ast/Database';
+import { NodeIterator } from './NodeIterator';
 import { NodeParser } from './NodeParser';
 import { ParsingContext } from './ParsingContext';
-import { NodeIterator } from './NodeIterator';
 
 /**
  * Database parser

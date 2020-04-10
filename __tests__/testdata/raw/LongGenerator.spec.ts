@@ -1,6 +1,6 @@
-import { LongGenerator } from "../../../modules/testdata/raw/LongGenerator";
-import { RandomLong } from "../../../modules/testdata/random/RandomLong";
 import { Random } from "../../../modules/testdata/random/Random";
+import { RandomLong } from "../../../modules/testdata/random/RandomLong";
+import { LongGenerator } from "../../../modules/testdata/raw/LongGenerator";
 
 describe( 'LongGenerator', () => {
 

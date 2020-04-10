@@ -1,10 +1,10 @@
 import * as globalDirs from 'global-dirs';
 import { fs, vol } from 'memfs';
 import { join, normalize } from 'path';
-import { FSFileHandler } from '../../modules/util/file/FSFileHandler';
 import { PackageBasedPluginFinder } from '../../modules/plugin/PackageBasedPluginFinder';
 import { PluginData, PLUGIN_PROPERTY } from '../../modules/plugin/PluginData';
 import { FSDirSearcher } from '../../modules/util/file/FSDirSearcher';
+import { FSFileHandler } from '../../modules/util/file/FSFileHandler';
 
 
 describe( 'PackageBasedPluginFinder', () => {

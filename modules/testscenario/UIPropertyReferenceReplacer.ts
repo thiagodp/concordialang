@@ -1,9 +1,9 @@
 import { basename } from 'path';
-
-import { Step, EntityValueType, UIPropertyTypes, UIElement, UIPropertyReference } from "../ast";
-import { UIElementNameHandler, isDefined } from "../util";
+import { EntityValueType, Step, UIElement, UIPropertyReference, UIPropertyTypes } from "../ast";
 import { RuntimeException } from '../error/RuntimeException';
 import { Symbols } from '../req/Symbols';
+import { isDefined, UIElementNameHandler } from "../util";
+import { removeDuplicated } from '../util/remove-duplicated';
 import { GenContext } from "./PreTestCaseGenerator";
 import { formatValueToUseInASentence } from './value-formatter';
 
@@ -46,7 +46,8 @@ export class UIPropertyReferenceReplacer {
                     Symbols.UI_ELEMENT_PREFIX + uipRef.uiElementName +
                     Symbols.UI_PROPERTY_REF_SEPARATOR + uipRef.property + Symbols.UI_ELEMENT_SUFFIX +
                     ' in ' + fileName + ' ' + locStr + '. Not supported yet.';
-                ctx.warnings.push( new RuntimeException( msg ) );
+                const err = new RuntimeException( msg );
+                ctx.warnings.push( err );
                 continue;
             }
 
@@ -71,13 +72,16 @@ export class UIPropertyReferenceReplacer {
                 const msg = 'Could not retrieve a value from ' +
                     Symbols.UI_ELEMENT_PREFIX + variable + Symbols.UI_ELEMENT_SUFFIX +
                     ' in ' + fileName + ' ' + locStr + '. It will receive an empty value.';
-                ctx.warnings.push( new RuntimeException( msg ) );
+                const err = new RuntimeException( msg );
+                ctx.warnings.push( err );
                 value = '';
             }
             const formattedValue = formatValueToUseInASentence( value, insideStringValue );
             const refStr: string = Symbols.UI_ELEMENT_PREFIX + uipRef.content + Symbols.UI_ELEMENT_SUFFIX;
             newContent = newContent.replace( refStr, formattedValue );
         }
+
+        removeDuplicated( ctx.warnings, ( a, b ) => a.message == b.message );
 
         return newContent;
     }

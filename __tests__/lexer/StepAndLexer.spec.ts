@@ -1,5 +1,5 @@
-import { NodeTypes } from '../../modules/req/NodeTypes';
 import { StepAndLexer } from "../../modules/lexer/StepAndLexer";
+import { NodeTypes } from '../../modules/req/NodeTypes';
 
 describe( 'StepAndLexer', () => {
 

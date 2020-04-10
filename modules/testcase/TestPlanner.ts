@@ -1,11 +1,11 @@
 import * as objectToArray from 'object-to-array';
-
 import { CombinationStrategy } from '../selection/CombinationStrategy';
 import { DTCAnalysisResult, UIEVariableToDTCMap } from '../testdata/DataTestCaseAnalyzer';
 import { Random } from '../testdata/random/Random';
 import { RandomLong } from '../testdata/random/RandomLong';
 import { DataTestCaseMix } from './DataTestCaseMix';
 import { TestPlan } from './TestPlan';
+
 
 /**
  * Uses the given mixing strategy to select the DataTestCases that will be included
@@ -82,7 +82,7 @@ export class TestPlanner {
         //         for ( let obj of objects ) {
         //             let validPlans = obj[ uieVar ];
         //             // console.log( 'Plans of', uieVar, ':', validPlans );
-        //             // Chooses only one, ramdomly
+        //             // Chooses only one, randomly
         //             const max = validPlans.length;
         //             if ( max > 0 ) {
         //                 if ( 1 === max ) {
@@ -104,7 +104,7 @@ export class TestPlanner {
             // console.log( 'combinations ', combinations, 'by', this.combinationStrategy.constructor.name );
 
             // Each combination now is a map uieName => UIEPlan
-            // Thet will be transformed in a TestPlan
+            // It will be transformed in a TestPlan
             for ( let combObj of combinations ) {
 
                 let plan = new TestPlan();

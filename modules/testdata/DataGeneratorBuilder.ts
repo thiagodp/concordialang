@@ -1,26 +1,26 @@
+import { QueryCache } from "../db/QueryCache";
 import { Queryable } from "../dbi/Queryable";
 import { ValueType } from "../util/ValueTypeDetector";
-import { RawDataGenerator } from "./raw/RawDataGenerator";
-import { StringGenerator } from "./raw/StringGenerator";
-import { LongGenerator } from "./raw/LongGenerator";
-import { DoubleGenerator } from "./raw/DoubleGenerator";
-import { DateGenerator } from "./raw/DateGenerator";
-import { TimeGenerator } from "./raw/TimeGenerator";
-import { DateTimeGenerator } from "./raw/DateTimeGenerator";
-import { RandomString } from "./random/RandomString";
-import { Random } from "./random/Random";
-import { RandomLong } from "./random/RandomLong";
-import { RandomDouble } from "./random/RandomDouble";
-import { RandomDate } from "./random/RandomDate";
-import { RandomTime } from "./random/RandomTime";
-import { RandomDateTime } from "./random/RandomDateTime";
-import { RangeAnalyzer } from "./raw/RangeAnalyzer";
-import { QueryCache } from "../db/QueryCache";
-import { RegexBasedDataGenerator } from "./RegexBasedDataGenerator";
-import { ListBasedDataGenerator } from "./ListBasedDataGenerator";
-import { QueryBasedDataGenerator } from "./QueryBasedDataGenerator";
 import { InvertedLogicListBasedDataGenerator } from "./InvertedLogicListBasedDataGenerator";
 import { InvertedLogicQueryBasedDataGenerator } from "./InvertedLogicQueryBasedDataGenerator";
+import { ListBasedDataGenerator } from "./ListBasedDataGenerator";
+import { QueryBasedDataGenerator } from "./QueryBasedDataGenerator";
+import { Random } from "./random/Random";
+import { RandomDate } from "./random/RandomDate";
+import { RandomDateTime } from "./random/RandomDateTime";
+import { RandomDouble } from "./random/RandomDouble";
+import { RandomLong } from "./random/RandomLong";
+import { RandomString } from "./random/RandomString";
+import { RandomTime } from "./random/RandomTime";
+import { DateGenerator } from "./raw/DateGenerator";
+import { DateTimeGenerator } from "./raw/DateTimeGenerator";
+import { DoubleGenerator } from "./raw/DoubleGenerator";
+import { LongGenerator } from "./raw/LongGenerator";
+import { RangeAnalyzer } from "./raw/RangeAnalyzer";
+import { RawDataGenerator } from "./raw/RawDataGenerator";
+import { StringGenerator } from "./raw/StringGenerator";
+import { TimeGenerator } from "./raw/TimeGenerator";
+import { RegexBasedDataGenerator } from "./RegexBasedDataGenerator";
 
 /**
  * Data generator builder
@@ -85,9 +85,9 @@ export class DataGeneratorBuilder {
     query(
         valueType: ValueType,
         query: string,
-        queriable: Queryable
+        queryable: Queryable
     ): QueryBasedDataGenerator< any > {
-        return new QueryBasedDataGenerator( this._randomLong, this.raw( valueType ), queriable, this.queryCache, query, this._randomTriesToInvalidValues );
+        return new QueryBasedDataGenerator( this._randomLong, this.raw( valueType ), queryable, this.queryCache, query, this._randomTriesToInvalidValues );
     }
 
     invertedLogicQuery(

@@ -1,12 +1,12 @@
 import { Regex } from '../ast/Regex';
-import { NodeTypes } from "../req/NodeTypes";
-import { LineChecker } from '../req/LineChecker';
 import { Expressions } from '../req/Expressions';
+import { LineChecker } from '../req/LineChecker';
+import { NodeTypes } from "../req/NodeTypes";
 import { Symbols } from '../req/Symbols';
-import { LexicalException } from './LexicalException';
-import { NodeLexer, LexicalAnalysisResult } from './NodeLexer';
-import { KeywordBasedLexer } from './KeywordBasedLexer';
 import { CommentHandler } from './CommentHandler';
+import { KeywordBasedLexer } from './KeywordBasedLexer';
+import { LexicalException } from './LexicalException';
+import { LexicalAnalysisResult, NodeLexer } from './NodeLexer';
 
 /**
  * Detects a Regex.

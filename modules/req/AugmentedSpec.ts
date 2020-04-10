@@ -1,21 +1,12 @@
 import { dirname, resolve } from 'path';
-
-import {
-    Spec,
-    Constant,
-    Database,
-    Document,
-    Feature,
-    NamedNode,
-    Table,
-    UIElement
-} from '../ast';
-import { DatabaseInterface } from '../dbi';
 import { CaseType } from '../app/CaseType';
+import { Constant, Database, Document, Feature, NamedNode, Spec, Table, UIElement } from '../ast';
+import { DatabaseInterface } from '../dbi';
 import { DocumentUtil } from '../util/DocumentUtil';
+import { toUnixPath } from '../util/file';
 import { isDefined, valueOrNull } from '../util/TypeChecking';
 import { UIElementNameHandler } from '../util/UIElementNameHandler';
-import { toUnixPath } from '../util/file';
+
 
 class MappedContent {
     feature: boolean = false;
@@ -54,7 +45,7 @@ export class AugmentedSpec extends Spec {
 
     private _uiLiteralCaseOption: CaseType = CaseType.CAMEL; // defined by setter
 
-    private _docToAcessibleUIElementsCache = new Map< Document, UIElement[] >();
+    private _docToAccessibleUIElementsCache = new Map< Document, UIElement[] >();
 
 
     constructor( basePath?: string ) {
@@ -599,7 +590,7 @@ export class AugmentedSpec extends Spec {
      * @param includeGlobals Whether globals should be included
      */
     extractUIElementsFromDocumentAndImports( doc: Document, includeGlobals: boolean = false ): UIElement[] {
-        let elements: UIElement[] = this._docToAcessibleUIElementsCache.get( doc ) || null;
+        let elements: UIElement[] = this._docToAccessibleUIElementsCache.get( doc ) || null;
         if ( isDefined( elements ) ) {
             return elements;
         }

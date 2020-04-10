@@ -1,8 +1,8 @@
 import { Text } from '../ast/Text';
-import { Symbols } from '../req/Symbols';
-import { NodeTypes } from '../req/NodeTypes';
 import { LineChecker } from "../req/LineChecker";
-import { NodeLexer, LexicalAnalysisResult } from "./NodeLexer";
+import { NodeTypes } from '../req/NodeTypes';
+import { Symbols } from '../req/Symbols';
+import { LexicalAnalysisResult, NodeLexer } from "./NodeLexer";
 
 /**
  * Detects anything not empty.

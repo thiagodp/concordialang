@@ -1,6 +1,6 @@
-import { BlockLexer } from "./BlockLexer";
 import { Background } from "../ast/Background";
 import { NodeTypes } from "../req/NodeTypes";
+import { BlockLexer } from "./BlockLexer";
 
 /**
  * Detects a Background block.

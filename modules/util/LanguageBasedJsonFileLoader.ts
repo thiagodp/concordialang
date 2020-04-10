@@ -1,7 +1,7 @@
 import { join } from 'path';
+import { EnglishKeywordDictionary } from "../language/EnglishKeywordDictionary";
 import { FileChecker } from '../util/file/FileChecker';
 import { FileReader } from '../util/file/FileReader';
-import { EnglishKeywordDictionary } from "../dict/EnglishKeywordDictionary";
 
 /**
  * Language-based JSON file loader.

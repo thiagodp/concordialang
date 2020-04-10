@@ -67,6 +67,8 @@
     "build": "rimraf dist && node copy.js && tsc",
     "watch": "npm run build && tsc --watch",
     "test": "node copy.js && jest --passWithNoTests",
+    "test:check": "tsc --noEmit -p __tests__",
+    "test:check:watch": "tsc --noEmit -p __tests__ --watch",
     "test:coverage": "node copy.js && jest --coverage --coverageDirectory=\"coverage\"",
     "test:sonar": "node copy.js && jest --coverage --coverageDirectory=\"coverage\" --reporters=\"default\" --reporters=\"jest-sonar\"",
     "all": "npm run build && npm run test",
@@ -77,14 +79,10 @@
   },
   "jest": {
     "transform": {
-      "^.+\\.tsx?$": "ts-jest"
+      "^.+\\.ts$": "ts-jest"
     },
-    "testRegex": "(/__tests__/.*|(\\.|/)(test|spec))\\.(tsx?)$",
-    "moduleFileExtensions": [
-      "ts",
-      "tsx",
-      "js"
-    ],
+    "testRegex": "__tests__/.*\\.spec\\.ts$",
+    "moduleFileExtensions": [ "ts", "js" ],
     "testEnvironment": "node",
     "watchPlugins": [
       "jest-watch-typeahead/filename",

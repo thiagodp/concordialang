@@ -1,5 +1,5 @@
-import { HasItems, HasValue, NamedNode } from './Node';
 import { ListItem } from './ListItem';
+import { HasItems, HasValue, NamedNode } from './Node';
 
 // Example:
 // ```

@@ -10,8 +10,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const alasql = require("alasql");
-const SqlHelper_1 = require("./SqlHelper");
 const AlaSqlTableCreator_1 = require("./AlaSqlTableCreator");
+const SqlHelper_1 = require("./SqlHelper");
 /**
  * Handles in-memory databases using AlaSql.
  *

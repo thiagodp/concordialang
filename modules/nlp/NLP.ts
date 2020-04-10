@@ -1,12 +1,8 @@
 import Bravey = require('../../lib/bravey'); // .js file
 import * as cloneRegExp from 'clone-regexp';
-
+import { Entities, NLPResult, NLPTrainingData } from "../nlp";
 import { adjustValueToTheRightType } from '../util/ValueTypeDetector';
-import {
-    NLPResult,
-    Entities,
-    NLPTrainingData
-} from "../nlp";
+
 
 /**
  * Natural Language Processor
@@ -136,7 +132,7 @@ export class NLP {
     }
 
     /**
-     * Recognizes a sentece.
+     * Recognizes a sentence.
      *
      * @param language Language to be used in the recognition.
      * @param sentence Sentence to be recognized.

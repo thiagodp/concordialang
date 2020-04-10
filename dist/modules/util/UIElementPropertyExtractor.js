@@ -1,9 +1,9 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const enumUtil = require("enum-util");
+const CaseType_1 = require("../app/CaseType");
 const ast_1 = require("../ast");
 const nlp_1 = require("../nlp");
-const CaseType_1 = require("../app/CaseType");
 const ActionTargets_1 = require("./ActionTargets");
 const CaseConversor_1 = require("./CaseConversor");
 const TypeChecking_1 = require("./TypeChecking");
@@ -243,7 +243,7 @@ class UIElementPropertyExtractor {
         let declaredPropertyMap = new Map(); // Just the first of each kind
         for (let propType of valueBasedPropertyTypes) {
             let properties = propertiesMap.get(propType);
-            if (!properties || properties.length < 2) { // << 2 because 1 has no conflit
+            if (!properties || properties.length < 2) { // << 2 because 1 has no conflict
                 continue;
             }
             let uiProperty = properties[0];

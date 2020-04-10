@@ -1,6 +1,6 @@
-import { BlockLexer } from "./BlockLexer";
 import { RegexBlock } from "../ast/RegexBlock";
 import { NodeTypes } from "../req/NodeTypes";
+import { BlockLexer } from "./BlockLexer";
 
 /**
  * Detects a Regex Block.

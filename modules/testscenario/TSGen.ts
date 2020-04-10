@@ -1,11 +1,10 @@
 import * as deepcopy from 'deepcopy';
-
-import { Step, Tag, tagsWithAnyOfTheNames, Variant, State } from '../ast';
-import { Entities, NLPUtil } from '../nlp';
-import { KeywordDictionary } from '../dict/KeywordDictionary';
-import { LanguageContentLoader } from '../dict/LanguageContentLoader';
-import { NodeTypes } from '../req/NodeTypes';
+import { State, Step, Tag, tagsWithAnyOfTheNames, Variant } from '../ast';
 import { RuntimeException } from '../error/RuntimeException';
+import { KeywordDictionary } from '../language/KeywordDictionary';
+import { LanguageContentLoader } from '../language/LanguageContentLoader';
+import { Entities, NLPUtil } from '../nlp';
+import { NodeTypes } from '../req/NodeTypes';
 import { CombinationStrategy } from '../selection/CombinationStrategy';
 import { VariantSelectionStrategy } from '../selection/VariantSelectionStrategy';
 import { OnlyValidMix } from '../testcase/DataTestCaseMix';
@@ -17,6 +16,7 @@ import { isDefined } from '../util/TypeChecking';
 import { GenContext, PreTestCaseGenerator } from './PreTestCaseGenerator';
 import { TestScenario } from './TestScenario';
 import { VariantStateDetector } from './VariantStateDetector';
+
 
 /**
  * Test Scenario generator

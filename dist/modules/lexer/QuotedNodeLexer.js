@@ -4,8 +4,8 @@ const XRegExp = require('xregexp');
 const Expressions_1 = require("../req/Expressions");
 const LineChecker_1 = require("../req/LineChecker");
 const Symbols_1 = require("../req/Symbols");
-const LexicalException_1 = require("./LexicalException");
 const CommentHandler_1 = require("./CommentHandler");
+const LexicalException_1 = require("./LexicalException");
 /**
  * Detects a node in the format "keyword "value"".
  *

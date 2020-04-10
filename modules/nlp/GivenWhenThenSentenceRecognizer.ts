@@ -1,18 +1,6 @@
+import { DEFAULT_UI_ACTION_SYNTAX_RULE, Entities, Intents, NLP, NLPException, NLPResult, NLPResultProcessor, NLPTrainer, NodeSentenceRecognizer, RuleBuilder, UI_ACTION_SYNTAX_RULES } from '.';
 import { ContentNode, Step } from '../ast';
 import { LocatedException } from '../error/LocatedException';
-import {
-    NLPResult,
-    Entities,
-    NLPTrainer,
-    Intents,
-    NodeSentenceRecognizer,
-    NLPResultProcessor,
-    NLP,
-    NLPException,
-    RuleBuilder,
-    UI_ACTION_SYNTAX_RULES,
-    DEFAULT_UI_ACTION_SYNTAX_RULE
-} from '.';
 
 /**
  * Given-When-Then sentence recognizer.

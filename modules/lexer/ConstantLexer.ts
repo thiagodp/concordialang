@@ -1,12 +1,12 @@
 import { Constant } from '../ast/Constant';
-import { LexicalException} from './LexicalException';
-import { LineChecker} from '../req/LineChecker';
-import { KeywordBasedLexer } from './KeywordBasedLexer';
-import { LexicalAnalysisResult, NodeLexer } from './NodeLexer';
-import { NodeTypes } from '../req/NodeTypes';
 import { Expressions } from '../req/Expressions';
+import { LineChecker } from '../req/LineChecker';
+import { NodeTypes } from '../req/NodeTypes';
 import { Symbols } from '../req/Symbols';
 import { CommentHandler } from './CommentHandler';
+import { KeywordBasedLexer } from './KeywordBasedLexer';
+import { LexicalException } from './LexicalException';
+import { LexicalAnalysisResult, NodeLexer } from './NodeLexer';
 
 /**
  * Detects a Contant.

@@ -1,8 +1,8 @@
 import { LocalDateTime } from "js-joda";
-
+import { Random } from "../../../modules/testdata/random/Random";
 import { RandomDateTime } from "../../../modules/testdata/random/RandomDateTime";
 import { RandomLong } from "../../../modules/testdata/random/RandomLong";
-import { Random } from "../../../modules/testdata/random/Random";
+
 
 describe( 'RandomDateTime', () => {
 

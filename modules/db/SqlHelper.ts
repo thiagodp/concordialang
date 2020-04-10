@@ -1,16 +1,16 @@
-import { ValueTypeDetector, ValueType } from "../util/ValueTypeDetector";
+import { ValueType, ValueTypeDetector } from "../util/ValueTypeDetector";
 
 /**
  * SQL helper.
- * 
+ *
  * @author Thiago Delgado Pinto
  */
 export class SqlHelper {
 
-    private _valueTypeDetector: ValueTypeDetector = new ValueTypeDetector();    
+    private _valueTypeDetector: ValueTypeDetector = new ValueTypeDetector();
 
     public generateUse( name: string ): string {
-        return 'USE `' + name + '`;';        
+        return 'USE `' + name + '`;';
     }
 
     public generateCreate( name: string, columns: string[] ): string {
@@ -19,7 +19,7 @@ export class SqlHelper {
 
     public generateCreateWithTypes( name: string, sqlColumns: string[] ): string {
         return 'CREATE TABLE IF NOT EXISTS `' + name + '` ( ' + sqlColumns.join( ', ' ) + ' );';
-    }    
+    }
 
     public generateDrop( name: string ): string {
         return 'DROP TABLE `' + name + '`;';
@@ -58,7 +58,7 @@ export class SqlHelper {
     public convertToSQLType( t: ValueType ): string {
         switch ( t ) {
             case ValueType.BOOLEAN: return 'BOOLEAN';
-            case ValueType.DOUBLE: return 'DOUBLE'; 
+            case ValueType.DOUBLE: return 'DOUBLE';
             case ValueType.INTEGER: return 'INT';
             case ValueType.DATE: return 'DATE';
             case ValueType.TIME: return 'TIME';

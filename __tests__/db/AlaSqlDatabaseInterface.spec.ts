@@ -3,7 +3,7 @@ import { resolve } from 'path';
 import { Options } from '../../modules/app/Options';
 import { Database, DatabaseProperties, DatabaseProperty, Document, Table } from '../../modules/ast';
 import { AlaSqlDatabaseInterface } from '../../modules/db';
-import { JsonLanguageContentLoader, LanguageContentLoader, EnglishKeywordDictionary } from '../../modules/dict';
+import { JsonLanguageContentLoader, LanguageContentLoader } from '../../modules/language';
 import { Lexer } from '../../modules/lexer/Lexer';
 import { Parser } from '../../modules/parser/Parser';
 import { NodeTypes } from '../../modules/req/NodeTypes';
