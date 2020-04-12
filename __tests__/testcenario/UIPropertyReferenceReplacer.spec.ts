@@ -1,4 +1,4 @@
-import { LocalDate, LocalDateTime, LocalTime } from "js-joda";
+import { LocalDate, LocalDateTime, LocalTime } from "@js-joda/core";
 import { EntityValueType, Step } from '../../modules/ast';
 import { LocatedException } from "../../modules/error/LocatedException";
 import { AugmentedSpec } from "../../modules/req";

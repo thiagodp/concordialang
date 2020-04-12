@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const js_joda_1 = require("js-joda");
+const core_1 = require("@js-joda/core");
 const TypeChecking_1 = require("../../util/TypeChecking");
 const DateLimits_1 = require("../limits/DateLimits");
 class DateGenerator {
@@ -23,7 +23,7 @@ class DateGenerator {
         this._max = TypeChecking_1.isDefined(max) ? max : DateLimits_1.DateLimits.MAX;
     }
     diffInDays() {
-        return js_joda_1.Period.between(this._min, this._max).days();
+        return core_1.Period.between(this._min, this._max).days();
     }
     // RANGE ANALYSIS
     /** @inheritDoc */

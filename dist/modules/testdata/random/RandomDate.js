@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const js_joda_1 = require("js-joda");
+const core_1 = require("@js-joda/core");
 const DateLimits_1 = require("../limits/DateLimits");
 /**
  * Generates random date values.
@@ -18,7 +18,7 @@ class RandomDate {
      * @param max Maximum date
      */
     between(min, max) {
-        const daysBetween = min.until(max, js_joda_1.ChronoUnit.DAYS);
+        const daysBetween = min.until(max, core_1.ChronoUnit.DAYS);
         if (0 === daysBetween) {
             return min;
         }

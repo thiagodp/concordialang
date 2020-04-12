@@ -1,4 +1,4 @@
-import { LocalDate } from "js-joda";
+import { LocalDate } from "@js-joda/core";
 import { Random } from "../../../modules/testdata/random/Random";
 import { RandomDate } from "../../../modules/testdata/random/RandomDate";
 import { RandomLong } from "../../../modules/testdata/random/RandomLong";

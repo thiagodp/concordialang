@@ -1,4 +1,4 @@
-import { LocalDate, LocalDateTime, LocalTime } from "js-joda";
+import { LocalDate, LocalDateTime, LocalTime } from "@js-joda/core";
 import { DataGenConfig, DataGenerator } from "../../modules/testdata/DataGenerator";
 import { DataGeneratorBuilder } from "../../modules/testdata/DataGeneratorBuilder";
 import { DataTestCase, DataTestCaseGroup, DataTestCaseGroupDef } from "../../modules/testdata/DataTestCase";

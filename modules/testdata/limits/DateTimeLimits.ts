@@ -1,4 +1,4 @@
-import { LocalDateTime } from 'js-joda';
+import { LocalDateTime } from "@js-joda/core";
 
 /**
  * Limits for datetime values.

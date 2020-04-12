@@ -1,4 +1,4 @@
-import { LocalDate, Period } from "js-joda";
+import { LocalDate, Period } from "@js-joda/core";
 import { isDefined } from '../../util/TypeChecking';
 import { DateLimits } from "../limits/DateLimits";
 import { RandomDate } from "../random/RandomDate";

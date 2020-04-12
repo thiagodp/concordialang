@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const js_joda_1 = require("js-joda");
+const core_1 = require("@js-joda/core");
 const moment = require("moment");
 /**
  * Value type.
@@ -54,7 +54,7 @@ class ValueTypeDetector {
     }
     isDate(val) {
         const t = typeof val;
-        if ('object' === t && (val instanceof Date || val instanceof js_joda_1.LocalDate)) {
+        if ('object' === t && (val instanceof Date || val instanceof core_1.LocalDate)) {
             return true;
         }
         if ('string' === t) {
@@ -66,7 +66,7 @@ class ValueTypeDetector {
     }
     isTime(val) {
         const t = typeof val;
-        if ('object' === t && (val instanceof Date || val instanceof js_joda_1.LocalTime)) {
+        if ('object' === t && (val instanceof Date || val instanceof core_1.LocalTime)) {
             return true;
         }
         if ('string' === t) {
@@ -78,7 +78,7 @@ class ValueTypeDetector {
     }
     isDateTime(val) {
         const t = typeof val;
-        if ('object' === t && (val instanceof Date || val instanceof js_joda_1.LocalDateTime)) {
+        if ('object' === t && (val instanceof Date || val instanceof core_1.LocalDateTime)) {
             return true;
         }
         if ('string' === t) {
@@ -140,28 +140,28 @@ function adjustValueToTheRightType(v, valueType) {
         }
         case ValueType.DATE: {
             try {
-                valueAfter = js_joda_1.LocalDate.parse(v);
+                valueAfter = core_1.LocalDate.parse(v);
             }
             catch (_a) {
-                valueAfter = js_joda_1.LocalDate.now();
+                valueAfter = core_1.LocalDate.now();
             }
             break;
         }
         case ValueType.TIME: {
             try {
-                valueAfter = js_joda_1.LocalTime.parse(v);
+                valueAfter = core_1.LocalTime.parse(v);
             }
             catch (_b) {
-                valueAfter = js_joda_1.LocalTime.now();
+                valueAfter = core_1.LocalTime.now();
             }
             break;
         }
         case ValueType.DATETIME: {
             try {
-                valueAfter = js_joda_1.LocalDateTime.parse(v);
+                valueAfter = core_1.LocalDateTime.parse(v);
             }
             catch (_c) {
-                valueAfter = js_joda_1.LocalDateTime.now();
+                valueAfter = core_1.LocalDateTime.now();
             }
             break;
         }

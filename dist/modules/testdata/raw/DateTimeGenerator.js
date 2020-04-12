@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const js_joda_1 = require("js-joda");
+const core_1 = require("@js-joda/core");
 const TypeChecking_1 = require("../../util/TypeChecking");
 const DateTimeLimits_1 = require("../limits/DateTimeLimits");
 class DateTimeGenerator {
@@ -23,7 +23,7 @@ class DateTimeGenerator {
         this._max = TypeChecking_1.isDefined(max) ? max : DateTimeLimits_1.DateTimeLimits.MAX;
     }
     diffInSeconds() {
-        return this._min.until(this._max, js_joda_1.ChronoUnit.SECONDS);
+        return this._min.until(this._max, core_1.ChronoUnit.SECONDS);
     }
     // RANGE ANALYSIS
     /** @inheritDoc */
@@ -84,10 +84,10 @@ class DateTimeGenerator {
     }
     /** @inheritDoc */
     median() {
-        const diffInDaysOfDates = js_joda_1.Period.between(this._min.toLocalDate(), this._max.toLocalDate()).days();
+        const diffInDaysOfDates = core_1.Period.between(this._min.toLocalDate(), this._max.toLocalDate()).days();
         const minTime = this._min.toLocalTime();
         const maxTime = this._max.toLocalTime();
-        const diffInSecondsOfTimes = minTime.until(maxTime, js_joda_1.ChronoUnit.SECONDS);
+        const diffInSecondsOfTimes = minTime.until(maxTime, core_1.ChronoUnit.SECONDS);
         const days = Math.round((diffInDaysOfDates - 1) / 2);
         const seconds = Math.round((diffInSecondsOfTimes - 1) / 2);
         let r = this._min.plusDays(days);

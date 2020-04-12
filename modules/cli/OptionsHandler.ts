@@ -1,7 +1,7 @@
 import * as cosmiconfig from 'cosmiconfig';
 import * as crypto from 'crypto';
 import * as fs from 'fs';
-import { DateTimeFormatter, LocalDateTime } from 'js-joda';
+import { DateTimeFormatter, LocalDateTime } from "@js-joda/core";
 import { join, relative } from "path";
 import { promisify } from "util";
 import { Options } from "../app/Options";

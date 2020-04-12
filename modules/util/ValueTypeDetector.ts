@@ -1,4 +1,4 @@
-import { LocalDate, LocalDateTime, LocalTime } from 'js-joda';
+import { LocalDate, LocalDateTime, LocalTime } from "@js-joda/core";
 import * as moment from 'moment';
 
 /**

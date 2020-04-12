@@ -1,4 +1,4 @@
-import { ChronoUnit, LocalTime } from "js-joda";
+import { ChronoUnit, LocalTime } from "@js-joda/core";
 import { isDefined } from '../../util/TypeChecking';
 import { TimeLimits } from "../limits/TimeLimits";
 import { RandomTime } from "../random/RandomTime";

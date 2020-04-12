@@ -1,4 +1,4 @@
-import { ChronoUnit, LocalDateTime } from 'js-joda';
+import { ChronoUnit, LocalDateTime } from "@js-joda/core";
 import { DateTimeLimits } from '../limits/DateTimeLimits';
 import { RandomLong } from './RandomLong';
 

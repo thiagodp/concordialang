@@ -1,4 +1,4 @@
-import { DateTimeFormatter, LocalDate, LocalDateTime, LocalTime } from "js-joda";
+import { DateTimeFormatter, LocalDate, LocalDateTime, LocalTime } from "@js-joda/core";
 import { Symbols } from "../req/Symbols";
 
 
