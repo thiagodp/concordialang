@@ -1,5 +1,5 @@
-import { Options } from "../Options";
 import { ProblemMapper } from "../../error/ProblemMapper";
+import { Options } from "../Options";
 
 export interface CompilerListener {
 

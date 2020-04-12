@@ -32,7 +32,6 @@ class CompilerFacade {
         this._tcGenListener = _tcGenListener;
     }
     compile(options) {
-        var _a, _b;
         return __awaiter(this, void 0, void 0, function* () {
             const startTime = Date.now();
             const fileHandler = new FSFileHandler_1.FSFileHandler(this._fs);
@@ -58,10 +57,13 @@ class CompilerFacade {
                 this._compilerListener.compilerStarted(options);
             }
             const compiler = new Compiler_1.Compiler(fileHandler, singleFileCompiler, options.lineBreaker);
+            // console.log( 'IN >', files.length, "\n", files );
             const output = yield compiler.compile(files, options.directory, { stopOnTheFirstError: options.stopOnTheFirstError });
+            // console.log( 'OUT >', output.spec.docs.length, "\n", output.spec.docs.map( d => d.fileInfo.path ) );
             if (this._compilerListener) {
-                const durationMS = Date.now() - startTime;
-                this._compilerListener.compilationFinished(files.length, ((_b = (_a = output.spec) === null || _a === void 0 ? void 0 : _a.docs) === null || _b === void 0 ? void 0 : _b.length) || files.length, durationMS);
+                // const durationMS = Date.now() - startTime;
+                // this._compilerListener.compilationFinished(
+                //     files.length, output.spec?.docs?.length || files.length, durationMS );
                 this._compilerListener.reportProblems(output.problems, options.directory);
             }
             if (!options.generateTestCase || !output.spec.docs || output.spec.docs.length < 1) {

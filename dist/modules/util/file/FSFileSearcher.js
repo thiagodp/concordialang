@@ -18,6 +18,13 @@ class FSFileSearcher {
     }
     searchFrom(options) {
         return __awaiter(this, void 0, void 0, function* () {
+            // Whether the given directory is a file, return it
+            const pStat = util_1.promisify(this._fs.stat);
+            const st = yield pStat(options.directory);
+            if (!st.isDirectory()) {
+                const msg = `${options.directory} is not a directory.`;
+                throw new Error(msg);
+            }
             const makeFilePath = file => {
                 return path_1.normalize(path_1.join(options.directory, file));
             };

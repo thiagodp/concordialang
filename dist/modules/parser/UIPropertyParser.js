@@ -26,7 +26,7 @@ class UIPropertyParser {
         node.nodeType = NodeTypes_1.NodeTypes.UI_PROPERTY;
         // Checks the context
         if (!context.currentUIElement) {
-            let e = new SyntacticException_1.SyntacticException('The "' + node.nodeType + '" clause must be declared for a UI Element.', node.location);
+            const e = new SyntacticException_1.SyntacticException('A "' + node.nodeType + '" is declared without a UI Element.', node.location);
             errors.push(e);
             return false;
         }

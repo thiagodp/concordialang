@@ -74,13 +74,16 @@ export class CompilerFacade {
 
         const compiler = new Compiler( fileHandler, singleFileCompiler, options.lineBreaker );
 
+        // console.log( 'IN >', files.length, "\n", files );
+
         const output = await compiler.compile( files, options.directory, { stopOnTheFirstError: options.stopOnTheFirstError } );
 
+        // console.log( 'OUT >', output.spec.docs.length, "\n", output.spec.docs.map( d => d.fileInfo.path ) );
 
         if ( this._compilerListener ) {
-            const durationMS = Date.now() - startTime;
-            this._compilerListener.compilationFinished(
-                files.length, output.spec?.docs?.length || files.length, durationMS );
+            // const durationMS = Date.now() - startTime;
+            // this._compilerListener.compilationFinished(
+            //     files.length, output.spec?.docs?.length || files.length, durationMS );
             this._compilerListener.reportProblems( output.problems, options.directory );
         }
 

@@ -1,5 +1,5 @@
 import Graph = require( 'graph.js/dist/graph.full.js' );
-import { dirname, relative } from 'path';
+import { relative } from 'path';
 import { Document, ReservedTags, TestCase, Variant } from "../ast";
 import { LocatedException } from "../error/LocatedException";
 import { RuntimeException } from "../error/RuntimeException";
@@ -187,7 +187,7 @@ export class TCGenController {
             );
 
             // Announce produced
-            this._listener.testCaseProduced( relative( dirname( options.directory ), newDoc.fileInfo.path ), errors, warnings );
+            this._listener.testCaseProduced( relative( options.directory, newDoc.fileInfo.path ), errors, warnings );
 
             // Generating file
             try {

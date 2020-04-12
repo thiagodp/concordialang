@@ -119,7 +119,7 @@ class TCGenController {
                 // Generating file content
                 const lines = tcDocFileGen.createLinesFromDoc(newDoc, errors, options.tcSuppressHeader, options.tcIndenter);
                 // Announce produced
-                this._listener.testCaseProduced(path_1.relative(path_1.dirname(options.directory), newDoc.fileInfo.path), errors, warnings);
+                this._listener.testCaseProduced(path_1.relative(options.directory, newDoc.fileInfo.path), errors, warnings);
                 // Generating file
                 try {
                     yield this._fileWriter.write(newDoc.fileInfo.path, lines.join(options.lineBreaker));

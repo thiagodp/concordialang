@@ -11,6 +11,14 @@ export class FSFileSearcher implements FileSearcher {
 
     async searchFrom( options: FileSearchOptions ): Promise< string[] > {
 
+        // Whether the given directory is a file, return it
+        const pStat = promisify( this._fs.stat );
+        const st = await pStat( options.directory );
+        if ( ! st.isDirectory() ) {
+            const msg = `${options.directory} is not a directory.`;
+            throw new Error( msg );
+        }
+
         const makeFilePath = file => {
             return normalize( join( options.directory, file ) );
         };

@@ -55,7 +55,7 @@ class AppController {
                 appListener.setDebugMode(options.debug);
             }
             catch (err) {
-                appListener.showError(err);
+                appListener.exception(err);
                 return false; // exit
             }
             if (options.verbose) {
@@ -63,7 +63,7 @@ class AppController {
             }
             if (options.init) {
                 if (optionsHandler.wasLoaded()) {
-                    cli.newLine(cli.symbolWarning, 'You already have a configuration file.');
+                    appListener.warn('You already have a configuration file.');
                 }
                 else {
                     options = yield (new GuidedConfig_1.GuidedConfig()).prompt(options);
@@ -76,7 +76,7 @@ class AppController {
                     yield optionsHandler.save();
                 }
                 catch (err) {
-                    appListener.showError(err);
+                    appListener.exception(err);
                     // continue!
                 }
             }
@@ -112,17 +112,11 @@ class AppController {
                 const link = terminalLink(url, url, { fallback: fallback }); // clickable URL
                 const diff = semverDiff(notifier.update.current, notifier.update.latest);
                 const hasBreakingChange = 'major' === diff;
-                if (hasBreakingChange) {
-                    cli.newLine(cli.colorHighlight('→'), cli.bgHighlight('PLEASE READ THE RELEASE NOTES BEFORE UPDATING'));
-                    cli.newLine(cli.colorHighlight('→'), link);
-                }
-                else {
-                    cli.newLine(cli.colorHighlight('→'), 'See', link, 'for details.');
-                }
+                appListener.announceUpdateAvailable(link, hasBreakingChange);
             }
             if (options.newer) {
                 if (!notifier.update) {
-                    cli.newLine(cli.symbolInfo, 'No update available');
+                    appListener.announceNoUpdateAvailable();
                 }
                 return true;
             }
@@ -139,7 +133,7 @@ class AppController {
                     yield pluginController.process(options, pluginManager, pluginDrawer);
                 }
                 catch (err) {
-                    appListener.showError(err);
+                    appListener.exception(err);
                     return false;
                 }
                 return true;
@@ -148,21 +142,22 @@ class AppController {
                 try {
                     pluginData = yield pluginManager.pluginWithName(options.plugin);
                     if (!pluginData) {
-                        cli.newLine(cli.symbolError, 'Plugin "' + options.plugin + '" not found at "' + options.pluginDir + '".');
+                        const msg = 'Plugin "' + options.plugin + '" not found at "' + options.pluginDir + '".';
+                        appListener.error(msg);
                         return true;
                     }
                     plugin = yield pluginManager.load(pluginData);
                 }
                 catch (err) {
-                    appListener.showError(err);
+                    appListener.exception(err);
                     return false;
                 }
                 if (!pluginData) { // needed?
-                    cli.newLine(cli.symbolError, 'Plugin not found:', options.plugin);
+                    appListener.error('Plugin not found:', options.plugin);
                     return false;
                 }
                 if (!plugin) { // needed?
-                    cli.newLine(cli.symbolError, 'Could not load the plugin:', options.plugin);
+                    appListener.error('Could not load the plugin:', options.plugin);
                     return false;
                 }
                 // can continue
@@ -172,35 +167,28 @@ class AppController {
                     yield this.listLanguages(options, cli, fileSearcher);
                 }
                 catch (err) {
-                    appListener.showError(err);
+                    appListener.exception(err);
                     return false;
                 }
                 return true;
             }
             let hasErrors = false;
             let spec = null;
+            appListener.announceOptions(options);
             if (options.compileSpecification) {
-                if (!options.generateTestCase) {
-                    cli.newLine(cli.symbolInfo, 'Test Case generation disabled.');
-                }
                 const compiler = new CompilerFacade_1.CompilerFacade(fs, appListener, appListener);
                 try {
                     [spec,] = yield compiler.compile(options);
                 }
                 catch (err) {
                     hasErrors = true;
-                    appListener.showError(err);
+                    appListener.exception(err);
                 }
             }
-            else {
-                cli.newLine(cli.symbolInfo, 'Specification compilation disabled.');
-            }
-            //cli.newLine( '-=[ SPEC ]=-', "\n\n" );
-            //cli.newLine( spec );
             if (options.ast) {
                 const getCircularReplacer = () => {
                     const seen = new WeakSet();
-                    return (key, value) => {
+                    return (/* key , */ value) => {
                         if ('object' === typeof value && value !== null) {
                             if (seen.has(value)) {
                                 return;
@@ -214,14 +202,14 @@ class AppController {
                     yield fileHandler.write(options.ast, JSON.stringify(spec, getCircularReplacer(), "  "));
                 }
                 catch (e) {
-                    cli.newLine(cli.symbolError, 'Error saving', cli.colorHighlight(options.ast), ': ' + e.message);
+                    appListener.error('Error saving', cli.colorHighlight(options.ast), ': ' + e.message);
                     return false;
                 }
-                cli.newLine(cli.symbolInfo, 'Saved', cli.colorHighlight(options.ast));
+                appListener.info('Saved', cli.colorHighlight(options.ast));
                 return true;
             }
             if (!plugin && (options.generateScript || options.executeScript || options.analyzeResult)) {
-                cli.newLine(cli.symbolWarning, 'A plugin was not defined.');
+                appListener.warn('A plugin was not defined.');
                 return true;
             }
             let abstractTestScripts = [];
@@ -234,26 +222,26 @@ class AppController {
                         let errors = [];
                         let files = [];
                         try {
-                            files = yield plugin.generateCode(abstractTestScripts, new concordialang_plugin_1.TestScriptGenerationOptions(options.plugin, options.dirScript), errors);
+                            files = yield plugin.generateCode(abstractTestScripts, new concordialang_plugin_1.TestScriptGenerationOptions(options.plugin, options.dirScript, options.directory), errors);
                         }
                         catch (err) {
                             hasErrors = true;
-                            appListener.showError(err);
+                            appListener.exception(err);
                         }
-                        for (let file of files) {
-                            cli.newLine(cli.symbolSuccess, 'Generated script', cli.colorHighlight(file));
+                        // When the terminal does not support links
+                        const fallback = (text, url) => {
+                            return text;
+                        };
+                        for (const file of files) {
+                            const relPath = path_1.relative(options.dirScript, file);
+                            const link = terminalLink(relPath, file, { fallback: fallback }); // clickable URL
+                            appListener.success('Generated script', cli.colorHighlight(link));
                         }
-                        for (let err of errors) {
+                        for (const err of errors) {
                             // cli.newLine( cli.symbolError, err.message );
-                            appListener.showError(err);
+                            appListener.exception(err);
                         }
                     }
-                    else {
-                        // cli.newLine( cli.symbolInfo, 'No generated abstract test scripts.' ); // no needed
-                    }
-                }
-                else {
-                    cli.newLine(cli.symbolInfo, 'Script generation disabled.');
                 }
             }
             let executionResult = null;
@@ -269,14 +257,14 @@ class AppController {
                 }
             }
             else {
-                appListener.testScriptExecutionDisabled();
+                // appListener.testScriptExecutionDisabled();
             }
             if (options.analyzeResult) { // Requires a plugin
                 let reportFile;
                 if (!executionResult) {
                     const defaultReportFile = path_1.join(options.dirResult, yield plugin.defaultReportFile());
                     if (!fs.existsSync(defaultReportFile)) {
-                        cli.newLine(cli.symbolWarning, 'Could not retrieve execution results.');
+                        appListener.warn('Could not retrieve execution results.');
                         return false;
                     }
                     reportFile = defaultReportFile;
@@ -291,18 +279,8 @@ class AppController {
                 }
                 catch (err) {
                     hasErrors = true;
-                    appListener.showError(err);
+                    appListener.exception(err);
                 }
-            }
-            else {
-                cli.newLine(cli.symbolInfo, 'Results\' analysis disabled.');
-            }
-            if (!options.compileSpecification
-                && !options.generateTestCase
-                && !options.generateScript
-                && !options.executeScript
-                && !options.analyzeResult) {
-                cli.newLine(cli.symbolWarning, 'Well, you have disabled all the interesting behavior. :)');
             }
             return !hasErrors;
         });

@@ -94,15 +94,13 @@ class AugmentedSpec extends ast_1.Spec {
         this._pathToDocCache.set(formattedPath, newDoc); // Overwrite cache
         return true;
     }
-    extractDocPath(doc) {
-        var _a;
-        return this.formatPath(((_a = doc === null || doc === void 0 ? void 0 : doc.fileInfo) === null || _a === void 0 ? void 0 : _a.path) || '');
-    }
     formatPath(path) {
         return file_1.toUnixPath(path_1.resolve(path_1.dirname(this.basePath), path)).toLowerCase();
+        // return toUnixPath( resolve( dirname( this.basePath ), path ) );
     }
     addToDocPath(doc) {
-        const path = this.extractDocPath(doc);
+        var _a;
+        const path = this.formatPath(((_a = doc === null || doc === void 0 ? void 0 : doc.fileInfo) === null || _a === void 0 ? void 0 : _a.path) || '');
         if (this._pathToDocCache.has(path)) {
             return false;
         }

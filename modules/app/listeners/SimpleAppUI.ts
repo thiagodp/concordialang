@@ -1,6 +1,5 @@
 import { TestScriptExecutionResult } from 'concordialang-plugin/dist';
-import { dirname, relative } from 'path';
-import * as prettyBytes from 'pretty-bytes';
+import { relative } from 'path';
 import * as terminalLink from 'terminal-link';
 import { CLI } from '../../cli/CLI';
 import { sortErrorsByLocation } from '../../error/ErrorSorting';
@@ -11,7 +10,6 @@ import { millisToString } from "../../util/TimeFormat";
 import { Defaults } from '../Defaults';
 import { Options } from '../Options';
 import { AppUI } from './AppUI';
-
 
 export class SimpleAppUI implements AppUI {
 
@@ -25,16 +23,109 @@ export class SimpleAppUI implements AppUI {
     // AppEventsListener
     //
 
+    /** @inheritdoc */
     setDebugMode( debugMode: boolean ): void {
         this._debugMode = debugMode;
     }
 
-    showError( error: Error ): void {
+    /** @inheritdoc */
+    show( ...args: any[] ): void {
+        this._cli.newLine( ...args );
+    }
+
+    /** @inheritdoc */
+    success( ...args: any[] ): void {
+        this._cli.newLine( this._cli.symbolSuccess, ...args );
+    }
+
+    /** @inheritdoc */
+    info( ...args: any[] ): void {
+        this._cli.newLine( this._cli.symbolInfo, ...args );
+    }
+
+    /** @inheritdoc */
+    warn( ...args: any[] ): void {
+        this._cli.newLine( this._cli.symbolWarning, ...args );
+    }
+
+    /** @inheritdoc */
+    error( ...args: any[] ): void {
+        this._cli.newLine( this._cli.symbolError, ...args );
+    }
+
+    /** @inheritdoc */
+    exception( error: Error ): void {
         if ( this._debugMode ) {
-            this._cli.newLine( this._cli.symbolError, error.message, this.formattedStackOf( error ) )
+            this.error( error.message, this.formattedStackOf( error ) );
         } else {
-            this._cli.newLine( this._cli.symbolError, error.message );
+            this.error( error.message );
         }
+    }
+
+    /** @inheritdoc */
+    announceUpdateAvailable( link: string, isMajor: boolean ): void {
+        if ( isMajor ) {
+            this.show( this._cli.colorHighlight( '→' ), this._cli.bgHighlight( 'PLEASE READ THE RELEASE NOTES BEFORE UPDATING' ) );
+            this.show( this._cli.colorHighlight( '→' ), link );
+        } else {
+            this.show( this._cli.colorHighlight( '→' ), 'See', link, 'for details.' );
+        }
+    }
+
+    /** @inheritdoc */
+    announceNoUpdateAvailable(): void {
+        this.info( 'No updates available.' );
+    }
+
+
+    /** @inheritdoc */
+    announceOptions( options: Options ): void {
+
+        if ( ! options ) {
+            return;
+        }
+
+        // Language
+        if ( new Defaults().LANGUAGE !== options.language ) {
+            this.info( 'Default language is', this._cli.colorHighlight( options.language ) );
+        }
+
+        const disabledStr = this._cli.colorHighlight( 'disabled' );
+
+        // Recursive
+        if ( ! options.recursive ) {
+            this.info( 'Directory recursion', disabledStr );
+        }
+
+        if ( ! options.compileSpecification ) {
+            this.info( 'Specification compilation', disabledStr );
+        } else {
+            if ( ! options.generateTestCase ) {
+                this.info( 'Test Case generation', disabledStr );
+            }
+        }
+
+        if ( ! options.generateScript ) {
+            this.info( 'Test script generation disabled', disabledStr );
+        }
+
+        if ( ! options.executeScript ) {
+            this.info( 'Test script execution', disabledStr );
+        }
+
+        if ( ! options.analyzeResult ) {
+            this.info( 'Test script results\' analysis', disabledStr );
+        }
+
+        if ( ! options.compileSpecification
+            && ! options.generateTestCase
+            && ! options.generateScript
+            && ! options.executeScript
+            && ! options.analyzeResult
+        ) {
+            this.warn( 'Well, you have disabled all the interesting behavior. :)' );
+        }
+
     }
 
     // /** @inheritDoc */
@@ -112,24 +203,6 @@ export class SimpleAppUI implements AppUI {
     /** @inheritDoc */
     public compilerStarted( options: Options ): void {
 
-        // Language
-        if ( new Defaults().LANGUAGE !== options.language ) {
-            this._cli.newLine(
-                this._cli.symbolInfo,
-                'Default language is',
-                this._cli.colorHighlight( options.language )
-            );
-        }
-
-        // Recursive
-        if ( ! options.recursive ) {
-            this._cli.newLine(
-                this._cli.symbolInfo,
-                'Directory recursion',
-                this._cli.colorHighlight( 'disabled' )
-            );
-        }
-
     }
 
     //
@@ -182,10 +255,14 @@ export class SimpleAppUI implements AppUI {
         compiledFilesCount: number,
         durationMS: number
     ) {
+        if ( givenFilesCount < 1 ) {
+            this.info( 'No files found.' );
+            return;
+        }
+
         const filesStr = count => count > 1 ? 'files' : 'file';
 
-        this._cli.newLine(
-            this._cli.symbolInfo,
+        this.info(
             givenFilesCount, filesStr( givenFilesCount ), 'given,',
             compiledFilesCount, filesStr( compiledFilesCount ), 'compiled',
             this.formatDuration( durationMS )
@@ -221,7 +298,7 @@ export class SimpleAppUI implements AppUI {
             const color = this._cli.properColor( hasErrors, hasWarnings );
             const symbol = this._cli.properSymbol( hasErrors, hasWarnings );
 
-            const text = relative( dirname( basePath ), filePath );
+            const text = relative( basePath, filePath );
             const link = terminalLink( text, filePath, { fallback: fallback } ); // clickable URL
 
             this._cli.newLine(
@@ -258,7 +335,7 @@ export class SimpleAppUI implements AppUI {
 
     /** @inheritDoc */
     testScriptExecutionError( error: Error ): void {
-        this.showError( error );
+        this.exception( error );
         this.showSeparationLine();
     }
 

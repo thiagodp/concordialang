@@ -114,16 +114,13 @@ export class AugmentedSpec extends Spec {
         return true;
     }
 
-    private extractDocPath( doc: Document ): string {
-        return this.formatPath( ( doc?.fileInfo?.path ) || '' );
-    }
-
     private formatPath( path: string ): string {
         return toUnixPath( resolve( dirname( this.basePath ), path ) ).toLowerCase();
+        // return toUnixPath( resolve( dirname( this.basePath ), path ) );
     }
 
     private addToDocPath( doc: Document ): boolean {
-        const path = this.extractDocPath( doc );
+        const path = this.formatPath( ( doc?.fileInfo?.path ) || '' );
         if ( this._pathToDocCache.has( path ) ) {
             return false;
         }

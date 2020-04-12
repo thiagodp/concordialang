@@ -18,6 +18,12 @@ class FSDirSearcher {
     /** @inheritDoc */
     search(options) {
         return __awaiter(this, void 0, void 0, function* () {
+            // // Whether the given directory is a file, return it
+            // const pStat = promisify( this._fs.stat );
+            // const st = await pStat( options.directory );
+            // if ( ! st.isDirectory() ) {
+            //     throw new Error( 'Please inform a directory. For files, use --files.' );
+            // }
             const entryFilter = entry => {
                 return entry.dirent.isDirectory()
                     && options.regexp.test(entry.name);
@@ -28,8 +34,8 @@ class FSDirSearcher {
                 throwErrorOnBrokenSymbolicLink: false,
                 // Entry filter
                 entryFilter: entryFilter,
-                // Skip all ENOENT errors
-                errorFilter: error => 'ENOENT' == error.code,
+                // Skip all ENOTDIR or ENOENT errors
+                errorFilter: error => 'ENOTDIR' == error.code || 'ENOENT' == error.code,
                 // Use deep filter when not recursive
                 deepFilter: options.recursive ? undefined : entryFilter
             };
