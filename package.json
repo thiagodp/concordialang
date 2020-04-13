@@ -74,10 +74,10 @@
     "test:check:watch": "tsc --noEmit -p __tests__ --watch",
     "test:coverage": "node copy.js && jest --coverage --coverageDirectory=\"coverage\"",
     "test:sonar": "node copy.js && jest --coverage --coverageDirectory=\"coverage\" --reporters=\"default\" --reporters=\"jest-sonar\"",
-    "all": "npm run build && npm run test",
+    "all": "npm run build && npm run test:check && npm run test",
     "start": "node bin/concordia.js",
     "depcheck": "depcheck",
-    "preversion": "npm run build && npm run test",
+    "preversion": "npm run all",
     "postversion": "git push && git push --tags"
   },
   "jest": {

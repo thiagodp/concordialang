@@ -9,8 +9,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const error_1 = require("../error");
 const TCGenController_1 = require("../app/TCGenController");
+const error_1 = require("../error");
 const language_1 = require("../language");
 const LanguageManager_1 = require("../language/LanguageManager");
 const Lexer_1 = require("../lexer/Lexer");
@@ -54,6 +54,7 @@ class CompilerFacade {
             //     specAnalyzer
             // );
             const files = yield fileSearcher.searchFrom(options);
+            // console.log( '>>> FOUND', files );
             if (this._compilerListener) {
                 this._compilerListener.compilerStarted(options);
             }

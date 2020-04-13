@@ -3,6 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const deepcopy = require("deepcopy");
 const path_1 = require("path");
 const NodeTypes_1 = require("../req/NodeTypes");
+const path_transformer_1 = require("../util/file/path-transformer");
 /**
  * Document (object) generator for Test Cases.
  *
@@ -58,7 +59,8 @@ class TCDocGen {
         const props = path_1.parse(docPath);
         const fileName = props.name + this._extensionTestCase;
         const outDir = !outputDir ? props.dir : path_1.relative(props.dir, outputDir);
-        const fullPath = path_1.normalize(path_1.resolve(this._basePath, path_1.join(outDir, fileName)));
+        // const fullPath = normalize( resolve( this._basePath, join( outDir, fileName ) ) );
+        const fullPath = path_transformer_1.toUnixPath(path_1.normalize(path_1.resolve(this._basePath, path_1.join(outDir, fileName))));
         return fullPath;
     }
     /**

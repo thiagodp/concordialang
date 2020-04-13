@@ -6,15 +6,15 @@ const TypeChecking_1 = require("../util/TypeChecking");
  * Abstract Test Script Generation Controller
  */
 class ATSGenController {
-    generate(spec) {
-        let all = [];
+    generate(docs, spec) {
+        const all = [];
         const gen = new AbstractTestScriptGenerator_1.AbstractTestScriptGenerator();
-        for (let doc of spec.docs || []) {
+        for (const doc of docs || []) {
             // Only test cases allowed
             if (!doc.testCases || doc.testCases.length < 1) {
                 continue;
             }
-            let ats = gen.generateFromDocument(doc, spec);
+            const ats = gen.generateFromDocument(doc, spec);
             if (TypeChecking_1.isDefined(ats)) {
                 // console.log( 'CREATED ATS from', ats.sourceFile );
                 all.push(ats);

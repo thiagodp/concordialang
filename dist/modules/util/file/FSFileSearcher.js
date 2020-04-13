@@ -58,7 +58,8 @@ class FSFileSearcher {
                     }
                     catch (err) { // err.code == 'ENOENT'
                         // console.log( err );
-                        continue;
+                        // TO-DO: add to warning list
+                        continue; // Ignores the file
                     }
                     files.push(f);
                 }

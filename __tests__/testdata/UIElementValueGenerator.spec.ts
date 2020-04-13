@@ -22,7 +22,7 @@ describe( 'UIElementValueGenerator', () => {
     let cp: SimpleCompiler;
     let bsa: BatchSpecificationAnalyzer;
     let spec: AugmentedSpec;
-    let errors: Error[] = [];
+    let errors = [];
 
     beforeEach( () => {
         dataGen = new DataGenerator( new DataGeneratorBuilder( SEED ) );

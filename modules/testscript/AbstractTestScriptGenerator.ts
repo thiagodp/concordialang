@@ -9,7 +9,6 @@ import { Symbols } from '../req/Symbols';
 import { Actions } from '../util/Actions';
 import { isDefined } from '../util/TypeChecking';
 
-
 /**
  * Generates Abstract Test Script
  */

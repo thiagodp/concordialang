@@ -2,9 +2,9 @@ import Graph = require( 'graph.js/dist/graph.full.js' );
 
 import { CompilerListener } from '../app/listeners/CompilerListener';
 import { TCGenListener } from '../app/listeners/TCGenListener';
-import { RuntimeException } from '../error';
 import { Options } from "../app/Options";
 import { TCGenController } from "../app/TCGenController";
+import { RuntimeException } from '../error';
 import { JsonLanguageContentLoader, LanguageContentLoader } from "../language";
 import { LanguageManager } from "../language/LanguageManager";
 import { Lexer } from "../lexer/Lexer";
@@ -68,6 +68,7 @@ export class CompilerFacade {
         // );
 
         const files: string[] = await fileSearcher.searchFrom( options );
+        // console.log( '>>> FOUND', files );
 
         if ( this._compilerListener ) {
             this._compilerListener.compilerStarted( options );

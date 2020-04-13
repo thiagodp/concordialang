@@ -2,7 +2,7 @@ import * as deepcopy from 'deepcopy';
 import { basename, dirname, join, normalize, parse, relative, resolve } from "path";
 import { Document, FileInfo, Import, Language, TestCase } from "../ast";
 import { NodeTypes } from "../req/NodeTypes";
-
+import { toUnixPath } from '../util/file/path-transformer';
 
 /**
  * Document (object) generator for Test Cases.
@@ -76,7 +76,8 @@ export class TCDocGen {
         const props = parse( docPath );
         const fileName = props.name + this._extensionTestCase;
         const outDir = ! outputDir ? props.dir : relative( props.dir, outputDir );
-        const fullPath = normalize( resolve( this._basePath, join( outDir, fileName ) ) );
+        // const fullPath = normalize( resolve( this._basePath, join( outDir, fileName ) ) );
+        const fullPath = toUnixPath( normalize( resolve( this._basePath, join( outDir, fileName ) ) ) );
         return fullPath;
     }
 

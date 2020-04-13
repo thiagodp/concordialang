@@ -213,34 +213,43 @@ class AppController {
                 return true;
             }
             let abstractTestScripts = [];
-            if (spec !== null) {
+            let generatedTestScriptFiles = [];
+            if (spec && options.generateScript) { // Requires a plugin
+                let docs = spec.docs;
+                if (options.files && options.files.length > 0) {
+                    const testCaseFilesToFilter = options.files.map(f => file_1.toUnixPath(f.replace(/\.feature$/u, '.testcase')));
+                    // console.log( '>> FILTER >>', testCaseFilesToFilter );
+                    // console.log( '>> docs before filter >>', spec.docs.map( d => d.fileInfo.path ) );
+                    const docHasPath = (doc, path) => {
+                        // console.log( 'DOC', toUnixPath( doc.fileInfo.path ), 'PATH', toUnixPath( path ) );
+                        return file_1.toUnixPath(doc.fileInfo.path).endsWith(file_1.toUnixPath(path));
+                    };
+                    docs = spec.docs.filter(doc => testCaseFilesToFilter.findIndex(file => docHasPath(doc, file)) >= 0);
+                }
                 const atsCtrl = new ATSGenController_1.ATSGenController();
-                abstractTestScripts = atsCtrl.generate(spec);
-                if (options.generateScript) { // Requires a plugin
-                    if (abstractTestScripts.length > 0) {
-                        // cli.newLine( cli.symbolInfo, 'Generated', abstractTestScripts.length, 'abstract test scripts' );
-                        let errors = [];
-                        let files = [];
-                        try {
-                            files = yield plugin.generateCode(abstractTestScripts, new concordialang_plugin_1.TestScriptGenerationOptions(options.plugin, options.dirScript, options.directory), errors);
-                        }
-                        catch (err) {
-                            hasErrors = true;
-                            appListener.exception(err);
-                        }
-                        // When the terminal does not support links
-                        const fallback = (text, url) => {
-                            return text;
-                        };
-                        for (const file of files) {
-                            const relPath = path_1.relative(options.dirScript, file);
-                            const link = terminalLink(relPath, file, { fallback: fallback }); // clickable URL
-                            appListener.success('Generated script', cli.colorHighlight(link));
-                        }
-                        for (const err of errors) {
-                            // cli.newLine( cli.symbolError, err.message );
-                            appListener.exception(err);
-                        }
+                abstractTestScripts = atsCtrl.generate(docs, spec);
+                if (abstractTestScripts.length > 0) {
+                    // cli.newLine( cli.symbolInfo, 'Generated', abstractTestScripts.length, 'abstract test scripts' );
+                    let errors = [];
+                    try {
+                        generatedTestScriptFiles = yield plugin.generateCode(abstractTestScripts, new concordialang_plugin_1.TestScriptGenerationOptions(options.plugin, options.dirScript, options.directory), errors);
+                    }
+                    catch (err) {
+                        hasErrors = true;
+                        appListener.exception(err);
+                    }
+                    // When the terminal does not support links
+                    const fallback = (text, url) => {
+                        return text;
+                    };
+                    for (const file of generatedTestScriptFiles) {
+                        const relPath = path_1.relative(options.dirScript, file);
+                        const link = terminalLink(relPath, file, { fallback: fallback }); // clickable URL
+                        appListener.success('Generated script', cli.colorHighlight(link));
+                    }
+                    for (const err of errors) {
+                        // cli.newLine( cli.symbolError, err.message );
+                        appListener.exception(err);
                     }
                 }
             }

@@ -5,6 +5,7 @@ import { join, relative } from 'path';
 import * as semverDiff from 'semver-diff';
 import * as terminalLink from 'terminal-link';
 import * as updateNotifier from 'update-notifier';
+import { Document } from '../ast';
 import { CLI } from '../cli/CLI';
 import { CliHelp } from '../cli/CliHelp';
 import { GuidedConfig } from '../cli/GuidedConfig';
@@ -20,7 +21,7 @@ import { PluginDrawer } from '../plugin/PluginDrawer';
 import { PluginManager } from '../plugin/PluginManager';
 import { AugmentedSpec } from '../req/AugmentedSpec';
 import { TestResultAnalyzer } from '../testscript/TestResultAnalyzer';
-import { DirSearcher, FileSearcher, FSDirSearcher, FSFileHandler, FSFileSearcher } from '../util/file';
+import { DirSearcher, FileSearcher, FSDirSearcher, FSFileHandler, FSFileSearcher, toUnixPath } from '../util/file';
 import { ATSGenController } from './ATSGenController';
 import { SimpleAppUI } from './listeners/SimpleAppUI';
 import { VerboseAppUI } from './listeners/VerboseAppUI';
@@ -242,51 +243,62 @@ export class AppController {
         }
 
         let abstractTestScripts: AbstractTestScript[] = [];
+        let generatedTestScriptFiles: string[] = [];
 
-        if ( spec !== null ) {
+        if ( spec && options.generateScript ) { // Requires a plugin
+
+            let docs: Document[] = spec.docs;
+            if ( options.files && options.files.length > 0 ) {
+
+                const testCaseFilesToFilter = options.files.map( f => toUnixPath( f.replace( /\.feature$/u, '.testcase' ) ) );
+                // console.log( '>> FILTER >>', testCaseFilesToFilter );
+                // console.log( '>> docs before filter >>', spec.docs.map( d => d.fileInfo.path ) );
+
+                const docHasPath = ( doc: Document, path: string ): boolean => {
+                    // console.log( 'DOC', toUnixPath( doc.fileInfo.path ), 'PATH', toUnixPath( path ) );
+                    return toUnixPath( doc.fileInfo.path ).endsWith( toUnixPath( path ) );
+                };
+
+                docs = spec.docs.filter( doc => testCaseFilesToFilter.findIndex( file => docHasPath( doc, file ) ) >= 0 );
+            }
 
             const atsCtrl = new ATSGenController();
-            abstractTestScripts = atsCtrl.generate( spec );
+            abstractTestScripts = atsCtrl.generate( docs, spec );
 
-            if ( options.generateScript ) { // Requires a plugin
+            if ( abstractTestScripts.length > 0 ) {
 
-                if ( abstractTestScripts.length > 0 ) {
+                // cli.newLine( cli.symbolInfo, 'Generated', abstractTestScripts.length, 'abstract test scripts' );
 
-                    // cli.newLine( cli.symbolInfo, 'Generated', abstractTestScripts.length, 'abstract test scripts' );
+                let errors: Error[] = [];
+                try {
+                    generatedTestScriptFiles = await plugin.generateCode(
+                        abstractTestScripts,
+                        new TestScriptGenerationOptions(
+                            options.plugin,
+                            options.dirScript,
+                            options.directory
+                        ),
+                        errors
+                    );
+                } catch ( err ) {
+                    hasErrors = true;
+                    appListener.exception( err );
+                }
 
-                    let errors: Error[] = [];
-                    let files: string[] = [];
-                    try {
-                        files = await plugin.generateCode(
-                            abstractTestScripts,
-                            new TestScriptGenerationOptions(
-                                options.plugin,
-                                options.dirScript,
-                                options.directory
-                            ),
-                            errors
-                        );
-                    } catch ( err ) {
-                        hasErrors = true;
-                        appListener.exception( err );
-                    }
+                // When the terminal does not support links
+                const fallback = ( text: string, url: string ): string => {
+                    return text;
+                };
 
-                    // When the terminal does not support links
-                    const fallback = ( text: string, url: string ): string => {
-                        return text;
-                    };
+                for ( const file of generatedTestScriptFiles ) {
+                    const relPath = relative( options.dirScript, file );
+                    const link = terminalLink( relPath, file, { fallback: fallback } ); // clickable URL
+                    appListener.success( 'Generated script', cli.colorHighlight( link ) );
+                }
 
-                    for ( const file of files ) {
-                        const relPath = relative( options.dirScript, file );
-                        const link = terminalLink( relPath, file, { fallback: fallback } ); // clickable URL
-                        appListener.success( 'Generated script', cli.colorHighlight( link ) );
-                    }
-
-                    for ( const err of errors ) {
-                        // cli.newLine( cli.symbolError, err.message );
-                        appListener.exception( err );
-                    }
-
+                for ( const err of errors ) {
+                    // cli.newLine( cli.symbolError, err.message );
+                    appListener.exception( err );
                 }
 
             }
