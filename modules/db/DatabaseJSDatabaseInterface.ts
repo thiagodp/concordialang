@@ -104,10 +104,10 @@ export class DatabaseJSDatabaseInterface implements DatabaseInterface {
     }
 
     /**
-     * Return an error about DBI is not instantied.
+     * Return an error about DBI is not instantiated.
      */
     private dbiError() {
-        return new Error( 'Internal database interface not instantied.' );
+        return new Error( 'Internal database interface not instantiated.' );
     }
 
 }

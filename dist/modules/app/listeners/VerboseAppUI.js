@@ -18,7 +18,7 @@ class VerboseAppUI extends SimpleAppUI_1.SimpleAppUI {
     /** @inheritDoc */
     testCaseGenerationStarted(warnings) {
         this._cli.newLine(this._cli.symbolInfo, 'Test case generation started');
-        this.showErrors(warnings, this._cli.symbolWarning, true);
+        this.showErrors(warnings, true);
     }
     /** @inheritDoc */
     testCaseGenerationFinished(durationMs) {

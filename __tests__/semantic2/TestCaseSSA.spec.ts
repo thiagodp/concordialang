@@ -166,7 +166,7 @@ describe( 'TestCaseSSA', () => {
 
     it( 'criticizes the lack of a feature and an import', () => {
         docC.imports = []; // empty
-        let errors: Error[] = [];
+        const errors = [];
         analyzer.analyzeDocument( spec, docC, errors );
         expect( errors ).toHaveLength( 1 );
         expect( errors[ 0 ].message ).toMatch( /import/ui );
@@ -175,34 +175,34 @@ describe( 'TestCaseSSA', () => {
     it( 'does not criticizes the lack of tags if its imports have a single feature', () => {
         docC.testCases[ 0 ].tags = []; // empty
         docC.imports.splice( 1 ); // remove the B, in order to have just one feature
-        let errors: Error[] = [];
+        const errors = [];
         analyzer.analyzeDocument( spec, docC, errors );
         expect( errors ).toHaveLength( 0 );
     } );
 
     it( 'criticizes the lack of tags if its imports have more than one feature', () => {
         docC.testCases[ 0 ].tags = []; // empty
-        let errors: Error[] = [];
+        const errors = [];
         analyzer.analyzeDocument( spec, docC, errors );
         expect( errors ).toHaveLength( 1 );
         expect( errors[ 0 ].message ).toMatch( /tag/ui );
     } );
 
     it( 'does not criticize the lack of feature if the file has a feature', () => {
-        let errors: Error[] = [];
+        const errors = [];
         analyzer.analyzeDocument( spec, docF, errors );
         expect( errors ).toHaveLength( 0 );
     } );
 
     it( 'does not criticize a referenced feature that is the file\'s feature', () => {
         docG.testCases[ 0 ].tags[ 0 ].content = docG.feature.name;
-        let errors: Error[] = [];
+        const errors = [];
         analyzer.analyzeDocument( spec, docG, errors );
         expect( errors ).toHaveLength( 0 );
     } );
 
     it( 'criticizes a referenced feature not imported', () => {
-        let errors: Error[] = [];
+        const errors = [];
         analyzer.analyzeDocument( spec, docG, errors );
         expect( errors ).toHaveLength( 1 );
         expect( errors[ 0 ].message ).toMatch( /tag/ui );
@@ -216,7 +216,7 @@ describe( 'TestCaseSSA', () => {
             } as TestCase
         );
 
-        let errors: Error[] = [];
+        const errors = [];
         analyzer.analyzeDocument( spec, docF, errors );
         expect( errors ).toHaveLength( 1 );
         expect( errors[ 0 ].message ).toMatch( /duplicated/ui );

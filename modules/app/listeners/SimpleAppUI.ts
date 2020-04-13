@@ -210,19 +210,22 @@ export class SimpleAppUI implements AppUI {
     //
 
     /** @inheritDoc */
-    testCaseGenerationStarted( warnings: Warning[] ) {
+    testCaseGenerationStarted( warnings: Warning[] ): void {
         // this._cli.newLine(
         //     this._cli.symbolInfo,
         //     'Test case generation started'
         // );
-        this.showErrors( warnings, this._cli.symbolWarning, true );
+        this.showErrors( warnings, true );
     }
 
     /** @inheritDoc */
-    testCaseProduced( path: string, errors: LocatedException[], warnings: Warning[] ) {
+    testCaseProduced( path: string, errors: LocatedException[], warnings: Warning[] ): void {
 
         const hasErrors = errors.length > 0;
         const hasWarnings = warnings.length > 0;
+        if ( ! hasErrors && ! hasWarnings ) {
+            return;
+        }
         const color = this._cli.properColor( hasErrors, hasWarnings );
         const symbol = this._cli.properSymbol( hasErrors, hasWarnings );
 
@@ -232,12 +235,11 @@ export class SimpleAppUI implements AppUI {
             this._cli.colorHighlight( path )
         );
 
-        this.showErrors( errors, this._cli.symbolError, true );
-        this.showErrors( warnings, this._cli.symbolWarning, true );
+        this.showErrors( [ ...errors, ...warnings ], true );
     }
 
     /** @inheritDoc */
-    testCaseGenerationFinished( durationMs ) {
+    testCaseGenerationFinished( durationMs ): void {
         // this._cli.newLine(
         //     this._cli.symbolInfo,
         //     'Test case generation finished',
@@ -254,7 +256,7 @@ export class SimpleAppUI implements AppUI {
         givenFilesCount: number,
         compiledFilesCount: number,
         durationMS: number
-    ) {
+    ): void {
         if ( givenFilesCount < 1 ) {
             this.info( 'No files found.' );
             return;
@@ -273,12 +275,10 @@ export class SimpleAppUI implements AppUI {
     reportProblems( problems: ProblemMapper, basePath: string ): void {
 
         // GENERIC
+        const genericErrors: LocatedException[] = problems.getGenericErrors();
+        const genericWarnings: LocatedException[] = problems.getGenericWarnings();
 
-        const genericErrors: Error[] = problems.getGenericErrors();
-        const genericWarnings: Error[] = problems.getGenericWarnings();
-
-        this.showErrors( genericErrors, this._cli.symbolError, false );
-        this.showErrors( genericWarnings, this._cli.symbolWarning, false );
+        this.showErrors( [ ...genericErrors, ...genericWarnings ], false );
 
         // PER FILE
 
@@ -306,8 +306,7 @@ export class SimpleAppUI implements AppUI {
                 this._cli.colorHighlight( link )
             );
 
-            this.showErrors( problemInfo.errors, this._cli.symbolError, true );
-            this.showErrors( problemInfo.warnings, this._cli.symbolWarning, true );
+            this.showErrors( [ ...problemInfo.errors, ...problemInfo.warnings], true );
         }
 
     }
@@ -420,13 +419,16 @@ export class SimpleAppUI implements AppUI {
         }
     }
 
-    protected showErrors( errors: LocatedException[], symbol: string, showSpaces: boolean ) {
+    protected showErrors( errors: LocatedException[], showSpaces: boolean ) {
         if ( ! errors || errors.length < 1 ) {
             return;
         }
         const sortedErrors = sortErrorsByLocation( errors );
         const spaces = ' ';
         for ( let e of sortedErrors ) {
+
+            const symbol = e.isWarning ? this._cli.symbolWarning : this._cli.symbolError;
+
             let msg = this._debugMode
                 ? e.message + ' ' + this.formattedStackOf( e )
                 : e.message;

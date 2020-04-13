@@ -48,7 +48,7 @@ describe( 'ScenarioDA', () => {
         let doc1: Document = {};
         parser.analyze( lexer.nodes(), doc1 );
 
-        let errors: Error[] = [];
+        const errors = [];
         analyzer.analyze( doc1, errors );
         expect( errors ).toHaveLength( 1 );
         expect( errors[ 0 ].message ).toMatch( /duplicated/ui );

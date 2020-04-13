@@ -8,25 +8,29 @@ import { Location } from 'concordialang-types';
 export abstract class LocatedException extends Error {
 
     name = 'LocatedException';
+    isWarning: boolean = false;
 
-    constructor( message?: string, public location?: Location, showFilePath: boolean = false ) {
-        super( LocatedException.makeExceptionMessage( message, location, showFilePath ) );
+    constructor(
+        message?: string,
+        public location?: Location,
+        messageShouldIncludeFilePath: boolean = false
+    ) {
+        super( LocatedException.makeExceptionMessage( message, location, messageShouldIncludeFilePath ) );
     }
 
     public static makeExceptionMessage(
         originalMessage?: string,
         location?: Location,
-        showFilePath: boolean = false
+        includeFilePath: boolean = false
     ): string {
         let msg = '';
         if ( location ) {
             msg += '(' + location.line + ',' + location.column + ') ';
-            if ( showFilePath && location.filePath ) {
+            if ( includeFilePath && location.filePath ) {
                 msg += location.filePath + ': ';
             }
         }
         msg += originalMessage || '';
-
         return msg;
     }
 

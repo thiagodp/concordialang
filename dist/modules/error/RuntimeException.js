@@ -11,5 +11,10 @@ class RuntimeException extends LocatedException_1.LocatedException {
         super(...arguments);
         this.name = 'RuntimeException';
     }
+    static createFrom(error) {
+        const e = new RuntimeException(error.message);
+        e.stack = error.stack;
+        return e;
+    }
 }
 exports.RuntimeException = RuntimeException;

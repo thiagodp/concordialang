@@ -9,6 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+const error_1 = require("../error");
 const TCGenController_1 = require("../app/TCGenController");
 const language_1 = require("../language");
 const LanguageManager_1 = require("../language/LanguageManager");
@@ -44,7 +45,7 @@ class CompilerFacade {
             const lm = new LanguageManager_1.LanguageManager(fileSearcher, options.languageDir);
             const availableLanguages = yield lm.availableLanguages();
             if (availableLanguages.indexOf(options.language) < 0) { // not found
-                throw new Error('Informed language is not available: ' + options.language);
+                throw new error_1.RuntimeException('Informed language is not available: ' + options.language);
             }
             let singleFileCompiler = new SingleFileCompiler_1.SingleFileCompiler(lexer, parser, nlpBasedSentenceRecognizer, options.language);
             // let mfp = new MultiFileProcessor( singleFileCompiler, listener, listener, listener, listener );

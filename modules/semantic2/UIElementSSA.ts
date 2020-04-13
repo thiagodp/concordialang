@@ -3,6 +3,7 @@ import { Location } from 'concordialang-types';
 import * as deepcopy from 'deepcopy';
 import { Document, Node, UIElement, UIProperty } from '../ast';
 import { QueryParser } from '../db/QueryParser';
+import { LocatedException } from '../error/LocatedException';
 import { ProblemMapper } from '../error/ProblemMapper';
 import { SemanticException } from '../error/SemanticException';
 import { Entities } from '../nlp/Entities';
@@ -85,7 +86,7 @@ export class UIElementSSA extends SpecificationAnalyzer {
         problems: ProblemMapper
     ): boolean {
 
-        let errors: Error[] = [];
+        let errors: LocatedException[] = [];
 
         // Analyze UI elements from the Feature, when declared
         if ( isDefined( doc.feature ) ) {

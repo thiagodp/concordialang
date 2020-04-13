@@ -1,3 +1,4 @@
+import { RuntimeException, Warning } from "../error";
 import { Document, Node } from "../ast";
 import { ProblemMapper } from "../error/ProblemMapper";
 import { Lexer } from "../lexer/Lexer";
@@ -52,14 +53,14 @@ export class SingleFileCompiler {
 
 
     /**
-     * Analyzes lexer's nodes of a single document.
+     * Analyze nodes recognized by a lexer for a given document.
      */
     analyzeNodes(
         problems: ProblemMapper,
         doc: Document
     ): boolean {
 
-        // Get the lexed nodes
+        // Get recognized nodes
         let nodes: Node[] = this._lexer.nodes();
 
         // Add errors found
@@ -80,14 +81,14 @@ export class SingleFileCompiler {
                 this._nlpRec.train( language );
             } else {
                 let errors = [
-                    new Error( 'The NLP cannot be trained in the language "' + language + '".' )
+                    new RuntimeException( 'The NLP cannot be trained in the language "' + language + '".' )
                 ];
                 this.addErrors( problems, errors, doc );
             }
         }
 
-        const errors: Error[] = [];
-        const warnings: Error[] = [];
+        const errors: RuntimeException[] = [];
+        const warnings: Warning[] = [];
 
         this._nlpRec.recognizeSentencesInDocument(
             doc, language, errors, warnings );
@@ -105,12 +106,18 @@ export class SingleFileCompiler {
 
 
     private addErrors( mapper: ProblemMapper, errors: Error[], doc: Document ) {
-        if ( errors.length > 0 ) {
-            mapper.addError( doc.fileInfo.path, ...errors );
+        for ( const e of errors ) {
+            let re;
+            if ( e.name === Error.name ) {
+                re = RuntimeException.createFrom( e );
+            } else {
+                re = e;
+            }
+            mapper.addError( doc.fileInfo.path, re );
         }
     }
 
-    private addWarnings( mapper: ProblemMapper, warnings: Error[], doc: Document ) {
+    private addWarnings( mapper: ProblemMapper, warnings: Warning[], doc: Document ) {
         if ( warnings.length > 0 ) {
             mapper.addWarning( doc.fileInfo.path, ...warnings );
         }

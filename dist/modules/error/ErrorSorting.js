@@ -1,8 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const Warning_1 = require("./Warning");
 function sortErrorsByLocation(errors) {
-    return Array.sort(errors, (a, b) => {
+    const compare = (a, b) => {
         if (a.location && b.location) {
             // Compare the line
             let lineDiff = a.location.line - b.location.line;
@@ -12,14 +11,12 @@ function sortErrorsByLocation(errors) {
             return lineDiff;
         }
         // No location, so let's compare the error type
-        const warningName = (new Warning_1.Warning()).name;
-        const aIsWarning = a.name === warningName;
-        const bIsWarning = b.name === warningName;
-        // Both are warnings, they are equal
-        if (aIsWarning && bIsWarning) {
+        // If both are warnings, they are equal
+        if (a.isWarning && b.isWarning) {
             return 0;
         }
-        return aIsWarning ? 1 : -1;
-    });
+        return a.isWarning ? 1 : -1;
+    };
+    return Array.sort(errors, compare);
 }
 exports.sortErrorsByLocation = sortErrorsByLocation;

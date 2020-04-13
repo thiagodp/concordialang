@@ -142,7 +142,7 @@ export class TestCaseSSA extends SpecificationAnalyzer {
     }
 
 
-    private processSingleImport( spec: AugmentedSpec, doc: Document, docImport: Import, errors: Error[] ): boolean {
+    private processSingleImport( spec: AugmentedSpec, doc: Document, docImport: Import, errors: LocatedException[] ): boolean {
 
         let feature = this.featureFromImport( spec, doc, docImport, errors );
         // It must have a feature
@@ -158,7 +158,7 @@ export class TestCaseSSA extends SpecificationAnalyzer {
     }
 
 
-    private featureFromImport( spec: AugmentedSpec, doc: Document, docImport: Import, errors: Error[] ): Feature {
+    private featureFromImport( spec: AugmentedSpec, doc: Document, docImport: Import, errors: LocatedException[] ): Feature {
 
         // Gets the imported document
         const filePath = docImport.value;
@@ -176,7 +176,11 @@ export class TestCaseSSA extends SpecificationAnalyzer {
     }
 
 
-    private processMultipleImports( spec: AugmentedSpec, doc: Document, errors: Error[] ): boolean {
+    private processMultipleImports(
+        spec: AugmentedSpec,
+        doc: Document,
+        errors: LocatedException[]
+        ): boolean {
 
         // Sanity checking
         if ( 0 === doc.imports.length ) {

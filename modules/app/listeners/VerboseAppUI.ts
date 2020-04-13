@@ -32,7 +32,7 @@ export class VerboseAppUI extends SimpleAppUI implements AppUI {
             this._cli.symbolInfo,
             'Test case generation started'
         );
-        this.showErrors( warnings, this._cli.symbolWarning, true );
+        this.showErrors( warnings, true );
     }
 
     /** @inheritDoc */

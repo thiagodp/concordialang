@@ -9,6 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+const error_1 = require("../error");
 const BatchDocumentAnalyzer_1 = require("../semantic2/single/BatchDocumentAnalyzer");
 class SingleFileCompiler {
     constructor(_lexer, _parser, _nlpRec, _defaultLanguage, _ignoreSemanticAnalysis = false) {
@@ -42,10 +43,10 @@ class SingleFileCompiler {
         });
     }
     /**
-     * Analyzes lexer's nodes of a single document.
+     * Analyze nodes recognized by a lexer for a given document.
      */
     analyzeNodes(problems, doc) {
-        // Get the lexed nodes
+        // Get recognized nodes
         let nodes = this._lexer.nodes();
         // Add errors found
         this.addErrors(problems, this._lexer.errors(), doc);
@@ -63,7 +64,7 @@ class SingleFileCompiler {
             }
             else {
                 let errors = [
-                    new Error('The NLP cannot be trained in the language "' + language + '".')
+                    new error_1.RuntimeException('The NLP cannot be trained in the language "' + language + '".')
                 ];
                 this.addErrors(problems, errors, doc);
             }
@@ -80,8 +81,15 @@ class SingleFileCompiler {
         return problems.isEmpty();
     }
     addErrors(mapper, errors, doc) {
-        if (errors.length > 0) {
-            mapper.addError(doc.fileInfo.path, ...errors);
+        for (const e of errors) {
+            let re;
+            if (e.name === Error.name) {
+                re = error_1.RuntimeException.createFrom(e);
+            }
+            else {
+                re = e;
+            }
+            mapper.addError(doc.fileInfo.path, re);
         }
     }
     addWarnings(mapper, warnings, doc) {

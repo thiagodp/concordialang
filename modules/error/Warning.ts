@@ -7,4 +7,5 @@ import { LocatedException } from "./LocatedException";
  */
 export class Warning extends LocatedException {
     name = 'Warning';
+    isWarning = true;
 }

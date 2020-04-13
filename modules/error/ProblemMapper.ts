@@ -1,10 +1,12 @@
+import { LocatedException } from "./LocatedException";
+
 /** Key for generic errors */
 export const GENERIC_ERROR_KEY: string = '*';
 
 export class ProblemInfo {
     constructor(
-        public errors: Error[] = [],
-        public warnings: Error[] = [],
+        public errors: LocatedException[] = [],
+        public warnings: LocatedException[] = [],
     ) {
     }
 
@@ -40,21 +42,21 @@ export class ProblemMapper {
         return key;
     }
 
-    addError( key: string, ... errors: Error[] ): void {
+    addError( key: string, ... errors: LocatedException[] ): void {
         let target: ProblemInfo = this.get( key, true );
         target.errors.push.apply( target.errors, errors );
     }
 
-    addGenericError( ...errors: Error[] ): void {
+    addGenericError( ...errors: LocatedException[] ): void {
         this.addError( GENERIC_ERROR_KEY, ...errors );
     }
 
-    addWarning( key: string, ... errors: Error[] ): void {
+    addWarning( key: string, ... errors: LocatedException[] ): void {
         let target: ProblemInfo = this.get( key, true );
         target.warnings.push.apply( target.warnings, errors );
     }
 
-    addGenericWarning( ...errors: Error[] ): void {
+    addGenericWarning( ...errors: LocatedException[] ): void {
         this.addWarning( GENERIC_ERROR_KEY, ...errors );
     }
 
@@ -72,7 +74,7 @@ export class ProblemMapper {
         return this.get( GENERIC_ERROR_KEY, assureExists );
     }
 
-    getErrors( key: string ): Error[] {
+    getErrors( key: string ): LocatedException[] {
         const target: ProblemInfo | undefined = this.get( key, false );
         if ( ! target ) {
             return [];
@@ -80,19 +82,19 @@ export class ProblemMapper {
         return target.errors;
     }
 
-    getGenericErrors(): Error[] {
+    getGenericErrors(): LocatedException[] {
         return this.getErrors( GENERIC_ERROR_KEY );
     }
 
-    getAllErrors(): Error[] {
-        const errors: Error[] = [];
+    getAllErrors(): LocatedException[] {
+        const errors: LocatedException[] = [];
         for ( const [ , value ] of this._map ) {
             errors.push.apply( errors, value.errors );
         }
         return errors;
     }
 
-    getWarnings( key: string ): Error[] {
+    getWarnings( key: string ): LocatedException[] {
         const target: ProblemInfo | undefined = this.get( key, false );
         if ( ! target ) {
             return [];
@@ -100,12 +102,12 @@ export class ProblemMapper {
         return target.warnings;
     }
 
-    getGenericWarnings(): Error[] {
+    getGenericWarnings(): LocatedException[] {
         return this.getWarnings( GENERIC_ERROR_KEY );
     }
 
-    getAllWarnings(): Error[] {
-        const warnings: Error[] = [];
+    getAllWarnings(): LocatedException[] {
+        const warnings: LocatedException[] = [];
         for ( const [ , value ] of this._map ) {
             warnings.push.apply( warnings, value.warnings );
         }

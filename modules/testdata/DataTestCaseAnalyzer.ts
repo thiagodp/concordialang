@@ -71,7 +71,7 @@ export class DataTestCaseAnalyzer {
      */
     analyzeUIElement(
         uie: UIElement,
-        errors: Error[]
+        errors: RuntimeException[]
     ): DTCMap {
 
         let map: DTCMap = new Map< DataTestCase, DTCAnalysisData >();

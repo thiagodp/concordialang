@@ -169,17 +169,19 @@ class SimpleAppUI {
         //     this._cli.symbolInfo,
         //     'Test case generation started'
         // );
-        this.showErrors(warnings, this._cli.symbolWarning, true);
+        this.showErrors(warnings, true);
     }
     /** @inheritDoc */
     testCaseProduced(path, errors, warnings) {
         const hasErrors = errors.length > 0;
         const hasWarnings = warnings.length > 0;
+        if (!hasErrors && !hasWarnings) {
+            return;
+        }
         const color = this._cli.properColor(hasErrors, hasWarnings);
         const symbol = this._cli.properSymbol(hasErrors, hasWarnings);
         this._cli.newLine(color(symbol), 'Generated', this._cli.colorHighlight(path));
-        this.showErrors(errors, this._cli.symbolError, true);
-        this.showErrors(warnings, this._cli.symbolWarning, true);
+        this.showErrors([...errors, ...warnings], true);
     }
     /** @inheritDoc */
     testCaseGenerationFinished(durationMs) {
@@ -206,8 +208,7 @@ class SimpleAppUI {
         // GENERIC
         const genericErrors = problems.getGenericErrors();
         const genericWarnings = problems.getGenericWarnings();
-        this.showErrors(genericErrors, this._cli.symbolError, false);
-        this.showErrors(genericWarnings, this._cli.symbolWarning, false);
+        this.showErrors([...genericErrors, ...genericWarnings], false);
         // PER FILE
         // When the terminal does not support links
         const fallback = (text, url) => {
@@ -225,8 +226,7 @@ class SimpleAppUI {
             const text = path_1.relative(basePath, filePath);
             const link = terminalLink(text, filePath, { fallback: fallback }); // clickable URL
             this._cli.newLine(color(symbol), this._cli.colorHighlight(link));
-            this.showErrors(problemInfo.errors, this._cli.symbolError, true);
-            this.showErrors(problemInfo.warnings, this._cli.symbolWarning, true);
+            this.showErrors([...problemInfo.errors, ...problemInfo.warnings], true);
         }
     }
     //
@@ -301,13 +301,14 @@ class SimpleAppUI {
             default: return this._cli.colorText;
         }
     }
-    showErrors(errors, symbol, showSpaces) {
+    showErrors(errors, showSpaces) {
         if (!errors || errors.length < 1) {
             return;
         }
         const sortedErrors = ErrorSorting_1.sortErrorsByLocation(errors);
         const spaces = ' ';
         for (let e of sortedErrors) {
+            const symbol = e.isWarning ? this._cli.symbolWarning : this._cli.symbolError;
             let msg = this._debugMode
                 ? e.message + ' ' + this.formattedStackOf(e)
                 : e.message;

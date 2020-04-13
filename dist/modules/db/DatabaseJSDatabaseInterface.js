@@ -110,10 +110,10 @@ class DatabaseJSDatabaseInterface {
         return new dbjs.Connection(absDB);
     }
     /**
-     * Return an error about DBI is not instantied.
+     * Return an error about DBI is not instantiated.
      */
     dbiError() {
-        return new Error('Internal database interface not instantied.');
+        return new Error('Internal database interface not instantiated.');
     }
 }
 exports.DatabaseJSDatabaseInterface = DatabaseJSDatabaseInterface;

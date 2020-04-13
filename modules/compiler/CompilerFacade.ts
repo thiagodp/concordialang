@@ -1,7 +1,8 @@
 import Graph = require( 'graph.js/dist/graph.full.js' );
 
-import { CompilerListener } from 'modules/app/listeners/CompilerListener';
-import { TCGenListener } from 'modules/app/listeners/TCGenListener';
+import { CompilerListener } from '../app/listeners/CompilerListener';
+import { TCGenListener } from '../app/listeners/TCGenListener';
+import { RuntimeException } from '../error';
 import { Options } from "../app/Options";
 import { TCGenController } from "../app/TCGenController";
 import { JsonLanguageContentLoader, LanguageContentLoader } from "../language";
@@ -49,7 +50,7 @@ export class CompilerFacade {
         const lm = new LanguageManager( fileSearcher, options.languageDir );
         const availableLanguages: string[] = await lm.availableLanguages();
         if ( availableLanguages.indexOf( options.language ) < 0 ) { // not found
-            throw new Error( 'Informed language is not available: ' + options.language );
+            throw new RuntimeException( 'Informed language is not available: ' + options.language );
         }
 
         let singleFileCompiler = new SingleFileCompiler(
