@@ -3,8 +3,8 @@ import { Document, FileInfo } from "../../modules/ast";
 import { FileProblemMapper } from '../../modules/error/FileProblemMapper';
 import { AugmentedSpec } from "../../modules/req/AugmentedSpec";
 import { SpecFilter } from "../../modules/selection/SpecFilter";
-import { BatchSpecificationAnalyzer } from "../../modules/semantic2/BatchSpecificationAnalyzer";
-import { UIElementSSA } from "../../modules/semantic2/UIElementSSA";
+import { BatchSpecificationAnalyzer } from "../../modules/semantic/BatchSpecificationAnalyzer";
+import { UIElementSSA } from "../../modules/semantic/UIElementSSA";
 import { SimpleCompiler } from "../SimpleCompiler";
 
 

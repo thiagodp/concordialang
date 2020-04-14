@@ -5,7 +5,7 @@ import { Document } from '../../../modules/ast/Document';
 import { JsonLanguageContentLoader, LanguageContentLoader } from '../../../modules/language';
 import { Lexer } from '../../../modules/lexer/Lexer';
 import { Parser } from '../../../modules/parser/Parser';
-import { ScenarioDA } from '../../../modules/semantic2/single/ScenarioDA';
+import { ScenarioDA } from '../../../modules/semantic/single/ScenarioDA';
 import { FSFileHandler } from '../../../modules/util/file/FSFileHandler';
 
 describe( 'ScenarioDA', () => {

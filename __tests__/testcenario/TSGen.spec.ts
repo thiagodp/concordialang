@@ -4,7 +4,7 @@ import { AugmentedSpec } from "../../modules/req/AugmentedSpec";
 import { CartesianProductStrategy } from "../../modules/selection/CombinationStrategy";
 import { SpecFilter } from "../../modules/selection/SpecFilter";
 import { AllVariantsSelectionStrategy } from "../../modules/selection/VariantSelectionStrategy";
-import { BatchSpecificationAnalyzer } from "../../modules/semantic2/BatchSpecificationAnalyzer";
+import { BatchSpecificationAnalyzer } from "../../modules/semantic/BatchSpecificationAnalyzer";
 import { GenContext, PreTestCaseGenerator } from "../../modules/testscenario/PreTestCaseGenerator";
 import { TestScenario } from "../../modules/testscenario/TestScenario";
 import { TSGen } from "../../modules/testscenario/TSGen";

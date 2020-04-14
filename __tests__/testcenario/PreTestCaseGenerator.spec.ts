@@ -3,7 +3,7 @@ import { FileProblemMapper } from "../../modules/error/FileProblemMapper";
 import { AugmentedSpec } from "../../modules/req/AugmentedSpec";
 import { IndexOfEachStrategy, SingleRandomOfEachStrategy } from "../../modules/selection/CombinationStrategy";
 import { SpecFilter } from "../../modules/selection/SpecFilter";
-import { BatchSpecificationAnalyzer } from "../../modules/semantic2/BatchSpecificationAnalyzer";
+import { BatchSpecificationAnalyzer } from "../../modules/semantic/BatchSpecificationAnalyzer";
 import { JustOneInvalidMix, OnlyValidMix } from "../../modules/testcase/DataTestCaseMix";
 import { TestPlanner } from "../../modules/testcase/TestPlanner";
 import { LongLimits } from "../../modules/testdata/limits/LongLimits";

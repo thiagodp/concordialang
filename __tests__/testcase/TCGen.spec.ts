@@ -4,7 +4,7 @@ import { LocatedException } from "../../modules/error/LocatedException";
 import { AugmentedSpec } from "../../modules/req/AugmentedSpec";
 import { IndexOfEachStrategy } from "../../modules/selection/CombinationStrategy";
 import { SpecFilter } from "../../modules/selection/SpecFilter";
-import { BatchSpecificationAnalyzer } from "../../modules/semantic2/BatchSpecificationAnalyzer";
+import { BatchSpecificationAnalyzer } from "../../modules/semantic/BatchSpecificationAnalyzer";
 import { JustOneInvalidMix, UnfilteredMix } from "../../modules/testcase/DataTestCaseMix";
 import { TCGen } from "../../modules/testcase/TCGen";
 import { TestPlanner } from "../../modules/testcase/TestPlanner";

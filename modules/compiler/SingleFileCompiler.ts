@@ -4,7 +4,7 @@ import { ProblemMapper } from "../error/ProblemMapper";
 import { Lexer } from "../lexer/Lexer";
 import { NLPBasedSentenceRecognizer } from "../nlp/NLPBasedSentenceRecognizer";
 import { Parser } from "../parser/Parser";
-import { BatchDocumentAnalyzer } from "../semantic2/single/BatchDocumentAnalyzer";
+import { BatchDocumentAnalyzer } from "../semantic/single/BatchDocumentAnalyzer";
 
 export class SingleFileCompiler {
 

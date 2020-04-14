@@ -5,7 +5,7 @@ import { ProblemMapper } from '../error';
 import { FileProblemMapper } from '../error/FileProblemMapper';
 import { RuntimeException } from '../error/RuntimeException';
 import { AugmentedSpec } from '../req/AugmentedSpec';
-import { BatchSpecificationAnalyzer } from '../semantic2/BatchSpecificationAnalyzer';
+import { BatchSpecificationAnalyzer } from '../semantic/BatchSpecificationAnalyzer';
 import { FileReader } from "../util/file/FileReader";
 import { toUnixPath } from "../util/file/path-transformer";
 import { runAllWithoutThrow } from '../util/p-all';

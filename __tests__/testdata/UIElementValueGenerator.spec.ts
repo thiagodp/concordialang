@@ -3,7 +3,7 @@ import { EntityValueType, FileInfo } from "../../modules/ast";
 import { FileProblemMapper } from "../../modules/error/FileProblemMapper";
 import { AugmentedSpec } from "../../modules/req/AugmentedSpec";
 import { SpecFilter } from "../../modules/selection/SpecFilter";
-import { BatchSpecificationAnalyzer } from "../../modules/semantic2/BatchSpecificationAnalyzer";
+import { BatchSpecificationAnalyzer } from "../../modules/semantic/BatchSpecificationAnalyzer";
 import { UIETestPlan } from "../../modules/testcase/UIETestPlan";
 import { DataGenerator } from "../../modules/testdata/DataGenerator";
 import { DataGeneratorBuilder } from "../../modules/testdata/DataGeneratorBuilder";

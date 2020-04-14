@@ -7,7 +7,7 @@ import { Lexer } from '../../modules/lexer/Lexer';
 import { Parser } from '../../modules/parser/Parser';
 import { AugmentedSpec } from '../../modules/req/AugmentedSpec';
 import { SpecFilter } from '../../modules/selection/SpecFilter';
-import { FeatureSSA } from '../../modules/semantic2/FeatureSSA';
+import { FeatureSSA } from '../../modules/semantic/FeatureSSA';
 import { FSFileHandler } from '../../modules/util/file/FSFileHandler';
 import { FileProblemMapper } from '../../modules/error/FileProblemMapper';
 

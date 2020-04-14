@@ -3,7 +3,7 @@ import { join } from 'path';
 import { Document, Feature, FileInfo, Import, ReservedTags, Tag, TestCase } from '../../modules/ast';
 import { AugmentedSpec } from '../../modules/req/AugmentedSpec';
 import { NodeTypes } from '../../modules/req/NodeTypes';
-import { TestCaseSSA } from '../../modules/semantic2/TestCaseSSA';
+import { TestCaseSSA } from '../../modules/semantic/TestCaseSSA';
 
 
 describe( 'TestCaseSSA', () => {
