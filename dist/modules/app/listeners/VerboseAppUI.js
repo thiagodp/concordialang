@@ -13,6 +13,9 @@ class VerboseAppUI extends SimpleAppUI_1.SimpleAppUI {
         this._cli.newLine(this._cli.symbolInfo, 'Compiling', this._cli.colorHighlight(path), '...');
     }
     //
+    // CompilerListener
+    //
+    //
     // TCGenListener
     //
     /** @inheritDoc */

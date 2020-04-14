@@ -5,11 +5,7 @@ export interface CompilerListener {
 
     compilerStarted( options: Options );
 
-    compilationFinished(
-        givenFilesCount: number,
-        compiledFilesCount: number,
-        durationMS: number
-        );
+    compilationFinished( durationMS: number );
 
     reportProblems( problems: ProblemMapper, basePath: string ): void;
 

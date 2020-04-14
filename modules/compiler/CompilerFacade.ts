@@ -83,9 +83,8 @@ export class CompilerFacade {
         // console.log( 'OUT >', output.spec.docs.length, "\n", output.spec.docs.map( d => d.fileInfo.path ) );
 
         if ( this._compilerListener ) {
-            // const durationMS = Date.now() - startTime;
-            // this._compilerListener.compilationFinished(
-            //     files.length, output.spec?.docs?.length || files.length, durationMS );
+            const durationMS = Date.now() - startTime;
+            this._compilerListener.compilationFinished( durationMS );
             this._compilerListener.reportProblems( output.problems, options.directory );
         }
 

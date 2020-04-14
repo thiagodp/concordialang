@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const path_1 = require("path");
 const terminalLink = require("terminal-link");
+const ora = require("ora");
 const ErrorSorting_1 = require("../../error/ErrorSorting");
 const TimeFormat_1 = require("../../util/TimeFormat");
 const Defaults_1 = require("../Defaults");
@@ -9,6 +10,7 @@ class SimpleAppUI {
     constructor(_cli, _debugMode = false) {
         this._cli = _cli;
         this._debugMode = _debugMode;
+        this._spinner = ora();
     }
     //
     // AppEventsListener
@@ -155,12 +157,6 @@ class SimpleAppUI {
         // nothing
     }
     //
-    // CompilerListener
-    //
-    /** @inheritDoc */
-    compilerStarted(options) {
-    }
-    //
     // TCGenListener
     //
     /** @inheritDoc */
@@ -194,14 +190,14 @@ class SimpleAppUI {
     //
     // CompilerListener
     //
+    /** @inheritDoc */
+    compilerStarted(options) {
+        this._spinner.start();
+    }
     /** @inheritdoc */
-    compilationFinished(givenFilesCount, compiledFilesCount, durationMS) {
-        if (givenFilesCount < 1) {
-            this.info('No files found.');
-            return;
-        }
-        const filesStr = count => count > 1 ? 'files' : 'file';
-        this.info(givenFilesCount, filesStr(givenFilesCount), 'given,', compiledFilesCount, filesStr(compiledFilesCount), 'compiled', this.formatDuration(durationMS));
+    compilationFinished(durationMS) {
+        this._spinner.stop();
+        this.info('Compiled', this.formatDuration(durationMS));
     }
     /** @inheritdoc */
     reportProblems(problems, basePath) {

@@ -1,6 +1,7 @@
 import { TestScriptExecutionResult } from 'concordialang-plugin/dist';
 import { relative } from 'path';
 import * as terminalLink from 'terminal-link';
+import * as ora from 'ora';
 import { CLI } from '../../cli/CLI';
 import { sortErrorsByLocation } from '../../error/ErrorSorting';
 import { LocatedException } from '../../error/LocatedException';
@@ -12,6 +13,8 @@ import { Options } from '../Options';
 import { AppUI } from './AppUI';
 
 export class SimpleAppUI implements AppUI {
+
+    protected _spinner = ora();
 
     constructor(
         protected readonly _cli: CLI,
@@ -197,15 +200,6 @@ export class SimpleAppUI implements AppUI {
     }
 
     //
-    // CompilerListener
-    //
-
-    /** @inheritDoc */
-    public compilerStarted( options: Options ): void {
-
-    }
-
-    //
     // TCGenListener
     //
 
@@ -239,7 +233,7 @@ export class SimpleAppUI implements AppUI {
     }
 
     /** @inheritDoc */
-    testCaseGenerationFinished( durationMs ): void {
+    testCaseGenerationFinished( durationMs: number ): void {
         // this._cli.newLine(
         //     this._cli.symbolInfo,
         //     'Test case generation finished',
@@ -251,24 +245,17 @@ export class SimpleAppUI implements AppUI {
     // CompilerListener
     //
 
+    /** @inheritDoc */
+    public compilerStarted( options: Options ): void {
+        this._spinner.start();
+    }
+
     /** @inheritdoc */
-    compilationFinished(
-        givenFilesCount: number,
-        compiledFilesCount: number,
-        durationMS: number
-    ): void {
-        if ( givenFilesCount < 1 ) {
-            this.info( 'No files found.' );
-            return;
-        }
+    compilationFinished( durationMS: number ): void {
 
-        const filesStr = count => count > 1 ? 'files' : 'file';
+        this._spinner.stop();
 
-        this.info(
-            givenFilesCount, filesStr( givenFilesCount ), 'given,',
-            compiledFilesCount, filesStr( compiledFilesCount ), 'compiled',
-            this.formatDuration( durationMS )
-        );
+        this.info( 'Compiled', this.formatDuration( durationMS ) );
     }
 
     /** @inheritdoc */
