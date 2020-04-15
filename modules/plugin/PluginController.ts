@@ -1,5 +1,5 @@
 import { Options } from "../app/Options";
-import { PluginDrawer } from "./PluginDrawer";
+import { PluginListener } from "./PluginListener";
 import { PluginManager } from "./PluginManager";
 
 /**
@@ -12,7 +12,7 @@ export class PluginController {
     public process = async (
         options: Options,
         pluginManager: PluginManager,
-        drawer: PluginDrawer
+        drawer: PluginListener
         ): Promise< boolean > => {
 
         if ( options.pluginList ) {
@@ -33,7 +33,7 @@ export class PluginController {
 
         if ( options.pluginInstall ) {
             try {
-                await pluginManager.installByName( options.plugin, drawer );
+                await pluginManager.installByName( options.plugin );
             } catch ( e ) {
                 drawer.showError( e );
             }
@@ -42,7 +42,7 @@ export class PluginController {
 
         if ( options.pluginUninstall ) {
             try {
-                await pluginManager.uninstallByName( options.plugin, drawer );
+                await pluginManager.uninstallByName( options.plugin );
             } catch ( e ) {
                 drawer.showError( e );
             }
@@ -63,7 +63,7 @@ export class PluginController {
 
         if ( options.pluginServe ) {
             try {
-                await pluginManager.serve( pluginData, drawer );
+                await pluginManager.serve( pluginData );
             } catch ( e ) {
                 drawer.showError( e );
             }

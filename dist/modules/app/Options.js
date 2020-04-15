@@ -3,8 +3,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const enumUtil = require("enum-util");
 const path_1 = require("path");
 const TypeChecking_1 = require("../util/TypeChecking");
-const CaseType_1 = require("./CaseType");
+const CaseType_1 = require("../util/CaseType");
 const Defaults_1 = require("./Defaults");
+const CombinationOptions_1 = require("./CombinationOptions");
 /**
  * Application options
  *
@@ -252,13 +253,13 @@ class Options {
         return CaseType_1.CaseType.CAMEL;
     }
     typedVariantSelection() {
-        if (enumUtil.isValue(Defaults_1.VariantSelectionOptions, this.combVariant)) {
+        if (enumUtil.isValue(CombinationOptions_1.VariantSelectionOptions, this.combVariant)) {
             return this.combVariant;
         }
-        if (enumUtil.isValue(Defaults_1.VariantSelectionOptions, this.defaults.VARIANT_SELECTION)) {
+        if (enumUtil.isValue(CombinationOptions_1.VariantSelectionOptions, this.defaults.VARIANT_SELECTION)) {
             return this.defaults.VARIANT_SELECTION;
         }
-        return Defaults_1.VariantSelectionOptions.SINGLE_RANDOM;
+        return CombinationOptions_1.VariantSelectionOptions.SINGLE_RANDOM;
     }
     typedStateCombination() {
         return this.typedCombinationFor(this.combState, this.defaults.STATE_COMBINATION);
@@ -267,13 +268,13 @@ class Options {
         return this.typedCombinationFor(this.combData, this.defaults.DATA_TEST_CASE_COMBINATION);
     }
     typedCombinationFor(value, defaultValue) {
-        if (enumUtil.isValue(Defaults_1.CombinationOptions, value)) {
+        if (enumUtil.isValue(CombinationOptions_1.CombinationOptions, value)) {
             return value;
         }
-        if (enumUtil.isValue(Defaults_1.CombinationOptions, defaultValue)) {
+        if (enumUtil.isValue(CombinationOptions_1.CombinationOptions, defaultValue)) {
             return defaultValue;
         }
-        return Defaults_1.CombinationOptions.SHUFFLED_ONE_WISE;
+        return CombinationOptions_1.CombinationOptions.SHUFFLED_ONE_WISE;
     }
     /**
      * Set attributes from a given object.
@@ -476,11 +477,11 @@ class Options {
         }
         // TEST SCENARIO SELECTION AND COMBINATION STRATEGIES
         if (TypeChecking_1.isString(obj.combVariant)
-            && enumUtil.isValue(Defaults_1.VariantSelectionOptions, obj.combVariant)) {
+            && enumUtil.isValue(CombinationOptions_1.VariantSelectionOptions, obj.combVariant)) {
             this.combVariant = obj.combVariant;
         }
         if (TypeChecking_1.isString(obj.combState)
-            && enumUtil.isValue(Defaults_1.CombinationOptions, obj.combState)) {
+            && enumUtil.isValue(CombinationOptions_1.CombinationOptions, obj.combState)) {
             this.combState = obj.combState;
         }
         // SELECTION AND COMBINATION STRATEGIES FOR DATA TEST CASES
@@ -491,7 +492,7 @@ class Options {
             this.combInvalid = obj.combInvalid;
         }
         if (TypeChecking_1.isString(obj.combData)
-            && enumUtil.isValue(Defaults_1.CombinationOptions, obj.combData)) {
+            && enumUtil.isValue(CombinationOptions_1.CombinationOptions, obj.combData)) {
             this.combData = obj.combData;
         }
         // TEST SCRIPT FILTERING

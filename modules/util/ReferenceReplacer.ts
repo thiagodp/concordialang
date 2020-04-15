@@ -1,5 +1,5 @@
 import { escape, escapeId } from 'sqlstring';
-import { CaseType } from '../app/CaseType';
+import { CaseType } from './CaseType';
 import { Document, Step } from "../ast";
 import { QueryParser } from '../db/QueryParser';
 import { LanguageContent } from '../language/LanguageContent';

@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const TCGenController_1 = require("../app/TCGenController");
+const TestCaseGeneratorFacade_1 = require("../testcase/TestCaseGeneratorFacade");
 const error_1 = require("../error");
 const language_1 = require("../language");
 const LanguageManager_1 = require("../language/LanguageManager");
@@ -70,7 +70,7 @@ class CompilerFacade {
             if (!options.generateTestCase || !output.spec.docs || output.spec.docs.length < 1) {
                 return [output.spec, output.graph];
             }
-            const tcGenCtrl = new TCGenController_1.TCGenController(nlpBasedSentenceRecognizer.variantSentenceRec, langLoader, this._tcGenListener, fileHandler);
+            const tcGenCtrl = new TestCaseGeneratorFacade_1.TestCaseGeneratorFacade(nlpBasedSentenceRecognizer.variantSentenceRec, langLoader, this._tcGenListener, fileHandler);
             return yield tcGenCtrl.execute(options, output.spec, output.graph);
         });
     }

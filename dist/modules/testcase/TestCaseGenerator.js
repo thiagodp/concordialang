@@ -16,7 +16,7 @@ const NodeTypes_1 = require("../req/NodeTypes");
  *
  * @author Thiago Delgado Pinto
  */
-class TCGen {
+class TestCaseGenerator {
     constructor(_preTestCaseGenerator) {
         this._preTestCaseGenerator = _preTestCaseGenerator;
     }
@@ -137,4 +137,4 @@ class TCGen {
         };
     }
 }
-exports.TCGen = TCGen;
+exports.TestCaseGenerator = TestCaseGenerator;

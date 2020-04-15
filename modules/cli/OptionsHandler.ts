@@ -1,12 +1,13 @@
+import { DateTimeFormatter, LocalDateTime } from '@js-joda/core';
 import * as cosmiconfig from 'cosmiconfig';
 import * as crypto from 'crypto';
 import * as fs from 'fs';
-import { DateTimeFormatter, LocalDateTime } from "@js-joda/core";
-import { join, relative } from "path";
-import { promisify } from "util";
-import { Options } from "../app/Options";
-import { isDefined } from "../util/TypeChecking";
-import { CLI } from "./CLI";
+import { join, relative } from 'path';
+import { promisify } from 'util';
+
+import { Options } from '../app/Options';
+import { OptionsListener } from '../app/OptionsListener';
+import { isDefined } from '../util/TypeChecking';
 
 
 type OptionsInfo = { config: any, filepath: string };
@@ -20,8 +21,7 @@ export class OptionsHandler {
     constructor(
         public appPath: string,
         public processPath: string,
-        private _cli: CLI,
-        private _meow: any,
+        private _optionsListener: OptionsListener,
         private _fs = fs
     ) {
         this._options = new Options( appPath, processPath );
@@ -46,15 +46,15 @@ export class OptionsHandler {
      * Load the configuration from the CLI and the configuration file (if
      * it exists). Returns a promise to the loaded options.
      */
-    async load(): Promise< Options > {
+    async load( cliOptions: any ): Promise< Options > {
 
-        let optionsInfo = await this.loadOptionsInfo();
+        let optionsInfo = await this.loadOptionsInfo( cliOptions );
 
         let options: Options = new Options( this.appPath, this.processPath );
         options.import( optionsInfo.config );
 
         // Update seed
-        this.updateSeed( options, this._cli );
+        this.updateSeed( options );
 
         // Save loaded parameters
         this._cfgFilePath = optionsInfo.filepath; // may be null
@@ -76,16 +76,12 @@ export class OptionsHandler {
         const write = promisify( this._fs.writeFile );
         await write( this._cfgFilePath, JSON.stringify( obj, undefined, "\t" ) );
 
-        this._cli.newLine(
-            this._cli.symbolInfo,
-            'Saved',
-            this._cli.colorHighlight( this._cfgFilePath )
-        );
+        this._optionsListener.announceConfigurationFileSaved( this._cfgFilePath );
 
         return obj;
     }
 
-    private updateSeed( options: Options, cli: CLI ): void {
+    private updateSeed( options: Options ): void {
 
         if ( ! options.seed ) {
             options.isGeneratedSeed = true;
@@ -100,11 +96,7 @@ export class OptionsHandler {
             && ! options.somePluginOption();
 
         if ( shouldShow ) {
-            cli.newLine(
-                cli.symbolInfo,
-                options.isGeneratedSeed ? 'Generated seed' : 'Seed',
-                cli.colorHighlight( options.seed )
-            );
+            this._optionsListener.announceSeed( options.seed, options.isGeneratedSeed );
         }
 
         // Real seed
@@ -118,12 +110,10 @@ export class OptionsHandler {
             options.realSeed = options.seed;
         }
 
-        if ( options.debug || options.verbose ) {
-            cli.newLine( cli.symbolInfo, 'Real seed', cli.colorHighlight( options.realSeed ) );
-        }
+        this._optionsListener.announceRealSeed( options.realSeed );
     }
 
-    private hasOptionAffectedByConfigurationFile( options ): boolean {
+    private hasOptionAffectedByConfigurationFile( options: Options ): boolean {
         return ! options.help
             && ! options.about
             && ! options.version
@@ -134,13 +124,11 @@ export class OptionsHandler {
     }
 
 
-    private async loadOptionsInfo(): Promise< OptionsInfo > {
+    private async loadOptionsInfo( cliOptions: any ): Promise< OptionsInfo > {
 
         // CLI options are read firstly in order to eventually consider
         // some parameter before loading a configuration file, i.e., pass
         // some argument to `optionsFromConfigFile`.
-
-        const cliOptions = this.optionsFromCLI();
 
         let cfg: { config: any, filepath: string } | null = null;
 
@@ -158,18 +146,6 @@ export class OptionsHandler {
         return { config: finalObj, filepath: ! cfg ? null : cfg.filepath };
     }
 
-    private optionsFromCLI(): any {
-        return this.adaptMeowObject( this._meow );
-    }
-
-    private adaptMeowObject( meowObj: any ): any {
-        let obj = Object.assign( {}, meowObj.flags );
-        const input = meowObj.input;
-        if ( ! obj.directory && ( isDefined( input ) && 1 === input.length ) ) {
-            obj.directory = input[ 0 ];
-        }
-        return obj;
-   }
 
    private async optionsFromConfigFile(): Promise< OptionsInfo | null > {
         const MODULE_NAME = 'concordia';
@@ -182,16 +158,12 @@ export class OptionsHandler {
         try {
             fileConfig = await explorer.load();
         } catch ( err ) {
-            this._cli.newLine( this._cli.symbolWarning, 'Could not load the configuration file.', err.message );
+            this._optionsListener.announceCouldNotLoadConfigurationFile( err.message );
         }
 
         if ( isDefined( fileConfig ) ) {
             const cfgFilePath = relative( process.cwd(), fileConfig.filepath );
-            this._cli.newLine(
-                this._cli.symbolInfo,
-                'Configuration file loaded:',
-                this._cli.colorHighlight( cfgFilePath )
-            );
+            this._optionsListener.announceConfigurationFileLoaded( cfgFilePath );
         }
 
         return fileConfig;

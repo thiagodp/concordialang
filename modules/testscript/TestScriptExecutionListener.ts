@@ -5,7 +5,7 @@ import { TestScriptExecutionResult } from "concordialang-plugin";
  *
  * @author Thiago Delgado Pinto
  */
-export interface ScriptExecutionListener {
+export interface TestScriptExecutionListener {
 
     testScriptExecutionStarted(): void;
 

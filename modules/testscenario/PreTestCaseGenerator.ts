@@ -3,7 +3,7 @@ import { Location } from 'concordialang-types';
 import * as deepcopy from 'deepcopy';
 import * as enumUtil from 'enum-util';
 import { basename } from 'path';
-import { CaseType } from '../app/CaseType';
+import { CaseType } from '../util/CaseType';
 import { Document, EntityValueType, Step, UIElement, UIPropertyReference, UIPropertyTypes } from '../ast';
 import { LocatedException, RuntimeException, Warning } from '../error';
 import { EnglishKeywordDictionary } from '../language/EnglishKeywordDictionary';

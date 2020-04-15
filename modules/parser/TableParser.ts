@@ -1,4 +1,4 @@
-import { CaseType } from "../app/CaseType";
+import { CaseType } from "../util/CaseType";
 import { Table } from "../ast/Table";
 import { convertCase } from "../util/CaseConversor";
 import { NodeIterator } from './NodeIterator';

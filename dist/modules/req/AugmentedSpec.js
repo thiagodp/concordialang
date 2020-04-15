@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const path_1 = require("path");
-const CaseType_1 = require("../app/CaseType");
+const CaseType_1 = require("../util/CaseType");
 const ast_1 = require("../ast");
 const DocumentUtil_1 = require("../util/DocumentUtil");
 const file_1 = require("../util/file");

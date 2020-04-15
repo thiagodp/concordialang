@@ -19,8 +19,8 @@ const PluginData_1 = require("./PluginData");
  * @author Thiago Delgado Pinto
  */
 class PluginManager {
-    constructor(_cli, _finder, _fileReader) {
-        this._cli = _cli;
+    constructor(_pluginListener, _finder, _fileReader) {
+        this._pluginListener = _pluginListener;
         this._finder = _finder;
         this._fileReader = _fileReader;
     }
@@ -59,7 +59,7 @@ class PluginManager {
             return withName.length > 0 ? withName[0] : null;
         });
     }
-    installByName(name, drawer) {
+    installByName(name) {
         return __awaiter(this, void 0, void 0, function* () {
             if (!name.includes(PluginData_1.PLUGIN_PREFIX)) {
                 name = PluginData_1.PLUGIN_PREFIX + name;
@@ -87,7 +87,7 @@ class PluginManager {
                     const content = yield this._fileReader.read(path);
                     if (!content) { // No package.json
                         mustGeneratePackageFile = true;
-                        drawer.showMessagePackageFileNotFound(PACKAGE_FILE);
+                        this._pluginListener.showMessagePackageFileNotFound(PACKAGE_FILE);
                     }
                 }
                 catch (err) {
@@ -96,50 +96,50 @@ class PluginManager {
                 // Create package.json if it does not exist
                 if (mustGeneratePackageFile) {
                     const code = yield this.runCommand(PACKAGE_CREATION_CMD);
-                    drawer.showCommandCode(code, false);
+                    this._pluginListener.showCommandCode(code, false);
                 }
             }
             // Install the plug-in as a DEVELOPMENT dependency using NPM
             const PACKAGE_MANAGER = 'NPM';
             const INSTALL_DEV_CMD = 'npm install --save-dev ' + name + ' --color=always';
-            drawer.showMessageTryingToInstall(name, PACKAGE_MANAGER);
+            this._pluginListener.showMessageTryingToInstall(name, PACKAGE_MANAGER);
             const code = yield this.runCommand(INSTALL_DEV_CMD);
-            drawer.showCommandCode(code, false);
+            this._pluginListener.showCommandCode(code, false);
             if (code !== 0) { // unsuccessful
                 return;
             }
             // Check if the plug-in is installed
             pluginData = yield this.pluginWithName(name, false);
             if (!pluginData) {
-                drawer.showMessageCouldNoFindInstalledPlugin(name);
+                this._pluginListener.showMessageCouldNoFindInstalledPlugin(name);
                 return;
             }
         });
     }
-    uninstallByName(name, drawer) {
+    uninstallByName(name) {
         return __awaiter(this, void 0, void 0, function* () {
             if (!name.includes(PluginData_1.PLUGIN_PREFIX)) {
                 name = PluginData_1.PLUGIN_PREFIX + name;
             }
             let pluginData = yield this.pluginWithName(name, false);
             if (!pluginData) {
-                drawer.showMessagePluginNotFound(name);
+                this._pluginListener.showMessagePluginNotFound(name);
                 return;
             }
             // Remove with a package manager
-            drawer.showMessageTryingToUninstall(name, 'NPM');
+            this._pluginListener.showMessageTryingToUninstall(name, 'NPM');
             let code = yield this.runCommand('npm uninstall --save-dev ' + name + ' --color=always');
-            drawer.showCommandCode(code);
+            this._pluginListener.showCommandCode(code, true);
         });
     }
-    serve(pluginData, drawer) {
+    serve(pluginData) {
         return __awaiter(this, void 0, void 0, function* () {
             if (!pluginData.serve) {
                 throw new Error('No "serve" property found in the plugin file. Can\'t serve.');
             }
-            drawer.showPluginServeStart(pluginData.name);
+            this._pluginListener.showPluginServeStart(pluginData.name);
             const code = yield this.runCommand(pluginData.serve);
-            drawer.showCommandCode(code);
+            this._pluginListener.showCommandCode(code, true);
         });
     }
     /**
@@ -159,9 +159,7 @@ class PluginManager {
     }
     runCommand(command) {
         return __awaiter(this, void 0, void 0, function* () {
-            const separationLine = '  ' + '_'.repeat(78);
-            this._cli.newLine('  Running', this._cli.colorHighlight(command));
-            this._cli.newLine(separationLine);
+            this._pluginListener.showCommandStarted(command);
             let options = {
                 // detached: true, // main process can terminate
                 // stdio: 'ignore', // ignore stdio since detach is active
@@ -185,7 +183,7 @@ class PluginManager {
                     console.warn(chunk.toString());
                 });
                 child.on('exit', (code) => {
-                    console.log(separationLine);
+                    this._pluginListener.showCommandFinished();
                     resolve(code);
                 });
             });

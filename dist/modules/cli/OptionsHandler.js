@@ -9,20 +9,19 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+const core_1 = require("@js-joda/core");
 const cosmiconfig = require("cosmiconfig");
 const crypto = require("crypto");
 const fs = require("fs");
-const core_1 = require("@js-joda/core");
 const path_1 = require("path");
 const util_1 = require("util");
 const Options_1 = require("../app/Options");
 const TypeChecking_1 = require("../util/TypeChecking");
 class OptionsHandler {
-    constructor(appPath, processPath, _cli, _meow, _fs = fs) {
+    constructor(appPath, processPath, _optionsListener, _fs = fs) {
         this.appPath = appPath;
         this.processPath = processPath;
-        this._cli = _cli;
-        this._meow = _meow;
+        this._optionsListener = _optionsListener;
         this._fs = _fs;
         this._wasLoaded = false;
         this._options = null;
@@ -45,13 +44,13 @@ class OptionsHandler {
      * Load the configuration from the CLI and the configuration file (if
      * it exists). Returns a promise to the loaded options.
      */
-    load() {
+    load(cliOptions) {
         return __awaiter(this, void 0, void 0, function* () {
-            let optionsInfo = yield this.loadOptionsInfo();
+            let optionsInfo = yield this.loadOptionsInfo(cliOptions);
             let options = new Options_1.Options(this.appPath, this.processPath);
             options.import(optionsInfo.config);
             // Update seed
-            this.updateSeed(options, this._cli);
+            this.updateSeed(options);
             // Save loaded parameters
             this._cfgFilePath = optionsInfo.filepath; // may be null
             this._options = options;
@@ -69,11 +68,11 @@ class OptionsHandler {
             }
             const write = util_1.promisify(this._fs.writeFile);
             yield write(this._cfgFilePath, JSON.stringify(obj, undefined, "\t"));
-            this._cli.newLine(this._cli.symbolInfo, 'Saved', this._cli.colorHighlight(this._cfgFilePath));
+            this._optionsListener.announceConfigurationFileSaved(this._cfgFilePath);
             return obj;
         });
     }
-    updateSeed(options, cli) {
+    updateSeed(options) {
         if (!options.seed) {
             options.isGeneratedSeed = true;
             options.seed =
@@ -85,7 +84,7 @@ class OptionsHandler {
             && !options.ast
             && !options.somePluginOption();
         if (shouldShow) {
-            cli.newLine(cli.symbolInfo, options.isGeneratedSeed ? 'Generated seed' : 'Seed', cli.colorHighlight(options.seed));
+            this._optionsListener.announceSeed(options.seed, options.isGeneratedSeed);
         }
         // Real seed
         const BYTES_OF_SHA_512 = 64; // 512 divided by 8
@@ -98,9 +97,7 @@ class OptionsHandler {
         else {
             options.realSeed = options.seed;
         }
-        if (options.debug || options.verbose) {
-            cli.newLine(cli.symbolInfo, 'Real seed', cli.colorHighlight(options.realSeed));
-        }
+        this._optionsListener.announceRealSeed(options.realSeed);
     }
     hasOptionAffectedByConfigurationFile(options) {
         return !options.help
@@ -110,12 +107,11 @@ class OptionsHandler {
             && !options.languageList
             && !options.pluginList;
     }
-    loadOptionsInfo() {
+    loadOptionsInfo(cliOptions) {
         return __awaiter(this, void 0, void 0, function* () {
             // CLI options are read firstly in order to eventually consider
             // some parameter before loading a configuration file, i.e., pass
             // some argument to `optionsFromConfigFile`.
-            const cliOptions = this.optionsFromCLI();
             let cfg = null;
             if (this.hasOptionAffectedByConfigurationFile(cliOptions)) {
                 cfg = yield this.optionsFromConfigFile();
@@ -127,17 +123,6 @@ class OptionsHandler {
             const finalObj = Object.assign(cfgFileOptions, cliOptions);
             return { config: finalObj, filepath: !cfg ? null : cfg.filepath };
         });
-    }
-    optionsFromCLI() {
-        return this.adaptMeowObject(this._meow);
-    }
-    adaptMeowObject(meowObj) {
-        let obj = Object.assign({}, meowObj.flags);
-        const input = meowObj.input;
-        if (!obj.directory && (TypeChecking_1.isDefined(input) && 1 === input.length)) {
-            obj.directory = input[0];
-        }
-        return obj;
     }
     optionsFromConfigFile() {
         return __awaiter(this, void 0, void 0, function* () {
@@ -152,11 +137,11 @@ class OptionsHandler {
                 fileConfig = yield explorer.load();
             }
             catch (err) {
-                this._cli.newLine(this._cli.symbolWarning, 'Could not load the configuration file.', err.message);
+                this._optionsListener.announceCouldNotLoadConfigurationFile(err.message);
             }
             if (TypeChecking_1.isDefined(fileConfig)) {
                 const cfgFilePath = path_1.relative(process.cwd(), fileConfig.filepath);
-                this._cli.newLine(this._cli.symbolInfo, 'Configuration file loaded:', this._cli.colorHighlight(cfgFilePath));
+                this._optionsListener.announceConfigurationFileLoaded(cfgFilePath);
             }
             return fileConfig;
         });

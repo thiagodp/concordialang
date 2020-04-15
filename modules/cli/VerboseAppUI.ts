@@ -1,16 +1,9 @@
-import { CLI } from '../../cli/CLI';
-import { Warning } from '../../error/Warning';
-import { AppUI } from './AppUI';
+import { AppUI } from '../app/AppUI';
+import { Warning } from '../error/Warning';
+import { CLI } from './CLI';
 import { SimpleAppUI } from './SimpleAppUI';
 
 export class VerboseAppUI extends SimpleAppUI implements AppUI {
-
-    constructor(
-        cli: CLI,
-        debug: boolean = false
-    ) {
-        super( cli, debug );
-    }
 
     //
     // FileCompilationListener
@@ -20,6 +13,15 @@ export class VerboseAppUI extends SimpleAppUI implements AppUI {
     fileStarted( path: string ): void {
         this._cli.newLine( this._cli.symbolInfo, 'Compiling',
             this._cli.colorHighlight( path ), '...' );
+    }
+
+    //
+    // OptionsListener
+    //
+
+    /** @inheritDoc */
+    announceRealSeed( realSeed: string ): void {
+        this.info( 'Real seed', this._cli.colorHighlight( realSeed ) );
     }
 
     //

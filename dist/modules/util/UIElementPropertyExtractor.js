@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const enumUtil = require("enum-util");
-const CaseType_1 = require("../app/CaseType");
+const CaseType_1 = require("./CaseType");
 const ast_1 = require("../ast");
 const nlp_1 = require("../nlp");
 const ActionTargets_1 = require("./ActionTargets");

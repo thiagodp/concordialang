@@ -2,10 +2,9 @@ import * as childProcess from 'child_process';
 import { Plugin } from "concordialang-plugin";
 import * as inquirer from 'inquirer';
 import { join } from 'path';
-import { CLI } from '../cli/CLI';
 import { FileReader } from '../util/file/FileReader';
 import { PluginData, PLUGIN_PREFIX } from "./PluginData";
-import { PluginDrawer } from "./PluginDrawer";
+import { PluginListener } from './PluginListener';
 import { PluginFinder } from "./PluginFinder";
 
 /**
@@ -16,7 +15,7 @@ import { PluginFinder } from "./PluginFinder";
 export class PluginManager {
 
     constructor(
-        private readonly _cli: CLI,
+        private readonly _pluginListener: PluginListener,
         private readonly _finder: PluginFinder,
         private readonly _fileReader: FileReader
         ) {
@@ -64,7 +63,7 @@ export class PluginManager {
         return withName.length > 0 ? withName[ 0 ] : null;
     }
 
-    public async installByName( name: string, drawer: PluginDrawer ): Promise< void > {
+    public async installByName( name: string ): Promise< void > {
 
         if ( ! name.includes( PLUGIN_PREFIX ) ) {
             name = PLUGIN_PREFIX + name;
@@ -102,7 +101,7 @@ export class PluginManager {
 
                 if ( ! content ) { // No package.json
                     mustGeneratePackageFile = true;
-                    drawer.showMessagePackageFileNotFound( PACKAGE_FILE );
+                    this._pluginListener.showMessagePackageFileNotFound( PACKAGE_FILE );
                 }
             } catch ( err ) {
                 mustGeneratePackageFile = true;
@@ -112,7 +111,7 @@ export class PluginManager {
 
             if ( mustGeneratePackageFile ) {
                 const code: number = await this.runCommand( PACKAGE_CREATION_CMD );
-                drawer.showCommandCode( code, false );
+                this._pluginListener.showCommandCode( code, false );
             }
         }
 
@@ -121,9 +120,9 @@ export class PluginManager {
         const PACKAGE_MANAGER = 'NPM';
         const INSTALL_DEV_CMD = 'npm install --save-dev ' + name + ' --color=always';
 
-        drawer.showMessageTryingToInstall( name, PACKAGE_MANAGER );
+        this._pluginListener.showMessageTryingToInstall( name, PACKAGE_MANAGER );
         const code: number = await this.runCommand( INSTALL_DEV_CMD );
-        drawer.showCommandCode( code, false );
+        this._pluginListener.showCommandCode( code, false );
         if ( code !== 0 ) { // unsuccessful
             return;
         }
@@ -132,13 +131,13 @@ export class PluginManager {
 
         pluginData = await this.pluginWithName( name, false );
         if ( ! pluginData ) {
-            drawer.showMessageCouldNoFindInstalledPlugin( name );
+            this._pluginListener.showMessageCouldNoFindInstalledPlugin( name );
             return;
         }
     }
 
 
-    public async uninstallByName( name: string, drawer: PluginDrawer ): Promise< void > {
+    public async uninstallByName( name: string ): Promise< void > {
 
         if ( ! name.includes( PLUGIN_PREFIX ) ) {
             name = PLUGIN_PREFIX + name;
@@ -146,25 +145,25 @@ export class PluginManager {
 
         let pluginData: PluginData = await this.pluginWithName( name, false );
         if ( ! pluginData ) {
-            drawer.showMessagePluginNotFound( name );
+            this._pluginListener.showMessagePluginNotFound( name );
             return;
         }
 
         // Remove with a package manager
-        drawer.showMessageTryingToUninstall( name, 'NPM' );
+        this._pluginListener.showMessageTryingToUninstall( name, 'NPM' );
         let code: number = await this.runCommand( 'npm uninstall --save-dev ' + name + ' --color=always' );
-        drawer.showCommandCode( code );
+        this._pluginListener.showCommandCode( code, true );
     }
 
-    public async serve( pluginData: PluginData, drawer: PluginDrawer ): Promise< void > {
+    public async serve( pluginData: PluginData ): Promise< void > {
 
         if ( ! pluginData.serve ) {
             throw new Error( 'No "serve" property found in the plugin file. Can\'t serve.' );
         }
 
-        drawer.showPluginServeStart( pluginData.name );
+        this._pluginListener.showPluginServeStart( pluginData.name );
         const code = await this.runCommand( pluginData.serve );
-        drawer.showCommandCode( code );
+        this._pluginListener.showCommandCode( code, true );
     }
 
 
@@ -189,10 +188,7 @@ export class PluginManager {
 
     private async runCommand( command: string ): Promise< number > {
 
-        const separationLine = '  ' + '_'.repeat( 78 );
-
-        this._cli.newLine( '  Running', this._cli.colorHighlight( command ) );
-        this._cli.newLine( separationLine );
+        this._pluginListener.showCommandStarted( command );
 
         let options = {
             // detached: true, // main process can terminate
@@ -225,7 +221,7 @@ export class PluginManager {
             } );
 
             child.on( 'exit', ( code ) => {
-                console.log( separationLine );
+                this._pluginListener.showCommandFinished();
                 resolve( code );
             } );
 

@@ -1,9 +1,9 @@
 import Graph = require( 'graph.js/dist/graph.full.js' );
 
-import { CompilerListener } from '../app/listeners/CompilerListener';
-import { TCGenListener } from '../app/listeners/TCGenListener';
+import { CompilerListener } from './CompilerListener';
+import { TestCaseGeneratorListener } from '../testcase/TestCaseGeneratorListener';
 import { Options } from "../app/Options";
-import { TCGenController } from "../app/TCGenController";
+import { TestCaseGeneratorFacade } from "../testcase/TestCaseGeneratorFacade";
 import { RuntimeException } from '../error';
 import { JsonLanguageContentLoader, LanguageContentLoader } from "../language";
 import { LanguageManager } from "../language/LanguageManager";
@@ -27,7 +27,7 @@ export class CompilerFacade {
     constructor(
         private readonly _fs: any,
         private readonly _compilerListener: CompilerListener,
-        private readonly _tcGenListener: TCGenListener,
+        private readonly _tcGenListener: TestCaseGeneratorListener,
         ) {
     }
 
@@ -92,7 +92,7 @@ export class CompilerFacade {
             return [ output.spec, output.graph ];
         }
 
-        const tcGenCtrl = new TCGenController(
+        const tcGenCtrl = new TestCaseGeneratorFacade(
             nlpBasedSentenceRecognizer.variantSentenceRec,
             langLoader,
             this._tcGenListener,

@@ -23,13 +23,20 @@ const TypeChecking_1 = require("../util/TypeChecking");
 const TestScenario_1 = require("./TestScenario");
 const VariantStateDetector_1 = require("./VariantStateDetector");
 /**
- * Test Scenario generator
+ * Test Scenario Generator
  *
- * > It still does not take Variant Backgrounds into account.
+ * Test Scenarios are produced before Test Cases. Their generation does not depend on
+ * the tag "ignore", as Test Cases do. A Test Scenario should be marked as
+ * `ignoredForTestCaseGeneration` whether Variants, Scenarios or Features have the
+ *  tag "ignore". Currently, however, the implementation only checks for Variants.
+ *
+ * TO-DO:
+ *  - Check Scenarios and Features for the tag "ignore" to set `ignoredForTestCaseGeneration`.
+ *  - Take Variant Backgrounds into account.
  *
  * @author Thiago Delgado Pinto
  */
-class TSGen {
+class TestScenarioGenerator {
     constructor(_preTestCaseGenerator, _variantSelectionStrategy, _statePairCombinationStrategy, _variantToTestScenarioMap, _postconditionNameToVariantsMap) {
         this._preTestCaseGenerator = _preTestCaseGenerator;
         this._variantSelectionStrategy = _variantSelectionStrategy;
@@ -366,4 +373,4 @@ class TSGen {
         return stepsAdded;
     }
 }
-exports.TSGen = TSGen;
+exports.TestScenarioGenerator = TestScenarioGenerator;

@@ -1,16 +1,18 @@
-import { TestScriptExecutionResult } from 'concordialang-plugin/dist';
-import { relative } from 'path';
-import * as terminalLink from 'terminal-link';
+import { TestScriptExecutionResult } from 'concordialang-plugin';
 import * as ora from 'ora';
-import { CLI } from '../../cli/CLI';
-import { sortErrorsByLocation } from '../../error/ErrorSorting';
-import { LocatedException } from '../../error/LocatedException';
-import { ProblemMapper } from '../../error/ProblemMapper';
-import { Warning } from '../../error/Warning';
-import { millisToString } from "../../util/TimeFormat";
-import { Defaults } from '../Defaults';
-import { Options } from '../Options';
-import { AppUI } from './AppUI';
+import { relative } from 'path';
+import { sprintf } from 'sprintf-js';
+import * as terminalLink from 'terminal-link';
+import { AppUI } from '../app/AppUI';
+import { Defaults } from '../app/Defaults';
+import { Options } from '../app/Options';
+import { sortErrorsByLocation } from '../error/ErrorSorting';
+import { LocatedException } from '../error/LocatedException';
+import { ProblemMapper } from '../error/ProblemMapper';
+import { Warning } from '../error/Warning';
+import { PluginData } from '../plugin/PluginData';
+import { millisToString } from "../util/TimeFormat";
+import { CLI } from './CLI';
 
 export class SimpleAppUI implements AppUI {
 
@@ -18,12 +20,13 @@ export class SimpleAppUI implements AppUI {
 
     constructor(
         protected readonly _cli: CLI,
+        protected readonly _meow: any,
         protected _debugMode: boolean = false
         ) {
     }
 
     //
-    // AppEventsListener
+    // AppUI
     //
 
     /** @inheritdoc */
@@ -32,54 +35,28 @@ export class SimpleAppUI implements AppUI {
     }
 
     /** @inheritdoc */
-    show( ...args: any[] ): void {
-        this._cli.newLine( ...args );
+    showHelp(): void {
+        this._cli.newLine( this._meow.help );
     }
 
     /** @inheritdoc */
-    success( ...args: any[] ): void {
-        this._cli.newLine( this._cli.symbolSuccess, ...args );
+    showAbout(): void {
+        const m = this._meow;
+
+        const desc = m.pkg.description || 'Concordia';
+        const version = m.pkg.version || '1.0.0';
+        const name = m.pkg.author.name || 'Thiago Delgado Pinto';
+        const site = m.pkg.homepage || 'http://concordialang.org';
+
+        this._cli.newLine( desc + ' v' + version  );
+        this._cli.newLine( 'Copyright (c) ' + name );
+        this._cli.newLine( site );
     }
 
     /** @inheritdoc */
-    info( ...args: any[] ): void {
-        this._cli.newLine( this._cli.symbolInfo, ...args );
+    showVersion(): void {
+        this._meow.showVersion();
     }
-
-    /** @inheritdoc */
-    warn( ...args: any[] ): void {
-        this._cli.newLine( this._cli.symbolWarning, ...args );
-    }
-
-    /** @inheritdoc */
-    error( ...args: any[] ): void {
-        this._cli.newLine( this._cli.symbolError, ...args );
-    }
-
-    /** @inheritdoc */
-    exception( error: Error ): void {
-        if ( this._debugMode ) {
-            this.error( error.message, this.formattedStackOf( error ) );
-        } else {
-            this.error( error.message );
-        }
-    }
-
-    /** @inheritdoc */
-    announceUpdateAvailable( link: string, isMajor: boolean ): void {
-        if ( isMajor ) {
-            this.show( this._cli.colorHighlight( '→' ), this._cli.bgHighlight( 'PLEASE READ THE RELEASE NOTES BEFORE UPDATING' ) );
-            this.show( this._cli.colorHighlight( '→' ), link );
-        } else {
-            this.show( this._cli.colorHighlight( '→' ), 'See', link, 'for details.' );
-        }
-    }
-
-    /** @inheritdoc */
-    announceNoUpdateAvailable(): void {
-        this.info( 'No updates available.' );
-    }
-
 
     /** @inheritdoc */
     announceOptions( options: Options ): void {
@@ -129,6 +106,131 @@ export class SimpleAppUI implements AppUI {
             this.warn( 'Well, you have disabled all the interesting behavior. :)' );
         }
 
+    }
+
+
+    /** @inheritdoc */
+    announceUpdateAvailable( url: string, hasBreakingChange: boolean ): void {
+
+        // When the terminal does not support links
+        const fallback = ( text: string, url: string ): string => {
+            return url;
+        };
+
+        const link = terminalLink( url, url, { fallback: fallback } ); // clickable URL
+
+        if ( hasBreakingChange ) {
+            this.show( this._cli.colorHighlight( '→' ), this._cli.bgHighlight( 'PLEASE READ THE RELEASE NOTES BEFORE UPDATING' ) );
+            this.show( this._cli.colorHighlight( '→' ), link );
+        } else {
+            this.show( this._cli.colorHighlight( '→' ), 'See', link, 'for details.' );
+        }
+    }
+
+    /** @inheritdoc */
+    announceNoUpdateAvailable(): void {
+        this.info( 'No updates available.' );
+    }
+
+    /** @inheritdoc */
+    announceConfigurationFileAlreadyExists(): void {
+        this.warn( 'You already have a configuration file.' );
+    }
+
+    /** @inheritDoc */
+    announcePluginNotFound( pluginDir: string, pluginName: string ): void {
+        this.error( `Plugin "${pluginName}" not found at "${pluginDir}".` );
+    }
+
+    /** @inheritDoc */
+    announcePluginCouldNotBeLoaded( pluginName: string ): void {
+        this.error( `Could not load the plugin: ${pluginName}.` );
+    }
+
+    /** @inheritDoc */
+    announceNoPluginWasDefined(): void {
+        this.warn( 'A plugin was not defined.' );
+    }
+
+    /** @inheritDoc */
+    announceReportFileNotFound( filePath: string ): void {
+        this.warn( `Could not retrieve execution results from "${filePath}".` );
+    }
+
+    /** @inheritdoc */
+    drawLanguages( languages: string[] ): void {
+        const highlight = this._cli.colorHighlight;
+        this._cli.newLine(
+            this._cli.symbolInfo,
+            'Available languages:',
+            languages.sort().map( l => highlight( l ) ).join( ', ' )
+        );
+    }
+
+    /** @inheritdoc */
+    showErrorSavingAST( astFile: string, errorMessage: string ): void {
+        this.error( 'Error saving', this._cli.colorHighlight( astFile ), ': ' + errorMessage );
+    }
+
+    /** @inheritdoc */
+    announceASTIsSaved( astFile: string ): void {
+        this.info( 'Saved', this._cli.colorHighlight( astFile ) );
+    }
+
+    /** @inheritdoc */
+    showGeneratedTestScriptFiles( scriptDir: string, files: string[] ): void {
+
+        // When the terminal does not support links
+        const fallback = ( text: string, url: string ): string => {
+            return text;
+        };
+
+        for ( const file of files ) {
+            const relPath = relative( scriptDir, file );
+            const link = terminalLink( relPath, file, { fallback: fallback } ); // clickable URL
+            this.success( 'Generated script', this._cli.colorHighlight( link ) );
+        }
+    }
+
+    /** @inheritdoc */
+    showTestScriptGenerationErrors( errors: Error[] ): void {
+        for ( const err of errors ) {
+            this.exception( err );
+        }
+    }
+
+    /** @inheritdoc */
+    show( ...args: any[] ): void {
+        this._cli.newLine( ...args );
+    }
+
+    /** @inheritdoc */
+    success( ...args: any[] ): void {
+        this._cli.newLine( this._cli.symbolSuccess, ...args );
+    }
+
+    /** @inheritdoc */
+    info( ...args: any[] ): void {
+        this._cli.newLine( this._cli.symbolInfo, ...args );
+    }
+
+    /** @inheritdoc */
+    warn( ...args: any[] ): void {
+        this._cli.newLine( this._cli.symbolWarning, ...args );
+    }
+
+    /** @inheritdoc */
+    error( ...args: any[] ): void {
+        this._cli.newLine( this._cli.symbolError, ...args );
+    }
+
+    /** @inheritdoc */
+    exception( error: Error ): void {
+        if ( this._debugMode ) {
+            this.error( error.message, this.formattedStackOf( error ) );
+        } else {
+            this.error( error.message );
+        }
     }
 
     // /** @inheritDoc */
@@ -184,6 +286,46 @@ export class SimpleAppUI implements AppUI {
     //         this.formatDuration( data.durationMs )
     //         );
     // }
+
+    //
+    // OptionsListener
+    //
+
+    /** @inheritDoc */
+    announceConfigurationFileSaved( filePath: string ): void {
+        this.info( 'Saved', this._cli.colorHighlight( filePath ) );
+    }
+
+    /** @inheritDoc */
+    announceCouldNotLoadConfigurationFile( errorMessage: string ): void {
+        this.warn(
+            'Could not load the configuration file:',
+            errorMessage
+            );
+    }
+
+    /** @inheritDoc */
+    announceConfigurationFileLoaded( filePath: string ): void {
+        this.info(
+            'Configuration file loaded:',
+            this._cli.colorHighlight( filePath )
+        );
+    }
+
+    /** @inheritDoc */
+    announceSeed( seed: string, generatedSeed: boolean ): void {
+        this.info(
+            generatedSeed ? 'Generated seed' : 'Seed',
+            this._cli.colorHighlight( seed )
+        );
+    }
+
+    /** @inheritDoc */
+    announceRealSeed( realSeed: string ): void {
+        if ( this._debugMode )  {
+            this.info( 'Real seed', this._cli.colorHighlight( realSeed ) );
+        }
+    }
 
     //
     // FileCompilationListener
@@ -297,6 +439,141 @@ export class SimpleAppUI implements AppUI {
         }
 
     }
+
+    //
+    // PluginListener
+    //
+
+    /** @inheritdoc */
+    public drawPluginList( plugins: PluginData[] ): void {
+        if ( plugins.length < 1 ) {
+            this._cli.newLine( this._cli.symbolInfo, 'No plugins found. Try to install a plugin with NPM.' );
+            return;
+        }
+        // const highlight = this._cli.colorHighlight;
+        // const format = "%-20s %-8s %-22s"; // util.format does not support padding :(
+        // this._cli.newLine( highlight( sprintf( format, 'Name', 'Version', 'Description' ) ) );
+        // for ( let p of plugins ) {
+        //     this._cli.newLine( sprintf( format, p.name, p.version, p.description ) );
+        // }
+
+        const highlight = this._cli.colorHighlight;
+        const format = "%-15s";
+        this._cli.newLine( this._cli.symbolInfo, highlight( 'Available Plugins:' ) );
+        for ( let p of plugins ) {
+            this._cli.newLine( ' ' );
+            this._cli.newLine( highlight( sprintf( format, '  Name' ) ), p.name );
+            this._cli.newLine( highlight( sprintf( format, '  Version' ) ), p.version );
+            this._cli.newLine( highlight( sprintf( format, '  Description' ) ), p.description );
+        }
+    }
+
+    /** @inheritdoc */
+    public drawSinglePlugin( p: PluginData ): void {
+        const highlight = this._cli.colorHighlight;
+        const format = "  - %-12s: %s"; // util.format does not support padding :(
+        const authors = p.authors.map( ( a, idx ) => 0 === idx ? a : sprintf( '%-17s %s', '', a ) );
+        this._cli.newLine( this._cli.symbolInfo, sprintf( 'Plugin %s', highlight( p.name ) ) );
+        this._cli.newLine( sprintf( format, 'version', p.version ) );
+        this._cli.newLine( sprintf( format, 'description', p.description ) );
+        this._cli.newLine( sprintf( format, 'targets', p.targets.join( ', ' ) ) );
+        this._cli.newLine( sprintf( format, 'authors', authors.join( '\n') ) );
+        if ( p.isFake ) {
+            this._cli.newLine( sprintf( format, 'fake', p.isFake ? 'yes': 'no' ) );
+        }
+        this._cli.newLine( sprintf( format, 'file', p.file ) );
+        this._cli.newLine( sprintf( format, 'class', p.class ) );
+    }
+
+    /** @inheritdoc */
+    public showMessagePluginNotFound( name: string ): void {
+        const highlight = this._cli.colorHighlight;
+        this._cli.newLine( this._cli.symbolError,
+            sprintf( 'No plugins installed with the name "%s".', highlight( name ) )
+            );
+    }
+
+    /** @inheritdoc */
+    public showMessagePluginAlreadyInstalled( name: string ): void {
+        const highlight = this._cli.colorHighlight;
+        this._cli.newLine( this._cli.symbolInfo,
+            sprintf( 'The plugin %s is already installed.', highlight( name ) )
+            );
+    }
+
+    /** @inheritdoc */
+    public showMessageTryingToInstall( name: string, tool: string ): void {
+        const highlight = this._cli.colorHighlight;
+        this._cli.newLine( this._cli.symbolInfo,
+            sprintf( 'Trying to install %s with %s.', highlight( name ), tool )
+            );
+    }
+
+    /** @inheritdoc */
+    public showMessageTryingToUninstall( name: string, tool: string ): void {
+        const highlight = this._cli.colorHighlight;
+        this._cli.newLine( this._cli.symbolInfo,
+            sprintf( 'Trying to uninstall %s with %s.', highlight( name ), tool )
+            );
+    }
+
+    /** @inheritdoc */
+    public showMessageCouldNoFindInstalledPlugin( name: string ): void {
+        const highlight = this._cli.colorHighlight;
+        this._cli.newLine( this._cli.symbolInfo,
+            sprintf( 'Could not find installed plug-in %s. Please try again.', highlight( name ) )
+            );
+    }
+
+    /** @inheritdoc */
+    public showMessagePackageFileNotFound( file: string ): void {
+        const highlight = this._cli.colorHighlight;
+        this._cli.newLine( this._cli.symbolWarning,
+            sprintf( 'Could not find %s. I will create it for you.', highlight( file ) )
+            );
+    }
+
+    /** @inheritdoc */
+    public showPluginServeStart( name: string ): void {
+        const highlight = this._cli.colorHighlight;
+        this._cli.newLine( this._cli.symbolInfo,
+            sprintf( 'Serving %s...', highlight( name ) )
+            );
+    }
+
+    /** @inheritdoc */
+    public showCommandStarted( command: string ): void {
+        this._cli.newLine( '  Running', this._cli.colorHighlight( command ) );
+        this.drawSeparationLine();
+    }
+
+    /** @inheritdoc */
+    public showCommandFinished(): void {
+        this.drawSeparationLine();
+    }
+
+    protected drawSeparationLine(): void {
+        const separationLine = '  ' + '_'.repeat( 78 );
+        this._cli.newLine( separationLine );
+    }
+
+
+    /** @inheritdoc */
+    public showCommandCode( code: number, showIfSuccess: boolean = true ): void {
+        if ( 0 === code ) {
+            if ( showIfSuccess ) {
+                this._cli.newLine( this._cli.symbolSuccess, 'Success' );
+            }
+        } else {
+            this._cli.newLine( this._cli.symbolError, 'Error during command execution.' );
+        }
+    }
+
+    /** @inheritdoc */
+    public showError( e: Error ): void {
+        this._cli.newLine( this._cli.symbolError, e.message );
+    }
+
 
     //
     // ScriptExecutionListener

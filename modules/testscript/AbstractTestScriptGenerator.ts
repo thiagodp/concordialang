@@ -15,6 +15,27 @@ import { isDefined } from '../util/TypeChecking';
 export class AbstractTestScriptGenerator {
 
     /**
+     * Generates for the given documents.
+     * @param docs Documents
+     * @param spec Specification
+     */
+    generate( docs: Document[], spec: AugmentedSpec ): AbstractTestScript[] {
+        const all: AbstractTestScript[] = [];
+        for ( const doc of docs || [] ) {
+            // Only test cases allowed
+            if ( ! doc.testCases || doc.testCases.length < 1 ) {
+                continue;
+            }
+            const ats = this.generateFromDocument( doc, spec );
+            if ( isDefined( ats ) ) {
+                // console.log( 'CREATED ATS from', ats.sourceFile );
+                all.push( ats );
+            }
+        }
+        return all;
+    }
+
+    /**
      * Generate an abstract test script with the test cases of a document.
      *
      * @param doc Document

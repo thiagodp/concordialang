@@ -1,7 +1,7 @@
-import { LocatedException } from "../../error/LocatedException";
-import { Warning } from "../../error/Warning";
+import { LocatedException } from "../error/LocatedException";
+import { Warning } from "../error/Warning";
 
-export interface TCGenListener {
+export interface TestCaseGeneratorListener {
 
     testCaseGenerationStarted( warnings: Warning[] );
 

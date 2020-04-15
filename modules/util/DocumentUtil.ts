@@ -1,4 +1,4 @@
-import { CaseType } from '../app/CaseType';
+import { CaseType } from './CaseType';
 import { Document, Scenario, UIElement, UIElementInfo, Variant } from '../ast';
 import { isDefined } from './TypeChecking';
 import { UIElementNameHandler } from './UIElementNameHandler';

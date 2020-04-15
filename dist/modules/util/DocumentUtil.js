@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const CaseType_1 = require("../app/CaseType");
+const CaseType_1 = require("./CaseType");
 const ast_1 = require("../ast");
 const TypeChecking_1 = require("./TypeChecking");
 const UIElementNameHandler_1 = require("./UIElementNameHandler");

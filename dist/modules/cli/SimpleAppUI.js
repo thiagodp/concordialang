@@ -1,66 +1,44 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const path_1 = require("path");
-const terminalLink = require("terminal-link");
 const ora = require("ora");
-const ErrorSorting_1 = require("../../error/ErrorSorting");
-const TimeFormat_1 = require("../../util/TimeFormat");
-const Defaults_1 = require("../Defaults");
+const path_1 = require("path");
+const sprintf_js_1 = require("sprintf-js");
+const terminalLink = require("terminal-link");
+const Defaults_1 = require("../app/Defaults");
+const ErrorSorting_1 = require("../error/ErrorSorting");
+const TimeFormat_1 = require("../util/TimeFormat");
 class SimpleAppUI {
-    constructor(_cli, _debugMode = false) {
+    constructor(_cli, _meow, _debugMode = false) {
         this._cli = _cli;
+        this._meow = _meow;
         this._debugMode = _debugMode;
         this._spinner = ora();
     }
     //
-    // AppEventsListener
+    // AppUI
     //
     /** @inheritdoc */
     setDebugMode(debugMode) {
         this._debugMode = debugMode;
     }
     /** @inheritdoc */
-    show(...args) {
-        this._cli.newLine(...args);
+    showHelp() {
+        this._cli.newLine(this._meow.help);
     }
     /** @inheritdoc */
-    success(...args) {
-        this._cli.newLine(this._cli.symbolSuccess, ...args);
+    showAbout() {
+        const m = this._meow;
+        const desc = m.pkg.description || 'Concordia';
+        const version = m.pkg.version || '1.0.0';
+        const name = m.pkg.author.name || 'Thiago Delgado Pinto';
+        const site = m.pkg.homepage || 'http://concordialang.org';
+        this._cli.newLine(desc + ' v' + version);
+        this._cli.newLine('Copyright (c) ' + name);
+        this._cli.newLine(site);
     }
     /** @inheritdoc */
-    info(...args) {
-        this._cli.newLine(this._cli.symbolInfo, ...args);
-    }
-    /** @inheritdoc */
-    warn(...args) {
-        this._cli.newLine(this._cli.symbolWarning, ...args);
-    }
-    /** @inheritdoc */
-    error(...args) {
-        this._cli.newLine(this._cli.symbolError, ...args);
-    }
-    /** @inheritdoc */
-    exception(error) {
-        if (this._debugMode) {
-            this.error(error.message, this.formattedStackOf(error));
-        }
-        else {
-            this.error(error.message);
-        }
-    }
-    /** @inheritdoc */
-    announceUpdateAvailable(link, isMajor) {
-        if (isMajor) {
-            this.show(this._cli.colorHighlight('→'), this._cli.bgHighlight('PLEASE READ THE RELEASE NOTES BEFORE UPDATING'));
-            this.show(this._cli.colorHighlight('→'), link);
-        }
-        else {
-            this.show(this._cli.colorHighlight('→'), 'See', link, 'for details.');
-        }
-    }
-    /** @inheritdoc */
-    announceNoUpdateAvailable() {
-        this.info('No updates available.');
+    showVersion() {
+        this._meow.showVersion();
     }
     /** @inheritdoc */
     announceOptions(options) {
@@ -99,6 +77,105 @@ class SimpleAppUI {
             && !options.executeScript
             && !options.analyzeResult) {
             this.warn('Well, you have disabled all the interesting behavior. :)');
+        }
+    }
+    /** @inheritdoc */
+    announceUpdateAvailable(url, hasBreakingChange) {
+        // When the terminal does not support links
+        const fallback = (text, url) => {
+            return url;
+        };
+        const link = terminalLink(url, url, { fallback: fallback }); // clickable URL
+        if (hasBreakingChange) {
+            this.show(this._cli.colorHighlight('→'), this._cli.bgHighlight('PLEASE READ THE RELEASE NOTES BEFORE UPDATING'));
+            this.show(this._cli.colorHighlight('→'), link);
+        }
+        else {
+            this.show(this._cli.colorHighlight('→'), 'See', link, 'for details.');
+        }
+    }
+    /** @inheritdoc */
+    announceNoUpdateAvailable() {
+        this.info('No updates available.');
+    }
+    /** @inheritdoc */
+    announceConfigurationFileAlreadyExists() {
+        this.warn('You already have a configuration file.');
+    }
+    /** @inheritDoc */
+    announcePluginNotFound(pluginDir, pluginName) {
+        this.error(`Plugin "${pluginName}" not found at "${pluginDir}".`);
+    }
+    /** @inheritDoc */
+    announcePluginCouldNotBeLoaded(pluginName) {
+        this.error(`Could not load the plugin: ${pluginName}.`);
+    }
+    /** @inheritDoc */
+    announceNoPluginWasDefined() {
+        this.warn('A plugin was not defined.');
+    }
+    /** @inheritDoc */
+    announceReportFileNotFound(filePath) {
+        this.warn(`Could not retrieve execution results from "${filePath}".`);
+    }
+    /** @inheritdoc */
+    drawLanguages(languages) {
+        const highlight = this._cli.colorHighlight;
+        this._cli.newLine(this._cli.symbolInfo, 'Available languages:', languages.sort().map(l => highlight(l)).join(', '));
+    }
+    /** @inheritdoc */
+    showErrorSavingAST(astFile, errorMessage) {
+        this.error('Error saving', this._cli.colorHighlight(astFile), ': ' + errorMessage);
+    }
+    /** @inheritdoc */
+    announceASTIsSaved(astFile) {
+        this.info('Saved', this._cli.colorHighlight(astFile));
+    }
+    /** @inheritdoc */
+    showGeneratedTestScriptFiles(scriptDir, files) {
+        // When the terminal does not support links
+        const fallback = (text, url) => {
+            return text;
+        };
+        for (const file of files) {
+            const relPath = path_1.relative(scriptDir, file);
+            const link = terminalLink(relPath, file, { fallback: fallback }); // clickable URL
+            this.success('Generated script', this._cli.colorHighlight(link));
+        }
+    }
+    /** @inheritdoc */
+    showTestScriptGenerationErrors(errors) {
+        for (const err of errors) {
+            this.exception(err);
+        }
+    }
+    /** @inheritdoc */
+    show(...args) {
+        this._cli.newLine(...args);
+    }
+    /** @inheritdoc */
+    success(...args) {
+        this._cli.newLine(this._cli.symbolSuccess, ...args);
+    }
+    /** @inheritdoc */
+    info(...args) {
+        this._cli.newLine(this._cli.symbolInfo, ...args);
+    }
+    /** @inheritdoc */
+    warn(...args) {
+        this._cli.newLine(this._cli.symbolWarning, ...args);
+    }
+    /** @inheritdoc */
+    error(...args) {
+        this._cli.newLine(this._cli.symbolError, ...args);
+    }
+    /** @inheritdoc */
+    exception(error) {
+        if (this._debugMode) {
+            this.error(error.message, this.formattedStackOf(error));
+        }
+        else {
+            this.error(error.message);
         }
     }
     // /** @inheritDoc */
@@ -145,6 +222,31 @@ class SimpleAppUI {
     //         this.formatDuration( data.durationMs )
     //         );
     // }
+    //
+    // OptionsListener
+    //
+    /** @inheritDoc */
+    announceConfigurationFileSaved(filePath) {
+        this.info('Saved', this._cli.colorHighlight(filePath));
+    }
+    /** @inheritDoc */
+    announceCouldNotLoadConfigurationFile(errorMessage) {
+        this.warn('Could not load the configuration file:', errorMessage);
+    }
+    /** @inheritDoc */
+    announceConfigurationFileLoaded(filePath) {
+        this.info('Configuration file loaded:', this._cli.colorHighlight(filePath));
+    }
+    /** @inheritDoc */
+    announceSeed(seed, generatedSeed) {
+        this.info(generatedSeed ? 'Generated seed' : 'Seed', this._cli.colorHighlight(seed));
+    }
+    /** @inheritDoc */
+    announceRealSeed(realSeed) {
+        if (this._debugMode) {
+            this.info('Real seed', this._cli.colorHighlight(realSeed));
+        }
+    }
     //
     // FileCompilationListener
     //
@@ -224,6 +326,110 @@ class SimpleAppUI {
             this._cli.newLine(color(symbol), this._cli.colorHighlight(link));
             this.showErrors([...problemInfo.errors, ...problemInfo.warnings], true);
         }
+    }
+    //
+    // PluginListener
+    //
+    /** @inheritdoc */
+    drawPluginList(plugins) {
+        if (plugins.length < 1) {
+            this._cli.newLine(this._cli.symbolInfo, 'No plugins found. Try to install a plugin with NPM.');
+            return;
+        }
+        // const highlight = this._cli.colorHighlight;
+        // const format = "%-20s %-8s %-22s"; // util.format does not support padding :(
+        // this._cli.newLine( highlight( sprintf( format, 'Name', 'Version', 'Description' ) ) );
+        // for ( let p of plugins ) {
+        //     this._cli.newLine( sprintf( format, p.name, p.version, p.description ) );
+        // }
+        const highlight = this._cli.colorHighlight;
+        const format = "%-15s";
+        this._cli.newLine(this._cli.symbolInfo, highlight('Available Plugins:'));
+        for (let p of plugins) {
+            this._cli.newLine(' ');
+            this._cli.newLine(highlight(sprintf_js_1.sprintf(format, '  Name')), p.name);
+            this._cli.newLine(highlight(sprintf_js_1.sprintf(format, '  Version')), p.version);
+            this._cli.newLine(highlight(sprintf_js_1.sprintf(format, '  Description')), p.description);
+        }
+    }
+    /** @inheritdoc */
+    drawSinglePlugin(p) {
+        const highlight = this._cli.colorHighlight;
+        const format = "  - %-12s: %s"; // util.format does not support padding :(
+        const authors = p.authors.map((a, idx) => 0 === idx ? a : sprintf_js_1.sprintf('%-17s %s', '', a));
+        this._cli.newLine(this._cli.symbolInfo, sprintf_js_1.sprintf('Plugin %s', highlight(p.name)));
+        this._cli.newLine(sprintf_js_1.sprintf(format, 'version', p.version));
+        this._cli.newLine(sprintf_js_1.sprintf(format, 'description', p.description));
+        this._cli.newLine(sprintf_js_1.sprintf(format, 'targets', p.targets.join(', ')));
+        this._cli.newLine(sprintf_js_1.sprintf(format, 'authors', authors.join('\n')));
+        if (p.isFake) {
+            this._cli.newLine(sprintf_js_1.sprintf(format, 'fake', p.isFake ? 'yes' : 'no'));
+        }
+        this._cli.newLine(sprintf_js_1.sprintf(format, 'file', p.file));
+        this._cli.newLine(sprintf_js_1.sprintf(format, 'class', p.class));
+    }
+    /** @inheritdoc */
+    showMessagePluginNotFound(name) {
+        const highlight = this._cli.colorHighlight;
+        this._cli.newLine(this._cli.symbolError, sprintf_js_1.sprintf('No plugins installed with the name "%s".', highlight(name)));
+    }
+    /** @inheritdoc */
+    showMessagePluginAlreadyInstalled(name) {
+        const highlight = this._cli.colorHighlight;
+        this._cli.newLine(this._cli.symbolInfo, sprintf_js_1.sprintf('The plugin %s is already installed.', highlight(name)));
+    }
+    /** @inheritdoc */
+    showMessageTryingToInstall(name, tool) {
+        const highlight = this._cli.colorHighlight;
+        this._cli.newLine(this._cli.symbolInfo, sprintf_js_1.sprintf('Trying to install %s with %s.', highlight(name), tool));
+    }
+    /** @inheritdoc */
+    showMessageTryingToUninstall(name, tool) {
+        const highlight = this._cli.colorHighlight;
+        this._cli.newLine(this._cli.symbolInfo, sprintf_js_1.sprintf('Trying to uninstall %s with %s.', highlight(name), tool));
+    }
+    /** @inheritdoc */
+    showMessageCouldNoFindInstalledPlugin(name) {
+        const highlight = this._cli.colorHighlight;
+        this._cli.newLine(this._cli.symbolInfo, sprintf_js_1.sprintf('Could not find installed plug-in %s. Please try again.', highlight(name)));
+    }
+    /** @inheritdoc */
+    showMessagePackageFileNotFound(file) {
+        const highlight = this._cli.colorHighlight;
+        this._cli.newLine(this._cli.symbolWarning, sprintf_js_1.sprintf('Could not find %s. I will create it for you.', highlight(file)));
+    }
+    /** @inheritdoc */
+    showPluginServeStart(name) {
+        const highlight = this._cli.colorHighlight;
+        this._cli.newLine(this._cli.symbolInfo, sprintf_js_1.sprintf('Serving %s...', highlight(name)));
+    }
+    /** @inheritdoc */
+    showCommandStarted(command) {
+        this._cli.newLine('  Running', this._cli.colorHighlight(command));
+        this.drawSeparationLine();
+    }
+    /** @inheritdoc */
+    showCommandFinished() {
+        this.drawSeparationLine();
+    }
+    drawSeparationLine() {
+        const separationLine = '  ' + '_'.repeat(78);
+        this._cli.newLine(separationLine);
+    }
+    /** @inheritdoc */
+    showCommandCode(code, showIfSuccess = true) {
+        if (0 === code) {
+            if (showIfSuccess) {
+                this._cli.newLine(this._cli.symbolSuccess, 'Success');
+            }
+        }
+        else {
+            this._cli.newLine(this._cli.symbolError, 'Error during command execution.');
+        }
+    }
+    /** @inheritdoc */
+    showError(e) {
+        this._cli.newLine(this._cli.symbolError, e.message);
     }
     //
     // ScriptExecutionListener

@@ -1,5 +1,5 @@
 import * as enumUtil from 'enum-util';
-import { CaseType } from '../app/CaseType';
+import { CaseType } from './CaseType';
 import { UIElement, UIProperty, UIPropertyTypes } from '../ast';
 import { Entities, NLPEntity, NLPUtil } from '../nlp';
 import { ActionTargets, EditableActionTargets } from './ActionTargets';

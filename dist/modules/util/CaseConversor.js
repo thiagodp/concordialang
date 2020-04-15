@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const case_1 = require("case");
-const CaseType_1 = require("../app/CaseType");
+const CaseType_1 = require("./CaseType");
 function convertCase(text, type) {
     switch (type.toString().trim().toLowerCase()) {
         case CaseType_1.CaseType.CAMEL: return case_1.camel(text);

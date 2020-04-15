@@ -1,5 +1,5 @@
 import { dirname, resolve } from 'path';
-import { CaseType } from '../app/CaseType';
+import { CaseType } from '../util/CaseType';
 import { Constant, Database, Document, Feature, NamedNode, Spec, Table, UIElement } from '../ast';
 import { DatabaseInterface } from '../dbi';
 import { DocumentUtil } from '../util/DocumentUtil';

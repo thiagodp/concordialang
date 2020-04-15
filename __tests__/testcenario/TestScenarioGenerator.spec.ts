@@ -7,12 +7,12 @@ import { AllVariantsSelectionStrategy } from "../../modules/selection/VariantSel
 import { BatchSpecificationAnalyzer } from "../../modules/semantic/BatchSpecificationAnalyzer";
 import { GenContext, PreTestCaseGenerator } from "../../modules/testscenario/PreTestCaseGenerator";
 import { TestScenario } from "../../modules/testscenario/TestScenario";
-import { TSGen } from "../../modules/testscenario/TSGen";
+import { TestScenarioGenerator } from "../../modules/testscenario/TestScenarioGenerator";
 import { SimpleCompiler } from "../SimpleCompiler";
 
-describe( 'TSGen', () => {
+describe( 'TestScenarioGenerator', () => {
 
-    let gen: TSGen = null; // under test
+    let gen: TestScenarioGenerator = null; // under test
 
     let ptcGen: PreTestCaseGenerator;
     const LANGUAGE: string = 'pt';
@@ -34,7 +34,7 @@ describe( 'TSGen', () => {
             SEED,
         );
 
-        gen = new TSGen(
+        gen = new TestScenarioGenerator(
             ptcGen,
             new AllVariantsSelectionStrategy(),
             new CartesianProductStrategy(),

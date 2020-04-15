@@ -10,7 +10,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const error_1 = require("../error");
-const BatchDocumentAnalyzer_1 = require("../semantic2/single/BatchDocumentAnalyzer");
+const BatchDocumentAnalyzer_1 = require("../semantic/single/BatchDocumentAnalyzer");
 class SingleFileCompiler {
     constructor(_lexer, _parser, _nlpRec, _defaultLanguage, _ignoreSemanticAnalysis = false) {
         this._lexer = _lexer;

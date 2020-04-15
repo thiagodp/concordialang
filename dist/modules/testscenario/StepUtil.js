@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const arrayMove = require("array-move");
 const deepcopy = require("deepcopy");
-const CaseType_1 = require("../app/CaseType");
+const CaseType_1 = require("../util/CaseType");
 const nlp_1 = require("../nlp");
 const NodeTypes_1 = require("../req/NodeTypes");
 const CaseConversor_1 = require("../util/CaseConversor");

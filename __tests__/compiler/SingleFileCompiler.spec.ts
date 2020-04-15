@@ -1,15 +1,15 @@
 import * as fs from 'fs';
 import { resolve } from 'path';
 import { Options } from '../../modules/app/Options';
-import { SingleFileCompiler } from '../../modules/compiler/SingleFileCompiler';
 import { Document } from '../../modules/ast/Document';
+import { SingleFileCompiler } from '../../modules/compiler/SingleFileCompiler';
+import { FileProblemMapper } from '../../modules/error';
 import { JsonLanguageContentLoader, LanguageContentLoader } from '../../modules/language';
 import { Lexer } from '../../modules/lexer/Lexer';
 import { NLPBasedSentenceRecognizer } from '../../modules/nlp/NLPBasedSentenceRecognizer';
 import { NLPTrainer } from '../../modules/nlp/NLPTrainer';
 import { Parser } from '../../modules/parser/Parser';
 import { FSFileHandler } from '../../modules/util/file/FSFileHandler';
-import { ProblemMapper, FileProblemMapper } from '../../modules/error';
 
 describe( 'SingleFileCompiler', () => {
 

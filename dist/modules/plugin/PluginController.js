@@ -34,7 +34,7 @@ class PluginController {
             }
             if (options.pluginInstall) {
                 try {
-                    yield pluginManager.installByName(options.plugin, drawer);
+                    yield pluginManager.installByName(options.plugin);
                 }
                 catch (e) {
                     drawer.showError(e);
@@ -43,7 +43,7 @@ class PluginController {
             }
             if (options.pluginUninstall) {
                 try {
-                    yield pluginManager.uninstallByName(options.plugin, drawer);
+                    yield pluginManager.uninstallByName(options.plugin);
                 }
                 catch (e) {
                     drawer.showError(e);
@@ -62,7 +62,7 @@ class PluginController {
             }
             if (options.pluginServe) {
                 try {
-                    yield pluginManager.serve(pluginData, drawer);
+                    yield pluginManager.serve(pluginData);
                 }
                 catch (e) {
                     drawer.showError(e);

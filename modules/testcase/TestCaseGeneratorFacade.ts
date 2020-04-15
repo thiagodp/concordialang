@@ -9,26 +9,30 @@ import { GivenWhenThenSentenceRecognizer } from "../nlp/GivenWhenThenSentenceRec
 import { AugmentedSpec } from "../req/AugmentedSpec";
 import { CartesianProductStrategy, CombinationStrategy, OneWiseStrategy, ShuffledOneWiseStrategy, SingleRandomOfEachStrategy } from "../selection/CombinationStrategy";
 import { AllVariantsSelectionStrategy, FirstMostImportantVariantSelectionStrategy, FirstVariantSelectionStrategy, SingleRandomVariantSelectionStrategy, VariantSelectionStrategy } from '../selection/VariantSelectionStrategy';
-import { DataTestCaseMix, JustOneInvalidMix, OnlyInvalidMix, OnlyValidMix, UnfilteredMix } from "../testcase/DataTestCaseMix";
-import { TCDocGen } from "../testcase/TCDocGen";
-import { TCGen } from "../testcase/TCGen";
-import { TestCaseFileGenerator } from "../testcase/TestCaseFileGenerator";
-import { TestPlanner } from "../testcase/TestPlanner";
+import { DataTestCaseMix, JustOneInvalidMix, OnlyInvalidMix, OnlyValidMix, UnfilteredMix } from "./DataTestCaseMix";
+import { TestCaseDocumentGenerator } from "./TestCaseDocumentGenerator";
+import { TestCaseGenerator } from "./TestCaseGenerator";
+import { TestCaseFileGenerator } from "./TestCaseFileGenerator";
+import { TestPlanner } from "./TestPlanner";
 import { GenContext, PreTestCaseGenerator } from "../testscenario/PreTestCaseGenerator";
 import { TestScenario } from "../testscenario/TestScenario";
-import { TSGen } from "../testscenario/TSGen";
+import { TestScenarioGenerator } from "../testscenario/TestScenarioGenerator";
 import { FileWriter, toUnixPath } from '../util/file';
-import { CombinationOptions, InvalidSpecialOptions, VariantSelectionOptions } from "./Defaults";
-import { TCGenListener } from "./listeners/TCGenListener";
-import { Options } from "./Options";
+import { CombinationOptions, InvalidSpecialOptions, VariantSelectionOptions } from "../app/CombinationOptions";
+import { TestCaseGeneratorListener } from "./TestCaseGeneratorListener";
+import { Options } from "../app/Options";
 
-
-export class TCGenController {
+/**
+ * Test Case Generator Facade
+ *
+ * @author Thiago Delgado Pinto
+ */
+export class TestCaseGeneratorFacade {
 
     constructor(
         private _variantSentenceRec: GivenWhenThenSentenceRecognizer,
         private _langLoader: LanguageContentLoader,
-        private _listener: TCGenListener,
+        private _listener: TestCaseGeneratorListener,
         private _fileWriter: FileWriter,
         ) {
     }
@@ -68,7 +72,7 @@ export class TCGenController {
 
         let postconditionNameToVariantsMap = new Map< string, Variant[] >();
 
-        let tsGen = new TSGen(
+        let tsGen = new TestScenarioGenerator(
             preTCGen,
             variantSelectionStrategy,
             stateCombinationStrategy,
@@ -76,11 +80,11 @@ export class TCGenController {
             postconditionNameToVariantsMap
         );
 
-        const tcGen = new TCGen( preTCGen );
+        const tcGen = new TestCaseGenerator( preTCGen );
 
         const testPlanMakers: TestPlanner[] = this.testPlanMakersFromOptions( options, strategyWarnings );
 
-        const tcDocGen = new TCDocGen( options.extensionTestCase, options.directory );
+        const tcDocGen = new TestCaseDocumentGenerator( options.extensionTestCase, options.directory );
 
         const tcDocFileGen = new TestCaseFileGenerator( this._langLoader, options.language );
 

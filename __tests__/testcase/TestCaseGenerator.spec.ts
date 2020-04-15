@@ -6,16 +6,16 @@ import { IndexOfEachStrategy } from "../../modules/selection/CombinationStrategy
 import { SpecFilter } from "../../modules/selection/SpecFilter";
 import { BatchSpecificationAnalyzer } from "../../modules/semantic/BatchSpecificationAnalyzer";
 import { JustOneInvalidMix, UnfilteredMix } from "../../modules/testcase/DataTestCaseMix";
-import { TCGen } from "../../modules/testcase/TCGen";
+import { TestCaseGenerator } from "../../modules/testcase/TestCaseGenerator";
 import { TestPlanner } from "../../modules/testcase/TestPlanner";
 import { LongLimits } from "../../modules/testdata/limits/LongLimits";
 import { GenContext, PreTestCaseGenerator } from "../../modules/testscenario/PreTestCaseGenerator";
 import { TestScenario } from "../../modules/testscenario/TestScenario";
 import { SimpleCompiler } from "../SimpleCompiler";
 
-describe( 'TCGen', () => {
+describe( 'TestCaseGenerator', () => {
 
-    let gen: TCGen; // under test
+    let gen: TestCaseGenerator; // under test
 
     const LANGUAGE = 'pt';
     const SEED = 'concordia';
@@ -33,7 +33,7 @@ describe( 'TCGen', () => {
             SEED
         );
 
-        gen = new TCGen( preTCGen );
+        gen = new TestCaseGenerator( preTCGen );
     } );
 
     afterEach( () => {

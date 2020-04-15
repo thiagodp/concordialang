@@ -1,5 +1,5 @@
 import { camel, kebab, pascal, snake } from 'case';
-import { CaseType } from '../app/CaseType';
+import { CaseType } from './CaseType';
 
 export function convertCase( text: string, type: CaseType | string ): string {
     switch ( type.toString().trim().toLowerCase() ) {

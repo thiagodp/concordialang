@@ -10,7 +10,7 @@ import { TestPlanner } from "./TestPlanner";
  *
  * @author Thiago Delgado Pinto
  */
-export class TCGen {
+export class TestCaseGenerator {
 
     constructor(
         private _preTestCaseGenerator: PreTestCaseGenerator

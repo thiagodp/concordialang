@@ -17,15 +17,21 @@ import { GenContext, PreTestCaseGenerator } from './PreTestCaseGenerator';
 import { TestScenario } from './TestScenario';
 import { VariantStateDetector } from './VariantStateDetector';
 
-
 /**
- * Test Scenario generator
+ * Test Scenario Generator
  *
- * > It still does not take Variant Backgrounds into account.
+ * Test Scenarios are produced before Test Cases. Their generation does not depend on
+ * the tag "ignore", as Test Cases do. A Test Scenario should be marked as
+ * `ignoredForTestCaseGeneration` whether Variants, Scenarios or Features have the
+ *  tag "ignore". Currently, however, the implementation only checks for Variants.
+ *
+ * TO-DO:
+ *  - Check Scenarios and Features for the tag "ignore" to set `ignoredForTestCaseGeneration`.
+ *  - Take Variant Backgrounds into account.
  *
  * @author Thiago Delgado Pinto
  */
-export class TSGen {
+export class TestScenarioGenerator {
 
     private readonly _randomLong: RandomLong;
     private readonly _langContentLoader: LanguageContentLoader;

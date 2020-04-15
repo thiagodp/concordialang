@@ -1,6 +1,6 @@
 import * as arrayMove from 'array-move';
 import * as deepcopy from 'deepcopy';
-import { CaseType } from "../app/CaseType";
+import { CaseType } from "../util/CaseType";
 import { Step } from '../ast/Step';
 import { KeywordDictionary } from "../language/KeywordDictionary";
 import { Entities, NLPUtil } from '../nlp';

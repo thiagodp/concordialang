@@ -15,16 +15,21 @@ const RuntimeException_1 = require("../error/RuntimeException");
 const Warning_1 = require("../error/Warning");
 const CombinationStrategy_1 = require("../selection/CombinationStrategy");
 const VariantSelectionStrategy_1 = require("../selection/VariantSelectionStrategy");
-const DataTestCaseMix_1 = require("../testcase/DataTestCaseMix");
-const TCDocGen_1 = require("../testcase/TCDocGen");
-const TCGen_1 = require("../testcase/TCGen");
-const TestCaseFileGenerator_1 = require("../testcase/TestCaseFileGenerator");
-const TestPlanner_1 = require("../testcase/TestPlanner");
+const DataTestCaseMix_1 = require("./DataTestCaseMix");
+const TestCaseDocumentGenerator_1 = require("./TestCaseDocumentGenerator");
+const TestCaseGenerator_1 = require("./TestCaseGenerator");
+const TestCaseFileGenerator_1 = require("./TestCaseFileGenerator");
+const TestPlanner_1 = require("./TestPlanner");
 const PreTestCaseGenerator_1 = require("../testscenario/PreTestCaseGenerator");
-const TSGen_1 = require("../testscenario/TSGen");
+const TestScenarioGenerator_1 = require("../testscenario/TestScenarioGenerator");
 const file_1 = require("../util/file");
-const Defaults_1 = require("./Defaults");
-class TCGenController {
+const CombinationOptions_1 = require("../app/CombinationOptions");
+/**
+ * Test Case Generator Facade
+ *
+ * @author Thiago Delgado Pinto
+ */
+class TestCaseGeneratorFacade {
     constructor(_variantSentenceRec, _langLoader, _listener, _fileWriter) {
         this._variantSentenceRec = _variantSentenceRec;
         this._langLoader = _langLoader;
@@ -43,10 +48,10 @@ class TCGenController {
             const stateCombinationStrategy = this.stateCombinationStrategyFromOptions(options, strategyWarnings);
             let variantToTestScenariosMap = new Map();
             let postconditionNameToVariantsMap = new Map();
-            let tsGen = new TSGen_1.TSGen(preTCGen, variantSelectionStrategy, stateCombinationStrategy, variantToTestScenariosMap, postconditionNameToVariantsMap);
-            const tcGen = new TCGen_1.TCGen(preTCGen);
+            let tsGen = new TestScenarioGenerator_1.TestScenarioGenerator(preTCGen, variantSelectionStrategy, stateCombinationStrategy, variantToTestScenariosMap, postconditionNameToVariantsMap);
+            const tcGen = new TestCaseGenerator_1.TestCaseGenerator(preTCGen);
             const testPlanMakers = this.testPlanMakersFromOptions(options, strategyWarnings);
-            const tcDocGen = new TCDocGen_1.TCDocGen(options.extensionTestCase, options.directory);
+            const tcDocGen = new TestCaseDocumentGenerator_1.TestCaseDocumentGenerator(options.extensionTestCase, options.directory);
             const tcDocFileGen = new TestCaseFileGenerator_1.TestCaseFileGenerator(this._langLoader, options.language);
             //
             // generation
@@ -157,16 +162,16 @@ class TCGenController {
     variantSelectionStrategyFromOptions(options, warnings) {
         const desired = options.typedVariantSelection();
         switch (desired) {
-            case Defaults_1.VariantSelectionOptions.SINGLE_RANDOM:
+            case CombinationOptions_1.VariantSelectionOptions.SINGLE_RANDOM:
                 return new VariantSelectionStrategy_1.SingleRandomVariantSelectionStrategy(options.realSeed);
-            case Defaults_1.VariantSelectionOptions.FIRST:
+            case CombinationOptions_1.VariantSelectionOptions.FIRST:
                 return new VariantSelectionStrategy_1.FirstVariantSelectionStrategy();
-            case Defaults_1.VariantSelectionOptions.FIRST_MOST_IMPORTANT:
+            case CombinationOptions_1.VariantSelectionOptions.FIRST_MOST_IMPORTANT:
                 return new VariantSelectionStrategy_1.FirstMostImportantVariantSelectionStrategy(options.importance, [ast_1.ReservedTags.IMPORTANCE]);
-            case Defaults_1.VariantSelectionOptions.ALL:
+            case CombinationOptions_1.VariantSelectionOptions.ALL:
                 return new VariantSelectionStrategy_1.AllVariantsSelectionStrategy();
             default: {
-                const used = Defaults_1.VariantSelectionOptions.SINGLE_RANDOM.toString();
+                const used = CombinationOptions_1.VariantSelectionOptions.SINGLE_RANDOM.toString();
                 const msg = 'Variant selection strategy not supported: ' + desired +
                     '. It will be used "' + used + '" instead.';
                 warnings.push(new Warning_1.Warning(msg));
@@ -179,16 +184,16 @@ class TCGenController {
     }
     combinationStrategyFrom(desired, name, options, warnings) {
         switch (desired) {
-            case Defaults_1.CombinationOptions.SHUFFLED_ONE_WISE:
+            case CombinationOptions_1.CombinationOptions.SHUFFLED_ONE_WISE:
                 return new CombinationStrategy_1.ShuffledOneWiseStrategy(options.realSeed);
-            case Defaults_1.CombinationOptions.ONE_WISE:
+            case CombinationOptions_1.CombinationOptions.ONE_WISE:
                 return new CombinationStrategy_1.OneWiseStrategy(options.realSeed);
-            case Defaults_1.CombinationOptions.SINGLE_RANDOM_OF_EACH:
+            case CombinationOptions_1.CombinationOptions.SINGLE_RANDOM_OF_EACH:
                 return new CombinationStrategy_1.SingleRandomOfEachStrategy(options.realSeed);
-            case Defaults_1.CombinationOptions.ALL:
+            case CombinationOptions_1.CombinationOptions.ALL:
                 return new CombinationStrategy_1.CartesianProductStrategy();
             default: {
-                const used = Defaults_1.CombinationOptions.SHUFFLED_ONE_WISE.toString();
+                const used = CombinationOptions_1.CombinationOptions.SHUFFLED_ONE_WISE.toString();
                 const msg = name + ' combination strategy not supported: ' + desired +
                     '. It will be used "' + used + '" instead.';
                 warnings.push(new Warning_1.Warning(msg));
@@ -198,10 +203,10 @@ class TCGenController {
     }
     testPlanMakersFromOptions(options, warnings) {
         // INVALID DATA TEST CASES AT A TIME
-        const none = Defaults_1.InvalidSpecialOptions.NONE.toString();
-        const all = Defaults_1.InvalidSpecialOptions.ALL.toString();
-        const random = Defaults_1.InvalidSpecialOptions.RANDOM.toString();
-        const default_ = Defaults_1.InvalidSpecialOptions.DEFAULT.toString();
+        const none = CombinationOptions_1.InvalidSpecialOptions.NONE.toString();
+        const all = CombinationOptions_1.InvalidSpecialOptions.ALL.toString();
+        const random = CombinationOptions_1.InvalidSpecialOptions.RANDOM.toString();
+        const default_ = CombinationOptions_1.InvalidSpecialOptions.DEFAULT.toString();
         let mixStrategy;
         const desired = String(options.combInvalid);
         switch (desired) {
@@ -229,7 +234,7 @@ class TCGenController {
         }
         // DATA TEST CASE COMBINATION
         const dataCombinationOption = desired === random
-            ? Defaults_1.CombinationOptions.SHUFFLED_ONE_WISE
+            ? CombinationOptions_1.CombinationOptions.SHUFFLED_ONE_WISE
             : options.typedDataCombination();
         // console.log( 'options.invalid', options.invalid, 'desired', desired, 'dataCombinationOption', dataCombinationOption );
         let combinationStrategy = this.combinationStrategyFrom(dataCombinationOption, 'Data', options, warnings);
@@ -238,4 +243,4 @@ class TCGenController {
         ];
     }
 }
-exports.TCGenController = TCGenController;
+exports.TestCaseGeneratorFacade = TestCaseGeneratorFacade;

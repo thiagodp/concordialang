@@ -2,15 +2,19 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const SimpleAppUI_1 = require("./SimpleAppUI");
 class VerboseAppUI extends SimpleAppUI_1.SimpleAppUI {
-    constructor(cli, debug = false) {
-        super(cli, debug);
-    }
     //
     // FileCompilationListener
     //
     /** @inheritDoc */
     fileStarted(path) {
         this._cli.newLine(this._cli.symbolInfo, 'Compiling', this._cli.colorHighlight(path), '...');
+    }
+    //
+    // OptionsListener
+    //
+    /** @inheritDoc */
+    announceRealSeed(realSeed) {
+        this.info('Real seed', this._cli.colorHighlight(realSeed));
     }
     //
     // CompilerListener

@@ -1,27 +1,24 @@
-import * as deepcopy from 'deepcopy';
-import { basename, dirname, join, normalize, parse, relative, resolve } from "path";
-import { Document, FileInfo, Import, Language, TestCase } from "../ast";
-import { NodeTypes } from "../req/NodeTypes";
-import { toUnixPath } from '../util/file/path-transformer';
-
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const deepcopy = require("deepcopy");
+const path_1 = require("path");
+const NodeTypes_1 = require("../req/NodeTypes");
+const path_transformer_1 = require("../util/file/path-transformer");
 /**
- * Document (object) generator for Test Cases.
+ * Generate Test Case Documents, i.e. documents to save as `.testcase` files.
  *
  * @author Thiago Delgado Pinto
  */
-export class TCDocGen {
-
+class TestCaseDocumentGenerator {
     /**
      * Constructor
      *
      * @param _extensionTestCase Extension to use in the file. It fulfils Document's `fileInfo`.
      */
-    constructor(
-        private readonly _extensionTestCase: string,
-        private readonly _basePath: string
-    ) {
+    constructor(_extensionTestCase, _basePath) {
+        this._extensionTestCase = _extensionTestCase;
+        this._basePath = _basePath;
     }
-
     /**
      * Generates a new Document with the given test cases.
      *
@@ -29,74 +26,57 @@ export class TCDocGen {
      * @param testCases Test cases
      * @param outputDir Output directory. If not defined, assumes the same directory as the owner document.
      */
-    generate(
-        fromDoc: Document,
-        testCases: TestCase[],
-        outputDir?: string, // to fullfil fileInfo
-    ): Document {
-
+    generate(fromDoc, testCases, outputDir) {
         let line = 1;
-
         // Cada TestCase contém o número que pode ser usado como índice para obter o cenário e a variante
         // Criar anotações que referenciam <- AQUI ?
-
-
         // # Create a simulated document object
-        let newDoc: Document = {
+        let newDoc = {
             fileInfo: {
                 hash: null,
-                path: this.createTestCaseFileNameBasedOn( fromDoc.fileInfo.path, outputDir )
-            } as FileInfo,
+                path: this.createTestCaseFileNameBasedOn(fromDoc.fileInfo.path, outputDir)
+            },
             imports: [],
             testCases: []
-        } as Document;
-
+        };
         // # Generate language
-        newDoc.language = this.createLanguage( fromDoc, ++line );
-
+        newDoc.language = this.createLanguage(fromDoc, ++line);
         // # Generate the needed imports
-        newDoc.imports = this.createImports( fromDoc, ++line, outputDir );
+        newDoc.imports = this.createImports(fromDoc, ++line, outputDir);
         line += newDoc.imports.length;
-
         // # Update lines then add the test cases
-        line = this.updateLinesFromTestCases( testCases, ++line );
+        line = this.updateLinesFromTestCases(testCases, ++line);
         newDoc.testCases = testCases;
-
         return newDoc;
     }
-
-
     /**
      * Creates a file name for the new document.
      *
      * @param docPath Current document path
      * @param outputDir Output directory. Assumes the same directory as the `docPath` if not defined.
      */
-    createTestCaseFileNameBasedOn( docPath: string, outputDir?: string ): string {
-        const props = parse( docPath );
+    createTestCaseFileNameBasedOn(docPath, outputDir) {
+        const props = path_1.parse(docPath);
         const fileName = props.name + this._extensionTestCase;
-        const outDir = ! outputDir ? props.dir : relative( props.dir, outputDir );
+        const outDir = !outputDir ? props.dir : path_1.relative(props.dir, outputDir);
         // const fullPath = normalize( resolve( this._basePath, join( outDir, fileName ) ) );
-        const fullPath = toUnixPath( normalize( resolve( this._basePath, join( outDir, fileName ) ) ) );
+        const fullPath = path_transformer_1.toUnixPath(path_1.normalize(path_1.resolve(this._basePath, path_1.join(outDir, fileName))));
         return fullPath;
     }
-
     /**
      * Create a language node.
      *
      * @param fromDoc Owner document
      * @param startLine Start line
      */
-    createLanguage( fromDoc: Document, startLine: number ): Language | undefined {
-        if ( ! fromDoc.language ) {
+    createLanguage(fromDoc, startLine) {
+        if (!fromDoc.language) {
             return;
         }
-        let lang: Language = deepcopy( fromDoc.language ) as Language;
+        let lang = deepcopy(fromDoc.language);
         lang.location.line = startLine;
         return lang;
     }
-
-
     /**
      * Create import nodes.
      *
@@ -104,72 +84,58 @@ export class TCDocGen {
      * @param startLine Start line
      * @param outputDir Output directory. Assumes the same directory as the `docPath` if not defined.
      */
-    createImports( fromDoc: Document, startLine: number, outputDir?: string ): Import[] {
-        let imports: Import[] = [];
-
+    createImports(fromDoc, startLine, outputDir) {
+        let imports = [];
         // Path relative to where the doc file is
-        const docDir = dirname( fromDoc.fileInfo.path );
+        const docDir = path_1.dirname(fromDoc.fileInfo.path);
         const outDir = outputDir || docDir;
-        const filePath = join(
-            relative( docDir, outDir ),
-            basename( fromDoc.fileInfo.path )
-        );
-
+        const filePath = path_1.join(path_1.relative(docDir, outDir), path_1.basename(fromDoc.fileInfo.path));
         // Generate the import to the given document
-        let docImport: Import = {
-            nodeType: NodeTypes.IMPORT,
+        let docImport = {
+            nodeType: NodeTypes_1.NodeTypes.IMPORT,
             location: {
                 column: 1,
                 line: startLine
             },
             value: filePath
-        } as Import;
-
-        imports.push( docImport );
-
+        };
+        imports.push(docImport);
         return imports;
     }
-
     /**
      * Update the lines of the given test cases.
      *
      * @param testCases Test cases to be updated
      * @param startLine Start line
      */
-    updateLinesFromTestCases( testCases: TestCase[], startLine: number ): number {
+    updateLinesFromTestCases(testCases, startLine) {
         let line = startLine;
-        for ( let tc of testCases ) {
-            line = this.updateLinesOfTestCase( tc, line );
+        for (let tc of testCases) {
+            line = this.updateLinesOfTestCase(tc, line);
         }
         return line;
     }
-
     /**
      * Update the lines of the given test case.
      *
      * @param tc Test case
      * @param startLine Start line
      */
-    updateLinesOfTestCase( tc: TestCase, startLine: number ): number {
+    updateLinesOfTestCase(tc, startLine) {
         let line = 1 + startLine;
-
         // Tags
-        for ( let tag of tc.tags || [] ) {
+        for (let tag of tc.tags || []) {
             tag.location.line = line++;
         }
-
         // Header
         tc.location.line = line++;
-
         // Solves the problem of references
-        tc.sentences = deepcopy( tc.sentences ); // DEEP COPY
-
+        tc.sentences = deepcopy(tc.sentences); // DEEP COPY
         // Sentences
-        for ( let sentence of tc.sentences || [] ) {
+        for (let sentence of tc.sentences || []) {
             sentence.location.line = line++;
         }
-
         return line;
     }
-
 }
+exports.TestCaseDocumentGenerator = TestCaseDocumentGenerator;

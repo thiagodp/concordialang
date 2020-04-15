@@ -7,5 +7,4 @@ __export(require("./PackageBasedPluginFinder"));
 __export(require("./PackageToPluginData"));
 __export(require("./PluginController"));
 __export(require("./PluginData"));
-__export(require("./PluginDrawer"));
 __export(require("./PluginManager"));
