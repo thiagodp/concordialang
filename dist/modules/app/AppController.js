@@ -47,6 +47,7 @@ class AppController {
         return obj;
     }
     start(appPath, processPath) {
+        var _a, _b;
         return __awaiter(this, void 0, void 0, function* () {
             const cli = new CLI_1.CLI();
             const cliHelp = new CliHelp_1.CliHelp();
@@ -253,6 +254,9 @@ class AppController {
             else {
                 // appListener.testScriptExecutionDisabled();
             }
+            if (!hasErrors && (executionResult.total.failed > 0 || executionResult.total.error > 0)) {
+                hasErrors = true;
+            }
             if (options.analyzeResult) { // Requires a plugin
                 let reportFile;
                 if (!executionResult) {
@@ -268,8 +272,11 @@ class AppController {
                 }
                 try {
                     let reportedResult = yield plugin.convertReportFile(reportFile);
-                    (new TestResultAnalyzer_1.TestResultAnalyzer()).adjustResult(reportedResult, abstractTestScripts);
+                    reportedResult = (new TestResultAnalyzer_1.TestResultAnalyzer()).adjustResult(reportedResult, abstractTestScripts);
                     appUI.testScriptExecutionFinished(reportedResult);
+                    if (!hasErrors && (((_a = reportedResult === null || reportedResult === void 0 ? void 0 : reportedResult.total) === null || _a === void 0 ? void 0 : _a.failed) > 0 || ((_b = reportedResult === null || reportedResult === void 0 ? void 0 : reportedResult.total) === null || _b === void 0 ? void 0 : _b.error) > 0)) {
+                        hasErrors = true;
+                    }
                 }
                 catch (err) {
                     hasErrors = true;

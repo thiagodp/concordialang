@@ -1,11 +1,13 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+const deepcopy = require("deepcopy");
 /**
  * Test Result Analyzer
  */
 class TestResultAnalyzer {
     adjustResult(executionResult, abstractTestScripts) {
-        for (let r of executionResult.results || []) {
+        const er = deepcopy(executionResult);
+        for (let r of er.results || []) {
             let featureName = r.suite;
             for (let m of r.methods || []) {
                 let ats = this.findAbstractTestCase(featureName, m.name, abstractTestScripts);
@@ -16,21 +18,22 @@ class TestResultAnalyzer {
                 }
                 if (this.shouldAdjustMethodToPassed(ats, m)) {
                     m.status = 'adjusted';
-                    if (undefined === executionResult.total.adjusted) {
-                        executionResult.total.adjusted = 1;
+                    if (undefined === er.total.adjusted) {
+                        er.total.adjusted = 1;
                     }
                     else {
-                        executionResult.total.adjusted++;
+                        er.total.adjusted++;
                     }
-                    if (!isNaN(executionResult.total.failed) &&
-                        executionResult.total.failed > 0) {
-                        executionResult.total.failed--;
+                    if (!isNaN(er.total.failed) &&
+                        er.total.failed > 0) {
+                        er.total.failed--;
                     }
                     // Notify user!
                     // console.log( 'adjusted to pass', featureName, m.name );
                 }
             }
         }
+        return er;
     }
     findAbstractTestCase(featureName, testCaseName, abstractTestScripts) {
         const name = testCaseName.indexOf('|') >= 0

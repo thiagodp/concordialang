@@ -299,6 +299,10 @@ export class AppController {
             // appListener.testScriptExecutionDisabled();
         }
 
+        if ( ! hasErrors && ( executionResult.total.failed > 0 || executionResult.total.error > 0 ) ) {
+            hasErrors = true;
+        }
+
         if ( options.analyzeResult ) { // Requires a plugin
 
             let reportFile: string;
@@ -319,8 +323,13 @@ export class AppController {
 
             try {
                 let reportedResult = await plugin.convertReportFile( reportFile );
-                ( new TestResultAnalyzer() ).adjustResult( reportedResult, abstractTestScripts );
+                reportedResult = ( new TestResultAnalyzer() ).adjustResult( reportedResult, abstractTestScripts );
                 appUI.testScriptExecutionFinished( reportedResult );
+
+                if ( ! hasErrors && ( reportedResult?.total?.failed > 0 || reportedResult?.total?.error > 0 ) ) {
+                    hasErrors = true;
+                }
+
             } catch ( err ) {
                 hasErrors = true;
                 appUI.exception( err );

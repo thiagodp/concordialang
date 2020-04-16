@@ -1,4 +1,5 @@
 import { AbstractTestScript, ATSTestCase, TestMethodResult, TestScriptExecutionResult } from 'concordialang-plugin';
+import * as deepcopy from 'deepcopy';
 
 /**
  * Test Result Analyzer
@@ -8,8 +9,12 @@ export class TestResultAnalyzer {
     adjustResult(
         executionResult: TestScriptExecutionResult,
         abstractTestScripts: AbstractTestScript[]
-    ): void {
-        for ( let r of executionResult.results || [] ) {
+    ): TestScriptExecutionResult {
+
+        const er = deepcopy( executionResult );
+
+        for ( let r of er.results || [] ) {
+
             let featureName = r.suite;
             for ( let m of r.methods || [] ) {
 
@@ -24,15 +29,15 @@ export class TestResultAnalyzer {
 
                     m.status = 'adjusted';
 
-                    if ( undefined === executionResult.total.adjusted ) {
-                        executionResult.total.adjusted = 1;
+                    if ( undefined === er.total.adjusted ) {
+                        er.total.adjusted = 1;
                     } else {
-                        executionResult.total.adjusted++;
+                        er.total.adjusted++;
                     }
 
-                    if ( ! isNaN( executionResult.total.failed ) &&
-                        executionResult.total.failed > 0 ) {
-                        executionResult.total.failed--;
+                    if ( ! isNaN( er.total.failed ) &&
+                        er.total.failed > 0 ) {
+                        er.total.failed--;
                     }
 
                     // Notify user!
@@ -40,6 +45,8 @@ export class TestResultAnalyzer {
                 }
             }
         }
+
+        return er;
     }
 
     findAbstractTestCase(
