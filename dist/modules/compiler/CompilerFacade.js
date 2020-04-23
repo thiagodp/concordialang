@@ -9,7 +9,6 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const TestCaseGeneratorFacade_1 = require("../testcase/TestCaseGeneratorFacade");
 const error_1 = require("../error");
 const language_1 = require("../language");
 const LanguageManager_1 = require("../language/LanguageManager");
@@ -17,18 +16,34 @@ const Lexer_1 = require("../lexer/Lexer");
 const NLPBasedSentenceRecognizer_1 = require("../nlp/NLPBasedSentenceRecognizer");
 const NLPTrainer_1 = require("../nlp/NLPTrainer");
 const Parser_1 = require("../parser/Parser");
+const TestCaseGeneratorFacade_1 = require("../testcase/TestCaseGeneratorFacade");
+const file_1 = require("../util/file");
+const ext_changer_1 = require("../util/file/ext-changer");
 const FSFileHandler_1 = require("../util/file/FSFileHandler");
 const FSFileSearcher_1 = require("../util/file/FSFileSearcher");
 const Compiler_1 = require("./Compiler");
 const SingleFileCompiler_1 = require("./SingleFileCompiler");
+function extractFilesToCompile(files, extensionFeature, extensionTestCase, pathLibrary) {
+    const featureFiles = files
+        .filter(f => f.endsWith(extensionFeature))
+        .map(f => file_1.toUnixPath(f));
+    const onlyTestCases = files
+        .filter(f => f.endsWith(extensionTestCase))
+        .map(f => file_1.toUnixPath(f));
+    const testCasesWithoutFeature = onlyTestCases
+        .filter(tc => !featureFiles.includes(file_1.toUnixPath(ext_changer_1.changeFileExtension(tc, extensionFeature, pathLibrary))));
+    return featureFiles.concat(testCasesWithoutFeature);
+}
+exports.extractFilesToCompile = extractFilesToCompile;
 /**
  * Compiler facade
  *
  * @author Thiago Delgado Pinto
  */
 class CompilerFacade {
-    constructor(_fs, _compilerListener, _tcGenListener) {
+    constructor(_fs, _path, _compilerListener, _tcGenListener) {
         this._fs = _fs;
+        this._path = _path;
         this._compilerListener = _compilerListener;
         this._tcGenListener = _tcGenListener;
     }
@@ -42,11 +57,15 @@ class CompilerFacade {
             }
             const files = yield fileSearcher.searchFrom(options);
             // console.log( '>>> FOUND', files );
+            const filesToCompile = extractFilesToCompile(files, options.extensionFeature, options.extensionTestCase, this._path);
+            const filesToCompileCount = filesToCompile.length;
             if (this._compilerListener) {
+                const filesCount = files.length;
+                const ignoredCount = files.length - filesToCompileCount;
                 const durationMS = Date.now() - startTime;
-                this._compilerListener.announceFileSearchFinished(durationMS, files);
+                this._compilerListener.announceFileSearchFinished(durationMS, filesCount, ignoredCount);
             }
-            if (files.length < 1) {
+            if (filesToCompileCount < 1) {
                 return [null, null];
             }
             const lm = new LanguageManager_1.LanguageManager(fileSearcher, options.languageDir);
@@ -65,8 +84,7 @@ class CompilerFacade {
                 this._compilerListener.announceCompilerStarted(options);
             }
             const compiler = new Compiler_1.Compiler(fileHandler, singleFileCompiler, options.lineBreaker);
-            // console.log( 'IN >', files.length, "\n", files );
-            const output = yield compiler.compile(files, options.directory, { stopOnTheFirstError: options.stopOnTheFirstError });
+            const output = yield compiler.compile(filesToCompile, options.directory, { stopOnTheFirstError: options.stopOnTheFirstError });
             // console.log( 'OUT >', output.spec.docs.length, "\n", output.spec.docs.map( d => d.fileInfo.path ) );
             const compiledFilesCount = (_b = (_a = output.spec) === null || _a === void 0 ? void 0 : _a.docs) === null || _b === void 0 ? void 0 : _b.length;
             if (this._compilerListener && compiledFilesCount) {

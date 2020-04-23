@@ -314,13 +314,9 @@ class SimpleUI {
         // empty
     }
     /** @inheritDoc */
-    testCaseProduced(path, testCasesCount, errors, warnings) {
+    testCaseProduced(dirTestCases, filePath, testCasesCount, errors, warnings) {
         const hasErrors = errors.length > 0;
         const hasWarnings = warnings.length > 0;
-        const successful = !hasErrors && !hasWarnings;
-        const color = successful ? this.colorSuccess : this.properColor(hasErrors, hasWarnings);
-        const symbol = successful ? this.symbolSuccess : this.properSymbol(hasErrors, hasWarnings);
-        this.writeln(color(symbol), 'Generated', this.highlight(path), 'with', this.highlight(testCasesCount), exports.pluralS(testCasesCount, 'test case'));
         if (!hasErrors && !hasWarnings) {
             return;
         }
@@ -328,7 +324,7 @@ class SimpleUI {
     }
     /** @inheritDoc */
     testCaseGenerationFinished(filesCount, testCasesCount, durationMs) {
-        this.info(this.highlight(filesCount), 'test case', exports.pluralS(filesCount, 'file'), 'generated,', this.highlight(testCasesCount), exports.pluralS(testCasesCount, 'test case'), this.formatDuration(durationMs));
+        this.info(this.highlight(filesCount), 'test case', exports.pluralS(filesCount, 'file'), 'generated:', this.highlight(testCasesCount), exports.pluralS(testCasesCount, 'test case'), 'total', this.formatDuration(durationMs));
     }
     //
     // CompilerListener
@@ -338,7 +334,7 @@ class SimpleUI {
         // this.startSpinner();
     }
     /** @inheritdoc */
-    announceFileSearchFinished(durationMS, files) {
+    announceFileSearchFinished(durationMS, filesFoundCount, filesIgnoredCount) {
         // this.stopSpinner();
     }
     /** @inheritDoc */
@@ -350,7 +346,7 @@ class SimpleUI {
     announceCompilerFinished(compiledFilesCount, featuresCount, testCasesCount, durationMS) {
         // this.stopSpinner();
         this.clearLine();
-        this.info(this.highlight(compiledFilesCount), exports.pluralS(compiledFilesCount, 'file'), 'compiled,', this.highlight(featuresCount), exports.pluralS(featuresCount, 'feature') + ',', this.highlight(testCasesCount), exports.pluralS(testCasesCount, 'test case'), this.formatDuration(durationMS));
+        this.info(this.highlight(compiledFilesCount), exports.pluralS(compiledFilesCount, 'file'), 'compiled:', this.highlight(featuresCount), 'feature', exports.pluralS(featuresCount, 'file'), 'and', this.highlight(testCasesCount), 'testcase', exports.pluralS(testCasesCount, 'file'), this.formatDuration(durationMS));
     }
     /** @inheritdoc */
     reportProblems(problems, basePath) {

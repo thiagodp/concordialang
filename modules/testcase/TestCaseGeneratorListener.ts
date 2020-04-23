@@ -5,7 +5,13 @@ export interface TestCaseGeneratorListener {
 
     testCaseGenerationStarted( strategyWarnings: Warning[] ): void;
 
-    testCaseProduced( filPath: string, testCasesCount: number, errors: LocatedException[], warnings: Warning[] ): void;
+    testCaseProduced(
+        dirTestCases: string,
+        filePath: string,
+        testCasesCount: number,
+        errors: LocatedException[],
+        warnings: Warning[]
+    ): void;
 
     testCaseGenerationFinished( filesCount: number, testCasesCount: number, durationMs: number ): void;
 }

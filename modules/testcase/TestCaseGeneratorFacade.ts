@@ -1,6 +1,4 @@
 import Graph = require( 'graph.js/dist/graph.full.js' );
-import { FileEraser } from 'modules/util/file/FileEraser';
-import { relative } from 'path';
 import { CombinationOptions, InvalidSpecialOptions, VariantSelectionOptions } from "../app/CombinationOptions";
 import { Options } from "../app/Options";
 import { Document, ReservedTags, TestCase, Variant } from "../ast";
@@ -16,6 +14,7 @@ import { GenContext, PreTestCaseGenerator } from "../testscenario/PreTestCaseGen
 import { TestScenario } from "../testscenario/TestScenario";
 import { TestScenarioGenerator } from "../testscenario/TestScenarioGenerator";
 import { FileWriter, toUnixPath } from '../util/file';
+import { FileEraser } from '../util/file/FileEraser';
 import { DataTestCaseMix, JustOneInvalidMix, OnlyInvalidMix, OnlyValidMix, UnfilteredMix } from "./DataTestCaseMix";
 import { TestCaseDocumentGenerator } from "./TestCaseDocumentGenerator";
 import { TestCaseFileGenerator } from "./TestCaseFileGenerator";
@@ -208,7 +207,8 @@ export class TestCaseGeneratorFacade {
 
             // Announce produced
             this._listener.testCaseProduced(
-                relative( options.directory, newDoc.fileInfo.path ),
+                options.directory,
+                newDoc.fileInfo.path,
                 newDoc.testCases.length,
                 errors,
                 warnings

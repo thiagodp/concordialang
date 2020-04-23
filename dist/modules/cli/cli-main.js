@@ -12,6 +12,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const cosmiconfig_1 = require("cosmiconfig");
 const fs = require("fs");
 const meow = require("meow");
+const path = require("path");
 const semverDiff = require("semver-diff");
 const updateNotifier = require("update-notifier");
 const util_1 = require("util");
@@ -130,7 +131,7 @@ function main(appPath, processPath) {
             }
             return true;
         }
-        const app = new app_1.App();
+        const app = new app_1.App(fs, path);
         return yield app.start(options, ui);
     });
 }

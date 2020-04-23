@@ -1,9 +1,6 @@
 import Graph = require( 'graph.js/dist/graph.full.js' );
 
-import { CompilerListener } from './CompilerListener';
-import { TestCaseGeneratorListener } from '../testcase/TestCaseGeneratorListener';
 import { Options } from "../app/Options";
-import { TestCaseGeneratorFacade } from "../testcase/TestCaseGeneratorFacade";
 import { RuntimeException } from '../error';
 import { JsonLanguageContentLoader, LanguageContentLoader } from "../language";
 import { LanguageManager } from "../language/LanguageManager";
@@ -12,10 +9,38 @@ import { NLPBasedSentenceRecognizer } from "../nlp/NLPBasedSentenceRecognizer";
 import { NLPTrainer } from "../nlp/NLPTrainer";
 import { Parser } from "../parser/Parser";
 import { AugmentedSpec } from "../req/AugmentedSpec";
+import { TestCaseGeneratorFacade } from "../testcase/TestCaseGeneratorFacade";
+import { TestCaseGeneratorListener } from '../testcase/TestCaseGeneratorListener';
+import { toUnixPath } from '../util/file';
+import { changeFileExtension } from '../util/file/ext-changer';
 import { FSFileHandler } from '../util/file/FSFileHandler';
 import { FSFileSearcher } from '../util/file/FSFileSearcher';
 import { Compiler } from './Compiler';
+import { CompilerListener } from './CompilerListener';
 import { SingleFileCompiler } from "./SingleFileCompiler";
+
+
+export function extractFilesToCompile(
+    files: string[],
+    extensionFeature: string,
+    extensionTestCase: string,
+    pathLibrary: any
+) {
+    const featureFiles: string[] = files
+        .filter( f => f.endsWith( extensionFeature ) )
+        .map( f => toUnixPath( f ) );
+
+    const onlyTestCases: string[] = files
+        .filter( f => f.endsWith( extensionTestCase ) )
+        .map( f => toUnixPath( f ) );
+
+    const testCasesWithoutFeature: string[] = onlyTestCases
+        .filter( tc => ! featureFiles.includes(
+            toUnixPath( changeFileExtension( tc, extensionFeature, pathLibrary ) ) )
+            );
+
+    return featureFiles.concat( testCasesWithoutFeature );
+}
 
 /**
  * Compiler facade
@@ -26,6 +51,7 @@ export class CompilerFacade {
 
     constructor(
         private readonly _fs: any,
+        private readonly _path: any,
         private readonly _compilerListener: CompilerListener,
         private readonly _tcGenListener: TestCaseGeneratorListener,
         ) {
@@ -44,12 +70,19 @@ export class CompilerFacade {
         const files: string[] = await fileSearcher.searchFrom( options );
         // console.log( '>>> FOUND', files );
 
+        const filesToCompile: string[] = extractFilesToCompile(
+            files, options.extensionFeature, options.extensionTestCase, this._path );
+
+        const filesToCompileCount = filesToCompile.length;
+
         if ( this._compilerListener ) {
+            const filesCount = files.length;
+            const ignoredCount = files.length - filesToCompileCount;
             const durationMS = Date.now() - startTime;
-            this._compilerListener.announceFileSearchFinished( durationMS, files );
+            this._compilerListener.announceFileSearchFinished( durationMS, filesCount, ignoredCount );
         }
 
-        if ( files.length < 1 ) {
+        if ( filesToCompileCount < 1 ) {
             return [ null, null ];
         }
 
@@ -81,9 +114,7 @@ export class CompilerFacade {
 
         const compiler = new Compiler( fileHandler, singleFileCompiler, options.lineBreaker );
 
-        // console.log( 'IN >', files.length, "\n", files );
-
-        const output = await compiler.compile( files, options.directory, { stopOnTheFirstError: options.stopOnTheFirstError } );
+        const output = await compiler.compile( filesToCompile, options.directory, { stopOnTheFirstError: options.stopOnTheFirstError } );
 
         // console.log( 'OUT >', output.spec.docs.length, "\n", output.spec.docs.map( d => d.fileInfo.path ) );
 

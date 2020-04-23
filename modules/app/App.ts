@@ -1,8 +1,6 @@
 import { DateTimeFormatter, LocalDateTime } from '@js-joda/core';
 import { AbstractTestScript, Plugin, TestScriptExecutionOptions, TestScriptExecutionResult, TestScriptGenerationOptions, TestScriptGenerationResult } from 'concordialang-plugin';
 import { createHash } from 'crypto';
-import * as fs from "fs";
-import { join } from 'path';
 import { Document } from '../ast';
 import { CompilerFacade } from '../compiler/CompilerFacade';
 import { LanguageManager } from '../language/LanguageManager';
@@ -13,7 +11,7 @@ import { PluginManager } from '../plugin/PluginManager';
 import { AugmentedSpec } from '../req/AugmentedSpec';
 import { AbstractTestScriptGenerator } from '../testscript/AbstractTestScriptGenerator';
 import { TestResultAnalyzer } from '../testscript/TestResultAnalyzer';
-import { DirSearcher, FileSearcher, FSDirSearcher, FSFileHandler, FSFileSearcher, toUnixPath } from '../util/file';
+import { DirSearcher, FileSearcher, FSDirSearcher, FSFileHandler, FSFileSearcher } from '../util/file';
 import { Options } from "./Options";
 import { UI } from './UI';
 
@@ -24,7 +22,16 @@ import { UI } from './UI';
  */
 export class App {
 
+    constructor(
+        private _fs: any,
+        private _path: any
+    ) {
+    }
+
     async start( options: Options, ui: UI ): Promise< boolean > {
+
+        const fs = this._fs;
+        const path = this._path;
 
         this.updateSeed( options, ui );
 
@@ -91,7 +98,7 @@ export class App {
         ui.announceOptions( options );
 
         if ( options.compileSpecification ) {
-            const compiler = new CompilerFacade( fs, ui, ui );
+            const compiler = new CompilerFacade( fs, path, ui, ui );
             try {
                 [ spec, /* graph */ ] = await compiler.compile( options );
             } catch ( err ) {
@@ -189,7 +196,10 @@ export class App {
                 const durationMS = Date.now() - startTime;
 
                 ui.showGeneratedTestScriptFiles(
-                    options.dirScripts, generatedTestScriptFiles, durationMS );
+                    options.dirScripts,
+                    generatedTestScriptFiles,
+                    durationMS
+                );
 
                 ui.showTestScriptGenerationErrors( errors );
             }
@@ -205,7 +215,7 @@ export class App {
 
         if ( shoudExecuteScripts ) { // Execution requires a plugin, but NOT a spec
 
-            console.log( '>>>', 'generatedTestScriptFiles', generatedTestScriptFiles );
+            // console.log( '>>>', 'generatedTestScriptFiles', generatedTestScriptFiles );
 
             const scriptFiles = options.scriptFiles?.length > 0
                 ? options.scriptFiles.join( ',' )
@@ -240,7 +250,7 @@ export class App {
             let reportFile: string;
             if ( ! executionResult  ) {
 
-                const defaultReportFile: string = join(
+                const defaultReportFile: string = path.join(
                     options.dirResults, await plugin.defaultReportFile() );
 
                 if ( ! fs.existsSync( defaultReportFile ) ) {

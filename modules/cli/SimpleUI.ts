@@ -409,20 +409,16 @@ export class SimpleUI implements UI {
     }
 
     /** @inheritDoc */
-    testCaseProduced( path: string, testCasesCount: number, errors: LocatedException[], warnings: Warning[] ): void {
+    testCaseProduced(
+        dirTestCases: string,
+        filePath: string,
+        testCasesCount: number,
+        errors: LocatedException[],
+        warnings: Warning[]
+    ): void {
 
         const hasErrors = errors.length > 0;
         const hasWarnings = warnings.length > 0;
-        const successful = ! hasErrors && ! hasWarnings;
-
-        const color = successful ? this.colorSuccess : this.properColor( hasErrors, hasWarnings );
-        const symbol = successful ? this.symbolSuccess : this.properSymbol( hasErrors, hasWarnings );
-
-        this.writeln(
-            color( symbol ),
-            'Generated', this.highlight( path ),
-            'with', this.highlight( testCasesCount ), pluralS( testCasesCount, 'test case' )
-            );
 
         if ( ! hasErrors && ! hasWarnings ) {
             return;
@@ -435,8 +431,8 @@ export class SimpleUI implements UI {
     testCaseGenerationFinished( filesCount: number, testCasesCount: number, durationMs: number ): void {
 
         this.info(
-            this.highlight( filesCount ), 'test case', pluralS( filesCount, 'file' ), 'generated,',
-            this.highlight( testCasesCount ), pluralS( testCasesCount, 'test case' ),
+            this.highlight( filesCount ), 'test case', pluralS( filesCount, 'file' ), 'generated:',
+            this.highlight( testCasesCount ), pluralS( testCasesCount, 'test case' ), 'total',
             this.formatDuration( durationMs )
         );
     }
@@ -451,7 +447,7 @@ export class SimpleUI implements UI {
     }
 
     /** @inheritdoc */
-    public announceFileSearchFinished( durationMS: number, files: string[] ): void {
+    public announceFileSearchFinished( durationMS: number, filesFoundCount: number, filesIgnoredCount: number ): void {
         // this.stopSpinner();
     }
 
@@ -473,9 +469,9 @@ export class SimpleUI implements UI {
         this.clearLine();
 
         this.info(
-            this.highlight( compiledFilesCount ), pluralS( compiledFilesCount, 'file' ), 'compiled,',
-            this.highlight( featuresCount ), pluralS( featuresCount, 'feature' ) + ',',
-            this.highlight( testCasesCount ), pluralS( testCasesCount, 'test case' ),
+            this.highlight( compiledFilesCount ), pluralS( compiledFilesCount, 'file' ), 'compiled:',
+            this.highlight( featuresCount ), 'feature', pluralS( featuresCount, 'file' ), 'and',
+            this.highlight( testCasesCount ), 'testcase', pluralS( testCasesCount, 'file' ),
             this.formatDuration( durationMS )
             );
     }

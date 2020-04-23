@@ -9,7 +9,6 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const path_1 = require("path");
 const CombinationOptions_1 = require("../app/CombinationOptions");
 const ast_1 = require("../ast");
 const RuntimeException_1 = require("../error/RuntimeException");
@@ -137,7 +136,7 @@ class TestCaseGeneratorFacade {
                 // Generating file content
                 const lines = tcDocFileGen.createLinesFromDoc(newDoc, errors, options.tcSuppressHeader, options.tcIndenter);
                 // Announce produced
-                this._listener.testCaseProduced(path_1.relative(options.directory, newDoc.fileInfo.path), newDoc.testCases.length, errors, warnings);
+                this._listener.testCaseProduced(options.directory, newDoc.fileInfo.path, newDoc.testCases.length, errors, warnings);
                 // Generating file
                 try {
                     yield this._fileHandler.write(newDoc.fileInfo.path, lines.join(options.lineBreaker));

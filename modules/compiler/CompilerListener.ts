@@ -4,7 +4,7 @@ import { Options } from "../app/Options";
 export interface CompilerListener {
 
     announceFileSearchStarted(): void;
-    announceFileSearchFinished( durationMS: number, files: string[] ): void;
+    announceFileSearchFinished( durationMS: number, filesFoundCount: number, filesIgnoredCount: number ): void;
 
     announceCompilerStarted( options: Options ): void;
 

@@ -45,7 +45,7 @@ class VerboseUI extends SimpleUI_1.SimpleUI {
             return text;
         };
         for (const file of files) {
-            const relPath = path_1.relative(scriptDir, file);
+            const relPath = path_1.relative(path_1.dirname(scriptDir), file);
             const link = terminalLink(relPath, file, { fallback: fallback }); // clickable URL
             this.success('Generated script', this.highlight(link));
         }
@@ -85,10 +85,9 @@ class VerboseUI extends SimpleUI_1.SimpleUI {
     // CompilerListener
     //
     /** @inheritdoc */
-    announceFileSearchFinished(durationMS, files) {
+    announceFileSearchFinished(durationMS, filesFoundCount, filesIgnoredCount) {
         // this.stopSpinner();
-        const len = files.length;
-        this.info(this.highlight(len), SimpleUI_1.pluralS(len, 'file'), 'given', this.formatDuration(durationMS));
+        this.info(this.highlight(filesFoundCount), SimpleUI_1.pluralS(filesFoundCount, 'file'), 'given,', this.highlight(filesIgnoredCount), 'test case', SimpleUI_1.pluralS(filesIgnoredCount, 'file'), 'ignored', this.formatDuration(durationMS));
     }
     //
     // TCGenListener
@@ -99,6 +98,19 @@ class VerboseUI extends SimpleUI_1.SimpleUI {
             this.info('Test case generation started');
             this.showErrors(strategyWarnings, true);
         }
+    }
+    /** @inheritDoc */
+    testCaseProduced(dirTestCases, filePath, testCasesCount, errors, warnings) {
+        const hasErrors = errors.length > 0;
+        const hasWarnings = warnings.length > 0;
+        const successful = !hasErrors && !hasWarnings;
+        const color = successful ? this.colorSuccess : this.properColor(hasErrors, hasWarnings);
+        const symbol = successful ? this.symbolSuccess : this.properSymbol(hasErrors, hasWarnings);
+        this.writeln(color(symbol), 'Generated', this.highlight(path_1.relative(dirTestCases, filePath)), 'with', this.highlight(testCasesCount), SimpleUI_1.pluralS(testCasesCount, 'test case'));
+        if (!hasErrors && !hasWarnings) {
+            return;
+        }
+        this.showErrors([...errors, ...warnings], true);
     }
 }
 exports.VerboseUI = VerboseUI;

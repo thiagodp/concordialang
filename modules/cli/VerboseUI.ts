@@ -1,9 +1,10 @@
-import { basename, relative } from 'path';
+import { basename, dirname, relative } from 'path';
 import * as terminalLink from 'terminal-link';
 import { Options } from '../app/Options';
 import { UI } from '../app/UI';
+import { LocatedException } from '../error/LocatedException';
 import { Warning } from '../error/Warning';
-import { SimpleUI, pluralS } from './SimpleUI';
+import { pluralS, SimpleUI } from './SimpleUI';
 
 export class VerboseUI extends SimpleUI implements UI {
 
@@ -61,7 +62,7 @@ export class VerboseUI extends SimpleUI implements UI {
         };
 
         for ( const file of files ) {
-            const relPath = relative( scriptDir, file );
+            const relPath = relative( dirname( scriptDir ), file );
             const link = terminalLink( relPath, file, { fallback: fallback } ); // clickable URL
             this.success( 'Generated script', this.highlight( link ) );
         }
@@ -115,11 +116,11 @@ export class VerboseUI extends SimpleUI implements UI {
     //
 
     /** @inheritdoc */
-    public announceFileSearchFinished( durationMS: number, files: string[] ): void {
+    public announceFileSearchFinished( durationMS: number, filesFoundCount: number, filesIgnoredCount: number ): void {
         // this.stopSpinner();
-        const len = files.length;
         this.info(
-            this.highlight( len ), pluralS( len, 'file' ), 'given',
+            this.highlight( filesFoundCount ), pluralS( filesFoundCount, 'file' ), 'given,',
+            this.highlight( filesIgnoredCount ), 'test case', pluralS( filesIgnoredCount, 'file' ), 'ignored',
             this.formatDuration( durationMS )
             );
     }
@@ -134,6 +135,35 @@ export class VerboseUI extends SimpleUI implements UI {
             this.info( 'Test case generation started' );
             this.showErrors( strategyWarnings, true );
         }
+    }
+
+    /** @inheritDoc */
+    testCaseProduced(
+        dirTestCases: string,
+        filePath: string,
+        testCasesCount: number,
+        errors: LocatedException[],
+        warnings: Warning[]
+    ): void {
+
+        const hasErrors = errors.length > 0;
+        const hasWarnings = warnings.length > 0;
+        const successful = ! hasErrors && ! hasWarnings;
+
+        const color = successful ? this.colorSuccess : this.properColor( hasErrors, hasWarnings );
+        const symbol = successful ? this.symbolSuccess : this.properSymbol( hasErrors, hasWarnings );
+
+        this.writeln(
+            color( symbol ),
+            'Generated', this.highlight( relative( dirTestCases, filePath ) ),
+            'with', this.highlight( testCasesCount ), pluralS( testCasesCount, 'test case' )
+            );
+
+        if ( ! hasErrors && ! hasWarnings ) {
+            return;
+        }
+
+        this.showErrors( [ ...errors, ...warnings ], true );
     }
 
 }

@@ -12,8 +12,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const core_1 = require("@js-joda/core");
 const concordialang_plugin_1 = require("concordialang-plugin");
 const crypto_1 = require("crypto");
-const fs = require("fs");
-const path_1 = require("path");
 const CompilerFacade_1 = require("../compiler/CompilerFacade");
 const LanguageManager_1 = require("../language/LanguageManager");
 const PackageBasedPluginFinder_1 = require("../plugin/PackageBasedPluginFinder");
@@ -28,9 +26,15 @@ const file_1 = require("../util/file");
  * @author Thiago Delgado Pinto
  */
 class App {
+    constructor(_fs, _path) {
+        this._fs = _fs;
+        this._path = _path;
+    }
     start(options, ui) {
         var _a, _b, _c, _d, _e, _f;
         return __awaiter(this, void 0, void 0, function* () {
+            const fs = this._fs;
+            const path = this._path;
             this.updateSeed(options, ui);
             let pluginData = null;
             const dirSearcher = new file_1.FSDirSearcher(fs);
@@ -84,7 +88,7 @@ class App {
             let spec = null;
             ui.announceOptions(options);
             if (options.compileSpecification) {
-                const compiler = new CompilerFacade_1.CompilerFacade(fs, ui, ui);
+                const compiler = new CompilerFacade_1.CompilerFacade(fs, path, ui, ui);
                 try {
                     [spec,] = yield compiler.compile(options);
                 }
@@ -166,7 +170,7 @@ class App {
                         generatedTestScriptFiles.length > 0 ||
                         ('string' === typeof options.dirResults && options.dirResults != '')));
             if (shoudExecuteScripts) { // Execution requires a plugin, but NOT a spec
-                console.log('>>>', 'generatedTestScriptFiles', generatedTestScriptFiles);
+                // console.log( '>>>', 'generatedTestScriptFiles', generatedTestScriptFiles );
                 const scriptFiles = ((_b = options.scriptFiles) === null || _b === void 0 ? void 0 : _b.length) > 0
                     ? options.scriptFiles.join(',')
                     : generatedTestScriptFiles.length > 0
@@ -193,7 +197,7 @@ class App {
             if (options.analyzeResult) { // Requires a plugin
                 let reportFile;
                 if (!executionResult) {
-                    const defaultReportFile = path_1.join(options.dirResults, yield plugin.defaultReportFile());
+                    const defaultReportFile = path.join(options.dirResults, yield plugin.defaultReportFile());
                     if (!fs.existsSync(defaultReportFile)) {
                         ui.announceReportFileNotFound(defaultReportFile);
                         return false;

@@ -1,7 +1,7 @@
 import { cosmiconfig } from 'cosmiconfig';
 import * as fs from 'fs';
 import * as meow from 'meow';
-import { join } from 'path';
+import * as path from 'path';
 import * as semverDiff from 'semver-diff';
 import * as updateNotifier from 'update-notifier';
 import { promisify } from 'util';
@@ -135,6 +135,6 @@ export async function main( appPath: string, processPath: string ): Promise< boo
         return true;
     }
 
-    const app = new App();
+    const app = new App( fs, path );
     return await app.start( options, ui );
 }
