@@ -53,13 +53,13 @@ describe( 'PackageToPluginData', () => {
             };
 
             pkg[ PLUGIN_PROPERTY ] = {
-                isFake: true
+                serve: 'npx foo'
             };
 
             const r = p.convert( pkg );
             expect( r ).not.toBeUndefined();
             expect( r ).toHaveProperty( 'name', 'concordialang-fake' );
-            expect( r ).toHaveProperty( 'isFake', true );
+            expect( r ).toHaveProperty( 'serve', 'npx foo' );
         } );
 
     } );

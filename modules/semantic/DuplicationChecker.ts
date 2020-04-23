@@ -1,5 +1,5 @@
 // TO-DO: remove the following dependencies:
-import chalk from 'chalk';
+import * as chalk from 'chalk';
 import * as logSymbols from 'log-symbols';
 // --
 import { Location } from "concordialang-types";

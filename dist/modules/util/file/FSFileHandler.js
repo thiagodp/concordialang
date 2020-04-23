@@ -66,5 +66,19 @@ class FSFileHandler {
             return yield writeFile(filePath, content);
         });
     }
+    /** @inheritDoc */
+    erase(filePath, checkIfExists) {
+        return __awaiter(this, void 0, void 0, function* () {
+            if (checkIfExists) {
+                const ok = yield this.exists(filePath);
+                if (!ok) {
+                    return false;
+                }
+            }
+            const unlinkFile = util_1.promisify(this._fs.unlink);
+            yield unlinkFile(filePath);
+            return true;
+        });
+    }
 }
 exports.FSFileHandler = FSFileHandler;

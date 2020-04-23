@@ -1,5 +1,5 @@
 import * as enumUtil from 'enum-util';
-import { resolve } from 'path';
+import { resolve, isAbsolute } from 'path';
 import { isDefined, isNumber, isString } from '../util/TypeChecking';
 import { CaseType } from '../util/CaseType';
 import { Defaults } from './Defaults';
@@ -52,19 +52,40 @@ export class Options {
         'version',
         'newer',
 
-        // Other
+        // Internal
         'debug',
         'pluginDir',
         'languageDir'
     ];
 
+    // Directories
+
+    /** Recursive search flag */
+    public recursive: boolean = true;
+    /** Directory with specification files */
+    public directory: string = this.defaults.DIRECTORY;
+    /** Output directory for test script files */
+    public dirScripts: string = this.defaults.DIR_SCRIPTS;
+    /** Output directory of test script results */
+    public dirResults: string = this.defaults.DIR_RESULTS;
+
     // Files
-    public directory: string = '.'; // directory to search
-    public recursive: boolean = true; // recursive search
-    public encoding: string = this.defaults.ENCODING; // change default encoding
-    public extensions: string[] = this.defaults.EXTENSIONS; // extensions to search // TO-DO: integrate this with extensionFeature and extensionTestCase
+    public config: string = this.defaults.CONFIG; // configuration file path
     public ignore: string[] = []; // files to ignore, from the given directory
     public files: string[] = []; // files to consider, instead of the given directory
+    public scriptFiles: string[] = []; // script files to execute
+
+    // File-related options
+
+    /** Default encoding */
+    public encoding: string = this.defaults.ENCODING;
+    public extensions: string[] = this.defaults.EXTENSIONS; // extensions to search // TO-DO: integrate this with extensionFeature and extensionTestCase
+    /** Extension for feature files */
+    public extensionFeature: string = this.defaults.EXTENSION_FEATURE;
+    /** Extension for test case files */
+    public extensionTestCase: string = this.defaults.EXTENSION_TEST_CASE;
+    /** Characters used to break lines in text files */
+    public lineBreaker: string = this.defaults.LINE_BREAKER;
 
     // Language
     public language: string = this.defaults.LANGUAGE; // change default language
@@ -100,19 +121,6 @@ export class Options {
     public executeScript: boolean = true;
     /** Whether it is desired to analyze test script results */
     public analyzeResult: boolean = true;
-    /** Output directory for test case files */
-    public dirTestCase: string | null = this.defaults.DIR_TEST_CASE;
-    /** Output directory for test script files */
-    public dirScript: string = this.defaults.DIR_SCRIPT;
-    /** Output directory of test script results */
-    public dirResult: string = this.defaults.DIR_SCRIPT_RESULT;
-    /** Extension for feature files */
-    public extensionFeature: string = this.defaults.EXTENSION_FEATURE;
-    /** Extension for test case files */
-    public extensionTestCase: string = this.defaults.EXTENSION_TEST_CASE;
-    /** Characters used to break lines in text files */
-    public lineBreaker: string = this.defaults.LINE_BREAKER;
-
 
     // CONTENT GENERATION
 
@@ -230,9 +238,13 @@ export class Options {
         this.pluginDir = resolve( appPath, this.defaults.DIR_PLUGIN );
         this.languageDir = resolve( appPath, this.defaults.DIR_LANGUAGE );
 
-        // User directories
-        this.dirScript = resolve( processPath, this.defaults.DIR_SCRIPT );
-        this.dirResult = resolve( processPath, this.defaults.DIR_SCRIPT_RESULT );
+        // Use-defined directories
+        this.directory = resolve( processPath, this.defaults.DIRECTORY );
+        this.dirScripts = resolve( processPath, this.defaults.DIR_SCRIPTS );
+        this.dirResults = resolve( processPath, this.defaults.DIR_RESULTS );
+
+        // Use-defined files
+        this.config = resolve( processPath, this.defaults.CONFIG );
     }
 
 
@@ -287,7 +299,11 @@ export class Options {
     }
 
     public somePluginOption(): boolean {
-        return this.pluginList || this.pluginAbout || this.pluginInstall || this.pluginUninstall || this.pluginServe;
+        return this.pluginList
+            || this.pluginAbout
+            || this.pluginInstall
+            || this.pluginUninstall
+            || this.pluginServe;
     }
 
     public someOptionThatRequiresAPlugin(): boolean {
@@ -343,34 +359,85 @@ export class Options {
      */
     import( obj: any ): void {
 
-        const CURRENT_DIRECTORY = '.';
         const PARAM_SEPARATOR: string = ',';
 
-        // FILES
+        const isStringNotEmpty = text => isString( text ) && text.trim() != '';
 
-        this.directory = obj.directory || CURRENT_DIRECTORY;
+        const resolvePath = p => isAbsolute( p ) ? p : resolve( this.processPath, p );
+
+        // DIRECTORIES
 
         this.recursive = obj.recursive !== false;
 
-        if ( isString( obj.encoding ) ) {
-            this.encoding = obj.encoding.trim().toLowerCase();
+        if ( isStringNotEmpty( obj.directory ) ) {
+            this.directory = resolvePath( obj.directory );
         }
-        if ( isString( obj.extensions ) ) {
-            this.extensions = obj.extensions.trim().split( PARAM_SEPARATOR );
+
+        if ( isStringNotEmpty( obj.dirScript ) ) { // singular
+            this.dirScripts = resolvePath( obj.dirScript );
+        } else if ( isStringNotEmpty( obj.dirScripts ) ) { // plural
+            this.dirScripts = resolvePath( obj.dirScripts );
         }
-        if ( isString( obj.ignore ) ) {
+
+        if ( isStringNotEmpty( obj.dirResult ) ) { // singular
+            this.dirResults = resolvePath( obj.dirResult );
+        } else if ( isStringNotEmpty( obj.dirResults ) ) { // plural
+            this.dirResults = resolvePath( obj.dirResults );
+        } else if ( isStringNotEmpty( obj.dirOutput ) ) { // alternative
+            this.dirResults = resolvePath( obj.dirOutput );
+        }
+
+        // FILES
+
+        if ( isStringNotEmpty( obj.config ) ) {
+            this.config = resolvePath( obj.config );
+        }
+
+        if ( isStringNotEmpty( obj.files ) ) {
+            this.files = obj.files.trim().split( PARAM_SEPARATOR );
+        } else if ( isStringNotEmpty( obj.file ) ) { // alternative
+            this.files = obj.file.trim().split( PARAM_SEPARATOR );
+        }
+
+        if ( isStringNotEmpty( obj.ignore ) ) {
             this.ignore = obj.ignore.trim().split( PARAM_SEPARATOR );
         }
 
-        if ( isString( obj.files ) ) {
-            this.files = obj.files.trim().split( PARAM_SEPARATOR );
-        } else if ( isString( obj.file ) ) { // alternative
-            this.files = obj.file.trim().split( PARAM_SEPARATOR );
+        if ( isStringNotEmpty( obj.scriptFiles ) ) {
+            this.scriptFiles = obj.scriptFiles.trim().split( PARAM_SEPARATOR );
+        } else if ( isStringNotEmpty( obj.scriptFile ) ) { // alternative
+            this.scriptFiles = obj.scriptFile.trim().split( PARAM_SEPARATOR );
+        }
+
+        // EXTENSIONS, ENCODING, SEPARATORS, ETC.
+
+        if ( isStringNotEmpty( obj.extensionFeature ) ) {
+            this.extensionFeature = obj.extensionFeature;
+        } else if ( isStringNotEmpty( obj.extFeature ) ) { // alternative
+            this.extensionFeature = obj.extFeature;
+        }
+
+        if ( isStringNotEmpty( obj.extensionTestCase ) ) {
+            this.extensionTestCase = obj.extensionTestCase;
+        } else if ( isStringNotEmpty( obj.extTestCase ) ) { // alternative
+            this.extensionTestCase = obj.extTestCase;
+        }
+
+        this.extensions = [ this.extensionFeature, this.extensionTestCase ];
+
+        if ( isString( obj.lineBreaker ) ) {
+            this.lineBreaker = obj.lineBreaker;
+        } else if ( isString( obj.lineBreak ) ) { // similar
+            this.lineBreaker = obj.lineBreak;
+        }
+
+        if ( isStringNotEmpty( obj.encoding ) ) {
+            this.encoding = obj.encoding.trim().toLowerCase();
         }
 
         // LANGUAGE
 
-        if ( isString( obj.language ) ) {
+        if ( isStringNotEmpty( obj.language )  ) {
             this.language = obj.language.trim().toLowerCase();
         }
 
@@ -380,42 +447,31 @@ export class Options {
 
         // console.log( obj );
 
-        if ( isString( obj.plugin ) ) {
+        if ( isStringNotEmpty( obj.plugin ) ) {
             this.plugin = obj.plugin.trim().toLowerCase();
         }
 
         this.pluginList = isDefined( obj.pluginList );
+        this.pluginAbout = isDefined( obj.pluginAbout ) || isDefined( obj.pluginInfo );
+        this.pluginInstall = isDefined( obj.pluginInstall );
+        this.pluginUninstall = isDefined( obj.pluginUninstall );
+        this.pluginServe = isDefined( obj.pluginServe );
 
-        if ( isString( obj.pluginAbout ) ) {
-            if ( obj.pluginAbout != '' ) {
-                this.plugin = obj.pluginAbout.trim().toLowerCase();
-            }
-            this.pluginAbout = true;
-        } else if ( isString( obj.pluginInfo ) ) { // Same as plugin about
-            if ( obj.pluginInfo != '' ) {
-                this.plugin = obj.pluginInfo.trim().toLowerCase();
-            }
-            this.pluginAbout = true;
-        } else if ( isString( obj.pluginInstall ) ) {
-            if ( obj.pluginInstall != '' ) {
-                this.plugin = obj.pluginInstall.trim().toLowerCase();
-            }
-            this.pluginInstall = true;
-        } else if ( isString( obj.pluginUninstall ) ) {
-            if ( obj.pluginUninstall != '' ) {
-                this.plugin = obj.pluginUninstall.trim().toLowerCase();
-            }
-            this.pluginUninstall = true;
-        } else if ( isString( obj.pluginServe ) ) {
-            if ( obj.pluginServe != '' ) {
-                this.plugin = obj.pluginServe.trim().toLowerCase();
-            }
-            this.pluginServe = true;
+        if ( isStringNotEmpty( obj.pluginAbout ) ) {
+            this.plugin = obj.pluginAbout.trim().toLowerCase();
+        } else if ( isStringNotEmpty( obj.pluginInfo ) ) { // Same as plugin about
+            this.plugin = obj.pluginInfo.trim().toLowerCase();
+        } else if ( isStringNotEmpty( obj.pluginInstall ) ) {
+            this.plugin = obj.pluginInstall.trim().toLowerCase();
+        } else if ( isStringNotEmpty( obj.pluginUninstall ) ) {
+            this.plugin = obj.pluginUninstall.trim().toLowerCase();
+        } else if ( isStringNotEmpty( obj.pluginServe ) ) {
+            this.plugin = obj.pluginServe.trim().toLowerCase();
         }
 
         // PROCESSING
 
-        const ast = isString( obj.ast )
+        const ast = isStringNotEmpty( obj.ast )
             ? obj.ast
             : ( isDefined( obj.ast ) ? this.defaults.AST_FILE : undefined );
 
@@ -431,22 +487,29 @@ export class Options {
         const justRun: boolean = isDefined( obj.justRun );
         const justResult: boolean = isDefined( obj.justResult ) || isDefined( obj.justResults );
 
-        // compare to false is important because meow transforms no-xxx to xxx === false
-        // const noSpec: boolean = false === obj.compileSpecification ||
-        //     false === obj.spec ||
+        // Compare to false is important because meow transforms no-xxx to xxx === false
+
+        // const noSpec: boolean = false === obj.spec ||
         //     false === obj.specification;
+
         const noTestCase: boolean = false === obj.generateTestCase ||
             false === obj.testCase ||
             false === obj.testCases ||
-            false === obj.testcase;
+            false === obj.testcase ||
+            false === obj.testcases;
+
         const noScript: boolean = false === obj.generateScript ||
             false === obj.script ||
             false === obj.scripts ||
             false === obj.testScript ||
-            false == obj.testscript;
+            false === obj.testScripts ||
+            false == obj.testscript ||
+            false == obj.testscripts;
+
         const noRun: boolean = false == obj.executeScript ||
             false === obj.run ||
             false === obj.execute;
+
         const noResult: boolean = false === obj.analyzeResult ||
             false === obj.result ||
             false === obj.results;
@@ -467,43 +530,6 @@ export class Options {
 
         this.compileSpecification = this.generateTestCase || this.generateScript;
 
-        // Directories
-
-        if ( isString( obj.dirTestCase ) ) { // singular
-            this.dirTestCase = obj.dirTestCase;
-        } else if ( isString( obj.dirTestCases ) ) { // plural
-            this.dirTestCase = obj.dirTestCases;
-        }
-        if ( isString( obj.dirScript ) ) { // singular
-            this.dirScript = obj.dirScript;
-        } else if ( isString( obj.dirScripts ) ) { // plural
-            this.dirScript = obj.dirScripts;
-        }
-        if ( isString( obj.dirResult ) ) { // singular
-            this.dirResult = obj.dirResult;
-        } else if ( isString( obj.dirResults ) ) { // plural
-            this.dirResult = obj.dirResults;
-        } else if ( isString( obj.dirOutput ) ) { // alternative
-            this.dirResult = obj.dirOutput;
-        }
-
-        if ( isString( obj.extensionFeature ) ) {
-            this.extensionFeature = obj.extensionFeature;
-        } else if ( isString( obj.extFeature ) ) { // similar
-            this.extensionFeature = obj.extFeature;
-        }
-
-        if ( isString( obj.extensionTestCase ) ) {
-            this.extensionTestCase = obj.extensionTestCase;
-        } else if ( isString( obj.extTestCase ) ) { // similar
-            this.extensionTestCase = obj.extTestCase;
-        }
-
-        if ( isString( obj.lineBreaker ) ) {
-            this.lineBreaker = obj.lineBreaker;
-        } else if ( isString( obj.lineBreak ) ) { // similar
-            this.lineBreaker = obj.lineBreak;
-        }
 
         // CONTENT GENERATION
 

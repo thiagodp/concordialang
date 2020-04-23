@@ -1,4 +1,4 @@
-import { AppController } from "./modules/app/AppController";
+import { main } from "./modules/cli/cli-main";
 
 process.on( 'uncaughtException', console.error );
 
@@ -7,8 +7,7 @@ process.on( 'SIGINT', () => { // e.g., Terminate execution with Ctrl + C
 	process.exit( 1 );
 } );
 
-( new AppController() )
-    .start( __dirname, process.cwd() )
+main( __dirname, process.cwd() )
     .then( ( success: boolean ) => {
         process.exit( success ? 0 : 1 );
     } )

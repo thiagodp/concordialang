@@ -6,23 +6,29 @@ import { VariantSelectionOptions, CombinationOptions, InvalidSpecialOptions } fr
  */
 export class Defaults {
 
-    readonly LANGUAGE: string = 'en';
-    readonly ENCODING: string = 'utf8';
-
-    readonly EXTENSION_FEATURE = '.feature'; // Extension for feature files
-    readonly EXTENSION_TEST_CASE = '.testcase'; // Extension for test case files
-
-    readonly EXTENSIONS: string[] = [ this.EXTENSION_FEATURE, this.EXTENSION_TEST_CASE ];
-
-    readonly CFG_FILE_NAME = '.concordiarc'; // Name for configuration files
+    // INTERNAL DIRECTORIES
 
     readonly DIR_PLUGIN: string = 'plugins/';
     readonly DIR_LANGUAGE: string = 'data/';
-    readonly DIR_TEST_CASE: string = null; // null means "same as the feature file"
-    readonly DIR_SCRIPT: string = 'test/';
-    readonly DIR_SCRIPT_RESULT: string = 'output/';
 
-    readonly AST_FILE: string = 'ast.json';
+    // DIRECTORIES
+
+    readonly DIRECTORY: string = '.';
+    readonly DIR_SCRIPTS: string = '.'; // 'test/';
+    readonly DIR_RESULTS: string = '.'; // 'output/'; // script results
+
+    // FILES
+
+    readonly CONFIG: string = '.concordiarc'; // path
+    readonly AST_FILE: string = 'ast.json'; // path
+
+    readonly EXTENSION_FEATURE = '.feature'; // Extension for feature files
+    readonly EXTENSION_TEST_CASE = '.testcase'; // Extension for test case files
+    readonly EXTENSIONS: string[] = [ this.EXTENSION_FEATURE, this.EXTENSION_TEST_CASE ];
+
+    readonly LANGUAGE: string = 'en';
+    readonly ENCODING: string = 'utf8';
+    readonly LINE_BREAKER: string = "\n";
 
     // CONTENT GENERATION
 
@@ -37,8 +43,6 @@ export class Defaults {
     readonly RANDOM_TRIES_TO_INVALID_VALUE: number = 5; // How many tries it will make to generate random values that are not in a set
 
     readonly IMPORTANCE: number = 5; // 0..9
-
-    readonly LINE_BREAKER: string = "\n";
 
     // TEST SCENARIO SELECTION AND COMBINATION STRATEGIES
 

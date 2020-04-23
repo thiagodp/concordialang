@@ -3,9 +3,9 @@ import { Warning } from "../error/Warning";
 
 export interface TestCaseGeneratorListener {
 
-    testCaseGenerationStarted( warnings: Warning[] );
+    testCaseGenerationStarted( strategyWarnings: Warning[] ): void;
 
-    testCaseProduced( path: string, errors: LocatedException[], warnings: Warning[] );
+    testCaseProduced( filPath: string, testCasesCount: number, errors: LocatedException[], warnings: Warning[] ): void;
 
-    testCaseGenerationFinished( durationMs: number );
+    testCaseGenerationFinished( filesCount: number, testCasesCount: number, durationMs: number ): void;
 }

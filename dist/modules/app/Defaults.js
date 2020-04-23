@@ -7,18 +7,22 @@ const CombinationOptions_1 = require("./CombinationOptions");
  */
 class Defaults {
     constructor() {
-        this.LANGUAGE = 'en';
-        this.ENCODING = 'utf8';
+        // INTERNAL DIRECTORIES
+        this.DIR_PLUGIN = 'plugins/';
+        this.DIR_LANGUAGE = 'data/';
+        // DIRECTORIES
+        this.DIRECTORY = '.';
+        this.DIR_SCRIPTS = '.'; // 'test/';
+        this.DIR_RESULTS = '.'; // 'output/'; // script results
+        // FILES
+        this.CONFIG = '.concordiarc'; // path
+        this.AST_FILE = 'ast.json'; // path
         this.EXTENSION_FEATURE = '.feature'; // Extension for feature files
         this.EXTENSION_TEST_CASE = '.testcase'; // Extension for test case files
         this.EXTENSIONS = [this.EXTENSION_FEATURE, this.EXTENSION_TEST_CASE];
-        this.CFG_FILE_NAME = '.concordiarc'; // Name for configuration files
-        this.DIR_PLUGIN = 'plugins/';
-        this.DIR_LANGUAGE = 'data/';
-        this.DIR_TEST_CASE = null; // null means "same as the feature file"
-        this.DIR_SCRIPT = 'test/';
-        this.DIR_SCRIPT_RESULT = 'output/';
-        this.AST_FILE = 'ast.json';
+        this.LANGUAGE = 'en';
+        this.ENCODING = 'utf8';
+        this.LINE_BREAKER = "\n";
         // CONTENT GENERATION
         this.CASE_UI = CaseType_1.CaseType.CAMEL.toString(); // e.g., fullName
         this.CASE_METHOD = CaseType_1.CaseType.SNAKE.toString(); // e.g., my_test_method
@@ -28,7 +32,6 @@ class Defaults {
         this.RANDOM_MAX_STRING_SIZE = 500;
         this.RANDOM_TRIES_TO_INVALID_VALUE = 5; // How many tries it will make to generate random values that are not in a set
         this.IMPORTANCE = 5; // 0..9
-        this.LINE_BREAKER = "\n";
         // TEST SCENARIO SELECTION AND COMBINATION STRATEGIES
         /** @see VariantSelectionOptions */
         this.VARIANT_SELECTION = CombinationOptions_1.VariantSelectionOptions.SINGLE_RANDOM.toString();

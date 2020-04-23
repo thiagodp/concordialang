@@ -23,8 +23,6 @@ class PackageToPluginData {
             // authors: this.packageAuthorToAuthors( pkg.author ).concat( this.packageContributorsToAuthors( pkg.contributors ) ),
             authors: this.packageAuthorToAuthors(pkg.author),
             // From the custom property
-            isFake: prop.isFake,
-            targets: prop.targets,
             file: prop.file,
             class: prop.class,
             serve: prop.serve

@@ -3,19 +3,14 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const deepcopy = require("deepcopy");
 const path_1 = require("path");
 const NodeTypes_1 = require("../req/NodeTypes");
-const path_transformer_1 = require("../util/file/path-transformer");
 /**
  * Generate Test Case Documents, i.e. documents to save as `.testcase` files.
  *
  * @author Thiago Delgado Pinto
  */
 class TestCaseDocumentGenerator {
-    /**
-     * Constructor
-     *
-     * @param _extensionTestCase Extension to use in the file. It fulfils Document's `fileInfo`.
-     */
-    constructor(_extensionTestCase, _basePath) {
+    constructor(_extensionFeature, _extensionTestCase, _basePath) {
+        this._extensionFeature = _extensionFeature;
         this._extensionTestCase = _extensionTestCase;
         this._basePath = _basePath;
     }
@@ -26,15 +21,17 @@ class TestCaseDocumentGenerator {
      * @param testCases Test cases
      * @param outputDir Output directory. If not defined, assumes the same directory as the owner document.
      */
-    generate(fromDoc, testCases, outputDir) {
+    generate(fromDoc, testCases) {
+        var _a;
         let line = 1;
         // Cada TestCase contém o número que pode ser usado como índice para obter o cenário e a variante
         // Criar anotações que referenciam <- AQUI ?
+        const fromDocPath = (_a = fromDoc === null || fromDoc === void 0 ? void 0 : fromDoc.fileInfo) === null || _a === void 0 ? void 0 : _a.path;
         // # Create a simulated document object
         let newDoc = {
             fileInfo: {
                 hash: null,
-                path: this.createTestCaseFileNameBasedOn(fromDoc.fileInfo.path, outputDir)
+                path: this.createTestCaseFilePath(fromDocPath)
             },
             imports: [],
             testCases: []
@@ -42,7 +39,7 @@ class TestCaseDocumentGenerator {
         // # Generate language
         newDoc.language = this.createLanguage(fromDoc, ++line);
         // # Generate the needed imports
-        newDoc.imports = this.createImports(fromDoc, ++line, outputDir);
+        newDoc.imports = this.createImports(fromDocPath, ++line);
         line += newDoc.imports.length;
         // # Update lines then add the test cases
         line = this.updateLinesFromTestCases(testCases, ++line);
@@ -50,18 +47,14 @@ class TestCaseDocumentGenerator {
         return newDoc;
     }
     /**
-     * Creates a file name for the new document.
+     * Creates a test case file path based on a feature path.
      *
-     * @param docPath Current document path
-     * @param outputDir Output directory. Assumes the same directory as the `docPath` if not defined.
+     * @param featurePath Feature path
      */
-    createTestCaseFileNameBasedOn(docPath, outputDir) {
-        const props = path_1.parse(docPath);
-        const fileName = props.name + this._extensionTestCase;
-        const outDir = !outputDir ? props.dir : path_1.relative(props.dir, outputDir);
-        // const fullPath = normalize( resolve( this._basePath, join( outDir, fileName ) ) );
-        const fullPath = path_transformer_1.toUnixPath(path_1.normalize(path_1.resolve(this._basePath, path_1.join(outDir, fileName))));
-        return fullPath;
+    createTestCaseFilePath(featurePath) {
+        const testCaseFile = path_1.basename(featurePath, this._extensionFeature) + this._extensionTestCase;
+        const testCasePath = path_1.join(path_1.dirname(featurePath), testCaseFile);
+        return testCasePath;
     }
     /**
      * Create a language node.
@@ -82,14 +75,12 @@ class TestCaseDocumentGenerator {
      *
      * @param fromDoc Owner document
      * @param startLine Start line
-     * @param outputDir Output directory. Assumes the same directory as the `docPath` if not defined.
      */
-    createImports(fromDoc, startLine, outputDir) {
+    createImports(fromDocPath, startLine) {
         let imports = [];
         // Path relative to where the doc file is
-        const docDir = path_1.dirname(fromDoc.fileInfo.path);
-        const outDir = outputDir || docDir;
-        const filePath = path_1.join(path_1.relative(docDir, outDir), path_1.basename(fromDoc.fileInfo.path));
+        const dir = path_1.dirname(fromDocPath);
+        const filePath = path_1.relative(dir, path_1.join(dir, path_1.basename(fromDocPath)));
         // Generate the import to the given document
         let docImport = {
             nodeType: NodeTypes_1.NodeTypes.IMPORT,

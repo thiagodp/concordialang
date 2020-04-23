@@ -1,35 +1,36 @@
 import * as inquirer from 'inquirer';
 import { Options } from '../app/Options';
 
+export type GuidedConfigOptions = {
+    directory: string;
+    language: string;
+    dirScripts: string;
+    dirResults: string;
+    plugin: string;
+    pluginInstall: string;
+};
+
 /**
  * Guided Concordia configuration.
  */
 export class GuidedConfig {
 
-    async prompt( options: Options ): Promise< Options > {
+    async prompt(): Promise< GuidedConfigOptions > {
 
         const q = new ConcordiaQuestions();
 
         const questions = [
             q.directory(),
             q.language(),
-            q.dirScript(),
-            q.dirResult(),
+            q.dirScripts(),
+            q.dirResults(),
             q.plugin(),
             q.pluginInstall()
         ];
 
-        let r = await inquirer.prompt( questions );
-
-        options.directory = r.directory;
-        options.language = r.language;
-        options.dirScript = r.dirScript;
-        options.dirResult = r.dirResult;
-        options.plugin = r.plugin;
-        options.pluginInstall = r.pluginInstall;
-
-        return options;
+        return await inquirer.prompt( questions );
     }
+
 }
 
 class ConcordiaQuestions {
@@ -56,19 +57,19 @@ class ConcordiaQuestions {
         };
     }
 
-    dirScript(): object {
+    dirScripts(): object {
         return {
             type: 'input',
-            name: 'dirScript',
+            name: 'dirScripts',
             message: 'Where do you want to save generated test scripts?',
             default: './test'
         };
     }
 
-    dirResult(): object {
+    dirResults(): object {
         return {
             type: 'input',
-            name: 'dirResult',
+            name: 'dirResults',
             message: 'Where do you want to save logs, screenshots, and report files?',
             default: './output'
         };

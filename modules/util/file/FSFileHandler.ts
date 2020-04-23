@@ -1,10 +1,7 @@
 import { promisify } from "util";
-import { FileChecker } from "./FileChecker";
-import { FileReader } from "./FileReader";
-import { FileWriter } from "./FileWriter";
+import { FileHandler } from "./FileHandler";
 
-
-export class FSFileHandler implements FileReader, FileChecker, FileWriter {
+export class FSFileHandler implements FileHandler {
 
     constructor(
         private _fs: any,
@@ -62,6 +59,19 @@ export class FSFileHandler implements FileReader, FileChecker, FileWriter {
     async write( filePath: string, content: string ): Promise< void > {
         const writeFile = promisify( this._fs.writeFile );
         return await writeFile( filePath, content );
+    }
+
+    /** @inheritDoc */
+    async erase( filePath: string, checkIfExists: boolean ): Promise< boolean > {
+        if ( checkIfExists ) {
+            const ok = await this.exists( filePath );
+            if ( ! ok ) {
+                return false;
+            }
+        }
+        const unlinkFile = promisify( this._fs.unlink );
+        await unlinkFile( filePath );
+        return true;
     }
 
 }

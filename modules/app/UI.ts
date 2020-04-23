@@ -4,10 +4,8 @@ import { PluginListener } from '../plugin/PluginListener';
 import { TestCaseGeneratorListener } from '../testcase/TestCaseGeneratorListener';
 import { TestScriptExecutionListener } from '../testscript/TestScriptExecutionListener';
 import { Options } from './Options';
-import { OptionsListener } from './OptionsListener';
 
-export interface AppUI extends
-    OptionsListener,
+export interface UI extends
     FileCompilationListener,
     CompilerListener,
     TestCaseGeneratorListener,
@@ -34,6 +32,17 @@ export interface AppUI extends
 
     announceConfigurationFileAlreadyExists(): void;
 
+    announceConfigurationFileLoaded( filePath: string, durationMS: number ): void;
+    announceCouldNotLoadConfigurationFile( errorMessage: string ): void;
+
+    announceConfigurationFileSaved( filePath: string ): void;
+
+    // Seed ?
+
+    announceSeed( seed: string, generatedSeed: boolean ): void;
+
+    announceRealSeed( realSeed: string ): void;
+
     // Plug-in
 
     announcePluginNotFound( pluginDir: string, pluginName: string ): void;
@@ -50,22 +59,21 @@ export interface AppUI extends
 
     // AST
 
-    showErrorSavingAST( astFile: string, errorMessage: string ): void;
-    announceASTIsSaved( astFile: string ): void;
+    showErrorSavingAbstractSyntaxTree( astFile: string, errorMessage: string ): void;
+    announceAbstractSyntaxTreeIsSaved( astFile: string ): void;
 
     // Test Script
 
-    showGeneratedTestScriptFiles( scriptDir: string, files: string[] ): void;
+    showGeneratedTestScriptFiles( scriptDir: string, files: string[], durationMS: number ): void;
     showTestScriptGenerationErrors( errors: Error[] ): void;
 
     // Generic
 
-    show( ...args: any[] ): void;
+    showException( error: Error ): void;
+
     success( ...args: any[] ): void;
     info( ...args: any[] ): void;
     warn( ...args: any[] ): void;
     error( ...args: any[] ): void;
-
-    exception( error: Error ): void;
 
 }

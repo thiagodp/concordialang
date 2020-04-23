@@ -47,18 +47,35 @@ class Options {
             'about',
             'version',
             'newer',
-            // Other
+            // Internal
             'debug',
             'pluginDir',
             'languageDir'
         ];
+        // Directories
+        /** Recursive search flag */
+        this.recursive = true;
+        /** Directory with specification files */
+        this.directory = this.defaults.DIRECTORY;
+        /** Output directory for test script files */
+        this.dirScripts = this.defaults.DIR_SCRIPTS;
+        /** Output directory of test script results */
+        this.dirResults = this.defaults.DIR_RESULTS;
         // Files
-        this.directory = '.'; // directory to search
-        this.recursive = true; // recursive search
-        this.encoding = this.defaults.ENCODING; // change default encoding
-        this.extensions = this.defaults.EXTENSIONS; // extensions to search // TO-DO: integrate this with extensionFeature and extensionTestCase
+        this.config = this.defaults.CONFIG; // configuration file path
         this.ignore = []; // files to ignore, from the given directory
         this.files = []; // files to consider, instead of the given directory
+        this.scriptFiles = []; // script files to execute
+        // File-related options
+        /** Default encoding */
+        this.encoding = this.defaults.ENCODING;
+        this.extensions = this.defaults.EXTENSIONS; // extensions to search // TO-DO: integrate this with extensionFeature and extensionTestCase
+        /** Extension for feature files */
+        this.extensionFeature = this.defaults.EXTENSION_FEATURE;
+        /** Extension for test case files */
+        this.extensionTestCase = this.defaults.EXTENSION_TEST_CASE;
+        /** Characters used to break lines in text files */
+        this.lineBreaker = this.defaults.LINE_BREAKER;
         // Language
         this.language = this.defaults.LANGUAGE; // change default language
         this.languageList = false; // show available languages
@@ -90,18 +107,6 @@ class Options {
         this.executeScript = true;
         /** Whether it is desired to analyze test script results */
         this.analyzeResult = true;
-        /** Output directory for test case files */
-        this.dirTestCase = this.defaults.DIR_TEST_CASE;
-        /** Output directory for test script files */
-        this.dirScript = this.defaults.DIR_SCRIPT;
-        /** Output directory of test script results */
-        this.dirResult = this.defaults.DIR_SCRIPT_RESULT;
-        /** Extension for feature files */
-        this.extensionFeature = this.defaults.EXTENSION_FEATURE;
-        /** Extension for test case files */
-        this.extensionTestCase = this.defaults.EXTENSION_TEST_CASE;
-        /** Characters used to break lines in text files */
-        this.lineBreaker = this.defaults.LINE_BREAKER;
         // CONTENT GENERATION
         /**
          * String case used for UI Elements' ids when an id is not defined.
@@ -187,9 +192,12 @@ class Options {
         // Concordia directories
         this.pluginDir = path_1.resolve(appPath, this.defaults.DIR_PLUGIN);
         this.languageDir = path_1.resolve(appPath, this.defaults.DIR_LANGUAGE);
-        // User directories
-        this.dirScript = path_1.resolve(processPath, this.defaults.DIR_SCRIPT);
-        this.dirResult = path_1.resolve(processPath, this.defaults.DIR_SCRIPT_RESULT);
+        // Use-defined directories
+        this.directory = path_1.resolve(processPath, this.defaults.DIRECTORY);
+        this.dirScripts = path_1.resolve(processPath, this.defaults.DIR_SCRIPTS);
+        this.dirResults = path_1.resolve(processPath, this.defaults.DIR_RESULTS);
+        // Use-defined files
+        this.config = path_1.resolve(processPath, this.defaults.CONFIG);
     }
     shouldSeeHelp() {
         return this.help
@@ -235,7 +243,11 @@ class Options {
         return this.help || this.about || this.version;
     }
     somePluginOption() {
-        return this.pluginList || this.pluginAbout || this.pluginInstall || this.pluginUninstall || this.pluginServe;
+        return this.pluginList
+            || this.pluginAbout
+            || this.pluginInstall
+            || this.pluginUninstall
+            || this.pluginServe;
     }
     someOptionThatRequiresAPlugin() {
         return this.generateScript || this.executeScript || this.analyzeResult;
@@ -282,69 +294,103 @@ class Options {
      * @param obj Object
      */
     import(obj) {
-        const CURRENT_DIRECTORY = '.';
         const PARAM_SEPARATOR = ',';
-        // FILES
-        this.directory = obj.directory || CURRENT_DIRECTORY;
+        const isStringNotEmpty = text => TypeChecking_1.isString(text) && text.trim() != '';
+        const resolvePath = p => path_1.isAbsolute(p) ? p : path_1.resolve(this.processPath, p);
+        // DIRECTORIES
         this.recursive = obj.recursive !== false;
-        if (TypeChecking_1.isString(obj.encoding)) {
-            this.encoding = obj.encoding.trim().toLowerCase();
+        if (isStringNotEmpty(obj.directory)) {
+            this.directory = resolvePath(obj.directory);
         }
-        if (TypeChecking_1.isString(obj.extensions)) {
-            this.extensions = obj.extensions.trim().split(PARAM_SEPARATOR);
+        if (isStringNotEmpty(obj.dirScript)) { // singular
+            this.dirScripts = resolvePath(obj.dirScript);
         }
-        if (TypeChecking_1.isString(obj.ignore)) {
-            this.ignore = obj.ignore.trim().split(PARAM_SEPARATOR);
+        else if (isStringNotEmpty(obj.dirScripts)) { // plural
+            this.dirScripts = resolvePath(obj.dirScripts);
         }
-        if (TypeChecking_1.isString(obj.files)) {
+        if (isStringNotEmpty(obj.dirResult)) { // singular
+            this.dirResults = resolvePath(obj.dirResult);
+        }
+        else if (isStringNotEmpty(obj.dirResults)) { // plural
+            this.dirResults = resolvePath(obj.dirResults);
+        }
+        else if (isStringNotEmpty(obj.dirOutput)) { // alternative
+            this.dirResults = resolvePath(obj.dirOutput);
+        }
+        // FILES
+        if (isStringNotEmpty(obj.config)) {
+            this.config = resolvePath(obj.config);
+        }
+        if (isStringNotEmpty(obj.files)) {
             this.files = obj.files.trim().split(PARAM_SEPARATOR);
         }
-        else if (TypeChecking_1.isString(obj.file)) { // alternative
+        else if (isStringNotEmpty(obj.file)) { // alternative
             this.files = obj.file.trim().split(PARAM_SEPARATOR);
         }
+        if (isStringNotEmpty(obj.ignore)) {
+            this.ignore = obj.ignore.trim().split(PARAM_SEPARATOR);
+        }
+        if (isStringNotEmpty(obj.scriptFiles)) {
+            this.scriptFiles = obj.scriptFiles.trim().split(PARAM_SEPARATOR);
+        }
+        else if (isStringNotEmpty(obj.scriptFile)) { // alternative
+            this.scriptFiles = obj.scriptFile.trim().split(PARAM_SEPARATOR);
+        }
+        // EXTENSIONS, ENCODING, SEPARATORS, ETC.
+        if (isStringNotEmpty(obj.extensionFeature)) {
+            this.extensionFeature = obj.extensionFeature;
+        }
+        else if (isStringNotEmpty(obj.extFeature)) { // alternative
+            this.extensionFeature = obj.extFeature;
+        }
+        if (isStringNotEmpty(obj.extensionTestCase)) {
+            this.extensionTestCase = obj.extensionTestCase;
+        }
+        else if (isStringNotEmpty(obj.extTestCase)) { // alternative
+            this.extensionTestCase = obj.extTestCase;
+        }
+        this.extensions = [this.extensionFeature, this.extensionTestCase];
+        if (TypeChecking_1.isString(obj.lineBreaker)) {
+            this.lineBreaker = obj.lineBreaker;
+        }
+        else if (TypeChecking_1.isString(obj.lineBreak)) { // similar
+            this.lineBreaker = obj.lineBreak;
+        }
+        if (isStringNotEmpty(obj.encoding)) {
+            this.encoding = obj.encoding.trim().toLowerCase();
+        }
         // LANGUAGE
-        if (TypeChecking_1.isString(obj.language)) {
+        if (isStringNotEmpty(obj.language)) {
             this.language = obj.language.trim().toLowerCase();
         }
         this.languageList = TypeChecking_1.isDefined(obj.languageList);
         // PLUG-IN
         // console.log( obj );
-        if (TypeChecking_1.isString(obj.plugin)) {
+        if (isStringNotEmpty(obj.plugin)) {
             this.plugin = obj.plugin.trim().toLowerCase();
         }
         this.pluginList = TypeChecking_1.isDefined(obj.pluginList);
-        if (TypeChecking_1.isString(obj.pluginAbout)) {
-            if (obj.pluginAbout != '') {
-                this.plugin = obj.pluginAbout.trim().toLowerCase();
-            }
-            this.pluginAbout = true;
+        this.pluginAbout = TypeChecking_1.isDefined(obj.pluginAbout) || TypeChecking_1.isDefined(obj.pluginInfo);
+        this.pluginInstall = TypeChecking_1.isDefined(obj.pluginInstall);
+        this.pluginUninstall = TypeChecking_1.isDefined(obj.pluginUninstall);
+        this.pluginServe = TypeChecking_1.isDefined(obj.pluginServe);
+        if (isStringNotEmpty(obj.pluginAbout)) {
+            this.plugin = obj.pluginAbout.trim().toLowerCase();
         }
-        else if (TypeChecking_1.isString(obj.pluginInfo)) { // Same as plugin about
-            if (obj.pluginInfo != '') {
-                this.plugin = obj.pluginInfo.trim().toLowerCase();
-            }
-            this.pluginAbout = true;
+        else if (isStringNotEmpty(obj.pluginInfo)) { // Same as plugin about
+            this.plugin = obj.pluginInfo.trim().toLowerCase();
         }
-        else if (TypeChecking_1.isString(obj.pluginInstall)) {
-            if (obj.pluginInstall != '') {
-                this.plugin = obj.pluginInstall.trim().toLowerCase();
-            }
-            this.pluginInstall = true;
+        else if (isStringNotEmpty(obj.pluginInstall)) {
+            this.plugin = obj.pluginInstall.trim().toLowerCase();
         }
-        else if (TypeChecking_1.isString(obj.pluginUninstall)) {
-            if (obj.pluginUninstall != '') {
-                this.plugin = obj.pluginUninstall.trim().toLowerCase();
-            }
-            this.pluginUninstall = true;
+        else if (isStringNotEmpty(obj.pluginUninstall)) {
+            this.plugin = obj.pluginUninstall.trim().toLowerCase();
         }
-        else if (TypeChecking_1.isString(obj.pluginServe)) {
-            if (obj.pluginServe != '') {
-                this.plugin = obj.pluginServe.trim().toLowerCase();
-            }
-            this.pluginServe = true;
+        else if (isStringNotEmpty(obj.pluginServe)) {
+            this.plugin = obj.pluginServe.trim().toLowerCase();
         }
         // PROCESSING
-        const ast = TypeChecking_1.isString(obj.ast)
+        const ast = isStringNotEmpty(obj.ast)
             ? obj.ast
             : (TypeChecking_1.isDefined(obj.ast) ? this.defaults.AST_FILE : undefined);
         this.init = TypeChecking_1.isDefined(obj.init);
@@ -357,19 +403,21 @@ class Options {
         const justScript = TypeChecking_1.isDefined(obj.justScript) || TypeChecking_1.isDefined(obj.justScripts);
         const justRun = TypeChecking_1.isDefined(obj.justRun);
         const justResult = TypeChecking_1.isDefined(obj.justResult) || TypeChecking_1.isDefined(obj.justResults);
-        // compare to false is important because meow transforms no-xxx to xxx === false
-        // const noSpec: boolean = false === obj.compileSpecification ||
-        //     false === obj.spec ||
+        // Compare to false is important because meow transforms no-xxx to xxx === false
+        // const noSpec: boolean = false === obj.spec ||
         //     false === obj.specification;
         const noTestCase = false === obj.generateTestCase ||
             false === obj.testCase ||
             false === obj.testCases ||
-            false === obj.testcase;
+            false === obj.testcase ||
+            false === obj.testcases;
         const noScript = false === obj.generateScript ||
             false === obj.script ||
             false === obj.scripts ||
             false === obj.testScript ||
-            false == obj.testscript;
+            false === obj.testScripts ||
+            false == obj.testscript ||
+            false == obj.testscripts;
         const noRun = false == obj.executeScript ||
             false === obj.run ||
             false === obj.execute;
@@ -386,46 +434,6 @@ class Options {
         this.analyzeResult = (!noResult || justResult)
             && (!justRun);
         this.compileSpecification = this.generateTestCase || this.generateScript;
-        // Directories
-        if (TypeChecking_1.isString(obj.dirTestCase)) { // singular
-            this.dirTestCase = obj.dirTestCase;
-        }
-        else if (TypeChecking_1.isString(obj.dirTestCases)) { // plural
-            this.dirTestCase = obj.dirTestCases;
-        }
-        if (TypeChecking_1.isString(obj.dirScript)) { // singular
-            this.dirScript = obj.dirScript;
-        }
-        else if (TypeChecking_1.isString(obj.dirScripts)) { // plural
-            this.dirScript = obj.dirScripts;
-        }
-        if (TypeChecking_1.isString(obj.dirResult)) { // singular
-            this.dirResult = obj.dirResult;
-        }
-        else if (TypeChecking_1.isString(obj.dirResults)) { // plural
-            this.dirResult = obj.dirResults;
-        }
-        else if (TypeChecking_1.isString(obj.dirOutput)) { // alternative
-            this.dirResult = obj.dirOutput;
-        }
-        if (TypeChecking_1.isString(obj.extensionFeature)) {
-            this.extensionFeature = obj.extensionFeature;
-        }
-        else if (TypeChecking_1.isString(obj.extFeature)) { // similar
-            this.extensionFeature = obj.extFeature;
-        }
-        if (TypeChecking_1.isString(obj.extensionTestCase)) {
-            this.extensionTestCase = obj.extensionTestCase;
-        }
-        else if (TypeChecking_1.isString(obj.extTestCase)) { // similar
-            this.extensionTestCase = obj.extTestCase;
-        }
-        if (TypeChecking_1.isString(obj.lineBreaker)) {
-            this.lineBreaker = obj.lineBreaker;
-        }
-        else if (TypeChecking_1.isString(obj.lineBreak)) { // similar
-            this.lineBreaker = obj.lineBreak;
-        }
         // CONTENT GENERATION
         if (TypeChecking_1.isString(obj.caseUi)) {
             this.caseUi = obj.caseUi;

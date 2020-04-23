@@ -7,11 +7,11 @@ import { TestScriptExecutionResult } from "concordialang-plugin";
  */
 export interface TestScriptExecutionListener {
 
-    testScriptExecutionStarted(): void;
-
     testScriptExecutionDisabled(): void;
 
-    testScriptExecutionError( error: Error ): void;
+    announceTestScriptExecutionStarted(): void;
+    announceTestScriptExecutionError( error: Error ): void;
+    announceTestScriptExecutionFinished(): void;
 
-    testScriptExecutionFinished( r: TestScriptExecutionResult ): void;
+    showTestScriptAnalysis( r: TestScriptExecutionResult ): void;
 }

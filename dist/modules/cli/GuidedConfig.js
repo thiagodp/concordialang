@@ -14,25 +14,18 @@ const inquirer = require("inquirer");
  * Guided Concordia configuration.
  */
 class GuidedConfig {
-    prompt(options) {
+    prompt() {
         return __awaiter(this, void 0, void 0, function* () {
             const q = new ConcordiaQuestions();
             const questions = [
                 q.directory(),
                 q.language(),
-                q.dirScript(),
-                q.dirResult(),
+                q.dirScripts(),
+                q.dirResults(),
                 q.plugin(),
                 q.pluginInstall()
             ];
-            let r = yield inquirer.prompt(questions);
-            options.directory = r.directory;
-            options.language = r.language;
-            options.dirScript = r.dirScript;
-            options.dirResult = r.dirResult;
-            options.plugin = r.plugin;
-            options.pluginInstall = r.pluginInstall;
-            return options;
+            return yield inquirer.prompt(questions);
         });
     }
 }
@@ -58,18 +51,18 @@ class ConcordiaQuestions {
             default: './features'
         };
     }
-    dirScript() {
+    dirScripts() {
         return {
             type: 'input',
-            name: 'dirScript',
+            name: 'dirScripts',
             message: 'Where do you want to save generated test scripts?',
             default: './test'
         };
     }
-    dirResult() {
+    dirResults() {
         return {
             type: 'input',
-            name: 'dirResult',
+            name: 'dirResults',
             message: 'Where do you want to save logs, screenshots, and report files?',
             default: './output'
         };

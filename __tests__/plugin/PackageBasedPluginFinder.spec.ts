@@ -32,8 +32,6 @@ describe( 'PackageBasedPluginFinder', () => {
     };
 
     pkg[ PLUGIN_PROPERTY ] = {
-        isFake: true,
-        targets: [ 'foo', 'bar' ],
         file: 'path/to/main.js',
         class: 'Main',
         serve: 'npm --version'

@@ -11,12 +11,8 @@ import { toUnixPath } from '../util/file/path-transformer';
  */
 export class TestCaseDocumentGenerator {
 
-    /**
-     * Constructor
-     *
-     * @param _extensionTestCase Extension to use in the file. It fulfils Document's `fileInfo`.
-     */
     constructor(
+        private readonly _extensionFeature: string,
         private readonly _extensionTestCase: string,
         private readonly _basePath: string
     ) {
@@ -31,8 +27,7 @@ export class TestCaseDocumentGenerator {
      */
     generate(
         fromDoc: Document,
-        testCases: TestCase[],
-        outputDir?: string, // to fullfil fileInfo
+        testCases: TestCase[]
     ): Document {
 
         let line = 1;
@@ -40,12 +35,13 @@ export class TestCaseDocumentGenerator {
         // Cada TestCase contém o número que pode ser usado como índice para obter o cenário e a variante
         // Criar anotações que referenciam <- AQUI ?
 
+        const fromDocPath: string = fromDoc?.fileInfo?.path;
 
         // # Create a simulated document object
         let newDoc: Document = {
             fileInfo: {
                 hash: null,
-                path: this.createTestCaseFileNameBasedOn( fromDoc.fileInfo.path, outputDir )
+                path: this.createTestCaseFilePath( fromDocPath )
             } as FileInfo,
             imports: [],
             testCases: []
@@ -55,7 +51,7 @@ export class TestCaseDocumentGenerator {
         newDoc.language = this.createLanguage( fromDoc, ++line );
 
         // # Generate the needed imports
-        newDoc.imports = this.createImports( fromDoc, ++line, outputDir );
+        newDoc.imports = this.createImports( fromDocPath, ++line );
         line += newDoc.imports.length;
 
         // # Update lines then add the test cases
@@ -67,18 +63,14 @@ export class TestCaseDocumentGenerator {
 
 
     /**
-     * Creates a file name for the new document.
+     * Creates a test case file path based on a feature path.
      *
-     * @param docPath Current document path
-     * @param outputDir Output directory. Assumes the same directory as the `docPath` if not defined.
+     * @param featurePath Feature path
      */
-    createTestCaseFileNameBasedOn( docPath: string, outputDir?: string ): string {
-        const props = parse( docPath );
-        const fileName = props.name + this._extensionTestCase;
-        const outDir = ! outputDir ? props.dir : relative( props.dir, outputDir );
-        // const fullPath = normalize( resolve( this._basePath, join( outDir, fileName ) ) );
-        const fullPath = toUnixPath( normalize( resolve( this._basePath, join( outDir, fileName ) ) ) );
-        return fullPath;
+    createTestCaseFilePath( featurePath: string ): string {
+        const testCaseFile = basename( featurePath, this._extensionFeature ) + this._extensionTestCase;
+        const testCasePath = join( dirname( featurePath ), testCaseFile );
+        return testCasePath;
     }
 
     /**
@@ -102,18 +94,13 @@ export class TestCaseDocumentGenerator {
      *
      * @param fromDoc Owner document
      * @param startLine Start line
-     * @param outputDir Output directory. Assumes the same directory as the `docPath` if not defined.
      */
-    createImports( fromDoc: Document, startLine: number, outputDir?: string ): Import[] {
+    createImports( fromDocPath: string, startLine: number ): Import[] {
         let imports: Import[] = [];
 
         // Path relative to where the doc file is
-        const docDir = dirname( fromDoc.fileInfo.path );
-        const outDir = outputDir || docDir;
-        const filePath = join(
-            relative( docDir, outDir ),
-            basename( fromDoc.fileInfo.path )
-        );
+        const dir = dirname( fromDocPath );
+        const filePath = relative( dir, join( dir, basename( fromDocPath ) ) );
 
         // Generate the import to the given document
         let docImport: Import = {

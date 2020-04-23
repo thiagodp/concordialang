@@ -16,30 +16,27 @@ export const PLUGIN_PREFIX: string = 'concordialang-';
  */
 export interface PluginData {
 
-    /** true if the plugin is fake (i.e. for demonstration purposes). */
-    isFake: boolean;
-
-    /** plugin name. */
+    /** Plugin name. */
     name: string;
 
-    /** plugin description. */
+    /** Plugin description. */
     description: string;
 
-    /** plugin version. */
+    /** Plugin version. */
     version: string;
 
-    /** target technologies (e.g. frameworks). */
-    targets: string[];
+    /** Plugin authors. */
+    authors?: string[];
 
-    /** authors of the plugin. */
-    authors: string[];
+    // --- main properties ---
 
-    /** main file path */
+    /** Path to file to be loaded. */
     file: string;
 
-    /** main class */
+    /** Class that implements the interface `Plugin`. */
     class: string;
 
-    /** serve command, usually to start a server */
-    serve: string;
+    /** Command to start a testing server, whether needed. */
+    serve?: string;
+
 }

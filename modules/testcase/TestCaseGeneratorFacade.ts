@@ -1,5 +1,8 @@
 import Graph = require( 'graph.js/dist/graph.full.js' );
+import { FileEraser } from 'modules/util/file/FileEraser';
 import { relative } from 'path';
+import { CombinationOptions, InvalidSpecialOptions, VariantSelectionOptions } from "../app/CombinationOptions";
+import { Options } from "../app/Options";
 import { Document, ReservedTags, TestCase, Variant } from "../ast";
 import { LocatedException } from "../error/LocatedException";
 import { RuntimeException } from "../error/RuntimeException";
@@ -9,18 +12,16 @@ import { GivenWhenThenSentenceRecognizer } from "../nlp/GivenWhenThenSentenceRec
 import { AugmentedSpec } from "../req/AugmentedSpec";
 import { CartesianProductStrategy, CombinationStrategy, OneWiseStrategy, ShuffledOneWiseStrategy, SingleRandomOfEachStrategy } from "../selection/CombinationStrategy";
 import { AllVariantsSelectionStrategy, FirstMostImportantVariantSelectionStrategy, FirstVariantSelectionStrategy, SingleRandomVariantSelectionStrategy, VariantSelectionStrategy } from '../selection/VariantSelectionStrategy';
-import { DataTestCaseMix, JustOneInvalidMix, OnlyInvalidMix, OnlyValidMix, UnfilteredMix } from "./DataTestCaseMix";
-import { TestCaseDocumentGenerator } from "./TestCaseDocumentGenerator";
-import { TestCaseGenerator } from "./TestCaseGenerator";
-import { TestCaseFileGenerator } from "./TestCaseFileGenerator";
-import { TestPlanner } from "./TestPlanner";
 import { GenContext, PreTestCaseGenerator } from "../testscenario/PreTestCaseGenerator";
 import { TestScenario } from "../testscenario/TestScenario";
 import { TestScenarioGenerator } from "../testscenario/TestScenarioGenerator";
 import { FileWriter, toUnixPath } from '../util/file';
-import { CombinationOptions, InvalidSpecialOptions, VariantSelectionOptions } from "../app/CombinationOptions";
+import { DataTestCaseMix, JustOneInvalidMix, OnlyInvalidMix, OnlyValidMix, UnfilteredMix } from "./DataTestCaseMix";
+import { TestCaseDocumentGenerator } from "./TestCaseDocumentGenerator";
+import { TestCaseFileGenerator } from "./TestCaseFileGenerator";
+import { TestCaseGenerator } from "./TestCaseGenerator";
 import { TestCaseGeneratorListener } from "./TestCaseGeneratorListener";
-import { Options } from "../app/Options";
+import { TestPlanner } from "./TestPlanner";
 
 /**
  * Test Case Generator Facade
@@ -33,7 +34,7 @@ export class TestCaseGeneratorFacade {
         private _variantSentenceRec: GivenWhenThenSentenceRecognizer,
         private _langLoader: LanguageContentLoader,
         private _listener: TestCaseGeneratorListener,
-        private _fileWriter: FileWriter,
+        private _fileHandler: FileWriter & FileEraser,
         ) {
     }
 
@@ -84,7 +85,7 @@ export class TestCaseGeneratorFacade {
 
         const testPlanMakers: TestPlanner[] = this.testPlanMakersFromOptions( options, strategyWarnings );
 
-        const tcDocGen = new TestCaseDocumentGenerator( options.extensionTestCase, options.directory );
+        const tcDocGen = new TestCaseDocumentGenerator( options.extensionFeature, options.extensionTestCase, options.directory );
 
         const tcDocFileGen = new TestCaseFileGenerator( this._langLoader, options.language );
 
@@ -100,6 +101,7 @@ export class TestCaseGeneratorFacade {
         // }
 
         let newTestCaseDocuments: Document[] = [];
+        let generatedTestCasesCount = 0;
 
         for ( let [ /* key */, value ] of vertices ) {
 
@@ -149,6 +151,8 @@ export class TestCaseGeneratorFacade {
                             continue;
                         }
 
+                        ++generatedTestCasesCount;
+
                         let tcIndex = 1;
                         for ( let tc of generatedTC ) {
 
@@ -171,7 +175,17 @@ export class TestCaseGeneratorFacade {
             }
 
             // Generating Documents with the Test Cases
-            const newDoc: Document = tcDocGen.generate( doc, testCases, options.dirTestCase );
+            const newDoc: Document = tcDocGen.generate( doc, testCases );
+
+            // Erase existing test case files when there is no test cases
+            if ( testCases.length < 1 ) {
+                try {
+                    await this._fileHandler.erase( newDoc.fileInfo.path, true );
+                    continue;
+                } catch ( err ) {
+                    errors.push( err );
+                }
+            }
 
             newTestCaseDocuments.push( newDoc );
 
@@ -182,6 +196,8 @@ export class TestCaseGeneratorFacade {
             graph.addVertex( from, newDoc ); // Overwrites if exist!
             graph.addEdge( to, from ); // order is this way...
 
+            // console.log( '>>> NEW TEST CASE', newDoc.fileInfo.path );
+
             // Generating file content
             const lines = tcDocFileGen.createLinesFromDoc(
                 newDoc,
@@ -191,11 +207,16 @@ export class TestCaseGeneratorFacade {
             );
 
             // Announce produced
-            this._listener.testCaseProduced( relative( options.directory, newDoc.fileInfo.path ), errors, warnings );
+            this._listener.testCaseProduced(
+                relative( options.directory, newDoc.fileInfo.path ),
+                newDoc.testCases.length,
+                errors,
+                warnings
+                );
 
             // Generating file
             try {
-                await this._fileWriter.write( newDoc.fileInfo.path, lines.join( options.lineBreaker ) )
+                await this._fileHandler.write( newDoc.fileInfo.path, lines.join( options.lineBreaker ) )
             } catch ( err ) {
                 const msg = 'Error generating the file "' + newDoc.fileInfo.path + '": ' + err.message;
                 errors.push( new RuntimeException( msg ) );
@@ -226,7 +247,7 @@ export class TestCaseGeneratorFacade {
 
         // Show errors and warnings if they exist
         const durationMs = Date.now() - startTime;
-        this._listener.testCaseGenerationFinished( durationMs );
+        this._listener.testCaseGenerationFinished( newTestCaseDocuments.length, generatedTestCasesCount, durationMs );
 
         return [ spec, graph ];
     }

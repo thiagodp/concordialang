@@ -10,31 +10,31 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const path_1 = require("path");
+const CombinationOptions_1 = require("../app/CombinationOptions");
 const ast_1 = require("../ast");
 const RuntimeException_1 = require("../error/RuntimeException");
 const Warning_1 = require("../error/Warning");
 const CombinationStrategy_1 = require("../selection/CombinationStrategy");
 const VariantSelectionStrategy_1 = require("../selection/VariantSelectionStrategy");
-const DataTestCaseMix_1 = require("./DataTestCaseMix");
-const TestCaseDocumentGenerator_1 = require("./TestCaseDocumentGenerator");
-const TestCaseGenerator_1 = require("./TestCaseGenerator");
-const TestCaseFileGenerator_1 = require("./TestCaseFileGenerator");
-const TestPlanner_1 = require("./TestPlanner");
 const PreTestCaseGenerator_1 = require("../testscenario/PreTestCaseGenerator");
 const TestScenarioGenerator_1 = require("../testscenario/TestScenarioGenerator");
 const file_1 = require("../util/file");
-const CombinationOptions_1 = require("../app/CombinationOptions");
+const DataTestCaseMix_1 = require("./DataTestCaseMix");
+const TestCaseDocumentGenerator_1 = require("./TestCaseDocumentGenerator");
+const TestCaseFileGenerator_1 = require("./TestCaseFileGenerator");
+const TestCaseGenerator_1 = require("./TestCaseGenerator");
+const TestPlanner_1 = require("./TestPlanner");
 /**
  * Test Case Generator Facade
  *
  * @author Thiago Delgado Pinto
  */
 class TestCaseGeneratorFacade {
-    constructor(_variantSentenceRec, _langLoader, _listener, _fileWriter) {
+    constructor(_variantSentenceRec, _langLoader, _listener, _fileHandler) {
         this._variantSentenceRec = _variantSentenceRec;
         this._langLoader = _langLoader;
         this._listener = _listener;
-        this._fileWriter = _fileWriter;
+        this._fileHandler = _fileHandler;
     }
     execute(options, spec, graph) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -51,7 +51,7 @@ class TestCaseGeneratorFacade {
             let tsGen = new TestScenarioGenerator_1.TestScenarioGenerator(preTCGen, variantSelectionStrategy, stateCombinationStrategy, variantToTestScenariosMap, postconditionNameToVariantsMap);
             const tcGen = new TestCaseGenerator_1.TestCaseGenerator(preTCGen);
             const testPlanMakers = this.testPlanMakersFromOptions(options, strategyWarnings);
-            const tcDocGen = new TestCaseDocumentGenerator_1.TestCaseDocumentGenerator(options.extensionTestCase, options.directory);
+            const tcDocGen = new TestCaseDocumentGenerator_1.TestCaseDocumentGenerator(options.extensionFeature, options.extensionTestCase, options.directory);
             const tcDocFileGen = new TestCaseFileGenerator_1.TestCaseFileGenerator(this._langLoader, options.language);
             //
             // generation
@@ -62,6 +62,7 @@ class TestCaseGeneratorFacade {
             //     console.log( key );
             // }
             let newTestCaseDocuments = [];
+            let generatedTestCasesCount = 0;
             for (let [/* key */ , value] of vertices) {
                 let doc = value;
                 if (!doc || !doc.feature || !doc.feature.scenarios) {
@@ -99,6 +100,7 @@ class TestCaseGeneratorFacade {
                             if (generatedTC.length < 1) {
                                 continue;
                             }
+                            ++generatedTestCasesCount;
                             let tcIndex = 1;
                             for (let tc of generatedTC) {
                                 tcGen.addReferenceTagsTo(tc, scenarioIndex + 1, variantIndex + 1);
@@ -113,7 +115,17 @@ class TestCaseGeneratorFacade {
                     ++scenarioIndex;
                 }
                 // Generating Documents with the Test Cases
-                const newDoc = tcDocGen.generate(doc, testCases, options.dirTestCase);
+                const newDoc = tcDocGen.generate(doc, testCases);
+                // Erase existing test case files when there is no test cases
+                if (testCases.length < 1) {
+                    try {
+                        yield this._fileHandler.erase(newDoc.fileInfo.path, true);
+                        continue;
+                    }
+                    catch (err) {
+                        errors.push(err);
+                    }
+                }
                 newTestCaseDocuments.push(newDoc);
                 // Adding the generated documents to the graph
                 // > This shall allow the test script generator to include all the needed test cases.
@@ -121,13 +133,14 @@ class TestCaseGeneratorFacade {
                 const to = file_1.toUnixPath(doc.fileInfo.path);
                 graph.addVertex(from, newDoc); // Overwrites if exist!
                 graph.addEdge(to, from); // order is this way...
+                // console.log( '>>> NEW TEST CASE', newDoc.fileInfo.path );
                 // Generating file content
                 const lines = tcDocFileGen.createLinesFromDoc(newDoc, errors, options.tcSuppressHeader, options.tcIndenter);
                 // Announce produced
-                this._listener.testCaseProduced(path_1.relative(options.directory, newDoc.fileInfo.path), errors, warnings);
+                this._listener.testCaseProduced(path_1.relative(options.directory, newDoc.fileInfo.path), newDoc.testCases.length, errors, warnings);
                 // Generating file
                 try {
-                    yield this._fileWriter.write(newDoc.fileInfo.path, lines.join(options.lineBreaker));
+                    yield this._fileHandler.write(newDoc.fileInfo.path, lines.join(options.lineBreaker));
                 }
                 catch (err) {
                     const msg = 'Error generating the file "' + newDoc.fileInfo.path + '": ' + err.message;
@@ -155,7 +168,7 @@ class TestCaseGeneratorFacade {
             }
             // Show errors and warnings if they exist
             const durationMs = Date.now() - startTime;
-            this._listener.testCaseGenerationFinished(durationMs);
+            this._listener.testCaseGenerationFinished(newTestCaseDocuments.length, generatedTestCasesCount, durationMs);
             return [spec, graph];
         });
     }

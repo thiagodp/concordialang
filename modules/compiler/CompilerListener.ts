@@ -3,9 +3,17 @@ import { Options } from "../app/Options";
 
 export interface CompilerListener {
 
-    compilerStarted( options: Options );
+    announceFileSearchStarted(): void;
+    announceFileSearchFinished( durationMS: number, files: string[] ): void;
 
-    compilationFinished( durationMS: number );
+    announceCompilerStarted( options: Options ): void;
+
+    announceCompilerFinished(
+        compiledFilesCount: number,
+        featuresCount: number,
+        testCasesCount: number,
+        durationMS: number
+        ): void;
 
     reportProblems( problems: ProblemMapper, basePath: string ): void;
 
