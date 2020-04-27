@@ -77,10 +77,6 @@ class VerboseUI extends SimpleUI_1.SimpleUI {
         }
         this.warn(msg);
     }
-    /** @inheritDoc */
-    announceRealSeed(realSeed) {
-        this.info('Real seed', this.highlight(realSeed));
-    }
     //
     // CompilerListener
     //

@@ -106,11 +106,6 @@ export class VerboseUI extends SimpleUI implements UI {
         this.warn( msg );
     }
 
-    /** @inheritDoc */
-    announceRealSeed( realSeed: string ): void {
-        this.info( 'Real seed', this.highlight( realSeed ) );
-    }
-
     //
     // CompilerListener
     //
