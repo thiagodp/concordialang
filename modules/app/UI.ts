@@ -37,12 +37,6 @@ export interface UI extends
 
     announceConfigurationFileSaved( filePath: string ): void;
 
-    // Seed ?
-
-    announceSeed( seed: string, generatedSeed: boolean ): void;
-
-    announceRealSeed( realSeed: string ): void;
-
     // Plug-in
 
     announcePluginNotFound( pluginDir: string, pluginName: string ): void;

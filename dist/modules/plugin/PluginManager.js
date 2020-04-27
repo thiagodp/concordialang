@@ -101,7 +101,7 @@ class PluginManager {
             }
             // Install the plug-in as a DEVELOPMENT dependency using NPM
             const PACKAGE_MANAGER = 'NPM';
-            const INSTALL_DEV_CMD = 'npm install --save-dev ' + name + ' --color=always';
+            const INSTALL_DEV_CMD = 'npm install --save-dev ' + name + ' --no-fund --no-audit --loglevel error --color=always';
             this._pluginListener.showMessageTryingToInstall(name, PACKAGE_MANAGER);
             const code = yield this.runCommand(INSTALL_DEV_CMD);
             this._pluginListener.showCommandCode(code, false);

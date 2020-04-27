@@ -9,6 +9,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+const core_1 = require("@js-joda/core");
+const crypto_1 = require("crypto");
 const error_1 = require("../error");
 const language_1 = require("../language");
 const LanguageManager_1 = require("../language/LanguageManager");
@@ -97,9 +99,41 @@ class CompilerFacade {
             if (!options.generateTestCase || !output.spec.docs || compiledFilesCount < 1) {
                 return [output.spec, output.graph];
             }
-            const tcGenCtrl = new TestCaseGeneratorFacade_1.TestCaseGeneratorFacade(nlpBasedSentenceRecognizer.variantSentenceRec, langLoader, this._tcGenListener, fileHandler);
-            return yield tcGenCtrl.execute(options, output.spec, output.graph);
+            this.updateSeed(options, this._compilerListener);
+            const tcGen = new TestCaseGeneratorFacade_1.TestCaseGeneratorFacade(nlpBasedSentenceRecognizer.variantSentenceRec, langLoader, this._tcGenListener, fileHandler);
+            return yield tcGen.execute(options, output.spec, output.graph);
         });
+    }
+    updateSeed(options, ui) {
+        if (!options.seed) {
+            options.isGeneratedSeed = true;
+            options.seed = core_1.LocalDateTime.now().format(core_1.DateTimeFormatter.ofPattern('yyyy-MM-dd HH:mm:ss')).toString();
+        }
+        // const isOptionThatIgnoresSeed =
+        //     options.help
+        //     || options.about
+        //     || options.version
+        //     || options.newer
+        //     || options.languageList
+        //     || options.pluginList
+        //     || options.init
+        //     || options.ast
+        //     || options.somePluginOption();
+        // if ( ! isOptionThatIgnoresSeed ) {
+        //     ui.announceSeed( options.seed, options.isGeneratedSeed );
+        // }
+        ui.announceSeed(options.seed, options.isGeneratedSeed);
+        // Real seed
+        const BYTES_OF_SHA_512 = 64; // 512 divided by 8
+        if (options.seed.length < BYTES_OF_SHA_512) {
+            options.realSeed = crypto_1.createHash('sha512')
+                .update(options.seed)
+                .digest('hex');
+        }
+        else {
+            options.realSeed = options.seed;
+        }
+        ui.announceRealSeed(options.realSeed);
     }
 }
 exports.CompilerFacade = CompilerFacade;

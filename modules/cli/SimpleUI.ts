@@ -52,6 +52,7 @@ export class SimpleUI implements UI {
 
     readonly colorSuccess = chalk.greenBright.bind( chalk ); // chalk.rgb(0, 255, 0);
     readonly colorError = chalk.redBright.bind( chalk ); // chalk.rgb(255, 0, 0);
+    readonly colorCriticalError = chalk.rgb( 139, 0, 0 ); // dark red
     readonly colorWarning = chalk.yellow.bind( chalk );
     readonly colorDiscreet = chalk.gray.bind( chalk );
     readonly highlight = chalk.yellowBright.bind( chalk ); // chalk.rgb(255, 242, 0);
@@ -260,7 +261,7 @@ export class SimpleUI implements UI {
 
     /** @inheritdoc */
     showTestScriptGenerationErrors( errors: Error[] ): void {
-        for ( const err of errors ) {
+        for ( const err of errors || [] ) {
             this.showException( err );
         }
     }
@@ -417,8 +418,8 @@ export class SimpleUI implements UI {
         warnings: Warning[]
     ): void {
 
-        const hasErrors = errors.length > 0;
-        const hasWarnings = warnings.length > 0;
+        const hasErrors = errors && errors.length > 0;
+        const hasWarnings = warnings && warnings.length > 0;
 
         if ( ! hasErrors && ! hasWarnings ) {
             return;
@@ -734,8 +735,8 @@ export class SimpleUI implements UI {
         switch ( status.toLowerCase() ) {
             case 'passed': return this.colorSuccess;
             case 'adjusted': return this.colorCyanBright;
-            case 'failed': return this.colorWarning;
-            case 'error': return this.colorError;
+            case 'failed': return this.colorError;
+            case 'error': return this.colorCriticalError;
             default: return this.colorText;
         }
     }

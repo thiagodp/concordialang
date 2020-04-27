@@ -58,24 +58,31 @@ export class Options {
         'languageDir'
     ];
 
-    // Directories
+    // DIRECTORIES
 
     /** Recursive search flag */
     public recursive: boolean = true;
     /** Directory with specification files */
     public directory: string = this.defaults.DIRECTORY;
     /** Output directory for test script files */
-    public dirScripts: string = this.defaults.DIR_SCRIPTS;
+    public dirScript: string = this.defaults.DIR_SCRIPT;
     /** Output directory of test script results */
-    public dirResults: string = this.defaults.DIR_RESULTS;
+    public dirResult: string = this.defaults.DIR_RESULT;
 
-    // Files
-    public config: string = this.defaults.CONFIG; // configuration file path
-    public ignore: string[] = []; // files to ignore, from the given directory
-    public files: string[] = []; // files to consider, instead of the given directory
-    public scriptFiles: string[] = []; // script files to execute
+    // FILES
 
-    // File-related options
+    /** Configuration file path */
+    public config: string = this.defaults.CONFIG;
+    /** Files to ignore, from the given directory */
+    public ignore: string[] = [];
+    /** Files to consider, instead of the given directory */
+    public file: string[] = [];
+    /** Script files to execute */
+    public scriptFile: string[] = [];
+    /** Send an expression to filter the test scripts to run. Some plug-ins may not support it. */
+    public scriptGrep: string = null;
+
+    // FILE-RELATED OPTIONS
 
     /** Default encoding */
     public encoding: string = this.defaults.ENCODING;
@@ -91,13 +98,34 @@ export class Options {
     public language: string = this.defaults.LANGUAGE; // change default language
     public languageList: boolean = false; // show available languages
 
-    // Plugin
-    public plugin: string = null; // plug-in name
-    public pluginList: boolean = false; // show available plug-ins
-    public pluginAbout: boolean = false; // show information about a plug-in
-    public pluginInstall: boolean = false; // install an available plug-in
-    public pluginUninstall: boolean = false; // uninstall an available plug-in
-    public pluginServe: boolean = false; // start the test server of a plug-in
+    // PLUGIN
+
+    /** Plug-in (name) to use */
+    public plugin: string = null;
+    /** Show available plug-ins */
+    public pluginList: boolean = false;
+    /** Show information about a plug-in */
+    public pluginAbout: boolean = false;
+    /** Install an available plug-in */
+    public pluginInstall: boolean = false;
+    /** Uninstall an available plug-in */
+    public pluginUninstall: boolean = false;
+    /** Start the test server of a plug-in */
+    public pluginServe: boolean = false;
+
+    /**
+     * CLI options to be repassed to the plug-in.
+     * This could be removed in a near future since plug-ins can be executed
+     * via code by the plug-ins.
+     */
+    // public pluginOption: string = null;
+
+    /** Target browsers or platforms */
+    public target: string = null;
+    /** Headless test script execution. Browsers only. Some plug-ins may not support it. */
+    public headless?: boolean = null;
+    /** Parallel instances to run. Some plug-ins may not support it. */
+    public instances?: number;
 
     // PROCESSING
 
@@ -240,8 +268,8 @@ export class Options {
 
         // Use-defined directories
         this.directory = resolve( processPath, this.defaults.DIRECTORY );
-        this.dirScripts = resolve( processPath, this.defaults.DIR_SCRIPTS );
-        this.dirResults = resolve( processPath, this.defaults.DIR_RESULTS );
+        this.dirScript = resolve( processPath, this.defaults.DIR_SCRIPT );
+        this.dirResult = resolve( processPath, this.defaults.DIR_RESULT );
 
         // Use-defined files
         this.config = resolve( processPath, this.defaults.CONFIG );
@@ -299,6 +327,7 @@ export class Options {
     }
 
     public somePluginOption(): boolean {
+        // `pluginOptions` is ignored
         return this.pluginList
             || this.pluginAbout
             || this.pluginInstall
@@ -374,17 +403,17 @@ export class Options {
         }
 
         if ( isStringNotEmpty( obj.dirScript ) ) { // singular
-            this.dirScripts = resolvePath( obj.dirScript );
+            this.dirScript = resolvePath( obj.dirScript );
         } else if ( isStringNotEmpty( obj.dirScripts ) ) { // plural
-            this.dirScripts = resolvePath( obj.dirScripts );
+            this.dirScript = resolvePath( obj.dirScripts );
         }
 
         if ( isStringNotEmpty( obj.dirResult ) ) { // singular
-            this.dirResults = resolvePath( obj.dirResult );
+            this.dirResult = resolvePath( obj.dirResult );
         } else if ( isStringNotEmpty( obj.dirResults ) ) { // plural
-            this.dirResults = resolvePath( obj.dirResults );
+            this.dirResult = resolvePath( obj.dirResults );
         } else if ( isStringNotEmpty( obj.dirOutput ) ) { // alternative
-            this.dirResults = resolvePath( obj.dirOutput );
+            this.dirResult = resolvePath( obj.dirOutput );
         }
 
         // FILES
@@ -393,21 +422,32 @@ export class Options {
             this.config = resolvePath( obj.config );
         }
 
-        if ( isStringNotEmpty( obj.files ) ) {
-            this.files = obj.files.trim().split( PARAM_SEPARATOR );
-        } else if ( isStringNotEmpty( obj.file ) ) { // alternative
-            this.files = obj.file.trim().split( PARAM_SEPARATOR );
+        if ( isStringNotEmpty( obj.file ) ) {
+            this.file = obj.file.trim().split( PARAM_SEPARATOR );
+        } else if ( isStringNotEmpty( obj.files ) ) { // alternative
+            this.file = obj.files.trim().split( PARAM_SEPARATOR );
         }
 
         if ( isStringNotEmpty( obj.ignore ) ) {
             this.ignore = obj.ignore.trim().split( PARAM_SEPARATOR );
         }
 
-        if ( isStringNotEmpty( obj.scriptFiles ) ) {
-            this.scriptFiles = obj.scriptFiles.trim().split( PARAM_SEPARATOR );
-        } else if ( isStringNotEmpty( obj.scriptFile ) ) { // alternative
-            this.scriptFiles = obj.scriptFile.trim().split( PARAM_SEPARATOR );
+        if ( isStringNotEmpty( obj.scriptFile ) ) {
+            this.scriptFile = obj.scriptFile.trim().split( PARAM_SEPARATOR );
+        } else if ( isStringNotEmpty( obj.scriptFiles ) ) { // alternative
+            this.scriptFile = obj.scriptFiles.trim().split( PARAM_SEPARATOR );
         }
+
+        if ( isStringNotEmpty( obj.scriptGrep ) ) {
+            this.scriptGrep = obj.scriptGrep.trim();
+        }
+
+        if ( true === obj.headless ) {
+            this.headless = true;
+        }
+
+        this.instances = ! isNaN( obj.instances ) && obj.instances > 1
+            ? obj.instances : undefined;
 
         // EXTENSIONS, ENCODING, SEPARATORS, ETC.
 
@@ -467,6 +507,18 @@ export class Options {
             this.plugin = obj.pluginUninstall.trim().toLowerCase();
         } else if ( isStringNotEmpty( obj.pluginServe ) ) {
             this.plugin = obj.pluginServe.trim().toLowerCase();
+        }
+
+        // if ( isStringNotEmpty( obj.pluginOption ) ) {
+        //     this.pluginOption = obj.pluginOption;
+        // } else if ( isStringNotEmpty( obj.pluginOptions ) ) { // alternative
+        //     this.pluginOption = obj.pluginOptions;
+        // }
+
+        if ( isStringNotEmpty( obj.target ) ) {
+            this.target = obj.target;
+        } else if ( isStringNotEmpty( obj.targets ) ) { // alternative
+            this.target = obj.targets;
         }
 
         // PROCESSING

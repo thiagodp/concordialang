@@ -9,9 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const core_1 = require("@js-joda/core");
 const concordialang_plugin_1 = require("concordialang-plugin");
-const crypto_1 = require("crypto");
 const CompilerFacade_1 = require("../compiler/CompilerFacade");
 const LanguageManager_1 = require("../language/LanguageManager");
 const PackageBasedPluginFinder_1 = require("../plugin/PackageBasedPluginFinder");
@@ -35,7 +33,6 @@ class App {
         return __awaiter(this, void 0, void 0, function* () {
             const fs = this._fs;
             const path = this._path;
-            this.updateSeed(options, ui);
             let pluginData = null;
             const dirSearcher = new file_1.FSDirSearcher(fs);
             const fileSearcher = new file_1.FSFileSearcher(fs);
@@ -150,7 +147,7 @@ class App {
                     // cli.newLine( cli.symbolInfo, 'Generated', abstractTestScripts.length, 'abstract test scripts' );
                     let errors = [];
                     try {
-                        const r = yield plugin.generateCode(abstractTestScripts, new concordialang_plugin_1.TestScriptGenerationOptions(options.plugin, options.dirScripts, options.directory));
+                        const r = yield plugin.generateCode(abstractTestScripts, new concordialang_plugin_1.TestScriptGenerationOptions(options.plugin, options.dirScript, options.directory));
                         generatedTestScriptFiles = r.generatedFiles || [];
                         errors = r.errors;
                     }
@@ -159,27 +156,31 @@ class App {
                         ui.showException(err);
                     }
                     const durationMS = Date.now() - startTime;
-                    ui.showGeneratedTestScriptFiles(options.dirScripts, generatedTestScriptFiles, durationMS);
+                    ui.showGeneratedTestScriptFiles(options.dirScript, generatedTestScriptFiles, durationMS);
                     ui.showTestScriptGenerationErrors(errors);
                 }
             }
             let executionResult = null;
-            const shoudExecuteScripts = !!plugin &&
+            const shouldExecuteScripts = !!plugin &&
                 (options.executeScript &&
-                    (((_a = options.scriptFiles) === null || _a === void 0 ? void 0 : _a.length) > 0 ||
+                    (((_a = options.scriptFile) === null || _a === void 0 ? void 0 : _a.length) > 0 ||
                         generatedTestScriptFiles.length > 0 ||
-                        ('string' === typeof options.dirResults && options.dirResults != '')));
-            if (shoudExecuteScripts) { // Execution requires a plugin, but NOT a spec
+                        ('string' === typeof options.dirResult && options.dirResult != '')));
+            if (shouldExecuteScripts) { // Execution requires a plugin, but NOT a spec
                 // console.log( '>>>', 'generatedTestScriptFiles', generatedTestScriptFiles );
-                const scriptFiles = ((_b = options.scriptFiles) === null || _b === void 0 ? void 0 : _b.length) > 0
-                    ? options.scriptFiles.join(',')
+                const scriptFiles = ((_b = options.scriptFile) === null || _b === void 0 ? void 0 : _b.length) > 0
+                    ? options.scriptFile.join(',')
                     : generatedTestScriptFiles.length > 0
                         ? generatedTestScriptFiles.join(',')
                         : undefined;
                 const tseo = {
-                    dirScripts: options.dirScripts,
-                    dirResults: options.dirResults,
-                    files: scriptFiles
+                    dirScript: options.dirScript,
+                    dirResult: options.dirResult,
+                    file: scriptFiles,
+                    grep: options.scriptGrep || undefined,
+                    target: options.target || undefined,
+                    headless: options.headless || undefined,
+                    instances: options.instances || undefined,
                 };
                 ui.announceTestScriptExecutionStarted();
                 try {
@@ -197,7 +198,7 @@ class App {
             if (options.analyzeResult) { // Requires a plugin
                 let reportFile;
                 if (!executionResult) {
-                    const defaultReportFile = path.join(options.dirResults, yield plugin.defaultReportFile());
+                    const defaultReportFile = path.join(options.dirResult, yield plugin.defaultReportFile());
                     if (!fs.existsSync(defaultReportFile)) {
                         ui.announceReportFileNotFound(defaultReportFile);
                         return false;
@@ -222,35 +223,6 @@ class App {
             }
             return !hasErrors;
         });
-    }
-    updateSeed(options, ui) {
-        if (!options.seed) {
-            options.isGeneratedSeed = true;
-            options.seed = core_1.LocalDateTime.now().format(core_1.DateTimeFormatter.ofPattern('yyyy-MM-dd HH:mm:ss')).toString();
-        }
-        const isOptionThatIgnoresSeed = options.help
-            || options.about
-            || options.version
-            || options.newer
-            || options.languageList
-            || options.pluginList
-            || options.init
-            || options.ast
-            || options.somePluginOption();
-        if (!isOptionThatIgnoresSeed) {
-            ui.announceSeed(options.seed, options.isGeneratedSeed);
-        }
-        // Real seed
-        const BYTES_OF_SHA_512 = 64; // 512 divided by 8
-        if (options.seed.length < BYTES_OF_SHA_512) {
-            options.realSeed = crypto_1.createHash('sha512')
-                .update(options.seed)
-                .digest('hex');
-        }
-        else {
-            options.realSeed = options.seed;
-        }
-        ui.announceRealSeed(options.realSeed);
     }
 }
 exports.App = App;

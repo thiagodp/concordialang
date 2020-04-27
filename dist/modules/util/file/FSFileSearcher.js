@@ -28,7 +28,7 @@ class FSFileSearcher {
             const makeFilePath = file => {
                 return path_1.normalize(path_1.join(options.directory, file));
             };
-            const hasFilesToSearch = options.files.length > 0;
+            const hasFilesToSearch = options.file.length > 0;
             const hasFilesToIgnore = options.ignore.length > 0;
             const ignoredFullPath = hasFilesToIgnore
                 ? options.ignore.map(f => makeFilePath(f))
@@ -42,7 +42,7 @@ class FSFileSearcher {
                 //     throwErrorOnBrokenSymbolicLink: false
                 // };
                 const pAccess = util_1.promisify(this._fs.access);
-                for (const file of options.files) {
+                for (const file of options.file) {
                     const f = makeFilePath(file);
                     if (hasFilesToIgnore
                         && (options.ignore.includes(file)

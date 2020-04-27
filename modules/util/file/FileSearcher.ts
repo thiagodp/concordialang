@@ -1,9 +1,10 @@
 
+/** @see Options */
 export type FileSearchOptions = {
     directory: string,
     recursive: boolean,
     extensions: string[],
-    files: string[],
+    file: string[],
     ignore: string[],
 };
 

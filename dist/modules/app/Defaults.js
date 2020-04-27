@@ -12,8 +12,8 @@ class Defaults {
         this.DIR_LANGUAGE = 'data/';
         // DIRECTORIES
         this.DIRECTORY = '.';
-        this.DIR_SCRIPTS = '.'; // 'test/';
-        this.DIR_RESULTS = '.'; // 'output/'; // script results
+        this.DIR_SCRIPT = '.'; // 'test/';
+        this.DIR_RESULT = '.'; // 'output/'; // script results
         // FILES
         this.CONFIG = '.concordiarc'; // path
         this.AST_FILE = 'ast.json'; // path

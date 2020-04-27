@@ -1,5 +1,7 @@
 import Graph = require( 'graph.js/dist/graph.full.js' );
 
+import { DateTimeFormatter, LocalDateTime } from '@js-joda/core';
+import { createHash } from 'crypto';
 import { Options } from "../app/Options";
 import { RuntimeException } from '../error';
 import { JsonLanguageContentLoader, LanguageContentLoader } from "../language";
@@ -137,14 +139,58 @@ export class CompilerFacade {
             return [ output.spec, output.graph ];
         }
 
-        const tcGenCtrl = new TestCaseGeneratorFacade(
+        this.updateSeed( options, this._compilerListener );
+
+        const tcGen = new TestCaseGeneratorFacade(
             nlpBasedSentenceRecognizer.variantSentenceRec,
             langLoader,
             this._tcGenListener,
             fileHandler
             );
 
-        return await tcGenCtrl.execute( options, output.spec, output.graph );
+        return await tcGen.execute( options, output.spec, output.graph );
+    }
+
+
+    private updateSeed( options: Options, ui: CompilerListener ): void {
+
+        if ( ! options.seed ) {
+            options.isGeneratedSeed = true;
+            options.seed = LocalDateTime.now().format(
+                DateTimeFormatter.ofPattern( 'yyyy-MM-dd HH:mm:ss' )
+                ).toString();
+        }
+
+        // const isOptionThatIgnoresSeed =
+        //     options.help
+        //     || options.about
+        //     || options.version
+        //     || options.newer
+        //     || options.languageList
+        //     || options.pluginList
+        //     || options.init
+        //     || options.ast
+        //     || options.somePluginOption();
+
+        // if ( ! isOptionThatIgnoresSeed ) {
+        //     ui.announceSeed( options.seed, options.isGeneratedSeed );
+        // }
+
+        ui.announceSeed( options.seed, options.isGeneratedSeed );
+
+        // Real seed
+        const BYTES_OF_SHA_512 = 64; // 512 divided by 8
+        if ( options.seed.length < BYTES_OF_SHA_512 ) {
+
+            options.realSeed = createHash( 'sha512' )
+                .update( options.seed )
+                .digest( 'hex' );
+
+        } else {
+            options.realSeed = options.seed;
+        }
+
+        ui.announceRealSeed( options.realSeed );
     }
 
 }

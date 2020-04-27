@@ -59,7 +59,7 @@ export class LanguageManager {
             directory: this._languageDir,
             recursive: true,
             extensions: [ '.json' ],
-            files: [],
+            file: [],
             ignore: []
         } );
     }

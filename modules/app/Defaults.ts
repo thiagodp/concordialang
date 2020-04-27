@@ -14,8 +14,8 @@ export class Defaults {
     // DIRECTORIES
 
     readonly DIRECTORY: string = '.';
-    readonly DIR_SCRIPTS: string = '.'; // 'test/';
-    readonly DIR_RESULTS: string = '.'; // 'output/'; // script results
+    readonly DIR_SCRIPT: string = '.'; // 'test/';
+    readonly DIR_RESULT: string = '.'; // 'output/'; // script results
 
     // FILES
 

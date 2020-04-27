@@ -23,7 +23,7 @@ export class FSFileSearcher implements FileSearcher {
             return normalize( join( options.directory, file ) );
         };
 
-        const hasFilesToSearch: boolean = options.files.length > 0;
+        const hasFilesToSearch: boolean = options.file.length > 0;
         const hasFilesToIgnore: boolean = options.ignore.length > 0;
 
         const ignoredFullPath: string[] = hasFilesToIgnore
@@ -42,7 +42,7 @@ export class FSFileSearcher implements FileSearcher {
 
             const pAccess = promisify( this._fs.access );
 
-            for ( const file of options.files ) {
+            for ( const file of options.file ) {
 
                 const f: string = makeFilePath( file );
 

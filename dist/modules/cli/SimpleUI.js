@@ -33,6 +33,7 @@ class SimpleUI {
         // COLORS
         this.colorSuccess = chalk.greenBright.bind(chalk); // chalk.rgb(0, 255, 0);
         this.colorError = chalk.redBright.bind(chalk); // chalk.rgb(255, 0, 0);
+        this.colorCriticalError = chalk.rgb(139, 0, 0); // dark red
         this.colorWarning = chalk.yellow.bind(chalk);
         this.colorDiscreet = chalk.gray.bind(chalk);
         this.highlight = chalk.yellowBright.bind(chalk); // chalk.rgb(255, 242, 0);
@@ -197,7 +198,7 @@ class SimpleUI {
     }
     /** @inheritdoc */
     showTestScriptGenerationErrors(errors) {
-        for (const err of errors) {
+        for (const err of errors || []) {
             this.showException(err);
         }
     }
@@ -315,8 +316,8 @@ class SimpleUI {
     }
     /** @inheritDoc */
     testCaseProduced(dirTestCases, filePath, testCasesCount, errors, warnings) {
-        const hasErrors = errors.length > 0;
-        const hasWarnings = warnings.length > 0;
+        const hasErrors = errors && errors.length > 0;
+        const hasWarnings = warnings && warnings.length > 0;
         if (!hasErrors && !hasWarnings) {
             return;
         }
@@ -528,8 +529,8 @@ class SimpleUI {
         switch (status.toLowerCase()) {
             case 'passed': return this.colorSuccess;
             case 'adjusted': return this.colorCyanBright;
-            case 'failed': return this.colorWarning;
-            case 'error': return this.colorError;
+            case 'failed': return this.colorError;
+            case 'error': return this.colorCriticalError;
             default: return this.colorText;
         }
     }

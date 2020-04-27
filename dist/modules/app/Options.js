@@ -52,21 +52,27 @@ class Options {
             'pluginDir',
             'languageDir'
         ];
-        // Directories
+        // DIRECTORIES
         /** Recursive search flag */
         this.recursive = true;
         /** Directory with specification files */
         this.directory = this.defaults.DIRECTORY;
         /** Output directory for test script files */
-        this.dirScripts = this.defaults.DIR_SCRIPTS;
+        this.dirScript = this.defaults.DIR_SCRIPT;
         /** Output directory of test script results */
-        this.dirResults = this.defaults.DIR_RESULTS;
-        // Files
-        this.config = this.defaults.CONFIG; // configuration file path
-        this.ignore = []; // files to ignore, from the given directory
-        this.files = []; // files to consider, instead of the given directory
-        this.scriptFiles = []; // script files to execute
-        // File-related options
+        this.dirResult = this.defaults.DIR_RESULT;
+        // FILES
+        /** Configuration file path */
+        this.config = this.defaults.CONFIG;
+        /** Files to ignore, from the given directory */
+        this.ignore = [];
+        /** Files to consider, instead of the given directory */
+        this.file = [];
+        /** Script files to execute */
+        this.scriptFile = [];
+        /** Send an expression to filter the test scripts to run. Some plug-ins may not support it. */
+        this.scriptGrep = null;
+        // FILE-RELATED OPTIONS
         /** Default encoding */
         this.encoding = this.defaults.ENCODING;
         this.extensions = this.defaults.EXTENSIONS; // extensions to search // TO-DO: integrate this with extensionFeature and extensionTestCase
@@ -79,13 +85,29 @@ class Options {
         // Language
         this.language = this.defaults.LANGUAGE; // change default language
         this.languageList = false; // show available languages
-        // Plugin
-        this.plugin = null; // plug-in name
-        this.pluginList = false; // show available plug-ins
-        this.pluginAbout = false; // show information about a plug-in
-        this.pluginInstall = false; // install an available plug-in
-        this.pluginUninstall = false; // uninstall an available plug-in
-        this.pluginServe = false; // start the test server of a plug-in
+        // PLUGIN
+        /** Plug-in (name) to use */
+        this.plugin = null;
+        /** Show available plug-ins */
+        this.pluginList = false;
+        /** Show information about a plug-in */
+        this.pluginAbout = false;
+        /** Install an available plug-in */
+        this.pluginInstall = false;
+        /** Uninstall an available plug-in */
+        this.pluginUninstall = false;
+        /** Start the test server of a plug-in */
+        this.pluginServe = false;
+        /**
+         * CLI options to be repassed to the plug-in.
+         * This could be removed in a near future since plug-ins can be executed
+         * via code by the plug-ins.
+         */
+        // public pluginOption: string = null;
+        /** Target browsers or platforms */
+        this.target = null;
+        /** Headless test script execution. Browsers only. Some plug-ins may not support it. */
+        this.headless = null;
         // PROCESSING
         /** Whether it is wanted to execute a guided configuration */
         this.init = false;
@@ -194,8 +216,8 @@ class Options {
         this.languageDir = path_1.resolve(appPath, this.defaults.DIR_LANGUAGE);
         // Use-defined directories
         this.directory = path_1.resolve(processPath, this.defaults.DIRECTORY);
-        this.dirScripts = path_1.resolve(processPath, this.defaults.DIR_SCRIPTS);
-        this.dirResults = path_1.resolve(processPath, this.defaults.DIR_RESULTS);
+        this.dirScript = path_1.resolve(processPath, this.defaults.DIR_SCRIPT);
+        this.dirResult = path_1.resolve(processPath, this.defaults.DIR_RESULT);
         // Use-defined files
         this.config = path_1.resolve(processPath, this.defaults.CONFIG);
     }
@@ -243,6 +265,7 @@ class Options {
         return this.help || this.about || this.version;
     }
     somePluginOption() {
+        // `pluginOptions` is ignored
         return this.pluginList
             || this.pluginAbout
             || this.pluginInstall
@@ -303,39 +326,47 @@ class Options {
             this.directory = resolvePath(obj.directory);
         }
         if (isStringNotEmpty(obj.dirScript)) { // singular
-            this.dirScripts = resolvePath(obj.dirScript);
+            this.dirScript = resolvePath(obj.dirScript);
         }
         else if (isStringNotEmpty(obj.dirScripts)) { // plural
-            this.dirScripts = resolvePath(obj.dirScripts);
+            this.dirScript = resolvePath(obj.dirScripts);
         }
         if (isStringNotEmpty(obj.dirResult)) { // singular
-            this.dirResults = resolvePath(obj.dirResult);
+            this.dirResult = resolvePath(obj.dirResult);
         }
         else if (isStringNotEmpty(obj.dirResults)) { // plural
-            this.dirResults = resolvePath(obj.dirResults);
+            this.dirResult = resolvePath(obj.dirResults);
         }
         else if (isStringNotEmpty(obj.dirOutput)) { // alternative
-            this.dirResults = resolvePath(obj.dirOutput);
+            this.dirResult = resolvePath(obj.dirOutput);
         }
         // FILES
         if (isStringNotEmpty(obj.config)) {
             this.config = resolvePath(obj.config);
         }
-        if (isStringNotEmpty(obj.files)) {
-            this.files = obj.files.trim().split(PARAM_SEPARATOR);
+        if (isStringNotEmpty(obj.file)) {
+            this.file = obj.file.trim().split(PARAM_SEPARATOR);
         }
-        else if (isStringNotEmpty(obj.file)) { // alternative
-            this.files = obj.file.trim().split(PARAM_SEPARATOR);
+        else if (isStringNotEmpty(obj.files)) { // alternative
+            this.file = obj.files.trim().split(PARAM_SEPARATOR);
         }
         if (isStringNotEmpty(obj.ignore)) {
             this.ignore = obj.ignore.trim().split(PARAM_SEPARATOR);
         }
-        if (isStringNotEmpty(obj.scriptFiles)) {
-            this.scriptFiles = obj.scriptFiles.trim().split(PARAM_SEPARATOR);
+        if (isStringNotEmpty(obj.scriptFile)) {
+            this.scriptFile = obj.scriptFile.trim().split(PARAM_SEPARATOR);
         }
-        else if (isStringNotEmpty(obj.scriptFile)) { // alternative
-            this.scriptFiles = obj.scriptFile.trim().split(PARAM_SEPARATOR);
+        else if (isStringNotEmpty(obj.scriptFiles)) { // alternative
+            this.scriptFile = obj.scriptFiles.trim().split(PARAM_SEPARATOR);
         }
+        if (isStringNotEmpty(obj.scriptGrep)) {
+            this.scriptGrep = obj.scriptGrep.trim();
+        }
+        if (true === obj.headless) {
+            this.headless = true;
+        }
+        this.instances = !isNaN(obj.instances) && obj.instances > 1
+            ? obj.instances : undefined;
         // EXTENSIONS, ENCODING, SEPARATORS, ETC.
         if (isStringNotEmpty(obj.extensionFeature)) {
             this.extensionFeature = obj.extensionFeature;
@@ -388,6 +419,17 @@ class Options {
         }
         else if (isStringNotEmpty(obj.pluginServe)) {
             this.plugin = obj.pluginServe.trim().toLowerCase();
+        }
+        // if ( isStringNotEmpty( obj.pluginOption ) ) {
+        //     this.pluginOption = obj.pluginOption;
+        // } else if ( isStringNotEmpty( obj.pluginOptions ) ) { // alternative
+        //     this.pluginOption = obj.pluginOptions;
+        // }
+        if (isStringNotEmpty(obj.target)) {
+            this.target = obj.target;
+        }
+        else if (isStringNotEmpty(obj.targets)) { // alternative
+            this.target = obj.targets;
         }
         // PROCESSING
         const ast = isStringNotEmpty(obj.ast)

@@ -118,27 +118,27 @@ describe( 'FileSearcher', () => {
 
         it( 'single file, current directory', async () => {
             o.recursive = false;
-            o.files = [ 'one.feature' ];
+            o.file = [ 'one.feature' ];
             const result: string[] = await s.searchFrom( o );
             expect( result ).toHaveLength( 1 );
         } );
 
         it( 'single file, with dot notation, current directory', async () => {
-            o.files = [ './one.testcase' ];
+            o.file = [ './one.testcase' ];
             const result: string[] = await s.searchFrom( o );
             expect( result ).toHaveLength( 1 );
             expect( result[ 0 ] ).toContain( 'one.testcase' );
         } );
 
         it( 'single file, subdirectory', async () => {
-            o.files = [ 'sub/three.feature' ];
+            o.file = [ 'sub/three.feature' ];
             const result: string[] = await s.searchFrom( o );
             expect( result ).toHaveLength( 1 );
             expect( result[ 0 ] ).toContain( 'three.feature' );
         } );
 
         it( 'single file, dot notation, subdirectory', async () => {
-            o.files = [ './sub/three.feature' ];
+            o.file = [ './sub/three.feature' ];
             const result: string[] = await s.searchFrom( o );
             expect( result ).toHaveLength( 1 );
             expect( result[ 0 ] ).toContain( 'three.feature' );
@@ -146,7 +146,7 @@ describe( 'FileSearcher', () => {
 
         it( 'does not find a file from a subdirectory in the current directory', async () => {
             o.recursive = false;
-            o.files = [ 'three.feature' ];
+            o.file = [ 'three.feature' ];
             const result: string[] = await s.searchFrom( o );
             expect( result ).toHaveLength( 0 );
         } );
@@ -188,7 +188,7 @@ describe( 'FileSearcher', () => {
         } );
 
         it( 'does not appear in the returned list', async () => {
-            o.files = [ './one.testcase', 'two.testcase' ];
+            o.file = [ './one.testcase', 'two.testcase' ];
             o.ignore = [ 'two.testcase' ];
             const result: string[] = await s.searchFrom( o );
             expect( result ).toHaveLength( 1 );

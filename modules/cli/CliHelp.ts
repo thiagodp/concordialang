@@ -39,7 +39,7 @@ ${chalk.gray('Input directories and files')}
 -d,  --directory <value>                Directory to search. Same as <dir>.
 -nr, --no-recursive                     Disable recursive search.
 
--f,  --files <"file1,file2,...">        Files to consider. Whether <dir> is
+-f,  --file <"file1,file2,...">         Files to consider. Whether <dir> is
                                         informed, files are searched in it.
 
 -i,  --ignore <"file1,file2,...">       Files to ignore, when <dir> is informed.
@@ -64,11 +64,19 @@ ${chalk.gray('Plug-in')}
 -pu, --plugin-uninstall <name>          Uninstall a plug-in.
 -ps, --plugin-serve [<name>]            Start a test server for a given plugin.
 
+-sf, --script-file <"file1,file2,...">  Test script files to execute.
+-sg, --script-grep <"expression">       Expression to filter the test scripts to
+                                        run. Some plug-ins may not support it.
+
+-t,  --target <"target1,target2,...">   Target browsers or platforms.
+-hl, --headless                         Enable headless execution (browsers).
+                                        Some plug-ins may not support it.
+
 ${chalk.gray('Configuration')}
 
 --init                                  Init a guided, basic configuration.
 
--c, --config                            Configuration file to load.
+-c,  --config                           Configuration file to load.
                                         Default is ".concordiarc".
 
 --save-config                           Save/overwrite a configuration file
@@ -165,7 +173,7 @@ ${chalk.gray('Information')}
 ${chalk.yellowBright('Examples')}
 
  $ ${exeName} features --language pt --plugin some-plugin --dir-script test --dir-result output
- $ ${exeName} --files "file1.feature,path/to/file2.feature" -l pt -p some-plugin -ds test -du output
+ $ ${exeName} --file "file1.feature,path/to/file2.feature" -l pt -p some-plugin -ds test -du output
  $ ${exeName} --no-run --no-result
 `;
 
@@ -189,6 +197,9 @@ ${chalk.yellowBright('Examples')}
 
                 files: { type: 'string', alias: 'f' },
                 ignore: { type: 'string', alias: 'i' },
+
+                scriptFile: { type: 'string', alias: 'sf' },
+                scriptGrep: { type: 'string', alias: 'sg' },
 
                 // CONFIG
 
@@ -217,6 +228,9 @@ ${chalk.yellowBright('Examples')}
                 pluginUninstall: { type: 'string', alias: 'pu' },
                 pluginServe: { type: 'string', alias: 'ps' },
                 pluginList: { type: 'boolean', alias: 'pl' },
+
+                target: { type: 'string', alias: 't' },
+                headless: { type: 'boolean', alias: 'hl' },
 
                 // PROCESSING AND OUTPUT
 

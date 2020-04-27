@@ -1,6 +1,4 @@
-import { DateTimeFormatter, LocalDateTime } from '@js-joda/core';
 import { AbstractTestScript, Plugin, TestScriptExecutionOptions, TestScriptExecutionResult, TestScriptGenerationOptions, TestScriptGenerationResult } from 'concordialang-plugin';
-import { createHash } from 'crypto';
 import { Document } from '../ast';
 import { CompilerFacade } from '../compiler/CompilerFacade';
 import { LanguageManager } from '../language/LanguageManager';
@@ -32,8 +30,6 @@ export class App {
 
         const fs = this._fs;
         const path = this._path;
-
-        this.updateSeed( options, ui );
 
         let pluginData: PluginData = null;
 
@@ -182,7 +178,7 @@ export class App {
                         abstractTestScripts,
                         new TestScriptGenerationOptions(
                             options.plugin,
-                            options.dirScripts,
+                            options.dirScript,
                             options.directory
                         )
                     );
@@ -196,7 +192,7 @@ export class App {
                 const durationMS = Date.now() - startTime;
 
                 ui.showGeneratedTestScriptFiles(
-                    options.dirScripts,
+                    options.dirScript,
                     generatedTestScriptFiles,
                     durationMS
                 );
@@ -207,26 +203,31 @@ export class App {
 
         let executionResult: TestScriptExecutionResult = null;
 
-        const shoudExecuteScripts: boolean =  !! plugin &&
+        const shouldExecuteScripts: boolean =  !! plugin &&
             ( options.executeScript &&
-                ( options.scriptFiles?.length > 0 ||
+                ( options.scriptFile?.length > 0 ||
                     generatedTestScriptFiles.length > 0 ||
-                    ( 'string' === typeof options.dirResults && options.dirResults != '' ) ) );
+                    ( 'string' === typeof options.dirResult && options.dirResult != '' ) ) );
 
-        if ( shoudExecuteScripts ) { // Execution requires a plugin, but NOT a spec
+        if ( shouldExecuteScripts ) { // Execution requires a plugin, but NOT a spec
 
             // console.log( '>>>', 'generatedTestScriptFiles', generatedTestScriptFiles );
 
-            const scriptFiles = options.scriptFiles?.length > 0
-                ? options.scriptFiles.join( ',' )
+            const scriptFiles = options.scriptFile?.length > 0
+                ? options.scriptFile.join( ',' )
                 : generatedTestScriptFiles.length > 0
                     ? generatedTestScriptFiles.join( ',' )
                     : undefined;
 
             const tseo: TestScriptExecutionOptions = {
-                dirScripts: options.dirScripts,
-                dirResults: options.dirResults,
-                files: scriptFiles
+                dirScript: options.dirScript,
+                dirResult: options.dirResult,
+                file: scriptFiles,
+                grep: options.scriptGrep || undefined,
+                target: options.target || undefined,
+                headless: options.headless || undefined,
+                instances: options.instances || undefined,
+                // parameters: options.pluginOption || undefined,
             } as TestScriptExecutionOptions;
 
             ui.announceTestScriptExecutionStarted();
@@ -251,7 +252,7 @@ export class App {
             if ( ! executionResult  ) {
 
                 const defaultReportFile: string = path.join(
-                    options.dirResults, await plugin.defaultReportFile() );
+                    options.dirResult, await plugin.defaultReportFile() );
 
                 if ( ! fs.existsSync( defaultReportFile ) ) {
                     ui.announceReportFileNotFound( defaultReportFile );
@@ -280,46 +281,6 @@ export class App {
         }
 
         return ! hasErrors;
-    }
-
-
-    private updateSeed( options: Options, ui: UI ): void {
-
-        if ( ! options.seed ) {
-            options.isGeneratedSeed = true;
-            options.seed = LocalDateTime.now().format(
-                DateTimeFormatter.ofPattern( 'yyyy-MM-dd HH:mm:ss' )
-                ).toString();
-        }
-
-        const isOptionThatIgnoresSeed =
-            options.help
-            || options.about
-            || options.version
-            || options.newer
-            || options.languageList
-            || options.pluginList
-            || options.init
-            || options.ast
-            || options.somePluginOption();
-
-        if ( ! isOptionThatIgnoresSeed ) {
-            ui.announceSeed( options.seed, options.isGeneratedSeed );
-        }
-
-        // Real seed
-        const BYTES_OF_SHA_512 = 64; // 512 divided by 8
-        if ( options.seed.length < BYTES_OF_SHA_512 ) {
-
-            options.realSeed = createHash( 'sha512' )
-                .update( options.seed )
-                .digest( 'hex' );
-
-        } else {
-            options.realSeed = options.seed;
-        }
-
-        ui.announceRealSeed( options.realSeed );
     }
 
 }

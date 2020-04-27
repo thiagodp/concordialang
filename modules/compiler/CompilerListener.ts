@@ -3,8 +3,17 @@ import { Options } from "../app/Options";
 
 export interface CompilerListener {
 
+    // Seed
+
+    announceSeed( seed: string, generatedSeed: boolean ): void;
+    announceRealSeed( realSeed: string ): void;
+
+    // File searcher
+
     announceFileSearchStarted(): void;
     announceFileSearchFinished( durationMS: number, filesFoundCount: number, filesIgnoredCount: number ): void;
+
+    // Compiler
 
     announceCompilerStarted( options: Options ): void;
 
