@@ -1,3 +1,4 @@
+import { DateTimeFormatter, LocalDateTime } from '@js-joda/core';
 import * as fs from 'fs';
 import { resolve } from 'path';
 import { Options } from '../../modules/app/Options';
@@ -28,6 +29,9 @@ describe( 'NLPInPortuguese', () => {
     const QUERY: string = Entities.QUERY;
     const STATE: string = Entities.STATE;
     const COMMAND: string = Entities.COMMAND;
+    const TIME: string = Entities.TIME;
+    const DATE: string = Entities.DATE;
+    const TIME_PERIOD: string = Entities.TIME_PERIOD;
     const UI_ACTION: string = Entities.UI_ACTION;
     const UI_ACTION_MODIFIER = Entities.UI_ACTION_MODIFIER;
     const UI_ACTION_OPTION = Entities.UI_ACTION_OPTION;
@@ -48,7 +52,6 @@ describe( 'NLPInPortuguese', () => {
     } );
 
     function recognize( sentence: string ) {
-
         return nlp.recognize( LANGUAGE, sentence );
     }
 
@@ -58,10 +61,6 @@ describe( 'NLPInPortuguese', () => {
 
     function recognizeInUI( sentence: string ) {
         return nlp.recognize( LANGUAGE, sentence, Intents.UI );
-    }
-
-    function recognizeInUIItemQuery( sentence: string ) {
-        return nlp.recognize( LANGUAGE, sentence, Intents.UI_ITEM_QUERY );
     }
 
     function shouldHaveEntities(
@@ -77,7 +76,7 @@ describe( 'NLPInPortuguese', () => {
             expect( r.entities ).not.toBeNull();
             expect( r.entities.length ).toBeGreaterThanOrEqual( expectedEntitiesNames.length );
             let entities = r.entities.map( e => e.entity );
-            expect( entities ).toEqual( expect.arrayContaining( expectedEntitiesNames ) ); // doesn't matter the array order
+            expect( entities ).toEqual( expect.arrayContaining( expectedEntitiesNames ) ); // it doesn't matter the array order
         }
     }
 
@@ -739,6 +738,264 @@ describe( 'NLPInPortuguese', () => {
         it( 'recognizes script definitions', () => {
             shouldHaveUIEntities( [ recognize( 'valor vem de "SELECT * FROM someTable"' ) ],
                 [ UI_PROPERTY, UI_CONNECTOR, QUERY  ] );
+        } );
+
+        describe( 'recognizes a date period', () => {
+
+            function checkDate( text: string, expected: LocalDateTime ): void {
+                let r: NLPResult = recognize( text );
+                shouldHaveUIEntities( [ r ], [ UI_PROPERTY, UI_CONNECTOR, DATE  ] );
+
+                const expectedStr = expected.format(
+                    DateTimeFormatter.ofPattern( 'yyyy-MM-dd' ) ).toString();
+
+                const date = r.entities.filter( e => e.entity === DATE );
+                expect( date[ 0 ].value ).toEqual( expectedStr );
+            }
+
+            it( 'last year', () => {
+                checkDate(
+                    'valor é ano passado',
+                    LocalDateTime.now().minusYears( 1 )
+                    );
+            } );
+
+            it( 'last semester', () => {
+                checkDate(
+                    'valor é semestre passado',
+                    LocalDateTime.now().minusMonths( 6 )
+                    );
+            } );
+
+            it( 'last month', () => {
+                checkDate(
+                    'valor é mês passado',
+                    LocalDateTime.now().minusMonths( 1 )
+                    );
+            } );
+
+            it( 'last week', () => {
+                checkDate(
+                    'valor é semana passada',
+                    LocalDateTime.now().minusDays( 7 )
+                    );
+            } );
+
+            it( 'the day before yesterday', () => {
+                checkDate(
+                    'valor é anteontem',
+                    LocalDateTime.now().minusDays( 2 )
+                    );
+                checkDate(
+                    'valor é antes de ontem',
+                    LocalDateTime.now().minusDays( 2 )
+                    );
+            } );
+
+            it( 'yesterday', () => {
+                checkDate(
+                    'valor é ontem',
+                    LocalDateTime.now().minusDays( 1 )
+                    );
+            } );
+
+            it( 'today', () => {
+                checkDate(
+                    'valor é hoje',
+                    LocalDateTime.now()
+                    );
+            } );
+
+            it( 'tomorrow', () => {
+                checkDate(
+                    'valor é amanhã',
+                    LocalDateTime.now().plusDays( 1 )
+                    );
+            } );
+
+            it( 'the day after tomorrow', () => {
+                checkDate(
+                    'valor é depois de amanhã',
+                    LocalDateTime.now().plusDays( 2 )
+                    );
+            } );
+
+            it( 'next week', () => {
+                checkDate(
+                    'valor é semana que vem',
+                    LocalDateTime.now().plusDays( 7 )
+                    );
+            } );
+
+            it( 'next month', () => {
+                checkDate(
+                    'valor é mês que vem',
+                    LocalDateTime.now().plusMonths( 1 )
+                    );
+            } );
+
+            it( 'next semester', () => {
+                checkDate(
+                    'valor é semestre que vem',
+                    LocalDateTime.now().plusMonths( 6 )
+                    );
+            } );
+
+            it( 'next year', () => {
+                checkDate(
+                    'valor é ano que vem',
+                    LocalDateTime.now().plusYears( 1 )
+                    );
+            } );
+
+            //
+            // dynamic - past
+            //
+
+            it( 'dynamic - past 1 year', () => {
+                checkDate(
+                    'valor é 1 ano atrás',
+                    LocalDateTime.now().minusYears( 1 )
+                    );
+            } );
+
+            it( 'dynamic - past 2 years', () => {
+                checkDate(
+                    'valor é 2 anos atrás',
+                    LocalDateTime.now().minusYears( 2 )
+                    );
+            } );
+
+            it( 'dynamic - past 1 month', () => {
+                checkDate(
+                    'valor é 1 mês atrás',
+                    LocalDateTime.now().minusMonths( 1 )
+                    );
+                checkDate(
+                    'valor é 1 mes atras',
+                    LocalDateTime.now().minusMonths( 1 )
+                    );
+            } );
+
+            it( 'dynamic - past 2 months', () => {
+                checkDate(
+                    'valor é 2 meses atrás',
+                    LocalDateTime.now().minusMonths( 2 )
+                    );
+                checkDate(
+                    'valor é 2 meses atras',
+                    LocalDateTime.now().minusMonths( 2 )
+                    );
+            } );
+
+            it( 'dynamic - past 1 week', () => {
+                checkDate(
+                    'valor é 1 semana atrás',
+                    LocalDateTime.now().minusDays( 7 )
+                    );
+                checkDate(
+                    'valor é 1 semana atras',
+                    LocalDateTime.now().minusDays( 7 )
+                    );
+            } );
+
+            it( 'dynamic - past 2 weeks', () => {
+                checkDate(
+                    'valor é 2 semanas atrás',
+                    LocalDateTime.now().minusDays( 14 )
+                    );
+                checkDate(
+                    'valor é 2 semanas atras',
+                    LocalDateTime.now().minusDays( 14 )
+                    );
+            } );
+
+            it( 'dynamic - past 1 day', () => {
+                checkDate(
+                    'valor é 1 dia atrás',
+                    LocalDateTime.now().minusDays( 1 )
+                    );
+                checkDate(
+                    'valor é 1 dia atras',
+                    LocalDateTime.now().minusDays( 1 )
+                    );
+            } );
+
+            it( 'dynamic - past 2 days', () => {
+                checkDate(
+                    'valor é 2 dia atrás',
+                    LocalDateTime.now().minusDays( 2 )
+                    );
+                checkDate(
+                    'valor é 2 dia atras',
+                    LocalDateTime.now().minusDays( 2 )
+                    );
+            } );
+
+
+            // dynamic - future
+
+
+            it( 'dynamic - next 1 year', () => {
+                checkDate(
+                    'valor é 1 ano adiante',
+                    LocalDateTime.now().plusYears( 1 )
+                    );
+            } );
+
+            it( 'dynamic - next 2 years', () => {
+                checkDate(
+                    'valor é 2 anos adiante',
+                    LocalDateTime.now().plusYears( 2 )
+                    );
+            } );
+
+            it( 'dynamic - next 1 month', () => {
+                checkDate(
+                    'valor é 1 mês adiante',
+                    LocalDateTime.now().plusMonths( 1 )
+                    );
+                checkDate(
+                    'valor é 1 mes adiante',
+                    LocalDateTime.now().plusMonths( 1 )
+                    );
+            } );
+
+            it( 'dynamic - next 2 months', () => {
+                checkDate(
+                    'valor é 2 meses adiante',
+                    LocalDateTime.now().plusMonths( 2 )
+                    );
+            } );
+
+            it( 'dynamic - next 1 week', () => {
+                checkDate(
+                    'valor é 1 semana adiante',
+                    LocalDateTime.now().plusDays( 7 )
+                    );
+            } );
+
+            it( 'dynamic - next 2 weeks', () => {
+                checkDate(
+                    'valor é 2 semanas adiante',
+                    LocalDateTime.now().plusDays( 14 )
+                    );
+            } );
+
+            it( 'dynamic - next 1 day', () => {
+                checkDate(
+                    'valor é 1 dia adiante',
+                    LocalDateTime.now().plusDays( 1 )
+                    );
+            } );
+
+            it( 'dynamic - next 2 days', () => {
+                checkDate(
+                    'valor é 2 dia adiante',
+                    LocalDateTime.now().plusDays( 2 )
+                    );
+            } );
+
         } );
 
     } );

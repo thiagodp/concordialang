@@ -12,6 +12,6 @@ var Intents;
     Intents["ALL"] = "*";
     Intents["TEST_CASE"] = "testcase";
     Intents["UI"] = "ui";
-    Intents["UI_ITEM_QUERY"] = "ui_item_query";
+    // UI_ITEM_QUERY = 'ui_item_query',
     Intents["DATABASE"] = "database";
 })(Intents = exports.Intents || (exports.Intents = {}));

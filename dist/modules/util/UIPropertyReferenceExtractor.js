@@ -4,6 +4,7 @@ const cloneRegExp = require("clone-regexp");
 const UIPropertyReference_1 = require("../ast/UIPropertyReference");
 const nlp_1 = require("../nlp");
 const Symbols_1 = require("../req/Symbols");
+const EntityRecognizerMaker_1 = require("../nlp/EntityRecognizerMaker");
 /**
  * Extracts references to UIProperties.
  */
@@ -45,7 +46,7 @@ class UIPropertyReferenceExtractor {
      * @param line Line. Optional, defaults to 1.
      */
     extractReferencesFromValue(text, line = 1) {
-        let regex = cloneRegExp(nlp_1.UI_PROPERTY_REF_REGEX);
+        let regex = cloneRegExp(EntityRecognizerMaker_1.UI_PROPERTY_REF_REGEX);
         let references = [];
         let result;
         while ((result = regex.exec(text)) !== null) {

@@ -322,20 +322,12 @@
                 "id é {value}",
                 "comprimento máximo é {number}",
                 "valor vem da consulta {query}",
+                "valor vem da query {query}",
+                "valor está em {query}",
+                "valor está contido em {query}",
+                "valor está presente em {query}",
                 "tipo é {ui_element_type}",
                 "tipo é botão"
-            ]
-        },
-
-        {
-            "intent": "ui_item_query",
-            "sentences": [
-                "{ui_property} vem de {query}",
-                "{ui_property} vem da consulta {query}",
-                "{ui_property} vem da query {query}",
-                "{ui_property} está em {query}",
-                "{ui_property} está contido em {query}",
-                "{ui_property} está presente em {query}"
             ]
         },
 

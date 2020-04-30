@@ -27,8 +27,8 @@ class UIPropertyRecognizer {
         return this._nlp.isTrained(language);
     }
     trainMe(trainer, language) {
-        return trainer.trainNLP(this._nlp, language, Intents_1.Intents.UI)
-            && trainer.trainNLP(this._nlp, language, Intents_1.Intents.UI_ITEM_QUERY);
+        return trainer.trainNLP(this._nlp, language, Intents_1.Intents.UI);
+        // && trainer.trainNLP( this._nlp, language, Intents.UI_ITEM_QUERY );
     }
     /**
      * Recognize sentences of UI Elements using NLP.
@@ -71,6 +71,15 @@ class UIPropertyRecognizer {
                         uiv = new ast_1.EntityValue(e.entity, ValueTypeDetector_1.adjustValueToTheRightType(e.value));
                         break;
                     // case Entities.VALUE_LIST     : uiv = new EntityValue( e.entity, _this.makeValueList( e.value ) ); break;
+                    case nlp_1.Entities.TIME:
+                        uiv = new ast_1.EntityValue(e.entity, e.value);
+                        break;
+                    case nlp_1.Entities.DATE:
+                        uiv = new ast_1.EntityValue(e.entity, e.value);
+                        break;
+                    case nlp_1.Entities.TIME_PERIOD:
+                        uiv = new ast_1.EntityValue(e.entity, e.value);
+                        break;
                     case nlp_1.Entities.VALUE_LIST:
                         uiv = new ast_1.EntityValue(e.entity, e.value);
                         break;
@@ -110,7 +119,8 @@ class UIPropertyRecognizer {
             }
             return item;
         };
-        recognizer.recognize(language, nodes, [Intents_1.Intents.UI, Intents_1.Intents.UI_ITEM_QUERY], 'UI Element', errors, warnings, processor);
+        recognizer.recognize(language, nodes, [Intents_1.Intents.UI], // [ Intents.UI, Intents.UI_ITEM_QUERY ],
+        'UI Element', errors, warnings, processor);
     }
     buildSyntaxRules() {
         return (new RuleBuilder_1.RuleBuilder()).build(SyntaxRules_1.UI_PROPERTY_SYNTAX_RULES, SyntaxRules_1.DEFAULT_UI_PROPERTY_SYNTAX_RULE);

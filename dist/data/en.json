@@ -287,19 +287,14 @@
                 "id is {value}",
                 "maximum length is {number}",
                 "value comes from the query {query}",
+                "value comes is in {query}",
+                "value comes is included in {query}",
+                "value comes is on {query}",
+                "value is {date}",
+                "value is next year",
+                "value is last year",
                 "type is {ui_element_type}",
                 "type is button"
-            ]
-        },
-
-        {
-            "intent": "ui_item_query",
-            "sentences": [
-                "{ui_property} comes from {query}",
-                "{ui_property} comes from the query {query}",
-                "{ui_property} is in {query}",
-                "{ui_property} is included in {query}",
-                "{ui_property} is on {query}"
             ]
         },
 

@@ -35,8 +35,8 @@ export class UIPropertyRecognizer {
     }
 
     trainMe( trainer: NLPTrainer, language: string ) {
-        return trainer.trainNLP( this._nlp, language, Intents.UI )
-            && trainer.trainNLP( this._nlp, language, Intents.UI_ITEM_QUERY );
+        return trainer.trainNLP( this._nlp, language, Intents.UI );
+            // && trainer.trainNLP( this._nlp, language, Intents.UI_ITEM_QUERY );
     }
 
     /**
@@ -94,6 +94,9 @@ export class UIPropertyRecognizer {
                     case Entities.VALUE             : // next
                     case Entities.NUMBER            : uiv = new EntityValue( e.entity, adjustValueToTheRightType( e.value ) ); break;
                     // case Entities.VALUE_LIST     : uiv = new EntityValue( e.entity, _this.makeValueList( e.value ) ); break;
+                    case Entities.TIME              : uiv = new EntityValue( e.entity, e.value ); break;
+                    case Entities.DATE              : uiv = new EntityValue( e.entity, e.value ); break;
+                    case Entities.TIME_PERIOD       : uiv = new EntityValue( e.entity, e.value ); break;
                     case Entities.VALUE_LIST        : uiv = new EntityValue( e.entity, e.value ); break;
                     case Entities.QUERY             : uiv = new EntityValue( e.entity, e.value ); break;
                     case Entities.UI_ELEMENT_REF    : uiv = new EntityValue( e.entity, e.value ); break;
@@ -123,7 +126,7 @@ export class UIPropertyRecognizer {
         recognizer.recognize(
             language,
             nodes,
-            [ Intents.UI, Intents.UI_ITEM_QUERY ],
+            [ Intents.UI ], // [ Intents.UI, Intents.UI_ITEM_QUERY ],
             'UI Element',
             errors,
             warnings,

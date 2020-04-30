@@ -23,6 +23,9 @@ var Entities;
     Entities["VALUE_LIST"] = "value_list";
     Entities["STATE"] = "state";
     Entities["COMMAND"] = "command";
+    Entities["TIME"] = "time";
+    Entities["DATE"] = "date";
+    Entities["TIME_PERIOD"] = "time_period";
     // from the intent "testcase"
     //UI_PROPERTY = 'ui_property', //                   e.g.: text, value, color, ...
     Entities["UI_ACTION"] = "ui_action";
