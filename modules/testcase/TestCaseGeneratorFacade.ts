@@ -100,12 +100,14 @@ export class TestCaseGeneratorFacade {
         // }
 
         let newTestCaseDocuments: Document[] = [];
-        let generatedTestCasesCount = 0;
+        let totalTestCasesCount = 0;
 
         for ( let [ /* key */, value ] of vertices ) {
 
             let doc: Document = value;
             if ( ! doc || ! doc.feature || ! doc.feature.scenarios ) {
+
+                totalTestCasesCount += doc.testCases?.length || 0;
                 continue;
             }
             // console.log( 'doc is', doc.fileInfo.path);
@@ -150,7 +152,7 @@ export class TestCaseGeneratorFacade {
                             continue;
                         }
 
-                        ++generatedTestCasesCount;
+                        ++totalTestCasesCount;
 
                         let tcIndex = 1;
                         for ( let tc of generatedTC ) {
@@ -247,7 +249,7 @@ export class TestCaseGeneratorFacade {
 
         // Show errors and warnings if they exist
         const durationMs = Date.now() - startTime;
-        this._listener.testCaseGenerationFinished( newTestCaseDocuments.length, generatedTestCasesCount, durationMs );
+        this._listener.testCaseGenerationFinished( newTestCaseDocuments.length, totalTestCasesCount, durationMs );
 
         return [ spec, graph ];
     }

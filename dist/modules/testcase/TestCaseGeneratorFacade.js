@@ -36,6 +36,7 @@ class TestCaseGeneratorFacade {
         this._fileHandler = _fileHandler;
     }
     execute(options, spec, graph) {
+        var _a;
         return __awaiter(this, void 0, void 0, function* () {
             const startTime = Date.now();
             //
@@ -61,10 +62,11 @@ class TestCaseGeneratorFacade {
             //     console.log( key );
             // }
             let newTestCaseDocuments = [];
-            let generatedTestCasesCount = 0;
+            let totalTestCasesCount = 0;
             for (let [/* key */ , value] of vertices) {
                 let doc = value;
                 if (!doc || !doc.feature || !doc.feature.scenarios) {
+                    totalTestCasesCount += ((_a = doc.testCases) === null || _a === void 0 ? void 0 : _a.length) || 0;
                     continue;
                 }
                 // console.log( 'doc is', doc.fileInfo.path);
@@ -99,7 +101,7 @@ class TestCaseGeneratorFacade {
                             if (generatedTC.length < 1) {
                                 continue;
                             }
-                            ++generatedTestCasesCount;
+                            ++totalTestCasesCount;
                             let tcIndex = 1;
                             for (let tc of generatedTC) {
                                 tcGen.addReferenceTagsTo(tc, scenarioIndex + 1, variantIndex + 1);
@@ -167,7 +169,7 @@ class TestCaseGeneratorFacade {
             }
             // Show errors and warnings if they exist
             const durationMs = Date.now() - startTime;
-            this._listener.testCaseGenerationFinished(newTestCaseDocuments.length, generatedTestCasesCount, durationMs);
+            this._listener.testCaseGenerationFinished(newTestCaseDocuments.length, totalTestCasesCount, durationMs);
             return [spec, graph];
         });
     }
