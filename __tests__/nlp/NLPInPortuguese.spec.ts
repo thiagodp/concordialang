@@ -1,4 +1,4 @@
-import { DateTimeFormatter, LocalDateTime } from '@js-joda/core';
+import { DateTimeFormatter, LocalDate } from '@js-joda/core';
 import * as fs from 'fs';
 import { resolve } from 'path';
 import { Options } from '../../modules/app/Options';
@@ -740,9 +740,9 @@ describe( 'NLPInPortuguese', () => {
                 [ UI_PROPERTY, UI_CONNECTOR, QUERY  ] );
         } );
 
-        describe( 'recognizes a date period', () => {
+        describe( 'recognizes a date expression', () => {
 
-            function checkDate( text: string, expected: LocalDateTime ): void {
+            function checkDate( text: string, expected: LocalDate ): void {
                 let r: NLPResult = recognize( text );
                 shouldHaveUIEntities( [ r ], [ UI_PROPERTY, UI_CONNECTOR, DATE  ] );
 
@@ -753,248 +753,275 @@ describe( 'NLPInPortuguese', () => {
                 expect( date[ 0 ].value ).toEqual( expectedStr );
             }
 
+            //
+            // static expressions
+            //
+
             it( 'last year', () => {
                 checkDate(
                     'valor é ano passado',
-                    LocalDateTime.now().minusYears( 1 )
+                    LocalDate.now().minusYears( 1 )
                     );
             } );
 
             it( 'last semester', () => {
                 checkDate(
                     'valor é semestre passado',
-                    LocalDateTime.now().minusMonths( 6 )
+                    LocalDate.now().minusMonths( 6 )
                     );
             } );
 
             it( 'last month', () => {
                 checkDate(
                     'valor é mês passado',
-                    LocalDateTime.now().minusMonths( 1 )
+                    LocalDate.now().minusMonths( 1 )
                     );
             } );
 
             it( 'last week', () => {
                 checkDate(
                     'valor é semana passada',
-                    LocalDateTime.now().minusDays( 7 )
+                    LocalDate.now().minusDays( 7 )
                     );
             } );
 
             it( 'the day before yesterday', () => {
                 checkDate(
                     'valor é anteontem',
-                    LocalDateTime.now().minusDays( 2 )
+                    LocalDate.now().minusDays( 2 )
                     );
                 checkDate(
                     'valor é antes de ontem',
-                    LocalDateTime.now().minusDays( 2 )
+                    LocalDate.now().minusDays( 2 )
                     );
             } );
 
             it( 'yesterday', () => {
                 checkDate(
                     'valor é ontem',
-                    LocalDateTime.now().minusDays( 1 )
+                    LocalDate.now().minusDays( 1 )
                     );
             } );
 
             it( 'today', () => {
                 checkDate(
                     'valor é hoje',
-                    LocalDateTime.now()
+                    LocalDate.now()
                     );
             } );
 
             it( 'tomorrow', () => {
                 checkDate(
                     'valor é amanhã',
-                    LocalDateTime.now().plusDays( 1 )
+                    LocalDate.now().plusDays( 1 )
                     );
             } );
 
             it( 'the day after tomorrow', () => {
                 checkDate(
                     'valor é depois de amanhã',
-                    LocalDateTime.now().plusDays( 2 )
+                    LocalDate.now().plusDays( 2 )
                     );
             } );
 
             it( 'next week', () => {
                 checkDate(
                     'valor é semana que vem',
-                    LocalDateTime.now().plusDays( 7 )
+                    LocalDate.now().plusDays( 7 )
                     );
             } );
 
             it( 'next month', () => {
                 checkDate(
                     'valor é mês que vem',
-                    LocalDateTime.now().plusMonths( 1 )
+                    LocalDate.now().plusMonths( 1 )
                     );
             } );
 
             it( 'next semester', () => {
                 checkDate(
                     'valor é semestre que vem',
-                    LocalDateTime.now().plusMonths( 6 )
+                    LocalDate.now().plusMonths( 6 )
                     );
             } );
 
             it( 'next year', () => {
                 checkDate(
                     'valor é ano que vem',
-                    LocalDateTime.now().plusYears( 1 )
+                    LocalDate.now().plusYears( 1 )
                     );
             } );
 
             //
-            // dynamic - past
+            // dynamic expressions - past
             //
 
             it( 'dynamic - past 1 year', () => {
                 checkDate(
                     'valor é 1 ano atrás',
-                    LocalDateTime.now().minusYears( 1 )
+                    LocalDate.now().minusYears( 1 )
                     );
             } );
 
             it( 'dynamic - past 2 years', () => {
                 checkDate(
                     'valor é 2 anos atrás',
-                    LocalDateTime.now().minusYears( 2 )
+                    LocalDate.now().minusYears( 2 )
                     );
             } );
 
             it( 'dynamic - past 1 month', () => {
                 checkDate(
                     'valor é 1 mês atrás',
-                    LocalDateTime.now().minusMonths( 1 )
+                    LocalDate.now().minusMonths( 1 )
                     );
                 checkDate(
                     'valor é 1 mes atras',
-                    LocalDateTime.now().minusMonths( 1 )
+                    LocalDate.now().minusMonths( 1 )
                     );
             } );
 
             it( 'dynamic - past 2 months', () => {
                 checkDate(
                     'valor é 2 meses atrás',
-                    LocalDateTime.now().minusMonths( 2 )
+                    LocalDate.now().minusMonths( 2 )
                     );
                 checkDate(
                     'valor é 2 meses atras',
-                    LocalDateTime.now().minusMonths( 2 )
+                    LocalDate.now().minusMonths( 2 )
                     );
             } );
 
             it( 'dynamic - past 1 week', () => {
                 checkDate(
                     'valor é 1 semana atrás',
-                    LocalDateTime.now().minusDays( 7 )
+                    LocalDate.now().minusDays( 7 )
                     );
                 checkDate(
                     'valor é 1 semana atras',
-                    LocalDateTime.now().minusDays( 7 )
+                    LocalDate.now().minusDays( 7 )
                     );
             } );
 
             it( 'dynamic - past 2 weeks', () => {
                 checkDate(
                     'valor é 2 semanas atrás',
-                    LocalDateTime.now().minusDays( 14 )
+                    LocalDate.now().minusDays( 14 )
                     );
                 checkDate(
                     'valor é 2 semanas atras',
-                    LocalDateTime.now().minusDays( 14 )
+                    LocalDate.now().minusDays( 14 )
                     );
             } );
 
             it( 'dynamic - past 1 day', () => {
                 checkDate(
                     'valor é 1 dia atrás',
-                    LocalDateTime.now().minusDays( 1 )
+                    LocalDate.now().minusDays( 1 )
                     );
                 checkDate(
                     'valor é 1 dia atras',
-                    LocalDateTime.now().minusDays( 1 )
+                    LocalDate.now().minusDays( 1 )
                     );
             } );
 
             it( 'dynamic - past 2 days', () => {
                 checkDate(
                     'valor é 2 dia atrás',
-                    LocalDateTime.now().minusDays( 2 )
+                    LocalDate.now().minusDays( 2 )
                     );
                 checkDate(
                     'valor é 2 dia atras',
-                    LocalDateTime.now().minusDays( 2 )
+                    LocalDate.now().minusDays( 2 )
                     );
             } );
 
-
-            // dynamic - future
-
+            //
+            // dynamic expressions - future
+            //
 
             it( 'dynamic - next 1 year', () => {
                 checkDate(
                     'valor é 1 ano adiante',
-                    LocalDateTime.now().plusYears( 1 )
+                    LocalDate.now().plusYears( 1 )
                     );
             } );
 
             it( 'dynamic - next 2 years', () => {
                 checkDate(
                     'valor é 2 anos adiante',
-                    LocalDateTime.now().plusYears( 2 )
+                    LocalDate.now().plusYears( 2 )
                     );
             } );
 
             it( 'dynamic - next 1 month', () => {
                 checkDate(
                     'valor é 1 mês adiante',
-                    LocalDateTime.now().plusMonths( 1 )
+                    LocalDate.now().plusMonths( 1 )
                     );
                 checkDate(
                     'valor é 1 mes adiante',
-                    LocalDateTime.now().plusMonths( 1 )
+                    LocalDate.now().plusMonths( 1 )
                     );
             } );
 
             it( 'dynamic - next 2 months', () => {
                 checkDate(
                     'valor é 2 meses adiante',
-                    LocalDateTime.now().plusMonths( 2 )
+                    LocalDate.now().plusMonths( 2 )
                     );
             } );
 
             it( 'dynamic - next 1 week', () => {
                 checkDate(
                     'valor é 1 semana adiante',
-                    LocalDateTime.now().plusDays( 7 )
+                    LocalDate.now().plusDays( 7 )
                     );
             } );
 
             it( 'dynamic - next 2 weeks', () => {
                 checkDate(
                     'valor é 2 semanas adiante',
-                    LocalDateTime.now().plusDays( 14 )
+                    LocalDate.now().plusDays( 14 )
                     );
             } );
 
             it( 'dynamic - next 1 day', () => {
                 checkDate(
                     'valor é 1 dia adiante',
-                    LocalDateTime.now().plusDays( 1 )
+                    LocalDate.now().plusDays( 1 )
                     );
             } );
 
             it( 'dynamic - next 2 days', () => {
                 checkDate(
                     'valor é 2 dia adiante',
-                    LocalDateTime.now().plusDays( 2 )
+                    LocalDate.now().plusDays( 2 )
                     );
             } );
+
+            //
+            // date
+            //
+
+            const parseDate = ( text: string ): LocalDate => {
+                return LocalDate.parse( text, DateTimeFormatter.ofPattern( "dd/MM/yyyy" ) );
+            };
+
+            it( 'full', () => {
+                checkDate(
+                    'valor é 31/12/2020',
+                    parseDate( "31/12/2020" )
+                    );
+            } );
+
+            it( 'partial', () => {
+                checkDate(
+                    'valor é 31/12',
+                    parseDate( "31/12/" + LocalDate.now().year() )
+                    );
+            } );
+
 
         } );
 

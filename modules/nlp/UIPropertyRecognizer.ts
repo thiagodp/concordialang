@@ -12,6 +12,7 @@ import { NLPTrainer } from './NLPTrainer';
 import { NLPResultProcessor, NodeSentenceRecognizer } from './NodeSentenceRecognizer';
 import { RuleBuilder } from './RuleBuilder';
 import { DEFAULT_UI_PROPERTY_SYNTAX_RULE, UI_PROPERTY_SYNTAX_RULES } from './SyntaxRules';
+import { DateTimeFormatter, LocalDate } from '@js-joda/core';
 
 /**
  * UI element property sentence recognizer.
@@ -58,7 +59,7 @@ export class UIPropertyRecognizer {
         const recognizer = new NodeSentenceRecognizer( this._nlp );
         const syntaxRules = this._syntaxRules;
 
-        // let _this = this;
+        const _this = this;
 
         let processor: NLPResultProcessor = function(
             node: ContentNode,
@@ -95,7 +96,7 @@ export class UIPropertyRecognizer {
                     case Entities.NUMBER            : uiv = new EntityValue( e.entity, adjustValueToTheRightType( e.value ) ); break;
                     // case Entities.VALUE_LIST     : uiv = new EntityValue( e.entity, _this.makeValueList( e.value ) ); break;
                     case Entities.TIME              : uiv = new EntityValue( e.entity, e.value ); break;
-                    case Entities.DATE              : uiv = new EntityValue( e.entity, e.value ); break;
+                    case Entities.DATE              : uiv = new EntityValue( e.entity, _this.formatDate( e.value, language ) ); break;
                     case Entities.TIME_PERIOD       : uiv = new EntityValue( e.entity, e.value ); break;
                     case Entities.VALUE_LIST        : uiv = new EntityValue( e.entity, e.value ); break;
                     case Entities.QUERY             : uiv = new EntityValue( e.entity, e.value ); break;
@@ -133,6 +134,36 @@ export class UIPropertyRecognizer {
             processor
         );
     }
+
+    /**
+     * Formats a date value according to the target language.
+     *
+     * @param value Value in the format YYYY-MM-DD
+     * @param language Language to format
+     */
+    public formatDate( value: string, language: string ): LocalDate | string {
+        const f = DateTimeFormatter.ofPattern( "yyyy-MM-dd" );
+        try {
+            return LocalDate.parse( value, f );
+        } catch {
+            try {
+                // const f2 = DateTimeFormatter.ofPattern( this.dateFormatFrom( language ) );
+                // return LocalDate.parse( value, f2 );
+                return LocalDate.parse( value );
+            } catch {
+                // will return original value
+            }
+        }
+        return value;
+    }
+
+    // public dateFormatFrom( language: string ): string {
+    //     switch ( language ) {
+    //         case "pt": return "dd/MM/yyyy";
+    //         case "en": return "MM/dd/yyyy";
+    //         default: return "yyyy-MM-dd";
+    //     }
+    // }
 
 
     public buildSyntaxRules(): object[] {

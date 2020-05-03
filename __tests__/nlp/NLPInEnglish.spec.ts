@@ -1,4 +1,4 @@
-import { DateTimeFormatter, LocalDateTime } from '@js-joda/core';
+import { DateTimeFormatter, LocalDateTime, LocalDate } from '@js-joda/core';
 import * as fs from 'fs';
 import { resolve } from 'path';
 import { Options } from '../../modules/app/Options';
@@ -91,7 +91,7 @@ describe( 'NLP in English', () => {
 
     describe( 'recognizes a date period', () => {
 
-        function checkDate( text: string, expected: LocalDateTime ): void {
+        function checkDate( text: string, expected: LocalDate ): void {
             let r: NLPResult = recognize( text );
             shouldHaveUIEntities( [ r ], [ UI_PROPERTY, DATE  ] );
 
@@ -105,91 +105,91 @@ describe( 'NLP in English', () => {
         it( 'last year', () => {
             checkDate(
                 'value is last year',
-                LocalDateTime.now().minusYears( 1 )
+                LocalDate.now().minusYears( 1 )
                 );
         } );
 
         it( 'last semester', () => {
             checkDate(
                 'value is last semester',
-                LocalDateTime.now().minusMonths( 6 )
+                LocalDate.now().minusMonths( 6 )
                 );
         } );
 
         it( 'last month', () => {
             checkDate(
                 'value is last month',
-                LocalDateTime.now().minusMonths( 1 )
+                LocalDate.now().minusMonths( 1 )
                 );
         } );
 
         it( 'last week', () => {
             checkDate(
                 'value is last week',
-                LocalDateTime.now().minusDays( 7 )
+                LocalDate.now().minusDays( 7 )
                 );
         } );
 
         it( 'the day before yesterday', () => {
             checkDate(
                 'value is the day before yesterday',
-                LocalDateTime.now().minusDays( 2 )
+                LocalDate.now().minusDays( 2 )
                 );
         } );
 
         it( 'yesterday', () => {
             checkDate(
                 'value is yesterday',
-                LocalDateTime.now().minusDays( 1 )
+                LocalDate.now().minusDays( 1 )
                 );
         } );
 
         it( 'today', () => {
             checkDate(
                 'value is today',
-                LocalDateTime.now()
+                LocalDate.now()
                 );
         } );
 
         it( 'tomorrow', () => {
             checkDate(
                 'value is tomorrow',
-                LocalDateTime.now().plusDays( 1 )
+                LocalDate.now().plusDays( 1 )
                 );
         } );
 
         it( 'the day after tomorrow', () => {
             checkDate(
                 'value is the day after tomorrow',
-                LocalDateTime.now().plusDays( 2 )
+                LocalDate.now().plusDays( 2 )
                 );
         } );
 
         it( 'next week', () => {
             checkDate(
                 'value is next week',
-                LocalDateTime.now().plusDays( 7 )
+                LocalDate.now().plusDays( 7 )
                 );
         } );
 
         it( 'next month', () => {
             checkDate(
                 'value is next month',
-                LocalDateTime.now().plusMonths( 1 )
+                LocalDate.now().plusMonths( 1 )
                 );
         } );
 
         it( 'next semester', () => {
             checkDate(
                 'value is next semester',
-                LocalDateTime.now().plusMonths( 6 )
+                LocalDate.now().plusMonths( 6 )
                 );
         } );
 
         it( 'next year', () => {
             checkDate(
                 'value is next year',
-                LocalDateTime.now().plusYears( 1 )
+                LocalDate.now().plusYears( 1 )
                 );
         } );
 
@@ -198,7 +198,7 @@ describe( 'NLP in English', () => {
         //
 
         it( 'dynamic - past 1 year', () => {
-            const expected = LocalDateTime.now().minusYears( 1 );
+            const expected = LocalDate.now().minusYears( 1 );
             checkDate(
                 'value is past 1 year',
                 expected
@@ -210,7 +210,7 @@ describe( 'NLP in English', () => {
         } );
 
         it( 'dynamic - past 2 years', () => {
-            const expected = LocalDateTime.now().minusYears( 2 );
+            const expected = LocalDate.now().minusYears( 2 );
             checkDate(
                 'value is past 2 years',
                 expected
@@ -222,7 +222,7 @@ describe( 'NLP in English', () => {
         } );
 
         it( 'dynamic - past 1 month', () => {
-            const expected = LocalDateTime.now().minusMonths( 1 );
+            const expected = LocalDate.now().minusMonths( 1 );
             checkDate(
                 'value is past 1 month',
                 expected
@@ -234,7 +234,7 @@ describe( 'NLP in English', () => {
         } );
 
         it( 'dynamic - past 2 months', () => {
-            const expected = LocalDateTime.now().minusMonths( 2 );
+            const expected = LocalDate.now().minusMonths( 2 );
             checkDate(
                 'value is past 2 months',
                 expected
@@ -246,7 +246,7 @@ describe( 'NLP in English', () => {
         } );
 
         it( 'dynamic - past 1 week', () => {
-            const expected = LocalDateTime.now().minusDays( 7 );
+            const expected = LocalDate.now().minusDays( 7 );
             checkDate(
                 'value is past 1 week',
                 expected
@@ -258,7 +258,7 @@ describe( 'NLP in English', () => {
         } );
 
         it( 'dynamic - past 2 weeks', () => {
-            const expected = LocalDateTime.now().minusDays( 14 );
+            const expected = LocalDate.now().minusDays( 14 );
             checkDate(
                 'value is past 2 weeks',
                 expected
@@ -270,7 +270,7 @@ describe( 'NLP in English', () => {
         } );
 
         it( 'dynamic - past 1 day', () => {
-            const expected = LocalDateTime.now().minusDays( 1 );
+            const expected = LocalDate.now().minusDays( 1 );
             checkDate(
                 'value is past 1 day',
                 expected
@@ -282,7 +282,7 @@ describe( 'NLP in English', () => {
         } );
 
         it( 'dynamic - past 2 days', () => {
-            const expected = LocalDateTime.now().minusDays( 2 );
+            const expected = LocalDate.now().minusDays( 2 );
             checkDate(
                 'value is past 2 days',
                 expected
@@ -298,7 +298,7 @@ describe( 'NLP in English', () => {
 
 
         it( 'dynamic - next 1 year', () => {
-            const expected = LocalDateTime.now().plusYears( 1 );
+            const expected = LocalDate.now().plusYears( 1 );
             checkDate(
                 'value is next 1 year',
                 expected
@@ -314,7 +314,7 @@ describe( 'NLP in English', () => {
         } );
 
         it( 'dynamic - next 2 years', () => {
-            const expected = LocalDateTime.now().plusYears( 2 );
+            const expected = LocalDate.now().plusYears( 2 );
             checkDate(
                 'value is next 2 years',
                 expected
@@ -330,7 +330,7 @@ describe( 'NLP in English', () => {
         } );
 
         it( 'dynamic - next 1 month', () => {
-            const expected = LocalDateTime.now().plusMonths( 1 );
+            const expected = LocalDate.now().plusMonths( 1 );
             checkDate(
                 'value is next 1 month',
                 expected
@@ -346,7 +346,7 @@ describe( 'NLP in English', () => {
         } );
 
         it( 'dynamic - next 2 months', () => {
-            const expected = LocalDateTime.now().plusMonths( 2 );
+            const expected = LocalDate.now().plusMonths( 2 );
             checkDate(
                 'value is next 2 months',
                 expected
@@ -362,7 +362,7 @@ describe( 'NLP in English', () => {
         } );
 
         it( 'dynamic - next 1 week', () => {
-            const expected = LocalDateTime.now().plusDays( 7 );
+            const expected = LocalDate.now().plusDays( 7 );
             checkDate(
                 'value is next 1 week',
                 expected
@@ -378,7 +378,7 @@ describe( 'NLP in English', () => {
         } );
 
         it( 'dynamic - next 2 weeks', () => {
-            const expected = LocalDateTime.now().plusDays( 14 );
+            const expected = LocalDate.now().plusDays( 14 );
             checkDate(
                 'value is next 2 weeks',
                 expected
@@ -394,7 +394,7 @@ describe( 'NLP in English', () => {
         } );
 
         it( 'dynamic - next 1 day', () => {
-            const expected = LocalDateTime.now().plusDays( 1 );
+            const expected = LocalDate.now().plusDays( 1 );
             checkDate(
                 'value is next 1 day',
                 expected
@@ -410,7 +410,7 @@ describe( 'NLP in English', () => {
         } );
 
         it( 'dynamic - next 2 days', () => {
-            const expected = LocalDateTime.now().plusDays( 2 );
+            const expected = LocalDate.now().plusDays( 2 );
             checkDate(
                 'value is next 2 days',
                 expected
@@ -424,6 +424,28 @@ describe( 'NLP in English', () => {
                 expected
             );
         } );
+
+            //
+            // date
+            //
+
+            const parseDate = ( text: string ): LocalDate => {
+                return LocalDate.parse( text, DateTimeFormatter.ofPattern( "MM/dd/yyyy" ) );
+            };
+
+            it( 'full', () => {
+                checkDate(
+                    'value is 12/31/2020',
+                    parseDate( "12/31/2020" )
+                    );
+            } );
+
+            it( 'partial', () => {
+                checkDate(
+                    'value is 12/31',
+                    parseDate( "12/31/" + LocalDate.now().year() )
+                    );
+            } );
 
     } );
 

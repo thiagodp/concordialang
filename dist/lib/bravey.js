@@ -2999,6 +2999,19 @@ Bravey.Language.EN.DateEntityRecognizer = function (entityName) {
             str: ["december~", "dec~", "12~"],
             val: 11
         }], 0);
+    // examples: "01/30/2000", "01-30-2000", "01.30.2000", "01/30", "01-30", "01.30"
+    matcher.addMatch(new RegExp("\\b(([0-9]{1,2})(/|-|\.)([0-9]{1,2})((/|-|\.)([0-9]{2,4}))?)\\b", "gi"), function (match) {
+        var now = new Date();
+        var y = now.getFullYear();
+        if (match[2] && match[4]) {
+            var m = (match[2] * 1) - 1; // month is zero-based
+            var d = match[4] * 1;
+            if (match[7]) {
+                y = match[7] * 1;
+            }
+            return Bravey.Date.formatDate((new Date(y, m, d, 0, 0, 0, 0)).getTime());
+        }
+    });
     // M/(D??)/(Y??)
     matcher.addMatch(new RegExp(prefixes +
         months.regex(1) + Bravey.Text.WORDSEP +
@@ -3021,26 +3034,29 @@ Bravey.Language.EN.DateEntityRecognizer = function (entityName) {
             return Bravey.Date.formatDate((new Date(y, m, d, 0, 0, 0, 0)).getTime());
     });
     // D/M/Y
-    matcher.addMatch(new RegExp(prefixes +
-        "([0-9]{1,2})" + Bravey.Text.WORDSEP +
-        "(st\\b|nd\\b|rd\\b|th\\b)?" + Bravey.Text.WORDSEP +
-        "(of\\b|,\\b|/\\b|-\\b|\\b)" + Bravey.Text.WORDSEP +
-        months.regex() +
-        "(of\\b|,\\b|/\\b|-\\b)?" + Bravey.Text.WORDSEP +
-        "([0-9]{2,4})?" +
-        "\\b", "gi"), function (match) {
-        var now = new Date();
-        var y = now.getFullYear();
-        var m = now.getMonth();
-        var d = now.getDate();
-        d = match[2] * 1;
-        m = months.get(match, 5, m);
-        if (match[7])
-            y = match[7] * 1;
-        y = Bravey.Date.centuryFinder(y);
-        if (Bravey.Text.calculateScore(match, [1, 5, 7]))
-            return Bravey.Date.formatDate((new Date(y, m, d, 0, 0, 0, 0)).getTime());
-    }, 10);
+    // matcher.addMatch(
+    //   new RegExp(
+    //     prefixes +
+    //     "([0-9]{1,2})" + Bravey.Text.WORDSEP +
+    //     "(st\\b|nd\\b|rd\\b|th\\b)?" + Bravey.Text.WORDSEP +
+    //     "(of\\b|,\\b|/\\b|-\\b|\\b)" + Bravey.Text.WORDSEP +
+    //     months.regex() +
+    //     "(of\\b|,\\b|/\\b|-\\b)?" + Bravey.Text.WORDSEP +
+    //     "([0-9]{2,4})?" +
+    //     "\\b", "gi"),
+    //   function(match) {
+    //     var now = new Date();
+    //     var y = now.getFullYear();
+    //     var m = now.getMonth();
+    //     var d = now.getDate();
+    //     d = match[2] * 1;
+    //     m = months.get(match, 5, m);
+    //     if (match[7]) y = match[7] * 1;
+    //     y = Bravey.Date.centuryFinder(y);
+    //     if (Bravey.Text.calculateScore(match, [1, 5, 7])) return Bravey.Date.formatDate((new Date(y, m, d, 0, 0, 0, 0)).getTime());
+    //   },
+    //   10
+    // );
     matcher.addMatch(new RegExp(prefixes + "(last year)\\b", "gi"), function (match) {
         return LocalDate.now().minusYears(1).format(dateFormatter).toString();
     });
@@ -3081,7 +3097,7 @@ Bravey.Language.EN.DateEntityRecognizer = function (entityName) {
         return LocalDate.now().plusYears(1).format(dateFormatter).toString();
     });
     var pastPrefix = "last|past";
-    var futurePrefix = "next";
+    var futurePrefix = "in|next";
     var pastSuffix = "ago|in the past";
     var futureSuffix = "ahead|in the future|later|from today|from now";
     var year = "years?";
@@ -4766,8 +4782,8 @@ Bravey.Language.PT.DateEntityRecognizer = function (entityName) {
             str: ["dezembro~", "dez~", "12~"],
             val: 11
         }], 0);
-    // examples: "30/01/2000", "30-01-2000", "30/01", "30-01"
-    matcher.addMatch(new RegExp("\\b(([0-9]{1,2})(/|-)([0-9]{1,2})((/|-)([0-9]{2,4}))?)\\b", "gi"), function (match) {
+    // examples: "30/01/2000", "30-01-2000", "30.01.2000", "30/01", "30-01", "30.01"
+    matcher.addMatch(new RegExp("\\b(([0-9]{1,2})(/|-|\.)([0-9]{1,2})((/|-|\.)([0-9]{2,4}))?)\\b", "gi"), function (match) {
         var now = new Date();
         var y = now.getFullYear();
         if (match[2] && match[4]) {
@@ -4831,7 +4847,7 @@ Bravey.Language.PT.DateEntityRecognizer = function (entityName) {
     });
     matcher.addMatch(new RegExp(prefixes + "(m[êe]s que vem)\\b", "gi"), function (match) {
         // return Bravey.Date.formatDate((new Date()).getTime() + (Bravey.Date.DAY * 30))
-        return LocalDate.now().plusDays(30).format(dateFormatter).toString();
+        return LocalDate.now().plusMonths(1).format(dateFormatter).toString();
     });
     matcher.addMatch(new RegExp(prefixes + "(semestre que vem)\\b", "gi"), function (match) {
         // return Bravey.Date.formatDate((new Date()).getTime() + (Bravey.Date.DAY * 30 * 6))

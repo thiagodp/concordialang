@@ -1,4 +1,4 @@
-import { LocalDate, LocalDateTime, LocalTime } from "@js-joda/core";
+import { LocalDate, LocalDateTime, LocalTime, DateTimeFormatter } from "@js-joda/core";
 import * as moment from 'moment';
 
 /**
@@ -138,7 +138,7 @@ export class ValueTypeDetector {
  * @param v Value to adjust.
  * @param valueType Desired value type. Optional. If not informed, the type is detected.
  */
-export function adjustValueToTheRightType( v: string, valueType?: ValueType ): any {
+export function adjustValueToTheRightType( v: string, valueType?: ValueType, formatters?: DateTimeFormatter[] ): any {
     const vType: ValueType = valueType || ( new ValueTypeDetector() ).detect( v.toString().trim() );
     let valueAfter: any;
     switch ( vType ) {
@@ -151,11 +151,27 @@ export function adjustValueToTheRightType( v: string, valueType?: ValueType ): a
         }
 
         case ValueType.DATE: {
-            try {
-                valueAfter = LocalDate.parse( v );
-            } catch {
+            // try {
+            //     valueAfter = LocalDate.parse( v );
+            // } catch {
+            //     valueAfter = LocalDate.now();
+            // }
+            const defaultFormatter = DateTimeFormatter.ofPattern( "yyyy-MM-dd" );
+            const formattersToUse = [ ...( formatters || [] ), defaultFormatter, undefined ];
+            let success = false;
+            for ( const fmt of formattersToUse ) {
+                try {
+                    valueAfter = LocalDate.parse( v, fmt );
+                    success = true;
+                    break;
+                } catch {
+                    // ignore
+                }
+            }
+            if ( ! success ) {
                 valueAfter = LocalDate.now();
             }
+
             break;
         }
 

@@ -6,6 +6,7 @@ import { ListItem } from './ListItem';
 import { Node } from './Node';
 import { Step } from './Step';
 import { MayHaveTags } from './Tag';
+import { LocalDate, LocalTime, LocalDateTime } from '@js-joda/core';
 
 /**
  * UI property node.
@@ -57,7 +58,14 @@ export class UIElementInfo {
     }
 }
 
-export type EntityValueType = null | string | number | boolean | any[];
+export type EntityValueType = null |
+    string |
+    number |
+    boolean |
+    LocalDate |
+    LocalTime |
+    LocalDateTime |
+    any[];
 
 /**
  * Recognized value of an entity.

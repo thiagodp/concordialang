@@ -129,7 +129,7 @@ exports.ValueTypeDetector = ValueTypeDetector;
  * @param v Value to adjust.
  * @param valueType Desired value type. Optional. If not informed, the type is detected.
  */
-function adjustValueToTheRightType(v, valueType) {
+function adjustValueToTheRightType(v, valueType, formatters) {
     const vType = valueType || (new ValueTypeDetector()).detect(v.toString().trim());
     let valueAfter;
     switch (vType) {
@@ -139,10 +139,25 @@ function adjustValueToTheRightType(v, valueType) {
             break;
         }
         case ValueType.DATE: {
-            try {
-                valueAfter = core_1.LocalDate.parse(v);
+            // try {
+            //     valueAfter = LocalDate.parse( v );
+            // } catch {
+            //     valueAfter = LocalDate.now();
+            // }
+            const defaultFormatter = core_1.DateTimeFormatter.ofPattern("yyyy-MM-dd");
+            const formattersToUse = [...(formatters || []), defaultFormatter, undefined];
+            let success = false;
+            for (const fmt of formattersToUse) {
+                try {
+                    valueAfter = core_1.LocalDate.parse(v, fmt);
+                    success = true;
+                    break;
+                }
+                catch (_a) {
+                    // ignore
+                }
             }
-            catch (_a) {
+            if (!success) {
                 valueAfter = core_1.LocalDate.now();
             }
             break;

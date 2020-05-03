@@ -10,6 +10,7 @@ const NLPException_1 = require("./NLPException");
 const NodeSentenceRecognizer_1 = require("./NodeSentenceRecognizer");
 const RuleBuilder_1 = require("./RuleBuilder");
 const SyntaxRules_1 = require("./SyntaxRules");
+const core_1 = require("@js-joda/core");
 /**
  * UI element property sentence recognizer.
  *
@@ -43,7 +44,7 @@ class UIPropertyRecognizer {
     recognizeSentences(language, nodes, errors, warnings) {
         const recognizer = new NodeSentenceRecognizer_1.NodeSentenceRecognizer(this._nlp);
         const syntaxRules = this._syntaxRules;
-        // let _this = this;
+        const _this = this;
         let processor = function (node, r, errors, warnings) {
             const recognizedEntityNames = r.entities.map(e => e.entity);
             // console.log( r.entities );
@@ -75,7 +76,7 @@ class UIPropertyRecognizer {
                         uiv = new ast_1.EntityValue(e.entity, e.value);
                         break;
                     case nlp_1.Entities.DATE:
-                        uiv = new ast_1.EntityValue(e.entity, e.value);
+                        uiv = new ast_1.EntityValue(e.entity, _this.formatDate(e.value, language));
                         break;
                     case nlp_1.Entities.TIME_PERIOD:
                         uiv = new ast_1.EntityValue(e.entity, e.value);
@@ -122,6 +123,36 @@ class UIPropertyRecognizer {
         recognizer.recognize(language, nodes, [Intents_1.Intents.UI], // [ Intents.UI, Intents.UI_ITEM_QUERY ],
         'UI Element', errors, warnings, processor);
     }
+    /**
+     * Formats a date value according to the target language.
+     *
+     * @param value Value in the format YYYY-MM-DD
+     * @param language Language to format
+     */
+    formatDate(value, language) {
+        const f = core_1.DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        try {
+            return core_1.LocalDate.parse(value, f);
+        }
+        catch (_a) {
+            try {
+                // const f2 = DateTimeFormatter.ofPattern( this.dateFormatFrom( language ) );
+                // return LocalDate.parse( value, f2 );
+                return core_1.LocalDate.parse(value);
+            }
+            catch (_b) {
+                // will return original value
+            }
+        }
+        return value;
+    }
+    // public dateFormatFrom( language: string ): string {
+    //     switch ( language ) {
+    //         case "pt": return "dd/MM/yyyy";
+    //         case "en": return "MM/dd/yyyy";
+    //         default: return "yyyy-MM-dd";
+    //     }
+    // }
     buildSyntaxRules() {
         return (new RuleBuilder_1.RuleBuilder()).build(SyntaxRules_1.UI_PROPERTY_SYNTAX_RULES, SyntaxRules_1.DEFAULT_UI_PROPERTY_SYNTAX_RULE);
     }

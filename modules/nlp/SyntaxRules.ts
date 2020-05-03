@@ -261,8 +261,8 @@ export const UI_PROPERTY_SYNTAX_RULES = [
     { name: "value", targets: [ "value", "number", "query", "constant", "value_list", "date" ] },
     { name: "minlength", targets: [ "number", "constant" ] },
     { name: "maxlength", targets: [ "number", "constant" ] },
-    { name: "minvalue", targets: [ "number", "constant" ] },
-    { name: "maxvalue", targets: [ "value", "number", "constant" ] },
+    { name: "minvalue", targets: [ "value", "number", "constant", "date" ] },
+    { name: "maxvalue", targets: [ "value", "number", "constant", "date" ] },
     { name: "format", targets: [ "value", "constant" ] },
     { name: "required", targets: [ "bool_value", "number" ], minTargets: 0 } // target not needed
 ];
