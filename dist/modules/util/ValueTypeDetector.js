@@ -116,6 +116,11 @@ class ValueTypeDetector {
         else if (this.isTime(val)) {
             return ValueType.TIME;
         }
+        else if (Array.isArray(val)) {
+            if (val.length > 0) {
+                return this.detect(val[0]);
+            }
+        }
         return ValueType.STRING;
     }
     detectAll(values) {

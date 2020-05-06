@@ -108,7 +108,7 @@ export class ValueTypeDetector {
         return false;
     }
 
-    detect( val: string ): ValueType {
+    detect( val: any ): ValueType {
         if ( this.isBoolean( val ) ) {
             return ValueType.BOOLEAN;
         } else if ( this.isInteger( val ) ) {
@@ -121,6 +121,10 @@ export class ValueTypeDetector {
             return ValueType.DATE;
         } else if ( this.isTime( val ) ) {
             return ValueType.TIME;
+        } else if ( Array.isArray( val ) ) {
+            if ( val.length > 0 ) {
+                return this.detect( val[ 0 ] );
+            }
         }
         return ValueType.STRING;
     }

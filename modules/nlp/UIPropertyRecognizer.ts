@@ -1,10 +1,11 @@
 
-import { ContentNode, EntityValue, UIProperty } from '../ast';
+import { DateTimeFormatter, LocalDate } from '@js-joda/core';
+import { ContentNode, EntityValue, UIProperty, EntityValueType } from '../ast';
 import { UIPropertyTypes } from '../ast/UIPropertyTypes';
 import { LocatedException } from '../error/LocatedException';
 import { Entities, NLPResult } from '../nlp';
 import { isDefined } from '../util/TypeChecking';
-import { adjustValueToTheRightType } from '../util/ValueTypeDetector';
+import { adjustValueToTheRightType, ValueType } from '../util/ValueTypeDetector';
 import { Intents } from './Intents';
 import { NLP } from './NLP';
 import { NLPException } from './NLPException';
@@ -12,7 +13,7 @@ import { NLPTrainer } from './NLPTrainer';
 import { NLPResultProcessor, NodeSentenceRecognizer } from './NodeSentenceRecognizer';
 import { RuleBuilder } from './RuleBuilder';
 import { DEFAULT_UI_PROPERTY_SYNTAX_RULE, UI_PROPERTY_SYNTAX_RULES } from './SyntaxRules';
-import { DateTimeFormatter, LocalDate } from '@js-joda/core';
+import { UIElementPropertyExtractor } from '../util/UIElementPropertyExtractor';
 
 /**
  * UI element property sentence recognizer.
@@ -90,26 +91,27 @@ export class UIPropertyRecognizer {
                 //
                 // References should be analyzed later, post NLP, in a global Semantic Analysis.
                 //
-                let uiv: EntityValue;
+                let entityValue: EntityValue;
                 switch ( e.entity ) {
                     case Entities.VALUE             : // next
-                    case Entities.NUMBER            : uiv = new EntityValue( e.entity, adjustValueToTheRightType( e.value ) ); break;
+                    case Entities.NUMBER            : entityValue = new EntityValue( e.entity, adjustValueToTheRightType( e.value ) ); break;
                     // case Entities.VALUE_LIST     : uiv = new EntityValue( e.entity, _this.makeValueList( e.value ) ); break;
-                    case Entities.TIME              : uiv = new EntityValue( e.entity, e.value ); break;
-                    case Entities.DATE              : uiv = new EntityValue( e.entity, _this.formatDate( e.value, language ) ); break;
-                    case Entities.TIME_PERIOD       : uiv = new EntityValue( e.entity, e.value ); break;
-                    case Entities.VALUE_LIST        : uiv = new EntityValue( e.entity, e.value ); break;
-                    case Entities.QUERY             : uiv = new EntityValue( e.entity, e.value ); break;
-                    case Entities.UI_ELEMENT_REF    : uiv = new EntityValue( e.entity, e.value ); break;
-                    case Entities.UI_LITERAL        : uiv = new EntityValue( e.entity, e.value ); break;
-                    case Entities.UI_PROPERTY_REF   : uiv = new EntityValue( e.entity, e.value ); break;
-                    case Entities.CONSTANT          : uiv = new EntityValue( e.entity, e.value ); break;
-                    case Entities.UI_DATA_TYPE      : uiv = new EntityValue( e.entity, e.value ); break;
-                    case Entities.BOOL_VALUE        : uiv = new EntityValue( e.entity, 'true' === e.value ); break;
-                    default                         : uiv = null;
+                    case Entities.DATE              : entityValue = new EntityValue( e.entity, _this.convertToDateIfNeeded( e.value, language ) ); break;
+                    // case Entities.TIME              : entityValue = new EntityValue( e.entity, e.value ); break;
+                    // case Entities.TIME_PERIOD       : entityValue = new EntityValue( e.entity, e.value ); break;
+                    // case Entities.YEAR_OF           : entityValue = new EntityValue( e.entity, e.value ); break;
+                    case Entities.VALUE_LIST        : entityValue = new EntityValue( e.entity, e.value ); break;
+                    case Entities.QUERY             : entityValue = new EntityValue( e.entity, e.value ); break;
+                    case Entities.UI_ELEMENT_REF    : entityValue = new EntityValue( e.entity, e.value ); break;
+                    case Entities.UI_LITERAL        : entityValue = new EntityValue( e.entity, e.value ); break;
+                    case Entities.UI_PROPERTY_REF   : entityValue = new EntityValue( e.entity, e.value ); break;
+                    case Entities.CONSTANT          : entityValue = new EntityValue( e.entity, e.value ); break;
+                    case Entities.UI_DATA_TYPE      : entityValue = new EntityValue( e.entity, e.value ); break;
+                    case Entities.BOOL_VALUE        : entityValue = new EntityValue( e.entity, 'true' === e.value ); break;
+                    default                         : entityValue = null;
                 }
-                if ( isDefined( uiv ) ) {
-                    item.value = uiv;
+                if ( isDefined( entityValue ) ) {
+                    item.value = entityValue;
                     break;
                 }
             }
@@ -127,21 +129,65 @@ export class UIPropertyRecognizer {
         recognizer.recognize(
             language,
             nodes,
-            [ Intents.UI ], // [ Intents.UI, Intents.UI_ITEM_QUERY ],
+            [ Intents.UI ],
             'UI Element',
             errors,
             warnings,
             processor
         );
+
+        // this.adjustRecognizedValues( nodes );
     }
 
+    // /**
+    //  * Adjust recognized values according to the data type property.
+    //  *
+    //  * For instance, whether the value is a date expression like "last year"
+    //  * but the data type is "integer", the year value should be extracted from
+    //  * the existing date.
+    //  *
+    //  * @param properties Declared properties
+    //  */
+    // public adjustRecognizedValues( properties: UIProperty[] ): void {
+
+    //     const extractor = new UIElementPropertyExtractor();
+
+    //     const map: Map< UIPropertyTypes, UIProperty[] > =
+    //         extractor.mapPropertiesToPropertyTypes( properties );
+
+    //     // const dataType: ValueType = extractor.guessDataType( map );
+
+    //     console.log( '>>> map', map );
+
+    //     if ( map.has( UIPropertyTypes.VALUE ) ) {
+
+    //         console.log( '>>> has value' );
+
+    //         const prop = map.get( UIPropertyTypes.VALUE )[ 0 ];
+
+    //         if ( extractor.hasEntity( prop, Entities.YEAR_OF ) ) {
+    //             console.log( '>>>', prop );
+
+    //             prop.value.value = ( prop.value.value as LocalDate ).year();
+    //         }
+
+    //     }
+
+
+
+
+    // }
+
     /**
-     * Formats a date value according to the target language.
+     * Converts a string value to a date if needed.
      *
      * @param value Value in the format YYYY-MM-DD
      * @param language Language to format
      */
-    public formatDate( value: string, language: string ): LocalDate | string {
+    public convertToDateIfNeeded( value: any, language: string ): any {
+        if ( typeof value != 'string' ) {
+            return value;
+        }
         const f = DateTimeFormatter.ofPattern( "yyyy-MM-dd" );
         try {
             return LocalDate.parse( value, f );

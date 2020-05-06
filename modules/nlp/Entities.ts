@@ -22,9 +22,9 @@ export enum Entities {
     VALUE_LIST = 'value_list', //                       e.g., [ 1, "hello", 2 ]
     STATE = 'state', //                                 e.g., ~some state~
     COMMAND = 'command', //                             e.g., 'DELETE FROM table'
-    TIME = 'time', //                                   e.g., now
-    DATE = 'date', //                                   e.g., today
-    TIME_PERIOD = 'time_period', //                     e.g., 18 years ago
+
+    DATE = 'date', //                                   e.g., today or 04/30/2020
+    TIME = 'time', //                                   e.g., now or 18:10:03
 
     // from the intent "testcase"
     //UI_PROPERTY = 'ui_property', //                   e.g.: text, value, color, ...

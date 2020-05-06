@@ -123,6 +123,7 @@ export class NLPBasedSentenceRecognizer {
         // UI Elements inside Features
         for ( let uiElement of doc.feature.uiElements || [] ) {
 
+            // Recognize each property (item)
             this._uiPropertyRec.recognizeSentences(
                 language, uiElement.items, errors, warnings );
 
@@ -130,7 +131,7 @@ export class NLPBasedSentenceRecognizer {
                 if ( ! item ) {
                     continue;
                 }
-                // Otherwise sentences of items
+                // Otherwise sentences of the property (item)
                 this._variantSentenceRec.recognizeSentences(
                     language, item.otherwiseSentences || [], errors, warnings );
             }

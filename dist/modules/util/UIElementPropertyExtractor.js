@@ -48,14 +48,50 @@ class UIElementPropertyExtractor {
         return nlpEntity.value;
     }
     extractDataType(uie) {
-        const nlpEntity = this.extractPropertyValueAsEntity(this.extractProperty(uie, ast_1.UIPropertyTypes.DATA_TYPE));
-        if (TypeChecking_1.isDefined(nlpEntity)) {
-            const dataType = nlpEntity.value.toString().toLowerCase();
-            if (enumUtil.isValue(ValueTypeDetector_1.ValueType, dataType)) {
-                return dataType;
-            }
+        return this.extractDataTypeFromProperty(this.extractProperty(uie, ast_1.UIPropertyTypes.DATA_TYPE));
+    }
+    extractDataTypeFromProperty(property) {
+        if (!property) {
+            return null;
+        }
+        const nlpEntity = this.extractPropertyValueAsEntity(property);
+        if (!TypeChecking_1.isDefined(nlpEntity)) {
+            return null;
+        }
+        return this.stringToValueType(nlpEntity.value);
+    }
+    stringToValueType(value) {
+        const dataType = value.toString().toLowerCase();
+        if (enumUtil.isValue(ValueTypeDetector_1.ValueType, dataType)) {
+            return dataType;
         }
         return null;
+    }
+    guessDataType(map) {
+        if (0 == map.size) {
+            return ValueTypeDetector_1.ValueType.STRING;
+        }
+        if (map.has(ast_1.UIPropertyTypes.DATA_TYPE)) {
+            const entityValue = map.get(ast_1.UIPropertyTypes.DATA_TYPE)[0].value;
+            return this.stringToValueType(entityValue.value.toString());
+        }
+        if (map.has(ast_1.UIPropertyTypes.MIN_LENGTH) ||
+            map.has(ast_1.UIPropertyTypes.MAX_LENGTH)) {
+            return ValueTypeDetector_1.ValueType.STRING;
+        }
+        const sequence = [
+            ast_1.UIPropertyTypes.MIN_VALUE,
+            ast_1.UIPropertyTypes.MAX_VALUE,
+            ast_1.UIPropertyTypes.VALUE
+        ];
+        const valueTypeDetector = new ValueTypeDetector_1.ValueTypeDetector();
+        for (const pType of sequence) {
+            if (map.has(pType)) {
+                const entityValue = map.get(pType)[0].value;
+                return valueTypeDetector.detect(entityValue.value);
+            }
+        }
+        return ValueTypeDetector_1.ValueType.STRING;
     }
     extractIsEditable(uie) {
         // true if no property is found
@@ -127,6 +163,10 @@ class UIElementPropertyExtractor {
         const uipEntities = uip.nlpResult.entities.map(e => e.entity);
         return entities.every(e => uipEntities.indexOf(e) >= 0);
     }
+    hasEntity(uip, entity) {
+        const e = uip.nlpResult.entities.find(nlpEntity => nlpEntity.entity == entity);
+        return !!e;
+    }
     /**
      * Returns
      *
@@ -161,6 +201,19 @@ class UIElementPropertyExtractor {
             let properties = this.extractProperties(uie, propType);
             if (properties !== null) {
                 map.set(propType, properties);
+            }
+        }
+        return map;
+    }
+    mapPropertiesToPropertyTypes(properties) {
+        const map = new Map();
+        for (const p of properties) {
+            const pType = p.property;
+            if (map.has(pType)) {
+                map.get(pType).push(p);
+            }
+            else {
+                map.set(pType, [p]);
             }
         }
         return map;

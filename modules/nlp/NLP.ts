@@ -58,9 +58,10 @@ export class NLP {
         this._additionalRecognizers.push( erMaker.makeCommand( Entities.COMMAND ) );
 
         // Language-based entities
-        this._additionalEntities.push( Entities.TIME );
         this._additionalEntities.push( Entities.DATE );
-        this._additionalEntities.push( Entities.TIME_PERIOD );
+        // this._additionalEntities.push( Entities.TIME );
+        // this._additionalEntities.push( Entities.TIME_PERIOD );
+        // this._additionalEntities.push( Entities.YEAR_OF );
     }
 
     /**
@@ -115,14 +116,15 @@ export class NLP {
 
         // Add language-based recognizers
         const erMaker = new EntityRecognizerMaker();
-        // nlp.addEntity( erMaker.makeTime( language, Entities.TIME ) );
         nlp.addEntity( erMaker.makeDate( language, Entities.DATE ) );
+        // nlp.addEntity( erMaker.makeTime( language, Entities.TIME ) );
         // nlp.addEntity( erMaker.makeTimePeriod( language, Entities.TIME_PERIOD ) );
+        // nlp.addEntity( erMaker.makeYearOf( language, Entities.YEAR_OF ) );
 
         // Train with examples that include the added entities
-        let opt = this.documentTrainingOptions();
-        for ( let ex of data.examples ) {
-            for ( let sentence of ex.sentences ) {
+        const opt = this.documentTrainingOptions();
+        for ( const ex of data.examples ) {
+            for ( const sentence of ex.sentences ) {
                 nlp.addDocument( sentence, ex.intent, opt );
             }
         }

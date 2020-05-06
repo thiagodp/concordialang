@@ -5,7 +5,7 @@ import { Entities, NLPEntity, NLPUtil } from '../nlp';
 import { ActionTargets, EditableActionTargets } from './ActionTargets';
 import { convertCase } from './CaseConversor';
 import { isDefined } from './TypeChecking';
-import { ValueType } from './ValueTypeDetector';
+import { ValueType, ValueTypeDetector } from './ValueTypeDetector';
 
 
 /**
@@ -50,15 +50,65 @@ export class UIElementPropertyExtractor {
     }
 
     extractDataType( uie: UIElement ): ValueType | null {
-        const nlpEntity = this.extractPropertyValueAsEntity( this.extractProperty( uie, UIPropertyTypes.DATA_TYPE ) );
-        if ( isDefined( nlpEntity ) ) {
-            const dataType: string = nlpEntity.value.toString().toLowerCase();
-            if ( enumUtil.isValue( ValueType, dataType ) ) {
-                return dataType;
-            }
+        return this.extractDataTypeFromProperty(
+            this.extractProperty( uie, UIPropertyTypes.DATA_TYPE )
+            );
+    }
+
+    extractDataTypeFromProperty( property: UIProperty ): ValueType | null {
+        if ( ! property ) {
+            return null;
+        }
+        const nlpEntity = this.extractPropertyValueAsEntity( property );
+        if ( ! isDefined( nlpEntity ) ) {
+            return null;
+        }
+        return this.stringToValueType( nlpEntity.value );
+    }
+
+    stringToValueType( value: string ): ValueType | null {
+        const dataType: string = value.toString().toLowerCase();
+        if ( enumUtil.isValue( ValueType, dataType ) ) {
+            return dataType;
         }
         return null;
     }
+
+    guessDataType( map: Map< UIPropertyTypes, UIProperty[] > ): ValueType {
+
+        if ( 0 == map.size ) {
+            return ValueType.STRING;
+        }
+
+        if ( map.has( UIPropertyTypes.DATA_TYPE ) ) {
+            const entityValue = map.get( UIPropertyTypes.DATA_TYPE )[ 0 ].value;
+            return this.stringToValueType( entityValue.value.toString() );
+        }
+
+        if ( map.has( UIPropertyTypes.MIN_LENGTH ) ||
+            map.has( UIPropertyTypes.MAX_LENGTH )
+        ) {
+            return ValueType.STRING;
+        }
+
+        const sequence: UIPropertyTypes[] = [
+            UIPropertyTypes.MIN_VALUE,
+            UIPropertyTypes.MAX_VALUE,
+            UIPropertyTypes.VALUE
+        ];
+
+        const valueTypeDetector = new ValueTypeDetector();
+
+        for ( const pType of sequence ) {
+            if ( map.has( pType ) ) {
+                const entityValue = map.get( pType )[ 0 ].value;
+                return valueTypeDetector.detect( entityValue.value );
+            }
+        }
+
+        return ValueType.STRING;
+    }
+
 
     extractIsEditable( uie: UIElement ): boolean {
 
@@ -151,6 +201,11 @@ export class UIElementPropertyExtractor {
         return entities.every( e => uipEntities.indexOf( e ) >= 0 );
     }
 
+    hasEntity( uip: UIProperty, entity: string ): boolean {
+        const e = uip.nlpResult.entities.find( nlpEntity => nlpEntity.entity == entity );
+        return !!e;
+    }
+
     /**
      * Returns
      *
@@ -188,6 +243,19 @@ export class UIElementPropertyExtractor {
             let properties = this.extractProperties( uie, propType );
             if ( properties !== null ) {
                 map.set( propType, properties );
+            }
+        }
+        return map;
+    }
+
+    mapPropertiesToPropertyTypes( properties: UIProperty[] ): Map< UIPropertyTypes, UIProperty[] > {
+        const map = new Map< UIPropertyTypes, UIProperty[] >();
+        for ( const p of properties ) {
+            const pType: UIPropertyTypes = p.property as UIPropertyTypes;
+            if ( map.has( pType ) ) {
+                map.get( pType ).push( p );
+            } else {
+                map.set( pType, [ p ] );
             }
         }
         return map;

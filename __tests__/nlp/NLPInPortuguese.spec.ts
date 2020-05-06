@@ -29,9 +29,8 @@ describe( 'NLPInPortuguese', () => {
     const QUERY: string = Entities.QUERY;
     const STATE: string = Entities.STATE;
     const COMMAND: string = Entities.COMMAND;
-    const TIME: string = Entities.TIME;
     const DATE: string = Entities.DATE;
-    const TIME_PERIOD: string = Entities.TIME_PERIOD;
+    const TIME: string = Entities.TIME;
     const UI_ACTION: string = Entities.UI_ACTION;
     const UI_ACTION_MODIFIER = Entities.UI_ACTION_MODIFIER;
     const UI_ACTION_OPTION = Entities.UI_ACTION_OPTION;
@@ -740,7 +739,7 @@ describe( 'NLPInPortuguese', () => {
                 [ UI_PROPERTY, UI_CONNECTOR, QUERY  ] );
         } );
 
-        describe( 'recognizes a date expression', () => {
+        describe( 'date', () => {
 
             function checkDate( text: string, expected: LocalDate ): void {
                 let r: NLPResult = recognize( text );
@@ -751,6 +750,13 @@ describe( 'NLPInPortuguese', () => {
 
                 const date = r.entities.filter( e => e.entity === DATE );
                 expect( date[ 0 ].value ).toEqual( expectedStr );
+            }
+
+            function checkValueOfDate( text: string, value: number ): void {
+                let r: NLPResult = recognize( text );
+                shouldHaveUIEntities( [ r ], [ UI_PROPERTY, UI_CONNECTOR, DATE ] );
+                const date = r.entities.filter( e => e.entity === DATE );
+                expect( date[ 0 ].value ).toEqual( value );
             }
 
             //
@@ -1008,17 +1014,71 @@ describe( 'NLPInPortuguese', () => {
                 return LocalDate.parse( text, DateTimeFormatter.ofPattern( "dd/MM/yyyy" ) );
             };
 
-            it( 'full', () => {
+            it( 'full date', () => {
                 checkDate(
                     'valor é 31/12/2020',
                     parseDate( "31/12/2020" )
                     );
             } );
 
-            it( 'partial', () => {
+            it( 'partial date', () => {
                 checkDate(
                     'valor é 31/12',
                     parseDate( "31/12/" + LocalDate.now().year() )
+                    );
+            } );
+
+            //
+            // year of
+            //
+
+            it( 'year of + static expression', () => {
+                checkValueOfDate(
+                    'valor é ano de hoje',
+                    LocalDate.now().year()
+                    );
+            } );
+
+            it( 'year of + dynamic expression', () => {
+                checkValueOfDate(
+                    'valor é ano de 2 anos atrás',
+                    LocalDate.now().minusYears( 2 ).year()
+                    );
+            } );
+
+            //
+            // month of
+            //
+
+            it( 'month of + static expression', () => {
+                checkValueOfDate(
+                    'valor é mês de hoje',
+                    LocalDate.now().monthValue()
+                    );
+            } );
+
+            it( 'month of + dynamic expression', () => {
+                checkValueOfDate(
+                    'valor é mês de 2 meses atrás',
+                    LocalDate.now().minusMonths( 2 ).monthValue()
+                    );
+            } );
+
+            //
+            // day of
+            //
+
+            it( 'day of + static expression', () => {
+                checkValueOfDate(
+                    'valor é dia de hoje',
+                    LocalDate.now().dayOfMonth()
+                    );
+            } );
+
+            it( 'day of + dynamic expression', () => {
+                checkValueOfDate(
+                    'valor é dia de 2 dias atrás',
+                    LocalDate.now().minusDays( 2 ).dayOfMonth()
                     );
             } );
 

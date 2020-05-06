@@ -299,16 +299,6 @@ class EntityRecognizerMaker {
     //     return valueRec;
     // }
     /**
-     * Creates a time recognizer.
-     *
-     * @param language Language of the recognizer. Available: "en", "pt", "it"
-     * @param entityName Entity name
-     */
-    makeTime(language, entityName) {
-        const lang = this.braveyLanguage(language);
-        return new lang.TimeEntityRecognizer(entityName, 10);
-    }
-    /**
      * Creates a date recognizer.
      *
      * @param language Language of the recognizer. Available: "en", "pt", "it"
@@ -319,15 +309,28 @@ class EntityRecognizerMaker {
         return new lang.DateEntityRecognizer(entityName);
     }
     /**
-     * Creates a time period recognizer.
+     * Creates a time recognizer.
      *
      * @param language Language of the recognizer. Available: "en", "pt", "it"
      * @param entityName Entity name
      */
-    makeTimePeriod(language, entityName) {
+    makeTime(language, entityName) {
         const lang = this.braveyLanguage(language);
-        return new lang.TimePeriodEntityRecognizer(entityName, 10);
+        return new lang.TimeEntityRecognizer(entityName, 10);
     }
+    // /**
+    //  * Creates a time period recognizer.
+    //  *
+    //  * @param language Language of the recognizer. Available: "en", "pt", "it"
+    //  * @param entityName Entity name
+    //  */
+    // public makeTimePeriod( language: string, entityName: string ): any {
+    //     const lang = this.braveyLanguage( language );
+    //     return new lang.TimePeriodEntityRecognizer( entityName, 10 );
+    // }
+    //
+    // Helper methods
+    //
     /**
      * Returns a Bravey language object according to the given language.
      * If the language is not found, it returns the detector for English.

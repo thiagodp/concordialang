@@ -1,4 +1,4 @@
-import { DateTimeFormatter, LocalDateTime, LocalDate } from '@js-joda/core';
+import { DateTimeFormatter, LocalDate } from '@js-joda/core';
 import * as fs from 'fs';
 import { resolve } from 'path';
 import { Options } from '../../modules/app/Options';
@@ -29,9 +29,8 @@ describe( 'NLP in English', () => {
     const QUERY: string = Entities.QUERY;
     const STATE: string = Entities.STATE;
     const COMMAND: string = Entities.COMMAND;
-    const TIME: string = Entities.TIME;
     const DATE: string = Entities.DATE;
-    const TIME_PERIOD: string = Entities.TIME_PERIOD;
+    const TIME: string = Entities.TIME;
     const UI_ACTION: string = Entities.UI_ACTION;
     const UI_ACTION_MODIFIER = Entities.UI_ACTION_MODIFIER;
     const UI_ACTION_OPTION = Entities.UI_ACTION_OPTION;
@@ -43,7 +42,8 @@ describe( 'NLP in English', () => {
 
     beforeEach( () => {
         nlp = new NLP();
-        const ok = ( new NLPTrainer( langLoader ) ).trainNLP( nlp, LANGUAGE );
+        const nlpTrainer = new NLPTrainer( langLoader );
+        const ok = nlpTrainer.trainNLP( nlp, LANGUAGE );
         expect( ok ).toBeTruthy();
     } );
 
@@ -433,17 +433,78 @@ describe( 'NLP in English', () => {
                 return LocalDate.parse( text, DateTimeFormatter.ofPattern( "MM/dd/yyyy" ) );
             };
 
-            it( 'full', () => {
+            it( 'full date', () => {
                 checkDate(
                     'value is 12/31/2020',
                     parseDate( "12/31/2020" )
                     );
             } );
 
-            it( 'partial', () => {
+            it( 'partial date', () => {
                 checkDate(
                     'value is 12/31',
                     parseDate( "12/31/" + LocalDate.now().year() )
+                    );
+            } );
+
+            //
+            // year of
+            //
+
+            function checkValueOfDate( text: string, value: number ): void {
+                let r: NLPResult = recognize( text );
+                shouldHaveUIEntities( [ r ], [ UI_PROPERTY, DATE ] );
+                const date = r.entities.filter( e => e.entity === DATE );
+                expect( date[ 0 ].value ).toEqual( value );
+            }
+
+            it( 'year of + static expression', () => {
+                checkValueOfDate(
+                    'value is year of today',
+                    LocalDate.now().year()
+                    );
+            } );
+
+            it( 'year of + dynamic expression', () => {
+                checkValueOfDate(
+                    'value is year of 2 years ago',
+                    LocalDate.now().minusYears( 2 ).year()
+                    );
+            } );
+
+            //
+            // month of
+            //
+
+            it( 'month of + static expression', () => {
+                checkValueOfDate(
+                    'value is month of today',
+                    LocalDate.now().monthValue()
+                    );
+            } );
+
+            it( 'month of + dynamic expression', () => {
+                checkValueOfDate(
+                    'value is month of 2 months ago',
+                    LocalDate.now().minusMonths( 2 ).monthValue()
+                    );
+            } );
+
+            //
+            // day of
+            //
+
+            it( 'day of + static expression', () => {
+                checkValueOfDate(
+                    'value is day of today',
+                    LocalDate.now().dayOfMonth()
+                    );
+            } );
+
+            it( 'day of + dynamic expression', () => {
+                checkValueOfDate(
+                    'value is day of 2 days ago',
+                    LocalDate.now().minusDays( 2 ).dayOfMonth()
                     );
             } );
 
