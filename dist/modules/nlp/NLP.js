@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const Bravey = require("../../lib/bravey"); // .js file
+const core_1 = require("@js-joda/core");
 const nlp_1 = require("../nlp");
 const EntityRecognizerMaker_1 = require("./EntityRecognizerMaker");
 /**
@@ -47,7 +48,7 @@ class NLP {
         this._additionalRecognizers.push(erMaker.makeCommand(nlp_1.Entities.COMMAND));
         // Language-based entities
         this._additionalEntities.push(nlp_1.Entities.DATE);
-        // this._additionalEntities.push( Entities.TIME );
+        this._additionalEntities.push(nlp_1.Entities.TIME);
         // this._additionalEntities.push( Entities.TIME_PERIOD );
         // this._additionalEntities.push( Entities.YEAR_OF );
     }
@@ -97,7 +98,7 @@ class NLP {
         // Add language-based recognizers
         const erMaker = new EntityRecognizerMaker_1.EntityRecognizerMaker();
         nlp.addEntity(erMaker.makeDate(language, nlp_1.Entities.DATE));
-        // nlp.addEntity( erMaker.makeTime( language, Entities.TIME ) );
+        nlp.addEntity(erMaker.makeTime(language, nlp_1.Entities.TIME));
         // nlp.addEntity( erMaker.makeTimePeriod( language, Entities.TIME_PERIOD ) );
         // nlp.addEntity( erMaker.makeYearOf( language, Entities.YEAR_OF ) );
         // Train with examples that include the added entities
@@ -141,6 +142,27 @@ class NLP {
         // );
         return r;
     }
+    // -------------------------------------------------------------------------
+    // FOR TESTING PURPOSES
+    getInternalClock() {
+        return Bravey.Clock.getValue();
+    }
+    setInternalClock(clockOrZone) {
+        Bravey.Clock.setValue(clockOrZone);
+    }
+    resetInternalClock() {
+        Bravey.Clock.resetValue();
+    }
+    /**
+     * Creates a fixed clock
+     *
+     * @param temporal A LocalTime or LocalDate for example
+     */
+    createFixedClockFromNow() {
+        return core_1.Clock.fixed(core_1.Instant.now(), // Instant.parse( "2018-08-19T16:02:42.00Z" ),
+        core_1.ZoneId.systemDefault());
+    }
+    // -------------------------------------------------------------------------
     createNLP() {
         return this._useFuzzyProcessor ? new Bravey.Nlp.Fuzzy() : new Bravey.Nlp.Sequential();
     }

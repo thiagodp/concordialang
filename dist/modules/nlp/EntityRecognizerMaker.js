@@ -19,6 +19,7 @@ exports.UI_PROPERTY_REF_REGEX = /\{[ ]*[a-zA-ZÀ-ÖØ-öø-ÿ][a-zA-ZÀ-ÖØ-ö�
 // export const UI_LITERAL_REGEX = /(?:\<)((?:#|@|\.|\/\/|~|[a-zA-ZÀ-ÖØ-öø-ÿ])[^<\r\n]*)(?:\>)/g; // Issue #19
 exports.UI_LITERAL_REGEX = /(?:\<)((?:#|@|\.|\/\/|~|[a-zA-ZÀ-ÖØ-öø-ÿ0-9 ]?)[^<\r\n]*[^\\>])(?:\>)/g;
 exports.NUMBER_REGEX = /(-?[0-9]+(?:\.[0-9]+)?)/g;
+// export const NUMBER_REGEX = /(?:[ ,\[]|^)(-?[0-9]+(?:\.[0-9]+)?)/g; // Last addition to not consider the invalid seconds of a time as being a number
 // export const QUERY_REGEX = new RegExp( '"(?:\t| )*SELECT[^"]+"', "gi" );
 exports.QUERY_REGEX = /"(?:\t| )*SELECT[^"]+"/gi;
 exports.CONSTANT_REGEX = /\[[a-zA-ZÀ-ÖØ-öø-ÿ_][a-zA-ZÀ-ÖØ-öø-ÿ0-9 _-]*\]/g;
@@ -316,7 +317,7 @@ class EntityRecognizerMaker {
      */
     makeTime(language, entityName) {
         const lang = this.braveyLanguage(language);
-        return new lang.TimeEntityRecognizer(entityName, 10);
+        return new lang.TimeEntityRecognizer2(entityName);
     }
     // /**
     //  * Creates a time period recognizer.

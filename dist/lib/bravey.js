@@ -3,6 +3,9 @@
 const core = require('@js-joda/core');
 const LocalDate = core.LocalDate;
 const DateTimeFormatter = core.DateTimeFormatter;
+const LocalTime = core.LocalTime;
+// See formats at
+// https://js-joda.github.io/js-joda/class/packages/core/src/format/DateTimeFormatter.js~DateTimeFormatter.html#static-method-ofPattern
 /**
  * The main namespace.
  * @namespace
@@ -41,6 +44,24 @@ Bravey.Filter = {};
  * @namespace
  */
 Bravey.SessionManager = {};
+// -------------------------------------
+// by TDP
+/**
+ * Use a clock to create the current time. Useful for testing purposes.
+ */
+Bravey.Clock = {
+    _value: undefined,
+    setValue: function (clock) {
+        this._value = clock;
+    },
+    resetValue: function () {
+        this.setValue(undefined);
+    },
+    getValue: function () {
+        return this._value;
+    }
+};
+// -------------------------------------
 /**
  Defines an entity.
  @typedef Entity
@@ -2900,6 +2921,105 @@ Bravey.Language.EN.TimeEntityRecognizer = function (entityName) {
     matcher.bindTo(this);
 };
 /**
+ * Entity recognizer of time expressions.
+ * @constructor
+ * @param {string} entityName
+ * @returns {Bravey.RegexEntityRecognizer}
+ */
+Bravey.Language.EN.TimeEntityRecognizer2 = function (entityName) {
+    var matcher = new Bravey.RegexEntityRecognizer(entityName);
+    //
+    // time
+    //
+    matcher.addMatch(new RegExp("(([01][0-9]|2[0-3])\\:([0-5][0-9])(\\:([0-5][0-9]))?)", "gi"), function (match) {
+        // console.log( 'TIME', match );
+        var hour = match[2];
+        var minute = match[3];
+        var second = typeof match[5] !== undefined ? match[5] : '00';
+        return LocalTime.of(hour, minute, second);
+    });
+    /**
+       * Returns a function to handle the regular expression match, using
+       * the parameterized time.
+       *
+       * @param {LocalDate} time
+       * @returns function( match )
+       */
+    var timeFromMatch = function (time) {
+        return function (match) {
+            // console.log( 'TIME FROM MATCH', match );
+            var prefixMatch = match[prefixMatchIndex];
+            if (!prefixMatch) {
+                // return time.format( formatter ).toString();
+                return time;
+            }
+            else if ((new RegExp(hour, "i")).test(prefixMatch)) {
+                return time.hour();
+            }
+            else if ((new RegExp(minute, "i")).test(prefixMatch)) {
+                return time.minute();
+            }
+            else if ((new RegExp(second, "i")).test(prefixMatch)) {
+                return time.second();
+            }
+            return time;
+        };
+    };
+    var hour = "hours?";
+    var minute = "minutes?";
+    var second = "seconds?";
+    var ofPrefixes = "((" + [hour, minute, second].join('|') + ")(?: |\\t)*(?:of|from|of the|from the))?(?: |\\t)*";
+    var prefixMatchIndex = 2;
+    /**
+       * Returns a function to handle the regular expression match, using
+       * the parameterized time.
+       *
+       * @param {LocalDate} time
+       * @returns function( match )
+       */
+    var timeFromMatch = function (time) {
+        return function (match) {
+            // console.log( 'TIME FROM MATCH', match );
+            var prefixMatch = match[prefixMatchIndex];
+            if (!prefixMatch) {
+                // return time.format( formatter ).toString();
+                return time;
+            }
+            else if ((new RegExp(hour, "i")).test(prefixMatch)) {
+                return time.hour();
+            }
+            else if ((new RegExp(minute, "i")).test(prefixMatch)) {
+                return time.minute();
+            }
+            else if ((new RegExp(second, "i")).test(prefixMatch)) {
+                return time.second();
+            }
+            return time;
+        };
+    };
+    function now() {
+        return LocalTime.now(Bravey.Clock.getValue());
+    }
+    //
+    // time expressions without number
+    //
+    matcher.addMatch(new RegExp(ofPrefixes + "(now|current time)", "gi"), timeFromMatch(now()));
+    // past
+    matcher.addMatch(new RegExp(ofPrefixes + "(last hour|previous hour)", "gi"), timeFromMatch(now().minusHours(1)));
+    matcher.addMatch(new RegExp(ofPrefixes + "(last minute|previous minute)", "gi"), timeFromMatch(now().minusMinutes(1)));
+    matcher.addMatch(new RegExp(ofPrefixes + "(last second|previous second)", "gi"), timeFromMatch(now().minusSeconds(1)));
+    // future
+    matcher.addMatch(new RegExp(ofPrefixes + "(next hour)", "gi"), timeFromMatch(now().plusHours(1)));
+    matcher.addMatch(new RegExp(ofPrefixes + "(next minute)", "gi"), timeFromMatch(now().plusMinutes(1)));
+    matcher.addMatch(new RegExp(ofPrefixes + "(next second)", "gi"), timeFromMatch(now().plusSeconds(1)));
+    var pastPrefix = "last|past";
+    var futurePrefix = "in|next";
+    var pastSuffix = "ago|in the past";
+    var futureSuffix = "ahead|in the future|later|from now";
+    addDynamicTimeMatchers(matcher, pastPrefix, futurePrefix, pastSuffix, futureSuffix, hour, minute, second, ofPrefixes);
+    matcher.bindTo(this);
+};
+/**
  * An entity recognizer that can recognizes time period expressions. Returned entities value <tt>{"start":"HH:MM:SS","end":"HH:MM:SS"}</tt>.
  * @constructor
  * @param {string} entityName - The name of produced entities.
@@ -2998,8 +3118,8 @@ Bravey.Language.EN.DateEntityRecognizer = function (entityName) {
             str: ["december~", "dec~", "12~"],
             val: 11
         }], 0);
-    // examples: "01/30/2000", "01-30-2000", "01.30.2000", "01/30", "01-30", "01.30"
-    matcher.addMatch(new RegExp("\\b(([0-9]{1,2})(/|-|\.)([0-9]{1,2})((/|-|\.)([0-9]{2,4}))?)\\b", "gi"), function (match) {
+    // examples: 01/30/2000, 01-30-2000, 01/30, 01-30
+    matcher.addMatch(new RegExp("\\b((0[1-9]|1[012])(\\/|-)(0[1-9]|[12][0-9]|3[01])((\\/|-)([0-9]{2,4}))?)\\b", "gi"), function (match) {
         var now = new Date();
         var y = now.getFullYear();
         if (match[2] && match[4]) {
@@ -3059,7 +3179,7 @@ Bravey.Language.EN.DateEntityRecognizer = function (entityName) {
     var pDay = 'day';
     var pMonth = 'month';
     var pYear = 'year';
-    var ofPrefixes = "((" + [pDay, pMonth, pYear].join('|') + ") of)?" + Bravey.Text.WORDSEP;
+    var ofPrefixes = "((" + [pDay, pMonth, pYear].join('|') + ")(?: |\\t)*(?:of|from))?(?: |\\t)*";
     var ofPrefixMatchIndex = 2;
     var dateFormatter = DateTimeFormatter.ofPattern('yyyy-MM-dd');
     /**
@@ -3084,19 +3204,22 @@ Bravey.Language.EN.DateEntityRecognizer = function (entityName) {
             return date.format(dateFormatter).toString();
         };
     };
-    matcher.addMatch(new RegExp(ofPrefixes + "(last year)\\b", "gi"), dateFromMatch(LocalDate.now().minusYears(1)));
-    matcher.addMatch(new RegExp(ofPrefixes + "(last semester)\\b", "gi"), dateFromMatch(LocalDate.now().minusMonths(6)));
-    matcher.addMatch(new RegExp(ofPrefixes + "(last month)\\b", "gi"), dateFromMatch(LocalDate.now().minusMonths(1)));
-    matcher.addMatch(new RegExp(ofPrefixes + "(last week)\\b", "gi"), dateFromMatch(LocalDate.now().minusDays(7)));
-    matcher.addMatch(new RegExp(ofPrefixes + "(the day before yesterday)\\b", "gi"), dateFromMatch(LocalDate.now().minusDays(2)));
-    matcher.addMatch(new RegExp(ofPrefixes + "(yesterday)\\b", "gi"), dateFromMatch(LocalDate.now().minusDays(1)));
-    matcher.addMatch(new RegExp(ofPrefixes + "(today)\\b", "gi"), dateFromMatch(LocalDate.now()));
-    matcher.addMatch(new RegExp(ofPrefixes + "(tomorrow)\\b", "gi"), dateFromMatch(LocalDate.now().plusDays(1)));
-    matcher.addMatch(new RegExp(ofPrefixes + "(the day after tomorrow)\\b", "gi"), dateFromMatch(LocalDate.now().plusDays(2)));
-    matcher.addMatch(new RegExp(ofPrefixes + "(next week)\\b", "gi"), dateFromMatch(LocalDate.now().plusDays(7)));
-    matcher.addMatch(new RegExp(ofPrefixes + "(next month)\\b", "gi"), dateFromMatch(LocalDate.now().plusMonths(1)));
-    matcher.addMatch(new RegExp(ofPrefixes + "(next semester)\\b", "gi"), dateFromMatch(LocalDate.now().plusMonths(6)));
-    matcher.addMatch(new RegExp(ofPrefixes + "(next year)\\b", "gi"), dateFromMatch(LocalDate.now().plusYears(1)));
+    function now() {
+        return LocalDate.now(Bravey.Clock.getValue());
+    }
+    matcher.addMatch(new RegExp(ofPrefixes + "(last year)\\b", "gi"), dateFromMatch(now().minusYears(1)));
+    matcher.addMatch(new RegExp(ofPrefixes + "(last semester)\\b", "gi"), dateFromMatch(now().minusMonths(6)));
+    matcher.addMatch(new RegExp(ofPrefixes + "(last month)\\b", "gi"), dateFromMatch(now().minusMonths(1)));
+    matcher.addMatch(new RegExp(ofPrefixes + "(last week)\\b", "gi"), dateFromMatch(now().minusDays(7)));
+    matcher.addMatch(new RegExp(ofPrefixes + "(the day before yesterday)\\b", "gi"), dateFromMatch(now().minusDays(2)));
+    matcher.addMatch(new RegExp(ofPrefixes + "(yesterday)\\b", "gi"), dateFromMatch(now().minusDays(1)));
+    matcher.addMatch(new RegExp(ofPrefixes + "(today|current date)\\b", "gi"), dateFromMatch(now()));
+    matcher.addMatch(new RegExp(ofPrefixes + "(tomorrow)\\b", "gi"), dateFromMatch(now().plusDays(1)));
+    matcher.addMatch(new RegExp(ofPrefixes + "(the day after tomorrow)\\b", "gi"), dateFromMatch(now().plusDays(2)));
+    matcher.addMatch(new RegExp(ofPrefixes + "(next week)\\b", "gi"), dateFromMatch(now().plusDays(7)));
+    matcher.addMatch(new RegExp(ofPrefixes + "(next month)\\b", "gi"), dateFromMatch(now().plusMonths(1)));
+    matcher.addMatch(new RegExp(ofPrefixes + "(next semester)\\b", "gi"), dateFromMatch(now().plusMonths(6)));
+    matcher.addMatch(new RegExp(ofPrefixes + "(next year)\\b", "gi"), dateFromMatch(now().plusYears(1)));
     var pastPrefix = "last|past";
     var futurePrefix = "in|next";
     var pastSuffix = "ago|in the past";
@@ -4582,6 +4705,73 @@ Bravey.Language.PT.Stemmer = (function () {
  * @param {string} entityName
  * @returns {Bravey.RegexEntityRecognizer}
  */
+Bravey.Language.PT.TimeEntityRecognizer2 = function (entityName) {
+    var matcher = new Bravey.RegexEntityRecognizer(entityName);
+    // time
+    matcher.addMatch(new RegExp("(([01][0-9]|2[0-3])\\:([0-5][0-9])(\\:([0-5][0-9]))?)", "gi"), function (match) {
+        // console.log( 'TIME', match );
+        var hour = match[2];
+        var minute = match[3];
+        var second = typeof match[5] !== undefined ? match[5] : '00';
+        return LocalTime.of(hour, minute, second);
+    });
+    var hour = "horas?";
+    var minute = "minutos?";
+    var second = "segundos?";
+    var ofPrefixes = "((" + [hour, minute, second].join('|') + ")(?: |\\t)*(?:d[eoa]))?(?: |\\t)*";
+    var prefixMatchIndex = 2;
+    // var formatter = DateTimeFormatter.ofPattern( "HH:mm:ss" );
+    /**
+     * Returns a function to handle the regular expression match, using
+     * the parameterized time.
+     *
+     * @param {LocalDate} time
+     * @returns function( match )
+     */
+    var timeFromMatch = function (time) {
+        return function (match) {
+            // console.log( 'TIME FROM MATCH', match );
+            var prefixMatch = match[prefixMatchIndex];
+            if (!prefixMatch) {
+                // return time.format( formatter ).toString();
+                return time;
+            }
+            else if ((new RegExp(hour, "i")).test(prefixMatch)) {
+                return time.hour();
+            }
+            else if ((new RegExp(minute, "i")).test(prefixMatch)) {
+                return time.minute();
+            }
+            else if ((new RegExp(second, "i")).test(prefixMatch)) {
+                return time.second();
+            }
+            return time;
+        };
+    };
+    function now() {
+        return LocalTime.now(Bravey.Clock.getValue());
+    }
+    // time expressions without number
+    matcher.addMatch(new RegExp(ofPrefixes + "(agora|hora atual)", "gi"), timeFromMatch(now()));
+    matcher.addMatch(new RegExp(ofPrefixes + "([úu]ltima hora|hora anterior)", "gi"), timeFromMatch(now().minusHours(1)));
+    matcher.addMatch(new RegExp(ofPrefixes + "([úu]ltimo minuto|minuto anterior)", "gi"), timeFromMatch(now().minusMinutes(1)));
+    matcher.addMatch(new RegExp(ofPrefixes + "([úu]ltimo segundo|segundo anterior)", "gi"), timeFromMatch(now().minusSeconds(1)));
+    matcher.addMatch(new RegExp(ofPrefixes + "(pr[óo]xima hora|hora seguinte)", "gi"), timeFromMatch(now().plusHours(1)));
+    matcher.addMatch(new RegExp(ofPrefixes + "(pr[óo]ximo minuto|minuto seguinte)", "gi"), timeFromMatch(now().plusMinutes(1)));
+    matcher.addMatch(new RegExp(ofPrefixes + "(pr[óo]ximo segundo|segundo seguinte)", "gi"), timeFromMatch(now().plusSeconds(1)));
+    var pastPrefix = "h[áa]";
+    var futurePrefix = "daqui|daqui a|em";
+    var pastSuffix = "atr[áa]s|no passado";
+    var futureSuffix = "adiante|[àa] frente|no futuro";
+    addDynamicTimeMatchers(matcher, pastPrefix, futurePrefix, pastSuffix, futureSuffix, hour, minute, second, ofPrefixes);
+    matcher.bindTo(this);
+};
+/**
+ * Entity recognizer of time expressions.
+ * @constructor
+ * @param {string} entityName
+ * @returns {Bravey.RegexEntityRecognizer}
+ */
 Bravey.Language.PT.TimeEntityRecognizer = function (entityName) {
     var matcher = new Bravey.RegexEntityRecognizer(entityName);
     var exp1 = "\\b(às\\b|as\\b|em\\b)?" + Bravey.Text.WORDSEP +
@@ -4694,12 +4884,15 @@ Bravey.Language.PT.TimePeriodEntityRecognizer = function (entityName) {
     matcher.bindTo(this);
 };
 function addDynamicDateMatchers(matcher, pastPrefix, futurePrefix, pastSuffix, futureSuffix, year, month, week, day, yearOf, monthOf, dayOf, ofPrefixes) {
+    function now() {
+        return LocalDate.now(Bravey.Clock.getValue());
+    }
     function formatDate(date) {
         var dateFormatter = DateTimeFormatter.ofPattern('yyyy-MM-dd');
         return date.format(dateFormatter).toString();
     }
     function dateFor(isPast, period, value) {
-        var date = LocalDate.now();
+        var date = now();
         if (new RegExp(year).test(period)) { // year
             date = isPast ? date.minusYears(value) : date.plusYears(value);
         }
@@ -4715,7 +4908,10 @@ function addDynamicDateMatchers(matcher, pastPrefix, futurePrefix, pastSuffix, f
         return date;
     }
     function analyzeDate(date, ofPrefixMatch) {
-        if ((new RegExp(yearOf, "i")).test(ofPrefixMatch)) {
+        if (!ofPrefixMatch) {
+            return formatDate(date);
+        }
+        else if ((new RegExp(yearOf, "i")).test(ofPrefixMatch)) {
             return date.year();
         }
         else if ((new RegExp(monthOf, "i")).test(ofPrefixMatch)) {
@@ -4728,12 +4924,12 @@ function addDynamicDateMatchers(matcher, pastPrefix, futurePrefix, pastSuffix, f
     }
     // PREFIXED
     var prefixedExp = ofPrefixes +
-        "(" + pastPrefix + "|" + futurePrefix + ")\\b(?: |\t)*([0-9]+)(?: |\t)+" +
+        "(" + pastPrefix + "|" + futurePrefix + ")\\b(?: |\\t)*([0-9]+)(?: |\\t)+" +
         //    1                                                 2
         "(" + [year, month, week, day].join("|") + ")";
     //    3
     matcher.addMatch(new RegExp(prefixedExp, "gi"), function (match) {
-        // console.log( 'PREFIXED', match );
+        // console.log( 'PREFIXED DATE', match );
         var ofPrefixMatch = match[1];
         var prefix = match[3];
         var value = Number(match[4]);
@@ -4744,12 +4940,12 @@ function addDynamicDateMatchers(matcher, pastPrefix, futurePrefix, pastSuffix, f
     });
     // SUFFIXED
     var suffixedExp = ofPrefixes +
-        "([0-9]+)(?: |\t)+(" + [year, month, week, day].join("|") + ")(?: |\t)*" +
+        "([0-9]+)(?: |\\t)+(" + [year, month, week, day].join("|") + ")(?: |\\t)*" +
         //  1                    2
         "(" + pastSuffix + "|" + futureSuffix + ")\\b";
     //  3
     matcher.addMatch(new RegExp(suffixedExp, "gi"), function (match) {
-        // console.log( 'POSTFIXED', match );
+        // console.log( 'SUFFIXED DATE', match );
         var ofPrefixMatch = match[1];
         var value = Number(match[3]);
         var period = match[4];
@@ -4757,6 +4953,78 @@ function addDynamicDateMatchers(matcher, pastPrefix, futurePrefix, pastSuffix, f
         var isPast = new RegExp(pastSuffix).test(suffix);
         var date = dateFor(isPast, period, value);
         return analyzeDate(date, ofPrefixMatch);
+    });
+}
+function addDynamicTimeMatchers(matcher, pastPrefix, futurePrefix, pastSuffix, futureSuffix, hour, minute, second, ofPrefixes) {
+    // function formatTime( localTime ) {
+    //   var formatter = DateTimeFormatter.ofPattern( 'HH:mm:ss' );
+    //   return localTime.format( formatter ).toString();
+    // }
+    function now() {
+        return LocalTime.now(Bravey.Clock.getValue());
+    }
+    function timeFor(isPast, period, value) {
+        var time = now();
+        if (new RegExp(hour).test(period)) { // hour
+            time = isPast ? time.minusHours(value) : time.plusHours(value);
+        }
+        else if (new RegExp(minute).test(period)) { // minute
+            time = isPast ? time.minusMinutes(value) : time.plusMinutes(value);
+        }
+        else if (new RegExp(second).test(period)) { // second
+            time = isPast ? time.minusSeconds(value) : time.plusSeconds(value);
+        }
+        return time;
+    }
+    function analyzeTime(localTime, ofPrefixMatch) {
+        if (!ofPrefixMatch) {
+            return localTime;
+        }
+        else if ((new RegExp(hour, "i")).test(ofPrefixMatch)) {
+            return localTime.hour();
+        }
+        else if ((new RegExp(minute, "i")).test(ofPrefixMatch)) {
+            return localTime.minute();
+        }
+        else if ((new RegExp(second, "i")).test(ofPrefixMatch)) {
+            return localTime.second();
+        }
+        // return formatTime( localTime );
+        return localTime;
+    }
+    // PREFIXED
+    var prefixedExp = "(" + ofPrefixes + "(?: |\\t)*" +
+        "(" + pastPrefix + "|" + futurePrefix + ")(?: |\\t)*([0-9]+)(?: |\\t)+" +
+        //    1                                                 2
+        "(" + [hour, minute, second].join("|") + "))";
+    //    3
+    // console.log( 'PREFIXED EXP', prefixedExp );
+    matcher.addMatch(new RegExp(prefixedExp, "gi"), function (match) {
+        // console.log( 'PREFIXED TIME', match );
+        var ofPrefixMatch = match[3];
+        var prefix = match[4];
+        var value = Number(match[5]);
+        var period = match[6];
+        var isPast = new RegExp(pastPrefix).test(prefix);
+        var date = timeFor(isPast, period, value);
+        return analyzeTime(date, ofPrefixMatch);
+    });
+    // SUFFIXED
+    var suffixedExp = "(" + ofPrefixes + "(?: |\\t)*" +
+        "([0-9]+)(?: |\\t)+(" + [hour, minute, second].join("|") + ")(?: |\\t)*" +
+        //  1                    2
+        "(" + pastSuffix + "|" + futureSuffix + "))";
+    //  3
+    // console.log( 'SIFFIXED EXP', suffixedExp );
+    matcher.addMatch(new RegExp(suffixedExp, "gi"), function (match) {
+        // console.log( 'SUFIXED TIME', match );
+        var ofPrefixMatch = match[3];
+        var value = Number(match[4]);
+        var period = match[5];
+        var suffix = match[6];
+        var isPast = new RegExp(pastSuffix).test(suffix);
+        var time = timeFor(isPast, period, value);
+        return analyzeTime(time, ofPrefixMatch);
     });
 }
 /**
@@ -4804,8 +5072,9 @@ Bravey.Language.PT.DateEntityRecognizer = function (entityName) {
             str: ["dezembro~", "dez~", "12~"],
             val: 11
         }], 0);
-    // examples: "30/01/2000", "30-01-2000", "30.01.2000", "30/01", "30-01", "30.01"
-    matcher.addMatch(new RegExp("\\b(([0-9]{1,2})(/|-|\.)([0-9]{1,2})((/|-|\.)([0-9]{2,4}))?)\\b", "gi"), function (match) {
+    // examples: 30/01/2000, 30-01-2000, 30/01, 30-01
+    matcher.addMatch(new RegExp("\\b((0[1-9]|[12][0-9]|3[01])(\\/|-)(0[1-9]|1[012])((\\/|-)([0-9]{2,4}))?)\\b", "gi"), function (match) {
+        // console.log( 'DATE', match );
         var now = new Date();
         var y = now.getFullYear();
         if (match[2] && match[4]) {
@@ -4854,7 +5123,7 @@ Bravey.Language.PT.DateEntityRecognizer = function (entityName) {
     var pDay = 'dia';
     var pMonth = 'm[êe]s';
     var pYear = 'ano';
-    var ofPrefixes = "((" + [pDay, pMonth, pYear].join('|') + ") d[eoa])?" + Bravey.Text.WORDSEP;
+    var ofPrefixes = "((" + [pDay, pMonth, pYear].join('|') + ")(?: |\\t)*(?:d[eoa]))?(?: |\\t)*";
     var prefixMatchIndex = 2;
     var dateFormatter = DateTimeFormatter.ofPattern('yyyy-MM-dd');
     /**
@@ -4879,21 +5148,24 @@ Bravey.Language.PT.DateEntityRecognizer = function (entityName) {
             return date.format(dateFormatter).toString();
         };
     };
-    matcher.addMatch(new RegExp(ofPrefixes + "(hoje)\\b", "gi"), dateFromMatch(LocalDate.now()));
-    matcher.addMatch(new RegExp(ofPrefixes + "(amanh[ãa])", "gi"), dateFromMatch(LocalDate.now().plusDays(1)));
-    matcher.addMatch(new RegExp(ofPrefixes + "(depois de amanh[ãa])", "gi"), dateFromMatch(LocalDate.now().plusDays(2)));
-    matcher.addMatch(new RegExp(ofPrefixes + "(semana que vem)\\b", "gi"), dateFromMatch(LocalDate.now().plusDays(7)));
-    matcher.addMatch(new RegExp(ofPrefixes + "(m[êe]s que vem)\\b", "gi"), dateFromMatch(LocalDate.now().plusMonths(1)));
-    matcher.addMatch(new RegExp(ofPrefixes + "(semestre que vem)\\b", "gi"), dateFromMatch(LocalDate.now().plusMonths(6)));
-    matcher.addMatch(new RegExp(ofPrefixes + "(ano que vem)\\b", "gi"), dateFromMatch(LocalDate.now().plusYears(1)));
-    matcher.addMatch(new RegExp(ofPrefixes + "(ontem)\\b", "gi"), dateFromMatch(LocalDate.now().minusDays(1)));
-    matcher.addMatch(new RegExp(ofPrefixes + "(anteontem|antes de ontem)\\b", "gi"), dateFromMatch(LocalDate.now().minusDays(2)));
-    matcher.addMatch(new RegExp(ofPrefixes + "(semana passada)\\b", "gi"), dateFromMatch(LocalDate.now().minusDays(7)));
-    matcher.addMatch(new RegExp(ofPrefixes + "(m[êe]s passado)\\b", "gi"), dateFromMatch(LocalDate.now().minusMonths(1)));
-    matcher.addMatch(new RegExp(ofPrefixes + "(semestre passado)\\b", "gi"), dateFromMatch(LocalDate.now().minusMonths(6)));
-    matcher.addMatch(new RegExp(ofPrefixes + "(ano passado)\\b", "gi"), dateFromMatch(LocalDate.now().minusYears(1)));
+    function now() {
+        return LocalDate.now(Bravey.Clock.getValue());
+    }
+    matcher.addMatch(new RegExp(ofPrefixes + "(hoje)\\b", "gi"), dateFromMatch(now()));
+    matcher.addMatch(new RegExp(ofPrefixes + "(amanh[ãa])", "gi"), dateFromMatch(now().plusDays(1)));
+    matcher.addMatch(new RegExp(ofPrefixes + "(depois de amanh[ãa])", "gi"), dateFromMatch(now().plusDays(2)));
+    matcher.addMatch(new RegExp(ofPrefixes + "(semana que vem)\\b", "gi"), dateFromMatch(now().plusDays(7)));
+    matcher.addMatch(new RegExp(ofPrefixes + "(m[êe]s que vem)\\b", "gi"), dateFromMatch(now().plusMonths(1)));
+    matcher.addMatch(new RegExp(ofPrefixes + "(semestre que vem)\\b", "gi"), dateFromMatch(now().plusMonths(6)));
+    matcher.addMatch(new RegExp(ofPrefixes + "(ano que vem)\\b", "gi"), dateFromMatch(now().plusYears(1)));
+    matcher.addMatch(new RegExp(ofPrefixes + "(ontem)\\b", "gi"), dateFromMatch(now().minusDays(1)));
+    matcher.addMatch(new RegExp(ofPrefixes + "(anteontem|antes de ontem)\\b", "gi"), dateFromMatch(now().minusDays(2)));
+    matcher.addMatch(new RegExp(ofPrefixes + "(semana passada)\\b", "gi"), dateFromMatch(now().minusDays(7)));
+    matcher.addMatch(new RegExp(ofPrefixes + "(m[êe]s passado)\\b", "gi"), dateFromMatch(now().minusMonths(1)));
+    matcher.addMatch(new RegExp(ofPrefixes + "(semestre passado)\\b", "gi"), dateFromMatch(now().minusMonths(6)));
+    matcher.addMatch(new RegExp(ofPrefixes + "(ano passado)\\b", "gi"), dateFromMatch(now().minusYears(1)));
     var pastPrefix = "h[áa]";
-    var futurePrefix = "daqui|em";
+    var futurePrefix = "daqui|daqui a|em";
     var pastSuffix = "atr[áa]s";
     var futureSuffix = "adiante|[àa] frente|no futuro";
     var year = "anos?";

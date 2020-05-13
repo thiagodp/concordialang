@@ -1,4 +1,5 @@
 import Bravey = require('../../lib/bravey'); // .js file
+import { Clock, TemporalAccessor, ZoneId, Instant } from '@js-joda/core';
 import { Entities, NLPResult, NLPTrainingData } from "../nlp";
 import { EntityRecognizerMaker } from './EntityRecognizerMaker';
 
@@ -59,7 +60,7 @@ export class NLP {
 
         // Language-based entities
         this._additionalEntities.push( Entities.DATE );
-        // this._additionalEntities.push( Entities.TIME );
+        this._additionalEntities.push( Entities.TIME );
         // this._additionalEntities.push( Entities.TIME_PERIOD );
         // this._additionalEntities.push( Entities.YEAR_OF );
     }
@@ -117,7 +118,7 @@ export class NLP {
         // Add language-based recognizers
         const erMaker = new EntityRecognizerMaker();
         nlp.addEntity( erMaker.makeDate( language, Entities.DATE ) );
-        // nlp.addEntity( erMaker.makeTime( language, Entities.TIME ) );
+        nlp.addEntity( erMaker.makeTime( language, Entities.TIME ) );
         // nlp.addEntity( erMaker.makeTimePeriod( language, Entities.TIME_PERIOD ) );
         // nlp.addEntity( erMaker.makeYearOf( language, Entities.YEAR_OF ) );
 
@@ -164,6 +165,36 @@ export class NLP {
         // );
         return r;
     }
+
+    // -------------------------------------------------------------------------
+    // FOR TESTING PURPOSES
+
+    public getInternalClock(): Clock | ZoneId {
+        return Bravey.Clock.getValue();
+    }
+
+    public setInternalClock( clockOrZone?: Clock | ZoneId ): void {
+        Bravey.Clock.setValue( clockOrZone );
+    }
+
+    public resetInternalClock(): void {
+        Bravey.Clock.resetValue();
+    }
+
+    /**
+     * Creates a fixed clock
+     *
+     * @param temporal A LocalTime or LocalDate for example
+     */
+    public createFixedClockFromNow(): Clock {
+        return Clock.fixed(
+            Instant.now(), // Instant.parse( "2018-08-19T16:02:42.00Z" ),
+            ZoneId.systemDefault()
+            );
+    }
+
+    // -------------------------------------------------------------------------
+
 
     private createNLP(): any {
         return this._useFuzzyProcessor ? new Bravey.Nlp.Fuzzy() : new Bravey.Nlp.Sequential()

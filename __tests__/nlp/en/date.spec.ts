@@ -1,14 +1,18 @@
-import { DateTimeFormatter, LocalDate } from '@js-joda/core';
+import { DateTimeFormatter, LocalDate, LocalTime, Clock, Instant, ZoneId } from '@js-joda/core';
 import * as fs from 'fs';
 import { resolve } from 'path';
-import { Options } from '../../modules/app/Options';
-import { JsonLanguageContentLoader, LanguageContentLoader } from '../../modules/language';
-import { Entities, Intents, NLP, NLPResult, NLPTrainer } from '../../modules/nlp';
-import { FSFileHandler } from '../../modules/util/file/FSFileHandler';
+import { Options } from '../../../modules/app/Options';
+import { JsonLanguageContentLoader, LanguageContentLoader } from '../../../modules/language';
+import { Entities, Intents, NLP, NLPResult, NLPTrainer } from '../../../modules/nlp';
+import { FSFileHandler } from '../../../modules/util/file/FSFileHandler';
 
-describe( 'NLP in English', () => {
+import { shouldHaveUIEntities, shouldNotHaveEntities } from "../util";
+
+describe( 'nlp.en.date', () => {
 
     let nlp: NLP; // under test
+
+    let clock: Clock; // helper
 
     const LANGUAGE = 'en';
     const options: Options = new Options( resolve( process.cwd(), 'dist/' ) );
@@ -21,33 +25,21 @@ describe( 'NLP in English', () => {
         );
 
     // entities
-    const UI_ELEMENT: string = Entities.UI_ELEMENT_REF;
-    const UI_LITERAL: string = Entities.UI_LITERAL;
-    const VALUE: string = Entities.VALUE;
-    const NUMBER: string = Entities.NUMBER;
-    const CONSTANT: string = Entities.CONSTANT;
-    const QUERY: string = Entities.QUERY;
-    const STATE: string = Entities.STATE;
-    const COMMAND: string = Entities.COMMAND;
     const DATE: string = Entities.DATE;
-    const TIME: string = Entities.TIME;
-    const UI_ACTION: string = Entities.UI_ACTION;
-    const UI_ACTION_MODIFIER = Entities.UI_ACTION_MODIFIER;
-    const UI_ACTION_OPTION = Entities.UI_ACTION_OPTION;
-    const UI_ELEMENT_TYPE: string = Entities.UI_ELEMENT_TYPE;
     const UI_PROPERTY: string = Entities.UI_PROPERTY;
-    const UI_CONNECTOR: string = Entities.UI_CONNECTOR;
-    const UI_DATA_TYPE: string = Entities.UI_DATA_TYPE;
-    const EXEC_ACTION: string = Entities.EXEC_ACTION;
 
-    beforeEach( () => {
+    beforeAll( () => {
         nlp = new NLP();
         const nlpTrainer = new NLPTrainer( langLoader );
         const ok = nlpTrainer.trainNLP( nlp, LANGUAGE );
         expect( ok ).toBeTruthy();
+
+        clock = nlp.createFixedClockFromNow();
+        nlp.setInternalClock( clock );
     } );
 
-    afterEach( () => {
+    afterAll( () => {
+        nlp.resetInternalClock();
         nlp = null;
     } );
 
@@ -55,150 +47,158 @@ describe( 'NLP in English', () => {
         return nlp.recognize( LANGUAGE, sentence );
     }
 
-    function recognizeInTestCase( sentence: string ) {
-        return nlp.recognize( LANGUAGE, sentence, Intents.TEST_CASE );
-    }
 
-    function recognizeInUI( sentence: string ) {
-        return nlp.recognize( LANGUAGE, sentence, Intents.UI );
-    }
+    function checkDate( text: string, expected: LocalDate ): void {
+        let r: NLPResult = recognize( text );
+        shouldHaveUIEntities( [ r ], [ UI_PROPERTY, DATE  ] );
 
-    function shouldHaveEntities(
-        results: NLPResult[],
-        expectedEntitiesNames: string[],
-        intent: string,
-        debug: boolean = false
-    ) {
-        for ( let r of results ) {
-            if ( debug ) { console.log( 'NLP Result is', r ); }
-            expect( r ).not.toBeFalsy();
-            expect( r.intent ).toEqual( intent );
-            expect( r.entities ).not.toBeNull();
-            expect( r.entities.length ).toBeGreaterThanOrEqual( expectedEntitiesNames.length );
-            let entities = r.entities.map( e => e.entity );
-            expect( entities ).toEqual( expect.arrayContaining( expectedEntitiesNames ) ); // it doesn't matter the array order
-        }
-    }
+        const expectedStr = expected.format(
+            DateTimeFormatter.ofPattern( 'yyyy-MM-dd' ) ).toString();
 
-    function shouldHaveTestCaseEntities( results: any[], expectedEntitiesNames: string[], debug: boolean = false ) {
-        shouldHaveEntities( results, expectedEntitiesNames, Intents.TEST_CASE, debug );
-    }
-
-    function shouldHaveUIEntities( results: any[], expectedEntitiesNames: string[], debug: boolean = false ) {
-        shouldHaveEntities( results, expectedEntitiesNames, Intents.UI, debug );
+        const date = r.entities.filter( e => e.entity === DATE );
+        expect( date[ 0 ].value ).toEqual( expectedStr );
     }
 
 
-    describe( 'recognizes a date period', () => {
+    describe( 'value', () => {
 
-        function checkDate( text: string, expected: LocalDate ): void {
-            let r: NLPResult = recognize( text );
-            shouldHaveUIEntities( [ r ], [ UI_PROPERTY, DATE  ] );
+        const parseDate = ( text: string ): LocalDate => {
+            return LocalDate.parse( text, DateTimeFormatter.ofPattern( "MM/dd/yyyy" ) );
+        };
 
-            const expectedStr = expected.format(
-                DateTimeFormatter.ofPattern( 'yyyy-MM-dd' ) ).toString();
+        it( 'full date', () => {
+            checkDate(
+                'value is 12/31/2020',
+                parseDate( "12/31/2020" )
+                );
+        } );
 
-            const date = r.entities.filter( e => e.entity === DATE );
-            expect( date[ 0 ].value ).toEqual( expectedStr );
-        }
+        it( 'partial date', () => {
+            checkDate(
+                'value is 12/31',
+                parseDate( "12/31/" + LocalDate.now( clock ).year() )
+                );
+        } );
+
+    } );
+
+
+    describe( 'expression without a number - present', () => {
+
+        it( 'today', () => {
+            checkDate(
+                'value is today',
+                LocalDate.now( clock )
+                );
+        } );
+
+        it( 'current date', () => {
+            checkDate(
+                'value is current date',
+                LocalDate.now( clock )
+                );
+        } );
+
+    } );
+
+    describe( 'expression without a number - past', () => {
 
         it( 'last year', () => {
             checkDate(
                 'value is last year',
-                LocalDate.now().minusYears( 1 )
+                LocalDate.now( clock ).minusYears( 1 )
                 );
         } );
 
         it( 'last semester', () => {
             checkDate(
                 'value is last semester',
-                LocalDate.now().minusMonths( 6 )
+                LocalDate.now( clock ).minusMonths( 6 )
                 );
         } );
 
         it( 'last month', () => {
             checkDate(
                 'value is last month',
-                LocalDate.now().minusMonths( 1 )
+                LocalDate.now( clock ).minusMonths( 1 )
                 );
         } );
 
         it( 'last week', () => {
             checkDate(
                 'value is last week',
-                LocalDate.now().minusDays( 7 )
+                LocalDate.now( clock ).minusDays( 7 )
                 );
         } );
 
         it( 'the day before yesterday', () => {
             checkDate(
                 'value is the day before yesterday',
-                LocalDate.now().minusDays( 2 )
+                LocalDate.now( clock ).minusDays( 2 )
                 );
         } );
 
         it( 'yesterday', () => {
             checkDate(
                 'value is yesterday',
-                LocalDate.now().minusDays( 1 )
+                LocalDate.now( clock ).minusDays( 1 )
                 );
         } );
 
-        it( 'today', () => {
-            checkDate(
-                'value is today',
-                LocalDate.now()
-                );
-        } );
+    } );
+
+
+    describe( 'expression without a number - future', () => {
 
         it( 'tomorrow', () => {
             checkDate(
                 'value is tomorrow',
-                LocalDate.now().plusDays( 1 )
+                LocalDate.now( clock ).plusDays( 1 )
                 );
         } );
 
         it( 'the day after tomorrow', () => {
             checkDate(
                 'value is the day after tomorrow',
-                LocalDate.now().plusDays( 2 )
+                LocalDate.now( clock ).plusDays( 2 )
                 );
         } );
 
         it( 'next week', () => {
             checkDate(
                 'value is next week',
-                LocalDate.now().plusDays( 7 )
+                LocalDate.now( clock ).plusDays( 7 )
                 );
         } );
 
         it( 'next month', () => {
             checkDate(
                 'value is next month',
-                LocalDate.now().plusMonths( 1 )
+                LocalDate.now( clock ).plusMonths( 1 )
                 );
         } );
 
         it( 'next semester', () => {
             checkDate(
                 'value is next semester',
-                LocalDate.now().plusMonths( 6 )
+                LocalDate.now( clock ).plusMonths( 6 )
                 );
         } );
 
         it( 'next year', () => {
             checkDate(
                 'value is next year',
-                LocalDate.now().plusYears( 1 )
+                LocalDate.now( clock ).plusYears( 1 )
                 );
         } );
 
-        //
-        // dynamic - past
-        //
+    } );
 
-        it( 'dynamic - past 1 year', () => {
-            const expected = LocalDate.now().minusYears( 1 );
+
+    describe( 'expression with a number - past', () => {
+
+        it( 'past 1 year', () => {
+            const expected = LocalDate.now( clock ).minusYears( 1 );
             checkDate(
                 'value is past 1 year',
                 expected
@@ -210,7 +210,7 @@ describe( 'NLP in English', () => {
         } );
 
         it( 'dynamic - past 2 years', () => {
-            const expected = LocalDate.now().minusYears( 2 );
+            const expected = LocalDate.now( clock ).minusYears( 2 );
             checkDate(
                 'value is past 2 years',
                 expected
@@ -222,7 +222,7 @@ describe( 'NLP in English', () => {
         } );
 
         it( 'dynamic - past 1 month', () => {
-            const expected = LocalDate.now().minusMonths( 1 );
+            const expected = LocalDate.now( clock ).minusMonths( 1 );
             checkDate(
                 'value is past 1 month',
                 expected
@@ -234,7 +234,7 @@ describe( 'NLP in English', () => {
         } );
 
         it( 'dynamic - past 2 months', () => {
-            const expected = LocalDate.now().minusMonths( 2 );
+            const expected = LocalDate.now( clock ).minusMonths( 2 );
             checkDate(
                 'value is past 2 months',
                 expected
@@ -246,7 +246,7 @@ describe( 'NLP in English', () => {
         } );
 
         it( 'dynamic - past 1 week', () => {
-            const expected = LocalDate.now().minusDays( 7 );
+            const expected = LocalDate.now( clock ).minusDays( 7 );
             checkDate(
                 'value is past 1 week',
                 expected
@@ -258,7 +258,7 @@ describe( 'NLP in English', () => {
         } );
 
         it( 'dynamic - past 2 weeks', () => {
-            const expected = LocalDate.now().minusDays( 14 );
+            const expected = LocalDate.now( clock ).minusDays( 14 );
             checkDate(
                 'value is past 2 weeks',
                 expected
@@ -270,7 +270,7 @@ describe( 'NLP in English', () => {
         } );
 
         it( 'dynamic - past 1 day', () => {
-            const expected = LocalDate.now().minusDays( 1 );
+            const expected = LocalDate.now( clock ).minusDays( 1 );
             checkDate(
                 'value is past 1 day',
                 expected
@@ -282,7 +282,7 @@ describe( 'NLP in English', () => {
         } );
 
         it( 'dynamic - past 2 days', () => {
-            const expected = LocalDate.now().minusDays( 2 );
+            const expected = LocalDate.now( clock ).minusDays( 2 );
             checkDate(
                 'value is past 2 days',
                 expected
@@ -293,12 +293,13 @@ describe( 'NLP in English', () => {
             );
         } );
 
+    } );
 
-        // dynamic - future
 
+    describe( 'expression without a number - future', () => {
 
         it( 'dynamic - next 1 year', () => {
-            const expected = LocalDate.now().plusYears( 1 );
+            const expected = LocalDate.now( clock ).plusYears( 1 );
             checkDate(
                 'value is next 1 year',
                 expected
@@ -314,7 +315,7 @@ describe( 'NLP in English', () => {
         } );
 
         it( 'dynamic - next 2 years', () => {
-            const expected = LocalDate.now().plusYears( 2 );
+            const expected = LocalDate.now( clock ).plusYears( 2 );
             checkDate(
                 'value is next 2 years',
                 expected
@@ -330,7 +331,7 @@ describe( 'NLP in English', () => {
         } );
 
         it( 'dynamic - next 1 month', () => {
-            const expected = LocalDate.now().plusMonths( 1 );
+            const expected = LocalDate.now( clock ).plusMonths( 1 );
             checkDate(
                 'value is next 1 month',
                 expected
@@ -346,7 +347,7 @@ describe( 'NLP in English', () => {
         } );
 
         it( 'dynamic - next 2 months', () => {
-            const expected = LocalDate.now().plusMonths( 2 );
+            const expected = LocalDate.now( clock ).plusMonths( 2 );
             checkDate(
                 'value is next 2 months',
                 expected
@@ -362,7 +363,7 @@ describe( 'NLP in English', () => {
         } );
 
         it( 'dynamic - next 1 week', () => {
-            const expected = LocalDate.now().plusDays( 7 );
+            const expected = LocalDate.now( clock ).plusDays( 7 );
             checkDate(
                 'value is next 1 week',
                 expected
@@ -378,7 +379,7 @@ describe( 'NLP in English', () => {
         } );
 
         it( 'dynamic - next 2 weeks', () => {
-            const expected = LocalDate.now().plusDays( 14 );
+            const expected = LocalDate.now( clock ).plusDays( 14 );
             checkDate(
                 'value is next 2 weeks',
                 expected
@@ -394,7 +395,7 @@ describe( 'NLP in English', () => {
         } );
 
         it( 'dynamic - next 1 day', () => {
-            const expected = LocalDate.now().plusDays( 1 );
+            const expected = LocalDate.now( clock ).plusDays( 1 );
             checkDate(
                 'value is next 1 day',
                 expected
@@ -410,7 +411,7 @@ describe( 'NLP in English', () => {
         } );
 
         it( 'dynamic - next 2 days', () => {
-            const expected = LocalDate.now().plusDays( 2 );
+            const expected = LocalDate.now( clock ).plusDays( 2 );
             checkDate(
                 'value is next 2 days',
                 expected
@@ -425,90 +426,72 @@ describe( 'NLP in English', () => {
             );
         } );
 
-            //
-            // date
-            //
-
-            const parseDate = ( text: string ): LocalDate => {
-                return LocalDate.parse( text, DateTimeFormatter.ofPattern( "MM/dd/yyyy" ) );
-            };
-
-            it( 'full date', () => {
-                checkDate(
-                    'value is 12/31/2020',
-                    parseDate( "12/31/2020" )
-                    );
-            } );
-
-            it( 'partial date', () => {
-                checkDate(
-                    'value is 12/31',
-                    parseDate( "12/31/" + LocalDate.now().year() )
-                    );
-            } );
-
-            //
-            // year of
-            //
-
-            function checkValueOfDate( text: string, value: number ): void {
-                let r: NLPResult = recognize( text );
-                shouldHaveUIEntities( [ r ], [ UI_PROPERTY, DATE ] );
-                const date = r.entities.filter( e => e.entity === DATE );
-                expect( date[ 0 ].value ).toEqual( value );
-            }
-
-            it( 'year of + static expression', () => {
-                checkValueOfDate(
-                    'value is year of today',
-                    LocalDate.now().year()
-                    );
-            } );
-
-            it( 'year of + dynamic expression', () => {
-                checkValueOfDate(
-                    'value is year of 2 years ago',
-                    LocalDate.now().minusYears( 2 ).year()
-                    );
-            } );
-
-            //
-            // month of
-            //
-
-            it( 'month of + static expression', () => {
-                checkValueOfDate(
-                    'value is month of today',
-                    LocalDate.now().monthValue()
-                    );
-            } );
-
-            it( 'month of + dynamic expression', () => {
-                checkValueOfDate(
-                    'value is month of 2 months ago',
-                    LocalDate.now().minusMonths( 2 ).monthValue()
-                    );
-            } );
-
-            //
-            // day of
-            //
-
-            it( 'day of + static expression', () => {
-                checkValueOfDate(
-                    'value is day of today',
-                    LocalDate.now().dayOfMonth()
-                    );
-            } );
-
-            it( 'day of + dynamic expression', () => {
-                checkValueOfDate(
-                    'value is day of 2 days ago',
-                    LocalDate.now().minusDays( 2 ).dayOfMonth()
-                    );
-            } );
-
     } );
 
+
+    describe( 'value from expression', () => {
+
+        //
+        // year of
+        //
+
+        function checkValueOfDate( text: string, value: number ): void {
+            let r: NLPResult = recognize( text );
+            shouldHaveUIEntities( [ r ], [ UI_PROPERTY, DATE ] );
+            const date = r.entities.filter( e => e.entity === DATE );
+            expect( date[ 0 ].value ).toEqual( value );
+        }
+
+        it( 'year of + static expression', () => {
+            checkValueOfDate(
+                'value is year of today',
+                LocalDate.now( clock ).year()
+                );
+        } );
+
+        it( 'year of + dynamic expression', () => {
+            checkValueOfDate(
+                'value is year of 2 years ago',
+                LocalDate.now( clock ).minusYears( 2 ).year()
+                );
+        } );
+
+        //
+        // month of
+        //
+
+        it( 'month of + static expression', () => {
+            checkValueOfDate(
+                'value is month of today',
+                LocalDate.now( clock ).monthValue()
+                );
+        } );
+
+        it( 'month of + dynamic expression', () => {
+            checkValueOfDate(
+                'value is month of 2 months ago',
+                LocalDate.now( clock ).minusMonths( 2 ).monthValue()
+                );
+        } );
+
+        //
+        // day of
+        //
+
+        it( 'day of + static expression', () => {
+            checkValueOfDate(
+                'value is day of today',
+                LocalDate.now( clock ).dayOfMonth()
+                );
+        } );
+
+        it( 'day of + dynamic expression', () => {
+            checkValueOfDate(
+                'value is day of 2 days ago',
+                LocalDate.now( clock ).minusDays( 2 ).dayOfMonth()
+                );
+        } );
+
+    } );
 
 } );

@@ -180,6 +180,7 @@ exports.BASE_TRAINING_EXAMPLES = [
             "{ui_property} {ui_connector} {ui_element_type}",
             "{ui_property} {ui_connector} {query}",
             "{ui_property} {ui_connector} {date}",
+            "{ui_property} {ui_connector} {time}",
         ]
     },
     {

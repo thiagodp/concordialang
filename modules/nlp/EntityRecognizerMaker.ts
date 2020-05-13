@@ -19,6 +19,7 @@ export const UI_PROPERTY_REF_REGEX = /\{[ ]*[a-zA-ZÀ-ÖØ-öø-ÿ][a-zA-ZÀ-Ö�
 // export const UI_LITERAL_REGEX = /(?:\<)((?:#|@|\.|\/\/|~|[a-zA-ZÀ-ÖØ-öø-ÿ])[^<\r\n]*)(?:\>)/g; // Issue #19
 export const UI_LITERAL_REGEX = /(?:\<)((?:#|@|\.|\/\/|~|[a-zA-ZÀ-ÖØ-öø-ÿ0-9 ]?)[^<\r\n]*[^\\>])(?:\>)/g;
 export const NUMBER_REGEX = /(-?[0-9]+(?:\.[0-9]+)?)/g;
+// export const NUMBER_REGEX = /(?:[ ,\[]|^)(-?[0-9]+(?:\.[0-9]+)?)/g; // Last addition to not consider the invalid seconds of a time as being a number
 // export const QUERY_REGEX = new RegExp( '"(?:\t| )*SELECT[^"]+"', "gi" );
 export const QUERY_REGEX = /"(?:\t| )*SELECT[^"]+"/gi;
 export const CONSTANT_REGEX = /\[[a-zA-ZÀ-ÖØ-öø-ÿ_][a-zA-ZÀ-ÖØ-öø-ÿ0-9 _-]*\]/g;
@@ -155,6 +156,7 @@ export class EntityRecognizerMaker {
             function( match ) {
                 // console.log( 'match ', match );
                 // return match[ 0 ].toString().trim();
+
                 const value = match[ 0 ].toString().trim();
                 return Number( value );
             },
@@ -373,7 +375,7 @@ export class EntityRecognizerMaker {
      */
     public makeTime( language: string, entityName: string ): any {
         const lang = this.braveyLanguage( language );
-        return new lang.TimeEntityRecognizer( entityName, 10 );
+        return new lang.TimeEntityRecognizer2( entityName );
     }
 
     // /**

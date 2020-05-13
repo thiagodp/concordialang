@@ -2,7 +2,6 @@ import * as enumUtil from 'enum-util';
 import { UIPropertyTypes } from '../../modules/ast';
 import { Entities, NLP, NLPResult, NLPTrainingData, NLPTrainingDataConversor } from '../../modules/nlp';
 
-
 describe( 'NLP', () => {
 
     let nlp: NLP; // under test
@@ -35,6 +34,10 @@ describe( 'NLP', () => {
 
     beforeEach( () => {
         nlp = new NLP();
+    } );
+
+    afterEach( () => {
+        nlp = null;
     } );
 
     describe( 'training', () => {
