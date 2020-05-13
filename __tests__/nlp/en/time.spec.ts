@@ -6,7 +6,7 @@ import { JsonLanguageContentLoader, LanguageContentLoader } from '../../../modul
 import { Entities, Intents, NLP, NLPResult, NLPTrainer } from '../../../modules/nlp';
 import { FSFileHandler } from '../../../modules/util/file/FSFileHandler';
 
-import { shouldHaveUIEntities, shouldNotHaveEntities } from "../util";
+import { shouldHaveUIEntities, shouldNotHaveEntities } from "../entity-util";
 
 describe( 'nlp.en.time', () => {
 
@@ -23,10 +23,6 @@ describe( 'nlp.en.time', () => {
         fileHandler,
         fileHandler
         );
-
-    // entities
-    const TIME: string = Entities.TIME;
-    const UI_PROPERTY: string = Entities.UI_PROPERTY;
 
     beforeAll( () => {
         nlp = new NLP();
@@ -47,33 +43,36 @@ describe( 'nlp.en.time', () => {
         return nlp.recognize( LANGUAGE, sentence );
     }
 
-    const timePattern = DateTimeFormatter.ofPattern( "HH:mm:ss" );
+    // time utilities
+
+    const fullPattern = DateTimeFormatter.ofPattern( "HH:mm:ss" );
+    const partialPattern = DateTimeFormatter.ofPattern( "HH:mm" );
 
     function checkTime( text: string, expected: LocalTime ): void {
         const r: NLPResult = recognize( text );
-        shouldHaveUIEntities( [ r ], [ UI_PROPERTY, TIME ] );
-        const time = r.entities.filter( e => e.entity === TIME );
-        const receivedStr = time[ 0 ].value.format( timePattern ).toString();
-        const expectedStr = expected.format( timePattern ).toString();
+        shouldHaveUIEntities( [ r ], [ Entities.UI_PROPERTY, Entities.TIME ] );
+        const entity = r.entities.filter( e => e.entity === Entities.TIME );
+        const receivedStr = entity[ 0 ].value.format( fullPattern ).toString();
+        const expectedStr = expected.format( fullPattern ).toString();
         expect( receivedStr ).toEqual( expectedStr );
     }
 
     function checkValueOfTime( text: string, expected: number ): void {
         const r: NLPResult = recognize( text );
-        shouldHaveUIEntities( [ r ], [ UI_PROPERTY, TIME ] );
-        const time = r.entities.filter( e => e.entity === TIME );
+        shouldHaveUIEntities( [ r ], [ Entities.UI_PROPERTY, Entities.TIME ] );
+        const time = r.entities.filter( e => e.entity === Entities.TIME );
         const value = time[ 0 ].value;
         expect( value ).toEqual( expected );
     }
 
     function checkNotTime( text: string ): void {
         const r: NLPResult = recognize( text );
-        shouldNotHaveEntities( r, [ TIME ], Intents.UI );
+        shouldNotHaveEntities( r, [ Entities.TIME ], Intents.UI );
     }
 
-    const parseTime = ( text: string ): LocalTime => {
-        return LocalTime.parse( text, timePattern );
-    };
+    function parseTime( text: string, partial: boolean = false ): LocalTime {
+        return LocalTime.parse( text, partial ? partialPattern : fullPattern );
+    }
 
 
     describe( 'value', () => {
@@ -108,6 +107,13 @@ describe( 'nlp.en.time', () => {
             checkTime(
                 'value is 23:59:60',
                 parseTime( "23:59:00" )
+                );
+        } );
+
+        it( 'partial time, first of the day', () => {
+            checkTime(
+                'value is 00:00',
+                parseTime( "00:00:00" )
                 );
         } );
 

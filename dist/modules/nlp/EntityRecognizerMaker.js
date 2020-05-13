@@ -302,7 +302,7 @@ class EntityRecognizerMaker {
     /**
      * Creates a date recognizer.
      *
-     * @param language Language of the recognizer. Available: "en", "pt", "it"
+     * @param language Language of the recognizer. Available: "en", "pt"
      * @param entityName Entity name
      */
     makeDate(language, entityName) {
@@ -312,23 +312,23 @@ class EntityRecognizerMaker {
     /**
      * Creates a time recognizer.
      *
-     * @param language Language of the recognizer. Available: "en", "pt", "it"
+     * @param language Language of the recognizer. Available: "en", "pt"
      * @param entityName Entity name
      */
     makeTime(language, entityName) {
         const lang = this.braveyLanguage(language);
         return new lang.TimeEntityRecognizer2(entityName);
     }
-    // /**
-    //  * Creates a time period recognizer.
-    //  *
-    //  * @param language Language of the recognizer. Available: "en", "pt", "it"
-    //  * @param entityName Entity name
-    //  */
-    // public makeTimePeriod( language: string, entityName: string ): any {
-    //     const lang = this.braveyLanguage( language );
-    //     return new lang.TimePeriodEntityRecognizer( entityName, 10 );
-    // }
+    /**
+     * Creates a datetime recognizer.
+     *
+     * @param language Language of the recognizer. Available: "en", "pt"
+     * @param entityName Entity name
+     */
+    makeDateTime(language, entityName) {
+        const lang = this.braveyLanguage(language);
+        return new lang.DateTimeEntityRecognizer(entityName);
+    }
     //
     // Helper methods
     //

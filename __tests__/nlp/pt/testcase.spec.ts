@@ -5,7 +5,7 @@ import { JsonLanguageContentLoader, LanguageContentLoader } from "../../../modul
 import { Intents, NLP, NLPResult, NLPTrainer } from "../../../modules/nlp";
 import { Entities } from "../../../modules/nlp/Entities";
 import { FSFileHandler } from "../../../modules/util/file";
-import { shouldHaveTestCaseEntities } from "../util";
+import { shouldHaveTestCaseEntities } from "../entity-util";
 
 describe( 'nlp.pt.testcase', () => {
 

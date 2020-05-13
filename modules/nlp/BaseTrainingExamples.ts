@@ -216,7 +216,7 @@ export const BASE_TRAINING_EXAMPLES: NLPTrainingIntentExample[] = [
 
             "{ui_property} {ui_connector} {date}",
             "{ui_property} {ui_connector} {time}",
-            // "{ui_property} {ui_connector} {time_period}",
+            "{ui_property} {ui_connector} {datetime}",
 
             // "id é {value}",
             // "comprimento máximo é {number}",

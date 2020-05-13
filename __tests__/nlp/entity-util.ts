@@ -1,4 +1,4 @@
-import { Entities, Intents, NLP, NLPResult, NLPTrainer } from '../../modules/nlp';
+import { Intents, NLPResult } from '../../modules/nlp';
 
 export function shouldHaveEntities(
     results: NLPResult[],

@@ -25,6 +25,7 @@ var Entities;
     Entities["COMMAND"] = "command";
     Entities["DATE"] = "date";
     Entities["TIME"] = "time";
+    Entities["DATETIME"] = "datetime";
     // from the intent "testcase"
     //UI_PROPERTY = 'ui_property', //                   e.g.: text, value, color, ...
     Entities["UI_ACTION"] = "ui_action";

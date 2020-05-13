@@ -4,6 +4,7 @@ const core = require('@js-joda/core');
 const LocalDate = core.LocalDate;
 const DateTimeFormatter = core.DateTimeFormatter;
 const LocalTime = core.LocalTime;
+const LocalDateTime = core.LocalDateTime;
 // See formats at
 // https://js-joda.github.io/js-joda/class/packages/core/src/format/DateTimeFormatter.js~DateTimeFormatter.html#static-method-ofPattern
 /**
@@ -3020,6 +3021,35 @@ Bravey.Language.EN.TimeEntityRecognizer2 = function (entityName) {
     matcher.bindTo(this);
 };
 /**
+ * Entity recognizer of datetime expressions.
+ * @constructor
+ * @param {string} entityName
+ * @returns {Bravey.RegexEntityRecognizer}
+ */
+Bravey.Language.EN.DateTimeEntityRecognizer = function (entityName) {
+    function now() {
+        return LocalDateTime.now(Bravey.Clock.getValue());
+    }
+    var matcher = new Bravey.RegexEntityRecognizer(entityName);
+    // value
+    // 12/31/2020 or 12-31-2020 with 23:59:59 or 23:59
+    matcher.addMatch(new RegExp("(?:(0[1-9]|1[012])(?:\\/|-)(0[1-9]|[12][0-9]|3[01])(?:\\/|-)([0-9]{2,4}) ([01][0-9]|2[0-3])\\:([0-5][0-9])(?:\\:([0-5][0-9]))?)", "gi"), 
+    //             1                         2                                3            4                     5                 6
+    function (match) {
+        // console.log( 'DATETIME', match );
+        var month = Number(match[1]);
+        var day = Number(match[2]);
+        var year = Number(match[3]);
+        var hour = Number(match[4]);
+        var minute = Number(match[5]);
+        var second = Number(match[6] || '00');
+        return LocalDateTime.of(LocalDate.of(year, month, day), LocalTime.of(hour, minute, second));
+    });
+    // expression
+    matcher.addMatch(new RegExp("current(?: |\\t)+date(?: |\\t)and(?: |\\t)time", "gi"), function (match) { return now(); });
+    matcher.bindTo(this);
+};
+/**
  * An entity recognizer that can recognizes time period expressions. Returned entities value <tt>{"start":"HH:MM:SS","end":"HH:MM:SS"}</tt>.
  * @constructor
  * @param {string} entityName - The name of produced entities.
@@ -4764,6 +4794,35 @@ Bravey.Language.PT.TimeEntityRecognizer2 = function (entityName) {
     var pastSuffix = "atr[áa]s|no passado";
     var futureSuffix = "adiante|[àa] frente|no futuro";
     addDynamicTimeMatchers(matcher, pastPrefix, futurePrefix, pastSuffix, futureSuffix, hour, minute, second, ofPrefixes);
+    matcher.bindTo(this);
+};
+/**
+ * Entity recognizer of datetime expressions.
+ * @constructor
+ * @param {string} entityName
+ * @returns {Bravey.RegexEntityRecognizer}
+ */
+Bravey.Language.PT.DateTimeEntityRecognizer = function (entityName) {
+    function now() {
+        return LocalDateTime.now(Bravey.Clock.getValue());
+    }
+    var matcher = new Bravey.RegexEntityRecognizer(entityName);
+    // value
+    // 12/31/2020 or 12-31-2020 with 23:59:59 or 23:59
+    matcher.addMatch(new RegExp("(?:(0[1-9]|[12][0-9]|3[01])(?:\\/|-)(0[1-9]|1[012])(?:\\/|-)([0-9]{2,4}) ([01][0-9]|2[0-3])\\:([0-5][0-9])(?:\\:([0-5][0-9]))?)", "gi"), 
+    //             1                                   2                                3            4                     5                 6
+    function (match) {
+        // console.log( 'DATETIME', match );
+        var day = Number(match[1]);
+        var month = Number(match[2]);
+        var year = Number(match[3]);
+        var hour = Number(match[4]);
+        var minute = Number(match[5]);
+        var second = Number(match[6] || '00');
+        return LocalDateTime.of(LocalDate.of(year, month, day), LocalTime.of(hour, minute, second));
+    });
+    // expression
+    matcher.addMatch(new RegExp("data(?: |\\t)+e(?: |\\t)+hora(?: |\\t)+(atual|atuais)", "gi"), function (match) { return now(); });
     matcher.bindTo(this);
 };
 /**

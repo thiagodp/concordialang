@@ -5,7 +5,7 @@ import { JsonLanguageContentLoader, LanguageContentLoader } from "../../../modul
 import { Intents, NLP, NLPTrainer } from "../../../modules/nlp";
 import { Entities } from "../../../modules/nlp/Entities";
 import { FSFileHandler } from "../../../modules/util/file";
-import { shouldHaveUIEntities } from "../util";
+import { shouldHaveUIEntities } from "../entity-util";
 
 describe( 'nlp.pt.ui', () => {
 

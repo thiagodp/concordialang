@@ -25,6 +25,7 @@ export enum Entities {
 
     DATE = 'date', //                                   e.g., today or 04/30/2020
     TIME = 'time', //                                   e.g., now or 18:10:03
+    DATETIME = 'datetime', //                           e.g., current date and time
 
     // from the intent "testcase"
     //UI_PROPERTY = 'ui_property', //                   e.g.: text, value, color, ...

@@ -6,7 +6,7 @@ import { JsonLanguageContentLoader, LanguageContentLoader } from "../../../modul
 import { Intents, NLP, NLPResult, NLPTrainer } from "../../../modules/nlp";
 import { Entities } from "../../../modules/nlp/Entities";
 import { FSFileHandler } from "../../../modules/util/file";
-import { shouldHaveUIEntities, shouldNotHaveEntities } from "../util";
+import { shouldHaveUIEntities, shouldNotHaveEntities } from "../entity-util";
 
 describe( 'nlp.pt.date', () => {
 

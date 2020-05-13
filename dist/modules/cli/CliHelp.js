@@ -48,7 +48,7 @@ ${chalk.gray('Output directories')}
 ${chalk.gray('Language')}
 
 -l,  --language <code>                  Set the default language.
-                                        Default is "en" (english).
+                                        The default is "en" (english).
 -ll, --language-list                    List available languages.
 
 ${chalk.gray('Plug-in')}
@@ -67,13 +67,14 @@ ${chalk.gray('Plug-in')}
 -t,  --target <"target1,target2,...">   Target browsers or platforms.
 -hl, --headless                         Enable headless execution (browsers).
                                         Some plug-ins may not support it.
+--instances                             Number of parallel instances to execute.
 
 ${chalk.gray('Configuration')}
 
 --init                                  Init a guided, basic configuration.
 
 -c,  --config                           Configuration file to load.
-                                        Default is ".concordiarc".
+                                        The default is ".concordiarc".
 
 --save-config                           Save/overwrite a configuration file
                                         with other command line options.
@@ -96,13 +97,13 @@ ${chalk.gray('Processing and output')}
 ${chalk.gray('Randomic value generation')}
 
 --seed <value>                          Random seed to use.
-                                        Default is the current date and time.
+                                        The default is the current date and time.
 --random-min-string-size <number>       Minimum random string size.
-                                        Default is 0.
+                                        The default is 0.
 --random-max-string-size <number>       Minimum random string size.
-                                        Default is 500.
+                                        The default is 500.
 --random-tries <number>                 Random tries to generate invalid values.
-                                        Default is 5.
+                                        The default is 5.
 
 ${chalk.gray('Combination strategies')}
 
@@ -139,25 +140,25 @@ ${chalk.gray('Content generation format')}
 
 --case-ui (camel|pascal|snake|kebab|none)
     String case to generate a UI Element locator when it is not defined.
-    Default is "camel".
+    The default is "camel".
 
 --case-method (camel|pascal|snake|kebab|none)
-    String case to use for test script methods. Default is "snake".
+    String case to use for test script methods. The default is "snake".
 
 --tc-suppress-header                    Suppress header in generated
                                         Test Case files.
 --tc-indenter <value>                   String used as indenter in generated
-                                        Test Case files. Default is double
+                                        Test Case files. The default is double
                                         spaces.
 
 ${chalk.gray('Input formats and extensions')}
 
--e,  --encoding <value>                 File encoding. Default is "utf8".
+-e,  --encoding <value>                 File encoding. The default is "utf8".
 -lb, --line-breaker                     Character used for breaking lines.
 -ef, --ext-feature                      File extension for Feature files.
-                                        Default is ".feature".
+                                        The default is ".feature".
 -et, --ext-test-case                    File extension for Test Case files.
-                                        Default is ".testcase".
+                                        The default is ".testcase".
 
 ${chalk.gray('Information')}
 
@@ -209,6 +210,7 @@ ${chalk.yellowBright('Examples')}
                 pluginList: { type: 'boolean', alias: 'pl' },
                 target: { type: 'string', alias: 't' },
                 headless: { type: 'boolean', alias: 'hl' },
+                instances: { type: 'integer' },
                 // PROCESSING AND OUTPUT
                 verbose: { type: 'boolean', alias: 'b' },
                 failFast: { type: 'boolean', alias: 'ff' },
