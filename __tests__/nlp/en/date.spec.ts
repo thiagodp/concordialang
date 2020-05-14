@@ -48,23 +48,31 @@ describe( 'nlp.en.date', () => {
     }
 
 
+    const genericPattern = DateTimeFormatter.ofPattern( 'yyyy-MM-dd' );
+    const englishPattern = DateTimeFormatter.ofPattern( "MM/dd/yyyy" );
+
+    function parseDate( text: string ): LocalDate {
+        return LocalDate.parse( text, englishPattern );
+    }
+
     function checkDate( text: string, expected: LocalDate ): void {
         let r: NLPResult = recognize( text );
         shouldHaveUIEntities( [ r ], [ UI_PROPERTY, DATE  ] );
+        const expectedStr = expected.format( genericPattern ).toString();
+        const entity = r.entities.filter( e => e.entity === DATE );
+        const valueStr = entity[ 0 ].value.format( genericPattern ).toString();
+        expect( valueStr ).toEqual( expectedStr );
+    }
 
-        const expectedStr = expected.format(
-            DateTimeFormatter.ofPattern( 'yyyy-MM-dd' ) ).toString();
-
-        const date = r.entities.filter( e => e.entity === DATE );
-        expect( date[ 0 ].value ).toEqual( expectedStr );
+    function checkValueOfDate( text: string, expected: number ): void {
+        let r: NLPResult = recognize( text );
+        shouldHaveUIEntities( [ r ], [ UI_PROPERTY, DATE  ] );
+        const entity = r.entities.filter( e => e.entity === DATE );
+        expect( entity[ 0 ].value ).toEqual( expected );
     }
 
 
     describe( 'value', () => {
-
-        const parseDate = ( text: string ): LocalDate => {
-            return LocalDate.parse( text, DateTimeFormatter.ofPattern( "MM/dd/yyyy" ) );
-        };
 
         it( 'full date', () => {
             checkDate(
@@ -435,13 +443,6 @@ describe( 'nlp.en.date', () => {
         // year of
         //
 
-        function checkValueOfDate( text: string, value: number ): void {
-            let r: NLPResult = recognize( text );
-            shouldHaveUIEntities( [ r ], [ UI_PROPERTY, DATE ] );
-            const date = r.entities.filter( e => e.entity === DATE );
-            expect( date[ 0 ].value ).toEqual( value );
-        }
-
         it( 'year of + static expression', () => {
             checkValueOfDate(
                 'value is year of today',
@@ -478,14 +479,14 @@ describe( 'nlp.en.date', () => {
         // day of
         //
 
-        it( 'day of + static expression', () => {
+        it( 'value of - day of today', () => {
             checkValueOfDate(
                 'value is day of today',
                 LocalDate.now( clock ).dayOfMonth()
                 );
         } );
 
-        it( 'day of + dynamic expression', () => {
+        it( 'value of - day of 2 days ago', () => {
             checkValueOfDate(
                 'value is day of 2 days ago',
                 LocalDate.now( clock ).minusDays( 2 ).dayOfMonth()

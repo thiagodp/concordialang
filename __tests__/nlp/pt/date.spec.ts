@@ -47,16 +47,15 @@ describe( 'nlp.pt.date', () => {
         nlp = null;
     } );
 
+    const fullPattern = DateTimeFormatter.ofPattern( 'dd/MM/yyyy' );
 
     function checkDate( text: string, expected: LocalDate ): void {
         let r: NLPResult = recognize( text );
         shouldHaveUIEntities( [ r ], [ UI_PROPERTY, DATE  ] );
-
-        const expectedStr = expected.format(
-            DateTimeFormatter.ofPattern( 'yyyy-MM-dd' ) ).toString();
-
-        const date = r.entities.filter( e => e.entity === DATE );
-        expect( date[ 0 ].value ).toEqual( expectedStr );
+        const expectedStr = expected.format( fullPattern ).toString();
+        const entity = r.entities.filter( e => e.entity === DATE );
+        const valueStr = entity[ 0 ].value.format( fullPattern ).toString();
+        expect( valueStr ).toEqual( expectedStr );
     }
 
     function checkNotDate( text: string ): void {
@@ -67,8 +66,8 @@ describe( 'nlp.pt.date', () => {
     function checkValueOfDate( text: string, value: number ): void {
         let r: NLPResult = recognize( text );
         shouldHaveUIEntities( [ r ], [ UI_PROPERTY, DATE ] );
-        const date = r.entities.filter( e => e.entity === DATE );
-        expect( date[ 0 ].value ).toEqual( value );
+        const entity = r.entities.filter( e => e.entity === DATE );
+        expect( entity[ 0 ].value ).toEqual( value );
     }
 
     //
