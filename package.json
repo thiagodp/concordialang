@@ -112,7 +112,6 @@
     "database-js": "^3.0.9",
     "database-js-json": "^1.2.1",
     "deepcopy": "^0.6.3",
-    "elegant-spinner": "^2.0.0",
     "enum-util": "^1.7.1",
     "figures": "^3.2.0",
     "global-dirs": "^0.1.1",
