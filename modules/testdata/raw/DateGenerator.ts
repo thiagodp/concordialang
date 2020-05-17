@@ -1,4 +1,4 @@
-import { LocalDate, Period } from "@js-joda/core";
+import { ChronoUnit, LocalDate } from "@js-joda/core";
 import { isDefined } from '../../util/TypeChecking';
 import { DateLimits } from "../limits/DateLimits";
 import { RandomDate } from "../random/RandomDate";
@@ -35,7 +35,7 @@ export class DateGenerator implements RawDataGenerator< LocalDate >, RangeAnalyz
 
 
 	public diffInDays(): number {
-        return Period.between( this._min, this._max ).days();
+		return this._min.until( this._max, ChronoUnit.DAYS );
 	}
 
 	// RANGE ANALYSIS
@@ -99,6 +99,12 @@ export class DateGenerator implements RawDataGenerator< LocalDate >, RangeAnalyz
 
     /** @inheritDoc */
 	public justAboveMin(): LocalDate {
+		console.log( '--> hasValuesBetweenMinAndMax ',
+			this.hasValuesBetweenMinAndMax() ? 'true' : 'false',
+			'MIN', this._min,
+			'MAX', this._max
+			);
+
 		return ( this.hasValuesBetweenMinAndMax() )
 			? this._min.plusDays( 1 )
 			: this._min;

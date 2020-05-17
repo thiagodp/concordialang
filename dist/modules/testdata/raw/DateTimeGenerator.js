@@ -84,7 +84,8 @@ class DateTimeGenerator {
     }
     /** @inheritDoc */
     median() {
-        const diffInDaysOfDates = core_1.Period.between(this._min.toLocalDate(), this._max.toLocalDate()).days();
+        // const diffInDaysOfDates = Period.between( this._min.toLocalDate(), this._max.toLocalDate() ).days();
+        const diffInDaysOfDates = this._min.toLocalDate().until(this._max.toLocalDate(), core_1.ChronoUnit.DAYS);
         const minTime = this._min.toLocalTime();
         const maxTime = this._max.toLocalTime();
         const diffInSecondsOfTimes = minTime.until(maxTime, core_1.ChronoUnit.SECONDS);

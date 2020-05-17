@@ -23,7 +23,7 @@ class DateGenerator {
         this._max = TypeChecking_1.isDefined(max) ? max : DateLimits_1.DateLimits.MAX;
     }
     diffInDays() {
-        return core_1.Period.between(this._min, this._max).days();
+        return this._min.until(this._max, core_1.ChronoUnit.DAYS);
     }
     // RANGE ANALYSIS
     /** @inheritDoc */
@@ -74,6 +74,7 @@ class DateGenerator {
     }
     /** @inheritDoc */
     justAboveMin() {
+        console.log('--> hasValuesBetweenMinAndMax ', this.hasValuesBetweenMinAndMax() ? 'true' : 'false', 'MIN', this._min, 'MAX', this._max);
         return (this.hasValuesBetweenMinAndMax())
             ? this._min.plusDays(1)
             : this._min;

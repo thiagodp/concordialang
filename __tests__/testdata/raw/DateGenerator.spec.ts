@@ -9,6 +9,7 @@ describe( 'DateGenerator', () => {
 
     const ranL = new RandomLong( new Random( 'concordia' ) );
     const ranD = new RandomDate( ranL );
+
     const aMin: LocalDate = LocalDate.of( 2018, 1, 1 );
     const aMax: LocalDate = LocalDate.of( 2018, 1, 30 );
     const aMedian: LocalDate = LocalDate.of( 2018, 1, 15 );
@@ -24,6 +25,12 @@ describe( 'DateGenerator', () => {
 
     it( 'just above min', () => {
         expect( gen.justAboveMin() ).toEqual( aMin.plusDays( 1 ) );
+    } );
+
+    it( 'just above min - last day of the year', () => {
+        const min = LocalDate.of( 2020, 12, 31 );
+        const dg = new DateGenerator( ranD, min );
+        expect( dg.justAboveMin() ).toEqual( min.plusDays( 1 ) );
     } );
 
 
@@ -61,6 +68,12 @@ describe( 'DateGenerator', () => {
 
     it( 'just below max', () => {
         expect( gen.justBelowMax() ).toEqual( aMax.minusDays( 1 ) );
+    } );
+
+    it( 'just below max - first day of the year', () => {
+        const max = LocalDate.of( 2020, 1, 1 );
+        const dg = new DateGenerator( ranD, undefined, max );
+        expect( dg.justBelowMax() ).toEqual( max.minusDays( 1 ) );
     } );
 
     it( 'just above max', () => {

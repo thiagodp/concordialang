@@ -1,4 +1,4 @@
-import { ChronoUnit, LocalDateTime, Period } from "@js-joda/core";
+import { ChronoUnit, LocalDateTime } from "@js-joda/core";
 import { isDefined } from '../../util/TypeChecking';
 import { DateTimeLimits } from "../limits/DateTimeLimits";
 import { RandomDateTime } from "../random/RandomDateTime";
@@ -109,8 +109,8 @@ export class DateTimeGenerator implements RawDataGenerator< LocalDateTime > {
 
     /** @inheritDoc */
 	public median(): LocalDateTime {
-
-        const diffInDaysOfDates = Period.between( this._min.toLocalDate(), this._max.toLocalDate() ).days();
+		// const diffInDaysOfDates = Period.between( this._min.toLocalDate(), this._max.toLocalDate() ).days();
+		const diffInDaysOfDates = this._min.toLocalDate().until( this._max.toLocalDate(), ChronoUnit.DAYS );
 
         const minTime = this._min.toLocalTime();
         const maxTime = this._max.toLocalTime();
