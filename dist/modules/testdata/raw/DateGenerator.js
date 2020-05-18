@@ -74,7 +74,6 @@ class DateGenerator {
     }
     /** @inheritDoc */
     justAboveMin() {
-        console.log('--> hasValuesBetweenMinAndMax ', this.hasValuesBetweenMinAndMax() ? 'true' : 'false', 'MIN', this._min, 'MAX', this._max);
         return (this.hasValuesBetweenMinAndMax())
             ? this._min.plusDays(1)
             : this._min;

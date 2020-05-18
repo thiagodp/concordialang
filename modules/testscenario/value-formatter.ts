@@ -9,13 +9,13 @@ import { fallbackToLanguage, formatDateByLocale, formatDateTimeByLocale, formatT
  * @param value Value to format
  * @param isAlreadyInsideAString Indicates if the value is already inside a string. Optional, defaults to `false`.
  */
-export function formatValueToUseInASentence(
-    locale: string, // en-US, pt-BR, etc.
+export async function formatValueToUseInASentence(
+    locale: string,
     value: any,
     isAlreadyInsideAString: boolean = false
-): string {
-    const loc = fallbackToLanguage( locale ) || 'en';
+): Promise< string > {
 
+    const loc = await fallbackToLanguage( locale ) || 'en';
     let formattedValue = value;
 
     // TODO: l10n for currency values
@@ -24,18 +24,18 @@ export function formatValueToUseInASentence(
         // formattedValue = value.format( DateTimeFormatter.ofPattern( 'HH:mm' ) ).toString();
         const nativeTime = new Date();
         nativeTime.setHours( value.hour(), value.minute(), value.second() );
-        formattedValue = formatTimeByLocale( loc, nativeTime );
+        formattedValue = await formatTimeByLocale( loc, nativeTime );
     } else if ( value instanceof LocalDate ) {
         // formattedValue = value.format( DateTimeFormatter.ofPattern( 'dd/MM/yyyy' ) ).toString();
         const nativeDate = new Date( value.year(), value.monthValue() - 1, value.dayOfMonth() );
-        formattedValue = formatDateByLocale( loc, nativeDate );
+        formattedValue = await formatDateByLocale( loc, nativeDate );
     } else if ( value instanceof LocalDateTime ) {
         // formattedValue = value.format( DateTimeFormatter.ofPattern( 'dd/MM/yyyy HH:mm' ) ).toString();
         const nativeDateTime = new Date(
             value.year(), value.monthValue() - 1, value.dayOfMonth(),
             value.hour(), value.minute(), value.second()
             );
-        formattedValue = formatDateTimeByLocale( loc, nativeDateTime );
+        formattedValue = await formatDateTimeByLocale( loc, nativeDateTime );
     }
 
     if ( isAlreadyInsideAString || 'number' === typeof formattedValue ) {

@@ -24,7 +24,7 @@ export class UIPropertyReferenceReplacer {
      * @param ctx Generation context.
      * @param isAlreadyInsideAString Indicates if the value is already inside a string. Optional, defaults to `false`.
      */
-    replaceUIPropertyReferencesByTheirValue(
+    async replaceUIPropertyReferencesByTheirValue(
         language: string,
         step: Step,
         content: string,
@@ -32,7 +32,7 @@ export class UIPropertyReferenceReplacer {
         uieVariableToValueMap: Map< string, EntityValueType >,
         ctx: GenContext,
         isAlreadyInsideAString: boolean = false
-    ): string {
+    ): Promise< string > {
 
         const uieNameHandler = new UIElementNameHandler();
         let newContent = content;
@@ -78,7 +78,7 @@ export class UIPropertyReferenceReplacer {
                 value = '';
             }
 
-            const formattedValue = formatValueToUseInASentence(
+            const formattedValue = await formatValueToUseInASentence(
                 language, value, isAlreadyInsideAString );
 
             const refStr: string = Symbols.UI_ELEMENT_PREFIX + uipRef.content + Symbols.UI_ELEMENT_SUFFIX;

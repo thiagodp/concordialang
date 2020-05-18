@@ -309,8 +309,15 @@ export class PreTestCaseGenerator {
             for ( let step of newSteps ) {
 
                 // Resulting otherwiseSteps are also processed
-                let [ resultingSteps, correspondingOtherwiseSteps ] = this.fillUIElementWithValueAndReplaceByUILiteralInStep(
-                    step, langContent, plan.dataTestCases, uieVariableToValueMap, language, ctx );
+                let [ resultingSteps, correspondingOtherwiseSteps ] =
+                    await this.fillUIElementWithValueAndReplaceByUILiteralInStep(
+                        step,
+                        langContent,
+                        plan.dataTestCases,
+                        uieVariableToValueMap,
+                        language,
+                        ctx
+                    );
 
                 // console.log( 'ORACLES', '>'.repeat(10), resultingOracles );
 
@@ -331,7 +338,7 @@ export class PreTestCaseGenerator {
             this.normalizeOracleSentences( filledOtherwiseSteps, langContent.keywords );
 
             // # (2019-07-13)
-            this.replaceUIPropertyReferencesInsideValues( filledSteps, filledOtherwiseSteps, uieVariableToValueMap, language, langContent, ctx );
+            await this.replaceUIPropertyReferencesInsideValues( filledSteps, filledOtherwiseSteps, uieVariableToValueMap, language, langContent, ctx );
             // ---
 
             all.push( new PreTestCase( plan, filledSteps, filledOtherwiseSteps, filledCorrespondingOtherwiseSteps ) );
@@ -608,14 +615,14 @@ export class PreTestCaseGenerator {
         }
     }
 
-    fillUIElementWithValueAndReplaceByUILiteralInStep(
+    async fillUIElementWithValueAndReplaceByUILiteralInStep(
         inputStep: Step,
         langContent: LanguageContent,
         uieVariableToUIETestPlanMap: Map< string, UIETestPlan >,
         uieVariableToValueMap: Map< string, EntityValueType >,
         language: string,
         ctx: GenContext
-    ): [ Step[], Array< CorrespondingOtherwiseSteps > ] {
+    ): Promise< [ Step[], Array< CorrespondingOtherwiseSteps > ] > {
 
         let step = deepcopy( inputStep );
 
@@ -623,7 +630,7 @@ export class PreTestCaseGenerator {
 
             const uipRefReplacer = new UIPropertyReferenceReplacer();
 
-            step.content = uipRefReplacer.replaceUIPropertyReferencesByTheirValue(
+            step.content = await uipRefReplacer.replaceUIPropertyReferencesByTheirValue(
                 language,
                 step,
                 step.content,
@@ -725,7 +732,7 @@ export class PreTestCaseGenerator {
                 targetType = this._targetTypeUtil.analyzeInputTargetTypes( step, langContent ) + ' ';
             }
 
-            const formattedValue = formatValueToUseInASentence( language, value );
+            const formattedValue = await formatValueToUseInASentence( language, value );
 
             // Generate the sentence
             let sentence = prefix + ' ' + keywordI + ' ' + dataInputActionEntity.string + ' ' +
@@ -935,30 +942,30 @@ export class PreTestCaseGenerator {
      * @param uieVariableToValueMap Value map.
      * @param language Language.
      */
-    replaceUIPropertyReferencesInsideValues(
+    async replaceUIPropertyReferencesInsideValues(
         steps: Step[],
         oracles: Step[],
         uieVariableToValueMap: Map< string, EntityValueType >,
         language: string,
         langContent: LanguageContent,
         ctx: GenContext
-    ): void {
+    ): Promise< void > {
         for ( let step of steps ) {
-            this.replaceUIPropertyReferencesInsideValuesOfStep( step, uieVariableToValueMap, language, langContent, ctx );
+            await this.replaceUIPropertyReferencesInsideValuesOfStep( step, uieVariableToValueMap, language, langContent, ctx );
         }
 
         for ( let step of oracles ) {
-            this.replaceUIPropertyReferencesInsideValuesOfStep( step, uieVariableToValueMap, language, langContent, ctx );
+            await this.replaceUIPropertyReferencesInsideValuesOfStep( step, uieVariableToValueMap, language, langContent, ctx );
         }
     }
 
-    replaceUIPropertyReferencesInsideValuesOfStep(
+    async replaceUIPropertyReferencesInsideValuesOfStep(
         step: Step,
         uieVariableToValueMap: Map< string, EntityValueType >,
         language: string,
         langContent: LanguageContent,
         ctx: GenContext
-    ): void {
+    ): Promise< void > {
         const extractor = new UIPropertyReferenceExtractor();
         const replacer = new UIPropertyReferenceReplacer();
         const valueEntities = this._nlpUtil.entitiesNamed( Entities.VALUE, step.nlpResult );
@@ -973,7 +980,7 @@ export class PreTestCaseGenerator {
 
             this.checkUIPropertyReferences( references, langContent, ctx ); // Also transforms into language-independent format
 
-            const after: string = replacer.replaceUIPropertyReferencesByTheirValue(
+            const after: string = await replacer.replaceUIPropertyReferencesByTheirValue(
                 language, step, before, references, uieVariableToValueMap, ctx, true );
 
             if ( after == before ) {

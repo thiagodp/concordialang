@@ -236,7 +236,7 @@ class PreTestCaseGenerator {
                 let filledCorrespondingOtherwiseSteps = [];
                 for (let step of newSteps) {
                     // Resulting otherwiseSteps are also processed
-                    let [resultingSteps, correspondingOtherwiseSteps] = this.fillUIElementWithValueAndReplaceByUILiteralInStep(step, langContent, plan.dataTestCases, uieVariableToValueMap, language, ctx);
+                    let [resultingSteps, correspondingOtherwiseSteps] = yield this.fillUIElementWithValueAndReplaceByUILiteralInStep(step, langContent, plan.dataTestCases, uieVariableToValueMap, language, ctx);
                     // console.log( 'ORACLES', '>'.repeat(10), resultingOracles );
                     filledSteps.push.apply(filledSteps, resultingSteps);
                     if (correspondingOtherwiseSteps.length > 0) {
@@ -250,7 +250,7 @@ class PreTestCaseGenerator {
                 }
                 this.normalizeOracleSentences(filledOtherwiseSteps, langContent.keywords);
                 // # (2019-07-13)
-                this.replaceUIPropertyReferencesInsideValues(filledSteps, filledOtherwiseSteps, uieVariableToValueMap, language, langContent, ctx);
+                yield this.replaceUIPropertyReferencesInsideValues(filledSteps, filledOtherwiseSteps, uieVariableToValueMap, language, langContent, ctx);
                 // ---
                 all.push(new PreTestCase_1.PreTestCase(plan, filledSteps, filledOtherwiseSteps, filledCorrespondingOtherwiseSteps));
             }
@@ -453,169 +453,171 @@ class PreTestCaseGenerator {
         }
     }
     fillUIElementWithValueAndReplaceByUILiteralInStep(inputStep, langContent, uieVariableToUIETestPlanMap, uieVariableToValueMap, language, ctx) {
-        let step = deepcopy(inputStep);
-        if (this.hasUIPropertyReference(step)) {
-            const uipRefReplacer = new UIPropertyReferenceReplacer_1.UIPropertyReferenceReplacer();
-            step.content = uipRefReplacer.replaceUIPropertyReferencesByTheirValue(language, step, step.content, step.uiePropertyReferences, uieVariableToValueMap, ctx);
-            // Update NLP !
-            this._variantSentenceRec.recognizeSentences(language, [step], ctx.errors, ctx.warnings);
-        }
-        const dataInputActionEntity = this.extractDataInputActionEntity(step);
-        if (null === dataInputActionEntity || this.hasValue(step) || this.hasNumber(step)) {
-            let steps = [step];
-            this.replaceUIElementsWithUILiterals(steps, language, langContent, ctx, UIElementReplacementOption.ALL);
-            // console.log( "EXIT 1" );
-            return [steps, []];
-        }
-        // Add target types
-        step.targetTypes = this._targetTypeUtil.extractTargetTypes(step, ctx.doc, ctx.spec, this._uiePropExtractor);
-        // Check for UIE entities
-        let uieEntities = this._nlpUtil.entitiesNamed(nlp_1.Entities.UI_ELEMENT_REF, step.nlpResult);
-        if (uieEntities.length < 1) {
-            // console.log( "EXIT 2" );
-            return [[step], []]; // nothing to do
-        }
-        const keywords = langContent.keywords || new EnglishKeywordDictionary_1.EnglishKeywordDictionary();
-        let nodeType = step.nodeType;
-        let prefix = this.stepPrefixNodeType(nodeType, keywords);
-        const prefixAnd = util_1.upperFirst(!keywords ? 'And' : (keywords.stepAnd[0] || 'And'));
-        const keywordI = !keywords.i ? 'I' : (keywords.i[0] || 'I');
-        const keywordWith = !keywords.with ? 'with' : (keywords.with[0] || 'with');
-        const keywordValid = !keywords.valid ? 'valid' : (keywords.valid[0] || 'valid');
-        const keywordInvalid = !keywords.invalid ? 'invalid' : (keywords.invalid[0] || 'invalid');
-        // const keywordRandom = ! keywords.random ? 'random' : ( keywords.random[ 0 ] || 'random' );
-        const keywordFrom = !keywords.from ? 'from' : (keywords.from[0] || 'from');
-        let steps = [];
-        let oracles = [];
-        let line = step.location.line;
-        let count = 0;
-        // console.log( 'step', step.content );
-        const uieNameHandler = new util_1.UIElementNameHandler();
-        for (let entity of uieEntities) {
-            // Change to "AND" when more than one entity is available
-            if (count > 0) {
-                nodeType = NodeTypes_1.NodeTypes.STEP_AND;
-                prefix = prefixAnd;
+        return __awaiter(this, void 0, void 0, function* () {
+            let step = deepcopy(inputStep);
+            if (this.hasUIPropertyReference(step)) {
+                const uipRefReplacer = new UIPropertyReferenceReplacer_1.UIPropertyReferenceReplacer();
+                step.content = yield uipRefReplacer.replaceUIPropertyReferencesByTheirValue(language, step, step.content, step.uiePropertyReferences, uieVariableToValueMap, ctx);
+                // Update NLP !
+                this._variantSentenceRec.recognizeSentences(language, [step], ctx.errors, ctx.warnings);
             }
-            const uieName = entity.value;
-            let [featureName, uieNameWithoutFeature] = uieNameHandler.extractNamesOf(uieName);
-            let variable;
-            let uie;
-            if (util_1.isDefined(featureName)) {
-                variable = uieName;
-                uie = ctx.spec.uiElementByVariable(uieName);
+            const dataInputActionEntity = this.extractDataInputActionEntity(step);
+            if (null === dataInputActionEntity || this.hasValue(step) || this.hasNumber(step)) {
+                let steps = [step];
+                this.replaceUIElementsWithUILiterals(steps, language, langContent, ctx, UIElementReplacementOption.ALL);
+                // console.log( "EXIT 1" );
+                return [steps, []];
             }
-            else {
-                uie = ctx.spec.uiElementByVariable(uieName, ctx.doc);
-                variable = !uie ? uieName : (!uie.info ? uieName : uie.info.fullVariableName);
+            // Add target types
+            step.targetTypes = this._targetTypeUtil.extractTargetTypes(step, ctx.doc, ctx.spec, this._uiePropExtractor);
+            // Check for UIE entities
+            let uieEntities = this._nlpUtil.entitiesNamed(nlp_1.Entities.UI_ELEMENT_REF, step.nlpResult);
+            if (uieEntities.length < 1) {
+                // console.log( "EXIT 2" );
+                return [[step], []]; // nothing to do
             }
-            let value = uieVariableToValueMap.get(variable);
-            if (!util_1.isDefined(value)) {
-                const fileName = path_1.basename(ctx.doc.fileInfo.path);
-                const locStr = '(' + step.location.line + ',' + step.location.column + ')';
-                const msg = 'Could not retrieve a value from ' +
-                    Symbols_1.Symbols.UI_ELEMENT_PREFIX + variable + Symbols_1.Symbols.UI_ELEMENT_SUFFIX +
-                    ' in ' + fileName + ' ' + locStr + '. It will receive an empty value.';
-                // console.log( uieVariableToValueMap );
-                // console.log( variable, '<'.repeat( 10 ) );
-                ctx.warnings.push(new error_1.RuntimeException(msg));
-                value = '';
-            }
-            let uieLiteral = util_1.isDefined(uie) && util_1.isDefined(uie.info) ? uie.info.uiLiteral : null;
-            // console.log( 'uieName', uieName, 'uieLiteral', uieLiteral, 'variable', variable, 'doc', ctx.doc.fileInfo.path );
-            if (null === uieLiteral) { // Should never happen since Spec defines Literals for mapped UI Elements
-                uieLiteral = util_1.convertCase(variable, this.uiLiteralCaseOption);
-                const msg = 'Could not retrieve a literal from ' +
-                    Symbols_1.Symbols.UI_ELEMENT_PREFIX + variable +
-                    Symbols_1.Symbols.UI_ELEMENT_SUFFIX + '. Generating the identification "' + uieLiteral + '"';
-                ctx.warnings.push(new error_1.RuntimeException(msg, step.location));
-            }
-            // Analyze whether it is an input target type
-            let targetType = '';
-            if (!dataInputActionEntity) {
-                targetType = this._targetTypeUtil.analyzeInputTargetTypes(step, langContent) + ' ';
-            }
-            const formattedValue = value_formatter_1.formatValueToUseInASentence(language, value);
-            // Generate the sentence
-            let sentence = prefix + ' ' + keywordI + ' ' + dataInputActionEntity.string + ' ' +
-                targetType +
-                Symbols_1.Symbols.UI_LITERAL_PREFIX + uieLiteral + Symbols_1.Symbols.UI_LITERAL_SUFFIX +
-                ' ' + keywordWith + ' ' + formattedValue;
-            // if ( targetType != '' ) {
-            //     console.log( sentence );
-            // }
-            const uieTestPlan = uieVariableToUIETestPlanMap.get(variable) || null;
-            let expectedResult, dtc;
-            let oraclesToAdd = [];
-            // console.log( 'uieTestPlan', uieTestPlan );
-            // Evaluate the test plan and oracles
-            if (null === uieTestPlan) { // not expected
-                expectedResult = keywordValid;
-                dtc = '??? (no test plan for variable ' + variable + ')';
-            }
-            else {
-                if (DataTestCaseAnalyzer_1.DTCAnalysisResult.INVALID === uieTestPlan.result) {
-                    expectedResult = keywordInvalid;
-                    // Process ORACLES as steps
-                    let oraclesClone = this.processOracles(uieTestPlan.otherwiseSteps, language, langContent, keywords, ctx);
-                    // Add comments in them
-                    for (let o of oraclesClone) {
-                        o.comment = (o.comment || '') + ' ' + keywordFrom + ' ' +
-                            Symbols_1.Symbols.UI_LITERAL_PREFIX + uieLiteral + Symbols_1.Symbols.UI_LITERAL_SUFFIX;
-                    }
-                    // Add oracles
-                    // oracles.push.apply( oracles, oraclesClone );
-                    oraclesToAdd = oraclesClone; // Save to add later
+            const keywords = langContent.keywords || new EnglishKeywordDictionary_1.EnglishKeywordDictionary();
+            let nodeType = step.nodeType;
+            let prefix = this.stepPrefixNodeType(nodeType, keywords);
+            const prefixAnd = util_1.upperFirst(!keywords ? 'And' : (keywords.stepAnd[0] || 'And'));
+            const keywordI = !keywords.i ? 'I' : (keywords.i[0] || 'I');
+            const keywordWith = !keywords.with ? 'with' : (keywords.with[0] || 'with');
+            const keywordValid = !keywords.valid ? 'valid' : (keywords.valid[0] || 'valid');
+            const keywordInvalid = !keywords.invalid ? 'invalid' : (keywords.invalid[0] || 'invalid');
+            // const keywordRandom = ! keywords.random ? 'random' : ( keywords.random[ 0 ] || 'random' );
+            const keywordFrom = !keywords.from ? 'from' : (keywords.from[0] || 'from');
+            let steps = [];
+            let oracles = [];
+            let line = step.location.line;
+            let count = 0;
+            // console.log( 'step', step.content );
+            const uieNameHandler = new util_1.UIElementNameHandler();
+            for (let entity of uieEntities) {
+                // Change to "AND" when more than one entity is available
+                if (count > 0) {
+                    nodeType = NodeTypes_1.NodeTypes.STEP_AND;
+                    prefix = prefixAnd;
+                }
+                const uieName = entity.value;
+                let [featureName, uieNameWithoutFeature] = uieNameHandler.extractNamesOf(uieName);
+                let variable;
+                let uie;
+                if (util_1.isDefined(featureName)) {
+                    variable = uieName;
+                    uie = ctx.spec.uiElementByVariable(uieName);
                 }
                 else {
+                    uie = ctx.spec.uiElementByVariable(uieName, ctx.doc);
+                    variable = !uie ? uieName : (!uie.info ? uieName : uie.info.fullVariableName);
+                }
+                let value = uieVariableToValueMap.get(variable);
+                if (!util_1.isDefined(value)) {
+                    const fileName = path_1.basename(ctx.doc.fileInfo.path);
+                    const locStr = '(' + step.location.line + ',' + step.location.column + ')';
+                    const msg = 'Could not retrieve a value from ' +
+                        Symbols_1.Symbols.UI_ELEMENT_PREFIX + variable + Symbols_1.Symbols.UI_ELEMENT_SUFFIX +
+                        ' in ' + fileName + ' ' + locStr + '. It will receive an empty value.';
+                    // console.log( uieVariableToValueMap );
+                    // console.log( variable, '<'.repeat( 10 ) );
+                    ctx.warnings.push(new error_1.RuntimeException(msg));
+                    value = '';
+                }
+                let uieLiteral = util_1.isDefined(uie) && util_1.isDefined(uie.info) ? uie.info.uiLiteral : null;
+                // console.log( 'uieName', uieName, 'uieLiteral', uieLiteral, 'variable', variable, 'doc', ctx.doc.fileInfo.path );
+                if (null === uieLiteral) { // Should never happen since Spec defines Literals for mapped UI Elements
+                    uieLiteral = util_1.convertCase(variable, this.uiLiteralCaseOption);
+                    const msg = 'Could not retrieve a literal from ' +
+                        Symbols_1.Symbols.UI_ELEMENT_PREFIX + variable +
+                        Symbols_1.Symbols.UI_ELEMENT_SUFFIX + '. Generating the identification "' + uieLiteral + '"';
+                    ctx.warnings.push(new error_1.RuntimeException(msg, step.location));
+                }
+                // Analyze whether it is an input target type
+                let targetType = '';
+                if (!dataInputActionEntity) {
+                    targetType = this._targetTypeUtil.analyzeInputTargetTypes(step, langContent) + ' ';
+                }
+                const formattedValue = yield value_formatter_1.formatValueToUseInASentence(language, value);
+                // Generate the sentence
+                let sentence = prefix + ' ' + keywordI + ' ' + dataInputActionEntity.string + ' ' +
+                    targetType +
+                    Symbols_1.Symbols.UI_LITERAL_PREFIX + uieLiteral + Symbols_1.Symbols.UI_LITERAL_SUFFIX +
+                    ' ' + keywordWith + ' ' + formattedValue;
+                // if ( targetType != '' ) {
+                //     console.log( sentence );
+                // }
+                const uieTestPlan = uieVariableToUIETestPlanMap.get(variable) || null;
+                let expectedResult, dtc;
+                let oraclesToAdd = [];
+                // console.log( 'uieTestPlan', uieTestPlan );
+                // Evaluate the test plan and oracles
+                if (null === uieTestPlan) { // not expected
                     expectedResult = keywordValid;
-                }
-                if (util_1.isDefined(langContent.testCaseNames)) {
-                    dtc = langContent.testCaseNames[uieTestPlan.dtc] || (uieTestPlan.dtc || '??? (no data test case)').toString();
+                    dtc = '??? (no test plan for variable ' + variable + ')';
                 }
                 else {
-                    dtc = (uieTestPlan.dtc || '??? (no translation and data test case)').toString();
+                    if (DataTestCaseAnalyzer_1.DTCAnalysisResult.INVALID === uieTestPlan.result) {
+                        expectedResult = keywordInvalid;
+                        // Process ORACLES as steps
+                        let oraclesClone = this.processOracles(uieTestPlan.otherwiseSteps, language, langContent, keywords, ctx);
+                        // Add comments in them
+                        for (let o of oraclesClone) {
+                            o.comment = (o.comment || '') + ' ' + keywordFrom + ' ' +
+                                Symbols_1.Symbols.UI_LITERAL_PREFIX + uieLiteral + Symbols_1.Symbols.UI_LITERAL_SUFFIX;
+                        }
+                        // Add oracles
+                        // oracles.push.apply( oracles, oraclesClone );
+                        oraclesToAdd = oraclesClone; // Save to add later
+                    }
+                    else {
+                        expectedResult = keywordValid;
+                    }
+                    if (util_1.isDefined(langContent.testCaseNames)) {
+                        dtc = langContent.testCaseNames[uieTestPlan.dtc] || (uieTestPlan.dtc || '??? (no data test case)').toString();
+                    }
+                    else {
+                        dtc = (uieTestPlan.dtc || '??? (no translation and data test case)').toString();
+                    }
                 }
+                // Make comment
+                let comment = ' ' + expectedResult + Symbols_1.Symbols.TITLE_SEPARATOR + ' ' + dtc;
+                if (uieNameWithoutFeature) {
+                    comment = ' ' + Symbols_1.Symbols.UI_ELEMENT_PREFIX + uieNameWithoutFeature + Symbols_1.Symbols.UI_ELEMENT_SUFFIX + ',' + comment;
+                }
+                // Make the step
+                let newStep = step;
+                newStep.nodeType = nodeType;
+                newStep.content = sentence;
+                newStep.comment = (step.comment || '') + comment;
+                newStep.location = {
+                    column: step.location.column,
+                    // column: this._lineChecker.countLeftSpacesAndTabs( sentence ),
+                    line: line++,
+                    filePath: step.location.filePath
+                };
+                newStep.isInvalidValue = (util_1.isDefined(uieTestPlan) && uieTestPlan.result === DataTestCaseAnalyzer_1.DTCAnalysisResult.INVALID);
+                // console.log( newStep );
+                // let newStep = {
+                //     nodeType: nodeType,
+                //     content: sentence,
+                //     comment: ( step.comment || '' ) + comment,
+                //     location: {
+                //         column: step.location.column,
+                //         // column: this._lineChecker.countLeftSpacesAndTabs( sentence ),
+                //         line: line++,
+                //         filePath: step.location.filePath
+                //     } as Location,
+                //     isInvalidValue: ( isDefined( uieTestPlan ) && uieTestPlan.result === DTCAnalysisResult.INVALID )
+                // } as Step;
+                // Update NLP !
+                this._variantSentenceRec.recognizeSentences(language, [newStep], ctx.errors, ctx.warnings);
+                steps.push(newStep);
+                if (oraclesToAdd.length > 0) {
+                    oracles.push({ step: newStep, otherwiseSteps: oraclesToAdd });
+                }
+                ++count;
             }
-            // Make comment
-            let comment = ' ' + expectedResult + Symbols_1.Symbols.TITLE_SEPARATOR + ' ' + dtc;
-            if (uieNameWithoutFeature) {
-                comment = ' ' + Symbols_1.Symbols.UI_ELEMENT_PREFIX + uieNameWithoutFeature + Symbols_1.Symbols.UI_ELEMENT_SUFFIX + ',' + comment;
-            }
-            // Make the step
-            let newStep = step;
-            newStep.nodeType = nodeType;
-            newStep.content = sentence;
-            newStep.comment = (step.comment || '') + comment;
-            newStep.location = {
-                column: step.location.column,
-                // column: this._lineChecker.countLeftSpacesAndTabs( sentence ),
-                line: line++,
-                filePath: step.location.filePath
-            };
-            newStep.isInvalidValue = (util_1.isDefined(uieTestPlan) && uieTestPlan.result === DataTestCaseAnalyzer_1.DTCAnalysisResult.INVALID);
-            // console.log( newStep );
-            // let newStep = {
-            //     nodeType: nodeType,
-            //     content: sentence,
-            //     comment: ( step.comment || '' ) + comment,
-            //     location: {
-            //         column: step.location.column,
-            //         // column: this._lineChecker.countLeftSpacesAndTabs( sentence ),
-            //         line: line++,
-            //         filePath: step.location.filePath
-            //     } as Location,
-            //     isInvalidValue: ( isDefined( uieTestPlan ) && uieTestPlan.result === DTCAnalysisResult.INVALID )
-            // } as Step;
-            // Update NLP !
-            this._variantSentenceRec.recognizeSentences(language, [newStep], ctx.errors, ctx.warnings);
-            steps.push(newStep);
-            if (oraclesToAdd.length > 0) {
-                oracles.push({ step: newStep, otherwiseSteps: oraclesToAdd });
-            }
-            ++count;
-        }
-        return [steps, oracles];
+            return [steps, oracles];
+        });
     }
     processOracles(steps, language, langContent, keywords, ctx) {
         if (steps.length < 1) {
@@ -690,34 +692,38 @@ class PreTestCaseGenerator {
      * @param language Language.
      */
     replaceUIPropertyReferencesInsideValues(steps, oracles, uieVariableToValueMap, language, langContent, ctx) {
-        for (let step of steps) {
-            this.replaceUIPropertyReferencesInsideValuesOfStep(step, uieVariableToValueMap, language, langContent, ctx);
-        }
-        for (let step of oracles) {
-            this.replaceUIPropertyReferencesInsideValuesOfStep(step, uieVariableToValueMap, language, langContent, ctx);
-        }
+        return __awaiter(this, void 0, void 0, function* () {
+            for (let step of steps) {
+                yield this.replaceUIPropertyReferencesInsideValuesOfStep(step, uieVariableToValueMap, language, langContent, ctx);
+            }
+            for (let step of oracles) {
+                yield this.replaceUIPropertyReferencesInsideValuesOfStep(step, uieVariableToValueMap, language, langContent, ctx);
+            }
+        });
     }
     replaceUIPropertyReferencesInsideValuesOfStep(step, uieVariableToValueMap, language, langContent, ctx) {
-        const extractor = new util_1.UIPropertyReferenceExtractor();
-        const replacer = new UIPropertyReferenceReplacer_1.UIPropertyReferenceReplacer();
-        const valueEntities = this._nlpUtil.entitiesNamed(nlp_1.Entities.VALUE, step.nlpResult);
-        const contentBefore = step.content;
-        // For all the values in the step
-        for (let entity of valueEntities) {
-            const before = entity.value; // Assumes that it is a language-independent value (!)
-            const references = extractor.extractReferencesFromValue(before, step.location.line);
-            this.checkUIPropertyReferences(references, langContent, ctx); // Also transforms into language-independent format
-            const after = replacer.replaceUIPropertyReferencesByTheirValue(language, step, before, references, uieVariableToValueMap, ctx, true);
-            if (after == before) {
-                continue;
+        return __awaiter(this, void 0, void 0, function* () {
+            const extractor = new util_1.UIPropertyReferenceExtractor();
+            const replacer = new UIPropertyReferenceReplacer_1.UIPropertyReferenceReplacer();
+            const valueEntities = this._nlpUtil.entitiesNamed(nlp_1.Entities.VALUE, step.nlpResult);
+            const contentBefore = step.content;
+            // For all the values in the step
+            for (let entity of valueEntities) {
+                const before = entity.value; // Assumes that it is a language-independent value (!)
+                const references = extractor.extractReferencesFromValue(before, step.location.line);
+                this.checkUIPropertyReferences(references, langContent, ctx); // Also transforms into language-independent format
+                const after = yield replacer.replaceUIPropertyReferencesByTheirValue(language, step, before, references, uieVariableToValueMap, ctx, true);
+                if (after == before) {
+                    continue;
+                }
+                // Change the value of the step
+                step.content = step.content.replace(Symbols_1.Symbols.VALUE_WRAPPER + before + Symbols_1.Symbols.VALUE_WRAPPER, Symbols_1.Symbols.VALUE_WRAPPER + after + Symbols_1.Symbols.VALUE_WRAPPER);
             }
-            // Change the value of the step
-            step.content = step.content.replace(Symbols_1.Symbols.VALUE_WRAPPER + before + Symbols_1.Symbols.VALUE_WRAPPER, Symbols_1.Symbols.VALUE_WRAPPER + after + Symbols_1.Symbols.VALUE_WRAPPER);
-        }
-        // Updates NLP if needed
-        if (contentBefore != step.content) {
-            this._variantSentenceRec.recognizeSentences(language, [step], ctx.errors, ctx.warnings);
-        }
+            // Updates NLP if needed
+            if (contentBefore != step.content) {
+                this._variantSentenceRec.recognizeSentences(language, [step], ctx.errors, ctx.warnings);
+            }
+        });
     }
     //
     // UI PROPERTY REFERENCES
