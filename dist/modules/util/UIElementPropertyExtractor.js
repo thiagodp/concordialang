@@ -68,17 +68,21 @@ class UIElementPropertyExtractor {
         return null;
     }
     guessDataType(map) {
+        // No properties ? -> string
         if (0 == map.size) {
             return ValueTypeDetector_1.ValueType.STRING;
         }
+        // Does it have data type ? -> extract it
         if (map.has(ast_1.UIPropertyTypes.DATA_TYPE)) {
-            const entityValue = map.get(ast_1.UIPropertyTypes.DATA_TYPE)[0].value;
+            const entityValue = map.get(ast_1.UIPropertyTypes.DATA_TYPE).value;
             return this.stringToValueType(entityValue.value.toString());
         }
+        // Does it have min length or max length -> string
         if (map.has(ast_1.UIPropertyTypes.MIN_LENGTH) ||
             map.has(ast_1.UIPropertyTypes.MAX_LENGTH)) {
             return ValueTypeDetector_1.ValueType.STRING;
         }
+        // Detect properties in sequence and evaluate their type
         const sequence = [
             ast_1.UIPropertyTypes.MIN_VALUE,
             ast_1.UIPropertyTypes.MAX_VALUE,
@@ -87,10 +91,11 @@ class UIElementPropertyExtractor {
         const valueTypeDetector = new ValueTypeDetector_1.ValueTypeDetector();
         for (const pType of sequence) {
             if (map.has(pType)) {
-                const entityValue = map.get(pType)[0].value;
+                const entityValue = map.get(pType).value;
                 return valueTypeDetector.detect(entityValue.value);
             }
         }
+        // Default
         return ValueTypeDetector_1.ValueType.STRING;
     }
     extractIsEditable(uie) {

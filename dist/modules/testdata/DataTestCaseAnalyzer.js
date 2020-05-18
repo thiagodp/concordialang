@@ -125,20 +125,21 @@ class DataTestCaseAnalyzer {
         const pMaxValueHasTagGenerateOnlyValidValues = pMaxValue && propertyHasTagGenerateOnlyValidValues(pMaxValue);
         const pFormatHasTagGenerateOnlyValidValues = pFormat && propertyHasTagGenerateOnlyValidValues(pFormat);
         // Data type
-        let valueType = ValueTypeDetector_1.ValueType.STRING;
-        if (propertiesMap.has(UIPropertyTypes_1.UIPropertyTypes.DATA_TYPE)) {
-            valueType = this._uiePropExtractor.extractDataType(uie);
-        }
-        else {
-            //
-            // Assumes INTEGER if it has some of the following properties, aiming at to
-            // be compatible with some data test cases. The right type is maybe not important
-            // since the test cases of the group VALUE will fit.
-            //
-            if (TypeChecking_1.isDefined(pValue) || TypeChecking_1.isDefined(pMinValue) || TypeChecking_1.isDefined(pMaxValue)) {
-                valueType = ValueTypeDetector_1.ValueType.INTEGER;
-            }
-        }
+        // let valueType = ValueType.STRING;
+        // if ( propertiesMap.has( UIPropertyTypes.DATA_TYPE ) ) {
+        //     valueType = this._uiePropExtractor.extractDataType( uie );
+        // } else {
+        //     //
+        //     // Assumes INTEGER if it has some of the following properties, aiming at to
+        //     // be compatible with some data test cases. The right type is maybe not important
+        //     // since the test cases of the group VALUE will fit.
+        //     //
+        //     if ( isDefined( pValue ) || isDefined( pMinValue ) || isDefined( pMaxValue ) ) {
+        //         valueType = ValueType.INTEGER;
+        //     }
+        // }
+        // v2.0
+        let valueType = this._uiePropExtractor.guessDataType(propertiesMap);
         // console.log( 'group', group, 'valueType', valueType, 'propertiesMap', propertiesMap.keys() );
         const validPair = new DTCAnalysisData(DTCAnalysisResult.VALID, []);
         const incompatiblePair = new DTCAnalysisData(DTCAnalysisResult.INCOMPATIBLE, []);

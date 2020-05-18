@@ -103,7 +103,10 @@ export class UIElementValueGenerator {
 
         // DATA TYPE
 
-        cfg.valueType = this._uiePropExtractor.extractDataType( uie ) || ValueType.STRING;
+        // cfg.valueType = this._uiePropExtractor.extractDataType( uie ) || ValueType.STRING;
+
+        // v2.0
+        cfg.valueType = this._uiePropExtractor.guessDataType( propertiesMap );
 
         // FORMAT
 

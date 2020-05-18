@@ -85,7 +85,9 @@ class UIElementValueGenerator {
             // console.log( 'BEFORE cfg >>>>>>>>>>', cfg );
             // console.log( 'properties', propertiesMap.keys() );
             // DATA TYPE
-            cfg.valueType = this._uiePropExtractor.extractDataType(uie) || ValueTypeDetector_1.ValueType.STRING;
+            // cfg.valueType = this._uiePropExtractor.extractDataType( uie ) || ValueType.STRING;
+            // v2.0
+            cfg.valueType = this._uiePropExtractor.guessDataType(propertiesMap);
             // FORMAT
             const pFormat = propertiesMap.get(ast_1.UIPropertyTypes.FORMAT) || null;
             if (TypeChecking_1.isDefined(pFormat)) {

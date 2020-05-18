@@ -74,22 +74,27 @@ export class UIElementPropertyExtractor {
         return null;
     }
 
-    guessDataType( map: Map< UIPropertyTypes, UIProperty[] > ): ValueType {
+    guessDataType( map: Map< UIPropertyTypes, UIProperty > ): ValueType {
 
+        // No properties ? -> string
         if ( 0 == map.size ) {
             return ValueType.STRING;
         }
 
+        // Does it have data type ? -> extract it
         if ( map.has( UIPropertyTypes.DATA_TYPE ) ) {
-            const entityValue = map.get( UIPropertyTypes.DATA_TYPE )[ 0 ].value;
+            const entityValue = map.get( UIPropertyTypes.DATA_TYPE ).value;
             return this.stringToValueType( entityValue.value.toString() );
         }
 
+        // Does it have min length or max length -> string
         if ( map.has( UIPropertyTypes.MIN_LENGTH ) ||
             map.has( UIPropertyTypes.MAX_LENGTH )
         ) {
             return ValueType.STRING;
         }
+
+        // Detect properties in sequence and evaluate their type
 
         const sequence: UIPropertyTypes[] = [
             UIPropertyTypes.MIN_VALUE,
@@ -101,11 +106,12 @@ export class UIElementPropertyExtractor {
 
         for ( const pType of sequence ) {
             if ( map.has( pType ) ) {
-                const entityValue = map.get( pType )[ 0 ].value;
+                const entityValue = map.get( pType ).value;
                 return valueTypeDetector.detect( entityValue.value );
             }
         }
 
+        // Default
         return ValueType.STRING;
     }
 
