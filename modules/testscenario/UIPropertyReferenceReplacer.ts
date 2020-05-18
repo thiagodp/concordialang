@@ -22,15 +22,16 @@ export class UIPropertyReferenceReplacer {
      * @param uiePropertyReferences References to replace.
      * @param uieVariableToValueMap Map that contains the value of all UIElement variables.
      * @param ctx Generation context.
-     * @param insideStringValue Indicates if the value is already inside a string. Optional, defaults to `false`.
+     * @param isAlreadyInsideAString Indicates if the value is already inside a string. Optional, defaults to `false`.
      */
     replaceUIPropertyReferencesByTheirValue(
+        language: string,
         step: Step,
         content: string,
         uiePropertyReferences: UIPropertyReference[],
         uieVariableToValueMap: Map< string, EntityValueType >,
         ctx: GenContext,
-        insideStringValue: boolean = false
+        isAlreadyInsideAString: boolean = false
     ): string {
 
         const uieNameHandler = new UIElementNameHandler();
@@ -76,7 +77,10 @@ export class UIPropertyReferenceReplacer {
                 ctx.warnings.push( err );
                 value = '';
             }
-            const formattedValue = formatValueToUseInASentence( value, insideStringValue );
+
+            const formattedValue = formatValueToUseInASentence(
+                language, value, isAlreadyInsideAString );
+
             const refStr: string = Symbols.UI_ELEMENT_PREFIX + uipRef.content + Symbols.UI_ELEMENT_SUFFIX;
             newContent = newContent.replace( refStr, formattedValue );
         }

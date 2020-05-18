@@ -456,7 +456,7 @@ class PreTestCaseGenerator {
         let step = deepcopy(inputStep);
         if (this.hasUIPropertyReference(step)) {
             const uipRefReplacer = new UIPropertyReferenceReplacer_1.UIPropertyReferenceReplacer();
-            step.content = uipRefReplacer.replaceUIPropertyReferencesByTheirValue(step, step.content, step.uiePropertyReferences, uieVariableToValueMap, ctx);
+            step.content = uipRefReplacer.replaceUIPropertyReferencesByTheirValue(language, step, step.content, step.uiePropertyReferences, uieVariableToValueMap, ctx);
             // Update NLP !
             this._variantSentenceRec.recognizeSentences(language, [step], ctx.errors, ctx.warnings);
         }
@@ -535,7 +535,7 @@ class PreTestCaseGenerator {
             if (!dataInputActionEntity) {
                 targetType = this._targetTypeUtil.analyzeInputTargetTypes(step, langContent) + ' ';
             }
-            const formattedValue = value_formatter_1.formatValueToUseInASentence(value);
+            const formattedValue = value_formatter_1.formatValueToUseInASentence(language, value);
             // Generate the sentence
             let sentence = prefix + ' ' + keywordI + ' ' + dataInputActionEntity.string + ' ' +
                 targetType +
@@ -707,7 +707,7 @@ class PreTestCaseGenerator {
             const before = entity.value; // Assumes that it is a language-independent value (!)
             const references = extractor.extractReferencesFromValue(before, step.location.line);
             this.checkUIPropertyReferences(references, langContent, ctx); // Also transforms into language-independent format
-            const after = replacer.replaceUIPropertyReferencesByTheirValue(step, before, references, uieVariableToValueMap, ctx, true);
+            const after = replacer.replaceUIPropertyReferencesByTheirValue(language, step, before, references, uieVariableToValueMap, ctx, true);
             if (after == before) {
                 continue;
             }

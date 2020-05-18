@@ -111,6 +111,7 @@
     "cosmiconfig": "^6.0.0",
     "database-js": "^3.0.9",
     "database-js-json": "^1.2.1",
+    "date-fns": "^2.13.0",
     "deepcopy": "^0.6.3",
     "enum-util": "^1.7.1",
     "figures": "^3.2.0",
