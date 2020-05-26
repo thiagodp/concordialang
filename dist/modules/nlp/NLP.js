@@ -49,7 +49,7 @@ class NLP {
         // Language-based entities
         this._additionalEntities.push(nlp_1.Entities.DATE);
         this._additionalEntities.push(nlp_1.Entities.TIME);
-        this._additionalEntities.push(nlp_1.Entities.DATETIME);
+        this._additionalEntities.push(nlp_1.Entities.DATE_TIME);
         // this._additionalEntities.push( Entities.TIME_PERIOD );
         // this._additionalEntities.push( Entities.YEAR_OF );
     }
@@ -100,7 +100,7 @@ class NLP {
         const erMaker = new EntityRecognizerMaker_1.EntityRecognizerMaker();
         nlp.addEntity(erMaker.makeDate(language, nlp_1.Entities.DATE));
         nlp.addEntity(erMaker.makeTime(language, nlp_1.Entities.TIME));
-        nlp.addEntity(erMaker.makeDateTime(language, nlp_1.Entities.DATETIME));
+        nlp.addEntity(erMaker.makeDateTime(language, nlp_1.Entities.DATE_TIME));
         // nlp.addEntity( erMaker.makeTimePeriod( language, Entities.TIME_PERIOD ) );
         // nlp.addEntity( erMaker.makeYearOf( language, Entities.YEAR_OF ) );
         // Train with examples that include the added entities

@@ -1,5 +1,24 @@
-import { Constant, Database, DatabaseProperties, DatabaseProperty, Document, EntityValue, EntityValueType, Node, Table, UIElement, UIProperty, UIPropertyTypes } from '../ast';
-import { AlaSqlDatabaseInterface, DatabaseJSDatabaseInterface, DatabaseToAbstractDatabase, QueryParser, supportTablesInQueries } from '../db';
+import {
+    Constant,
+    Database,
+    DatabaseProperties,
+    DatabaseProperty,
+    Document,
+    EntityValue,
+    EntityValueType,
+    Node,
+    Table,
+    UIElement,
+    UIProperty,
+    UIPropertyTypes,
+} from '../ast';
+import {
+    AlaSqlDatabaseInterface,
+    DatabaseJSDatabaseInterface,
+    DatabaseToAbstractDatabase,
+    QueryParser,
+    supportTablesInQueries,
+} from '../db';
 import { DatabaseInterface, Queryable } from '../dbi';
 import { LocatedException, RuntimeException } from '../error';
 import { Entities } from '../nlp';
@@ -11,7 +30,7 @@ import { isDefined, valueOrNull } from '../util/TypeChecking';
 import { UIElementNameHandler } from '../util/UIElementNameHandler';
 import { UIElementOperatorChecker } from '../util/UIElementOperatorChecker';
 import { UIElementPropertyExtractor } from '../util/UIElementPropertyExtractor';
-import { adjustValueToTheRightType, ValueType } from '../util/ValueTypeDetector';
+import { adjustValueToTheRightType } from '../util/ValueTypeDetector';
 import { DataGenConfig, DataGenerator } from './DataGenerator';
 import { DataTestCaseGroup, DataTestCaseGroupDef } from './DataTestCase';
 
@@ -183,7 +202,7 @@ export class UIElementValueGenerator {
             }
         }
 
-        // console.log( 'cfg >>>>>>>>>>', cfg, '\nerrors:', errors.map( e => e.message ) );
+        // console.log( '>>>', uieName, cfg, '\nerrors:', errors.map( e => e.message ) );
 
 
         // The switch prepares `cfg` to be used after it
@@ -259,7 +278,7 @@ export class UIElementValueGenerator {
             errors.push( new RuntimeException( msg, uie.location ) );
         }
 
-        // console.log( '--------------> ', value );
+        // console.log( '--------------> ', value, 'group:', group );
 
         // Save in the map
         context.uieVariableToValueMap.set( uie.info.fullVariableName, value );

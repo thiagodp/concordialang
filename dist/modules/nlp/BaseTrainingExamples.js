@@ -181,15 +181,23 @@ exports.BASE_TRAINING_EXAMPLES = [
             "{ui_property} {ui_connector} {query}",
             "{ui_property} {ui_connector} {date}",
             "{ui_property} {ui_connector} {time}",
+            "{ui_property} {ui_connector} {longtime}",
             "{ui_property} {ui_connector} {datetime}",
+            "{ui_property} {ui_connector} {longdatetime}",
         ]
     },
-    {
-        "intent": "ui_item_query",
-        "sentences": [
-            "{ui_property} {query}",
-        ]
-    },
+    // {
+    //     "intent": "ui_item_query",
+    //     "sentences": [
+    //         "{ui_property} {query}",
+    //         // "{ui_property} vem de {query}",
+    //         // "{ui_property} vem da consulta {query}",
+    //         // "{ui_property} vem da query {query}",
+    //         // "{ui_property} está em {query}",
+    //         // "{ui_property} está contido em {query}",
+    //         // "{ui_property} está presente em {query}"
+    //     ]
+    // },
     {
         "intent": "database",
         "sentences": [

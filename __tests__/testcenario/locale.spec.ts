@@ -1,4 +1,4 @@
-import { isLocaleFormatValid, fallbackToLanguage } from "../../modules/testscenario/locale";
+import { createDefaultLocaleMap, fallbackToLanguage, isLocaleAvailable, isLocaleFormatValid, LocaleMap } from "../../modules/testscenario/locale";
 
 describe( 'locale', () => {
 
@@ -59,39 +59,70 @@ describe( 'locale', () => {
      */
     describe( '#fallbackToLanguage', () => {
 
+        let map: LocaleMap;
+
+        beforeAll( () => {
+            map = createDefaultLocaleMap();
+        } );
+
+        afterAll( () => {
+            map = null;
+        } );
+
         it( 'accepts pre-loaded language with country', async () => {
-            const r = await fallbackToLanguage( 'en-US' );
+            const r = await fallbackToLanguage( 'en-US', map );
             expect( r ).toEqual( 'en-US' );
         } );
 
         it( 'accepts pre-loaded language without country', async () => {
-            const r = await fallbackToLanguage( 'en' );
+            const r = await fallbackToLanguage( 'en', map );
             expect( r ).toEqual( 'en' );
         } );
 
         it( 'accepts an existing but not pre-loaded language with country', async () => {
-            const r = await fallbackToLanguage( 'en-GB' );
+            const r = await fallbackToLanguage( 'en-GB', map );
             expect( r ).toEqual( 'en-GB' );
         } );
 
         it( 'accepts an existing but not pre-loaded language with country', async () => {
-            const r = await fallbackToLanguage( 'fr' );
+            const r = await fallbackToLanguage( 'fr', map );
             expect( r ).toEqual( 'fr' );
         } );
 
         it( 'a non existing country fallbacks to an existing language', async () => {
-            const r = await fallbackToLanguage( 'es-AR' );
+            const r = await fallbackToLanguage( 'es-AR', map );
             expect( r ).toEqual( 'es' );
         } );
 
         it( 'a non existing language and country returns null', async () => {
-            const r = await fallbackToLanguage( 'xx-XX' );
+            const r = await fallbackToLanguage( 'xx-XX', map );
             expect( r ).toEqual( null );
         } );
 
         it( 'a non existing language returns null', async () => {
-            const r = await fallbackToLanguage( 'xx' );
+            const r = await fallbackToLanguage( 'xx', map );
             expect( r ).toEqual( null );
+        } );
+
+    } );
+
+
+    describe( '#isLocaleAvailable', () => {
+
+        let map: LocaleMap;
+
+        beforeEach( () => {
+            map = createDefaultLocaleMap();
+        } );
+
+        afterEach( () => {
+            map = null;
+        } );
+
+        it ( 'is able to load an available language', async () => {
+            expect( map.has( 'ja' ) ).toBeFalsy();
+            expect( await isLocaleAvailable( 'ja', map ) ).toBeTruthy();
+            expect( map.has( 'ja' ) ).toBeTruthy();
         } );
 
     } );

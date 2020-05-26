@@ -5,8 +5,10 @@ function __export(m) {
 Object.defineProperty(exports, "__esModule", { value: true });
 __export(require("./BaseTrainingExamples"));
 __export(require("./DatabasePropertyRecognizer"));
+__export(require("./DateTimeExpressions"));
 __export(require("./Entities"));
 __export(require("./EntityHandler"));
+__export(require("./EntityRecognizerMaker"));
 __export(require("./GivenWhenThenSentenceRecognizer"));
 __export(require("./Intents"));
 __export(require("./NLP"));
@@ -17,6 +19,4 @@ __export(require("./NLPTrainingData"));
 __export(require("./NLPTrainingDataConversor"));
 __export(require("./NLPUtil"));
 __export(require("./NodeSentenceRecognizer"));
-__export(require("./RuleBuilder"));
-__export(require("./SyntaxRules"));
 __export(require("./UIPropertyRecognizer"));

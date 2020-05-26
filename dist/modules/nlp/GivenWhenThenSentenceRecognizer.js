@@ -1,6 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const _1 = require(".");
+const SyntaxRuleBuilder_1 = require("./syntax/SyntaxRuleBuilder");
+const UIActionSyntaxRules_1 = require("./syntax/UIActionSyntaxRules");
 /**
  * Given-When-Then sentence recognizer.
  *
@@ -91,7 +93,7 @@ class GivenWhenThenSentenceRecognizer {
         recognizer.recognize(language, nodes, [_1.Intents.TEST_CASE], ownerName, errors, warnings, processor);
     }
     buildSyntaxRules() {
-        return (new _1.RuleBuilder()).build(_1.UI_ACTION_SYNTAX_RULES, _1.DEFAULT_UI_ACTION_SYNTAX_RULE);
+        return (new SyntaxRuleBuilder_1.SyntaxRuleBuilder()).build(UIActionSyntaxRules_1.UI_ACTION_SYNTAX_RULES, UIActionSyntaxRules_1.DEFAULT_UI_ACTION_SYNTAX_RULE);
     }
 }
 exports.GivenWhenThenSentenceRecognizer = GivenWhenThenSentenceRecognizer;

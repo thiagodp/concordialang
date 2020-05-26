@@ -45,21 +45,31 @@ class DataGenConfig {
         this._valueType = valType;
     }
     get valueType() {
-        // console.log( '  internal type', this._valueType, 'minValue', this.minValue, 'maxValue', this.maxValue, 'value', this.value );
-        if (TypeChecking_1.isDefined(this.minValue)) {
-            return (new ValueTypeDetector_1.ValueTypeDetector()).detect(this.minValue);
+        // console.log( this );
+        // Whether it is a STRING and has minValue or maxValue, then
+        // it is probably a value that comes from a query.
+        if (ValueTypeDetector_1.ValueType.STRING === this._valueType) {
+            if (TypeChecking_1.isDefined(this.minValue)) {
+                return (new ValueTypeDetector_1.ValueTypeDetector()).detect(this.minValue);
+            }
+            if (TypeChecking_1.isDefined(this.maxValue)) {
+                return (new ValueTypeDetector_1.ValueTypeDetector()).detect(this.maxValue);
+            }
         }
-        if (TypeChecking_1.isDefined(this.maxValue)) {
-            return (new ValueTypeDetector_1.ValueTypeDetector()).detect(this.maxValue);
-        }
-        if (TypeChecking_1.isDefined(this.value)) {
+        // if ( isDefined( this.value ) ) {
+        // 	const detector = new ValueTypeDetector();
+        // 	if ( ! Array.isArray( this.value ) ) {
+        // 		return detector.detect( this.value.toString() );
+        // 	}
+        // 	if ( this.value.length > 0 ) {
+        // 		return detector.detect( this.value[ 0 ] );
+        // 	}
+        // }
+        if (TypeChecking_1.isDefined(this.value)
+            && Array.isArray(this.value)
+            && this.value.length > 0) {
             const detector = new ValueTypeDetector_1.ValueTypeDetector();
-            if (!Array.isArray(this.value)) {
-                return detector.detect(this.value.toString());
-            }
-            if (this.value.length > 0) {
-                return detector.detect(this.value[0]);
-            }
+            return detector.detect(this.value[0]);
         }
         return this._valueType;
     }

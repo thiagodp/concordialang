@@ -1,6 +1,9 @@
-import { DATABASE_PROPERTY_SYNTAX_RULES, DEFAULT_DATABASE_PROPERTY_SYNTAX_RULE, Entities, Intents, NLP, NLPException, NLPResult, NLPResultProcessor, NLPTrainer, NodeSentenceRecognizer, RuleBuilder } from '.';
+import { Entities, Intents, NLP, NLPException, NLPResult, NLPResultProcessor, NLPTrainer, NodeSentenceRecognizer } from '.';
 import { ContentNode, DatabaseProperty } from '../ast';
 import { LocatedException } from '../error/LocatedException';
+import { DATABASE_PROPERTY_SYNTAX_RULES, DEFAULT_DATABASE_PROPERTY_SYNTAX_RULE } from "./syntax/DatabasePropertySyntaxRules";
+import { SyntaxRuleBuilder } from "./syntax/SyntaxRuleBuilder";
+import { SyntaxRule } from './syntax/SyntaxRule';
 
 /**
  * Database property sentence recognizer.
@@ -96,9 +99,11 @@ export class DatabasePropertyRecognizer {
     }
 
 
-    public buildSyntaxRules(): object[] {
-        return ( new RuleBuilder() ).build(
-            DATABASE_PROPERTY_SYNTAX_RULES, DEFAULT_DATABASE_PROPERTY_SYNTAX_RULE );
+    public buildSyntaxRules(): Array< SyntaxRule > {
+        return ( new SyntaxRuleBuilder() ).build(
+            DATABASE_PROPERTY_SYNTAX_RULES,
+            DEFAULT_DATABASE_PROPERTY_SYNTAX_RULE
+        );
     }
 
 }

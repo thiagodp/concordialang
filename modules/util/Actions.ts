@@ -4,9 +4,11 @@
  * @author Thiago Delgado Pinto
  */
 export enum Actions {
+    ACCEPT          = "accept"        , // web, mobile web
     AM_ON           = "amOn"          , // web, mobile web
     APPEND          = "append"        , // web, mobile web, mobile native, desktop
     ATTACH_FILE     = "attachFile"    , // web, mobile web
+    CANCEL          = "cancel"        , // web, mobile web
     CHECK           = "check"         , // web, mobile web, mobile native, desktop
     CLEAR           = "clear"         , // web, mobile web, mobile native, desktop
     CLICK           = "click"         , // web, mobile web, mobile native, desktop
@@ -17,6 +19,7 @@ export enum Actions {
     DRAG            = "drag"          , // web, mobile web, mobile native, desktop
     FILL            = "fill"          , // web, mobile web, mobile native, desktop
     HIDE            = "hide"          , // web, mobile web, mobile native, desktop
+    INSTALL         = "install"       , // mobile native
     MAXIMIZE        = "maximize"      , // web, desktop
     MOVE            = "move"          , // web, mobile web, mobile native, desktop
     MOUSE_OUT       = "mouseOut"      , // web, mobile web, desktop
@@ -27,15 +30,15 @@ export enum Actions {
     REFRESH         = "refresh"       , // web, mobile web
     REMOVE          = "remove"        , // web, mobile web, mobile native
     RESIZE          = "resize"        , // web, mobile web, mobile native, desktop
-    ROTATE          = "remove"        , // mobile web, mobile native
     RIGHT_CLICK     = "rightClick"    , // web, mobile web, desktop
+    ROTATE          = "remove"        , // mobile web, mobile native
+    RUN             = "run"           , // mobile web, mobile native
     SAVE_SCREENSHOT = "saveScreenshot", // web, mobile web, mobile native, desktop
     SCROLL_TO       = "scrollTo"      , // web, mobile web, mobile native, desktop
-    RUN             = "run"           , // mobile web, mobile native
     SEE             = "see"           , // web, mobile web, mobile native, desktop
     SELECT          = "select"        , // web, mobile web, mobile native, desktop
     SHAKE           = 'shake'         , // mobile web, mobile native
-    SHOW            = "show"          , // web, mobile web, mobile native, desktop
+    // SHOW            = "show"          , // web, mobile web, mobile native, desktop
     SWIPE           = "swipe"         , // mobile web, mobile native
     SWITCH          = "switch"        , // mobile web, mobile native
     TAP             = "tap"           , // mobile web, mobile native

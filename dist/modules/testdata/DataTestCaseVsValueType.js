@@ -50,7 +50,7 @@ class DataTestCaseVsValueType {
         this.addValueDef(ValueTypeDetector_1.ValueType.TIME);
     }
     addDateTimeDefs() {
-        this.addValueDef(ValueTypeDetector_1.ValueType.DATETIME);
+        this.addValueDef(ValueTypeDetector_1.ValueType.DATE_TIME);
     }
     addBooleanDefs() {
         const valueType = ValueTypeDetector_1.ValueType.BOOLEAN;

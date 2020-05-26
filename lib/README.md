@@ -1,8 +1,8 @@
-The `lib` directory contains libraries that were not installed using `npm` (on purpose).
+The `lib` directory contains adapted libraries that were not installed using `npm`.
 
 ## Bravey
 
-**WARNING: Do not overwrite `bravey.js` with a newer version without adapting it.** See the following notes.
+**WARNING: Do not overwrite `bravey.js` with a newer version.** See the following notes.
 
 [bravey.js](https://github.com/BraveyJS/Bravey)  was adapted in order to avoid transforming the sentences to lowercase. The following transformations were made:
 
@@ -20,4 +20,8 @@ text = Bravey.Text.clean(text);
 
 **d)** debug mode
 
-**e)** improved support to Dates - English and Portuguese.
+**e)** support to Date values.
+
+**f)** support to Time values.
+
+**g)** support to DateTime values.

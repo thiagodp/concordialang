@@ -24,7 +24,7 @@ class EnglishKeywordDictionary {
         this.afterFeature = ['after feature'];
         this.beforeEachScenario = ['before each scenario'];
         this.afterEachScenario = ['after each scenario'];
-        this.i = ['i'];
+        this.i = ['I'];
         this.is = ['is'];
         this.with = ['with'];
         this.valid = ['valid'];

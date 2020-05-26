@@ -1,19 +1,19 @@
-
 import { DateTimeFormatter, LocalDate } from '@js-joda/core';
-import { ContentNode, EntityValue, UIProperty, EntityValueType } from '../ast';
+
+import { ContentNode, EntityValue, UIProperty } from '../ast';
 import { UIPropertyTypes } from '../ast/UIPropertyTypes';
 import { LocatedException } from '../error/LocatedException';
 import { Entities, NLPResult } from '../nlp';
 import { isDefined } from '../util/TypeChecking';
-import { adjustValueToTheRightType, ValueType } from '../util/ValueTypeDetector';
+import { adjustValueToTheRightType } from '../util/ValueTypeDetector';
 import { Intents } from './Intents';
 import { NLP } from './NLP';
 import { NLPException } from './NLPException';
 import { NLPTrainer } from './NLPTrainer';
 import { NLPResultProcessor, NodeSentenceRecognizer } from './NodeSentenceRecognizer';
-import { RuleBuilder } from './RuleBuilder';
-import { DEFAULT_UI_PROPERTY_SYNTAX_RULE, UI_PROPERTY_SYNTAX_RULES } from './SyntaxRules';
-import { UIElementPropertyExtractor } from '../util/UIElementPropertyExtractor';
+import { SyntaxRule } from './syntax/SyntaxRule';
+import { SyntaxRuleBuilder } from './syntax/SyntaxRuleBuilder';
+import { DEFAULT_UI_PROPERTY_SYNTAX_RULE, UI_PROPERTY_SYNTAX_RULES } from './syntax/UIPropertySyntaxRules';
 
 /**
  * UI element property sentence recognizer.
@@ -97,9 +97,13 @@ export class UIPropertyRecognizer {
                     case Entities.NUMBER            : entityValue = new EntityValue( e.entity, adjustValueToTheRightType( e.value ) ); break;
                     // case Entities.VALUE_LIST     : uiv = new EntityValue( e.entity, _this.makeValueList( e.value ) ); break;
                     case Entities.DATE              : entityValue = new EntityValue( e.entity, _this.convertToDateIfNeeded( e.value, language ) ); break;
-                    // case Entities.TIME              : entityValue = new EntityValue( e.entity, e.value ); break;
-                    // case Entities.TIME_PERIOD       : entityValue = new EntityValue( e.entity, e.value ); break;
-                    // case Entities.YEAR_OF           : entityValue = new EntityValue( e.entity, e.value ); break;
+
+                    case Entities.LONG_TIME         : // next
+                    case Entities.TIME              : entityValue = new EntityValue( e.entity, e.value ); break;
+
+                    case Entities.LONG_DATE_TIME    : // next
+                    case Entities.DATE_TIME         : entityValue = new EntityValue( e.entity, e.value ); break;
+
                     case Entities.VALUE_LIST        : entityValue = new EntityValue( e.entity, e.value ); break;
                     case Entities.QUERY             : entityValue = new EntityValue( e.entity, e.value ); break;
                     case Entities.UI_ELEMENT_REF    : entityValue = new EntityValue( e.entity, e.value ); break;
@@ -188,7 +192,7 @@ export class UIPropertyRecognizer {
         if ( typeof value != 'string' ) {
             return value;
         }
-        const f = DateTimeFormatter.ofPattern( "yyyy-MM-dd" );
+        const f = DateTimeFormatter.ofPattern( "uuuu-MM-dd" );
         try {
             return LocalDate.parse( value, f );
         } catch {
@@ -212,8 +216,11 @@ export class UIPropertyRecognizer {
     // }
 
 
-    public buildSyntaxRules(): object[] {
-        return ( new RuleBuilder() ).build( UI_PROPERTY_SYNTAX_RULES, DEFAULT_UI_PROPERTY_SYNTAX_RULE );
+    public buildSyntaxRules(): Array< SyntaxRule > {
+        return ( new SyntaxRuleBuilder() ).build(
+            UI_PROPERTY_SYNTAX_RULES,
+            DEFAULT_UI_PROPERTY_SYNTAX_RULE
+            );
     }
 
     // public makeValueList( content: string ): any[] {

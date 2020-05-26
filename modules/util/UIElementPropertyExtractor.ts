@@ -106,13 +106,38 @@ export class UIElementPropertyExtractor {
 
         for ( const pType of sequence ) {
             if ( map.has( pType ) ) {
+                // console.log( 'property of type', pType, '=', map.get( pType ) );
                 const entityValue = map.get( pType ).value;
-                return valueTypeDetector.detect( entityValue.value );
+                // console.log( 'entityValue', entityValue );
+                return valueTypeDetector.detect( entityValue?.value || '' );
             }
         }
 
         // Default
         return ValueType.STRING;
+    }
+
+    /**
+     * Extracts the value of the property `locale`. If not defined, returns
+     * the document language.
+     *
+     * @param uie UI Element
+     * @param documentLanguage Current document's language
+     */
+    extractLocale( uie: UIElement, documentLanguage: string ): string {
+
+        if ( ! uie.items || uie.items.length < 1 ) {
+            return documentLanguage;
+        }
+
+        const nlpEntity = this.extractPropertyValueAsEntity(
+            this.extractProperty( uie, UIPropertyTypes.LOCALE )
+        );
+        if ( ! nlpEntity ) {
+            return documentLanguage;
+        }
+
+        return nlpEntity.value.toString();
     }
 
 

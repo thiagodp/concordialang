@@ -1,6 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const _1 = require(".");
+const DatabasePropertySyntaxRules_1 = require("./syntax/DatabasePropertySyntaxRules");
+const SyntaxRuleBuilder_1 = require("./syntax/SyntaxRuleBuilder");
 /**
  * Database property sentence recognizer.
  *
@@ -62,7 +64,7 @@ class DatabasePropertyRecognizer {
         recognizer.recognize(language, nodes, [_1.Intents.DATABASE], 'Database Property', errors, warnings, processor);
     }
     buildSyntaxRules() {
-        return (new _1.RuleBuilder()).build(_1.DATABASE_PROPERTY_SYNTAX_RULES, _1.DEFAULT_DATABASE_PROPERTY_SYNTAX_RULE);
+        return (new SyntaxRuleBuilder_1.SyntaxRuleBuilder()).build(DatabasePropertySyntaxRules_1.DATABASE_PROPERTY_SYNTAX_RULES, DatabasePropertySyntaxRules_1.DEFAULT_DATABASE_PROPERTY_SYNTAX_RULE);
     }
 }
 exports.DatabasePropertyRecognizer = DatabasePropertyRecognizer;

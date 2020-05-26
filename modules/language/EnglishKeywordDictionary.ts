@@ -28,7 +28,7 @@ export class EnglishKeywordDictionary implements KeywordDictionary {
     beforeEachScenario: string[] = [ 'before each scenario' ];
     afterEachScenario: string[] = [ 'after each scenario' ];
 
-    i: string[] = [ 'i' ];
+    i: string[] = [ 'I' ];
     is: string[] = [ 'is' ];
     with: string[] = [ 'with' ];
     valid: string[] = [ 'valid' ];

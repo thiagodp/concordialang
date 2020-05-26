@@ -1,11 +1,12 @@
-import { LocalDate, LocalDateTime, LocalTime } from "@js-joda/core";
-import { DataGenConfig, DataGenerator } from "../../modules/testdata/DataGenerator";
-import { DataGeneratorBuilder } from "../../modules/testdata/DataGeneratorBuilder";
-import { DataTestCase, DataTestCaseGroup, DataTestCaseGroupDef } from "../../modules/testdata/DataTestCase";
-import { DateLimits } from "../../modules/testdata/limits/DateLimits";
-import { DateTimeLimits } from "../../modules/testdata/limits/DateTimeLimits";
-import { TimeLimits } from "../../modules/testdata/limits/TimeLimits";
-import { ValueType } from "../../modules/util/ValueTypeDetector";
+import { LocalDate, LocalDateTime, LocalTime } from '@js-joda/core';
+
+import { DataGenConfig, DataGenerator } from '../../modules/testdata/DataGenerator';
+import { DataGeneratorBuilder } from '../../modules/testdata/DataGeneratorBuilder';
+import { DataTestCase, DataTestCaseGroup, DataTestCaseGroupDef } from '../../modules/testdata/DataTestCase';
+import { DateLimits } from '../../modules/testdata/limits/DateLimits';
+import { DateTimeLimits, ShortDateTimeLimits } from '../../modules/testdata/limits/DateTimeLimits';
+import { ShortTimeLimits, TimeLimits } from '../../modules/testdata/limits/TimeLimits';
+import { ValueType } from '../../modules/util/ValueTypeDetector';
 
 
 describe( 'DataGenerator', () => {
@@ -295,6 +296,14 @@ describe( 'DataGenerator', () => {
         ) );
 
         describe( 'time', checkTestCasesOfTheGroupValue( ValueType.TIME,
+            LocalTime.of( 12,  0 ),
+            LocalTime.of( 13,  0 ),
+            LocalTime.of( 12, 30 ),
+            ShortTimeLimits.MIN,
+            timeComparator
+        ) );
+
+        describe( 'long_time', checkTestCasesOfTheGroupValue( ValueType.LONG_TIME,
             LocalTime.of( 12,  0,  0 ),
             LocalTime.of( 13,  0,  0 ),
             LocalTime.of( 12, 30,  0 ),
@@ -302,7 +311,15 @@ describe( 'DataGenerator', () => {
             timeComparator
         ) );
 
-        describe( 'datetime', checkTestCasesOfTheGroupValue( ValueType.DATETIME,
+        describe( 'datetime', checkTestCasesOfTheGroupValue( ValueType.DATE_TIME,
+            LocalDateTime.of( 2018, 1,  1, 12,  0 ),
+            LocalDateTime.of( 2018, 1, 30, 13,  0 ),
+            LocalDateTime.of( 2018, 1, 15, 12, 30 ),
+            ShortDateTimeLimits.MIN,
+            dateTimeComparator
+        ) );
+
+        describe( 'long_datetime', checkTestCasesOfTheGroupValue( ValueType.LONG_DATE_TIME,
             LocalDateTime.of( 2018, 1,  1, 12,  0,  0 ),
             LocalDateTime.of( 2018, 1, 30, 13,  0,  0 ),
             LocalDateTime.of( 2018, 1, 15, 12, 30,  0 ),

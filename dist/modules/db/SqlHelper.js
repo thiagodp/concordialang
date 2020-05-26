@@ -57,8 +57,10 @@ class SqlHelper {
             case ValueTypeDetector_1.ValueType.DOUBLE: return 'DOUBLE';
             case ValueTypeDetector_1.ValueType.INTEGER: return 'INT';
             case ValueTypeDetector_1.ValueType.DATE: return 'DATE';
+            case ValueTypeDetector_1.ValueType.LONG_TIME: // see next
             case ValueTypeDetector_1.ValueType.TIME: return 'TIME';
-            case ValueTypeDetector_1.ValueType.DATETIME: return 'DATETIME';
+            case ValueTypeDetector_1.ValueType.LONG_DATE_TIME: // see next
+            case ValueTypeDetector_1.ValueType.DATE_TIME: return 'DATETIME';
             default: return 'STRING';
         }
     }

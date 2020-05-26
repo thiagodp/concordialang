@@ -61,8 +61,10 @@ export class SqlHelper {
             case ValueType.DOUBLE: return 'DOUBLE';
             case ValueType.INTEGER: return 'INT';
             case ValueType.DATE: return 'DATE';
+            case ValueType.LONG_TIME: // see next
             case ValueType.TIME: return 'TIME';
-            case ValueType.DATETIME: return 'DATETIME';
+            case ValueType.LONG_DATE_TIME: // see next
+            case ValueType.DATE_TIME: return 'DATETIME';
             default: return 'STRING';
         }
     }

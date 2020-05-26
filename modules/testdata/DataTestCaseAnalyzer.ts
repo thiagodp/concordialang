@@ -1,5 +1,6 @@
 import * as arrayDiff from 'arr-diff';
 import * as enumUtil from 'enum-util';
+
 import { Constant, ReservedTags, Step, UIElement, UIProperty } from '../ast';
 import { UIPropertyTypes } from '../ast/UIPropertyTypes';
 import { RuntimeException } from '../error/RuntimeException';

@@ -6,6 +6,8 @@ import { isDefined } from '../util/TypeChecking';
 import { NLP } from './NLP';
 import { NLPException } from './NLPException';
 import { NLPResult } from './NLPResult';
+import { SyntaxRule } from './syntax/SyntaxRule';
+import { Entities } from './Entities';
 
 
 /**
@@ -120,7 +122,7 @@ export class NodeSentenceRecognizer {
     public validate(
         node: ContentNode,
         recognizedEntityNames: string[],
-        syntaxRules: any[],
+        syntaxRules: Array< SyntaxRule >,
         property: string,
         errors: LocatedException[],
         warnings: LocatedException[]
@@ -135,12 +137,12 @@ export class NodeSentenceRecognizer {
         }
 
         // Let's check the rules!
-        const rule: any = syntaxRules[ propertyRuleIndex ];
+        const rule: SyntaxRule = syntaxRules[ propertyRuleIndex ];
         //console.log( 'recognized are', recognizedEntityNames );
         //console.log( 'targets of', rule.name, 'are', rule.targets );
 
         // Count the expected targets, ignores the other ones - like verbs
-        const expectedTargetsCount = recognizedEntityNames.filter( name => rule.targets.indexOf( name ) >= 0 ).length;
+        const expectedTargetsCount = recognizedEntityNames.filter( name => rule.targets.indexOf( name as Entities ) >= 0 ).length;
         // Checking minTargets
         if ( expectedTargetsCount < rule.minTargets ) {
             const msg = 'The property "' + property + '" expects at least ' + rule.minTargets + ' values, but it was informed ' +  expectedTargetsCount +  '.';
@@ -184,7 +186,7 @@ export class NodeSentenceRecognizer {
         }
 
         // Checking mustBeUsedWith
-        for ( let otherEntity of rule.mustBeUsedWith ) {
+        for ( let otherEntity of rule.mustBeUsedWith || [] ) {
             // Must have the other entity
             if ( recognizedEntityNames.indexOf( otherEntity ) < 0 ) {
                 const msg = 'The property "' + property + '" must be used with "' + otherEntity + '".';

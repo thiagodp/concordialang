@@ -2,6 +2,8 @@ import { LocalDate, LocalDateTime, LocalTime } from "@js-joda/core";
 import { EntityValueType, Step } from '../../modules/ast';
 import { LocatedException } from "../../modules/error/LocatedException";
 import { AugmentedSpec } from "../../modules/req";
+import { createDefaultLocaleMap } from "../../modules/testscenario/locale";
+import { LocaleContext } from "../../modules/testscenario/LocaleContext";
 import { GenContext } from "../../modules/testscenario/PreTestCaseGenerator";
 import { UIPropertyReferenceReplacer } from '../../modules/testscenario/UIPropertyReferenceReplacer';
 import { UIPropertyReferenceExtractor } from "../../modules/util/UIPropertyReferenceExtractor";
@@ -12,6 +14,8 @@ describe( 'UIPropertyReferenceReplacer', () => {
 
     describe( '#replaceUIPropertyReferencesByTheirValue', () => {
 
+        const localeMap = createDefaultLocaleMap();
+
         async function check(
             compiler: SimpleCompiler,
             language: string,
@@ -21,7 +25,7 @@ describe( 'UIPropertyReferenceReplacer', () => {
             expected: string
             ): Promise< void > {
 
-            const replacer = new UIPropertyReferenceReplacer(); // immutable
+            const replacer = new UIPropertyReferenceReplacer(); // immutable, under test
 
             let spec: AugmentedSpec = new AugmentedSpec( '.' );
 
@@ -39,8 +43,10 @@ describe( 'UIPropertyReferenceReplacer', () => {
             let references = ( new UIPropertyReferenceExtractor() ).extractReferences(
                 step.nlpResult.entities, step.location.line );
 
+            const localeContext = new LocaleContext( language, language, localeMap );
+
             const sentence = await replacer.replaceUIPropertyReferencesByTheirValue(
-                language, step, step.content, references, uieVarToValue, ctx );
+                localeContext, step, step.content, references, uieVarToValue, ctx );
 
             expect( sentence ).toEqual( expected );
         }

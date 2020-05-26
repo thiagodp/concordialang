@@ -1,19 +1,24 @@
+import { SyntaxRule } from "./SyntaxRule";
+
 /**
- * RuleBuilder.
- * 
+ * Rule Builder.
+ *
  * @author Thiago Delgado Pinto
  */
-export class RuleBuilder {
-    
+export class SyntaxRuleBuilder {
+
     /**
      * Creates an array of rules applying the default rule to each object,
      * and then applying the partial rule.
-     * 
+     *
      * @param partialRules Partial rules.
      * @param defaultRule Default rule.
      * @return Array with rules.
      */
-    public build( partialRules: object[], defaultRule: object ): object[] {
+    public build(
+        partialRules: Array< SyntaxRule >,
+        defaultRule: SyntaxRule
+    ): Array< SyntaxRule > {
         let rules = [];
         for ( let rule of partialRules ) {
             // Starts with the default rules

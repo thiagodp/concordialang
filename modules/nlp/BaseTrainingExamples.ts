@@ -213,11 +213,11 @@ export const BASE_TRAINING_EXAMPLES: NLPTrainingIntentExample[] = [
             "{ui_property} {ui_connector} {ui_data_type}",
             "{ui_property} {ui_connector} {ui_element_type}",
             "{ui_property} {ui_connector} {query}",
-
             "{ui_property} {ui_connector} {date}",
             "{ui_property} {ui_connector} {time}",
+            "{ui_property} {ui_connector} {longtime}",
             "{ui_property} {ui_connector} {datetime}",
-
+            "{ui_property} {ui_connector} {longdatetime}",
             // "id é {value}",
             // "comprimento máximo é {number}",
             // "valor vem da consulta {query}",
@@ -226,18 +226,18 @@ export const BASE_TRAINING_EXAMPLES: NLPTrainingIntentExample[] = [
         ]
     },
 
-    {
-        "intent": "ui_item_query",
-        "sentences": [
-            "{ui_property} {query}",
-            // "{ui_property} vem de {query}",
-            // "{ui_property} vem da consulta {query}",
-            // "{ui_property} vem da query {query}",
-            // "{ui_property} está em {query}",
-            // "{ui_property} está contido em {query}",
-            // "{ui_property} está presente em {query}"
-        ]
-    },
+    // {
+    //     "intent": "ui_item_query",
+    //     "sentences": [
+    //         "{ui_property} {query}",
+    //         // "{ui_property} vem de {query}",
+    //         // "{ui_property} vem da consulta {query}",
+    //         // "{ui_property} vem da query {query}",
+    //         // "{ui_property} está em {query}",
+    //         // "{ui_property} está contido em {query}",
+    //         // "{ui_property} está presente em {query}"
+    //     ]
+    // },
 
     {
         "intent": "database",

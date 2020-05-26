@@ -47,3 +47,7 @@ export enum DatabaseProperties {
     CHARSET = 'charset',
     OPTIONS = 'options'
 }
+
+export enum DatabasePropertyAlias {
+    NAME = 'name' // alias for "path"
+}

@@ -214,7 +214,9 @@
                 "minvalue": [ "minvalue", "min value", "minimum value" ],
                 "maxvalue": [ "maxvalue", "max value", "maximum value" ],
                 "format": [ "format" ],
-                "required": [ "required", "mandatory", "obligatory", "necessary" ]
+                "required": [ "required", "mandatory", "obligatory", "necessary" ],
+                "locale": [ "locale" ],
+                "localeFormat": [ "locale format" ]
             },
 
             "ui_connector": {
@@ -233,7 +235,9 @@
                 "double": [ "double", "float", "real", "floating point" ],
                 "date": [ "date" ],
                 "time": [ "time" ],
-                "datetime": [ "datetime", "timestamp" ]
+                "longtime": [ "longtime", "long time", "time with second", "time with seconds" ],
+                "datetime": [ "datetime", "date and time" ],
+                "longdatetime": [ "long datetime", "long date and time", "timestamp" ]
             },
 
             "bool_value": {

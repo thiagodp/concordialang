@@ -19,3 +19,7 @@ var DatabaseProperties;
     DatabaseProperties["CHARSET"] = "charset";
     DatabaseProperties["OPTIONS"] = "options";
 })(DatabaseProperties = exports.DatabaseProperties || (exports.DatabaseProperties = {}));
+var DatabasePropertyAlias;
+(function (DatabasePropertyAlias) {
+    DatabasePropertyAlias["NAME"] = "name"; // alias for "path"
+})(DatabasePropertyAlias = exports.DatabasePropertyAlias || (exports.DatabasePropertyAlias = {}));

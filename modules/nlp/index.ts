@@ -1,7 +1,9 @@
 export * from './BaseTrainingExamples';
 export * from './DatabasePropertyRecognizer';
+export * from './DateTimeExpressions';
 export * from './Entities';
 export * from './EntityHandler';
+export * from './EntityRecognizerMaker';
 export * from './GivenWhenThenSentenceRecognizer';
 export * from './Intents';
 export * from './NLP';
@@ -14,6 +16,4 @@ export * from './NLPTrainingData';
 export * from './NLPTrainingDataConversor';
 export * from './NLPUtil';
 export * from './NodeSentenceRecognizer';
-export * from './RuleBuilder';
-export * from './SyntaxRules';
 export * from './UIPropertyRecognizer';

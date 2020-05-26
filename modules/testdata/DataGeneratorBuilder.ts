@@ -1,26 +1,30 @@
-import { QueryCache } from "../db/QueryCache";
-import { Queryable } from "../dbi/Queryable";
-import { ValueType } from "../util/ValueTypeDetector";
-import { InvertedLogicListBasedDataGenerator } from "./InvertedLogicListBasedDataGenerator";
-import { InvertedLogicQueryBasedDataGenerator } from "./InvertedLogicQueryBasedDataGenerator";
-import { ListBasedDataGenerator } from "./ListBasedDataGenerator";
-import { QueryBasedDataGenerator } from "./QueryBasedDataGenerator";
-import { Random } from "./random/Random";
-import { RandomDate } from "./random/RandomDate";
-import { RandomDateTime } from "./random/RandomDateTime";
-import { RandomDouble } from "./random/RandomDouble";
-import { RandomLong } from "./random/RandomLong";
-import { RandomString } from "./random/RandomString";
-import { RandomTime } from "./random/RandomTime";
-import { DateGenerator } from "./raw/DateGenerator";
-import { DateTimeGenerator } from "./raw/DateTimeGenerator";
-import { DoubleGenerator } from "./raw/DoubleGenerator";
-import { LongGenerator } from "./raw/LongGenerator";
-import { RangeAnalyzer } from "./raw/RangeAnalyzer";
-import { RawDataGenerator } from "./raw/RawDataGenerator";
-import { StringGenerator } from "./raw/StringGenerator";
-import { TimeGenerator } from "./raw/TimeGenerator";
-import { RegexBasedDataGenerator } from "./RegexBasedDataGenerator";
+import { QueryCache } from '../db/QueryCache';
+import { Queryable } from '../dbi/Queryable';
+import { ValueType } from '../util/ValueTypeDetector';
+import { InvertedLogicListBasedDataGenerator } from './InvertedLogicListBasedDataGenerator';
+import { InvertedLogicQueryBasedDataGenerator } from './InvertedLogicQueryBasedDataGenerator';
+import { ListBasedDataGenerator } from './ListBasedDataGenerator';
+import { QueryBasedDataGenerator } from './QueryBasedDataGenerator';
+import { Random } from './random/Random';
+import { RandomDate } from './random/RandomDate';
+import { RandomDateTime } from './random/RandomDateTime';
+import { RandomDouble } from './random/RandomDouble';
+import { RandomLong } from './random/RandomLong';
+import { RandomShortDateTime } from './random/RandomShortDateTime';
+import { RandomShortTime } from './random/RandomShortTime';
+import { RandomString } from './random/RandomString';
+import { RandomTime } from './random/RandomTime';
+import { DateGenerator } from './raw/DateGenerator';
+import { DateTimeGenerator } from './raw/DateTimeGenerator';
+import { DoubleGenerator } from './raw/DoubleGenerator';
+import { LongGenerator } from './raw/LongGenerator';
+import { RangeAnalyzer } from './raw/RangeAnalyzer';
+import { RawDataGenerator } from './raw/RawDataGenerator';
+import { ShortDateTimeGenerator } from './raw/ShortDateTimeGenerator';
+import { ShortTimeGenerator } from './raw/ShortTimeGenerator';
+import { StringGenerator } from './raw/StringGenerator';
+import { TimeGenerator } from './raw/TimeGenerator';
+import { RegexBasedDataGenerator } from './RegexBasedDataGenerator';
 
 /**
  * Data generator builder
@@ -35,7 +39,9 @@ export class DataGeneratorBuilder {
     private readonly _randomDouble: RandomDouble;
     private readonly _randomDate: RandomDate;
     private readonly _randomTime: RandomTime;
+    private readonly _randomShortTime: RandomShortTime;
     private readonly _randomDateTime: RandomDateTime;
+    private readonly _randomShortDateTime: RandomShortDateTime;
 
     private readonly _queryCache: QueryCache = new QueryCache();
 
@@ -51,17 +57,22 @@ export class DataGeneratorBuilder {
         this._randomDouble = new RandomDouble( this._random );
         this._randomDate = new RandomDate( this._randomLong );
         this._randomTime = new RandomTime( this._randomLong );
+        this._randomShortTime = new RandomShortTime( this._randomLong );
         this._randomDateTime = new RandomDateTime( this._randomLong );
+        this._randomShortDateTime = new RandomShortDateTime( this._randomLong );
     }
 
 	raw( valueType: ValueType, min?: any, max?: any ): RawDataGenerator< any > {
+        // console.log( 'generator for valueType', valueType, 'min', min, 'max', max );
 		switch ( valueType ) {
 			case ValueType.STRING: return new StringGenerator( this._randomString, min, max, this._maxPossibleStringLength );
 			case ValueType.INTEGER: return new LongGenerator( this._randomLong, min, max );
 			case ValueType.DOUBLE: return new DoubleGenerator( this._randomDouble, min, max );
 			case ValueType.DATE: return new DateGenerator( this._randomDate, min, max );
-			case ValueType.TIME: return new TimeGenerator(this._randomTime, min, max );
-			case ValueType.DATETIME: return new DateTimeGenerator( this._randomDateTime, min, max );
+            case ValueType.TIME: return new ShortTimeGenerator( this._randomShortTime, min, max );
+            case ValueType.LONG_TIME: return new TimeGenerator( this._randomTime, min, max );
+            case ValueType.DATE_TIME: return new ShortDateTimeGenerator( this._randomShortDateTime, min, max );
+            case ValueType.LONG_DATE_TIME: return new DateTimeGenerator( this._randomDateTime, min, max );
 			default: throw Error( 'Generator not available fot the type ' + valueType );
 		}
     }

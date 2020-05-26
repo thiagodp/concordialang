@@ -3,7 +3,6 @@ import { Location } from 'concordialang-types';
 import * as deepcopy from 'deepcopy';
 import * as enumUtil from 'enum-util';
 import { basename } from 'path';
-import { CaseType } from '../util/CaseType';
 import { Document, EntityValueType, Step, UIElement, UIPropertyReference, UIPropertyTypes } from '../ast';
 import { LocatedException, RuntimeException, Warning } from '../error';
 import { EnglishKeywordDictionary } from '../language/EnglishKeywordDictionary';
@@ -27,6 +26,9 @@ import { Random } from '../testdata/random/Random';
 import { RandomString, RandomStringOptions } from '../testdata/random/RandomString';
 import { UIElementValueGenerator, ValueGenContext } from '../testdata/UIElementValueGenerator';
 import { Actions, convertCase, isDefined, ReferenceReplacer, TargetTypeUtil, UIElementNameHandler, UIElementPropertyExtractor, UIPropertyReferenceExtractor, upperFirst } from '../util';
+import { CaseType } from '../util/CaseType';
+import { createDefaultLocaleMap } from './locale';
+import { LocaleContext } from './LocaleContext';
 import { CorrespondingOtherwiseSteps, PreTestCase } from './PreTestCase';
 import { UIPropertyReferenceReplacer } from './UIPropertyReferenceReplacer';
 import { formatValueToUseInASentence } from './value-formatter';
@@ -141,6 +143,9 @@ export class PreTestCaseGenerator {
         // Determine the language to use
         const language = this.docLanguage( ctx.doc );
         const langContent = this.langContentLoader.load( language );
+
+        // Locale context
+        const localeContext = new LocaleContext( language, language, createDefaultLocaleMap() );
 
         let clonedSteps: Step[] = this.cloneSteps( steps );
 
@@ -291,7 +296,9 @@ export class PreTestCaseGenerator {
 
                 let generatedValue: EntityValueType;
                 try {
-                    generatedValue = await this._uieValueGen.generate( uieVar, context, ctx.doc, ctx.spec, ctx.errors );
+                    generatedValue = await this._uieValueGen.generate(
+                        uieVar, context, ctx.doc, ctx.spec, ctx.errors
+                    );
                 } catch ( e ) {
                     ctx.doc.fileErrors.push( e );
                     continue;
@@ -315,7 +322,7 @@ export class PreTestCaseGenerator {
                         langContent,
                         plan.dataTestCases,
                         uieVariableToValueMap,
-                        language,
+                        localeContext,
                         ctx
                     );
 
@@ -338,7 +345,14 @@ export class PreTestCaseGenerator {
             this.normalizeOracleSentences( filledOtherwiseSteps, langContent.keywords );
 
             // # (2019-07-13)
-            await this.replaceUIPropertyReferencesInsideValues( filledSteps, filledOtherwiseSteps, uieVariableToValueMap, language, langContent, ctx );
+            await this.replaceUIPropertyReferencesInsideValues(
+                filledSteps,
+                filledOtherwiseSteps,
+                uieVariableToValueMap,
+                localeContext,
+                langContent,
+                ctx
+            );
             // ---
 
             all.push( new PreTestCase( plan, filledSteps, filledOtherwiseSteps, filledCorrespondingOtherwiseSteps ) );
@@ -620,7 +634,7 @@ export class PreTestCaseGenerator {
         langContent: LanguageContent,
         uieVariableToUIETestPlanMap: Map< string, UIETestPlan >,
         uieVariableToValueMap: Map< string, EntityValueType >,
-        language: string,
+        localeContext: LocaleContext,
         ctx: GenContext
     ): Promise< [ Step[], Array< CorrespondingOtherwiseSteps > ] > {
 
@@ -631,7 +645,7 @@ export class PreTestCaseGenerator {
             const uipRefReplacer = new UIPropertyReferenceReplacer();
 
             step.content = await uipRefReplacer.replaceUIPropertyReferencesByTheirValue(
-                language,
+                localeContext,
                 step,
                 step.content,
                 step.uiePropertyReferences,
@@ -640,13 +654,16 @@ export class PreTestCaseGenerator {
             );
 
             // Update NLP !
-            this._variantSentenceRec.recognizeSentences( language, [ step ], ctx.errors, ctx.warnings );
+            this._variantSentenceRec.recognizeSentences(
+                localeContext.language, [ step ], ctx.errors, ctx.warnings );
         }
 
         const dataInputActionEntity: NLPEntity = this.extractDataInputActionEntity( step );
         if ( null === dataInputActionEntity || this.hasValue( step ) || this.hasNumber( step ) ) {
             let steps = [ step ];
-            this.replaceUIElementsWithUILiterals( steps, language, langContent, ctx, UIElementReplacementOption.ALL );
+            this.replaceUIElementsWithUILiterals(
+                steps, localeContext.language, langContent, ctx, UIElementReplacementOption.ALL
+            );
             // console.log( "EXIT 1" );
             return [ steps, [] ];
         }
@@ -732,7 +749,14 @@ export class PreTestCaseGenerator {
                 targetType = this._targetTypeUtil.analyzeInputTargetTypes( step, langContent ) + ' ';
             }
 
-            const formattedValue = await formatValueToUseInASentence( language, value );
+
+            const propertyMap = this._uiePropExtractor.mapFirstPropertyOfEachType( uie );
+            const valueType = this._uiePropExtractor.guessDataType( propertyMap );
+            const formattedValue = await formatValueToUseInASentence(
+                valueType,
+                localeContext,
+                value
+                );
 
             // Generate the sentence
             let sentence = prefix + ' ' + keywordI + ' ' + dataInputActionEntity.string + ' ' +
@@ -761,7 +785,7 @@ export class PreTestCaseGenerator {
 
                     // Process ORACLES as steps
                     let oraclesClone = this.processOracles(
-                        uieTestPlan.otherwiseSteps, language, langContent, keywords, ctx );
+                        uieTestPlan.otherwiseSteps, localeContext.language, langContent, keywords, ctx );
 
                     // Add comments in them
                     for ( let o of oraclesClone ) {
@@ -822,7 +846,9 @@ export class PreTestCaseGenerator {
             // } as Step;
 
             // Update NLP !
-            this._variantSentenceRec.recognizeSentences( language, [ newStep ], ctx.errors, ctx.warnings );
+            this._variantSentenceRec.recognizeSentences(
+                localeContext.language, [ newStep ], ctx.errors, ctx.warnings
+            );
 
             steps.push( newStep );
 
@@ -946,23 +972,23 @@ export class PreTestCaseGenerator {
         steps: Step[],
         oracles: Step[],
         uieVariableToValueMap: Map< string, EntityValueType >,
-        language: string,
+        localeContext: LocaleContext,
         langContent: LanguageContent,
         ctx: GenContext
     ): Promise< void > {
         for ( let step of steps ) {
-            await this.replaceUIPropertyReferencesInsideValuesOfStep( step, uieVariableToValueMap, language, langContent, ctx );
+            await this.replaceUIPropertyReferencesInsideValuesOfStep( step, uieVariableToValueMap, localeContext, langContent, ctx );
         }
 
         for ( let step of oracles ) {
-            await this.replaceUIPropertyReferencesInsideValuesOfStep( step, uieVariableToValueMap, language, langContent, ctx );
+            await this.replaceUIPropertyReferencesInsideValuesOfStep( step, uieVariableToValueMap, localeContext, langContent, ctx );
         }
     }
 
     async replaceUIPropertyReferencesInsideValuesOfStep(
         step: Step,
         uieVariableToValueMap: Map< string, EntityValueType >,
-        language: string,
+        localeContext: LocaleContext,
         langContent: LanguageContent,
         ctx: GenContext
     ): Promise< void > {
@@ -981,7 +1007,7 @@ export class PreTestCaseGenerator {
             this.checkUIPropertyReferences( references, langContent, ctx ); // Also transforms into language-independent format
 
             const after: string = await replacer.replaceUIPropertyReferencesByTheirValue(
-                language, step, before, references, uieVariableToValueMap, ctx, true );
+                localeContext, step, before, references, uieVariableToValueMap, ctx, true );
 
             if ( after == before ) {
                 continue;
@@ -995,7 +1021,9 @@ export class PreTestCaseGenerator {
 
         // Updates NLP if needed
         if ( contentBefore != step.content ) {
-            this._variantSentenceRec.recognizeSentences( language, [ step ], ctx.errors, ctx.warnings );
+            this._variantSentenceRec.recognizeSentences(
+                localeContext.language, [ step ], ctx.errors, ctx.warnings
+            );
         }
     }
 

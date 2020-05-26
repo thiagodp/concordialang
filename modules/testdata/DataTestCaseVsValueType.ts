@@ -60,7 +60,7 @@ export class DataTestCaseVsValueType {
     }
 
     private addDateTimeDefs(): void {
-        this.addValueDef( ValueType.DATETIME );
+        this.addValueDef( ValueType.DATE_TIME );
     }
 
     private addBooleanDefs(): void {

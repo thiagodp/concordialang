@@ -261,7 +261,9 @@
                 "minvalue": [ "valor mínimo" ],
                 "maxvalue": [ "valor máximo" ],
                 "format": [ "formato" ],
-                "required": [ "obrigatório", "requerido", "required" ]
+                "required": [ "obrigatório", "requerido", "required" ],
+                "locale": [ "localidade", "locale" ],
+                "localeFormat": [ "formato de localidade", "formato da localidade", "locale format" ]
             },
 
             "ui_connector": {
@@ -280,7 +282,9 @@
                 "double": [ "flutuante", "double", "float", "real" ],
                 "date": [ "data", "date" ],
                 "time": [ "hora", "time" ],
-                "datetime": [ "datahora", "datetime", "timestamp" ]
+                "longtime": [ "hora longa", "hora com segundo", "hora com segundos", "long time", "longtime" ],
+                "datetime": [ "datahora", "datetime" ],
+                "longdatetime": [ "datahora longa", "data e hora longa", "data e hora hora com segundo", "data e hora hora com segundos", "long datetime", "timestamp" ]
             },
 
             "bool_value": {

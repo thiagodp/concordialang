@@ -50,8 +50,8 @@ describe( 'nlp.pt.datetime', () => {
 
     function checkDateTime( text: string, expected: LocalDateTime ): void {
         const r: NLPResult = recognize( text );
-        shouldHaveUIEntities( [ r ], [ Entities.UI_PROPERTY, Entities.DATETIME ] );
-        const entity = r.entities.filter( e => e.entity === Entities.DATETIME );
+        shouldHaveUIEntities( [ r ], [ Entities.UI_PROPERTY, Entities.DATE_TIME ] );
+        const entity = r.entities.filter( e => e.entity === Entities.DATE_TIME );
         const receivedStr = entity[ 0 ].value.format( fullPattern ).toString();
         const expectedStr = expected.format( fullPattern ).toString();
         expect( receivedStr ).toEqual( expectedStr );
@@ -59,15 +59,15 @@ describe( 'nlp.pt.datetime', () => {
 
     function checkValueOfDateTime( text: string, expected: number ): void {
         const r: NLPResult = recognize( text );
-        shouldHaveUIEntities( [ r ], [ Entities.UI_PROPERTY, Entities.DATETIME ] );
-        const entity = r.entities.filter( e => e.entity === Entities.DATETIME );
+        shouldHaveUIEntities( [ r ], [ Entities.UI_PROPERTY, Entities.DATE_TIME ] );
+        const entity = r.entities.filter( e => e.entity === Entities.DATE_TIME );
         const value = entity[ 0 ].value;
         expect( value ).toEqual( expected );
     }
 
     function checkNotDateTime( text: string ): void {
         const r: NLPResult = recognize( text );
-        shouldNotHaveEntities( r, [ Entities.DATETIME ], Intents.UI );
+        shouldNotHaveEntities( r, [ Entities.DATE_TIME ], Intents.UI );
     }
 
     function parseDateTime( text: string, partial: boolean = false ): LocalDateTime {

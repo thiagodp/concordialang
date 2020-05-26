@@ -17,7 +17,7 @@ class DateTimeGenerator {
         this._randomDateTimeGen = _randomDateTimeGen;
         this.ZERO = DateTimeLimits_1.DateTimeLimits.MIN;
         if (TypeChecking_1.isDefined(min) && TypeChecking_1.isDefined(max) && min.isAfter(max)) {
-            throw new Error('min datetime should not be greater than max');
+            throw new Error('Minimum value should not be greater than the maximum value.');
         }
         this._min = TypeChecking_1.isDefined(min) ? min : DateTimeLimits_1.DateTimeLimits.MIN;
         this._max = TypeChecking_1.isDefined(max) ? max : DateTimeLimits_1.DateTimeLimits.MAX;
@@ -88,9 +88,9 @@ class DateTimeGenerator {
         const diffInDaysOfDates = this._min.toLocalDate().until(this._max.toLocalDate(), core_1.ChronoUnit.DAYS);
         const minTime = this._min.toLocalTime();
         const maxTime = this._max.toLocalTime();
-        const diffInSecondsOfTimes = minTime.until(maxTime, core_1.ChronoUnit.SECONDS);
+        const diffInSecondsFromTime = minTime.until(maxTime, core_1.ChronoUnit.SECONDS);
         const days = Math.round((diffInDaysOfDates - 1) / 2);
-        const seconds = Math.round((diffInSecondsOfTimes - 1) / 2);
+        const seconds = Math.round((diffInSecondsFromTime - 1) / 2);
         let r = this._min.plusDays(days);
         if (maxTime.compareTo(minTime) > 0) { // maxTime greater than minTime
             return r.plusSeconds(seconds);

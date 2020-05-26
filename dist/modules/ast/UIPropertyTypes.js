@@ -13,4 +13,6 @@ var UIPropertyTypes;
     UIPropertyTypes["MAX_VALUE"] = "maxvalue";
     UIPropertyTypes["FORMAT"] = "format";
     UIPropertyTypes["REQUIRED"] = "required";
+    UIPropertyTypes["LOCALE"] = "locale";
+    UIPropertyTypes["LOCALE_FORMAT"] = "localeFormat";
 })(UIPropertyTypes = exports.UIPropertyTypes || (exports.UIPropertyTypes = {}));

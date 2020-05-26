@@ -1,11 +1,11 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 /**
- * RuleBuilder.
+ * Rule Builder.
  *
  * @author Thiago Delgado Pinto
  */
-class RuleBuilder {
+class SyntaxRuleBuilder {
     /**
      * Creates an array of rules applying the default rule to each object,
      * and then applying the partial rule.
@@ -26,4 +26,4 @@ class RuleBuilder {
         return rules;
     }
 }
-exports.RuleBuilder = RuleBuilder;
+exports.SyntaxRuleBuilder = SyntaxRuleBuilder;

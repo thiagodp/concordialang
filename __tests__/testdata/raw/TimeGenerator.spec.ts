@@ -77,4 +77,28 @@ describe( 'TimeGenerator', () => {
         expect( gen.randomAboveMax().isAfter( aMax ) ).toBeTruthy();
     } );
 
+    // They should respect min and maximum values, instead of looping
+
+    it( 'just above max - keeps the last time of the day', () => {
+
+        expect( new TimeGenerator( ranD,
+            LocalTime.of( 23, 59, 59 ),
+            LocalTime.of( 23, 59, 59 )
+        ).justAboveMax() ).toEqual(
+            LocalTime.of( 23, 59, 59 )
+        );
+
+    } );
+
+    it( 'just below min - keeps the first time of the day', () => {
+
+        expect( new TimeGenerator( ranD,
+            LocalTime.of( 0, 0, 0 ),
+            LocalTime.of( 0, 0, 0 )
+        ).justBelowMin() ).toEqual(
+            LocalTime.of( 0, 0, 0 )
+        );
+
+    } );
+
 } );

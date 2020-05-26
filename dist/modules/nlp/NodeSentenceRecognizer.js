@@ -133,7 +133,7 @@ class NodeSentenceRecognizer {
             }
         }
         // Checking mustBeUsedWith
-        for (let otherEntity of rule.mustBeUsedWith) {
+        for (let otherEntity of rule.mustBeUsedWith || []) {
             // Must have the other entity
             if (recognizedEntityNames.indexOf(otherEntity) < 0) {
                 const msg = 'The property "' + property + '" must be used with "' + otherEntity + '".';

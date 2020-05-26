@@ -56,24 +56,38 @@ export class DataGenConfig {
 
 	get valueType() {
 
-		// console.log( '  internal type', this._valueType, 'minValue', this.minValue, 'maxValue', this.maxValue, 'value', this.value );
+		// console.log( this );
 
-		if ( isDefined( this.minValue ) ) {
-			return ( new ValueTypeDetector() ).detect( this.minValue );
+		// Whether it is a STRING and has minValue or maxValue, then
+		// it is probably a value that comes from a query.
+		if ( ValueType.STRING === this._valueType ) {
+
+			if ( isDefined( this.minValue ) ) {
+				return ( new ValueTypeDetector() ).detect( this.minValue );
+			}
+
+			if ( isDefined( this.maxValue ) ) {
+				return ( new ValueTypeDetector() ).detect( this.maxValue );
+			}
+
 		}
 
-		if ( isDefined( this.maxValue ) ) {
-			return ( new ValueTypeDetector() ).detect( this.maxValue );
-		}
+		// if ( isDefined( this.value ) ) {
+		// 	const detector = new ValueTypeDetector();
+		// 	if ( ! Array.isArray( this.value ) ) {
+		// 		return detector.detect( this.value.toString() );
+		// 	}
+		// 	if ( this.value.length > 0 ) {
+		// 		return detector.detect( this.value[ 0 ] );
+		// 	}
+		// }
 
-		if ( isDefined( this.value ) ) {
+		if ( isDefined( this.value )
+			&& Array.isArray( this.value )
+			&& this.value.length > 0
+		) {
 			const detector = new ValueTypeDetector();
-			if ( ! Array.isArray( this.value ) ) {
-				return detector.detect( this.value.toString() );
-			}
-			if ( this.value.length > 0 ) {
-				return detector.detect( this.value[ 0 ] );
-			}
+			return detector.detect( this.value[ 0 ] );
 		}
 
 		return this._valueType;

@@ -11,34 +11,37 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const core_1 = require("@js-joda/core");
 const Symbols_1 = require("../req/Symbols");
+const ValueTypeDetector_1 = require("../util/ValueTypeDetector");
 const locale_1 = require("./locale");
 /**
  * Returns the formatted value to use in a sentence.
  *
- * @param locale Locale, such as en-US, pt-BR, etc.
+ * @param localeContext Locale context
  * @param value Value to format
  * @param isAlreadyInsideAString Indicates if the value is already inside a string. Optional, defaults to `false`.
  */
-function formatValueToUseInASentence(locale, value, isAlreadyInsideAString = false) {
+function formatValueToUseInASentence(valueType, localeContext, value, isAlreadyInsideAString = false) {
     return __awaiter(this, void 0, void 0, function* () {
-        const loc = (yield locale_1.fallbackToLanguage(locale)) || 'en';
+        const loc = yield localeContext.resolve();
         let formattedValue = value;
         // TODO: l10n for currency values
         if (value instanceof core_1.LocalTime) {
             // formattedValue = value.format( DateTimeFormatter.ofPattern( 'HH:mm' ) ).toString();
+            const includeSeconds = valueType === ValueTypeDetector_1.ValueType.LONG_TIME;
             const nativeTime = new Date();
             nativeTime.setHours(value.hour(), value.minute(), value.second());
-            formattedValue = yield locale_1.formatTimeByLocale(loc, nativeTime);
+            formattedValue = yield locale_1.formatTimeByLocale(loc, localeContext.localeMap, nativeTime, includeSeconds);
         }
         else if (value instanceof core_1.LocalDate) {
             // formattedValue = value.format( DateTimeFormatter.ofPattern( 'dd/MM/yyyy' ) ).toString();
             const nativeDate = new Date(value.year(), value.monthValue() - 1, value.dayOfMonth());
-            formattedValue = yield locale_1.formatDateByLocale(loc, nativeDate);
+            formattedValue = yield locale_1.formatDateByLocale(loc, localeContext.localeMap, nativeDate);
         }
         else if (value instanceof core_1.LocalDateTime) {
             // formattedValue = value.format( DateTimeFormatter.ofPattern( 'dd/MM/yyyy HH:mm' ) ).toString();
+            const includeSeconds = valueType === ValueTypeDetector_1.ValueType.LONG_DATE_TIME;
             const nativeDateTime = new Date(value.year(), value.monthValue() - 1, value.dayOfMonth(), value.hour(), value.minute(), value.second());
-            formattedValue = yield locale_1.formatDateTimeByLocale(loc, nativeDateTime);
+            formattedValue = yield locale_1.formatDateTimeByLocale(loc, localeContext.localeMap, nativeDateTime, includeSeconds);
         }
         if (isAlreadyInsideAString || 'number' === typeof formattedValue) {
             return formattedValue.toString();

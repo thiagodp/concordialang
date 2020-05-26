@@ -9,5 +9,7 @@ export enum UIPropertyTypes {
     MIN_VALUE = 'minvalue',
     MAX_VALUE = 'maxvalue',
     FORMAT = 'format',
-    REQUIRED = 'required'
+    REQUIRED = 'required',
+    LOCALE = 'locale',
+    LOCALE_FORMAT = 'localeFormat',
 }

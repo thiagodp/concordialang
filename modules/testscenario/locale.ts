@@ -1,15 +1,24 @@
-import { format, Locale } from 'date-fns'
+import { format, Locale } from 'date-fns';
 import { enUS, pt, ptBR } from "date-fns/locale";
 
-// Pre-loaded locales
-const localeMap = {
-    'en': enUS,
-    'en-US': enUS,
+export type LocaleData = Locale;
+export type LocaleMap = Map< string, LocaleData >;
 
-    'pt': ptBR,
-    'pt-BR': ptBR,
-    'pt-PT': pt
-};
+
+// Pre-loaded locales
+export function createDefaultLocaleMap(): LocaleMap {
+    const map = new Map< string, LocaleData >();
+
+    map.set( 'en', enUS );
+    map.set( 'en-US', enUS );
+
+    map.set( 'pt', ptBR );
+    map.set( 'pt-BR', ptBR );
+    map.set( 'pt-PT', pt );
+
+    return map;
+}
+
 
 export function isLocaleFormatValid( locale: string, strict: boolean = false ): boolean {
     if ( strict ) {
@@ -26,27 +35,30 @@ export function formatLocale( locale: string ): string {
     return lang.toLowerCase() + '-' + country.toUpperCase();
 }
 
-export async function isLocaleAvailable( locale: string ): Promise< boolean > {
+export async function isLocaleAvailable(
+    locale: string,
+    map: LocaleMap
+): Promise< boolean > {
+
     if ( ! isLocaleFormatValid( locale, true ) ) {
         return false;
     }
-    if ( localeMap[ locale ] ) {
+
+    if ( map.has( locale ) ) {
         return true;
     }
-    let lib;
+
     try {
-        lib = await import( `date-fns/locale/${locale}` );
+        let lib = await import( `date-fns/locale/${locale}` );
+        // Use default export
+        if ( lib.default ) {
+            lib = lib.default;
+        }
+        map.set( locale, lib );
+        return true;
     } catch ( err ) {
         return false;
     }
-    if ( ! localeMap[ locale ] ) {
-        localeMap[ locale ] = lib;
-    }
-    return true;
-}
-
-export function isLocaleLoaded( locale: string ): boolean {
-    return !! localeMap[ locale ];
 }
 
 /**
@@ -55,13 +67,20 @@ export function isLocaleLoaded( locale: string ): boolean {
  * available, returns `null`.
  *
  * @param locale Locale
+ * @param map Locale map
  */
-export async function fallbackToLanguage( locale: string ): Promise< string | null > {
+export async function fallbackToLanguage(
+    locale: string,
+    map: LocaleMap
+): Promise< string | null > {
+
     const loc = formatLocale( locale );
-    if ( isLocaleLoaded( loc ) ) {
+
+    if ( map.has( loc ) ) {
         return loc;
     }
-    const isAvailable = await isLocaleAvailable( loc );
+
+    const isAvailable = await isLocaleAvailable( loc, map );
     if ( isAvailable ) {
         return loc;
     }
@@ -70,33 +89,57 @@ export async function fallbackToLanguage( locale: string ): Promise< string | nu
     if ( lang == loc ) {
         return null;
     }
-    return await fallbackToLanguage( lang );
+
+    return await fallbackToLanguage( lang, map );
 }
 
 /**
  * Returns a locale whether available or English otherwise.
  *
  * @param locale Locale to load
+ * @param map Map to store the locale
  */
-async function loadLocale( locale: string ): Promise< Locale > {
-    const isAvailable = await isLocaleAvailable( locale );
-    return isAvailable ? localeMap[ locale ] : localeMap[ 'en' ];
+async function loadLocale(
+    locale: string,
+    map: LocaleMap
+): Promise< LocaleData > {
+    const isAvailable = await isLocaleAvailable( locale, map );
+    return isAvailable ? map.get( locale ) : map.get( 'en' );
 }
 
-export async function formatDateByLocale( locale: string, date: Date ): Promise< string > {
-    const loc = await loadLocale( locale );
+export async function formatDateByLocale(
+    locale: string,
+    map: LocaleMap,
+    date: Date
+): Promise< string > {
+    const loc = await loadLocale( locale, map );
     // 'P' means long localized date
     return format( date, 'P', { locale: loc } );
 }
 
-export async function formatTimeByLocale( locale: string, time: Date ): Promise< string > {
-    const loc = await loadLocale( locale );
-    // 'HH:mm' uses 24 hour format
+export async function formatTimeByLocale(
+    locale: string,
+    map: LocaleMap,
+    time: Date,
+    includeSeconds: boolean
+): Promise< string > {
+    const loc = await loadLocale( locale, map );
+    // HH is 24 hour format
+    if ( includeSeconds ) {
+        // 'HH:mm:ss'
+        return format( time, 'HH:mm:ss', { locale: loc } );
+    }
+    // 'HH:mm'
     return format( time, 'HH:mm', { locale: loc } );
 }
 
-export async function formatDateTimeByLocale( locale: string, dateTime: Date ): Promise< string > {
-    const dateStr = await formatDateByLocale( locale, dateTime );
-    const timeStr = await formatTimeByLocale( locale, dateTime );
+export async function formatDateTimeByLocale(
+    locale: string,
+    map: LocaleMap,
+    dateTime: Date,
+    includeSeconds: boolean
+): Promise< string > {
+    const dateStr = await formatDateByLocale( locale, map, dateTime );
+    const timeStr = await formatTimeByLocale( locale, map, dateTime, includeSeconds );
     return dateStr + ' ' + timeStr;
 }

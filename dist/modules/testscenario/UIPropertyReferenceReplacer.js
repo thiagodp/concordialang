@@ -25,6 +25,7 @@ class UIPropertyReferenceReplacer {
     /**
      * Returns the content with all the UIProperty references replaced by their value.
      *
+     * @param localeContext Locale context.
      * @param step Input step.
      * @param content Input content.
      * @param uiePropertyReferences References to replace.
@@ -32,9 +33,10 @@ class UIPropertyReferenceReplacer {
      * @param ctx Generation context.
      * @param isAlreadyInsideAString Indicates if the value is already inside a string. Optional, defaults to `false`.
      */
-    replaceUIPropertyReferencesByTheirValue(language, step, content, uiePropertyReferences, uieVariableToValueMap, ctx, isAlreadyInsideAString = false) {
+    replaceUIPropertyReferencesByTheirValue(localeContext, step, content, uiePropertyReferences, uieVariableToValueMap, ctx, isAlreadyInsideAString = false) {
         return __awaiter(this, void 0, void 0, function* () {
             const uieNameHandler = new util_1.UIElementNameHandler();
+            const propExtractor = new util_1.UIElementPropertyExtractor();
             let newContent = content;
             for (let uipRef of uiePropertyReferences || []) {
                 // Properties different from VALUE are not supported yet
@@ -73,7 +75,11 @@ class UIPropertyReferenceReplacer {
                     ctx.warnings.push(err);
                     value = '';
                 }
-                const formattedValue = yield value_formatter_1.formatValueToUseInASentence(language, value, isAlreadyInsideAString);
+                const propertyMap = propExtractor.mapFirstPropertyOfEachType(uie);
+                const valueType = propExtractor.guessDataType(propertyMap);
+                const uieLocale = propExtractor.extractLocale(uie, localeContext.language);
+                const uieLocaleContext = localeContext.clone().withLocale(uieLocale);
+                const formattedValue = yield value_formatter_1.formatValueToUseInASentence(valueType, uieLocaleContext, value, isAlreadyInsideAString);
                 const refStr = Symbols_1.Symbols.UI_ELEMENT_PREFIX + uipRef.content + Symbols_1.Symbols.UI_ELEMENT_SUFFIX;
                 newContent = newContent.replace(refStr, formattedValue);
             }

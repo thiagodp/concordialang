@@ -23,9 +23,12 @@ export enum Entities {
     STATE = 'state', //                                 e.g., ~some state~
     COMMAND = 'command', //                             e.g., 'DELETE FROM table'
 
-    DATE = 'date', //                                   e.g., today or 04/30/2020
-    TIME = 'time', //                                   e.g., now or 18:10:03
-    DATETIME = 'datetime', //                           e.g., current date and time
+    DATE = 'date', //                                   e.g., today or "2020/12/31" or 12/31/2020
+    TIME = 'time', //                                   e.g., expression or HH:mm
+    LONG_TIME = 'longtime', //                          e.g., expression or HH:mm:ss
+    DATE_TIME = 'datetime', //                           e.g., expression or yyyy/MM/dd
+    LONG_DATE_TIME = 'longdatetime', //                  e.g., expression or yyyy/MM/dd
+
 
     // from the intent "testcase"
     //UI_PROPERTY = 'ui_property', //                   e.g.: text, value, color, ...

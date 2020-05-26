@@ -1,6 +1,9 @@
-import { DEFAULT_UI_ACTION_SYNTAX_RULE, Entities, Intents, NLP, NLPException, NLPResult, NLPResultProcessor, NLPTrainer, NodeSentenceRecognizer, RuleBuilder, UI_ACTION_SYNTAX_RULES } from '.';
+import { Entities, Intents, NLP, NLPException, NLPResult, NLPResultProcessor, NLPTrainer, NodeSentenceRecognizer } from '.';
 import { ContentNode, Step } from '../ast';
 import { LocatedException } from '../error/LocatedException';
+import { SyntaxRuleBuilder } from "./syntax/SyntaxRuleBuilder";
+import { SyntaxRule } from './syntax/SyntaxRule';
+import { DEFAULT_UI_ACTION_SYNTAX_RULE, UI_ACTION_SYNTAX_RULES } from "./syntax/UIActionSyntaxRules";
 
 /**
  * Given-When-Then sentence recognizer.
@@ -133,8 +136,11 @@ export class GivenWhenThenSentenceRecognizer {
     }
 
 
-    public buildSyntaxRules(): object[] {
-        return ( new RuleBuilder() ).build( UI_ACTION_SYNTAX_RULES, DEFAULT_UI_ACTION_SYNTAX_RULE );
+    public buildSyntaxRules(): Array< SyntaxRule > {
+        return ( new SyntaxRuleBuilder() ).build(
+            UI_ACTION_SYNTAX_RULES,
+            DEFAULT_UI_ACTION_SYNTAX_RULE
+        );
     }
 
 }

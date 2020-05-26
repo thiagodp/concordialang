@@ -12,13 +12,16 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const date_fns_1 = require("date-fns");
 const locale_1 = require("date-fns/locale");
 // Pre-loaded locales
-const localeMap = {
-    'en': locale_1.enUS,
-    'en-US': locale_1.enUS,
-    'pt': locale_1.ptBR,
-    'pt-BR': locale_1.ptBR,
-    'pt-PT': locale_1.pt
-};
+function createDefaultLocaleMap() {
+    const map = new Map();
+    map.set('en', locale_1.enUS);
+    map.set('en-US', locale_1.enUS);
+    map.set('pt', locale_1.ptBR);
+    map.set('pt-BR', locale_1.ptBR);
+    map.set('pt-PT', locale_1.pt);
+    return map;
+}
+exports.createDefaultLocaleMap = createDefaultLocaleMap;
 function isLocaleFormatValid(locale, strict = false) {
     if (strict) {
         return /^[a-z]{2}(?:\-[A-Z]{2})?$/.test(locale);
@@ -34,46 +37,44 @@ function formatLocale(locale) {
     return lang.toLowerCase() + '-' + country.toUpperCase();
 }
 exports.formatLocale = formatLocale;
-function isLocaleAvailable(locale) {
+function isLocaleAvailable(locale, map) {
     return __awaiter(this, void 0, void 0, function* () {
         if (!isLocaleFormatValid(locale, true)) {
             return false;
         }
-        if (localeMap[locale]) {
+        if (map.has(locale)) {
             return true;
         }
-        let lib;
         try {
-            lib = yield Promise.resolve().then(() => require(`date-fns/locale/${locale}`));
+            let lib = yield Promise.resolve().then(() => require(`date-fns/locale/${locale}`));
+            // Use default export
+            if (lib.default) {
+                lib = lib.default;
+            }
+            map.set(locale, lib);
+            return true;
         }
         catch (err) {
             return false;
         }
-        if (!localeMap[locale]) {
-            localeMap[locale] = lib;
-        }
-        return true;
     });
 }
 exports.isLocaleAvailable = isLocaleAvailable;
-function isLocaleLoaded(locale) {
-    return !!localeMap[locale];
-}
-exports.isLocaleLoaded = isLocaleLoaded;
 /**
  * Returns the formatted locale with language and country if available. If the
  * country is not available, returns the language. If the language is also not
  * available, returns `null`.
  *
  * @param locale Locale
+ * @param map Locale map
  */
-function fallbackToLanguage(locale) {
+function fallbackToLanguage(locale, map) {
     return __awaiter(this, void 0, void 0, function* () {
         const loc = formatLocale(locale);
-        if (isLocaleLoaded(loc)) {
+        if (map.has(loc)) {
             return loc;
         }
-        const isAvailable = yield isLocaleAvailable(loc);
+        const isAvailable = yield isLocaleAvailable(loc, map);
         if (isAvailable) {
             return loc;
         }
@@ -81,7 +82,7 @@ function fallbackToLanguage(locale) {
         if (lang == loc) {
             return null;
         }
-        return yield fallbackToLanguage(lang);
+        return yield fallbackToLanguage(lang, map);
     });
 }
 exports.fallbackToLanguage = fallbackToLanguage;
@@ -89,33 +90,39 @@ exports.fallbackToLanguage = fallbackToLanguage;
  * Returns a locale whether available or English otherwise.
  *
  * @param locale Locale to load
+ * @param map Map to store the locale
  */
-function loadLocale(locale) {
+function loadLocale(locale, map) {
     return __awaiter(this, void 0, void 0, function* () {
-        const isAvailable = yield isLocaleAvailable(locale);
-        return isAvailable ? localeMap[locale] : localeMap['en'];
+        const isAvailable = yield isLocaleAvailable(locale, map);
+        return isAvailable ? map.get(locale) : map.get('en');
     });
 }
-function formatDateByLocale(locale, date) {
+function formatDateByLocale(locale, map, date) {
     return __awaiter(this, void 0, void 0, function* () {
-        const loc = yield loadLocale(locale);
+        const loc = yield loadLocale(locale, map);
         // 'P' means long localized date
         return date_fns_1.format(date, 'P', { locale: loc });
     });
 }
 exports.formatDateByLocale = formatDateByLocale;
-function formatTimeByLocale(locale, time) {
+function formatTimeByLocale(locale, map, time, includeSeconds) {
     return __awaiter(this, void 0, void 0, function* () {
-        const loc = yield loadLocale(locale);
-        // 'HH:mm' uses 24 hour format
+        const loc = yield loadLocale(locale, map);
+        // HH is 24 hour format
+        if (includeSeconds) {
+            // 'HH:mm:ss'
+            return date_fns_1.format(time, 'HH:mm:ss', { locale: loc });
+        }
+        // 'HH:mm'
         return date_fns_1.format(time, 'HH:mm', { locale: loc });
     });
 }
 exports.formatTimeByLocale = formatTimeByLocale;
-function formatDateTimeByLocale(locale, dateTime) {
+function formatDateTimeByLocale(locale, map, dateTime, includeSeconds) {
     return __awaiter(this, void 0, void 0, function* () {
-        const dateStr = yield formatDateByLocale(locale, dateTime);
-        const timeStr = yield formatTimeByLocale(locale, dateTime);
+        const dateStr = yield formatDateByLocale(locale, map, dateTime);
+        const timeStr = yield formatTimeByLocale(locale, map, dateTime, includeSeconds);
         return dateStr + ' ' + timeStr;
     });
 }

@@ -154,7 +154,7 @@ class UIElementValueGenerator {
                     errors.push(new error_1.RuntimeException(msg));
                 }
             }
-            // console.log( 'cfg >>>>>>>>>>', cfg, '\nerrors:', errors.map( e => e.message ) );
+            // console.log( '>>>', uieName, cfg, '\nerrors:', errors.map( e => e.message ) );
             // The switch prepares `cfg` to be used after it
             switch (group) {
                 //
@@ -217,7 +217,7 @@ class UIElementValueGenerator {
                 }
                 errors.push(new error_1.RuntimeException(msg, uie.location));
             }
-            // console.log( '--------------> ', value );
+            // console.log( '--------------> ', value, 'group:', group );
             // Save in the map
             context.uieVariableToValueMap.set(uie.info.fullVariableName, value);
             return value;

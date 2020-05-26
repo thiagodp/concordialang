@@ -11,12 +11,16 @@ const RandomDate_1 = require("./random/RandomDate");
 const RandomDateTime_1 = require("./random/RandomDateTime");
 const RandomDouble_1 = require("./random/RandomDouble");
 const RandomLong_1 = require("./random/RandomLong");
+const RandomShortDateTime_1 = require("./random/RandomShortDateTime");
+const RandomShortTime_1 = require("./random/RandomShortTime");
 const RandomString_1 = require("./random/RandomString");
 const RandomTime_1 = require("./random/RandomTime");
 const DateGenerator_1 = require("./raw/DateGenerator");
 const DateTimeGenerator_1 = require("./raw/DateTimeGenerator");
 const DoubleGenerator_1 = require("./raw/DoubleGenerator");
 const LongGenerator_1 = require("./raw/LongGenerator");
+const ShortDateTimeGenerator_1 = require("./raw/ShortDateTimeGenerator");
+const ShortTimeGenerator_1 = require("./raw/ShortTimeGenerator");
 const StringGenerator_1 = require("./raw/StringGenerator");
 const TimeGenerator_1 = require("./raw/TimeGenerator");
 const RegexBasedDataGenerator_1 = require("./RegexBasedDataGenerator");
@@ -37,16 +41,21 @@ class DataGeneratorBuilder {
         this._randomDouble = new RandomDouble_1.RandomDouble(this._random);
         this._randomDate = new RandomDate_1.RandomDate(this._randomLong);
         this._randomTime = new RandomTime_1.RandomTime(this._randomLong);
+        this._randomShortTime = new RandomShortTime_1.RandomShortTime(this._randomLong);
         this._randomDateTime = new RandomDateTime_1.RandomDateTime(this._randomLong);
+        this._randomShortDateTime = new RandomShortDateTime_1.RandomShortDateTime(this._randomLong);
     }
     raw(valueType, min, max) {
+        // console.log( 'generator for valueType', valueType, 'min', min, 'max', max );
         switch (valueType) {
             case ValueTypeDetector_1.ValueType.STRING: return new StringGenerator_1.StringGenerator(this._randomString, min, max, this._maxPossibleStringLength);
             case ValueTypeDetector_1.ValueType.INTEGER: return new LongGenerator_1.LongGenerator(this._randomLong, min, max);
             case ValueTypeDetector_1.ValueType.DOUBLE: return new DoubleGenerator_1.DoubleGenerator(this._randomDouble, min, max);
             case ValueTypeDetector_1.ValueType.DATE: return new DateGenerator_1.DateGenerator(this._randomDate, min, max);
-            case ValueTypeDetector_1.ValueType.TIME: return new TimeGenerator_1.TimeGenerator(this._randomTime, min, max);
-            case ValueTypeDetector_1.ValueType.DATETIME: return new DateTimeGenerator_1.DateTimeGenerator(this._randomDateTime, min, max);
+            case ValueTypeDetector_1.ValueType.TIME: return new ShortTimeGenerator_1.ShortTimeGenerator(this._randomShortTime, min, max);
+            case ValueTypeDetector_1.ValueType.LONG_TIME: return new TimeGenerator_1.TimeGenerator(this._randomTime, min, max);
+            case ValueTypeDetector_1.ValueType.DATE_TIME: return new ShortDateTimeGenerator_1.ShortDateTimeGenerator(this._randomShortDateTime, min, max);
+            case ValueTypeDetector_1.ValueType.LONG_DATE_TIME: return new DateTimeGenerator_1.DateTimeGenerator(this._randomDateTime, min, max);
             default: throw Error('Generator not available fot the type ' + valueType);
         }
     }

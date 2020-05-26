@@ -9,8 +9,8 @@ const ValueTypeDetector_1 = require("../util/ValueTypeDetector");
 const Intents_1 = require("./Intents");
 const NLPException_1 = require("./NLPException");
 const NodeSentenceRecognizer_1 = require("./NodeSentenceRecognizer");
-const RuleBuilder_1 = require("./RuleBuilder");
-const SyntaxRules_1 = require("./SyntaxRules");
+const SyntaxRuleBuilder_1 = require("./syntax/SyntaxRuleBuilder");
+const UIPropertySyntaxRules_1 = require("./syntax/UIPropertySyntaxRules");
 /**
  * UI element property sentence recognizer.
  *
@@ -75,9 +75,14 @@ class UIPropertyRecognizer {
                     case nlp_1.Entities.DATE:
                         entityValue = new ast_1.EntityValue(e.entity, _this.convertToDateIfNeeded(e.value, language));
                         break;
-                    // case Entities.TIME              : entityValue = new EntityValue( e.entity, e.value ); break;
-                    // case Entities.TIME_PERIOD       : entityValue = new EntityValue( e.entity, e.value ); break;
-                    // case Entities.YEAR_OF           : entityValue = new EntityValue( e.entity, e.value ); break;
+                    case nlp_1.Entities.LONG_TIME: // next
+                    case nlp_1.Entities.TIME:
+                        entityValue = new ast_1.EntityValue(e.entity, e.value);
+                        break;
+                    case nlp_1.Entities.LONG_DATE_TIME: // next
+                    case nlp_1.Entities.DATE_TIME:
+                        entityValue = new ast_1.EntityValue(e.entity, e.value);
+                        break;
                     case nlp_1.Entities.VALUE_LIST:
                         entityValue = new ast_1.EntityValue(e.entity, e.value);
                         break;
@@ -154,7 +159,7 @@ class UIPropertyRecognizer {
         if (typeof value != 'string') {
             return value;
         }
-        const f = core_1.DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        const f = core_1.DateTimeFormatter.ofPattern("uuuu-MM-dd");
         try {
             return core_1.LocalDate.parse(value, f);
         }
@@ -178,7 +183,7 @@ class UIPropertyRecognizer {
     //     }
     // }
     buildSyntaxRules() {
-        return (new RuleBuilder_1.RuleBuilder()).build(SyntaxRules_1.UI_PROPERTY_SYNTAX_RULES, SyntaxRules_1.DEFAULT_UI_PROPERTY_SYNTAX_RULE);
+        return (new SyntaxRuleBuilder_1.SyntaxRuleBuilder()).build(UIPropertySyntaxRules_1.UI_PROPERTY_SYNTAX_RULES, UIPropertySyntaxRules_1.DEFAULT_UI_PROPERTY_SYNTAX_RULE);
     }
 }
 exports.UIPropertyRecognizer = UIPropertyRecognizer;

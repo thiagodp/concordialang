@@ -10,9 +10,11 @@ import { ActionTargets } from "./ActionTargets";
  */
 export const ACTION_TARGET_MAP = new Map< string, string >(
     [
+        [ Actions.ACCEPT          , ActionTargets.NONE         ],
         [ Actions.AM_ON           , ActionTargets.URL          ],
         [ Actions.APPEND          , ActionTargets.LISTBOX      ],
         [ Actions.ATTACH_FILE     , ActionTargets.DIV          ],
+        [ Actions.CANCEL          , ActionTargets.NONE         ],
         [ Actions.CHECK           , ActionTargets.CHECKBOX     ],
         [ Actions.CLEAR           , ActionTargets.TEXTBOX      ],
         [ Actions.CLICK           , ActionTargets.BUTTON       ],
@@ -23,6 +25,7 @@ export const ACTION_TARGET_MAP = new Map< string, string >(
         [ Actions.DRAG            , ActionTargets.IMAGE        ],
         [ Actions.FILL            , ActionTargets.TEXTBOX      ],
         [ Actions.HIDE            , ActionTargets.TEXTBOX      ],
+        [ Actions.INSTALL         , ActionTargets.NONE         ],
         [ Actions.MAXIMIZE        , ActionTargets.WINDOW       ],
         [ Actions.MOVE            , ActionTargets.CURSOR       ],
         [ Actions.MOUSE_OUT       , ActionTargets.CURSOR       ],
@@ -33,19 +36,20 @@ export const ACTION_TARGET_MAP = new Map< string, string >(
         [ Actions.REFRESH         , ActionTargets.CURRENT_PAGE ],
         [ Actions.REMOVE          , ActionTargets.TEXT         ],
         [ Actions.RESIZE          , ActionTargets.WINDOW       ],
-        [ Actions.ROTATE          , ActionTargets.TEXT         ],
         [ Actions.RIGHT_CLICK     , ActionTargets.IMAGE        ],
+        [ Actions.ROTATE          , ActionTargets.TEXT         ],
         [ Actions.RUN             , ActionTargets.NONE         ],
         [ Actions.SAVE_SCREENSHOT , ActionTargets.NONE         ],
         [ Actions.SCROLL_TO       , ActionTargets.CURRENT_PAGE ],
         [ Actions.SEE             , ActionTargets.TEXT         ],
         [ Actions.SELECT          , ActionTargets.SELECT       ],
         [ Actions.SHAKE           , ActionTargets.NONE         ],
-        [ Actions.SHOW            , ActionTargets.WINDOW       ],
+        // [ Actions.SHOW            , ActionTargets.WINDOW       ],
         [ Actions.SWIPE           , ActionTargets.SCREEN       ],
         [ Actions.SWITCH          , ActionTargets.FRAME        ],
         [ Actions.TAP             , ActionTargets.BUTTON       ],
         [ Actions.UNCHECK         , ActionTargets.CHECKBOX     ],
+        [ Actions.UNINSTALL       , ActionTargets.NONE         ],
         [ Actions.WAIT            , ActionTargets.TEXT         ]
     ]
  );

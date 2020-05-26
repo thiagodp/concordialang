@@ -13,7 +13,6 @@ const arrayDiff = require("arr-diff");
 const deepcopy = require("deepcopy");
 const enumUtil = require("enum-util");
 const path_1 = require("path");
-const CaseType_1 = require("../util/CaseType");
 const ast_1 = require("../ast");
 const error_1 = require("../error");
 const EnglishKeywordDictionary_1 = require("../language/EnglishKeywordDictionary");
@@ -30,6 +29,9 @@ const Random_1 = require("../testdata/random/Random");
 const RandomString_1 = require("../testdata/random/RandomString");
 const UIElementValueGenerator_1 = require("../testdata/UIElementValueGenerator");
 const util_1 = require("../util");
+const CaseType_1 = require("../util/CaseType");
+const locale_1 = require("./locale");
+const LocaleContext_1 = require("./LocaleContext");
 const PreTestCase_1 = require("./PreTestCase");
 const UIPropertyReferenceReplacer_1 = require("./UIPropertyReferenceReplacer");
 const value_formatter_1 = require("./value-formatter");
@@ -115,6 +117,8 @@ class PreTestCaseGenerator {
             // Determine the language to use
             const language = this.docLanguage(ctx.doc);
             const langContent = this.langContentLoader.load(language);
+            // Locale context
+            const localeContext = new LocaleContext_1.LocaleContext(language, language, locale_1.createDefaultLocaleMap());
             let clonedSteps = this.cloneSteps(steps);
             // # Replace CONSTANTS with VALUES
             this.replaceConstantsWithTheirValues(clonedSteps, language, ctx);
@@ -236,7 +240,7 @@ class PreTestCaseGenerator {
                 let filledCorrespondingOtherwiseSteps = [];
                 for (let step of newSteps) {
                     // Resulting otherwiseSteps are also processed
-                    let [resultingSteps, correspondingOtherwiseSteps] = yield this.fillUIElementWithValueAndReplaceByUILiteralInStep(step, langContent, plan.dataTestCases, uieVariableToValueMap, language, ctx);
+                    let [resultingSteps, correspondingOtherwiseSteps] = yield this.fillUIElementWithValueAndReplaceByUILiteralInStep(step, langContent, plan.dataTestCases, uieVariableToValueMap, localeContext, ctx);
                     // console.log( 'ORACLES', '>'.repeat(10), resultingOracles );
                     filledSteps.push.apply(filledSteps, resultingSteps);
                     if (correspondingOtherwiseSteps.length > 0) {
@@ -250,7 +254,7 @@ class PreTestCaseGenerator {
                 }
                 this.normalizeOracleSentences(filledOtherwiseSteps, langContent.keywords);
                 // # (2019-07-13)
-                yield this.replaceUIPropertyReferencesInsideValues(filledSteps, filledOtherwiseSteps, uieVariableToValueMap, language, langContent, ctx);
+                yield this.replaceUIPropertyReferencesInsideValues(filledSteps, filledOtherwiseSteps, uieVariableToValueMap, localeContext, langContent, ctx);
                 // ---
                 all.push(new PreTestCase_1.PreTestCase(plan, filledSteps, filledOtherwiseSteps, filledCorrespondingOtherwiseSteps));
             }
@@ -452,19 +456,19 @@ class PreTestCaseGenerator {
             }
         }
     }
-    fillUIElementWithValueAndReplaceByUILiteralInStep(inputStep, langContent, uieVariableToUIETestPlanMap, uieVariableToValueMap, language, ctx) {
+    fillUIElementWithValueAndReplaceByUILiteralInStep(inputStep, langContent, uieVariableToUIETestPlanMap, uieVariableToValueMap, localeContext, ctx) {
         return __awaiter(this, void 0, void 0, function* () {
             let step = deepcopy(inputStep);
             if (this.hasUIPropertyReference(step)) {
                 const uipRefReplacer = new UIPropertyReferenceReplacer_1.UIPropertyReferenceReplacer();
-                step.content = yield uipRefReplacer.replaceUIPropertyReferencesByTheirValue(language, step, step.content, step.uiePropertyReferences, uieVariableToValueMap, ctx);
+                step.content = yield uipRefReplacer.replaceUIPropertyReferencesByTheirValue(localeContext, step, step.content, step.uiePropertyReferences, uieVariableToValueMap, ctx);
                 // Update NLP !
-                this._variantSentenceRec.recognizeSentences(language, [step], ctx.errors, ctx.warnings);
+                this._variantSentenceRec.recognizeSentences(localeContext.language, [step], ctx.errors, ctx.warnings);
             }
             const dataInputActionEntity = this.extractDataInputActionEntity(step);
             if (null === dataInputActionEntity || this.hasValue(step) || this.hasNumber(step)) {
                 let steps = [step];
-                this.replaceUIElementsWithUILiterals(steps, language, langContent, ctx, UIElementReplacementOption.ALL);
+                this.replaceUIElementsWithUILiterals(steps, localeContext.language, langContent, ctx, UIElementReplacementOption.ALL);
                 // console.log( "EXIT 1" );
                 return [steps, []];
             }
@@ -536,7 +540,9 @@ class PreTestCaseGenerator {
                 if (!dataInputActionEntity) {
                     targetType = this._targetTypeUtil.analyzeInputTargetTypes(step, langContent) + ' ';
                 }
-                const formattedValue = yield value_formatter_1.formatValueToUseInASentence(language, value);
+                const propertyMap = this._uiePropExtractor.mapFirstPropertyOfEachType(uie);
+                const valueType = this._uiePropExtractor.guessDataType(propertyMap);
+                const formattedValue = yield value_formatter_1.formatValueToUseInASentence(valueType, localeContext, value);
                 // Generate the sentence
                 let sentence = prefix + ' ' + keywordI + ' ' + dataInputActionEntity.string + ' ' +
                     targetType +
@@ -558,7 +564,7 @@ class PreTestCaseGenerator {
                     if (DataTestCaseAnalyzer_1.DTCAnalysisResult.INVALID === uieTestPlan.result) {
                         expectedResult = keywordInvalid;
                         // Process ORACLES as steps
-                        let oraclesClone = this.processOracles(uieTestPlan.otherwiseSteps, language, langContent, keywords, ctx);
+                        let oraclesClone = this.processOracles(uieTestPlan.otherwiseSteps, localeContext.language, langContent, keywords, ctx);
                         // Add comments in them
                         for (let o of oraclesClone) {
                             o.comment = (o.comment || '') + ' ' + keywordFrom + ' ' +
@@ -609,7 +615,7 @@ class PreTestCaseGenerator {
                 //     isInvalidValue: ( isDefined( uieTestPlan ) && uieTestPlan.result === DTCAnalysisResult.INVALID )
                 // } as Step;
                 // Update NLP !
-                this._variantSentenceRec.recognizeSentences(language, [newStep], ctx.errors, ctx.warnings);
+                this._variantSentenceRec.recognizeSentences(localeContext.language, [newStep], ctx.errors, ctx.warnings);
                 steps.push(newStep);
                 if (oraclesToAdd.length > 0) {
                     oracles.push({ step: newStep, otherwiseSteps: oraclesToAdd });
@@ -691,17 +697,17 @@ class PreTestCaseGenerator {
      * @param uieVariableToValueMap Value map.
      * @param language Language.
      */
-    replaceUIPropertyReferencesInsideValues(steps, oracles, uieVariableToValueMap, language, langContent, ctx) {
+    replaceUIPropertyReferencesInsideValues(steps, oracles, uieVariableToValueMap, localeContext, langContent, ctx) {
         return __awaiter(this, void 0, void 0, function* () {
             for (let step of steps) {
-                yield this.replaceUIPropertyReferencesInsideValuesOfStep(step, uieVariableToValueMap, language, langContent, ctx);
+                yield this.replaceUIPropertyReferencesInsideValuesOfStep(step, uieVariableToValueMap, localeContext, langContent, ctx);
             }
             for (let step of oracles) {
-                yield this.replaceUIPropertyReferencesInsideValuesOfStep(step, uieVariableToValueMap, language, langContent, ctx);
+                yield this.replaceUIPropertyReferencesInsideValuesOfStep(step, uieVariableToValueMap, localeContext, langContent, ctx);
             }
         });
     }
-    replaceUIPropertyReferencesInsideValuesOfStep(step, uieVariableToValueMap, language, langContent, ctx) {
+    replaceUIPropertyReferencesInsideValuesOfStep(step, uieVariableToValueMap, localeContext, langContent, ctx) {
         return __awaiter(this, void 0, void 0, function* () {
             const extractor = new util_1.UIPropertyReferenceExtractor();
             const replacer = new UIPropertyReferenceReplacer_1.UIPropertyReferenceReplacer();
@@ -712,7 +718,7 @@ class PreTestCaseGenerator {
                 const before = entity.value; // Assumes that it is a language-independent value (!)
                 const references = extractor.extractReferencesFromValue(before, step.location.line);
                 this.checkUIPropertyReferences(references, langContent, ctx); // Also transforms into language-independent format
-                const after = yield replacer.replaceUIPropertyReferencesByTheirValue(language, step, before, references, uieVariableToValueMap, ctx, true);
+                const after = yield replacer.replaceUIPropertyReferencesByTheirValue(localeContext, step, before, references, uieVariableToValueMap, ctx, true);
                 if (after == before) {
                     continue;
                 }
@@ -721,7 +727,7 @@ class PreTestCaseGenerator {
             }
             // Updates NLP if needed
             if (contentBefore != step.content) {
-                this._variantSentenceRec.recognizeSentences(language, [step], ctx.errors, ctx.warnings);
+                this._variantSentenceRec.recognizeSentences(localeContext.language, [step], ctx.errors, ctx.warnings);
             }
         });
     }

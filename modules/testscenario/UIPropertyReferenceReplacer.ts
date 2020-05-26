@@ -2,10 +2,11 @@ import { basename } from 'path';
 import { EntityValueType, Step, UIElement, UIPropertyReference, UIPropertyTypes } from "../ast";
 import { RuntimeException } from '../error/RuntimeException';
 import { Symbols } from '../req/Symbols';
-import { isDefined, UIElementNameHandler } from "../util";
+import { isDefined, UIElementNameHandler, UIElementPropertyExtractor } from "../util";
 import { removeDuplicated } from '../util/remove-duplicated';
 import { GenContext } from "./PreTestCaseGenerator";
 import { formatValueToUseInASentence } from './value-formatter';
+import { LocaleContext } from './LocaleContext';
 
 /**
  * Replaces UIE property references.
@@ -17,6 +18,7 @@ export class UIPropertyReferenceReplacer {
     /**
      * Returns the content with all the UIProperty references replaced by their value.
      *
+     * @param localeContext Locale context.
      * @param step Input step.
      * @param content Input content.
      * @param uiePropertyReferences References to replace.
@@ -25,7 +27,7 @@ export class UIPropertyReferenceReplacer {
      * @param isAlreadyInsideAString Indicates if the value is already inside a string. Optional, defaults to `false`.
      */
     async replaceUIPropertyReferencesByTheirValue(
-        language: string,
+        localeContext: LocaleContext,
         step: Step,
         content: string,
         uiePropertyReferences: UIPropertyReference[],
@@ -35,6 +37,8 @@ export class UIPropertyReferenceReplacer {
     ): Promise< string > {
 
         const uieNameHandler = new UIElementNameHandler();
+        const propExtractor = new UIElementPropertyExtractor();
+
         let newContent = content;
 
         for ( let uipRef of uiePropertyReferences || [] ) {
@@ -78,8 +82,13 @@ export class UIPropertyReferenceReplacer {
                 value = '';
             }
 
+            const propertyMap = propExtractor.mapFirstPropertyOfEachType( uie );
+            const valueType = propExtractor.guessDataType( propertyMap );
+            const uieLocale: string = propExtractor.extractLocale( uie, localeContext.language );
+            const uieLocaleContext = localeContext.clone().withLocale( uieLocale );
+
             const formattedValue = await formatValueToUseInASentence(
-                language, value, isAlreadyInsideAString );
+                valueType, uieLocaleContext, value, isAlreadyInsideAString );
 
             const refStr: string = Symbols.UI_ELEMENT_PREFIX + uipRef.content + Symbols.UI_ELEMENT_SUFFIX;
             newContent = newContent.replace( refStr, formattedValue );

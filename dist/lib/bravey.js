@@ -2,7 +2,7 @@
 // Added by TDP
 const core = require('@js-joda/core');
 const LocalDate = core.LocalDate;
-const DateTimeFormatter = core.DateTimeFormatter;
+// const DateTimeFormatter = core.DateTimeFormatter;
 const LocalTime = core.LocalTime;
 const LocalDateTime = core.LocalDateTime;
 // See formats at
@@ -266,9 +266,9 @@ Bravey.Text.tokenize = function (text) {
 };
 Bravey.DATA.diacriticsMap = {};
 /**
- * Remove diatrics from a sentence, replacing them with not-diatrics representation.
+ * Remove diacritics from a sentence, replacing them with not-diacritics representation.
  * @param {string} text - The string to be processed
- * @returns {string} The text without diatrics.
+ * @returns {string} The text without diacritics.
  */
 Bravey.Text.removeDiacritics = function (text) {
     return text.replace(/[^\u0000-\u007E]/g, function (a) {

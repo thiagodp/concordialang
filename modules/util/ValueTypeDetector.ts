@@ -1,5 +1,5 @@
-import { LocalDate, LocalDateTime, LocalTime, DateTimeFormatter } from "@js-joda/core";
-import * as moment from 'moment';
+import { DateTimeFormatter, LocalDate, LocalDateTime, LocalTime } from "@js-joda/core";
+import { isValidDate, isValidDateTime, isValidTime, isShortTime, isShortDateTime } from "./date-time-validation";
 
 /**
  * Value type.
@@ -7,13 +7,23 @@ import * as moment from 'moment';
  * @author Thiago Delgado Pinto
  */
 export enum ValueType {
+
     STRING = 'string',
     INTEGER = 'integer',
     DOUBLE = 'double',
+
     DATE = 'date',
-    TIME = 'time',
-    DATETIME = 'datetime',
+
+    TIME = 'time', // HH:mm:ss -> HH:mm (new)
+    // SHORT_TIME = 'short_time', // HH:mm
+    LONG_TIME = 'longtime', // HH:mm:ss
+
+    DATE_TIME = 'datetime', // yyyy/MM/dd HH:mm:ss -> dd/MM/yyyy HH:mm (new)
+    // SHORT_DATETIME = 'short_datetime', // yyyy/MM/dd HH:mm
+    LONG_DATE_TIME = 'longdatetime', // yyyy/MM/dd HH:mm:ss
+
     BOOLEAN = 'boolean'
+
 }
 
 /**
@@ -40,92 +50,119 @@ export class ValueTypeDetector {
     }
 
     isInteger( val: any ): boolean {
-        const t = typeof val;
-        if ( 'number' === t || 'string' === t  ) {
+        const valueType = typeof val;
+        if ( 'number' === valueType || 'string' === valueType  ) {
             return ( new RegExp( '^-?[0-9]+$' ) ).test( val ); // convert to string before testing
         }
         return false;
     }
 
     isDouble( val: any ): boolean {
-        const t = typeof val;
-        if ( 'number' === t ) {
+        const valueType = typeof val;
+        if ( 'number' === valueType ) {
             return true;
         }
-        if ( 'string' === t  ) {
+        if ( 'string' === valueType  ) {
             return ( new RegExp( '^(-?[0-9]+(?:.[0-9]+)?)$' ) ).test( val );
         }
         return false;
     }
 
     isDate( val: any ): boolean {
-        const t = typeof val;
-        if ( 'object' === t && ( val instanceof Date || val instanceof LocalDate ) ) {
+        const valueType = typeof val;
+        if ( 'object' === valueType && ( val instanceof Date || val instanceof LocalDate ) ) {
             return true;
         }
-        if ( 'string' === t  ) {
-            return moment( val, 'YYYY-MM-DD', true ).isValid()
-                || moment( val, 'YYYY/MM/DD', true ).isValid()
-                || moment( val, 'YYYY.MM.DD', true ).isValid()
-                ;
+        if ( 'string' === valueType ) {
+            return isValidDate( val );
         }
         return false;
     }
 
     isTime( val: any ): boolean {
-        const t = typeof val;
-        if ( 'object' === t && ( val instanceof Date || val instanceof LocalTime ) ) {
+        const valueType = typeof val;
+        if ( 'object' === valueType && ( val instanceof Date || val instanceof LocalTime ) ) {
             return true;
         }
-        if ( 'string' === t  ) {
-            return moment( val, 'HH:mm', true ).isValid()
-                || moment( val, 'HH:mm:ss', true ).isValid()
-                || moment( val, 'HH:mm:ss.SSS', true ).isValid()
-                ;
+        if ( 'string' === valueType  ) {
+            return isShortTime( val );
+        }
+        return false;
+    }
+
+    isLongTime( val: any ): boolean {
+        const valueType = typeof val;
+        if ( 'object' === valueType && ( val instanceof Date || val instanceof LocalTime ) ) {
+            return true;
+        }
+        if ( 'string' === valueType  ) {
+            return isValidTime( val ) && ! isShortTime( val );
         }
         return false;
     }
 
     isDateTime( val: any ): boolean {
-        const t = typeof val;
-        if ( 'object' === t && ( val instanceof Date || val instanceof LocalDateTime ) ) {
+        const valueType = typeof val;
+        if ( 'object' === valueType && ( val instanceof Date || val instanceof LocalDateTime ) ) {
             return true;
         }
-        if ( 'string' === t  ) {
-            const v = val.toString().trim();
-            if ( ! v.indexOf( ' ' ) ) {
-                if ( moment( val, moment.ISO_8601, true ).isValid() ) {
-                    return true;
-                }
-                return false;
-            }
-            const dt = v.split( ' ' );
-            if ( dt.length < 2 ) {
-                return false;
-            }
-            return this.isDate( dt[ 0 ] ) && this.isTime( dt[ 1 ] );
+        if ( 'string' === valueType  ) {
+            return isShortDateTime( val );
+        }
+        return false;
+    }
+
+    isLongDateTime( val: any ): boolean {
+        const valueType = typeof val;
+        if ( 'object' === valueType && ( val instanceof Date || val instanceof LocalDateTime ) ) {
+            return true;
+        }
+        if ( 'string' === valueType  ) {
+            return isValidDateTime( val ) && ! isShortDateTime( val );
         }
         return false;
     }
 
     detect( val: any ): ValueType {
+
         if ( this.isBoolean( val ) ) {
             return ValueType.BOOLEAN;
-        } else if ( this.isInteger( val ) ) {
+        }
+
+        if ( this.isInteger( val ) ) {
             return ValueType.INTEGER;
-        } else if ( this.isDouble( val ) ) {
+        }
+
+        if ( this.isDouble( val ) ) {
             return ValueType.DOUBLE;
-        } else if ( this.isDateTime( val ) ) {
-            return ValueType.DATETIME;
-        } else if ( this.isDate( val ) ) {
+        }
+
+        if ( this.isDateTime( val ) ) { // it must be before isLongDateTime
+            return ValueType.DATE_TIME;
+        }
+
+        if ( this.isLongDateTime( val ) ) {
+            return ValueType.LONG_DATE_TIME;
+        }
+
+        if ( this.isDate( val ) ) {
             return ValueType.DATE;
-        } else if ( this.isTime( val ) ) {
+        }
+
+        if ( this.isTime( val ) ) { // it must be before isLongTime
             return ValueType.TIME;
-        } else if ( Array.isArray( val ) ) {
+        }
+
+        if ( this.isLongTime( val ) ) {
+            return ValueType.LONG_TIME;
+        }
+
+        if ( Array.isArray( val ) ) {
             if ( val.length > 0 ) {
                 return this.detect( val[ 0 ] );
             }
         }
+
         return ValueType.STRING;
     }
 
@@ -160,7 +197,7 @@ export function adjustValueToTheRightType( v: string, valueType?: ValueType, for
             // } catch {
             //     valueAfter = LocalDate.now();
             // }
-            const defaultFormatter = DateTimeFormatter.ofPattern( "yyyy-MM-dd" );
+            const defaultFormatter = DateTimeFormatter.ofPattern( "uuuuu-MM-dd" );
             const formattersToUse = [ ...( formatters || [] ), defaultFormatter, undefined ];
             let success = false;
             for ( const fmt of formattersToUse ) {
@@ -179,6 +216,7 @@ export function adjustValueToTheRightType( v: string, valueType?: ValueType, for
             break;
         }
 
+        case ValueType.LONG_TIME:
         case ValueType.TIME: {
             try {
                 valueAfter = LocalTime.parse( v );
@@ -188,7 +226,8 @@ export function adjustValueToTheRightType( v: string, valueType?: ValueType, for
             break;
         }
 
-        case ValueType.DATETIME: {
+        case ValueType.LONG_DATE_TIME:
+        case ValueType.DATE_TIME: {
             try {
                 valueAfter = LocalDateTime.parse( v );
             } catch {

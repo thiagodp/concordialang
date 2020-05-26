@@ -1,8 +1,9 @@
-import { ChronoUnit, LocalDateTime } from "@js-joda/core";
+import { ChronoUnit, LocalDateTime } from '@js-joda/core';
+
 import { isDefined } from '../../util/TypeChecking';
-import { DateTimeLimits } from "../limits/DateTimeLimits";
-import { RandomDateTime } from "../random/RandomDateTime";
-import { RawDataGenerator } from "./RawDataGenerator";
+import { DateTimeLimits } from '../limits/DateTimeLimits';
+import { RandomDateTime } from '../random/RandomDateTime';
+import { RawDataGenerator } from './RawDataGenerator';
 
 export class DateTimeGenerator implements RawDataGenerator< LocalDateTime > {
 
@@ -26,7 +27,7 @@ export class DateTimeGenerator implements RawDataGenerator< LocalDateTime > {
 		max?: LocalDateTime
 	) {
 		if ( isDefined( min ) && isDefined( max ) && min.isAfter( max ) ) {
-            throw new Error( 'min datetime should not be greater than max' );
+            throw new Error( 'Minimum value should not be greater than the maximum value.' );
         }
         this._min = isDefined( min ) ? min: DateTimeLimits.MIN;
 		this._max = isDefined( max ) ? max: DateTimeLimits.MAX;
@@ -114,10 +115,10 @@ export class DateTimeGenerator implements RawDataGenerator< LocalDateTime > {
 
         const minTime = this._min.toLocalTime();
         const maxTime = this._max.toLocalTime();
-        const diffInSecondsOfTimes = minTime.until( maxTime, ChronoUnit.SECONDS );
+        const diffInSecondsFromTime = minTime.until( maxTime, ChronoUnit.SECONDS );
 
         const days = Math.round( ( diffInDaysOfDates - 1 ) / 2 );
-        const seconds = Math.round( ( diffInSecondsOfTimes - 1 ) / 2 );
+        const seconds = Math.round( ( diffInSecondsFromTime - 1 ) / 2 );
 
         let r = this._min.plusDays( days );
         if ( maxTime.compareTo( minTime ) > 0 ) { // maxTime greater than minTime

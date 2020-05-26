@@ -11,6 +11,7 @@ import { DataTestCase } from "../../modules/testdata/DataTestCase";
 import { DTCAnalysisResult } from "../../modules/testdata/DataTestCaseAnalyzer";
 import { UIElementValueGenerator, ValueGenContext } from "../../modules/testdata/UIElementValueGenerator";
 import { SimpleCompiler } from "../SimpleCompiler";
+import { LocalDate, LocalTime } from "@js-joda/core";
 
 describe( 'UIElementValueGenerator', () => {
 
@@ -90,6 +91,57 @@ describe( 'UIElementValueGenerator', () => {
             expect( errors ).toEqual( [] );
             expect( value ).toBe( 10 );
         } );
+
+        it( 'min value - date', async () => {
+
+            let doc1 = await cp.addToSpec(
+                spec,
+                [
+                    'Feature: A',
+                    'UI Element: foo',
+                    ' - valor mínimo é 31/12/2020'
+                ],
+                { } as FileInfo
+            );
+
+            let plans = new Map( [
+                [ 'A:foo', new UIETestPlan( DataTestCase.VALUE_JUST_ABOVE_MIN, DTCAnalysisResult.VALID, [] ) ]
+            ] );
+
+            let values = new Map< string, EntityValueType >();
+            let context = new ValueGenContext( plans, values );
+            const value = await gen.generate( 'foo', context, doc1, spec, errors );
+
+            expect( errors ).toEqual( [] );
+            expect( value ).toBeInstanceOf( LocalDate );
+            expect( value.toString() ).toEqual( "2021-01-01" ); // VALUE_JUST_ABOVE_MIN
+        } );
+
+        it( 'min value - time', async () => {
+
+            let doc1 = await cp.addToSpec(
+                spec,
+                [
+                    'Feature: A',
+                    'UI Element: foo',
+                    ' - valor mínimo é 23:58'
+                ],
+                { } as FileInfo
+            );
+
+            let plans = new Map( [
+                [ 'A:foo', new UIETestPlan( DataTestCase.VALUE_JUST_ABOVE_MIN, DTCAnalysisResult.VALID, [] ) ]
+            ] );
+
+            let values = new Map< string, EntityValueType >();
+            let context = new ValueGenContext( plans, values );
+            const value = await gen.generate( 'foo', context, doc1, spec, errors );
+
+            expect( errors ).toEqual( [] );
+            expect( value ).toBeInstanceOf( LocalTime );
+            expect( value.toString() ).toEqual( "23:59" ); // VALUE_JUST_ABOVE_MIN
+        } );
+
 
         it( 'min length', async () => {
 
