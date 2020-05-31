@@ -2,7 +2,6 @@ export * from './AlaSqlDatabaseInterface';
 export * from './AlaSqlTableCreator';
 export * from './AlaSqlTypes';
 export * from './DatabaseConnectionChecker';
-export * from './DatabaseConnectionChecker2';
 export * from './DatabaseJSDatabaseInterface';
 export * from './DatabaseToAbstractDatabase';
 export * from './DatabaseTypes';

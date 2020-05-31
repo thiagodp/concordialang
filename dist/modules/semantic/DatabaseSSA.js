@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const DatabaseConnectionChecker2_1 = require("../db/DatabaseConnectionChecker2");
+const DatabaseConnectionChecker_1 = require("../db/DatabaseConnectionChecker");
 const SpecificationAnalyzer_1 = require("./SpecificationAnalyzer");
 /**
  * Analyzes Databases in a specification.
@@ -36,7 +36,7 @@ class DatabaseSSA extends SpecificationAnalyzer_1.SpecificationAnalyzer {
     }
     checkConnections(problems, spec) {
         return __awaiter(this, void 0, void 0, function* () {
-            let checker = new DatabaseConnectionChecker2_1.DatabaseConnectionChecker2();
+            let checker = new DatabaseConnectionChecker_1.DatabaseConnectionChecker();
             let r = yield checker.check(spec, problems);
             return r ? r.success : false;
         });

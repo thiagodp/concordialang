@@ -24,7 +24,7 @@ class DatabaseConnectionChecker {
             return new DatabaseJSDatabaseInterface_1.DatabaseJSDatabaseInterface();
         };
     }
-    check(spec, errors, disconnectAfterConnecting = false) {
+    check(spec, problems, disconnectAfterConnecting = false) {
         return __awaiter(this, void 0, void 0, function* () {
             let r = new dbi_1.ConnectionCheckResult(true);
             for (let doc of spec.docs) {
@@ -49,10 +49,9 @@ class DatabaseConnectionChecker {
                         r.success = false;
                         cr.success = false;
                         const msg = 'Could not connect to the database "' + db.name + '". Reason: ' + err.message;
-                        let e = new error_1.RuntimeException(msg, db.location);
+                        const e = new error_1.RuntimeException(msg, db.location);
                         cr.errors.push(e);
-                        errors.push(e);
-                        doc.fileWarnings.push(e);
+                        problems.addWarning(doc.fileInfo.path, e);
                         continue;
                     }
                     if (!disconnectAfterConnecting) {
@@ -67,10 +66,9 @@ class DatabaseConnectionChecker {
                     catch (err) {
                         const msg = 'Error while disconnecting from database "' +
                             db.name + '". Details: ' + err.message + ' at ' + err.stack;
-                        let e = new error_1.RuntimeException(msg, db.location);
+                        const e = new error_1.RuntimeException(msg, db.location);
                         cr.errors.push(e);
-                        errors.push(e);
-                        doc.fileWarnings.push(e);
+                        problems.addWarning(doc.fileInfo.path, e);
                     }
                 }
             }

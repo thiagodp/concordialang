@@ -1,7 +1,7 @@
 import { Database } from '../ast/Database';
 import { ConnectionCheckResult, ConnectionResult, DatabaseInterface } from '../dbi';
-import { LocatedException, RuntimeException } from '../error';
-import { AugmentedSpec } from "../req/AugmentedSpec";
+import { ProblemMapper, RuntimeException } from '../error';
+import { AugmentedSpec } from '../req/AugmentedSpec';
 import { DatabaseJSDatabaseInterface } from './DatabaseJSDatabaseInterface';
 
 /**
@@ -13,7 +13,7 @@ export class DatabaseConnectionChecker {
 
     async check(
         spec: AugmentedSpec,
-        errors: LocatedException[],
+        problems: ProblemMapper,
         disconnectAfterConnecting: boolean = false
     ): Promise< ConnectionCheckResult > {
 
@@ -48,10 +48,10 @@ export class DatabaseConnectionChecker {
                     cr.success = false;
                     const msg = 'Could not connect to the database "' + db.name + '". Reason: ' + err.message;
 
-                    let e = new RuntimeException( msg, db.location );
+                    const e = new RuntimeException( msg, db.location );
                     cr.errors.push( e );
-                    errors.push( e );
-                    doc.fileWarnings.push( e );
+
+                    problems.addWarning( doc.fileInfo.path, e );
 
                     continue;
                 }
@@ -69,10 +69,10 @@ export class DatabaseConnectionChecker {
                     const msg = 'Error while disconnecting from database "' +
                         db.name + '". Details: ' + err.message + ' at ' + err.stack;
 
-                    let e = new RuntimeException( msg, db.location );
+                    const e = new RuntimeException( msg, db.location );
                     cr.errors.push( e );
-                    errors.push( e );
-                    doc.fileWarnings.push( e );
+
+                    problems.addWarning( doc.fileInfo.path, e );
                 }
             }
         }

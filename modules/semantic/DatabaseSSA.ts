@@ -1,6 +1,6 @@
 import Graph = require('graph.js/dist/graph.full.js');
 
-import { DatabaseConnectionChecker2 } from '../db/DatabaseConnectionChecker2';
+import { DatabaseConnectionChecker } from '../db/DatabaseConnectionChecker';
 import { ProblemMapper } from '../error/ProblemMapper';
 import { SemanticException } from '../error/SemanticException';
 import { AugmentedSpec } from '../req/AugmentedSpec';
@@ -40,7 +40,7 @@ export class DatabaseSSA extends SpecificationAnalyzer {
         problems: ProblemMapper,
         spec: AugmentedSpec
     ): Promise< boolean > {
-        let checker = new DatabaseConnectionChecker2();
+        let checker = new DatabaseConnectionChecker();
         let r = await checker.check( spec, problems );
         return r ? r.success : false;
     }
