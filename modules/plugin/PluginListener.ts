@@ -23,9 +23,7 @@ export interface PluginListener {
 
     showCommandStarted( command: string ): void;
 
-    showCommandFinished(): void;
-
-    showCommandCode( code: number, showIfSuccess: boolean ): void;
+    showCommandFinished( code: number, showIfSuccess: boolean ): void;
 
     showError( e: Error ): void;
 

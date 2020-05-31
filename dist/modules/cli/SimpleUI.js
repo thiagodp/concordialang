@@ -445,15 +445,8 @@ class SimpleUI {
         this.drawSeparationLine();
     }
     /** @inheritdoc */
-    showCommandFinished() {
+    showCommandFinished(code, showIfSuccess = true) {
         this.drawSeparationLine();
-    }
-    drawSeparationLine() {
-        const separationLine = '  ' + '_'.repeat(78);
-        this.writeln(this.colorDiscreet(separationLine));
-    }
-    /** @inheritdoc */
-    showCommandCode(code, showIfSuccess = true) {
         if (0 === code) {
             if (showIfSuccess) {
                 this.success('Success');
@@ -462,6 +455,10 @@ class SimpleUI {
         else {
             this.error('Error during command execution.');
         }
+    }
+    drawSeparationLine() {
+        const separationLine = '  ' + '_'.repeat(78);
+        this.writeln(this.colorDiscreet(separationLine));
     }
     /** @inheritdoc */
     showError(e) {

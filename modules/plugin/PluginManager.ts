@@ -1,11 +1,12 @@
-import * as childProcess from 'child_process';
-import { Plugin } from "concordialang-plugin";
+import { Plugin } from 'concordialang-plugin';
 import * as inquirer from 'inquirer';
 import { join } from 'path';
+
 import { FileReader } from '../util/file/FileReader';
-import { PluginData, PLUGIN_PREFIX } from "./PluginData";
+import { runCommand } from '../util/run-command';
+import { PLUGIN_PREFIX, PluginData } from './PluginData';
+import { PluginFinder } from './PluginFinder';
 import { PluginListener } from './PluginListener';
-import { PluginFinder } from "./PluginFinder";
 
 /**
  * Plug-in manager
@@ -110,8 +111,7 @@ export class PluginManager {
             // Create package.json if it does not exist
 
             if ( mustGeneratePackageFile ) {
-                const code: number = await this.runCommand( PACKAGE_CREATION_CMD );
-                this._pluginListener.showCommandCode( code, false );
+                await this.runCommand( PACKAGE_CREATION_CMD, false );
             }
         }
 
@@ -121,8 +121,7 @@ export class PluginManager {
         const INSTALL_DEV_CMD = 'npm install --save-dev ' + name + ' --no-fund --no-audit --loglevel error --color=always';
 
         this._pluginListener.showMessageTryingToInstall( name, PACKAGE_MANAGER );
-        const code: number = await this.runCommand( INSTALL_DEV_CMD );
-        this._pluginListener.showCommandCode( code, false );
+        const code: number = await this.runCommand( INSTALL_DEV_CMD, false );
         if ( code !== 0 ) { // unsuccessful
             return;
         }
@@ -150,9 +149,9 @@ export class PluginManager {
         }
 
         // Remove with a package manager
+        const command = 'npm uninstall --save-dev ' + name + ' --color=always';
         this._pluginListener.showMessageTryingToUninstall( name, 'NPM' );
-        let code: number = await this.runCommand( 'npm uninstall --save-dev ' + name + ' --color=always' );
-        this._pluginListener.showCommandCode( code, true );
+        await this.runCommand( command, true );
     }
 
     public async serve( pluginData: PluginData ): Promise< void > {
@@ -162,10 +161,8 @@ export class PluginManager {
         }
 
         this._pluginListener.showPluginServeStart( pluginData.name );
-        const code = await this.runCommand( pluginData.serve );
-        this._pluginListener.showCommandCode( code, true );
+        await this.runCommand( pluginData.serve, true );
     }
-
 
     /**
      * Tries to load a plug-in and to return its instance.
@@ -185,49 +182,14 @@ export class PluginManager {
         return obj as Plugin;
     }
 
+    // -------------------------------------------------------------------------
 
-    private async runCommand( command: string ): Promise< number > {
-
+    private async runCommand( command: string, showIfSuccess: boolean ): Promise< number > {
         this._pluginListener.showCommandStarted( command );
-
-        let options = {
-            // detached: true, // main process can terminate
-            // stdio: 'ignore', // ignore stdio since detach is active
-            shell: true, // allow parameters in the command
-            // stdio: 'inherit', // <<< not working on windows
-        };
-
-        // Splits the command into pieces to pass to the process;
-        //  mapping function simply removes quotes from each piece
-        let cmds = command.match( /[^"\s]+|"(?:\\"|[^"])+"/g )
-            .map( expr => {
-                return expr.charAt( 0 ) === '"' && expr.charAt( expr.length - 1 ) === '"' ? expr.slice( 1, -1 ) : expr;
-            } );
-        const runCMD = cmds[ 0 ];
-        cmds.shift();
-
-        return new Promise< any >( ( resolve, reject ) => {
-
-            // Executing
-
-            const child = childProcess.spawn( runCMD, cmds, options );
-
-            child.stdout.on( 'data', ( chunk ) => {
-                console.log( chunk.toString() );
-            } );
-
-            child.stderr.on( 'data', ( chunk ) => {
-                console.warn( chunk.toString() );
-            } );
-
-            child.on( 'exit', ( code ) => {
-                this._pluginListener.showCommandFinished();
-                resolve( code );
-            } );
-
-        } );
+        const code = await runCommand( command );
+        this._pluginListener.showCommandFinished( code, showIfSuccess );
+        return code;
     }
-
 
     private sortByName( plugins: PluginData[] ): PluginData[] {
         return plugins.sort( ( a: PluginData, b: PluginData ): number => {

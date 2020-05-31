@@ -613,18 +613,8 @@ export class SimpleUI implements UI {
     }
 
     /** @inheritdoc */
-    public showCommandFinished(): void {
+    public showCommandFinished( code: number, showIfSuccess: boolean = true ): void {
         this.drawSeparationLine();
-    }
-
-    protected drawSeparationLine(): void {
-        const separationLine = '  ' + '_'.repeat( 78 );
-        this.writeln( this.colorDiscreet( separationLine ) );
-    }
-
-
-    /** @inheritdoc */
-    public showCommandCode( code: number, showIfSuccess: boolean = true ): void {
         if ( 0 === code ) {
             if ( showIfSuccess ) {
                 this.success( 'Success' );
@@ -632,6 +622,11 @@ export class SimpleUI implements UI {
         } else {
             this.error( 'Error during command execution.' );
         }
+    }
+
+    protected drawSeparationLine(): void {
+        const separationLine = '  ' + '_'.repeat( 78 );
+        this.writeln( this.colorDiscreet( separationLine ) );
     }
 
     /** @inheritdoc */
