@@ -46,3 +46,22 @@ function runCommand(command) {
     });
 }
 exports.runCommand = runCommand;
+/**
+ * Run the given commands in batch.
+ *
+ * Aborts when a command fails. Returns the result code.
+ *
+ * @param commands Commands to run.
+ */
+function runInBatch(commands) {
+    return __awaiter(this, void 0, void 0, function* () {
+        for (const cmd of commands) {
+            const code = yield runCommand(cmd);
+            if (code != 0) {
+                return code;
+            }
+        }
+        return 0;
+    });
+}
+exports.runInBatch = runInBatch;

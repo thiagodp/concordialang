@@ -17,6 +17,8 @@ const semverDiff = require("semver-diff");
 const updateNotifier = require("update-notifier");
 const util_1 = require("util");
 const app_1 = require("../app");
+const package_installation_1 = require("../util/package-installation");
+const run_command_1 = require("../util/run-command");
 const CliHelp_1 = require("./CliHelp");
 const GuidedConfig_1 = require("./GuidedConfig");
 const SimpleUI_1 = require("./SimpleUI");
@@ -92,6 +94,20 @@ function main(appPath, processPath) {
                 const guidedOptions = yield (new GuidedConfig_1.GuidedConfig()).prompt();
                 options.import(guidedOptions);
                 options.saveConfig = true;
+                const packages = guidedOptions.databases || [];
+                if (packages.length > 0) {
+                    ui.announceDatabasePackagesInstallationStarted();
+                    let code;
+                    for (const pkg of packages) {
+                        ui.announceDatabasePackage(pkg);
+                        const cmd = package_installation_1.makePackageInstallCommand(pkg);
+                        code = yield run_command_1.runCommand(cmd);
+                        if (code !== 0) {
+                            break;
+                        }
+                    }
+                    ui.announceDatabasePackagesInstallationFinished(code);
+                }
             }
         }
         // Save config option ?

@@ -1,5 +1,4 @@
 import * as inquirer from 'inquirer';
-import { Options } from '../app/Options';
 
 export type GuidedConfigOptions = {
     directory: string;
@@ -8,6 +7,7 @@ export type GuidedConfigOptions = {
     dirResults: string;
     plugin: string;
     pluginInstall: string;
+    databases: string[];
 };
 
 /**
@@ -25,7 +25,8 @@ export class GuidedConfig {
             q.dirScripts(),
             q.dirResults(),
             q.plugin(),
-            q.pluginInstall()
+            q.pluginInstall(),
+            q.databases()
         ];
 
         return await inquirer.prompt( questions );
@@ -75,13 +76,13 @@ class ConcordiaQuestions {
         };
     }
 
-    // TO-DO: load plug-in options dynamically
     plugin(): object {
         return {
             type: 'list',
             name: 'plugin',
             message: 'Which plug-in do you want to use?',
             choices: [
+                { value: 'codeceptjs-playwright', short: 'codeceptjs-playwright', name: 'CodeceptJS with Playwright (web applications)' },
                 { value: 'codeceptjs-webdriverio', short: 'codeceptjs-webdriverio', name: 'CodeceptJS with WebDriverIO (web applications)' },
                 { value: 'codeceptjs-appium', short: 'codeceptjs-appium', name: 'CodeceptJS with Appium (mobile or desktop applications)' }
             ]
@@ -93,6 +94,30 @@ class ConcordiaQuestions {
             type: 'confirm',
             name: 'pluginInstall',
             message: 'Do you want to download and install the plug-in?'
+        };
+    }
+
+    databases(): object {
+
+        const choices = [
+            { value: 'database-js-csv', name: 'CSV files' },
+            { value: 'database-js-xlsx', name: 'Excel files' },
+            { value: 'database-js-firebase', name: 'Firebase databases' },
+            { value: 'database-js-ini', name: 'Ini files' },
+            { value: 'database-js-json', name: 'JSON files' },
+            { value: 'database-js-mysql', name: 'MySQL databases' },
+            { value: 'database-js-adodb', name: 'MS Access databases (Windows only)' },
+            { value: 'database-js-mssql', name: 'MS SQL Server databases' },
+            { value: 'database-js-postgres', name: 'PostgreSQL' },
+            { value: 'database-js-sqlite', name: 'SQLite' },
+        ];
+
+        return {
+            type: 'checkbox',
+            name: 'databases',
+            message: 'Which databases do you want to use in your tests?',
+            choices: choices,
+            pageSize: choices.length
         };
     }
 

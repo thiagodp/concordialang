@@ -43,3 +43,20 @@ export async function runCommand( command: string ): Promise< number > {
     } );
 
 }
+
+/**
+ * Run the given commands in batch.
+ *
+ * Aborts when a command fails. Returns the result code.
+ *
+ * @param commands Commands to run.
+ */
+export async function runInBatch( commands: string[] ): Promise< number > {
+    for ( const cmd of commands ) {
+        const code = await runCommand( cmd );
+        if ( code != 0 ) {
+            return code;
+        }
+    }
+    return 0;
+}

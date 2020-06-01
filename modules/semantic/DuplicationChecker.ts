@@ -1,5 +1,5 @@
 // TO-DO: remove the following dependencies:
-import * as chalk from 'chalk';
+import * as colors from 'chalk';
 import * as logSymbols from 'log-symbols';
 // --
 import { Location } from "concordialang-types";
@@ -149,7 +149,7 @@ export class DuplicationChecker {
     }
 
     jointLocations( locations: Location[] ): string {
-        return chalk.white( locations.map( this.makeLocationString ).join( ', ' ) );
+        return colors.white( locations.map( this.makeLocationString ).join( ', ' ) );
     }
 
     makeLocationString( loc: Location ): string {

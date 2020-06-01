@@ -1,4 +1,4 @@
-import * as chalk from 'chalk';
+import * as colors from 'chalk';
 import { TestScriptExecutionResult } from 'concordialang-plugin';
 import * as figures from 'figures';
 import * as logSymbols from 'log-symbols';
@@ -50,24 +50,24 @@ export class SimpleUI implements UI {
 
     // COLORS
 
-    readonly colorSuccess = chalk.greenBright.bind( chalk ); // chalk.rgb(0, 255, 0);
-    readonly colorError = chalk.redBright.bind( chalk ); // chalk.rgb(255, 0, 0);
-    readonly colorCriticalError = chalk.rgb( 139, 0, 0 ); // dark red
-    readonly colorWarning = chalk.yellow.bind( chalk );
-    readonly colorDiscreet = chalk.gray.bind( chalk );
-    readonly highlight = chalk.yellowBright.bind( chalk ); // chalk.rgb(255, 242, 0);
-    readonly colorText = chalk.white.bind( chalk );
-    readonly colorCyanBright = chalk.cyanBright.bind( chalk );
-    readonly colorMagenta = chalk.magentaBright.bind( chalk );
+    readonly colorSuccess = colors.greenBright.bind( colors ); // chalk.rgb(0, 255, 0);
+    readonly colorError = colors.redBright.bind( colors ); // colors.rgb(255, 0, 0);
+    readonly colorCriticalError = colors.rgb( 139, 0, 0 ); // dark red
+    readonly colorWarning = colors.yellow.bind( colors );
+    readonly colorDiscreet = colors.gray.bind( colors );
+    readonly highlight = colors.yellowBright.bind( colors ); // colors.rgb(255, 242, 0);
+    readonly colorText = colors.white.bind( colors );
+    readonly colorCyanBright = colors.cyanBright.bind( colors );
+    readonly colorMagenta = colors.magentaBright.bind( colors );
 
-    readonly bgSuccess = chalk.bgGreenBright.bind( chalk );
-    readonly bgError = chalk.bgRed.bind( chalk );
-    readonly bgCriticalError = chalk.bgRgb( 139, 0, 0 ).bind( chalk ); // dark red
-    readonly bgWarning = chalk.bgYellow.bind( chalk );
-    readonly bgInfo = chalk.bgBlackBright.bind( chalk ); // bgGray does not exist in chalk
-    readonly bgHighlight = chalk.bgYellowBright.bind( chalk );
-    readonly bgText = chalk.bgWhiteBright.bind( chalk );
-    readonly bgCyan = chalk.bgCyan.bind( chalk );
+    readonly bgSuccess = colors.bgGreenBright.bind( colors );
+    readonly bgError = colors.bgRed.bind( colors );
+    readonly bgCriticalError = colors.bgRgb( 139, 0, 0 ).bind( colors ); // dark red
+    readonly bgWarning = colors.bgYellow.bind( colors );
+    readonly bgInfo = colors.bgBlackBright.bind( colors ); // bgGray does not exist in colors
+    readonly bgHighlight = colors.bgYellowBright.bind( colors );
+    readonly bgText = colors.bgWhiteBright.bind( colors );
+    readonly bgCyan = colors.bgCyan.bind( colors );
 
     // protected intervalFn = null;
 
@@ -234,6 +234,29 @@ export class SimpleUI implements UI {
             'Available languages:',
             languages.sort().map( l => highlight( l ) ).join( ', ' )
         );
+    }
+
+    // Database
+
+    /** @inheritdoc */
+    announceDatabasePackagesInstallationStarted(): void {
+        this.info( this.colorCyanBright( 'Installing database drivers...' ) );
+        this.drawSeparationLine();
+    }
+
+    /** @inheritdoc */
+    announceDatabasePackage( packageName: string ): void {
+        this.write( ' ', this.highlight( packageName ), "\n" );
+    }
+
+    /** @inheritdoc */
+    announceDatabasePackagesInstallationFinished( code: number ): void {
+        this.drawSeparationLine();
+        if ( 0 == code ) {
+            this.info( this.colorCyanBright( 'Installation successful.' ) );
+        } else {
+            this.warn( this.colorCyanBright( 'A problem occurred during installation.' ) );
+        }
     }
 
     /** @inheritdoc */

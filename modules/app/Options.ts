@@ -4,6 +4,7 @@ import { isDefined, isNumber, isString } from '../util/TypeChecking';
 import { CaseType } from '../util/CaseType';
 import { Defaults } from './Defaults';
 import { CombinationOptions, VariantSelectionOptions } from "./CombinationOptions";
+import { ValueTypeDetector } from '../util/ValueTypeDetector';
 
 
 /**
@@ -390,6 +391,8 @@ export class Options {
 
         const PARAM_SEPARATOR: string = ',';
 
+        // Helper functions
+
         const isStringNotEmpty = text => isString( text ) && text.trim() != '';
 
         const resolvePath = p => isAbsolute( p ) ? p : resolve( this.processPath, p );
@@ -493,7 +496,7 @@ export class Options {
 
         this.pluginList = isDefined( obj.pluginList );
         this.pluginAbout = isDefined( obj.pluginAbout ) || isDefined( obj.pluginInfo );
-        this.pluginInstall = isDefined( obj.pluginInstall );
+        this.pluginInstall = isDefined( obj.pluginInstall ) && ! ( false === obj.pluginInstall );
         this.pluginUninstall = isDefined( obj.pluginUninstall );
         this.pluginServe = isDefined( obj.pluginServe );
 
@@ -523,14 +526,24 @@ export class Options {
 
         // PROCESSING
 
+        if ( isDefined( obj.init ) ) {
+            this.init = true == obj.init;
+        }
+
+        if ( isDefined( obj.saveConfig ) ) {
+            this.saveConfig = true == obj.saveConfig;
+        }
+
         const ast = isStringNotEmpty( obj.ast )
             ? obj.ast
             : ( isDefined( obj.ast ) ? this.defaults.AST_FILE : undefined );
 
-        this.init = isDefined( obj.init );
-        this.saveConfig = isDefined( obj.saveConfig );
         this.ast = ast;
-        this.verbose = isDefined( obj.verbose );
+
+        if ( isDefined( obj.verbose ) ) {
+            this.verbose = true == obj.verbose;
+        }
+
         this.stopOnTheFirstError = true === obj.failFast || true === obj.stopOnTheFirstError;
 
         // const justSpec: boolean = isDefined( obj.justSpec ) || isDefined( obj.justSpecification );

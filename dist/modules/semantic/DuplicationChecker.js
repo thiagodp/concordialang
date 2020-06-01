@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 // TO-DO: remove the following dependencies:
-const chalk = require("chalk");
+const colors = require("chalk");
 const logSymbols = require("log-symbols");
 const SemanticException_1 = require("../error/SemanticException");
 /**
@@ -130,7 +130,7 @@ class DuplicationChecker {
         return map;
     }
     jointLocations(locations) {
-        return chalk.white(locations.map(this.makeLocationString).join(', '));
+        return colors.white(locations.map(this.makeLocationString).join(', '));
     }
     makeLocationString(loc) {
         return "\n  " + logSymbols.error + " (" + loc.line + ',' + loc.column + ')' + (!loc.filePath ? '' : ' ' + loc.filePath);

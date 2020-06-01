@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const chalk = require("chalk");
+const colors = require("chalk");
 const figures = require("figures");
 const logSymbols = require("log-symbols");
 const path_1 = require("path");
@@ -31,23 +31,23 @@ class SimpleUI {
         this.symbolWarning = logSymbols.warning;
         this.symbolInfo = logSymbols.info;
         // COLORS
-        this.colorSuccess = chalk.greenBright.bind(chalk); // chalk.rgb(0, 255, 0);
-        this.colorError = chalk.redBright.bind(chalk); // chalk.rgb(255, 0, 0);
-        this.colorCriticalError = chalk.rgb(139, 0, 0); // dark red
-        this.colorWarning = chalk.yellow.bind(chalk);
-        this.colorDiscreet = chalk.gray.bind(chalk);
-        this.highlight = chalk.yellowBright.bind(chalk); // chalk.rgb(255, 242, 0);
-        this.colorText = chalk.white.bind(chalk);
-        this.colorCyanBright = chalk.cyanBright.bind(chalk);
-        this.colorMagenta = chalk.magentaBright.bind(chalk);
-        this.bgSuccess = chalk.bgGreenBright.bind(chalk);
-        this.bgError = chalk.bgRed.bind(chalk);
-        this.bgCriticalError = chalk.bgRgb(139, 0, 0).bind(chalk); // dark red
-        this.bgWarning = chalk.bgYellow.bind(chalk);
-        this.bgInfo = chalk.bgBlackBright.bind(chalk); // bgGray does not exist in chalk
-        this.bgHighlight = chalk.bgYellowBright.bind(chalk);
-        this.bgText = chalk.bgWhiteBright.bind(chalk);
-        this.bgCyan = chalk.bgCyan.bind(chalk);
+        this.colorSuccess = colors.greenBright.bind(colors); // chalk.rgb(0, 255, 0);
+        this.colorError = colors.redBright.bind(colors); // colors.rgb(255, 0, 0);
+        this.colorCriticalError = colors.rgb(139, 0, 0); // dark red
+        this.colorWarning = colors.yellow.bind(colors);
+        this.colorDiscreet = colors.gray.bind(colors);
+        this.highlight = colors.yellowBright.bind(colors); // colors.rgb(255, 242, 0);
+        this.colorText = colors.white.bind(colors);
+        this.colorCyanBright = colors.cyanBright.bind(colors);
+        this.colorMagenta = colors.magentaBright.bind(colors);
+        this.bgSuccess = colors.bgGreenBright.bind(colors);
+        this.bgError = colors.bgRed.bind(colors);
+        this.bgCriticalError = colors.bgRgb(139, 0, 0).bind(colors); // dark red
+        this.bgWarning = colors.bgYellow.bind(colors);
+        this.bgInfo = colors.bgBlackBright.bind(colors); // bgGray does not exist in colors
+        this.bgHighlight = colors.bgYellowBright.bind(colors);
+        this.bgText = colors.bgWhiteBright.bind(colors);
+        this.bgCyan = colors.bgCyan.bind(colors);
     }
     // protected intervalFn = null;
     // protected startSpinner(): void {
@@ -181,6 +181,26 @@ class SimpleUI {
     drawLanguages(languages) {
         const highlight = this.highlight;
         this.info('Available languages:', languages.sort().map(l => highlight(l)).join(', '));
+    }
+    // Database
+    /** @inheritdoc */
+    announceDatabasePackagesInstallationStarted() {
+        this.info(this.colorCyanBright('Installing database drivers...'));
+        this.drawSeparationLine();
+    }
+    /** @inheritdoc */
+    announceDatabasePackage(packageName) {
+        this.write(' ', this.highlight(packageName), "\n");
+    }
+    /** @inheritdoc */
+    announceDatabasePackagesInstallationFinished(code) {
+        this.drawSeparationLine();
+        if (0 == code) {
+            this.info(this.colorCyanBright('Installation successful.'));
+        }
+        else {
+            this.warn(this.colorCyanBright('A problem occurred during installation.'));
+        }
     }
     /** @inheritdoc */
     showErrorSavingAbstractSyntaxTree(astFile, errorMessage) {

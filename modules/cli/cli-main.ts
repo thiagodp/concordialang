@@ -5,11 +5,15 @@ import * as path from 'path';
 import * as semverDiff from 'semver-diff';
 import * as updateNotifier from 'update-notifier';
 import { promisify } from 'util';
-import { App, Options } from "../app";
+
+import { App, Options } from '../app';
+import { makePackageInstallCommand } from '../util/package-installation';
+import { runCommand } from '../util/run-command';
 import { CliHelp } from './CliHelp';
 import { GuidedConfig } from './GuidedConfig';
-import { SimpleUI } from "./SimpleUI";
-import { VerboseUI } from "./VerboseUI";
+import { SimpleUI } from './SimpleUI';
+import { VerboseUI } from './VerboseUI';
+
 
 export async function main( appPath: string, processPath: string ): Promise< boolean > {
 
@@ -88,6 +92,20 @@ export async function main( appPath: string, processPath: string ): Promise< boo
             const guidedOptions = await ( new GuidedConfig() ).prompt();
             options.import( guidedOptions );
             options.saveConfig = true;
+            const packages = guidedOptions.databases || [];
+            if ( packages.length > 0 ) {
+                ui.announceDatabasePackagesInstallationStarted();
+                let code: number;
+                for ( const pkg of packages ) {
+                    ui.announceDatabasePackage( pkg );
+                    const cmd = makePackageInstallCommand( pkg );
+                    code = await runCommand( cmd );
+                    if ( code !== 0 ) {
+                        break;
+                    }
+                }
+                ui.announceDatabasePackagesInstallationFinished( code );
+            }
         }
     }
 

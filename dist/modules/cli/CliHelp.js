@@ -1,11 +1,11 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const chalk = require("chalk");
+const colors = require("chalk");
 class CliHelp {
     content() {
-        const exeName = chalk.magenta('concordia');
+        const exeName = colors.magenta('concordia');
         /*
-          ${chalk.gray('Specification filtering')}
+          ${colors.gray('Specification filtering')}
         
           --importance <number>                  Sets the default importance value.
           --sel-min-feature <number>             Minimum feature importance.  ${NIY}
@@ -14,7 +14,7 @@ class CliHelp {
           --sel-max-scenario <number>            Maximum scenario importance. ${NIY}
           --sel-filter <filter>                  Filter by tag. ${NIY}
         
-          ${chalk.gray('Test script filtering (depends on the used plugin)')}
+          ${colors.gray('Test script filtering (depends on the used plugin)')}
         
           --run-min-feature <number>             Minimum feature importance. ${NIY}
           --run-max-feature <number>             Maximum feature importance. ${NIY}
@@ -24,13 +24,13 @@ class CliHelp {
         `;
         */
         return `
-${chalk.yellowBright('Usage:')} ${exeName} [<dir>] [options]
+${colors.yellowBright('Usage:')} ${exeName} [<dir>] [options]
 
 where <dir> is the directory that contains your specification files.
 
-${chalk.yellowBright('Options:')}
+${colors.yellowBright('Options:')}
 
-${chalk.gray('Input directories and files')}
+${colors.gray('Input directories and files')}
 
 -d,  --directory <value>                Directory to search. Same as <dir>.
 -nr, --no-recursive                     Disable recursive search.
@@ -40,18 +40,18 @@ ${chalk.gray('Input directories and files')}
 
 -i,  --ignore <"file1,file2,...">       Files to ignore, when <dir> is informed.
 
-${chalk.gray('Output directories')}
+${colors.gray('Output directories')}
 
 -ds, --dir-script                       Output directory for test scripts.
 -du, --dir-result                       Output directory for result files.
 
-${chalk.gray('Language')}
+${colors.gray('Language')}
 
 -l,  --language <code>                  Set the default language.
                                         The default is "en" (english).
 -ll, --language-list                    List available languages.
 
-${chalk.gray('Plug-in')}
+${colors.gray('Plug-in')}
 
 -p,  --plugin [<name>]                  Plug-in to use.
 -pa, --plugin-about [<name>]            Show information about a plug-in.
@@ -69,7 +69,7 @@ ${chalk.gray('Plug-in')}
                                         Some plug-ins may not support it.
 --instances                             Number of parallel instances to execute.
 
-${chalk.gray('Configuration')}
+${colors.gray('Configuration')}
 
 --init                                  Init a guided, basic configuration.
 
@@ -79,7 +79,7 @@ ${chalk.gray('Configuration')}
 --save-config                           Save/overwrite a configuration file
                                         with other command line options.
 
-${chalk.gray('Processing and output')}
+${colors.gray('Processing and output')}
 
 -b,  --verbose                          Show verbose output.
 
@@ -94,7 +94,7 @@ ${chalk.gray('Processing and output')}
 -js, --just-script                      Just generate test scripts.
 -jx, --just-run                         Just execute test scripts.
 
-${chalk.gray('Randomic value generation')}
+${colors.gray('Randomic value generation')}
 
 --seed <value>                          Random seed to use.
                                         The default is the current date and time.
@@ -105,7 +105,7 @@ ${chalk.gray('Randomic value generation')}
 --random-tries <number>                 Random tries to generate invalid values.
                                         The default is 5.
 
-${chalk.gray('Combination strategies')}
+${colors.gray('Combination strategies')}
 
 --comb-variant (random|first|fmi|all)
     Strategy to select variants to combine by their states:
@@ -136,7 +136,7 @@ ${chalk.gray('Combination strategies')}
       ow      = one-wise
       all     = all
 
-${chalk.gray('Content generation format')}
+${colors.gray('Content generation format')}
 
 --case-ui (camel|pascal|snake|kebab|none)
     String case to generate a UI Element locator when it is not defined.
@@ -151,7 +151,7 @@ ${chalk.gray('Content generation format')}
                                         Test Case files. The default is double
                                         spaces.
 
-${chalk.gray('Input formats and extensions')}
+${colors.gray('Input formats and extensions')}
 
 -e,  --encoding <value>                 File encoding. The default is "utf8".
 -lb, --line-breaker                     Character used for breaking lines.
@@ -160,14 +160,14 @@ ${chalk.gray('Input formats and extensions')}
 -et, --ext-test-case                    File extension for Test Case files.
                                         The default is ".testcase".
 
-${chalk.gray('Information')}
+${colors.gray('Information')}
 
 -v,  --version                          Show current version.
 -a,  --about                            Show information about this application.
 -h,  --help                             Show this help.
 -n,  --newer                            Check for newer versions.
 
-${chalk.yellowBright('Examples')}
+${colors.yellowBright('Examples')}
 
  $ ${exeName} features --language pt --plugin some-plugin --dir-script test --dir-result output
  $ ${exeName} --file "file1.feature,path/to/file2.feature" -l pt -p some-plugin -ds test -du output

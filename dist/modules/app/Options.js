@@ -318,6 +318,7 @@ class Options {
      */
     import(obj) {
         const PARAM_SEPARATOR = ',';
+        // Helper functions
         const isStringNotEmpty = text => TypeChecking_1.isString(text) && text.trim() != '';
         const resolvePath = p => path_1.isAbsolute(p) ? p : path_1.resolve(this.processPath, p);
         // DIRECTORIES
@@ -402,7 +403,7 @@ class Options {
         }
         this.pluginList = TypeChecking_1.isDefined(obj.pluginList);
         this.pluginAbout = TypeChecking_1.isDefined(obj.pluginAbout) || TypeChecking_1.isDefined(obj.pluginInfo);
-        this.pluginInstall = TypeChecking_1.isDefined(obj.pluginInstall);
+        this.pluginInstall = TypeChecking_1.isDefined(obj.pluginInstall) && !(false === obj.pluginInstall);
         this.pluginUninstall = TypeChecking_1.isDefined(obj.pluginUninstall);
         this.pluginServe = TypeChecking_1.isDefined(obj.pluginServe);
         if (isStringNotEmpty(obj.pluginAbout)) {
@@ -432,13 +433,19 @@ class Options {
             this.target = obj.targets;
         }
         // PROCESSING
+        if (TypeChecking_1.isDefined(obj.init)) {
+            this.init = true == obj.init;
+        }
+        if (TypeChecking_1.isDefined(obj.saveConfig)) {
+            this.saveConfig = true == obj.saveConfig;
+        }
         const ast = isStringNotEmpty(obj.ast)
             ? obj.ast
             : (TypeChecking_1.isDefined(obj.ast) ? this.defaults.AST_FILE : undefined);
-        this.init = TypeChecking_1.isDefined(obj.init);
-        this.saveConfig = TypeChecking_1.isDefined(obj.saveConfig);
         this.ast = ast;
-        this.verbose = TypeChecking_1.isDefined(obj.verbose);
+        if (TypeChecking_1.isDefined(obj.verbose)) {
+            this.verbose = true == obj.verbose;
+        }
         this.stopOnTheFirstError = true === obj.failFast || true === obj.stopOnTheFirstError;
         // const justSpec: boolean = isDefined( obj.justSpec ) || isDefined( obj.justSpecification );
         const justTestCase = TypeChecking_1.isDefined(obj.justTestCase) || TypeChecking_1.isDefined(obj.justTestCases);

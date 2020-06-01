@@ -51,6 +51,12 @@ export interface UI extends
 
     drawLanguages( languages: string[] ): void;
 
+    // Database
+
+    announceDatabasePackagesInstallationStarted(): void;
+    announceDatabasePackage( packageName: string ): void;
+    announceDatabasePackagesInstallationFinished( code: number ): void;
+
     // AST
 
     showErrorSavingAbstractSyntaxTree( astFile: string, errorMessage: string ): void;
