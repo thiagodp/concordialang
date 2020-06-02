@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.Options = void 0;
 const enumUtil = require("enum-util");
 const path_1 = require("path");
 const TypeChecking_1 = require("../util/TypeChecking");

@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.StepGivenLexer = void 0;
 const NodeTypes_1 = require("../req/NodeTypes");
 const StartingKeywordLexer_1 = require("./StartingKeywordLexer");
 /**

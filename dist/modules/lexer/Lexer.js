@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.Lexer = void 0;
 const ast_1 = require("../ast");
 const TestEventLexer_1 = require("../lexer/TestEventLexer");
 const NodeTypes_1 = require("../req/NodeTypes");

@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.BatchDocumentAnalyzer = void 0;
 const DatabaseDA_1 = require("./DatabaseDA");
 const ImportDA_1 = require("./ImportDA");
 const ScenarioDA_1 = require("./ScenarioDA");

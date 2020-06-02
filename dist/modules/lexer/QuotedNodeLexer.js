@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.QuotedNodeLexer = void 0;
 const XRegExp = require('xregexp');
 const Expressions_1 = require("../req/Expressions");
 const LineChecker_1 = require("../req/LineChecker");

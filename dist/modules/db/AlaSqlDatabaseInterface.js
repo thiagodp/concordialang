@@ -9,6 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.AlaSqlDatabaseInterface = void 0;
 const alasql = require("alasql");
 const AlaSqlTableCreator_1 = require("./AlaSqlTableCreator");
 const SqlHelper_1 = require("./SqlHelper");

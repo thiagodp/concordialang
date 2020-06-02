@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.ShortTimeGenerator = void 0;
 const core_1 = require("@js-joda/core");
 const TypeChecking_1 = require("../../util/TypeChecking");
 const TimeLimits_1 = require("../limits/TimeLimits");

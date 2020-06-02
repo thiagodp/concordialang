@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.QueryParser = void 0;
 const RegexUtil_1 = require("../util/RegexUtil");
 /**
  * @author Thiago Delgado Pinto

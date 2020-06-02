@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.EditableActionTargets = exports.ActionTargets = void 0;
 /**
  * Actions targets
  *

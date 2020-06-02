@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.AfterFeatureParser = void 0;
 const TypeChecking_1 = require("../util/TypeChecking");
 const SyntacticException_1 = require("./SyntacticException");
 /**

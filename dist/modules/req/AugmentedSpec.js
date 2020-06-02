@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.AugmentedSpec = exports.IN_MEMORY_DATABASE_NAME = void 0;
 const path_1 = require("path");
 const CaseType_1 = require("../util/CaseType");
 const ast_1 = require("../ast");

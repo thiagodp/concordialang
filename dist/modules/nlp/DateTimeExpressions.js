@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.extractNumberFromSuffixedMatch = exports.suffixedRegex = exports.extractNumberFromPrefixedMatch = exports.prefixedRegex = exports.extractPrefixedDDE = exports.makeSuffixedDDE = exports.makePrefixedDDE = exports.datePropertyToDate = exports.propertyByMatch = exports.joinExpressions = exports.expressionsOf = void 0;
 const core_1 = require("@js-joda/core");
 const PT = {
     "date": {

@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.ProblemMapper = exports.ProblemInfo = exports.GENERIC_ERROR_KEY = void 0;
 /** Key for generic errors */
 exports.GENERIC_ERROR_KEY = '*';
 class ProblemInfo {

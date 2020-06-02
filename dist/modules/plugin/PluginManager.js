@@ -9,6 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.PluginManager = void 0;
 const inquirer = require("inquirer");
 const path_1 = require("path");
 const run_command_1 = require("../util/run-command");

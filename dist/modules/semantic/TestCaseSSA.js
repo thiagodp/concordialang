@@ -9,6 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.TestCaseSSA = void 0;
 const deepcopy = require("deepcopy");
 const error_1 = require("../error");
 const language_1 = require("../language");

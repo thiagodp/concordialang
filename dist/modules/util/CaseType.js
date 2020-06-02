@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.CaseType = void 0;
 var CaseType;
 (function (CaseType) {
     CaseType["CAMEL"] = "camel";

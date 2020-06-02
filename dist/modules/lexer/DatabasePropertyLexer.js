@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.DatabasePropertyLexer = void 0;
 const NodeTypes_1 = require("../req/NodeTypes");
 const ListItemLexer_1 = require("./ListItemLexer");
 /**

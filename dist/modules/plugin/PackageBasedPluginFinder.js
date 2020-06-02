@@ -9,6 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.PackageBasedPluginFinder = void 0;
 const globalDirs = require("global-dirs");
 const path_1 = require("path");
 const PackageToPluginData_1 = require("./PackageToPluginData");

@@ -9,6 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.LanguageManager = void 0;
 const path_1 = require("path");
 const EnglishKeywordDictionary_1 = require("./EnglishKeywordDictionary");
 /**

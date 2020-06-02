@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.DatabasePropertyAlias = exports.DatabaseProperties = void 0;
 /**
  * Database properties.
  *

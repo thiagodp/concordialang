@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.Random = void 0;
 const seedrandom = require("seedrandom");
 /**
  * Predictable random number generator.

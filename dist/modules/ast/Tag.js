@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.tagsWithAnyOfTheNames = exports.hasTagNamed = exports.ReservedTags = void 0;
 /**
  * Reserved tags.
  *

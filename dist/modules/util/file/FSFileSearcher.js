@@ -9,6 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.FSFileSearcher = void 0;
 const fsWalk = require("@nodelib/fs.walk");
 const path_1 = require("path");
 const util_1 = require("util");

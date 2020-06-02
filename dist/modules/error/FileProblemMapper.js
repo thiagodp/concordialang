@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.FileProblemMapper = void 0;
 const path_transformer_1 = require("../util/file/path-transformer");
 const ProblemMapper_1 = require("./ProblemMapper");
 /**

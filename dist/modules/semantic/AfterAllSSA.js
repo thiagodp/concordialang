@@ -9,6 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.AfterAllSSA = void 0;
 const error_1 = require("../error");
 const SpecificationAnalyzer_1 = require("./SpecificationAnalyzer");
 /**

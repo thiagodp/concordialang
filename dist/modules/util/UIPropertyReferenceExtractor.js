@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.UIPropertyReferenceExtractor = void 0;
 const cloneRegExp = require("clone-regexp");
 const UIPropertyReference_1 = require("../ast/UIPropertyReference");
 const nlp_1 = require("../nlp");
