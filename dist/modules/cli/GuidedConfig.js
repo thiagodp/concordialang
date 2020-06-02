@@ -75,6 +75,7 @@ class ConcordiaQuestions {
             name: 'plugin',
             message: 'Which plug-in do you want to use?',
             choices: [
+                { value: 'codeceptjs-testcafe', short: 'codeceptjs-testcafe', name: 'CodeceptJS with TestCafé (web applications)' },
                 { value: 'codeceptjs-playwright', short: 'codeceptjs-playwright', name: 'CodeceptJS with Playwright (web applications)' },
                 { value: 'codeceptjs-webdriverio', short: 'codeceptjs-webdriverio', name: 'CodeceptJS with WebDriverIO (web applications)' },
                 { value: 'codeceptjs-appium', short: 'codeceptjs-appium', name: 'CodeceptJS with Appium (mobile or desktop applications)' }
