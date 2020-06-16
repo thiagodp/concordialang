@@ -202,6 +202,13 @@ export class UIElementValueGenerator {
             }
         }
 
+        // // LOCALE
+        // const pLocale = propertiesMap.get( UIPropertyTypes.LOCALE ) || null;
+        // if ( isDefined( pLocale ) ) {
+        //     const locale: string | null = this._uiePropExtractor.extractLocale( uie );
+        //     // ...
+        // }
+
         // console.log( '>>>', uieName, cfg, '\nerrors:', errors.map( e => e.message ) );
 
 

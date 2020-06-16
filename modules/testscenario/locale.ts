@@ -143,3 +143,13 @@ export async function formatDateTimeByLocale(
     const timeStr = await formatTimeByLocale( locale, map, dateTime, includeSeconds );
     return dateStr + ' ' + timeStr;
 }
+
+export async function formatUsingLocale(
+    locale: string,
+    map: LocaleMap,
+    nativeDate: Date,
+    localeFormat: string,
+): Promise< string > {
+    const loc = await loadLocale( locale, map );
+    return format( nativeDate, localeFormat, { locale: loc } );
+}

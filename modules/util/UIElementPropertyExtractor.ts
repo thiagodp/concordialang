@@ -118,25 +118,32 @@ export class UIElementPropertyExtractor {
     }
 
     /**
-     * Extracts the value of the property `locale`. If not defined, returns
-     * the document language.
+     * Extracts the value of the property `locale`. If not defined, returns `null`.
      *
      * @param uie UI Element
-     * @param documentLanguage Current document's language
      */
-    extractLocale( uie: UIElement, documentLanguage: string ): string {
-
-        if ( ! uie.items || uie.items.length < 1 ) {
-            return documentLanguage;
-        }
-
+    extractLocale( uie: UIElement ): string | null {
         const nlpEntity = this.extractPropertyValueAsEntity(
             this.extractProperty( uie, UIPropertyTypes.LOCALE )
         );
         if ( ! nlpEntity ) {
-            return documentLanguage;
+            return null;
         }
+        return nlpEntity.value.toString();
+    }
 
+    /**
+     * Extracts the value of the property `locale format`. If not defined, returns `null`.
+     *
+     * @param uie UI Element
+     */
+    extractLocaleFormat( uie: UIElement ): string | null {
+        const nlpEntity = this.extractPropertyValueAsEntity(
+            this.extractProperty( uie, UIPropertyTypes.LOCALE_FORMAT )
+        );
+        if ( ! nlpEntity ) {
+            return null;
+        }
         return nlpEntity.value.toString();
     }
 
@@ -214,7 +221,7 @@ export class UIElementPropertyExtractor {
      * @param property Property
      */
     extractProperty( uie: UIElement, property: string ): UIProperty | null {
-        if ( ! isDefined( uie.items ) ) {
+        if ( ! isDefined( uie.items ) || uie.items.length < 1 ) {
             return null;
         }
         return uie.items.find( item => !! item && property === item.property ) || null;
@@ -248,13 +255,24 @@ export class UIElementPropertyExtractor {
         }
 
         // fallbacks
+
+        // const acceptedValueEntities: string[] = [
+        //     Entities.UI_DATA_TYPE, // e.g., string, integer, ...
+        //     Entities.UI_ELEMENT_TYPE, // e.g. button, textbox, ...
+        //     Entities.BOOL_VALUE, // e.g. true, false, ...
+        //     Entities.VALUE,
+        //     Entities.NUMBER,
+        //     Entities.CONSTANT,
+        //     Entities.VALUE_LIST,
+        //     Entities.QUERY
+        // ];
         const acceptedValueEntities: string[] = [
-            Entities.UI_DATA_TYPE, // e.g., string, integer, ...
-            Entities.UI_ELEMENT_TYPE, // e.g. button, textbox, ...
-            Entities.BOOL_VALUE, // e.g. true, false, ...
             Entities.VALUE,
             Entities.NUMBER,
             Entities.CONSTANT,
+            Entities.BOOL_VALUE, // e.g. true, false, ...
+            Entities.UI_DATA_TYPE, // e.g., string, integer, ...
+            Entities.UI_ELEMENT_TYPE, // e.g. button, textbox, ...
             Entities.VALUE_LIST,
             Entities.QUERY
         ];

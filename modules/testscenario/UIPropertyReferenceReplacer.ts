@@ -84,8 +84,12 @@ export class UIPropertyReferenceReplacer {
 
             const propertyMap = propExtractor.mapFirstPropertyOfEachType( uie );
             const valueType = propExtractor.guessDataType( propertyMap );
-            const uieLocale: string = propExtractor.extractLocale( uie, localeContext.language );
-            const uieLocaleContext = localeContext.clone().withLocale( uieLocale );
+
+            const uieLocale: string = propExtractor.extractLocale( uie ) || localeContext.language;
+            const uieLocaleFormat: string | null = propExtractor.extractLocaleFormat( uie );
+            const uieLocaleContext = localeContext.clone()
+                .withLocale( uieLocale )
+                .withLocaleFormat( uieLocaleFormat );
 
             const formattedValue = await formatValueToUseInASentence(
                 valueType, uieLocaleContext, value, isAlreadyInsideAString );

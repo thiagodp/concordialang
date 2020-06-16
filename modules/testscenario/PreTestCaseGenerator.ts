@@ -752,9 +752,16 @@ export class PreTestCaseGenerator {
 
             const propertyMap = this._uiePropExtractor.mapFirstPropertyOfEachType( uie );
             const valueType = this._uiePropExtractor.guessDataType( propertyMap );
+
+            const uieLocale: string = this._uiePropExtractor.extractLocale( uie ) || localeContext.language;
+            const uieLocaleFormat: string | null = this._uiePropExtractor.extractLocaleFormat( uie );
+            const uieLocaleContext = localeContext.clone()
+                .withLocale( uieLocale )
+                .withLocaleFormat( uieLocaleFormat );
+
             const formattedValue = await formatValueToUseInASentence(
                 valueType,
-                localeContext,
+                uieLocaleContext,
                 value
                 );
 

@@ -3,14 +3,17 @@ import { LocaleMap, fallbackToLanguage } from "./locale";
 export class LocaleContext {
 
     /**
-     * @param language Document's language, such as "en" or "pt".
-     * @param locale Locale to use, such as "en-US" or "pt-BR".
-     * @param localeMap Storage for locale data.
+     * @param language      Document's language, such as "en" or "pt".
+     * @param locale        Locale to use, such as "en-US" or "pt-BR".
+     * @param localeMap     Storage for locale data.
+     * @param localeFormat  Locale format for the current UI Element. Optional.
+     *                      The default is `undefined`.
      */
     constructor(
         public language: string,
         public locale: string,
-        public localeMap: LocaleMap
+        public localeMap: LocaleMap,
+        public localeFormat?: string | null | undefined
     ) {
     }
 
@@ -21,12 +24,18 @@ export class LocaleContext {
         return new LocaleContext(
             this.language,
             this.locale,
-            this.localeMap
+            this.localeMap,
+            this.localeFormat
         );
     }
 
     withLocale( locale: string ): LocaleContext {
         this.locale = locale;
+        return this;
+    }
+
+    withLocaleFormat( localeFormat: string | null ): LocaleContext {
+        this.localeFormat = localeFormat;
         return this;
     }
 

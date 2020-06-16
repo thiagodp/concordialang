@@ -543,7 +543,12 @@ class PreTestCaseGenerator {
                 }
                 const propertyMap = this._uiePropExtractor.mapFirstPropertyOfEachType(uie);
                 const valueType = this._uiePropExtractor.guessDataType(propertyMap);
-                const formattedValue = yield value_formatter_1.formatValueToUseInASentence(valueType, localeContext, value);
+                const uieLocale = this._uiePropExtractor.extractLocale(uie) || localeContext.language;
+                const uieLocaleFormat = this._uiePropExtractor.extractLocaleFormat(uie);
+                const uieLocaleContext = localeContext.clone()
+                    .withLocale(uieLocale)
+                    .withLocaleFormat(uieLocaleFormat);
+                const formattedValue = yield value_formatter_1.formatValueToUseInASentence(valueType, uieLocaleContext, value);
                 // Generate the sentence
                 let sentence = prefix + ' ' + keywordI + ' ' + dataInputActionEntity.string + ' ' +
                     targetType +

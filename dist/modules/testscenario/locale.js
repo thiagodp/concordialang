@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.formatDateTimeByLocale = exports.formatTimeByLocale = exports.formatDateByLocale = exports.fallbackToLanguage = exports.isLocaleAvailable = exports.formatLocale = exports.isLocaleFormatValid = exports.createDefaultLocaleMap = void 0;
+exports.formatUsingLocale = exports.formatDateTimeByLocale = exports.formatTimeByLocale = exports.formatDateByLocale = exports.fallbackToLanguage = exports.isLocaleAvailable = exports.formatLocale = exports.isLocaleFormatValid = exports.createDefaultLocaleMap = void 0;
 const date_fns_1 = require("date-fns");
 const locale_1 = require("date-fns/locale");
 // Pre-loaded locales
@@ -128,3 +128,10 @@ function formatDateTimeByLocale(locale, map, dateTime, includeSeconds) {
     });
 }
 exports.formatDateTimeByLocale = formatDateTimeByLocale;
+function formatUsingLocale(locale, map, nativeDate, localeFormat) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const loc = yield loadLocale(locale, map);
+        return date_fns_1.format(nativeDate, localeFormat, { locale: loc });
+    });
+}
+exports.formatUsingLocale = formatUsingLocale;

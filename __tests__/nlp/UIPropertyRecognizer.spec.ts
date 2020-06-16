@@ -56,31 +56,31 @@ describe( 'UIPropertyRecognizer', () => {
 
         describe( 'recognizes', () => {
 
-            it( 'an id with a value', () => {
+            it( 'id with a value', () => {
                 shouldRecognize( '- id é "foo"', 'id', 'foo' );
             } );
 
-            it( 'a max length with a value', () => {
+            it( 'max length with a value', () => {
                 shouldRecognize( '- comprimento máximo é 8', 'maxlength', 8 );
             } );
 
-            it( 'a min length with a value', () => {
+            it( 'min length with a value', () => {
                 shouldRecognize( '- comprimento mínimo é 1', 'minlength', 1 );
             } );
 
-            it( 'a max value with a value', () => {
+            it( 'max value with a value', () => {
                 shouldRecognize( '- valor máximo é 7.33', 'maxvalue', 7.33 );
             } );
 
-            it( 'a min value with a value', () => {
+            it( 'min value with a value', () => {
                 shouldRecognize( '- valor mínimo é -15.22', 'minvalue', -15.22 );
             } );
 
-            it( 'a value with a query', () => {
+            it( 'value with a query', () => {
                 shouldRecognize( '- valor está em "SELECT * FROM someTable"', 'value', 'SELECT * FROM someTable' );
             } );
 
-            describe( 'a required property', () => {
+            describe( 'required', () => {
 
                 it( 'with true', () => {
                     shouldRecognize( '- obrigatório é true', 'required', true );
@@ -104,7 +104,7 @@ describe( 'UIPropertyRecognizer', () => {
 
             } );
 
-            describe( 'an editable property', () => {
+            describe( 'editable', () => {
 
                 it( 'with true', () => {
                     shouldRecognize( '- editável é true', 'editable', true );

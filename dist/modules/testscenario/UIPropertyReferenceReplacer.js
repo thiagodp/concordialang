@@ -78,8 +78,11 @@ class UIPropertyReferenceReplacer {
                 }
                 const propertyMap = propExtractor.mapFirstPropertyOfEachType(uie);
                 const valueType = propExtractor.guessDataType(propertyMap);
-                const uieLocale = propExtractor.extractLocale(uie, localeContext.language);
-                const uieLocaleContext = localeContext.clone().withLocale(uieLocale);
+                const uieLocale = propExtractor.extractLocale(uie) || localeContext.language;
+                const uieLocaleFormat = propExtractor.extractLocaleFormat(uie);
+                const uieLocaleContext = localeContext.clone()
+                    .withLocale(uieLocale)
+                    .withLocaleFormat(uieLocaleFormat);
                 const formattedValue = yield value_formatter_1.formatValueToUseInASentence(valueType, uieLocaleContext, value, isAlreadyInsideAString);
                 const refStr = Symbols_1.Symbols.UI_ELEMENT_PREFIX + uipRef.content + Symbols_1.Symbols.UI_ELEMENT_SUFFIX;
                 newContent = newContent.replace(refStr, formattedValue);

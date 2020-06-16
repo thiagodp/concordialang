@@ -262,8 +262,8 @@
                 "maxvalue": [ "valor máximo" ],
                 "format": [ "formato" ],
                 "required": [ "obrigatório", "requerido", "required" ],
-                "locale": [ "localidade", "locale" ],
-                "localeFormat": [ "formato de localidade", "formato da localidade", "locale format" ]
+                "locale": [ "localidade", "local", "locale" ],
+                "localeFormat": [ "formato local", "formato de localidade", "formato de local", "formato da localidade", "formato do local", "locale format" ]
             },
 
             "ui_connector": {

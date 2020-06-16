@@ -102,19 +102,26 @@ class UIElementPropertyExtractor {
         return ValueTypeDetector_1.ValueType.STRING;
     }
     /**
-     * Extracts the value of the property `locale`. If not defined, returns
-     * the document language.
+     * Extracts the value of the property `locale`. If not defined, returns `null`.
      *
      * @param uie UI Element
-     * @param documentLanguage Current document's language
      */
-    extractLocale(uie, documentLanguage) {
-        if (!uie.items || uie.items.length < 1) {
-            return documentLanguage;
-        }
+    extractLocale(uie) {
         const nlpEntity = this.extractPropertyValueAsEntity(this.extractProperty(uie, ast_1.UIPropertyTypes.LOCALE));
         if (!nlpEntity) {
-            return documentLanguage;
+            return null;
+        }
+        return nlpEntity.value.toString();
+    }
+    /**
+     * Extracts the value of the property `locale format`. If not defined, returns `null`.
+     *
+     * @param uie UI Element
+     */
+    extractLocaleFormat(uie) {
+        const nlpEntity = this.extractPropertyValueAsEntity(this.extractProperty(uie, ast_1.UIPropertyTypes.LOCALE_FORMAT));
+        if (!nlpEntity) {
+            return null;
         }
         return nlpEntity.value.toString();
     }
@@ -173,7 +180,7 @@ class UIElementPropertyExtractor {
      * @param property Property
      */
     extractProperty(uie, property) {
-        if (!TypeChecking_1.isDefined(uie.items)) {
+        if (!TypeChecking_1.isDefined(uie.items) || uie.items.length < 1) {
             return null;
         }
         return uie.items.find(item => !!item && property === item.property) || null;
@@ -202,13 +209,23 @@ class UIElementPropertyExtractor {
             return null;
         }
         // fallbacks
+        // const acceptedValueEntities: string[] = [
+        //     Entities.UI_DATA_TYPE, // e.g., string, integer, ...
+        //     Entities.UI_ELEMENT_TYPE, // e.g. button, textbox, ...
+        //     Entities.BOOL_VALUE, // e.g. true, false, ...
+        //     Entities.VALUE,
+        //     Entities.NUMBER,
+        //     Entities.CONSTANT,
+        //     Entities.VALUE_LIST,
+        //     Entities.QUERY
+        // ];
         const acceptedValueEntities = [
-            nlp_1.Entities.UI_DATA_TYPE,
-            nlp_1.Entities.UI_ELEMENT_TYPE,
-            nlp_1.Entities.BOOL_VALUE,
             nlp_1.Entities.VALUE,
             nlp_1.Entities.NUMBER,
             nlp_1.Entities.CONSTANT,
+            nlp_1.Entities.BOOL_VALUE,
+            nlp_1.Entities.UI_DATA_TYPE,
+            nlp_1.Entities.UI_ELEMENT_TYPE,
             nlp_1.Entities.VALUE_LIST,
             nlp_1.Entities.QUERY
         ];
