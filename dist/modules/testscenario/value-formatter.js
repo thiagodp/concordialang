@@ -9,7 +9,6 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.formatValueToUseInASentence = void 0;
 const core_1 = require("@js-joda/core");
 const Symbols_1 = require("../req/Symbols");
 const ValueTypeDetector_1 = require("../util/ValueTypeDetector");

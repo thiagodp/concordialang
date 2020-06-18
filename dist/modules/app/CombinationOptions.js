@@ -1,6 +1,5 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.InvalidSpecialOptions = exports.CombinationOptions = exports.VariantSelectionOptions = void 0;
 /**
  * Reduces the Variants that produce a certain State required by a Precondition
  * or by a State Call. The scenarios of these Variants will be combined with

@@ -1,6 +1,5 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.TableRowParser = void 0;
 const SyntacticException_1 = require("./SyntacticException");
 /**
  * TableRow parser.

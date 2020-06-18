@@ -9,7 +9,6 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.main = void 0;
 const cosmiconfig_1 = require("cosmiconfig");
 const fs = require("fs");
 const meow = require("meow");
@@ -18,6 +17,8 @@ const semverDiff = require("semver-diff");
 const updateNotifier = require("update-notifier");
 const util_1 = require("util");
 const app_1 = require("../app");
+const database_package_manager_1 = require("../db/database-package-manager");
+const file_1 = require("../util/file");
 const package_installation_1 = require("../util/package-installation");
 const run_command_1 = require("../util/run-command");
 const CliHelp_1 = require("./CliHelp");
@@ -63,7 +64,45 @@ function main(appPath, processPath) {
             ui.showVersion();
             return true;
         }
-        // Load config file options
+        // DATABASE
+        if (options.dbInstall) {
+            const databases = options.dbInstall.split(',').map(d => d.trim());
+            ui.announceDatabasePackagesInstallationStarted(1 === databases.length);
+            let code = 1;
+            try {
+                code = yield database_package_manager_1.installDatabases(databases);
+            }
+            catch (_b) {
+            }
+            ui.announceDatabasePackagesInstallationFinished(code);
+            return 0 === code;
+        }
+        if (options.dbUninstall) {
+            const databases = options.dbUninstall.split(',').map(d => d.trim());
+            ui.announceDatabasePackagesUninstallationStarted(1 === databases.length);
+            let code = 1;
+            try {
+                code = yield database_package_manager_1.uninstallDatabases(databases);
+            }
+            catch (_c) {
+            }
+            ui.announceDatabasePackagesUninstallationFinished(code);
+            return 0 === code;
+        }
+        if (options.dbList) {
+            let databases = [];
+            try {
+                const nodeModulesDir = path.join(processPath, 'node_modules');
+                databases = yield database_package_manager_1.allInstalledDatabases(nodeModulesDir, new file_1.FSDirSearcher(fs));
+                ui.drawDatabases(databases);
+                return true;
+            }
+            catch (err) {
+                ui.showError(err);
+                return false;
+            }
+        }
+        // LOAD CONFIG FILE OPTIONS
         let fileOptions = null;
         try {
             const startTime = Date.now();

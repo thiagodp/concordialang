@@ -7,6 +7,8 @@ import * as updateNotifier from 'update-notifier';
 import { promisify } from 'util';
 
 import { App, Options } from '../app';
+import { allInstalledDatabases, installDatabases, uninstallDatabases } from '../db/database-package-manager';
+import { FSDirSearcher } from '../util/file';
 import { makePackageInstallCommand } from '../util/package-installation';
 import { runCommand } from '../util/run-command';
 import { CliHelp } from './CliHelp';
@@ -58,9 +60,52 @@ export async function main( appPath: string, processPath: string ): Promise< boo
     if ( options.version ) {
         ui.showVersion();
         return true;
-    }
+	}
 
-    // Load config file options
+	// DATABASE
+
+	if ( options.dbInstall ) {
+		const databases = options.dbInstall.split( ',' ).map( d => d.trim() );
+		ui.announceDatabasePackagesInstallationStarted( 1 === databases.length );
+		let code = 1;
+		try {
+			code = await installDatabases( databases );
+		} catch {
+		}
+		ui.announceDatabasePackagesInstallationFinished( code );
+		return 0 === code;
+	}
+
+	if ( options.dbUninstall ) {
+		const databases = options.dbUninstall.split( ',' ).map( d => d.trim() );
+		ui.announceDatabasePackagesUninstallationStarted( 1 === databases.length );
+		let code = 1;
+		try {
+			code = await uninstallDatabases( databases );
+		} catch {
+		}
+		ui.announceDatabasePackagesUninstallationFinished( code );
+		return 0 === code;
+	}
+
+	if ( options.dbList ) {
+		let databases = [];
+		try {
+			const nodeModulesDir = path.join( processPath, 'node_modules' );
+			databases = await allInstalledDatabases(
+				nodeModulesDir,
+				new FSDirSearcher( fs )
+			);
+			ui.drawDatabases( databases );
+			return true;
+		} catch ( err ) {
+			ui.showError( err );
+			return false;
+		}
+	}
+
+	// LOAD CONFIG FILE OPTIONS
+
     let fileOptions = null;
     try {
         const startTime = Date.now();
@@ -125,7 +170,7 @@ export async function main( appPath: string, processPath: string ): Promise< boo
 
     if ( options.init && ! options.pluginInstall ) {
         return true;
-    }
+	}
 
     // Check for updates
 

@@ -1,6 +1,5 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.valueOrNull = exports.isDefined = exports.isNumber = exports.isString = void 0;
 function isString(val) {
     return typeof val === 'string'
         || ((isDefined(val) && 'object' === typeof val) && '[object String]' === Object.prototype.toString.call(val));

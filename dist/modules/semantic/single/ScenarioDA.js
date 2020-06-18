@@ -1,6 +1,5 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.ScenarioDA = void 0;
 const SemanticException_1 = require("../../error/SemanticException");
 const DuplicationChecker_1 = require("../DuplicationChecker");
 /**

@@ -1,6 +1,5 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.DuplicationChecker = void 0;
 // TO-DO: remove the following dependencies:
 const colors = require("chalk");
 const logSymbols = require("log-symbols");

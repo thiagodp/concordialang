@@ -9,7 +9,6 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.UIPropertyReferenceReplacer = void 0;
 const path_1 = require("path");
 const ast_1 = require("../ast");
 const RuntimeException_1 = require("../error/RuntimeException");

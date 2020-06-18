@@ -1,6 +1,5 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.StepUtil = void 0;
 const arrayMove = require("array-move");
 const deepcopy = require("deepcopy");
 const CaseType_1 = require("../util/CaseType");

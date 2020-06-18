@@ -1,6 +1,5 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.ConnectionCheckResult = void 0;
 /**
  * Connection check result.
  *

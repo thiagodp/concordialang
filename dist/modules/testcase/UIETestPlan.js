@@ -1,6 +1,5 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.UIETestPlan = void 0;
 const DataTestCaseAnalyzer_1 = require("../testdata/DataTestCaseAnalyzer");
 class UIETestPlan {
     constructor(dtc, result, otherwiseSteps) {

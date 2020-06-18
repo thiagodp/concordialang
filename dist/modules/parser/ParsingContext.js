@@ -1,6 +1,5 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.ParsingContext = void 0;
 /**
  * Parsing context.
  *

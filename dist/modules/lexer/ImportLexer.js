@@ -1,6 +1,5 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.ImportLexer = void 0;
 const isValidPath = require("is-valid-path");
 const NodeTypes_1 = require("../req/NodeTypes");
 const QuotedNodeLexer_1 = require("./QuotedNodeLexer");

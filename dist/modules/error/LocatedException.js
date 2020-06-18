@@ -1,6 +1,5 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.LocatedException = void 0;
 /**
  * Provides an exception that contains information about its location.
  *

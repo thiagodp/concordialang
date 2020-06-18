@@ -239,8 +239,17 @@ export class SimpleUI implements UI {
     // Database
 
     /** @inheritdoc */
-    announceDatabasePackagesInstallationStarted(): void {
-        this.info( this.colorCyanBright( 'Installing database drivers...' ) );
+    announceDatabasePackagesInstallationStarted( singular: boolean = false ): void {
+        this.info( this.colorCyanBright(
+			'Installing database driver' + ( singular ? '' : 's' ) + '...'
+		) );
+        this.drawSeparationLine();
+	}
+
+    announceDatabasePackagesUninstallationStarted( singular: boolean = false ): void {
+        this.info( this.colorCyanBright(
+			'Uninstalling database driver' + ( singular ? '' : 's' ) + '...'
+		) );
         this.drawSeparationLine();
     }
 
@@ -257,7 +266,27 @@ export class SimpleUI implements UI {
         } else {
             this.warn( this.colorCyanBright( 'A problem occurred during installation.' ) );
         }
-    }
+	}
+
+    /** @inheritdoc */
+    announceDatabasePackagesUninstallationFinished( code: number ): void {
+        this.drawSeparationLine();
+        if ( 0 == code ) {
+            this.info( this.colorCyanBright( 'Uninstallation successful.' ) );
+        } else {
+            this.warn( this.colorCyanBright( 'A problem occurred during uninstallation.' ) );
+        }
+	}
+
+	drawDatabases( databases: string[] ): void {
+		if ( ! databases || databases.length < 1 ) {
+			this.info( 'No database drivers installed.' );
+			return;
+		}
+		const dbs: string[] = databases.map( d => this.highlight( d ) );
+		this.info( 'Installed database drivers:', dbs.join( ', ' ) );
+	}
+
 
     /** @inheritdoc */
     showErrorSavingAbstractSyntaxTree( astFile: string, errorMessage: string ): void {

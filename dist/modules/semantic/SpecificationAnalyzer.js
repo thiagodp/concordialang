@@ -1,6 +1,5 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.SpecificationAnalyzer = void 0;
 const DuplicationChecker_1 = require("./DuplicationChecker");
 /**
  * Specification semantic analyzer.

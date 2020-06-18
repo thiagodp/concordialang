@@ -1,6 +1,5 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.RandomLong = void 0;
 const LongLimits_1 = require("../limits/LongLimits");
 /**
  * Generates random long integer values.

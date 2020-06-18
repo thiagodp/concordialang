@@ -1,6 +1,5 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.upperFirst = exports.convertCase = void 0;
 const case_1 = require("case");
 const CaseType_1 = require("./CaseType");
 function convertCase(text, type) {

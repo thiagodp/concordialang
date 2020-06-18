@@ -1,6 +1,5 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.TagUtil = void 0;
 /**
  * Tag utilities
  *

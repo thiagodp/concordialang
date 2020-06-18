@@ -1,6 +1,5 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.TestCaseParser = void 0;
 const SyntacticException_1 = require("./SyntacticException");
 const TagCollector_1 = require("./TagCollector");
 /**

@@ -1,6 +1,5 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.SimpleUI = exports.pluralS = void 0;
 const colors = require("chalk");
 const figures = require("figures");
 const logSymbols = require("log-symbols");
@@ -185,8 +184,12 @@ class SimpleUI {
     }
     // Database
     /** @inheritdoc */
-    announceDatabasePackagesInstallationStarted() {
-        this.info(this.colorCyanBright('Installing database drivers...'));
+    announceDatabasePackagesInstallationStarted(singular = false) {
+        this.info(this.colorCyanBright('Installing database driver' + (singular ? '' : 's') + '...'));
+        this.drawSeparationLine();
+    }
+    announceDatabasePackagesUninstallationStarted(singular = false) {
+        this.info(this.colorCyanBright('Uninstalling database driver' + (singular ? '' : 's') + '...'));
         this.drawSeparationLine();
     }
     /** @inheritdoc */
@@ -202,6 +205,24 @@ class SimpleUI {
         else {
             this.warn(this.colorCyanBright('A problem occurred during installation.'));
         }
+    }
+    /** @inheritdoc */
+    announceDatabasePackagesUninstallationFinished(code) {
+        this.drawSeparationLine();
+        if (0 == code) {
+            this.info(this.colorCyanBright('Uninstallation successful.'));
+        }
+        else {
+            this.warn(this.colorCyanBright('A problem occurred during uninstallation.'));
+        }
+    }
+    drawDatabases(databases) {
+        if (!databases || databases.length < 1) {
+            this.info('No database drivers installed.');
+            return;
+        }
+        const dbs = databases.map(d => this.highlight(d));
+        this.info('Installed database drivers:', dbs.join(', '));
     }
     /** @inheritdoc */
     showErrorSavingAbstractSyntaxTree(astFile, errorMessage) {

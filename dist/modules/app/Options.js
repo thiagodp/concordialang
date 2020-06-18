@@ -1,6 +1,5 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Options = void 0;
 const enumUtil = require("enum-util");
 const path_1 = require("path");
 const TypeChecking_1 = require("../util/TypeChecking");
@@ -36,6 +35,10 @@ class Options {
             'pluginInstall',
             'pluginUninstall',
             'pluginServe',
+            // Database
+            `dbList`,
+            'dbInstall',
+            'dbUninstall',
             // Processing
             'init',
             'saveConfig',
@@ -109,6 +112,9 @@ class Options {
         this.target = null;
         /** Headless test script execution. Browsers only. Some plug-ins may not support it. */
         this.headless = null;
+        // DATABASE
+        /** Show available databases */
+        this.dbList = false;
         // PROCESSING
         /** Whether it is wanted to execute a guided configuration */
         this.init = false;
@@ -432,6 +438,14 @@ class Options {
         }
         else if (isStringNotEmpty(obj.targets)) { // alternative
             this.target = obj.targets;
+        }
+        // DATABASE
+        this.dbList = TypeChecking_1.isDefined(obj.dbList);
+        if (isStringNotEmpty(obj.dbInstall)) {
+            this.dbInstall = obj.dbInstall.trim().toLowerCase();
+        }
+        else if (isStringNotEmpty(obj.dbUninstall)) {
+            this.dbUninstall = obj.dbUninstall.trim().toLowerCase();
         }
         // PROCESSING
         if (TypeChecking_1.isDefined(obj.init)) {

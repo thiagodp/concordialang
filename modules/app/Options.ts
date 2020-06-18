@@ -36,7 +36,12 @@ export class Options {
         'pluginAbout',
         'pluginInstall',
         'pluginUninstall',
-        'pluginServe',
+		'pluginServe',
+
+		// Database
+		`dbList`,
+        'dbInstall',
+		'dbUninstall',
 
         // Processing
         'init',
@@ -126,7 +131,18 @@ export class Options {
     /** Headless test script execution. Browsers only. Some plug-ins may not support it. */
     public headless?: boolean = null;
     /** Parallel instances to run. Some plug-ins may not support it. */
-    public instances?: number;
+	public instances?: number;
+
+
+	// DATABASE
+
+	/** Show available databases */
+	public dbList: boolean = false;
+    /** Install a database */
+    public dbInstall: string;
+    /** Uninstall a database */
+    public dbUninstall: string;
+
 
     // PROCESSING
 
@@ -522,6 +538,16 @@ export class Options {
             this.target = obj.target;
         } else if ( isStringNotEmpty( obj.targets ) ) { // alternative
             this.target = obj.targets;
+		}
+
+		// DATABASE
+
+		this.dbList = isDefined( obj.dbList );
+
+		if ( isStringNotEmpty( obj.dbInstall ) ) {
+            this.dbInstall = obj.dbInstall.trim().toLowerCase();
+        } else if ( isStringNotEmpty( obj.dbUninstall ) ) {
+            this.dbUninstall = obj.dbUninstall.trim().toLowerCase();
         }
 
         // PROCESSING

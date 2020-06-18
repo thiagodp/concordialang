@@ -1,6 +1,5 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.QueryReferenceReplacer = void 0;
 const sqlstring_1 = require("sqlstring");
 const QueryParser_1 = require("../db/QueryParser");
 /**

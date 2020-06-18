@@ -1,6 +1,5 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.RegexUtil = void 0;
 /**
  * Regex utilities.
  *

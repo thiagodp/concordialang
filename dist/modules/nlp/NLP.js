@@ -1,6 +1,5 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.NLP = void 0;
 const Bravey = require("../../lib/bravey"); // .js file
 const core_1 = require("@js-joda/core");
 const nlp_1 = require("../nlp");

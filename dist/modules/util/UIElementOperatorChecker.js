@@ -1,6 +1,5 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.UIElementOperatorChecker = void 0;
 const nlp_1 = require("../nlp");
 const UIElementOperator_1 = require("./UIElementOperator");
 /**

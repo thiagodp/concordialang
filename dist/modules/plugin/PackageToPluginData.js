@@ -1,6 +1,5 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.PackageToPluginData = void 0;
 /**
  * Converts data from a NPM package file into Concordia Plugin Data.
  *

@@ -1,6 +1,5 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.EnglishKeywordDictionary = void 0;
 /**
  * English keyword dictionary as the base dictionary.
  *

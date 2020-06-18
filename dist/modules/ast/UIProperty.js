@@ -1,6 +1,5 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.EntityValue = exports.UIElementInfo = void 0;
 /**
  * Additional information about an UI element.
  *

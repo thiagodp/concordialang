@@ -1,6 +1,5 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.VerboseUI = void 0;
 const path_1 = require("path");
 const terminalLink = require("terminal-link");
 const SimpleUI_1 = require("./SimpleUI");

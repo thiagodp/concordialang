@@ -73,6 +73,12 @@ ${colors.gray('Plug-in')}
                                         Some plug-ins may not support it.
 --instances                             Number of parallel instances to execute.
 
+${colors.gray('Database support')}
+
+--db-list                               List installed databases drivers.
+--db-install <"db1,db2,...">            Install one or more database drivers.
+--db-uninstall <"db1,db2,...">          Uninstall one or more database drivers.
+
 ${colors.gray('Configuration')}
 
 --init                                  Init a guided, basic configuration.
@@ -232,7 +238,13 @@ ${colors.yellowBright('Examples')}
 
                 target: { type: 'string', alias: 't' },
                 headless: { type: 'boolean', alias: 'hl' },
-                instances: { type: 'integer' },
+				instances: { type: 'integer' },
+
+				// DATABASE
+
+				dbInstall: { type: 'string' },
+                dbUninstall: { type: 'string' },
+                dbList: { type: 'boolean' },
 
                 // PROCESSING AND OUTPUT
 

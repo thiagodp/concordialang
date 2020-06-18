@@ -1,6 +1,5 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.TagCollector = void 0;
 const NodeTypes_1 = require("../req/NodeTypes");
 /**
  * Tag collector

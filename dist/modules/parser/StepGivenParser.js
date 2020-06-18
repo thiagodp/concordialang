@@ -1,6 +1,5 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.StepGivenParser = void 0;
 const NodeTypes_1 = require("../req/NodeTypes");
 const SyntacticException_1 = require("./SyntacticException");
 /**

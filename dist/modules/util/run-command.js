@@ -9,7 +9,6 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.runInBatch = exports.runCommand = void 0;
 const childProcess = require("child_process");
 /**
  * Run a command in the terminal/console. Returns the exit code.
@@ -34,6 +33,7 @@ function runCommand(command) {
         cmds.shift();
         return new Promise((resolve, reject) => {
             const child = childProcess.spawn(runCMD, cmds, options);
+            child.stdout.setEncoding('utf8');
             child.stdout.on('data', (chunk) => {
                 console.log(chunk.toString());
             });

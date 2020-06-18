@@ -1,6 +1,5 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.UI_ACTION_SYNTAX_RULES = exports.DEFAULT_UI_ACTION_SYNTAX_RULE = void 0;
 const Actions_1 = require("../../util/Actions");
 const Entities_1 = require("../Entities");
 const UI_ACTION_RULE = {

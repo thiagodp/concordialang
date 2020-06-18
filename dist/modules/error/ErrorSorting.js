@@ -1,6 +1,5 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.sortErrorsByLocation = void 0;
 function sortErrorsByLocation(errors) {
     const compare = (a, b) => {
         if (a.location && b.location) {

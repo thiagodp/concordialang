@@ -1,6 +1,5 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.RandomString = void 0;
 const better_randstr_1 = require("better-randstr");
 const TypeChecking_1 = require("../../util/TypeChecking");
 const escape_1 = require("../util/escape");

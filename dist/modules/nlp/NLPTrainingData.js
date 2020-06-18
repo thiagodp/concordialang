@@ -1,6 +1,5 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.NLPTrainingIntentExample = exports.NLPTrainingMatch = exports.NLPTrainingEntity = exports.NLPTrainingIntent = exports.NLPTrainingData = exports.NLP_PRIORITIES = void 0;
 exports.NLP_PRIORITIES = {
     "testcase": {
         "ui_action_modifier": 2,

@@ -1,7 +1,13 @@
 
 export type DirSearchOptions = {
-    directory: string,
-    recursive: boolean,
+	/** Base directory to search */
+	directory: string,
+	/** Recursive search */
+	recursive: boolean,
+	/**
+	 * Regex to compare. If it evaluates to `true` the directory is included
+	 * in the results.
+	 */
     regexp: RegExp,
 };
 

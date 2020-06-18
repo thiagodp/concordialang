@@ -1,6 +1,5 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Parser = void 0;
 const NodeTypes_1 = require("../req/NodeTypes");
 const AfterAllParser_1 = require("./AfterAllParser");
 const AfterEachScenarioParser_1 = require("./AfterEachScenarioParser");

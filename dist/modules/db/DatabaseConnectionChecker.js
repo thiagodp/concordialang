@@ -9,7 +9,6 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.DatabaseConnectionChecker = void 0;
 const dbi_1 = require("../dbi");
 const error_1 = require("../error");
 const DatabaseJSDatabaseInterface_1 = require("./DatabaseJSDatabaseInterface");

@@ -1,6 +1,5 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.RuntimeException = void 0;
 const LocatedException_1 = require("./LocatedException");
 /**
  * Runtime exception

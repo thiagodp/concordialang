@@ -1,6 +1,5 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Defaults = void 0;
 const CaseType_1 = require("../util/CaseType");
 const CombinationOptions_1 = require("./CombinationOptions");
 /**

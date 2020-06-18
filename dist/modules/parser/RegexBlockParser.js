@@ -1,6 +1,5 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.RegexBlockParser = void 0;
 const SyntacticException_1 = require("./SyntacticException");
 /**
  * Regex block parser

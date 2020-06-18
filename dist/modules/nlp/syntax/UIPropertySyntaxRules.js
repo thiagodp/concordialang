@@ -1,6 +1,5 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.UI_PROPERTY_SYNTAX_RULES = exports.DEFAULT_UI_PROPERTY_SYNTAX_RULE = void 0;
 const ast_1 = require("../../ast");
 const Entities_1 = require("../Entities");
 const UIP_RULES = {

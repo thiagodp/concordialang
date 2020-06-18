@@ -1,6 +1,5 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.TagSubLexer = exports.TagLexer = void 0;
 const XRegExp = require('xregexp');
 const NodeTypes_1 = require("../req/NodeTypes");
 const Symbols_1 = require("../req/Symbols");

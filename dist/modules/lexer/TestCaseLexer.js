@@ -1,6 +1,5 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.TestCaseLexer = void 0;
 const NodeTypes_1 = require("../req/NodeTypes");
 const NamedNodeLexer_1 = require("./NamedNodeLexer");
 /**

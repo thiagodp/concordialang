@@ -1,6 +1,5 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.DatabaseToAbstractDatabase = void 0;
 const path_1 = require("path");
 const Database_1 = require("../ast/Database");
 const DatabaseTypes_1 = require("./DatabaseTypes");

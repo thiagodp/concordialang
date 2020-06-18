@@ -9,7 +9,6 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.DatabaseSSA = void 0;
 const DatabaseConnectionChecker_1 = require("../db/DatabaseConnectionChecker");
 const SpecificationAnalyzer_1 = require("./SpecificationAnalyzer");
 /**

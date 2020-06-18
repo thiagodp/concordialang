@@ -1,6 +1,5 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.TestCaseDocumentGenerator = void 0;
 const deepcopy = require("deepcopy");
 const path_1 = require("path");
 const NodeTypes_1 = require("../req/NodeTypes");

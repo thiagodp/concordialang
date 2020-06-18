@@ -1,6 +1,5 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.BASE_TRAINING_EXAMPLES = void 0;
 exports.BASE_TRAINING_EXAMPLES = [
     {
         "intent": "testcase",

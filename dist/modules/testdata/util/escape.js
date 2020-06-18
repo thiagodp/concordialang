@@ -1,6 +1,5 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.escapeJson = exports.countMatches = exports.escapeString = exports.escapeChar = void 0;
 //
 // Inspired in https://stackoverflow.com/questions/7744912/making-a-javascript-string-sql-friendly/7760578#7760578
 //

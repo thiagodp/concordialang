@@ -4,5 +4,5 @@ export function makePackageInstallCommand( pkgName: string ) {
 }
 
 export function makePackageUninstallCommand( pkgName: string ) {
-    return 'npm uninstall --save-dev ' + pkgName + ' --color=always';
+    return 'npm uninstall --save-dev ' + pkgName + ' --no-fund --no-audit --color=always';
 }

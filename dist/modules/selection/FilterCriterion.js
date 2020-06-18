@@ -1,6 +1,5 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.FilterCriterion = void 0;
 /**
  * Filter criterion
  *

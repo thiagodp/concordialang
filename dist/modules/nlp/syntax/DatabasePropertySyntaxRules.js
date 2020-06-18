@@ -1,6 +1,5 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.DATABASE_PROPERTY_SYNTAX_RULES = exports.DEFAULT_DATABASE_PROPERTY_SYNTAX_RULE = void 0;
 const ast_1 = require("../../ast");
 const Entities_1 = require("../Entities");
 const DB_RULES = {

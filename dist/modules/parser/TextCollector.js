@@ -1,6 +1,5 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.TextCollector = void 0;
 const NodeTypes_1 = require("../req/NodeTypes");
 /**
  * Text collector

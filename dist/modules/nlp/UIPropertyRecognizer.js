@@ -1,6 +1,5 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.UIPropertyRecognizer = void 0;
 const core_1 = require("@js-joda/core");
 const ast_1 = require("../ast");
 const UIPropertyTypes_1 = require("../ast/UIPropertyTypes");

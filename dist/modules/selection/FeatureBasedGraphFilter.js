@@ -1,6 +1,5 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.FeatureBasedGraphFilter = void 0;
 const TypeChecking_1 = require("../util/TypeChecking");
 /**
  * Feature-based graph filter.

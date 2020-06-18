@@ -1,6 +1,5 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.GivenWhenThenSentenceRecognizer = void 0;
 const _1 = require(".");
 const SyntaxRuleBuilder_1 = require("./syntax/SyntaxRuleBuilder");
 const UIActionSyntaxRules_1 = require("./syntax/UIActionSyntaxRules");

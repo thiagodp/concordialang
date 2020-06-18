@@ -9,7 +9,6 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.CompilerFacade = exports.extractFilesToCompile = void 0;
 const core_1 = require("@js-joda/core");
 const crypto_1 = require("crypto");
 const error_1 = require("../error");

@@ -26,7 +26,9 @@ export async function runCommand( command: string ): Promise< number > {
 
     return new Promise< any >( ( resolve, reject ) => {
 
-        const child = childProcess.spawn( runCMD, cmds, options );
+		const child = childProcess.spawn( runCMD, cmds, options );
+
+		child.stdout.setEncoding( 'utf8' );
 
         child.stdout.on( 'data', ( chunk ) => {
             console.log( chunk.toString() );
