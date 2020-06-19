@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.ImportBasedGraphBuilder = void 0;
 const file_1 = require("../util/file");
 //const Graph = require( 'graph.js/dist/graph.full.js' );
 const Graph = require("graph.js/dist/graph.full.js");

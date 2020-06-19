@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.VariantStateDetector = void 0;
 const ast_1 = require("../ast");
 const nlp_1 = require("../nlp");
 const NodeTypes_1 = require("../req/NodeTypes");

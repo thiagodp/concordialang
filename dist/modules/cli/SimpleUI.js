@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.SimpleUI = exports.pluralS = void 0;
 const colors = require("chalk");
 const figures = require("figures");
 const logSymbols = require("log-symbols");

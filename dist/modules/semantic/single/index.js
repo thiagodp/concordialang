@@ -1,11 +1,19 @@
 "use strict";
-function __export(m) {
-    for (var p in m) if (!exports.hasOwnProperty(p)) exports[p] = m[p];
-}
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __exportStar = (this && this.__exportStar) || function(m, exports) {
+    for (var p in m) if (p !== "default" && !exports.hasOwnProperty(p)) __createBinding(exports, m, p);
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-__export(require("./BatchDocumentAnalyzer"));
-__export(require("./DatabaseDA"));
-__export(require("./ImportDA"));
-__export(require("./ScenarioDA"));
-__export(require("./UIElementDA"));
-__export(require("./VariantGivenStepDA"));
+__exportStar(require("./BatchDocumentAnalyzer"), exports);
+__exportStar(require("./DatabaseDA"), exports);
+__exportStar(require("./DocumentAnalyzer"), exports);
+__exportStar(require("./ImportDA"), exports);
+__exportStar(require("./ScenarioDA"), exports);
+__exportStar(require("./UIElementDA"), exports);
+__exportStar(require("./VariantGivenStepDA"), exports);

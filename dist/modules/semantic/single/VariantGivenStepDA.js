@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.VariantGivenStepDA = void 0;
 const SemanticException_1 = require("../../error/SemanticException");
 const nlp_1 = require("../../nlp");
 const NodeTypes_1 = require("../../req/NodeTypes");

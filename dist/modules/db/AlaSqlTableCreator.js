@@ -9,6 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.AlaSqlTableCreator = void 0;
 const alasql = require("alasql");
 const error_1 = require("../error");
 const util_1 = require("../util");

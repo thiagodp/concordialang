@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.CliHelp = void 0;
 const colors = require("chalk");
 class CliHelp {
     content() {

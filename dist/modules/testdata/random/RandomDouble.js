@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.RandomDouble = void 0;
 const DoubleLimits_1 = require("../limits/DoubleLimits");
 /**
  * Generates random double values.

@@ -9,6 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.DataGenerator = exports.DataGenConfig = void 0;
 const deepcopy = require("deepcopy");
 const TypeChecking_1 = require("../util/TypeChecking");
 const ValueTypeDetector_1 = require("../util/ValueTypeDetector");

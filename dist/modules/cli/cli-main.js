@@ -9,6 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.main = void 0;
 const cosmiconfig_1 = require("cosmiconfig");
 const fs = require("fs");
 const meow = require("meow");

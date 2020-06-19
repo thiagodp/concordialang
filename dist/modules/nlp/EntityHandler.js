@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.EntityHandler = void 0;
 /**
  * Entity handler
  *

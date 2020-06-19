@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.SyntaxRuleBuilder = void 0;
 /**
  * Rule Builder.
  *

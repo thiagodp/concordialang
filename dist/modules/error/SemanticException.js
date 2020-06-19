@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.SemanticException = void 0;
 const RuntimeException_1 = require("./RuntimeException");
 /**
  * Semantic exception.

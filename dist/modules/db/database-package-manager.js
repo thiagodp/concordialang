@@ -9,6 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.databasePackageNameFor = exports.uninstallDatabases = exports.installDatabases = exports.allInstalledDatabases = void 0;
 const package_installation_1 = require("../util/package-installation");
 const run_command_1 = require("../util/run-command");
 function allInstalledDatabases(baseDirectory, dirSearcher) {

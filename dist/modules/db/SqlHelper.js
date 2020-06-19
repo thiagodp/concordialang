@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.SqlHelper = void 0;
 const ValueTypeDetector_1 = require("../util/ValueTypeDetector");
 /**
  * SQL helper.

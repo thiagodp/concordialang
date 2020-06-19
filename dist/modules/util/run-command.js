@@ -9,6 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.runInBatch = exports.runCommand = void 0;
 const childProcess = require("child_process");
 /**
  * Run a command in the terminal/console. Returns the exit code.

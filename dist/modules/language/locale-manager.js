@@ -9,6 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.installedDateLocales = void 0;
 // import { makePackageInstallCommand, makePackageUninstallCommand } from "../util/package-installation";
 // import { runCommand } from "../util/run-command";
 /**

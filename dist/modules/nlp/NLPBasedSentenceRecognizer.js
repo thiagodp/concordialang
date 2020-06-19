@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.NLPBasedSentenceRecognizer = void 0;
 const TypeChecking_1 = require("../util/TypeChecking");
 const DatabasePropertyRecognizer_1 = require("./DatabasePropertyRecognizer");
 const GivenWhenThenSentenceRecognizer_1 = require("./GivenWhenThenSentenceRecognizer");

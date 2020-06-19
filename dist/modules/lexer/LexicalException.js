@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.LexicalException = void 0;
 const LocatedException_1 = require("../error/LocatedException");
 /**
  * Lexical exception.

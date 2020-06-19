@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.LanguageContent = void 0;
 /**
  * Language content
  *

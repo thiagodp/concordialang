@@ -59,6 +59,10 @@
     "name": "Thiago Delgado Pinto",
     "email": "thiago-dp@bol.com.br"
   },
+  "files": [
+    "dist/**/*",
+    "bin/**/*"
+  ],
   "main": "./dist/main.js",
   "bin": {
     "concordia": "./bin/concordia.js"

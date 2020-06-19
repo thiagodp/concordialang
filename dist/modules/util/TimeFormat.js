@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.millisToString = exports.millisObjectToString = exports.millisToObject = void 0;
 /**
  * Converts a value in milliseconds to an object that may contain `day`, `hour`,
  * `min`, `sec`, and `ms`.
