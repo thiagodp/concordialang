@@ -28,6 +28,7 @@ class FSDirSearcher {
                 return entry.dirent.isDirectory()
                     && options.regexp.test(entry.name);
             };
+            // @see https://www.npmjs.com/package/@nodelib/fs.walk#options
             const walkOptions = {
                 fs: this._fs,
                 followSymbolicLinks: true,
@@ -36,7 +37,7 @@ class FSDirSearcher {
                 entryFilter: entryFilter,
                 // Skip all ENOTDIR or ENOENT errors
                 errorFilter: error => 'ENOTDIR' == error.code || 'ENOENT' == error.code,
-                // Use deep filter when not recursive
+                // Use deep filter when *not* recursive
                 deepFilter: options.recursive ? undefined : entryFilter
             };
             const pWalk = util_1.promisify(fsWalk.walk);

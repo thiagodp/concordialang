@@ -1,6 +1,6 @@
 import { fs, vol } from 'memfs';
 import * as path from 'path';
-import { allInstalledDatabases, databasePackageNameFor } from '../../modules/language/locale-manager';
+import { allInstalledDatabases, databasePackageNameFor } from '../../modules/db/database-package-manager';
 import { FSDirSearcher } from '../../modules/util/file';
 
 describe( 'database-package-manager', () => {

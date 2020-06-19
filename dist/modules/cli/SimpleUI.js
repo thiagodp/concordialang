@@ -105,13 +105,37 @@ class SimpleUI {
         return this.symbolSuccess;
     }
     // -------------------------------------------------------------------------
-    //
-    // AppUI
-    //
     /** @inheritdoc */
     setDebugMode(debugMode) {
         this._debugMode = debugMode;
     }
+    // Basic UI
+    /** @inheritdoc */
+    success(...args) {
+        this.writeln(this.symbolSuccess, ...args);
+    }
+    /** @inheritdoc */
+    info(...args) {
+        this.writeln(this.symbolInfo, ...args);
+    }
+    /** @inheritdoc */
+    warn(...args) {
+        this.writeln(this.symbolWarning, ...args);
+    }
+    /** @inheritdoc */
+    error(...args) {
+        this.writeln(this.symbolError, ...args);
+    }
+    /** @inheritdoc */
+    showException(error) {
+        if (this._debugMode) {
+            this.error(error.message, this.formattedStackOf(error));
+        }
+        else {
+            this.error(error.message);
+        }
+    }
+    // CLI
     /** @inheritdoc */
     showHelp() {
         this.writeln(this._meow.help);
@@ -221,8 +245,21 @@ class SimpleUI {
             this.info('No database drivers installed.');
             return;
         }
-        const dbs = databases.map(d => this.highlight(d));
-        this.info('Installed database drivers:', dbs.join(', '));
+        const all = databases.map(d => this.highlight(d));
+        this.info('Installed database drivers:', all.join(', '));
+    }
+    /** @inheritdoc */
+    drawLocales(locales, localeType = '', note) {
+        const locType = localeType ? (localeType || '') + ' ' : '';
+        if (!locales || locales.length < 1) {
+            this.info(`No ${locType}locales installed.`);
+            return;
+        }
+        const all = locales.map(d => this.highlight(d));
+        this.info(`Installed ${locType}locales:`, all.join(', '));
+        if (note) {
+            this.write(this.colorWarning('  Note: ' + note));
+        }
     }
     /** @inheritdoc */
     showErrorSavingAbstractSyntaxTree(astFile, errorMessage) {
@@ -242,31 +279,6 @@ class SimpleUI {
     showTestScriptGenerationErrors(errors) {
         for (const err of errors || []) {
             this.showException(err);
-        }
-    }
-    /** @inheritdoc */
-    success(...args) {
-        this.writeln(this.symbolSuccess, ...args);
-    }
-    /** @inheritdoc */
-    info(...args) {
-        this.writeln(this.symbolInfo, ...args);
-    }
-    /** @inheritdoc */
-    warn(...args) {
-        this.writeln(this.symbolWarning, ...args);
-    }
-    /** @inheritdoc */
-    error(...args) {
-        this.writeln(this.symbolError, ...args);
-    }
-    /** @inheritdoc */
-    showException(error) {
-        if (this._debugMode) {
-            this.error(error.message, this.formattedStackOf(error));
-        }
-        else {
-            this.error(error.message);
         }
     }
     // /** @inheritDoc */

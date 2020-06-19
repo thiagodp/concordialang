@@ -8,6 +8,7 @@ import { promisify } from 'util';
 
 import { App, Options } from '../app';
 import { allInstalledDatabases, installDatabases, uninstallDatabases } from '../db/database-package-manager';
+import { installedDateLocales } from '../language/locale-manager';
 import { FSDirSearcher } from '../util/file';
 import { makePackageInstallCommand } from '../util/package-installation';
 import { runCommand } from '../util/run-command';
@@ -15,6 +16,7 @@ import { CliHelp } from './CliHelp';
 import { GuidedConfig } from './GuidedConfig';
 import { SimpleUI } from './SimpleUI';
 import { VerboseUI } from './VerboseUI';
+
 
 
 export async function main( appPath: string, processPath: string ): Promise< boolean > {
@@ -97,6 +99,27 @@ export async function main( appPath: string, processPath: string ): Promise< boo
 				new FSDirSearcher( fs )
 			);
 			ui.drawDatabases( databases );
+			return true;
+		} catch ( err ) {
+			ui.showError( err );
+			return false;
+		}
+	}
+
+	// LOCALE
+
+	if ( options.localeList ) {
+
+		// For now, only date locales are detected
+		try {
+			const nodeModulesDir = path.join( processPath, 'node_modules' );
+			const dateLocales = await installedDateLocales(
+				nodeModulesDir,
+				new FSDirSearcher( fs ),
+				path
+			);
+			ui.drawLocales( dateLocales, 'date',
+				'Unavailable locales fallback to the their language. Example: "es-AR" fallbacks to "es".' );
 			return true;
 		} catch ( err ) {
 			ui.showError( err );

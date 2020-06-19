@@ -137,14 +137,44 @@ export class SimpleUI implements UI {
 
     // -------------------------------------------------------------------------
 
-    //
-    // AppUI
-    //
 
     /** @inheritdoc */
     setDebugMode( debugMode: boolean ): void {
         this._debugMode = debugMode;
+	}
+
+	// Basic UI
+
+    /** @inheritdoc */
+    success( ...args: any[] ): void {
+        this.writeln( this.symbolSuccess, ...args );
     }
+
+    /** @inheritdoc */
+    info( ...args: any[] ): void {
+        this.writeln( this.symbolInfo, ...args );
+    }
+
+    /** @inheritdoc */
+    warn( ...args: any[] ): void {
+        this.writeln( this.symbolWarning, ...args );
+    }
+
+    /** @inheritdoc */
+    error( ...args: any[] ): void {
+        this.writeln( this.symbolError, ...args );
+    }
+
+    /** @inheritdoc */
+    showException( error: Error ): void {
+        if ( this._debugMode ) {
+            this.error( error.message, this.formattedStackOf( error ) );
+        } else {
+            this.error( error.message );
+        }
+    }
+
+	// CLI
 
     /** @inheritdoc */
     showHelp(): void {
@@ -177,7 +207,6 @@ export class SimpleUI implements UI {
             this.info( 'Default language is', this.highlight( options.language ) );
         }
     }
-
 
     /** @inheritdoc */
     announceUpdateAvailable( url: string, hasBreakingChange: boolean ): void {
@@ -283,8 +312,22 @@ export class SimpleUI implements UI {
 			this.info( 'No database drivers installed.' );
 			return;
 		}
-		const dbs: string[] = databases.map( d => this.highlight( d ) );
-		this.info( 'Installed database drivers:', dbs.join( ', ' ) );
+		const all: string[] = databases.map( d => this.highlight( d ) );
+		this.info( 'Installed database drivers:', all.join( ', ' ) );
+	}
+
+	/** @inheritdoc */
+	drawLocales( locales: string[], localeType: string = '', note?: string ): void {
+		const locType: string = localeType ? ( localeType || '' ) + ' ' : '';
+		if ( ! locales || locales.length < 1 ) {
+			this.info( `No ${locType}locales installed.` );
+			return;
+		}
+		const all: string[] = locales.map( d => this.highlight( d ) );
+		this.info( `Installed ${locType}locales:`, all.join( ', ' ) );
+		if ( note ) {
+			this.write( this.colorWarning( '  Note: ' + note ) );
+		}
 	}
 
 
@@ -315,35 +358,6 @@ export class SimpleUI implements UI {
     showTestScriptGenerationErrors( errors: Error[] ): void {
         for ( const err of errors || [] ) {
             this.showException( err );
-        }
-    }
-
-    /** @inheritdoc */
-    success( ...args: any[] ): void {
-        this.writeln( this.symbolSuccess, ...args );
-    }
-
-    /** @inheritdoc */
-    info( ...args: any[] ): void {
-        this.writeln( this.symbolInfo, ...args );
-    }
-
-    /** @inheritdoc */
-    warn( ...args: any[] ): void {
-        this.writeln( this.symbolWarning, ...args );
-    }
-
-    /** @inheritdoc */
-    error( ...args: any[] ): void {
-        this.writeln( this.symbolError, ...args );
-    }
-
-    /** @inheritdoc */
-    showException( error: Error ): void {
-        if ( this._debugMode ) {
-            this.error( error.message, this.formattedStackOf( error ) );
-        } else {
-            this.error( error.message );
         }
     }
 

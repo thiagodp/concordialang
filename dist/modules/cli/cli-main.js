@@ -18,6 +18,7 @@ const updateNotifier = require("update-notifier");
 const util_1 = require("util");
 const app_1 = require("../app");
 const database_package_manager_1 = require("../db/database-package-manager");
+const locale_manager_1 = require("../language/locale-manager");
 const file_1 = require("../util/file");
 const package_installation_1 = require("../util/package-installation");
 const run_command_1 = require("../util/run-command");
@@ -95,6 +96,20 @@ function main(appPath, processPath) {
                 const nodeModulesDir = path.join(processPath, 'node_modules');
                 databases = yield database_package_manager_1.allInstalledDatabases(nodeModulesDir, new file_1.FSDirSearcher(fs));
                 ui.drawDatabases(databases);
+                return true;
+            }
+            catch (err) {
+                ui.showError(err);
+                return false;
+            }
+        }
+        // LOCALE
+        if (options.localeList) {
+            // For now, only date locales are detected
+            try {
+                const nodeModulesDir = path.join(processPath, 'node_modules');
+                const dateLocales = yield locale_manager_1.installedDateLocales(nodeModulesDir, new file_1.FSDirSearcher(fs), path);
+                ui.drawLocales(dateLocales, 'date', 'Unavailable locales fallback to the their language. Example: "es-AR" fallbacks to "es".');
                 return true;
             }
             catch (err) {

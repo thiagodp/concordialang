@@ -39,6 +39,8 @@ class Options {
             `dbList`,
             'dbInstall',
             'dbUninstall',
+            // Locale
+            `localeList`,
             // Processing
             'init',
             'saveConfig',
@@ -115,6 +117,9 @@ class Options {
         // DATABASE
         /** Show available databases */
         this.dbList = false;
+        // LOCALE
+        /** Show available locales */
+        this.localeList = false;
         // PROCESSING
         /** Whether it is wanted to execute a guided configuration */
         this.init = false;
@@ -447,6 +452,8 @@ class Options {
         else if (isStringNotEmpty(obj.dbUninstall)) {
             this.dbUninstall = obj.dbUninstall.trim().toLowerCase();
         }
+        // LOCALE
+        this.localeList = TypeChecking_1.isDefined(obj.localeList);
         // PROCESSING
         if (TypeChecking_1.isDefined(obj.init)) {
             this.init = true == obj.init;

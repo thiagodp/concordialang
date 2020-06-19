@@ -13,7 +13,18 @@ export interface UI extends
     TestScriptExecutionListener
 {
 
-    setDebugMode( debugMode: boolean ): void;
+	setDebugMode( debugMode: boolean ): void;
+
+	// BASIC UI
+
+    success( ...args: any[] ): void;
+    info( ...args: any[] ): void;
+    warn( ...args: any[] ): void;
+	error( ...args: any[] ): void;
+
+	showException( error: Error ): void;
+
+	// CLI
 
 
     showHelp(): void;
@@ -55,7 +66,10 @@ export interface UI extends
 
     announceDatabasePackagesInstallationStarted(): void;
     announceDatabasePackage( packageName: string ): void;
-    announceDatabasePackagesInstallationFinished( code: number ): void;
+	announceDatabasePackagesInstallationFinished( code: number ): void;
+
+	// Locale
+	drawLocales( locales: string[], localeType?: string, note?: string ): void;
 
     // AST
 
@@ -66,14 +80,5 @@ export interface UI extends
 
     showGeneratedTestScriptFiles( scriptDir: string, files: string[], durationMS: number ): void;
     showTestScriptGenerationErrors( errors: Error[] ): void;
-
-    // Generic
-
-    showException( error: Error ): void;
-
-    success( ...args: any[] ): void;
-    info( ...args: any[] ): void;
-    warn( ...args: any[] ): void;
-    error( ...args: any[] ): void;
 
 }

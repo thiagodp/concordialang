@@ -43,6 +43,9 @@ export class Options {
         'dbInstall',
 		'dbUninstall',
 
+		// Locale
+		`localeList`,
+
         // Processing
         'init',
         'saveConfig',
@@ -143,6 +146,10 @@ export class Options {
     /** Uninstall a database */
     public dbUninstall: string;
 
+	// LOCALE
+
+	/** Show available locales */
+	public localeList: boolean = false;
 
     // PROCESSING
 
@@ -548,7 +555,10 @@ export class Options {
             this.dbInstall = obj.dbInstall.trim().toLowerCase();
         } else if ( isStringNotEmpty( obj.dbUninstall ) ) {
             this.dbUninstall = obj.dbUninstall.trim().toLowerCase();
-        }
+		}
+
+		// LOCALE
+		this.localeList = isDefined( obj.localeList );
 
         // PROCESSING
 

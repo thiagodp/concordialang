@@ -49,11 +49,13 @@ ${colors.gray('Output directories')}
 -ds, --dir-script                       Output directory for test scripts.
 -du, --dir-result                       Output directory for result files.
 
-${colors.gray('Language')}
+${colors.gray('Language and Locale')}
 
 -l,  --language <code>                  Set the default language.
                                         The default is "en" (english).
 -ll, --language-list                    List available languages.
+
+--locale-list							List available locales.
 
 ${colors.gray('Plug-in')}
 
