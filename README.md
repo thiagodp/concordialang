@@ -19,7 +19,8 @@ At a glance:
 3. Use the Concordia Compiler to generate and execute functional test scripts from your Concordia specification. *No coding required.*
 
 
-### 👉 Are you migrating from version `0.x` to `1.x`? Please read the [Migration Guide](./docs/en/migration.md).
+## 💥 [VERSION 2 IS COMING](https://github.com/thiagodp/concordialang/issues/56) 👁‍
+
 
 ## Contents
 
@@ -72,7 +73,7 @@ Concordia Compiler works on **Windows**, **Linux**, and **MacOS**, and requires 
 
 After installing the dependencies, open the console/terminal to execute the installation command.
 
-### 1. Recommend Installation
+### 1. Global Installation
 
 **Windows**
 ```bash
