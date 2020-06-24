@@ -8,7 +8,7 @@ const ExpectedResult_1 = require("../ExpectedResult");
  */
 class RandomValue {
     /** @inheritdoc */
-    pre(cfg) {
+    analyze(cfg) {
         // All constraints but Required are accepted as incompatible
         if (TypeChecking_1.isDefined(cfg.value) ||
             TypeChecking_1.isDefined(cfg.format) ||

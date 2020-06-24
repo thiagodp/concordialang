@@ -10,6 +10,6 @@ export interface DTCAnalyzer {
 	 *
 	 * @param cfg Configuration
 	 */
-	pre( cfg: Cfg ): ExpectedResult;
+	analyze( cfg: Cfg ): ExpectedResult;
 
 }

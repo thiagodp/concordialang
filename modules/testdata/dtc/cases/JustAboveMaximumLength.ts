@@ -11,7 +11,7 @@ import { ExpectedResult } from '../ExpectedResult';
 export class JustAboveMaximumLength implements DTCAnalyzer {
 
 	/** @inheritdoc */
-	pre( cfg: Cfg ): ExpectedResult {
+	analyze( cfg: Cfg ): ExpectedResult {
 
 		if ( cfg.dataType !== ValueType.STRING ) {
 			return ExpectedResult.INCOMPATIBLE;

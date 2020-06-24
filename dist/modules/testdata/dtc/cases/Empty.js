@@ -8,7 +8,7 @@ const ExpectedResult_1 = require("../ExpectedResult");
  */
 class Empty {
     /** @inheritdoc */
-    pre(cfg) {
+    analyze(cfg) {
         // Required
         if (cfg.required) {
             if (cfg.requiredWithOnlyValidDTC) {

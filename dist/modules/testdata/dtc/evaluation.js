@@ -38,78 +38,78 @@ exports.evaluateDataTestCases = evaluateDataTestCases;
 function evaluateSingleDataTestCase(dtc, cfg) {
     switch (dtc) {
         case DataTestCase_1.DataTestCase.RANDOM_VALUE:
-            return (new cases_1.RandomValue()).pre(cfg);
+            return (new cases_1.RandomValue()).analyze(cfg);
         // Value
         case DataTestCase_1.DataTestCase.EQUAL_TO_VALUE:
-            return (new cases_1.EqualToValue()).pre(cfg);
+            return (new cases_1.EqualToValue()).analyze(cfg);
         case DataTestCase_1.DataTestCase.RANDOM_DIFFERENT_FROM_VALUE:
-            return (new cases_1.RandomDifferentFromValue()).pre(cfg);
+            return (new cases_1.RandomDifferentFromValue()).analyze(cfg);
         // Set
         case DataTestCase_1.DataTestCase.RANDOM_IN_SET:
-            return (new cases_1.RandomInSet()).pre(cfg);
+            return (new cases_1.RandomInSet()).analyze(cfg);
         case DataTestCase_1.DataTestCase.RANDOM_NOT_IN_SET:
-            return (new cases_1.RandomNotInSet()).pre(cfg);
+            return (new cases_1.RandomNotInSet()).analyze(cfg);
         // Number
         case DataTestCase_1.DataTestCase.ZERO:
-            return (new cases_1.Zero()).pre(cfg);
+            return (new cases_1.Zero()).analyze(cfg);
         // String
         case DataTestCase_1.DataTestCase.EMPTY:
-            return (new cases_1.Empty()).pre(cfg);
+            return (new cases_1.Empty()).analyze(cfg);
         case DataTestCase_1.DataTestCase.GREATEST_LENGTH:
-            return (new cases_1.GreatestLength()).pre(cfg);
+            return (new cases_1.GreatestLength()).analyze(cfg);
         // Minimum length
         case DataTestCase_1.DataTestCase.RANDOM_BELOW_MINIMUM_LENGTH:
-            return (new cases_1.RandomBelowMinimumLength()).pre(cfg);
+            return (new cases_1.RandomBelowMinimumLength()).analyze(cfg);
         case DataTestCase_1.DataTestCase.JUST_BELOW_MINIMUM_LENGTH:
-            return (new cases_1.JustBelowMinimumLength()).pre(cfg);
+            return (new cases_1.JustBelowMinimumLength()).analyze(cfg);
         case DataTestCase_1.DataTestCase.EQUAL_TO_MINIMUM_LENGTH:
-            return (new cases_1.EqualToMinimumLength()).pre(cfg);
+            return (new cases_1.EqualToMinimumLength()).analyze(cfg);
         case DataTestCase_1.DataTestCase.JUST_ABOVE_MINIMUM_LENGTH:
-            return (new cases_1.JustAboveMinimumLength()).pre(cfg);
+            return (new cases_1.JustAboveMinimumLength()).analyze(cfg);
         // Maximum length
         case DataTestCase_1.DataTestCase.JUST_BELOW_MAXIMUM_LENGTH:
-            return (new cases_1.JustBelowMaximumLength()).pre(cfg);
+            return (new cases_1.JustBelowMaximumLength()).analyze(cfg);
         case DataTestCase_1.DataTestCase.EQUAL_TO_MAXIMUM_LENGTH:
-            return (new cases_1.EqualToMaximumLength()).pre(cfg);
+            return (new cases_1.EqualToMaximumLength()).analyze(cfg);
         case DataTestCase_1.DataTestCase.JUST_ABOVE_MAXIMUM_LENGTH:
-            return (new cases_1.JustAboveMaximumLength()).pre(cfg);
+            return (new cases_1.JustAboveMaximumLength()).analyze(cfg);
         case DataTestCase_1.DataTestCase.RANDOM_ABOVE_MAXIMUM_LENGTH:
-            return (new cases_1.RandomAboveMaximumLength()).pre(cfg);
+            return (new cases_1.RandomAboveMaximumLength()).analyze(cfg);
         // Minimum length & Maximum length
         case DataTestCase_1.DataTestCase.RANDOM_BETWEEN_MINIMUM_AND_MAXIMUM_LENGTH:
-            return (new cases_1.RandomBetweenMinimumAndMaximumLength()).pre(cfg);
+            return (new cases_1.RandomBetweenMinimumAndMaximumLength()).analyze(cfg);
         // Minimum value
         case DataTestCase_1.DataTestCase.LOWEST_VALUE:
-            return (new cases_1.LowestValue()).pre(cfg);
+            return (new cases_1.LowestValue()).analyze(cfg);
         case DataTestCase_1.DataTestCase.RANDOM_BELOW_MINIMUM_VALUE:
-            return (new RandomBelowMinimumValue_1.RandomBelowMinimumValue()).pre(cfg);
+            return (new RandomBelowMinimumValue_1.RandomBelowMinimumValue()).analyze(cfg);
         case DataTestCase_1.DataTestCase.JUST_BELOW_MINIMUM_VALUE:
-            return (new cases_1.JustBelowMinimumValue()).pre(cfg);
+            return (new cases_1.JustBelowMinimumValue()).analyze(cfg);
         case DataTestCase_1.DataTestCase.EQUAL_TO_MINIMUM_VALUE:
-            return (new cases_1.EqualToMinimumValue()).pre(cfg);
+            return (new cases_1.EqualToMinimumValue()).analyze(cfg);
         case DataTestCase_1.DataTestCase.JUST_ABOVE_MINIMUM_VALUE:
-            return (new cases_1.JustAboveMinimumValue()).pre(cfg);
+            return (new cases_1.JustAboveMinimumValue()).analyze(cfg);
         // Maximum value
         case DataTestCase_1.DataTestCase.JUST_BELOW_MAXIMUM_VALUE:
-            return (new cases_1.JustBelowMaximumValue()).pre(cfg);
+            return (new cases_1.JustBelowMaximumValue()).analyze(cfg);
         case DataTestCase_1.DataTestCase.EQUAL_TO_MAXIMUM_VALUE:
-            return (new cases_1.EqualToMaximumValue()).pre(cfg);
+            return (new cases_1.EqualToMaximumValue()).analyze(cfg);
         case DataTestCase_1.DataTestCase.JUST_ABOVE_MAXIMUM_VALUE:
-            return (new cases_1.JustAboveMaximumValue()).pre(cfg);
+            return (new cases_1.JustAboveMaximumValue()).analyze(cfg);
         case DataTestCase_1.DataTestCase.RANDOM_ABOVE_MAXIMUM_VALUE:
-            return (new RandomAboveMaximumValue_1.RandomAboveMaximumValue()).pre(cfg);
+            return (new RandomAboveMaximumValue_1.RandomAboveMaximumValue()).analyze(cfg);
         case DataTestCase_1.DataTestCase.GREATEST_VALUE:
-            return (new cases_1.GreatestValue()).pre(cfg);
+            return (new cases_1.GreatestValue()).analyze(cfg);
         // Minimum value & Maximum value
         case DataTestCase_1.DataTestCase.RANDOM_BETWEEN_MINIMUM_AND_MAXIMUM_VALUE:
-            return (new RandomBetweenMinimumAndMaximumValue_1.RandomBetweenMinimumAndMaximumValue()).pre(cfg);
+            return (new RandomBetweenMinimumAndMaximumValue_1.RandomBetweenMinimumAndMaximumValue()).analyze(cfg);
         case DataTestCase_1.DataTestCase.MEDIAN_VALUE:
-            return (new MedianValue_1.MedianValue()).pre(cfg);
+            return (new MedianValue_1.MedianValue()).analyze(cfg);
         // Format
         case DataTestCase_1.DataTestCase.RANDOM_FROM_FORMAT:
-            return (new cases_1.RandomFromFormat()).pre(cfg);
+            return (new cases_1.RandomFromFormat()).analyze(cfg);
         case DataTestCase_1.DataTestCase.RANDOM_DIFFERENT_FROM_FORMAT:
-            return (new cases_1.RandomDifferentFromFormat()).pre(cfg);
+            return (new cases_1.RandomDifferentFromFormat()).analyze(cfg);
     }
     return ExpectedResult_1.ExpectedResult.INCOMPATIBLE;
 }

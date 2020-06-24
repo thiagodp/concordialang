@@ -10,7 +10,7 @@ const ExpectedResult_1 = require("../ExpectedResult");
  */
 class GreatestLength {
     /** @inheritdoc */
-    pre(cfg) {
+    analyze(cfg) {
         if (cfg.dataType !== ValueTypeDetector_1.ValueType.STRING) {
             return ExpectedResult_1.ExpectedResult.INCOMPATIBLE;
         }

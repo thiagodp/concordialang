@@ -71,119 +71,119 @@ function evaluateSingleDataTestCase( dtc: DataTestCase, cfg: Cfg ): ExpectedResu
 	switch ( dtc ) {
 
 		case DataTestCase.RANDOM_VALUE:
-			return ( new RandomValue() ).pre( cfg );
+			return ( new RandomValue() ).analyze( cfg );
 
 		// Value
 
 		case DataTestCase.EQUAL_TO_VALUE:
-			return ( new EqualToValue() ).pre( cfg );
+			return ( new EqualToValue() ).analyze( cfg );
 
 		case DataTestCase.RANDOM_DIFFERENT_FROM_VALUE:
-			return ( new RandomDifferentFromValue() ).pre( cfg );
+			return ( new RandomDifferentFromValue() ).analyze( cfg );
 
 		// Set
 
 		case DataTestCase.RANDOM_IN_SET:
-			return ( new RandomInSet() ).pre( cfg );
+			return ( new RandomInSet() ).analyze( cfg );
 
 		case DataTestCase.RANDOM_NOT_IN_SET:
-			return ( new RandomNotInSet() ).pre( cfg );
+			return ( new RandomNotInSet() ).analyze( cfg );
 
 		// Number
 
 		case DataTestCase.ZERO:
-			return ( new Zero() ).pre( cfg );
+			return ( new Zero() ).analyze( cfg );
 
 		// String
 
 		case DataTestCase.EMPTY:
-			return ( new Empty() ).pre( cfg );
+			return ( new Empty() ).analyze( cfg );
 
 		case DataTestCase.GREATEST_LENGTH:
-			return ( new GreatestLength() ).pre( cfg );
+			return ( new GreatestLength() ).analyze( cfg );
 
 		// Minimum length
 
 		case DataTestCase.RANDOM_BELOW_MINIMUM_LENGTH:
-			return ( new RandomBelowMinimumLength() ).pre( cfg );
+			return ( new RandomBelowMinimumLength() ).analyze( cfg );
 
 		case DataTestCase.JUST_BELOW_MINIMUM_LENGTH:
-			return ( new JustBelowMinimumLength() ).pre( cfg );
+			return ( new JustBelowMinimumLength() ).analyze( cfg );
 
 		case DataTestCase.EQUAL_TO_MINIMUM_LENGTH:
-			return ( new EqualToMinimumLength() ).pre( cfg );
+			return ( new EqualToMinimumLength() ).analyze( cfg );
 
 		case DataTestCase.JUST_ABOVE_MINIMUM_LENGTH:
-			return ( new JustAboveMinimumLength() ).pre( cfg );
+			return ( new JustAboveMinimumLength() ).analyze( cfg );
 
 		// Maximum length
 
 		case DataTestCase.JUST_BELOW_MAXIMUM_LENGTH:
-			return ( new JustBelowMaximumLength() ).pre( cfg );
+			return ( new JustBelowMaximumLength() ).analyze( cfg );
 
 		case DataTestCase.EQUAL_TO_MAXIMUM_LENGTH:
-			return ( new EqualToMaximumLength() ).pre( cfg );
+			return ( new EqualToMaximumLength() ).analyze( cfg );
 
 		case DataTestCase.JUST_ABOVE_MAXIMUM_LENGTH:
-			return ( new JustAboveMaximumLength() ).pre( cfg );
+			return ( new JustAboveMaximumLength() ).analyze( cfg );
 
 		case DataTestCase.RANDOM_ABOVE_MAXIMUM_LENGTH:
-			return ( new RandomAboveMaximumLength() ).pre( cfg );
+			return ( new RandomAboveMaximumLength() ).analyze( cfg );
 
 		// Minimum length & Maximum length
 
 		case DataTestCase.RANDOM_BETWEEN_MINIMUM_AND_MAXIMUM_LENGTH:
-			return ( new RandomBetweenMinimumAndMaximumLength() ).pre( cfg );
+			return ( new RandomBetweenMinimumAndMaximumLength() ).analyze( cfg );
 
 		// Minimum value
 
 		case DataTestCase.LOWEST_VALUE:
-			return ( new LowestValue() ).pre( cfg );
+			return ( new LowestValue() ).analyze( cfg );
 
 		case DataTestCase.RANDOM_BELOW_MINIMUM_VALUE:
-			return ( new RandomBelowMinimumValue() ).pre( cfg );
+			return ( new RandomBelowMinimumValue() ).analyze( cfg );
 
 		case DataTestCase.JUST_BELOW_MINIMUM_VALUE:
-			return ( new JustBelowMinimumValue() ).pre( cfg );
+			return ( new JustBelowMinimumValue() ).analyze( cfg );
 
 		case DataTestCase.EQUAL_TO_MINIMUM_VALUE:
-			return ( new EqualToMinimumValue() ).pre( cfg );
+			return ( new EqualToMinimumValue() ).analyze( cfg );
 
 		case DataTestCase.JUST_ABOVE_MINIMUM_VALUE:
-			return ( new JustAboveMinimumValue() ).pre( cfg );
+			return ( new JustAboveMinimumValue() ).analyze( cfg );
 
 		// Maximum value
 
 		case DataTestCase.JUST_BELOW_MAXIMUM_VALUE:
-			return ( new JustBelowMaximumValue() ).pre( cfg );
+			return ( new JustBelowMaximumValue() ).analyze( cfg );
 
 		case DataTestCase.EQUAL_TO_MAXIMUM_VALUE:
-			return ( new EqualToMaximumValue() ).pre( cfg );
+			return ( new EqualToMaximumValue() ).analyze( cfg );
 
 		case DataTestCase.JUST_ABOVE_MAXIMUM_VALUE:
-			return ( new JustAboveMaximumValue() ).pre( cfg );
+			return ( new JustAboveMaximumValue() ).analyze( cfg );
 
 		case DataTestCase.RANDOM_ABOVE_MAXIMUM_VALUE:
-			return ( new RandomAboveMaximumValue() ).pre( cfg );
+			return ( new RandomAboveMaximumValue() ).analyze( cfg );
 
 		case DataTestCase.GREATEST_VALUE:
-			return ( new GreatestValue() ).pre( cfg );
+			return ( new GreatestValue() ).analyze( cfg );
 
 		// Minimum value & Maximum value
 
 		case DataTestCase.RANDOM_BETWEEN_MINIMUM_AND_MAXIMUM_VALUE:
-			return ( new RandomBetweenMinimumAndMaximumValue() ).pre( cfg );
+			return ( new RandomBetweenMinimumAndMaximumValue() ).analyze( cfg );
 
 		case DataTestCase.MEDIAN_VALUE:
-			return ( new MedianValue() ).pre( cfg );
+			return ( new MedianValue() ).analyze( cfg );
 
 		// Format
 
 		case DataTestCase.RANDOM_FROM_FORMAT:
-			return ( new RandomFromFormat() ).pre( cfg );
+			return ( new RandomFromFormat() ).analyze( cfg );
 
 		case DataTestCase.RANDOM_DIFFERENT_FROM_FORMAT:
-			return ( new RandomDifferentFromFormat() ).pre( cfg );
+			return ( new RandomDifferentFromFormat() ).analyze( cfg );
 
 	}
 

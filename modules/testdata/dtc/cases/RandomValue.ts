@@ -9,7 +9,7 @@ import { ExpectedResult } from "../ExpectedResult";
 export class RandomValue implements DTCAnalyzer {
 
 	/** @inheritdoc */
-	pre( cfg: Cfg ): ExpectedResult {
+	analyze( cfg: Cfg ): ExpectedResult {
 
 		// All constraints but Required are accepted as incompatible
 		if ( isDefined( cfg.value ) ||

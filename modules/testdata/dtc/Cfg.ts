@@ -2,6 +2,9 @@ import { LocalDate, LocalTime, LocalDateTime } from "@js-joda/core";
 import { AnyValue } from "./AnyValue";
 import { ValueType } from "../../util/ValueTypeDetector";
 
+/**
+ * Configuration for Data Test Case generation.
+ */
 export class Cfg {
 
 	withOnlyValidDTC: boolean = false;

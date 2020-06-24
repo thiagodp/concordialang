@@ -9,7 +9,7 @@ import { ExpectedResult } from "../ExpectedResult";
 export class Empty implements DTCAnalyzer {
 
 	/** @inheritdoc */
-	pre( cfg: Cfg ): ExpectedResult {
+	analyze( cfg: Cfg ): ExpectedResult {
 
 		// Required
 		if ( cfg.required ) {

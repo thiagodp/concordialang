@@ -10,7 +10,7 @@ import { ExpectedResult } from '../ExpectedResult';
 export class RandomBetweenMinimumAndMaximumValue implements DTCAnalyzer {
 
 	/** @inheritdoc */
-	pre( cfg: Cfg ): ExpectedResult {
+	analyze( cfg: Cfg ): ExpectedResult {
 
 		if ( ValueType.STRING === cfg.dataType ) {
 			return ExpectedResult.INCOMPATIBLE;

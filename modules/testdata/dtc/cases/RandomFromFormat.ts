@@ -9,7 +9,7 @@ import { ExpectedResult } from "../ExpectedResult";
 export class RandomFromFormat implements DTCAnalyzer {
 
 	/** @inheritdoc */
-	pre( cfg: Cfg ): ExpectedResult {
+	analyze( cfg: Cfg ): ExpectedResult {
 
 		if ( ! isDefined( cfg.format ) ) {
 			return ExpectedResult.INCOMPATIBLE;

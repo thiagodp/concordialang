@@ -9,7 +9,7 @@ const ExpectedResult_1 = require("../ExpectedResult");
  */
 class Zero {
     /** @inheritdoc */
-    pre(cfg) {
+    analyze(cfg) {
         if (cfg.dataType !== util_1.ValueType.INTEGER &&
             cfg.dataType !== util_1.ValueType.DOUBLE) {
             return ExpectedResult_1.ExpectedResult.INCOMPATIBLE;

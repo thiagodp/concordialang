@@ -11,7 +11,7 @@ import { ExpectedResult } from '../ExpectedResult';
 export class JustBelowMinimumValue implements DTCAnalyzer {
 
 	/** @inheritdoc */
-	pre( cfg: Cfg ): ExpectedResult {
+	analyze( cfg: Cfg ): ExpectedResult {
 
 		if ( ValueType.STRING === cfg.dataType ) {
 			return ExpectedResult.INCOMPATIBLE;

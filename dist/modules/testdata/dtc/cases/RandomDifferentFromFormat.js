@@ -8,7 +8,7 @@ const ExpectedResult_1 = require("../ExpectedResult");
  */
 class RandomDifferentFromFormat {
     /** @inheritdoc */
-    pre(cfg) {
+    analyze(cfg) {
         if (!TypeChecking_1.isDefined(cfg.format)) {
             return ExpectedResult_1.ExpectedResult.INCOMPATIBLE;
         }

@@ -2,6 +2,9 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Cfg = void 0;
 const ValueTypeDetector_1 = require("../../util/ValueTypeDetector");
+/**
+ * Configuration for Data Test Case generation.
+ */
 class Cfg {
     constructor() {
         this.withOnlyValidDTC = false;

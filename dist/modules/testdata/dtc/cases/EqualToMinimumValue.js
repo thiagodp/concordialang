@@ -9,7 +9,7 @@ const ExpectedResult_1 = require("../ExpectedResult");
  */
 class EqualToMinimumValue {
     /** @inheritdoc */
-    pre(cfg) {
+    analyze(cfg) {
         if (ValueTypeDetector_1.ValueType.STRING === cfg.dataType) {
             return ExpectedResult_1.ExpectedResult.INCOMPATIBLE;
         }

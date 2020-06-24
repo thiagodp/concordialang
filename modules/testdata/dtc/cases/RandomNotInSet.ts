@@ -9,7 +9,7 @@ import { ExpectedResult } from "../ExpectedResult";
 export class RandomNotInSet implements DTCAnalyzer {
 
 	/** @inheritdoc */
-	pre( cfg: Cfg ): ExpectedResult {
+	analyze( cfg: Cfg ): ExpectedResult {
 
 		if ( isDefined( cfg.value ) &&
 			Array.isArray( cfg.value ) &&

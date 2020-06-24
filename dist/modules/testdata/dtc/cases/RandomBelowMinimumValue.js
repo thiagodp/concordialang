@@ -10,7 +10,7 @@ const limits_1 = require("modules/testdata/limits/limits");
  */
 class RandomBelowMinimumValue {
     /** @inheritdoc */
-    pre(cfg) {
+    analyze(cfg) {
         if (ValueTypeDetector_1.ValueType.STRING === cfg.dataType) {
             return ExpectedResult_1.ExpectedResult.INCOMPATIBLE;
         }

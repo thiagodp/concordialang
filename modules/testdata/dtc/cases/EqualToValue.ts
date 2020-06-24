@@ -9,7 +9,7 @@ import { ExpectedResult } from "../ExpectedResult";
 export class EqualToValue implements DTCAnalyzer {
 
 	/** @inheritdoc */
-	pre( cfg: Cfg ): ExpectedResult {
+	analyze( cfg: Cfg ): ExpectedResult {
 
 		// Doesn't it have a value ?
 		if ( ! isDefined( cfg.value ) ) {

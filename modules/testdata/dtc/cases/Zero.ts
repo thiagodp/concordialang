@@ -10,7 +10,7 @@ import { ExpectedResult } from "../ExpectedResult";
 export class Zero implements DTCAnalyzer {
 
 	/** @inheritdoc */
-	pre( cfg: Cfg ): ExpectedResult {
+	analyze( cfg: Cfg ): ExpectedResult {
 
 		if ( cfg.dataType !== ValueType.INTEGER &&
 			cfg.dataType !== ValueType.DOUBLE

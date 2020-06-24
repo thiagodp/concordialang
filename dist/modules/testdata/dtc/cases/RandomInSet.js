@@ -8,7 +8,7 @@ const ExpectedResult_1 = require("../ExpectedResult");
  */
 class RandomInSet {
     /** @inheritdoc */
-    pre(cfg) {
+    analyze(cfg) {
         if (TypeChecking_1.isDefined(cfg.value) &&
             Array.isArray(cfg.value) &&
             cfg.value.length >= 2) {

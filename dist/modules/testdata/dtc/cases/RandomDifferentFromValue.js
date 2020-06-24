@@ -8,7 +8,7 @@ const ExpectedResult_1 = require("../ExpectedResult");
  */
 class RandomDifferentFromValue {
     /** @inheritdoc */
-    pre(cfg) {
+    analyze(cfg) {
         // Doesn't it have a value ?
         if (!TypeChecking_1.isDefined(cfg.value)) {
             return ExpectedResult_1.ExpectedResult.INCOMPATIBLE;
