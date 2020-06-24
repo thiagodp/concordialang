@@ -42,6 +42,8 @@ export enum DataTestCase {
 	// Value
 
 	/**
+	 * Equal to a fixed or retrieved value or set with a single element.
+	 *
 	 * When the property "value" is fixed and has a single value,
 	 * the generated value should be equal to it.
 	 *

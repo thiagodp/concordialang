@@ -8,7 +8,7 @@ import { minLimitOfType } from 'modules/testdata/limits/limits';
 /**
  * Evaluate `DataTestCase.RANDOM_BELOW_MINIMUM_VALUE`
  */
-export class RandomBelowMinimumValue extends DTCAnalyzer {
+export class RandomBelowMinimumValue implements DTCAnalyzer {
 
 	/** @inheritdoc */
 	pre( cfg: Cfg ): ExpectedResult {
@@ -23,6 +23,10 @@ export class RandomBelowMinimumValue extends DTCAnalyzer {
 
 		// No free values bellow
 		if ( cfg.minimumValue === minLimitOfType( cfg.dataType ) ) {
+			return ExpectedResult.INCOMPATIBLE;
+		}
+
+		if ( cfg.minimumValueWithOnlyValidDTC ) {
 			return ExpectedResult.INCOMPATIBLE;
 		}
 

@@ -8,7 +8,7 @@ import { ExpectedResult } from '../ExpectedResult';
 /**
  * Evaluate `DataTestCase.JUST_BELOW_MINIMUM_VALUE`
  */
-export class JustBelowMinimumValue extends DTCAnalyzer {
+export class JustBelowMinimumValue implements DTCAnalyzer {
 
 	/** @inheritdoc */
 	pre( cfg: Cfg ): ExpectedResult {
@@ -23,6 +23,10 @@ export class JustBelowMinimumValue extends DTCAnalyzer {
 
 		// It should have at least one free value above
 		if ( cfg.minimumValue === minLimitOfType( cfg.dataType ) ) {
+			return ExpectedResult.INCOMPATIBLE;
+		}
+
+		if ( cfg.minimumValueWithOnlyValidDTC ) {
 			return ExpectedResult.INCOMPATIBLE;
 		}
 

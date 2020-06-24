@@ -8,7 +8,7 @@ import { ExpectedResult } from '../ExpectedResult';
 /**
  * Evaluate `DataTestCase.GREATEST_VALUE`
  */
-export class GreatestValue extends DTCAnalyzer {
+export class GreatestValue implements DTCAnalyzer {
 
 	/** @inheritdoc */
 	pre( cfg: Cfg ): ExpectedResult {
@@ -24,6 +24,10 @@ export class GreatestValue extends DTCAnalyzer {
 		if ( isDefined( cfg.maximumValue ) ) {
 
 			if ( cfg.maximumValue === maxLimitOfType( cfg.dataType ) ) {
+				return ExpectedResult.INCOMPATIBLE;
+			}
+
+			if ( cfg.maximumValueWithOnlyValidDTC ) {
 				return ExpectedResult.INCOMPATIBLE;
 			}
 

@@ -6,13 +6,16 @@ import { ExpectedResult } from "../ExpectedResult";
 /**
  * Evaluates `DataTestCase.EMPTY`
  */
-export class Empty extends DTCAnalyzer {
+export class Empty implements DTCAnalyzer {
 
 	/** @inheritdoc */
 	pre( cfg: Cfg ): ExpectedResult {
 
 		// Required
-		if ( true === cfg.required ) {
+		if ( cfg.required ) {
+			if ( cfg.requiredWithOnlyValidDTC ) {
+				return ExpectedResult.INCOMPATIBLE;
+			}
 			return ExpectedResult.INVALID;
 		}
 
@@ -28,6 +31,10 @@ export class Empty extends DTCAnalyzer {
 				return ExpectedResult.VALID;
 			}
 
+			if ( cfg.minimumLengthWithOnlyValidDTC ) {
+				return ExpectedResult.INCOMPATIBLE;
+			}
+
 			return ExpectedResult.INVALID;
 		}
 
@@ -37,6 +44,11 @@ export class Empty extends DTCAnalyzer {
 				if ( new RegExp( cfg.format ).test( '' ) ) {
 					return ExpectedResult.VALID;
 				}
+
+				if ( cfg.formatWithOnlyValidDTC ) {
+					return ExpectedResult.INCOMPATIBLE;
+				}
+
 				return ExpectedResult.INVALID;
 			} catch {
 				return ExpectedResult.INCOMPATIBLE;

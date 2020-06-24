@@ -7,7 +7,7 @@ import { ExpectedResult } from '../ExpectedResult';
 /**
  * Evaluates `DataTestCase.EQUAL_TO_MINIMUM_VALUE`
  */
-export class EqualToMinimumValue extends DTCAnalyzer {
+export class EqualToMinimumValue implements DTCAnalyzer {
 
 	/** @inheritdoc */
 	pre( cfg: Cfg ): ExpectedResult {

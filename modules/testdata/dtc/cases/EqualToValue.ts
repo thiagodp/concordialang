@@ -6,7 +6,7 @@ import { ExpectedResult } from "../ExpectedResult";
 /**
  * Evaluates `DataTestCase.EQUAL_TO_VALUE`
  */
-export class EqualToValue extends DTCAnalyzer {
+export class EqualToValue implements DTCAnalyzer {
 
 	/** @inheritdoc */
 	pre( cfg: Cfg ): ExpectedResult {
@@ -31,12 +31,13 @@ export class EqualToValue extends DTCAnalyzer {
 		if ( true === cfg.required ) {
 			// Required but empty
 			if ( '' === value ) {
+				if ( cfg.requiredWithOnlyValidDTC ) {
+					return ExpectedResult.INCOMPATIBLE;
+				}
 				return ExpectedResult.INVALID;
 			}
 			// Required and not empty
-			else {
-				return ExpectedResult.VALID;
-			}
+			return ExpectedResult.VALID;
 		}
 		// Not required
 		else if ( false === cfg.required ) {

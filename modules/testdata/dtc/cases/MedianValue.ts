@@ -7,7 +7,7 @@ import { ExpectedResult } from '../ExpectedResult';
 /**
  * Evaluate `DataTestCase.MEDIAN_VALUE`
  */
-export class MedianValue extends DTCAnalyzer {
+export class MedianValue implements DTCAnalyzer {
 
 	/** @inheritdoc */
 	pre( cfg: Cfg ): ExpectedResult {

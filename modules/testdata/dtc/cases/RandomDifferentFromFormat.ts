@@ -6,12 +6,16 @@ import { ExpectedResult } from "../ExpectedResult";
 /**
  * Evaluates `DataTestCase.RANDOM_DIFFERENT_FROM_FORMAT`
  */
-export class RandomDifferentFromFormat extends DTCAnalyzer {
+export class RandomDifferentFromFormat implements DTCAnalyzer {
 
 	/** @inheritdoc */
 	pre( cfg: Cfg ): ExpectedResult {
 
 		if ( ! isDefined( cfg.format ) ) {
+			return ExpectedResult.INCOMPATIBLE;
+		}
+
+		if ( cfg.formatWithOnlyValidDTC ) {
 			return ExpectedResult.INCOMPATIBLE;
 		}
 

@@ -52,6 +52,9 @@ export function evaluateDataTestCases( cfg: Cfg ): Map< DataTestCase, ExpectedRe
 		if ( true === cfg.invertedLogic ) {
 			e = invertValidity( e );
 		}
+		if ( true === cfg.withOnlyValidDTC && ExpectedResult.INVALID === e ) {
+			e = ExpectedResult.INCOMPATIBLE;
+		}
 		map.set( dtc, e );
 	}
 

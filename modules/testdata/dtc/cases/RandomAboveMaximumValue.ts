@@ -9,7 +9,7 @@ import { maxLimitOfType } from 'modules/testdata/limits/limits';
 /**
  * Evaluate `DataTestCase.RANDOM_ABOVE_MAXIMUM_VALUE`
  */
-export class RandomAboveMaximumValue extends DTCAnalyzer {
+export class RandomAboveMaximumValue implements DTCAnalyzer {
 
 	/** @inheritdoc */
 	pre( cfg: Cfg ): ExpectedResult {
@@ -24,6 +24,10 @@ export class RandomAboveMaximumValue extends DTCAnalyzer {
 
 		// No free values above
 		if ( cfg.maximumValue === maxLimitOfType( cfg.dataType ) ) {
+			return ExpectedResult.INCOMPATIBLE;
+		}
+
+		if ( cfg.maximumValueWithOnlyValidDTC ) {
 			return ExpectedResult.INCOMPATIBLE;
 		}
 

@@ -7,7 +7,7 @@ import { ExpectedResult } from '../ExpectedResult';
 /**
  * Evaluate `DataTestCase.JUST_BELOW_MAXIMUM_VALUE`
  */
-export class JustBelowMaximumValue extends DTCAnalyzer {
+export class JustBelowMaximumValue implements DTCAnalyzer {
 
 	/** @inheritdoc */
 	pre( cfg: Cfg ): ExpectedResult {

@@ -7,7 +7,7 @@ import { ExpectedResult } from '../ExpectedResult';
 /**
  * Evaluate `DataTestCase.EQUAL_TO_MAXIMUM_LENGTH`
  */
-export class EqualToMaximumLength extends DTCAnalyzer {
+export class EqualToMaximumLength implements DTCAnalyzer {
 
 	/** @inheritdoc */
 	pre( cfg: Cfg ): ExpectedResult {

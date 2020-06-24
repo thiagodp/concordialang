@@ -7,7 +7,7 @@ import { ExpectedResult } from '../ExpectedResult';
 /**
  * Evaluate `DataTestCase.RANDOM_BETWEEN_MINIMUM_AND_MAXIMUM_VALUE`
  */
-export class RandomBetweenMinimumAndMaximumValue extends DTCAnalyzer {
+export class RandomBetweenMinimumAndMaximumValue implements DTCAnalyzer {
 
 	/** @inheritdoc */
 	pre( cfg: Cfg ): ExpectedResult {

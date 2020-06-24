@@ -6,7 +6,7 @@ import { ExpectedResult } from "../ExpectedResult";
 /**
  * Evaluate `DataTestCase.RANDOM_DIFFERENT_FROM_VALUE`
  */
-export class RandomDifferentFromValue extends DTCAnalyzer {
+export class RandomDifferentFromValue implements DTCAnalyzer {
 
 	/** @inheritdoc */
 	pre( cfg: Cfg ): ExpectedResult {
@@ -22,6 +22,10 @@ export class RandomDifferentFromValue extends DTCAnalyzer {
 			if ( cfg.value.length > 1 ) {
 				return ExpectedResult.INCOMPATIBLE;
 			}
+		}
+
+		if ( cfg.valueWithOnlyValidDTC ) {
+			return ExpectedResult.INCOMPATIBLE;
 		}
 
 		return ExpectedResult.INVALID;

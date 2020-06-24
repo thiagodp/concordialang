@@ -8,7 +8,7 @@ import { ExpectedResult } from '../ExpectedResult';
 /**
  * Evaluate `DataTestCase.RANDOM_ABOVE_MAXIMUM_LENGTH`
  */
-export class RandomAboveMaximumLength extends DTCAnalyzer {
+export class RandomAboveMaximumLength implements DTCAnalyzer {
 
 	/** @inheritdoc */
 	pre( cfg: Cfg ): ExpectedResult {
@@ -25,6 +25,10 @@ export class RandomAboveMaximumLength extends DTCAnalyzer {
 		// It should have 2+ free values, since JustAboveMaximumLength covers
 		// one of them
 		if ( freeValues <= 1 ) {
+			return ExpectedResult.INCOMPATIBLE;
+		}
+
+		if ( cfg.maximumLengthWithOnlyValidDTC ) {
 			return ExpectedResult.INCOMPATIBLE;
 		}
 

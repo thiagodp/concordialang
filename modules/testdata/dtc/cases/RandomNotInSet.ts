@@ -6,7 +6,7 @@ import { ExpectedResult } from "../ExpectedResult";
 /**
  * Evaluates `DataTestCase.RANDOM_NOT_IN_SET`
  */
-export class RandomNotInSet extends DTCAnalyzer {
+export class RandomNotInSet implements DTCAnalyzer {
 
 	/** @inheritdoc */
 	pre( cfg: Cfg ): ExpectedResult {
@@ -15,6 +15,11 @@ export class RandomNotInSet extends DTCAnalyzer {
 			Array.isArray( cfg.value ) &&
 			cfg.value.length >= 2
 		) {
+
+			if ( cfg.valueWithOnlyValidDTC ) {
+				return ExpectedResult.INCOMPATIBLE;
+			}
+
 			return ExpectedResult.INVALID;
 		}
 

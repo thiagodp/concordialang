@@ -7,13 +7,14 @@ import { ExpectedResult } from "../ExpectedResult";
 /**
  * Evaluates `DataTestCase.ZERO`
  */
-export class Zero extends DTCAnalyzer {
+export class Zero implements DTCAnalyzer {
 
 	/** @inheritdoc */
 	pre( cfg: Cfg ): ExpectedResult {
 
 		if ( cfg.dataType !== ValueType.INTEGER &&
-			cfg.dataType !== ValueType.DOUBLE ) {
+			cfg.dataType !== ValueType.DOUBLE
+		) {
 			return ExpectedResult.INCOMPATIBLE;
 		}
 
@@ -37,6 +38,11 @@ export class Zero extends DTCAnalyzer {
 			}
 
 			if ( cfg.minimumValue > 0 ) {
+
+				if ( cfg.minimumValueWithOnlyValidDTC ) {
+					return ExpectedResult.INCOMPATIBLE;
+				}
+
 				return ExpectedResult.INVALID;
 			}
 		}
@@ -53,6 +59,11 @@ export class Zero extends DTCAnalyzer {
 			}
 
 			if ( cfg.maximumValue < 0 ) {
+
+				if ( cfg.maximumValueWithOnlyValidDTC ) {
+					return ExpectedResult.INCOMPATIBLE;
+				}
+
 				return ExpectedResult.INVALID;
 			}
 		}

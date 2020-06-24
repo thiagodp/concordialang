@@ -7,7 +7,7 @@ import { ExpectedResult } from '../ExpectedResult';
 /**
  * Evaluates `DataTestCase.EQUAL_TO_MINIMUM_LENGTH`
  */
-export class EqualToMinimumLength extends DTCAnalyzer {
+export class EqualToMinimumLength implements DTCAnalyzer {
 
 	/** @inheritdoc */
 	pre( cfg: Cfg ): ExpectedResult {
@@ -20,7 +20,12 @@ export class EqualToMinimumLength extends DTCAnalyzer {
 			return ExpectedResult.INCOMPATIBLE;
 		}
 
-		if ( 0 === cfg.minimumLength && true === cfg.required ) {
+		if ( 0 === cfg.minimumLength && cfg.required ) {
+
+			if ( cfg.minimumLengthWithOnlyValidDTC || cfg.requiredWithOnlyValidDTC ) {
+				return ExpectedResult.INCOMPATIBLE;
+			}
+
 			return ExpectedResult.INVALID;
 		}
 

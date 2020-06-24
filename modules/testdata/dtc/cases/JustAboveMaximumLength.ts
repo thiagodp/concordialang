@@ -8,7 +8,7 @@ import { ExpectedResult } from '../ExpectedResult';
 /**
  * Evaluate `DataTestCase.JUST_ABOVE_MAXIMUM_LENGTH`
  */
-export class JustAboveMaximumLength extends DTCAnalyzer {
+export class JustAboveMaximumLength implements DTCAnalyzer {
 
 	/** @inheritdoc */
 	pre( cfg: Cfg ): ExpectedResult {
@@ -22,6 +22,10 @@ export class JustAboveMaximumLength extends DTCAnalyzer {
 		}
 
 		if ( cfg.maximumLength === StringLimits.MAX ) {
+			return ExpectedResult.INCOMPATIBLE;
+		}
+
+		if ( cfg.maximumLengthWithOnlyValidDTC ) {
 			return ExpectedResult.INCOMPATIBLE;
 		}
 

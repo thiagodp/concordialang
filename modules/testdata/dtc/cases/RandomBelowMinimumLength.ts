@@ -7,7 +7,7 @@ import { ExpectedResult } from '../ExpectedResult';
 /**
  * Evaluate `DataTestCase.RANDOM_BELOW_MINIMUM_LENGTH`
  */
-export class RandomBelowMinimumLength extends DTCAnalyzer {
+export class RandomBelowMinimumLength implements DTCAnalyzer {
 
 	/** @inheritdoc */
 	pre( cfg: Cfg ): ExpectedResult {
@@ -24,6 +24,10 @@ export class RandomBelowMinimumLength extends DTCAnalyzer {
 		// Empty covers 0, and BelowMinimumLength covers 1,
 		// minimumLength should be 3+ to have at least one uncovered value.
 		if ( cfg.minimumLength <= 2 ) {
+			return ExpectedResult.INCOMPATIBLE;
+		}
+
+		if ( cfg.minimumLengthWithOnlyValidDTC ) {
 			return ExpectedResult.INCOMPATIBLE;
 		}
 

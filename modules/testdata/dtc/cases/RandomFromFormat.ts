@@ -6,7 +6,7 @@ import { ExpectedResult } from "../ExpectedResult";
 /**
  * Evaluates `DataTestCase.RANDOM_FROM_FORMAT`
  */
-export class RandomFromFormat extends DTCAnalyzer {
+export class RandomFromFormat implements DTCAnalyzer {
 
 	/** @inheritdoc */
 	pre( cfg: Cfg ): ExpectedResult {

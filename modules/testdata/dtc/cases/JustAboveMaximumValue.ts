@@ -8,7 +8,7 @@ import { ExpectedResult } from '../ExpectedResult';
 /**
  * Evaluate `DataTestCase.JUST_ABOVE_MAXIMUM_VALUE`
  */
-export class JustAboveMaximumValue extends DTCAnalyzer {
+export class JustAboveMaximumValue implements DTCAnalyzer {
 
 	/** @inheritdoc */
 	pre( cfg: Cfg ): ExpectedResult {
@@ -23,6 +23,10 @@ export class JustAboveMaximumValue extends DTCAnalyzer {
 
 		// It should have at least one free above
 		if ( cfg.maximumValue === maxLimitOfType( cfg.dataType ) ) {
+			return ExpectedResult.INCOMPATIBLE;
+		}
+
+		if ( cfg.maximumValueWithOnlyValidDTC ) {
 			return ExpectedResult.INCOMPATIBLE;
 		}
 
