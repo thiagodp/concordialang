@@ -35,7 +35,7 @@ var Actions;
     Actions["REMOVE"] = "remove";
     Actions["RESIZE"] = "resize";
     Actions["RIGHT_CLICK"] = "rightClick";
-    Actions["ROTATE"] = "remove";
+    Actions["ROTATE"] = "rotate";
     Actions["RUN"] = "run";
     Actions["SAVE_SCREENSHOT"] = "saveScreenshot";
     Actions["SCROLL_TO"] = "scrollTo";

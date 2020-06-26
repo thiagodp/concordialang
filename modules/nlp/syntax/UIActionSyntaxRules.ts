@@ -417,7 +417,7 @@ SCROLL_TO[ Entities.UI_PROPERTY_REF ] = { min: 0, max: 1 };
 
 const SEE: SyntaxRule = {
     name: Actions.SEE,
-    minTargets: 1,
+    minTargets: 0, // zero since it allows ui options that are not targets
     maxTargets: 3,
     targets: [
         Entities.UI_ELEMENT_REF,

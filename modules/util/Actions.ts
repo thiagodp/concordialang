@@ -31,7 +31,7 @@ export enum Actions {
     REMOVE          = "remove"        , // web, mobile web, mobile native
     RESIZE          = "resize"        , // web, mobile web, mobile native, desktop
     RIGHT_CLICK     = "rightClick"    , // web, mobile web, desktop
-    ROTATE          = "remove"        , // mobile web, mobile native
+    ROTATE          = "rotate"        , // mobile web, mobile native
     RUN             = "run"           , // mobile web, mobile native
     SAVE_SCREENSHOT = "saveScreenshot", // web, mobile web, mobile native, desktop
     SCROLL_TO       = "scrollTo"      , // web, mobile web, mobile native, desktop

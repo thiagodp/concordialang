@@ -326,7 +326,7 @@ SCROLL_TO[Entities_1.Entities.CONSTANT] = { min: 0, max: 1 };
 SCROLL_TO[Entities_1.Entities.UI_PROPERTY_REF] = { min: 0, max: 1 };
 const SEE = {
     name: Actions_1.Actions.SEE,
-    minTargets: 1,
+    minTargets: 0,
     maxTargets: 3,
     targets: [
         Entities_1.Entities.UI_ELEMENT_REF,
