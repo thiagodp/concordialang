@@ -17,3 +17,4 @@ __exportStar(require("./KeywordDictionary"), exports);
 __exportStar(require("./LanguageContent"), exports);
 __exportStar(require("./LanguageContentLoader"), exports);
 __exportStar(require("./LanguageManager"), exports);
+__exportStar(require("./locale-manager"), exports);

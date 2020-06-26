@@ -490,10 +490,13 @@ class Options {
             false === obj.testScripts ||
             false == obj.testscript ||
             false == obj.testscripts;
-        const noRun = false == obj.executeScript ||
+        const noRunAndNoResult = true === obj.x;
+        const noRun = noRunAndNoResult ||
+            false == obj.executeScript ||
             false === obj.run ||
             false === obj.execute;
-        const noResult = false === obj.analyzeResult ||
+        const noResult = noRunAndNoResult ||
+            false === obj.analyzeResult ||
             false === obj.result ||
             false === obj.results;
         // Adjust flags
