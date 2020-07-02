@@ -511,11 +511,24 @@ export class SimpleUI implements UI {
     /** @inheritdoc */
     public announceFileSearchStarted(): void {
         // this.startSpinner();
-    }
+	}
+
+	/** @inheritdoc */
+	public announceFileSearchWarnings( warnings: string[] ): void {
+		for ( const w of warnings ) {
+			this.warn( w );
+		}
+	}
 
     /** @inheritdoc */
     public announceFileSearchFinished( durationMS: number, filesFoundCount: number, filesIgnoredCount: number ): void {
-        // this.stopSpinner();
+		// this.stopSpinner();
+		if ( 0 === filesFoundCount ) {
+			this.warn(
+				'No files found',
+				this.formatDuration( durationMS )
+				);
+		}
     }
 
     /** @inheritDoc */

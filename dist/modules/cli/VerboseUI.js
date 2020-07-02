@@ -83,7 +83,10 @@ class VerboseUI extends SimpleUI_1.SimpleUI {
     //
     /** @inheritdoc */
     announceFileSearchFinished(durationMS, filesFoundCount, filesIgnoredCount) {
-        // this.stopSpinner();
+        if (0 === filesFoundCount) {
+            super.announceFileSearchFinished(durationMS, filesFoundCount, filesIgnoredCount);
+            return;
+        }
         this.info(this.highlight(filesFoundCount), SimpleUI_1.pluralS(filesFoundCount, 'file'), 'given,', this.highlight(filesIgnoredCount), 'test case', SimpleUI_1.pluralS(filesIgnoredCount, 'file'), 'ignored', this.formatDuration(durationMS));
     }
     //

@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.CompilerFacade = exports.extractFilesToCompile = void 0;
+exports.CompilerFacade = exports.filterFilesToCompile = void 0;
 const core_1 = require("@js-joda/core");
 const crypto_1 = require("crypto");
 const error_1 = require("../error");
@@ -26,7 +26,7 @@ const FSFileHandler_1 = require("../util/file/FSFileHandler");
 const FSFileSearcher_1 = require("../util/file/FSFileSearcher");
 const Compiler_1 = require("./Compiler");
 const SingleFileCompiler_1 = require("./SingleFileCompiler");
-function extractFilesToCompile(files, extensionFeature, extensionTestCase, pathLibrary) {
+function filterFilesToCompile(files, extensionFeature, extensionTestCase, pathLibrary) {
     const featureFiles = files
         .filter(f => f.endsWith(extensionFeature))
         .map(f => file_1.toUnixPath(f));
@@ -37,7 +37,7 @@ function extractFilesToCompile(files, extensionFeature, extensionTestCase, pathL
         .filter(tc => !featureFiles.includes(file_1.toUnixPath(ext_changer_1.changeFileExtension(tc, extensionFeature, pathLibrary))));
     return featureFiles.concat(testCasesWithoutFeature);
 }
-exports.extractFilesToCompile = extractFilesToCompile;
+exports.filterFilesToCompile = filterFilesToCompile;
 /**
  * Compiler facade
  *
@@ -58,9 +58,13 @@ class CompilerFacade {
             if (this._compilerListener) {
                 this._compilerListener.announceFileSearchStarted();
             }
-            const files = yield fileSearcher.searchFrom(options);
+            const searchResults = yield fileSearcher.searchFrom(options);
+            if (this._compilerListener && searchResults.warnings.length > 0) {
+                this._compilerListener.announceFileSearchWarnings(searchResults.warnings);
+            }
+            const files = searchResults.files;
             // console.log( '>>> FOUND', files );
-            const filesToCompile = extractFilesToCompile(files, options.extensionFeature, options.extensionTestCase, this._path);
+            const filesToCompile = filterFilesToCompile(files, options.extensionFeature, options.extensionTestCase, this._path);
             const filesToCompileCount = filesToCompile.length;
             if (this._compilerListener) {
                 const filesCount = files.length;

@@ -13,7 +13,7 @@ import { Parser } from "../parser/Parser";
 import { AugmentedSpec } from "../req/AugmentedSpec";
 import { TestCaseGeneratorFacade } from "../testcase/TestCaseGeneratorFacade";
 import { TestCaseGeneratorListener } from '../testcase/TestCaseGeneratorListener';
-import { toUnixPath } from '../util/file';
+import { toUnixPath, FileSearchResults } from '../util/file';
 import { changeFileExtension } from '../util/file/ext-changer';
 import { FSFileHandler } from '../util/file/FSFileHandler';
 import { FSFileSearcher } from '../util/file/FSFileSearcher';
@@ -22,7 +22,7 @@ import { CompilerListener } from './CompilerListener';
 import { SingleFileCompiler } from "./SingleFileCompiler";
 
 
-export function extractFilesToCompile(
+export function filterFilesToCompile(
     files: string[],
     extensionFeature: string,
     extensionTestCase: string,
@@ -67,12 +67,18 @@ export class CompilerFacade {
 
         if ( this._compilerListener ) {
             this._compilerListener.announceFileSearchStarted();
-        }
+		}
 
-        const files: string[] = await fileSearcher.searchFrom( options );
-        // console.log( '>>> FOUND', files );
+		const searchResults: FileSearchResults = await fileSearcher.searchFrom( options );
 
-        const filesToCompile: string[] = extractFilesToCompile(
+		if ( this._compilerListener && searchResults.warnings.length > 0 ) {
+			this._compilerListener.announceFileSearchWarnings( searchResults.warnings );
+		}
+
+        const files: string[] = searchResults.files;
+		// console.log( '>>> FOUND', files );
+
+        const filesToCompile: string[] = filterFilesToCompile(
             files, options.extensionFeature, options.extensionTestCase, this._path );
 
         const filesToCompileCount = filesToCompile.length;

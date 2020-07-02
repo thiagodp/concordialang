@@ -112,7 +112,12 @@ export class VerboseUI extends SimpleUI implements UI {
 
     /** @inheritdoc */
     public announceFileSearchFinished( durationMS: number, filesFoundCount: number, filesIgnoredCount: number ): void {
-        // this.stopSpinner();
+
+		if ( 0 === filesFoundCount ) {
+			super.announceFileSearchFinished( durationMS, filesFoundCount, filesIgnoredCount );
+			return;
+		}
+
         this.info(
             this.highlight( filesFoundCount ), pluralS( filesFoundCount, 'file' ), 'given,',
             this.highlight( filesIgnoredCount ), 'test case', pluralS( filesIgnoredCount, 'file' ), 'ignored',

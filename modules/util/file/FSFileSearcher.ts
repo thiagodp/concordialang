@@ -1,7 +1,7 @@
 import * as fsWalk from '@nodelib/fs.walk';
 import { join, normalize } from 'path';
 import { promisify } from "util";
-import { FileSearcher, FileSearchOptions } from "./FileSearcher";
+import { FileSearcher, FileSearchOptions, FileSearchResults } from "./FileSearcher";
 
 
 export class FSFileSearcher implements FileSearcher {
@@ -9,19 +9,37 @@ export class FSFileSearcher implements FileSearcher {
     constructor( private readonly _fs: any ) {
     }
 
-    async searchFrom( options: FileSearchOptions ): Promise< string[] > {
+    async searchFrom( options: FileSearchOptions ): Promise< FileSearchResults > {
 
         // Whether the given directory is a file, return it
-        const pStat = promisify( this._fs.stat );
-        const st = await pStat( options.directory );
-        if ( ! st.isDirectory() ) {
-            const msg = `${options.directory} is not a directory.`;
-            throw new Error( msg );
-        }
+		const pStat = promisify( this._fs.stat );
+
+		if ( options.directory ) {
+			const msgNotADirectory = `Directory not found: ${options.directory}`;
+			let st;
+			try {
+				st = await pStat( options.directory );
+			} catch ( err ) {
+				throw new Error( msgNotADirectory );
+			}
+
+			if ( ! st.isDirectory() ) {
+				throw new Error( msgNotADirectory );
+			}
+		}
 
         const makeFilePath = file => {
             return normalize( join( options.directory, file ) );
-        };
+		};
+
+		const fileHasValidExtension = path => {
+			for ( const ext of options.extensions ) {
+				if ( path.endsWith( ext ) ) {
+					return true;
+				}
+			}
+			return false;
+		};
 
         const hasFilesToSearch: boolean = options.file.length > 0;
         const hasFilesToIgnore: boolean = options.ignore.length > 0;
@@ -30,7 +48,8 @@ export class FSFileSearcher implements FileSearcher {
             ? options.ignore.map( f => makeFilePath( f ) )
             : [];
 
-        let files: string[] = [];
+		let files: string[] = [];
+		let warnings: string[] = [];
         // Search for specific files instead of searching in the given directory
         if ( hasFilesToSearch ) {
             // const pStat = promisify( fsStat.stat );
@@ -50,7 +69,12 @@ export class FSFileSearcher implements FileSearcher {
                     && ( options.ignore.includes( file )
                         || options.ignore.includes( f ) ) ) {
                     continue;
-                }
+				}
+
+				if ( ! fileHasValidExtension( file ) ) {
+					warnings.push( `Ignored file "${file}".` );
+					continue;
+				}
 
                 try {
                     // const stats = await pStat( file, statOptions );
@@ -60,7 +84,7 @@ export class FSFileSearcher implements FileSearcher {
                     await pAccess( f, this._fs.constants.R_OK );
                 } catch ( err ) { // err.code == 'ENOENT'
                     // console.log( err );
-                    // TO-DO: add to warning list
+                    warnings.push( `Could not access file "${file}".` );
                     continue; // Ignores the file
                 }
                 files.push( f );
@@ -69,22 +93,13 @@ export class FSFileSearcher implements FileSearcher {
         } else {
             const pWalk = promisify( fsWalk.walk );
 
-            const fileHasExtension = path => {
-                for ( const ext of options.extensions ) {
-                    if ( path.endsWith( ext ) ) {
-                        return true;
-                    }
-                }
-                return false;
-            };
-
             const entryFilter = entry => {
 
                 // if ( hasFilesToIgnore ) {
                 //     console.log( 'IGNORE LIST: ', ignoredFullPath, 'NAME', entry.name, 'PATH', entry.path );
                 // }
 
-                if ( ! fileHasExtension( entry.path ) ) {
+                if ( ! fileHasValidExtension( entry.path ) ) {
                     return false;
                 }
 
@@ -121,7 +136,7 @@ export class FSFileSearcher implements FileSearcher {
         //     }
         // }
 
-        return files;
+        return { files: files, warnings: warnings };
     }
 
 }

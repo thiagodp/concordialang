@@ -390,8 +390,17 @@ class SimpleUI {
         // this.startSpinner();
     }
     /** @inheritdoc */
+    announceFileSearchWarnings(warnings) {
+        for (const w of warnings) {
+            this.warn(w);
+        }
+    }
+    /** @inheritdoc */
     announceFileSearchFinished(durationMS, filesFoundCount, filesIgnoredCount) {
         // this.stopSpinner();
+        if (0 === filesFoundCount) {
+            this.warn('No files found', this.formatDuration(durationMS));
+        }
     }
     /** @inheritDoc */
     announceCompilerStarted(options) {

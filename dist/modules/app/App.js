@@ -95,6 +95,9 @@ class App {
                     ui.showException(err);
                 }
             }
+            if (null === spec && options.file.length > 0) {
+                return true; // hasErrors
+            }
             if (spec && options.ast) {
                 const getCircularReplacer = () => {
                     const seen = new WeakSet();

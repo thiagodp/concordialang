@@ -10,7 +10,8 @@ export interface CompilerListener {
 
     // File searcher
 
-    announceFileSearchStarted(): void;
+	announceFileSearchStarted(): void;
+	announceFileSearchWarnings( warnings: string[] ): void;
     announceFileSearchFinished( durationMS: number, filesFoundCount: number, filesIgnoredCount: number ): void;
 
     // Compiler

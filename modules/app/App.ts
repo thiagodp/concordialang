@@ -96,12 +96,16 @@ export class App {
         if ( options.compileSpecification ) {
             const compiler = new CompilerFacade( fs, path, ui, ui );
             try {
-                [ spec, /* graph */ ] = await compiler.compile( options );
+				[ spec, /* graph */ ] = await compiler.compile( options );
             } catch ( err ) {
                 hasErrors = true;
                 ui.showException( err );
             }
-        }
+		}
+
+		if ( null === spec && options.file.length > 0 ) {
+			return true; // hasErrors
+		}
 
         if ( spec && options.ast ) {
 

@@ -55,13 +55,13 @@ export class LanguageManager {
      */
     public async languageFiles(): Promise< string[] > {
 
-        return await this._fileSearcher.searchFrom( {
+		return ( await this._fileSearcher.searchFrom( {
             directory: this._languageDir,
             recursive: true,
             extensions: [ '.json' ],
             file: [],
             ignore: []
-        } );
+        } ) ).files;
     }
 
     /**

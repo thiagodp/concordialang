@@ -1,13 +1,13 @@
 import * as path from 'path';
-import { extractFilesToCompile } from '../../modules/compiler/CompilerFacade';
+import { filterFilesToCompile } from '../../modules/compiler/CompilerFacade';
 
 describe( 'CompilerFacade', () => {
 
-    describe( '#extractFilesToCompile', () => {
+    describe( '#filterFilesToCompile', () => {
 
         it( 'does not include testcase files that have a corresponding feature file', () => {
 
-            const r = extractFilesToCompile( [
+            const r = filterFilesToCompile( [
                 '/path/to/foo.feature',
                 '/path/to/foo.testcase',
                 '/path/to/bar.feature',
