@@ -605,15 +605,19 @@ export class Options {
             false === obj.testScript ||
             false === obj.testScripts ||
             false == obj.testscript ||
-            false == obj.testscripts;
+			false == obj.testscripts;
 
-        const noRun: boolean = false == obj.executeScript ||
+		const noRunAndNoResult: boolean = true === obj.x;
+
+		const noRun: boolean = noRunAndNoResult ||
+			false == obj.executeScript ||
             false === obj.run ||
             false === obj.execute;
 
-        const noResult: boolean = false === obj.analyzeResult ||
+		const noResult: boolean = noRunAndNoResult ||
+			false === obj.analyzeResult ||
             false === obj.result ||
-            false === obj.results;
+			false === obj.results;
 
         // Adjust flags
 

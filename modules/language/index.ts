@@ -5,3 +5,4 @@ export * from './KeywordDictionary';
 export * from './LanguageContent';
 export * from './LanguageContentLoader';
 export * from './LanguageManager';
+export * from './locale-manager';

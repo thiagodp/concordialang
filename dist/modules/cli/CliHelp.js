@@ -33,44 +33,46 @@ ${colors.yellowBright('Options:')}
 
 ${colors.gray('Input directories and files')}
 
--d,  --directory <value>                Directory to search. Same as <dir>.
--nr, --no-recursive                     Disable recursive search.
+-d, --directory <value>                 Directory to search. Same as <dir>.
+--no-recursive							Disable recursive search.
 
--f,  --file <"file1,file2,...">         Files to consider. Whether <dir> is
+-f, --file <"file1,file2,...">          Files to consider. Whether <dir> is
                                         informed, files are searched in it.
 
--i,  --ignore <"file1,file2,...">       Files to ignore, when <dir> is informed.
+-i, --ignore <"file1,file2,...">        Files to ignore, when <dir> is informed.
 
 ${colors.gray('Output directories')}
 
--ds, --dir-script                       Output directory for test scripts.
--du, --dir-result                       Output directory for result files.
+-o, --dir-script                        Output directory for test scripts.
+-O, --dir-result						Output directory for reports and
+										screenshots.
 
 ${colors.gray('Language and Locale')}
 
--l,  --language <code>                  Set the default language.
+-l, --language <code>                   Set the default language.
                                         The default is "en" (english).
--ll, --language-list                    List available languages.
+--language-list                         List available languages.
 
 --locale-list							List available locales.
 
 ${colors.gray('Plug-in')}
 
--p,  --plugin [<name>]                  Plug-in to use.
--pa, --plugin-about [<name>]            Show information about a plug-in.
--pl, --plugin-list                      List installed plug-ins.
--pi, --plugin-install <name>            Install a plug-in.
--pu, --plugin-uninstall <name>          Uninstall a plug-in.
--ps, --plugin-serve [<name>]            Start a test server for a given plugin.
+-p, --plugin [<name>]                   Plug-in to use.
+-S, --plugin-serve [<name>]				Start a test server for a given plugin.
+--plugin-list                           List installed plug-ins.
+--plugin-install <name>                 Install a plug-in.
+--plugin-uninstall <name>               Uninstall a plug-in.
+--plugin-about [<name>]                 Show information about an installed
+										plug-in.
 
--sf, --script-file <"file1,file2,...">  Test script files to execute.
--sg, --script-grep <"expression">       Expression to filter the test scripts to
+-F, --script-file <"file1,file2,...">	Test script files to execute.
+-G, --script-grep <"expression">		Expression to filter the test scripts to
                                         run. Some plug-ins may not support it.
 
--t,  --target <"target1,target2,...">   Target browsers or platforms.
--hl, --headless                         Enable headless execution (browsers).
+-T, --target <"target1,target2,...">	Target browsers or platforms.
+-H, --headless                          Enable headless execution (browsers).
                                         Some plug-ins may not support it.
---instances                             Number of parallel instances to execute.
+-I, --instances							Number of parallel instances to execute.
 
 ${colors.gray('Database support')}
 
@@ -82,7 +84,7 @@ ${colors.gray('Configuration')}
 
 --init                                  Init a guided, basic configuration.
 
--c,  --config                           Configuration file to load.
+-c, --config                            Configuration file to load.
                                         The default is ".concordiarc".
 
 --save-config                           Save/overwrite a configuration file
@@ -90,20 +92,22 @@ ${colors.gray('Configuration')}
 
 ${colors.gray('Processing and output')}
 
--b,  --verbose                          Show verbose output.
+--verbose                               Show verbose output.
 
--np, --no-spec                          Do not process specification files.
--nt, --no-test-case                     Do not generate test cases.
--ns, --no-script                        Do not generate test scripts.
--nx, --no-run                           Do not run test scripts.
--nu, --no-result                        Do not process execution results.
+--no-spec                               Do not process specification files.
+--no-test-case                          Do not generate test cases.
+--no-script                             Do not generate test scripts.
+--no-run                                Do not run test scripts.
+--no-result                             Do not process execution results.
 
--jp, --just-spec                        Just process specification files.
--jt, --just-test-case                   Just generate test cases.
--js, --just-script                      Just generate test scripts.
--jx, --just-run                         Just execute test scripts.
+-x                                      Apply --no-run and --no-result.
 
-${colors.gray('Randomic value generation')}
+--just-spec                             Just process specification files.
+--just-test-case                        Just generate test cases.
+--just-script                           Just generate test scripts.
+--just-run                              Just execute test scripts.
+
+${colors.gray('Random generation')}
 
 --seed <value>                          Random seed to use.
                                         The default is the current date and time.
@@ -130,9 +134,9 @@ ${colors.gray('Combination strategies')}
       ow      = one-wise
       all     = all
 
---comb-invalid (node|0|1|smart|random|all)
+--comb-invalid (0|1|smart|random|all)
     How many input data will be invalid in each test case:
-      0,none  = no invalid data
+      0       = no invalid data
       1       = one invalid data per test case
       smart   = use algorithm to decide (default)
       random  = random invalid data per test case
@@ -162,24 +166,24 @@ ${colors.gray('Content generation format')}
 
 ${colors.gray('Input formats and extensions')}
 
--e,  --encoding <value>                 File encoding. The default is "utf8".
--lb, --line-breaker                     Character used for breaking lines.
--ef, --ext-feature                      File extension for Feature files.
+-e, --encoding <value>                  File encoding. The default is "utf8".
+--line-breaker                          Character used for breaking lines.
+--ext-feature                           File extension for Feature files.
                                         The default is ".feature".
--et, --ext-test-case                    File extension for Test Case files.
+--ext-test-case                         File extension for Test Case files.
                                         The default is ".testcase".
 
 ${colors.gray('Information')}
 
--v,  --version                          Show current version.
--a,  --about                            Show information about this application.
--h,  --help                             Show this help.
--n,  --newer                            Check for newer versions.
+-v, --version                           Show current version.
+--about                             	Show information about this application.
+--help                              	Show this help.
+--newer									Check for newer versions.
 
 ${colors.yellowBright('Examples')}
 
  $ ${exeName} features --language pt --plugin some-plugin --dir-script test --dir-result output
- $ ${exeName} --file "file1.feature,path/to/file2.feature" -l pt -p some-plugin -ds test -du output
+ $ ${exeName} --file "file1.feature,path/to/file2.feature" -l pt -p some-plugin
  $ ${exeName} --no-run --no-result
 `;
     } // method content()
@@ -188,54 +192,53 @@ ${colors.yellowBright('Examples')}
             booleanDefault: undefined,
             flags: {
                 // DIRECTORIES
-                noRecursive: { type: 'boolean', alias: 'nr' },
                 directory: { type: 'string', alias: 'd' },
-                dirScript: { type: 'string', alias: 'ds' },
-                dirResult: { type: 'string', alias: 'du' },
+                noRecursive: { type: 'boolean' },
+                dirScript: { type: 'string', alias: 'o' },
+                dirResult: { type: 'string', alias: 'O' },
                 // FILES
                 files: { type: 'string', alias: 'f' },
                 ignore: { type: 'string', alias: 'i' },
-                scriptFile: { type: 'string', alias: 'sf' },
-                scriptGrep: { type: 'string', alias: 'sg' },
+                scriptFile: { type: 'string', alias: 'F' },
+                scriptGrep: { type: 'string', alias: 'G' },
                 // CONFIG
                 init: { type: 'boolean' },
                 config: { type: 'string', alias: 'c' },
                 saveConfig: { type: 'boolean' },
                 // LANGUAGE
                 language: { type: 'string', alias: 'l' },
-                languageList: { type: 'boolean', alias: 'll' },
+                languageList: { type: 'boolean' },
                 // FILE-RELATED OPTIONS
                 encoding: { type: 'string', alias: 'e' },
-                lineBreaker: { type: 'string', alias: 'lb' },
-                // extensions: { type: 'string', alias: 'x' },
-                extFeature: { type: 'string', alias: 'ef' },
-                extTestCases: { type: 'string', alias: 'et' },
+                lineBreaker: { type: 'string' },
+                extFeature: { type: 'string' },
+                extTestCases: { type: 'string' },
                 // PLUG-IN
                 plugin: { type: 'string', alias: 'p' },
-                pluginAbout: { type: 'string', alias: 'pa' },
-                pluginInstall: { type: 'string', alias: 'pi' },
-                pluginUninstall: { type: 'string', alias: 'pu' },
-                pluginServe: { type: 'string', alias: 'ps' },
-                pluginList: { type: 'boolean', alias: 'pl' },
-                target: { type: 'string', alias: 't' },
-                headless: { type: 'boolean', alias: 'hl' },
-                instances: { type: 'integer' },
+                pluginAbout: { type: 'string' },
+                pluginInstall: { type: 'string' },
+                pluginUninstall: { type: 'string' },
+                pluginServe: { type: 'string', alias: 'S' },
+                pluginList: { type: 'boolean' },
+                target: { type: 'string', alias: 'T' },
+                headless: { type: 'boolean', alias: 'H' },
+                instances: { type: 'integer', alias: 'I' },
                 // DATABASE
                 dbInstall: { type: 'string' },
                 dbUninstall: { type: 'string' },
                 dbList: { type: 'boolean' },
                 // PROCESSING AND OUTPUT
-                verbose: { type: 'boolean', alias: 'b' },
-                failFast: { type: 'boolean', alias: 'ff' },
-                noSpec: { type: 'boolean', alias: 'np' },
-                noTestCase: { type: 'boolean', alias: 'nt' },
-                noScript: { type: 'boolean', alias: 'ns' },
-                noRun: { type: 'boolean', alias: 'nr' },
-                noResult: { type: 'boolean', alias: 'nu' },
-                justSpec: { type: 'boolean', alias: 'jp' },
-                justTestCase: { type: 'boolean', alias: 'jt' },
-                justScript: { type: 'boolean', alias: 'js' },
-                justRun: { type: 'boolean', alias: 'jx' },
+                verbose: { type: 'boolean' },
+                failFast: { type: 'boolean' },
+                noSpec: { type: 'boolean' },
+                noTestCase: { type: 'boolean' },
+                noScript: { type: 'boolean' },
+                noRun: { type: 'boolean' },
+                noResult: { type: 'boolean' },
+                justSpec: { type: 'boolean' },
+                justTestCase: { type: 'boolean' },
+                justScript: { type: 'boolean' },
+                justRun: { type: 'boolean' },
                 // CONTENT GENERATION
                 caseUi: { type: 'string' },
                 caseMethod: { type: 'string' },
@@ -265,10 +268,10 @@ ${colors.yellowBright('Examples')}
                 // runMaxScenario: { type: 'integer' },
                 // runFilter: { type: 'string' },
                 // INFO
-                help: { alias: 'h', type: 'boolean' },
-                about: { alias: 'a', type: 'boolean' },
-                version: { alias: 'v', type: 'boolean' },
-                newer: { alias: 'n', type: 'boolean' },
+                help: { type: 'boolean' },
+                about: { type: 'boolean' },
+                version: { type: 'boolean', alias: 'v' },
+                newer: { type: 'boolean' },
             }
         };
     }
