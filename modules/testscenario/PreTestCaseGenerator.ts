@@ -206,18 +206,15 @@ export class PreTestCaseGenerator {
 
 
         // # Extract UI Elements to generate value
-        //
-        //  The extraction is from all UI Elements involved with the document.
-        //  However, since the given steps may not include some UI Elements, we
-        //  can only generate plans with INVALID values for those directly involved.
-        //  That is, UI Elements not directly involved, i.e., not included in the steps,
-        //  should always receive values, in order to make the VALUE GENERATION of other
-        //  UI Elements to work properly.
-        //
-        //  Thus, the group of UI Elements not involved in the steps must always
-        //  receive VALID values, while the involved ones may vary according to the
-        //  desired mix strategy.
-        //
+		//
+		//  UI Elements that not appear in steps will receive VALID values
+		//  so that dependent UI Elements can work properly. All the others
+		//  will receive values that are according to the selected data test
+		//  cases and mix strategies.
+		//
+		//  Naturally, non-editable UI Elements are not considered for value
+		//  generation.
+		//
 
         const stepUIElements: UIElement[] = this.extractUIElementsFromSteps( newSteps, ctx );
 
