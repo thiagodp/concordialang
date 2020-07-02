@@ -524,7 +524,7 @@ class PreTestCaseGenerator {
                         ' in ' + fileName + ' ' + locStr + '. It will receive an empty value.';
                     // console.log( uieVariableToValueMap );
                     // console.log( variable, '<'.repeat( 10 ) );
-                    ctx.warnings.push(new error_1.RuntimeException(msg));
+                    ctx.warnings.push(new error_1.Warning(msg));
                     value = '';
                 }
                 let uieLiteral = util_1.isDefined(uie) && util_1.isDefined(uie.info) ? uie.info.uiLiteral : null;

@@ -729,7 +729,7 @@ export class PreTestCaseGenerator {
                     ' in ' + fileName + ' ' + locStr + '. It will receive an empty value.';
                 // console.log( uieVariableToValueMap );
                 // console.log( variable, '<'.repeat( 10 ) );
-                ctx.warnings.push( new RuntimeException( msg ) );
+                ctx.warnings.push( new Warning( msg ) );
                 value = '';
             }
 

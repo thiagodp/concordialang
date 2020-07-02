@@ -489,7 +489,16 @@ export class SimpleUI implements UI {
 
         if ( ! hasErrors && ! hasWarnings ) {
             return;
-        }
+		}
+
+        const color = this.properColor( hasErrors, hasWarnings );
+        const symbol = this.properSymbol( hasErrors, hasWarnings );
+
+        this.writeln(
+            color( symbol ),
+            this.highlight( relative( dirTestCases, filePath ) ) + ':'
+            );
+
 
         this.showErrors( [ ...errors, ...warnings ], true );
     }

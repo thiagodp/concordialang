@@ -12,7 +12,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.UIPropertyReferenceReplacer = void 0;
 const path_1 = require("path");
 const ast_1 = require("../ast");
-const RuntimeException_1 = require("../error/RuntimeException");
+const Warning_1 = require("../error/Warning");
 const Symbols_1 = require("../req/Symbols");
 const util_1 = require("../util");
 const remove_duplicated_1 = require("../util/remove-duplicated");
@@ -48,7 +48,7 @@ class UIPropertyReferenceReplacer {
                         Symbols_1.Symbols.UI_ELEMENT_PREFIX + uipRef.uiElementName +
                         Symbols_1.Symbols.UI_PROPERTY_REF_SEPARATOR + uipRef.property + Symbols_1.Symbols.UI_ELEMENT_SUFFIX +
                         ' in ' + fileName + ' ' + locStr + '. Not supported yet.';
-                    const err = new RuntimeException_1.RuntimeException(msg);
+                    const err = new Warning_1.Warning(msg);
                     ctx.warnings.push(err);
                     continue;
                 }
@@ -72,7 +72,7 @@ class UIPropertyReferenceReplacer {
                     const msg = 'Could not retrieve a value from ' +
                         Symbols_1.Symbols.UI_ELEMENT_PREFIX + variable + Symbols_1.Symbols.UI_ELEMENT_SUFFIX +
                         ' in ' + fileName + ' ' + locStr + '. It will receive an empty value.';
-                    const err = new RuntimeException_1.RuntimeException(msg);
+                    const err = new Warning_1.Warning(msg);
                     ctx.warnings.push(err);
                     value = '';
                 }

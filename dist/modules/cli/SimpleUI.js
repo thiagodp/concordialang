@@ -376,6 +376,9 @@ class SimpleUI {
         if (!hasErrors && !hasWarnings) {
             return;
         }
+        const color = this.properColor(hasErrors, hasWarnings);
+        const symbol = this.properSymbol(hasErrors, hasWarnings);
+        this.writeln(color(symbol), this.highlight(path_1.relative(dirTestCases, filePath)) + ':');
         this.showErrors([...errors, ...warnings], true);
     }
     /** @inheritDoc */
