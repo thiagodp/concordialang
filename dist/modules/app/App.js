@@ -146,14 +146,14 @@ class App {
                 // }
                 const atsGenerator = new AbstractTestScriptGenerator_1.AbstractTestScriptGenerator();
                 abstractTestScripts = atsGenerator.generate(docs, spec);
-                if (abstractTestScripts.length > 0) {
+                if (abstractTestScripts && abstractTestScripts.length > 0) {
                     const startTime = Date.now();
                     // cli.newLine( cli.symbolInfo, 'Generated', abstractTestScripts.length, 'abstract test scripts' );
                     let errors = [];
                     try {
                         const r = yield plugin.generateCode(abstractTestScripts, new concordialang_plugin_1.TestScriptGenerationOptions(options.plugin, options.dirScript, options.directory));
-                        generatedTestScriptFiles = r.generatedFiles || [];
-                        errors = r.errors;
+                        generatedTestScriptFiles = (r === null || r === void 0 ? void 0 : r.generatedFiles) || [];
+                        errors = (r === null || r === void 0 ? void 0 : r.errors) || [];
                     }
                     catch (err) {
                         hasErrors = true;
@@ -180,7 +180,7 @@ class App {
                 const tseo = {
                     dirScript: options.dirScript,
                     dirResult: options.dirResult,
-                    file: scriptFiles,
+                    file: scriptFiles || [],
                     grep: options.scriptGrep || undefined,
                     target: options.target || undefined,
                     headless: options.headless || undefined,

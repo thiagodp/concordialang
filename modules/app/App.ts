@@ -171,7 +171,7 @@ export class App {
             const atsGenerator = new AbstractTestScriptGenerator();
             abstractTestScripts = atsGenerator.generate( docs, spec );
 
-            if ( abstractTestScripts.length > 0 ) {
+            if ( abstractTestScripts && abstractTestScripts.length > 0 ) {
 
                 const startTime = Date.now();
 
@@ -186,8 +186,8 @@ export class App {
                             options.directory
                         )
                     );
-                    generatedTestScriptFiles = r.generatedFiles || [];
-                    errors = r.errors;
+                    generatedTestScriptFiles = r?.generatedFiles || [];
+                    errors = r?.errors || [];
                 } catch ( err ) {
                     hasErrors = true;
                     ui.showException( err );
@@ -226,7 +226,7 @@ export class App {
             const tseo: TestScriptExecutionOptions = {
                 dirScript: options.dirScript,
                 dirResult: options.dirResult,
-                file: scriptFiles,
+                file: scriptFiles || [],
                 grep: options.scriptGrep || undefined,
                 target: options.target || undefined,
                 headless: options.headless || undefined,
