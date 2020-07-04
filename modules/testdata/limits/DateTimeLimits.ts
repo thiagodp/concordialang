@@ -1,8 +1,8 @@
-import { LocalDateTime } from 'js-joda';
+import { LocalDateTime } from '@js-joda/core';
 
 /**
  * Limits for datetime values.
- * 
+ *
  * @author Thiago Delgado Pinto
  */
 export abstract class DateTimeLimits {

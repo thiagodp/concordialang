@@ -1,5 +1,5 @@
 import { ValueTypeDetector, adjustValueToTheRightType } from "../../modules/util/ValueTypeDetector";
-// import { LocalTime, LocalDate, LocalDateTime } from "js-joda";
+// import { LocalTime, LocalDate, LocalDateTime } from "@js-joda/core";
 
 describe( 'ValueTypeDetector', () => {
 

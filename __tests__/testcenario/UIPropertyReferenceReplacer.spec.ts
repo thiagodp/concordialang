@@ -1,4 +1,4 @@
-import { LocalDate, LocalTime, LocalDateTime } from "js-joda";
+import { LocalDate, LocalTime, LocalDateTime } from "@js-joda/core";
 
 import { UIPropertyReferenceReplacer } from '../../modules/testscenario/UIPropertyReferenceReplacer';
 import { Step, EntityValueType } from '../../modules/ast';

@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.DateLimits = void 0;
-const js_joda_1 = require("js-joda");
+const core_1 = require("@js-joda/core");
 /**
  * Limits for date values.
  *
@@ -10,5 +10,5 @@ const js_joda_1 = require("js-joda");
 class DateLimits {
 }
 exports.DateLimits = DateLimits;
-DateLimits.MIN = js_joda_1.LocalDate.of(0, 1, 1); // 0000-01-01
-DateLimits.MAX = js_joda_1.LocalDate.of(9999, 12, 31); // 9999-12-31
+DateLimits.MIN = core_1.LocalDate.of(0, 1, 1); // 0000-01-01
+DateLimits.MAX = core_1.LocalDate.of(9999, 12, 31); // 9999-12-31

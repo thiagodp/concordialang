@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.RandomDateTime = void 0;
-const js_joda_1 = require("js-joda");
+const core_1 = require("@js-joda/core");
 const DateTimeLimits_1 = require("../limits/DateTimeLimits");
 /**
  * Generates random datetime values.
@@ -19,7 +19,7 @@ class RandomDateTime {
      * @param max Maximum date time
      */
     between(min, max) {
-        const diffInSeconds = min.until(max, js_joda_1.ChronoUnit.SECONDS);
+        const diffInSeconds = min.until(max, core_1.ChronoUnit.SECONDS);
         if (0 === diffInSeconds) {
             return min;
         }

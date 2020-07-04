@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.formatValueToUseInASentence = void 0;
-const js_joda_1 = require("js-joda");
+const core_1 = require("@js-joda/core");
 const Symbols_1 = require("../req/Symbols");
 /**
  * Returns the formatted value to use in a sentence.
@@ -14,14 +14,14 @@ const Symbols_1 = require("../req/Symbols");
 function formatValueToUseInASentence(value, insideStringValue = false) {
     let formattedValue = value;
     // TODO: l10n / i18n
-    if (value instanceof js_joda_1.LocalTime) {
-        formattedValue = value.format(js_joda_1.DateTimeFormatter.ofPattern('HH:mm')).toString();
+    if (value instanceof core_1.LocalTime) {
+        formattedValue = value.format(core_1.DateTimeFormatter.ofPattern('HH:mm')).toString();
     }
-    else if (value instanceof js_joda_1.LocalDate) {
-        formattedValue = value.format(js_joda_1.DateTimeFormatter.ofPattern('dd/MM/yyyy')).toString();
+    else if (value instanceof core_1.LocalDate) {
+        formattedValue = value.format(core_1.DateTimeFormatter.ofPattern('dd/MM/yyyy')).toString();
     }
-    else if (value instanceof js_joda_1.LocalDateTime) {
-        formattedValue = value.format(js_joda_1.DateTimeFormatter.ofPattern('dd/MM/yyyy HH:mm')).toString();
+    else if (value instanceof core_1.LocalDateTime) {
+        formattedValue = value.format(core_1.DateTimeFormatter.ofPattern('dd/MM/yyyy HH:mm')).toString();
     }
     return insideStringValue || 'number' === typeof formattedValue
         ? formattedValue

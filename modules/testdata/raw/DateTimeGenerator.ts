@@ -2,7 +2,7 @@ import { RawDataGenerator } from "./RawDataGenerator";
 import { DateTimeLimits } from "../limits/DateTimeLimits";
 import { RandomDateTime } from "../random/RandomDateTime";
 import { isDefined } from '../../util/TypeChecking';
-import { LocalDateTime, Period, ChronoUnit } from "js-joda";
+import { LocalDateTime, Period, ChronoUnit } from "@js-joda/core";
 
 export class DateTimeGenerator implements RawDataGenerator< LocalDateTime > {
 

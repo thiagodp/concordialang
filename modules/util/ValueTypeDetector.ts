@@ -1,5 +1,5 @@
 import * as moment from 'moment';
-import { LocalDate, LocalTime, LocalDateTime } from 'js-joda';
+import { LocalDate, LocalTime, LocalDateTime } from '@js-joda/core';
 
 /**
  * Value type.

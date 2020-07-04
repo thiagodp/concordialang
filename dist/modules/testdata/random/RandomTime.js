@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.RandomTime = void 0;
-const js_joda_1 = require("js-joda");
+const core_1 = require("@js-joda/core");
 const TimeLimits_1 = require("../limits/TimeLimits");
 /**
  * Generates random time values.
@@ -19,7 +19,7 @@ class RandomTime {
      * @param max Maximum time
      */
     between(min, max) {
-        const diffInSeconds = min.until(max, js_joda_1.ChronoUnit.SECONDS);
+        const diffInSeconds = min.until(max, core_1.ChronoUnit.SECONDS);
         if (0 === diffInSeconds) {
             return min;
         }

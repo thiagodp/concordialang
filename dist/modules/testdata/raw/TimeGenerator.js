@@ -3,7 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.TimeGenerator = void 0;
 const TimeLimits_1 = require("../limits/TimeLimits");
 const TypeChecking_1 = require("../../util/TypeChecking");
-const js_joda_1 = require("js-joda");
+const core_1 = require("@js-joda/core");
 class TimeGenerator {
     /**
      * Constructor.
@@ -24,7 +24,7 @@ class TimeGenerator {
         this._max = TypeChecking_1.isDefined(max) ? max : TimeLimits_1.TimeLimits.MAX;
     }
     diffInSeconds() {
-        return this._min.until(this._max, js_joda_1.ChronoUnit.SECONDS);
+        return this._min.until(this._max, core_1.ChronoUnit.SECONDS);
     }
     // RANGE ANALYSIS
     /** @inheritDoc */

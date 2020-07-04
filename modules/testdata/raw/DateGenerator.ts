@@ -2,7 +2,7 @@ import { RawDataGenerator } from "./RawDataGenerator";
 import { DateLimits } from "../limits/DateLimits";
 import { RandomDate } from "../random/RandomDate";
 import { isDefined } from '../../util/TypeChecking';
-import { LocalDate, Period } from "js-joda";
+import { LocalDate, Period } from "@js-joda/core";
 import { RangeAnalyzer } from "./RangeAnalyzer";
 
 export class DateGenerator implements RawDataGenerator< LocalDate >, RangeAnalyzer {

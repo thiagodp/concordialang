@@ -1,4 +1,4 @@
-import { LocalDateTime } from "js-joda";
+import { LocalDateTime } from "@js-joda/core";
 
 import { DateTimeGenerator } from "../../../modules/testdata/raw/DateTimeGenerator";
 import { RandomLong } from "../../../modules/testdata/random/RandomLong";

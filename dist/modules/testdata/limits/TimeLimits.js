@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.TimeLimits = void 0;
-const js_joda_1 = require("js-joda");
+const core_1 = require("@js-joda/core");
 /**
  * Limits for date values.
  *
@@ -10,5 +10,5 @@ const js_joda_1 = require("js-joda");
 class TimeLimits {
 }
 exports.TimeLimits = TimeLimits;
-TimeLimits.MIN = js_joda_1.LocalTime.of(0, 0, 0, 0); // 00:00:00.000
-TimeLimits.MAX = js_joda_1.LocalTime.of(23, 59, 59, 999); // 23:59:59.999
+TimeLimits.MIN = core_1.LocalTime.of(0, 0, 0, 0); // 00:00:00.000
+TimeLimits.MAX = core_1.LocalTime.of(23, 59, 59, 999); // 23:59:59.999

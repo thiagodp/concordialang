@@ -90,6 +90,7 @@
     ]
   },
   "dependencies": {
+    "@js-joda/core": "^2.0.0",
     "alasql": "^0.4.11",
     "arr-diff": "^4.0.0",
     "array-move": "^1.0.0",
@@ -112,7 +113,6 @@
     "graph.js": "^1.21.1",
     "inquirer": "^6.5.2",
     "is-valid-path": "^0.1.1",
-    "js-joda": "^1.11.0",
     "log-symbols": "^3.0.0",
     "log-update": "^2.3.0",
     "meow": "^5.0.0",

@@ -2,7 +2,7 @@ import { RawDataGenerator } from "./RawDataGenerator";
 import { TimeLimits } from "../limits/TimeLimits";
 import { RandomTime } from "../random/RandomTime";
 import { isDefined } from '../../util/TypeChecking';
-import { LocalTime, ChronoUnit } from "js-joda";
+import { LocalTime, ChronoUnit } from "@js-joda/core";
 import { RangeAnalyzer } from "./RangeAnalyzer";
 
 export class TimeGenerator implements RawDataGenerator< LocalTime >, RangeAnalyzer {

@@ -14,7 +14,7 @@ const path_1 = require("path");
 const fs = require("fs");
 const util_1 = require("util");
 const crypto = require("crypto");
-const js_joda_1 = require("js-joda");
+const core_1 = require("@js-joda/core");
 const cosmiconfig = require("cosmiconfig");
 const Options_1 = require("./Options");
 const TypeChecking_1 = require("../util/TypeChecking");
@@ -78,7 +78,7 @@ class OptionsHandler {
         if (!options.seed) {
             options.isGeneratedSeed = true;
             options.seed =
-                js_joda_1.LocalDateTime.now().format(js_joda_1.DateTimeFormatter.ofPattern('yyyy-MM-dd HH:mm:ss')).toString();
+                core_1.LocalDateTime.now().format(core_1.DateTimeFormatter.ofPattern('yyyy-MM-dd HH:mm:ss')).toString();
         }
         const shouldShow = !options.help
             && !options.about

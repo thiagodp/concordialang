@@ -2,7 +2,7 @@ import { relative, join } from "path";
 import * as fs from 'fs';
 import { promisify } from "util";
 import * as crypto from 'crypto';
-import { LocalDateTime, DateTimeFormatter } from 'js-joda';
+import { LocalDateTime, DateTimeFormatter } from '@js-joda/core';
 import * as cosmiconfig from 'cosmiconfig';
 import { Options } from "./Options";
 import { CLI } from "./CLI";
