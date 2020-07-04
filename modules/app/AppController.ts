@@ -233,7 +233,9 @@ export class AppController {
             return true;
         }
 
-        let abstractTestScripts: AbstractTestScript[] = [];
+		let abstractTestScripts: AbstractTestScript[] = [];
+
+		let incompatiblePluginVersion: boolean = false;
 
         if ( spec !== null ) {
 
@@ -260,11 +262,26 @@ export class AppController {
                     } catch ( err ) {
                         hasErrors = true;
                         this.showException( err, options, cli );
-                    }
+					}
 
-                    for ( let file of files || [] ) {
-                        cli.newLine( cli.symbolSuccess, 'Generated script', cli.colorHighlight( file ) );
-                    }
+					if ( Array.isArray( files ) ) {
+						for ( let file of files || [] ) {
+							cli.newLine( cli.symbolSuccess, 'Generated script', cli.colorHighlight( file ) );
+						}
+					} else {
+						incompatiblePluginVersion = true;
+
+						cli.newLine( cli.symbolError,
+							cli.colorError( "You have an incompatible plug-in version installed (made for version 2.0)." ),
+							"\n ", '_'.repeat( 86 ),
+                            "\n  Please install it again using Concordia Compiler to use the latest compatible version:",
+							"\n ", cli.colorHighlight( 'concordia --plugin-uninstall ' + options.plugin ),
+							"\n ", cli.colorHighlight( 'concordia --plugin-install ' + options.plugin ),
+							"\n ", cli.colorText( 'Note: You may need to use NPX.' ),
+							"\n ", '_'.repeat( 86 ),
+							"\n"
+						);
+					}
 
                     for ( let err of errors || [] ) {
                         // cli.newLine( cli.symbolError, err.message );
@@ -281,7 +298,7 @@ export class AppController {
         }
 
         let executionResult: TestScriptExecutionResult = null;
-        if ( options.executeScript ) { // Requires a plugin
+        if ( ! incompatiblePluginVersion && options.executeScript ) { // Requires a plugin
             let tseo: TestScriptExecutionOptions = new TestScriptExecutionOptions(
                 options.dirScript,
                 options.dirResult
@@ -297,11 +314,11 @@ export class AppController {
                 this.showException( err, options, cli );
                 cli.newLine( SEPARATION_LINE );
             }
-        } else {
+        } else if ( ! options.executeScript ) {
             cli.newLine( cli.symbolInfo, 'Script execution disabled.' );
         }
 
-        if ( options.analyzeResult ) { // Requires a plugin
+        if ( ! incompatiblePluginVersion && options.analyzeResult ) { // Requires a plugin
 
             let reportFile: string;
             if ( ! executionResult  ) {
@@ -328,7 +345,7 @@ export class AppController {
                 this.showException( err, options, cli );
             }
 
-        } else {
+        } else if ( ! options.analyzeResult ) {
             cli.newLine( cli.symbolInfo, 'Results\' analysis disabled.' );
         }
 
