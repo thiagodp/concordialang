@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.NodeTypes = void 0;
 const Keywords_1 = require("./Keywords");
 /**
  * Node types

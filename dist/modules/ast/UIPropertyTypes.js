@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.UIPropertyTypes = void 0;
 var UIPropertyTypes;
 (function (UIPropertyTypes) {
     UIPropertyTypes["ID"] = "id";

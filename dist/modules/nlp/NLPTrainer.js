@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.NLPTrainer = void 0;
 const deepcopy = require("deepcopy");
 const TypeChecking_1 = require("../util/TypeChecking");
 const NLPTrainingData_1 = require("./NLPTrainingData");

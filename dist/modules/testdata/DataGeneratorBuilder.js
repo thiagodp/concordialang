@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.DataGeneratorBuilder = void 0;
 const ValueTypeDetector_1 = require("../util/ValueTypeDetector");
 const StringGenerator_1 = require("./raw/StringGenerator");
 const LongGenerator_1 = require("./raw/LongGenerator");

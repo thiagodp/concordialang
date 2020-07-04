@@ -204,7 +204,7 @@
         "ui": {
 
             "ui_property": {
-                "id": [ "id", "identification", "identificator", "locator" ],
+                "id": [ "id", "identification", "identificator", "locator", "selector" ],
                 "type": [ "type" ],
                 "editable": [ "editable" ],
                 "datatype": [ "datatype", "data type" ],

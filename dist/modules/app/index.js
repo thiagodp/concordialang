@@ -1,30 +1,40 @@
 "use strict";
-function __export(m) {
-    for (var p in m) if (!exports.hasOwnProperty(p)) exports[p] = m[p];
-}
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __exportStar = (this && this.__exportStar) || function(m, exports) {
+    for (var p in m) if (p !== "default" && !exports.hasOwnProperty(p)) __createBinding(exports, m, p);
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-__export(require("./AppController"));
-__export(require("./ATSGenController"));
-__export(require("./CaseType"));
-__export(require("./CLI"));
-__export(require("./CliHelp"));
-__export(require("./CliScriptExecutionReporter"));
-__export(require("./Compiler"));
-__export(require("./CompilerController"));
-__export(require("./Defaults"));
-__export(require("./GuidedConfig"));
-__export(require("./LanguageController"));
-__export(require("./LanguageDrawer"));
-__export(require("./LanguageManager"));
-__export(require("./Listeners"));
-__export(require("./MultiFileProcessor"));
-__export(require("./Options"));
-__export(require("./OptionsHandler"));
-__export(require("./ProcessingInfo"));
-__export(require("./SimpleAppEventsListener"));
-__export(require("./SingleDocumentProcessor"));
-__export(require("./SingleFileCompiler"));
-__export(require("./SingleFileProcessor"));
-__export(require("./TCGenController"));
-__export(require("./UI"));
-__export(require("./VerboseAppEventsListener"));
+__exportStar(require("./AppController"), exports);
+__exportStar(require("./ATSGenController"), exports);
+__exportStar(require("./CaseType"), exports);
+__exportStar(require("./CLI"), exports);
+__exportStar(require("./CliHelp"), exports);
+__exportStar(require("./CliScriptExecutionReporter"), exports);
+__exportStar(require("./Compiler"), exports);
+__exportStar(require("./CompilerController"), exports);
+__exportStar(require("./CompilerListener"), exports);
+__exportStar(require("./Defaults"), exports);
+__exportStar(require("./GuidedConfig"), exports);
+__exportStar(require("./LanguageController"), exports);
+__exportStar(require("./LanguageDrawer"), exports);
+__exportStar(require("./LanguageManager"), exports);
+__exportStar(require("./Listeners"), exports);
+__exportStar(require("./MultiFileProcessor"), exports);
+__exportStar(require("./Options"), exports);
+__exportStar(require("./OptionsHandler"), exports);
+__exportStar(require("./ProcessingInfo"), exports);
+__exportStar(require("./ScriptExecutionReporter"), exports);
+__exportStar(require("./SimpleAppEventsListener"), exports);
+__exportStar(require("./SingleDocumentProcessor"), exports);
+__exportStar(require("./SingleFileCompiler"), exports);
+__exportStar(require("./SingleFileProcessor"), exports);
+__exportStar(require("./TCGenController"), exports);
+__exportStar(require("./TCGenListener"), exports);
+__exportStar(require("./UI"), exports);
+__exportStar(require("./VerboseAppEventsListener"), exports);

@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.AbstractTestScriptGenerator = void 0;
 const concordialang_plugin_1 = require("concordialang-plugin");
 const Entities_1 = require("../nlp/Entities");
 const DatabaseToAbstractDatabase_1 = require("../db/DatabaseToAbstractDatabase");

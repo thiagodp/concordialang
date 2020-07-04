@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.SimpleCompiler = void 0;
 const path_1 = require("path");
 const Options_1 = require("../app/Options");
 const dict_1 = require("../dict");

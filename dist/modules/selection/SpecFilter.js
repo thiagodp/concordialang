@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.SpecFilter = void 0;
 const events_1 = require("events");
 const GraphFilter_1 = require("./GraphFilter");
 const ImportBasedGraphBuilder_1 = require("./ImportBasedGraphBuilder");

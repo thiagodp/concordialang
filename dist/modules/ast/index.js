@@ -1,12 +1,44 @@
 "use strict";
-function __export(m) {
-    for (var p in m) if (!exports.hasOwnProperty(p)) exports[p] = m[p];
-}
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __exportStar = (this && this.__exportStar) || function(m, exports) {
+    for (var p in m) if (p !== "default" && !exports.hasOwnProperty(p)) __createBinding(exports, m, p);
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-__export(require("./Database"));
-__export(require("./Spec"));
-__export(require("./Tag"));
-__export(require("./UIProperty"));
-__export(require("./UIPropertyReference"));
-__export(require("./UIPropertyTypes"));
-__export(require("./VariantLike"));
+__exportStar(require("./Background"), exports);
+__exportStar(require("./Block"), exports);
+__exportStar(require("./Constant"), exports);
+__exportStar(require("./ConstantBlock"), exports);
+__exportStar(require("./Database"), exports);
+__exportStar(require("./Document"), exports);
+__exportStar(require("./Feature"), exports);
+__exportStar(require("./FileInfo"), exports);
+__exportStar(require("./Import"), exports);
+__exportStar(require("./Language"), exports);
+__exportStar(require("./ListItem"), exports);
+__exportStar(require("./LongString"), exports);
+__exportStar(require("./Node"), exports);
+__exportStar(require("./Regex"), exports);
+__exportStar(require("./RegexBlock"), exports);
+__exportStar(require("./Rule"), exports);
+__exportStar(require("./Scenario"), exports);
+__exportStar(require("./Spec"), exports);
+__exportStar(require("./Step"), exports);
+__exportStar(require("./Table"), exports);
+__exportStar(require("./Tag"), exports);
+__exportStar(require("./Task"), exports);
+__exportStar(require("./TestCase"), exports);
+__exportStar(require("./TestEvent"), exports);
+__exportStar(require("./Text"), exports);
+__exportStar(require("./UIElement"), exports);
+__exportStar(require("./UIProperty"), exports);
+__exportStar(require("./UIPropertyReference"), exports);
+__exportStar(require("./UIPropertyTypes"), exports);
+__exportStar(require("./Variant"), exports);
+__exportStar(require("./VariantBackground"), exports);
+__exportStar(require("./VariantLike"), exports);

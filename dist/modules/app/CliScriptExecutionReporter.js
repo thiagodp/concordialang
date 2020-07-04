@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.CliScriptExecutionReporter = void 0;
 const TimeFormat_1 = require("../util/TimeFormat");
 /**
  * CLI script execution reporter

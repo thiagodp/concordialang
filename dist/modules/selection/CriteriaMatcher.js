@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.CriteriaMatcher = void 0;
 const Tag_1 = require("../ast/Tag");
 const Defaults_1 = require("../app/Defaults");
 const TypeChecking_1 = require("../util/TypeChecking");

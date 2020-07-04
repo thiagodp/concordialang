@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.VerboseAppEventsListener = void 0;
 const prettyBytes = require("pretty-bytes");
 const ErrorSorting_1 = require("../util/ErrorSorting");
 const TypeChecking_1 = require("../util/TypeChecking");

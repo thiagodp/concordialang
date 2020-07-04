@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.FirstMostImportantVariantSelectionStrategy = exports.SingleRandomVariantSelectionStrategy = exports.FirstVariantSelectionStrategy = exports.AllVariantsSelectionStrategy = void 0;
 const RandomLong_1 = require("../testdata/random/RandomLong");
 const Random_1 = require("../testdata/random/Random");
 const TagUtil_1 = require("../util/TagUtil");

@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.PluginDrawer = void 0;
 const sprintf_js_1 = require("sprintf-js");
 /**
  * Draws plug-in related data.

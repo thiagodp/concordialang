@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.UIElementPropertyExtractor = void 0;
 const enumUtil = require("enum-util");
 const ast_1 = require("../ast");
 const nlp_1 = require("../nlp");

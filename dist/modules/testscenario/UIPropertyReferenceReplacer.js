@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.UIPropertyReferenceReplacer = void 0;
 const path_1 = require("path");
 const ast_1 = require("../ast");
 const util_1 = require("../util");

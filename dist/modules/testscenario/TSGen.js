@@ -9,6 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.TSGen = void 0;
 const deepcopy = require("deepcopy");
 const ast_1 = require("../ast");
 const nlp_1 = require("../nlp");

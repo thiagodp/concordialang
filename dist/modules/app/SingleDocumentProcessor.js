@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.SingleDocumentProcessor = void 0;
 const BatchDocumentAnalyzer_1 = require("../semantic/single/BatchDocumentAnalyzer");
 /**
  * Single document processor.

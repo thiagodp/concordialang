@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.DoubleLimits = void 0;
 /**
  * Limits for double values.
  *

@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.MinMaxChecker = void 0;
 const TypeChecking_1 = require("../../util/TypeChecking");
 /**
  * Checks minimum and maximum values.

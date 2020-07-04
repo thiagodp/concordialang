@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.DocumentUtil = void 0;
 const ast_1 = require("../ast");
 const CaseType_1 = require("../app/CaseType");
 const TypeChecking_1 = require("./TypeChecking");

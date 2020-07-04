@@ -1,6 +1,7 @@
 "use strict";
 //#region UI ACTION
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.DATABASE_PROPERTY_SYNTAX_RULES = exports.DEFAULT_DATABASE_PROPERTY_SYNTAX_RULE = exports.UI_PROPERTY_SYNTAX_RULES = exports.DEFAULT_UI_PROPERTY_SYNTAX_RULE = exports.UI_ACTION_SYNTAX_RULES = exports.DEFAULT_UI_ACTION_SYNTAX_RULE = void 0;
 /**
  * Default syntax rule for UI Actions.
  *

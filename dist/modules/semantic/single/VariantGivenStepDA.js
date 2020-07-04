@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.VariantGivenStepDA = void 0;
 const nlp_1 = require("../../nlp");
 const TypeChecking_1 = require("../../util/TypeChecking");
 const NodeTypes_1 = require("../../req/NodeTypes");

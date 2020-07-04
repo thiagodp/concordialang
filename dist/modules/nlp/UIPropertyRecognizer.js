@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.UIPropertyRecognizer = void 0;
 const nlp_1 = require("../nlp");
 const ast_1 = require("../ast");
 const TypeChecking_1 = require("../util/TypeChecking");

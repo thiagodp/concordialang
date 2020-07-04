@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.DatabaseDA = void 0;
 const ast_1 = require("../../ast");
 const SemanticException_1 = require("../SemanticException");
 /**

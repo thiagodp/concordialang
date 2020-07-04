@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.TableRowLexer = void 0;
 const Expressions_1 = require("../req/Expressions");
 const LexicalException_1 = require("./LexicalException");
 const NodeTypes_1 = require("../req/NodeTypes");

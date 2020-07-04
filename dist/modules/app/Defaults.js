@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.Defaults = exports.InvalidSpecialOptions = exports.CombinationOptions = exports.VariantSelectionOptions = void 0;
 const CaseType_1 = require("./CaseType");
 /**
  * Reduces the Variants that produce a certain State required by a Precondition

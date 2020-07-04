@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.ProcessedFileData = exports.FileData = exports.FileMeta = void 0;
 class FileMeta {
     constructor(fullPath, size, hash) {
         this.fullPath = fullPath;

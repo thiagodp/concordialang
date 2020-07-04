@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.supportTablesInQueries = exports.stringToDatabaseTypeString = exports.isPathBasedDatabaseType = exports.DatabaseType = void 0;
 const enum_util_1 = require("enum-util");
 /**
  * Currently supported database types, through `database-js`.

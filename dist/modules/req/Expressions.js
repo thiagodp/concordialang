@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.Expressions = void 0;
 /**
  * Commonly-used regular expressions.
  *

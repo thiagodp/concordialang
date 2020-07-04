@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.Intents = void 0;
 /**
  * Intents for NLP
  *

@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.UIElementNameHandler = void 0;
 const Symbols_1 = require("../req/Symbols");
 const TypeChecking_1 = require("./TypeChecking");
 /**

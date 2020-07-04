@@ -9,6 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.LanguageController = void 0;
 const LanguageDrawer_1 = require("./LanguageDrawer");
 const LanguageManager_1 = require("./LanguageManager");
 class LanguageController {

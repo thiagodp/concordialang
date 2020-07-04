@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.NLPTrainingDataConversor = void 0;
 const NLPTrainingData_1 = require("./NLPTrainingData");
 /**
  * Training data conversor.

@@ -9,6 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.UIElementSSA = void 0;
 const deepcopy = require("deepcopy");
 const Entities_1 = require("../nlp/Entities");
 const QueryParser_1 = require("../db/QueryParser");

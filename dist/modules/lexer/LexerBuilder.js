@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.LexerBuilder = void 0;
 const dict_1 = require("../dict");
 const Lexer_1 = require("./Lexer");
 class LexerBuilder {

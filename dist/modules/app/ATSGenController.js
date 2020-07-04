@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.ATSGenController = void 0;
 const AbstractTestScriptGenerator_1 = require("../testscript/AbstractTestScriptGenerator");
 const TypeChecking_1 = require("../util/TypeChecking");
 /**

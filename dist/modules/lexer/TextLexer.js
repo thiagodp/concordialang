@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.TextLexer = void 0;
 const Symbols_1 = require("../req/Symbols");
 const NodeTypes_1 = require("../req/NodeTypes");
 const LineChecker_1 = require("../req/LineChecker");

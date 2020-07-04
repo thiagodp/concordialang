@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.NodeSentenceRecognizer = void 0;
 const Warning_1 = require("../error/Warning");
 const TypeChecking_1 = require("../util/TypeChecking");
 const _1 = require(".");

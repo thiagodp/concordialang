@@ -1,11 +1,19 @@
 "use strict";
-function __export(m) {
-    for (var p in m) if (!exports.hasOwnProperty(p)) exports[p] = m[p];
-}
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __exportStar = (this && this.__exportStar) || function(m, exports) {
+    for (var p in m) if (p !== "default" && !exports.hasOwnProperty(p)) __createBinding(exports, m, p);
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-__export(require("./PackageBasedPluginFinder"));
-__export(require("./PackageToPluginData"));
-__export(require("./PluginController"));
-__export(require("./PluginData"));
-__export(require("./PluginDrawer"));
-__export(require("./PluginManager"));
+__exportStar(require("./PackageBasedPluginFinder"), exports);
+__exportStar(require("./PackageToPluginData"), exports);
+__exportStar(require("./PluginController"), exports);
+__exportStar(require("./PluginData"), exports);
+__exportStar(require("./PluginDrawer"), exports);
+__exportStar(require("./PluginFinder"), exports);
+__exportStar(require("./PluginManager"), exports);

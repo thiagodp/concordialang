@@ -9,6 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.SingleFileCompiler = void 0;
 const SingleFileProcessor_1 = require("./SingleFileProcessor");
 const SingleDocumentProcessor_1 = require("./SingleDocumentProcessor");
 class SingleFileCompiler {

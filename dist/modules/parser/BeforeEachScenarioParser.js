@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.BeforeEachScenarioParser = void 0;
 const SyntacticException_1 = require("./SyntacticException");
 const TypeChecking_1 = require("../util/TypeChecking");
 /**

@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.DirectoryReadResult = void 0;
 class DirectoryReadResult {
     constructor(dirCount, filesCount, filesSize, durationMs, fileErrorCount) {
         this.dirCount = dirCount;

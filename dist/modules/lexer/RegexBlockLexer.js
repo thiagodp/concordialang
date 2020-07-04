@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.RegexBlockLexer = void 0;
 const BlockLexer_1 = require("./BlockLexer");
 const NodeTypes_1 = require("../req/NodeTypes");
 /**

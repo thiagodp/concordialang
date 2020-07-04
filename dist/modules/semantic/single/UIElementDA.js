@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.UIElementDA = void 0;
 const DuplicationChecker_1 = require("../../util/DuplicationChecker");
 const TypeChecking_1 = require("../../util/TypeChecking");
 const UIElementPropertyExtractor_1 = require("../../util/UIElementPropertyExtractor");

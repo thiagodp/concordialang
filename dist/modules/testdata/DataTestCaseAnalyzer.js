@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.DataTestCaseAnalyzer = exports.DTCAnalysisData = exports.DTCAnalysisResult = void 0;
 const arrayDiff = require("arr-diff");
 const enumUtil = require("enum-util");
 const ast_1 = require("../ast");

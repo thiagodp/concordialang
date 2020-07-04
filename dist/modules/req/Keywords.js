@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.Keywords = void 0;
 /**
  * Keywords to identify nodes.
  *

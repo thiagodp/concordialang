@@ -9,6 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.CompilerController = void 0;
 const SimpleAppEventsListener_1 = require("./SimpleAppEventsListener");
 const LexerBuilder_1 = require("../lexer/LexerBuilder");
 const Parser_1 = require("../parser/Parser");

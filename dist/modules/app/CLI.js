@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.CLI = void 0;
 const logUpdate = require("log-update");
 const logSymbols = require("log-symbols");
 const chalk_1 = require("chalk");
