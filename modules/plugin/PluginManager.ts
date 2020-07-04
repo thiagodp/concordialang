@@ -1,13 +1,14 @@
 import * as childProcess from 'child_process';
-import * as inquirer from 'inquirer';
+import { Plugin } from 'concordialang-plugin';
 import * as fs from 'fs';
+import * as inquirer from 'inquirer';
 import { join } from 'path';
-import { Plugin } from "concordialang-plugin";
-import { CLI } from 'modules/app/CLI';
-import { PluginData, PLUGIN_PREFIX } from "./PluginData";
-import { PluginDrawer } from "./PluginDrawer";
-import { PluginFinder } from "./PluginFinder";
+
+import { CLI } from '../app/CLI';
 import { readFileAsync } from '../util/read-file';
+import { PLUGIN_PREFIX, PluginData } from './PluginData';
+import { PluginDrawer } from './PluginDrawer';
+import { PluginFinder } from './PluginFinder';
 
 /**
  * Plug-in manager
@@ -122,8 +123,9 @@ export class PluginManager {
 
         // Install the plug-in as a DEVELOPMENT dependency using NPM
 
-        const PACKAGE_MANAGER = 'NPM';
-        const INSTALL_DEV_CMD = 'npm install --save-dev ' + name + ' --color=always';
+		const PACKAGE_MANAGER = 'NPM';
+		// App @1 to install only plugins compatible with Concordia 1.x
+        const INSTALL_DEV_CMD = 'npm install --save-dev ' + name + '@1 --no-fund --no-audit --loglevel error --color=always';
 
         drawer.showMessageTryingToInstall( name, PACKAGE_MANAGER );
         const code: number = await this.runCommand( INSTALL_DEV_CMD );
@@ -156,7 +158,7 @@ export class PluginManager {
 
         // Remove with a package manager
         drawer.showMessageTryingToUninstall( name, 'NPM' );
-        let code: number = await this.runCommand( 'npm uninstall --save-dev ' + name + ' --color=always' );
+        let code: number = await this.runCommand( 'npm uninstall --save-dev ' + name + ' --no-fund --no-audit --color=always' );
         drawer.showCommandCode( code );
     }
 

@@ -262,11 +262,11 @@ export class AppController {
                         this.showException( err, options, cli );
                     }
 
-                    for ( let file of files ) {
+                    for ( let file of files || [] ) {
                         cli.newLine( cli.symbolSuccess, 'Generated script', cli.colorHighlight( file ) );
                     }
 
-                    for ( let err of errors ) {
+                    for ( let err of errors || [] ) {
                         // cli.newLine( cli.symbolError, err.message );
                         this.showException( err, options, cli );
                     }

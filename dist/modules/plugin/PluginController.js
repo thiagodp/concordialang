@@ -9,6 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.PluginController = void 0;
 const PluginDrawer_1 = require("./PluginDrawer");
 const PluginManager_1 = require("./PluginManager");
 const PackageBasedPluginFinder_1 = require("./PackageBasedPluginFinder");

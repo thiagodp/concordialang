@@ -9,6 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.AppController = void 0;
 const fs_1 = require("fs");
 const path_1 = require("path");
 const util_1 = require("util");
@@ -229,10 +230,10 @@ class AppController {
                             hasErrors = true;
                             this.showException(err, options, cli);
                         }
-                        for (let file of files) {
+                        for (let file of files || []) {
                             cli.newLine(cli.symbolSuccess, 'Generated script', cli.colorHighlight(file));
                         }
-                        for (let err of errors) {
+                        for (let err of errors || []) {
                             // cli.newLine( cli.symbolError, err.message );
                             this.showException(err, options, cli);
                         }

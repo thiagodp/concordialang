@@ -9,12 +9,13 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.PluginManager = void 0;
 const childProcess = require("child_process");
-const inquirer = require("inquirer");
 const fs = require("fs");
+const inquirer = require("inquirer");
 const path_1 = require("path");
-const PluginData_1 = require("./PluginData");
 const read_file_1 = require("../util/read-file");
+const PluginData_1 = require("./PluginData");
 /**
  * Plug-in manager
  *
@@ -103,7 +104,8 @@ class PluginManager {
             }
             // Install the plug-in as a DEVELOPMENT dependency using NPM
             const PACKAGE_MANAGER = 'NPM';
-            const INSTALL_DEV_CMD = 'npm install --save-dev ' + name + ' --color=always';
+            // App @1 to install only plugins compatible with Concordia 1.x
+            const INSTALL_DEV_CMD = 'npm install --save-dev ' + name + '@1 --no-fund --no-audit --loglevel error --color=always';
             drawer.showMessageTryingToInstall(name, PACKAGE_MANAGER);
             const code = yield this.runCommand(INSTALL_DEV_CMD);
             drawer.showCommandCode(code, false);
@@ -130,7 +132,7 @@ class PluginManager {
             }
             // Remove with a package manager
             drawer.showMessageTryingToUninstall(name, 'NPM');
-            let code = yield this.runCommand('npm uninstall --save-dev ' + name + ' --color=always');
+            let code = yield this.runCommand('npm uninstall --save-dev ' + name + ' --no-fund --no-audit --color=always');
             drawer.showCommandCode(code);
         });
     }
