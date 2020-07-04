@@ -2,6 +2,21 @@
     "version": "0.2.0",
     "configurations": [
         {
+          "type": "node",
+          "request": "launch",
+          "name": "App -x",
+          "program": "${workspaceFolder}/bin/concordia",
+          "args": [
+              "-x --verbose --debug"
+          ],
+          "console": "integratedTerminal",
+          "internalConsoleOptions": "neverOpen",
+          "disableOptimisticBPs": true,
+          "windows": {
+              "program": "${workspaceFolder}/bin/concordia",
+          }
+      },
+        {
             "type": "node",
             "request": "launch",
             "name": "Jest All",
