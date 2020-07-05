@@ -70,7 +70,9 @@ export class TestScenarioGenerator {
         let testScenarios: TestScenario[] = [];
 
         // Detect Preconditions, State Calls, and Postconditions of the Variant
-        this.detectVariantStates( variant, ctx.errors );
+		this.detectVariantStates( variant, ctx.errors );
+
+		// this.mapPostconditionsOf( variant );
 
         // console.log( 'variant', variant.name, '\n', variant.sentences.map( s => s.content ) );
         // console.log( 'pre', variant.preconditions );
@@ -108,7 +110,7 @@ export class TestScenarioGenerator {
                 let currentMap = pairMap[ state.name ];
 
                 let producerVariants = this.variantsThatProduce( state.name );
-                // console.log( 'Producer variants', producerVariants );
+                // console.log( 'Producer variants:', producerVariants );
 
                 // No producers ? -> Error
                 if ( producerVariants.length < 1 ) {
@@ -120,7 +122,8 @@ export class TestScenarioGenerator {
                 }
 
                 // Reduce Variants
-                producerVariants = this.selectVariantsToCombine( producerVariants );
+				producerVariants = this.selectVariantsToCombine( producerVariants );
+				// console.log( 'Producer variants after reduction:', producerVariants );
 
                 // Make pairs State => Test Scenario to combine later
                 for ( let otherVariant of producerVariants ) {
@@ -154,7 +157,7 @@ export class TestScenarioGenerator {
 
             // console.log( 'pairMap', JSON.stringify( pairMap ) );
 
-            // let product = cartesian( pairMap ); // TO-DO replace cartesian with strategy
+			// let product = cartesian( pairMap ); // TO-DO replace cartesian with strategy
             let result = this._statePairCombinationStrategy.combine( pairMap );
 
             let testScenariosToCombineByState: any[] = result;

@@ -129,7 +129,8 @@ export class TestCaseGeneratorFacade {
 
                     let testScenarios: TestScenario[] = [];
                     try {
-                        testScenarios = await tsGen.generate( ctx, variant );
+						testScenarios = await tsGen.generate( ctx, variant );
+						// console.log( 'test scenarios:', testScenarios );
                     } catch ( err ) {
                         errors.push( err );
                         continue;
@@ -142,9 +143,11 @@ export class TestCaseGeneratorFacade {
 
                         let generatedTC: TestCase[] = [];
                         try {
-                            generatedTC = await tcGen.generate( ts, ctx, testPlanMakers );
+							generatedTC = await tcGen.generate( ts, ctx, testPlanMakers );
+							// console.log( 'generated TC', generatedTC );
                         } catch ( err ) {
-                            errors.push( err );
+							errors.push( err );
+							// console.log( 'ERRO --->', err );
                             continue;
                         }
 
@@ -176,7 +179,7 @@ export class TestCaseGeneratorFacade {
             }
 
             // Generating Documents with the Test Cases
-            const newDoc: Document = tcDocGen.generate( doc, testCases );
+			const newDoc: Document = tcDocGen.generate( doc, testCases );
 
             // Erase existing test case files when there is no test cases
             if ( testCases.length < 1 ) {

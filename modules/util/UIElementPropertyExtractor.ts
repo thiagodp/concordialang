@@ -221,25 +221,31 @@ export class UIElementPropertyExtractor {
      * @param property Property
      */
     extractProperty( uie: UIElement, property: string ): UIProperty | null {
-        if ( ! isDefined( uie.items ) || uie.items.length < 1 ) {
+        if ( ! uie || ! uie.items || uie.items.length < 1 ) {
             return null;
         }
         return uie.items.find( item => !! item && property === item.property ) || null;
     }
 
     extractProperties( uie: UIElement, property: string ): UIProperty[] {
-        if ( ! isDefined( uie.items ) ) {
+        if ( ! uie || ! uie.items ) {
             return [];
         }
         return uie.items.filter( item => !! item && property === item.property );
     }
 
     hasEntities( uip: UIProperty, entities: string[] ): boolean {
+		if ( ! uip || ! uip.nlpResult || ! uip.nlpResult.entities ) {
+			return false;
+		}
         const uipEntities: string[] = uip.nlpResult.entities.map( e => e.entity );
         return entities.every( e => uipEntities.indexOf( e ) >= 0 );
     }
 
     hasEntity( uip: UIProperty, entity: string ): boolean {
+		if ( ! uip || ! uip.nlpResult || ! uip.nlpResult.entities ) {
+			return false;
+		}
         const e = uip.nlpResult.entities.find( nlpEntity => nlpEntity.entity == entity );
         return !!e;
     }

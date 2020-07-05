@@ -58,6 +58,7 @@ class TestScenarioGenerator {
             let testScenarios = [];
             // Detect Preconditions, State Calls, and Postconditions of the Variant
             this.detectVariantStates(variant, ctx.errors);
+            // this.mapPostconditionsOf( variant );
             // console.log( 'variant', variant.name, '\n', variant.sentences.map( s => s.content ) );
             // console.log( 'pre', variant.preconditions );
             // console.log( 'post', variant.postconditions );
@@ -84,7 +85,7 @@ class TestScenarioGenerator {
                     }
                     let currentMap = pairMap[state.name];
                     let producerVariants = this.variantsThatProduce(state.name);
-                    // console.log( 'Producer variants', producerVariants );
+                    // console.log( 'Producer variants:', producerVariants );
                     // No producers ? -> Error
                     if (producerVariants.length < 1) {
                         const msg = 'The producer of the state "' + state.name + '" was not found.';
@@ -95,6 +96,7 @@ class TestScenarioGenerator {
                     }
                     // Reduce Variants
                     producerVariants = this.selectVariantsToCombine(producerVariants);
+                    // console.log( 'Producer variants after reduction:', producerVariants );
                     // Make pairs State => Test Scenario to combine later
                     for (let otherVariant of producerVariants) {
                         // console.log( 'otherVariant >>', otherVariant.name, '\n', otherVariant.sentences.map( s => s.content ) );

@@ -219,7 +219,9 @@ export class PreTestCaseGenerator {
         //  desired mix strategy.
         //
 
-        const stepUIElements: UIElement[] = this.extractUIElementsFromSteps( newSteps, ctx );
+		const stepUIElements: UIElement[] = this.extractUIElementsFromSteps( newSteps, ctx );
+
+		// console.log('stepUIElements', stepUIElements );
 
         // NO UI ELEMENTS --> No values to generate and no oracles to add
         if ( stepUIElements.length < 1 ) {
@@ -251,7 +253,9 @@ export class PreTestCaseGenerator {
         // }
         // ---
 
-        const stepUIEVariables: string[] = stepUIElements.map( uie => uie.info ? uie.info.fullVariableName : uie.name );
+		const stepUIEVariables: string[] = stepUIElements.map( uie => uie.info ? uie.info.fullVariableName : uie.name );
+
+		// console.log('stepUIEVariables', stepUIEVariables );
 
         const allAvailableUIElements: UIElement[] = ctx.spec.extractUIElementsFromDocumentAndImports( ctx.doc );
         const allAvailableVariables: string[] = allAvailableUIElements.map( uie => uie.info ? uie.info.fullVariableName : uie.name );
@@ -735,12 +739,14 @@ export class PreTestCaseGenerator {
 
             let uieLiteral = isDefined( uie ) && isDefined( uie.info ) ? uie.info.uiLiteral : null;
             // console.log( 'uieName', uieName, 'uieLiteral', uieLiteral, 'variable', variable, 'doc', ctx.doc.fileInfo.path );
-            if ( null === uieLiteral ) { // Should never happen since Spec defines Literals for mapped UI Elements
+
+			// It happens when the UI Element is used in a step but it is not declared
+			if ( null === uieLiteral ) {
                 uieLiteral = convertCase( variable, this.uiLiteralCaseOption );
-                const msg = 'Could not retrieve a literal from ' +
+                const msg = 'Could not retrieve a selector from ' +
                     Symbols.UI_ELEMENT_PREFIX + variable +
-                    Symbols.UI_ELEMENT_SUFFIX + '. Generating the identification "' + uieLiteral + '"';
-                ctx.warnings.push( new RuntimeException( msg, step.location ) );
+                    Symbols.UI_ELEMENT_SUFFIX + ', so I\'m generating "' + uieLiteral + '" for it.';
+                ctx.warnings.push( new Warning( msg, step.location ) );
             }
 
             // Analyze whether it is an input target type

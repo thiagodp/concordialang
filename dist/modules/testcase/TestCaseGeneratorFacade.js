@@ -83,6 +83,7 @@ class TestCaseGeneratorFacade {
                         let testScenarios = [];
                         try {
                             testScenarios = yield tsGen.generate(ctx, variant);
+                            // console.log( 'test scenarios:', testScenarios );
                         }
                         catch (err) {
                             errors.push(err);
@@ -94,9 +95,11 @@ class TestCaseGeneratorFacade {
                             let generatedTC = [];
                             try {
                                 generatedTC = yield tcGen.generate(ts, ctx, testPlanMakers);
+                                // console.log( 'generated TC', generatedTC );
                             }
                             catch (err) {
                                 errors.push(err);
+                                // console.log( 'ERRO --->', err );
                                 continue;
                             }
                             if (generatedTC.length < 1) {
