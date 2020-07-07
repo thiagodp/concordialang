@@ -4,7 +4,29 @@ import { RandomString } from "../../../modules/testdata/random/RandomString";
 describe( 'RandomString', () => {
 
     const _r = new Random();
-    let random = new RandomString( _r );
+	let random = new RandomString( _r );
+
+	it( 'can set the minimum string character', () => {
+		const r = new RandomString( _r );
+		expect( r.minCharCode( 65 ) ).toEqual( 65 );
+	} );
+
+	it( 'can set the maximum string character', () => {
+		const r = new RandomString( _r );
+		expect( r.maxCharCode( 65 ) ).toEqual( 65 );
+	} );
+
+	it( 'cannot set the minimum string character greater than the maximum', () => {
+		const r = new RandomString( _r );
+		expect( r.maxCharCode( 65 ) ).toEqual( 65 );
+		expect( r.minCharCode( 66 ) ).toEqual( 65 );
+	} );
+
+	it( 'cannot set the maximum string character less than the minimum', () => {
+		const r = new RandomString( _r );
+		expect( r.minCharCode( 65 ) ).toEqual( 65 );
+		expect( r.maxCharCode( 64 ) ).toEqual( 65 );
+	} );
 
     it( 'can generate an empty string', () => {
         expect( random.exactly( 0 ) ).toBe( '' );

@@ -77,7 +77,7 @@ class CriteriaMatcher {
         return false;
     }
     importanceValue(tags) {
-        return this._tagUtil.firstNumericContentOf(this._tagUtil.tagsWithNameInKeywords(tags, this._importanceKeywords));
+        return this._tagUtil.numericContentOfTheFirstTag(this._tagUtil.tagsWithNameInKeywords(tags, this._importanceKeywords));
     }
     hasIgnoreTag(tags) {
         const filtered = this._tagUtil.tagsWithNameInKeywords(tags, this._ignoreKeywords);

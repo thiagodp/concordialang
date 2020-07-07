@@ -66,6 +66,26 @@ function main(appPath, processPath) {
             ui.showVersion();
             return true;
         }
+        // Check for updates
+        const pkg = meowResult.pkg; // require( './package.json' );
+        const notifier = updateNotifier({
+            pkg,
+            updateCheckInterval: 1000 * 60 * 60 * 12 // 12 hours
+        });
+        notifier.notify(); // display a message only if an update is available
+        if (!!notifier.update) {
+            const diff = semverDiff(notifier.update.current, notifier.update.latest);
+            const hasBreakingChange = 'major' === diff;
+            const url = 'https://github.com/thiagodp/concordialang/releases';
+            ui.announceUpdateAvailable(url, hasBreakingChange);
+        }
+        // Newer option ?
+        if (options.newer) {
+            if (!notifier.update) {
+                ui.announceNoUpdateAvailable();
+            }
+            return true;
+        }
         // DATABASE
         if (options.dbInstall) {
             const databases = options.dbInstall.split(',').map(d => d.trim());
@@ -181,26 +201,6 @@ function main(appPath, processPath) {
             }
         }
         if (options.init && !options.pluginInstall) {
-            return true;
-        }
-        // Check for updates
-        const pkg = meowResult.pkg; // require( './package.json' );
-        const notifier = updateNotifier({
-            pkg,
-            updateCheckInterval: 1000 * 60 * 60 * 12 // 12 hours
-        });
-        notifier.notify(); // display a message only if an update is available
-        if (!!notifier.update) {
-            const diff = semverDiff(notifier.update.current, notifier.update.latest);
-            const hasBreakingChange = 'major' === diff;
-            const url = 'https://github.com/thiagodp/concordialang/releases';
-            ui.announceUpdateAvailable(url, hasBreakingChange);
-        }
-        // Newer option ?
-        if (options.newer) {
-            if (!notifier.update) {
-                ui.announceNoUpdateAvailable();
-            }
             return true;
         }
         const app = new app_1.App(fs, path);

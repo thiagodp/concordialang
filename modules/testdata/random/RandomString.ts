@@ -30,8 +30,8 @@ function avoidDatabaseChar( char ) {
  */
 export class RandomString {
 
-    public readonly MIN_PRINTABLE_ASCII: number = 32;
-    public readonly MAX_PRINTABLE_ASCII: number = 255;
+    public readonly MIN_PRINTABLE_ASCII_ISO: number = 32;
+    public readonly MAX_PRINTABLE_ASCII_ISO: number = 255;
 
     private readonly _randomLong: RandomLong;
     private _minCharCode: number;
@@ -48,8 +48,8 @@ export class RandomString {
         public options: RandomStringOptions = Object.assign( {}, DEFAULT_RANDOM_STRING_OPTIONS )
     ) {
         this._randomLong = new RandomLong( _random  );
-        this._minCharCode = this.MIN_PRINTABLE_ASCII;
-        this._maxCharCode = this.MAX_PRINTABLE_ASCII;
+        this._minCharCode = this.MIN_PRINTABLE_ASCII_ISO;
+        this._maxCharCode = this.MAX_PRINTABLE_ASCII_ISO;
     }
 
     // VALUE GENERATION
@@ -90,23 +90,33 @@ export class RandomString {
 
     // UTIL
 
-    public minCharCode( min?: number ) {
+	/**
+	 * Sets or gets the minimum character code.
+	 *
+	 * @param min Minimum character code.
+	 */
+    public minCharCode( min?: number ): number {
         if ( isDefined( min ) && min >= 0 ) {
             this._minCharCode = min;
             // Prevent range error
             if ( this._maxCharCode < this._minCharCode ) {
-                this._maxCharCode = this._minCharCode;
+                this._minCharCode = this._maxCharCode;
             }
         }
         return this._minCharCode;
     }
 
-    public maxCharCode( max?: number ) {
+	/**
+	 * Sets or gets the maximum character code.
+	 *
+	 * @param max Maximum character code.
+	 */
+    public maxCharCode( max?: number ): number  {
         if ( isDefined( max ) && max >= 0 ) {
             this._maxCharCode = max;
             // Prevent range error
             if ( this._minCharCode > this._maxCharCode ) {
-                this._minCharCode = this._maxCharCode;
+                this._maxCharCode = this._minCharCode;
             }
         }
         return this._maxCharCode;

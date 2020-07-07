@@ -94,7 +94,7 @@ export class CriteriaMatcher {
     }
 
     importanceValue( tags: Tag[] ): number | null {
-        return this._tagUtil.firstNumericContentOf(
+        return this._tagUtil.numericContentOfTheFirstTag(
             this._tagUtil.tagsWithNameInKeywords( tags, this._importanceKeywords )
         );
     }

@@ -12,6 +12,7 @@ var __exportStar = (this && this.__exportStar) || function(m, exports) {
 Object.defineProperty(exports, "__esModule", { value: true });
 __exportStar(require("./Compiler"), exports);
 __exportStar(require("./CompilerFacade"), exports);
+__exportStar(require("./CompilerListener"), exports);
+__exportStar(require("./FileCompilationListener"), exports);
 __exportStar(require("./ImportBasedGraphBuilder"), exports);
-__exportStar(require("./ProcessingInfo"), exports);
 __exportStar(require("./SingleFileCompiler"), exports);

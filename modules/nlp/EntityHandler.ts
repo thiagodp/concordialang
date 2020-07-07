@@ -1,4 +1,6 @@
-import { Entities, NLPEntity, NLPResult } from '.';
+import { Entities } from './Entities';
+import { NLPEntity } from './NLPEntity';
+import { NLPResult } from './NLPResult';
 
 /**
  * Entity handler
@@ -8,6 +10,9 @@ import { Entities, NLPEntity, NLPResult } from '.';
 export class EntityHandler {
 
     with( r: NLPResult, target: Entities ): NLPEntity[] {
+		if ( ! r.entities ) {
+			return [];
+		}
         return r.entities.filter( e => e.entity === target );
     }
 

@@ -8,6 +8,9 @@ exports.EntityHandler = void 0;
  */
 class EntityHandler {
     with(r, target) {
+        if (!r.entities) {
+            return [];
+        }
         return r.entities.filter(e => e.entity === target);
     }
     count(r, target) {

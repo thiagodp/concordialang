@@ -97,6 +97,9 @@
     "watchPlugins": [
       "jest-watch-typeahead/filename",
       "jest-watch-typeahead/testname"
+    ],
+    "collectCoverageFrom": [
+      "modules/{!(cli),}/**/{!(index),}.ts"
     ]
   },
   "dependencies": {

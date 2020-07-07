@@ -1,5 +1,13 @@
 import { LocatedException } from './LocatedException';
 
+/**
+ * Returns the errors sorted by `location`, without considering the file name.
+ *
+ * When two locations are not defined for comparison, it considers the flag
+ * `isWarning`.
+ *
+ * @param errors Errors
+ */
 export function sortErrorsByLocation( errors: LocatedException[] ): LocatedException[] {
 
     const compare = ( a: LocatedException, b: LocatedException ) => {
@@ -18,7 +26,8 @@ export function sortErrorsByLocation( errors: LocatedException[] ): LocatedExcep
             return 0;
         }
         return a.isWarning ? 1 : -1;
-    };
+	};
 
-    return Array.sort( errors, compare );
+	// return Array.sort( errors, compare );
+	return errors.sort( compare );
 }

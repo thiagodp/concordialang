@@ -32,11 +32,11 @@ class RandomString {
     constructor(_random, options = Object.assign({}, DEFAULT_RANDOM_STRING_OPTIONS)) {
         this._random = _random;
         this.options = options;
-        this.MIN_PRINTABLE_ASCII = 32;
-        this.MAX_PRINTABLE_ASCII = 255;
+        this.MIN_PRINTABLE_ASCII_ISO = 32;
+        this.MAX_PRINTABLE_ASCII_ISO = 255;
         this._randomLong = new RandomLong_1.RandomLong(_random);
-        this._minCharCode = this.MIN_PRINTABLE_ASCII;
-        this._maxCharCode = this.MAX_PRINTABLE_ASCII;
+        this._minCharCode = this.MIN_PRINTABLE_ASCII_ISO;
+        this._maxCharCode = this.MAX_PRINTABLE_ASCII_ISO;
     }
     // VALUE GENERATION
     exactly(length) {
@@ -66,22 +66,32 @@ class RandomString {
         return this.exactly(this._randomLong.between(min, max));
     }
     // UTIL
+    /**
+     * Sets or gets the minimum character code.
+     *
+     * @param min Minimum character code.
+     */
     minCharCode(min) {
         if (TypeChecking_1.isDefined(min) && min >= 0) {
             this._minCharCode = min;
             // Prevent range error
             if (this._maxCharCode < this._minCharCode) {
-                this._maxCharCode = this._minCharCode;
+                this._minCharCode = this._maxCharCode;
             }
         }
         return this._minCharCode;
     }
+    /**
+     * Sets or gets the maximum character code.
+     *
+     * @param max Maximum character code.
+     */
     maxCharCode(max) {
         if (TypeChecking_1.isDefined(max) && max >= 0) {
             this._maxCharCode = max;
             // Prevent range error
             if (this._minCharCode > this._maxCharCode) {
-                this._minCharCode = this._maxCharCode;
+                this._maxCharCode = this._minCharCode;
             }
         }
         return this._maxCharCode;

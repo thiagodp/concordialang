@@ -22,7 +22,6 @@ __exportStar(require("./ImportLexer"), exports);
 __exportStar(require("./KeywordBasedLexer"), exports);
 __exportStar(require("./LanguageLexer"), exports);
 __exportStar(require("./Lexer"), exports);
-__exportStar(require("./LexerProcessor"), exports);
 __exportStar(require("./LexicalException"), exports);
 __exportStar(require("./ListItemLexer"), exports);
 __exportStar(require("./LongStringLexer"), exports);

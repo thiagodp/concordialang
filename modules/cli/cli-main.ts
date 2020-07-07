@@ -64,6 +64,32 @@ export async function main( appPath: string, processPath: string ): Promise< boo
         return true;
 	}
 
+    // Check for updates
+
+    const pkg = meowResult.pkg; // require( './package.json' );
+    const notifier = updateNotifier(
+        {
+            pkg,
+            updateCheckInterval: 1000 * 60 * 60 * 12 // 12 hours
+        }
+    );
+    notifier.notify(); // display a message only if an update is available
+
+    if ( !! notifier.update ) {
+        const diff = semverDiff( notifier.update.current, notifier.update.latest );
+        const hasBreakingChange: boolean = 'major' === diff;
+        const url = 'https://github.com/thiagodp/concordialang/releases';
+        ui.announceUpdateAvailable( url, hasBreakingChange );
+	}
+
+    // Newer option ?
+    if ( options.newer ) {
+        if ( ! notifier.update ) {
+            ui.announceNoUpdateAvailable();
+        }
+        return true;
+    }
+
 	// DATABASE
 
 	if ( options.dbInstall ) {
@@ -194,32 +220,6 @@ export async function main( appPath: string, processPath: string ): Promise< boo
     if ( options.init && ! options.pluginInstall ) {
         return true;
 	}
-
-    // Check for updates
-
-    const pkg = meowResult.pkg; // require( './package.json' );
-    const notifier = updateNotifier(
-        {
-            pkg,
-            updateCheckInterval: 1000 * 60 * 60 * 12 // 12 hours
-        }
-    );
-    notifier.notify(); // display a message only if an update is available
-
-    if ( !! notifier.update ) {
-        const diff = semverDiff( notifier.update.current, notifier.update.latest );
-        const hasBreakingChange: boolean = 'major' === diff;
-        const url = 'https://github.com/thiagodp/concordialang/releases';
-        ui.announceUpdateAvailable( url, hasBreakingChange );
-    }
-
-    // Newer option ?
-    if ( options.newer ) {
-        if ( ! notifier.update ) {
-            ui.announceNoUpdateAvailable();
-        }
-        return true;
-    }
 
     const app = new App( fs, path );
     return await app.start( options, ui );

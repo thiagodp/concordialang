@@ -15,12 +15,12 @@ export class TagUtil {
         return tags.filter( ( t: Tag ) => this.isNameInKeywords( t, keywords ) );
     }
 
-    firstContentOf( tags: Tag[] ): string | null {
+    contentOfTheFirstTag( tags: Tag[] ): string | null {
         return ( tags.length > 0 ) ? tags[ 0 ].content : null;
     }
 
-    firstNumericContentOf( tags: Tag[] ): number | null {
-        const content = this.firstContentOf( tags );
+    numericContentOfTheFirstTag( tags: Tag[] ): number | null {
+        const content = this.contentOfTheFirstTag( tags );
         if ( content !== null ) {
             const num = parseInt( content );
             return isNaN( num ) ? null : num;

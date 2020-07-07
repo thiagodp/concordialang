@@ -74,7 +74,7 @@ class FirstMostImportantVariantSelectionStrategy {
         return greaterImportanceIndex >= 0 ? [variants[greaterImportanceIndex]] : [];
     }
     importanceOf(variant) {
-        const importance = this._tagUtil.firstNumericContentOf(this._tagUtil.tagsWithNameInKeywords(variant.tags, this._importanceKeywords));
+        const importance = this._tagUtil.numericContentOfTheFirstTag(this._tagUtil.tagsWithNameInKeywords(variant.tags, this._importanceKeywords));
         return null === importance ? this._defaultImportance : importance;
     }
 }
