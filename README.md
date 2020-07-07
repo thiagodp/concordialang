@@ -112,7 +112,11 @@ npx concordia --version
 
 ## Getting Started
 
-Let's create a basic, "hello world"-like example. In order to run its tests, you will need an Internet connection and the [Google Chrome](https://www.google.com/chrome/) web browser installed.
+Let's create a basic, "hello world"-like example.
+
+> 👉 This example does _not_ cover test data generation, test oracle generation, feature combination, and many other things.
+
+In order to run its tests, you will need an Internet connection and the [Google Chrome](https://www.google.com/chrome/) web browser installed.
 
 **Step 1: *Create a directory***
 
@@ -242,16 +246,14 @@ In the example above, there is a Test Case generated from the Variant declared i
 Feature("Search");
 
 Scenario("Search returns the expected result | Search content on pressing Enter - 1", (I) => {
-    I.amOnPage("https://google.com"); // (10,5)
-    I.fillField("q", "concordialang.org"); // (11,5)
-    I.pressKey("Enter"); // (12,7)
-    I.see("npm"); // (13,5)
+    I.amOnPage("https://google.com");
+    I.fillField("q", "concordialang.org");
+    I.pressKey("Enter");
+    I.see("npm");
 });
 ```
 
 To generate and run the test again, just repeat the last command.
-
-> 👉 Remember, this is just a "hello word". Concordia has *much more* to offer!
 
 
 ## See Next

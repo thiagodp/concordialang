@@ -113,7 +113,11 @@ npx concordia --version
 
 ## Começando
 
-Vamos criar um exemplo básico, similar a um "olá mundo". Para poder executar os testes dele, você precisará de conexão com a Internet e ter o navegador [Google Chrome](https://www.google.com/chrome/) instalado.
+Vamos criar um exemplo básico, similar a um "olá mundo".
+
+> 👉 Esse exemplo _não_ cobre a geração de dados de teste, oráculos de teste, combinação de funcionalidades e muitas outras coisas.
+
+Para poder executar os testes dele, você precisará de conexão com a Internet e ter o navegador [Google Chrome](https://www.google.com/chrome/) instalado.
 
 **Passo 1: *Crie um diretório***
 
@@ -246,16 +250,14 @@ No exemplo acima, temos um Caso de Teste gerado a partir da Variante declarada e
 Feature("Busca");
 
 Scenario("Busca retorna resultado esperado | Busca ao teclar Enter - 1", (I) => {
-    I.amOnPage("https://google.com.br"); // (10,5)
-    I.fillField("q", "concordialang.org"); // (11,5)
-    I.pressKey("Enter"); // (12,7)
-    I.see("npm"); // (13,5)
+    I.amOnPage("https://google.com.br");
+    I.fillField("q", "concordialang.org");
+    I.pressKey("Enter");
+    I.see("npm");
 });
 ```
 
 Para gerar e executar os testes novamente, basta repetir o último comando.
-
-> 👉 Lembre-se que isso é só um "olá mundo". Concordia tem *muito* mais a oferecer!
 
 
 ## Veja a Seguir
