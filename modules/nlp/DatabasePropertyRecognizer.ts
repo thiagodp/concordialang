@@ -1,9 +1,16 @@
-import { Entities, Intents, NLP, NLPException, NLPResult, NLPResultProcessor, NLPTrainer, NodeSentenceRecognizer } from '.';
-import { ContentNode, DatabaseProperty } from '../ast';
+import { DatabaseProperty } from '../ast/Database';
+import { ContentNode } from '../ast/Node';
 import { LocatedException } from '../error/LocatedException';
-import { DATABASE_PROPERTY_SYNTAX_RULES, DEFAULT_DATABASE_PROPERTY_SYNTAX_RULE } from "./syntax/DatabasePropertySyntaxRules";
-import { SyntaxRuleBuilder } from "./syntax/SyntaxRuleBuilder";
+import { Entities } from './Entities';
+import { Intents } from './Intents';
+import { NLP } from './NLP';
+import { NLPException } from './NLPException';
+import { NLPResult } from './NLPResult';
+import { NLPTrainer } from './NLPTrainer';
+import { NLPResultProcessor, NodeSentenceRecognizer } from './NodeSentenceRecognizer';
+import { DATABASE_PROPERTY_SYNTAX_RULES, DEFAULT_DATABASE_PROPERTY_SYNTAX_RULE } from './syntax/DatabasePropertySyntaxRules';
 import { SyntaxRule } from './syntax/SyntaxRule';
+import { SyntaxRuleBuilder } from './syntax/SyntaxRuleBuilder';
 
 /**
  * Database property sentence recognizer.
