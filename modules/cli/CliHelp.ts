@@ -27,6 +27,8 @@ export class CliHelp {
 `;
 */
 
+// *** USE SPACES INSTEAD OF TAB INSIDE THE STRING ***
+
 return `
 ${colors.yellowBright('Usage:')} ${exeName} [<dir>] [options]
 
@@ -37,7 +39,7 @@ ${colors.yellowBright('Options:')}
 ${colors.gray('Input directories and files')}
 
 -d, --directory <value>                 Directory to search. Same as <dir>.
---no-recursive							Disable recursive search.
+--no-recursive                          Disable recursive search.
 
 -f, --file <"file1,file2,...">          Files to consider. Whether <dir> is
                                         informed, files are searched in it.
@@ -47,8 +49,8 @@ ${colors.gray('Input directories and files')}
 ${colors.gray('Output directories')}
 
 -o, --dir-script                        Output directory for test scripts.
--O, --dir-result						Output directory for reports and
-										screenshots.
+-O, --dir-result                        Output directory for reports and
+                                        screenshots.
 
 ${colors.gray('Language and Locale')}
 
@@ -56,26 +58,26 @@ ${colors.gray('Language and Locale')}
                                         The default is "en" (english).
 --language-list                         List available languages.
 
---locale-list							List available locales.
+--locale-list                           List available locales.
 
 ${colors.gray('Plug-in')}
 
 -p, --plugin [<name>]                   Plug-in to use.
--S, --plugin-serve [<name>]				Start a test server for a given plugin.
+-S, --plugin-serve [<name>]             Start a test server for a given plugin.
 --plugin-list                           List installed plug-ins.
 --plugin-install <name>                 Install a plug-in.
 --plugin-uninstall <name>               Uninstall a plug-in.
 --plugin-about [<name>]                 Show information about an installed
-										plug-in.
+                                        plug-in.
 
--F, --script-file <"file1,file2,...">	Test script files to execute.
--G, --script-grep <"expression">		Expression to filter the test scripts to
+-F, --script-file <"file1,file2,...">   Test script files to execute.
+-G, --script-grep <"expression">        Expression to filter the test scripts to
                                         run. Some plug-ins may not support it.
 
--T, --target <"target1,target2,...">	Target browsers or platforms.
+-T, --target <"target1,target2,...">    Target browsers or platforms.
 -H, --headless                          Enable headless execution (browsers).
                                         Some plug-ins may not support it.
--I, --instances							Number of parallel instances to execute.
+-I, --instances                         Number of parallel instances to execute.
 
 ${colors.gray('Database support')}
 
@@ -179,9 +181,9 @@ ${colors.gray('Input formats and extensions')}
 ${colors.gray('Information')}
 
 -v, --version                           Show current version.
---about                             	Show information about this application.
---help                              	Show this help.
---newer									Check for newer versions.
+--about                                 Show information about this application.
+--help                                  Show this help.
+--newer                                 Check for newer versions.
 
 ${colors.yellowBright('Examples')}
 
