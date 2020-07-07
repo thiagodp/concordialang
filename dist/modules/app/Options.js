@@ -656,13 +656,18 @@ class Options {
     /**
      * Returns an object that can be saved.
      */
-    export() {
+    export(useRelativePaths = false) {
         const newOptions = new Options(this.appPath, this.processPath);
         let obj = {};
         let paramsToIgnore = this.PARAMS_TO_IGNORE.slice(0); // copy
         // Individual cases
         if (this.isGeneratedSeed) {
             paramsToIgnore.push('seed');
+        }
+        if (useRelativePaths) {
+            this.directory = path_1.relative(this.processPath, this.directory);
+            this.dirResult = path_1.relative(this.processPath, this.dirResult);
+            this.dirScript = path_1.relative(this.processPath, this.dirScript);
         }
         // Convert
         for (let p in this) {

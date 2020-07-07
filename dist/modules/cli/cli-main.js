@@ -169,7 +169,7 @@ function main(appPath, processPath) {
         // Save config option ?
         if (options.saveConfig) {
             const writeF = util_1.promisify(fs.writeFile);
-            const obj = options.export();
+            const obj = options.export(true);
             const file = options.config;
             try {
                 yield writeF(file, JSON.stringify(obj, undefined, "\t"));

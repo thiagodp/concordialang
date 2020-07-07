@@ -1,5 +1,5 @@
 import * as enumUtil from 'enum-util';
-import { resolve, isAbsolute } from 'path';
+import { resolve, isAbsolute, relative } from 'path';
 import { isDefined, isNumber, isString } from '../util/TypeChecking';
 import { CaseType } from '../util/CaseType';
 import { Defaults } from './Defaults';
@@ -812,14 +812,21 @@ export class Options {
     /**
      * Returns an object that can be saved.
      */
-    export(): any {
+    export( useRelativePaths: boolean = false ): any {
         const newOptions = new Options( this.appPath, this.processPath );
         let obj = {};
         let paramsToIgnore = this.PARAMS_TO_IGNORE.slice( 0 ); // copy
         // Individual cases
         if ( this.isGeneratedSeed ) {
             paramsToIgnore.push( 'seed' );
-        }
+		}
+
+		if ( useRelativePaths ) {
+			this.directory = relative( this.processPath, this.directory );
+			this.dirResult = relative( this.processPath, this.dirResult );
+			this.dirScript = relative( this.processPath, this.dirScript );
+		}
+
         // Convert
         for ( let p in this ) {
             let pType = typeof p;
@@ -844,7 +851,8 @@ export class Options {
             }
             obj[ p.toString() ] = this[ p ];
             // console.log( 'copied', p );
-        }
+		}
+
         return obj;
     }
 

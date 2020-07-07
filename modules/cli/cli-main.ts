@@ -180,7 +180,7 @@ export async function main( appPath: string, processPath: string ): Promise< boo
     // Save config option ?
     if ( options.saveConfig ) {
         const writeF = promisify( fs.writeFile );
-        const obj = options.export();
+		const obj = options.export( true );
         const file = options.config;
         try {
             await writeF( file, JSON.stringify( obj, undefined, "\t" ) );
