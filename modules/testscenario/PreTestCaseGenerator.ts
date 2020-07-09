@@ -489,9 +489,6 @@ export class PreTestCaseGenerator {
         const keywordValid = ! keywords.valid ? 'valid' : ( keywords.valid[ 0 ] || 'valid' );
         const keywordRandom = ! keywords.random ? 'random' : ( keywords.random[ 0 ] || 'random' );
 
-        let steps: Step[] = [];
-        let line = step.location.line, count = 0;
-
         let entities: NLPEntity[] = [];
         if ( uiElements.length > 0 ) {
             entities.push.apply( entities, uiLiterals );
@@ -499,7 +496,11 @@ export class PreTestCaseGenerator {
             entities.sort( ( a, b ) => a.position - b.position ); // sort by position
         } else {
             entities = uiLiterals;
-        }
+		}
+
+        let steps: Step[] = [];
+		let line = step.location.line;
+		let count = 0;
 
         // Create a Step for every entity
         for ( let entity of entities ) {
@@ -829,7 +830,7 @@ export class PreTestCaseGenerator {
             }
 
             // Make the step
-            let newStep = step;
+            let newStep = deepcopy( step ) as Step;
             newStep.nodeType = nodeType;
             newStep.content = sentence;
             newStep.comment = ( step.comment || '' ) + comment;

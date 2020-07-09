@@ -350,8 +350,6 @@ class PreTestCaseGenerator {
         const keywordWith = !keywords.with ? 'with' : (keywords.with[0] || 'with');
         const keywordValid = !keywords.valid ? 'valid' : (keywords.valid[0] || 'valid');
         const keywordRandom = !keywords.random ? 'random' : (keywords.random[0] || 'random');
-        let steps = [];
-        let line = step.location.line, count = 0;
         let entities = [];
         if (uiElements.length > 0) {
             entities.push.apply(entities, uiLiterals);
@@ -361,6 +359,9 @@ class PreTestCaseGenerator {
         else {
             entities = uiLiterals;
         }
+        let steps = [];
+        let line = step.location.line;
+        let count = 0;
         // Create a Step for every entity
         for (let entity of entities) {
             // Change to "AND" when more than one UI Literal is available
@@ -599,7 +600,7 @@ class PreTestCaseGenerator {
                     comment = ' ' + Symbols_1.Symbols.UI_ELEMENT_PREFIX + uieNameWithoutFeature + Symbols_1.Symbols.UI_ELEMENT_SUFFIX + ',' + comment;
                 }
                 // Make the step
-                let newStep = step;
+                let newStep = deepcopy(step);
                 newStep.nodeType = nodeType;
                 newStep.content = sentence;
                 newStep.comment = (step.comment || '') + comment;
