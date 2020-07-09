@@ -788,7 +788,7 @@ export class PreTestCaseGenerator {
             }
 
             // Make the step
-            let newStep = step;
+            let newStep = deepcopy( step ) as Step;
             newStep.nodeType = nodeType;
             newStep.content = sentence;
             newStep.comment = ( step.comment || '' ) + comment;

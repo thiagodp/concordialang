@@ -12,6 +12,7 @@ import { RandomString } from "../../modules/testdata/random/RandomString";
 import { Random } from "../../modules/testdata/random/Random";
 import { LongLimits } from "../../modules/testdata/limits/LongLimits";
 
+
 describe( 'PreTestCaseGenerator', () => {
 
     let gen: PreTestCaseGenerator; // under test
@@ -401,7 +402,71 @@ describe( 'PreTestCaseGenerator', () => {
             ]
         );
 
-    } );
+	} );
+
+
+	it( 'separates all UI Elements', async () => {
+
+		let spec = new AugmentedSpec( '.' );
+
+		let doc1: Document = await cp.addToSpec( spec,
+			[
+				'Funcionalidade: F1',
+				'Cenário: C1',
+				'Variante: V1',
+				'  Quando eu preencho {A}, {B}, {C} e {D}',
+				'  Então eu tenho ~foo~',
+				'Elemento de IU: A',
+				'Elemento de IU: B',
+				'Elemento de IU: C',
+				'Elemento de IU: D'
+			],
+			{ path: 'doc1.feature', hash: 'doc1' } as FileInfo
+		);
+
+        const specFilter = new SpecFilter( spec );
+        const batchSpecAnalyzer = new BatchSpecificationAnalyzer();
+        let errors: LocatedException[] = [],
+        warnings: LocatedException[] = [];
+
+        await batchSpecAnalyzer.analyze( specFilter.graph(), spec, errors );
+
+        // expect( doc1.fileErrors ).toEqual( [] );
+        // expect( doc2.fileErrors ).toEqual( [] );
+
+        const testPlanMakers: TestPlanner[] = [
+            // new TestPlanMaker( new AllValidMix(), new SingleRandomOfEachStrategy( SEED ) )
+            new TestPlanner( new OnlyValidMix(), new IndexOfEachStrategy( 1 ), SEED )
+        ];
+
+		const ctx1 = new GenContext( spec, doc1, errors, warnings );
+		const variant1: Variant = doc1.feature.scenarios[ 0 ].variants[ 0 ];
+		const preTestCases = await gen.generate( variant1.sentences, ctx1, testPlanMakers );
+		expect( preTestCases ).toHaveLength( 1 );
+
+		const preTC = preTestCases[ 0 ];
+
+		// Content + Comment
+		const lines = preTC.steps.map( s => s.content + ( ! s.comment ? '' : ' #' + s.comment ) );
+		const [ value1, value2, value3, value4 ] = [ '', '', '', '' ];
+		const [ comment1, comment2, comment3, comment4 ] = [
+			'# {A}, válido: não preenchido',
+			'# {B}, válido: não preenchido',
+			'# {C}, válido: não preenchido',
+			'# {D}, válido: não preenchido',
+		];
+
+		expect( lines ).toEqual(
+			[
+				'Quando eu preencho <a> com "' + value1 + '" ' + comment1,
+				'E eu preencho <b> com "' + value2 + '" ' + comment2,
+				'E eu preencho <c> com "' + value3 + '" ' + comment3,
+				'E eu preencho <d> com "' + value4 + '" ' + comment4,
+				'Então eu tenho ~foo~'
+			]
+		);
+
+	} );
 
 
 

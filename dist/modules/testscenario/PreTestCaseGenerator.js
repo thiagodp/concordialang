@@ -584,7 +584,7 @@ class PreTestCaseGenerator {
                 comment = ' ' + Symbols_1.Symbols.UI_ELEMENT_PREFIX + uieNameWithoutFeature + Symbols_1.Symbols.UI_ELEMENT_SUFFIX + ',' + comment;
             }
             // Make the step
-            let newStep = step;
+            let newStep = deepcopy(step);
             newStep.nodeType = nodeType;
             newStep.content = sentence;
             newStep.comment = (step.comment || '') + comment;
