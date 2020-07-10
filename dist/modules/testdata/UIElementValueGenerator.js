@@ -332,9 +332,6 @@ class UIElementValueGenerator {
                             }
                         }
                     }
-                    else { // none
-                        msg = 'Query must have a Database reference or a Table reference.';
-                    }
                     if (TypeChecking_1.isDefined(msg)) {
                         const err = new error_1.RuntimeException(msg, owner.location);
                         // Errors may have duplicated messages. Comparisons should
