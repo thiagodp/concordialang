@@ -21,14 +21,30 @@ class TestScenario {
          * the step after all preconditions, in order to allow ignoring
          * them, which is needed for State Calls.
          */
-        this.stepAfterPreconditions = null;
+        // stepAfterPreconditions: Step = null;
         this.steps = [];
+        // stepsWithoutPreconditions(): Step[] {
+        //     if ( null === this.stepAfterPreconditions ) {
+        //         return this.steps;
+        //     }
+        //     let subset: Step[] = [];
+        //     let canAdd: boolean = false;
+        //     for ( let step of this.steps ) {
+        //         if ( ! canAdd && step === this.stepAfterPreconditions ) {
+        //             canAdd = true;
+        //         }
+        //         if ( canAdd ) {
+        //             subset.push( step );
+        //         }
+        //     }
+        //     return subset;
+        // }
     }
     clone() {
         let ts = new TestScenario();
         ts.steps = this.steps.slice(0); // copy the array, but do not clone the steps
         ts.ignoreForTestCaseGeneration = this.ignoreForTestCaseGeneration;
-        ts.stepAfterPreconditions = this.stepAfterPreconditions;
+        // ts.stepAfterPreconditions = this.stepAfterPreconditions;
         return ts;
         // let ts = new TestScenario();
         // ts.steps = [];
@@ -39,22 +55,6 @@ class TestScenario {
         // const stepIndex = this.steps.indexOf( this.stepAfterPreconditions );
         // ts.stepAfterPreconditions = stepIndex < 0 ? null : ts.steps[ stepIndex ];
         // return ts;
-    }
-    stepsWithoutPreconditions() {
-        if (null === this.stepAfterPreconditions) {
-            return this.steps;
-        }
-        let subset = [];
-        let canAdd = false;
-        for (let step of this.steps) {
-            if (!canAdd && step === this.stepAfterPreconditions) {
-                canAdd = true;
-            }
-            if (canAdd) {
-                subset.push(step);
-            }
-        }
-        return subset;
     }
 }
 exports.TestScenario = TestScenario;

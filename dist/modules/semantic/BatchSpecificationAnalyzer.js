@@ -19,7 +19,6 @@ const ImportSSA_1 = require("./ImportSSA");
 const SpecificationAnalyzer_1 = require("./SpecificationAnalyzer");
 const TableSSA_1 = require("./TableSSA");
 const TestCaseSSA_1 = require("./TestCaseSSA");
-const UIElementSSA_1 = require("./UIElementSSA");
 /**
  * Executes semantic analyzers in batch.
  *
@@ -31,7 +30,6 @@ class BatchSpecificationAnalyzer extends SpecificationAnalyzer_1.SpecificationAn
         // Order is relevant!
         this._analyzers = [
             new ImportSSA_1.ImportSSA(),
-            new UIElementSSA_1.UIElementSSA(),
             new FeatureSSA_1.FeatureSSA(),
             new ConstantSSA_1.ConstantSSA(),
             new DatabaseSSA_1.DatabaseSSA(),

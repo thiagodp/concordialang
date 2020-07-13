@@ -1,4 +1,4 @@
-import { Step } from "../ast/Step";
+import { Step } from '../ast/Step';
 
 /**
  * Test Scenario
@@ -21,7 +21,7 @@ export class TestScenario {
      * the step after all preconditions, in order to allow ignoring
      * them, which is needed for State Calls.
      */
-    stepAfterPreconditions: Step = null;
+    // stepAfterPreconditions: Step = null;
 
 
     steps: Step[] = [];
@@ -31,7 +31,7 @@ export class TestScenario {
         let ts = new TestScenario();
         ts.steps = this.steps.slice( 0 ); // copy the array, but do not clone the steps
         ts.ignoreForTestCaseGeneration = this.ignoreForTestCaseGeneration;
-        ts.stepAfterPreconditions = this.stepAfterPreconditions;
+        // ts.stepAfterPreconditions = this.stepAfterPreconditions;
         return ts;
         // let ts = new TestScenario();
         // ts.steps = [];
@@ -44,21 +44,22 @@ export class TestScenario {
         // return ts;
     }
 
-    stepsWithoutPreconditions(): Step[] {
-        if ( null === this.stepAfterPreconditions ) {
-            return this.steps;
-        }
-        let subset: Step[] = [];
-        let canAdd: boolean = false;
-        for ( let step of this.steps ) {
-            if ( ! canAdd && step === this.stepAfterPreconditions ) {
-                canAdd = true;
-            }
-            if ( canAdd ) {
-                subset.push( step );
-            }
-        }
-        return subset;
-    }
+    // stepsWithoutPreconditions(): Step[] {
+    //     if ( null === this.stepAfterPreconditions ) {
+    //         return this.steps;
+    //     }
+    //     let subset: Step[] = [];
+    //     let canAdd: boolean = false;
+    //     for ( let step of this.steps ) {
+    //         if ( ! canAdd && step === this.stepAfterPreconditions ) {
+    //             canAdd = true;
+    //         }
+    //         if ( canAdd ) {
+    //             subset.push( step );
+    //         }
+    //     }
+    //     return subset;
+	// }
+
 
 }

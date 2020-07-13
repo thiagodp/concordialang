@@ -8,6 +8,9 @@ exports.NLPUtil = void 0;
  */
 class NLPUtil {
     entitiesNamed(name, nlpResult) {
+        if (!name || !nlpResult) {
+            return [];
+        }
         return nlpResult.entities.filter(e => name === e.entity);
     }
     hasEntityNamed(name, nlpResult) {
@@ -23,9 +26,15 @@ class NLPUtil {
         return names.every(name => this.hasEntityNamed(name, nlpResult));
     }
     entityNamed(name, nlpResult) {
+        if (!name || !nlpResult) {
+            return null;
+        }
         return nlpResult.entities.find(e => name === e.entity) || null;
     }
     valuesOfEntitiesNamed(name, nlpResult) {
+        if (!name || !nlpResult) {
+            return [];
+        }
         return nlpResult.entities.filter(e => name === e.entity).map(e => e.value);
     }
 }

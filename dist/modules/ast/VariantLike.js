@@ -7,9 +7,11 @@ exports.State = void 0;
  * @author Thiago Delgado Pinto
  */
 class State {
-    constructor(name, stepIndex) {
+    constructor(name, stepIndex, notFound // Occurs when the State reference is not found
+    ) {
         this.name = name;
         this.stepIndex = stepIndex;
+        this.notFound = notFound;
     }
     toString() {
         return name;

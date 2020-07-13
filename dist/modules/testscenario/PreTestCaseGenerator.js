@@ -52,7 +52,7 @@ var UIElementReplacementOption;
     UIElementReplacementOption[UIElementReplacementOption["NO_INPUT_ACTIONS"] = 2] = "NO_INPUT_ACTIONS";
 })(UIElementReplacementOption || (UIElementReplacementOption = {}));
 /**
- * Generates `PreTestCase`s.
+ * Generates `PreTestCase`s, i.e. scenarios with test data and oracles.
  *
  * @author Thiago Delgado Pinto
  */

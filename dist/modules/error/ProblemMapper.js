@@ -32,6 +32,12 @@ class ProblemMapper {
     convertKey(key) {
         return key;
     }
+    /**
+     * Add one or more errors.
+     *
+     * @param key Usually the file path.
+     * @param errors Errors to add.
+     */
     addError(key, ...errors) {
         let target = this.get(key, true);
         target.errors.push.apply(target.errors, errors);
@@ -39,6 +45,12 @@ class ProblemMapper {
     addGenericError(...errors) {
         this.addError(exports.GENERIC_ERROR_KEY, ...errors);
     }
+    /**
+     * Add one or more warnings.
+     *
+     * @param key Usually the file path.
+     * @param errors Errors to add.
+     */
     addWarning(key, ...errors) {
         let target = this.get(key, true);
         target.warnings.push.apply(target.warnings, errors);

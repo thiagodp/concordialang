@@ -161,42 +161,6 @@ describe( 'TestScenarioGenerator', () => {
     } );
 
 
-
-    it( 'gets an error when precondition requires a state not declared', async () => {
-
-        let spec = new AugmentedSpec( '.' );
-
-        let doc: Document = await cp.addToSpec( spec,
-            [
-                '#language:pt',
-                'Funcionalidade: Feature 2',
-                'Cenário: Bar',
-                'Variante: Bar',
-                '  Dado que eu tenho ~foo~',
-                '  Quando eu preencho <c> com "c"',
-                '    E eu preencho <d> com "d"'
-            ],
-            { path: 'doc2.feature', hash: 'doc2' } as FileInfo
-        );
-
-        const specFilter = new SpecFilter( spec );
-        const analyzer = new BatchSpecificationAnalyzer();
-
-        const problems = new FileProblemMapper();
-        await analyzer.analyze( problems, spec, specFilter.graph() );
-        const errors = problems.getAllErrors();
-        const warnings = [];
-
-        let ctx = new GenContext( spec, doc, errors, warnings );
-
-        let variant: Variant = doc.feature.scenarios[ 0 ].variants[ 0 ];
-        let ts = await gen.generate( ctx, variant );
-        expect( errors ).toHaveLength( 1 );
-        expect( ts ).toHaveLength( 0 );
-    } );
-
-
-
     it( 'replaces orphan postcondition AND steps with THEN', async () => {
 
         let spec = new AugmentedSpec( '.' );
@@ -526,7 +490,8 @@ describe( 'TestScenarioGenerator', () => {
                 '#language:pt',
                 'Funcionalidade: Feature 1',
                 'Cenário: Foo',
-                'Variante: Foo',
+				'Variante: Foo',
+				'  Dado que eu estou em "https://foo.com"',
                 '  Quando eu preencho <a> com [ipsum]',
                 '    E eu preencho <b> com [pi]',
                 ' Então eu tenho ~foo~',
@@ -562,13 +527,27 @@ describe( 'TestScenarioGenerator', () => {
                 'Cenário: Zoo',
                 'Variante: Zoo',
                 '  Dado que eu vejo "zoo"',
-                '  Quando eu tenho ~bar~', // <<<
+                '  Quando eu tenho ~bar~', // <<< state call
                 '    E eu preencho <x> com "x"',
                 '    E eu preencho <y> com "Y"',
                 '  Então eu vejo "zoo"'
             ],
-            { path: 'doc3.feature', hash: 'doc3' } as FileInfo
-        );
+			{ path: 'doc3.feature', hash: 'doc3' } as FileInfo
+		);
+
+
+        const expectedSteps: string[] = [
+            'Dado que eu vejo "zoo"', // doc3
+            'Dado que eu vejo "bar"', // doc2
+            'Quando eu preencho <c> com "c"', // doc2
+            'E eu preencho <d> com "d"', // doc2
+            'Então eu vejo "baz"', // doc2
+            'Quando eu preencho <x> com "x"', // doc3
+            'E eu preencho <y> com "Y"', // doc3
+            'Então eu vejo "zoo"' // doc3
+		];
+
+
 
         const specFilter = new SpecFilter( spec );
         const analyzer = new BatchSpecificationAnalyzer();
@@ -599,19 +578,65 @@ describe( 'TestScenarioGenerator', () => {
         expect( errors ).toHaveLength( 0 );
         expect( ts3 ).toHaveLength( 1 );
 
-        const expectedSteps: string[] = [
-            'Dado que eu vejo "zoo"', // 1st original
-            'Dado que eu vejo "bar"',
-            'Quando eu preencho <c> com "c"',
-            'E eu preencho <d> com "d"',
-            'Então eu vejo "baz"',
-            'Quando eu preencho <x> com "x"', // 2nd original
-            'E eu preencho <y> com "Y"',
-            'Então eu vejo "zoo"'
-        ];
-
         const stepsContent: string[] = ts3[ 0 ].steps.map( s => s.content );
         expect( stepsContent ).toEqual( expectedSteps );
+	} );
+
+
+	//	TODO:	Criar testes que verifiquem que estado não existente
+	//       	é removido do cenário gerado:
+	//			Fazer testes para os 3 tipos de estado.
+
+	//	TODO:	Criar testes que verifiquem se após a remoção de passos com
+	//			estado inexistente, o passo posterior é ajustado corretamente.
+	//			Exemplo:
+	//				Dado que eu tenho ~foo~
+	//				  e estou em "https//foo.com"
+	//			Deve gerar:
+	//				Dado que estou em "https//foo.com"
+	//
+	//			Fazer testes para os 3 tipos de estado.
+
+    it( 'does not include an inexistent precondition', async () => {
+
+        const spec = new AugmentedSpec( '.' );
+
+        const doc1: Document = await cp.addToSpec( spec,
+            [
+                '#language:pt',
+                'Funcionalidade: F1',
+                'Cenário: C1',
+                'Variante: V1',
+                '  Dado que eu tenho ~foo~',
+                '  Quando eu preencho <b> com 10',
+                '  Então eu vejo "bar"',
+            ],
+            { path: 'doc1.feature', hash: 'doc1' } as FileInfo
+		);
+
+        const specFilter = new SpecFilter( spec );
+        const analyzer = new BatchSpecificationAnalyzer();
+
+        const problems = new FileProblemMapper();
+        await analyzer.analyze( problems, spec, specFilter.graph() );
+        const errors = problems.getAllErrors();
+        const warnings = [];
+
+        // expect( doc1.fileErrors ).toEqual( [] );
+        // expect( doc2.fileErrors ).toEqual( [] );
+
+        const ctx1 = new GenContext( spec, doc1, errors, warnings );
+        const variant1: Variant = doc1.feature.scenarios[ 0 ].variants[ 0 ];
+        const ts1 = await gen.generate( ctx1, variant1 );
+        expect( errors ).not.toHaveLength( 0 );
+        expect( ts1 ).toHaveLength( 1 );
+
+        const stepsContent: string[] = ts1[ 0 ].steps.map( s => s.content );
+        expect( stepsContent ).toEqual( [
+			'Quando eu preencho <b> com 10',
+			'Então eu vejo "bar"',
+        ] );
     } );
+
 
 } );

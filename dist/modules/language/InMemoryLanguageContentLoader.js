@@ -7,6 +7,9 @@ exports.InMemoryLanguageContentLoader = void 0;
  * @author Thiago Delgado Pinto
  */
 class InMemoryLanguageContentLoader {
+    /**
+     * @param map Maps a language to a language content.
+     */
     constructor(_map) {
         this._map = _map;
     }

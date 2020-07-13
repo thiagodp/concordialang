@@ -8,6 +8,9 @@ import { LanguageContentLoader } from "./LanguageContentLoader";
  */
 export class InMemoryLanguageContentLoader implements LanguageContentLoader {
 
+	/**
+	 * @param map Maps a language to a language content.
+	 */
     constructor( private _map: Map< string, LanguageContent > ) {
     }
 

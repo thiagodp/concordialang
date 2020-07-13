@@ -1,4 +1,4 @@
-import { State, Variant } from '../ast';
+import { State, Variant, VariantBackground } from '../ast';
 import { Entities, NLPUtil } from '../nlp';
 import { NodeTypes } from '../req/NodeTypes';
 
@@ -12,33 +12,27 @@ export class VariantStateDetector {
     /**
      * Detects State references and adds them to the given object.
      *
-     * @param variantLike Variant or Variant Background object to be updated.
+     * @param variantLike Variant-like object to be updated.
      */
-    update( variantLike: any, isVariant: boolean ): void {
+    update( variantLike: Variant | VariantBackground ): void {
 
-        // No sentences? -> Exit
-        if ( ! variantLike || ! variantLike.sentences || variantLike.sentences.length < 1 ) {
+		if ( ! variantLike ) {
+			return;
+		}
+
+        variantLike.preconditions = [];
+        variantLike.stateCalls = [];
+        variantLike.postconditions = [];
+
+        // No sentences? -> exit
+        if ( ! variantLike.sentences || variantLike.sentences.length < 1 ) {
             return;
         }
 
-        // Preparing the state references
-
-        if ( ! variantLike.preconditions ) {
-            variantLike.preconditions = [];
-        }
-
-        if ( ! variantLike.stateCalls ) {
-            variantLike.stateCalls = [];
-        }
-
-        if ( isVariant && ! variantLike.postconditions ) {
-            variantLike.postconditions = [];
-        }
-
-        // Analysing detected entities of the steps
+        // Analyzing detected entities of the steps
 
         const nlpUtil = new NLPUtil();
-        let lastGWT: NodeTypes = null;
+        let nodeType: NodeTypes = null;
 
         let stepIndex = -1;
         for ( let step of variantLike.sentences ) {
@@ -49,31 +43,33 @@ export class VariantStateDetector {
             }
 
             // Handles "AND" steps as the last Given/When/Then
-            if ( step.nodeType !== NodeTypes.STEP_AND && step.nodeType !== NodeTypes.STEP_OTHERWISE ) {
-                lastGWT = step.nodeType;
+			if ( step.nodeType !== NodeTypes.STEP_AND &&
+				step.nodeType !== NodeTypes.STEP_OTHERWISE
+			) {
+                nodeType = step.nodeType;
             }
 
-            if ( null === lastGWT ) {
+            if ( null === nodeType ) { // Starts with AND
                 continue;
             }
 
-            let targetStates: State[] | null = null;
-            switch ( lastGWT ) {
-                case NodeTypes.STEP_GIVEN: targetStates = variantLike.preconditions; break;
-                case NodeTypes.STEP_WHEN: targetStates = variantLike.stateCalls; break;
-                case NodeTypes.STEP_THEN: {
-                    targetStates = isVariant ? variantLike.postconditions : null;
-                    break;
-                }
+            let targetRef: State[] | null = null;
+            switch ( nodeType ) {
+                case NodeTypes.STEP_GIVEN: targetRef = variantLike.preconditions; break;
+                case NodeTypes.STEP_WHEN: targetRef = variantLike.stateCalls; break;
+                case NodeTypes.STEP_THEN: targetRef = variantLike.postconditions; break;
             }
 
-            if ( null === targetStates ) {
+            if ( null === targetRef ) {
                 continue;
             }
 
-            const stateNames: string[] = nlpUtil.valuesOfEntitiesNamed( Entities.STATE, step.nlpResult );
-            for ( let name of stateNames ) {
-                targetStates.push( new State( name, stepIndex ) );
+			// Expected at most one state
+            const stateNames: string[] = nlpUtil.valuesOfEntitiesNamed(
+				Entities.STATE, step.nlpResult );
+
+            for ( const name of stateNames ) {
+                targetRef.push( new State( name, stepIndex ) );
             }
         }
     }

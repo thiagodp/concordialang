@@ -42,6 +42,12 @@ export class ProblemMapper {
         return key;
     }
 
+	/**
+	 * Add one or more errors.
+	 *
+	 * @param key Usually the file path.
+	 * @param errors Errors to add.
+	 */
     addError( key: string, ... errors: LocatedException[] ): void {
         let target: ProblemInfo = this.get( key, true );
         target.errors.push.apply( target.errors, errors );
@@ -51,6 +57,12 @@ export class ProblemMapper {
         this.addError( GENERIC_ERROR_KEY, ...errors );
     }
 
+	/**
+	 * Add one or more warnings.
+	 *
+	 * @param key Usually the file path.
+	 * @param errors Errors to add.
+	 */
     addWarning( key: string, ... errors: LocatedException[] ): void {
         let target: ProblemInfo = this.get( key, true );
         target.warnings.push.apply( target.warnings, errors );

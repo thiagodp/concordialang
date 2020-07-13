@@ -53,7 +53,7 @@ enum UIElementReplacementOption {
 }
 
 /**
- * Generates `PreTestCase`s.
+ * Generates `PreTestCase`s, i.e. scenarios with test data and oracles.
  *
  * @author Thiago Delgado Pinto
  */

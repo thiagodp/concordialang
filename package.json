@@ -107,7 +107,6 @@
     "@nodelib/fs.walk": "^1.2.4",
     "alasql": "^0.4.11",
     "arr-diff": "^4.0.0",
-    "array-move": "^1.0.0",
     "better-randstr": "^1.0.0",
     "cartesian": "^1.0.1",
     "case": "^1.6.3",

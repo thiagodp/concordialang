@@ -9,5 +9,3 @@ export * from './ImportSSA';
 export * from './SpecificationAnalyzer';
 export * from './TableSSA';
 export * from './TestCaseSSA';
-export * from './UIElementSSA';
-
