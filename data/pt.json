@@ -126,7 +126,7 @@
                 "mouseOut": [ "retiro o mouse" ],
                 "mouseOver": [ "coloco o mouse", "ponho o mouse", "passo o mouse" ],
                 "open": [ "abro", "navego para", "vou para" ],
-                "press": [ "pressiono", "seguro", "teclo" ],
+                "press": [ "pressiono", "seguro", "teclo", "aperto" ],
                 "pull": [ "extraio", "puxo", "pull" ],
                 "refresh": [ "atualizo", "recarrego" ],
                 "remove": [ "removo", "retiro", "apago", "deleto" ],
