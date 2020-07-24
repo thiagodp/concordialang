@@ -1,25 +1,25 @@
-import Graph = require( 'graph.js/dist/graph.full.js' );
-
 import { DateTimeFormatter, LocalDateTime } from '@js-joda/core';
 import { createHash } from 'crypto';
-import { Options } from "../app/Options";
+import Graph = require('graph.js/dist/graph.full.js');
+
+import { AppOptions } from '../app/AppOptions';
 import { RuntimeException } from '../error';
-import { JsonLanguageContentLoader, LanguageContentLoader } from "../language";
-import { LanguageManager } from "../language/LanguageManager";
-import { Lexer } from "../lexer/Lexer";
-import { NLPBasedSentenceRecognizer } from "../nlp/NLPBasedSentenceRecognizer";
-import { NLPTrainer } from "../nlp/NLPTrainer";
-import { Parser } from "../parser/Parser";
-import { AugmentedSpec } from "../req/AugmentedSpec";
-import { TestCaseGeneratorFacade } from "../testcase/TestCaseGeneratorFacade";
+import { JsonLanguageContentLoader, LanguageContentLoader } from '../language';
+import { LanguageManager } from '../language/LanguageManager';
+import { Lexer } from '../lexer/Lexer';
+import { NLPBasedSentenceRecognizer } from '../nlp/NLPBasedSentenceRecognizer';
+import { NLPTrainer } from '../nlp/NLPTrainer';
+import { Parser } from '../parser/Parser';
+import { AugmentedSpec } from '../req/AugmentedSpec';
+import { TestCaseGeneratorFacade } from '../testcase/TestCaseGeneratorFacade';
 import { TestCaseGeneratorListener } from '../testcase/TestCaseGeneratorListener';
-import { toUnixPath, FileSearchResults } from '../util/file';
+import { FileSearchResults, toUnixPath } from '../util/file';
 import { changeFileExtension } from '../util/file/ext-changer';
 import { FSFileHandler } from '../util/file/FSFileHandler';
 import { FSFileSearcher } from '../util/file/FSFileSearcher';
 import { Compiler } from './Compiler';
 import { CompilerListener } from './CompilerListener';
-import { SingleFileCompiler } from "./SingleFileCompiler";
+import { SingleFileCompiler } from './SingleFileCompiler';
 
 
 export function filterFilesToCompile(
@@ -59,7 +59,7 @@ export class CompilerFacade {
         ) {
     }
 
-    public async compile( options: Options ): Promise< [ AugmentedSpec, Graph ] > {
+    public async compile( options: AppOptions ): Promise< [ AugmentedSpec, Graph ] > {
 
         const startTime = Date.now();
 
@@ -69,7 +69,13 @@ export class CompilerFacade {
             this._compilerListener.announceFileSearchStarted();
 		}
 
-		const searchResults: FileSearchResults = await fileSearcher.searchFrom( options );
+		const searchResults: FileSearchResults = await fileSearcher.searchFrom( {
+			directory: options.directory,
+			extensions: [ options.extensionFeature, options.extensionTestCase ],
+			file: options.file,
+			ignore: options.ignore,
+			recursive: options.recursive
+		} );
 
 		if ( this._compilerListener && searchResults.warnings.length > 0 ) {
 			this._compilerListener.announceFileSearchWarnings( searchResults.warnings );
@@ -78,8 +84,12 @@ export class CompilerFacade {
         const files: string[] = searchResults.files;
 		// console.log( '>>> FOUND', files );
 
-        const filesToCompile: string[] = filterFilesToCompile(
-            files, options.extensionFeature, options.extensionTestCase, this._path );
+		// If the options is just to generate script, ALL the .testcase files should be considered.
+		const isJustGenerateScript: boolean = options.script &&
+			! options.run && ! options.result;
+
+		const filesToCompile: string[] = isJustGenerateScript ? files :
+			filterFilesToCompile( files, options.extensionFeature, options.extensionTestCase, this._path );
 
         const filesToCompileCount = filesToCompile.length;
 
@@ -141,7 +151,7 @@ export class CompilerFacade {
             this._compilerListener.reportProblems( output.problems, options.directory );
         }
 
-        if ( ! options.generateTestCase || ! output.spec.docs || compiledFilesCount < 1 ) {
+        if ( ! options.testCase || ! output.spec.docs || compiledFilesCount < 1 ) {
             return [ output.spec, output.graph ];
         }
 
@@ -158,7 +168,7 @@ export class CompilerFacade {
     }
 
 
-    private updateSeed( options: Options, ui: CompilerListener ): void {
+    private updateSeed( options: AppOptions, ui: CompilerListener ): void {
 
         if ( ! options.seed ) {
             options.isGeneratedSeed = true;

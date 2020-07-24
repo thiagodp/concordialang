@@ -58,13 +58,23 @@ class CompilerFacade {
             if (this._compilerListener) {
                 this._compilerListener.announceFileSearchStarted();
             }
-            const searchResults = yield fileSearcher.searchFrom(options);
+            const searchResults = yield fileSearcher.searchFrom({
+                directory: options.directory,
+                extensions: [options.extensionFeature, options.extensionTestCase],
+                file: options.file,
+                ignore: options.ignore,
+                recursive: options.recursive
+            });
             if (this._compilerListener && searchResults.warnings.length > 0) {
                 this._compilerListener.announceFileSearchWarnings(searchResults.warnings);
             }
             const files = searchResults.files;
             // console.log( '>>> FOUND', files );
-            const filesToCompile = filterFilesToCompile(files, options.extensionFeature, options.extensionTestCase, this._path);
+            // If the options is just to generate script, ALL the .testcase files should be considered.
+            const isJustGenerateScript = options.script &&
+                !options.run && !options.result;
+            const filesToCompile = isJustGenerateScript ? files :
+                filterFilesToCompile(files, options.extensionFeature, options.extensionTestCase, this._path);
             const filesToCompileCount = filesToCompile.length;
             if (this._compilerListener) {
                 const filesCount = files.length;
@@ -101,7 +111,7 @@ class CompilerFacade {
                 this._compilerListener.announceCompilerFinished(compiledFilesCount, featuresCount, testCasesCount, durationMS);
                 this._compilerListener.reportProblems(output.problems, options.directory);
             }
-            if (!options.generateTestCase || !output.spec.docs || compiledFilesCount < 1) {
+            if (!options.testCase || !output.spec.docs || compiledFilesCount < 1) {
                 return [output.spec, output.graph];
             }
             this.updateSeed(options, this._compilerListener);

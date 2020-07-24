@@ -13,28 +13,28 @@ class VerboseUI extends SimpleUI_1.SimpleUI {
         if (!options.recursive) {
             this.info('Directory recursion', disabledStr);
         }
-        if (!options.compileSpecification) {
+        if (!options.spec) {
             this.info('Specification compilation', disabledStr);
         }
         else {
-            if (!options.generateTestCase) {
+            if (!options.testCase) {
                 this.info('Test Case generation', disabledStr);
             }
         }
-        if (!options.generateScript) {
+        if (!options.script) {
             this.info('Test script generation disabled', disabledStr);
         }
-        if (!options.executeScript) {
+        if (!options.run) {
             this.info('Test script execution', disabledStr);
         }
-        if (!options.analyzeResult) {
+        if (!options.result) {
             this.info('Test script results\' analysis', disabledStr);
         }
-        if (!options.compileSpecification
-            && !options.generateTestCase
-            && !options.generateScript
-            && !options.executeScript
-            && !options.analyzeResult) {
+        if (!options.spec
+            && !options.testCase
+            && !options.script
+            && !options.run
+            && !options.result) {
             this.warn('Well, you have disabled all the interesting behavior. :)');
         }
     }

@@ -1,26 +1,87 @@
-import Graph = require( 'graph.js/dist/graph.full.js' );
-import { CombinationOptions, InvalidSpecialOptions, VariantSelectionOptions } from "../app/CombinationOptions";
-import { Options } from "../app/Options";
-import { Document, ReservedTags, TestCase, Variant } from "../ast";
-import { LocatedException } from "../error/LocatedException";
-import { RuntimeException } from "../error/RuntimeException";
-import { Warning } from "../error/Warning";
-import { LanguageContentLoader } from "../language/LanguageContentLoader";
-import { GivenWhenThenSentenceRecognizer } from "../nlp/GivenWhenThenSentenceRecognizer";
-import { AugmentedSpec } from "../req/AugmentedSpec";
-import { CartesianProductStrategy, CombinationStrategy, OneWiseStrategy, ShuffledOneWiseStrategy, SingleRandomOfEachStrategy } from "../selection/CombinationStrategy";
-import { AllVariantsSelectionStrategy, FirstMostImportantVariantSelectionStrategy, FirstVariantSelectionStrategy, SingleRandomVariantSelectionStrategy, VariantSelectionStrategy } from '../selection/VariantSelectionStrategy';
-import { GenContext, PreTestCaseGenerator } from "../testscenario/PreTestCaseGenerator";
-import { TestScenario } from "../testscenario/TestScenario";
-import { TestScenarioGenerator } from "../testscenario/TestScenarioGenerator";
+import * as enumUtil from 'enum-util';
+import Graph = require('graph.js/dist/graph.full.js');
+
+import { AppOptions } from '../app/AppOptions';
+import { CombinationOptions, InvalidSpecialOptions, VariantSelectionOptions } from '../app/CombinationOptions';
+import {
+    DEFAULT_CASE_UI,
+    DEFAULT_DATA_TEST_CASE_COMBINATION,
+    DEFAULT_STATE_COMBINATION,
+    DEFAULT_VARIANT_SELECTION,
+} from '../app/defaults';
+import { Document, ReservedTags, TestCase, Variant } from '../ast';
+import { LocatedException } from '../error/LocatedException';
+import { RuntimeException } from '../error/RuntimeException';
+import { Warning } from '../error/Warning';
+import { LanguageContentLoader } from '../language/LanguageContentLoader';
+import { GivenWhenThenSentenceRecognizer } from '../nlp/GivenWhenThenSentenceRecognizer';
+import { AugmentedSpec } from '../req/AugmentedSpec';
+import {
+    CartesianProductStrategy,
+    CombinationStrategy,
+    OneWiseStrategy,
+    ShuffledOneWiseStrategy,
+    SingleRandomOfEachStrategy,
+} from '../selection/CombinationStrategy';
+import {
+    AllVariantsSelectionStrategy,
+    FirstMostImportantVariantSelectionStrategy,
+    FirstVariantSelectionStrategy,
+    SingleRandomVariantSelectionStrategy,
+    VariantSelectionStrategy,
+} from '../selection/VariantSelectionStrategy';
+import { GenContext, PreTestCaseGenerator } from '../testscenario/PreTestCaseGenerator';
+import { TestScenario } from '../testscenario/TestScenario';
+import { TestScenarioGenerator } from '../testscenario/TestScenarioGenerator';
+import { CaseType } from '../util/CaseType';
 import { FileWriter, toUnixPath } from '../util/file';
 import { FileEraser } from '../util/file/FileEraser';
-import { DataTestCaseMix, JustOneInvalidMix, OnlyInvalidMix, OnlyValidMix, UnfilteredMix } from "./DataTestCaseMix";
-import { TestCaseDocumentGenerator } from "./TestCaseDocumentGenerator";
-import { TestCaseFileGenerator } from "./TestCaseFileGenerator";
-import { TestCaseGenerator } from "./TestCaseGenerator";
-import { TestCaseGeneratorListener } from "./TestCaseGeneratorListener";
-import { TestPlanner } from "./TestPlanner";
+import { DataTestCaseMix, JustOneInvalidMix, OnlyInvalidMix, OnlyValidMix, UnfilteredMix } from './DataTestCaseMix';
+import { TestCaseDocumentGenerator } from './TestCaseDocumentGenerator';
+import { TestCaseFileGenerator } from './TestCaseFileGenerator';
+import { TestCaseGenerator } from './TestCaseGenerator';
+import { TestCaseGeneratorListener } from './TestCaseGeneratorListener';
+import { TestPlanner } from './TestPlanner';
+
+
+function toCaseType( caseUi: string ): CaseType {
+	if ( enumUtil.isValue( CaseType, caseUi ) ) {
+		return caseUi;
+	}
+	if ( enumUtil.isValue( CaseType, DEFAULT_CASE_UI ) ) {
+		return DEFAULT_CASE_UI;
+	}
+	return CaseType.CAMEL;
+}
+
+
+function toVariantSelectionOptions( combVariant: string ): VariantSelectionOptions {
+	if ( enumUtil.isValue( VariantSelectionOptions, combVariant ) ) {
+		return combVariant;
+	}
+	if ( enumUtil.isValue( VariantSelectionOptions, DEFAULT_VARIANT_SELECTION ) ) {
+		return DEFAULT_VARIANT_SELECTION;
+	}
+	return VariantSelectionOptions.SINGLE_RANDOM;
+}
+
+function typedStateCombination( combState: string ): CombinationOptions {
+	return typedCombinationFor( combState, DEFAULT_STATE_COMBINATION );
+}
+
+function typedDataCombination( combData: string ): CombinationOptions {
+	return typedCombinationFor( combData, DEFAULT_DATA_TEST_CASE_COMBINATION );
+}
+
+function typedCombinationFor( value: string, defaultValue: string ): CombinationOptions {
+	if ( enumUtil.isValue( CombinationOptions, value ) ) {
+		return value;
+	}
+	if ( enumUtil.isValue( CombinationOptions, defaultValue ) ) {
+		return defaultValue;
+	}
+	return CombinationOptions.SHUFFLED_ONE_WISE;
+}
 
 /**
  * Test Case Generator Facade
@@ -38,7 +99,7 @@ export class TestCaseGeneratorFacade {
     }
 
     async execute(
-        options: Options,
+        options: AppOptions,
         spec: AugmentedSpec,
         graph: Graph,
     ): Promise< [ AugmentedSpec, Graph ] > {
@@ -47,14 +108,14 @@ export class TestCaseGeneratorFacade {
 
         //
         // setup
-        //
+		//
 
         const preTCGen = new PreTestCaseGenerator(
             this._variantSentenceRec,
             this._langLoader,
             options.language,
             options.realSeed,
-            options.typedCaseUI(),
+            toCaseType( options.caseUi ),
             options.randomMinStringSize,
             options.randomMaxStringSize,
             options.randomTriesToInvalidValue
@@ -260,11 +321,11 @@ export class TestCaseGeneratorFacade {
 
 
     private variantSelectionStrategyFromOptions(
-        options: Options,
+        options: AppOptions,
         warnings: LocatedException[]
     ): VariantSelectionStrategy {
 
-        const desired = options.typedVariantSelection();
+        const desired = toVariantSelectionOptions( options.combVariant );
         switch ( desired ) {
 
             case VariantSelectionOptions.SINGLE_RANDOM:
@@ -295,11 +356,11 @@ export class TestCaseGeneratorFacade {
 
 
     private stateCombinationStrategyFromOptions(
-        options: Options,
+        options: AppOptions,
         warnings: LocatedException[]
     ): CombinationStrategy {
         return this.combinationStrategyFrom(
-            options.typedStateCombination(),
+            typedStateCombination( options.combState ),
             'State',
             options,
             warnings
@@ -310,7 +371,7 @@ export class TestCaseGeneratorFacade {
     private combinationStrategyFrom(
         desired: CombinationOptions,
         name: string,
-        options: Options,
+        options: AppOptions,
         warnings: LocatedException[]
     ): CombinationStrategy {
 
@@ -341,7 +402,7 @@ export class TestCaseGeneratorFacade {
     }
 
 
-    private testPlanMakersFromOptions( options: Options, warnings: LocatedException[] ): TestPlanner[] {
+    private testPlanMakersFromOptions( options: AppOptions, warnings: LocatedException[] ): TestPlanner[] {
 
         // INVALID DATA TEST CASES AT A TIME
 
@@ -387,7 +448,7 @@ export class TestCaseGeneratorFacade {
 
         const dataCombinationOption = desired === random
             ? CombinationOptions.SHUFFLED_ONE_WISE
-            : options.typedDataCombination();
+            : typedDataCombination( options.combData );
 
         // console.log( 'options.invalid', options.invalid, 'desired', desired, 'dataCombinationOption', dataCombinationOption );
 

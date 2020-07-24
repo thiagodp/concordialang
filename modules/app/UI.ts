@@ -3,7 +3,7 @@ import { FileCompilationListener } from '../compiler/FileCompilationListener';
 import { PluginListener } from '../plugin/PluginListener';
 import { TestCaseGeneratorListener } from '../testcase/TestCaseGeneratorListener';
 import { TestScriptExecutionListener } from '../testscript/TestScriptExecutionListener';
-import { Options } from './Options';
+import { AppOptions } from './AppOptions';
 
 export interface UI extends
     FileCompilationListener,
@@ -27,11 +27,11 @@ export interface UI extends
 	// CLI
 
 
-    showHelp(): void;
-    showAbout(): void;
-    showVersion(): void;
+    showHelp( content: string ): void;
+    showAbout( { description, version, author, homepage } ): void;
+    showVersion( version: string ): void;
 
-    announceOptions( options: Options ): void;
+    announceOptions( options: AppOptions ): void;
 
     // Update
 
@@ -50,12 +50,13 @@ export interface UI extends
 
     // Plug-in
 
-    announcePluginNotFound( pluginDir: string, pluginName: string ): void;
+    announcePluginNotFound( pluginName: string ): void;
 
     announcePluginCouldNotBeLoaded( pluginName: string ): void;
 
     announceNoPluginWasDefined(): void;
 
+	announceReportFile( filePath: string ): void;
     announceReportFileNotFound( filePath: string ): void;
 
     // Language

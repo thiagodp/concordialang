@@ -1,6 +1,7 @@
 import { basename, dirname, relative } from 'path';
 import * as terminalLink from 'terminal-link';
-import { Options } from '../app/Options';
+
+import { AppOptions } from '../app/AppOptions';
 import { UI } from '../app/UI';
 import { LocatedException } from '../error/LocatedException';
 import { Warning } from '../error/Warning';
@@ -9,7 +10,7 @@ import { pluralS, SimpleUI } from './SimpleUI';
 export class VerboseUI extends SimpleUI implements UI {
 
     /** @inheritdoc */
-    announceOptions( options: Options ): void {
+    announceOptions( options: AppOptions ): void {
 
         super.announceOptions( options );
 
@@ -20,31 +21,31 @@ export class VerboseUI extends SimpleUI implements UI {
             this.info( 'Directory recursion', disabledStr );
         }
 
-        if ( ! options.compileSpecification ) {
+        if ( ! options.spec ) {
             this.info( 'Specification compilation', disabledStr );
         } else {
-            if ( ! options.generateTestCase ) {
+            if ( ! options.testCase ) {
                 this.info( 'Test Case generation', disabledStr );
             }
         }
 
-        if ( ! options.generateScript ) {
+        if ( ! options.script ) {
             this.info( 'Test script generation disabled', disabledStr );
         }
 
-        if ( ! options.executeScript ) {
+        if ( ! options.run ) {
             this.info( 'Test script execution', disabledStr );
         }
 
-        if ( ! options.analyzeResult ) {
+        if ( ! options.result ) {
             this.info( 'Test script results\' analysis', disabledStr );
         }
 
-        if ( ! options.compileSpecification
-            && ! options.generateTestCase
-            && ! options.generateScript
-            && ! options.executeScript
-            && ! options.analyzeResult
+        if ( ! options.spec
+            && ! options.testCase
+            && ! options.script
+            && ! options.run
+            && ! options.result
         ) {
             this.warn( 'Well, you have disabled all the interesting behavior. :)' );
         }

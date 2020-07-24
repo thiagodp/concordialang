@@ -1,21 +1,24 @@
 import * as fs from 'fs';
-import { resolve } from "path";
-import { Options } from "../../../modules/app/Options";
-import { JsonLanguageContentLoader, LanguageContentLoader } from "../../../modules/language";
-import { Intents, NLP, NLPResult, NLPTrainer } from "../../../modules/nlp";
-import { Entities } from "../../../modules/nlp/Entities";
-import { FSFileHandler } from "../../../modules/util/file";
-import { shouldHaveTestCaseEntities } from "../entity-util";
+import { resolve } from 'path';
+
+import { DEFAULT_DIR_LANGUAGE } from '../../../modules/app/defaults';
+import { JsonLanguageContentLoader, LanguageContentLoader } from '../../../modules/language';
+import { Intents, NLP, NLPResult, NLPTrainer } from '../../../modules/nlp';
+import { Entities } from '../../../modules/nlp/Entities';
+import { FSFileHandler } from '../../../modules/util/file';
+import { shouldHaveTestCaseEntities } from '../entity-util';
 
 describe( 'nlp.pt.testcase', () => {
 
     let nlp: NLP; // under test
 
     const LANGUAGE = 'pt';
-    const options: Options = new Options( resolve( process.cwd(), 'dist/' ) );
+	const dir = resolve( process.cwd(), 'dist/' );
+	const langDir = resolve( dir, DEFAULT_DIR_LANGUAGE );
+
     const fileHandler = new FSFileHandler( fs );
     const langLoader: LanguageContentLoader = new JsonLanguageContentLoader(
-        options.languageDir,
+        langDir,
         {},
         fileHandler,
         fileHandler

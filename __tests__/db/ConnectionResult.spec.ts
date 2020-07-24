@@ -1,4 +1,4 @@
-import { ConnectionCheckResult, ConnectionResult } from "../../modules/dbi/ConnectionResult";
+import { ConnectionCheckResult, ConnectionResult } from '../../modules/dbi/ConnectionResult';
 
 describe( 'ConnectionResult', () => {
 

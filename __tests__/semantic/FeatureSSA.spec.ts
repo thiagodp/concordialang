@@ -1,19 +1,13 @@
-import * as fs from 'fs';
-import { resolve, join } from 'path';
-import { Options } from '../../modules/app/Options';
+import { join } from 'path';
+
 import { Document } from '../../modules/ast/Document';
-import { FileInfo } from "../../modules/ast/FileInfo";
-import { JsonLanguageContentLoader, LanguageContentLoader } from '../../modules/language';
-import { Lexer } from '../../modules/lexer/Lexer';
-import { Parser } from '../../modules/parser/Parser';
+import { FileInfo } from '../../modules/ast/FileInfo';
+import { FileProblemMapper } from '../../modules/error/FileProblemMapper';
 import { AugmentedSpec } from '../../modules/req/AugmentedSpec';
 import { SpecFilter } from '../../modules/selection/SpecFilter';
+import { BatchSpecificationAnalyzer } from '../../modules/semantic/BatchSpecificationAnalyzer';
 import { FeatureSSA } from '../../modules/semantic/FeatureSSA';
-import { FSFileHandler } from '../../modules/util/file/FSFileHandler';
-import { FileProblemMapper } from '../../modules/error/FileProblemMapper';
-import { BatchSpecificationAnalyzer } from "../../modules/semantic/BatchSpecificationAnalyzer";
-
-import { SimpleCompiler } from "../SimpleCompiler";
+import { SimpleCompiler } from '../SimpleCompiler';
 
 describe( 'FeatureSSA', () => {
 

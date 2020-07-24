@@ -1,4 +1,5 @@
 "use strict";
+// export type ValueOf<T> = T extends any[] ? T[number] : T[keyof T]; // it does not work for enum
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.InvalidSpecialOptions = exports.CombinationOptions = exports.VariantSelectionOptions = void 0;
 /**
@@ -47,6 +48,8 @@ var CombinationOptions;
  */
 var InvalidSpecialOptions;
 (function (InvalidSpecialOptions) {
+    InvalidSpecialOptions["ZERO"] = "0";
+    InvalidSpecialOptions["ONE"] = "1";
     InvalidSpecialOptions["NONE"] = "none";
     InvalidSpecialOptions["ALL"] = "all";
     /**

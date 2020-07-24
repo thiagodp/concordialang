@@ -1,3 +1,6 @@
+
+// export type ValueOf<T> = T extends any[] ? T[number] : T[keyof T]; // it does not work for enum
+
 /**
  * Reduces the Variants that produce a certain State required by a Precondition
  * or by a State Call. The scenarios of these Variants will be combined with
@@ -52,8 +55,13 @@ export type StateCombinationOptions = CombinationOptions;
  *     invalid=default      -> leave as is
  */
 export enum InvalidSpecialOptions {
+
+	ZERO = '0',
+	ONE = '1',
+
     NONE = 'none',
-    ALL = 'all',
+	ALL = 'all',
+
     /**
      * Leave the mix untouched (i.e., does not filter the DataTestCases of each UI Element ) and
      * apply SHUFFLED_ONE_WISE combination for the DataTestCases.

@@ -1,13 +1,13 @@
 import { fs, vol } from 'memfs';
-import { join, normalize, resolve } from "path";
-import { Options } from "../../../modules/app/Options";
-import { FileSearcher } from '../../../modules/util/file/FileSearcher';
-import { FSFileSearcher } from "../../../modules/util/file/FSFileSearcher";
+import { join, normalize, resolve } from 'path';
+
+import { FileSearcher, FileSearchOptions } from '../../../modules/util/file/FileSearcher';
+import { FSFileSearcher } from '../../../modules/util/file/FSFileSearcher';
 
 describe( 'FileSearcher', () => {
 
     let s: FileSearcher; // under test
-    let o: Options;
+    let o: FileSearchOptions;
 
     const dir = process.cwd();
     const currentDir: string = normalize( resolve( dir, 'dist/' ) );
@@ -37,7 +37,13 @@ describe( 'FileSearcher', () => {
 
     beforeEach( () => {
         s = new FSFileSearcher( fs );
-        o = new Options( currentDir, dir );
+        o = {
+			directory: currentDir,
+			recursive: true,
+			extensions: [ '.feature', '.testcase' ],
+			ignore: [],
+			file: [],
+		};
         o.directory = currentDir;
     } );
 

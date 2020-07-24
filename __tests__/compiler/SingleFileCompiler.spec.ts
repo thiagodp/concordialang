@@ -1,6 +1,7 @@
 import * as fs from 'fs';
 import { resolve } from 'path';
-import { Options } from '../../modules/app/Options';
+
+import { DEFAULT_DIR_LANGUAGE } from '../../modules/app/defaults';
 import { Document } from '../../modules/ast/Document';
 import { SingleFileCompiler } from '../../modules/compiler/SingleFileCompiler';
 import { FileProblemMapper } from '../../modules/error';
@@ -13,12 +14,14 @@ import { FSFileHandler } from '../../modules/util/file/FSFileHandler';
 
 describe( 'SingleFileCompiler', () => {
 
-    const LANGUAGE = 'pt';
+	const LANGUAGE = 'pt';
 
-    const options: Options = new Options( resolve( process.cwd(), 'dist/' ) );
+	const dir = resolve( process.cwd(), 'dist/' );
+	const langDir = resolve( dir, DEFAULT_DIR_LANGUAGE );
+
     const fileHandler = new FSFileHandler( fs );
     const langLoader: LanguageContentLoader =
-        new JsonLanguageContentLoader( options.languageDir, {}, fileHandler, fileHandler );
+        new JsonLanguageContentLoader( langDir, {}, fileHandler, fileHandler );
 
     const lexer: Lexer = new Lexer( LANGUAGE, langLoader );
 

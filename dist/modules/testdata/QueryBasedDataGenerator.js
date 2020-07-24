@@ -24,15 +24,15 @@ class QueryBasedDataGenerator {
      *
      * @param _random Random number generator.
      * @param _rawDataGenerator Raw data generator
-     * @param _queriable Queriable
+     * @param _queryable Queryable
      * @param _queryCache Query cache
      * @param _query SQL query
      * @param _maxTries Max tries to generate an element which does not belong to the set
      */
-    constructor(_random, _rawDataGenerator, _queriable, _queryCache, _query, _maxTries = 10) {
+    constructor(_random, _rawDataGenerator, _queryable, _queryCache, _query, _maxTries = 10) {
         this._random = _random;
         this._rawDataGenerator = _rawDataGenerator;
-        this._queriable = _queriable;
+        this._queryable = _queryable;
         this._queryCache = _queryCache;
         this._query = _query;
         this._maxTries = _maxTries;
@@ -111,7 +111,7 @@ class QueryBasedDataGenerator {
             if (this._queryCache.has(this._query)) {
                 return this._queryCache.get(this._query);
             }
-            const result = yield this._queriable.query(this._query);
+            const result = yield this._queryable.query(this._query);
             this._queryCache.put(this._query, result);
             return result;
         });

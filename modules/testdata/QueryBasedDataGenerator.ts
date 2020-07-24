@@ -18,7 +18,7 @@ export class QueryBasedDataGenerator< T > {
      *
      * @param _random Random number generator.
      * @param _rawDataGenerator Raw data generator
-     * @param _queriable Queriable
+     * @param _queryable Queryable
      * @param _queryCache Query cache
      * @param _query SQL query
      * @param _maxTries Max tries to generate an element which does not belong to the set
@@ -26,7 +26,7 @@ export class QueryBasedDataGenerator< T > {
     constructor(
         private _random: RandomLong,
         private _rawDataGenerator: RawDataGenerator< T >,
-        private _queriable: Queryable,
+        private _queryable: Queryable,
         private _queryCache: QueryCache,
         private _query: string,
         private _maxTries: number = 10
@@ -103,7 +103,7 @@ export class QueryBasedDataGenerator< T > {
         if ( this._queryCache.has( this._query ) ) {
             return this._queryCache.get( this._query );
         }
-        const result = await this._queriable.query( this._query );
+        const result = await this._queryable.query( this._query );
         this._queryCache.put( this._query, result );
         return result;
     }

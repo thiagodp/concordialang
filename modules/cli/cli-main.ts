@@ -1,72 +1,126 @@
+// console.log( '---> process.argv', process.argv );
 import { cosmiconfig } from 'cosmiconfig';
+import { distance } from 'damerau-levenshtein-js';
 import * as fs from 'fs';
-import * as meow from 'meow';
 import * as path from 'path';
+import * as readPkgUp from 'read-pkg-up';
 import * as semverDiff from 'semver-diff';
 import * as updateNotifier from 'update-notifier';
 import { promisify } from 'util';
 
-import { App, Options } from '../app';
+import { App } from '../app/App';
+import { AppOptions } from '../app/AppOptions';
+import { copyOptions } from '../app/options-importer';
+import { makeAllOptions } from '../app/options-maker';
+import { createPersistableCopy } from '../app/options-exporter';
 import { allInstalledDatabases, installDatabases, uninstallDatabases } from '../db/database-package-manager';
+import { LanguageManager } from '../language/LanguageManager';
 import { installedDateLocales } from '../language/locale-manager';
-import { FSDirSearcher } from '../util/file';
+import { PackageBasedPluginFinder, PluginController, PluginManager } from '../plugin';
+import { bestMatch } from '../util/best-match';
+import { DirSearcher, FileSearcher, FSDirSearcher, FSFileHandler, FSFileSearcher } from '../util/file';
 import { makePackageInstallCommand } from '../util/package-installation';
 import { runCommand } from '../util/run-command';
-import { CliHelp } from './CliHelp';
+import { parseArgs } from './args';
+import { helpContent } from './cli-help';
+import { CliOnlyOptions, hasSomePluginAction } from './CliOnlyOptions';
 import { GuidedConfig } from './GuidedConfig';
 import { SimpleUI } from './SimpleUI';
 import { VerboseUI } from './VerboseUI';
 
 
+// Prevent caching of this module so module.parent is always accurate
+// delete require.cache[__filename];
+// const parentDir = path.dirname(module.parent.filename);
+
 
 export async function main( appPath: string, processPath: string ): Promise< boolean > {
 
-    const options = new Options( appPath, processPath );
+	let options: AppOptions & CliOnlyOptions =
+		makeAllOptions( appPath, processPath );
 
-    // Load CLI options
-    const cliHelp: CliHelp = new CliHelp();
-    const meowResult = meow( cliHelp.content(), cliHelp.meowOptions() );
-    let cliOptions = {};
+	// Parse CLI arguments
+	// console.log( process.argv );
+	const args = parseArgs( process.argv.slice( 2 ) );
+	// console.log( 'ARGS:', args );
+
+	// Show invalid options whether needed
+	const unexpectedKeys: string[] = args && args.unexpected
+		? Object.keys( args.unexpected )
+		: [];
+	if ( unexpectedKeys.length > 0 ) {
+		const similarity = ( a, b ) => 1/distance( a, b );
+		const putDashes = t => '-'.repeat( 1 === t.length ? 1 : 2 ) + t;
+		for ( const k of unexpectedKeys ) {
+			const match = bestMatch( k, args.allFlags, similarity );
+			const dK = putDashes( k );
+			if ( ! match ) {
+				console.log( `Invalid option: "${dK}"` );
+				continue;
+			}
+			const dMatch = putDashes( match.value );
+			console.log( `Invalid option: "${dK}". Did you mean "${dMatch}"?` );
+		}
+		return false;
+	}
+
+	// Copy parsed arguments to options
+
+    const cliOptions = args.flags; // Object.assign( {}, args.flags ); // copy
     try {
         // Adapt to look like Options
-        const obj = Object.assign( {}, meowResult.flags ); // copy
-        const input = meowResult.input;
-        if ( ! obj.directory && input && 1 === input.length ) {
-            obj.directory = input[ 0 ];
-        }
-
-        cliOptions = obj;
-        options.import( cliOptions );
+        const input = args.input;
+        if ( ! cliOptions.directory && input && 1 === input.length ) {
+            cliOptions.directory = input[ 0 ];
+		}
+		const errors: string[] = copyOptions( cliOptions as any, options );
+		for ( const e of errors ) {
+			console.log( e );
+		}
+		if ( errors.length > 0 ) {
+			return false;
+		}
     } catch {
         // continue
-    }
+	}
+	// console.log( 'OPTIONS:', options );
 
     // Start UI
     const ui = options.verbose
-        ? new VerboseUI( meowResult, options.debug )
-        : new SimpleUI( meowResult, options.debug );
+        ? new VerboseUI( options.debug )
+        : new SimpleUI( options.debug );
 
-    // Show help ?
+    // Show help
     if ( options.help ) {
-        ui.showHelp();
+        ui.showHelp( helpContent() );
         return true;
-    }
+	}
 
-    // Show about ?
+	// Retrieve package data
+	const parentDir = path.dirname( appPath );
+	const pkg = readPkgUp.sync( {
+		cwd: parentDir,
+		normalize: false
+	} ).packageJson || {};
+
+    // Show about
     if ( options.about ) {
-        ui.showAbout();
+        ui.showAbout( {
+			description: pkg.description || 'Concordia',
+			version: pkg.version || '?',
+			author: pkg.author[ 'name' ] || 'Thiago Delgado Pinto',
+			homepage: pkg.homepage || 'https://concordialang.org'
+		});
         return true;
     }
 
-    // Show version ?
+    // Show version
     if ( options.version ) {
-        ui.showVersion();
+        ui.showVersion( pkg.version || '?' );
         return true;
 	}
 
     // Check for updates
-
-    const pkg = meowResult.pkg; // require( './package.json' );
     const notifier = updateNotifier(
         {
             pkg,
@@ -153,6 +207,24 @@ export async function main( appPath: string, processPath: string ): Promise< boo
 		}
 	}
 
+	// LANGUAGE
+
+	if ( options.languageList ) {
+
+		const fileSearcher: FileSearcher = new FSFileSearcher( fs );
+
+		const lm = new LanguageManager( fileSearcher, options.languageDir );
+		try {
+			const languages: string[] = await lm.availableLanguages();
+			ui.drawLanguages( languages );
+		} catch ( err ) {
+			ui.showException( err );
+			return false;
+		}
+		return true;
+	}
+
+
 	// LOAD CONFIG FILE OPTIONS
 
     let fileOptions = null;
@@ -165,26 +237,63 @@ export async function main( appPath: string, processPath: string ): Promise< boo
         };
         const explorer = cosmiconfig( MODULE_NAME, loadOptions );
         const cfg: { config: any, filepath: string } = await explorer.load( options.config );
-        fileOptions = cfg.config;
+		fileOptions = cfg.config;
+
+		// ADAPT KEYS
+
+		// wanted, variation1, variation2, ...
+		const optionsToConvert = [
+			[ 'dirResult', 'dirResults' ],
+			[ 'dirScript', 'dirScripts' ],
+		];
+
+		// Adapt
+		for ( const [ wanted, ...variations ] of optionsToConvert ) {
+			for ( const v of variations ) {
+				if ( fileOptions[ v ] ) {
+					fileOptions[ wanted ] = fileOptions[ v ];
+					delete fileOptions[ v ];
+				}
+			}
+		}
+
         const durationMS = Date.now() - startTime;
         ui.announceConfigurationFileLoaded( cfg.filepath, durationMS );
     } catch ( err ) {
         // console.log( '>>', options.config, 'ERROR', err.message );
         ui.announceCouldNotLoadConfigurationFile( err.message );
         // continue
-    }
+	}
+
+	// console.log( 'CLI', cliOptions );
+	// console.log( 'FILE', fileOptions );
 
     // CLI options override file options
-    const userOptions = Object.assign( fileOptions || {}, cliOptions || {} );
-    options.import( userOptions );
+	const userOptions = Object.assign( {}, fileOptions || {}, cliOptions || {} );
+	// console.log( 'USER', userOptions );
+
+	// Override default options with user options
+	const errors: string[] = copyOptions( userOptions, options );
+	// console.log( 'OPTIONS', options );
+	for ( const e of errors ) {
+		console.log( e );
+	}
+	if ( errors.length > 0 ) {
+		return false;
+	}
 
     // Init option ?
     if ( options.init ) {
         if ( fileOptions ) {
             ui.announceConfigurationFileAlreadyExists();
         } else {
-            const guidedOptions = await ( new GuidedConfig() ).prompt();
-            options.import( guidedOptions );
+			const guidedOptions = await ( new GuidedConfig() ).prompt();
+
+			const errors = copyOptions( guidedOptions as any, options );
+			for ( const e of errors ) {
+				console.log( e );
+			}
+
             options.saveConfig = true;
             const packages = guidedOptions.databases || [];
             if ( packages.length > 0 ) {
@@ -205,8 +314,12 @@ export async function main( appPath: string, processPath: string ): Promise< boo
 
     // Save config option ?
     if ( options.saveConfig ) {
-        const writeF = promisify( fs.writeFile );
-		const obj = options.export( true );
+		const writeF = promisify( fs.writeFile );
+
+		const defaultOptions: AppOptions & CliOnlyOptions =
+			makeAllOptions( appPath, processPath );
+
+		const obj = createPersistableCopy( options, defaultOptions, true );
         const file = options.config;
         try {
             await writeF( file, JSON.stringify( obj, undefined, "\t" ) );
@@ -221,6 +334,64 @@ export async function main( appPath: string, processPath: string ): Promise< boo
         return true;
 	}
 
+	const fileHandler = new FSFileHandler( fs, options.encoding );
+
+	// PLUGIN
+
+	if ( hasSomePluginAction( options ) ) {
+
+		const dirSearcher: DirSearcher = new FSDirSearcher( fs );
+
+		const pluginFinder = new PackageBasedPluginFinder(
+			options.processPath, fileHandler, dirSearcher );
+
+		const pluginManager: PluginManager = new PluginManager(
+			ui,
+			pluginFinder,
+			fileHandler
+			);
+
+		const pluginController: PluginController = new PluginController();
+
+		try {
+			await pluginController.process( options, pluginManager, ui );
+		} catch ( err ) {
+			ui.showException( err );
+			return false;
+		}
+		return true;
+	}
+
+
     const app = new App( fs, path );
-    return await app.start( options, ui );
+	const { spec, success } = await app.start( options, ui );
+
+	// AST
+
+	if ( spec && options.ast ) {
+
+		const getCircularReplacer = () => {
+			const seen = new WeakSet();
+			return ( /* key , */ value ) => {
+				if ( 'object' === typeof value && value !== null ) {
+					if ( seen.has( value ) ) {
+						return;
+					}
+					seen.add( value );
+				}
+				return value;
+			};
+		};
+
+		try {
+			await fileHandler.write( options.ast, JSON.stringify( spec, getCircularReplacer(), "  " ) );
+		} catch ( e ) {
+			ui.showErrorSavingAbstractSyntaxTree( options.ast, e.message );
+			return false;
+		}
+		ui.announceAbstractSyntaxTreeIsSaved( options.ast );
+		return true;
+	}
+
+	return success;
 }

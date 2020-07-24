@@ -6,15 +6,16 @@ import { basename, relative } from 'path';
 import * as readline from 'readline';
 import { sprintf } from 'sprintf-js';
 import * as terminalLink from 'terminal-link';
-import { Defaults } from '../app/Defaults';
-import { Options } from '../app/Options';
+
+import { AppOptions } from '../app/AppOptions';
+import { DEFAULT_LANGUAGE } from '../app/defaults';
 import { UI } from '../app/UI';
 import { sortErrorsByLocation } from '../error/ErrorSorting';
 import { LocatedException } from '../error/LocatedException';
 import { ProblemMapper } from '../error/ProblemMapper';
 import { Warning } from '../error/Warning';
 import { PluginData } from '../plugin/PluginData';
-import { millisToString } from "../util/TimeFormat";
+import { millisToString } from '../util/TimeFormat';
 
 
 export const pluralS = ( count: number, singular: string, plural?: string ) => {
@@ -31,7 +32,6 @@ export class SimpleUI implements UI {
     // protected _spinner = ora();
 
     constructor(
-        protected readonly _meow: any,
         protected _debugMode: boolean = false
         ) {
     }
@@ -177,33 +177,26 @@ export class SimpleUI implements UI {
 	// CLI
 
     /** @inheritdoc */
-    showHelp(): void {
-        this.writeln( this._meow.help );
+    showHelp( content: string ): void {
+        this.writeln( content );
     }
 
     /** @inheritdoc */
-    showAbout(): void {
-        const m = this._meow;
-
-        const desc = m.pkg.description || 'Concordia';
-        const version = m.pkg.version || '1.0.0';
-        const name = m.pkg.author.name || 'Thiago Delgado Pinto';
-        const site = m.pkg.homepage || 'http://concordialang.org';
-
-        this.writeln( desc + ' v' + version  );
-        this.writeln( 'Copyright (c) ' + name );
-        this.writeln( site );
+    showAbout( { description, version, author, homepage } ): void {
+        this.writeln( description, 'v' + version  );
+        this.writeln( 'Copyright (c)', author );
+        this.writeln( homepage );
     }
 
     /** @inheritdoc */
-    showVersion(): void {
-        this._meow.showVersion();
+    showVersion( version: string ): void {
+        this.writeln( version );
     }
 
     /** @inheritdoc */
-    announceOptions( options: Options ): void {
+    announceOptions( options: AppOptions ): void {
         // Language
-        if ( new Defaults().LANGUAGE !== options.language ) {
+        if ( DEFAULT_LANGUAGE !== options.language ) {
             this.info( 'Default language is', this.highlight( options.language ) );
         }
     }
@@ -237,8 +230,8 @@ export class SimpleUI implements UI {
     }
 
     /** @inheritDoc */
-    announcePluginNotFound( pluginDir: string, pluginName: string ): void {
-        this.error( `Plugin "${pluginName}" not found at "${pluginDir}".` );
+    announcePluginNotFound( pluginName: string ): void {
+        this.error( `A plugin named "${pluginName}" was not found.` );
     }
 
     /** @inheritDoc */
@@ -250,6 +243,12 @@ export class SimpleUI implements UI {
     announceNoPluginWasDefined(): void {
         this.warn( 'A plugin was not defined.' );
     }
+
+	/** @inheritDoc */
+	announceReportFile( filePath: string ): void {
+		this.info( 'Retrieving result from report file',
+			this.highlight( filePath ) + '...' );
+	}
 
     /** @inheritDoc */
     announceReportFileNotFound( filePath: string ): void {
@@ -541,7 +540,7 @@ export class SimpleUI implements UI {
     }
 
     /** @inheritDoc */
-    public announceCompilerStarted( options: Options ): void {
+    public announceCompilerStarted( options: AppOptions ): void {
         // this.startSpinner();
         this.write( this.symbolInfo, 'Compiling...' );
     }
@@ -624,12 +623,12 @@ export class SimpleUI implements UI {
 
         const highlight = this.highlight;
         const format = "%-15s";
-        this.info( highlight( 'Available Plugins:' ) );
+        this.info( 'Installed Plugins:' );
         for ( let p of plugins ) {
             this.writeln( ' ' );
-            this.writeln( highlight( sprintf( format, '  Name' ) ), p.name );
-            this.writeln( highlight( sprintf( format, '  Version' ) ), p.version );
-            this.writeln( highlight( sprintf( format, '  Description' ) ), p.description );
+            this.writeln( sprintf( format, '  Name' ), highlight( p.name ) );
+            this.writeln( sprintf( format, '  Version' ), p.version );
+            this.writeln( sprintf( format, '  Description' ), p.description );
         }
     }
 
@@ -757,7 +756,7 @@ export class SimpleUI implements UI {
             return;
         }
 
-        this.info( 'Test execution results:', "\n" );
+		this.info( 'Test execution result:\n' );
 
         const passedStr = t.passed ? this.bgSuccess( t.passed + ' passed' ) : '';
         const failedStr = t.failed ? this.bgError( t.failed + ' failed' ) : '';

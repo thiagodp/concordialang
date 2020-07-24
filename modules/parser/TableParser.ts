@@ -1,6 +1,6 @@
 import { CaseType } from "../util/CaseType";
 import { Table } from "../ast/Table";
-import { convertCase } from "../util/CaseConversor";
+import { convertCase, removeDiacritics } from "../util/CaseConversor";
 import { NodeIterator } from './NodeIterator';
 import { NodeParser } from "./NodeParser";
 import { ParsingContext } from "./ParsingContext";
@@ -21,7 +21,7 @@ export class TableParser implements NodeParser< Table > {
         }
 
         // Generates the internal name
-        node.internalName = convertCase( node.name, CaseType.SNAKE );
+        node.internalName = removeDiacritics( convertCase( node.name, CaseType.SNAKE ) );
 
         // Adjusts the content
         context.resetInValues();

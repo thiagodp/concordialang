@@ -10,64 +10,113 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.main = void 0;
+// console.log( '---> process.argv', process.argv );
 const cosmiconfig_1 = require("cosmiconfig");
+const damerau_levenshtein_js_1 = require("damerau-levenshtein-js");
 const fs = require("fs");
-const meow = require("meow");
 const path = require("path");
+const readPkgUp = require("read-pkg-up");
 const semverDiff = require("semver-diff");
 const updateNotifier = require("update-notifier");
 const util_1 = require("util");
-const app_1 = require("../app");
+const App_1 = require("../app/App");
+const options_importer_1 = require("../app/options-importer");
+const options_maker_1 = require("../app/options-maker");
+const options_exporter_1 = require("../app/options-exporter");
 const database_package_manager_1 = require("../db/database-package-manager");
+const LanguageManager_1 = require("../language/LanguageManager");
 const locale_manager_1 = require("../language/locale-manager");
+const plugin_1 = require("../plugin");
+const best_match_1 = require("../util/best-match");
 const file_1 = require("../util/file");
 const package_installation_1 = require("../util/package-installation");
 const run_command_1 = require("../util/run-command");
-const CliHelp_1 = require("./CliHelp");
+const args_1 = require("./args");
+const cli_help_1 = require("./cli-help");
+const CliOnlyOptions_1 = require("./CliOnlyOptions");
 const GuidedConfig_1 = require("./GuidedConfig");
 const SimpleUI_1 = require("./SimpleUI");
 const VerboseUI_1 = require("./VerboseUI");
+// Prevent caching of this module so module.parent is always accurate
+// delete require.cache[__filename];
+// const parentDir = path.dirname(module.parent.filename);
 function main(appPath, processPath) {
     return __awaiter(this, void 0, void 0, function* () {
-        const options = new app_1.Options(appPath, processPath);
-        // Load CLI options
-        const cliHelp = new CliHelp_1.CliHelp();
-        const meowResult = meow(cliHelp.content(), cliHelp.meowOptions());
-        let cliOptions = {};
+        let options = options_maker_1.makeAllOptions(appPath, processPath);
+        // Parse CLI arguments
+        // console.log( process.argv );
+        const args = args_1.parseArgs(process.argv.slice(2));
+        // console.log( 'ARGS:', args );
+        // Show invalid options whether needed
+        const unexpectedKeys = args && args.unexpected
+            ? Object.keys(args.unexpected)
+            : [];
+        if (unexpectedKeys.length > 0) {
+            const similarity = (a, b) => 1 / damerau_levenshtein_js_1.distance(a, b);
+            const putDashes = t => '-'.repeat(1 === t.length ? 1 : 2) + t;
+            for (const k of unexpectedKeys) {
+                const match = best_match_1.bestMatch(k, args.allFlags, similarity);
+                const dK = putDashes(k);
+                if (!match) {
+                    console.log(`Invalid option: "${dK}"`);
+                    continue;
+                }
+                const dMatch = putDashes(match.value);
+                console.log(`Invalid option: "${dK}". Did you mean "${dMatch}"?`);
+            }
+            return false;
+        }
+        // Copy parsed arguments to options
+        const cliOptions = args.flags; // Object.assign( {}, args.flags ); // copy
         try {
             // Adapt to look like Options
-            const obj = Object.assign({}, meowResult.flags); // copy
-            const input = meowResult.input;
-            if (!obj.directory && input && 1 === input.length) {
-                obj.directory = input[0];
+            const input = args.input;
+            if (!cliOptions.directory && input && 1 === input.length) {
+                cliOptions.directory = input[0];
             }
-            cliOptions = obj;
-            options.import(cliOptions);
+            const errors = options_importer_1.copyOptions(cliOptions, options);
+            for (const e of errors) {
+                console.log(e);
+            }
+            if (errors.length > 0) {
+                return false;
+            }
         }
         catch (_a) {
             // continue
         }
+        // console.log( 'OPTIONS:', options );
         // Start UI
         const ui = options.verbose
-            ? new VerboseUI_1.VerboseUI(meowResult, options.debug)
-            : new SimpleUI_1.SimpleUI(meowResult, options.debug);
-        // Show help ?
+            ? new VerboseUI_1.VerboseUI(options.debug)
+            : new SimpleUI_1.SimpleUI(options.debug);
+        // Show help
         if (options.help) {
-            ui.showHelp();
+            ui.showHelp(cli_help_1.helpContent());
             return true;
         }
-        // Show about ?
+        // Retrieve package data
+        const parentDir = path.dirname(appPath);
+        const pkg = readPkgUp.sync({
+            cwd: parentDir,
+            normalize: false
+        }).packageJson || {};
+        // Show about
         if (options.about) {
-            ui.showAbout();
+            ui.showAbout({
+                description: pkg.description || 'Concordia',
+                version: pkg.version || '?',
+                author: pkg.author['name'] || 'Thiago Delgado Pinto',
+                homepage: pkg.homepage || 'https://concordialang.org'
+            });
             return true;
         }
-        // Show version ?
+        // Show version
         if (options.version) {
-            ui.showVersion();
+            ui.showVersion(pkg.version || '?');
             return true;
         }
         // Check for updates
-        const pkg = meowResult.pkg; // require( './package.json' );
         const notifier = updateNotifier({
             pkg,
             updateCheckInterval: 1000 * 60 * 60 * 12 // 12 hours
@@ -138,6 +187,20 @@ function main(appPath, processPath) {
                 return false;
             }
         }
+        // LANGUAGE
+        if (options.languageList) {
+            const fileSearcher = new file_1.FSFileSearcher(fs);
+            const lm = new LanguageManager_1.LanguageManager(fileSearcher, options.languageDir);
+            try {
+                const languages = yield lm.availableLanguages();
+                ui.drawLanguages(languages);
+            }
+            catch (err) {
+                ui.showException(err);
+                return false;
+            }
+            return true;
+        }
         // LOAD CONFIG FILE OPTIONS
         let fileOptions = null;
         try {
@@ -150,6 +213,21 @@ function main(appPath, processPath) {
             const explorer = cosmiconfig_1.cosmiconfig(MODULE_NAME, loadOptions);
             const cfg = yield explorer.load(options.config);
             fileOptions = cfg.config;
+            // ADAPT KEYS
+            // wanted, variation1, variation2, ...
+            const optionsToConvert = [
+                ['dirResult', 'dirResults'],
+                ['dirScript', 'dirScripts'],
+            ];
+            // Adapt
+            for (const [wanted, ...variations] of optionsToConvert) {
+                for (const v of variations) {
+                    if (fileOptions[v]) {
+                        fileOptions[wanted] = fileOptions[v];
+                        delete fileOptions[v];
+                    }
+                }
+            }
             const durationMS = Date.now() - startTime;
             ui.announceConfigurationFileLoaded(cfg.filepath, durationMS);
         }
@@ -158,9 +236,20 @@ function main(appPath, processPath) {
             ui.announceCouldNotLoadConfigurationFile(err.message);
             // continue
         }
+        // console.log( 'CLI', cliOptions );
+        // console.log( 'FILE', fileOptions );
         // CLI options override file options
-        const userOptions = Object.assign(fileOptions || {}, cliOptions || {});
-        options.import(userOptions);
+        const userOptions = Object.assign({}, fileOptions || {}, cliOptions || {});
+        // console.log( 'USER', userOptions );
+        // Override default options with user options
+        const errors = options_importer_1.copyOptions(userOptions, options);
+        // console.log( 'OPTIONS', options );
+        for (const e of errors) {
+            console.log(e);
+        }
+        if (errors.length > 0) {
+            return false;
+        }
         // Init option ?
         if (options.init) {
             if (fileOptions) {
@@ -168,7 +257,10 @@ function main(appPath, processPath) {
             }
             else {
                 const guidedOptions = yield (new GuidedConfig_1.GuidedConfig()).prompt();
-                options.import(guidedOptions);
+                const errors = options_importer_1.copyOptions(guidedOptions, options);
+                for (const e of errors) {
+                    console.log(e);
+                }
                 options.saveConfig = true;
                 const packages = guidedOptions.databases || [];
                 if (packages.length > 0) {
@@ -189,7 +281,8 @@ function main(appPath, processPath) {
         // Save config option ?
         if (options.saveConfig) {
             const writeF = util_1.promisify(fs.writeFile);
-            const obj = options.export(true);
+            const defaultOptions = options_maker_1.makeAllOptions(appPath, processPath);
+            const obj = options_exporter_1.createPersistableCopy(options, defaultOptions, true);
             const file = options.config;
             try {
                 yield writeF(file, JSON.stringify(obj, undefined, "\t"));
@@ -203,8 +296,49 @@ function main(appPath, processPath) {
         if (options.init && !options.pluginInstall) {
             return true;
         }
-        const app = new app_1.App(fs, path);
-        return yield app.start(options, ui);
+        const fileHandler = new file_1.FSFileHandler(fs, options.encoding);
+        // PLUGIN
+        if (CliOnlyOptions_1.hasSomePluginAction(options)) {
+            const dirSearcher = new file_1.FSDirSearcher(fs);
+            const pluginFinder = new plugin_1.PackageBasedPluginFinder(options.processPath, fileHandler, dirSearcher);
+            const pluginManager = new plugin_1.PluginManager(ui, pluginFinder, fileHandler);
+            const pluginController = new plugin_1.PluginController();
+            try {
+                yield pluginController.process(options, pluginManager, ui);
+            }
+            catch (err) {
+                ui.showException(err);
+                return false;
+            }
+            return true;
+        }
+        const app = new App_1.App(fs, path);
+        const { spec, success } = yield app.start(options, ui);
+        // AST
+        if (spec && options.ast) {
+            const getCircularReplacer = () => {
+                const seen = new WeakSet();
+                return (/* key , */ value) => {
+                    if ('object' === typeof value && value !== null) {
+                        if (seen.has(value)) {
+                            return;
+                        }
+                        seen.add(value);
+                    }
+                    return value;
+                };
+            };
+            try {
+                yield fileHandler.write(options.ast, JSON.stringify(spec, getCircularReplacer(), "  "));
+            }
+            catch (e) {
+                ui.showErrorSavingAbstractSyntaxTree(options.ast, e.message);
+                return false;
+            }
+            ui.announceAbstractSyntaxTreeIsSaved(options.ast);
+            return true;
+        }
+        return success;
     });
 }
 exports.main = main;
