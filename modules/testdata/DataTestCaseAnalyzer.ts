@@ -206,9 +206,20 @@ export class DataTestCaseAnalyzer {
                         return hasAnyValueOrLengthProperty ? incompatiblePair : validPair;
                     }
                     case DataTestCase.FORMAT_INVALID: {
+
                         if ( pFormatHasTagGenerateOnlyValidValues ) {
                             return incompatiblePair;
-                        }
+						}
+
+						const val = pFormat.value.value.toString();
+
+						const someExpressionsWithoutInvalidValues = [
+							'.', '^.', '(.)', '.*', '^.*',
+						];
+						if ( someExpressionsWithoutInvalidValues.includes( val ) ) {
+							return incompatiblePair;
+						}
+
                         return new DTCAnalysisData( DTCAnalysisResult.INVALID, pFormat.otherwiseSentences || [] );
                     }
                 }
@@ -242,6 +253,8 @@ export class DataTestCaseAnalyzer {
 
                     case DataTestCase.REQUIRED_NOT_FILLED: {
 
+						// console.log( 'Analyzing REQUIRED_NOT_FILLED', 'isRequired', isRequired );
+
                         // // Incompatible if value comes from a query
                         // if ( isDefined( pValue )
                         //     && this._nlpUtil.hasEntityNamed( Entities.QUERY, pValue.nlpResult ) ) {
@@ -250,11 +263,31 @@ export class DataTestCaseAnalyzer {
 
                         if ( isRequired && pRequiredHasTagGenerateOnlyValidValues ) {
                             return incompatiblePair;
-                        }
+						}
 
-                        return isRequired
-                            ? new DTCAnalysisData( DTCAnalysisResult.INVALID, pRequired.otherwiseSentences || [] )
-                            : validPair;
+						if ( isRequired ) {
+							return new DTCAnalysisData( DTCAnalysisResult.INVALID, pRequired.otherwiseSentences || [] );
+						}
+
+						if ( pFormat ) {
+							// Check if an empty string is compatible with the regex
+							try {
+								const val = pFormat.value.value.toString();
+								// console.log( 'REQUIRED_NOT_FILLED - expression', val );
+								const r = new RegExp( val );
+								if ( ! r.test( '' ) ) {
+									return new DTCAnalysisData(
+										DTCAnalysisResult.INVALID,
+										pFormat.otherwiseSentences || [] // from format
+									);
+								}
+								// If continue is because it passes the regex
+							} catch {
+								return incompatiblePair;
+							}
+						}
+
+						return validPair;
                     }
                 }
                 return incompatiblePair;

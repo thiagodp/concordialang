@@ -59,12 +59,14 @@ class RegexBasedDataGenerator {
             let val = this._randomString.between(0, max);
             // If the value does not match the regex, it is considered invalid
             if (!regex.test(val)) {
+                // console.log( 'EXPRESSION', this._expression, 'value', val );
                 return val;
             }
         }
         // Try to generate a value based on the negated expression
         const negatedExp = this.negateExpression(this._expression);
         const value = this.generateFor(negatedExp, this._valueType);
+        // console.log( 'NEGATED EXPRESSION', negatedExp, 'value', value );
         // Limit the value to the maximum size, if needed
         if (value.length >= max) {
             return value.substr(0, max);
