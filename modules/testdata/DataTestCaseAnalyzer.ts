@@ -216,9 +216,12 @@ export class DataTestCaseAnalyzer {
             }
 
 
-            case DataTestCaseGroup.REQUIRED: { // negation is not valid here
-                const isRequired: boolean = this._uiePropExtractor.extractIsRequired( uie );
+			case DataTestCaseGroup.REQUIRED: { // negation is not valid here
+
+				const isRequired: boolean = this._uiePropExtractor.extractIsRequired( uie );
+
                 switch ( dtc ) {
+
                     case DataTestCase.REQUIRED_FILLED: {
 
                         // Check whether the value has a reference to another UI Element
@@ -228,7 +231,11 @@ export class DataTestCaseAnalyzer {
                                 // return new Pair( DTCAnalysisResult.INVALID, pRequired.otherwiseSentences || [] );
                                 return incompatiblePair;
                             }
-                        }
+						}
+
+						if ( pFormat ) {
+							return incompatiblePair;
+						}
 
                         return validPair;
                     }

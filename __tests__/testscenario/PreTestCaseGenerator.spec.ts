@@ -339,6 +339,57 @@ describe( 'PreTestCaseGenerator', () => {
 
 
 
+		it( 'generates UI Elements values with escaped quotes', async () => {
+
+			let spec = new AugmentedSpec( '.' );
+
+			let doc1: Document = await cp.addToSpec( spec,
+				[
+					'Funcionalidade: F1',
+					'Cenário: C1',
+					'Variante: V1',
+					'  Quando eu preencho {A}',
+					'Elemento de IU: A',
+					'  - formato é "^\\"$"'
+				],
+				{ path: 'doc1.feature', hash: 'doc1' } as FileInfo
+			);
+
+			const specFilter = new SpecFilter( spec );
+			const analyzer = new BatchSpecificationAnalyzer();
+
+			const problems = new FileProblemMapper();
+			await analyzer.analyze( problems, spec, specFilter.graph() );
+			const errors = problems.getAllErrors();
+			const warnings = [];
+
+			const testPlanMakers: TestPlanner[] = [
+				// new TestPlanMaker( new AllValidMix(), new SingleRandomOfEachStrategy( SEED ) )
+				new TestPlanner( new OnlyValidMix(), new IndexOfEachStrategy( 0 ), SEED )
+			];
+
+			const ctx1 = new GenContext( spec, doc1, errors, warnings );
+			const variant1: Variant = doc1.feature.scenarios[ 0 ].variants[ 0 ];
+			const preTestCases = await gen.generate( variant1.sentences, ctx1, testPlanMakers );
+			expect( errors ).toHaveLength( 0 );
+			expect( preTestCases ).toHaveLength( 1 );
+
+			const preTC = preTestCases[ 0 ];
+
+			// Content + Comment
+			const lines = preTC.steps.map( s => s.content + ( ! s.comment ? '' : ' #' + s.comment ) );
+			const comment1 = '# {A}, válido: formato válido';
+
+			expect( lines ).toEqual(
+				[
+					'Quando eu preencho <a> com "\\"" ' + comment1,
+				]
+			);
+
+		} );
+
+
+
 		it( 'separates UI literals and UI Elements', async () => {
 
 			let spec = new AugmentedSpec( '.' );

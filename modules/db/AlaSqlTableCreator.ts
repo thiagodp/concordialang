@@ -66,7 +66,7 @@ export class AlaSqlTableCreator {
             const row = table.rows[ i ];
             try {
                 // console.log( 'row', row );
-                let params = this.normalizeValues( row.cells, valTypes );
+                let params = this.adjustValuesToTheRightTypes( row.cells, valTypes );
                 // console.log( 'params', params );
                 insert( params );
             } catch ( e ) {
@@ -104,24 +104,23 @@ export class AlaSqlTableCreator {
     }
 
 
-    normalizeValues( values: any[], types: ValueType[] ): any[] {
+    adjustValuesToTheRightTypes( values: any[], types: ValueType[] ): any[] {
         const typesLen = types.length;
-        let i = 0, normalized: any[] = [];
+        let i = 0, adjusted: any[] = [];
         for ( let val of values ) {
             if ( i < typesLen ) {
-                normalized.push( this.normalizeValue( val, types[ i ] ) );
+                adjusted.push( this.adjustValueToTheRightType( val, types[ i ] ) );
             } else {
-                normalized.push( val );
+                adjusted.push( val );
             }
             ++i;
         }
-        return normalized;
+        return adjusted;
     }
 
 
-    normalizeValue( value: any, type: ValueType ): any {
-        let detectedType = this._valueTypeDetector.detect( value );
-        // switch ( type ) {
+    adjustValueToTheRightType( value: any, type: ValueType ): any {
+        const detectedType = this._valueTypeDetector.detect( value );
         switch ( detectedType ) {
             case ValueType.BOOLEAN: return this._valueTypeDetector.isTrue( value );
             case ValueType.INTEGER: return parseInt( value );

@@ -126,6 +126,7 @@
     "graph.js": "^1.21.1",
     "inquirer": "^6.5.2",
     "is-valid-path": "^0.1.1",
+    "jsesc": "^3.0.1",
     "log-symbols": "^3.0.0",
     "node-fs-extra": "^0.8.2",
     "object-to-array": "^2.0.1",

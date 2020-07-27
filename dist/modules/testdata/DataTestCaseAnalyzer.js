@@ -178,6 +178,9 @@ class DataTestCaseAnalyzer {
                                 return incompatiblePair;
                             }
                         }
+                        if (pFormat) {
+                            return incompatiblePair;
+                        }
                         return validPair;
                     }
                     case DataTestCase_1.DataTestCase.REQUIRED_NOT_FILLED: {

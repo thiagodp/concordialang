@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.RegexBasedDataGenerator = void 0;
+const jsesc = require("jsesc");
 const RandExp = require("randexp");
 const ValueTypeDetector_1 = require("../util/ValueTypeDetector");
 const StringLimits_1 = require("./limits/StringLimits");
@@ -92,7 +93,8 @@ class RegexBasedDataGenerator {
     generateFor(expression, valueType = ValueTypeDetector_1.ValueType.STRING) {
         const value = new RandExp(expression).gen();
         if (ValueTypeDetector_1.ValueType.STRING === valueType) {
-            return value;
+            // @see https://github.com/mathiasbynens/jsesc#api
+            return jsesc(value, { quotes: 'double' });
         }
         return ValueTypeDetector_1.adjustValueToTheRightType(value, valueType);
     }

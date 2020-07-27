@@ -63,4 +63,18 @@ describe( 'RegexBaseDataGenerator', () => {
 
 	} );
 
+	it( 'valid generates escaped quotes', () => {
+		const exp = '^"$';
+		const gen = new RegexBasedDataGenerator( ranL, ranS, exp );
+		const val = gen.valid();
+		expect( val ).toEqual( `\\"` );
+	} );
+
+	it( 'invalid generates escaped quotes', () => {
+		const exp = '[^"]';
+		const gen = new RegexBasedDataGenerator( ranL, ranS, exp );
+		const val = gen.invalid();
+		expect( val ).toEqual( `\\"` );
+	} );
+
 } );

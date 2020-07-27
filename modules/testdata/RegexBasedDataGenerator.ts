@@ -1,4 +1,6 @@
+import * as jsesc from 'jsesc';
 import * as RandExp from 'randexp';
+
 import { adjustValueToTheRightType, ValueType } from '../util/ValueTypeDetector';
 import { StringLimits } from './limits/StringLimits';
 import { RandomLong } from './random/RandomLong';
@@ -105,7 +107,8 @@ export class RegexBasedDataGenerator {
     private generateFor( expression: string, valueType: ValueType = ValueType.STRING ): string {
         const value = new RandExp( expression ).gen();
         if ( ValueType.STRING === valueType ) {
-            return value;
+			// @see https://github.com/mathiasbynens/jsesc#api
+            return jsesc( value, { quotes: 'double' } );
         }
         return adjustValueToTheRightType( value, valueType );
     }
