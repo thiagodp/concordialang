@@ -269,7 +269,12 @@ describe( 'NLP', () => {
 
                 it( 'starting with a number', () => {
                     recogLiteral( ' <1a> ', '1a' );
-                } );
+				} );
+
+				it( 'css with sub paths', () => {
+					recogLiteral( '<#regex-app > div > div.fy8Gb > div > div._1q2k8>', '#regex-app > div > div.fy8Gb > div > div._1q2k8' );
+
+				} );
 
             } );
 
