@@ -184,18 +184,9 @@ function makeGetOptsOptions() {
 		// justScript: false,
 		// justRun: false,
 
-		// CONTENT GENERATION
 
 	} as DefaultType;
 
-
-	type AdditionalStringKeys = 'tc-indenter';
-
-	const stringKeys: ( OptionsKey | AdditionalStringKeys )[] = [
-		"seed",
-		"tcIndenter",
-		"tc-indenter", // Needed because getopts does not consider
-	];
 
 	const booleanKeys: OptionsKey[] = [
 
@@ -253,7 +244,6 @@ function makeGetOptsOptions() {
 	return {
 		alias,
 		default: defaultValues,
-		string: stringKeys,
 		boolean: booleanKeys
 	};
 }

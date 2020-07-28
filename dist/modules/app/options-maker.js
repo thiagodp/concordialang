@@ -60,7 +60,7 @@ function makeAppOptions(appPath = __dirname, processPath = process.cwd()) {
         tcIndenter: defaults_1.DEFAULT_TC_INDENTER,
         // RANDOMIC GENERATION
         // seed
-        seed: '',
+        // seed: '', // will be ignored
         randomMinStringSize: defaults_1.DEFAULT_RANDOM_MIN_STRING_SIZE,
         randomMaxStringSize: defaults_1.DEFAULT_RANDOM_MAX_STRING_SIZE,
         randomTriesToInvalidValue: defaults_1.DEFAULT_RANDOM_TRIES_TO_INVALID_VALUE,

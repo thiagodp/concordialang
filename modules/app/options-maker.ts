@@ -110,7 +110,7 @@ export function makeAppOptions(
 		// RANDOMIC GENERATION
 
 		// seed
-		seed: '', // will be ignored
+		// seed: '', // will be ignored
 		randomMinStringSize: DEFAULT_RANDOM_MIN_STRING_SIZE,
 		randomMaxStringSize: DEFAULT_RANDOM_MAX_STRING_SIZE,
 		randomTriesToInvalidValue: DEFAULT_RANDOM_TRIES_TO_INVALID_VALUE,

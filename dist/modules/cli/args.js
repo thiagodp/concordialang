@@ -121,11 +121,6 @@ function makeGetOptsOptions() {
         run: true,
         result: true,
     };
-    const stringKeys = [
-        "seed",
-        "tcIndenter",
-        "tc-indenter",
-    ];
     const booleanKeys = [
         // INTERNAL
         "debug",
@@ -168,7 +163,6 @@ function makeGetOptsOptions() {
     return {
         alias,
         default: defaultValues,
-        string: stringKeys,
         boolean: booleanKeys
     };
 }
