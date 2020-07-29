@@ -263,6 +263,13 @@ describe( 'NLP', () => {
                     );
                 } );
 
+                it( 'xpath with brackets, single quotes, at', () => {
+                    recogLiteral(
+                        `<//*[@id='event-1684412635']/span[2]/a>`,
+                        `//*[@id='event-1684412635']/span[2]/a`
+                    );
+                } );
+
                 it( 'number', () => {
                     recogLiteral( ' <1> ', '1' );
                 } );
