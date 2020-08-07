@@ -279,7 +279,7 @@ Allowed properties:
 #### Property `id`
   - Example: `- id is "name"`
   - Default value is the element name in camel case and without spaces, *e.g.*, `"Some Name"` becomes `"someName"`
-  - Value must be declared between quotes (`"`)
+  - Value must be declared between quotes (`"`). Internal quotes must be escaped. Example: `"//*[id=\"phone\"]"`
   - Support the following notation:
     - `"value"` denotes an `id`
     - `"#value"` denotes an `id`
