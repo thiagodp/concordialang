@@ -249,13 +249,6 @@ describe( 'NLP', () => {
                     recogLiteral( ' <~foo> ', '~foo' );
                 } );
 
-                it( 'long, escaped CSS selectors', () => {
-                    recogLiteral(
-                        ' <#js-repo-pjax-container \> div.container.new-discussion-timeline.experiment-repo-nav \> div.repository-content \> div.release-show \> div \> div.release-body.commit.open.float-left \> div.my-4 \> h2>',
-                        '#js-repo-pjax-container \> div.container.new-discussion-timeline.experiment-repo-nav \> div.repository-content \> div.release-show \> div \> div.release-body.commit.open.float-left \> div.my-4 \> h2'
-                    );
-                } );
-
                 it( 'xpath with brackets, quotes, at', () => {
                     recogLiteral(
                         '<//*[@id="event-1684412635"]/span[2]/a>',
@@ -278,9 +271,18 @@ describe( 'NLP', () => {
                     recogLiteral( ' <1a> ', '1a' );
 				} );
 
-				it( 'css with sub paths', () => {
-					recogLiteral( '<#regex-app > div > div.fy8Gb > div > div._1q2k8>', '#regex-app > div > div.fy8Gb > div > div._1q2k8' );
+                it( 'long, escaped CSS selectors', () => {
+                    recogLiteral(
+                        ' <#js-repo-pjax-container \\> div.container.new-discussion-timeline.experiment-repo-nav \\> div.repository-content \\> div.release-show \\> div \\> div.release-body.commit.open.float-left \\> div.my-4 \\> h2>',
+                        '#js-repo-pjax-container > div.container.new-discussion-timeline.experiment-repo-nav > div.repository-content > div.release-show > div > div.release-body.commit.open.float-left > div.my-4 > h2'
+                    );
+                } );
 
+				it( 'css only with escaped sub paths', () => {
+					recogLiteral(
+						'<//*[@id="event-1684412635"] \\> div \\> div.fy8Gb \\> div \\> div._1q2k8>',
+						'//*[@id="event-1684412635"] > div > div.fy8Gb > div > div._1q2k8'
+					);
 				} );
 
             } );
