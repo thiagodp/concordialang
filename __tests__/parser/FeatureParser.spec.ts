@@ -1,7 +1,7 @@
 import * as fs from 'fs';
 import { resolve } from 'path';
 
-import { DEFAULT_DIR_LANGUAGE } from '../../modules/app/defaults';
+import { DEFAULT_DIR_LANGUAGE } from '../../modules/app/default-options';
 import { Feature } from '../../modules/ast/Feature';
 import { JsonLanguageContentLoader, LanguageContentLoader } from '../../modules/language';
 import { Lexer } from '../../modules/lexer/Lexer';

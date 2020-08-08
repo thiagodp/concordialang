@@ -1,7 +1,7 @@
 import * as fs from 'fs';
 import { resolve } from 'path';
 
-import { DEFAULT_DIR_LANGUAGE } from '../../modules/app/defaults';
+import { DEFAULT_DIR_LANGUAGE } from '../../modules/app/default-options';
 import { SingleFileCompiler } from '../../modules/compiler/SingleFileCompiler';
 import { FileProblemMapper } from '../../modules/error';
 import { JsonLanguageContentLoader, LanguageContentLoader } from '../../modules/language';

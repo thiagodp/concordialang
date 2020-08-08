@@ -6,7 +6,7 @@ import { JsonLanguageContentLoader, LanguageContentLoader } from '../../modules/
 import { NLP, NLPTrainer, UIPropertyRecognizer } from '../../modules/nlp';
 import { NodeTypes } from '../../modules/req/NodeTypes';
 import { FSFileHandler } from '../../modules/util/file/FSFileHandler';
-import { DEFAULT_DIR_LANGUAGE } from '../../modules/app/defaults';
+import { DEFAULT_DIR_LANGUAGE } from '../../modules/app/default-options';
 
 describe( 'UIPropertyRecognizer', () => {
 

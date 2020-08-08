@@ -1,7 +1,7 @@
 import { fs, vol } from 'memfs';
 import { join, resolve } from 'path';
 
-import { DEFAULT_DIR_LANGUAGE } from '../../modules/app/defaults';
+import { DEFAULT_DIR_LANGUAGE } from '../../modules/app/default-options';
 import { LanguageManager } from '../../modules/language/LanguageManager';
 import { FSFileSearcher } from '../../modules/util/file/FSFileSearcher';
 

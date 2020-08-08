@@ -1,4 +1,4 @@
-import { DEFAULT_IMPORTANCE } from '../app/defaults';
+import { DEFAULT_IMPORTANCE } from '../app/default-options';
 import { ReservedTags, Tag } from '../ast/Tag';
 import { TagUtil } from '../util/TagUtil';
 import { isString } from '../util/TypeChecking';

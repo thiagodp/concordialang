@@ -23,7 +23,7 @@ import {
     DEFAULT_STATE_COMBINATION,
     DEFAULT_TC_INDENTER,
     DEFAULT_VARIANT_SELECTION,
-} from './defaults';
+} from './default-options';
 
 
 /**

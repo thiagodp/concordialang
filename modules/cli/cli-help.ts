@@ -1,5 +1,5 @@
 import * as colors from 'chalk';
-import { DEFAULT_RANDOM_MAX_STRING_SIZE, DEFAULT_RANDOM_TRIES_TO_INVALID_VALUE } from '../app/defaults';
+import { DEFAULT_RANDOM_MAX_STRING_SIZE, DEFAULT_RANDOM_TRIES_TO_INVALID_VALUE } from '../app/default-options';
 
 export function helpContent(): string {
 

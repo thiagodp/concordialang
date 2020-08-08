@@ -8,7 +8,7 @@ const path_1 = require("path");
 const readline = require("readline");
 const sprintf_js_1 = require("sprintf-js");
 const terminalLink = require("terminal-link");
-const defaults_1 = require("../app/defaults");
+const default_options_1 = require("../app/default-options");
 const ErrorSorting_1 = require("../error/ErrorSorting");
 const TimeFormat_1 = require("../util/TimeFormat");
 exports.pluralS = (count, singular, plural) => {
@@ -153,7 +153,7 @@ class SimpleUI {
     /** @inheritdoc */
     announceOptions(options) {
         // Language
-        if (defaults_1.DEFAULT_LANGUAGE !== options.language) {
+        if (default_options_1.DEFAULT_LANGUAGE !== options.language) {
             this.info('Default language is', this.highlight(options.language));
         }
     }

@@ -12,7 +12,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.TestCaseGeneratorFacade = void 0;
 const enumUtil = require("enum-util");
 const CombinationOptions_1 = require("../app/CombinationOptions");
-const defaults_1 = require("../app/defaults");
+const default_options_1 = require("../app/default-options");
 const ast_1 = require("../ast");
 const RuntimeException_1 = require("../error/RuntimeException");
 const Warning_1 = require("../error/Warning");
@@ -31,8 +31,8 @@ function toCaseType(caseUi) {
     if (enumUtil.isValue(CaseType_1.CaseType, caseUi)) {
         return caseUi;
     }
-    if (enumUtil.isValue(CaseType_1.CaseType, defaults_1.DEFAULT_CASE_UI)) {
-        return defaults_1.DEFAULT_CASE_UI;
+    if (enumUtil.isValue(CaseType_1.CaseType, default_options_1.DEFAULT_CASE_UI)) {
+        return default_options_1.DEFAULT_CASE_UI;
     }
     return CaseType_1.CaseType.CAMEL;
 }
@@ -40,16 +40,16 @@ function toVariantSelectionOptions(combVariant) {
     if (enumUtil.isValue(CombinationOptions_1.VariantSelectionOptions, combVariant)) {
         return combVariant;
     }
-    if (enumUtil.isValue(CombinationOptions_1.VariantSelectionOptions, defaults_1.DEFAULT_VARIANT_SELECTION)) {
-        return defaults_1.DEFAULT_VARIANT_SELECTION;
+    if (enumUtil.isValue(CombinationOptions_1.VariantSelectionOptions, default_options_1.DEFAULT_VARIANT_SELECTION)) {
+        return default_options_1.DEFAULT_VARIANT_SELECTION;
     }
     return CombinationOptions_1.VariantSelectionOptions.SINGLE_RANDOM;
 }
 function typedStateCombination(combState) {
-    return typedCombinationFor(combState, defaults_1.DEFAULT_STATE_COMBINATION);
+    return typedCombinationFor(combState, default_options_1.DEFAULT_STATE_COMBINATION);
 }
 function typedDataCombination(combData) {
-    return typedCombinationFor(combData, defaults_1.DEFAULT_DATA_TEST_CASE_COMBINATION);
+    return typedCombinationFor(combData, default_options_1.DEFAULT_DATA_TEST_CASE_COMBINATION);
 }
 function typedCombinationFor(value, defaultValue) {
     if (enumUtil.isValue(CombinationOptions_1.CombinationOptions, value)) {

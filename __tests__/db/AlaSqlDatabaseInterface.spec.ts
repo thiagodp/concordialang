@@ -1,7 +1,7 @@
 import * as fs from 'fs';
 import { resolve } from 'path';
 
-import { DEFAULT_DIR_LANGUAGE, DEFAULT_LANGUAGE } from '../../modules/app/defaults';
+import { DEFAULT_DIR_LANGUAGE, DEFAULT_LANGUAGE } from '../../modules/app/default-options';
 import { Database, DatabaseProperties, DatabaseProperty, Document, Table } from '../../modules/ast';
 import { AlaSqlDatabaseInterface } from '../../modules/db';
 import { JsonLanguageContentLoader, LanguageContentLoader } from '../../modules/language';

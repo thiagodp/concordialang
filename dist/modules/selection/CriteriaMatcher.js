@@ -1,13 +1,13 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.CriteriaMatcher = void 0;
-const defaults_1 = require("../app/defaults");
+const default_options_1 = require("../app/default-options");
 const Tag_1 = require("../ast/Tag");
 const TagUtil_1 = require("../util/TagUtil");
 const TypeChecking_1 = require("../util/TypeChecking");
 const FilterCriterion_1 = require("./FilterCriterion");
 class CriteriaMatcher {
-    constructor(_ignoreKeywords = [Tag_1.ReservedTags.IGNORE], _importanceKeywords = [Tag_1.ReservedTags.IMPORTANCE], _defaultImportanceValue = defaults_1.DEFAULT_IMPORTANCE) {
+    constructor(_ignoreKeywords = [Tag_1.ReservedTags.IGNORE], _importanceKeywords = [Tag_1.ReservedTags.IMPORTANCE], _defaultImportanceValue = default_options_1.DEFAULT_IMPORTANCE) {
         this._ignoreKeywords = _ignoreKeywords;
         this._importanceKeywords = _importanceKeywords;
         this._defaultImportanceValue = _defaultImportanceValue;

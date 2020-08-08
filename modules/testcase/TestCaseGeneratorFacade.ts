@@ -8,7 +8,7 @@ import {
     DEFAULT_DATA_TEST_CASE_COMBINATION,
     DEFAULT_STATE_COMBINATION,
     DEFAULT_VARIANT_SELECTION,
-} from '../app/defaults';
+} from '../app/default-options';
 import { Document, ReservedTags, TestCase, Variant } from '../ast';
 import { LocatedException } from '../error/LocatedException';
 import { RuntimeException } from '../error/RuntimeException';

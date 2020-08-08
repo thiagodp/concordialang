@@ -2,7 +2,7 @@ import { Clock, DateTimeFormatter, LocalDateTime } from '@js-joda/core';
 import * as fs from 'fs';
 import { resolve } from 'path';
 
-import { DEFAULT_DIR_LANGUAGE } from '../../../modules/app/defaults';
+import { DEFAULT_DIR_LANGUAGE } from '../../../modules/app/default-options';
 import { JsonLanguageContentLoader, LanguageContentLoader } from '../../../modules/language';
 import { Entities, Intents, NLP, NLPResult, NLPTrainer } from '../../../modules/nlp';
 import { FSFileHandler } from '../../../modules/util/file/FSFileHandler';

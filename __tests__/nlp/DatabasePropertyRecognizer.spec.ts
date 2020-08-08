@@ -1,7 +1,7 @@
 import * as fs from 'fs';
 import { resolve } from 'path';
 
-import { DEFAULT_DIR_LANGUAGE } from '../../modules/app/defaults';
+import { DEFAULT_DIR_LANGUAGE } from '../../modules/app/default-options';
 import { DatabaseProperty } from '../../modules/ast';
 import { JsonLanguageContentLoader, LanguageContentLoader } from '../../modules/language';
 import { DatabasePropertyRecognizer, NLP, NLPTrainer } from '../../modules/nlp';

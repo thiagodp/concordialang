@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.makeAllOptions = exports.makeCliOnlyOptions = exports.makeAppOptions = void 0;
 const path_1 = require("path");
-const defaults_1 = require("./defaults");
+const default_options_1 = require("./default-options");
 /**
  * Create app options.
  *
@@ -11,11 +11,11 @@ const defaults_1 = require("./defaults");
  */
 function makeAppOptions(appPath = __dirname, processPath = process.cwd()) {
     // Concordia directories
-    const languageDir = path_1.resolve(appPath, defaults_1.DEFAULT_DIR_LANGUAGE);
+    const languageDir = path_1.resolve(appPath, default_options_1.DEFAULT_DIR_LANGUAGE);
     // User-defined directories
-    const directory = path_1.resolve(processPath, defaults_1.DEFAULT_DIRECTORY);
-    const dirScript = path_1.resolve(processPath, defaults_1.DEFAULT_DIR_SCRIPT);
-    const dirResult = path_1.resolve(processPath, defaults_1.DEFAULT_DIR_RESULT);
+    const directory = path_1.resolve(processPath, default_options_1.DEFAULT_DIRECTORY);
+    const dirScript = path_1.resolve(processPath, default_options_1.DEFAULT_DIR_SCRIPT);
+    const dirResult = path_1.resolve(processPath, default_options_1.DEFAULT_DIR_RESULT);
     const o = {
         // INTERNAL
         // debug: false,
@@ -34,12 +34,12 @@ function makeAppOptions(appPath = __dirname, processPath = process.cwd()) {
         scriptFile: [],
         // scriptGrep
         // FILE-RELATED OPTIONS
-        encoding: defaults_1.DEFAULT_ENCODING,
-        extensionFeature: defaults_1.DEFAULT_EXTENSION_FEATURE,
-        extensionTestCase: defaults_1.DEFAULT_EXTENSION_TEST_CASE,
-        lineBreaker: defaults_1.DEFAULT_LINE_BREAKER,
+        encoding: default_options_1.DEFAULT_ENCODING,
+        extensionFeature: default_options_1.DEFAULT_EXTENSION_FEATURE,
+        extensionTestCase: default_options_1.DEFAULT_EXTENSION_TEST_CASE,
+        lineBreaker: default_options_1.DEFAULT_LINE_BREAKER,
         // LANGUAGE
-        language: defaults_1.DEFAULT_LANGUAGE,
+        language: default_options_1.DEFAULT_LANGUAGE,
         // PLUGIN
         // plugin
         // target
@@ -55,29 +55,29 @@ function makeAppOptions(appPath = __dirname, processPath = process.cwd()) {
         result: false,
         // headless: false,
         // CONTENT GENERATION
-        caseUi: defaults_1.DEFAULT_CASE_UI,
+        caseUi: default_options_1.DEFAULT_CASE_UI,
         // tcSuppressHeader: false,
-        tcIndenter: defaults_1.DEFAULT_TC_INDENTER,
+        tcIndenter: default_options_1.DEFAULT_TC_INDENTER,
         // RANDOMIC GENERATION
         // seed
         // seed: '', // will be ignored
-        randomMinStringSize: defaults_1.DEFAULT_RANDOM_MIN_STRING_SIZE,
-        randomMaxStringSize: defaults_1.DEFAULT_RANDOM_MAX_STRING_SIZE,
-        randomTriesToInvalidValue: defaults_1.DEFAULT_RANDOM_TRIES_TO_INVALID_VALUE,
+        randomMinStringSize: default_options_1.DEFAULT_RANDOM_MIN_STRING_SIZE,
+        randomMaxStringSize: default_options_1.DEFAULT_RANDOM_MAX_STRING_SIZE,
+        randomTriesToInvalidValue: default_options_1.DEFAULT_RANDOM_TRIES_TO_INVALID_VALUE,
         // SPECIFICATION SELECTION
-        importance: defaults_1.DEFAULT_IMPORTANCE,
+        importance: default_options_1.DEFAULT_IMPORTANCE,
         // TEST SCENARIO SELECTION AND COMBINATION STRATEGIES
-        combVariant: defaults_1.DEFAULT_VARIANT_SELECTION,
-        combState: defaults_1.DEFAULT_STATE_COMBINATION,
-        combInvalid: defaults_1.DEFAULT_INVALID_DATA_TEST_CASES_AT_A_TIME,
-        combData: defaults_1.DEFAULT_DATA_TEST_CASE_COMBINATION,
+        combVariant: default_options_1.DEFAULT_VARIANT_SELECTION,
+        combState: default_options_1.DEFAULT_STATE_COMBINATION,
+        combInvalid: default_options_1.DEFAULT_INVALID_DATA_TEST_CASES_AT_A_TIME,
+        combData: default_options_1.DEFAULT_DATA_TEST_CASE_COMBINATION,
     };
     return o;
 }
 exports.makeAppOptions = makeAppOptions;
 function makeCliOnlyOptions(processPath) {
     return {
-        config: path_1.resolve(processPath, defaults_1.DEFAULT_CONFIG),
+        config: path_1.resolve(processPath, default_options_1.DEFAULT_CONFIG),
     };
 }
 exports.makeCliOnlyOptions = makeCliOnlyOptions;

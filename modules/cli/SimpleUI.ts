@@ -8,7 +8,7 @@ import { sprintf } from 'sprintf-js';
 import * as terminalLink from 'terminal-link';
 
 import { AppOptions } from '../app/AppOptions';
-import { DEFAULT_LANGUAGE } from '../app/defaults';
+import { DEFAULT_LANGUAGE } from '../app/default-options';
 import { UI } from '../app/UI';
 import { sortErrorsByLocation } from '../error/ErrorSorting';
 import { LocatedException } from '../error/LocatedException';
