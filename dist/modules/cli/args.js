@@ -115,6 +115,7 @@ function makeGetOptsOptions() {
         // DIRECTORIES
         recursive: true,
         // PROCESSING AND OUTPUT
+        seed: undefined,
         spec: true,
         testCase: true,
         script: true,
