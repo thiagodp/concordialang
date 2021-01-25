@@ -263,6 +263,42 @@ describe( 'NLP', () => {
                     );
                 } );
 
+                it( 'xpath with brackets, single quotes and no dash', () => {
+                    recogLiteral(
+                        `<//*[@id='event-1684412635']>`,
+                        `//*[@id='event-1684412635']`
+                    );
+
+                    recogLiteral(
+                        `<//*[@placeholder='Ex.: 00000-000']>`,
+                        `//*[@placeholder='Ex.: 00000-000']`
+                    );
+                } );
+
+                it( 'css filter, single quotes', () => {
+                    recogLiteral(
+                        `<[id='event-1684412635']>`,
+                        `[id='event-1684412635']`
+                    );
+
+                    recogLiteral(
+                        `<[placeholder='Ex.: 00000-000']>`,
+                        `[placeholder='Ex.: 00000-000']`
+                    );
+                } );
+
+                it( 'css filter, double quotes', () => {
+                    recogLiteral(
+                        `<[id="event-1684412635"]>`,
+                        `[id="event-1684412635"]`
+                    );
+
+                    recogLiteral(
+                        `<[placeholder="Ex.: 00000-000"]>`,
+                        `[placeholder="Ex.: 00000-000"]`
+                    );
+                } );
+
                 it( 'number', () => {
                     recogLiteral( ' <1> ', '1' );
                 } );

@@ -24,7 +24,7 @@ export const UI_PROPERTY_REF_REGEX = /\{[ ]*[a-zA-ZÀ-ÖØ-öø-ÿ][a-zA-ZÀ-Ö�
 // export const UI_LITERAL_REGEX = /(?:\<)([a-zA-ZÀ-ÖØ-öø-ÿ0-9\#\@\~\.\-\*\=\\_\"\'\>\/\[\] ]+)(?:\>)/g; // Last (without only consider escaped >) - problematic
 //
 // Modified to only recognize XPaths with internal ">" when escaped, that is "\>".
-export const UI_LITERAL_REGEX = /(?:\<)([a-zA-ZÀ-ÖØ-öø-ÿ0-9 \#\@\~\.\-\*\=\_\/\[\]\'\"]|\\['">])+(?:\>)/g;
+export const UI_LITERAL_REGEX = /(?:\<)([a-zA-ZÀ-ÖØ-öø-ÿ0-9 \#\@\~\.\:\-\*\=\_\/\[\]\'\"]|\\['">])+(?:\>)/g;
 
 
 export const NUMBER_REGEX = /(-?[0-9]+(?:\.[0-9]+)?)/g;
