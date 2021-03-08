@@ -1,9 +1,10 @@
 import * as fs from 'fs';
 import { resolve } from 'path';
-import { Options } from '../../modules/app/Options';
+
+import { DEFAULT_DIR_LANGUAGE } from '../../modules/app/default-options';
 import { Document } from '../../modules/ast/Document';
 import { JsonLanguageContentLoader, LanguageContentLoader } from '../../modules/language';
-import { Lexer } from "../../modules/lexer/Lexer";
+import { Lexer } from '../../modules/lexer/Lexer';
 import { Parser } from '../../modules/parser/Parser';
 import { NodeTypes } from '../../modules/req/NodeTypes';
 import { FSFileHandler } from '../../modules/util/file/FSFileHandler';
@@ -12,15 +13,17 @@ describe( 'Parser', () => {
 
     let parser = new Parser(); // under test
 
-    const options: Options = new Options( resolve( process.cwd(), 'dist/' ) );
+	const dir = resolve( process.cwd(), 'dist/' );
+	const langDir = resolve( dir, DEFAULT_DIR_LANGUAGE );
+
     const fileHandler = new FSFileHandler( fs );
     const langLoader: LanguageContentLoader = new JsonLanguageContentLoader(
-        options.languageDir,
+        langDir,
         {},
         fileHandler,
         fileHandler
         );
-    const lexer: Lexer = new Lexer( options.language, langLoader );
+    const lexer: Lexer = new Lexer( 'en', langLoader );
 
 
     beforeEach( () => {

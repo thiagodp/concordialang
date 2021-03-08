@@ -290,8 +290,11 @@ class AugmentedSpec extends ast_1.Spec {
         return this.uiElementsVariableMap(false).get(variable) || null;
     }
     findByName(name, nodes) {
+        if (!name) {
+            return null;
+        }
         const lowerCasedName = name.toLowerCase();
-        return TypeChecking_1.valueOrNull(nodes.find(n => n.name.toLowerCase() === lowerCasedName));
+        return TypeChecking_1.valueOrNull(nodes.find(n => n.name ? n.name.toLowerCase() === lowerCasedName : false));
     }
     //
     // OTHER

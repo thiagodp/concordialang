@@ -91,7 +91,7 @@ export class FirstMostImportantVariantSelectionStrategy implements VariantSelect
     }
 
     importanceOf( variant: Variant ): number {
-        const importance: number | null = this._tagUtil.firstNumericContentOf(
+        const importance: number | null = this._tagUtil.numericContentOfTheFirstTag(
             this._tagUtil.tagsWithNameInKeywords(
                 variant.tags,
                 this._importanceKeywords

@@ -1,6 +1,7 @@
 import * as fs from 'fs';
 import { resolve } from 'path';
-import { Options } from '../../modules/app/Options';
+
+import { DEFAULT_DIR_LANGUAGE, DEFAULT_LANGUAGE } from '../../modules/app/default-options';
 import { Database, DatabaseProperties, DatabaseProperty, Document, Table } from '../../modules/ast';
 import { AlaSqlDatabaseInterface } from '../../modules/db';
 import { JsonLanguageContentLoader, LanguageContentLoader } from '../../modules/language';
@@ -13,12 +14,14 @@ describe( 'AlaSqlDatabaseInterface', () => {
 
     let dbi: AlaSqlDatabaseInterface; // under test
 
+	const dir = resolve( process.cwd(), 'dist/' );
+	const langDir = resolve( dir, DEFAULT_DIR_LANGUAGE );
+
     let parser = new Parser();
-    const options: Options = new Options( resolve( process.cwd(), 'dist/' ) );
     const fileHandler = new FSFileHandler( fs );
     const langLoader: LanguageContentLoader =
-        new JsonLanguageContentLoader( options.languageDir, {}, fileHandler, fileHandler );
-    let lexer: Lexer = new Lexer( options.language, langLoader );
+        new JsonLanguageContentLoader( langDir, {}, fileHandler, fileHandler );
+    let lexer: Lexer = new Lexer( DEFAULT_LANGUAGE, langLoader );
 
     beforeAll( () => {
         dbi = new AlaSqlDatabaseInterface();

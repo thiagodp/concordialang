@@ -1,5 +1,5 @@
-import { ProblemMapper } from "../error/ProblemMapper";
-import { Options } from "../app/Options";
+import { AppOptions } from '../app/AppOptions';
+import { ProblemMapper } from '../error/ProblemMapper';
 
 export interface CompilerListener {
 
@@ -10,12 +10,13 @@ export interface CompilerListener {
 
     // File searcher
 
-    announceFileSearchStarted(): void;
+	announceFileSearchStarted(): void;
+	announceFileSearchWarnings( warnings: string[] ): void;
     announceFileSearchFinished( durationMS: number, filesFoundCount: number, filesIgnoredCount: number ): void;
 
     // Compiler
 
-    announceCompilerStarted( options: Options ): void;
+    announceCompilerStarted( options: AppOptions ): void;
 
     announceCompilerFinished(
         compiledFilesCount: number,

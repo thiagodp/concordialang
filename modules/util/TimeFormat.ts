@@ -51,7 +51,7 @@ export function millisObjectToString( o, i18n?: any, separator?: string ): strin
 }
 
 /**
- * Transform a value in miliiseconds to a human-readable string.
+ * Transform a value in milliseconds to a human-readable string.
  *
  * @param ms Value in milliseconds
  * @param i18n Object with strings for the time properties. Optional.

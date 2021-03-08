@@ -7,11 +7,8 @@ const core_1 = require("@js-joda/core");
  *
  * @author Thiago Delgado Pinto
  */
-let DateLimits = /** @class */ (() => {
-    class DateLimits {
-    }
-    DateLimits.MIN = core_1.LocalDate.of(0, 1, 1); // 0000-01-01
-    DateLimits.MAX = core_1.LocalDate.of(9999, 12, 31); // 9999-12-31
-    return DateLimits;
-})();
+class DateLimits {
+}
 exports.DateLimits = DateLimits;
+DateLimits.MIN = core_1.LocalDate.of(0, 1, 1); // 0000-01-01
+DateLimits.MAX = core_1.LocalDate.of(9999, 12, 31); // 9999-12-31

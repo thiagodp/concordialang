@@ -206,9 +206,20 @@ export class DataTestCaseAnalyzer {
                         return hasAnyValueOrLengthProperty ? incompatiblePair : validPair;
                     }
                     case DataTestCase.FORMAT_INVALID: {
+
                         if ( pFormatHasTagGenerateOnlyValidValues ) {
                             return incompatiblePair;
-                        }
+						}
+
+						const val = pFormat.value.value.toString();
+
+						const someExpressionsWithoutInvalidValues = [
+							'.', '^.', '(.)', '.*', '^.*',
+						];
+						if ( someExpressionsWithoutInvalidValues.includes( val ) ) {
+							return incompatiblePair;
+						}
+
                         return new DTCAnalysisData( DTCAnalysisResult.INVALID, pFormat.otherwiseSentences || [] );
                     }
                 }
@@ -216,9 +227,12 @@ export class DataTestCaseAnalyzer {
             }
 
 
-            case DataTestCaseGroup.REQUIRED: { // negation is not valid here
-                const isRequired: boolean = this._uiePropExtractor.extractIsRequired( uie );
+			case DataTestCaseGroup.REQUIRED: { // negation is not valid here
+
+				const isRequired: boolean = this._uiePropExtractor.extractIsRequired( uie );
+
                 switch ( dtc ) {
+
                     case DataTestCase.REQUIRED_FILLED: {
 
                         // Check whether the value has a reference to another UI Element
@@ -228,12 +242,18 @@ export class DataTestCaseAnalyzer {
                                 // return new Pair( DTCAnalysisResult.INVALID, pRequired.otherwiseSentences || [] );
                                 return incompatiblePair;
                             }
-                        }
+						}
+
+						if ( pFormat ) {
+							return incompatiblePair;
+						}
 
                         return validPair;
                     }
 
                     case DataTestCase.REQUIRED_NOT_FILLED: {
+
+						// console.log( 'Analyzing REQUIRED_NOT_FILLED', 'isRequired', isRequired );
 
                         // // Incompatible if value comes from a query
                         // if ( isDefined( pValue )
@@ -243,11 +263,31 @@ export class DataTestCaseAnalyzer {
 
                         if ( isRequired && pRequiredHasTagGenerateOnlyValidValues ) {
                             return incompatiblePair;
-                        }
+						}
 
-                        return isRequired
-                            ? new DTCAnalysisData( DTCAnalysisResult.INVALID, pRequired.otherwiseSentences || [] )
-                            : validPair;
+						if ( isRequired ) {
+							return new DTCAnalysisData( DTCAnalysisResult.INVALID, pRequired.otherwiseSentences || [] );
+						}
+
+						if ( pFormat ) {
+							// Check if an empty string is compatible with the regex
+							try {
+								const val = pFormat.value.value.toString();
+								// console.log( 'REQUIRED_NOT_FILLED - expression', val );
+								const r = new RegExp( val );
+								if ( ! r.test( '' ) ) {
+									return new DTCAnalysisData(
+										DTCAnalysisResult.INVALID,
+										pFormat.otherwiseSentences || [] // from format
+									);
+								}
+								// If continue is because it passes the regex
+							} catch {
+								return incompatiblePair;
+							}
+						}
+
+						return validPair;
                     }
                 }
                 return incompatiblePair;

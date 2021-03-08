@@ -8,15 +8,22 @@ export type FileSearchOptions = {
     ignore: string[],
 };
 
+export type FileSearchResults = {
+	files: string[],
+	warnings: string[]
+};
+
 export interface FileSearcher {
 
     /**
-     * Return a list of files, according to the given options.
-     * The returned list contains absolute paths.
+     * Returns a search result with a list of files and warnings, according to
+	 * the given options. Returned files have absolute paths.
      *
      * @param options Options
-     * @return List of files
+     * @return Search results
+	 *
+	 * @throws Error When a given directory does not exist.
      */
-    searchFrom( options: FileSearchOptions ): Promise< string[] >;
+    searchFrom( options: FileSearchOptions ): Promise< FileSearchResults >;
 
 }

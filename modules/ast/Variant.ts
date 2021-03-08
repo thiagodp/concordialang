@@ -11,6 +11,4 @@ import { State, VariantLike } from './VariantLike';
  */
 export interface Variant extends VariantLike, NamedNode, MayHaveTags {
 
-    /** Postconditions, usually detected during test scenario generation */
-    postconditions?: State[];
 }

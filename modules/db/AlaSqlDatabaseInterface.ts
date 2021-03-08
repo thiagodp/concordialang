@@ -109,6 +109,16 @@ export class AlaSqlDatabaseInterface implements DatabaseInterface {
 
     /** @inheritDoc */
     async query( cmd: string, params?: any ): Promise< any[] > {
+
+		const removeProblematicChars =  s => s;//( s: string ) => s.replace( /'/g, '' );
+
+		let  p = params;
+		if ( p !== undefined ) {
+			if ( Array.isArray( p ) ) {
+				p = p.map( removeProblematicChars );
+			}
+		}
+
         return await this.exec( cmd, params );
     }
 

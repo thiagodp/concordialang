@@ -1,13 +1,13 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.CriteriaMatcher = void 0;
-const Defaults_1 = require("../app/Defaults");
+const default_options_1 = require("../app/default-options");
 const Tag_1 = require("../ast/Tag");
 const TagUtil_1 = require("../util/TagUtil");
 const TypeChecking_1 = require("../util/TypeChecking");
 const FilterCriterion_1 = require("./FilterCriterion");
 class CriteriaMatcher {
-    constructor(_ignoreKeywords = [Tag_1.ReservedTags.IGNORE], _importanceKeywords = [Tag_1.ReservedTags.IMPORTANCE], _defaultImportanceValue = (new Defaults_1.Defaults()).IMPORTANCE) {
+    constructor(_ignoreKeywords = [Tag_1.ReservedTags.IGNORE], _importanceKeywords = [Tag_1.ReservedTags.IMPORTANCE], _defaultImportanceValue = default_options_1.DEFAULT_IMPORTANCE) {
         this._ignoreKeywords = _ignoreKeywords;
         this._importanceKeywords = _importanceKeywords;
         this._defaultImportanceValue = _defaultImportanceValue;
@@ -77,7 +77,7 @@ class CriteriaMatcher {
         return false;
     }
     importanceValue(tags) {
-        return this._tagUtil.firstNumericContentOf(this._tagUtil.tagsWithNameInKeywords(tags, this._importanceKeywords));
+        return this._tagUtil.numericContentOfTheFirstTag(this._tagUtil.tagsWithNameInKeywords(tags, this._importanceKeywords));
     }
     hasIgnoreTag(tags) {
         const filtered = this._tagUtil.tagsWithNameInKeywords(tags, this._ignoreKeywords);

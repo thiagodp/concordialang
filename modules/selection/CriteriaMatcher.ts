@@ -1,4 +1,4 @@
-import { Defaults } from '../app/Defaults';
+import { DEFAULT_IMPORTANCE } from '../app/default-options';
 import { ReservedTags, Tag } from '../ast/Tag';
 import { TagUtil } from '../util/TagUtil';
 import { isString } from '../util/TypeChecking';
@@ -11,7 +11,7 @@ export class CriteriaMatcher {
     constructor(
         private _ignoreKeywords: string[] = [ ReservedTags.IGNORE ],
         private _importanceKeywords: string[] = [ ReservedTags.IMPORTANCE ],
-        private readonly _defaultImportanceValue: number = ( new Defaults() ).IMPORTANCE
+        private readonly _defaultImportanceValue: number = DEFAULT_IMPORTANCE,
     ) {
     }
 
@@ -94,7 +94,7 @@ export class CriteriaMatcher {
     }
 
     importanceValue( tags: Tag[] ): number | null {
-        return this._tagUtil.firstNumericContentOf(
+        return this._tagUtil.numericContentOfTheFirstTag(
             this._tagUtil.tagsWithNameInKeywords( tags, this._importanceKeywords )
         );
     }

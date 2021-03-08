@@ -1,12 +1,12 @@
-import { DateTimeFormatter, LocalDate, LocalTime, Clock, Instant, ZoneId } from '@js-joda/core';
+import { Clock, DateTimeFormatter, LocalTime } from '@js-joda/core';
 import * as fs from 'fs';
 import { resolve } from 'path';
-import { Options } from '../../../modules/app/Options';
+
+import { DEFAULT_DIR_LANGUAGE } from '../../../modules/app/default-options';
 import { JsonLanguageContentLoader, LanguageContentLoader } from '../../../modules/language';
 import { Entities, Intents, NLP, NLPResult, NLPTrainer } from '../../../modules/nlp';
 import { FSFileHandler } from '../../../modules/util/file/FSFileHandler';
-
-import { shouldHaveUIEntities, shouldNotHaveEntities } from "../entity-util";
+import { shouldHaveUIEntities, shouldNotHaveEntities } from '../entity-util';
 
 describe( 'nlp.en.time', () => {
 
@@ -14,11 +14,13 @@ describe( 'nlp.en.time', () => {
 
     let clock: Clock; // helper
 
-    const LANGUAGE = 'en';
-    const options: Options = new Options( resolve( process.cwd(), 'dist/' ) );
+	const LANGUAGE = 'en';
+	const dir = resolve( process.cwd(), 'dist/' );
+	const langDir = resolve( dir, DEFAULT_DIR_LANGUAGE );
+
     const fileHandler = new FSFileHandler( fs );
     const langLoader: LanguageContentLoader = new JsonLanguageContentLoader(
-        options.languageDir,
+        langDir,
         {},
         fileHandler,
         fileHandler

@@ -12,7 +12,8 @@ export interface VariantLike {
     // Detected during test scenario generation:
 
     preconditions?: State[];
-    stateCalls?: State[];
+	stateCalls?: State[];
+    postconditions?: State[];
 }
 
 
@@ -25,7 +26,8 @@ export class State {
 
     constructor(
         public name: string,
-        public stepIndex: number
+		public stepIndex: number,
+		public notFound?: boolean // Occurs when the State reference is not found
     ) {
     }
 

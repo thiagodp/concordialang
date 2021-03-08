@@ -49,22 +49,31 @@ class DataGeneratorBuilder {
     raw(valueType, min, max) {
         // console.log( 'generator for valueType', valueType, 'min', min, 'max', max );
         switch (valueType) {
-            case ValueTypeDetector_1.ValueType.STRING: return new StringGenerator_1.StringGenerator(this._randomString, min, max, this._maxPossibleStringLength);
-            case ValueTypeDetector_1.ValueType.INTEGER: return new LongGenerator_1.LongGenerator(this._randomLong, min, max);
-            case ValueTypeDetector_1.ValueType.DOUBLE: return new DoubleGenerator_1.DoubleGenerator(this._randomDouble, min, max);
-            case ValueTypeDetector_1.ValueType.DATE: return new DateGenerator_1.DateGenerator(this._randomDate, min, max);
-            case ValueTypeDetector_1.ValueType.TIME: return new ShortTimeGenerator_1.ShortTimeGenerator(this._randomShortTime, min, max);
-            case ValueTypeDetector_1.ValueType.LONG_TIME: return new TimeGenerator_1.TimeGenerator(this._randomTime, min, max);
-            case ValueTypeDetector_1.ValueType.DATE_TIME: return new ShortDateTimeGenerator_1.ShortDateTimeGenerator(this._randomShortDateTime, min, max);
-            case ValueTypeDetector_1.ValueType.LONG_DATE_TIME: return new DateTimeGenerator_1.DateTimeGenerator(this._randomDateTime, min, max);
-            default: throw Error('Generator not available fot the type ' + valueType);
+            case ValueTypeDetector_1.ValueType.STRING:
+                return new StringGenerator_1.StringGenerator(this._randomString, min, max, this._maxPossibleStringLength);
+            case ValueTypeDetector_1.ValueType.INTEGER:
+                return new LongGenerator_1.LongGenerator(this._randomLong, min, max);
+            case ValueTypeDetector_1.ValueType.DOUBLE:
+                return new DoubleGenerator_1.DoubleGenerator(this._randomDouble, min, max);
+            case ValueTypeDetector_1.ValueType.DATE:
+                return new DateGenerator_1.DateGenerator(this._randomDate, min, max);
+            case ValueTypeDetector_1.ValueType.TIME:
+                return new ShortTimeGenerator_1.ShortTimeGenerator(this._randomShortTime, min, max);
+            case ValueTypeDetector_1.ValueType.LONG_TIME:
+                return new TimeGenerator_1.TimeGenerator(this._randomTime, min, max);
+            case ValueTypeDetector_1.ValueType.DATE_TIME:
+                return new ShortDateTimeGenerator_1.ShortDateTimeGenerator(this._randomShortDateTime, min, max);
+            case ValueTypeDetector_1.ValueType.LONG_DATE_TIME:
+                return new DateTimeGenerator_1.DateTimeGenerator(this._randomDateTime, min, max);
+            default:
+                throw Error('Generator not available fot the type ' + valueType);
         }
     }
     rawAnalyzer(valueType, min, max) {
         return this.raw(valueType, min, max);
     }
     regex(valueType, expression) {
-        return new RegexBasedDataGenerator_1.RegexBasedDataGenerator(this._randomLong, this._randomString, expression, valueType, this._randomTriesToInvalidValues);
+        return new RegexBasedDataGenerator_1.RegexBasedDataGenerator(this._randomLong, this._randomString, expression, valueType, this._randomTriesToInvalidValues, this._maxPossibleStringLength);
     }
     list(valueType, listValues) {
         return new ListBasedDataGenerator_1.ListBasedDataGenerator(this._randomLong, this.raw(valueType), listValues, this._randomTriesToInvalidValues);
@@ -75,8 +84,8 @@ class DataGeneratorBuilder {
     query(valueType, query, queryable) {
         return new QueryBasedDataGenerator_1.QueryBasedDataGenerator(this._randomLong, this.raw(valueType), queryable, this.queryCache, query, this._randomTriesToInvalidValues);
     }
-    invertedLogicQuery(valueType, query, queriable) {
-        return new InvertedLogicQueryBasedDataGenerator_1.InvertedLogicQueryBasedDataGenerator(this.query(valueType, query, queriable));
+    invertedLogicQuery(valueType, query, queryable) {
+        return new InvertedLogicQueryBasedDataGenerator_1.InvertedLogicQueryBasedDataGenerator(this.query(valueType, query, queryable));
     }
     get queryCache() {
         return this._queryCache;

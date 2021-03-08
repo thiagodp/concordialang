@@ -1,6 +1,7 @@
 import * as fs from 'fs';
 import { resolve } from 'path';
-import { Options } from '../../modules/app/Options';
+
+import { DEFAULT_DIR_LANGUAGE } from '../../modules/app/default-options';
 import { DatabaseProperty } from '../../modules/ast';
 import { JsonLanguageContentLoader, LanguageContentLoader } from '../../modules/language';
 import { DatabasePropertyRecognizer, NLP, NLPTrainer } from '../../modules/nlp';
@@ -11,12 +12,14 @@ describe( 'DatabasePropertyRecognizer', () => {
 
     let nodes = [];
     let errors = [];
-    let warnings = [];
+	let warnings = [];
 
-    const options: Options = new Options( resolve( process.cwd(), 'dist/' ) );
+	const dir = resolve( process.cwd(), 'dist/' );
+	const langDir = resolve( dir, DEFAULT_DIR_LANGUAGE );
+
     const fileHandler = new FSFileHandler( fs );
     const langLoader: LanguageContentLoader =
-        new JsonLanguageContentLoader( options.languageDir, {}, fileHandler, fileHandler );
+        new JsonLanguageContentLoader( langDir, {}, fileHandler, fileHandler );
 
     // helper
     function makeNode( content: string, line = 1, column = 1 ): DatabaseProperty {

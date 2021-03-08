@@ -1,6 +1,7 @@
-import { Options } from "../app/Options";
-import { PluginListener } from "./PluginListener";
-import { PluginManager } from "./PluginManager";
+import { AppOptions } from '../app/AppOptions';
+import { CliOnlyOptions } from '../cli/CliOnlyOptions';
+import { PluginListener } from './PluginListener';
+import { PluginManager } from './PluginManager';
 
 /**
  * Plugin controller
@@ -10,7 +11,7 @@ import { PluginManager } from "./PluginManager";
 export class PluginController {
 
     public process = async (
-        options: Options,
+        options: AppOptions & CliOnlyOptions,
         pluginManager: PluginManager,
         drawer: PluginListener
         ): Promise< boolean > => {

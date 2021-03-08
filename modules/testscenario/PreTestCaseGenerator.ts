@@ -53,7 +53,7 @@ enum UIElementReplacementOption {
 }
 
 /**
- * Generates `PreTestCase`s.
+ * Generates `PreTestCase`s, i.e. scenarios with test data and oracles.
  *
  * @author Thiago Delgado Pinto
  */
@@ -216,7 +216,9 @@ export class PreTestCaseGenerator {
 		//  generation.
 		//
 
-        const stepUIElements: UIElement[] = this.extractUIElementsFromSteps( newSteps, ctx );
+		const stepUIElements: UIElement[] = this.extractUIElementsFromSteps( newSteps, ctx );
+
+		// console.log('stepUIElements', stepUIElements );
 
         // NO UI ELEMENTS --> No values to generate and no oracles to add
         if ( stepUIElements.length < 1 ) {
@@ -248,7 +250,9 @@ export class PreTestCaseGenerator {
         // }
         // ---
 
-        const stepUIEVariables: string[] = stepUIElements.map( uie => uie.info ? uie.info.fullVariableName : uie.name );
+		const stepUIEVariables: string[] = stepUIElements.map( uie => uie.info ? uie.info.fullVariableName : uie.name );
+
+		// console.log('stepUIEVariables', stepUIEVariables );
 
         const allAvailableUIElements: UIElement[] = ctx.spec.extractUIElementsFromDocumentAndImports( ctx.doc );
         const allAvailableVariables: string[] = allAvailableUIElements.map( uie => uie.info ? uie.info.fullVariableName : uie.name );
@@ -482,9 +486,6 @@ export class PreTestCaseGenerator {
         const keywordValid = ! keywords.valid ? 'valid' : ( keywords.valid[ 0 ] || 'valid' );
         const keywordRandom = ! keywords.random ? 'random' : ( keywords.random[ 0 ] || 'random' );
 
-        let steps: Step[] = [];
-        let line = step.location.line, count = 0;
-
         let entities: NLPEntity[] = [];
         if ( uiElements.length > 0 ) {
             entities.push.apply( entities, uiLiterals );
@@ -492,7 +493,11 @@ export class PreTestCaseGenerator {
             entities.sort( ( a, b ) => a.position - b.position ); // sort by position
         } else {
             entities = uiLiterals;
-        }
+		}
+
+        let steps: Step[] = [];
+		let line = step.location.line;
+		let count = 0;
 
         // Create a Step for every entity
         for ( let entity of entities ) {
@@ -726,18 +731,20 @@ export class PreTestCaseGenerator {
                     ' in ' + fileName + ' ' + locStr + '. It will receive an empty value.';
                 // console.log( uieVariableToValueMap );
                 // console.log( variable, '<'.repeat( 10 ) );
-                ctx.warnings.push( new RuntimeException( msg ) );
+                ctx.warnings.push( new Warning( msg ) );
                 value = '';
             }
 
             let uieLiteral = isDefined( uie ) && isDefined( uie.info ) ? uie.info.uiLiteral : null;
             // console.log( 'uieName', uieName, 'uieLiteral', uieLiteral, 'variable', variable, 'doc', ctx.doc.fileInfo.path );
-            if ( null === uieLiteral ) { // Should never happen since Spec defines Literals for mapped UI Elements
+
+			// It happens when the UI Element is used in a step but it is not declared
+			if ( null === uieLiteral ) {
                 uieLiteral = convertCase( variable, this.uiLiteralCaseOption );
-                const msg = 'Could not retrieve a literal from ' +
+                const msg = 'Could not retrieve a selector from ' +
                     Symbols.UI_ELEMENT_PREFIX + variable +
-                    Symbols.UI_ELEMENT_SUFFIX + '. Generating the identification "' + uieLiteral + '"';
-                ctx.warnings.push( new RuntimeException( msg, step.location ) );
+                    Symbols.UI_ELEMENT_SUFFIX + ', so I\'m generating "' + uieLiteral + '" for it.';
+                ctx.warnings.push( new Warning( msg, step.location ) );
             }
 
             // Analyze whether it is an input target type
@@ -820,7 +827,7 @@ export class PreTestCaseGenerator {
             }
 
             // Make the step
-            let newStep = step;
+            let newStep = deepcopy( step ) as Step;
             newStep.nodeType = nodeType;
             newStep.content = sentence;
             newStep.comment = ( step.comment || '' ) + comment;

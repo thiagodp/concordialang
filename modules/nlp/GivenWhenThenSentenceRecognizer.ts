@@ -1,9 +1,15 @@
-import { Entities, Intents, NLP, NLPException, NLPResult, NLPResultProcessor, NLPTrainer, NodeSentenceRecognizer } from '.';
 import { ContentNode, Step } from '../ast';
 import { LocatedException } from '../error/LocatedException';
-import { SyntaxRuleBuilder } from "./syntax/SyntaxRuleBuilder";
+import { Entities } from './Entities';
+import { Intents } from './Intents';
+import { NLP } from './NLP';
+import { NLPException } from './NLPException';
+import { NLPResult } from './NLPResult';
+import { NLPTrainer } from './NLPTrainer';
+import { NLPResultProcessor, NodeSentenceRecognizer } from './NodeSentenceRecognizer';
 import { SyntaxRule } from './syntax/SyntaxRule';
-import { DEFAULT_UI_ACTION_SYNTAX_RULE, UI_ACTION_SYNTAX_RULES } from "./syntax/UIActionSyntaxRules";
+import { SyntaxRuleBuilder } from './syntax/SyntaxRuleBuilder';
+import { DEFAULT_UI_ACTION_SYNTAX_RULE, UI_ACTION_SYNTAX_RULES } from './syntax/UIActionSyntaxRules';
 
 /**
  * Given-When-Then sentence recognizer.

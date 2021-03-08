@@ -7,19 +7,16 @@ const Keywords_1 = require("./Keywords");
  *
  * @author Thiago Delgado Pinto
  */
-let NodeTypes = /** @class */ (() => {
-    class NodeTypes extends Keywords_1.Keywords {
-    }
-    // Not available in Gherkin
-    NodeTypes.REGEX = 'regex';
-    NodeTypes.CONSTANT = 'constant';
-    NodeTypes.UI_PROPERTY = 'uiProperty';
-    NodeTypes.DATABASE_PROPERTY = 'databaseProperty';
-    // Also available in Gherkin
-    NodeTypes.TAG = 'tag';
-    NodeTypes.TABLE_ROW = 'tableRow';
-    NodeTypes.LONG_STRING = 'longString'; // a.k.a. py string
-    NodeTypes.TEXT = 'text'; // not empty content
-    return NodeTypes;
-})();
+class NodeTypes extends Keywords_1.Keywords {
+}
 exports.NodeTypes = NodeTypes;
+// Not available in Gherkin
+NodeTypes.REGEX = 'regex';
+NodeTypes.CONSTANT = 'constant';
+NodeTypes.UI_PROPERTY = 'uiProperty';
+NodeTypes.DATABASE_PROPERTY = 'databaseProperty';
+// Also available in Gherkin
+NodeTypes.TAG = 'tag';
+NodeTypes.TABLE_ROW = 'tableRow';
+NodeTypes.LONG_STRING = 'longString'; // a.k.a. py string
+NodeTypes.TEXT = 'text'; // not empty content

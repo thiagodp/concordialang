@@ -11,23 +11,37 @@ import { adjustValueToTheRightType } from '../util/ValueTypeDetector';
 //
 
 export const VALUE_REGEX = /"(?:[^"\\]|\\.)*"/g;
+
 // export const UI_ELEMENT_REF_REGEX = new RegExp( '\{[a-zA-ZÀ-ÖØ-öø-ÿ][^|<\r\n\>\}]*\}', 'g' );
 export const UI_ELEMENT_REF_REGEX = /\{[a-zA-ZÀ-ÖØ-öø-ÿ][^|<\r\n\>\}]*\}/g;
+
 // export const UI_PROPERTY_REF_REGEX = new RegExp( '\\{[ ]*[a-zA-ZÀ-ÖØ-öø-ÿ]+[a-zA-ZÀ-ÖØ-öø-ÿ ]*\\:?[a-zA-ZÀ-ÖØ-öø-ÿ ]*\\|[a-zA-ZÀ-ÖØ-öø-ÿ ]+\\}', 'g' );
 export const UI_PROPERTY_REF_REGEX = /\{[ ]*[a-zA-ZÀ-ÖØ-öø-ÿ][a-zA-ZÀ-ÖØ-öø-ÿ0-9 _-]*(\:[a-zA-ZÀ-ÖØ-öø-ÿ][a-zA-ZÀ-ÖØ-öø-ÿ0-9 _-]*)?\|[a-zA-ZÀ-ÖØ-öø-ÿ][a-zA-ZÀ-ÖØ-öø-ÿ ]+\}/g;
+
 // export const UI_LITERAL_REGEX = /(?:\<)((?:#|@|\.|\/\/|~|[a-zA-ZÀ-ÖØ-öø-ÿ])[^<\r\n\>]*)(?:\>)/g;
 // export const UI_LITERAL_REGEX = /(?:\<)((?:#|@|\.|\/\/|~|[a-zA-ZÀ-ÖØ-öø-ÿ])[^<\r\n]*)(?:\>)/g; // Issue #19
-export const UI_LITERAL_REGEX = /(?:\<)((?:#|@|\.|\/\/|~|[a-zA-ZÀ-ÖØ-öø-ÿ0-9 ]?)[^<\r\n]*[^\\>])(?:\>)/g;
+// export const UI_LITERAL_REGEX = /(?:\<)((?:#|@|\.|\/\/|~|[a-zA-ZÀ-ÖØ-öø-ÿ0-9 ]?)[^<\r\n]*[^\\>])(?:\>)/g; // <- Penultimate
+// export const UI_LITERAL_REGEX = /(?:\<)([a-zA-ZÀ-ÖØ-öø-ÿ0-9\#\@\~\.\-\*\=\\_\"\'\>\/\[\] ]+)(?:\>)/g; // Last (without only consider escaped >) - problematic
+//
+// Modified to only recognize XPaths with internal ">" when escaped, that is "\>".
+export const UI_LITERAL_REGEX = /(?:\<)([a-zA-ZÀ-ÖØ-öø-ÿ0-9 \#\@\~\.\:\-\*\=\_\/\[\]\'\"]|\\['">])+(?:\>)/g;
+
+
 export const NUMBER_REGEX = /(-?[0-9]+(?:\.[0-9]+)?)/g;
 // export const NUMBER_REGEX = /(?:[ ,\[]|^)(-?[0-9]+(?:\.[0-9]+)?)/g; // Last addition to not consider the invalid seconds of a time as being a number
+
 // export const QUERY_REGEX = new RegExp( '"(?:\t| )*SELECT[^"]+"', "gi" );
 export const QUERY_REGEX = /"(?:\t| )*SELECT[^"]+"/gi;
+
 export const CONSTANT_REGEX = /\[[a-zA-ZÀ-ÖØ-öø-ÿ_][a-zA-ZÀ-ÖØ-öø-ÿ0-9 _-]*\]/g;
+
 // export const VALUE_LIST_REGEX = /\[(?: )*((?:,) ?|([0-9]+(\.[0-9]+)?|\"(.*[^\\])\"))+(?: )*\]/g;
 // export const VALUE_LIST_REGEX = /(\[[\t ]*([^\]])*[\t ]*[^\\]\])+/g; // only [ anything ]
 // export const VALUE_LIST_REGEX = /(?:\[[\t ]*)(("[^"]*"|(-?[0-9]+(\.[0-9]+)?))*,?[\t ]?)+[^\]]?(?:\])/g; // [ value or number ]
 export const VALUE_LIST_REGEX = /(?:\[[\t ]*)(("(\\"|[^"])+"|(-?[0-9]+(\.[0-9]+)?))+,?[\t ]?)+[^\]]?(?:\])/g; // [ value or number ]
+
 export const STATE_REGEX = /\~[a-zA-ZÀ-ÖØ-öø-ÿ_][a-zA-ZÀ-ÖØ-öø-ÿ0-9 _-]*\~/g;
+
 export const COMMAND_REGEX = /'(?:[^'\\]|\\.)*'/g;
 
 /**
@@ -131,8 +145,10 @@ export class EntityRecognizerMaker {
         valueRec.addMatch(
             regex,
             function( match ) {
-                //console.log( 'match: ', match );
-                return match[ 1 ].toString();
+				const value: string = match[ 0 ].toString();
+				return value.trim() // Removes spaces
+					.substring( 1, value.length - 1 ).trim() // Removes < and >
+					.replace( /\\>/g, '>' ); // Replace \> with >
             },
             100 // priority
         );

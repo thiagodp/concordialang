@@ -1,21 +1,24 @@
 import * as fs from 'fs';
-import { resolve } from "path";
-import { Options } from "../../../modules/app/Options";
-import { JsonLanguageContentLoader, LanguageContentLoader } from "../../../modules/language";
-import { Intents, NLP, NLPResult, NLPTrainer } from "../../../modules/nlp";
-import { Entities } from "../../../modules/nlp/Entities";
-import { FSFileHandler } from "../../../modules/util/file";
-import { shouldHaveTestCaseEntities } from "../entity-util";
+import { resolve } from 'path';
+
+import { DEFAULT_DIR_LANGUAGE } from '../../../modules/app/default-options';
+import { JsonLanguageContentLoader, LanguageContentLoader } from '../../../modules/language';
+import { Intents, NLP, NLPResult, NLPTrainer } from '../../../modules/nlp';
+import { Entities } from '../../../modules/nlp/Entities';
+import { FSFileHandler } from '../../../modules/util/file';
+import { shouldHaveTestCaseEntities } from '../entity-util';
 
 describe( 'nlp.pt.testcase', () => {
 
     let nlp: NLP; // under test
 
     const LANGUAGE = 'pt';
-    const options: Options = new Options( resolve( process.cwd(), 'dist/' ) );
+	const dir = resolve( process.cwd(), 'dist/' );
+	const langDir = resolve( dir, DEFAULT_DIR_LANGUAGE );
+
     const fileHandler = new FSFileHandler( fs );
     const langLoader: LanguageContentLoader = new JsonLanguageContentLoader(
-        options.languageDir,
+        langDir,
         {},
         fileHandler,
         fileHandler
@@ -378,15 +381,25 @@ describe( 'nlp.pt.testcase', () => {
         it( 'click with long css selector', () => {
             let results = [];
             let r: NLPResult;
-            results.push( r = recognizeInTestCase( 'eu clico em "#js-repo-pjax-container > div.container.new-discussion-timeline.experiment-repo-nav > div.repository-content > div.release-show > div > div.release-body.commit.open.float-left > div.my-4 > h2"' ) );
+            results.push(
+				r = recognizeInTestCase(
+					'eu clico em "#js-repo-pjax-container > div.container.new-discussion-timeline.experiment-repo-nav > div.repository-content > div.release-show > div > div.release-body.commit.open.float-left > div.my-4 > h2"'
+				)
+			);
             shouldHaveTestCaseEntities( results, [ UI_ACTION, VALUE ] );
-            expect( r.entities.find( e => e.entity === VALUE ).value ).toEqual( '#js-repo-pjax-container > div.container.new-discussion-timeline.experiment-repo-nav > div.repository-content > div.release-show > div > div.release-body.commit.open.float-left > div.my-4 > h2' );
+            expect( r.entities.find( e => e.entity === VALUE ).value ).toEqual(
+				'#js-repo-pjax-container > div.container.new-discussion-timeline.experiment-repo-nav > div.repository-content > div.release-show > div > div.release-body.commit.open.float-left > div.my-4 > h2'
+			);
         } );
 
         it( 'see with long escaped css selector as ui literal', () => {
             let results = [];
             let r: NLPResult;
-            results.push( r = recognizeInTestCase( 'eu vejo <#js-repo-pjax-container \> div.container.new-discussion-timeline.experiment-repo-nav \> div.repository-content \> div.release-show \> div \> div.release-body.commit.open.float-left \> div.my-4 \> h2>' ) );
+            results.push(
+				r = recognizeInTestCase(
+					'eu vejo <#js-repo-pjax-container \\> div.container.new-discussion-timeline.experiment-repo-nav \\> div.repository-content \\> div.release-show \\> div \\> div.release-body.commit.open.float-left \\> div.my-4 \\> h2>'
+				)
+			);
             shouldHaveTestCaseEntities( results, [ UI_ACTION, UI_LITERAL ] );
             expect( r.entities.find( e => e.entity === UI_LITERAL ).value ).toEqual(
                 '#js-repo-pjax-container > div.container.new-discussion-timeline.experiment-repo-nav > div.repository-content > div.release-show > div > div.release-body.commit.open.float-left > div.my-4 > h2' );
@@ -405,13 +418,16 @@ describe( 'nlp.pt.testcase', () => {
         it( 'drag and drop with with long escaped css selector as ui literals', () => {
             let results = [];
             let r: NLPResult;
-            results.push( r = recognizeInTestCase(
-                'eu arrasto <#js-repo-pjax-container \> div.container \> div h2> para <foo \> bar \> zoo>' ) );
+            results.push(
+				r = recognizeInTestCase(
+					'eu arrasto <#js-repo-pjax-container \\> div.container \\> div h2> para <foo \\> bar \\> zoo>'
+				)
+			);
             shouldHaveTestCaseEntities( results, [ UI_ACTION, UI_LITERAL, UI_LITERAL ] );
 
             let found = r.entities.filter( e => e.entity === UI_LITERAL );
-            expect( found[ 0 ].value ).toEqual( '#js-repo-pjax-container \> div.container \> div h2' );
-            expect( found[ 1 ].value ).toEqual( 'foo \> bar \> zoo' );
+            expect( found[ 0 ].value ).toEqual( '#js-repo-pjax-container > div.container > div h2' );
+            expect( found[ 1 ].value ).toEqual( 'foo > bar > zoo' );
         } );
 
         it( 'fill with ui literal and long value', () => {

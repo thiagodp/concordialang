@@ -1,8 +1,8 @@
 import * as deepcopy from 'deepcopy';
-import { basename, dirname, join, normalize, parse, relative, resolve } from "path";
-import { Document, FileInfo, Import, Language, TestCase } from "../ast";
-import { NodeTypes } from "../req/NodeTypes";
-import { toUnixPath } from '../util/file/path-transformer';
+import { basename, dirname, join, relative } from 'path';
+
+import { Document, FileInfo, Import, Language, TestCase } from '../ast';
+import { NodeTypes } from '../req/NodeTypes';
 
 /**
  * Generate Test Case Documents, i.e. documents to save as `.testcase` files.

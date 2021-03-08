@@ -13,26 +13,22 @@ class VariantStateDetector {
     /**
      * Detects State references and adds them to the given object.
      *
-     * @param variantLike Variant or Variant Background object to be updated.
+     * @param variantLike Variant-like object to be updated.
      */
-    update(variantLike, isVariant) {
-        // No sentences? -> Exit
-        if (!variantLike || !variantLike.sentences || variantLike.sentences.length < 1) {
+    update(variantLike) {
+        if (!variantLike) {
             return;
         }
-        // Preparing the state references
-        if (!variantLike.preconditions) {
-            variantLike.preconditions = [];
+        variantLike.preconditions = [];
+        variantLike.stateCalls = [];
+        variantLike.postconditions = [];
+        // No sentences? -> exit
+        if (!variantLike.sentences || variantLike.sentences.length < 1) {
+            return;
         }
-        if (!variantLike.stateCalls) {
-            variantLike.stateCalls = [];
-        }
-        if (isVariant && !variantLike.postconditions) {
-            variantLike.postconditions = [];
-        }
-        // Analysing detected entities of the steps
+        // Analyzing detected entities of the steps
         const nlpUtil = new nlp_1.NLPUtil();
-        let lastGWT = null;
+        let nodeType = null;
         let stepIndex = -1;
         for (let step of variantLike.sentences) {
             ++stepIndex;
@@ -40,31 +36,32 @@ class VariantStateDetector {
                 continue;
             }
             // Handles "AND" steps as the last Given/When/Then
-            if (step.nodeType !== NodeTypes_1.NodeTypes.STEP_AND && step.nodeType !== NodeTypes_1.NodeTypes.STEP_OTHERWISE) {
-                lastGWT = step.nodeType;
+            if (step.nodeType !== NodeTypes_1.NodeTypes.STEP_AND &&
+                step.nodeType !== NodeTypes_1.NodeTypes.STEP_OTHERWISE) {
+                nodeType = step.nodeType;
             }
-            if (null === lastGWT) {
+            if (null === nodeType) { // Starts with AND
                 continue;
             }
-            let targetStates = null;
-            switch (lastGWT) {
+            let targetRef = null;
+            switch (nodeType) {
                 case NodeTypes_1.NodeTypes.STEP_GIVEN:
-                    targetStates = variantLike.preconditions;
+                    targetRef = variantLike.preconditions;
                     break;
                 case NodeTypes_1.NodeTypes.STEP_WHEN:
-                    targetStates = variantLike.stateCalls;
+                    targetRef = variantLike.stateCalls;
                     break;
-                case NodeTypes_1.NodeTypes.STEP_THEN: {
-                    targetStates = isVariant ? variantLike.postconditions : null;
+                case NodeTypes_1.NodeTypes.STEP_THEN:
+                    targetRef = variantLike.postconditions;
                     break;
-                }
             }
-            if (null === targetStates) {
+            if (null === targetRef) {
                 continue;
             }
+            // Expected at most one state
             const stateNames = nlpUtil.valuesOfEntitiesNamed(nlp_1.Entities.STATE, step.nlpResult);
-            for (let name of stateNames) {
-                targetStates.push(new ast_1.State(name, stepIndex));
+            for (const name of stateNames) {
+                targetRef.push(new ast_1.State(name, stepIndex));
             }
         }
     }

@@ -105,6 +105,13 @@ class AlaSqlDatabaseInterface {
     /** @inheritDoc */
     query(cmd, params) {
         return __awaiter(this, void 0, void 0, function* () {
+            const removeProblematicChars = s => s; //( s: string ) => s.replace( /'/g, '' );
+            let p = params;
+            if (p !== undefined) {
+                if (Array.isArray(p)) {
+                    p = p.map(removeProblematicChars);
+                }
+            }
             return yield this.exec(cmd, params);
         });
     }

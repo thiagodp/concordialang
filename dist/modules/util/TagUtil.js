@@ -13,11 +13,11 @@ class TagUtil {
     tagsWithNameInKeywords(tags, keywords) {
         return tags.filter((t) => this.isNameInKeywords(t, keywords));
     }
-    firstContentOf(tags) {
+    contentOfTheFirstTag(tags) {
         return (tags.length > 0) ? tags[0].content : null;
     }
-    firstNumericContentOf(tags) {
-        const content = this.firstContentOf(tags);
+    numericContentOfTheFirstTag(tags) {
+        const content = this.contentOfTheFirstTag(tags);
         if (content !== null) {
             const num = parseInt(content);
             return isNaN(num) ? null : num;

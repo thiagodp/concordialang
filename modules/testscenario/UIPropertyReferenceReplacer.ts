@@ -1,12 +1,13 @@
 import { basename } from 'path';
-import { EntityValueType, Step, UIElement, UIPropertyReference, UIPropertyTypes } from "../ast";
-import { RuntimeException } from '../error/RuntimeException';
+
+import { EntityValueType, Step, UIElement, UIPropertyReference, UIPropertyTypes } from '../ast';
+import { Warning } from '../error/Warning';
 import { Symbols } from '../req/Symbols';
-import { isDefined, UIElementNameHandler, UIElementPropertyExtractor } from "../util";
+import { isDefined, UIElementNameHandler, UIElementPropertyExtractor } from '../util';
 import { removeDuplicated } from '../util/remove-duplicated';
-import { GenContext } from "./PreTestCaseGenerator";
-import { formatValueToUseInASentence } from './value-formatter';
 import { LocaleContext } from './LocaleContext';
+import { GenContext } from './PreTestCaseGenerator';
+import { formatValueToUseInASentence } from './value-formatter';
 
 /**
  * Replaces UIE property references.
@@ -51,7 +52,7 @@ export class UIPropertyReferenceReplacer {
                     Symbols.UI_ELEMENT_PREFIX + uipRef.uiElementName +
                     Symbols.UI_PROPERTY_REF_SEPARATOR + uipRef.property + Symbols.UI_ELEMENT_SUFFIX +
                     ' in ' + fileName + ' ' + locStr + '. Not supported yet.';
-                const err = new RuntimeException( msg );
+                const err = new Warning( msg );
                 ctx.warnings.push( err );
                 continue;
             }
@@ -77,7 +78,7 @@ export class UIPropertyReferenceReplacer {
                 const msg = 'Could not retrieve a value from ' +
                     Symbols.UI_ELEMENT_PREFIX + variable + Symbols.UI_ELEMENT_SUFFIX +
                     ' in ' + fileName + ' ' + locStr + '. It will receive an empty value.';
-                const err = new RuntimeException( msg );
+                const err = new Warning( msg );
                 ctx.warnings.push( err );
                 value = '';
             }

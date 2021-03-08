@@ -1,19 +1,19 @@
 import * as deepcopy from 'deepcopy';
+
 import { State, Step, Tag, tagsWithAnyOfTheNames, Variant } from '../ast';
 import { RuntimeException } from '../error/RuntimeException';
 import { KeywordDictionary } from '../language/KeywordDictionary';
 import { LanguageContentLoader } from '../language/LanguageContentLoader';
-import { Entities, NLPUtil } from '../nlp';
-import { NodeTypes } from '../req/NodeTypes';
+import { Entities } from '../nlp';
 import { CombinationStrategy } from '../selection/CombinationStrategy';
 import { VariantSelectionStrategy } from '../selection/VariantSelectionStrategy';
 import { OnlyValidMix } from '../testcase/DataTestCaseMix';
 import { TestPlanner } from '../testcase/TestPlanner';
 import { Random } from '../testdata/random/Random';
 import { RandomLong } from '../testdata/random/RandomLong';
-import { upperFirst } from '../util/CaseConversor';
 import { isDefined } from '../util/TypeChecking';
 import { GenContext, PreTestCaseGenerator } from './PreTestCaseGenerator';
+import { StepHandler } from './StepHandler';
 import { TestScenario } from './TestScenario';
 import { VariantStateDetector } from './VariantStateDetector';
 
@@ -35,7 +35,8 @@ export class TestScenarioGenerator {
 
     private readonly _randomLong: RandomLong;
     private readonly _langContentLoader: LanguageContentLoader;
-    private readonly _defaultLanguage: string;
+	private readonly _defaultLanguage: string;
+	private readonly _stepHandler;
     public readonly seed: string;
 
     private readonly _validValuePlanMaker: TestPlanner;
@@ -48,7 +49,13 @@ export class TestScenarioGenerator {
         private _postconditionNameToVariantsMap: Map< string, Variant[] >
     ) {
         this._langContentLoader = this._preTestCaseGenerator.langContentLoader;
-        this._defaultLanguage = this._preTestCaseGenerator.defaultLanguage;
+		this._defaultLanguage = this._preTestCaseGenerator.defaultLanguage;
+
+		this._stepHandler = new StepHandler(
+			this._langContentLoader,
+			this._defaultLanguage
+		);
+
         this.seed = this._preTestCaseGenerator.seed;
         this._randomLong = new RandomLong( new Random( this.seed ) );
 
@@ -70,7 +77,9 @@ export class TestScenarioGenerator {
         let testScenarios: TestScenario[] = [];
 
         // Detect Preconditions, State Calls, and Postconditions of the Variant
-        this.detectVariantStates( variant, ctx.errors );
+		// this.detectVariantStates( variant, ctx.errors ); // NOT NEEDED ANYMORE -> Done in FeatureSSA !
+
+		// this.mapPostconditionsOf( variant );
 
         // console.log( 'variant', variant.name, '\n', variant.sentences.map( s => s.content ) );
         // console.log( 'pre', variant.preconditions );
@@ -87,9 +96,13 @@ export class TestScenarioGenerator {
             return [];
         }
 
-        let pairMap = {}; // Maps string => [ [ State, TestScenario ] ]
+		let pairMap = {}; // Maps string => [ [ State, TestScenario ] ]
 
-        let allStatesToReplace = variant.preconditions.concat( variant.stateCalls );
+		const preconditions = ( variant.preconditions || [] ).filter( st => ! st.notFound );
+		const stateCalls = ( variant.stateCalls || [] ).filter( st => ! st.notFound );
+
+		let allStatesToReplace = preconditions.concat( stateCalls );
+
         // console.log( 'States to replace', allStatesToReplace.map( s=> s.name ) );
 
         if ( allStatesToReplace.length > 0 ) { // Preconditions + State Calls
@@ -98,29 +111,29 @@ export class TestScenarioGenerator {
 
                 let state = deepcopy( stateToReplace );
 
-                // Already mapped?
-                if ( isDefined( pairMap[ state.name ] ) ) {
-                    continue;
-                }
                 if ( ! pairMap[ state.name ] ) {
                     pairMap[ state.name ] = [];
-                }
+                } else {
+					continue; // already mapped !
+				}
+
                 let currentMap = pairMap[ state.name ];
 
                 let producerVariants = this.variantsThatProduce( state.name );
-                // console.log( 'Producer variants', producerVariants );
+                // console.log( 'Producer variants:', producerVariants );
 
                 // No producers ? -> Error
                 if ( producerVariants.length < 1 ) {
-                    const msg = 'The producer of the state "' + state.name + '" was not found.';
-                    const loc = variant.sentences[ state.stepIndex ].location;
-                    const err = new RuntimeException( msg, loc );
-                    ctx.errors.push( err );
+                    // const msg = 'The producer of the state "' + state.name + '" was not found.';
+                    // const loc = variant.sentences[ state.stepIndex ].location;
+                    // const err = new RuntimeException( msg, loc );
+					// ctx.errors.push( err );
                     continue;
                 }
 
                 // Reduce Variants
-                producerVariants = this.selectVariantsToCombine( producerVariants );
+				producerVariants = this.selectVariantsToCombine( producerVariants );
+				// console.log( 'Producer variants after reduction:', producerVariants );
 
                 // Make pairs State => Test Scenario to combine later
                 for ( let otherVariant of producerVariants ) {
@@ -154,93 +167,102 @@ export class TestScenarioGenerator {
 
             // console.log( 'pairMap', JSON.stringify( pairMap ) );
 
-            // let product = cartesian( pairMap ); // TO-DO replace cartesian with strategy
+			// let product = cartesian( pairMap ); // TO-DO replace cartesian with strategy
             let result = this._statePairCombinationStrategy.combine( pairMap );
 
-            let testScenariosToCombineByState: any[] = result;
+			let testScenariosToCombineByState: any[] = result;
 
-            // console.log( 'after combining', result );
+			if ( ! testScenariosToCombineByState || testScenariosToCombineByState.length < 1 ) {
+				testScenarios.push( baseScenario );
+			} else {
 
-            for ( let stateObj of testScenariosToCombineByState ) {
+				// console.log( 'after combining', result );
 
-                let ts = baseScenario.clone();
+				for ( let stateObj of testScenariosToCombineByState ) {
 
-                // console.log( '\nNEW TS ---------------------------------\n' );
+					let ts = baseScenario.clone();
 
-                for ( let stateInTestCase of allStatesToReplace ) {
+					// console.log( '\nNEW TS ---------------------------------\n' );
 
-                    // console.log( "\tTS steps\n", ts.steps.map( s => s.content ) );
+					for ( let stateInTestCase of allStatesToReplace ) {
 
-                    for ( let stateName in stateObj ) {
+						// console.log( "\tTS steps\n", ts.steps.map( s => s.content ) );
 
-                        if ( ! stateInTestCase.nameEquals( stateName ) ) {
-                            continue;
-                        }
+						for ( let stateName in stateObj ) {
 
-                        // console.log( "\tstateName", stateName );
+							if ( ! stateInTestCase.nameEquals( stateName ) ) {
+								continue;
+							}
 
-                        let statePair = stateObj[ stateName ];
-                        if ( ! statePair ) {
-                            continue;
-                        }
+							// console.log( "\tstateName", stateName );
 
-                        // console.log( "\tstatePair\n", statePair );
+							let statePair = stateObj[ stateName ];
+							if ( ! statePair ) {
+								continue;
+							}
 
-                        let state = statePair[ 0 ];
-                        let tsToReplaceStep = statePair[ 1 ];
-                        let stepsAdded = 0;
+							// console.log( "\tstatePair\n", statePair );
 
-                        // Adjust step index (precondition or state call)
-                        let stepIndex: number = 0;
-                        for ( let tsStep of ts.steps ) {
-                            let tsState = tsStep.nlpResult.entities.find( e => e.entity === Entities.STATE );
-                            if ( tsState && state.nameEquals( tsState.value ) ) {
-                                state.stepIndex = stepIndex;
-                                break;
-                            }
-                            ++stepIndex;
-                        }
+							let state: State = statePair[ 0 ];
+							let tsToReplaceStep: TestScenario = statePair[ 1 ];
+							let stepsAdded = 0;
 
-                        const variantPreconditionIndex = variant.preconditions.indexOf( state );
-                        const isPrecondition = variantPreconditionIndex >= 0;
+							// Adjust step index (precondition or state call)
+							let stepIndex: number = 0;
+							for ( let tsStep of ts.steps ) {
+								let tsState = tsStep.nlpResult.entities.find( e => e.entity === Entities.STATE );
+								if ( tsState && state.nameEquals( tsState.value ) ) {
+									state.stepIndex = stepIndex;
+									break;
+								}
+								++stepIndex;
+							}
 
-                        // ---
-                        // Use GenUtil to replace references and fill values of the TestScenario
+							// const variantPreconditionIndex = preconditions.indexOf( state );
+							// const isPrecondition = variantPreconditionIndex >= 0;
+							const isPrecondition = preconditions
+								.findIndex( st => st.nameEquals( state.name ) ) >= 0;
 
-                        // Clone the current TestScenario
-                        let tsToUse: TestScenario = tsToReplaceStep.clone();
+							// ---
+							// Use GenUtil to replace references and fill values of the TestScenario
 
-                        // Make all substitutions and generate valid values
-                        let all = await this._preTestCaseGenerator.generate(
-                            tsToReplaceStep.steps,
-                            ctx,
-                            [ this._validValuePlanMaker ]
-                        );
+							// Clone the current TestScenario
+							let tsToUse: TestScenario = tsToReplaceStep.clone();
 
-                        const preTestCase = all[ 0 ];
+							// Make all substitutions and generate valid values
+							let all = await this._preTestCaseGenerator.generate(
+								tsToReplaceStep.steps,
+								ctx,
+								[ this._validValuePlanMaker ]
+							);
 
-                        // console.log( "\nPreTestCase\n", preTestCase.steps.map( s => s.content ) );
+							const preTestCase = all[ 0 ];
 
-                        // Replace TestScenario steps with the new ones
-                        tsToUse.steps = preTestCase.steps;
+							// console.log( "\nPreTestCase\n", preTestCase.steps.map( s => s.content ) );
 
-                        // Adjust the stepAfterPreconditions
-                        tsToUse.stepAfterPreconditions = null;
-                        let oldIndex = tsToReplaceStep.steps.indexOf( tsToReplaceStep.stepAfterPreconditions );
-                        if ( oldIndex >= 0 ) {
-                            tsToUse.stepAfterPreconditions = tsToUse.steps[ oldIndex ];
-                        }
-                        // ---
+							// Replace TestScenario steps with the new ones
+							tsToUse.steps = preTestCase.steps;
 
-                        // console.log( 'state to replace: ', state.name, '@', state.stepIndex );
-                        state.stepIndex += stepsAdded > 0 ? stepsAdded - 1 : 0;
-                        stepsAdded += this.replaceStepWithTestScenario( ts, state, tsToUse, isPrecondition );
-                        // console.log( "\nTS modified is\n", ts.steps.map( s => s.content ) );
-                    }
+							// Adjust the stepAfterPreconditions
+							// tsToUse.stepAfterPreconditions = null;
+							// let oldIndex = tsToReplaceStep.steps.indexOf( tsToReplaceStep.stepAfterPreconditions );
+							// if ( oldIndex >= 0 ) {
+							// 	tsToUse.stepAfterPreconditions = tsToUse.steps[ oldIndex ];
+							// }
+							// ---
 
-                }
-                testScenarios.push( ts );
-            }
+							// console.log( 'state to replace: ', state.name, '@', state.stepIndex );
+							state.stepIndex += stepsAdded > 0 ? stepsAdded - 1 : 0;
+							stepsAdded += this.replaceStepWithTestScenario(
+								ts, state, tsToUse, isPrecondition, docLanguage );
+							// console.log( "\nTS modified is\n", ts.steps.map( s => s.content ) );
+						}
+
+					}
+					testScenarios.push( ts );
+				}
+
+			}
 
             // console.log( 'GENERATED', testScenarios.length, 'scenarios for states', allStatesToReplace.map( s => s.name ) );
 
@@ -264,7 +286,7 @@ export class TestScenarioGenerator {
             testScenarios.push( baseScenario );
         }
 
-        if ( isDefined( variant.postconditions ) && variant.postconditions.length > 0 ) {
+        if ( variant.postconditions && variant.postconditions.length > 0 ) {
 
             let newTestScenarios: TestScenario[] = [];
             for ( let ts of testScenarios ) {
@@ -288,13 +310,13 @@ export class TestScenarioGenerator {
                 // Replace TestScenario steps with the new ones
                 let newTS = ts.clone();
                 newTS.steps = preTestCase.steps;
-                newTS.stepAfterPreconditions = null;
+                // newTS.stepAfterPreconditions = null;
 
-                // Adjust the stepAfterPreconditions
-                let oldIndex = ts.steps.indexOf( ts.stepAfterPreconditions );
-                if ( oldIndex >= 0 ) {
-                    newTS.stepAfterPreconditions = newTS.steps[ oldIndex ];
-                }
+                // // Adjust the stepAfterPreconditions
+                // let oldIndex = ts.steps.indexOf( ts.stepAfterPreconditions );
+                // if ( oldIndex >= 0 ) {
+                //     newTS.stepAfterPreconditions = newTS.steps[ oldIndex ];
+                // }
 
                 newTestScenarios.push( newTS );
             }
@@ -332,7 +354,7 @@ export class TestScenarioGenerator {
         errors: RuntimeException[]
     ): void {
         const detector = new VariantStateDetector();
-        detector.update( variant, true );
+        detector.update( variant );
 
         let removed = detector.removePreconditionsThatRefersToPostconditions( variant );
         if ( removed.length > 0 ) {
@@ -372,103 +394,129 @@ export class TestScenarioGenerator {
         return testScenarios[ index ];
     }
 
-    makeTestScenarioFromVariant( variant: Variant, docLanguage: string | undefined ): TestScenario {
-        let ts = new TestScenario();
+    makeTestScenarioFromVariant(
+		variant: Variant,
+		docLanguage: string
+	): TestScenario {
 
-        if ( ! isDefined( variant ) || ! isDefined( variant.sentences ) ) {
+        const ts = new TestScenario();
+
+		if ( ! variant || ! variant.sentences || variant.sentences.length < 1 ) {
             return ts;
         }
 
-        let sentencesCount = variant.sentences.length;
-        if ( sentencesCount < 1 ) {
-            return ts;
-        }
+        // Clone the steps
+		ts.steps = deepcopy( variant.sentences ) as Step[];
 
-        const langContent = this._langContentLoader.load(
+
+		// Remove GIVEN steps with UNDECLARED states in REVERSE ORDER
+		const preconditionsToRemove = variant.preconditions
+			? variant.preconditions.filter( st => st.notFound ).reverse()
+			: [];
+
+		for ( const state of preconditionsToRemove ) {
+
+			const producerVariants = this.variantsThatProduce( state.name );
+
+			// It has a producer? Nothing to do.
+			if ( producerVariants.length > 0 ) {
+				continue;
+			}
+
+			// No valid step at the given index ? Ignore it.
+			if ( ! ts.steps[ state.stepIndex ] ) {
+				continue;
+			}
+
+			ts.steps = this._stepHandler.removeStep( ts.steps, state.stepIndex, docLanguage );
+		}
+
+		// Remove THEN steps with postconditions in REVERSE ORDER
+		for ( const state of variant.postconditions.reverse() ) {
+
+			// No valid step at the given index ? Ignore it.
+			if ( ! ts.steps[ state.stepIndex ] ) {
+				continue;
+			}
+
+			ts.steps = this._stepHandler.removeStep( ts.steps, state.stepIndex, docLanguage );
+		}
+
+
+        // Adjust stepAfterPreconditions
+        // const lastPreconditionIndex = variant.preconditions.length - 1;
+        // if ( lastPreconditionIndex >= 0 && lastPreconditionIndex + 1 < ts.steps.length ) {
+        //     ts.stepAfterPreconditions = ts.steps[ lastPreconditionIndex + 1 ];
+        // } else {
+        //     ts.stepAfterPreconditions = ts.steps[ 0 ];
+        // }
+
+        // // Prepare eventual GIVEN AND steps that *do not have* States to become GIVEN steps,
+        // //     and eventual WHEN AND  steps that *do not have* States to become WHEN  steps,
+		// // since they will be replaced later
+
+		// const nlpUtil = new NLPUtil();
+
+        // const langContent = this._langContentLoader.load(
+        //     isDefined( docLanguage ) ? docLanguage : this._defaultLanguage
+        // );
+        // const keywords: KeywordDictionary = langContent.keywords;
+
+        // const stepAndKeyword: string = ( keywords.stepAnd || [ 'and' ] )[ 0 ];
+        // const stepThenKeyword: string = ( keywords.stepThen || [ 'then' ] )[ 0 ];
+        // const stepWhenKeyword: string = ( keywords.stepWhen || [ 'when' ] )[ 0 ];
+		// const stepGivenKeyword: string = ( keywords.stepGiven || [ 'given' ] )[ 0 ];
+
+		// const stepAndRegex = new RegExp( stepAndKeyword, 'i' );
+
+        // let index = 0, priorWasGiven = false, priorWasWhen = false, priorHasState = false;
+        // for ( let step of ts.steps ) {
+
+        //     if ( step.nodeType === NodeTypes.STEP_GIVEN ) {
+        //         priorWasGiven = true;
+        //         priorWasWhen = false;
+        //         priorHasState = nlpUtil.hasEntityNamed( Entities.STATE, step.nlpResult );
+
+        //     } else if ( step.nodeType === NodeTypes.STEP_WHEN ) {
+        //         priorWasGiven = false;
+        //         priorWasWhen = true;
+        //         priorHasState = nlpUtil.hasEntityNamed( Entities.STATE, step.nlpResult );
+
+        //     } else if ( step.nodeType === NodeTypes.STEP_AND
+        //         && priorHasState && ( priorWasGiven || priorWasWhen )
+        //         && ! nlpUtil.hasEntityNamed( Entities.STATE, step.nlpResult ) ) { // current does not have state
+
+        //         if ( priorWasGiven ) {
+        //             // Change node type
+        //             step.nodeType = NodeTypes.STEP_GIVEN;
+        //             // Change node sentence
+        //             step.content = step.content.replace( stepAndRegex, upperFirst( stepGivenKeyword ) ); // Given ...
+        //         } else {
+        //             // Change node type
+        //             step.nodeType = NodeTypes.STEP_WHEN;
+        //             // Change node sentence
+        //             step.content = step.content.replace( stepAndRegex, upperFirst( stepWhenKeyword ) ); // When ...
+        //         }
+
+        //         priorHasState = false; // important
+        //     }
+
+        //     ++index;
+        // }
+
+
+		const langContent = this._langContentLoader.load(
             isDefined( docLanguage ) ? docLanguage : this._defaultLanguage
         );
-        const keywords: KeywordDictionary = langContent.keywords;
+		const keywords: KeywordDictionary = langContent.keywords;
 
-        // Steps
-        ts.steps = deepcopy( variant.sentences ) as Step[]; // variant.sentences.slice( 0 ); // make another array with the same items
+        ts.ignoreForTestCaseGeneration = this.containsIgnoreTag(
+			variant.tags, ( keywords.tagIgnore || [ 'ignore' ] ) );
 
-        // Remove Then steps with postconditions
-        const stepAndKeyword: string = ( keywords.stepAnd || [ 'and' ] )[ 0 ];
-        const stepThenKeyword: string = ( keywords.stepThen || [ 'then' ] )[ 0 ];
-        const stepAndRegex = new RegExp( stepAndKeyword, 'i' );
-
-        for ( let postc of variant.postconditions ) {
-
-            // Make the next step to become a THEN instead of an AND, if needed
-            if ( postc.stepIndex + 1 < sentencesCount ) {
-                let nextStep = ts.steps[ postc.stepIndex + 1 ];
-                if ( nextStep.nodeType === NodeTypes.STEP_AND ) {
-                    // Change the node type
-                    nextStep.nodeType = NodeTypes.STEP_THEN;
-                    // Change the sentence content!
-                    nextStep.content = nextStep.content.replace( stepAndRegex, upperFirst( stepThenKeyword ) ); // Then ...
-                }
-            }
-
-            ts.steps.splice( postc.stepIndex, 1 );
-        }
-
-        sentencesCount = ts.steps.length;
-
-        // Step after Precondition
-        const lastPreconditionIndex = variant.preconditions.length - 1;
-        if ( lastPreconditionIndex >= 0 && lastPreconditionIndex + 1 < sentencesCount ) {
-            ts.stepAfterPreconditions = ts.steps[ lastPreconditionIndex + 1 ];
-        } else {
-            ts.stepAfterPreconditions = ts.steps[ 0 ];
-        }
-
-        // Prepare eventual GIVEN AND steps that *do not have* States to become GIVEN steps,
-        //     and eventual WHEN AND  steps that *do not have* States to become WHEN  steps,
-        // since they will be replaced later
-        const nlpUtil = new NLPUtil();
-        const stepWhenKeyword: string = ( keywords.stepWhen || [ 'when' ] )[ 0 ];
-        const stepGivenKeyword: string = ( keywords.stepGiven || [ 'given' ] )[ 0 ];
-        let index = 0, priorWasGiven = false, priorWasWhen = false, priorHasState = false;
-        for ( let step of ts.steps ) {
-
-            if ( step.nodeType === NodeTypes.STEP_GIVEN ) {
-                priorWasGiven = true;
-                priorWasWhen = false;
-                priorHasState = nlpUtil.hasEntityNamed( Entities.STATE, step.nlpResult );
-
-            } else if ( step.nodeType === NodeTypes.STEP_WHEN ) {
-                priorWasGiven = false;
-                priorWasWhen = true;
-                priorHasState = nlpUtil.hasEntityNamed( Entities.STATE, step.nlpResult );
-
-            } else if ( step.nodeType === NodeTypes.STEP_AND
-                && priorHasState && ( priorWasGiven || priorWasWhen )
-                && ! nlpUtil.hasEntityNamed( Entities.STATE, step.nlpResult ) ) { // current does not have state
-
-                if ( priorWasGiven ) {
-                    // Change node type
-                    step.nodeType = NodeTypes.STEP_GIVEN;
-                    // Change node sentence
-                    step.content = step.content.replace( stepAndRegex, upperFirst( stepGivenKeyword ) ); // Given ...
-                } else {
-                    // Change node type
-                    step.nodeType = NodeTypes.STEP_WHEN;
-                    // Change node sentence
-                    step.content = step.content.replace( stepAndRegex, upperFirst( stepWhenKeyword ) ); // When ...
-                }
-
-                priorHasState = false; // important
-            }
-
-            ++index;
-        }
-
-
-        ts.ignoreForTestCaseGeneration = this.containsIgnoreTag( variant.tags, ( keywords.tagIgnore || [ 'ignore' ] ) );
+		this._stepHandler.adjustPrefixesToReplaceStates( ts.steps, docLanguage );
 
         return ts;
-    }
+	}
 
 
     containsIgnoreTag( tags: Tag[], ignoreKeywords: string[] ): boolean {
@@ -480,11 +528,21 @@ export class TestScenarioGenerator {
         ts: TestScenario,
         state: State,
         tsToReplaceStep: TestScenario,
-        isPrecondition: boolean
+		isPrecondition: boolean,
+		docLanguage: string
     ) {
-        let stepsToReplace: Step[] = deepcopy(
-            isPrecondition ? tsToReplaceStep.steps : tsToReplaceStep.stepsWithoutPreconditions()
-        );
+
+		// console.log( 'isPrecondition', isPrecondition,
+		// 	'\nsteps', ts.steps, '\nto replace', tsToReplaceStep );
+
+		// Precondition is replaced by all the steps
+		// State call is replaced by all the steps but Given steps without State
+		const stepsToCopy = isPrecondition
+			? tsToReplaceStep.steps
+			: this._stepHandler.stepsExceptExternalOrGivenStepsWithState(
+				tsToReplaceStep.steps, docLanguage )
+
+        let stepsToReplace: Step[] = deepcopy( stepsToCopy );
 
         // Set the flag "external"
         for ( let step of stepsToReplace ) {

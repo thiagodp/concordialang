@@ -1,6 +1,9 @@
-import Bravey = require('../../lib/bravey'); // .js file
-import { Clock, TemporalAccessor, ZoneId, Instant } from '@js-joda/core';
-import { Entities, NLPResult, NLPTrainingData } from "../nlp";
+import { Clock, Instant, ZoneId } from '@js-joda/core';
+
+import Bravey = require('../../lib/bravey');
+import { Entities } from '../nlp/Entities';
+import { NLPResult } from '../nlp/NLPResult';
+import { NLPTrainingData } from '../nlp/NLPTrainingData';
 import { EntityRecognizerMaker } from './EntityRecognizerMaker';
 
 /**

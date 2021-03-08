@@ -4,7 +4,7 @@ exports.UIPropertyRecognizer = void 0;
 const core_1 = require("@js-joda/core");
 const ast_1 = require("../ast");
 const UIPropertyTypes_1 = require("../ast/UIPropertyTypes");
-const nlp_1 = require("../nlp");
+const Entities_1 = require("../nlp/Entities");
 const TypeChecking_1 = require("../util/TypeChecking");
 const ValueTypeDetector_1 = require("../util/ValueTypeDetector");
 const Intents_1 = require("./Intents");
@@ -50,7 +50,7 @@ class UIPropertyRecognizer {
             const recognizedEntityNames = r.entities.map(e => e.entity);
             // console.log( r.entities );
             // Must have a UI Property
-            const propertyIndex = recognizedEntityNames.indexOf(nlp_1.Entities.UI_PROPERTY);
+            const propertyIndex = recognizedEntityNames.indexOf(Entities_1.Entities.UI_PROPERTY);
             if (propertyIndex < 0) {
                 const msg = 'Unrecognized (' + language + '): ' + node.content;
                 warnings.push(new NLPException_1.NLPException(msg, node.location));
@@ -68,44 +68,44 @@ class UIPropertyRecognizer {
                 //
                 let entityValue;
                 switch (e.entity) {
-                    case nlp_1.Entities.VALUE: // next
-                    case nlp_1.Entities.NUMBER:
+                    case Entities_1.Entities.VALUE: // next
+                    case Entities_1.Entities.NUMBER:
                         entityValue = new ast_1.EntityValue(e.entity, ValueTypeDetector_1.adjustValueToTheRightType(e.value));
                         break;
                     // case Entities.VALUE_LIST     : uiv = new EntityValue( e.entity, _this.makeValueList( e.value ) ); break;
-                    case nlp_1.Entities.DATE:
+                    case Entities_1.Entities.DATE:
                         entityValue = new ast_1.EntityValue(e.entity, _this.convertToDateIfNeeded(e.value, language));
                         break;
-                    case nlp_1.Entities.LONG_TIME: // next
-                    case nlp_1.Entities.TIME:
+                    case Entities_1.Entities.LONG_TIME: // next
+                    case Entities_1.Entities.TIME:
                         entityValue = new ast_1.EntityValue(e.entity, e.value);
                         break;
-                    case nlp_1.Entities.LONG_DATE_TIME: // next
-                    case nlp_1.Entities.DATE_TIME:
+                    case Entities_1.Entities.LONG_DATE_TIME: // next
+                    case Entities_1.Entities.DATE_TIME:
                         entityValue = new ast_1.EntityValue(e.entity, e.value);
                         break;
-                    case nlp_1.Entities.VALUE_LIST:
+                    case Entities_1.Entities.VALUE_LIST:
                         entityValue = new ast_1.EntityValue(e.entity, e.value);
                         break;
-                    case nlp_1.Entities.QUERY:
+                    case Entities_1.Entities.QUERY:
                         entityValue = new ast_1.EntityValue(e.entity, e.value);
                         break;
-                    case nlp_1.Entities.UI_ELEMENT_REF:
+                    case Entities_1.Entities.UI_ELEMENT_REF:
                         entityValue = new ast_1.EntityValue(e.entity, e.value);
                         break;
-                    case nlp_1.Entities.UI_LITERAL:
+                    case Entities_1.Entities.UI_LITERAL:
                         entityValue = new ast_1.EntityValue(e.entity, e.value);
                         break;
-                    case nlp_1.Entities.UI_PROPERTY_REF:
+                    case Entities_1.Entities.UI_PROPERTY_REF:
                         entityValue = new ast_1.EntityValue(e.entity, e.value);
                         break;
-                    case nlp_1.Entities.CONSTANT:
+                    case Entities_1.Entities.CONSTANT:
                         entityValue = new ast_1.EntityValue(e.entity, e.value);
                         break;
-                    case nlp_1.Entities.UI_DATA_TYPE:
+                    case Entities_1.Entities.UI_DATA_TYPE:
                         entityValue = new ast_1.EntityValue(e.entity, e.value);
                         break;
-                    case nlp_1.Entities.BOOL_VALUE:
+                    case Entities_1.Entities.BOOL_VALUE:
                         entityValue = new ast_1.EntityValue(e.entity, 'true' === e.value);
                         break;
                     default: entityValue = null;
@@ -118,8 +118,8 @@ class UIPropertyRecognizer {
             // A boolean property without value ?
             const booleanProperties = [UIPropertyTypes_1.UIPropertyTypes.REQUIRED, UIPropertyTypes_1.UIPropertyTypes.EDITABLE];
             if (booleanProperties.indexOf(property) >= 0 &&
-                !r.entities.find(e => e.entity === nlp_1.Entities.BOOL_VALUE)) {
-                item.value = new ast_1.EntityValue(nlp_1.Entities.BOOL_VALUE, true);
+                !r.entities.find(e => e.entity === Entities_1.Entities.BOOL_VALUE)) {
+                item.value = new ast_1.EntityValue(Entities_1.Entities.BOOL_VALUE, true);
             }
             return item;
         };

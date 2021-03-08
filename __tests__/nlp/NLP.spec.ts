@@ -249,17 +249,53 @@ describe( 'NLP', () => {
                     recogLiteral( ' <~foo> ', '~foo' );
                 } );
 
-                it( 'long, escaped CSS selectors', () => {
-                    recogLiteral(
-                        ' <#js-repo-pjax-container \> div.container.new-discussion-timeline.experiment-repo-nav \> div.repository-content \> div.release-show \> div \> div.release-body.commit.open.float-left \> div.my-4 \> h2>',
-                        '#js-repo-pjax-container \> div.container.new-discussion-timeline.experiment-repo-nav \> div.repository-content \> div.release-show \> div \> div.release-body.commit.open.float-left \> div.my-4 \> h2'
-                    );
-                } );
-
                 it( 'xpath with brackets, quotes, at', () => {
                     recogLiteral(
                         '<//*[@id="event-1684412635"]/span[2]/a>',
                         '//*[@id="event-1684412635"]/span[2]/a'
+                    );
+                } );
+
+                it( 'xpath with brackets, single quotes, at', () => {
+                    recogLiteral(
+                        `<//*[@id='event-1684412635']/span[2]/a>`,
+                        `//*[@id='event-1684412635']/span[2]/a`
+                    );
+                } );
+
+                it( 'xpath with brackets, single quotes and no dash', () => {
+                    recogLiteral(
+                        `<//*[@id='event-1684412635']>`,
+                        `//*[@id='event-1684412635']`
+                    );
+
+                    recogLiteral(
+                        `<//*[@placeholder='Ex.: 00000-000']>`,
+                        `//*[@placeholder='Ex.: 00000-000']`
+                    );
+                } );
+
+                it( 'css filter, single quotes', () => {
+                    recogLiteral(
+                        `<[id='event-1684412635']>`,
+                        `[id='event-1684412635']`
+                    );
+
+                    recogLiteral(
+                        `<[placeholder='Ex.: 00000-000']>`,
+                        `[placeholder='Ex.: 00000-000']`
+                    );
+                } );
+
+                it( 'css filter, double quotes', () => {
+                    recogLiteral(
+                        `<[id="event-1684412635"]>`,
+                        `[id="event-1684412635"]`
+                    );
+
+                    recogLiteral(
+                        `<[placeholder="Ex.: 00000-000"]>`,
+                        `[placeholder="Ex.: 00000-000"]`
                     );
                 } );
 
@@ -269,7 +305,21 @@ describe( 'NLP', () => {
 
                 it( 'starting with a number', () => {
                     recogLiteral( ' <1a> ', '1a' );
+				} );
+
+                it( 'long, escaped CSS selectors', () => {
+                    recogLiteral(
+                        ' <#js-repo-pjax-container \\> div.container.new-discussion-timeline.experiment-repo-nav \\> div.repository-content \\> div.release-show \\> div \\> div.release-body.commit.open.float-left \\> div.my-4 \\> h2>',
+                        '#js-repo-pjax-container > div.container.new-discussion-timeline.experiment-repo-nav > div.repository-content > div.release-show > div > div.release-body.commit.open.float-left > div.my-4 > h2'
+                    );
                 } );
+
+				it( 'css only with escaped sub paths', () => {
+					recogLiteral(
+						'<//*[@id="event-1684412635"] \\> div \\> div.fy8Gb \\> div \\> div._1q2k8>',
+						'//*[@id="event-1684412635"] > div > div.fy8Gb > div > div._1q2k8'
+					);
+				} );
 
             } );
 

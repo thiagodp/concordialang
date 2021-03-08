@@ -21,4 +21,3 @@ __exportStar(require("./ImportSSA"), exports);
 __exportStar(require("./SpecificationAnalyzer"), exports);
 __exportStar(require("./TableSSA"), exports);
 __exportStar(require("./TestCaseSSA"), exports);
-__exportStar(require("./UIElementSSA"), exports);

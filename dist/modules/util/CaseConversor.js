@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.upperFirst = exports.convertCase = void 0;
+exports.removeDiacritics = exports.upperFirst = exports.convertCase = void 0;
 const case_1 = require("case");
 const CaseType_1 = require("./CaseType");
 function convertCase(text, type) {
@@ -20,3 +20,7 @@ function upperFirst(text) {
     return text;
 }
 exports.upperFirst = upperFirst;
+function removeDiacritics(text) {
+    return text.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+}
+exports.removeDiacritics = removeDiacritics;

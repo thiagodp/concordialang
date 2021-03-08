@@ -1,6 +1,7 @@
 import * as fs from 'fs';
 import { resolve } from 'path';
-import { Options } from '../../../modules/app/Options';
+
+import { DEFAULT_DIR_LANGUAGE } from '../../../modules/app/default-options';
 import { Document } from '../../../modules/ast/Document';
 import { JsonLanguageContentLoader, LanguageContentLoader } from '../../../modules/language';
 import { Lexer } from '../../../modules/lexer/Lexer';
@@ -13,12 +14,13 @@ describe( 'ScenarioDA', () => {
     const analyzer = new ScenarioDA(); // under test
 
     let parser = new Parser();
-    const options: Options = new Options( resolve( process.cwd(), 'dist/' ) );
+	const dir = resolve( process.cwd(), 'dist/' );
+	const langDir = resolve( dir, DEFAULT_DIR_LANGUAGE );
+
     const fileHandler = new FSFileHandler( fs );
     const langLoader: LanguageContentLoader =
-        new JsonLanguageContentLoader( options.languageDir, {}, fileHandler, fileHandler );
-    const lexer: Lexer = new Lexer( options.language, langLoader );
-
+        new JsonLanguageContentLoader( langDir, {}, fileHandler, fileHandler );
+    const lexer: Lexer = new Lexer( 'en', langLoader );
 
     beforeEach( () => {
         lexer.reset();

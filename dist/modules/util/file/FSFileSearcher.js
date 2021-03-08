@@ -21,13 +21,29 @@ class FSFileSearcher {
         return __awaiter(this, void 0, void 0, function* () {
             // Whether the given directory is a file, return it
             const pStat = util_1.promisify(this._fs.stat);
-            const st = yield pStat(options.directory);
-            if (!st.isDirectory()) {
-                const msg = `${options.directory} is not a directory.`;
-                throw new Error(msg);
+            if (options.directory) {
+                const msgNotADirectory = `Directory not found: ${options.directory}`;
+                let st;
+                try {
+                    st = yield pStat(options.directory);
+                }
+                catch (err) {
+                    throw new Error(msgNotADirectory);
+                }
+                if (!st.isDirectory()) {
+                    throw new Error(msgNotADirectory);
+                }
             }
             const makeFilePath = file => {
                 return path_1.normalize(path_1.join(options.directory, file));
+            };
+            const fileHasValidExtension = path => {
+                for (const ext of options.extensions) {
+                    if (path.endsWith(ext)) {
+                        return true;
+                    }
+                }
+                return false;
             };
             const hasFilesToSearch = options.file.length > 0;
             const hasFilesToIgnore = options.ignore.length > 0;
@@ -35,6 +51,7 @@ class FSFileSearcher {
                 ? options.ignore.map(f => makeFilePath(f))
                 : [];
             let files = [];
+            let warnings = [];
             // Search for specific files instead of searching in the given directory
             if (hasFilesToSearch) {
                 // const pStat = promisify( fsStat.stat );
@@ -50,6 +67,10 @@ class FSFileSearcher {
                             || options.ignore.includes(f))) {
                         continue;
                     }
+                    if (!fileHasValidExtension(file)) {
+                        warnings.push(`Ignored file "${file}".`);
+                        continue;
+                    }
                     try {
                         // const stats = await pStat( file, statOptions );
                         // if ( ! stats.isFile() ) {
@@ -59,7 +80,7 @@ class FSFileSearcher {
                     }
                     catch (err) { // err.code == 'ENOENT'
                         // console.log( err );
-                        // TO-DO: add to warning list
+                        warnings.push(`Could not access file "${file}".`);
                         continue; // Ignores the file
                     }
                     files.push(f);
@@ -67,19 +88,11 @@ class FSFileSearcher {
             }
             else {
                 const pWalk = util_1.promisify(fsWalk.walk);
-                const fileHasExtension = path => {
-                    for (const ext of options.extensions) {
-                        if (path.endsWith(ext)) {
-                            return true;
-                        }
-                    }
-                    return false;
-                };
                 const entryFilter = entry => {
                     // if ( hasFilesToIgnore ) {
                     //     console.log( 'IGNORE LIST: ', ignoredFullPath, 'NAME', entry.name, 'PATH', entry.path );
                     // }
-                    if (!fileHasExtension(entry.path)) {
+                    if (!fileHasValidExtension(entry.path)) {
                         return false;
                     }
                     const shouldBeIgnored = hasFilesToIgnore &&
@@ -110,7 +123,7 @@ class FSFileSearcher {
             //         }
             //     }
             // }
-            return files;
+            return { files: files, warnings: warnings };
         });
     }
 }

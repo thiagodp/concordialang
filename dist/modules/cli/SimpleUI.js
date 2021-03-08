@@ -8,7 +8,7 @@ const path_1 = require("path");
 const readline = require("readline");
 const sprintf_js_1 = require("sprintf-js");
 const terminalLink = require("terminal-link");
-const Defaults_1 = require("../app/Defaults");
+const default_options_1 = require("../app/default-options");
 const ErrorSorting_1 = require("../error/ErrorSorting");
 const TimeFormat_1 = require("../util/TimeFormat");
 exports.pluralS = (count, singular, plural) => {
@@ -20,8 +20,7 @@ class SimpleUI {
     // Note: Same problem using "elegant-spinner" with "log-update"
     //
     // protected _spinner = ora();
-    constructor(_meow, _debugMode = false) {
-        this._meow = _meow;
+    constructor(_debugMode = false) {
         this._debugMode = _debugMode;
         // CLI ---------------------------------------------------------------------
         // SYMBOLS
@@ -138,28 +137,23 @@ class SimpleUI {
     }
     // CLI
     /** @inheritdoc */
-    showHelp() {
-        this.writeln(this._meow.help);
+    showHelp(content) {
+        this.writeln(content);
     }
     /** @inheritdoc */
-    showAbout() {
-        const m = this._meow;
-        const desc = m.pkg.description || 'Concordia';
-        const version = m.pkg.version || '1.0.0';
-        const name = m.pkg.author.name || 'Thiago Delgado Pinto';
-        const site = m.pkg.homepage || 'http://concordialang.org';
-        this.writeln(desc + ' v' + version);
-        this.writeln('Copyright (c) ' + name);
-        this.writeln(site);
+    showAbout({ description, version, author, homepage }) {
+        this.writeln(description, 'v' + version);
+        this.writeln('Copyright (c)', author);
+        this.writeln(homepage);
     }
     /** @inheritdoc */
-    showVersion() {
-        this._meow.showVersion();
+    showVersion(version) {
+        this.writeln(version);
     }
     /** @inheritdoc */
     announceOptions(options) {
         // Language
-        if (new Defaults_1.Defaults().LANGUAGE !== options.language) {
+        if (default_options_1.DEFAULT_LANGUAGE !== options.language) {
             this.info('Default language is', this.highlight(options.language));
         }
     }
@@ -187,8 +181,8 @@ class SimpleUI {
         this.warn('You already have a configuration file.');
     }
     /** @inheritDoc */
-    announcePluginNotFound(pluginDir, pluginName) {
-        this.error(`Plugin "${pluginName}" not found at "${pluginDir}".`);
+    announcePluginNotFound(pluginName) {
+        this.error(`A plugin named "${pluginName}" was not found.`);
     }
     /** @inheritDoc */
     announcePluginCouldNotBeLoaded(pluginName) {
@@ -197,6 +191,10 @@ class SimpleUI {
     /** @inheritDoc */
     announceNoPluginWasDefined() {
         this.warn('A plugin was not defined.');
+    }
+    /** @inheritDoc */
+    announceReportFile(filePath) {
+        this.info('Retrieving result from report file', this.highlight(filePath) + '...');
     }
     /** @inheritDoc */
     announceReportFileNotFound(filePath) {
@@ -376,6 +374,9 @@ class SimpleUI {
         if (!hasErrors && !hasWarnings) {
             return;
         }
+        const color = this.properColor(hasErrors, hasWarnings);
+        const symbol = this.properSymbol(hasErrors, hasWarnings);
+        this.writeln(color(symbol), this.highlight(path_1.relative(dirTestCases, filePath)) + ':');
         this.showErrors([...errors, ...warnings], true);
     }
     /** @inheritDoc */
@@ -390,8 +391,17 @@ class SimpleUI {
         // this.startSpinner();
     }
     /** @inheritdoc */
+    announceFileSearchWarnings(warnings) {
+        for (const w of warnings) {
+            this.warn(w);
+        }
+    }
+    /** @inheritdoc */
     announceFileSearchFinished(durationMS, filesFoundCount, filesIgnoredCount) {
         // this.stopSpinner();
+        if (0 === filesFoundCount) {
+            this.warn('No files found', this.formatDuration(durationMS));
+        }
     }
     /** @inheritDoc */
     announceCompilerStarted(options) {
@@ -447,12 +457,12 @@ class SimpleUI {
         // }
         const highlight = this.highlight;
         const format = "%-15s";
-        this.info(highlight('Available Plugins:'));
+        this.info('Installed Plugins:');
         for (let p of plugins) {
             this.writeln(' ');
-            this.writeln(highlight(sprintf_js_1.sprintf(format, '  Name')), p.name);
-            this.writeln(highlight(sprintf_js_1.sprintf(format, '  Version')), p.version);
-            this.writeln(highlight(sprintf_js_1.sprintf(format, '  Description')), p.description);
+            this.writeln(sprintf_js_1.sprintf(format, '  Name'), highlight(p.name));
+            this.writeln(sprintf_js_1.sprintf(format, '  Version'), p.version);
+            this.writeln(sprintf_js_1.sprintf(format, '  Description'), p.description);
         }
     }
     /** @inheritdoc */
@@ -546,7 +556,7 @@ class SimpleUI {
             this.info('No tests executed.');
             return;
         }
-        this.info('Test execution results:', "\n");
+        this.info('Test execution result:\n');
         const passedStr = t.passed ? this.bgSuccess(t.passed + ' passed') : '';
         const failedStr = t.failed ? this.bgError(t.failed + ' failed') : '';
         const adjustedStr = t.adjusted ? this.bgCyan(t.adjusted + ' adjusted') : '';

@@ -1,30 +1,33 @@
 import * as fs from 'fs';
-import { resolve } from "path";
-import { Options } from "../../modules/app/Options";
-import { SingleFileCompiler } from "../../modules/compiler/SingleFileCompiler";
+import { resolve } from 'path';
+
+import { DEFAULT_DIR_LANGUAGE } from '../../modules/app/default-options';
+import { SingleFileCompiler } from '../../modules/compiler/SingleFileCompiler';
 import { FileProblemMapper } from '../../modules/error';
-import { JsonLanguageContentLoader, LanguageContentLoader } from "../../modules/language";
-import { Lexer } from "../../modules/lexer/Lexer";
-import { NLPBasedSentenceRecognizer } from "../../modules/nlp/NLPBasedSentenceRecognizer";
-import { NLPTrainer } from "../../modules/nlp/NLPTrainer";
-import { Parser } from "../../modules/parser/Parser";
-import { TestCaseFileGenerator } from "../../modules/testcase/TestCaseFileGenerator";
+import { JsonLanguageContentLoader, LanguageContentLoader } from '../../modules/language';
+import { Lexer } from '../../modules/lexer/Lexer';
+import { NLPBasedSentenceRecognizer } from '../../modules/nlp/NLPBasedSentenceRecognizer';
+import { NLPTrainer } from '../../modules/nlp/NLPTrainer';
+import { Parser } from '../../modules/parser/Parser';
+import { TestCaseFileGenerator } from '../../modules/testcase/TestCaseFileGenerator';
 import { FSFileHandler } from '../../modules/util/file/FSFileHandler';
 
 describe( 'TestCaseFileGenerator', () => {
 
     const LANGUAGE = 'en';
-    const options: Options = new Options( resolve( process.cwd(), 'dist/' ) );
+	const dir = resolve( process.cwd(), 'dist/' );
+	const langDir = resolve( dir, DEFAULT_DIR_LANGUAGE );
+
     const fileHandler = new FSFileHandler( fs );
     const langLoader: LanguageContentLoader = new JsonLanguageContentLoader(
-        options.languageDir,
+        langDir,
         {},
         fileHandler,
         fileHandler
         );
 
     let sfc = new SingleFileCompiler(
-        new Lexer( options.language, langLoader ),
+        new Lexer( LANGUAGE, langLoader ),
         new Parser(),
         new NLPBasedSentenceRecognizer( new NLPTrainer( langLoader ) ),
         LANGUAGE,

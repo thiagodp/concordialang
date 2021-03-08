@@ -9,6 +9,9 @@ import { NLPResult } from "./NLPResult";
 export class NLPUtil {
 
     entitiesNamed( name: string, nlpResult: NLPResult ): NLPEntity[] {
+		if ( ! name || ! nlpResult ) {
+			return [];
+		}
         return nlpResult.entities.filter( e => name === e.entity );
     }
 
@@ -27,10 +30,16 @@ export class NLPUtil {
     }
 
     entityNamed( name: string, nlpResult: NLPResult ): NLPEntity | null {
+		if ( ! name || ! nlpResult ) {
+			return null;
+		}
         return nlpResult.entities.find( e => name === e.entity ) || null;
     }
 
     valuesOfEntitiesNamed( name: string, nlpResult: NLPResult ): string[] {
+		if ( ! name || ! nlpResult ) {
+			return [];
+		}
         return nlpResult.entities.filter( e => name === e.entity ).map( e => e.value );
     }
 

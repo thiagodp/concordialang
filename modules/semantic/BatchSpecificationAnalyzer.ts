@@ -11,7 +11,6 @@ import { ImportSSA } from './ImportSSA';
 import { SpecificationAnalyzer } from './SpecificationAnalyzer';
 import { TableSSA } from './TableSSA';
 import { TestCaseSSA } from './TestCaseSSA';
-import { UIElementSSA } from './UIElementSSA';
 
 /**
  * Executes semantic analyzers in batch.
@@ -28,8 +27,7 @@ export class BatchSpecificationAnalyzer extends SpecificationAnalyzer {
         // Order is relevant!
         this._analyzers = [
             new ImportSSA(),
-            new UIElementSSA(), // needed before other global declarations
-            new FeatureSSA(),
+            new FeatureSSA(), // needed before other global declarations
             new ConstantSSA(),
             new DatabaseSSA(),
             new TableSSA(),

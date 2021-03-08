@@ -1,8 +1,9 @@
 import { fs, vol } from 'memfs';
-import { join, resolve } from "path";
-import { Options } from "../../modules/app/Options";
-import { LanguageManager } from "../../modules/language/LanguageManager";
-import { FSFileSearcher } from "../../modules/util/file/FSFileSearcher";
+import { join, resolve } from 'path';
+
+import { DEFAULT_DIR_LANGUAGE } from '../../modules/app/default-options';
+import { LanguageManager } from '../../modules/language/LanguageManager';
+import { FSFileSearcher } from '../../modules/util/file/FSFileSearcher';
 
 describe( 'LanguageManager', () => {
 
@@ -10,7 +11,7 @@ describe( 'LanguageManager', () => {
 
     const fileSearcher = new FSFileSearcher( fs );
     const dir = resolve( process.cwd(), 'dist/' );
-    const langDir: string = new Options( dir ).languageDir;
+    const langDir: string = resolve( dir, DEFAULT_DIR_LANGUAGE );
 
     beforeAll( () => {
         // Create in-memory file structure

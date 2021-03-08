@@ -21,8 +21,8 @@ class GuidedConfig {
             const questions = [
                 q.directory(),
                 q.language(),
-                q.dirScripts(),
-                q.dirResults(),
+                q.dirScript(),
+                q.dirResult(),
                 q.plugin(),
                 q.pluginInstall(),
                 q.databases()
@@ -53,18 +53,18 @@ class ConcordiaQuestions {
             default: './features'
         };
     }
-    dirScripts() {
+    dirScript() {
         return {
             type: 'input',
-            name: 'dirScripts',
+            name: 'dirScript',
             message: 'Where do you want to save generated test scripts?',
             default: './test'
         };
     }
-    dirResults() {
+    dirResult() {
         return {
             type: 'input',
-            name: 'dirResults',
+            name: 'dirResult',
             message: 'Where do you want to save logs, screenshots, and report files?',
             default: './output'
         };

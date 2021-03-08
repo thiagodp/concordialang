@@ -12,13 +12,12 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.App = void 0;
 const concordialang_plugin_1 = require("concordialang-plugin");
 const CompilerFacade_1 = require("../compiler/CompilerFacade");
-const LanguageManager_1 = require("../language/LanguageManager");
 const PackageBasedPluginFinder_1 = require("../plugin/PackageBasedPluginFinder");
-const PluginController_1 = require("../plugin/PluginController");
 const PluginManager_1 = require("../plugin/PluginManager");
 const AbstractTestScriptGenerator_1 = require("../testscript/AbstractTestScriptGenerator");
 const TestResultAnalyzer_1 = require("../testscript/TestResultAnalyzer");
 const file_1 = require("../util/file");
+const AppOptions_1 = require("./AppOptions");
 /**
  * Application facade
  *
@@ -34,58 +33,44 @@ class App {
         return __awaiter(this, void 0, void 0, function* () {
             const fs = this._fs;
             const path = this._path;
-            let pluginData = null;
-            const dirSearcher = new file_1.FSDirSearcher(fs);
-            const fileSearcher = new file_1.FSFileSearcher(fs);
             const fileHandler = new file_1.FSFileHandler(fs, options.encoding);
-            const pluginManager = new PluginManager_1.PluginManager(ui, new PackageBasedPluginFinder_1.PackageBasedPluginFinder(options.processPath, fileHandler, dirSearcher), fileHandler);
+            // Load plug-in
             let plugin = null;
-            if (options.somePluginOption()) {
-                const pluginController = new PluginController_1.PluginController();
-                try {
-                    yield pluginController.process(options, pluginManager, ui);
-                }
-                catch (err) {
-                    ui.showException(err);
-                    return false;
-                }
-                return true;
-            }
-            else if (options.someOptionThatRequiresAPlugin() && options.hasPluginName()) {
+            if (AppOptions_1.hasSomeOptionThatRequiresAPlugin(options) && options.plugin) {
+                const dirSearcher = new file_1.FSDirSearcher(fs);
+                const pluginManager = new PluginManager_1.PluginManager(ui, new PackageBasedPluginFinder_1.PackageBasedPluginFinder(options.processPath, fileHandler, dirSearcher), fileHandler);
+                let pluginData = null;
                 try {
                     pluginData = yield pluginManager.pluginWithName(options.plugin);
                     if (!pluginData) {
-                        ui.announcePluginNotFound(options.pluginDir, options.plugin);
-                        return false;
+                        ui.announcePluginNotFound(options.plugin);
+                        return { success: false };
+                        ;
                     }
                     plugin = yield pluginManager.load(pluginData);
                 }
                 catch (err) {
                     ui.showException(err);
-                    return false;
+                    return { success: false };
                 }
                 if (!plugin) { // needed?
                     ui.announcePluginCouldNotBeLoaded(options.plugin);
-                    return false;
+                    return { success: false };
+                    ;
                 }
                 // can continue
             }
-            if (options.languageList) {
-                const lm = new LanguageManager_1.LanguageManager(fileSearcher, options.languageDir);
-                try {
-                    const languages = yield lm.availableLanguages();
-                    ui.drawLanguages(languages);
-                }
-                catch (err) {
-                    ui.showException(err);
-                    return false;
-                }
-                return true;
+            if (!plugin &&
+                (options.script || options.run || options.result)) {
+                ui.announceNoPluginWasDefined();
+                return { success: false };
+                ;
             }
+            // Compile
             let hasErrors = false;
             let spec = null;
             ui.announceOptions(options);
-            if (options.compileSpecification) {
+            if (options.spec) {
                 const compiler = new CompilerFacade_1.CompilerFacade(fs, path, ui, ui);
                 try {
                     [spec,] = yield compiler.compile(options);
@@ -94,38 +79,14 @@ class App {
                     hasErrors = true;
                     ui.showException(err);
                 }
-            }
-            if (spec && options.ast) {
-                const getCircularReplacer = () => {
-                    const seen = new WeakSet();
-                    return (/* key , */ value) => {
-                        if ('object' === typeof value && value !== null) {
-                            if (seen.has(value)) {
-                                return;
-                            }
-                            seen.add(value);
-                        }
-                        return value;
-                    };
-                };
-                try {
-                    yield fileHandler.write(options.ast, JSON.stringify(spec, getCircularReplacer(), "  "));
+                if (null === spec && options.file.length > 0) {
+                    return { success: !hasErrors };
                 }
-                catch (e) {
-                    ui.showErrorSavingAbstractSyntaxTree(options.ast, e.message);
-                    return false;
-                }
-                ui.announceAbstractSyntaxTreeIsSaved(options.ast);
-                return true;
-            }
-            if (!plugin && (options.generateScript || options.executeScript || options.analyzeResult)) {
-                ui.announceNoPluginWasDefined();
-                return true;
             }
             // Abstract test scripts
             let abstractTestScripts = [];
             let generatedTestScriptFiles = [];
-            if (spec && options.generateScript) { // Requires spec and a plugin
+            if (spec && options.script) { // Requires spec and a plugin
                 let docs = spec.docs;
                 // console.log( '>> spec docs', spec.docs.map( d => d.fileInfo.path ) );
                 // if ( options.files && options.files.length > 0 ) {
@@ -143,14 +104,14 @@ class App {
                 // }
                 const atsGenerator = new AbstractTestScriptGenerator_1.AbstractTestScriptGenerator();
                 abstractTestScripts = atsGenerator.generate(docs, spec);
-                if (abstractTestScripts.length > 0) {
+                if (abstractTestScripts && abstractTestScripts.length > 0) {
                     const startTime = Date.now();
                     // cli.newLine( cli.symbolInfo, 'Generated', abstractTestScripts.length, 'abstract test scripts' );
                     let errors = [];
                     try {
                         const r = yield plugin.generateCode(abstractTestScripts, new concordialang_plugin_1.TestScriptGenerationOptions(options.plugin, options.dirScript, options.directory));
-                        generatedTestScriptFiles = r.generatedFiles || [];
-                        errors = r.errors;
+                        generatedTestScriptFiles = (r === null || r === void 0 ? void 0 : r.generatedFiles) || [];
+                        errors = (r === null || r === void 0 ? void 0 : r.errors) || [];
                     }
                     catch (err) {
                         hasErrors = true;
@@ -163,7 +124,7 @@ class App {
             }
             let executionResult = null;
             const shouldExecuteScripts = !!plugin &&
-                (options.executeScript &&
+                (options.run &&
                     (((_a = options.scriptFile) === null || _a === void 0 ? void 0 : _a.length) > 0 ||
                         generatedTestScriptFiles.length > 0 ||
                         ('string' === typeof options.dirResult && options.dirResult != '')));
@@ -177,7 +138,7 @@ class App {
                 const tseo = {
                     dirScript: options.dirScript,
                     dirResult: options.dirResult,
-                    file: scriptFiles,
+                    file: scriptFiles || undefined,
                     grep: options.scriptGrep || undefined,
                     target: options.target || undefined,
                     headless: options.headless || undefined,
@@ -196,23 +157,33 @@ class App {
             if (!hasErrors && (((_c = executionResult === null || executionResult === void 0 ? void 0 : executionResult.total) === null || _c === void 0 ? void 0 : _c.failed) > 0 || ((_d = executionResult === null || executionResult === void 0 ? void 0 : executionResult.total) === null || _d === void 0 ? void 0 : _d.error) > 0)) {
                 hasErrors = true;
             }
-            if (options.analyzeResult) { // Requires a plugin
+            if (options.result) { // Requires a plugin
                 let reportFile;
                 if (!executionResult) {
                     const defaultReportFile = path.join(options.dirResult, yield plugin.defaultReportFile());
                     if (!fs.existsSync(defaultReportFile)) {
                         ui.announceReportFileNotFound(defaultReportFile);
-                        return false;
+                        return { success: false, spec };
                     }
                     reportFile = defaultReportFile;
                 }
                 else {
                     reportFile = executionResult.sourceFile;
                 }
+                ui.announceReportFile(reportFile);
                 try {
-                    let reportedResult = yield plugin.convertReportFile(reportFile);
-                    reportedResult = (new TestResultAnalyzer_1.TestResultAnalyzer()).adjustResult(reportedResult, abstractTestScripts);
+                    executionResult = yield plugin.convertReportFile(reportFile);
+                }
+                catch (err) {
+                    hasErrors = true;
+                    ui.showException(err);
+                }
+            }
+            if (executionResult) {
+                try {
+                    const reportedResult = (new TestResultAnalyzer_1.TestResultAnalyzer()).adjustResult(executionResult, abstractTestScripts);
                     ui.showTestScriptAnalysis(reportedResult);
+                    // TODO: save report to file
                     if (!hasErrors && (((_e = reportedResult === null || reportedResult === void 0 ? void 0 : reportedResult.total) === null || _e === void 0 ? void 0 : _e.failed) > 0 || ((_f = reportedResult === null || reportedResult === void 0 ? void 0 : reportedResult.total) === null || _f === void 0 ? void 0 : _f.error) > 0)) {
                         hasErrors = true;
                     }
@@ -222,7 +193,7 @@ class App {
                     ui.showException(err);
                 }
             }
-            return !hasErrors;
+            return { success: !hasErrors, spec };
         });
     }
 }

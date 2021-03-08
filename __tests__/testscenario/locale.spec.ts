@@ -123,7 +123,11 @@ describe( 'locale', () => {
             expect( map.has( 'ja' ) ).toBeFalsy();
             expect( await isLocaleAvailable( 'ja', map ) ).toBeTruthy();
             expect( map.has( 'ja' ) ).toBeTruthy();
-        } );
+		} );
+
+		it( 'rejects an invalid locale format', async () => {
+			expect( await isLocaleAvailable( '1', map ) ).toBeFalsy();
+		} );
 
     } );
 

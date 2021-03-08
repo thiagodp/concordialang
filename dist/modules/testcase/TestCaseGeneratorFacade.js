@@ -10,7 +10,9 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.TestCaseGeneratorFacade = void 0;
+const enumUtil = require("enum-util");
 const CombinationOptions_1 = require("../app/CombinationOptions");
+const default_options_1 = require("../app/default-options");
 const ast_1 = require("../ast");
 const RuntimeException_1 = require("../error/RuntimeException");
 const Warning_1 = require("../error/Warning");
@@ -18,12 +20,46 @@ const CombinationStrategy_1 = require("../selection/CombinationStrategy");
 const VariantSelectionStrategy_1 = require("../selection/VariantSelectionStrategy");
 const PreTestCaseGenerator_1 = require("../testscenario/PreTestCaseGenerator");
 const TestScenarioGenerator_1 = require("../testscenario/TestScenarioGenerator");
+const CaseType_1 = require("../util/CaseType");
 const file_1 = require("../util/file");
 const DataTestCaseMix_1 = require("./DataTestCaseMix");
 const TestCaseDocumentGenerator_1 = require("./TestCaseDocumentGenerator");
 const TestCaseFileGenerator_1 = require("./TestCaseFileGenerator");
 const TestCaseGenerator_1 = require("./TestCaseGenerator");
 const TestPlanner_1 = require("./TestPlanner");
+function toCaseType(caseUi) {
+    if (enumUtil.isValue(CaseType_1.CaseType, caseUi)) {
+        return caseUi;
+    }
+    if (enumUtil.isValue(CaseType_1.CaseType, default_options_1.DEFAULT_CASE_UI)) {
+        return default_options_1.DEFAULT_CASE_UI;
+    }
+    return CaseType_1.CaseType.CAMEL;
+}
+function toVariantSelectionOptions(combVariant) {
+    if (enumUtil.isValue(CombinationOptions_1.VariantSelectionOptions, combVariant)) {
+        return combVariant;
+    }
+    if (enumUtil.isValue(CombinationOptions_1.VariantSelectionOptions, default_options_1.DEFAULT_VARIANT_SELECTION)) {
+        return default_options_1.DEFAULT_VARIANT_SELECTION;
+    }
+    return CombinationOptions_1.VariantSelectionOptions.SINGLE_RANDOM;
+}
+function typedStateCombination(combState) {
+    return typedCombinationFor(combState, default_options_1.DEFAULT_STATE_COMBINATION);
+}
+function typedDataCombination(combData) {
+    return typedCombinationFor(combData, default_options_1.DEFAULT_DATA_TEST_CASE_COMBINATION);
+}
+function typedCombinationFor(value, defaultValue) {
+    if (enumUtil.isValue(CombinationOptions_1.CombinationOptions, value)) {
+        return value;
+    }
+    if (enumUtil.isValue(CombinationOptions_1.CombinationOptions, defaultValue)) {
+        return defaultValue;
+    }
+    return CombinationOptions_1.CombinationOptions.SHUFFLED_ONE_WISE;
+}
 /**
  * Test Case Generator Facade
  *
@@ -43,7 +79,7 @@ class TestCaseGeneratorFacade {
             //
             // setup
             //
-            const preTCGen = new PreTestCaseGenerator_1.PreTestCaseGenerator(this._variantSentenceRec, this._langLoader, options.language, options.realSeed, options.typedCaseUI(), options.randomMinStringSize, options.randomMaxStringSize, options.randomTriesToInvalidValue);
+            const preTCGen = new PreTestCaseGenerator_1.PreTestCaseGenerator(this._variantSentenceRec, this._langLoader, options.language, options.realSeed, toCaseType(options.caseUi), options.randomMinStringSize, options.randomMaxStringSize, options.randomTriesToInvalidValue);
             let strategyWarnings = [];
             const variantSelectionStrategy = this.variantSelectionStrategyFromOptions(options, strategyWarnings);
             const stateCombinationStrategy = this.stateCombinationStrategyFromOptions(options, strategyWarnings);
@@ -83,6 +119,7 @@ class TestCaseGeneratorFacade {
                         let testScenarios = [];
                         try {
                             testScenarios = yield tsGen.generate(ctx, variant);
+                            // console.log( 'test scenarios:', testScenarios );
                         }
                         catch (err) {
                             errors.push(err);
@@ -94,9 +131,11 @@ class TestCaseGeneratorFacade {
                             let generatedTC = [];
                             try {
                                 generatedTC = yield tcGen.generate(ts, ctx, testPlanMakers);
+                                // console.log( 'generated TC', generatedTC );
                             }
                             catch (err) {
                                 errors.push(err);
+                                // console.log( 'ERRO --->', err );
                                 continue;
                             }
                             if (generatedTC.length < 1) {
@@ -175,7 +214,7 @@ class TestCaseGeneratorFacade {
         });
     }
     variantSelectionStrategyFromOptions(options, warnings) {
-        const desired = options.typedVariantSelection();
+        const desired = toVariantSelectionOptions(options.combVariant);
         switch (desired) {
             case CombinationOptions_1.VariantSelectionOptions.SINGLE_RANDOM:
                 return new VariantSelectionStrategy_1.SingleRandomVariantSelectionStrategy(options.realSeed);
@@ -195,7 +234,7 @@ class TestCaseGeneratorFacade {
         }
     }
     stateCombinationStrategyFromOptions(options, warnings) {
-        return this.combinationStrategyFrom(options.typedStateCombination(), 'State', options, warnings);
+        return this.combinationStrategyFrom(typedStateCombination(options.combState), 'State', options, warnings);
     }
     combinationStrategyFrom(desired, name, options, warnings) {
         switch (desired) {
@@ -250,7 +289,7 @@ class TestCaseGeneratorFacade {
         // DATA TEST CASE COMBINATION
         const dataCombinationOption = desired === random
             ? CombinationOptions_1.CombinationOptions.SHUFFLED_ONE_WISE
-            : options.typedDataCombination();
+            : typedDataCombination(options.combData);
         // console.log( 'options.invalid', options.invalid, 'desired', desired, 'dataCombinationOption', dataCombinationOption );
         let combinationStrategy = this.combinationStrategyFrom(dataCombinationOption, 'Data', options, warnings);
         return [

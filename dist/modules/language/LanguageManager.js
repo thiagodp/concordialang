@@ -56,13 +56,13 @@ class LanguageManager {
      */
     languageFiles() {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield this._fileSearcher.searchFrom({
+            return (yield this._fileSearcher.searchFrom({
                 directory: this._languageDir,
                 recursive: true,
                 extensions: ['.json'],
                 file: [],
                 ignore: []
-            });
+            })).files;
         });
     }
     /**

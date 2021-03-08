@@ -10,6 +10,10 @@ const SyntacticException_1 = require("./SyntacticException");
 class LanguageParser {
     /** @inheritDoc */
     analyze(node, context, it, errors) {
+        // Nothing to check
+        if (!context) {
+            return false;
+        }
         // Checks if it is already declared
         if (context.doc.language) {
             let e = new SyntacticException_1.SyntacticException('Just one language declaration is allowed.', node.location);

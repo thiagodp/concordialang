@@ -409,9 +409,7 @@ export class UIElementValueGenerator {
                             return null;
                         }
                     }
-                } else { // none
-                    msg = 'Query must have a Database reference or a Table reference.';
-                }
+				}
 
                 if ( isDefined( msg ) ) {
                     const err = new RuntimeException( msg, owner.location );

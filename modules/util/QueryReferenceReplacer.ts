@@ -1,6 +1,6 @@
 import { escape } from 'sqlstring';
-import { QueryParser } from '../db/QueryParser';
 
+import { QueryParser } from '../db/QueryParser';
 
 /**
  * Query reference replacer
@@ -14,9 +14,13 @@ export class QueryReferenceReplacer {
         return query.replace( regex, this.wrapValue( value ) );
     }
 
-    replaceUIElementInQuery( query: string, variable: string, value: string | number | boolean ): string {
+    replaceUIElementInQuery(
+		query: string,
+		variable: string,
+		value: string | number | boolean
+	): string {
         const regex = this.makeVarRegex( variable );
-        return query.replace( regex, this.wrapValue( value ) );
+		return query.replace( regex, this.wrapValue( value ) );
     }
 
     replaceDatabaseInQuery( query: string, variable: string, removeFrom: boolean ): string {

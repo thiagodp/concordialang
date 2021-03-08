@@ -45,7 +45,6 @@ export class DataGeneratorBuilder {
 
     private readonly _queryCache: QueryCache = new QueryCache();
 
-
     constructor(
         private readonly _seed: string,
         private readonly _randomTriesToInvalidValues: number = 10,
@@ -65,15 +64,25 @@ export class DataGeneratorBuilder {
 	raw( valueType: ValueType, min?: any, max?: any ): RawDataGenerator< any > {
         // console.log( 'generator for valueType', valueType, 'min', min, 'max', max );
 		switch ( valueType ) {
-			case ValueType.STRING: return new StringGenerator( this._randomString, min, max, this._maxPossibleStringLength );
-			case ValueType.INTEGER: return new LongGenerator( this._randomLong, min, max );
-			case ValueType.DOUBLE: return new DoubleGenerator( this._randomDouble, min, max );
-			case ValueType.DATE: return new DateGenerator( this._randomDate, min, max );
-            case ValueType.TIME: return new ShortTimeGenerator( this._randomShortTime, min, max );
-            case ValueType.LONG_TIME: return new TimeGenerator( this._randomTime, min, max );
-            case ValueType.DATE_TIME: return new ShortDateTimeGenerator( this._randomShortDateTime, min, max );
-            case ValueType.LONG_DATE_TIME: return new DateTimeGenerator( this._randomDateTime, min, max );
-			default: throw Error( 'Generator not available fot the type ' + valueType );
+			case ValueType.STRING:
+				return new StringGenerator(
+					this._randomString, min, max, this._maxPossibleStringLength );
+			case ValueType.INTEGER:
+				return new LongGenerator( this._randomLong, min, max );
+			case ValueType.DOUBLE:
+				return new DoubleGenerator( this._randomDouble, min, max );
+			case ValueType.DATE:
+				return new DateGenerator( this._randomDate, min, max );
+            case ValueType.TIME:
+				return new ShortTimeGenerator( this._randomShortTime, min, max );
+            case ValueType.LONG_TIME:
+				return new TimeGenerator( this._randomTime, min, max );
+            case ValueType.DATE_TIME:
+				return new ShortDateTimeGenerator( this._randomShortDateTime, min, max );
+            case ValueType.LONG_DATE_TIME:
+				return new DateTimeGenerator( this._randomDateTime, min, max );
+			default:
+				throw Error( 'Generator not available fot the type ' + valueType );
 		}
     }
 
@@ -82,15 +91,29 @@ export class DataGeneratorBuilder {
     }
 
     regex( valueType: ValueType, expression: string ): RegexBasedDataGenerator {
-        return new RegexBasedDataGenerator( this._randomLong, this._randomString, expression, valueType, this._randomTriesToInvalidValues );
+        return new RegexBasedDataGenerator(
+			this._randomLong,
+			this._randomString,
+			expression,
+			valueType,
+			this._randomTriesToInvalidValues,
+			this._maxPossibleStringLength
+		);
     }
 
     list( valueType: ValueType, listValues: any[] ): ListBasedDataGenerator< any > {
-        return new ListBasedDataGenerator( this._randomLong, this.raw( valueType ), listValues, this._randomTriesToInvalidValues );
+        return new ListBasedDataGenerator(
+			this._randomLong,
+			this.raw( valueType ),
+			listValues,
+			this._randomTriesToInvalidValues
+		);
     }
 
     invertedLogicList( valueType: ValueType, listValues: any[] ): InvertedLogicListBasedDataGenerator< any > {
-        return new InvertedLogicListBasedDataGenerator( this.list( valueType, listValues ) );
+        return new InvertedLogicListBasedDataGenerator(
+			this.list( valueType, listValues )
+		);
     }
 
     query(
@@ -98,15 +121,24 @@ export class DataGeneratorBuilder {
         query: string,
         queryable: Queryable
     ): QueryBasedDataGenerator< any > {
-        return new QueryBasedDataGenerator( this._randomLong, this.raw( valueType ), queryable, this.queryCache, query, this._randomTriesToInvalidValues );
+        return new QueryBasedDataGenerator(
+			this._randomLong,
+			this.raw( valueType ),
+			queryable,
+			this.queryCache,
+			query,
+			this._randomTriesToInvalidValues
+		);
     }
 
     invertedLogicQuery(
         valueType: ValueType,
         query: string,
-        queriable: Queryable
+        queryable: Queryable
     ): InvertedLogicQueryBasedDataGenerator< any > {
-        return new InvertedLogicQueryBasedDataGenerator( this.query( valueType, query, queriable ) );
+        return new InvertedLogicQueryBasedDataGenerator(
+			this.query( valueType, query, queryable )
+		);
     }
 
     get queryCache() {

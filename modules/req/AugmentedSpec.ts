@@ -367,8 +367,11 @@ export class AugmentedSpec extends Spec {
 
 
     private findByName< T extends NamedNode >( name: string, nodes: T[] ): T | null {
+		if ( ! name ) {
+			return null;
+		}
         const lowerCasedName: string = name.toLowerCase();
-        return valueOrNull( nodes.find( n => n.name.toLowerCase() === lowerCasedName ) );
+        return valueOrNull( nodes.find( n => n.name ? n.name.toLowerCase() === lowerCasedName : false ) );
     }
 
     //

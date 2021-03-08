@@ -14,6 +14,11 @@ export class LanguageParser implements NodeParser< Language > {
     /** @inheritDoc */
     public analyze( node: Language, context: ParsingContext, it: NodeIterator, errors: Error[] ): boolean {
 
+		// Nothing to check
+		if ( ! context ) {
+			return false;
+		}
+
         // Checks if it is already declared
         if ( context.doc.language ) {
             let e = new SyntacticException( 'Just one language declaration is allowed.', node.location );
@@ -35,9 +40,8 @@ export class LanguageParser implements NodeParser< Language > {
             return false;
         }
 
-        context.doc.language = node;
-
-        return true;
+		context.doc.language = node;
+		return true;
     }
 
 }

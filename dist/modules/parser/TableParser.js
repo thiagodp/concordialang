@@ -16,7 +16,7 @@ class TableParser {
             context.doc.tables = [];
         }
         // Generates the internal name
-        node.internalName = CaseConversor_1.convertCase(node.name, CaseType_1.CaseType.SNAKE);
+        node.internalName = CaseConversor_1.removeDiacritics(CaseConversor_1.convertCase(node.name, CaseType_1.CaseType.SNAKE));
         // Adjusts the content
         context.resetInValues();
         context.inTable = true;
