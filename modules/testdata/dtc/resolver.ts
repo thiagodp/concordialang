@@ -1,11 +1,14 @@
+import { Document } from '../../ast/Document';
 import { UIElement } from '../../ast/UIElement';
-import { UIProperty, EntityValueType } from '../../ast/UIProperty';
+import { EntityValueType, UIProperty } from '../../ast/UIProperty';
+import { DataTestCase } from '../DataTestCase';
 import { UIElementValueGenerator } from '../UIElementValueGenerator';
 import { Cfg } from './Cfg';
-import { DataTestCase } from '../DataTestCase';
 import { ExpectedResult } from './ExpectedResult';
-import { Document } from '../../ast/Document';
-import { evaluateDataTestCases } from './evaluation';
+
+// Map all UI Elements (and UI Literals?)
+// Establish dependency order, based on Scenarios and UI Elements' references
+
 
 
 class ResolvedUIE {
@@ -33,7 +36,7 @@ type DTCMap = Map< DataTestCase, ExpectedResult >;
 type UIERefToDTCMap = Map< string, DTCMap >;
 
 
-function generate( uie: UIElement, doc: Document, uieMap: UIERefToUIE ) {
+function generate( uie: UIElement, doc: Document, uieRefToUIEMap: UIERefToUIE ) {
 
 	const name = makeFullVariableName( doc, uie );
 
@@ -57,4 +60,7 @@ function makeFullVariableName( doc: Document, uie: UIElement ): string {
 // =============================================================================
 // Conjunto de possíveis DTCs devem ser atreladas à geração do cenário. A
 // combinação faz parte da construção do resultado, independente do algoritmo.
+
+
+
 

@@ -44,6 +44,7 @@ export class UIElementInfo {
      * @param document Document in which the UI element was declared
      * @param uiLiteral Literal
      * @param feature Feature where the UI Element was declared. A `null` value denotes a *global* UI Element.
+     * @param fullVariableName Name in the format "Feature:UI Element" or just "UI Element" whether it is global.
      */
     constructor(
         public document: Document = null,

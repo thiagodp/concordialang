@@ -33,8 +33,6 @@ export class DataGenConfig {
 	public value: EntityValueType = null; // for value and list-based generation
 	public invertedLogic: boolean = false; // for list-based generation, when operator "not in" is used
 
-	public computedBy: string = null; // expression
-
 	constructor(
 		private _valueType: ValueType = ValueType.STRING
 	) {

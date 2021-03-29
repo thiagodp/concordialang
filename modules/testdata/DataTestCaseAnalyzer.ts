@@ -19,8 +19,14 @@ import { RangeAnalyzer } from './raw/RangeAnalyzer';
  * @author Thiago Delgado Pinto
  */
 export enum DTCAnalysisResult {
+
+    /** Considered incompatible, i.e., it should not be used */
     INCOMPATIBLE = 'incompatible',
+
+    /** Considered invalid */
     INVALID = 'invalid',
+
+    /** Considered value */
     VALID = 'valid'
 }
 

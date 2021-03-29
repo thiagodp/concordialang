@@ -42,16 +42,12 @@ export enum DataTestCase {
 	// Value
 
 	/**
-	 * Equal to a fixed or retrieved value or set with a single element.
+	 * Equal to a fixed or retrieved value or maybe a set with a single element.
 	 *
-	 * When the property "value" is fixed and has a single value,
-	 * the generated value should be equal to it.
-	 *
-	 * OR
-	 *
-	 * When the property "value" depends on the value of another UI Element,
-	 * and the retrieved value is unique (single), the generated value
-	 * should be equal to the retrieved value.
+	 * Valid values:
+	 * - Whether the property "value" is a fixed, single value, then it should also be the generated value.
+	 * - Whether the property "value" depends on the value of another UI Element and the retrieved value is
+	 *   a fixed, single value, the generated value should be equal to the retrieved value.
 	 */
 	EQUAL_TO_VALUE,
 

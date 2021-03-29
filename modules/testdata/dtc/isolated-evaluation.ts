@@ -38,7 +38,7 @@ import { DataTestCase } from './DataTestCase';
 import { ExpectedResult } from './ExpectedResult';
 
 /**
- * Evaluates all the data test cases applicable to the given configuration.
+ * Evaluates applicable data test cases for the given UI Element configuration.
  *
  * @param cfg Configuration
  */
@@ -62,7 +62,7 @@ export function evaluateDataTestCases( cfg: Cfg ): Map< DataTestCase, ExpectedRe
 }
 
 /**
- * Evaluates a data test cases against the given configuration.
+ * Evaluates a data test cases based on the given configuration.
  *
  * @param cfg Configuration
  */
@@ -190,7 +190,12 @@ function evaluateSingleDataTestCase( dtc: DataTestCase, cfg: Cfg ): ExpectedResu
 	return ExpectedResult.INCOMPATIBLE;
 }
 
-
+/**
+ * Inverts the validity of a result.
+ *
+ * @param result Result to be inverted.
+ * @returns
+ */
 function invertValidity( result: ExpectedResult ): ExpectedResult {
 	switch ( result ) {
 		case ExpectedResult.VALID: return ExpectedResult.INVALID;
