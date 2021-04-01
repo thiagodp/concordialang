@@ -1,5 +1,6 @@
 import * as fs from 'fs';
 import { resolve } from 'path';
+import { promisify } from 'util';
 
 import { DEFAULT_DIR_LANGUAGE } from '../../modules/app/default-options';
 import { Feature } from '../../modules/ast/Feature';
@@ -9,7 +10,7 @@ import { FeatureParser } from '../../modules/parser/FeatureParser';
 import { NodeIterator } from '../../modules/parser/NodeIterator';
 import { ParsingContext } from '../../modules/parser/ParsingContext';
 import { NodeTypes } from '../../modules/req/NodeTypes';
-import { FSFileHandler } from '../../modules/util/file/FSFileHandler';
+import { FSFileHandler } from '../../modules/util/fs/FSFileHandler';
 
 describe( 'FeatureParser', () => {
 
@@ -18,7 +19,7 @@ describe( 'FeatureParser', () => {
 	const dir = resolve( process.cwd(), 'dist/' );
 	const langDir = resolve( dir, DEFAULT_DIR_LANGUAGE );
 
-    const fileHandler = new FSFileHandler( fs );
+    const fileHandler = new FSFileHandler( fs, promisify );
     const langLoader: LanguageContentLoader = new JsonLanguageContentLoader(
         langDir,
         {},

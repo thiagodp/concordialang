@@ -21,9 +21,9 @@ const NLPTrainer_1 = require("../nlp/NLPTrainer");
 const Parser_1 = require("../parser/Parser");
 const TestCaseGeneratorFacade_1 = require("../testcase/TestCaseGeneratorFacade");
 const file_1 = require("../util/file");
-const ext_changer_1 = require("../util/file/ext-changer");
-const FSFileHandler_1 = require("../util/file/FSFileHandler");
-const FSFileSearcher_1 = require("../util/file/FSFileSearcher");
+const ext_changer_1 = require("../util/fs/ext-changer");
+const FSFileHandler_1 = require("../util/fs/FSFileHandler");
+const FSFileSearcher_1 = require("../util/fs/FSFileSearcher");
 const Compiler_1 = require("./Compiler");
 const SingleFileCompiler_1 = require("./SingleFileCompiler");
 function filterFilesToCompile(files, extensionFeature, extensionTestCase, pathLibrary) {
@@ -44,9 +44,10 @@ exports.filterFilesToCompile = filterFilesToCompile;
  * @author Thiago Delgado Pinto
  */
 class CompilerFacade {
-    constructor(_fs, _path, _compilerListener, _tcGenListener) {
+    constructor(_fs, _path, _promisify, _compilerListener, _tcGenListener) {
         this._fs = _fs;
         this._path = _path;
+        this._promisify = _promisify;
         this._compilerListener = _compilerListener;
         this._tcGenListener = _tcGenListener;
     }
@@ -90,7 +91,7 @@ class CompilerFacade {
             if (availableLanguages.indexOf(options.language) < 0) { // not found
                 throw new error_1.RuntimeException('Informed language is not available: ' + options.language);
             }
-            const fileHandler = new FSFileHandler_1.FSFileHandler(this._fs);
+            const fileHandler = new FSFileHandler_1.FSFileHandler(this._fs, this._promisify, options.encoding);
             const langLoader = new language_1.JsonLanguageContentLoader(options.languageDir, {}, fileHandler, fileHandler);
             const lexer = new Lexer_1.Lexer(options.language, langLoader);
             const parser = new Parser_1.Parser();

@@ -1,5 +1,5 @@
 import * as colors from 'chalk';
-import { TestScriptExecutionResult } from 'concordialang-plugin';
+import { TestScriptExecutionResult } from 'concordialang-types';
 import * as figures from 'figures';
 import * as logSymbols from 'log-symbols';
 import { basename, relative } from 'path';

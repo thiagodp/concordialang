@@ -216,7 +216,7 @@ export class TestCaseGeneratorFacade {
                             continue;
                         }
 
-                        ++totalTestCasesCount;
+                        // ++totalTestCasesCount;
 
                         let tcIndex = 1;
                         for ( let tc of generatedTC ) {

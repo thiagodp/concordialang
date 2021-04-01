@@ -2,20 +2,23 @@ import {
     AbstractTestScript,
     Plugin,
     TestScriptExecutionOptions,
-    TestScriptExecutionResult,
     TestScriptGenerationOptions,
     TestScriptGenerationResult,
 } from 'concordialang-plugin';
+import { TestScriptExecutionResult } from 'concordialang-types';
 
 import { Document, Spec } from '../ast';
 import { CompilerFacade } from '../compiler/CompilerFacade';
 import { PackageBasedPluginFinder } from '../plugin/PackageBasedPluginFinder';
 import { PluginData } from '../plugin/PluginData';
 import { PluginManager } from '../plugin/PluginManager';
+import { FileBasedTestReporterOptions } from '../report/FileBasedTestReporter';
+import { JSONTestReporter } from '../report/JSONTestReporter';
 import { AugmentedSpec } from '../req/AugmentedSpec';
 import { AbstractTestScriptGenerator } from '../testscript/AbstractTestScriptGenerator';
 import { TestResultAnalyzer } from '../testscript/TestResultAnalyzer';
-import { DirSearcher, FSDirSearcher, FSFileHandler } from '../util/file';
+import { DirSearcher } from '../util/file';
+import { FSDirSearcher, FSFileHandler } from '../util/fs';
 import { AppOptions, hasSomeOptionThatRequiresAPlugin } from './AppOptions';
 import { UI } from './UI';
 
@@ -34,7 +37,8 @@ export class App {
 
     constructor(
         private _fs: any,
-        private _path: any
+        private _path: any,
+        private _promisify: any
     ) {
     }
 
@@ -42,7 +46,9 @@ export class App {
 
         const fs = this._fs;
         const path = this._path;
-        const fileHandler = new FSFileHandler( fs, options.encoding );
+        const promisify = this._promisify;
+
+        const fileHandler = new FSFileHandler( fs, promisify, options.encoding );
 
 		// Load plug-in
 
@@ -50,7 +56,7 @@ export class App {
 
 		if ( hasSomeOptionThatRequiresAPlugin( options ) && options.plugin ) {
 
-			const dirSearcher: DirSearcher = new FSDirSearcher( fs );
+			const dirSearcher: DirSearcher = new FSDirSearcher( fs, promisify );
 
 			const pluginManager: PluginManager = new PluginManager(
 				ui,
@@ -93,7 +99,7 @@ export class App {
         ui.announceOptions( options );
 
         if ( options.spec ) {
-            const compiler = new CompilerFacade( fs, path, ui, ui );
+            const compiler = new CompilerFacade( fs, path, promisify, ui, ui );
             try {
 				[ spec, /* graph */ ] = await compiler.compile( options );
             } catch ( err ) {
@@ -260,6 +266,12 @@ export class App {
 
 				ui.showTestScriptAnalysis( reportedResult );
 				// TODO: save report to file
+                const reporter = new JSONTestReporter( fileHandler, path );
+                await reporter.report(
+                    reportedResult,
+                    { directory: options.dirResult, useTimestamp: false } as FileBasedTestReporterOptions
+                );
+                // ---
 
 				if ( ! hasErrors && ( reportedResult?.total?.failed > 0 || reportedResult?.total?.error > 0 ) ) {
 					hasErrors = true;

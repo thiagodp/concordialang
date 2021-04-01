@@ -1,11 +1,12 @@
 import * as fs from 'fs';
 import { resolve } from 'path';
+import { promisify } from 'util';
 
 import { DEFAULT_DIR_LANGUAGE } from '../../../modules/app/default-options';
 import { JsonLanguageContentLoader, LanguageContentLoader } from '../../../modules/language';
 import { Intents, NLP, NLPTrainer } from '../../../modules/nlp';
 import { Entities } from '../../../modules/nlp/Entities';
-import { FSFileHandler } from '../../../modules/util/file';
+import { FSFileHandler } from '../../../modules/util/fs/FSFileHandler';
 import { shouldHaveUIEntities } from '../entity-util';
 
 describe( 'nlp.pt.ui', () => {
@@ -16,7 +17,7 @@ describe( 'nlp.pt.ui', () => {
 	const dir = resolve( process.cwd(), 'dist/' );
 	const langDir = resolve( dir, DEFAULT_DIR_LANGUAGE );
 
-    const fileHandler = new FSFileHandler( fs );
+    const fileHandler = new FSFileHandler( fs, promisify );
     const langLoader: LanguageContentLoader = new JsonLanguageContentLoader(
         langDir,
         {},

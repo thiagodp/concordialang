@@ -1,18 +1,18 @@
-import { promisify } from "util";
-import { FileHandler } from "./FileHandler";
+import { FileHandler } from '../file/FileHandler';
 
 export class FSFileHandler implements FileHandler {
 
     constructor(
-        private _fs: any,
-        private _encoding: string = 'utf8'
+        private readonly _fs: any,
+        private readonly _promisify: any,
+        private readonly _encoding: string = 'utf8'
     ) {
     }
 
     /** @inheritDoc */
     async read( filePath: string ): Promise< string > {
 
-        const readFile = promisify( this._fs.readFile );
+        const readFile = this._promisify( this._fs.readFile );
 
         const options = {
             encoding: this._encoding,
@@ -41,7 +41,7 @@ export class FSFileHandler implements FileHandler {
 
     /** @inheritDoc */
     async exists( filePath: string ): Promise< boolean > {
-        const pAccess = promisify( this._fs.access );
+        const pAccess = this._promisify( this._fs.access );
         try {
             await pAccess( filePath, this._fs.constants.R_OK );
             return true;
@@ -57,7 +57,7 @@ export class FSFileHandler implements FileHandler {
 
     /** @inheritDoc */
     async write( filePath: string, content: string ): Promise< void > {
-        const writeFile = promisify( this._fs.writeFile );
+        const writeFile = this._promisify( this._fs.writeFile );
         return await writeFile( filePath, content );
     }
 
@@ -69,7 +69,7 @@ export class FSFileHandler implements FileHandler {
                 return false;
             }
         }
-        const unlinkFile = promisify( this._fs.unlink );
+        const unlinkFile = this._promisify( this._fs.unlink );
         await unlinkFile( filePath );
         return true;
     }

@@ -3,7 +3,7 @@ import { join, resolve } from 'path';
 
 import { DEFAULT_DIR_LANGUAGE } from '../../modules/app/default-options';
 import { LanguageManager } from '../../modules/language/LanguageManager';
-import { FSFileSearcher } from '../../modules/util/file/FSFileSearcher';
+import { FSFileSearcher } from '../../modules/util/fs/FSFileSearcher';
 
 describe( 'LanguageManager', () => {
 

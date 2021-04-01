@@ -1,10 +1,12 @@
 import * as globalDirs from 'global-dirs';
 import { fs, vol } from 'memfs';
 import { join, normalize } from 'path';
+import { promisify } from 'util';
+
 import { PackageBasedPluginFinder } from '../../modules/plugin/PackageBasedPluginFinder';
-import { PluginData, PLUGIN_PROPERTY } from '../../modules/plugin/PluginData';
-import { FSDirSearcher } from '../../modules/util/file/FSDirSearcher';
-import { FSFileHandler } from '../../modules/util/file/FSFileHandler';
+import { PLUGIN_PROPERTY, PluginData } from '../../modules/plugin/PluginData';
+import { FSDirSearcher } from '../../modules/util/fs/FSDirSearcher';
+import { FSFileHandler } from '../../modules/util/fs/FSFileHandler';
 
 
 describe( 'PackageBasedPluginFinder', () => {
@@ -38,8 +40,8 @@ describe( 'PackageBasedPluginFinder', () => {
     } as PluginData;
 
     const makeFinder = () => {
-        const fileReader = new FSFileHandler( fs );
-        const dirSearcher = new FSDirSearcher( fs );
+        const fileReader = new FSFileHandler( fs, promisify );
+        const dirSearcher = new FSDirSearcher( fs, promisify );
 
         const finder: PackageBasedPluginFinder = new PackageBasedPluginFinder(
             currentDir, fileReader, dirSearcher );

@@ -28,7 +28,7 @@ const LanguageManager_1 = require("../language/LanguageManager");
 const locale_manager_1 = require("../language/locale-manager");
 const plugin_1 = require("../plugin");
 const best_match_1 = require("../util/best-match");
-const file_1 = require("../util/file");
+const fs_1 = require("../util/fs");
 const package_installation_1 = require("../util/package-installation");
 const run_command_1 = require("../util/run-command");
 const args_1 = require("./args");
@@ -164,7 +164,7 @@ function main(appPath, processPath) {
             let databases = [];
             try {
                 const nodeModulesDir = path.join(processPath, 'node_modules');
-                databases = yield database_package_manager_1.allInstalledDatabases(nodeModulesDir, new file_1.FSDirSearcher(fs));
+                databases = yield database_package_manager_1.allInstalledDatabases(nodeModulesDir, new fs_1.FSDirSearcher(fs, util_1.promisify));
                 ui.drawDatabases(databases);
                 return true;
             }
@@ -178,7 +178,7 @@ function main(appPath, processPath) {
             // For now, only date locales are detected
             try {
                 const nodeModulesDir = path.join(processPath, 'node_modules');
-                const dateLocales = yield locale_manager_1.installedDateLocales(nodeModulesDir, new file_1.FSDirSearcher(fs), path);
+                const dateLocales = yield locale_manager_1.installedDateLocales(nodeModulesDir, new fs_1.FSDirSearcher(fs, util_1.promisify), path);
                 ui.drawLocales(dateLocales, 'date', 'Unavailable locales fallback to the their language. Example: "es-AR" fallbacks to "es".');
                 return true;
             }
@@ -189,7 +189,7 @@ function main(appPath, processPath) {
         }
         // LANGUAGE
         if (options.languageList) {
-            const fileSearcher = new file_1.FSFileSearcher(fs);
+            const fileSearcher = new fs_1.FSFileSearcher(fs);
             const lm = new LanguageManager_1.LanguageManager(fileSearcher, options.languageDir);
             try {
                 const languages = yield lm.availableLanguages();
@@ -296,10 +296,10 @@ function main(appPath, processPath) {
         if (options.init && !options.pluginInstall) {
             return true;
         }
-        const fileHandler = new file_1.FSFileHandler(fs, options.encoding);
+        const fileHandler = new fs_1.FSFileHandler(fs, util_1.promisify, options.encoding);
         // PLUGIN
         if (CliOnlyOptions_1.hasSomePluginAction(options)) {
-            const dirSearcher = new file_1.FSDirSearcher(fs);
+            const dirSearcher = new fs_1.FSDirSearcher(fs, util_1.promisify);
             const pluginFinder = new plugin_1.PackageBasedPluginFinder(options.processPath, fileHandler, dirSearcher);
             const pluginManager = new plugin_1.PluginManager(ui, pluginFinder, fileHandler);
             const pluginController = new plugin_1.PluginController();
@@ -312,7 +312,7 @@ function main(appPath, processPath) {
             }
             return true;
         }
-        const app = new App_1.App(fs, path);
+        const app = new App_1.App(fs, path, util_1.promisify);
         const { spec, success } = yield app.start(options, ui);
         // AST
         if (spec && options.ast) {

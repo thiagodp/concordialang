@@ -141,7 +141,7 @@ class TestCaseGeneratorFacade {
                             if (generatedTC.length < 1) {
                                 continue;
                             }
-                            ++totalTestCasesCount;
+                            // ++totalTestCasesCount;
                             let tcIndex = 1;
                             for (let tc of generatedTC) {
                                 tcGen.addReferenceTagsTo(tc, scenarioIndex + 1, variantIndex + 1);

@@ -1,5 +1,6 @@
 import * as fs from 'fs';
 import { resolve } from 'path';
+import { promisify } from 'util';
 
 import { DEFAULT_DIR_LANGUAGE, DEFAULT_ENCODING } from '../modules/app/default-options';
 import { Document, FileInfo } from '../modules/ast';
@@ -11,7 +12,7 @@ import { NLPBasedSentenceRecognizer } from '../modules/nlp/NLPBasedSentenceRecog
 import { NLPTrainer } from '../modules/nlp/NLPTrainer';
 import { Parser } from '../modules/parser/Parser';
 import { AugmentedSpec } from '../modules/req/AugmentedSpec';
-import { FSFileHandler } from '../modules/util/file/FSFileHandler';
+import { FSFileHandler } from '../modules/util/fs/FSFileHandler';
 
 /**
  * Useful for testing purposes.
@@ -27,7 +28,7 @@ export class SimpleCompiler {
 
 	langDir = resolve( this.dir, DEFAULT_DIR_LANGUAGE );
 
-    fileHandler = new FSFileHandler( fs, DEFAULT_ENCODING );
+    fileHandler = new FSFileHandler( fs, promisify, DEFAULT_ENCODING );
 
     langLoader: LanguageContentLoader = new JsonLanguageContentLoader(
         this.langDir,

@@ -11,10 +11,10 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.FSDirSearcher = void 0;
 const fsWalk = require("@nodelib/fs.walk");
-const util_1 = require("util");
 class FSDirSearcher {
-    constructor(_fs) {
+    constructor(_fs, _promisify) {
         this._fs = _fs;
+        this._promisify = _promisify;
     }
     /** @inheritDoc */
     search(options) {
@@ -41,7 +41,7 @@ class FSDirSearcher {
                 // Use deep filter when *not* recursive
                 deepFilter: options.recursive ? undefined : entryFilter
             };
-            const pWalk = util_1.promisify(fsWalk.walk);
+            const pWalk = this._promisify(fsWalk.walk);
             const entries = yield pWalk(options.directory, walkOptions);
             return entries.map(e => e.path);
         });

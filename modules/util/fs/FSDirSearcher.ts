@@ -1,10 +1,10 @@
 import * as fsWalk from '@nodelib/fs.walk';
-import { promisify } from "util";
-import { DirSearcher, DirSearchOptions } from './DirSearcher';
+
+import { DirSearcher, DirSearchOptions } from '../file/DirSearcher';
 
 export class FSDirSearcher implements DirSearcher {
 
-    constructor( private readonly _fs: any ) {
+    constructor( private readonly _fs: any, private readonly _promisify: any ) {
     }
 
     /** @inheritDoc */
@@ -35,7 +35,7 @@ export class FSDirSearcher implements DirSearcher {
             deepFilter: options.recursive ? undefined : entryFilter
         };
 
-        const pWalk = promisify( fsWalk.walk );
+        const pWalk = this._promisify( fsWalk.walk );
         const entries = await pWalk( options.directory, walkOptions );
         return entries.map( e => e.path );
     }

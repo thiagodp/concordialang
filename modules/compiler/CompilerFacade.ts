@@ -14,9 +14,9 @@ import { AugmentedSpec } from '../req/AugmentedSpec';
 import { TestCaseGeneratorFacade } from '../testcase/TestCaseGeneratorFacade';
 import { TestCaseGeneratorListener } from '../testcase/TestCaseGeneratorListener';
 import { FileSearchResults, toUnixPath } from '../util/file';
-import { changeFileExtension } from '../util/file/ext-changer';
-import { FSFileHandler } from '../util/file/FSFileHandler';
-import { FSFileSearcher } from '../util/file/FSFileSearcher';
+import { changeFileExtension } from '../util/fs/ext-changer';
+import { FSFileHandler } from '../util/fs/FSFileHandler';
+import { FSFileSearcher } from '../util/fs/FSFileSearcher';
 import { Compiler } from './Compiler';
 import { CompilerListener } from './CompilerListener';
 import { SingleFileCompiler } from './SingleFileCompiler';
@@ -54,6 +54,7 @@ export class CompilerFacade {
     constructor(
         private readonly _fs: any,
         private readonly _path: any,
+        private readonly _promisify: any,
         private readonly _compilerListener: CompilerListener,
         private readonly _tcGenListener: TestCaseGeneratorListener,
         ) {
@@ -111,7 +112,7 @@ export class CompilerFacade {
         }
 
 
-        const fileHandler = new FSFileHandler( this._fs );
+        const fileHandler = new FSFileHandler( this._fs, this._promisify, options.encoding );
         const langLoader: LanguageContentLoader = new JsonLanguageContentLoader(
             options.languageDir, {}, fileHandler, fileHandler );
         const lexer: Lexer = new Lexer( options.language, langLoader );

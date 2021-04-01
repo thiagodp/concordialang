@@ -1,11 +1,12 @@
 import { Clock, DateTimeFormatter, LocalDate } from '@js-joda/core';
 import * as fs from 'fs';
 import { resolve } from 'path';
+import { promisify } from 'util';
 
 import { DEFAULT_DIR_LANGUAGE } from '../../../modules/app/default-options';
 import { JsonLanguageContentLoader, LanguageContentLoader } from '../../../modules/language';
 import { Entities, NLP, NLPResult, NLPTrainer } from '../../../modules/nlp';
-import { FSFileHandler } from '../../../modules/util/file/FSFileHandler';
+import { FSFileHandler } from '../../../modules/util/fs/FSFileHandler';
 import { shouldHaveUIEntities } from '../entity-util';
 
 describe( 'nlp.en.date', () => {
@@ -18,7 +19,7 @@ describe( 'nlp.en.date', () => {
 	const dir = resolve( process.cwd(), 'dist/' );
 	const langDir = resolve( dir, DEFAULT_DIR_LANGUAGE );
 
-    const fileHandler = new FSFileHandler( fs );
+    const fileHandler = new FSFileHandler( fs, promisify );
     const langLoader: LanguageContentLoader = new JsonLanguageContentLoader(
         langDir,
         {},

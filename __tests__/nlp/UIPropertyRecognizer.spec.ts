@@ -1,12 +1,13 @@
 import * as fs from 'fs';
 import { resolve } from 'path';
+import { promisify } from 'util';
 
+import { DEFAULT_DIR_LANGUAGE } from '../../modules/app/default-options';
 import { UIProperty } from '../../modules/ast/UIProperty';
 import { JsonLanguageContentLoader, LanguageContentLoader } from '../../modules/language';
 import { NLP, NLPTrainer, UIPropertyRecognizer } from '../../modules/nlp';
 import { NodeTypes } from '../../modules/req/NodeTypes';
-import { FSFileHandler } from '../../modules/util/file/FSFileHandler';
-import { DEFAULT_DIR_LANGUAGE } from '../../modules/app/default-options';
+import { FSFileHandler } from '../../modules/util/fs/FSFileHandler';
 
 describe( 'UIPropertyRecognizer', () => {
 
@@ -17,7 +18,7 @@ describe( 'UIPropertyRecognizer', () => {
 	const dir = resolve( process.cwd(), 'dist/' );
 	const langDir = resolve( dir, DEFAULT_DIR_LANGUAGE );
 
-    const fileHandler = new FSFileHandler( fs );
+    const fileHandler = new FSFileHandler( fs, promisify );
     const langLoader: LanguageContentLoader =
         new JsonLanguageContentLoader( langDir, {}, fileHandler, fileHandler );
 

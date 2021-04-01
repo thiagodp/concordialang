@@ -1,5 +1,6 @@
 import * as fs from 'fs';
 import { resolve } from 'path';
+import { promisify } from 'util';
 
 import { DEFAULT_DIR_LANGUAGE } from '../../modules/app/default-options';
 import { SingleFileCompiler } from '../../modules/compiler/SingleFileCompiler';
@@ -10,7 +11,7 @@ import { NLPBasedSentenceRecognizer } from '../../modules/nlp/NLPBasedSentenceRe
 import { NLPTrainer } from '../../modules/nlp/NLPTrainer';
 import { Parser } from '../../modules/parser/Parser';
 import { TestCaseFileGenerator } from '../../modules/testcase/TestCaseFileGenerator';
-import { FSFileHandler } from '../../modules/util/file/FSFileHandler';
+import { FSFileHandler } from '../../modules/util/fs/FSFileHandler';
 
 describe( 'TestCaseFileGenerator', () => {
 
@@ -18,7 +19,7 @@ describe( 'TestCaseFileGenerator', () => {
 	const dir = resolve( process.cwd(), 'dist/' );
 	const langDir = resolve( dir, DEFAULT_DIR_LANGUAGE );
 
-    const fileHandler = new FSFileHandler( fs );
+    const fileHandler = new FSFileHandler( fs, promisify );
     const langLoader: LanguageContentLoader = new JsonLanguageContentLoader(
         langDir,
         {},

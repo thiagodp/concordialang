@@ -18,7 +18,8 @@ import { LanguageManager } from '../language/LanguageManager';
 import { installedDateLocales } from '../language/locale-manager';
 import { PackageBasedPluginFinder, PluginController, PluginManager } from '../plugin';
 import { bestMatch } from '../util/best-match';
-import { DirSearcher, FileSearcher, FSDirSearcher, FSFileHandler, FSFileSearcher } from '../util/file';
+import { DirSearcher, FileSearcher } from '../util/file';
+import { FSDirSearcher, FSFileHandler, FSFileSearcher } from '../util/fs';
 import { makePackageInstallCommand } from '../util/package-installation';
 import { runCommand } from '../util/run-command';
 import { parseArgs } from './args';
@@ -176,7 +177,7 @@ export async function main( appPath: string, processPath: string ): Promise< boo
 			const nodeModulesDir = path.join( processPath, 'node_modules' );
 			databases = await allInstalledDatabases(
 				nodeModulesDir,
-				new FSDirSearcher( fs )
+				new FSDirSearcher( fs, promisify )
 			);
 			ui.drawDatabases( databases );
 			return true;
@@ -195,7 +196,7 @@ export async function main( appPath: string, processPath: string ): Promise< boo
 			const nodeModulesDir = path.join( processPath, 'node_modules' );
 			const dateLocales = await installedDateLocales(
 				nodeModulesDir,
-				new FSDirSearcher( fs ),
+				new FSDirSearcher( fs, promisify ),
 				path
 			);
 			ui.drawLocales( dateLocales, 'date',
@@ -334,13 +335,13 @@ export async function main( appPath: string, processPath: string ): Promise< boo
         return true;
 	}
 
-	const fileHandler = new FSFileHandler( fs, options.encoding );
+	const fileHandler = new FSFileHandler( fs, promisify, options.encoding );
 
 	// PLUGIN
 
 	if ( hasSomePluginAction( options ) ) {
 
-		const dirSearcher: DirSearcher = new FSDirSearcher( fs );
+		const dirSearcher: DirSearcher = new FSDirSearcher( fs, promisify );
 
 		const pluginFinder = new PackageBasedPluginFinder(
 			options.processPath, fileHandler, dirSearcher );
@@ -363,7 +364,7 @@ export async function main( appPath: string, processPath: string ): Promise< boo
 	}
 
 
-    const app = new App( fs, path );
+    const app = new App( fs, path, promisify );
 	const { spec, success } = await app.start( options, ui );
 
 	// AST

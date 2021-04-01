@@ -1,6 +1,6 @@
 import * as path from 'path';
 import { toUnixPath } from '../../../modules/util/file';
-import { changeFileExtension } from '../../../modules/util/file/ext-changer';
+import { changeFileExtension } from '../../../modules/util/fs/ext-changer';
 
 describe( 'ext-changer', () => {
 
@@ -17,7 +17,7 @@ describe( 'ext-changer', () => {
         } );
 
         it( 'requires node path library when not defined', () => {
-            const r = changeFileExtension( 'a.feature', '.testcase' );
+            const r = changeFileExtension( 'a.feature', '.testcase', path );
             expect( r ).toBe( 'a.testcase' );
         } );
 

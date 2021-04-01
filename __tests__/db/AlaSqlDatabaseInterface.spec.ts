@@ -1,5 +1,6 @@
 import * as fs from 'fs';
 import { resolve } from 'path';
+import { promisify } from 'util';
 
 import { DEFAULT_DIR_LANGUAGE, DEFAULT_LANGUAGE } from '../../modules/app/default-options';
 import { Database, DatabaseProperties, DatabaseProperty, Document, Table } from '../../modules/ast';
@@ -8,7 +9,7 @@ import { JsonLanguageContentLoader, LanguageContentLoader } from '../../modules/
 import { Lexer } from '../../modules/lexer/Lexer';
 import { Parser } from '../../modules/parser/Parser';
 import { NodeTypes } from '../../modules/req/NodeTypes';
-import { FSFileHandler } from '../../modules/util/file/FSFileHandler';
+import { FSFileHandler } from '../../modules/util/fs/FSFileHandler';
 
 describe( 'AlaSqlDatabaseInterface', () => {
 
@@ -18,7 +19,7 @@ describe( 'AlaSqlDatabaseInterface', () => {
 	const langDir = resolve( dir, DEFAULT_DIR_LANGUAGE );
 
     let parser = new Parser();
-    const fileHandler = new FSFileHandler( fs );
+    const fileHandler = new FSFileHandler( fs, promisify );
     const langLoader: LanguageContentLoader =
         new JsonLanguageContentLoader( langDir, {}, fileHandler, fileHandler );
     let lexer: Lexer = new Lexer( DEFAULT_LANGUAGE, langLoader );

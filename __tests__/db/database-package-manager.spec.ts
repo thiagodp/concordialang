@@ -1,7 +1,9 @@
 import { fs, vol } from 'memfs';
 import * as path from 'path';
+import { promisify } from 'util';
+
 import { allInstalledDatabases, databasePackageNameFor } from '../../modules/db/database-package-manager';
-import { FSDirSearcher } from '../../modules/util/file';
+import { FSDirSearcher } from '../../modules/util/fs/FSDirSearcher';
 
 describe( 'database-package-manager', () => {
 
@@ -25,7 +27,7 @@ describe( 'database-package-manager', () => {
 		vol.mkdirpSync( path.join( localModulesDir, 'database-js' ) );
 		vol.mkdirpSync( path.join( localModulesDir, 'database-js-json' ) );
 
-		const s = new FSDirSearcher( fs );
+		const s = new FSDirSearcher( fs, promisify );
 		const r = await allInstalledDatabases( localModulesDir, s );
 
 		expect( r.length ).toEqual( 1 );

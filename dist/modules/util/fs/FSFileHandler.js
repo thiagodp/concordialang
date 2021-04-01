@@ -10,16 +10,16 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.FSFileHandler = void 0;
-const util_1 = require("util");
 class FSFileHandler {
-    constructor(_fs, _encoding = 'utf8') {
+    constructor(_fs, _promisify, _encoding = 'utf8') {
         this._fs = _fs;
+        this._promisify = _promisify;
         this._encoding = _encoding;
     }
     /** @inheritDoc */
     read(filePath) {
         return __awaiter(this, void 0, void 0, function* () {
-            const readFile = util_1.promisify(this._fs.readFile);
+            const readFile = this._promisify(this._fs.readFile);
             const options = {
                 encoding: this._encoding,
                 flag: 'r'
@@ -46,7 +46,7 @@ class FSFileHandler {
     /** @inheritDoc */
     exists(filePath) {
         return __awaiter(this, void 0, void 0, function* () {
-            const pAccess = util_1.promisify(this._fs.access);
+            const pAccess = this._promisify(this._fs.access);
             try {
                 yield pAccess(filePath, this._fs.constants.R_OK);
                 return true;
@@ -63,7 +63,7 @@ class FSFileHandler {
     /** @inheritDoc */
     write(filePath, content) {
         return __awaiter(this, void 0, void 0, function* () {
-            const writeFile = util_1.promisify(this._fs.writeFile);
+            const writeFile = this._promisify(this._fs.writeFile);
             return yield writeFile(filePath, content);
         });
     }
@@ -76,7 +76,7 @@ class FSFileHandler {
                     return false;
                 }
             }
-            const unlinkFile = util_1.promisify(this._fs.unlink);
+            const unlinkFile = this._promisify(this._fs.unlink);
             yield unlinkFile(filePath);
             return true;
         });

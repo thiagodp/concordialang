@@ -1,7 +1,9 @@
 import { fs, vol } from 'memfs';
-import { join, normalize, resolve } from "path";
+import { join, normalize, resolve } from 'path';
+import { promisify } from 'util';
+
 import { DirSearcher, DirSearchOptions } from '../../../modules/util/file/DirSearcher';
-import { FSDirSearcher } from "../../../modules/util/file/FSDirSearcher";
+import { FSDirSearcher } from '../../../modules/util/fs/FSDirSearcher';
 
 describe( 'DirSearcher', () => {
 
@@ -40,7 +42,7 @@ describe( 'DirSearcher', () => {
     } );
 
     beforeEach( () => {
-        s = new FSDirSearcher( fs );
+        s = new FSDirSearcher( fs, promisify );
         o = {
             directory: currentDir,
             recursive: false,

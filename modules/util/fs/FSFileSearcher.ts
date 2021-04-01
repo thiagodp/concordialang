@@ -1,7 +1,8 @@
 import * as fsWalk from '@nodelib/fs.walk';
 import { join, normalize } from 'path';
-import { promisify } from "util";
-import { FileSearcher, FileSearchOptions, FileSearchResults } from "./FileSearcher";
+import { promisify } from 'util';
+
+import { FileSearcher, FileSearchOptions, FileSearchResults } from '../file/FileSearcher';
 
 
 export class FSFileSearcher implements FileSearcher {

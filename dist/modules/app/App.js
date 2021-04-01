@@ -14,9 +14,10 @@ const concordialang_plugin_1 = require("concordialang-plugin");
 const CompilerFacade_1 = require("../compiler/CompilerFacade");
 const PackageBasedPluginFinder_1 = require("../plugin/PackageBasedPluginFinder");
 const PluginManager_1 = require("../plugin/PluginManager");
+const JSONTestReporter_1 = require("../report/JSONTestReporter");
 const AbstractTestScriptGenerator_1 = require("../testscript/AbstractTestScriptGenerator");
 const TestResultAnalyzer_1 = require("../testscript/TestResultAnalyzer");
-const file_1 = require("../util/file");
+const fs_1 = require("../util/fs");
 const AppOptions_1 = require("./AppOptions");
 /**
  * Application facade
@@ -24,20 +25,22 @@ const AppOptions_1 = require("./AppOptions");
  * @author Thiago Delgado Pinto
  */
 class App {
-    constructor(_fs, _path) {
+    constructor(_fs, _path, _promisify) {
         this._fs = _fs;
         this._path = _path;
+        this._promisify = _promisify;
     }
     start(options, ui) {
         var _a, _b, _c, _d, _e, _f;
         return __awaiter(this, void 0, void 0, function* () {
             const fs = this._fs;
             const path = this._path;
-            const fileHandler = new file_1.FSFileHandler(fs, options.encoding);
+            const promisify = this._promisify;
+            const fileHandler = new fs_1.FSFileHandler(fs, promisify, options.encoding);
             // Load plug-in
             let plugin = null;
             if (AppOptions_1.hasSomeOptionThatRequiresAPlugin(options) && options.plugin) {
-                const dirSearcher = new file_1.FSDirSearcher(fs);
+                const dirSearcher = new fs_1.FSDirSearcher(fs, promisify);
                 const pluginManager = new PluginManager_1.PluginManager(ui, new PackageBasedPluginFinder_1.PackageBasedPluginFinder(options.processPath, fileHandler, dirSearcher), fileHandler);
                 let pluginData = null;
                 try {
@@ -71,7 +74,7 @@ class App {
             let spec = null;
             ui.announceOptions(options);
             if (options.spec) {
-                const compiler = new CompilerFacade_1.CompilerFacade(fs, path, ui, ui);
+                const compiler = new CompilerFacade_1.CompilerFacade(fs, path, promisify, ui, ui);
                 try {
                     [spec,] = yield compiler.compile(options);
                 }
@@ -184,6 +187,9 @@ class App {
                     const reportedResult = (new TestResultAnalyzer_1.TestResultAnalyzer()).adjustResult(executionResult, abstractTestScripts);
                     ui.showTestScriptAnalysis(reportedResult);
                     // TODO: save report to file
+                    const reporter = new JSONTestReporter_1.JSONTestReporter(fileHandler, path);
+                    yield reporter.report(reportedResult, { directory: options.dirResult, useTimestamp: false });
+                    // ---
                     if (!hasErrors && (((_e = reportedResult === null || reportedResult === void 0 ? void 0 : reportedResult.total) === null || _e === void 0 ? void 0 : _e.failed) > 0 || ((_f = reportedResult === null || reportedResult === void 0 ? void 0 : reportedResult.total) === null || _f === void 0 ? void 0 : _f.error) > 0)) {
                         hasErrors = true;
                     }
