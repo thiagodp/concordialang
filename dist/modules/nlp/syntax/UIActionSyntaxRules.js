@@ -26,7 +26,14 @@ exports.DEFAULT_UI_ACTION_SYNTAX_RULE = UI_ACTION_RULE;
 const ACCEPT = {
     name: Actions_1.Actions.ACCEPT,
     minTargets: 0,
-    maxTargets: 0,
+    maxTargets: 1,
+    targets: [
+        Entities_1.Entities.UI_ELEMENT_REF,
+        Entities_1.Entities.VALUE,
+        Entities_1.Entities.NUMBER,
+        Entities_1.Entities.CONSTANT,
+        Entities_1.Entities.UI_PROPERTY_REF,
+    ]
 };
 const AM_ON = {
     name: Actions_1.Actions.AM_ON,
