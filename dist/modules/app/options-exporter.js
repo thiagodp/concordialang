@@ -22,6 +22,7 @@ function createPersistableCopy(source, defaultObject, useRelativePaths = false) 
         'pluginInstall',
         'pluginUninstall',
         'pluginServe',
+        'headless',
         // DATABASE
         `dbList`,
         'dbInstall',
@@ -33,6 +34,15 @@ function createPersistableCopy(source, defaultObject, useRelativePaths = false) 
         'init',
         'saveConfig',
         'ast',
+        'verbose',
+        'stopOnTheFirstError',
+        'x',
+        'justSpec',
+        'justTestCase',
+        'justScript',
+        'justRun',
+        'justResult',
+        'tcSuppressHeader',
         // INFO
         'help',
         'about',

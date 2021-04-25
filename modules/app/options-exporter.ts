@@ -37,6 +37,8 @@ export function createPersistableCopy(
         'pluginUninstall',
 		'pluginServe',
 
+		'headless',
+
 		// DATABASE
 		`dbList`,
         'dbInstall',
@@ -51,6 +53,16 @@ export function createPersistableCopy(
         'init',
         'saveConfig',
 		'ast',
+
+		'verbose',
+		'stopOnTheFirstError',
+		'x',
+		'justSpec',
+		'justTestCase',
+		'justScript',
+		'justRun',
+		'justResult',
+		'tcSuppressHeader',
 
         // INFO
         'help',
