@@ -246,12 +246,15 @@ export class App {
                 reportFile = executionResult.sourceFile;
 			}
 
-			ui.announceReportFile( reportFile );
-            try {
-                executionResult = await plugin.convertReportFile( reportFile );
-            } catch ( err ) {
-                hasErrors = true;
-                ui.showException( err );
+            if ( reportFile ) {
+
+                ui.announceReportFile( reportFile );
+                try {
+                    executionResult = await plugin.convertReportFile( reportFile );
+                } catch ( err ) {
+                    hasErrors = true;
+                    ui.showException( err );
+                }
             }
 
 		}

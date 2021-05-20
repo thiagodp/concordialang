@@ -173,13 +173,15 @@ class App {
                 else {
                     reportFile = executionResult.sourceFile;
                 }
-                ui.announceReportFile(reportFile);
-                try {
-                    executionResult = yield plugin.convertReportFile(reportFile);
-                }
-                catch (err) {
-                    hasErrors = true;
-                    ui.showException(err);
+                if (reportFile) {
+                    ui.announceReportFile(reportFile);
+                    try {
+                        executionResult = yield plugin.convertReportFile(reportFile);
+                    }
+                    catch (err) {
+                        hasErrors = true;
+                        ui.showException(err);
+                    }
                 }
             }
             if (executionResult) {
