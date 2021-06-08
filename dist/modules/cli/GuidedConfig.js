@@ -11,11 +11,17 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.GuidedConfig = void 0;
 const inquirer = require("inquirer");
+const package_installation_1 = require("../util/package-installation");
 /**
  * Guided Concordia configuration.
  */
 class GuidedConfig {
-    prompt() {
+    /**
+     *
+     * @param options Defined options are ignored for prompt and their value is returned.
+     * @returns
+     */
+    prompt(options) {
         return __awaiter(this, void 0, void 0, function* () {
             const q = new ConcordiaQuestions();
             const questions = [
@@ -23,11 +29,19 @@ class GuidedConfig {
                 q.language(),
                 q.dirScript(),
                 q.dirResult(),
-                q.plugin(),
-                q.pluginInstall(),
-                q.databases()
             ];
-            return yield inquirer.prompt(questions);
+            const hasPackageManager = options && !!options.packageManager;
+            if (!hasPackageManager) {
+                questions.push(q.packageManager());
+            }
+            questions.push(q.plugin());
+            questions.push(q.pluginInstall());
+            questions.push(q.databases());
+            const r = yield inquirer.prompt(questions);
+            if (hasPackageManager) {
+                r.packageManager = options.packageManager;
+            }
+            return r;
         });
     }
 }
@@ -69,16 +83,41 @@ class ConcordiaQuestions {
             default: './output'
         };
     }
+    packageManager() {
+        const choices = package_installation_1.packageManagers().map(tool => ({ value: tool, short: tool, name: tool }));
+        return {
+            type: 'list',
+            name: 'packageManager',
+            message: 'Which package manager do you want to use?',
+            choices: choices
+        };
+    }
     plugin() {
         return {
             type: 'list',
             name: 'plugin',
             message: 'Which plug-in do you want to use?',
             choices: [
-                { value: 'codeceptjs-testcafe', short: 'codeceptjs-testcafe', name: 'CodeceptJS with TestCafé (web applications)' },
-                { value: 'codeceptjs-playwright', short: 'codeceptjs-playwright', name: 'CodeceptJS with Playwright (web applications)' },
-                { value: 'codeceptjs-webdriverio', short: 'codeceptjs-webdriverio', name: 'CodeceptJS with WebDriverIO (web applications)' },
-                { value: 'codeceptjs-appium', short: 'codeceptjs-appium', name: 'CodeceptJS with Appium (mobile or desktop applications)' }
+                {
+                    value: 'codeceptjs-testcafe',
+                    short: 'codeceptjs-testcafe',
+                    name: 'CodeceptJS with TestCafé (web applications)'
+                },
+                {
+                    value: 'codeceptjs-playwright',
+                    short: 'codeceptjs-playwright',
+                    name: 'CodeceptJS with Playwright (web applications)'
+                },
+                {
+                    value: 'codeceptjs-webdriverio',
+                    short: 'codeceptjs-webdriverio',
+                    name: 'CodeceptJS with WebDriverIO (web applications)'
+                },
+                {
+                    value: 'codeceptjs-appium',
+                    short: 'codeceptjs-appium',
+                    name: 'CodeceptJS with Appium (mobile or desktop applications)'
+                }
             ]
         };
     }

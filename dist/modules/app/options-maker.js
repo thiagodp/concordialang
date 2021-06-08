@@ -29,6 +29,7 @@ function makeAppOptions(appPath = __dirname, processPath = process.cwd()) {
         directory,
         dirScript,
         dirResult,
+        packageManager: 'npm',
         ignore: [],
         file: [],
         scriptFile: [],

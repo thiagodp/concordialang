@@ -2,7 +2,7 @@ import { DateTimeFormatter, LocalDateTime } from '@js-joda/core';
 import { createHash } from 'crypto';
 import Graph = require('graph.js/dist/graph.full.js');
 
-import { AppOptions } from '../app/AppOptions';
+import { AppOptions } from '../app/app-options';
 import { RuntimeException } from '../error';
 import { JsonLanguageContentLoader, LanguageContentLoader } from '../language';
 import { LanguageManager } from '../language/LanguageManager';

@@ -11,10 +11,6 @@ export interface PluginListener {
 
     showMessagePluginAlreadyInstalled( name: string ): void;
 
-    showMessageTryingToInstall( name: string, tool: string ): void;
-
-    showMessageTryingToUninstall( name: string, tool: string ): void;
-
     showMessageCouldNoFindInstalledPlugin( name: string ): void;
 
     showMessagePackageFileNotFound( file: string ): void;
@@ -23,7 +19,7 @@ export interface PluginListener {
 
     showCommandStarted( command: string ): void;
 
-    showCommandFinished( code: number, showIfSuccess: boolean ): void;
+    showCommandFinished( code: number ): void;
 
     showError( e: Error ): void;
 

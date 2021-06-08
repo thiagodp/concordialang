@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.databasePackageNameFor = exports.uninstallDatabases = exports.installDatabases = exports.allInstalledDatabases = void 0;
+exports.uninstallDatabases = exports.installDatabases = exports.allInstalledDatabases = void 0;
 const package_installation_1 = require("../util/package-installation");
 const run_command_1 = require("../util/run-command");
 function allInstalledDatabases(baseDirectory, dirSearcher) {
@@ -28,26 +28,19 @@ function allInstalledDatabases(baseDirectory, dirSearcher) {
     });
 }
 exports.allInstalledDatabases = allInstalledDatabases;
-function installDatabases(databasesOrPackageNames) {
+function installDatabases(databasesOrPackageNames, tool) {
     return __awaiter(this, void 0, void 0, function* () {
-        const packages = databasesOrPackageNames.map(databasePackageNameFor);
-        const cmd = package_installation_1.makePackageInstallCommand(packages.join(' '));
+        const packages = databasesOrPackageNames.map(package_installation_1.makeDatabasePackageNameFor);
+        const cmd = package_installation_1.makePackageInstallCommand(packages.join(' '), tool);
         return yield run_command_1.runCommand(cmd);
     });
 }
 exports.installDatabases = installDatabases;
-function uninstallDatabases(databasesOrPackageNames) {
+function uninstallDatabases(databasesOrPackageNames, tool) {
     return __awaiter(this, void 0, void 0, function* () {
-        const packages = databasesOrPackageNames.map(databasePackageNameFor);
-        const cmd = package_installation_1.makePackageUninstallCommand(packages.join(' '));
+        const packages = databasesOrPackageNames.map(package_installation_1.makeDatabasePackageNameFor);
+        const cmd = package_installation_1.makePackageUninstallCommand(packages.join(' '), tool);
         return yield run_command_1.runCommand(cmd);
     });
 }
 exports.uninstallDatabases = uninstallDatabases;
-function databasePackageNameFor(databaseOrPackageName) {
-    const prefix = 'database-js-';
-    return databaseOrPackageName.startsWith(prefix)
-        ? databaseOrPackageName
-        : prefix + databaseOrPackageName;
-}
-exports.databasePackageNameFor = databasePackageNameFor;

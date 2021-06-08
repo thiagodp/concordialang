@@ -11,7 +11,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.TestCaseGeneratorFacade = void 0;
 const enumUtil = require("enum-util");
-const CombinationOptions_1 = require("../app/CombinationOptions");
+const combination_options_1 = require("../app/combination-options");
 const default_options_1 = require("../app/default-options");
 const ast_1 = require("../ast");
 const RuntimeException_1 = require("../error/RuntimeException");
@@ -37,13 +37,13 @@ function toCaseType(caseUi) {
     return CaseType_1.CaseType.CAMEL;
 }
 function toVariantSelectionOptions(combVariant) {
-    if (enumUtil.isValue(CombinationOptions_1.VariantSelectionOptions, combVariant)) {
+    if (enumUtil.isValue(combination_options_1.VariantSelectionOptions, combVariant)) {
         return combVariant;
     }
-    if (enumUtil.isValue(CombinationOptions_1.VariantSelectionOptions, default_options_1.DEFAULT_VARIANT_SELECTION)) {
+    if (enumUtil.isValue(combination_options_1.VariantSelectionOptions, default_options_1.DEFAULT_VARIANT_SELECTION)) {
         return default_options_1.DEFAULT_VARIANT_SELECTION;
     }
-    return CombinationOptions_1.VariantSelectionOptions.SINGLE_RANDOM;
+    return combination_options_1.VariantSelectionOptions.SINGLE_RANDOM;
 }
 function typedStateCombination(combState) {
     return typedCombinationFor(combState, default_options_1.DEFAULT_STATE_COMBINATION);
@@ -52,13 +52,13 @@ function typedDataCombination(combData) {
     return typedCombinationFor(combData, default_options_1.DEFAULT_DATA_TEST_CASE_COMBINATION);
 }
 function typedCombinationFor(value, defaultValue) {
-    if (enumUtil.isValue(CombinationOptions_1.CombinationOptions, value)) {
+    if (enumUtil.isValue(combination_options_1.CombinationOptions, value)) {
         return value;
     }
-    if (enumUtil.isValue(CombinationOptions_1.CombinationOptions, defaultValue)) {
+    if (enumUtil.isValue(combination_options_1.CombinationOptions, defaultValue)) {
         return defaultValue;
     }
-    return CombinationOptions_1.CombinationOptions.SHUFFLED_ONE_WISE;
+    return combination_options_1.CombinationOptions.SHUFFLED_ONE_WISE;
 }
 /**
  * Test Case Generator Facade
@@ -216,16 +216,16 @@ class TestCaseGeneratorFacade {
     variantSelectionStrategyFromOptions(options, warnings) {
         const desired = toVariantSelectionOptions(options.combVariant);
         switch (desired) {
-            case CombinationOptions_1.VariantSelectionOptions.SINGLE_RANDOM:
+            case combination_options_1.VariantSelectionOptions.SINGLE_RANDOM:
                 return new VariantSelectionStrategy_1.SingleRandomVariantSelectionStrategy(options.realSeed);
-            case CombinationOptions_1.VariantSelectionOptions.FIRST:
+            case combination_options_1.VariantSelectionOptions.FIRST:
                 return new VariantSelectionStrategy_1.FirstVariantSelectionStrategy();
-            case CombinationOptions_1.VariantSelectionOptions.FIRST_MOST_IMPORTANT:
+            case combination_options_1.VariantSelectionOptions.FIRST_MOST_IMPORTANT:
                 return new VariantSelectionStrategy_1.FirstMostImportantVariantSelectionStrategy(options.importance, [ast_1.ReservedTags.IMPORTANCE]);
-            case CombinationOptions_1.VariantSelectionOptions.ALL:
+            case combination_options_1.VariantSelectionOptions.ALL:
                 return new VariantSelectionStrategy_1.AllVariantsSelectionStrategy();
             default: {
-                const used = CombinationOptions_1.VariantSelectionOptions.SINGLE_RANDOM.toString();
+                const used = combination_options_1.VariantSelectionOptions.SINGLE_RANDOM.toString();
                 const msg = 'Variant selection strategy not supported: ' + desired +
                     '. It will be used "' + used + '" instead.';
                 warnings.push(new Warning_1.Warning(msg));
@@ -238,16 +238,16 @@ class TestCaseGeneratorFacade {
     }
     combinationStrategyFrom(desired, name, options, warnings) {
         switch (desired) {
-            case CombinationOptions_1.CombinationOptions.SHUFFLED_ONE_WISE:
+            case combination_options_1.CombinationOptions.SHUFFLED_ONE_WISE:
                 return new CombinationStrategy_1.ShuffledOneWiseStrategy(options.realSeed);
-            case CombinationOptions_1.CombinationOptions.ONE_WISE:
+            case combination_options_1.CombinationOptions.ONE_WISE:
                 return new CombinationStrategy_1.OneWiseStrategy(options.realSeed);
-            case CombinationOptions_1.CombinationOptions.SINGLE_RANDOM_OF_EACH:
+            case combination_options_1.CombinationOptions.SINGLE_RANDOM_OF_EACH:
                 return new CombinationStrategy_1.SingleRandomOfEachStrategy(options.realSeed);
-            case CombinationOptions_1.CombinationOptions.ALL:
+            case combination_options_1.CombinationOptions.ALL:
                 return new CombinationStrategy_1.CartesianProductStrategy();
             default: {
-                const used = CombinationOptions_1.CombinationOptions.SHUFFLED_ONE_WISE.toString();
+                const used = combination_options_1.CombinationOptions.SHUFFLED_ONE_WISE.toString();
                 const msg = name + ' combination strategy not supported: ' + desired +
                     '. It will be used "' + used + '" instead.';
                 warnings.push(new Warning_1.Warning(msg));
@@ -257,10 +257,10 @@ class TestCaseGeneratorFacade {
     }
     testPlanMakersFromOptions(options, warnings) {
         // INVALID DATA TEST CASES AT A TIME
-        const none = CombinationOptions_1.InvalidSpecialOptions.NONE.toString();
-        const all = CombinationOptions_1.InvalidSpecialOptions.ALL.toString();
-        const random = CombinationOptions_1.InvalidSpecialOptions.RANDOM.toString();
-        const default_ = CombinationOptions_1.InvalidSpecialOptions.DEFAULT.toString();
+        const none = combination_options_1.InvalidSpecialOptions.NONE.toString();
+        const all = combination_options_1.InvalidSpecialOptions.ALL.toString();
+        const random = combination_options_1.InvalidSpecialOptions.RANDOM.toString();
+        const default_ = combination_options_1.InvalidSpecialOptions.DEFAULT.toString();
         let mixStrategy;
         const desired = String(options.combInvalid);
         switch (desired) {
@@ -288,7 +288,7 @@ class TestCaseGeneratorFacade {
         }
         // DATA TEST CASE COMBINATION
         const dataCombinationOption = desired === random
-            ? CombinationOptions_1.CombinationOptions.SHUFFLED_ONE_WISE
+            ? combination_options_1.CombinationOptions.SHUFFLED_ONE_WISE
             : typedDataCombination(options.combData);
         // console.log( 'options.invalid', options.invalid, 'desired', desired, 'dataCombinationOption', dataCombinationOption );
         let combinationStrategy = this.combinationStrategyFrom(dataCombinationOption, 'Data', options, warnings);

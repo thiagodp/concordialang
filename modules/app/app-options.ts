@@ -34,6 +34,10 @@ export interface AppOptions {
     /** Output directory of test script results */
     dirResult?: string;
 
+    // TOOL
+    /** Package manager to use */
+    packageManager?: string;
+
     // FILES
 
     /** Files to ignore, from the given directory */

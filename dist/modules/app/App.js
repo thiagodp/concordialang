@@ -18,7 +18,7 @@ const JSONTestReporter_1 = require("../report/JSONTestReporter");
 const AbstractTestScriptGenerator_1 = require("../testscript/AbstractTestScriptGenerator");
 const TestResultAnalyzer_1 = require("../testscript/TestResultAnalyzer");
 const fs_1 = require("../util/fs");
-const AppOptions_1 = require("./AppOptions");
+const app_options_1 = require("./app-options");
 /**
  * Application facade
  *
@@ -30,7 +30,7 @@ class App {
         this._path = _path;
         this._promisify = _promisify;
     }
-    start(options, ui) {
+    start(options, listener) {
         var _a, _b, _c, _d, _e, _f;
         return __awaiter(this, void 0, void 0, function* () {
             const fs = this._fs;
@@ -39,25 +39,25 @@ class App {
             const fileHandler = new fs_1.FSFileHandler(fs, promisify, options.encoding);
             // Load plug-in
             let plugin = null;
-            if (AppOptions_1.hasSomeOptionThatRequiresAPlugin(options) && options.plugin) {
+            if (app_options_1.hasSomeOptionThatRequiresAPlugin(options) && options.plugin) {
                 const dirSearcher = new fs_1.FSDirSearcher(fs, promisify);
-                const pluginManager = new PluginManager_1.PluginManager(ui, new PackageBasedPluginFinder_1.PackageBasedPluginFinder(options.processPath, fileHandler, dirSearcher), fileHandler);
+                const pluginManager = new PluginManager_1.PluginManager(options.packageManager, listener, new PackageBasedPluginFinder_1.PackageBasedPluginFinder(options.processPath, fileHandler, dirSearcher), fileHandler);
                 let pluginData = null;
                 try {
                     pluginData = yield pluginManager.pluginWithName(options.plugin);
                     if (!pluginData) {
-                        ui.announcePluginNotFound(options.plugin);
+                        listener.announcePluginNotFound(options.plugin);
                         return { success: false };
                         ;
                     }
                     plugin = yield pluginManager.load(pluginData);
                 }
                 catch (err) {
-                    ui.showException(err);
+                    listener.showException(err);
                     return { success: false };
                 }
                 if (!plugin) { // needed?
-                    ui.announcePluginCouldNotBeLoaded(options.plugin);
+                    listener.announcePluginCouldNotBeLoaded(options.plugin);
                     return { success: false };
                     ;
                 }
@@ -65,22 +65,22 @@ class App {
             }
             if (!plugin &&
                 (options.script || options.run || options.result)) {
-                ui.announceNoPluginWasDefined();
+                listener.announceNoPluginWasDefined();
                 return { success: false };
                 ;
             }
             // Compile
             let hasErrors = false;
             let spec = null;
-            ui.announceOptions(options);
+            listener.announceOptions(options);
             if (options.spec) {
-                const compiler = new CompilerFacade_1.CompilerFacade(fs, path, promisify, ui, ui);
+                const compiler = new CompilerFacade_1.CompilerFacade(fs, path, promisify, listener, listener);
                 try {
                     [spec,] = yield compiler.compile(options);
                 }
                 catch (err) {
                     hasErrors = true;
-                    ui.showException(err);
+                    listener.showException(err);
                 }
                 if (null === spec && options.file.length > 0) {
                     return { success: !hasErrors };
@@ -118,11 +118,11 @@ class App {
                     }
                     catch (err) {
                         hasErrors = true;
-                        ui.showException(err);
+                        listener.showException(err);
                     }
                     const durationMS = Date.now() - startTime;
-                    ui.showGeneratedTestScriptFiles(options.dirScript, generatedTestScriptFiles, durationMS);
-                    ui.showTestScriptGenerationErrors(errors);
+                    listener.showGeneratedTestScriptFiles(options.dirScript, generatedTestScriptFiles, durationMS);
+                    listener.showTestScriptGenerationErrors(errors);
                 }
             }
             let executionResult = null;
@@ -147,15 +147,15 @@ class App {
                     headless: options.headless || undefined,
                     instances: options.instances || undefined,
                 };
-                ui.announceTestScriptExecutionStarted();
+                listener.announceTestScriptExecutionStarted();
                 try {
                     executionResult = yield plugin.executeCode(tseo);
                 }
                 catch (err) {
                     hasErrors = true;
-                    ui.announceTestScriptExecutionError(err);
+                    listener.announceTestScriptExecutionError(err);
                 }
-                ui.announceTestScriptExecutionFinished();
+                listener.announceTestScriptExecutionFinished();
             }
             if (!hasErrors && (((_c = executionResult === null || executionResult === void 0 ? void 0 : executionResult.total) === null || _c === void 0 ? void 0 : _c.failed) > 0 || ((_d = executionResult === null || executionResult === void 0 ? void 0 : executionResult.total) === null || _d === void 0 ? void 0 : _d.error) > 0)) {
                 hasErrors = true;
@@ -165,7 +165,7 @@ class App {
                 if (!executionResult) {
                     const defaultReportFile = path.join(options.dirResult, yield plugin.defaultReportFile());
                     if (!fs.existsSync(defaultReportFile)) {
-                        ui.announceReportFileNotFound(defaultReportFile);
+                        listener.announceReportFileNotFound(defaultReportFile);
                         return { success: false, spec };
                     }
                     reportFile = defaultReportFile;
@@ -174,20 +174,20 @@ class App {
                     reportFile = executionResult.sourceFile;
                 }
                 if (reportFile) {
-                    ui.announceReportFile(reportFile);
+                    listener.announceReportFile(reportFile);
                     try {
                         executionResult = yield plugin.convertReportFile(reportFile);
                     }
                     catch (err) {
                         hasErrors = true;
-                        ui.showException(err);
+                        listener.showException(err);
                     }
                 }
             }
             if (executionResult) {
                 try {
                     const reportedResult = (new TestResultAnalyzer_1.TestResultAnalyzer()).adjustResult(executionResult, abstractTestScripts);
-                    ui.showTestScriptAnalysis(reportedResult);
+                    listener.showTestScriptAnalysis(reportedResult);
                     // TODO: save report to file
                     const reporter = new JSONTestReporter_1.JSONTestReporter(fileHandler, path);
                     yield reporter.report(reportedResult, { directory: options.dirResult, useTimestamp: false });
@@ -198,7 +198,7 @@ class App {
                 }
                 catch (err) {
                     hasErrors = true;
-                    ui.showException(err);
+                    listener.showException(err);
                 }
             }
             return { success: !hasErrors, spec };

@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.PackageToPluginData = void 0;
 /**
- * Converts data from a NPM package file into Concordia Plugin Data.
+ * Converts data from a package file into Concordia Plugin Data.
  *
  * @author Thiago Delgado Pinto
  */

@@ -1,7 +1,7 @@
 import { resolve } from 'path';
 
 import { CliOnlyOptions } from '../cli/CliOnlyOptions';
-import { AppOptions } from './AppOptions';
+import { AppOptions } from './app-options';
 import {
     DEFAULT_CASE_UI,
     DEFAULT_CONFIG,
@@ -66,6 +66,8 @@ export function makeAppOptions(
 		directory,
 		dirScript,
 		dirResult,
+
+		packageManager: 'npm',
 
 		ignore: [],
 		file: [],

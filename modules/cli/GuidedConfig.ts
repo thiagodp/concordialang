@@ -1,13 +1,19 @@
 import * as inquirer from 'inquirer';
+import { packageManagers } from '../util/package-installation';
 
 export type GuidedConfigOptions = {
     directory: string;
     language: string;
     dirScript: string;
     dirResult: string;
+    packageManager: string;
     plugin: string;
     pluginInstall: string;
     databases: string[];
+};
+
+export type PromptOptions = {
+    packageManager?: string;
 };
 
 /**
@@ -15,7 +21,12 @@ export type GuidedConfigOptions = {
  */
 export class GuidedConfig {
 
-    async prompt(): Promise< GuidedConfigOptions > {
+    /**
+     *
+     * @param options Defined options are ignored for prompt and their value is returned.
+     * @returns
+     */
+    async prompt( options?: PromptOptions ): Promise< GuidedConfigOptions > {
 
         const q = new ConcordiaQuestions();
 
@@ -24,12 +35,24 @@ export class GuidedConfig {
             q.language(),
             q.dirScript(),
             q.dirResult(),
-            q.plugin(),
-            q.pluginInstall(),
-            q.databases()
         ];
 
-        return await inquirer.prompt( questions );
+        const hasPackageManager = options && !!options.packageManager;
+        if ( ! hasPackageManager ) {
+            questions.push( q.packageManager() );
+        }
+
+        questions.push( q.plugin() );
+        questions.push( q.pluginInstall() );
+        questions.push( q.databases() );
+
+        const r = await inquirer.prompt( questions );
+
+        if ( hasPackageManager ) {
+            r.packageManager = options.packageManager;
+        }
+
+        return r;
     }
 
 }
@@ -76,16 +99,42 @@ class ConcordiaQuestions {
         };
     }
 
+    packageManager(): object {
+        const choices = packageManagers().map( tool => ({ value: tool, short: tool, name: tool }) );
+        return {
+            type: 'list',
+            name: 'packageManager',
+            message: 'Which package manager do you want to use?',
+            choices: choices
+        };
+    }
+
     plugin(): object {
         return {
             type: 'list',
             name: 'plugin',
             message: 'Which plug-in do you want to use?',
             choices: [
-                { value: 'codeceptjs-testcafe', short: 'codeceptjs-testcafe', name: 'CodeceptJS with TestCafé (web applications)' },
-                { value: 'codeceptjs-playwright', short: 'codeceptjs-playwright', name: 'CodeceptJS with Playwright (web applications)' },
-                { value: 'codeceptjs-webdriverio', short: 'codeceptjs-webdriverio', name: 'CodeceptJS with WebDriverIO (web applications)' },
-                { value: 'codeceptjs-appium', short: 'codeceptjs-appium', name: 'CodeceptJS with Appium (mobile or desktop applications)' }
+                {
+                    value: 'codeceptjs-testcafe',
+                    short: 'codeceptjs-testcafe',
+                    name: 'CodeceptJS with TestCafé (web applications)'
+                },
+                {
+                    value: 'codeceptjs-playwright',
+                    short: 'codeceptjs-playwright',
+                    name: 'CodeceptJS with Playwright (web applications)'
+                },
+                {
+                    value: 'codeceptjs-webdriverio',
+                    short: 'codeceptjs-webdriverio',
+                    name: 'CodeceptJS with WebDriverIO (web applications)'
+                },
+                {
+                    value: 'codeceptjs-appium',
+                    short: 'codeceptjs-appium',
+                    name: 'CodeceptJS with Appium (mobile or desktop applications)'
+                }
             ]
         };
     }
@@ -101,16 +150,16 @@ class ConcordiaQuestions {
     databases(): object {
 
         const choices = [
-            { value: 'database-js-csv', name: 'CSV files' },
-            { value: 'database-js-xlsx', name: 'Excel files' },
-            { value: 'database-js-firebase', name: 'Firebase databases' },
-            { value: 'database-js-ini', name: 'Ini files' },
-            { value: 'database-js-json', name: 'JSON files' },
-            { value: 'database-js-mysql', name: 'MySQL databases' },
-            { value: 'database-js-adodb', name: 'MS Access databases (Windows only)' },
-            { value: 'database-js-mssql', name: 'MS SQL Server databases' },
-            { value: 'database-js-postgres', name: 'PostgreSQL' },
-            { value: 'database-js-sqlite', name: 'SQLite' },
+            { value: 'database-js-csv',         name: 'CSV files' },
+            { value: 'database-js-xlsx',        name: 'Excel files' },
+            { value: 'database-js-firebase',    name: 'Firebase databases' },
+            { value: 'database-js-ini',         name: 'Ini files' },
+            { value: 'database-js-json',        name: 'JSON files' },
+            { value: 'database-js-mysql',       name: 'MySQL databases' },
+            { value: 'database-js-adodb',       name: 'MS Access databases (Windows only)' },
+            { value: 'database-js-mssql',       name: 'MS SQL Server databases' },
+            { value: 'database-js-postgres',    name: 'PostgreSQL' },
+            { value: 'database-js-sqlite',      name: 'SQLite' },
         ];
 
         return {

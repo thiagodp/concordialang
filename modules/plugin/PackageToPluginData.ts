@@ -1,7 +1,7 @@
 import { PluginData } from "./PluginData";
 
 /**
- * Converts data from a NPM package file into Concordia Plugin Data.
+ * Converts data from a package file into Concordia Plugin Data.
  *
  * @author Thiago Delgado Pinto
  */

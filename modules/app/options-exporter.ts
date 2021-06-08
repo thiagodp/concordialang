@@ -1,6 +1,6 @@
 import { relative } from 'path';
 
-import { AppOptions } from './AppOptions';
+import { AppOptions } from './app-options';
 import { CliOnlyOptions } from '../cli/CliOnlyOptions';
 
 /**

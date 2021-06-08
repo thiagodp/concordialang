@@ -1,8 +1,8 @@
 import * as enumUtil from 'enum-util';
 import Graph = require('graph.js/dist/graph.full.js');
 
-import { AppOptions } from '../app/AppOptions';
-import { CombinationOptions, InvalidSpecialOptions, VariantSelectionOptions } from '../app/CombinationOptions';
+import { AppOptions } from '../app/app-options';
+import { CombinationOptions, InvalidSpecialOptions, VariantSelectionOptions } from '../app/combination-options';
 import {
     DEFAULT_CASE_UI,
     DEFAULT_DATA_TEST_CASE_COMBINATION,

@@ -1,4 +1,4 @@
-import { AppOptions } from '../app/AppOptions';
+import { AppOptions } from '../app/app-options';
 import { CliOnlyOptions } from '../cli/CliOnlyOptions';
 import { PluginListener } from './PluginListener';
 import { PluginManager } from './PluginManager';

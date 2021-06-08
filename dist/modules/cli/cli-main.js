@@ -19,10 +19,10 @@ const readPkgUp = require("read-pkg-up");
 const semverDiff = require("semver-diff");
 const updateNotifier = require("update-notifier");
 const util_1 = require("util");
-const App_1 = require("../app/App");
+const app_1 = require("../app/app");
+const options_exporter_1 = require("../app/options-exporter");
 const options_importer_1 = require("../app/options-importer");
 const options_maker_1 = require("../app/options-maker");
-const options_exporter_1 = require("../app/options-exporter");
 const database_package_manager_1 = require("../db/database-package-manager");
 const LanguageManager_1 = require("../language/LanguageManager");
 const locale_manager_1 = require("../language/locale-manager");
@@ -35,8 +35,7 @@ const args_1 = require("./args");
 const cli_help_1 = require("./cli-help");
 const CliOnlyOptions_1 = require("./CliOnlyOptions");
 const GuidedConfig_1 = require("./GuidedConfig");
-const SimpleUI_1 = require("./SimpleUI");
-const VerboseUI_1 = require("./VerboseUI");
+const cli_ui_1 = require("./cli-ui");
 // Prevent caching of this module so module.parent is always accurate
 // delete require.cache[__filename];
 // const parentDir = path.dirname(module.parent.filename);
@@ -87,9 +86,7 @@ function main(appPath, processPath) {
         }
         // console.log( 'OPTIONS:', options );
         // Start UI
-        const ui = options.verbose
-            ? new VerboseUI_1.VerboseUI(options.debug)
-            : new SimpleUI_1.SimpleUI(options.debug);
+        const ui = new cli_ui_1.UI(options.debug, options.verbose);
         // Show help
         if (options.help) {
             ui.showHelp(cli_help_1.helpContent());
@@ -132,72 +129,6 @@ function main(appPath, processPath) {
         if (options.newer) {
             if (!notifier.update) {
                 ui.announceNoUpdateAvailable();
-            }
-            return true;
-        }
-        // DATABASE
-        if (options.dbInstall) {
-            const databases = options.dbInstall.split(',').map(d => d.trim());
-            ui.announceDatabasePackagesInstallationStarted(1 === databases.length);
-            let code = 1;
-            try {
-                code = yield database_package_manager_1.installDatabases(databases);
-            }
-            catch (_b) {
-            }
-            ui.announceDatabasePackagesInstallationFinished(code);
-            return 0 === code;
-        }
-        if (options.dbUninstall) {
-            const databases = options.dbUninstall.split(',').map(d => d.trim());
-            ui.announceDatabasePackagesUninstallationStarted(1 === databases.length);
-            let code = 1;
-            try {
-                code = yield database_package_manager_1.uninstallDatabases(databases);
-            }
-            catch (_c) {
-            }
-            ui.announceDatabasePackagesUninstallationFinished(code);
-            return 0 === code;
-        }
-        if (options.dbList) {
-            let databases = [];
-            try {
-                const nodeModulesDir = path.join(processPath, 'node_modules');
-                databases = yield database_package_manager_1.allInstalledDatabases(nodeModulesDir, new fs_1.FSDirSearcher(fs, util_1.promisify));
-                ui.drawDatabases(databases);
-                return true;
-            }
-            catch (err) {
-                ui.showError(err);
-                return false;
-            }
-        }
-        // LOCALE
-        if (options.localeList) {
-            // For now, only date locales are detected
-            try {
-                const nodeModulesDir = path.join(processPath, 'node_modules');
-                const dateLocales = yield locale_manager_1.installedDateLocales(nodeModulesDir, new fs_1.FSDirSearcher(fs, util_1.promisify), path);
-                ui.drawLocales(dateLocales, 'date', 'Unavailable locales fallback to the their language. Example: "es-AR" fallbacks to "es".');
-                return true;
-            }
-            catch (err) {
-                ui.showError(err);
-                return false;
-            }
-        }
-        // LANGUAGE
-        if (options.languageList) {
-            const fileSearcher = new fs_1.FSFileSearcher(fs);
-            const lm = new LanguageManager_1.LanguageManager(fileSearcher, options.languageDir);
-            try {
-                const languages = yield lm.availableLanguages();
-                ui.drawLanguages(languages);
-            }
-            catch (err) {
-                ui.showException(err);
-                return false;
             }
             return true;
         }
@@ -250,13 +181,24 @@ function main(appPath, processPath) {
         if (errors.length > 0) {
             return false;
         }
+        const fileHandler = new fs_1.FSFileHandler(fs, util_1.promisify, options.encoding);
         // Init option ?
         if (options.init) {
             if (fileOptions) {
                 ui.announceConfigurationFileAlreadyExists();
             }
             else {
-                const guidedOptions = yield (new GuidedConfig_1.GuidedConfig()).prompt();
+                // Detect package managers' lock files
+                const pkgManagers = package_installation_1.packageManagers();
+                const lockFileIndex = pkgManagers
+                    .map(tool => path.join(processPath, package_installation_1.makeLockFileName(tool)))
+                    .findIndex(fileHandler.existsSync);
+                // Ignore the package manager prompt if its lock file was detected
+                let promptOptions;
+                if (lockFileIndex >= 0) {
+                    promptOptions = { packageManager: pkgManagers[lockFileIndex] };
+                }
+                const guidedOptions = yield (new GuidedConfig_1.GuidedConfig()).prompt(promptOptions);
                 const errors = options_importer_1.copyOptions(guidedOptions, options);
                 for (const e of errors) {
                     console.log(e);
@@ -264,11 +206,11 @@ function main(appPath, processPath) {
                 options.saveConfig = true;
                 const packages = guidedOptions.databases || [];
                 if (packages.length > 0) {
-                    ui.announceDatabasePackagesInstallationStarted();
+                    const cmd = package_installation_1.makePackageInstallCommand(package_installation_1.joinDatabasePackageNames(packages), options.packageManager);
+                    ui.announceDatabasePackagesInstallationStarted(1 === packages.length, cmd);
                     let code;
                     for (const pkg of packages) {
-                        ui.announceDatabasePackage(pkg);
-                        const cmd = package_installation_1.makePackageInstallCommand(pkg);
+                        const cmd = package_installation_1.makePackageInstallCommand(pkg, options.packageManager);
                         code = yield run_command_1.runCommand(cmd);
                         if (code !== 0) {
                             break;
@@ -296,12 +238,79 @@ function main(appPath, processPath) {
         if (options.init && !options.pluginInstall) {
             return true;
         }
-        const fileHandler = new fs_1.FSFileHandler(fs, util_1.promisify, options.encoding);
+        // DATABASE
+        if (options.dbInstall) {
+            const databases = options.dbInstall.split(',').map(d => d.trim());
+            const cmd = package_installation_1.makePackageInstallCommand(package_installation_1.joinDatabasePackageNames(databases), options.packageManager);
+            ui.announceDatabasePackagesInstallationStarted(1 === databases.length, cmd);
+            let code = 1;
+            try {
+                code = yield run_command_1.runCommand(cmd);
+            }
+            catch (_b) {
+            }
+            ui.announceDatabasePackagesInstallationFinished(code);
+            return 0 === code;
+        }
+        if (options.dbUninstall) {
+            const databases = options.dbUninstall.split(',').map(d => d.trim());
+            const cmd = package_installation_1.makePackageUninstallCommand(package_installation_1.joinDatabasePackageNames(databases), options.packageManager);
+            ui.announceDatabasePackagesUninstallationStarted(1 === databases.length, cmd);
+            let code = 1;
+            try {
+                code = yield run_command_1.runCommand(cmd);
+            }
+            catch (_c) {
+            }
+            ui.announceDatabasePackagesUninstallationFinished(code);
+            return 0 === code;
+        }
+        if (options.dbList) {
+            let databases = [];
+            try {
+                const nodeModulesDir = path.join(processPath, 'node_modules');
+                databases = yield database_package_manager_1.allInstalledDatabases(nodeModulesDir, new fs_1.FSDirSearcher(fs, util_1.promisify));
+                ui.drawDatabases(databases);
+                return true;
+            }
+            catch (err) {
+                ui.showError(err);
+                return false;
+            }
+        }
+        // LOCALE
+        if (options.localeList) {
+            // For now, only date locales are detected
+            try {
+                const nodeModulesDir = path.join(processPath, 'node_modules');
+                const dateLocales = yield locale_manager_1.installedDateLocales(nodeModulesDir, new fs_1.FSDirSearcher(fs, util_1.promisify), path);
+                ui.drawLocales(dateLocales, 'date', 'Unavailable locales fallback to the their language. Example: "es-AR" fallbacks to "es".');
+                return true;
+            }
+            catch (err) {
+                ui.showError(err);
+                return false;
+            }
+        }
+        // LANGUAGE
+        if (options.languageList) {
+            const fileSearcher = new fs_1.FSFileSearcher(fs);
+            const lm = new LanguageManager_1.LanguageManager(fileSearcher, options.languageDir);
+            try {
+                const languages = yield lm.availableLanguages();
+                ui.drawLanguages(languages);
+            }
+            catch (err) {
+                ui.showException(err);
+                return false;
+            }
+            return true;
+        }
         // PLUGIN
         if (CliOnlyOptions_1.hasSomePluginAction(options)) {
             const dirSearcher = new fs_1.FSDirSearcher(fs, util_1.promisify);
             const pluginFinder = new plugin_1.PackageBasedPluginFinder(options.processPath, fileHandler, dirSearcher);
-            const pluginManager = new plugin_1.PluginManager(ui, pluginFinder, fileHandler);
+            const pluginManager = new plugin_1.PluginManager(options.packageManager, ui, pluginFinder, fileHandler);
             const pluginController = new plugin_1.PluginController();
             try {
                 yield pluginController.process(options, pluginManager, ui);
@@ -312,7 +321,7 @@ function main(appPath, processPath) {
             }
             return true;
         }
-        const app = new App_1.App(fs, path, util_1.promisify);
+        const app = new app_1.App(fs, path, util_1.promisify);
         const { spec, success } = yield app.start(options, ui);
         // AST
         if (spec && options.ast) {

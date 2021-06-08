@@ -58,7 +58,13 @@ class FSFileHandler {
     }
     /** @inheritDoc */
     existsSync(filePath) {
-        return this._fs.existsSync(filePath);
+        try {
+            this._fs.accessSync(filePath, this._fs.constants.R_OK);
+            return true;
+        }
+        catch (_a) {
+            return false;
+        }
     }
     /** @inheritDoc */
     write(filePath, content) {

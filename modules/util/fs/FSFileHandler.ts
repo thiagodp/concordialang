@@ -52,7 +52,12 @@ export class FSFileHandler implements FileHandler {
 
     /** @inheritDoc */
     existsSync( filePath: string ): boolean {
-        return this._fs.existsSync( filePath );
+        try {
+            this._fs.accessSync( filePath, this._fs.constants.R_OK );
+            return true;
+        } catch {
+            return false;
+        }
     }
 
     /** @inheritDoc */

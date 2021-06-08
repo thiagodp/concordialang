@@ -12,6 +12,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.PluginManager = void 0;
 const inquirer = require("inquirer");
 const path_1 = require("path");
+const package_installation_1 = require("../util/package-installation");
 const run_command_1 = require("../util/run-command");
 const PluginData_1 = require("./PluginData");
 /**
@@ -20,7 +21,8 @@ const PluginData_1 = require("./PluginData");
  * @author Thiago Delgado Pinto
  */
 class PluginManager {
-    constructor(_pluginListener, _finder, _fileReader) {
+    constructor(_packageManager, _pluginListener, _finder, _fileReader) {
+        this._packageManager = _packageManager;
         this._pluginListener = _pluginListener;
         this._finder = _finder;
         this._fileReader = _fileReader;
@@ -80,10 +82,9 @@ class PluginManager {
             }
             else { // plug-in does not exist
                 // Check if package.json exists
-                const PACKAGE_FILE = 'package.json';
-                const PACKAGE_CREATION_CMD = 'npm init --yes';
                 let mustGeneratePackageFile = false;
                 try {
+                    const PACKAGE_FILE = 'package.json';
                     const path = path_1.join(process.cwd(), PACKAGE_FILE);
                     const content = yield this._fileReader.read(path);
                     if (!content) { // No package.json
@@ -96,22 +97,20 @@ class PluginManager {
                 }
                 // Create package.json if it does not exist
                 if (mustGeneratePackageFile) {
-                    yield this.runCommand(PACKAGE_CREATION_CMD, false);
+                    const PACKAGE_CREATION_CMD = package_installation_1.makePackageInitCommand(this._packageManager); // 'npm init --yes';
+                    yield this.runCommand(PACKAGE_CREATION_CMD);
                 }
             }
-            // Install the plug-in as a DEVELOPMENT dependency using NPM
-            const PACKAGE_MANAGER = 'NPM';
-            const INSTALL_DEV_CMD = 'npm install --save-dev ' + name + ' --no-fund --no-audit --loglevel error --color=always';
-            this._pluginListener.showMessageTryingToInstall(name, PACKAGE_MANAGER);
-            const code = yield this.runCommand(INSTALL_DEV_CMD, false);
+            // Install the package as a DEVELOPMENT dependency
+            const command = package_installation_1.makePackageInstallCommand(name, this._packageManager);
+            const code = yield this.runCommand(command);
             if (code !== 0) { // unsuccessful
                 return;
             }
-            // Check if the plug-in is installed
+            // Check if it is installed
             pluginData = yield this.pluginWithName(name, false);
             if (!pluginData) {
                 this._pluginListener.showMessageCouldNoFindInstalledPlugin(name);
-                return;
             }
         });
     }
@@ -125,10 +124,9 @@ class PluginManager {
                 this._pluginListener.showMessagePluginNotFound(name);
                 return;
             }
-            // Remove with a package manager
-            const command = 'npm uninstall --save-dev ' + name + ' --color=always';
-            this._pluginListener.showMessageTryingToUninstall(name, 'NPM');
-            yield this.runCommand(command, true);
+            // Uninstall the package
+            const command = package_installation_1.makePackageUninstallCommand(name, this._packageManager);
+            yield this.runCommand(command);
         });
     }
     serve(pluginData) {
@@ -137,7 +135,7 @@ class PluginManager {
                 throw new Error('No "serve" property found in the plugin file. Can\'t serve.');
             }
             this._pluginListener.showPluginServeStart(pluginData.name);
-            yield this.runCommand(pluginData.serve, true);
+            yield this.runCommand(pluginData.serve);
         });
     }
     /**
@@ -156,11 +154,11 @@ class PluginManager {
         });
     }
     // -------------------------------------------------------------------------
-    runCommand(command, showIfSuccess) {
+    runCommand(command) {
         return __awaiter(this, void 0, void 0, function* () {
             this._pluginListener.showCommandStarted(command);
             const code = yield run_command_1.runCommand(command);
-            this._pluginListener.showCommandFinished(code, showIfSuccess);
+            this._pluginListener.showCommandFinished(code);
             return code;
         });
     }

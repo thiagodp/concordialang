@@ -4,7 +4,7 @@ exports.copyOptions = void 0;
 const enumUtil = require("enum-util");
 const path_1 = require("path");
 const TypeChecking_1 = require("../util/TypeChecking");
-const CombinationOptions_1 = require("./CombinationOptions");
+const combination_options_1 = require("./combination-options");
 /**
  * Copy options
  *
@@ -302,7 +302,7 @@ function copyOptions(from, to) {
     // }
     // TEST SCENARIO SELECTION AND COMBINATION STRATEGIES
     if (TypeChecking_1.isString(from.combVariant)) {
-        if (enumUtil.isValue(CombinationOptions_1.VariantSelectionOptions, from.combVariant)) {
+        if (enumUtil.isValue(combination_options_1.VariantSelectionOptions, from.combVariant)) {
             to.combVariant = from.combVariant;
         }
         else {
@@ -310,7 +310,7 @@ function copyOptions(from, to) {
         }
     }
     if (TypeChecking_1.isString(from.combState)) {
-        if (enumUtil.isValue(CombinationOptions_1.CombinationOptions, from.combState)) {
+        if (enumUtil.isValue(combination_options_1.CombinationOptions, from.combState)) {
             to.combState = from.combState;
         }
         else {
@@ -328,7 +328,7 @@ function copyOptions(from, to) {
         }
     }
     else if (TypeChecking_1.isString(from.combInvalid)) {
-        if (enumUtil.isValue(CombinationOptions_1.InvalidSpecialOptions, from.combInvalid)) {
+        if (enumUtil.isValue(combination_options_1.InvalidSpecialOptions, from.combInvalid)) {
             to.combInvalid = from.combInvalid;
         }
         else {
@@ -336,7 +336,7 @@ function copyOptions(from, to) {
         }
     }
     if (TypeChecking_1.isString(from.combData)) {
-        if (enumUtil.isValue(CombinationOptions_1.CombinationOptions, from.combData)) {
+        if (enumUtil.isValue(combination_options_1.CombinationOptions, from.combData)) {
             to.combData = from.combData;
         }
         else {

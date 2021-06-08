@@ -3,8 +3,8 @@ import { isAbsolute, resolve } from 'path';
 
 import { CliOnlyOptions } from '../cli/CliOnlyOptions';
 import { isNumber, isString } from '../util/TypeChecking';
-import { AppOptions } from './AppOptions';
-import { CombinationOptions, VariantSelectionOptions, InvalidSpecialOptions } from './CombinationOptions';
+import { AppOptions } from './app-options';
+import { CombinationOptions, VariantSelectionOptions, InvalidSpecialOptions } from './combination-options';
 
 /**
  * Copy options

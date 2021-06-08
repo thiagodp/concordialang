@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.availableEncodings = exports.DEFAULT_DATA_TEST_CASE_COMBINATION = exports.DEFAULT_INVALID_DATA_TEST_CASES_AT_A_TIME = exports.DEFAULT_STATE_COMBINATION = exports.DEFAULT_VARIANT_SELECTION = exports.DEFAULT_IMPORTANCE = exports.DEFAULT_RANDOM_TRIES_TO_INVALID_VALUE = exports.DEFAULT_RANDOM_MAX_STRING_SIZE = exports.DEFAULT_RANDOM_MIN_STRING_SIZE = exports.DEFAULT_TC_INDENTER = exports.DEFAULT_CASE_METHOD = exports.DEFAULT_CASE_UI = exports.DEFAULT_LINE_BREAKER = exports.DEFAULT_ENCODING = exports.DEFAULT_LANGUAGE = exports.DEFAULT_EXTENSION_TEST_CASE = exports.DEFAULT_EXTENSION_FEATURE = exports.DEFAULT_AST_FILE = exports.DEFAULT_CONFIG = exports.DEFAULT_DIR_RESULT = exports.DEFAULT_DIR_SCRIPT = exports.DEFAULT_DIRECTORY = exports.DEFAULT_DIR_LANGUAGE = void 0;
 const CaseType_1 = require("../util/CaseType");
-const CombinationOptions_1 = require("./CombinationOptions");
+const combination_options_1 = require("./combination-options");
 // INTERNAL DIRECTORIES
 exports.DEFAULT_DIR_LANGUAGE = 'data/';
 // DIRECTORIES
@@ -28,9 +28,9 @@ exports.DEFAULT_RANDOM_TRIES_TO_INVALID_VALUE = 5; // How many tries it will mak
 exports.DEFAULT_IMPORTANCE = 5; // 0..9
 // TEST SCENARIO SELECTION AND COMBINATION STRATEGIES
 /** @see VariantSelectionOptions */
-exports.DEFAULT_VARIANT_SELECTION = CombinationOptions_1.VariantSelectionOptions.SINGLE_RANDOM.toString();
+exports.DEFAULT_VARIANT_SELECTION = combination_options_1.VariantSelectionOptions.SINGLE_RANDOM.toString();
 /** @see StateCombinationOptions */
-exports.DEFAULT_STATE_COMBINATION = CombinationOptions_1.CombinationOptions.SINGLE_RANDOM_OF_EACH.toString();
+exports.DEFAULT_STATE_COMBINATION = combination_options_1.CombinationOptions.SINGLE_RANDOM_OF_EACH.toString();
 // SELECTION AND COMBINATION STRATEGIES FOR DATA TEST CASES
 /**
  * How many UI Elements will receive invalid values at a time.
@@ -46,9 +46,9 @@ exports.DEFAULT_STATE_COMBINATION = CombinationOptions_1.CombinationOptions.SING
  *
  * @see InvalidSpecialOptions
  */
-exports.DEFAULT_INVALID_DATA_TEST_CASES_AT_A_TIME = CombinationOptions_1.InvalidSpecialOptions.DEFAULT;
+exports.DEFAULT_INVALID_DATA_TEST_CASES_AT_A_TIME = combination_options_1.InvalidSpecialOptions.DEFAULT;
 /** @see DataTestCaseCombinationOptions */
-exports.DEFAULT_DATA_TEST_CASE_COMBINATION = CombinationOptions_1.CombinationOptions.SHUFFLED_ONE_WISE.toString();
+exports.DEFAULT_DATA_TEST_CASE_COMBINATION = combination_options_1.CombinationOptions.SHUFFLED_ONE_WISE.toString();
 /**
  * Returns available encodings.
  *

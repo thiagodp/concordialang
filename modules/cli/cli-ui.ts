@@ -2,14 +2,14 @@ import * as colors from 'chalk';
 import { TestScriptExecutionResult } from 'concordialang-types';
 import * as figures from 'figures';
 import * as logSymbols from 'log-symbols';
-import { basename, relative } from 'path';
+import { AppListener } from 'modules/app/app-listener';
+import { basename, dirname, relative } from 'path';
 import * as readline from 'readline';
 import { sprintf } from 'sprintf-js';
 import * as terminalLink from 'terminal-link';
 
-import { AppOptions } from '../app/AppOptions';
+import { AppOptions } from '../app/app-options';
 import { DEFAULT_LANGUAGE } from '../app/default-options';
-import { UI } from '../app/UI';
 import { sortErrorsByLocation } from '../error/ErrorSorting';
 import { LocatedException } from '../error/LocatedException';
 import { ProblemMapper } from '../error/ProblemMapper';
@@ -23,7 +23,7 @@ export const pluralS = ( count: number, singular: string, plural?: string ) => {
 };
 
 
-export class SimpleUI implements UI {
+export class UI implements AppListener {
 
     // Ora has a bug that swallows lines before stop that spinner and that's why it was removed.
     // @see https://github.com/sindresorhus/ora/issues/90
@@ -32,7 +32,8 @@ export class SimpleUI implements UI {
     // protected _spinner = ora();
 
     constructor(
-        protected _debugMode: boolean = false
+        protected _debugMode: boolean = false,
+        protected _verboseMode: boolean = false,
         ) {
     }
 
@@ -193,11 +194,56 @@ export class SimpleUI implements UI {
         this.writeln( version );
     }
 
+    // ------------------------------------------------------------------------
+
     /** @inheritdoc */
     announceOptions( options: AppOptions ): void {
+
         // Language
         if ( DEFAULT_LANGUAGE !== options.language ) {
             this.info( 'Default language is', this.highlight( options.language ) );
+        }
+
+        // VERBOSE MODE
+
+        if ( ! this._verboseMode ) {
+            return;
+        }
+
+        const disabledStr = this.highlight( 'disabled' );
+
+        // Recursive
+        if ( ! options.recursive ) {
+            this.info( 'Directory recursion', disabledStr );
+        }
+
+        if ( ! options.spec ) {
+            this.info( 'Specification compilation', disabledStr );
+        } else {
+            if ( ! options.testCase ) {
+                this.info( 'Test Case generation', disabledStr );
+            }
+        }
+
+        if ( ! options.script ) {
+            this.info( 'Test script generation disabled', disabledStr );
+        }
+
+        if ( ! options.run ) {
+            this.info( 'Test script execution', disabledStr );
+        }
+
+        if ( ! options.result ) {
+            this.info( 'Test script results\' analysis', disabledStr );
+        }
+
+        if ( ! options.spec
+            && ! options.testCase
+            && ! options.script
+            && ! options.run
+            && ! options.result
+        ) {
+            this.warn( 'Well, you have disabled all the interesting behavior. :)' );
         }
     }
 
@@ -264,43 +310,43 @@ export class SimpleUI implements UI {
         );
     }
 
-    // Database
+    //
+    // DATABASE
+    //
 
     /** @inheritdoc */
-    announceDatabasePackagesInstallationStarted( singular: boolean = false ): void {
+    announceDatabasePackagesInstallationStarted( singular: boolean, command: string ): void {
         this.info( this.colorCyanBright(
 			'Installing database driver' + ( singular ? '' : 's' ) + '...'
 		) );
         this.drawSeparationLine();
+        this.info( this.highlight( command ) );
 	}
-
-    announceDatabasePackagesUninstallationStarted( singular: boolean = false ): void {
-        this.info( this.colorCyanBright(
-			'Uninstalling database driver' + ( singular ? '' : 's' ) + '...'
-		) );
-        this.drawSeparationLine();
-    }
-
-    /** @inheritdoc */
-    announceDatabasePackage( packageName: string ): void {
-        this.write( ' ', this.highlight( packageName ), "\n" );
-    }
 
     /** @inheritdoc */
     announceDatabasePackagesInstallationFinished( code: number ): void {
         this.drawSeparationLine();
         if ( 0 == code ) {
-            this.info( this.colorCyanBright( 'Installation successful.' ) );
+            this.success( this.colorCyanBright( 'Installation successful.' ) );
         } else {
             this.warn( this.colorCyanBright( 'A problem occurred during installation.' ) );
         }
 	}
 
     /** @inheritdoc */
+    announceDatabasePackagesUninstallationStarted( singular: boolean, command: string ): void {
+        this.info( this.colorCyanBright(
+			'Uninstalling database driver' + ( singular ? '' : 's' ) + '...'
+		) );
+        this.drawSeparationLine();
+        this.info( this.highlight( command ) );
+    }
+
+    /** @inheritdoc */
     announceDatabasePackagesUninstallationFinished( code: number ): void {
         this.drawSeparationLine();
         if ( 0 == code ) {
-            this.info( this.colorCyanBright( 'Uninstallation successful.' ) );
+            this.success( this.colorCyanBright( 'Uninstallation successful.' ) );
         } else {
             this.warn( this.colorCyanBright( 'A problem occurred during uninstallation.' ) );
         }
@@ -351,6 +397,24 @@ export class SimpleUI implements UI {
             'test script ' + fileStr, 'generated',
             this.formatDuration( durationMS )
             );
+
+
+        // VERBOSE MODE
+
+        if ( ! this._verboseMode ) {
+            return;
+        }
+
+        // When the terminal does not support links
+        const fallback = ( text: string, url: string ): string => {
+            return text;
+        };
+
+        for ( const file of files ) {
+            const relPath = relative( dirname( scriptDir ), file );
+            const link = terminalLink( relPath, file, { fallback: fallback } ); // clickable URL
+            this.success( 'Generated script', this.highlight( link ) );
+        }
     }
 
     /** @inheritdoc */
@@ -426,13 +490,27 @@ export class SimpleUI implements UI {
     /** @inheritDoc */
     announceCouldNotLoadConfigurationFile( errorMessage: string ): void {
         // empty
+
+        // VERBOSE MODE
+
+        if ( ! this._verboseMode ) {
+            return;
+        }
+
+        const msg = 'Could not load the configuration file';
+        if ( this._debugMode ) {
+            this.warn( msg + ':', errorMessage );
+            return;
+        }
+        this.warn( msg );
     }
 
     /** @inheritDoc */
     announceConfigurationFileLoaded( filePath: string, durationMS: number ): void {
         this.info(
             'Configuration file loaded:',
-            this.highlight( this._debugMode ? filePath : basename( filePath ) )
+            this.highlight( this._debugMode ? filePath : basename( filePath ) ),
+            this._verboseMode ? this.formatDuration( durationMS ) : ''
         );
     }
 
@@ -457,12 +535,20 @@ export class SimpleUI implements UI {
 
     /** @inheritDoc */
     fileStarted( path: string ): void {
-        // nothing
+        // empty
+
+        // VERBOSE MODE
+
+        if ( ! this._verboseMode ) {
+            return;
+        }
+
+        this.info( 'Compiling', this.highlight( path ), '...' );
     }
 
     /** @inheritDoc */
     fileFinished( path: string, durationMS: number ): void {
-        // nothing
+        // empty
     }
 
     //
@@ -472,6 +558,16 @@ export class SimpleUI implements UI {
     /** @inheritDoc */
     testCaseGenerationStarted( strategyWarnings: Warning[] ): void {
         // empty
+
+        // VERBOSE MODE
+
+        if ( ! this._verboseMode ) {
+            return;
+        }
+        if ( strategyWarnings.length > 0 ) {
+            this.info( 'Test case generation started' );
+            this.showErrors( strategyWarnings, true );
+        }
     }
 
     /** @inheritDoc */
@@ -483,23 +579,40 @@ export class SimpleUI implements UI {
         warnings: Warning[]
     ): void {
 
-        const hasErrors = errors && errors.length > 0;
-        const hasWarnings = warnings && warnings.length > 0;
+        const hasErrors = errors.length > 0;
+        const hasWarnings = warnings.length > 0;
+        const successful = ! hasErrors && ! hasWarnings;
 
-        if ( ! hasErrors && ! hasWarnings ) {
-            return;
-		}
+        const color = successful ? this.colorSuccess : this.properColor( hasErrors, hasWarnings );
+        const symbol = successful ? this.symbolSuccess : this.properSymbol( hasErrors, hasWarnings );
 
-        const color = this.properColor( hasErrors, hasWarnings );
-        const symbol = this.properSymbol( hasErrors, hasWarnings );
+        if ( ! this._verboseMode ) {
 
-        this.writeln(
-            color( symbol ),
-            this.highlight( relative( dirTestCases, filePath ) ) + ':'
-            );
+            if ( ! hasErrors && ! hasWarnings ) {
+                return;
+            }
 
+            this.writeln(
+                color( symbol ),
+                this.highlight( relative( dirTestCases, filePath ) ) + ':'
+                );
 
-        this.showErrors( [ ...errors, ...warnings ], true );
+            this.showErrors( [ ...errors, ...warnings ], true );
+
+        } else {
+
+            this.writeln(
+                color( symbol ),
+                'Generated', this.highlight( relative( dirTestCases, filePath ) ),
+                'with', this.highlight( testCasesCount ), pluralS( testCasesCount, 'test case' )
+                );
+
+            if ( ! hasErrors && ! hasWarnings ) {
+                return;
+            }
+
+            this.showErrors( [ ...errors, ...warnings ], true );
+        }
     }
 
     /** @inheritDoc */
@@ -536,7 +649,20 @@ export class SimpleUI implements UI {
 				'No files found',
 				this.formatDuration( durationMS )
 				);
+            return;
 		}
+
+        // VERBOSE MODE
+
+        if ( ! this._verboseMode ) {
+            return;
+        }
+
+        this.info(
+            this.highlight( filesFoundCount ), pluralS( filesFoundCount, 'file' ), 'given,',
+            this.highlight( filesIgnoredCount ), 'test case', pluralS( filesIgnoredCount, 'file' ), 'ignored',
+            this.formatDuration( durationMS )
+            );
     }
 
     /** @inheritDoc */
@@ -695,17 +821,15 @@ export class SimpleUI implements UI {
 
     /** @inheritdoc */
     public showCommandStarted( command: string ): void {
-        this.writeln( '  Running', this.highlight( command ) );
         this.drawSeparationLine();
+        this.writeln( ' ', this.highlight( command ) );
     }
 
     /** @inheritdoc */
-    public showCommandFinished( code: number, showIfSuccess: boolean = true ): void {
+    public showCommandFinished( code: number ): void {
         this.drawSeparationLine();
         if ( 0 === code ) {
-            if ( showIfSuccess ) {
-                this.success( 'Success' );
-            }
+            this.success( 'Success' );
         } else {
             this.error( 'Error during command execution.' );
         }

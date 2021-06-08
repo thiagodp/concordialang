@@ -8,11 +8,11 @@ import * as semverDiff from 'semver-diff';
 import * as updateNotifier from 'update-notifier';
 import { promisify } from 'util';
 
-import { App } from '../app/App';
-import { AppOptions } from '../app/AppOptions';
+import { App } from '../app/app';
+import { AppOptions } from '../app/app-options';
+import { createPersistableCopy } from '../app/options-exporter';
 import { copyOptions } from '../app/options-importer';
 import { makeAllOptions } from '../app/options-maker';
-import { createPersistableCopy } from '../app/options-exporter';
 import { allInstalledDatabases, installDatabases, uninstallDatabases } from '../db/database-package-manager';
 import { LanguageManager } from '../language/LanguageManager';
 import { installedDateLocales } from '../language/locale-manager';
@@ -20,14 +20,13 @@ import { PackageBasedPluginFinder, PluginController, PluginManager } from '../pl
 import { bestMatch } from '../util/best-match';
 import { DirSearcher, FileSearcher } from '../util/file';
 import { FSDirSearcher, FSFileHandler, FSFileSearcher } from '../util/fs';
-import { makePackageInstallCommand } from '../util/package-installation';
+import { joinDatabasePackageNames, makeLockFileName, makePackageInstallCommand, makePackageUninstallCommand, PackageManager, packageManagers } from '../util/package-installation';
 import { runCommand } from '../util/run-command';
 import { parseArgs } from './args';
 import { helpContent } from './cli-help';
 import { CliOnlyOptions, hasSomePluginAction } from './CliOnlyOptions';
-import { GuidedConfig } from './GuidedConfig';
-import { SimpleUI } from './SimpleUI';
-import { VerboseUI } from './VerboseUI';
+import { GuidedConfig, PromptOptions } from './GuidedConfig';
+import { UI } from './cli-ui';
 
 
 // Prevent caching of this module so module.parent is always accurate
@@ -87,9 +86,7 @@ export async function main( appPath: string, processPath: string ): Promise< boo
 	// console.log( 'OPTIONS:', options );
 
     // Start UI
-    const ui = options.verbose
-        ? new VerboseUI( options.debug )
-        : new SimpleUI( options.debug );
+    const ui = new UI( options.debug, options.verbose );
 
     // Show help
     if ( options.help ) {
@@ -145,14 +142,139 @@ export async function main( appPath: string, processPath: string ): Promise< boo
         return true;
     }
 
+	// LOAD CONFIG FILE OPTIONS
+
+    let fileOptions = null;
+    try {
+        const startTime = Date.now();
+        const MODULE_NAME = 'concordia';
+        // @see https://github.com/davidtheclark/cosmiconfig
+        const loadOptions = {
+            stopDir: options.processPath
+        };
+        const explorer = cosmiconfig( MODULE_NAME, loadOptions );
+        const cfg: { config: any, filepath: string } = await explorer.load( options.config );
+		fileOptions = cfg.config;
+
+		// ADAPT KEYS
+
+		// wanted, variation1, variation2, ...
+		const optionsToConvert = [
+			[ 'dirResult', 'dirResults' ],
+			[ 'dirScript', 'dirScripts' ],
+		];
+
+		// Adapt
+		for ( const [ wanted, ...variations ] of optionsToConvert ) {
+			for ( const v of variations ) {
+				if ( fileOptions[ v ] ) {
+					fileOptions[ wanted ] = fileOptions[ v ];
+					delete fileOptions[ v ];
+				}
+			}
+		}
+
+        const durationMS = Date.now() - startTime;
+        ui.announceConfigurationFileLoaded( cfg.filepath, durationMS );
+    } catch ( err ) {
+        // console.log( '>>', options.config, 'ERROR', err.message );
+        ui.announceCouldNotLoadConfigurationFile( err.message );
+        // continue
+	}
+
+	// console.log( 'CLI', cliOptions );
+	// console.log( 'FILE', fileOptions );
+
+    // CLI options override file options
+	const userOptions = Object.assign( {}, fileOptions || {}, cliOptions || {} );
+	// console.log( 'USER', userOptions );
+
+	// Override default options with user options
+	const errors: string[] = copyOptions( userOptions, options );
+	// console.log( 'OPTIONS', options );
+	for ( const e of errors ) {
+		console.log( e );
+	}
+	if ( errors.length > 0 ) {
+		return false;
+	}
+
+	const fileHandler = new FSFileHandler( fs, promisify, options.encoding );
+
+    // Init option ?
+    if ( options.init ) {
+        if ( fileOptions ) {
+            ui.announceConfigurationFileAlreadyExists();
+        } else {
+			// Detect package managers' lock files
+			const pkgManagers = packageManagers();
+			const lockFileIndex = pkgManagers
+				.map( tool => path.join( processPath, makeLockFileName( tool ) ) )
+				.findIndex( fileHandler.existsSync );
+			// Ignore the package manager prompt if its lock file was detected
+			let promptOptions: PromptOptions;
+			if ( lockFileIndex >= 0 ) {
+				promptOptions = { packageManager: pkgManagers[ lockFileIndex ] };
+			}
+			const guidedOptions = await ( new GuidedConfig() ).prompt( promptOptions );
+
+			const errors = copyOptions( guidedOptions as any, options );
+			for ( const e of errors ) {
+				console.log( e );
+			}
+
+            options.saveConfig = true;
+            const packages = guidedOptions.databases || [];
+            if ( packages.length > 0 ) {
+				const cmd = makePackageInstallCommand(
+					joinDatabasePackageNames( packages ),
+					options.packageManager as PackageManager
+				);
+                ui.announceDatabasePackagesInstallationStarted( 1 === packages.length, cmd );
+                let code: number;
+                for ( const pkg of packages ) {
+                    const cmd = makePackageInstallCommand( pkg, options.packageManager as PackageManager );
+                    code = await runCommand( cmd );
+                    if ( code !== 0 ) {
+                        break;
+                    }
+                }
+                ui.announceDatabasePackagesInstallationFinished( code );
+            }
+        }
+    }
+
+    // Save config option ?
+    if ( options.saveConfig ) {
+		const writeF = promisify( fs.writeFile );
+
+		const defaultOptions: AppOptions & CliOnlyOptions =
+			makeAllOptions( appPath, processPath );
+
+		const obj = createPersistableCopy( options, defaultOptions, true );
+        const file = options.config;
+        try {
+            await writeF( file, JSON.stringify( obj, undefined, "\t" ) );
+            ui.announceConfigurationFileSaved( file );
+        } catch ( err ) {
+            ui.showException( err );
+            // continue!
+        }
+    }
+
+    if ( options.init && ! options.pluginInstall ) {
+        return true;
+	}
+
 	// DATABASE
 
 	if ( options.dbInstall ) {
 		const databases = options.dbInstall.split( ',' ).map( d => d.trim() );
-		ui.announceDatabasePackagesInstallationStarted( 1 === databases.length );
+		const cmd = makePackageInstallCommand( joinDatabasePackageNames( databases ), options.packageManager as PackageManager );
+		ui.announceDatabasePackagesInstallationStarted( 1 === databases.length, cmd );
 		let code = 1;
 		try {
-			code = await installDatabases( databases );
+			code = await runCommand( cmd );
 		} catch {
 		}
 		ui.announceDatabasePackagesInstallationFinished( code );
@@ -161,10 +283,11 @@ export async function main( appPath: string, processPath: string ): Promise< boo
 
 	if ( options.dbUninstall ) {
 		const databases = options.dbUninstall.split( ',' ).map( d => d.trim() );
-		ui.announceDatabasePackagesUninstallationStarted( 1 === databases.length );
+		const cmd = makePackageUninstallCommand( joinDatabasePackageNames( databases ), options.packageManager as PackageManager );
+		ui.announceDatabasePackagesUninstallationStarted( 1 === databases.length, cmd );
 		let code = 1;
 		try {
-			code = await uninstallDatabases( databases );
+			code = await runCommand( cmd );
 		} catch {
 		}
 		ui.announceDatabasePackagesUninstallationFinished( code );
@@ -225,118 +348,6 @@ export async function main( appPath: string, processPath: string ): Promise< boo
 		return true;
 	}
 
-
-	// LOAD CONFIG FILE OPTIONS
-
-    let fileOptions = null;
-    try {
-        const startTime = Date.now();
-        const MODULE_NAME = 'concordia';
-        // @see https://github.com/davidtheclark/cosmiconfig
-        const loadOptions = {
-            stopDir: options.processPath
-        };
-        const explorer = cosmiconfig( MODULE_NAME, loadOptions );
-        const cfg: { config: any, filepath: string } = await explorer.load( options.config );
-		fileOptions = cfg.config;
-
-		// ADAPT KEYS
-
-		// wanted, variation1, variation2, ...
-		const optionsToConvert = [
-			[ 'dirResult', 'dirResults' ],
-			[ 'dirScript', 'dirScripts' ],
-		];
-
-		// Adapt
-		for ( const [ wanted, ...variations ] of optionsToConvert ) {
-			for ( const v of variations ) {
-				if ( fileOptions[ v ] ) {
-					fileOptions[ wanted ] = fileOptions[ v ];
-					delete fileOptions[ v ];
-				}
-			}
-		}
-
-        const durationMS = Date.now() - startTime;
-        ui.announceConfigurationFileLoaded( cfg.filepath, durationMS );
-    } catch ( err ) {
-        // console.log( '>>', options.config, 'ERROR', err.message );
-        ui.announceCouldNotLoadConfigurationFile( err.message );
-        // continue
-	}
-
-	// console.log( 'CLI', cliOptions );
-	// console.log( 'FILE', fileOptions );
-
-    // CLI options override file options
-	const userOptions = Object.assign( {}, fileOptions || {}, cliOptions || {} );
-	// console.log( 'USER', userOptions );
-
-	// Override default options with user options
-	const errors: string[] = copyOptions( userOptions, options );
-	// console.log( 'OPTIONS', options );
-	for ( const e of errors ) {
-		console.log( e );
-	}
-	if ( errors.length > 0 ) {
-		return false;
-	}
-
-    // Init option ?
-    if ( options.init ) {
-        if ( fileOptions ) {
-            ui.announceConfigurationFileAlreadyExists();
-        } else {
-			const guidedOptions = await ( new GuidedConfig() ).prompt();
-
-			const errors = copyOptions( guidedOptions as any, options );
-			for ( const e of errors ) {
-				console.log( e );
-			}
-
-            options.saveConfig = true;
-            const packages = guidedOptions.databases || [];
-            if ( packages.length > 0 ) {
-                ui.announceDatabasePackagesInstallationStarted();
-                let code: number;
-                for ( const pkg of packages ) {
-                    ui.announceDatabasePackage( pkg );
-                    const cmd = makePackageInstallCommand( pkg );
-                    code = await runCommand( cmd );
-                    if ( code !== 0 ) {
-                        break;
-                    }
-                }
-                ui.announceDatabasePackagesInstallationFinished( code );
-            }
-        }
-    }
-
-    // Save config option ?
-    if ( options.saveConfig ) {
-		const writeF = promisify( fs.writeFile );
-
-		const defaultOptions: AppOptions & CliOnlyOptions =
-			makeAllOptions( appPath, processPath );
-
-		const obj = createPersistableCopy( options, defaultOptions, true );
-        const file = options.config;
-        try {
-            await writeF( file, JSON.stringify( obj, undefined, "\t" ) );
-            ui.announceConfigurationFileSaved( file );
-        } catch ( err ) {
-            ui.showException( err );
-            // continue!
-        }
-    }
-
-    if ( options.init && ! options.pluginInstall ) {
-        return true;
-	}
-
-	const fileHandler = new FSFileHandler( fs, promisify, options.encoding );
-
 	// PLUGIN
 
 	if ( hasSomePluginAction( options ) ) {
@@ -347,6 +358,7 @@ export async function main( appPath: string, processPath: string ): Promise< boo
 			options.processPath, fileHandler, dirSearcher );
 
 		const pluginManager: PluginManager = new PluginManager(
+			options.packageManager,
 			ui,
 			pluginFinder,
 			fileHandler

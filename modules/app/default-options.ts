@@ -1,5 +1,5 @@
 import { CaseType } from '../util/CaseType';
-import { CombinationOptions, InvalidSpecialOptions, VariantSelectionOptions } from './CombinationOptions';
+import { CombinationOptions, InvalidSpecialOptions, VariantSelectionOptions } from './combination-options';
 
 // INTERNAL DIRECTORIES
 

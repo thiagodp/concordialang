@@ -1,5 +1,5 @@
 import { DirSearcher, DirSearchOptions } from "../util/file";
-import { makePackageInstallCommand, makePackageUninstallCommand } from "../util/package-installation";
+import { makeDatabasePackageNameFor, makePackageInstallCommand, makePackageUninstallCommand, PackageManager } from "../util/package-installation";
 import { runCommand } from "../util/run-command";
 
 
@@ -23,21 +23,20 @@ export async function allInstalledDatabases(
 	return directories.map( extractName );
 }
 
-export async function installDatabases( databasesOrPackageNames: string[] ): Promise< number > {
-	const packages = databasesOrPackageNames.map( databasePackageNameFor );
-	const cmd = makePackageInstallCommand( packages.join( ' ' ) );
+export async function installDatabases(
+	databasesOrPackageNames: string[],
+	tool: PackageManager
+): Promise< number > {
+	const packages = databasesOrPackageNames.map( makeDatabasePackageNameFor );
+	const cmd = makePackageInstallCommand( packages.join( ' ' ), tool );
 	return await runCommand( cmd );
 }
 
-export async function uninstallDatabases( databasesOrPackageNames: string[]  ): Promise< number > {
-	const packages = databasesOrPackageNames.map( databasePackageNameFor );
-	const cmd = makePackageUninstallCommand( packages.join( ' ' ) );
+export async function uninstallDatabases(
+	databasesOrPackageNames: string[],
+	tool: PackageManager
+): Promise< number > {
+	const packages = databasesOrPackageNames.map( makeDatabasePackageNameFor );
+	const cmd = makePackageUninstallCommand( packages.join( ' ' ), tool );
 	return await runCommand( cmd );
-}
-
-export function databasePackageNameFor( databaseOrPackageName: string ): string {
-	const prefix = 'database-js-';
-	return databaseOrPackageName.startsWith( prefix )
-		? databaseOrPackageName
-		: prefix + databaseOrPackageName;
 }

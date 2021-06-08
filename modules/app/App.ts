@@ -19,8 +19,8 @@ import { AbstractTestScriptGenerator } from '../testscript/AbstractTestScriptGen
 import { TestResultAnalyzer } from '../testscript/TestResultAnalyzer';
 import { DirSearcher } from '../util/file';
 import { FSDirSearcher, FSFileHandler } from '../util/fs';
-import { AppOptions, hasSomeOptionThatRequiresAPlugin } from './AppOptions';
-import { UI } from './UI';
+import { AppOptions, hasSomeOptionThatRequiresAPlugin } from './app-options';
+import { AppListener } from './app-listener';
 
 type AppResult = {
 	spec?: Spec,
@@ -42,7 +42,7 @@ export class App {
     ) {
     }
 
-    async start( options: AppOptions, ui: UI ): Promise< AppResult > {
+    async start( options: AppOptions, listener: AppListener ): Promise< AppResult > {
 
         const fs = this._fs;
         const path = this._path;
@@ -59,7 +59,8 @@ export class App {
 			const dirSearcher: DirSearcher = new FSDirSearcher( fs, promisify );
 
 			const pluginManager: PluginManager = new PluginManager(
-				ui,
+                options.packageManager,
+				listener,
 				new PackageBasedPluginFinder( options.processPath, fileHandler, dirSearcher ),
 				fileHandler
 				);
@@ -68,16 +69,16 @@ export class App {
             try {
                 pluginData = await pluginManager.pluginWithName( options.plugin );
                 if ( ! pluginData ) {
-                    ui.announcePluginNotFound( options.plugin );
+                    listener.announcePluginNotFound( options.plugin );
                     return { success: false };;
                 }
                 plugin = await pluginManager.load( pluginData );
             } catch ( err ) {
-                ui.showException( err );
+                listener.showException( err );
                 return { success: false };
             }
             if ( ! plugin ) { // needed?
-                ui.announcePluginCouldNotBeLoaded( options.plugin );
+                listener.announcePluginCouldNotBeLoaded( options.plugin );
                 return { success: false };;
             }
 
@@ -87,7 +88,7 @@ export class App {
 		if ( ! plugin &&
 			( options.script || options.run || options.result )
 		) {
-            ui.announceNoPluginWasDefined();
+            listener.announceNoPluginWasDefined();
             return { success: false };;
 		}
 
@@ -96,15 +97,15 @@ export class App {
         let hasErrors: boolean = false;
         let spec: AugmentedSpec = null;
 
-        ui.announceOptions( options );
+        listener.announceOptions( options );
 
         if ( options.spec ) {
-            const compiler = new CompilerFacade( fs, path, promisify, ui, ui );
+            const compiler = new CompilerFacade( fs, path, promisify, listener, listener );
             try {
 				[ spec, /* graph */ ] = await compiler.compile( options );
             } catch ( err ) {
                 hasErrors = true;
-                ui.showException( err );
+                listener.showException( err );
 			}
 
 			if ( null === spec && options.file.length > 0 ) {
@@ -165,18 +166,18 @@ export class App {
                     errors = r?.errors || [];
                 } catch ( err ) {
                     hasErrors = true;
-                    ui.showException( err );
+                    listener.showException( err );
                 }
 
                 const durationMS = Date.now() - startTime;
 
-                ui.showGeneratedTestScriptFiles(
+                listener.showGeneratedTestScriptFiles(
                     options.dirScript,
                     generatedTestScriptFiles,
                     durationMS
                 );
 
-                ui.showTestScriptGenerationErrors( errors );
+                listener.showTestScriptGenerationErrors( errors );
             }
         }
 
@@ -209,16 +210,16 @@ export class App {
                 // parameters: options.pluginOption || undefined,
             } as TestScriptExecutionOptions;
 
-            ui.announceTestScriptExecutionStarted();
+            listener.announceTestScriptExecutionStarted();
 
             try {
                 executionResult = await plugin.executeCode( tseo );
             } catch ( err ) {
                 hasErrors = true;
-                ui.announceTestScriptExecutionError( err );
+                listener.announceTestScriptExecutionError( err );
             }
 
-            ui.announceTestScriptExecutionFinished();
+            listener.announceTestScriptExecutionFinished();
         }
 
         if ( ! hasErrors && ( executionResult?.total?.failed > 0 || executionResult?.total?.error > 0 ) ) {
@@ -237,7 +238,7 @@ export class App {
 				);
 
                 if ( ! fs.existsSync( defaultReportFile ) ) {
-                    ui.announceReportFileNotFound( defaultReportFile );
+                    listener.announceReportFileNotFound( defaultReportFile );
                     return { success: false, spec };
                 }
 
@@ -248,12 +249,12 @@ export class App {
 
             if ( reportFile ) {
 
-                ui.announceReportFile( reportFile );
+                listener.announceReportFile( reportFile );
                 try {
                     executionResult = await plugin.convertReportFile( reportFile );
                 } catch ( err ) {
                     hasErrors = true;
-                    ui.showException( err );
+                    listener.showException( err );
                 }
             }
 
@@ -267,7 +268,7 @@ export class App {
 					abstractTestScripts
 				);
 
-				ui.showTestScriptAnalysis( reportedResult );
+				listener.showTestScriptAnalysis( reportedResult );
 				// TODO: save report to file
                 const reporter = new JSONTestReporter( fileHandler, path );
                 await reporter.report(
@@ -282,7 +283,7 @@ export class App {
 
 			} catch ( err ) {
 				hasErrors = true;
-				ui.showException( err );
+				listener.showException( err );
 			}
 		}
 

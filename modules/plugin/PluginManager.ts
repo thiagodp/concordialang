@@ -3,6 +3,12 @@ import * as inquirer from 'inquirer';
 import { join } from 'path';
 
 import { FileReader } from '../util/file/FileReader';
+import {
+    makePackageInitCommand,
+    makePackageInstallCommand,
+    makePackageUninstallCommand,
+    PackageManager,
+} from '../util/package-installation';
 import { runCommand } from '../util/run-command';
 import { PLUGIN_PREFIX, PluginData } from './PluginData';
 import { PluginFinder } from './PluginFinder';
@@ -16,6 +22,7 @@ import { PluginListener } from './PluginListener';
 export class PluginManager {
 
     constructor(
+        private readonly _packageManager: string,
         private readonly _pluginListener: PluginListener,
         private readonly _finder: PluginFinder,
         private readonly _fileReader: FileReader
@@ -90,12 +97,9 @@ export class PluginManager {
 
             // Check if package.json exists
 
-            const PACKAGE_FILE = 'package.json';
-            const PACKAGE_CREATION_CMD = 'npm init --yes';
-
             let mustGeneratePackageFile: boolean = false;
-
             try {
+                const PACKAGE_FILE = 'package.json';
                 const path = join( process.cwd(), PACKAGE_FILE );
 
                 const content: string | null = await this._fileReader.read( path );
@@ -111,27 +115,22 @@ export class PluginManager {
             // Create package.json if it does not exist
 
             if ( mustGeneratePackageFile ) {
-                await this.runCommand( PACKAGE_CREATION_CMD, false );
+                const PACKAGE_CREATION_CMD = makePackageInitCommand( this._packageManager as PackageManager );  // 'npm init --yes';
+                await this.runCommand( PACKAGE_CREATION_CMD );
             }
         }
 
-        // Install the plug-in as a DEVELOPMENT dependency using NPM
-
-        const PACKAGE_MANAGER = 'NPM';
-        const INSTALL_DEV_CMD = 'npm install --save-dev ' + name + ' --no-fund --no-audit --loglevel error --color=always';
-
-        this._pluginListener.showMessageTryingToInstall( name, PACKAGE_MANAGER );
-        const code: number = await this.runCommand( INSTALL_DEV_CMD, false );
+        // Install the package as a DEVELOPMENT dependency
+        const command = makePackageInstallCommand( name, this._packageManager as PackageManager )
+        const code: number = await this.runCommand( command );
         if ( code !== 0 ) { // unsuccessful
             return;
         }
 
-        // Check if the plug-in is installed
-
+        // Check if it is installed
         pluginData = await this.pluginWithName( name, false );
         if ( ! pluginData ) {
             this._pluginListener.showMessageCouldNoFindInstalledPlugin( name );
-            return;
         }
     }
 
@@ -148,10 +147,9 @@ export class PluginManager {
             return;
         }
 
-        // Remove with a package manager
-        const command = 'npm uninstall --save-dev ' + name + ' --color=always';
-        this._pluginListener.showMessageTryingToUninstall( name, 'NPM' );
-        await this.runCommand( command, true );
+        // Uninstall the package
+        const command = makePackageUninstallCommand( name, this._packageManager as PackageManager );
+        await this.runCommand( command );
     }
 
     public async serve( pluginData: PluginData ): Promise< void > {
@@ -161,7 +159,7 @@ export class PluginManager {
         }
 
         this._pluginListener.showPluginServeStart( pluginData.name );
-        await this.runCommand( pluginData.serve, true );
+        await this.runCommand( pluginData.serve );
     }
 
     /**
@@ -184,10 +182,10 @@ export class PluginManager {
 
     // -------------------------------------------------------------------------
 
-    private async runCommand( command: string, showIfSuccess: boolean ): Promise< number > {
+    private async runCommand( command: string ): Promise< number > {
         this._pluginListener.showCommandStarted( command );
         const code = await runCommand( command );
-        this._pluginListener.showCommandFinished( code, showIfSuccess );
+        this._pluginListener.showCommandFinished( code );
         return code;
     }
 
