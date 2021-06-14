@@ -1,18 +1,6 @@
-"use strict";
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.ImportSSA = void 0;
-const path_1 = require("path");
-const error_1 = require("../error");
-const SpecificationAnalyzer_1 = require("./SpecificationAnalyzer");
+import { basename } from 'path';
+import { SemanticException } from '../error';
+import { SpecificationAnalyzer } from './SpecificationAnalyzer';
 /**
  * Executes semantic analysis of Imports in a specification.
  *
@@ -21,12 +9,10 @@ const SpecificationAnalyzer_1 = require("./SpecificationAnalyzer");
  *
  * @author Thiago Delgado Pinto
  */
-class ImportSSA extends SpecificationAnalyzer_1.SpecificationAnalyzer {
+export class ImportSSA extends SpecificationAnalyzer {
     /** @inheritDoc */
-    analyze(problems, spec, graph) {
-        return __awaiter(this, void 0, void 0, function* () {
-            return this.findCyclicReferences(problems, graph);
-        });
+    async analyze(problems, spec, graph) {
+        return this.findCyclicReferences(problems, graph);
     }
     findCyclicReferences(problems, graph) {
         let hasError = false;
@@ -43,16 +29,16 @@ class ImportSSA extends SpecificationAnalyzer_1.SpecificationAnalyzer {
                 loc = this.locationOfTheImport(doc, cycle[1]);
             }
             const msg = 'Cyclic reference: "' + fullCycle + '".';
-            const err = new error_1.SemanticException(msg, loc);
+            const err = new SemanticException(msg, loc);
             problems.addError(filePath, err);
         }
         return hasError;
     }
     locationOfTheImport(doc, importFile) {
         if (doc.imports) {
-            let fileName = path_1.basename(importFile); // name without dir
+            let fileName = basename(importFile); // name without dir
             for (let imp of doc.imports) {
-                let currentFileName = path_1.basename(imp.value); // filename without dir
+                let currentFileName = basename(imp.value); // filename without dir
                 if (fileName == currentFileName) {
                     return imp.location;
                 }
@@ -61,4 +47,3 @@ class ImportSSA extends SpecificationAnalyzer_1.SpecificationAnalyzer {
         return { line: 1, column: 1 }; // import not found, so let's return the first position in the file
     }
 }
-exports.ImportSSA = ImportSSA;

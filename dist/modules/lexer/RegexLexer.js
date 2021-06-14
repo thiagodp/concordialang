@@ -1,22 +1,19 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.RegexLexer = void 0;
-const Expressions_1 = require("../req/Expressions");
-const LineChecker_1 = require("../req/LineChecker");
-const NodeTypes_1 = require("../req/NodeTypes");
-const Symbols_1 = require("../req/Symbols");
-const CommentHandler_1 = require("./CommentHandler");
-const LexicalException_1 = require("./LexicalException");
+import { Expressions } from '../req/Expressions';
+import { LineChecker } from '../req/LineChecker';
+import { NodeTypes } from "../req/NodeTypes";
+import { Symbols } from '../req/Symbols';
+import { CommentHandler } from './CommentHandler';
+import { LexicalException } from './LexicalException';
 /**
  * Detects a Regex.
  *
  * @author Thiago Delgado Pinto
  */
-class RegexLexer {
+export class RegexLexer {
     constructor(_words) {
         this._words = _words;
-        this._lineChecker = new LineChecker_1.LineChecker();
-        this._nodeType = NodeTypes_1.NodeTypes.REGEX;
+        this._lineChecker = new LineChecker();
+        this._nodeType = NodeTypes.REGEX;
     }
     /** @inheritDoc */
     nodeType() {
@@ -24,11 +21,11 @@ class RegexLexer {
     }
     /** @inheritDoc */
     suggestedNextNodeTypes() {
-        return [NodeTypes_1.NodeTypes.REGEX];
+        return [NodeTypes.REGEX];
     }
     /** @inheritDoc */
     affectedKeyword() {
-        return NodeTypes_1.NodeTypes.IS;
+        return NodeTypes.IS;
     }
     /** @inheritDoc */
     updateWords(words) {
@@ -63,19 +60,19 @@ class RegexLexer {
         // Let's extract the interesting parts
         let pos = this._lineChecker.countLeftSpacesAndTabs(line);
         let name = values[0]
-            .replace(new RegExp(Symbols_1.Symbols.VALUE_WRAPPER, 'g'), '') // replace all '"' with ''
+            .replace(new RegExp(Symbols.VALUE_WRAPPER, 'g'), '') // replace all '"' with ''
             .trim();
         let value = values[1];
         // Removes the wrapper of the content, if the wrapper exists
-        let firstWrapperIndex = value.indexOf(Symbols_1.Symbols.VALUE_WRAPPER);
+        let firstWrapperIndex = value.indexOf(Symbols.VALUE_WRAPPER);
         if (firstWrapperIndex >= 0) {
-            let lastWrapperIndex = value.lastIndexOf(Symbols_1.Symbols.VALUE_WRAPPER);
+            let lastWrapperIndex = value.lastIndexOf(Symbols.VALUE_WRAPPER);
             if (firstWrapperIndex != lastWrapperIndex) {
                 value = value.substring(firstWrapperIndex + 1, lastWrapperIndex);
             }
         }
-        let content = (new CommentHandler_1.CommentHandler()).removeComment(line);
-        content = this._lineChecker.textAfterSeparator(Symbols_1.Symbols.LIST_ITEM_PREFIX, content).trim();
+        let content = (new CommentHandler()).removeComment(line);
+        content = this._lineChecker.textAfterSeparator(Symbols.LIST_ITEM_PREFIX, content).trim();
         let node = {
             nodeType: this._nodeType,
             location: { line: lineNumber || 0, column: pos + 1 },
@@ -86,20 +83,19 @@ class RegexLexer {
         let errors = [];
         if (0 == name.length) {
             let msg = this._nodeType + ' cannot have an empty name.';
-            errors.push(new LexicalException_1.LexicalException(msg, node.location));
+            errors.push(new LexicalException(msg, node.location));
         }
         return { nodes: [node], errors: errors };
     }
     makeRegexForTheWords(words) {
-        return '^' + Expressions_1.Expressions.OPTIONAL_SPACES_OR_TABS
-            + Symbols_1.Symbols.LIST_ITEM_PREFIX // -
-            + Expressions_1.Expressions.OPTIONAL_SPACES_OR_TABS
-            + Expressions_1.Expressions.SOMETHING_INSIDE_QUOTES
-            + Expressions_1.Expressions.OPTIONAL_SPACES_OR_TABS
+        return '^' + Expressions.OPTIONAL_SPACES_OR_TABS
+            + Symbols.LIST_ITEM_PREFIX // -
+            + Expressions.OPTIONAL_SPACES_OR_TABS
+            + Expressions.SOMETHING_INSIDE_QUOTES
+            + Expressions.OPTIONAL_SPACES_OR_TABS
             + '(?:' + words.join('|') + ')' // is
-            + Expressions_1.Expressions.OPTIONAL_SPACES_OR_TABS
-            + '(' + Expressions_1.Expressions.SOMETHING_INSIDE_QUOTES + ')'
-            + Expressions_1.Expressions.OPTIONAL_SPACES_OR_TABS;
+            + Expressions.OPTIONAL_SPACES_OR_TABS
+            + '(' + Expressions.SOMETHING_INSIDE_QUOTES + ')'
+            + Expressions.OPTIONAL_SPACES_OR_TABS;
     }
 }
-exports.RegexLexer = RegexLexer;

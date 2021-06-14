@@ -10,11 +10,11 @@ import { PluginManager } from './PluginManager';
  */
 export class PluginController {
 
-    public process = async (
+    async process(
         options: AppOptions & CliOnlyOptions,
         pluginManager: PluginManager,
         drawer: PluginListener
-        ): Promise< boolean > => {
+        ): Promise< boolean > {
 
         if ( options.pluginList ) {
             try {
@@ -72,6 +72,6 @@ export class PluginController {
         }
 
         return true;
-    };
+    }
 
 }

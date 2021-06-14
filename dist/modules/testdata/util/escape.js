@@ -1,12 +1,9 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.escapeJson = exports.countMatches = exports.escapeString = exports.escapeChar = void 0;
 //
 // Inspired in https://stackoverflow.com/questions/7744912/making-a-javascript-string-sql-friendly/7760578#7760578
 //
 // Adapted for Concordia needs.
 //
-function escapeChar(char) {
+export function escapeChar(char) {
     switch (char) {
         // special
         case '\0': return '\\0';
@@ -27,8 +24,7 @@ function escapeChar(char) {
     }
     return char;
 }
-exports.escapeChar = escapeChar;
-function escapeString(str) {
+export function escapeString(str) {
     //return str.replace( /[\0\x08\x09\x1a\n\r"'\\\%]/g, escapeChar );
     const charsToReplace = /[\0\x08\x09\x1a\n\r"'\\><]/g;
     let newStr = str.replace(charsToReplace, escapeChar);
@@ -51,12 +47,9 @@ function escapeString(str) {
     }
     return newStr;
 }
-exports.escapeString = escapeString;
-function countMatches(regex, text) {
+export function countMatches(regex, text) {
     return ((text || '').match(regex) || []).length;
 }
-exports.countMatches = countMatches;
-function escapeJson(json) {
+export function escapeJson(json) {
     return JSON.stringify({ _: json }).slice(6, -2);
 }
-exports.escapeJson = escapeJson;

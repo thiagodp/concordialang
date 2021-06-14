@@ -1,14 +1,11 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.UIElementNameHandler = void 0;
-const Symbols_1 = require("../req/Symbols");
-const TypeChecking_1 = require("./TypeChecking");
+import { Symbols } from "../req/Symbols";
+import { isDefined } from "./TypeChecking";
 /**
  * Handles names of UI Elements.
  *
  * @author Thiago Delgado Pinto
  */
-class UIElementNameHandler {
+export class UIElementNameHandler {
     /**
      * Retrieves a feature name from a variable or null if not found.
      *
@@ -53,17 +50,17 @@ class UIElementNameHandler {
      */
     extractNamesOf(variable) {
         const v = variable
-            .replace(Symbols_1.Symbols.UI_ELEMENT_PREFIX, '')
-            .replace(Symbols_1.Symbols.UI_ELEMENT_SUFFIX, '')
+            .replace(Symbols.UI_ELEMENT_PREFIX, '')
+            .replace(Symbols.UI_ELEMENT_SUFFIX, '')
             .trim();
-        const index = v.indexOf(Symbols_1.Symbols.FEATURE_TO_UI_ELEMENT_SEPARATOR);
+        const index = v.indexOf(Symbols.FEATURE_TO_UI_ELEMENT_SEPARATOR);
         if (index < 0) { // ui element only
             return [null, v];
         }
         if (1 === v.length) { // separator only, e.g., {:}
             return [null, null];
         }
-        return v.split(Symbols_1.Symbols.FEATURE_TO_UI_ELEMENT_SEPARATOR);
+        return v.split(Symbols.FEATURE_TO_UI_ELEMENT_SEPARATOR);
     }
     /**
      * Makes a variable name.
@@ -73,12 +70,11 @@ class UIElementNameHandler {
      * @param surroundVariable Whether it should surround the variable with its symbol (brackets).
      */
     makeVariableName(featureName, uiElementName, surroundVariable = false) {
-        const variable = (TypeChecking_1.isDefined(featureName) ? featureName + Symbols_1.Symbols.FEATURE_TO_UI_ELEMENT_SEPARATOR : '') +
+        const variable = (isDefined(featureName) ? featureName + Symbols.FEATURE_TO_UI_ELEMENT_SEPARATOR : '') +
             uiElementName;
         if (!surroundVariable) {
             return variable;
         }
-        return Symbols_1.Symbols.UI_ELEMENT_PREFIX + variable + Symbols_1.Symbols.UI_ELEMENT_SUFFIX;
+        return Symbols.UI_ELEMENT_PREFIX + variable + Symbols.UI_ELEMENT_SUFFIX;
     }
 }
-exports.UIElementNameHandler = UIElementNameHandler;

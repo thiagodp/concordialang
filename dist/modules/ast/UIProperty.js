@@ -1,12 +1,9 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.EntityValue = exports.UIElementInfo = void 0;
 /**
  * Additional information about an UI element.
  *
  * @author Thiago Delgado Pinto
  */
-class UIElementInfo {
+export class UIElementInfo {
     /**
      *
      * @param document Document in which the UI element was declared
@@ -23,13 +20,12 @@ class UIElementInfo {
         return !this.feature;
     }
 }
-exports.UIElementInfo = UIElementInfo;
 /**
  * Recognized value of an entity.
  *
  * @author Thiago Delgado Pinto
  */
-class EntityValue {
+export class EntityValue {
     /**
      *
      * @param entity Entity
@@ -42,4 +38,3 @@ class EntityValue {
         this.references = references;
     }
 }
-exports.EntityValue = EntityValue;

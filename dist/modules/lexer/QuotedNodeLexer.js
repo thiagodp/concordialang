@@ -1,22 +1,19 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.QuotedNodeLexer = void 0;
 const XRegExp = require('xregexp');
-const Expressions_1 = require("../req/Expressions");
-const LineChecker_1 = require("../req/LineChecker");
-const Symbols_1 = require("../req/Symbols");
-const CommentHandler_1 = require("./CommentHandler");
-const LexicalException_1 = require("./LexicalException");
+import { Expressions } from '../req/Expressions';
+import { LineChecker } from '../req/LineChecker';
+import { Symbols } from "../req/Symbols";
+import { CommentHandler } from './CommentHandler';
+import { LexicalException } from "./LexicalException";
 /**
  * Detects a node in the format "keyword "value"".
  *
  * @author Thiago Delgado Pinto
  */
-class QuotedNodeLexer {
+export class QuotedNodeLexer {
     constructor(_words, _nodeType) {
         this._words = _words;
         this._nodeType = _nodeType;
-        this._lineChecker = new LineChecker_1.LineChecker();
+        this._lineChecker = new LineChecker();
     }
     /** @inheritDoc */
     nodeType() {
@@ -35,11 +32,11 @@ class QuotedNodeLexer {
         this._words = words;
     }
     makeRegexForTheWords(words) {
-        return '^' + Expressions_1.Expressions.OPTIONAL_SPACES_OR_TABS
+        return '^' + Expressions.OPTIONAL_SPACES_OR_TABS
             + '(?:' + words.join('|') + ')'
-            + Expressions_1.Expressions.OPTIONAL_SPACES_OR_TABS
-            + Expressions_1.Expressions.SOMETHING_INSIDE_QUOTES
-            + Expressions_1.Expressions.OPTIONAL_SPACES_OR_TABS;
+            + Expressions.OPTIONAL_SPACES_OR_TABS
+            + Expressions.SOMETHING_INSIDE_QUOTES
+            + Expressions.OPTIONAL_SPACES_OR_TABS;
     }
     /** @inheritDoc */
     analyze(line, lineNumber) {
@@ -48,10 +45,10 @@ class QuotedNodeLexer {
         if (!result) {
             return null;
         }
-        let value = (new CommentHandler_1.CommentHandler()).removeComment(line);
+        let value = (new CommentHandler()).removeComment(line);
         value = this._lineChecker
-            .textAfterSeparator(Symbols_1.Symbols.VALUE_WRAPPER, value)
-            .replace(new RegExp(Symbols_1.Symbols.VALUE_WRAPPER, 'g'), '') // replace all '"' with ''
+            .textAfterSeparator(Symbols.VALUE_WRAPPER, value)
+            .replace(new RegExp(Symbols.VALUE_WRAPPER, 'g'), '') // replace all '"' with ''
             .trim();
         let pos = this._lineChecker.countLeftSpacesAndTabs(line);
         let node = {
@@ -63,7 +60,7 @@ class QuotedNodeLexer {
         if (!this.isValidName(value)) {
             let loc = { line: lineNumber || 0, column: line.indexOf(value) + 1 };
             let msg = 'Invalid ' + this._nodeType + ': "' + value + '"';
-            errors.push(new LexicalException_1.LexicalException(msg, loc));
+            errors.push(new LexicalException(msg, loc));
         }
         return { nodes: [node], errors: errors };
     }
@@ -76,4 +73,3 @@ class QuotedNodeLexer {
         return XRegExp('^[\\p{L}][\\p{L}0-9 ._-]*$', 'ui').test(name); // TO-DO: improve the regex
     }
 }
-exports.QuotedNodeLexer = QuotedNodeLexer;

@@ -1,18 +1,15 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.GraphFilter = exports.GraphFilterEvent = void 0;
-const Graph = require("graph.js/dist/graph.full.js");
-const events_1 = require("events");
-var GraphFilterEvent;
+import { EventEmitter } from 'events';
+import Graph from 'graph.js/dist/graph.full.js';
+export var GraphFilterEvent;
 (function (GraphFilterEvent) {
     GraphFilterEvent["DOCUMENT_NOT_INCLUDED"] = "concordia:documentNotIncluded";
-})(GraphFilterEvent = exports.GraphFilterEvent || (exports.GraphFilterEvent = {}));
+})(GraphFilterEvent || (GraphFilterEvent = {}));
 /**
  * Graph filter.
  *
  * @author Thiago Delgado Pinto
  */
-class GraphFilter extends events_1.EventEmitter {
+export class GraphFilter extends EventEmitter {
     /**
      * Creates a new graph containing the documents that match the evaluation function.
      *
@@ -43,4 +40,3 @@ class GraphFilter extends events_1.EventEmitter {
         return newGraph;
     }
 }
-exports.GraphFilter = GraphFilter;

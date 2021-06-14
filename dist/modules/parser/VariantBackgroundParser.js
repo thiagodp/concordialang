@@ -1,18 +1,15 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.VariantBackgroundParser = void 0;
-const SyntacticException_1 = require("./SyntacticException");
+import { SyntacticException } from "./SyntacticException";
 /**
  * Variant Background parser
  *
  * @author Thiago Delgado Pinto
  */
-class VariantBackgroundParser {
+export class VariantBackgroundParser {
     /** @inheritDoc */
     analyze(node, context, it, errors) {
         // Checks if a feature has been declared before it
         if (!context.doc.feature) {
-            let e = new SyntacticException_1.SyntacticException('A background must be declared after a feature.', node.location);
+            let e = new SyntacticException('A background must be declared after a feature.', node.location);
             errors.push(e);
             return false;
         }
@@ -20,13 +17,13 @@ class VariantBackgroundParser {
         const wasDeclaredForTheFeature = !!feature.variantBackground;
         const doesNotHaveScenarios = !feature.scenarios || feature.scenarios.length < 1;
         if (wasDeclaredForTheFeature && doesNotHaveScenarios) {
-            let e = new SyntacticException_1.SyntacticException('A feature cannot have more than one variant background.', node.location);
+            let e = new SyntacticException('A feature cannot have more than one variant background.', node.location);
             errors.push(e);
             return false;
         }
         let target = doesNotHaveScenarios ? feature : context.currentScenario;
         if (!target) { // Only when currentScenario is not defined
-            let e = new SyntacticException_1.SyntacticException('Could not determine the current scenario for the variant background.', node.location);
+            let e = new SyntacticException('Could not determine the current scenario for the variant background.', node.location);
             errors.push(e);
             return false;
         }
@@ -44,4 +41,3 @@ class VariantBackgroundParser {
         }
     }
 }
-exports.VariantBackgroundParser = VariantBackgroundParser;

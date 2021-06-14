@@ -1,24 +1,21 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.StepOtherwiseParser = void 0;
-const NodeTypes_1 = require("../req/NodeTypes");
-const SyntacticException_1 = require("./SyntacticException");
+import { NodeTypes } from '../req/NodeTypes';
+import { SyntacticException } from './SyntacticException';
 /**
  * Step Otherwise node parser.
  *
  * @author Thiago Delgado Pinto
  */
-class StepOtherwiseParser {
+export class StepOtherwiseParser {
     /** @inheritDoc */
     analyze(node, context, it, errors) {
         // Checks prior nodes
         const allowedPriorNodes = [
-            NodeTypes_1.NodeTypes.UI_PROPERTY,
-            NodeTypes_1.NodeTypes.STEP_OTHERWISE,
-            NodeTypes_1.NodeTypes.STEP_AND
+            NodeTypes.UI_PROPERTY,
+            NodeTypes.STEP_OTHERWISE,
+            NodeTypes.STEP_AND
         ];
         if (!it.hasPrior() || allowedPriorNodes.indexOf(it.spyPrior().nodeType) < 0) {
-            let e = new SyntacticException_1.SyntacticException('The "' + node.nodeType + '" clause must be declared after a UI Element Property.', node.location);
+            let e = new SyntacticException('The "' + node.nodeType + '" clause must be declared after a UI Element Property.', node.location);
             errors.push(e);
             return false;
         }
@@ -32,4 +29,3 @@ class StepOtherwiseParser {
         return true;
     }
 }
-exports.StepOtherwiseParser = StepOtherwiseParser;

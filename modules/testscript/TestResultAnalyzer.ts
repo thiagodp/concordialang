@@ -1,6 +1,6 @@
 import { AbstractTestScript, ATSTestCase } from 'concordialang-plugin';
 import { TestMethodResult, TestScriptExecutionResult } from 'concordialang-types';
-import * as deepcopy from 'deepcopy';
+import deepcopy from 'deepcopy';
 
 /**
  * Test Result Analyzer

@@ -1,12 +1,13 @@
 import { escape, escapeId } from 'sqlstring';
-import { CaseType } from './CaseType';
-import { Document, Step } from "../ast";
+
+import { Document, Step } from '../ast';
 import { QueryParser } from '../db/QueryParser';
-import { LanguageContent } from '../language/LanguageContent';
-import { Entities, NLPResult } from "../nlp";
+import { LanguageDictionary } from '../language/LanguageDictionary';
+import { Entities, NLPResult } from '../nlp';
 import { AugmentedSpec } from '../req/AugmentedSpec';
 import { Symbols } from '../req/Symbols';
 import { convertCase } from './CaseConversor';
+import { CaseType } from './CaseType';
 import { TargetTypeUtil } from './TargetTypeUtil';
 import { isDefined } from './TypeChecking';
 import { ValueTypeDetector } from './ValueTypeDetector';
@@ -87,7 +88,7 @@ export class ReferenceReplacer {
      * @param step
      * @param doc
      * @param spec
-     * @param langContent
+     * @param languageDictionary
      * @param uiLiteralCaseOption
      */
     replaceUIElementsWithUILiterals(
@@ -95,7 +96,7 @@ export class ReferenceReplacer {
         hasInputAction: boolean,
         doc: Document,
         spec: AugmentedSpec,
-        langContent: LanguageContent,
+        languageDictionary: LanguageDictionary,
         uiLiteralCaseOption: CaseType
     ): [ string, string ] {
         let sentence: string = step.content;
@@ -122,8 +123,8 @@ export class ReferenceReplacer {
             const uiLiteral = Symbols.UI_LITERAL_PREFIX + literalName + Symbols.UI_LITERAL_SUFFIX;
 
             let targetType: string = '';
-            if ( ! hasInputAction && ! targetTypeUtil.hasInputTargetInTheSentence( step.content, langContent ) ) {
-                targetType = targetTypeUtil.analyzeInputTargetTypes( step, langContent );
+            if ( ! hasInputAction && ! targetTypeUtil.hasInputTargetInTheSentence( step.content, languageDictionary ) ) {
+                targetType = targetTypeUtil.analyzeInputTargetTypes( step, languageDictionary );
             }
 
             const prefixedUILiteral = targetType.length > 0 ? targetType + ' ' + uiLiteral : uiLiteral;

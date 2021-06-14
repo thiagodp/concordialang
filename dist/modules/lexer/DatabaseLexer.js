@@ -1,20 +1,16 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.DatabaseLexer = void 0;
-const NodeTypes_1 = require("../req/NodeTypes");
-const NamedNodeLexer_1 = require("./NamedNodeLexer");
+import { NodeTypes } from "../req/NodeTypes";
+import { NamedNodeLexer } from "./NamedNodeLexer";
 /**
  * Detects a Database node.
  *
  * @author Thiago Delgado Pinto
  */
-class DatabaseLexer extends NamedNodeLexer_1.NamedNodeLexer {
+export class DatabaseLexer extends NamedNodeLexer {
     constructor(words) {
-        super(words, NodeTypes_1.NodeTypes.DATABASE);
+        super(words, NodeTypes.DATABASE);
     }
     /** @inheritDoc */
     suggestedNextNodeTypes() {
-        return [NodeTypes_1.NodeTypes.DATABASE];
+        return [NodeTypes.DATABASE];
     }
 }
-exports.DatabaseLexer = DatabaseLexer;

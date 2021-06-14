@@ -1,29 +1,26 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.DatabasePropertyParser = void 0;
-const NodeTypes_1 = require("../req/NodeTypes");
-const SyntacticException_1 = require("./SyntacticException");
+import { NodeTypes } from "../req/NodeTypes";
+import { SyntacticException } from "./SyntacticException";
 /**
  * Database property parser.
  *
  * @author Thiago Delgado Pinto
  */
-class DatabasePropertyParser {
+export class DatabasePropertyParser {
     /** @inheritDoc */
     isAccepted(node, it) {
         const allowedPriorNodes = [
-            NodeTypes_1.NodeTypes.DATABASE,
-            NodeTypes_1.NodeTypes.DATABASE_PROPERTY
+            NodeTypes.DATABASE,
+            NodeTypes.DATABASE_PROPERTY
         ];
         return allowedPriorNodes.indexOf(it.spyPrior().nodeType) >= 0;
     }
     /** @inheritDoc */
     handle(node, context, it, errors) {
         // Adjusts the node type
-        node.nodeType = NodeTypes_1.NodeTypes.DATABASE_PROPERTY;
+        node.nodeType = NodeTypes.DATABASE_PROPERTY;
         // Checks the context
         if (!context.currentDatabase) {
-            let e = new SyntacticException_1.SyntacticException('The "' + node.nodeType + '" clause must be declared for a Database.', node.location);
+            let e = new SyntacticException('The "' + node.nodeType + '" clause must be declared for a Database.', node.location);
             errors.push(e);
             return false;
         }
@@ -38,4 +35,3 @@ class DatabasePropertyParser {
         return true;
     }
 }
-exports.DatabasePropertyParser = DatabasePropertyParser;

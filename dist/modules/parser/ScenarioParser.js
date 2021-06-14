@@ -1,18 +1,15 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.ScenarioParser = void 0;
-const SyntacticException_1 = require("./SyntacticException");
+import { SyntacticException } from './SyntacticException';
 /**
  * Scenario parser
  *
  * @author Thiago Delgado Pinto
  */
-class ScenarioParser {
+export class ScenarioParser {
     /** @inheritDoc */
     analyze(node, context, it, errors) {
         // Checks if a feature has been declared before it
         if (!context.doc.feature) {
-            let e = new SyntacticException_1.SyntacticException('A scenario must be declared after a feature.', node.location);
+            let e = new SyntacticException('A scenario must be declared after a feature.', node.location);
             errors.push(e);
             return false;
         }
@@ -30,4 +27,3 @@ class ScenarioParser {
         return true;
     }
 }
-exports.ScenarioParser = ScenarioParser;

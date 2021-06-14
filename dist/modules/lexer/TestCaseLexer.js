@@ -1,20 +1,16 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.TestCaseLexer = void 0;
-const NodeTypes_1 = require("../req/NodeTypes");
-const NamedNodeLexer_1 = require("./NamedNodeLexer");
+import { NodeTypes } from "../req/NodeTypes";
+import { NamedNodeLexer } from "./NamedNodeLexer";
 /**
  * Detects a TestCase.
  *
  * @author Thiago Delgado Pinto
  */
-class TestCaseLexer extends NamedNodeLexer_1.NamedNodeLexer {
+export class TestCaseLexer extends NamedNodeLexer {
     constructor(words) {
-        super(words, NodeTypes_1.NodeTypes.TEST_CASE);
+        super(words, NodeTypes.TEST_CASE);
     }
     /** @inheritDoc */
     suggestedNextNodeTypes() {
-        return [NodeTypes_1.NodeTypes.STEP_GIVEN];
+        return [NodeTypes.STEP_GIVEN];
     }
 }
-exports.TestCaseLexer = TestCaseLexer;

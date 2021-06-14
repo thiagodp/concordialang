@@ -1,22 +1,19 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.copyOptions = void 0;
-const enumUtil = require("enum-util");
-const path_1 = require("path");
-const TypeChecking_1 = require("../util/TypeChecking");
-const combination_options_1 = require("./combination-options");
+import * as enumUtil from 'enum-util';
+import { isAbsolute, resolve } from 'path';
+import { isNumber, isString } from '../util/TypeChecking';
+import { CombinationOptions, VariantSelectionOptions, InvalidSpecialOptions } from './combination-options';
 /**
  * Copy options
  *
  * @param from Object whose keys are on the available options.
  * @param to Object that follows the keys and types of the available options.
  */
-function copyOptions(from, to) {
+export function copyOptions(from, to) {
     const PARAM_SEPARATOR = ',';
     const errors = [];
     // HELPER FUNCTIONS
-    const isStringNotEmpty = text => TypeChecking_1.isString(text) && text.trim() != '';
-    const resolvePath = p => path_1.isAbsolute(p) ? p : path_1.resolve(to.processPath, p);
+    const isStringNotEmpty = text => isString(text) && text.trim() != '';
+    const resolvePath = p => isAbsolute(p) ? p : resolve(to.processPath, p);
     // Copy all attributes that exists in the target object,
     // considering differences in the types when possible.
     const pathKeys = [
@@ -301,16 +298,16 @@ function copyOptions(from, to) {
     // 	to.importance = from.importance;
     // }
     // TEST SCENARIO SELECTION AND COMBINATION STRATEGIES
-    if (TypeChecking_1.isString(from.combVariant)) {
-        if (enumUtil.isValue(combination_options_1.VariantSelectionOptions, from.combVariant)) {
+    if (isString(from.combVariant)) {
+        if (enumUtil.isValue(VariantSelectionOptions, from.combVariant)) {
             to.combVariant = from.combVariant;
         }
         else {
             errors.push("Option '--comb-variant' expects another value. See '--help'.");
         }
     }
-    if (TypeChecking_1.isString(from.combState)) {
-        if (enumUtil.isValue(combination_options_1.CombinationOptions, from.combState)) {
+    if (isString(from.combState)) {
+        if (enumUtil.isValue(CombinationOptions, from.combState)) {
             to.combState = from.combState;
         }
         else {
@@ -318,7 +315,7 @@ function copyOptions(from, to) {
         }
     }
     // SELECTION AND COMBINATION STRATEGIES FOR DATA TEST CASES
-    if (TypeChecking_1.isNumber(from.combInvalid)) {
+    if (isNumber(from.combInvalid)) {
         const n = Number(from.combInvalid);
         if (n >= 0 && n <= 1) {
             to.combInvalid = from.combInvalid;
@@ -327,16 +324,16 @@ function copyOptions(from, to) {
             errors.push("Option '--comb-invalid' expects only 0 or 1 as numbers. See '--help'.");
         }
     }
-    else if (TypeChecking_1.isString(from.combInvalid)) {
-        if (enumUtil.isValue(combination_options_1.InvalidSpecialOptions, from.combInvalid)) {
+    else if (isString(from.combInvalid)) {
+        if (enumUtil.isValue(InvalidSpecialOptions, from.combInvalid)) {
             to.combInvalid = from.combInvalid;
         }
         else {
             errors.push("Option '--comb-invalid' expects another value. See '--help'.");
         }
     }
-    if (TypeChecking_1.isString(from.combData)) {
-        if (enumUtil.isValue(combination_options_1.CombinationOptions, from.combData)) {
+    if (isString(from.combData)) {
+        if (enumUtil.isValue(CombinationOptions, from.combData)) {
             to.combData = from.combData;
         }
         else {
@@ -352,7 +349,6 @@ function copyOptions(from, to) {
     fixInconsistences(to);
     return errors;
 }
-exports.copyOptions = copyOptions;
 /**
  * Fix inconsistences
  */

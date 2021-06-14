@@ -1,20 +1,16 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.VariantLexer = void 0;
-const NodeTypes_1 = require("../req/NodeTypes");
-const NamePlusNumberNodeLexer_1 = require("./NamePlusNumberNodeLexer");
+import { NodeTypes } from "../req/NodeTypes";
+import { NamePlusNumberNodeLexer } from "./NamePlusNumberNodeLexer";
 /**
  * Detects a Variant.
  *
  * @author Thiago Delgado Pinto
  */
-class VariantLexer extends NamePlusNumberNodeLexer_1.NamePlusNumberNodeLexer {
+export class VariantLexer extends NamePlusNumberNodeLexer {
     constructor(words) {
-        super(words, NodeTypes_1.NodeTypes.VARIANT);
+        super(words, NodeTypes.VARIANT);
     }
     /** @inheritDoc */
     suggestedNextNodeTypes() {
-        return [NodeTypes_1.NodeTypes.STEP_GIVEN];
+        return [NodeTypes.STEP_GIVEN];
     }
 }
-exports.VariantLexer = VariantLexer;

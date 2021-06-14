@@ -1,23 +1,20 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.NLPBasedSentenceRecognizer = void 0;
-const TypeChecking_1 = require("../util/TypeChecking");
-const DatabasePropertyRecognizer_1 = require("./DatabasePropertyRecognizer");
-const GivenWhenThenSentenceRecognizer_1 = require("./GivenWhenThenSentenceRecognizer");
-const NLP_1 = require("./NLP");
-const UIPropertyRecognizer_1 = require("./UIPropertyRecognizer");
+import { isDefined } from '../util/TypeChecking';
+import { DatabasePropertyRecognizer } from './DatabasePropertyRecognizer';
+import { GivenWhenThenSentenceRecognizer } from './GivenWhenThenSentenceRecognizer';
+import { NLP } from './NLP';
+import { UIPropertyRecognizer } from './UIPropertyRecognizer';
 /**
  * NLP-based sentence recognizer.
  *
  * @author Thiago Delgado Pinto
  */
-class NLPBasedSentenceRecognizer {
+export class NLPBasedSentenceRecognizer {
     constructor(_nlpTrainer, _useFuzzyProcessor) {
         this._nlpTrainer = _nlpTrainer;
         this._useFuzzyProcessor = _useFuzzyProcessor;
-        this._uiPropertyRec = new UIPropertyRecognizer_1.UIPropertyRecognizer(new NLP_1.NLP(_useFuzzyProcessor));
-        this._variantSentenceRec = new GivenWhenThenSentenceRecognizer_1.GivenWhenThenSentenceRecognizer(new NLP_1.NLP(_useFuzzyProcessor));
-        this._dbPropertyRec = new DatabasePropertyRecognizer_1.DatabasePropertyRecognizer(new NLP_1.NLP(_useFuzzyProcessor));
+        this._uiPropertyRec = new UIPropertyRecognizer(new NLP(_useFuzzyProcessor));
+        this._variantSentenceRec = new GivenWhenThenSentenceRecognizer(new NLP(_useFuzzyProcessor));
+        this._dbPropertyRec = new DatabasePropertyRecognizer(new NLP(_useFuzzyProcessor));
     }
     get uiPropertyRec() {
         return this._uiPropertyRec;
@@ -60,11 +57,11 @@ class NLPBasedSentenceRecognizer {
             this._dbPropertyRec.recognizeSentences(language, db.items, errors, warnings);
         }
         // Before All
-        if (TypeChecking_1.isDefined(doc.beforeAll)) {
+        if (isDefined(doc.beforeAll)) {
             this._variantSentenceRec.recognizeSentences(language, doc.beforeAll.sentences, errors, warnings, 'Before All');
         }
         // After All
-        if (TypeChecking_1.isDefined(doc.afterAll)) {
+        if (isDefined(doc.afterAll)) {
             this._variantSentenceRec.recognizeSentences(language, doc.afterAll.sentences, errors, warnings, 'After All');
         }
         //
@@ -78,7 +75,7 @@ class NLPBasedSentenceRecognizer {
             return;
         }
         // Variant Background
-        if (TypeChecking_1.isDefined(doc.feature.variantBackground)) {
+        if (isDefined(doc.feature.variantBackground)) {
             let vb = doc.feature.variantBackground;
             this._variantSentenceRec.recognizeSentences(language, vb.sentences, errors, warnings);
         }
@@ -97,7 +94,7 @@ class NLPBasedSentenceRecognizer {
         // Variants and Variant Background inside Scenarios
         for (let scenario of doc.feature.scenarios || []) {
             // Variant Background
-            if (TypeChecking_1.isDefined(scenario.variantBackground)) {
+            if (isDefined(scenario.variantBackground)) {
                 let vb = scenario.variantBackground;
                 this._variantSentenceRec.recognizeSentences(language, vb.sentences, errors, warnings, 'Variant Background');
             }
@@ -107,21 +104,20 @@ class NLPBasedSentenceRecognizer {
             }
         }
         // Before Feature
-        if (TypeChecking_1.isDefined(doc.beforeFeature)) {
+        if (isDefined(doc.beforeFeature)) {
             this._variantSentenceRec.recognizeSentences(language, doc.beforeFeature.sentences, errors, warnings, 'Before Feature');
         }
         // After Feature
-        if (TypeChecking_1.isDefined(doc.afterFeature)) {
+        if (isDefined(doc.afterFeature)) {
             this._variantSentenceRec.recognizeSentences(language, doc.afterFeature.sentences, errors, warnings, 'After Feature');
         }
         // Before Each Scenario
-        if (TypeChecking_1.isDefined(doc.beforeEachScenario)) {
+        if (isDefined(doc.beforeEachScenario)) {
             this._variantSentenceRec.recognizeSentences(language, doc.beforeEachScenario.sentences, errors, warnings, 'Before Each Scenario');
         }
         // After Each Scenario
-        if (TypeChecking_1.isDefined(doc.afterEachScenario)) {
+        if (isDefined(doc.afterEachScenario)) {
             this._variantSentenceRec.recognizeSentences(language, doc.afterEachScenario.sentences, errors, warnings, 'After Feature');
         }
     }
 }
-exports.NLPBasedSentenceRecognizer = NLPBasedSentenceRecognizer;

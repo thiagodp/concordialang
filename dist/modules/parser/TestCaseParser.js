@@ -1,20 +1,17 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.TestCaseParser = void 0;
-const SyntacticException_1 = require("./SyntacticException");
-const TagCollector_1 = require("./TagCollector");
+import { SyntacticException } from './SyntacticException';
+import { TagCollector } from './TagCollector';
 /**
  * TestCase parser
  *
  * @author Thiago Delgado Pinto
  */
-class TestCaseParser {
+export class TestCaseParser {
     /** @inheritDoc */
     analyze(node, context, it, errors) {
         // Has no feature and has no imports?
         if (!context.doc.feature
             && (!context.doc.imports || context.doc.imports.length < 1)) {
-            let e = new SyntacticException_1.SyntacticException('A Test Case must be declared after a Feature. Please declare or import a Feature and then declare the Test Case.', node.location);
+            let e = new SyntacticException('A Test Case must be declared after a Feature. Please declare or import a Feature and then declare the Test Case.', node.location);
             errors.push(e);
             return false;
         }
@@ -33,8 +30,7 @@ class TestCaseParser {
         if (!node.tags) {
             node.tags = [];
         }
-        (new TagCollector_1.TagCollector()).addBackwardTags(it, node.tags);
+        (new TagCollector()).addBackwardTags(it, node.tags);
         return true;
     }
 }
-exports.TestCaseParser = TestCaseParser;

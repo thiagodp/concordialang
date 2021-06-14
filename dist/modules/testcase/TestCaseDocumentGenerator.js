@@ -1,15 +1,12 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.TestCaseDocumentGenerator = void 0;
-const deepcopy = require("deepcopy");
-const path_1 = require("path");
-const NodeTypes_1 = require("../req/NodeTypes");
+import deepcopy from 'deepcopy';
+import { basename, dirname, join, relative } from 'path';
+import { NodeTypes } from '../req/NodeTypes';
 /**
  * Generate Test Case Documents, i.e. documents to save as `.testcase` files.
  *
  * @author Thiago Delgado Pinto
  */
-class TestCaseDocumentGenerator {
+export class TestCaseDocumentGenerator {
     constructor(_extensionFeature, _extensionTestCase, _basePath) {
         this._extensionFeature = _extensionFeature;
         this._extensionTestCase = _extensionTestCase;
@@ -23,11 +20,10 @@ class TestCaseDocumentGenerator {
      * @param outputDir Output directory. If not defined, assumes the same directory as the owner document.
      */
     generate(fromDoc, testCases) {
-        var _a;
         let line = 1;
         // Cada TestCase contém o número que pode ser usado como índice para obter o cenário e a variante
         // Criar anotações que referenciam <- AQUI ?
-        const fromDocPath = (_a = fromDoc === null || fromDoc === void 0 ? void 0 : fromDoc.fileInfo) === null || _a === void 0 ? void 0 : _a.path;
+        const fromDocPath = fromDoc?.fileInfo?.path;
         // # Create a simulated document object
         let newDoc = {
             fileInfo: {
@@ -53,8 +49,8 @@ class TestCaseDocumentGenerator {
      * @param featurePath Feature path
      */
     createTestCaseFilePath(featurePath) {
-        const testCaseFile = path_1.basename(featurePath, this._extensionFeature) + this._extensionTestCase;
-        const testCasePath = path_1.join(path_1.dirname(featurePath), testCaseFile);
+        const testCaseFile = basename(featurePath, this._extensionFeature) + this._extensionTestCase;
+        const testCasePath = join(dirname(featurePath), testCaseFile);
         return testCasePath;
     }
     /**
@@ -80,11 +76,11 @@ class TestCaseDocumentGenerator {
     createImports(fromDocPath, startLine) {
         let imports = [];
         // Path relative to where the doc file is
-        const dir = path_1.dirname(fromDocPath);
-        const filePath = path_1.relative(dir, path_1.join(dir, path_1.basename(fromDocPath)));
+        const dir = dirname(fromDocPath);
+        const filePath = relative(dir, join(dir, basename(fromDocPath)));
         // Generate the import to the given document
         let docImport = {
-            nodeType: NodeTypes_1.NodeTypes.IMPORT,
+            nodeType: NodeTypes.IMPORT,
             location: {
                 column: 1,
                 line: startLine
@@ -130,4 +126,3 @@ class TestCaseDocumentGenerator {
         return line;
     }
 }
-exports.TestCaseDocumentGenerator = TestCaseDocumentGenerator;

@@ -1,25 +1,21 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.ImportLexer = void 0;
-const isValidPath = require("is-valid-path");
-const NodeTypes_1 = require("../req/NodeTypes");
-const QuotedNodeLexer_1 = require("./QuotedNodeLexer");
+import isValidPath from 'is-valid-path';
+import { NodeTypes } from '../req/NodeTypes';
+import { QuotedNodeLexer } from './QuotedNodeLexer';
 /**
  * Detects an Import.
  *
  * @author Thiago Delgado Pinto
  */
-class ImportLexer extends QuotedNodeLexer_1.QuotedNodeLexer {
+export class ImportLexer extends QuotedNodeLexer {
     constructor(words) {
-        super(words, NodeTypes_1.NodeTypes.IMPORT);
+        super(words, NodeTypes.IMPORT);
     }
     /** @inheritDoc */
     suggestedNextNodeTypes() {
-        return [NodeTypes_1.NodeTypes.FEATURE, NodeTypes_1.NodeTypes.VARIANT];
+        return [NodeTypes.FEATURE, NodeTypes.VARIANT];
     }
     /** @inheritdoc */
     isValidName(name) {
         return isValidPath(name);
     }
 }
-exports.ImportLexer = ImportLexer;

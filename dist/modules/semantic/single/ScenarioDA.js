@@ -1,8 +1,5 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.ScenarioDA = void 0;
-const SemanticException_1 = require("../../error/SemanticException");
-const DuplicationChecker_1 = require("../DuplicationChecker");
+import { SemanticException } from "../../error/SemanticException";
+import { DuplicationChecker } from "../DuplicationChecker";
 /**
  * Analyzes Scenario declarations for a single document.
  *
@@ -11,7 +8,7 @@ const DuplicationChecker_1 = require("../DuplicationChecker");
  *
  * @author Thiago Delgado Pinto
  */
-class ScenarioDA {
+export class ScenarioDA {
     /** @inheritDoc */
     analyze(doc, errors) {
         // Checking the document structure
@@ -25,13 +22,12 @@ class ScenarioDA {
         this.checkForDuplicatedScenarios(doc, errors);
     }
     checkForDuplicatedScenarios(doc, errors) {
-        let duplicated = (new DuplicationChecker_1.DuplicationChecker())
+        let duplicated = (new DuplicationChecker())
             .withDuplicatedProperty(doc.feature.scenarios, 'name');
         for (let dup of duplicated) {
             let msg = 'Duplicated scenario "' + dup.name + '".';
-            let err = new SemanticException_1.SemanticException(msg, dup.location);
+            let err = new SemanticException(msg, dup.location);
             errors.push(err);
         }
     }
 }
-exports.ScenarioDA = ScenarioDA;

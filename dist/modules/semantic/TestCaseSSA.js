@@ -1,20 +1,8 @@
-"use strict";
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.TestCaseSSA = void 0;
-const deepcopy = require("deepcopy");
-const error_1 = require("../error");
-const language_1 = require("../language");
-const TypeChecking_1 = require("../util/TypeChecking");
-const SpecificationAnalyzer_1 = require("./SpecificationAnalyzer");
+import deepcopy from 'deepcopy';
+import { SemanticException } from '../error';
+import { englishKeywords } from '../language/data/en';
+import { isDefined } from '../util/TypeChecking';
+import { SpecificationAnalyzer } from './SpecificationAnalyzer';
 /**
  * Analyzes Test Cases from a specification.
  *
@@ -54,39 +42,40 @@ const SpecificationAnalyzer_1 = require("./SpecificationAnalyzer");
  *
  * @author Thiago Delgado Pinto
  */
-class TestCaseSSA extends SpecificationAnalyzer_1.SpecificationAnalyzer {
+export class TestCaseSSA extends SpecificationAnalyzer {
     // TODO: change it to receive a dictionary loader, according to the analyzed doc
-    constructor(_keywords = new language_1.EnglishKeywordDictionary()) {
+    constructor(_keywords) {
         super();
         this._keywords = _keywords;
+        if (!this._keywords) {
+            this._keywords = englishKeywords;
+        }
     }
     /** @inheritDoc */
-    analyze(problems, spec, graph) {
-        return __awaiter(this, void 0, void 0, function* () {
-            let specOK = true;
-            for (let doc of spec.docs) {
-                let errors = [];
-                this.analyzeDocument(spec, doc, errors);
-                if (errors.length > 0) {
-                    specOK = false;
-                    problems.addError(doc.fileInfo.path, ...errors);
-                }
+    async analyze(problems, spec, graph) {
+        let specOK = true;
+        for (let doc of spec.docs) {
+            let errors = [];
+            this.analyzeDocument(spec, doc, errors);
+            if (errors.length > 0) {
+                specOK = false;
+                problems.addError(doc.fileInfo.path, ...errors);
             }
-            return specOK;
-        });
+        }
+        return specOK;
     }
     analyzeDocument(spec, doc, errors) {
         // No Test Cases -> exit
         if (!doc.testCases || doc.testCases.length < 1) {
             return;
         }
-        const hasFeature = TypeChecking_1.isDefined(doc.feature);
-        const hasImport = TypeChecking_1.isDefined(doc.imports) && doc.imports.length > 0;
+        const hasFeature = isDefined(doc.feature);
+        const hasImport = isDefined(doc.imports) && doc.imports.length > 0;
         // No Feature or Imports declared
         if (!hasFeature && !hasImport) {
             let firstTestCase = doc.testCases[0];
             const msg = 'No imports or feature declared before the test case.';
-            const err = new error_1.SemanticException(msg, this.makeLocationWithPath(firstTestCase.location, doc.fileInfo.path));
+            const err = new SemanticException(msg, this.makeLocationWithPath(firstTestCase.location, doc.fileInfo.path));
             errors.push(err);
             return;
         }
@@ -129,7 +118,7 @@ class TestCaseSSA extends SpecificationAnalyzer_1.SpecificationAnalyzer {
         // It must have a feature
         if (!feature) {
             const msg = 'Imported document does not have a feature.';
-            const err = new error_1.SemanticException(msg, this.makeLocationWithPath(docImport.location, doc.fileInfo.path));
+            const err = new SemanticException(msg, this.makeLocationWithPath(docImport.location, doc.fileInfo.path));
             errors.push(err);
             return false;
         }
@@ -141,7 +130,7 @@ class TestCaseSSA extends SpecificationAnalyzer_1.SpecificationAnalyzer {
         const importedDoc = spec.docWithPath(filePath, doc.fileInfo.path);
         if (!importedDoc) {
             const msg = 'Imported document path not resolved: "' + filePath + '".';
-            const err = new error_1.SemanticException(msg, this.makeLocationWithPath(docImport.location, doc.fileInfo.path));
+            const err = new SemanticException(msg, this.makeLocationWithPath(docImport.location, doc.fileInfo.path));
             errors.push(err);
             return null;
         }
@@ -167,7 +156,7 @@ class TestCaseSSA extends SpecificationAnalyzer_1.SpecificationAnalyzer {
         // Checks the number of available features
         if (0 === availableFeatures.length) {
             const msg = 'None of the imported files has features.';
-            const err = new error_1.SemanticException(msg, this.makeLocationWithPath(doc.imports[0].location, doc.fileInfo.path));
+            const err = new SemanticException(msg, this.makeLocationWithPath(doc.imports[0].location, doc.fileInfo.path));
             errors.push(err);
             return false;
         }
@@ -206,7 +195,7 @@ class TestCaseSSA extends SpecificationAnalyzer_1.SpecificationAnalyzer {
         else { // multiple features
             if (!featureName) {
                 const msg = 'Test case has no tag that refers to its feature.';
-                const err = new error_1.SemanticException(msg, this.makeLocationWithPath(testCases.location, doc.fileInfo.path));
+                const err = new SemanticException(msg, this.makeLocationWithPath(testCases.location, doc.fileInfo.path));
                 errors.push(err);
                 return false;
             }
@@ -217,7 +206,7 @@ class TestCaseSSA extends SpecificationAnalyzer_1.SpecificationAnalyzer {
         const featureIndex = availableFeatureNames.indexOf(featureName);
         if (featureIndex < 0) {
             const msg = 'Tag refers to a non existing feature.';
-            const err = new error_1.SemanticException(msg, this.makeLocationWithPath(featureTag.location, doc.fileInfo.path));
+            const err = new SemanticException(msg, this.makeLocationWithPath(featureTag.location, doc.fileInfo.path));
             errors.push(err);
             return false;
         }
@@ -276,16 +265,16 @@ class TestCaseSSA extends SpecificationAnalyzer_1.SpecificationAnalyzer {
                 let docs;
                 if (hasFeatureTag) {
                     docs = spec.importedDocumentsOf(doc)
-                        .filter(impDoc => TypeChecking_1.isDefined(impDoc.feature)
+                        .filter(impDoc => isDefined(impDoc.feature)
                         && impDoc.feature.name.toLowerCase() == tc.declaredFeatureName.toLowerCase());
                 }
                 else {
                     docs = spec.importedDocumentsOf(doc)
-                        .filter(impDoc => TypeChecking_1.isDefined(impDoc.feature));
+                        .filter(impDoc => isDefined(impDoc.feature));
                 }
                 // No feature
                 if (docs.length < 1) {
-                    errors.push(new error_1.SemanticException(msgNoFeature, tc.location));
+                    errors.push(new SemanticException(msgNoFeature, tc.location));
                     continue;
                 }
                 feature = docs[0].feature;
@@ -294,44 +283,44 @@ class TestCaseSSA extends SpecificationAnalyzer_1.SpecificationAnalyzer {
                 const size = (feature.scenarios || []).length;
                 // No scenarios
                 if (size < 1) {
-                    errors.push(new error_1.SemanticException(msgNoScenarios, tc.location));
+                    errors.push(new SemanticException(msgNoScenarios, tc.location));
                     continue;
                 }
                 // Index > size
                 if (tc.declaredScenarioIndex > size) {
-                    errors.push(new error_1.SemanticException(msgMaxScenarioIndex, tc.location));
+                    errors.push(new SemanticException(msgMaxScenarioIndex, tc.location));
                     continue;
                 }
                 // Index < 1
                 if (tc.declaredScenarioIndex < 1) {
-                    errors.push(new error_1.SemanticException(msgMinScenarioIndex, tc.location));
+                    errors.push(new SemanticException(msgMinScenarioIndex, tc.location));
                     continue;
                 }
             }
             if (hasVariantTag && !hasScenarioTag) {
-                errors.push(new error_1.SemanticException(msgNoScenarioTag, tc.location));
+                errors.push(new SemanticException(msgNoScenarioTag, tc.location));
                 continue;
             }
             if (hasVariantTag) {
                 const scenario = feature.scenarios[tc.declaredScenarioIndex - 1];
                 if (!scenario) { // should not happen since there are prior validations
-                    errors.push(new error_1.SemanticException(msgNoScenario, tc.location));
+                    errors.push(new SemanticException(msgNoScenario, tc.location));
                     continue;
                 }
                 const size = (scenario.variants || []).length;
                 // No variants
                 if (size < 1) {
-                    errors.push(new error_1.SemanticException(msgNoVariants, tc.location));
+                    errors.push(new SemanticException(msgNoVariants, tc.location));
                     continue;
                 }
                 // Index > size
                 if (tc.declaredVariantIndex > size) {
-                    errors.push(new error_1.SemanticException(msgMaxVariantIndex, tc.location));
+                    errors.push(new SemanticException(msgMaxVariantIndex, tc.location));
                     continue;
                 }
                 // Index < 1
                 if (tc.declaredVariantIndex < 1) {
-                    errors.push(new error_1.SemanticException(msgMinVariantIndex, tc.location));
+                    errors.push(new SemanticException(msgMinVariantIndex, tc.location));
                     continue;
                 }
             }
@@ -351,19 +340,18 @@ class TestCaseSSA extends SpecificationAnalyzer_1.SpecificationAnalyzer {
     }
     detectTagContentAsIndex(tag, errors) {
         let value = Array.isArray(tag.content) ? tag.content[0] : tag.content;
-        if (!TypeChecking_1.isDefined(value)) {
+        if (!isDefined(value)) {
             return value;
         }
         value = parseInt(value.trim());
         if (isNaN(value)) {
             const msg = 'This tag must have a number.';
-            errors.push(new error_1.SemanticException(msg, tag.location));
+            errors.push(new SemanticException(msg, tag.location));
         }
         else if (value <= 0) {
             const msg = 'The tag content must be a number greater than zero.';
-            errors.push(new error_1.SemanticException(msg, tag.location));
+            errors.push(new SemanticException(msg, tag.location));
         }
         return value;
     }
 }
-exports.TestCaseSSA = TestCaseSSA;

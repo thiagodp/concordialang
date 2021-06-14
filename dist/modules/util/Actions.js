@@ -1,12 +1,9 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.Actions = void 0;
 /**
  * Actions
  *
  * @author Thiago Delgado Pinto
  */
-var Actions;
+export var Actions;
 (function (Actions) {
     Actions["ACCEPT"] = "accept";
     Actions["AM_ON"] = "amOn";
@@ -49,4 +46,4 @@ var Actions;
     Actions["UNCHECK"] = "uncheck";
     Actions["UNINSTALL"] = "uninstall";
     Actions["WAIT"] = "wait"; // web, mobile web, mobile native, desktop
-})(Actions = exports.Actions || (exports.Actions = {}));
+})(Actions || (Actions = {}));

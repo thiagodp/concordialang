@@ -1,14 +1,15 @@
-import { Document, FileInfo, Variant } from "../../modules/ast";
-import { FileProblemMapper } from "../../modules/error";
-import { AugmentedSpec } from "../../modules/req/AugmentedSpec";
-import { CartesianProductStrategy } from "../../modules/selection/CombinationStrategy";
-import { SpecFilter } from "../../modules/selection/SpecFilter";
-import { AllVariantsSelectionStrategy } from "../../modules/selection/VariantSelectionStrategy";
-import { BatchSpecificationAnalyzer } from "../../modules/semantic/BatchSpecificationAnalyzer";
-import { GenContext, PreTestCaseGenerator } from "../../modules/testscenario/PreTestCaseGenerator";
-import { TestScenario } from "../../modules/testscenario/TestScenario";
-import { TestScenarioGenerator } from "../../modules/testscenario/TestScenarioGenerator";
-import { SimpleCompiler } from "../SimpleCompiler";
+import { Document, FileInfo, Variant } from '../../modules/ast';
+import { FileProblemMapper } from '../../modules/error';
+import languageMap from '../../modules/language/data/map';
+import { AugmentedSpec } from '../../modules/req/AugmentedSpec';
+import { CartesianProductStrategy } from '../../modules/selection/CombinationStrategy';
+import { SpecFilter } from '../../modules/selection/SpecFilter';
+import { AllVariantsSelectionStrategy } from '../../modules/selection/VariantSelectionStrategy';
+import { BatchSpecificationAnalyzer } from '../../modules/semantic/BatchSpecificationAnalyzer';
+import { GenContext, PreTestCaseGenerator } from '../../modules/testscenario/PreTestCaseGenerator';
+import { TestScenario } from '../../modules/testscenario/TestScenario';
+import { TestScenarioGenerator } from '../../modules/testscenario/TestScenarioGenerator';
+import { SimpleCompiler } from '../SimpleCompiler';
 
 describe( 'TestScenarioGenerator', () => {
 
@@ -29,7 +30,7 @@ describe( 'TestScenarioGenerator', () => {
 
         ptcGen = new PreTestCaseGenerator(
             cp.nlpRec.variantSentenceRec,
-            cp.langLoader,
+            languageMap,
             cp.language,
             SEED,
         );

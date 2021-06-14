@@ -1,10 +1,7 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.DateGenerator = void 0;
-const core_1 = require("@js-joda/core");
-const TypeChecking_1 = require("../../util/TypeChecking");
-const DateLimits_1 = require("../limits/DateLimits");
-class DateGenerator {
+import { ChronoUnit } from "@js-joda/core";
+import { isDefined } from '../../util/TypeChecking';
+import { DateLimits } from "../limits/DateLimits";
+export class DateGenerator {
     /**
      * Constructor.
      *
@@ -16,15 +13,15 @@ class DateGenerator {
      */
     constructor(_randomDateGen, min, max) {
         this._randomDateGen = _randomDateGen;
-        this.ZERO = DateLimits_1.DateLimits.MIN;
-        if (TypeChecking_1.isDefined(min) && TypeChecking_1.isDefined(max) && min.isAfter(max)) {
+        this.ZERO = DateLimits.MIN;
+        if (isDefined(min) && isDefined(max) && min.isAfter(max)) {
             throw new Error('min date should not be greater than max');
         }
-        this._min = TypeChecking_1.isDefined(min) ? min : DateLimits_1.DateLimits.MIN;
-        this._max = TypeChecking_1.isDefined(max) ? max : DateLimits_1.DateLimits.MAX;
+        this._min = isDefined(min) ? min : DateLimits.MIN;
+        this._max = isDefined(max) ? max : DateLimits.MAX;
     }
     diffInDays() {
-        return this._min.until(this._max, core_1.ChronoUnit.DAYS);
+        return this._min.until(this._max, ChronoUnit.DAYS);
     }
     // RANGE ANALYSIS
     /** @inheritDoc */
@@ -33,11 +30,11 @@ class DateGenerator {
     }
     /** @inheritDoc */
     hasValuesBelowMin() {
-        return this._min.isAfter(DateLimits_1.DateLimits.MIN);
+        return this._min.isAfter(DateLimits.MIN);
     }
     /** @inheritDoc */
     hasValuesAboveMax() {
-        return this._max.isBefore(DateLimits_1.DateLimits.MAX);
+        return this._max.isBefore(DateLimits.MAX);
     }
     /** @inheritDoc */
     isZeroBetweenMinAndMax() {
@@ -55,7 +52,7 @@ class DateGenerator {
     // DATA GENERATION
     /** @inheritDoc */
     lowest() {
-        return DateLimits_1.DateLimits.MIN;
+        return DateLimits.MIN;
     }
     /** @inheritDoc */
     randomBelowMin() {
@@ -117,7 +114,6 @@ class DateGenerator {
     }
     /** @inheritDoc */
     greatest() {
-        return DateLimits_1.DateLimits.MAX;
+        return DateLimits.MAX;
     }
 }
-exports.DateGenerator = DateGenerator;

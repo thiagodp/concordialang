@@ -1,37 +1,32 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.FirstMostImportantVariantSelectionStrategy = exports.SingleRandomVariantSelectionStrategy = exports.FirstVariantSelectionStrategy = exports.AllVariantsSelectionStrategy = void 0;
-const Random_1 = require("../testdata/random/Random");
-const RandomLong_1 = require("../testdata/random/RandomLong");
-const TagUtil_1 = require("../util/TagUtil");
+import { Random } from "../testdata/random/Random";
+import { RandomLong } from "../testdata/random/RandomLong";
+import { TagUtil } from "../util/TagUtil";
 /**
  * Variant selection strategy in which all variants are selected
  *
  * @author Thiago Delgado Pinto
  */
-class AllVariantsSelectionStrategy {
+export class AllVariantsSelectionStrategy {
     select(variants) {
         return variants;
     }
 }
-exports.AllVariantsSelectionStrategy = AllVariantsSelectionStrategy;
 /**
  * Variant selection strategy in which the first variant is selected
  *
  * @author Thiago Delgado Pinto
  */
-class FirstVariantSelectionStrategy {
+export class FirstVariantSelectionStrategy {
     select(variants) {
         return variants.length > 0 ? [variants[0]] : [];
     }
 }
-exports.FirstVariantSelectionStrategy = FirstVariantSelectionStrategy;
 /**
  * Variant selection strategy in which a single variant is randomly selected
  *
  * @author Thiago Delgado Pinto
  */
-class SingleRandomVariantSelectionStrategy {
+export class SingleRandomVariantSelectionStrategy {
     constructor(_seed) {
         this._seed = _seed;
     }
@@ -40,12 +35,11 @@ class SingleRandomVariantSelectionStrategy {
         if (max < 1) {
             return [];
         }
-        const randomLong = new RandomLong_1.RandomLong(new Random_1.Random(this._seed));
+        const randomLong = new RandomLong(new Random(this._seed));
         const index = randomLong.between(0, max - 1);
         return [variants[index]];
     }
 }
-exports.SingleRandomVariantSelectionStrategy = SingleRandomVariantSelectionStrategy;
 /**
  * Variant selection strategy in which the first most important variant is selected.
  * The strategy considers the tag `importance` to get variants' importance value,
@@ -53,11 +47,11 @@ exports.SingleRandomVariantSelectionStrategy = SingleRandomVariantSelectionStrat
  *
  * @author Thiago Delgado Pinto
  */
-class FirstMostImportantVariantSelectionStrategy {
+export class FirstMostImportantVariantSelectionStrategy {
     constructor(_defaultImportance, _importanceKeywords) {
         this._defaultImportance = _defaultImportance;
         this._importanceKeywords = _importanceKeywords;
-        this._tagUtil = new TagUtil_1.TagUtil();
+        this._tagUtil = new TagUtil();
     }
     select(variants) {
         let greaterImportanceValue = 0;
@@ -78,4 +72,3 @@ class FirstMostImportantVariantSelectionStrategy {
         return null === importance ? this._defaultImportance : importance;
     }
 }
-exports.FirstMostImportantVariantSelectionStrategy = FirstMostImportantVariantSelectionStrategy;

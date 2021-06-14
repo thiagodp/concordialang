@@ -1,12 +1,9 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.NLPUtil = void 0;
 /**
  * NLP utilities.
  *
  * @author Thiago Delgado Pinto
  */
-class NLPUtil {
+export class NLPUtil {
     entitiesNamed(name, nlpResult) {
         if (!name || !nlpResult) {
             return [];
@@ -38,4 +35,3 @@ class NLPUtil {
         return nlpResult.entities.filter(e => name === e.entity).map(e => e.value);
     }
 }
-exports.NLPUtil = NLPUtil;

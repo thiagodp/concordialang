@@ -1,208 +1,189 @@
-"use strict";
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.App = void 0;
-const concordialang_plugin_1 = require("concordialang-plugin");
-const CompilerFacade_1 = require("../compiler/CompilerFacade");
-const PackageBasedPluginFinder_1 = require("../plugin/PackageBasedPluginFinder");
-const PluginManager_1 = require("../plugin/PluginManager");
-const JSONTestReporter_1 = require("../report/JSONTestReporter");
-const AbstractTestScriptGenerator_1 = require("../testscript/AbstractTestScriptGenerator");
-const TestResultAnalyzer_1 = require("../testscript/TestResultAnalyzer");
-const fs_1 = require("../util/fs");
-const app_options_1 = require("./app-options");
+import { TestScriptGenerationOptions, } from 'concordialang-plugin';
+import { CompilerFacade } from '../compiler/CompilerFacade';
+import { PackageBasedPluginFinder } from '../plugin/PackageBasedPluginFinder';
+import { PluginManager } from '../plugin/PluginManager';
+import { JSONTestReporter } from '../report/JSONTestReporter';
+import { AbstractTestScriptGenerator } from '../testscript/AbstractTestScriptGenerator';
+import { TestResultAnalyzer } from '../testscript/TestResultAnalyzer';
+import { FSDirSearcher, FSFileHandler } from '../util/fs';
+import { hasSomeOptionThatRequiresAPlugin } from './app-options';
 /**
  * Application facade
  *
  * @author Thiago Delgado Pinto
  */
-class App {
+export class App {
     constructor(_fs, _path, _promisify) {
         this._fs = _fs;
         this._path = _path;
         this._promisify = _promisify;
     }
-    start(options, listener) {
-        var _a, _b, _c, _d, _e, _f;
-        return __awaiter(this, void 0, void 0, function* () {
-            const fs = this._fs;
-            const path = this._path;
-            const promisify = this._promisify;
-            const fileHandler = new fs_1.FSFileHandler(fs, promisify, options.encoding);
-            // Load plug-in
-            let plugin = null;
-            if (app_options_1.hasSomeOptionThatRequiresAPlugin(options) && options.plugin) {
-                const dirSearcher = new fs_1.FSDirSearcher(fs, promisify);
-                const pluginManager = new PluginManager_1.PluginManager(options.packageManager, listener, new PackageBasedPluginFinder_1.PackageBasedPluginFinder(options.processPath, fileHandler, dirSearcher), fileHandler);
-                let pluginData = null;
-                try {
-                    pluginData = yield pluginManager.pluginWithName(options.plugin);
-                    if (!pluginData) {
-                        listener.announcePluginNotFound(options.plugin);
-                        return { success: false };
-                        ;
-                    }
-                    plugin = yield pluginManager.load(pluginData);
-                }
-                catch (err) {
-                    listener.showException(err);
-                    return { success: false };
-                }
-                if (!plugin) { // needed?
-                    listener.announcePluginCouldNotBeLoaded(options.plugin);
+    async start(options, listener) {
+        const fs = this._fs;
+        const path = this._path;
+        const promisify = this._promisify;
+        const fileHandler = new FSFileHandler(fs, promisify, options.encoding);
+        // Load plug-in
+        let plugin = null;
+        if (hasSomeOptionThatRequiresAPlugin(options) && options.plugin) {
+            const dirSearcher = new FSDirSearcher(fs, promisify);
+            const pluginManager = new PluginManager(options.packageManager, listener, new PackageBasedPluginFinder(options.processPath, fileHandler, dirSearcher), fileHandler);
+            try {
+                const pluginData = await pluginManager.pluginWithName(options.plugin);
+                if (!pluginData) {
+                    listener.announcePluginNotFound(options.plugin);
                     return { success: false };
                     ;
                 }
-                // can continue
+                plugin = await pluginManager.load(pluginData);
             }
-            if (!plugin &&
-                (options.script || options.run || options.result)) {
-                listener.announceNoPluginWasDefined();
+            catch (err) {
+                listener.showException(err);
+                return { success: false };
+            }
+            if (!plugin) { // needed?
+                listener.announcePluginCouldNotBeLoaded(options.plugin);
                 return { success: false };
                 ;
             }
-            // Compile
-            let hasErrors = false;
-            let spec = null;
-            listener.announceOptions(options);
-            if (options.spec) {
-                const compiler = new CompilerFacade_1.CompilerFacade(fs, path, promisify, listener, listener);
-                try {
-                    [spec,] = yield compiler.compile(options);
-                }
-                catch (err) {
-                    hasErrors = true;
-                    listener.showException(err);
-                }
-                if (null === spec && options.file.length > 0) {
-                    return { success: !hasErrors };
-                }
+            // can continue
+        }
+        if (!plugin &&
+            (options.script || options.run || options.result)) {
+            listener.announceNoPluginWasDefined();
+            return { success: false };
+            ;
+        }
+        // Compile
+        let hasErrors = false;
+        let spec = null;
+        listener.announceOptions(options);
+        if (options.spec) {
+            const compiler = new CompilerFacade(fs, promisify, listener, listener);
+            try {
+                [spec,] = await compiler.compile(options);
             }
-            // Abstract test scripts
-            let abstractTestScripts = [];
-            let generatedTestScriptFiles = [];
-            if (spec && options.script) { // Requires spec and a plugin
-                let docs = spec.docs;
-                // console.log( '>> spec docs', spec.docs.map( d => d.fileInfo.path ) );
-                // if ( options.files && options.files.length > 0 ) {
-                //     const endsWithFeatureExtension = new RegExp( `/\\${options.extensionFeature}$/`, 'u' );
-                //     const transformFeaturesFilesIntoTestCaseFiles = Array.from( new Set(
-                //         options.files.map( f => toUnixPath( f.replace( endsWithFeatureExtension, options.extensionTestCase ) ) )
-                //         ) );
-                //     console.log( '>> FILTER >>', transformFeaturesFilesIntoTestCaseFiles );
-                //     const docContainsPath = ( doc: Document, path: string ): boolean => {
-                //         // console.log( 'DOC', toUnixPath( doc.fileInfo.path ), 'PATH', toUnixPath( path ) );
-                //         return toUnixPath( doc.fileInfo.path ).endsWith( toUnixPath( path ) );
-                //     };
-                //     docs = spec.docs.filter( doc => transformFeaturesFilesIntoTestCaseFiles.findIndex( file => docContainsPath( doc, file ) ) >= 0 );
-                //     console.log( '>> docs after filter >>', spec.docs.map( d => d.fileInfo.path ) );
-                // }
-                const atsGenerator = new AbstractTestScriptGenerator_1.AbstractTestScriptGenerator();
-                abstractTestScripts = atsGenerator.generate(docs, spec);
-                if (abstractTestScripts && abstractTestScripts.length > 0) {
-                    const startTime = Date.now();
-                    // cli.newLine( cli.symbolInfo, 'Generated', abstractTestScripts.length, 'abstract test scripts' );
-                    let errors = [];
-                    try {
-                        const r = yield plugin.generateCode(abstractTestScripts, new concordialang_plugin_1.TestScriptGenerationOptions(options.plugin, options.dirScript, options.directory));
-                        generatedTestScriptFiles = (r === null || r === void 0 ? void 0 : r.generatedFiles) || [];
-                        errors = (r === null || r === void 0 ? void 0 : r.errors) || [];
-                    }
-                    catch (err) {
-                        hasErrors = true;
-                        listener.showException(err);
-                    }
-                    const durationMS = Date.now() - startTime;
-                    listener.showGeneratedTestScriptFiles(options.dirScript, generatedTestScriptFiles, durationMS);
-                    listener.showTestScriptGenerationErrors(errors);
-                }
-            }
-            let executionResult = null;
-            const shouldExecuteScripts = !!plugin &&
-                (options.run &&
-                    (((_a = options.scriptFile) === null || _a === void 0 ? void 0 : _a.length) > 0 ||
-                        generatedTestScriptFiles.length > 0 ||
-                        ('string' === typeof options.dirResult && options.dirResult != '')));
-            if (shouldExecuteScripts) { // Execution requires a plugin, but NOT a spec
-                // console.log( '>>>', 'generatedTestScriptFiles', generatedTestScriptFiles );
-                const scriptFiles = ((_b = options.scriptFile) === null || _b === void 0 ? void 0 : _b.length) > 0
-                    ? options.scriptFile.join(',')
-                    : generatedTestScriptFiles.length > 0
-                        ? generatedTestScriptFiles.join(',')
-                        : undefined;
-                const tseo = {
-                    dirScript: options.dirScript,
-                    dirResult: options.dirResult,
-                    file: scriptFiles || undefined,
-                    grep: options.scriptGrep || undefined,
-                    target: options.target || undefined,
-                    headless: options.headless || undefined,
-                    instances: options.instances || undefined,
-                };
-                listener.announceTestScriptExecutionStarted();
-                try {
-                    executionResult = yield plugin.executeCode(tseo);
-                }
-                catch (err) {
-                    hasErrors = true;
-                    listener.announceTestScriptExecutionError(err);
-                }
-                listener.announceTestScriptExecutionFinished();
-            }
-            if (!hasErrors && (((_c = executionResult === null || executionResult === void 0 ? void 0 : executionResult.total) === null || _c === void 0 ? void 0 : _c.failed) > 0 || ((_d = executionResult === null || executionResult === void 0 ? void 0 : executionResult.total) === null || _d === void 0 ? void 0 : _d.error) > 0)) {
+            catch (err) {
                 hasErrors = true;
+                listener.showException(err);
             }
-            if (options.result) { // Requires a plugin
-                let reportFile;
-                if (!executionResult) {
-                    const defaultReportFile = path.join(options.dirResult, yield plugin.defaultReportFile());
-                    if (!fs.existsSync(defaultReportFile)) {
-                        listener.announceReportFileNotFound(defaultReportFile);
-                        return { success: false, spec };
-                    }
-                    reportFile = defaultReportFile;
-                }
-                else {
-                    reportFile = executionResult.sourceFile;
-                }
-                if (reportFile) {
-                    listener.announceReportFile(reportFile);
-                    try {
-                        executionResult = yield plugin.convertReportFile(reportFile);
-                    }
-                    catch (err) {
-                        hasErrors = true;
-                        listener.showException(err);
-                    }
-                }
+            if (null === spec && options.file.length > 0) {
+                return { success: !hasErrors };
             }
-            if (executionResult) {
+        }
+        // Abstract test scripts
+        let abstractTestScripts = [];
+        let generatedTestScriptFiles = [];
+        let tseo;
+        if (spec && options.script) { // Requires spec and a plugin
+            let docs = spec.docs;
+            const atsGenerator = new AbstractTestScriptGenerator();
+            abstractTestScripts = atsGenerator.generate(docs, spec);
+            if (!!plugin.generateCode && !!abstractTestScripts && abstractTestScripts.length > 0) {
+                const startTime = Date.now();
+                let errors = [];
                 try {
-                    const reportedResult = (new TestResultAnalyzer_1.TestResultAnalyzer()).adjustResult(executionResult, abstractTestScripts);
-                    listener.showTestScriptAnalysis(reportedResult);
-                    // TODO: save report to file
-                    const reporter = new JSONTestReporter_1.JSONTestReporter(fileHandler, path);
-                    yield reporter.report(reportedResult, { directory: options.dirResult, useTimestamp: false });
-                    // ---
-                    if (!hasErrors && (((_e = reportedResult === null || reportedResult === void 0 ? void 0 : reportedResult.total) === null || _e === void 0 ? void 0 : _e.failed) > 0 || ((_f = reportedResult === null || reportedResult === void 0 ? void 0 : reportedResult.total) === null || _f === void 0 ? void 0 : _f.error) > 0)) {
-                        hasErrors = true;
-                    }
+                    const r = await plugin.generateCode(abstractTestScripts, new TestScriptGenerationOptions(options.plugin, options.dirScript, options.directory));
+                    generatedTestScriptFiles = r?.generatedFiles || [];
+                    errors = r?.errors || [];
+                }
+                catch (err) {
+                    hasErrors = true;
+                    listener.showException(err);
+                }
+                const durationMS = Date.now() - startTime;
+                listener.showGeneratedTestScriptFiles(options.dirScript, generatedTestScriptFiles, durationMS);
+                listener.showTestScriptGenerationErrors(errors);
+            }
+        }
+        let executionResult = null;
+        const shouldExecuteScripts = !!plugin && !!plugin.executeCode &&
+            (options.run &&
+                (options.scriptFile?.length > 0 ||
+                    generatedTestScriptFiles.length > 0 ||
+                    ('string' === typeof options.dirResult && options.dirResult != '')));
+        if (shouldExecuteScripts) { // Execution requires a plugin, but NOT a spec
+            // console.log( '>>>', 'generatedTestScriptFiles', generatedTestScriptFiles );
+            const scriptFiles = options.scriptFile?.length > 0
+                ? options.scriptFile.join(',')
+                : generatedTestScriptFiles.length > 0
+                    ? generatedTestScriptFiles.join(',')
+                    : undefined;
+            tseo = {
+                dirScript: options.dirScript,
+                dirResult: options.dirResult,
+                file: scriptFiles || undefined,
+                grep: options.scriptGrep || undefined,
+                target: options.target || undefined,
+                headless: options.headless || undefined,
+                instances: options.instances || undefined,
+            };
+            listener.announceTestScriptExecutionStarted();
+            try {
+                executionResult = await plugin.executeCode(tseo);
+            }
+            catch (err) {
+                hasErrors = true;
+                listener.announceTestScriptExecutionError(err);
+            }
+            listener.announceTestScriptExecutionFinished();
+        }
+        if (!hasErrors && (executionResult?.total?.failed > 0 || executionResult?.total?.error > 0)) {
+            hasErrors = true;
+        }
+        if (options.result &&
+            !!plugin.defaultReportFile &&
+            !!plugin.convertReportFile) { // Requires a plugin
+            let reportFile;
+            if (!executionResult) {
+                const defaultReportFile = path.join(options.dirResult, await plugin.defaultReportFile());
+                if (!fs.existsSync(defaultReportFile)) {
+                    listener.announceReportFileNotFound(defaultReportFile);
+                    return { success: false, spec };
+                }
+                reportFile = defaultReportFile;
+            }
+            else {
+                reportFile = executionResult.sourceFile;
+            }
+            if (reportFile) {
+                listener.announceReportFile(reportFile);
+                try {
+                    executionResult = await plugin.convertReportFile(reportFile);
                 }
                 catch (err) {
                     hasErrors = true;
                     listener.showException(err);
                 }
             }
-            return { success: !hasErrors, spec };
-        });
+        }
+        if (executionResult) {
+            try {
+                const reportedResult = (new TestResultAnalyzer()).adjustResult(executionResult, abstractTestScripts);
+                // @ts-ignore
+                if (!!plugin?.beforeReport) {
+                    // @ts-ignore
+                    await plugin.beforeReport(reportedResult, tseo);
+                }
+                listener.showTestScriptAnalysis(reportedResult);
+                // Save report to file
+                const reporter = new JSONTestReporter(fileHandler);
+                await reporter.report(reportedResult, { directory: options.dirResult, useTimestamp: false });
+                // ---
+                // @ts-ignore
+                if (!!plugin?.afterReport) {
+                    // @ts-ignore
+                    await plugin.afterReport(reportedResult, tseo);
+                }
+                if (!hasErrors && (reportedResult?.total?.failed > 0 || reportedResult?.total?.error > 0)) {
+                    hasErrors = true;
+                }
+            }
+            catch (err) {
+                hasErrors = true;
+                listener.showException(err);
+            }
+        }
+        return { success: !hasErrors, spec };
     }
 }
-exports.App = App;

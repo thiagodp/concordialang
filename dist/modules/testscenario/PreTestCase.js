@@ -1,13 +1,10 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.PreTestCase = void 0;
-const NodeTypes_1 = require("../req/NodeTypes");
+import { NodeTypes } from "../req/NodeTypes";
 /**
  * Pre Test Case
  *
  * @author Thiago Delgado Pinto
  */
-class PreTestCase {
+export class PreTestCase {
     constructor(testPlan, steps = [], oracles = [], // Otherwise steps
     correspondingOracles = []) {
         this.testPlan = testPlan;
@@ -22,7 +19,7 @@ class PreTestCase {
         const len = (this.steps || []).length;
         for (let i = len - 1; i >= 0; --i) {
             let step = this.steps[i];
-            if (NodeTypes_1.NodeTypes.STEP_THEN === step.nodeType) {
+            if (NodeTypes.STEP_THEN === step.nodeType) {
                 return step;
             }
         }
@@ -67,4 +64,3 @@ class PreTestCase {
         return !!this.correspondingOracles.find(c => c.step === step);
     }
 }
-exports.PreTestCase = PreTestCase;

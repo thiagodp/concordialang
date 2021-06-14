@@ -10,7 +10,6 @@ import { TestScriptExecutionResult } from 'concordialang-types';
 import { Document, Spec } from '../ast';
 import { CompilerFacade } from '../compiler/CompilerFacade';
 import { PackageBasedPluginFinder } from '../plugin/PackageBasedPluginFinder';
-import { PluginData } from '../plugin/PluginData';
 import { PluginManager } from '../plugin/PluginManager';
 import { FileBasedTestReporterOptions } from '../report/FileBasedTestReporter';
 import { JSONTestReporter } from '../report/JSONTestReporter';
@@ -19,8 +18,8 @@ import { AbstractTestScriptGenerator } from '../testscript/AbstractTestScriptGen
 import { TestResultAnalyzer } from '../testscript/TestResultAnalyzer';
 import { DirSearcher } from '../util/file';
 import { FSDirSearcher, FSFileHandler } from '../util/fs';
-import { AppOptions, hasSomeOptionThatRequiresAPlugin } from './app-options';
 import { AppListener } from './app-listener';
+import { AppOptions, hasSomeOptionThatRequiresAPlugin } from './app-options';
 
 type AppResult = {
 	spec?: Spec,
@@ -65,9 +64,8 @@ export class App {
 				fileHandler
 				);
 
-			let pluginData: PluginData = null;
             try {
-                pluginData = await pluginManager.pluginWithName( options.plugin );
+                const pluginData = await pluginManager.pluginWithName( options.plugin );
                 if ( ! pluginData ) {
                     listener.announcePluginNotFound( options.plugin );
                     return { success: false };;
@@ -100,7 +98,7 @@ export class App {
         listener.announceOptions( options );
 
         if ( options.spec ) {
-            const compiler = new CompilerFacade( fs, path, promisify, listener, listener );
+            const compiler = new CompilerFacade( fs, promisify, listener, listener );
             try {
 				[ spec, /* graph */ ] = await compiler.compile( options );
             } catch ( err ) {
@@ -117,41 +115,19 @@ export class App {
 
         let abstractTestScripts: AbstractTestScript[] = [];
         let generatedTestScriptFiles: string[] = [];
+        let tseo: TestScriptExecutionOptions;
 
         if ( spec && options.script ) { // Requires spec and a plugin
 
             let docs: Document[] = spec.docs;
 
-            // console.log( '>> spec docs', spec.docs.map( d => d.fileInfo.path ) );
-
-            // if ( options.files && options.files.length > 0 ) {
-
-            //     const endsWithFeatureExtension = new RegExp( `/\\${options.extensionFeature}$/`, 'u' );
-
-            //     const transformFeaturesFilesIntoTestCaseFiles = Array.from( new Set(
-            //         options.files.map( f => toUnixPath( f.replace( endsWithFeatureExtension, options.extensionTestCase ) ) )
-            //         ) );
-
-            //     console.log( '>> FILTER >>', transformFeaturesFilesIntoTestCaseFiles );
-
-            //     const docContainsPath = ( doc: Document, path: string ): boolean => {
-            //         // console.log( 'DOC', toUnixPath( doc.fileInfo.path ), 'PATH', toUnixPath( path ) );
-            //         return toUnixPath( doc.fileInfo.path ).endsWith( toUnixPath( path ) );
-            //     };
-
-            //     docs = spec.docs.filter( doc => transformFeaturesFilesIntoTestCaseFiles.findIndex( file => docContainsPath( doc, file ) ) >= 0 );
-
-            //     console.log( '>> docs after filter >>', spec.docs.map( d => d.fileInfo.path ) );
-            // }
-
             const atsGenerator = new AbstractTestScriptGenerator();
             abstractTestScripts = atsGenerator.generate( docs, spec );
 
-            if ( abstractTestScripts && abstractTestScripts.length > 0 ) {
+            if ( !! plugin.generateCode && !! abstractTestScripts && abstractTestScripts.length > 0 ) {
 
                 const startTime = Date.now();
 
-                // cli.newLine( cli.symbolInfo, 'Generated', abstractTestScripts.length, 'abstract test scripts' );
                 let errors: Error[] = [];
                 try {
                     const r: TestScriptGenerationResult = await plugin.generateCode(
@@ -183,7 +159,7 @@ export class App {
 
         let executionResult: TestScriptExecutionResult = null;
 
-        const shouldExecuteScripts: boolean =  !! plugin &&
+        const shouldExecuteScripts: boolean =  !! plugin && !! plugin.executeCode &&
             ( options.run &&
                 ( options.scriptFile?.length > 0 ||
                     generatedTestScriptFiles.length > 0 ||
@@ -199,7 +175,7 @@ export class App {
                     ? generatedTestScriptFiles.join( ',' )
                     : undefined;
 
-            const tseo: TestScriptExecutionOptions = {
+            tseo = {
                 dirScript: options.dirScript,
                 dirResult: options.dirResult,
                 file: scriptFiles || undefined,
@@ -226,7 +202,10 @@ export class App {
             hasErrors = true;
 		}
 
-		if ( options.result ) { // Requires a plugin
+		if ( options.result &&
+            !! plugin.defaultReportFile &&
+            !! plugin.convertReportFile
+            ) { // Requires a plugin
 
 			let reportFile: string;
 
@@ -268,14 +247,27 @@ export class App {
 					abstractTestScripts
 				);
 
+                // @ts-ignore
+                if ( !! plugin?.beforeReport ) {
+                    // @ts-ignore
+                    await plugin.beforeReport( reportedResult, tseo );
+                }
+
 				listener.showTestScriptAnalysis( reportedResult );
-				// TODO: save report to file
-                const reporter = new JSONTestReporter( fileHandler, path );
+
+				// Save report to file
+                const reporter = new JSONTestReporter( fileHandler );
                 await reporter.report(
                     reportedResult,
                     { directory: options.dirResult, useTimestamp: false } as FileBasedTestReporterOptions
                 );
                 // ---
+
+                // @ts-ignore
+                if ( !! plugin?.afterReport ) {
+                    // @ts-ignore
+                    await plugin.afterReport( reportedResult, tseo );
+                }
 
 				if ( ! hasErrors && ( reportedResult?.total?.failed > 0 || reportedResult?.total?.error > 0 ) ) {
 					hasErrors = true;

@@ -4,7 +4,7 @@ import { distance } from 'damerau-levenshtein-js';
 import * as fs from 'fs';
 import * as path from 'path';
 import * as readPkgUp from 'read-pkg-up';
-import * as semverDiff from 'semver-diff';
+import semverDiff from 'semver-diff';
 import * as updateNotifier from 'update-notifier';
 import { promisify } from 'util';
 
@@ -13,20 +13,27 @@ import { AppOptions } from '../app/app-options';
 import { createPersistableCopy } from '../app/options-exporter';
 import { copyOptions } from '../app/options-importer';
 import { makeAllOptions } from '../app/options-maker';
-import { allInstalledDatabases, installDatabases, uninstallDatabases } from '../db/database-package-manager';
-import { LanguageManager } from '../language/LanguageManager';
+import { allInstalledDatabases } from '../db/database-package-manager';
+import { availableLanguages } from '../language/data/map';
 import { installedDateLocales } from '../language/locale-manager';
 import { PackageBasedPluginFinder, PluginController, PluginManager } from '../plugin';
 import { bestMatch } from '../util/best-match';
-import { DirSearcher, FileSearcher } from '../util/file';
-import { FSDirSearcher, FSFileHandler, FSFileSearcher } from '../util/fs';
-import { joinDatabasePackageNames, makeLockFileName, makePackageInstallCommand, makePackageUninstallCommand, PackageManager, packageManagers } from '../util/package-installation';
+import { DirSearcher } from '../util/file';
+import { FSDirSearcher, FSFileHandler } from '../util/fs';
+import {
+    joinDatabasePackageNames,
+    makeLockFileName,
+    makePackageInstallCommand,
+    makePackageUninstallCommand,
+    PackageManager,
+    packageManagers,
+} from '../util/package-installation';
 import { runCommand } from '../util/run-command';
 import { parseArgs } from './args';
 import { helpContent } from './cli-help';
+import { UI } from './cli-ui';
 import { CliOnlyOptions, hasSomePluginAction } from './CliOnlyOptions';
 import { GuidedConfig, PromptOptions } from './GuidedConfig';
-import { UI } from './cli-ui';
 
 
 // Prevent caching of this module so module.parent is always accurate
@@ -334,13 +341,8 @@ export async function main( appPath: string, processPath: string ): Promise< boo
 	// LANGUAGE
 
 	if ( options.languageList ) {
-
-		const fileSearcher: FileSearcher = new FSFileSearcher( fs );
-
-		const lm = new LanguageManager( fileSearcher, options.languageDir );
 		try {
-			const languages: string[] = await lm.availableLanguages();
-			ui.drawLanguages( languages );
+			ui.drawLanguages( availableLanguages );
 		} catch ( err ) {
 			ui.showException( err );
 			return false;

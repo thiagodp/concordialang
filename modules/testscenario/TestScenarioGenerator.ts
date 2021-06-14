@@ -1,9 +1,9 @@
-import * as deepcopy from 'deepcopy';
+import deepcopy from 'deepcopy';
 
 import { State, Step, Tag, tagsWithAnyOfTheNames, Variant } from '../ast';
 import { RuntimeException } from '../error/RuntimeException';
+import { dictionaryForLanguage } from '../language/data/map';
 import { KeywordDictionary } from '../language/KeywordDictionary';
-import { LanguageContentLoader } from '../language/LanguageContentLoader';
 import { Entities } from '../nlp';
 import { CombinationStrategy } from '../selection/CombinationStrategy';
 import { VariantSelectionStrategy } from '../selection/VariantSelectionStrategy';
@@ -34,7 +34,6 @@ import { VariantStateDetector } from './VariantStateDetector';
 export class TestScenarioGenerator {
 
     private readonly _randomLong: RandomLong;
-    private readonly _langContentLoader: LanguageContentLoader;
 	private readonly _defaultLanguage: string;
 	private readonly _stepHandler;
     public readonly seed: string;
@@ -48,13 +47,8 @@ export class TestScenarioGenerator {
         private _variantToTestScenarioMap: Map< Variant, TestScenario[] >,
         private _postconditionNameToVariantsMap: Map< string, Variant[] >
     ) {
-        this._langContentLoader = this._preTestCaseGenerator.langContentLoader;
 		this._defaultLanguage = this._preTestCaseGenerator.defaultLanguage;
-
-		this._stepHandler = new StepHandler(
-			this._langContentLoader,
-			this._defaultLanguage
-		);
+		this._stepHandler = new StepHandler( this._defaultLanguage );
 
         this.seed = this._preTestCaseGenerator.seed;
         this._randomLong = new RandomLong( new Random( this.seed ) );
@@ -69,10 +63,7 @@ export class TestScenarioGenerator {
     }
 
 
-    async generate(
-        ctx: GenContext,
-        variant: Variant
-    ): Promise< TestScenario[] > {
+    async generate( ctx: GenContext, variant: Variant ): Promise< TestScenario[] > {
 
         let testScenarios: TestScenario[] = [];
 
@@ -505,10 +496,10 @@ export class TestScenarioGenerator {
         // }
 
 
-		const langContent = this._langContentLoader.load(
+		const languageDictionary = dictionaryForLanguage(
             isDefined( docLanguage ) ? docLanguage : this._defaultLanguage
         );
-		const keywords: KeywordDictionary = langContent.keywords;
+		const keywords: KeywordDictionary = languageDictionary.keywords;
 
         ts.ignoreForTestCaseGeneration = this.containsIgnoreTag(
 			variant.tags, ( keywords.tagIgnore || [ 'ignore' ] ) );

@@ -1,13 +1,10 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.QueryParser = void 0;
-const RegexUtil_1 = require("../util/RegexUtil");
+import { RegexUtil } from '../util/RegexUtil';
 /**
  * @author Thiago Delgado Pinto
  */
-class QueryParser {
+export class QueryParser {
     constructor() {
-        this._regexUtil = new RegexUtil_1.RegexUtil();
+        this._regexUtil = new RegexUtil();
     }
     //
     // Idea is replacing fields/constants/etc with the corresponding "real" values.
@@ -67,4 +64,3 @@ class QueryParser {
         return new RegExp(exp, 'gui');
     }
 }
-exports.QueryParser = QueryParser;

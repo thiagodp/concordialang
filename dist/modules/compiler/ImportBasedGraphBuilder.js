@@ -1,15 +1,11 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.ImportBasedGraphBuilder = void 0;
-const file_1 = require("../util/file");
-//const Graph = require( 'graph.js/dist/graph.full.js' );
-const Graph = require("graph.js/dist/graph.full.js");
+import Graph from 'graph.js/dist/graph.full.js';
+import { toUnixPath } from '../util/file';
 /**
  * Import-based graph builder
  *
  * @author Thiago Delgado Pinto
  */
-class ImportBasedGraphBuilder {
+export class ImportBasedGraphBuilder {
     /**
      * Create a graph in which each vertex is identified by the
      * document path and contains a reference to a document.
@@ -23,13 +19,13 @@ class ImportBasedGraphBuilder {
         let graph = new Graph();
         for (let doc of spec.docs) {
             // Use the file path as the key
-            let fromKey = file_1.toUnixPath(!doc.fileInfo ? '' : doc.fileInfo.path || '');
+            let fromKey = toUnixPath(!doc.fileInfo ? '' : doc.fileInfo.path || '');
             // console.log( 'fromKey', fromKey );
             // Add the document as a vertex. If the key already exists, the value is overwritten.
             graph.addVertex(fromKey, doc); // key, value
             // Make each imported file a vertex, but not overwrite the value if it already exists.
             for (let imp of doc.imports || []) {
-                let toKey = file_1.toUnixPath(imp.resolvedPath); // key
+                let toKey = toUnixPath(imp.resolvedPath); // key
                 // console.log( 'toKey', toKey );
                 graph.ensureVertex(toKey); // no value
                 // Make an edge from the doc to the imported file.
@@ -40,4 +36,3 @@ class ImportBasedGraphBuilder {
         return graph;
     }
 }
-exports.ImportBasedGraphBuilder = ImportBasedGraphBuilder;

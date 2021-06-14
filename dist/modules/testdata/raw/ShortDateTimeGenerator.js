@@ -1,10 +1,7 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.ShortDateTimeGenerator = void 0;
-const core_1 = require("@js-joda/core");
-const TypeChecking_1 = require("../../util/TypeChecking");
-const DateTimeLimits_1 = require("../limits/DateTimeLimits");
-class ShortDateTimeGenerator {
+import { ChronoUnit } from '@js-joda/core';
+import { isDefined } from '../../util/TypeChecking';
+import { ShortDateTimeLimits } from '../limits/DateTimeLimits';
+export class ShortDateTimeGenerator {
     /**
      * Constructor.
      *
@@ -16,15 +13,15 @@ class ShortDateTimeGenerator {
      */
     constructor(_randomGen, min, max) {
         this._randomGen = _randomGen;
-        this.ZERO = DateTimeLimits_1.ShortDateTimeLimits.MIN;
-        if (TypeChecking_1.isDefined(min) && TypeChecking_1.isDefined(max) && min.isAfter(max)) {
+        this.ZERO = ShortDateTimeLimits.MIN;
+        if (isDefined(min) && isDefined(max) && min.isAfter(max)) {
             throw new Error('Minimum value should not be greater than the maximum value.');
         }
-        this._min = TypeChecking_1.isDefined(min) ? min : DateTimeLimits_1.ShortDateTimeLimits.MIN;
-        this._max = TypeChecking_1.isDefined(max) ? max : DateTimeLimits_1.ShortDateTimeLimits.MAX;
+        this._min = isDefined(min) ? min : ShortDateTimeLimits.MIN;
+        this._max = isDefined(max) ? max : ShortDateTimeLimits.MAX;
     }
     diffInMinutes() {
-        return this._min.until(this._max, core_1.ChronoUnit.MINUTES);
+        return this._min.until(this._max, ChronoUnit.MINUTES);
     }
     // RANGE ANALYSIS
     /** @inheritDoc */
@@ -33,11 +30,11 @@ class ShortDateTimeGenerator {
     }
     /** @inheritDoc */
     hasValuesBelowMin() {
-        return this._min.isAfter(DateTimeLimits_1.ShortDateTimeLimits.MIN);
+        return this._min.isAfter(ShortDateTimeLimits.MIN);
     }
     /** @inheritDoc */
     hasValuesAboveMax() {
-        return this._max.isBefore(DateTimeLimits_1.ShortDateTimeLimits.MAX);
+        return this._max.isBefore(ShortDateTimeLimits.MAX);
     }
     /** @inheritDoc */
     isZeroBetweenMinAndMax() {
@@ -55,7 +52,7 @@ class ShortDateTimeGenerator {
     // DATA GENERATION
     /** @inheritDoc */
     lowest() {
-        return DateTimeLimits_1.ShortDateTimeLimits.MIN;
+        return ShortDateTimeLimits.MIN;
     }
     /** @inheritDoc */
     randomBelowMin() {
@@ -86,10 +83,10 @@ class ShortDateTimeGenerator {
     /** @inheritDoc */
     median() {
         // const diffInDaysOfDates = Period.between( this._min.toLocalDate(), this._max.toLocalDate() ).days();
-        const diffInDaysOfDates = this._min.toLocalDate().until(this._max.toLocalDate(), core_1.ChronoUnit.DAYS);
+        const diffInDaysOfDates = this._min.toLocalDate().until(this._max.toLocalDate(), ChronoUnit.DAYS);
         const minTime = this._min.toLocalTime();
         const maxTime = this._max.toLocalTime();
-        const diffInMinutesFromTime = minTime.until(maxTime, core_1.ChronoUnit.MINUTES);
+        const diffInMinutesFromTime = minTime.until(maxTime, ChronoUnit.MINUTES);
         const days = Math.round((diffInDaysOfDates - 1) / 2);
         const minutes = Math.round((diffInMinutesFromTime - 1) / 2);
         let r = this._min.plusDays(days);
@@ -128,7 +125,6 @@ class ShortDateTimeGenerator {
     }
     /** @inheritDoc */
     greatest() {
-        return DateTimeLimits_1.ShortDateTimeLimits.MAX;
+        return ShortDateTimeLimits.MAX;
     }
 }
-exports.ShortDateTimeGenerator = ShortDateTimeGenerator;

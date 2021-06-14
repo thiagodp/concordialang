@@ -1,18 +1,13 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.parseArgs = void 0;
-// import * as meow from 'meow';
-const getopts = require("getopts");
+import getopts from 'getopts';
 /**
  * Parses the given arguments.
  *
  * @param args Arguments to parse.
  * @return Parsed arguments.
  */
-function parseArgs(args) {
+export function parseArgs(args) {
     return parseWithGetOpts(args);
 }
-exports.parseArgs = parseArgs;
 function parseWithGetOpts(inputArgs) {
     const options = makeGetOptsOptions();
     const unexpected = {};

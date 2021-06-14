@@ -1,9 +1,6 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.EntityRecognizerMaker = exports.COMMAND_REGEX = exports.STATE_REGEX = exports.VALUE_LIST_REGEX = exports.CONSTANT_REGEX = exports.QUERY_REGEX = exports.NUMBER_REGEX = exports.UI_LITERAL_REGEX = exports.UI_PROPERTY_REF_REGEX = exports.UI_ELEMENT_REF_REGEX = exports.VALUE_REGEX = void 0;
-const Bravey = require("../../lib/bravey"); // .js file
-const cloneRegExp = require("clone-regexp");
-const ValueTypeDetector_1 = require("../util/ValueTypeDetector");
+import cloneRegExp from 'clone-regexp';
+import Bravey from '../../lib/bravey';
+import { adjustValueToTheRightType } from '../util/ValueTypeDetector';
 // import { expressionsOf, joinExpressions, propertyByMatch, datePropertyToDate, prefixedRegex, extractNumberFromPrefixedMatch } from './DateTimeExpressions';
 // import { LocalDate, DateTimeFormatter } from '@js-joda/core';
 //
@@ -11,35 +8,35 @@ const ValueTypeDetector_1 = require("../util/ValueTypeDetector");
 //  - all of them have /g
 //  - It is recommended to clone before using, because of lastIndex when using exec()
 //
-exports.VALUE_REGEX = /"(?:[^"\\]|\\.)*"/g;
+export const VALUE_REGEX = /"(?:[^"\\]|\\.)*"/g;
 // export const UI_ELEMENT_REF_REGEX = new RegExp( '\{[a-zA-ZÀ-ÖØ-öø-ÿ][^|<\r\n\>\}]*\}', 'g' );
-exports.UI_ELEMENT_REF_REGEX = /\{[a-zA-ZÀ-ÖØ-öø-ÿ][^|<\r\n\>\}]*\}/g;
+export const UI_ELEMENT_REF_REGEX = /\{[a-zA-ZÀ-ÖØ-öø-ÿ][^|<\r\n\>\}]*\}/g;
 // export const UI_PROPERTY_REF_REGEX = new RegExp( '\\{[ ]*[a-zA-ZÀ-ÖØ-öø-ÿ]+[a-zA-ZÀ-ÖØ-öø-ÿ ]*\\:?[a-zA-ZÀ-ÖØ-öø-ÿ ]*\\|[a-zA-ZÀ-ÖØ-öø-ÿ ]+\\}', 'g' );
-exports.UI_PROPERTY_REF_REGEX = /\{[ ]*[a-zA-ZÀ-ÖØ-öø-ÿ][a-zA-ZÀ-ÖØ-öø-ÿ0-9 _-]*(\:[a-zA-ZÀ-ÖØ-öø-ÿ][a-zA-ZÀ-ÖØ-öø-ÿ0-9 _-]*)?\|[a-zA-ZÀ-ÖØ-öø-ÿ][a-zA-ZÀ-ÖØ-öø-ÿ ]+\}/g;
+export const UI_PROPERTY_REF_REGEX = /\{[ ]*[a-zA-ZÀ-ÖØ-öø-ÿ][a-zA-ZÀ-ÖØ-öø-ÿ0-9 _-]*(\:[a-zA-ZÀ-ÖØ-öø-ÿ][a-zA-ZÀ-ÖØ-öø-ÿ0-9 _-]*)?\|[a-zA-ZÀ-ÖØ-öø-ÿ][a-zA-ZÀ-ÖØ-öø-ÿ ]+\}/g;
 // export const UI_LITERAL_REGEX = /(?:\<)((?:#|@|\.|\/\/|~|[a-zA-ZÀ-ÖØ-öø-ÿ])[^<\r\n\>]*)(?:\>)/g;
 // export const UI_LITERAL_REGEX = /(?:\<)((?:#|@|\.|\/\/|~|[a-zA-ZÀ-ÖØ-öø-ÿ])[^<\r\n]*)(?:\>)/g; // Issue #19
 // export const UI_LITERAL_REGEX = /(?:\<)((?:#|@|\.|\/\/|~|[a-zA-ZÀ-ÖØ-öø-ÿ0-9 ]?)[^<\r\n]*[^\\>])(?:\>)/g; // <- Penultimate
 // export const UI_LITERAL_REGEX = /(?:\<)([a-zA-ZÀ-ÖØ-öø-ÿ0-9\#\@\~\.\-\*\=\\_\"\'\>\/\[\] ]+)(?:\>)/g; // Last (without only consider escaped >) - problematic
 //
 // Modified to only recognize XPaths with internal ">" when escaped, that is "\>".
-exports.UI_LITERAL_REGEX = /(?:\<)([a-zA-ZÀ-ÖØ-öø-ÿ0-9 \#\@\~\.\:\-\*\=\_\/\[\]\'\"]|\\['">])+(?:\>)/g;
-exports.NUMBER_REGEX = /(-?[0-9]+(?:\.[0-9]+)?)/g;
+export const UI_LITERAL_REGEX = /(?:\<)([a-zA-ZÀ-ÖØ-öø-ÿ0-9 \#\@\~\.\:\-\*\=\_\/\[\]\'\"]|\\['">])+(?:\>)/g;
+export const NUMBER_REGEX = /(-?[0-9]+(?:\.[0-9]+)?)/g;
 // export const NUMBER_REGEX = /(?:[ ,\[]|^)(-?[0-9]+(?:\.[0-9]+)?)/g; // Last addition to not consider the invalid seconds of a time as being a number
 // export const QUERY_REGEX = new RegExp( '"(?:\t| )*SELECT[^"]+"', "gi" );
-exports.QUERY_REGEX = /"(?:\t| )*SELECT[^"]+"/gi;
-exports.CONSTANT_REGEX = /\[[a-zA-ZÀ-ÖØ-öø-ÿ_][a-zA-ZÀ-ÖØ-öø-ÿ0-9 _-]*\]/g;
+export const QUERY_REGEX = /"(?:\t| )*SELECT[^"]+"/gi;
+export const CONSTANT_REGEX = /\[[a-zA-ZÀ-ÖØ-öø-ÿ_][a-zA-ZÀ-ÖØ-öø-ÿ0-9 _-]*\]/g;
 // export const VALUE_LIST_REGEX = /\[(?: )*((?:,) ?|([0-9]+(\.[0-9]+)?|\"(.*[^\\])\"))+(?: )*\]/g;
 // export const VALUE_LIST_REGEX = /(\[[\t ]*([^\]])*[\t ]*[^\\]\])+/g; // only [ anything ]
 // export const VALUE_LIST_REGEX = /(?:\[[\t ]*)(("[^"]*"|(-?[0-9]+(\.[0-9]+)?))*,?[\t ]?)+[^\]]?(?:\])/g; // [ value or number ]
-exports.VALUE_LIST_REGEX = /(?:\[[\t ]*)(("(\\"|[^"])+"|(-?[0-9]+(\.[0-9]+)?))+,?[\t ]?)+[^\]]?(?:\])/g; // [ value or number ]
-exports.STATE_REGEX = /\~[a-zA-ZÀ-ÖØ-öø-ÿ_][a-zA-ZÀ-ÖØ-öø-ÿ0-9 _-]*\~/g;
-exports.COMMAND_REGEX = /'(?:[^'\\]|\\.)*'/g;
+export const VALUE_LIST_REGEX = /(?:\[[\t ]*)(("(\\"|[^"])+"|(-?[0-9]+(\.[0-9]+)?))+,?[\t ]?)+[^\]]?(?:\])/g; // [ value or number ]
+export const STATE_REGEX = /\~[a-zA-ZÀ-ÖØ-öø-ÿ_][a-zA-ZÀ-ÖØ-öø-ÿ0-9 _-]*\~/g;
+export const COMMAND_REGEX = /'(?:[^'\\]|\\.)*'/g;
 /**
  * EntityRecognizer maker
  *
  * @author Thiago Delgado Pinto
  */
-class EntityRecognizerMaker {
+export class EntityRecognizerMaker {
     /**
      * Creates a recognizer for values between quotes.
      *
@@ -51,7 +48,7 @@ class EntityRecognizerMaker {
      */
     makeValue(entityName) {
         let valueRec = new Bravey.RegexEntityRecognizer(entityName, 10);
-        let regex = cloneRegExp(exports.VALUE_REGEX);
+        let regex = cloneRegExp(VALUE_REGEX);
         valueRec.addMatch(regex, function (match) {
             const value = match[0] || '';
             return value.substring(1, value.length - 1); // exclude quotes
@@ -73,7 +70,7 @@ class EntityRecognizerMaker {
      */
     makeUIElementReference(entityName) {
         let valueRec = new Bravey.RegexEntityRecognizer(entityName, 10);
-        let regex = cloneRegExp(exports.UI_ELEMENT_REF_REGEX);
+        let regex = cloneRegExp(UI_ELEMENT_REF_REGEX);
         valueRec.addMatch(regex, function (match) {
             //console.log( 'match: ', match );
             return match.toString().replace('{', '').replace('}', '');
@@ -97,7 +94,7 @@ class EntityRecognizerMaker {
      */
     makeUIPropertyReference(entityName) {
         let valueRec = new Bravey.RegexEntityRecognizer(entityName, 10);
-        let regex = cloneRegExp(exports.UI_PROPERTY_REF_REGEX);
+        let regex = cloneRegExp(UI_PROPERTY_REF_REGEX);
         valueRec.addMatch(regex, function (match) {
             const value = match[0] || '';
             return value.substring(1, value.length - 1).trim(); // exclude { and } and trim
@@ -118,7 +115,7 @@ class EntityRecognizerMaker {
      */
     makeUILiteral(entityName) {
         let valueRec = new Bravey.RegexEntityRecognizer(entityName, 10);
-        let regex = cloneRegExp(exports.UI_LITERAL_REGEX);
+        let regex = cloneRegExp(UI_LITERAL_REGEX);
         valueRec.addMatch(regex, function (match) {
             const value = match[0].toString();
             return value.trim() // Removes spaces
@@ -139,7 +136,7 @@ class EntityRecognizerMaker {
      */
     makeNumber(entityName) {
         let valueRec = new Bravey.RegexEntityRecognizer(entityName, 10);
-        let regex = cloneRegExp(exports.NUMBER_REGEX);
+        let regex = cloneRegExp(NUMBER_REGEX);
         valueRec.addMatch(regex, function (match) {
             // console.log( 'match ', match );
             // return match[ 0 ].toString().trim();
@@ -160,7 +157,7 @@ class EntityRecognizerMaker {
      */
     makeQuery(entityName) {
         let valueRec = new Bravey.RegexEntityRecognizer(entityName, 10);
-        let regex = cloneRegExp(exports.QUERY_REGEX);
+        let regex = cloneRegExp(QUERY_REGEX);
         valueRec.addMatch(regex, function (match) {
             // return match.toString().replace( /["]+/g, '' ).trim();
             const content = match.toString();
@@ -182,7 +179,7 @@ class EntityRecognizerMaker {
      */
     makeConstant(entityName) {
         let valueRec = new Bravey.RegexEntityRecognizer(entityName, 10);
-        let regex = cloneRegExp(exports.CONSTANT_REGEX);
+        let regex = cloneRegExp(CONSTANT_REGEX);
         valueRec.addMatch(regex, function (match) {
             const value = match[0].toString();
             return value.substring(1, value.length - 1); // exclude '[' and ']'
@@ -198,7 +195,7 @@ class EntityRecognizerMaker {
      */
     makeValueList(entityName) {
         let valueRec = new Bravey.RegexEntityRecognizer(entityName, 10);
-        let regex = cloneRegExp(exports.VALUE_LIST_REGEX);
+        let regex = cloneRegExp(VALUE_LIST_REGEX);
         valueRec.addMatch(regex, function (match) {
             // console.log( 'match: ', match );
             // return match[ 0 ].toString().trim();
@@ -216,7 +213,7 @@ class EntityRecognizerMaker {
                     values.push(v.substring(1, v.length - 1)); // Remove quotes
                 }
                 else {
-                    values.push(ValueTypeDetector_1.adjustValueToTheRightType(v));
+                    values.push(adjustValueToTheRightType(v));
                 }
             }
             // console.log( "VALUES:", values );
@@ -238,7 +235,7 @@ class EntityRecognizerMaker {
      */
     makeState(entityName) {
         let valueRec = new Bravey.RegexEntityRecognizer(entityName, 10);
-        let regex = cloneRegExp(exports.STATE_REGEX);
+        let regex = cloneRegExp(STATE_REGEX);
         valueRec.addMatch(regex, function (match) {
             const value = match[0].toString();
             return value.substring(1, value.length - 1); // exclude '~' and '~'
@@ -257,7 +254,7 @@ class EntityRecognizerMaker {
      */
     makeCommand(entityName) {
         let valueRec = new Bravey.RegexEntityRecognizer(entityName, 10);
-        let regex = cloneRegExp(exports.COMMAND_REGEX);
+        let regex = cloneRegExp(COMMAND_REGEX);
         valueRec.addMatch(regex, function (match) {
             const content = match.toString();
             return content.substring(1, content.length - 1).trim();
@@ -351,4 +348,3 @@ class EntityRecognizerMaker {
         return Bravey.Language[lang] || Bravey.Language['EN'];
     }
 }
-exports.EntityRecognizerMaker = EntityRecognizerMaker;

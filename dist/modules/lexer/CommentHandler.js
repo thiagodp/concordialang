@@ -1,27 +1,24 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.CommentHandler = void 0;
-const Symbols_1 = require("../req/Symbols");
+import { Symbols } from "../req/Symbols";
 /**
  * Command handler
  *
  * @author Thiago Delgado Pinto
  */
-class CommentHandler {
+export class CommentHandler {
     remove(content) {
         // Comment is the first character after trim left
-        if (0 === content.trimLeft().indexOf(Symbols_1.Symbols.COMMENT_PREFIX)) {
-            return content.substring(0, content.indexOf(Symbols_1.Symbols.COMMENT_PREFIX));
+        if (0 === content.trimLeft().indexOf(Symbols.COMMENT_PREFIX)) {
+            return content.substring(0, content.indexOf(Symbols.COMMENT_PREFIX));
         }
         // There is content before the comment, let's get the last index
-        let commentPos = content.lastIndexOf(Symbols_1.Symbols.COMMENT_PREFIX);
+        let commentPos = content.lastIndexOf(Symbols.COMMENT_PREFIX);
         if (commentPos < 0) { // not found
             return content;
         }
         // Check whether it has any terminator after it
-        let lastValueIndex = content.lastIndexOf(Symbols_1.Symbols.VALUE_WRAPPER);
-        let lastUILiteralIndex = content.lastIndexOf(Symbols_1.Symbols.UI_LITERAL_SUFFIX);
-        let lastCommandIndex = content.lastIndexOf(Symbols_1.Symbols.COMMAND_WRAPPER);
+        let lastValueIndex = content.lastIndexOf(Symbols.VALUE_WRAPPER);
+        let lastUILiteralIndex = content.lastIndexOf(Symbols.UI_LITERAL_SUFFIX);
+        let lastCommandIndex = content.lastIndexOf(Symbols.COMMAND_WRAPPER);
         if ((lastValueIndex >= 0 && commentPos < lastValueIndex) ||
             (lastUILiteralIndex >= 0 && commentPos < lastUILiteralIndex) ||
             (lastCommandIndex >= 0 && commentPos < lastCommandIndex)) {
@@ -34,4 +31,3 @@ class CommentHandler {
         return ignoreTrim ? result : result.trim();
     }
 }
-exports.CommentHandler = CommentHandler;

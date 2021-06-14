@@ -1,11 +1,11 @@
 import { Document, Step } from '../ast';
-import { LanguageContent } from "../language/LanguageContent";
+import { LanguageDictionary } from '../language/LanguageDictionary';
 import { Entities } from '../nlp/Entities';
-import { AugmentedSpec } from "../req/AugmentedSpec";
-import { ACTION_TARGET_MAP } from "./ActionMap";
-import { EditableActionTargets } from "./ActionTargets";
-import { isDefined } from "./TypeChecking";
-import { UIElementPropertyExtractor } from "./UIElementPropertyExtractor";
+import { AugmentedSpec } from '../req/AugmentedSpec';
+import { ACTION_TARGET_MAP } from './ActionMap';
+import { EditableActionTargets } from './ActionTargets';
+import { isDefined } from './TypeChecking';
+import { UIElementPropertyExtractor } from './UIElementPropertyExtractor';
 
 export class TargetTypeUtil {
 
@@ -14,9 +14,9 @@ export class TargetTypeUtil {
      * or the dictionary term to an input otherwise.
      *
      * @param step
-     * @param langContent
+     * @param languageDictionary
      */
-    analyzeInputTargetTypes( step: Step, langContent: LanguageContent ): string {
+    analyzeInputTargetTypes( step: Step, languageDictionary: LanguageDictionary ): string {
         let targetType: string = '';
         const INPUT_TARGET_TYPES: string[] = [
             EditableActionTargets.TEXTBOX,
@@ -26,7 +26,7 @@ export class TargetTypeUtil {
         for ( let tt of step.targetTypes || [] ) {
             if ( INPUT_TARGET_TYPES.indexOf( tt ) >= 0 ) {
                 // TO-DO: refactor removing magic strings
-                const values: string[] = ( ( langContent.nlp[ "testcase" ] || {} )[ "ui_action_option" ] || {} )[ 'field' ];
+                const values: string[] = ( ( languageDictionary.nlp[ "testcase" ] || {} )[ "ui_action_option" ] || {} )[ 'field' ];
                 if ( isDefined( values ) && values.length > 0 ) {
                     targetType = values[ 0 ];
                 }
@@ -36,22 +36,22 @@ export class TargetTypeUtil {
         return targetType;
     }
 
-    hasInputTargetInTheSentence( sentence: string, langContent: LanguageContent ): boolean {
+    hasInputTargetInTheSentence( sentence: string, languageDictionary: LanguageDictionary ): boolean {
 
         // TO-DO: refactor removing magic strings
 
-        let terms: string[] = ( ( langContent.nlp[ "testcase" ] || {} )[ "ui_action_option" ] || {} )[ 'field' ] || [];
+        let terms: string[] = ( ( languageDictionary.nlp[ "testcase" ] || {} )[ "ui_action_option" ] || {} )[ 'field' ] || [];
 
         terms = terms.concat(
-            ( ( langContent.nlp[ "testcase" ] || {} )[ "ui_element_type" ] || {} )[ 'textbox' ] || []
+            ( ( languageDictionary.nlp[ "testcase" ] || {} )[ "ui_element_type" ] || {} )[ 'textbox' ] || []
         );
 
         terms = terms.concat(
-            ( ( langContent.nlp[ "testcase" ] || {} )[ "ui_element_type" ] || {} )[ 'textarea' ] || []
+            ( ( languageDictionary.nlp[ "testcase" ] || {} )[ "ui_element_type" ] || {} )[ 'textarea' ] || []
         );
 
         terms = terms.concat(
-            ( ( langContent.nlp[ "testcase" ] || {} )[ "ui_element_type" ] || {} )[ 'fileInput' ] || []
+            ( ( languageDictionary.nlp[ "testcase" ] || {} )[ "ui_element_type" ] || {} )[ 'fileInput' ] || []
         );
 
         for ( let term of terms ) {

@@ -1,12 +1,9 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.Keywords = void 0;
 /**
  * Keywords to identify nodes.
  *
  * @author Thiago Delgado Pinto
  */
-class Keywords {
+export class Keywords {
     // Utilities
     static all() {
         let set = [];
@@ -18,7 +15,6 @@ class Keywords {
         return set;
     }
 }
-exports.Keywords = Keywords;
 // Not available in Gherkin
 Keywords.IMPORT = 'import';
 Keywords.REGEX_BLOCK = 'regexBlock';

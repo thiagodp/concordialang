@@ -1,10 +1,7 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.ImportDA = void 0;
-const fs = require("fs");
-const path_1 = require("path");
-const SemanticException_1 = require("../../error/SemanticException");
-const DuplicationChecker_1 = require("../DuplicationChecker");
+import * as fs from 'fs';
+import { dirname, join } from 'path';
+import { SemanticException } from "../../error/SemanticException";
+import { DuplicationChecker } from '../DuplicationChecker';
 /**
  * Analyzes Import declarations for a single Document.
  *
@@ -15,7 +12,7 @@ const DuplicationChecker_1 = require("../DuplicationChecker");
  *
  * @author Thiago Delgado Pinto
  */
-class ImportDA {
+export class ImportDA {
     constructor(_fs = fs) {
         this._fs = _fs;
     }
@@ -27,32 +24,31 @@ class ImportDA {
             return;
         }
         // Check duplicated imports
-        let duplicated = (new DuplicationChecker_1.DuplicationChecker())
+        let duplicated = (new DuplicationChecker())
             .withDuplicatedProperty(doc.imports, 'content');
         for (let dup of duplicated) {
             let msg = 'Duplicated imported to file "' + dup.value + '".';
-            let err = new SemanticException_1.SemanticException(msg, dup.location);
+            let err = new SemanticException(msg, dup.location);
             errors.push(err);
         }
         for (let imp of doc.imports) {
             let importPath = imp.value;
-            let resolvedPath = path_1.join(path_1.dirname(doc.fileInfo.path), importPath);
+            let resolvedPath = join(dirname(doc.fileInfo.path), importPath);
             // Add the resolved path to the import
             imp.resolvedPath = resolvedPath;
             // Check for a self reference
             if (doc.fileInfo.path === resolvedPath) {
                 let msg = 'Imported file is a self reference: "' + importPath + '".';
-                let err = new SemanticException_1.SemanticException(msg, imp.location);
+                let err = new SemanticException(msg, imp.location);
                 errors.push(err);
             }
             // Check if the imported file exist
             const exists = this._fs.existsSync(resolvedPath);
             if (!exists) {
                 let msg = 'Imported file not found: "' + importPath + '".';
-                let err = new SemanticException_1.SemanticException(msg, imp.location);
+                let err = new SemanticException(msg, imp.location);
                 errors.push(err);
             }
         }
     }
 }
-exports.ImportDA = ImportDA;

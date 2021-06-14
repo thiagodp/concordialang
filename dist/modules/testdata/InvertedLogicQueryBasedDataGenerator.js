@@ -1,49 +1,24 @@
-"use strict";
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.InvertedLogicQueryBasedDataGenerator = void 0;
-class InvertedLogicQueryBasedDataGenerator {
+export class InvertedLogicQueryBasedDataGenerator {
     constructor(_gen) {
         this._gen = _gen;
     }
     // DATA GENERATION
-    firstElement() {
-        return __awaiter(this, void 0, void 0, function* () {
-            return yield this._gen.notInSet();
-        });
+    async firstElement() {
+        return await this._gen.notInSet();
     }
-    secondElement() {
-        return __awaiter(this, void 0, void 0, function* () {
-            return yield this._gen.notInSet();
-        });
+    async secondElement() {
+        return await this._gen.notInSet();
     }
-    randomElement() {
-        return __awaiter(this, void 0, void 0, function* () {
-            return yield this._gen.notInSet();
-        });
+    async randomElement() {
+        return await this._gen.notInSet();
     }
-    penultimateElement() {
-        return __awaiter(this, void 0, void 0, function* () {
-            return yield this._gen.notInSet();
-        });
+    async penultimateElement() {
+        return await this._gen.notInSet();
     }
-    lastElement() {
-        return __awaiter(this, void 0, void 0, function* () {
-            return yield this._gen.notInSet();
-        });
+    async lastElement() {
+        return await this._gen.notInSet();
     }
-    notInSet() {
-        return __awaiter(this, void 0, void 0, function* () {
-            return yield this._gen.randomElement();
-        });
+    async notInSet() {
+        return await this._gen.randomElement();
     }
 }
-exports.InvertedLogicQueryBasedDataGenerator = InvertedLogicQueryBasedDataGenerator;

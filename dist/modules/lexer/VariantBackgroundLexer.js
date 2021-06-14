@@ -1,20 +1,16 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.VariantBackgroundLexer = void 0;
-const NodeTypes_1 = require("../req/NodeTypes");
-const BlockLexer_1 = require("./BlockLexer");
+import { NodeTypes } from "../req/NodeTypes";
+import { BlockLexer } from "./BlockLexer";
 /**
  * Detects a Variant Background block.
  *
  * @author Thiago Delgado Pinto
  */
-class VariantBackgroundLexer extends BlockLexer_1.BlockLexer {
+export class VariantBackgroundLexer extends BlockLexer {
     constructor(words) {
-        super(words, NodeTypes_1.NodeTypes.VARIANT_BACKGROUND);
+        super(words, NodeTypes.VARIANT_BACKGROUND);
     }
     /** @inheritDoc */
     suggestedNextNodeTypes() {
-        return [NodeTypes_1.NodeTypes.STEP_GIVEN, NodeTypes_1.NodeTypes.SCENARIO, NodeTypes_1.NodeTypes.VARIANT];
+        return [NodeTypes.STEP_GIVEN, NodeTypes.SCENARIO, NodeTypes.VARIANT];
     }
 }
-exports.VariantBackgroundLexer = VariantBackgroundLexer;

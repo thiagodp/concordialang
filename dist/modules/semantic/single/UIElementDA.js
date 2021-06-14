@@ -1,10 +1,7 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.UIElementDA = void 0;
-const SemanticException_1 = require("../../error/SemanticException");
-const TypeChecking_1 = require("../../util/TypeChecking");
-const UIElementPropertyExtractor_1 = require("../../util/UIElementPropertyExtractor");
-const DuplicationChecker_1 = require("../DuplicationChecker");
+import { SemanticException } from "../../error/SemanticException";
+import { isDefined } from "../../util/TypeChecking";
+import { UIElementPropertyExtractor } from "../../util/UIElementPropertyExtractor";
+import { DuplicationChecker } from "../DuplicationChecker";
 /**
  * Analyzes UI Element declarations for a single document.
  *
@@ -18,14 +15,14 @@ const DuplicationChecker_1 = require("../DuplicationChecker");
  *
  * @author Thiago Delgado Pinto
  */
-class UIElementDA {
+export class UIElementDA {
     analyze(doc, errors) {
-        const checker = new DuplicationChecker_1.DuplicationChecker();
+        const checker = new DuplicationChecker();
         // In the Document (global)
         const globalOnes = doc.uiElements || [];
         checker.checkDuplicatedNamedNodes(globalOnes, errors, 'global UI Element');
         // In the Feature (local)
-        const localOnes = TypeChecking_1.isDefined(doc.feature) ? doc.feature.uiElements || [] : [];
+        const localOnes = isDefined(doc.feature) ? doc.feature.uiElements || [] : [];
         checker.checkDuplicatedNamedNodes(localOnes, errors, 'UI Element');
         // Between both
         // const all: UIElement[] = [ ...global, ...fromFeature ];
@@ -34,7 +31,7 @@ class UIElementDA {
         this.analyzeUIPropertiesOfEvery(localOnes, doc, errors);
     }
     analyzeUIPropertiesOfEvery(uiElements, doc, errors) {
-        const uipExtractor = new UIElementPropertyExtractor_1.UIElementPropertyExtractor();
+        const uipExtractor = new UIElementPropertyExtractor();
         const baseNonRepeatableMsg = 'Non-repeatable properties found:';
         const baseNonTriplicableMsg = 'Three instances of the same property found:';
         const baseIncompatiblePropertiesMsg = 'Incompatible properties found:';
@@ -51,28 +48,27 @@ class UIElementDA {
             const nonRepeatable = uipExtractor.nonRepeatableProperties(propertiesMap);
             for (let nr of nonRepeatable) {
                 const msg = makeMsg(baseNonRepeatableMsg, nr);
-                const err = new SemanticException_1.SemanticException(msg, uie.location);
+                const err = new SemanticException(msg, uie.location);
                 errors.push(err);
             }
             const nonTriplicable = uipExtractor.nonTriplicatableProperties(propertiesMap);
             for (let nt of nonTriplicable) {
                 const msg = makeMsg(baseNonTriplicableMsg, nt);
-                const err = new SemanticException_1.SemanticException(msg, uie.location);
+                const err = new SemanticException(msg, uie.location);
                 errors.push(err);
             }
             const incompatiblesProperties = uipExtractor.incompatibleProperties(propertiesMap);
             for (let inc of incompatiblesProperties) {
                 const msg = makeMsg(baseIncompatiblePropertiesMsg, inc);
-                const err = new SemanticException_1.SemanticException(msg, uie.location);
+                const err = new SemanticException(msg, uie.location);
                 errors.push(err);
             }
             const incompatibleOperators = uipExtractor.incompatibleOperators(propertiesMap);
             for (let inc of incompatibleOperators) {
                 const msg = makeMsg(baseIncompatibleOperatorsMsg, inc);
-                const err = new SemanticException_1.SemanticException(msg, uie.location);
+                const err = new SemanticException(msg, uie.location);
                 errors.push(err);
             }
         }
     }
 }
-exports.UIElementDA = UIElementDA;

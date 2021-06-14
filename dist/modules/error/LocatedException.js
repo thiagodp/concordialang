@@ -1,12 +1,9 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.LocatedException = void 0;
 /**
  * Provides an exception that contains information about its location.
  *
  * @author Thiago Delgado Pinto
  */
-class LocatedException extends Error {
+export class LocatedException extends Error {
     constructor(message, location, messageShouldIncludeFilePath = false) {
         super(LocatedException.makeExceptionMessage(message, location, messageShouldIncludeFilePath));
         this.location = location;
@@ -25,4 +22,3 @@ class LocatedException extends Error {
         return msg;
     }
 }
-exports.LocatedException = LocatedException;

@@ -1,12 +1,14 @@
 import { Location } from 'concordialang-types';
-import * as deepcopy from 'deepcopy';
+import deepcopy from 'deepcopy';
+import Graph from 'graph.js/dist/graph.full.js';
+
 import { Document, Feature, Import, Tag, TestCase } from '../ast';
 import { LocatedException, ProblemMapper, SemanticException } from '../error';
-import { EnglishKeywordDictionary, KeywordDictionary } from '../language';
-import { AugmentedSpec } from "../req/AugmentedSpec";
+import { KeywordDictionary } from '../language';
+import { englishKeywords } from '../language/data/en';
+import { AugmentedSpec } from '../req/AugmentedSpec';
 import { isDefined } from '../util/TypeChecking';
 import { SpecificationAnalyzer } from './SpecificationAnalyzer';
-import Graph = require('graph.js/dist/graph.full.js');
 
 
 /**
@@ -51,10 +53,11 @@ import Graph = require('graph.js/dist/graph.full.js');
 export class TestCaseSSA extends SpecificationAnalyzer {
 
     // TODO: change it to receive a dictionary loader, according to the analyzed doc
-    constructor(
-        private readonly _keywords: KeywordDictionary = new EnglishKeywordDictionary()
-    ) {
+    constructor( private _keywords?: KeywordDictionary ) {
         super();
+        if ( ! this._keywords ) {
+            this._keywords = englishKeywords;
+        }
     }
 
     /** @inheritDoc */

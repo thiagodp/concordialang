@@ -1,15 +1,12 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.NodeSentenceRecognizer = void 0;
-const Warning_1 = require("../error/Warning");
-const TypeChecking_1 = require("../util/TypeChecking");
-const NLPException_1 = require("./NLPException");
+import { Warning } from '../error/Warning';
+import { isDefined } from '../util/TypeChecking';
+import { NLPException } from './NLPException';
 /**
  * Node sentence recognizer
  *
  * @author Thiago Delgado Pinto
  */
-class NodeSentenceRecognizer {
+export class NodeSentenceRecognizer {
     constructor(_nlp) {
         this._nlp = _nlp;
     }
@@ -34,7 +31,7 @@ class NodeSentenceRecognizer {
         }
         if (!this._nlp.isTrained(language)) {
             let msg = 'The language processor is not trained in ' + language;
-            errors.push(new NLPException_1.NLPException(msg, { line: 1, column: 1 }));
+            errors.push(new NLPException(msg, { line: 1, column: 1 }));
             return false;
         }
         // for ( let node of nodes ) {
@@ -53,17 +50,17 @@ class NodeSentenceRecognizer {
             // Not recognized?
             if (!r) {
                 let msg = 'Unrecognized: "' + node.content + '". Intents: ' + targetIntents.join(',');
-                warnings.push(new NLPException_1.NLPException(msg, node.location));
+                warnings.push(new NLPException(msg, node.location));
                 // continue;
                 return;
             }
             // Save the result in the node
             node['nlpResult'] = r;
             // Different intent?
-            if (TypeChecking_1.isDefined(r) && TypeChecking_1.isDefined(r.intent) && targetIntents.indexOf(r.intent) < 0) {
+            if (isDefined(r) && isDefined(r.intent) && targetIntents.indexOf(r.intent) < 0) {
                 //let msg = 'Unrecognized as part of a ' + targetDisplayName + ': ' + node.content;
                 let msg = 'Different intent recognized for: ' + node.content + '. Intent: ' + r.intent;
-                warnings.push(new NLPException_1.NLPException(msg, node.location));
+                warnings.push(new NLPException(msg, node.location));
                 // continue;
                 return;
             }
@@ -83,7 +80,7 @@ class NodeSentenceRecognizer {
         const propertyRuleIndex = syntaxRules.map(sr => sr.name).indexOf(property);
         if (propertyRuleIndex < 0) {
             const msg = 'The sentence "' + node.content + '" could not be validated due to an inexistent rule for "' + property + '"';
-            warnings.push(new Warning_1.Warning(msg, node.location));
+            warnings.push(new Warning(msg, node.location));
             return false;
         }
         // Let's check the rules!
@@ -95,13 +92,13 @@ class NodeSentenceRecognizer {
         // Checking minTargets
         if (expectedTargetsCount < rule.minTargets) {
             const msg = '"' + property + '" expects at least ' + rule.minTargets + ' values, but it was informed ' + expectedTargetsCount + '.';
-            warnings.push(new Warning_1.Warning(msg, node.location));
+            warnings.push(new Warning(msg, node.location));
             return false;
         }
         // Checking maxTargets
         if (expectedTargetsCount > rule.maxTargets) {
             const msg = '"' + property + '" expects at most ' + rule.maxTargets + ' values, but it was informed ' + expectedTargetsCount + '.';
-            warnings.push(new Warning_1.Warning(msg, node.location));
+            warnings.push(new Warning(msg, node.location));
             return false;
         }
         // Checking targets
@@ -109,7 +106,7 @@ class NodeSentenceRecognizer {
             // Inexistent rule for the target
             if (!rule[target]) {
                 const msg = 'The sentence "' + node.content + '" could not be validated due to an inexistent rule for the target "' + target + '" of "' + property + '"';
-                warnings.push(new Warning_1.Warning(msg, node.location));
+                warnings.push(new Warning(msg, node.location));
                 return false;
             }
             const targetRule = rule[target];
@@ -122,13 +119,13 @@ class NodeSentenceRecognizer {
                 // Min
                 if (numberOfEntitiesOfTheTarget < targetRule.min) {
                     const msg = '"' + property + '" expects at least ' + targetRule.min + ' for "' + target + '", but it was informed ' + numberOfEntitiesOfTheTarget + '.';
-                    warnings.push(new Warning_1.Warning(msg, node.location));
+                    warnings.push(new Warning(msg, node.location));
                     return false;
                 }
                 // Max
                 if (numberOfEntitiesOfTheTarget > targetRule.max) {
                     const msg = '"' + property + '" expects at most ' + targetRule.max + ' for "' + target + '", but it was informed ' + numberOfEntitiesOfTheTarget + '.';
-                    warnings.push(new Warning_1.Warning(msg, node.location));
+                    warnings.push(new Warning(msg, node.location));
                     return false;
                 }
             }
@@ -138,7 +135,7 @@ class NodeSentenceRecognizer {
             // Must have the other entity
             if (recognizedEntityNames.indexOf(otherEntity) < 0) {
                 const msg = '"' + property + '" must be used with "' + otherEntity + '".';
-                warnings.push(new Warning_1.Warning(msg, node.location));
+                warnings.push(new Warning(msg, node.location));
                 return false;
             }
         }
@@ -146,4 +143,3 @@ class NodeSentenceRecognizer {
         return true;
     }
 }
-exports.NodeSentenceRecognizer = NodeSentenceRecognizer;

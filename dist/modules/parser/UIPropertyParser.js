@@ -1,33 +1,30 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.UIPropertyParser = void 0;
-const NodeTypes_1 = require("../req/NodeTypes");
-const SyntacticException_1 = require("./SyntacticException");
-const TagCollector_1 = require("./TagCollector");
+import { NodeTypes } from "../req/NodeTypes";
+import { SyntacticException } from "./SyntacticException";
+import { TagCollector } from './TagCollector';
 /**
  * UI property parser.
  *
  * @author Thiago Delgado Pinto
  */
-class UIPropertyParser {
+export class UIPropertyParser {
     /** @inheritDoc */
     isAccepted(node, it) {
         const allowedPriorNodes = [
-            NodeTypes_1.NodeTypes.TAG,
-            NodeTypes_1.NodeTypes.UI_ELEMENT,
-            NodeTypes_1.NodeTypes.UI_PROPERTY,
-            NodeTypes_1.NodeTypes.STEP_OTHERWISE,
-            NodeTypes_1.NodeTypes.STEP_AND
+            NodeTypes.TAG,
+            NodeTypes.UI_ELEMENT,
+            NodeTypes.UI_PROPERTY,
+            NodeTypes.STEP_OTHERWISE,
+            NodeTypes.STEP_AND
         ];
         return allowedPriorNodes.indexOf(it.spyPrior().nodeType) >= 0;
     }
     /** @inheritDoc */
     handle(node, context, it, errors) {
         // Adjusts the node type
-        node.nodeType = NodeTypes_1.NodeTypes.UI_PROPERTY;
+        node.nodeType = NodeTypes.UI_PROPERTY;
         // Checks the context
         if (!context.currentUIElement) {
-            const e = new SyntacticException_1.SyntacticException('A "' + node.nodeType + '" is declared without a UI Element.', node.location);
+            const e = new SyntacticException('A "' + node.nodeType + '" is declared without a UI Element.', node.location);
             errors.push(e);
             return false;
         }
@@ -44,10 +41,9 @@ class UIPropertyParser {
         if (!uiProperty.tags) {
             uiProperty.tags = [];
         }
-        (new TagCollector_1.TagCollector()).addBackwardTags(it, uiProperty.tags);
+        (new TagCollector()).addBackwardTags(it, uiProperty.tags);
         // Adds the node
         context.currentUIElement.items.push(uiProperty);
         return true;
     }
 }
-exports.UIPropertyParser = UIPropertyParser;

@@ -1,15 +1,12 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.UIPropertyReferenceExtractor = void 0;
-const cloneRegExp = require("clone-regexp");
-const UIPropertyReference_1 = require("../ast/UIPropertyReference");
-const nlp_1 = require("../nlp");
-const Symbols_1 = require("../req/Symbols");
-const EntityRecognizerMaker_1 = require("../nlp/EntityRecognizerMaker");
+import cloneRegExp from 'clone-regexp';
+import { UIPropertyReference } from '../ast/UIPropertyReference';
+import { Entities } from '../nlp';
+import { UI_PROPERTY_REF_REGEX } from '../nlp/EntityRecognizerMaker';
+import { Symbols } from '../req/Symbols';
 /**
  * Extracts references to UIProperties.
  */
-class UIPropertyReferenceExtractor {
+export class UIPropertyReferenceExtractor {
     /**
      * Extracts references from a NLP result.
      *
@@ -35,7 +32,7 @@ class UIPropertyReferenceExtractor {
      * @param line Line of a text file. Optional, defaults to 1.
      */
     extractFromEntity(nlpEntity, line = 1) {
-        if (nlpEntity.entity != nlp_1.Entities.UI_PROPERTY_REF) {
+        if (nlpEntity.entity != Entities.UI_PROPERTY_REF) {
             return null;
         }
         return this.makeReferenceFromString(nlpEntity.value, { column: nlpEntity.position, line: line });
@@ -47,7 +44,7 @@ class UIPropertyReferenceExtractor {
      * @param line Line. Optional, defaults to 1.
      */
     extractReferencesFromValue(text, line = 1) {
-        let regex = cloneRegExp(EntityRecognizerMaker_1.UI_PROPERTY_REF_REGEX);
+        let regex = cloneRegExp(UI_PROPERTY_REF_REGEX);
         let references = [];
         let result;
         while ((result = regex.exec(text)) !== null) {
@@ -65,16 +62,15 @@ class UIPropertyReferenceExtractor {
      */
     makeReferenceFromString(reference, location) {
         let value = reference;
-        if (value.indexOf(Symbols_1.Symbols.UI_ELEMENT_PREFIX) >= 0) {
+        if (value.indexOf(Symbols.UI_ELEMENT_PREFIX) >= 0) {
             value = value.substring(1, value.length - 1).trim(); // exclude { and } and trim
         }
-        const [uieName, prop] = value.split(Symbols_1.Symbols.UI_PROPERTY_REF_SEPARATOR);
-        let ref = new UIPropertyReference_1.UIPropertyReference();
+        const [uieName, prop] = value.split(Symbols.UI_PROPERTY_REF_SEPARATOR);
+        let ref = new UIPropertyReference();
         ref.uiElementName = uieName.trim();
         ref.property = prop.trim();
-        ref.content = ref.uiElementName + Symbols_1.Symbols.UI_PROPERTY_REF_SEPARATOR + ref.property;
+        ref.content = ref.uiElementName + Symbols.UI_PROPERTY_REF_SEPARATOR + ref.property;
         ref.location = location;
         return ref;
     }
 }
-exports.UIPropertyReferenceExtractor = UIPropertyReferenceExtractor;

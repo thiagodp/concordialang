@@ -1,4 +1,4 @@
-import Graph = require('graph.js/dist/graph.full.js');
+import Graph from 'graph.js/dist/graph.full.js';
 
 import { Document } from '../ast/Document';
 import { isDefined } from '../util/TypeChecking';

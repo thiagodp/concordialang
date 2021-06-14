@@ -1,55 +1,60 @@
-{
-    "keywords": {
-        "import": [ "importe", "importar", "import" ],
-        "regexBlock": [ "expressões", "expressões regulares", "regexes" ],
-        "constantBlock": [ "constantes", "constants" ],
-        "variant": [ "variante", "variação", "variant" ],
-        "variantBackground": [ "contexto de variante", "contexto de variação", "cenário de variação", "variant background" ],
-        "testCase": [ "caso de teste", "test case" ],
-        "uiElement": [ "elemento da iu", "elemento de iu", "elemento de ui", "elemento de interface de usuário", "ui element" ],
-        "database": [ "banco de dados", "database" ],
+import { KeywordDictionary } from '../KeywordDictionary';
+import { LanguageDictionary } from '../LanguageDictionary';
 
-        "beforeAll": [ "antes de todas", "antes de todos", "antes de tudo", "before all" ],
-        "afterAll": [ "depois de todas", "depois de todos", "após todos", "após todas", "depois de tudo", "após tudo", "after all" ],
-        "beforeFeature": [ "antes da funcionalidade", "antes da característica", "antes da feature", "before feature" ],
-        "afterFeature": [ "depois da funcionalidade", "depois da característica", "depois da feature", "após a funcionalidade", "após a característica", "após a feature", "after feature" ],
-        "beforeEachScenario": [ "antes de cada cenário", "antes de cenário", "before each scenario" ],
-        "afterEachScenario": [ "depois de cada cenário", "depois de cenário", "após cada cenário", "after each scenario" ],
+const keywords: KeywordDictionary = {
 
-        "i": [ "eu" ],
-        "is": [ "é", "is" ],
-        "with": [ "com" ],
-        "valid": [ "válido" ],
-        "invalid": [ "inválido" ],
-        "random": [ "aleatório" ],
-        "from": [ "de" ],
+    "import": [ "importe", "importar", "import" ],
+    "regexBlock": [ "expressões", "expressões regulares", "regexes" ],
+    "constantBlock": [ "constantes", "constants" ],
+    "variant": [ "variante", "variação", "variant" ],
+    "variantBackground": [ "contexto de variante", "contexto de variação", "cenário de variação", "variant background" ],
+    "testCase": [ "caso de teste", "test case" ],
+    "uiElement": [ "elemento da iu", "elemento de iu", "elemento de ui", "elemento de interface de usuário", "ui element" ],
+    "database": [ "banco de dados", "database" ],
 
-        "tagGlobal": [ "global" ],
-        "tagFeature": [ "feature" ],
-        "tagScenario": [ "scenario" ],
-        "tagVariant": [ "variant" ],
-        "tagImportance": [ "importance" ],
-        "tagIgnore": [ "ignore" ],
-        "tagGenerated": [ "generated" ],
-        "tagFail": [ "fail" ],
-        "tagGenerateOnlyValidValues": [ "generate-only-valid-values" ],
+    "beforeAll": [ "antes de todas", "antes de todos", "antes de tudo", "before all" ],
+    "afterAll": [ "depois de todas", "depois de todos", "após todos", "após todas", "depois de tudo", "após tudo", "after all" ],
+    "beforeFeature": [ "antes da funcionalidade", "antes da característica", "antes da feature", "before feature" ],
+    "afterFeature": [ "depois da funcionalidade", "depois da característica", "depois da feature", "após a funcionalidade", "após a característica", "após a feature", "after feature" ],
+    "beforeEachScenario": [ "antes de cada cenário", "antes de cenário", "before each scenario" ],
+    "afterEachScenario": [ "depois de cada cenário", "depois de cenário", "após cada cenário", "after each scenario" ],
 
-        "language": [ "language" ],
+    "i": [ "eu" ],
+    "is": [ "é", "is" ],
+    "with": [ "com" ],
+    "valid": [ "válido" ],
+    "invalid": [ "inválido" ],
+    "random": [ "aleatório" ],
+    "from": [ "de" ],
 
-        "feature": [ "funcionalidade", "característica", "feature", "história", "história de usuário" ],
-        "background": [ "contexto", "cenário de fundo", "fundo", "background" ],
-        "scenario": [ "cenário", "scenario" ],
+    "tagGlobal": [ "global" ],
+    "tagFeature": [ "feature" ],
+    "tagScenario": [ "scenario" ],
+    "tagVariant": [ "variant" ],
+    "tagImportance": [ "importance" ],
+    "tagIgnore": [ "ignore" ],
+    "tagGenerated": [ "generated" ],
+    "tagFail": [ "fail" ],
+    "tagGenerateOnlyValidValues": [ "generate-only-valid-values" ],
 
-        "stepGiven": [ "dado que", "dado", "given" ],
-        "stepWhen": [ "quando", "when" ],
-        "stepThen": [ "então", "then" ],
-        "stepAnd": [ "e", "mas", "and", "but" ],
-        "stepOtherwise": [ "caso contrário", "senão", "quando inválido", "se inválido" ],
+    "language": [ "language" ],
 
-        "table": [ "tabela", "table" ]
-    },
+    "feature": [ "funcionalidade", "característica", "feature", "história", "história de usuário" ],
+    "background": [ "contexto", "cenário de fundo", "fundo", "background" ],
+    "scenario": [ "cenário", "scenario" ],
 
+    "stepGiven": [ "dado que", "dado", "given" ],
+    "stepWhen": [ "quando", "when" ],
+    "stepThen": [ "então", "then" ],
+    "stepAnd": [ "e", "mas", "and", "but" ],
+    "stepOtherwise": [ "caso contrário", "senão", "quando inválido", "se inválido" ],
 
+    "table": [ "tabela", "table" ]
+};
+
+const dictionary: LanguageDictionary = {
+
+    "keywords": keywords,
 
     "testCaseNames": {
 
@@ -347,4 +352,6 @@
 
     ]
 
-}
+};
+
+export default dictionary;

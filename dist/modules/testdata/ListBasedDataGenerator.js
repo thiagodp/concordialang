@@ -1,12 +1,9 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.ListBasedDataGenerator = void 0;
 /**
  * List-based data generator
  *
  * @author Thiago Delgado Pinto
  */
-class ListBasedDataGenerator {
+export class ListBasedDataGenerator {
     /**
      * Constructor
      *
@@ -58,4 +55,3 @@ class ListBasedDataGenerator {
         return null;
     }
 }
-exports.ListBasedDataGenerator = ListBasedDataGenerator;

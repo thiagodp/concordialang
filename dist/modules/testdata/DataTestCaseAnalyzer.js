@@ -1,45 +1,41 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.DataTestCaseAnalyzer = exports.DTCAnalysisData = exports.DTCAnalysisResult = void 0;
-const arrayDiff = require("arr-diff");
-const enumUtil = require("enum-util");
-const ast_1 = require("../ast");
-const UIPropertyTypes_1 = require("../ast/UIPropertyTypes");
-const nlp_1 = require("../nlp");
-const TypeChecking_1 = require("../util/TypeChecking");
-const UIElementPropertyExtractor_1 = require("../util/UIElementPropertyExtractor");
-const ValueTypeDetector_1 = require("../util/ValueTypeDetector");
-const DataGeneratorBuilder_1 = require("./DataGeneratorBuilder");
-const DataTestCase_1 = require("./DataTestCase");
+import arrayDiff from 'arr-diff';
+import * as enumUtil from 'enum-util';
+import { ReservedTags } from '../ast';
+import { UIPropertyTypes } from '../ast/UIPropertyTypes';
+import { Entities, NLPUtil } from '../nlp';
+import { isDefined } from '../util/TypeChecking';
+import { UIElementPropertyExtractor } from '../util/UIElementPropertyExtractor';
+import { adjustValueToTheRightType } from '../util/ValueTypeDetector';
+import { DataGeneratorBuilder } from './DataGeneratorBuilder';
+import { DataTestCase, DataTestCaseGroup, DataTestCaseGroupDef } from './DataTestCase';
 /**
  * Data test case analysis result
  *
  * @author Thiago Delgado Pinto
  */
-var DTCAnalysisResult;
+export var DTCAnalysisResult;
 (function (DTCAnalysisResult) {
     DTCAnalysisResult["INCOMPATIBLE"] = "incompatible";
     DTCAnalysisResult["INVALID"] = "invalid";
     DTCAnalysisResult["VALID"] = "valid";
-})(DTCAnalysisResult = exports.DTCAnalysisResult || (exports.DTCAnalysisResult = {}));
-class DTCAnalysisData {
+})(DTCAnalysisResult || (DTCAnalysisResult = {}));
+export class DTCAnalysisData {
     constructor(result, oracles = [], uieVariableDependencies = []) {
         this.result = result;
         this.oracles = oracles;
         this.uieVariableDependencies = uieVariableDependencies;
     }
 }
-exports.DTCAnalysisData = DTCAnalysisData;
 /**
  * Data test case analyzer
  *
  * @author Thiago Delgado Pinto
  */
-class DataTestCaseAnalyzer {
+export class DataTestCaseAnalyzer {
     constructor(seed) {
-        this._uiePropExtractor = new UIElementPropertyExtractor_1.UIElementPropertyExtractor();
-        this._nlpUtil = new nlp_1.NLPUtil();
-        this._dataGenBuilder = new DataGeneratorBuilder_1.DataGeneratorBuilder(seed);
+        this._uiePropExtractor = new UIElementPropertyExtractor();
+        this._nlpUtil = new NLPUtil();
+        this._dataGenBuilder = new DataGeneratorBuilder(seed);
     }
     /**
      * Analysis a UI Element and returns a map with the available data test cases and
@@ -70,7 +66,7 @@ class DataTestCaseAnalyzer {
         //     // console.log( 'NO COMPATIBLES:', uie.name );
         //     compatibles.push( DataTestCase.REQUIRED_FILLED ); // Should produce a random value
         // }
-        let compatibles = enumUtil.getValues(DataTestCase_1.DataTestCase);
+        let compatibles = enumUtil.getValues(DataTestCase);
         const incompatiblePair = new DTCAnalysisData(DTCAnalysisResult.INCOMPATIBLE, []);
         // Analyzes compatible rules (valid/invalid)
         for (let dtc of compatibles) {
@@ -87,7 +83,7 @@ class DataTestCaseAnalyzer {
             }
         }
         // Sets incompatible ones
-        const incompatibles = arrayDiff(compatibles, enumUtil.getValues(DataTestCase_1.DataTestCase));
+        const incompatibles = arrayDiff(compatibles, enumUtil.getValues(DataTestCase));
         for (let dtc of incompatibles) {
             map.set(dtc, incompatiblePair);
         }
@@ -102,21 +98,21 @@ class DataTestCaseAnalyzer {
      */
     analyzeProperties(dtc, uie, errors) {
         // Note: assumes that properties were validated previously, and conflicting properties were already solved.
-        const groupDef = new DataTestCase_1.DataTestCaseGroupDef();
+        const groupDef = new DataTestCaseGroupDef();
         const group = groupDef.groupOf(dtc);
         const propertiesMap = this._uiePropExtractor.mapFirstPropertyOfEachType(uie);
         // Properties
-        const pRequired = propertiesMap.get(UIPropertyTypes_1.UIPropertyTypes.REQUIRED) || null;
-        const pValue = propertiesMap.get(UIPropertyTypes_1.UIPropertyTypes.VALUE) || null;
-        const pMinLength = propertiesMap.get(UIPropertyTypes_1.UIPropertyTypes.MIN_LENGTH) || null;
-        const pMaxLength = propertiesMap.get(UIPropertyTypes_1.UIPropertyTypes.MAX_LENGTH) || null;
-        const pMinValue = propertiesMap.get(UIPropertyTypes_1.UIPropertyTypes.MIN_VALUE) || null;
-        const pMaxValue = propertiesMap.get(UIPropertyTypes_1.UIPropertyTypes.MAX_VALUE) || null;
-        const pFormat = propertiesMap.get(UIPropertyTypes_1.UIPropertyTypes.FORMAT) || null;
+        const pRequired = propertiesMap.get(UIPropertyTypes.REQUIRED) || null;
+        const pValue = propertiesMap.get(UIPropertyTypes.VALUE) || null;
+        const pMinLength = propertiesMap.get(UIPropertyTypes.MIN_LENGTH) || null;
+        const pMaxLength = propertiesMap.get(UIPropertyTypes.MAX_LENGTH) || null;
+        const pMinValue = propertiesMap.get(UIPropertyTypes.MIN_VALUE) || null;
+        const pMaxValue = propertiesMap.get(UIPropertyTypes.MAX_VALUE) || null;
+        const pFormat = propertiesMap.get(UIPropertyTypes.FORMAT) || null;
         // Tags
         const propertyHasTagGenerateOnlyValidValues = (p) => {
             return p.tags && p.tags.length > 0
-                && p.tags.findIndex(tag => tag.subType === ast_1.ReservedTags.GENERATE_ONLY_VALID_VALUES) >= 0;
+                && p.tags.findIndex(tag => tag.subType === ReservedTags.GENERATE_ONLY_VALID_VALUES) >= 0;
         };
         const pRequiredHasTagGenerateOnlyValidValues = pRequired && propertyHasTagGenerateOnlyValidValues(pRequired);
         const pValueHasTagGenerateOnlyValidValues = pValue && propertyHasTagGenerateOnlyValidValues(pValue);
@@ -145,19 +141,19 @@ class DataTestCaseAnalyzer {
         const validPair = new DTCAnalysisData(DTCAnalysisResult.VALID, []);
         const incompatiblePair = new DTCAnalysisData(DTCAnalysisResult.INCOMPATIBLE, []);
         switch (group) {
-            case DataTestCase_1.DataTestCaseGroup.FORMAT: { // negation is not valid here
+            case DataTestCaseGroup.FORMAT: { // negation is not valid here
                 if (!pFormat) {
                     return incompatiblePair;
                 }
                 switch (dtc) {
-                    case DataTestCase_1.DataTestCase.FORMAT_VALID: {
+                    case DataTestCase.FORMAT_VALID: {
                         // Does not consider FORMAT_VALID whether it has a value-related property
-                        const hasAnyValueOrLengthProperty = TypeChecking_1.isDefined(pValue) ||
-                            TypeChecking_1.isDefined(pMinValue) || TypeChecking_1.isDefined(pMaxValue) ||
-                            TypeChecking_1.isDefined(pMinLength) || TypeChecking_1.isDefined(pMaxLength);
+                        const hasAnyValueOrLengthProperty = isDefined(pValue) ||
+                            isDefined(pMinValue) || isDefined(pMaxValue) ||
+                            isDefined(pMinLength) || isDefined(pMaxLength);
                         return hasAnyValueOrLengthProperty ? incompatiblePair : validPair;
                     }
-                    case DataTestCase_1.DataTestCase.FORMAT_INVALID: {
+                    case DataTestCase.FORMAT_INVALID: {
                         if (pFormatHasTagGenerateOnlyValidValues) {
                             return incompatiblePair;
                         }
@@ -173,13 +169,13 @@ class DataTestCaseAnalyzer {
                 }
                 return incompatiblePair;
             }
-            case DataTestCase_1.DataTestCaseGroup.REQUIRED: { // negation is not valid here
+            case DataTestCaseGroup.REQUIRED: { // negation is not valid here
                 const isRequired = this._uiePropExtractor.extractIsRequired(uie);
                 switch (dtc) {
-                    case DataTestCase_1.DataTestCase.REQUIRED_FILLED: {
+                    case DataTestCase.REQUIRED_FILLED: {
                         // Check whether the value has a reference to another UI Element
-                        if (TypeChecking_1.isDefined(pValue)) {
-                            const hasQuery = this._nlpUtil.hasEntityNamed(nlp_1.Entities.QUERY, pValue.nlpResult);
+                        if (isDefined(pValue)) {
+                            const hasQuery = this._nlpUtil.hasEntityNamed(Entities.QUERY, pValue.nlpResult);
                             if (hasQuery) {
                                 // return new Pair( DTCAnalysisResult.INVALID, pRequired.otherwiseSentences || [] );
                                 return incompatiblePair;
@@ -190,7 +186,7 @@ class DataTestCaseAnalyzer {
                         }
                         return validPair;
                     }
-                    case DataTestCase_1.DataTestCase.REQUIRED_NOT_FILLED: {
+                    case DataTestCase.REQUIRED_NOT_FILLED: {
                         // console.log( 'Analyzing REQUIRED_NOT_FILLED', 'isRequired', isRequired );
                         // // Incompatible if value comes from a query
                         // if ( isDefined( pValue )
@@ -215,7 +211,7 @@ class DataTestCaseAnalyzer {
                                 }
                                 // If continue is because it passes the regex
                             }
-                            catch (_a) {
+                            catch {
                                 return incompatiblePair;
                             }
                         }
@@ -224,26 +220,26 @@ class DataTestCaseAnalyzer {
                 }
                 return incompatiblePair;
             }
-            case DataTestCase_1.DataTestCaseGroup.SET: {
+            case DataTestCaseGroup.SET: {
                 // TO-DO:   Analyze if the has QUERY and the QUERY depends on another UI Element
                 //          If it depends and the data test case of the other element is INVALID,
                 //          the result should also be invalid.
                 if (!pValue) {
                     return incompatiblePair;
                 }
-                const hasValue = this._nlpUtil.hasEntityNamed(nlp_1.Entities.VALUE, pValue.nlpResult);
-                const hasConstant = this._nlpUtil.hasEntityNamed(nlp_1.Entities.CONSTANT, pValue.nlpResult);
+                const hasValue = this._nlpUtil.hasEntityNamed(Entities.VALUE, pValue.nlpResult);
+                const hasConstant = this._nlpUtil.hasEntityNamed(Entities.CONSTANT, pValue.nlpResult);
                 if (!hasValue
                     && !hasConstant
-                    && !this._nlpUtil.hasEntityNamed(nlp_1.Entities.QUERY, pValue.nlpResult)
-                    && !this._nlpUtil.hasEntityNamed(nlp_1.Entities.VALUE_LIST, pValue.nlpResult)) {
+                    && !this._nlpUtil.hasEntityNamed(Entities.QUERY, pValue.nlpResult)
+                    && !this._nlpUtil.hasEntityNamed(Entities.VALUE_LIST, pValue.nlpResult)) {
                     return incompatiblePair;
                 }
                 const hasNegation = this.hasNegation(pValue); // e.g., "value NOT IN ..."
                 const invalidPair = new DTCAnalysisData(DTCAnalysisResult.INVALID, pValue.otherwiseSentences || []);
                 // Diminish the number of applicable test cases if it is a value or a constant
                 if (hasValue || hasConstant) {
-                    if (DataTestCase_1.DataTestCase.SET_FIRST_ELEMENT === dtc) {
+                    if (DataTestCase.SET_FIRST_ELEMENT === dtc) {
                         if (hasNegation) {
                             if (pValueHasTagGenerateOnlyValidValues) {
                                 return incompatiblePair;
@@ -252,7 +248,7 @@ class DataTestCaseAnalyzer {
                         }
                         return validPair;
                     }
-                    else if (DataTestCase_1.DataTestCase.SET_NOT_IN_SET === dtc) {
+                    else if (DataTestCase.SET_NOT_IN_SET === dtc) {
                         if (hasNegation) {
                             return validPair;
                         }
@@ -274,9 +270,9 @@ class DataTestCaseAnalyzer {
                 //     }
                 // }
                 switch (dtc) {
-                    case DataTestCase_1.DataTestCase.SET_FIRST_ELEMENT: // next
-                    case DataTestCase_1.DataTestCase.SET_LAST_ELEMENT: // next
-                    case DataTestCase_1.DataTestCase.SET_RANDOM_ELEMENT: {
+                    case DataTestCase.SET_FIRST_ELEMENT: // next
+                    case DataTestCase.SET_LAST_ELEMENT: // next
+                    case DataTestCase.SET_RANDOM_ELEMENT: {
                         if (hasNegation) {
                             if (pValueHasTagGenerateOnlyValidValues) {
                                 return incompatiblePair;
@@ -285,7 +281,7 @@ class DataTestCaseAnalyzer {
                         }
                         return validPair;
                     }
-                    case DataTestCase_1.DataTestCase.SET_NOT_IN_SET: {
+                    case DataTestCase.SET_NOT_IN_SET: {
                         if (hasNegation) {
                             return validPair;
                         }
@@ -297,23 +293,23 @@ class DataTestCaseAnalyzer {
                 }
                 return incompatiblePair;
             }
-            case DataTestCase_1.DataTestCaseGroup.VALUE: {
+            case DataTestCaseGroup.VALUE: {
                 // If it has VALUE property:
                 // - it must NOT generate VALID length values but it must generate invalid.
                 // - if it has negation, it must generate VALID as valid, and INVALID as invalid.
-                const hasValueProperty = TypeChecking_1.isDefined(pValue);
+                const hasValueProperty = isDefined(pValue);
                 const valueHasNegation = hasValueProperty && this.hasNegation(pValue); // e.g., "value NOT IN ..."
                 const shouldGenerateValid = !hasValueProperty || (hasValueProperty && valueHasNegation);
-                const hasMinValue = TypeChecking_1.isDefined(pMinValue);
-                const hasMaxValue = TypeChecking_1.isDefined(pMaxValue);
+                const hasMinValue = isDefined(pMinValue);
+                const hasMaxValue = isDefined(pMaxValue);
                 if (!hasMinValue && !hasMaxValue) {
                     return incompatiblePair;
                 }
                 let [minValue, isToFakeMinValue] = hasMinValue
-                    ? this.resolvePropertyValue(UIPropertyTypes_1.UIPropertyTypes.MIN_VALUE, pMinValue, valueType)
+                    ? this.resolvePropertyValue(UIPropertyTypes.MIN_VALUE, pMinValue, valueType)
                     : [null, false];
                 let [maxValue, isToFakeMaxValue] = hasMaxValue
-                    ? this.resolvePropertyValue(UIPropertyTypes_1.UIPropertyTypes.MAX_VALUE, pMaxValue, valueType)
+                    ? this.resolvePropertyValue(UIPropertyTypes.MAX_VALUE, pMaxValue, valueType)
                     : [null, false];
                 const invalidMinPair = new DTCAnalysisData(DTCAnalysisResult.INVALID, hasMinValue ? pMinValue.otherwiseSentences || [] : []);
                 const invalidMaxPair = new DTCAnalysisData(DTCAnalysisResult.INVALID, hasMaxValue ? pMaxValue.otherwiseSentences || [] : []);
@@ -333,9 +329,9 @@ class DataTestCaseAnalyzer {
                 }
                 let analyzer = this._dataGenBuilder.rawAnalyzer(valueType, minValue, maxValue);
                 switch (dtc) {
-                    case DataTestCase_1.DataTestCase.VALUE_LOWEST: // next
-                    case DataTestCase_1.DataTestCase.VALUE_RANDOM_BELOW_MIN: // next
-                    case DataTestCase_1.DataTestCase.VALUE_JUST_BELOW_MIN: {
+                    case DataTestCase.VALUE_LOWEST: // next
+                    case DataTestCase.VALUE_RANDOM_BELOW_MIN: // next
+                    case DataTestCase.VALUE_JUST_BELOW_MIN: {
                         if (hasMinValue || isToFakeMinValue) {
                             if (analyzer.hasValuesBelowMin()) {
                                 if (pMinValueHasTagGenerateOnlyValidValues) {
@@ -349,28 +345,28 @@ class DataTestCaseAnalyzer {
                         }
                         return incompatiblePair;
                     }
-                    case DataTestCase_1.DataTestCase.VALUE_JUST_ABOVE_MIN: // next
-                    case DataTestCase_1.DataTestCase.VALUE_MIN: {
+                    case DataTestCase.VALUE_JUST_ABOVE_MIN: // next
+                    case DataTestCase.VALUE_MIN: {
                         if (hasMinValue || isToFakeMinValue) {
                             return shouldGenerateValid ? validPair : incompatiblePair;
                         }
                         return incompatiblePair;
                     }
-                    case DataTestCase_1.DataTestCase.VALUE_RANDOM_BETWEEN_MIN_MAX: // next
-                    case DataTestCase_1.DataTestCase.VALUE_MEDIAN: {
+                    case DataTestCase.VALUE_RANDOM_BETWEEN_MIN_MAX: // next
+                    case DataTestCase.VALUE_MEDIAN: {
                         if ((hasMinValue || isToFakeMinValue) && (hasMaxValue || isToFakeMaxValue)) {
                             return shouldGenerateValid ? validPair : incompatiblePair;
                         }
                         return incompatiblePair;
                     }
-                    case DataTestCase_1.DataTestCase.VALUE_JUST_BELOW_MAX: // next
-                    case DataTestCase_1.DataTestCase.VALUE_MAX: {
+                    case DataTestCase.VALUE_JUST_BELOW_MAX: // next
+                    case DataTestCase.VALUE_MAX: {
                         if (hasMaxValue || isToFakeMaxValue) {
                             return shouldGenerateValid ? validPair : incompatiblePair;
                         }
                         return incompatiblePair;
                     }
-                    case DataTestCase_1.DataTestCase.VALUE_ZERO: {
+                    case DataTestCase.VALUE_ZERO: {
                         if ((hasMinValue || isToFakeMinValue) && (hasMaxValue || isToFakeMaxValue)) {
                             if (analyzer.isZeroBetweenMinAndMax()) {
                                 return shouldGenerateValid ? validPair : incompatiblePair;
@@ -382,9 +378,9 @@ class DataTestCaseAnalyzer {
                         }
                         return incompatiblePair;
                     }
-                    case DataTestCase_1.DataTestCase.VALUE_JUST_ABOVE_MAX: // next
-                    case DataTestCase_1.DataTestCase.VALUE_RANDOM_ABOVE_MAX: // next
-                    case DataTestCase_1.DataTestCase.VALUE_GREATEST: {
+                    case DataTestCase.VALUE_JUST_ABOVE_MAX: // next
+                    case DataTestCase.VALUE_RANDOM_ABOVE_MAX: // next
+                    case DataTestCase.VALUE_GREATEST: {
                         if (hasMaxValue || isToFakeMaxValue) {
                             if (analyzer.hasValuesAboveMax()) {
                                 if (pMaxValueHasTagGenerateOnlyValidValues) {
@@ -399,29 +395,29 @@ class DataTestCaseAnalyzer {
                 }
                 return incompatiblePair;
             }
-            case DataTestCase_1.DataTestCaseGroup.LENGTH: {
+            case DataTestCaseGroup.LENGTH: {
                 const isRequired = this._uiePropExtractor.extractIsRequired(uie);
                 // If it has VALUE property:
                 // - it must NOT generate VALID length values but it must generate invalid.
                 // - if it has negation, it must generate VALID as valid, and INVALID as invalid.
-                const hasValueProperty = TypeChecking_1.isDefined(pValue);
+                const hasValueProperty = isDefined(pValue);
                 const valueHasNegation = hasValueProperty && this.hasNegation(pValue); // e.g., "value NOT IN ..."
                 const shouldGenerateValid = !hasValueProperty || (hasValueProperty && valueHasNegation);
                 // // Does not consider FORMAT_VALID whether it has a value-related property
                 // const hasAnyValueOrLengthProperty = isDefined( pValue ) ||
                 //     isDefined( pMinValue ) || isDefined( pMaxValue ) ||
                 //     isDefined( pMinLength ) || isDefined( pMaxLength );
-                const hasMinLength = TypeChecking_1.isDefined(pMinLength);
-                const hasMaxLength = TypeChecking_1.isDefined(pMaxLength);
+                const hasMinLength = isDefined(pMinLength);
+                const hasMaxLength = isDefined(pMaxLength);
                 if (!hasMinLength && !hasMaxLength) {
                     return incompatiblePair;
                 }
                 // We are simulating min length and max length when they come from a QUERY or a UI_ELEMENT
                 let [minLength, isToFakeMinLength] = hasMinLength
-                    ? this.resolvePropertyValue(UIPropertyTypes_1.UIPropertyTypes.MIN_LENGTH, pMinLength, valueType)
+                    ? this.resolvePropertyValue(UIPropertyTypes.MIN_LENGTH, pMinLength, valueType)
                     : [null, false];
                 let [maxLength, isToFakeMaxLength] = hasMaxLength
-                    ? this.resolvePropertyValue(UIPropertyTypes_1.UIPropertyTypes.MAX_LENGTH, pMaxLength, valueType)
+                    ? this.resolvePropertyValue(UIPropertyTypes.MAX_LENGTH, pMaxLength, valueType)
                     : [null, false];
                 if (isToFakeMinLength) {
                     minLength = 2; // fake with fixed value - does not matter, since it is to evaluate data test case
@@ -433,18 +429,18 @@ class DataTestCaseAnalyzer {
                 const invalidMinPair = new DTCAnalysisData(DTCAnalysisResult.INVALID, hasMinLength ? pMinLength.otherwiseSentences || [] : []);
                 const invalidMaxPair = new DTCAnalysisData(DTCAnalysisResult.INVALID, hasMaxLength ? pMaxLength.otherwiseSentences || [] : []);
                 switch (dtc) {
-                    case DataTestCase_1.DataTestCase.LENGTH_LOWEST: // next
-                    case DataTestCase_1.DataTestCase.LENGTH_RANDOM_BELOW_MIN: // next
-                    case DataTestCase_1.DataTestCase.LENGTH_JUST_BELOW_MIN: {
+                    case DataTestCase.LENGTH_LOWEST: // next
+                    case DataTestCase.LENGTH_RANDOM_BELOW_MIN: // next
+                    case DataTestCase.LENGTH_JUST_BELOW_MIN: {
                         if (isRequired) {
-                            if (dtc === DataTestCase_1.DataTestCase.LENGTH_LOWEST) {
+                            if (dtc === DataTestCase.LENGTH_LOWEST) {
                                 return incompatiblePair;
                             }
-                            if (dtc === DataTestCase_1.DataTestCase.LENGTH_RANDOM_BELOW_MIN &&
+                            if (dtc === DataTestCase.LENGTH_RANDOM_BELOW_MIN &&
                                 2 === minLength && !isToFakeMinLength) {
                                 return incompatiblePair;
                             }
-                            if (dtc === DataTestCase_1.DataTestCase.LENGTH_JUST_BELOW_MIN &&
+                            if (dtc === DataTestCase.LENGTH_JUST_BELOW_MIN &&
                                 1 === minLength && !isToFakeMinLength) {
                                 return incompatiblePair;
                             }
@@ -460,30 +456,30 @@ class DataTestCaseAnalyzer {
                         }
                         return incompatiblePair;
                     }
-                    case DataTestCase_1.DataTestCase.LENGTH_JUST_ABOVE_MIN: // next
-                    case DataTestCase_1.DataTestCase.LENGTH_MIN: {
+                    case DataTestCase.LENGTH_JUST_ABOVE_MIN: // next
+                    case DataTestCase.LENGTH_MIN: {
                         if (hasMinLength || isToFakeMinLength) {
                             return shouldGenerateValid ? validPair : incompatiblePair;
                         }
                         return incompatiblePair;
                     }
-                    case DataTestCase_1.DataTestCase.LENGTH_RANDOM_BETWEEN_MIN_MAX: // next
-                    case DataTestCase_1.DataTestCase.LENGTH_MEDIAN: {
+                    case DataTestCase.LENGTH_RANDOM_BETWEEN_MIN_MAX: // next
+                    case DataTestCase.LENGTH_MEDIAN: {
                         if ((hasMinLength || isToFakeMinLength) && (hasMaxLength || isToFakeMaxLength)) {
                             return shouldGenerateValid ? validPair : incompatiblePair;
                         }
                         return incompatiblePair;
                     }
-                    case DataTestCase_1.DataTestCase.LENGTH_JUST_BELOW_MAX: // next
-                    case DataTestCase_1.DataTestCase.LENGTH_MAX: {
+                    case DataTestCase.LENGTH_JUST_BELOW_MAX: // next
+                    case DataTestCase.LENGTH_MAX: {
                         if (hasMaxLength || isToFakeMaxLength) {
                             return shouldGenerateValid ? validPair : incompatiblePair;
                         }
                         return incompatiblePair;
                     }
-                    case DataTestCase_1.DataTestCase.LENGTH_JUST_ABOVE_MAX: // next
-                    case DataTestCase_1.DataTestCase.LENGTH_RANDOM_ABOVE_MAX: // next
-                    case DataTestCase_1.DataTestCase.LENGTH_GREATEST: {
+                    case DataTestCase.LENGTH_JUST_ABOVE_MAX: // next
+                    case DataTestCase.LENGTH_RANDOM_ABOVE_MAX: // next
+                    case DataTestCase.LENGTH_GREATEST: {
                         if (hasMaxLength || isToFakeMaxLength) {
                             if (analyzer.hasValuesAboveMax()) {
                                 if (pMaxLengthHasTagGenerateOnlyValidValues) {
@@ -498,7 +494,7 @@ class DataTestCaseAnalyzer {
                 }
                 return incompatiblePair;
             }
-            case DataTestCase_1.DataTestCaseGroup.COMPUTATION: { // not supported yet
+            case DataTestCaseGroup.COMPUTATION: { // not supported yet
                 return incompatiblePair;
             }
             default: return incompatiblePair;
@@ -517,23 +513,22 @@ class DataTestCaseAnalyzer {
             return [null, false];
         }
         switch (uip.value.entity) {
-            case nlp_1.Entities.CONSTANT: {
+            case Entities.CONSTANT: {
                 const constant = uip.value.references[0];
-                if (TypeChecking_1.isDefined(constant)) {
-                    return [ValueTypeDetector_1.adjustValueToTheRightType(constant.value), false];
+                if (isDefined(constant)) {
+                    return [adjustValueToTheRightType(constant.value), false];
                 }
                 return [null, false];
             }
             // case Entities.COMPUTATION: // next
-            case nlp_1.Entities.QUERY: // next
-            case nlp_1.Entities.UI_ELEMENT_REF: {
+            case Entities.QUERY: // next
+            case Entities.UI_ELEMENT_REF: {
                 return [null, true]; // << FAKED !
             }
             default: return [uip.value.value, false];
         }
     }
     hasNegation(uip) {
-        return this._nlpUtil.hasEntityNamed(nlp_1.Entities.UI_CONNECTOR_MODIFIER, uip.nlpResult);
+        return this._nlpUtil.hasEntityNamed(Entities.UI_CONNECTOR_MODIFIER, uip.nlpResult);
     }
 }
-exports.DataTestCaseAnalyzer = DataTestCaseAnalyzer;

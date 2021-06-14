@@ -1,23 +1,20 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.NamedNodeLexer = void 0;
-const Expressions_1 = require("../req/Expressions");
-const LineChecker_1 = require("../req/LineChecker");
-const Symbols_1 = require("../req/Symbols");
-const CommentHandler_1 = require("./CommentHandler");
-const LexicalException_1 = require("./LexicalException");
+import { Expressions } from '../req/Expressions';
+import { LineChecker } from '../req/LineChecker';
+import { Symbols } from '../req/Symbols';
+import { CommentHandler } from './CommentHandler';
+import { LexicalException } from './LexicalException';
 const XRegExp = require('xregexp');
 /**
  * Detects a node in the format "keyword: name".
  *
  * @author Thiago Delgado Pinto
  */
-class NamedNodeLexer {
+export class NamedNodeLexer {
     constructor(_words, _nodeType) {
         this._words = _words;
         this._nodeType = _nodeType;
-        this._separator = Symbols_1.Symbols.TITLE_SEPARATOR;
-        this._lineChecker = new LineChecker_1.LineChecker();
+        this._separator = Symbols.TITLE_SEPARATOR;
+        this._lineChecker = new LineChecker();
     }
     /** @inheritDoc */
     nodeType() {
@@ -39,11 +36,11 @@ class NamedNodeLexer {
         return this._separator;
     }
     makeRegexForTheWords(words) {
-        return '^' + Expressions_1.Expressions.OPTIONAL_SPACES_OR_TABS
+        return '^' + Expressions.OPTIONAL_SPACES_OR_TABS
             + '(' + words.join('|') + ')'
-            + Expressions_1.Expressions.OPTIONAL_SPACES_OR_TABS
+            + Expressions.OPTIONAL_SPACES_OR_TABS
             + this._separator
-            + Expressions_1.Expressions.ANYTHING; // the name
+            + Expressions.ANYTHING; // the name
     }
     /** @inheritDoc */
     analyze(line, lineNumber) {
@@ -53,7 +50,7 @@ class NamedNodeLexer {
             return null;
         }
         let pos = this._lineChecker.countLeftSpacesAndTabs(line);
-        let name = (new CommentHandler_1.CommentHandler()).removeComment(line);
+        let name = (new CommentHandler()).removeComment(line);
         name = this._lineChecker.textAfterSeparator(this._separator, name).trim();
         let node = {
             nodeType: this._nodeType,
@@ -64,7 +61,7 @@ class NamedNodeLexer {
         if (!this.isValidName(name)) {
             let loc = { line: lineNumber || 0, column: line.indexOf(name) + 1 };
             let msg = 'Invalid ' + this._nodeType + ' name: "' + name + '"';
-            errors.push(new LexicalException_1.LexicalException(msg, loc));
+            errors.push(new LexicalException(msg, loc));
         }
         return { nodes: [node], errors: errors };
     }
@@ -77,4 +74,3 @@ class NamedNodeLexer {
         return XRegExp('^[\\p{L}][\\p{L}0-9 ._-]*$', 'ui').test(name); // TO-DO: improve the regex
     }
 }
-exports.NamedNodeLexer = NamedNodeLexer;

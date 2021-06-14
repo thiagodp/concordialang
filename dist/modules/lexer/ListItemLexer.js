@@ -1,26 +1,23 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.ListItemLexer = void 0;
-const Expressions_1 = require("../req/Expressions");
-const LineChecker_1 = require("../req/LineChecker");
-const Symbols_1 = require("../req/Symbols");
-const CommentHandler_1 = require("./CommentHandler");
-const LexicalException_1 = require("./LexicalException");
+import { Expressions } from "../req/Expressions";
+import { LineChecker } from "../req/LineChecker";
+import { Symbols } from "../req/Symbols";
+import { CommentHandler } from './CommentHandler';
+import { LexicalException } from "./LexicalException";
 /**
  * Detects a node with the format "- anything".
  *
  * @author Thiago Delgado Pinto
  */
-class ListItemLexer {
+export class ListItemLexer {
     constructor(_nodeType) {
         this._nodeType = _nodeType;
-        this._symbol = Symbols_1.Symbols.LIST_ITEM_PREFIX;
-        this._lineChecker = new LineChecker_1.LineChecker();
+        this._symbol = Symbols.LIST_ITEM_PREFIX;
+        this._lineChecker = new LineChecker();
     }
     makeRegex() {
-        return '^' + Expressions_1.Expressions.OPTIONAL_SPACES_OR_TABS
+        return '^' + Expressions.OPTIONAL_SPACES_OR_TABS
             + this._symbol
-            + Expressions_1.Expressions.ANYTHING;
+            + Expressions.ANYTHING;
     }
     /** @inheritDoc */
     nodeType() {
@@ -37,7 +34,7 @@ class ListItemLexer {
         if (!result) {
             return null;
         }
-        let content = (new CommentHandler_1.CommentHandler()).removeComment(line);
+        let content = (new CommentHandler()).removeComment(line);
         content = this._lineChecker.textAfterSeparator(this._symbol, content).trim();
         let pos = this._lineChecker.countLeftSpacesAndTabs(line);
         let node = {
@@ -48,9 +45,8 @@ class ListItemLexer {
         let errors = [];
         if (0 === content.length) {
             let msg = 'Empty content in ' + this._nodeType + '.';
-            errors.push(new LexicalException_1.LexicalException(msg, node.location));
+            errors.push(new LexicalException(msg, node.location));
         }
         return { nodes: [node], errors: errors };
     }
 }
-exports.ListItemLexer = ListItemLexer;

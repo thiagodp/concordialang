@@ -1,36 +1,33 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.availableEncodings = exports.DEFAULT_DATA_TEST_CASE_COMBINATION = exports.DEFAULT_INVALID_DATA_TEST_CASES_AT_A_TIME = exports.DEFAULT_STATE_COMBINATION = exports.DEFAULT_VARIANT_SELECTION = exports.DEFAULT_IMPORTANCE = exports.DEFAULT_RANDOM_TRIES_TO_INVALID_VALUE = exports.DEFAULT_RANDOM_MAX_STRING_SIZE = exports.DEFAULT_RANDOM_MIN_STRING_SIZE = exports.DEFAULT_TC_INDENTER = exports.DEFAULT_CASE_METHOD = exports.DEFAULT_CASE_UI = exports.DEFAULT_LINE_BREAKER = exports.DEFAULT_ENCODING = exports.DEFAULT_LANGUAGE = exports.DEFAULT_EXTENSION_TEST_CASE = exports.DEFAULT_EXTENSION_FEATURE = exports.DEFAULT_AST_FILE = exports.DEFAULT_CONFIG = exports.DEFAULT_DIR_RESULT = exports.DEFAULT_DIR_SCRIPT = exports.DEFAULT_DIRECTORY = exports.DEFAULT_DIR_LANGUAGE = void 0;
-const CaseType_1 = require("../util/CaseType");
-const combination_options_1 = require("./combination-options");
+import { CaseType } from '../util/CaseType';
+import { CombinationOptions, InvalidSpecialOptions, VariantSelectionOptions } from './combination-options';
 // INTERNAL DIRECTORIES
-exports.DEFAULT_DIR_LANGUAGE = 'data/';
+export const DEFAULT_DIR_LANGUAGE = 'data/';
 // DIRECTORIES
-exports.DEFAULT_DIRECTORY = '.';
-exports.DEFAULT_DIR_SCRIPT = '.'; // 'test/';
-exports.DEFAULT_DIR_RESULT = '.'; // 'output/'; // script results
+export const DEFAULT_DIRECTORY = '.';
+export const DEFAULT_DIR_SCRIPT = '.'; // 'test/';
+export const DEFAULT_DIR_RESULT = '.'; // 'output/'; // script results
 // FILES
-exports.DEFAULT_CONFIG = '.concordiarc'; // path
-exports.DEFAULT_AST_FILE = 'ast.json'; // path
-exports.DEFAULT_EXTENSION_FEATURE = '.feature'; // Extension for feature files
-exports.DEFAULT_EXTENSION_TEST_CASE = '.testcase'; // Extension for test case files
-exports.DEFAULT_LANGUAGE = 'en';
-exports.DEFAULT_ENCODING = 'utf8';
-exports.DEFAULT_LINE_BREAKER = "\n";
+export const DEFAULT_CONFIG = '.concordiarc'; // path
+export const DEFAULT_AST_FILE = 'ast.json'; // path
+export const DEFAULT_EXTENSION_FEATURE = '.feature'; // Extension for feature files
+export const DEFAULT_EXTENSION_TEST_CASE = '.testcase'; // Extension for test case files
+export const DEFAULT_LANGUAGE = 'en';
+export const DEFAULT_ENCODING = 'utf8';
+export const DEFAULT_LINE_BREAKER = "\n";
 // CONTENT GENERATION
-exports.DEFAULT_CASE_UI = CaseType_1.CaseType.CAMEL.toString(); // e.g., fullName
-exports.DEFAULT_CASE_METHOD = CaseType_1.CaseType.SNAKE.toString(); // e.g., my_test_method
-exports.DEFAULT_TC_INDENTER = '  '; // test case indenter
+export const DEFAULT_CASE_UI = CaseType.CAMEL.toString(); // e.g., fullName
+export const DEFAULT_CASE_METHOD = CaseType.SNAKE.toString(); // e.g., my_test_method
+export const DEFAULT_TC_INDENTER = '  '; // test case indenter
 // RANDOMIC GENERATION
-exports.DEFAULT_RANDOM_MIN_STRING_SIZE = 0;
-exports.DEFAULT_RANDOM_MAX_STRING_SIZE = 500;
-exports.DEFAULT_RANDOM_TRIES_TO_INVALID_VALUE = 5; // How many tries it will make to generate random values that are not in a set
-exports.DEFAULT_IMPORTANCE = 5; // 0..9
+export const DEFAULT_RANDOM_MIN_STRING_SIZE = 0;
+export const DEFAULT_RANDOM_MAX_STRING_SIZE = 500;
+export const DEFAULT_RANDOM_TRIES_TO_INVALID_VALUE = 5; // How many tries it will make to generate random values that are not in a set
+export const DEFAULT_IMPORTANCE = 5; // 0..9
 // TEST SCENARIO SELECTION AND COMBINATION STRATEGIES
 /** @see VariantSelectionOptions */
-exports.DEFAULT_VARIANT_SELECTION = combination_options_1.VariantSelectionOptions.SINGLE_RANDOM.toString();
+export const DEFAULT_VARIANT_SELECTION = VariantSelectionOptions.SINGLE_RANDOM.toString();
 /** @see StateCombinationOptions */
-exports.DEFAULT_STATE_COMBINATION = combination_options_1.CombinationOptions.SINGLE_RANDOM_OF_EACH.toString();
+export const DEFAULT_STATE_COMBINATION = CombinationOptions.SINGLE_RANDOM_OF_EACH.toString();
 // SELECTION AND COMBINATION STRATEGIES FOR DATA TEST CASES
 /**
  * How many UI Elements will receive invalid values at a time.
@@ -46,15 +43,15 @@ exports.DEFAULT_STATE_COMBINATION = combination_options_1.CombinationOptions.SIN
  *
  * @see InvalidSpecialOptions
  */
-exports.DEFAULT_INVALID_DATA_TEST_CASES_AT_A_TIME = combination_options_1.InvalidSpecialOptions.DEFAULT;
+export const DEFAULT_INVALID_DATA_TEST_CASES_AT_A_TIME = InvalidSpecialOptions.DEFAULT;
 /** @see DataTestCaseCombinationOptions */
-exports.DEFAULT_DATA_TEST_CASE_COMBINATION = combination_options_1.CombinationOptions.SHUFFLED_ONE_WISE.toString();
+export const DEFAULT_DATA_TEST_CASE_COMBINATION = CombinationOptions.SHUFFLED_ONE_WISE.toString();
 /**
  * Returns available encodings.
  *
  * @see https://github.com/nodejs/node/blob/master/lib/buffer.js
  */
-function availableEncodings() {
+export function availableEncodings() {
     return [
         'utf8', 'utf-8',
         'ascii',
@@ -63,4 +60,3 @@ function availableEncodings() {
         'utf16le', 'utf-16le'
     ];
 }
-exports.availableEncodings = availableEncodings;

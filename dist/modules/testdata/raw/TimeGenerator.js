@@ -1,10 +1,7 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.TimeGenerator = void 0;
-const core_1 = require("@js-joda/core");
-const TypeChecking_1 = require("../../util/TypeChecking");
-const TimeLimits_1 = require("../limits/TimeLimits");
-class TimeGenerator {
+import { ChronoUnit } from "@js-joda/core";
+import { isDefined } from '../../util/TypeChecking';
+import { TimeLimits } from "../limits/TimeLimits";
+export class TimeGenerator {
     /**
      * Constructor.
      *
@@ -16,15 +13,15 @@ class TimeGenerator {
      */
     constructor(_randomTimeGen, min, max) {
         this._randomTimeGen = _randomTimeGen;
-        this.ZERO = TimeLimits_1.TimeLimits.MIN;
-        if (TypeChecking_1.isDefined(min) && TypeChecking_1.isDefined(max) && min.isAfter(max)) {
+        this.ZERO = TimeLimits.MIN;
+        if (isDefined(min) && isDefined(max) && min.isAfter(max)) {
             throw new Error('min time should not be greater than max');
         }
-        this._min = TypeChecking_1.isDefined(min) ? min : TimeLimits_1.TimeLimits.MIN;
-        this._max = TypeChecking_1.isDefined(max) ? max : TimeLimits_1.TimeLimits.MAX;
+        this._min = isDefined(min) ? min : TimeLimits.MIN;
+        this._max = isDefined(max) ? max : TimeLimits.MAX;
     }
     diffInSeconds() {
-        return this._min.until(this._max, core_1.ChronoUnit.SECONDS);
+        return this._min.until(this._max, ChronoUnit.SECONDS);
     }
     // RANGE ANALYSIS
     /** @inheritDoc */
@@ -33,11 +30,11 @@ class TimeGenerator {
     }
     /** @inheritDoc */
     hasValuesBelowMin() {
-        return this._min.isAfter(TimeLimits_1.TimeLimits.MIN);
+        return this._min.isAfter(TimeLimits.MIN);
     }
     /** @inheritDoc */
     hasValuesAboveMax() {
-        return this._max.isBefore(TimeLimits_1.TimeLimits.MAX);
+        return this._max.isBefore(TimeLimits.MAX);
     }
     /** @inheritDoc */
     isZeroBetweenMinAndMax() {
@@ -55,7 +52,7 @@ class TimeGenerator {
     // DATA GENERATION
     /** @inheritDoc */
     lowest() {
-        return TimeLimits_1.TimeLimits.MIN;
+        return TimeLimits.MIN;
     }
     /** @inheritDoc */
     randomBelowMin() {
@@ -117,7 +114,6 @@ class TimeGenerator {
     }
     /** @inheritDoc */
     greatest() {
-        return TimeLimits_1.TimeLimits.MAX;
+        return TimeLimits.MAX;
     }
 }
-exports.TimeGenerator = TimeGenerator;

@@ -1,12 +1,9 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.tagsWithAnyOfTheNames = exports.hasTagNamed = exports.ReservedTags = void 0;
 /**
  * Reserved tags.
  *
  * @author Thiago Delgado Pinto
  */
-var ReservedTags;
+export var ReservedTags;
 (function (ReservedTags) {
     ReservedTags["GENERATED"] = "generated";
     ReservedTags["FAIL"] = "fail";
@@ -17,18 +14,16 @@ var ReservedTags;
     ReservedTags["IGNORE"] = "ignore";
     ReservedTags["IMPORTANCE"] = "importance";
     ReservedTags["GENERATE_ONLY_VALID_VALUES"] = "generate-only-valid-values"; // example: @generate-only-valid-values
-})(ReservedTags = exports.ReservedTags || (exports.ReservedTags = {}));
+})(ReservedTags || (ReservedTags = {}));
 /**
  * Returns true if the one of the given tags has the given name.
  *
  * @param name Tag name
  * @param tags Tags where to find
  */
-function hasTagNamed(name, tags) {
+export function hasTagNamed(name, tags) {
     return !!tags.find(tag => tag.name === name);
 }
-exports.hasTagNamed = hasTagNamed;
-function tagsWithAnyOfTheNames(tags, names) {
+export function tagsWithAnyOfTheNames(tags, names) {
     return tags.filter(t => names.indexOf(t.name.toLowerCase()) >= 0);
 }
-exports.tagsWithAnyOfTheNames = tagsWithAnyOfTheNames;

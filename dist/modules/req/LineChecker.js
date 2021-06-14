@@ -1,12 +1,9 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.LineChecker = void 0;
 /**
  * Line checker
  *
  * @author Thiago Delgado Pinto
  */
-class LineChecker {
+export class LineChecker {
     isEmpty(line) {
         return 0 === line.trim().length;
     }
@@ -30,4 +27,3 @@ class LineChecker {
         return i > 0 ? line.substring(0, i) : '';
     }
 }
-exports.LineChecker = LineChecker;

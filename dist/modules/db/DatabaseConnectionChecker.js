@@ -1,80 +1,65 @@
-"use strict";
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.DatabaseConnectionChecker = void 0;
-const dbi_1 = require("../dbi");
-const error_1 = require("../error");
-const DatabaseJSDatabaseInterface_1 = require("./DatabaseJSDatabaseInterface");
+import { ConnectionCheckResult } from '../dbi';
+import { RuntimeException } from '../error';
+import { DatabaseJSDatabaseInterface } from './DatabaseJSDatabaseInterface';
 /**
  * Checks all the connections of a specification.
  *
  * @author Thiago Delgado Pinto
  */
-class DatabaseConnectionChecker {
+export class DatabaseConnectionChecker {
     constructor() {
         this.createDBI = (db) => {
             // In the future, other implementation could be selected, according to the database type
-            return new DatabaseJSDatabaseInterface_1.DatabaseJSDatabaseInterface();
+            return new DatabaseJSDatabaseInterface();
         };
     }
-    check(spec, problems, disconnectAfterConnecting = false) {
-        return __awaiter(this, void 0, void 0, function* () {
-            let r = new dbi_1.ConnectionCheckResult(true);
-            for (let doc of spec.docs) {
-                // Sanity checking
-                if (!doc.databases) {
+    async check(spec, problems, disconnectAfterConnecting = false) {
+        let r = new ConnectionCheckResult(true);
+        for (let doc of spec.docs) {
+            // Sanity checking
+            if (!doc.databases) {
+                continue;
+            }
+            for (let db of doc.databases) {
+                let dbi = this.createDBI(db);
+                let cr = {
+                    success: true,
+                    errors: [],
+                    databaseName: db.name,
+                    dbi: dbi
+                };
+                r.resultsMap[db.name] = cr;
+                // connect
+                try {
+                    await dbi.connect(db, spec.basePath);
+                }
+                catch (err) {
+                    r.success = false;
+                    cr.success = false;
+                    const msg = 'Could not connect to the database "' + db.name + '". Reason: ' + err.message;
+                    const e = new RuntimeException(msg, db.location);
+                    cr.errors.push(e);
+                    problems.addWarning(doc.fileInfo.path, e);
                     continue;
                 }
-                for (let db of doc.databases) {
-                    let dbi = this.createDBI(db);
-                    let cr = {
-                        success: true,
-                        errors: [],
-                        databaseName: db.name,
-                        dbi: dbi
-                    };
-                    r.resultsMap[db.name] = cr;
-                    // connect
-                    try {
-                        yield dbi.connect(db, spec.basePath);
-                    }
-                    catch (err) {
-                        r.success = false;
-                        cr.success = false;
-                        const msg = 'Could not connect to the database "' + db.name + '". Reason: ' + err.message;
-                        const e = new error_1.RuntimeException(msg, db.location);
-                        cr.errors.push(e);
-                        problems.addWarning(doc.fileInfo.path, e);
-                        continue;
-                    }
-                    if (!disconnectAfterConnecting) {
-                        continue;
-                    }
-                    // disconnect
-                    try {
-                        if (yield dbi.isConnected()) {
-                            yield dbi.disconnect();
-                        }
-                    }
-                    catch (err) {
-                        const msg = 'Error while disconnecting from database "' +
-                            db.name + '". Details: ' + err.message + ' at ' + err.stack;
-                        const e = new error_1.RuntimeException(msg, db.location);
-                        cr.errors.push(e);
-                        problems.addWarning(doc.fileInfo.path, e);
+                if (!disconnectAfterConnecting) {
+                    continue;
+                }
+                // disconnect
+                try {
+                    if (await dbi.isConnected()) {
+                        await dbi.disconnect();
                     }
                 }
+                catch (err) {
+                    const msg = 'Error while disconnecting from database "' +
+                        db.name + '". Details: ' + err.message + ' at ' + err.stack;
+                    const e = new RuntimeException(msg, db.location);
+                    cr.errors.push(e);
+                    problems.addWarning(doc.fileInfo.path, e);
+                }
             }
-            return r;
-        });
+        }
+        return r;
     }
 }
-exports.DatabaseConnectionChecker = DatabaseConnectionChecker;

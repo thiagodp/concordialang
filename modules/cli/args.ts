@@ -1,5 +1,4 @@
-// import * as meow from 'meow';
-import * as getopts from 'getopts';
+import getopts from 'getopts';
 
 import { AppOptions } from '../app/app-options';
 import { CliOnlyOptions } from './CliOnlyOptions';

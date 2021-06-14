@@ -1,6 +1,6 @@
 import { Clock, Instant, ZoneId } from '@js-joda/core';
 
-import Bravey = require('../../lib/bravey');
+import Bravey from '../../lib/bravey';
 import { Entities } from '../nlp/Entities';
 import { NLPResult } from '../nlp/NLPResult';
 import { NLPTrainingData } from '../nlp/NLPTrainingData';

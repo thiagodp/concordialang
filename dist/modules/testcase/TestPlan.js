@@ -1,12 +1,9 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.TestPlan = void 0;
 /**
  * A test plan can be applied to test scenarios to produce test cases.
  *
  * @author Thiago Delgado Pinto
  */
-class TestPlan {
+export class TestPlan {
     constructor() {
         /**
          * DataTestCases to apply for each UI Element variable in a test scenario.
@@ -26,4 +23,3 @@ class TestPlan {
         return false;
     }
 }
-exports.TestPlan = TestPlan;

@@ -1,12 +1,9 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.ParsingContext = void 0;
 /**
  * Parsing context.
  *
  * @author Thiago Delgado Pinto
  */
-class ParsingContext {
+export class ParsingContext {
     constructor(doc) {
         this.doc = {};
         this.inFeature = false;
@@ -66,4 +63,3 @@ class ParsingContext {
         this.inAfterEachScenario = false;
     }
 }
-exports.ParsingContext = ParsingContext;

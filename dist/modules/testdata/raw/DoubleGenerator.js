@@ -1,14 +1,11 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.DoubleGenerator = void 0;
-const DoubleLimits_1 = require("../limits/DoubleLimits");
-const MinMaxChecker_1 = require("../util/MinMaxChecker");
+import { DoubleLimits } from '../limits/DoubleLimits';
+import { MinMaxChecker } from '../util/MinMaxChecker';
 /**
  * Double generator.
  *
  * @author Thiago Delgado Pinto
  */
-class DoubleGenerator {
+export class DoubleGenerator {
     /**
      * Constructor.
      *
@@ -23,10 +20,10 @@ class DoubleGenerator {
     constructor(_random, min, max, delta) {
         this._random = _random;
         this.DEFAULT_DELTA = 0.01;
-        const checker = new MinMaxChecker_1.MinMaxChecker();
+        const checker = new MinMaxChecker();
         checker.check(min, max, delta); // may throw Error
-        this._min = min !== null && min !== undefined ? Number(min) : DoubleLimits_1.DoubleLimits.MIN;
-        this._max = max !== null && max !== undefined ? Number(max) : DoubleLimits_1.DoubleLimits.MAX;
+        this._min = min !== null && min !== undefined ? Number(min) : DoubleLimits.MIN;
+        this._max = max !== null && max !== undefined ? Number(max) : DoubleLimits.MAX;
         this._delta = delta !== null && delta !== undefined
             ? delta
             : checker.greatestFractionalPart(this.DEFAULT_DELTA, min, max);
@@ -44,11 +41,11 @@ class DoubleGenerator {
     }
     /** @inheritDoc */
     hasValuesBelowMin() {
-        return this._min > DoubleLimits_1.DoubleLimits.MIN;
+        return this._min > DoubleLimits.MIN;
     }
     /** @inheritDoc */
     hasValuesAboveMax() {
-        return this._max < DoubleLimits_1.DoubleLimits.MAX;
+        return this._max < DoubleLimits.MAX;
     }
     /** @inheritDoc */
     isZeroBetweenMinAndMax() {
@@ -65,7 +62,7 @@ class DoubleGenerator {
     // DATA GENERATION
     /** @inheritDoc */
     lowest() {
-        return DoubleLimits_1.DoubleLimits.MIN;
+        return DoubleLimits.MIN;
     }
     /** @inheritDoc */
     randomBelowMin() {
@@ -127,7 +124,6 @@ class DoubleGenerator {
     }
     /** @inheritDoc */
     greatest() {
-        return DoubleLimits_1.DoubleLimits.MAX;
+        return DoubleLimits.MAX;
     }
 }
-exports.DoubleGenerator = DoubleGenerator;

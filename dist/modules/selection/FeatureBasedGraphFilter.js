@@ -1,13 +1,10 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.FeatureBasedGraphFilter = void 0;
-const TypeChecking_1 = require("../util/TypeChecking");
+import { isDefined } from '../util/TypeChecking';
 /**
  * Feature-based graph filter.
  *
  * @author Thiago Delgado Pinto
  */
-class FeatureBasedGraphFilter {
+export class FeatureBasedGraphFilter {
     constructor(_criteria, _matcher) {
         this._criteria = _criteria;
         this._matcher = _matcher;
@@ -23,7 +20,7 @@ class FeatureBasedGraphFilter {
      */
     shouldBeIncluded(doc, graph) {
         // Has a Feature ?
-        if (TypeChecking_1.isDefined(doc.feature)) {
+        if (isDefined(doc.feature)) {
             return this._matcher.matches(this._criteria, doc.feature.tags || [], doc.feature.name);
         }
         // A document WITHOUT a Feature should be included whether it dependes on
@@ -41,4 +38,3 @@ class FeatureBasedGraphFilter {
         return shouldBeIncluded;
     }
 }
-exports.FeatureBasedGraphFilter = FeatureBasedGraphFilter;

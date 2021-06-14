@@ -1,21 +1,18 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.VariantParser = void 0;
-const SyntacticException_1 = require("./SyntacticException");
-const TagCollector_1 = require("./TagCollector");
+import { SyntacticException } from './SyntacticException';
+import { TagCollector } from './TagCollector';
 /**
  * Variant parser
  *
  * @author Thiago Delgado Pinto
  */
-class VariantParser {
+export class VariantParser {
     /** @inheritDoc */
     analyze(node, context, it, errors) {
         // Checks if a scenario has been declared
         if (!context.doc.feature
             || !context.doc.feature.scenarios
             || context.doc.feature.scenarios.length < 1) {
-            let e = new SyntacticException_1.SyntacticException('A variant must be declared after a scenario.', node.location);
+            let e = new SyntacticException('A variant must be declared after a scenario.', node.location);
             errors.push(e);
             return false;
         }
@@ -34,8 +31,7 @@ class VariantParser {
         if (!node.tags) {
             node.tags = [];
         }
-        (new TagCollector_1.TagCollector()).addBackwardTags(it, node.tags);
+        (new TagCollector()).addBackwardTags(it, node.tags);
         return true;
     }
 }
-exports.VariantParser = VariantParser;

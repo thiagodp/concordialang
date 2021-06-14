@@ -1,12 +1,9 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.RegexUtil = void 0;
 /**
  * Regex utilities.
  *
  * @author Thiago Delgado Pinto
  */
-class RegexUtil {
+export class RegexUtil {
     /**
      * Returns matches, ignoring undefined values. It is capable of ignoring full matches.
      *
@@ -30,4 +27,3 @@ class RegexUtil {
         return results;
     }
 }
-exports.RegexUtil = RegexUtil;

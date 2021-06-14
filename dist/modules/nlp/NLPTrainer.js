@@ -1,25 +1,23 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.NLPTrainer = void 0;
-const deepcopy = require("deepcopy");
-const TypeChecking_1 = require("../util/TypeChecking");
-const BaseTrainingExamples_1 = require("./BaseTrainingExamples");
-const NLPTrainingData_1 = require("./NLPTrainingData");
-const NLPTrainingDataConversor_1 = require("./NLPTrainingDataConversor");
+import deepcopy from 'deepcopy';
+import { dictionaryForLanguage } from '../language/data/map';
+import { isDefined } from '../util/TypeChecking';
+import { BASE_TRAINING_EXAMPLES } from './BaseTrainingExamples';
+import { NLP_PRIORITIES } from './NLPTrainingData';
+import { NLPTrainingDataConversor } from './NLPTrainingDataConversor';
 /**
  * NLP trainer.
  *
  * @author Thiago Delgado Pinto
  */
-class NLPTrainer {
-    constructor(_langLoader) {
-        this._langLoader = _langLoader;
+export class NLPTrainer {
+    constructor(_languageMap) {
+        this._languageMap = _languageMap;
         this.LANGUAGE_INTENT_SEPARATOR = ':';
         this.ALL_INTENTS = '*';
         this._trainedIntents = [];
     }
     canBeTrained(language) {
-        return this._langLoader.has(language);
+        return !!this._languageMap[language];
     }
     isIntentTrained(language, intent) {
         return this._trainedIntents.indexOf(this.joinLanguageAndIntent(language, intent)) >= 0
@@ -36,13 +34,13 @@ class NLPTrainer {
         if (this.isIntentTrained(language, intentNameFilter)) {
             return true;
         }
-        let content = deepcopy(this._langLoader.load(language));
+        let languageDictionary = deepcopy(dictionaryForLanguage(language));
         // Add base training sentences;
-        if (TypeChecking_1.isDefined(intentNameFilter)) {
+        if (isDefined(intentNameFilter)) {
             // console.log( 'INTENT DEFINED:', intentNameFilter );
-            let example = content.training.find(ex => ex.intent === intentNameFilter);
-            const baseIntentExample = BaseTrainingExamples_1.BASE_TRAINING_EXAMPLES.find(ex => ex.intent === intentNameFilter);
-            if (TypeChecking_1.isDefined(example) && TypeChecking_1.isDefined(baseIntentExample)) {
+            let example = languageDictionary.training.find(ex => ex.intent === intentNameFilter);
+            const baseIntentExample = BASE_TRAINING_EXAMPLES.find(ex => ex.intent === intentNameFilter);
+            if (isDefined(example) && isDefined(baseIntentExample)) {
                 // console.log( intentNameFilter );
                 // console.log( 'BEFORE' );
                 // console.log( example.sentences.length );
@@ -55,13 +53,13 @@ class NLPTrainer {
         else {
             // console.log( 'INTENT NOT DEFINED' );
             // Concat with base training sentences
-            for (const baseEx of BaseTrainingExamples_1.BASE_TRAINING_EXAMPLES) {
+            for (const baseEx of BASE_TRAINING_EXAMPLES) {
                 if (this.isIntentTrained(language, baseEx.intent)) {
                     // console.log( '-> base intent already trained:', baseEx.intent );
                     continue;
                 }
                 // console.log( '-> base intent untrained:', baseEx.intent );
-                let example = content.training.find(ex => ex.intent === baseEx.intent);
+                let example = languageDictionary.training.find(ex => ex.intent === baseEx.intent);
                 if (!example) {
                     continue;
                 }
@@ -75,26 +73,25 @@ class NLPTrainer {
             }
         }
         // COPY SOME PARTS TO OTHERS
-        if (TypeChecking_1.isDefined(content.nlp["testcase"]) && TypeChecking_1.isDefined(content.nlp["ui"])) {
+        if (isDefined(languageDictionary.nlp["testcase"]) && isDefined(languageDictionary.nlp["ui"])) {
             // Copy "ui_element_type" from "testcase" to "ui"
-            if (TypeChecking_1.isDefined(content.nlp["testcase"]["ui_element_type"])
-                && !TypeChecking_1.isDefined(content.nlp["ui"]["ui_element_type"])) {
-                content.nlp["ui"]["ui_element_type"] = content.nlp["testcase"]["ui_element_type"];
+            if (isDefined(languageDictionary.nlp["testcase"]["ui_element_type"])
+                && !isDefined(languageDictionary.nlp["ui"]["ui_element_type"])) {
+                languageDictionary.nlp["ui"]["ui_element_type"] = languageDictionary.nlp["testcase"]["ui_element_type"];
             }
             // Add items of "ui_property" from "ui" to "testcase"
-            if (TypeChecking_1.isDefined(content.nlp["testcase"]["ui_property"])
-                && !TypeChecking_1.isDefined(content.nlp["ui"]["ui_property"])) {
-                const uiProperties = content.nlp["ui"]["ui_property"];
+            if (isDefined(languageDictionary.nlp["testcase"]["ui_property"])
+                && !isDefined(languageDictionary.nlp["ui"]["ui_property"])) {
+                const uiProperties = languageDictionary.nlp["ui"]["ui_property"];
                 for (const p in uiProperties) {
-                    content.nlp["testcase"]["ui_property"][p] = content.nlp["ui"]["ui_property"][p];
+                    languageDictionary.nlp["testcase"]["ui_property"][p] = languageDictionary.nlp["ui"]["ui_property"][p];
                 }
             }
         }
-        let conversor = new NLPTrainingDataConversor_1.NLPTrainingDataConversor();
-        let converted = conversor.convert(content.nlp || {}, content.training || []);
-        converted.priorities = NLPTrainingData_1.NLP_PRIORITIES;
+        let conversor = new NLPTrainingDataConversor();
+        let converted = conversor.convert(languageDictionary.nlp || {}, languageDictionary.training || []);
+        converted.priorities = NLP_PRIORITIES;
         nlp.train(language, converted, intentNameFilter);
         return true;
     }
 }
-exports.NLPTrainer = NLPTrainer;

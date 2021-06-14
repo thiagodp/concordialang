@@ -1,15 +1,3 @@
-"use strict";
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.QueryBasedDataGenerator = void 0;
 /**
  * Query-based data generator.
  *
@@ -18,7 +6,7 @@ exports.QueryBasedDataGenerator = void 0;
  *
  * @author Thiago Delgado Pinto
  */
-class QueryBasedDataGenerator {
+export class QueryBasedDataGenerator {
     /**
      * Constructor
      *
@@ -38,63 +26,51 @@ class QueryBasedDataGenerator {
         this._maxTries = _maxTries;
     }
     // DATA GENERATION
-    firstElement() {
-        return __awaiter(this, void 0, void 0, function* () {
-            const values = yield this.queryValues();
-            return values.length > 0
-                ? this.valueOfTheFirstColumn(values[0])
-                : null;
-        });
+    async firstElement() {
+        const values = await this.queryValues();
+        return values.length > 0
+            ? this.valueOfTheFirstColumn(values[0])
+            : null;
     }
-    secondElement() {
-        return __awaiter(this, void 0, void 0, function* () {
-            const values = yield this.queryValues();
-            return values.length > 1
-                ? this.valueOfTheFirstColumn(values[1])
-                : null;
-        });
+    async secondElement() {
+        const values = await this.queryValues();
+        return values.length > 1
+            ? this.valueOfTheFirstColumn(values[1])
+            : null;
     }
-    randomElement() {
-        return __awaiter(this, void 0, void 0, function* () {
-            /// TO-DO: use LIMIT and OFFSET to generate the random number
-            // e.g.: LIMIT 1 OFFSET random( 1, COUNT( * ) )
-            const values = yield this.queryValues();
-            if (values.length < 1) {
-                return null;
-            }
-            const index = this._random.between(0, values.length - 1);
-            return this.valueOfTheFirstColumn(values[index]);
-        });
-    }
-    penultimateElement() {
-        return __awaiter(this, void 0, void 0, function* () {
-            const values = yield this.queryValues();
-            const len = values.length;
-            return len > 1
-                ? this.valueOfTheFirstColumn(values[len - 2])
-                : null;
-        });
-    }
-    lastElement() {
-        return __awaiter(this, void 0, void 0, function* () {
-            const values = yield this.queryValues();
-            const len = values.length;
-            return len > 0
-                ? this.valueOfTheFirstColumn(values[len - 1])
-                : null;
-        });
-    }
-    notInSet() {
-        return __awaiter(this, void 0, void 0, function* () {
-            for (let i = 0; i < this._maxTries; ++i) {
-                const val = this._rawDataGenerator.randomBetweenMinAndMax();
-                const found = yield this.hasValue(val);
-                if (!found) {
-                    return val;
-                }
-            }
+    async randomElement() {
+        /// TO-DO: use LIMIT and OFFSET to generate the random number
+        // e.g.: LIMIT 1 OFFSET random( 1, COUNT( * ) )
+        const values = await this.queryValues();
+        if (values.length < 1) {
             return null;
-        });
+        }
+        const index = this._random.between(0, values.length - 1);
+        return this.valueOfTheFirstColumn(values[index]);
+    }
+    async penultimateElement() {
+        const values = await this.queryValues();
+        const len = values.length;
+        return len > 1
+            ? this.valueOfTheFirstColumn(values[len - 2])
+            : null;
+    }
+    async lastElement() {
+        const values = await this.queryValues();
+        const len = values.length;
+        return len > 0
+            ? this.valueOfTheFirstColumn(values[len - 1])
+            : null;
+    }
+    async notInSet() {
+        for (let i = 0; i < this._maxTries; ++i) {
+            const val = this._rawDataGenerator.randomBetweenMinAndMax();
+            const found = await this.hasValue(val);
+            if (!found) {
+                return val;
+            }
+        }
+        return null;
     }
     // UTIL
     valueOfTheFirstColumn(row) {
@@ -106,27 +82,22 @@ class QueryBasedDataGenerator {
         }
         return null;
     }
-    queryValues() {
-        return __awaiter(this, void 0, void 0, function* () {
-            if (this._queryCache.has(this._query)) {
-                return this._queryCache.get(this._query);
-            }
-            const result = yield this._queryable.query(this._query);
-            this._queryCache.put(this._query, result);
-            return result;
-        });
+    async queryValues() {
+        if (this._queryCache.has(this._query)) {
+            return this._queryCache.get(this._query);
+        }
+        const result = await this._queryable.query(this._query);
+        this._queryCache.put(this._query, result);
+        return result;
     }
-    hasValue(value) {
-        return __awaiter(this, void 0, void 0, function* () {
-            const values = yield this.queryValues();
-            for (let row of values) {
-                const val = this.valueOfTheFirstColumn(row);
-                if (val == value) {
-                    return true;
-                }
+    async hasValue(value) {
+        const values = await this.queryValues();
+        for (let row of values) {
+            const val = this.valueOfTheFirstColumn(row);
+            if (val == value) {
+                return true;
             }
-            return false;
-        });
+        }
+        return false;
     }
 }
-exports.QueryBasedDataGenerator = QueryBasedDataGenerator;

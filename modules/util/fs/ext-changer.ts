@@ -1,25 +1,19 @@
 import { format } from 'date-fns';
-
+import { parse, join } from 'path';
 
 export function changeFileExtension(
     file: string,
-    extension: string,
-    pathLibrary: any
+    extension: string
 ) {
-    const { parse, join } = pathLibrary || require( 'path' );
-    const r = parse( file );
-    return join( r.dir, r.name + extension );
+    const { dir, name } = parse( file );
+    return join( dir, name + extension );
 }
 
 
 export function addTimeStampToFilename(
     file: string,
-    extension: string,
-    dateTime: Date,
-    pathLibrary: any
+    dateTime: Date
 ): string {
-    const { parse, join } = pathLibrary || require( 'path' );
-    const r = parse( file );
-    const timestamp = '-' + format( dateTime, 'yyyy-MM-dd_HH-mm-ss' );
-    return join( r.dir, r.name + timestamp + extension );
+    const { dir, name, ext } = parse( file );
+    return join( dir, name + '-' + format( dateTime, 'yyyy-MM-dd_HH-mm-ss' ) + ext );
 }

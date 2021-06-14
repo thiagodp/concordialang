@@ -1,5 +1,5 @@
-import * as jsesc from 'jsesc';
-import * as RandExp from 'randexp';
+import jsesc from 'jsesc';
+import RandExp from 'randexp';
 
 import { adjustValueToTheRightType, ValueType } from '../util/ValueTypeDetector';
 import { StringLimits } from './limits/StringLimits';

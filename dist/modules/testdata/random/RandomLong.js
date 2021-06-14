@@ -1,13 +1,10 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.RandomLong = void 0;
-const LongLimits_1 = require("../limits/LongLimits");
+import { LongLimits } from "../limits/LongLimits";
 /**
  * Generates random long integer values.
  *
  * @author Thiago Delgado Pinto
  */
-class RandomLong {
+export class RandomLong {
     constructor(_random) {
         this._random = _random;
     }
@@ -31,7 +28,7 @@ class RandomLong {
      * @return		A random value less than a maximum value.
      */
     before(max) {
-        return this.between(LongLimits_1.LongLimits.MIN, max - 1);
+        return this.between(LongLimits.MIN, max - 1);
     }
     /**
      * Generates a random value greater than a minimum value.
@@ -40,7 +37,6 @@ class RandomLong {
      * @return		A random value greater than a minimum value.
      */
     after(min) {
-        return this.between(min + 1, LongLimits_1.LongLimits.MAX);
+        return this.between(min + 1, LongLimits.MAX);
     }
 }
-exports.RandomLong = RandomLong;

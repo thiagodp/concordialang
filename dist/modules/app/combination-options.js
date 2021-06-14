@@ -1,7 +1,4 @@
-"use strict";
 // export type ValueOf<T> = T extends any[] ? T[number] : T[keyof T]; // it does not work for enum
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.InvalidSpecialOptions = exports.CombinationOptions = exports.VariantSelectionOptions = void 0;
 /**
  * Reduces the Variants that produce a certain State required by a Precondition
  * or by a State Call. The scenarios of these Variants will be combined with
@@ -10,25 +7,25 @@ exports.InvalidSpecialOptions = exports.CombinationOptions = exports.VariantSele
  *
  * @see VariantSelectionStrategy
  */
-var VariantSelectionOptions;
+export var VariantSelectionOptions;
 (function (VariantSelectionOptions) {
     VariantSelectionOptions["SINGLE_RANDOM"] = "random";
     VariantSelectionOptions["FIRST"] = "first";
     VariantSelectionOptions["FIRST_MOST_IMPORTANT"] = "fmi";
     VariantSelectionOptions["ALL"] = "all";
-})(VariantSelectionOptions = exports.VariantSelectionOptions || (exports.VariantSelectionOptions = {}));
+})(VariantSelectionOptions || (VariantSelectionOptions = {}));
 /**
  * Generic combination options
  *
  * @see CombinationStrategy
  */
-var CombinationOptions;
+export var CombinationOptions;
 (function (CombinationOptions) {
     CombinationOptions["SINGLE_RANDOM_OF_EACH"] = "sre";
     CombinationOptions["SHUFFLED_ONE_WISE"] = "sow";
     CombinationOptions["ONE_WISE"] = "ow";
     CombinationOptions["ALL"] = "all";
-})(CombinationOptions = exports.CombinationOptions || (exports.CombinationOptions = {}));
+})(CombinationOptions || (CombinationOptions = {}));
 /**
  * Number of UI Elements that will receive invalid DataTestCases at a time.
  *
@@ -46,7 +43,7 @@ var CombinationOptions;
  *
  *     invalid=default      -> leave as is
  */
-var InvalidSpecialOptions;
+export var InvalidSpecialOptions;
 (function (InvalidSpecialOptions) {
     InvalidSpecialOptions["ZERO"] = "0";
     InvalidSpecialOptions["ONE"] = "1";
@@ -63,4 +60,4 @@ var InvalidSpecialOptions;
      * Leave the mix untouched (i.e., does not filter the DataTestCases of each UI Element ).
      */
     InvalidSpecialOptions["DEFAULT"] = "smart";
-})(InvalidSpecialOptions = exports.InvalidSpecialOptions || (exports.InvalidSpecialOptions = {}));
+})(InvalidSpecialOptions || (InvalidSpecialOptions = {}));

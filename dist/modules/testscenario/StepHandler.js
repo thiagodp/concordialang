@@ -1,31 +1,28 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.StepHandler = void 0;
-const NodeTypes_1 = require("../req/NodeTypes");
-const CaseConversor_1 = require("../util/CaseConversor");
-const TypeChecking_1 = require("../util/TypeChecking");
-const EntityRecognizerMaker_1 = require("../nlp/EntityRecognizerMaker");
-const hasState = sentence => EntityRecognizerMaker_1.STATE_REGEX.test(sentence);
+import { dictionaryForLanguage } from '../language/data/map';
+import { STATE_REGEX } from '../nlp/EntityRecognizerMaker';
+import { NodeTypes } from '../req/NodeTypes';
+import { upperFirst } from '../util/CaseConversor';
+import { isDefined } from '../util/TypeChecking';
+const hasState = sentence => STATE_REGEX.test(sentence);
 const stepHasState = (step) => step ? hasState(step.content) : false;
-class StepHandler {
-    constructor(_langContentLoader, _defaultLanguage) {
-        this._langContentLoader = _langContentLoader;
+export class StepHandler {
+    constructor(_defaultLanguage) {
         this._defaultLanguage = _defaultLanguage;
         /** Maps language => ( keyword, value ) */
         this._keywords = new Map();
     }
     keywordMapForLanguage(docLanguage) {
-        const lang = TypeChecking_1.isDefined(docLanguage) ? docLanguage : this._defaultLanguage;
+        const lang = isDefined(docLanguage) ? docLanguage : this._defaultLanguage;
         let dictionary = this._keywords.get(lang);
         if (!dictionary) {
-            const langContent = this._langContentLoader.load(lang);
-            const keywords = langContent.keywords;
+            const languageDictionary = dictionaryForLanguage(lang);
+            const keywords = languageDictionary.keywords;
             dictionary = new Map();
-            dictionary.set(NodeTypes_1.NodeTypes.STEP_GIVEN, (keywords.stepGiven || ['given'])[0]);
-            dictionary.set(NodeTypes_1.NodeTypes.STEP_WHEN, (keywords.stepWhen || ['when'])[0]);
-            dictionary.set(NodeTypes_1.NodeTypes.STEP_THEN, (keywords.stepThen || ['then'])[0]);
-            dictionary.set(NodeTypes_1.NodeTypes.STEP_AND, (keywords.stepAnd || ['and'])[0]);
-            dictionary.set(NodeTypes_1.NodeTypes.STEP_OTHERWISE, (keywords.stepOtherwise || ['otherwise'])[0]);
+            dictionary.set(NodeTypes.STEP_GIVEN, (keywords.stepGiven || ['given'])[0]);
+            dictionary.set(NodeTypes.STEP_WHEN, (keywords.stepWhen || ['when'])[0]);
+            dictionary.set(NodeTypes.STEP_THEN, (keywords.stepThen || ['then'])[0]);
+            dictionary.set(NodeTypes.STEP_AND, (keywords.stepAnd || ['and'])[0]);
+            dictionary.set(NodeTypes.STEP_OTHERWISE, (keywords.stepOtherwise || ['otherwise'])[0]);
             this._keywords.set(lang, dictionary);
         }
         return dictionary;
@@ -55,8 +52,8 @@ class StepHandler {
             return stepContent;
         }
         // Make given/when/then -> Given/When/Then
-        if (replaceNodeType !== NodeTypes_1.NodeTypes.STEP_AND) {
-            replaceKeyword = CaseConversor_1.upperFirst(replaceKeyword);
+        if (replaceNodeType !== NodeTypes.STEP_AND) {
+            replaceKeyword = upperFirst(replaceKeyword);
         }
         const searchWithOptionalTabsOrSpaces = new RegExp('^(?: |\t)*' + searchKeyword, 'i');
         if (!searchWithOptionalTabsOrSpaces.test(stepContent)) {
@@ -81,14 +78,14 @@ class StepHandler {
     adjustPrefixes(steps, docLanguage) {
         let lastStepType;
         for (const step of steps) {
-            if (step.nodeType !== NodeTypes_1.NodeTypes.STEP_AND) {
+            if (step.nodeType !== NodeTypes.STEP_AND) {
                 if (!lastStepType) {
                     lastStepType = step.nodeType;
                     continue;
                 }
                 if (step.nodeType === lastStepType) {
-                    step.content = this.replacePrefix(step.nodeType, NodeTypes_1.NodeTypes.STEP_AND, step.content, docLanguage);
-                    step.nodeType = NodeTypes_1.NodeTypes.STEP_AND;
+                    step.content = this.replacePrefix(step.nodeType, NodeTypes.STEP_AND, step.content, docLanguage);
+                    step.nodeType = NodeTypes.STEP_AND;
                 }
             }
             lastStepType = step.nodeType;
@@ -97,28 +94,28 @@ class StepHandler {
     adjustPrefixesToReplaceStates(steps, docLanguage) {
         let priorWasGiven = false, priorWasWhen = false, priorHasState = false;
         for (let step of steps) {
-            if (step.nodeType === NodeTypes_1.NodeTypes.STEP_GIVEN) {
+            if (step.nodeType === NodeTypes.STEP_GIVEN) {
                 priorWasGiven = true;
                 priorWasWhen = false;
                 priorHasState = stepHasState(step);
             }
-            else if (step.nodeType === NodeTypes_1.NodeTypes.STEP_WHEN) {
+            else if (step.nodeType === NodeTypes.STEP_WHEN) {
                 priorWasGiven = false;
                 priorWasWhen = true;
                 priorHasState = stepHasState(step);
             }
-            else if (step.nodeType === NodeTypes_1.NodeTypes.STEP_AND &&
+            else if (step.nodeType === NodeTypes.STEP_AND &&
                 priorHasState &&
                 (priorWasGiven || priorWasWhen) &&
                 !stepHasState(step) // current does not have state
             ) {
                 if (priorWasGiven) {
-                    step.content = this.replacePrefix(NodeTypes_1.NodeTypes.STEP_AND, NodeTypes_1.NodeTypes.STEP_GIVEN, step.content, docLanguage);
-                    step.nodeType = NodeTypes_1.NodeTypes.STEP_GIVEN;
+                    step.content = this.replacePrefix(NodeTypes.STEP_AND, NodeTypes.STEP_GIVEN, step.content, docLanguage);
+                    step.nodeType = NodeTypes.STEP_GIVEN;
                 }
                 else { // When
-                    step.content = this.replacePrefix(NodeTypes_1.NodeTypes.STEP_AND, NodeTypes_1.NodeTypes.STEP_WHEN, step.content, docLanguage);
-                    step.nodeType = NodeTypes_1.NodeTypes.STEP_WHEN;
+                    step.content = this.replacePrefix(NodeTypes.STEP_AND, NodeTypes.STEP_WHEN, step.content, docLanguage);
+                    step.nodeType = NodeTypes.STEP_WHEN;
                 }
                 priorHasState = false; // important
             }
@@ -144,9 +141,9 @@ class StepHandler {
         if (!target) {
             return steps;
         }
-        const isTargetAnAndStep = target.nodeType === NodeTypes_1.NodeTypes.STEP_AND;
+        const isTargetAnAndStep = target.nodeType === NodeTypes.STEP_AND;
         const nextStep = index + 1 < len ? steps[index + 1] : null;
-        const isNextAnAndStep = nextStep && nextStep.nodeType === NodeTypes_1.NodeTypes.STEP_AND;
+        const isNextAnAndStep = nextStep && nextStep.nodeType === NodeTypes.STEP_AND;
         // Case 1:
         //  Given/When/Then/Otherwise ...	 <-- TARGET
         //    and ...          				 <-- NEXT STEP
@@ -208,18 +205,18 @@ class StepHandler {
                 indexesToRemove.push(index);
                 continue;
             }
-            if (step.nodeType === NodeTypes_1.NodeTypes.STEP_GIVEN) {
+            if (step.nodeType === NodeTypes.STEP_GIVEN) {
                 lastNonAndWasGiven = true;
                 if (stepHasState(step)) {
                     indexesToRemove.push(index);
                     continue;
                 }
             }
-            else if (step.nodeType === NodeTypes_1.NodeTypes.STEP_WHEN ||
-                step.nodeType === NodeTypes_1.NodeTypes.STEP_THEN) {
+            else if (step.nodeType === NodeTypes.STEP_WHEN ||
+                step.nodeType === NodeTypes.STEP_THEN) {
                 lastNonAndWasGiven = false;
             }
-            if (lastNonAndWasGiven && step.nodeType === NodeTypes_1.NodeTypes.STEP_AND) {
+            if (lastNonAndWasGiven && step.nodeType === NodeTypes.STEP_AND) {
                 if (stepHasState(step)) {
                     indexesToRemove.push(index);
                     continue;
@@ -233,4 +230,3 @@ class StepHandler {
         return newSteps;
     }
 }
-exports.StepHandler = StepHandler;

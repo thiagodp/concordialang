@@ -1,47 +1,31 @@
-"use strict";
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.SingleFileCompiler = void 0;
-const error_1 = require("../error");
-const BatchDocumentAnalyzer_1 = require("../semantic/single/BatchDocumentAnalyzer");
-class SingleFileCompiler {
+import { RuntimeException } from "../error";
+import { BatchDocumentAnalyzer } from "../semantic/single/BatchDocumentAnalyzer";
+export class SingleFileCompiler {
     constructor(_lexer, _parser, _nlpRec, _defaultLanguage, _ignoreSemanticAnalysis = false) {
         this._lexer = _lexer;
         this._parser = _parser;
         this._nlpRec = _nlpRec;
         this._defaultLanguage = _defaultLanguage;
         this._ignoreSemanticAnalysis = _ignoreSemanticAnalysis;
-        this._documentAnalyzer = new BatchDocumentAnalyzer_1.BatchDocumentAnalyzer();
+        this._documentAnalyzer = new BatchDocumentAnalyzer();
     }
     /**
      * MUST NEVER THROW
      */
-    process(problems, filePath, content, lineBreaker = "\n") {
-        return __awaiter(this, void 0, void 0, function* () {
-            const lines = content.split(lineBreaker);
-            return this.processLines(problems, filePath, lines);
-        });
+    async process(problems, filePath, content, lineBreaker = "\n") {
+        const lines = content.split(lineBreaker);
+        return this.processLines(problems, filePath, lines);
     }
     /**
      * MUST NEVER THROW
      */
-    processLines(problems, filePath, lines) {
-        return __awaiter(this, void 0, void 0, function* () {
-            lines.forEach((line, index) => this._lexer.addNodeFromLine(line, index + 1));
-            let doc = {
-                fileInfo: { hash: null, path: filePath }
-            };
-            this.analyzeNodes(problems, doc);
-            return doc;
-        });
+    async processLines(problems, filePath, lines) {
+        lines.forEach((line, index) => this._lexer.addNodeFromLine(line, index + 1));
+        let doc = {
+            fileInfo: { hash: null, path: filePath }
+        };
+        this.analyzeNodes(problems, doc);
+        return doc;
     }
     /**
      * Analyze nodes recognized by a lexer for a given document.
@@ -65,7 +49,7 @@ class SingleFileCompiler {
             }
             else {
                 let errors = [
-                    new error_1.RuntimeException('The NLP cannot be trained in the language "' + language + '".')
+                    new RuntimeException('The NLP cannot be trained in the language "' + language + '".')
                 ];
                 this.addErrors(problems, errors, doc);
             }
@@ -85,7 +69,7 @@ class SingleFileCompiler {
         for (const e of errors) {
             let re;
             if (e.name === Error.name) {
-                re = error_1.RuntimeException.createFrom(e);
+                re = RuntimeException.createFrom(e);
             }
             else {
                 re = e;
@@ -99,4 +83,3 @@ class SingleFileCompiler {
         }
     }
 }
-exports.SingleFileCompiler = SingleFileCompiler;

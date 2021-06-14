@@ -1,10 +1,7 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.RegexBasedDataGenerator = void 0;
-const jsesc = require("jsesc");
-const RandExp = require("randexp");
-const ValueTypeDetector_1 = require("../util/ValueTypeDetector");
-const StringLimits_1 = require("./limits/StringLimits");
+import jsesc from 'jsesc';
+import RandExp from 'randexp';
+import { adjustValueToTheRightType, ValueType } from '../util/ValueTypeDetector';
+import { StringLimits } from './limits/StringLimits';
 /**
  * Regular Expression -based data generator.
  *
@@ -13,7 +10,7 @@ const StringLimits_1 = require("./limits/StringLimits");
  *
  * @author Thiago Delgado Pinto
  */
-class RegexBasedDataGenerator {
+export class RegexBasedDataGenerator {
     /**
      * Constructor
      *
@@ -23,7 +20,7 @@ class RegexBasedDataGenerator {
      * @param _randomTriesToInvalidValues How many tries to generate random invalid values.
      * @param _maxStringSize Maximum string size.
      */
-    constructor(_randomLong, _randomString, _expression, _valueType = ValueTypeDetector_1.ValueType.STRING, _randomTriesToInvalidValues = 10, _maxStringSize) {
+    constructor(_randomLong, _randomString, _expression, _valueType = ValueType.STRING, _randomTriesToInvalidValues = 10, _maxStringSize) {
         this._randomLong = _randomLong;
         this._randomString = _randomString;
         this._expression = _expression;
@@ -38,7 +35,7 @@ class RegexBasedDataGenerator {
             this._randomTriesToInvalidValues = 0;
         }
         if (this._maxStringSize <= 0) {
-            this._maxStringSize = StringLimits_1.StringLimits.MAX;
+            this._maxStringSize = StringLimits.MAX;
         }
     }
     /**
@@ -51,7 +48,7 @@ class RegexBasedDataGenerator {
      * Returns a value considered invalid.
      */
     invalid() {
-        const max = this._maxStringSize || StringLimits_1.StringLimits.MAX;
+        const max = this._maxStringSize || StringLimits.MAX;
         // Generates a random string, hoping that it does not match the expression.
         // This is faster and possibly less error prone than negate the expression.
         const regex = new RegExp(this._expression);
@@ -92,13 +89,12 @@ class RegexBasedDataGenerator {
      *
      * @param expression Expression
      */
-    generateFor(expression, valueType = ValueTypeDetector_1.ValueType.STRING) {
+    generateFor(expression, valueType = ValueType.STRING) {
         const value = new RandExp(expression).gen();
-        if (ValueTypeDetector_1.ValueType.STRING === valueType) {
+        if (ValueType.STRING === valueType) {
             // @see https://github.com/mathiasbynens/jsesc#api
             return jsesc(value, { quotes: 'double' });
         }
-        return ValueTypeDetector_1.adjustValueToTheRightType(value, valueType);
+        return adjustValueToTheRightType(value, valueType);
     }
 }
-exports.RegexBasedDataGenerator = RegexBasedDataGenerator;

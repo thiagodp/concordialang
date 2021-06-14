@@ -1,11 +1,8 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.createPersistableCopy = void 0;
-const path_1 = require("path");
+import { relative } from 'path';
 /**
  * Returns an object that can be saved.
  */
-function createPersistableCopy(source, defaultObject, useRelativePaths = false) {
+export function createPersistableCopy(source, defaultObject, useRelativePaths = false) {
     const unwantedProperties = [
         // INTERNAL
         'debug',
@@ -54,9 +51,9 @@ function createPersistableCopy(source, defaultObject, useRelativePaths = false) 
         unwantedProperties.push('seed');
     }
     if (useRelativePaths) {
-        obj.directory = path_1.relative(obj.processPath, obj.directory);
-        obj.dirResult = path_1.relative(obj.processPath, obj.dirResult);
-        obj.dirScript = path_1.relative(obj.processPath, obj.dirScript);
+        obj.directory = relative(obj.processPath, obj.directory);
+        obj.dirResult = relative(obj.processPath, obj.dirResult);
+        obj.dirScript = relative(obj.processPath, obj.dirScript);
     }
     // Remove properties with the same values as the default configuration
     for (const [k, d] of Object.entries(defaultObject)) {
@@ -78,4 +75,3 @@ function createPersistableCopy(source, defaultObject, useRelativePaths = false) 
     }
     return obj;
 }
-exports.createPersistableCopy = createPersistableCopy;

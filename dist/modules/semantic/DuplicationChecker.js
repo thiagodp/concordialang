@@ -1,16 +1,13 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.DuplicationChecker = void 0;
 // TO-DO: remove the following dependencies:
-const colors = require("chalk");
-const logSymbols = require("log-symbols");
-const SemanticException_1 = require("../error/SemanticException");
+import colors from 'chalk';
+import logSymbols from 'log-symbols';
+import { SemanticException } from "../error/SemanticException";
 /**
  * Duplication checker.
  *
  * @author Thiago Delgado Pinto
  */
-class DuplicationChecker {
+export class DuplicationChecker {
     /**
      * Returns true whether the given items have the given property duplicated.
      *
@@ -126,7 +123,7 @@ class DuplicationChecker {
             let duplicatedNodes = map[prop];
             let locations = duplicatedNodes.map(node => node.location);
             let msg = 'Duplicated ' + nodeName + ' "' + prop + '" in: ' + this.jointLocations(locations);
-            errors.push(new SemanticException_1.SemanticException(msg));
+            errors.push(new SemanticException(msg));
         }
         return map;
     }
@@ -137,4 +134,3 @@ class DuplicationChecker {
         return "\n  " + logSymbols.error + " (" + loc.line + ',' + loc.column + ')' + (!loc.filePath ? '' : ' ' + loc.filePath);
     }
 }
-exports.DuplicationChecker = DuplicationChecker;

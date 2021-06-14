@@ -1,7 +1,4 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.Random = void 0;
-const seedrandom = require("seedrandom");
+import * as seedrandom from 'seedrandom';
 /**
  * Predictable random number generator.
  *
@@ -9,7 +6,7 @@ const seedrandom = require("seedrandom");
  * @see     https://github.com/davidbau/seedrandom
  * @see     https://github.com/nquinlan/better-random-numbers-for-javascript-mirror
  */
-class Random {
+export class Random {
     /**
      * @param seed Seed (optional). Defaults to the current timestamp.
      */
@@ -25,4 +22,3 @@ class Random {
         //return this._prng().double(); // 56 bits of randomness in a double
     }
 }
-exports.Random = Random;

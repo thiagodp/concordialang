@@ -1,4 +1,5 @@
-import Graph = require('graph.js/dist/graph.full.js');
+import Graph from 'graph.js/dist/graph.full.js';
+
 import { ProblemMapper } from '../error/ProblemMapper';
 import { AugmentedSpec } from '../req/AugmentedSpec';
 import { DuplicationChecker } from './DuplicationChecker';
@@ -20,7 +21,7 @@ export abstract class SpecificationAnalyzer {
      * @param graph Graph that maps specification's documents.
      * @returns `true` if successful.
      */
-    public abstract async analyze(
+    public abstract analyze(
         problems: ProblemMapper,
         spec: AugmentedSpec,
         graph: Graph,

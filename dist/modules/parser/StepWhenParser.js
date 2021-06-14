@@ -1,38 +1,35 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.StepWhenParser = void 0;
-const NodeTypes_1 = require("../req/NodeTypes");
-const SyntacticException_1 = require("./SyntacticException");
+import { NodeTypes } from '../req/NodeTypes';
+import { SyntacticException } from './SyntacticException';
 /**
  * Step When node parser.
  *
  * @author Thiago Delgado Pinto
  */
-class StepWhenParser {
+export class StepWhenParser {
     /** @inheritDoc */
     analyze(node, context, it, errors) {
         // Checks prior nodes
         let allowedPriorNodes = [
-            NodeTypes_1.NodeTypes.BACKGROUND,
-            NodeTypes_1.NodeTypes.SCENARIO,
-            NodeTypes_1.NodeTypes.VARIANT_BACKGROUND,
-            NodeTypes_1.NodeTypes.VARIANT,
-            NodeTypes_1.NodeTypes.TEST_CASE,
-            NodeTypes_1.NodeTypes.BEFORE_ALL,
-            NodeTypes_1.NodeTypes.BEFORE_FEATURE,
-            NodeTypes_1.NodeTypes.BEFORE_EACH_SCENARIO,
-            NodeTypes_1.NodeTypes.AFTER_ALL,
-            NodeTypes_1.NodeTypes.AFTER_FEATURE,
-            NodeTypes_1.NodeTypes.AFTER_EACH_SCENARIO,
-            NodeTypes_1.NodeTypes.STEP_GIVEN,
-            NodeTypes_1.NodeTypes.STEP_WHEN,
-            NodeTypes_1.NodeTypes.STEP_AND
+            NodeTypes.BACKGROUND,
+            NodeTypes.SCENARIO,
+            NodeTypes.VARIANT_BACKGROUND,
+            NodeTypes.VARIANT,
+            NodeTypes.TEST_CASE,
+            NodeTypes.BEFORE_ALL,
+            NodeTypes.BEFORE_FEATURE,
+            NodeTypes.BEFORE_EACH_SCENARIO,
+            NodeTypes.AFTER_ALL,
+            NodeTypes.AFTER_FEATURE,
+            NodeTypes.AFTER_EACH_SCENARIO,
+            NodeTypes.STEP_GIVEN,
+            NodeTypes.STEP_WHEN,
+            NodeTypes.STEP_AND
         ];
         if (context.inTestCase) { // because of joint scenarios
-            allowedPriorNodes.push(NodeTypes_1.NodeTypes.STEP_THEN);
+            allowedPriorNodes.push(NodeTypes.STEP_THEN);
         }
         if (!it.hasPrior() || allowedPriorNodes.indexOf(it.spyPrior().nodeType) < 0) {
-            let e = new SyntacticException_1.SyntacticException('The "' + node.nodeType + '" clause must be declared after: ' + allowedPriorNodes.join(', '), node.location);
+            let e = new SyntacticException('The "' + node.nodeType + '" clause must be declared after: ' + allowedPriorNodes.join(', '), node.location);
             errors.push(e);
             return false;
         }
@@ -63,14 +60,14 @@ class StepWhenParser {
         else if (context.inAfterEachScenario)
             owner = context.doc.afterEachScenario;
         else {
-            const lastBlock = allowedPriorNodes.indexOf(NodeTypes_1.NodeTypes.STEP_GIVEN);
+            const lastBlock = allowedPriorNodes.indexOf(NodeTypes.STEP_GIVEN);
             const blocks = allowedPriorNodes.filter((v, index) => index < lastBlock);
-            let e = new SyntacticException_1.SyntacticException('The "' + node.nodeType + '" clause must be declared after:' + blocks.join(','), node.location);
+            let e = new SyntacticException('The "' + node.nodeType + '" clause must be declared after:' + blocks.join(','), node.location);
             errors.push(e);
             return false;
         }
         if (!owner) {
-            let e = new SyntacticException_1.SyntacticException('Invalid context for the step "' + node.nodeType + '".', node.location);
+            let e = new SyntacticException('Invalid context for the step "' + node.nodeType + '".', node.location);
             errors.push(e);
             return false;
         }
@@ -82,4 +79,3 @@ class StepWhenParser {
         return true;
     }
 }
-exports.StepWhenParser = StepWhenParser;

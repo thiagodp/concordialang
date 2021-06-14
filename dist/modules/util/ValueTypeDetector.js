@@ -1,14 +1,11 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.adjustValueToTheRightType = exports.ValueTypeDetector = exports.ValueType = void 0;
-const core_1 = require("@js-joda/core");
-const date_time_validation_1 = require("./date-time-validation");
+import { DateTimeFormatter, LocalDate, LocalDateTime, LocalTime } from "@js-joda/core";
+import { isValidDate, isValidDateTime, isValidTime, isShortTime, isShortDateTime } from "./date-time-validation";
 /**
  * Value type.
  *
  * @author Thiago Delgado Pinto
  */
-var ValueType;
+export var ValueType;
 (function (ValueType) {
     ValueType["STRING"] = "string";
     ValueType["INTEGER"] = "integer";
@@ -21,13 +18,13 @@ var ValueType;
     // SHORT_DATETIME = 'short_datetime', // yyyy/MM/dd HH:mm
     ValueType["LONG_DATE_TIME"] = "longdatetime";
     ValueType["BOOLEAN"] = "boolean";
-})(ValueType = exports.ValueType || (exports.ValueType = {}));
+})(ValueType || (ValueType = {}));
 /**
  * Value type detector.
  *
  * @author Thiago Delgado Pinto
  */
-class ValueTypeDetector {
+export class ValueTypeDetector {
     isTrue(val) {
         return true === val || 'true' === val.toString().toLowerCase();
     }
@@ -59,51 +56,51 @@ class ValueTypeDetector {
     }
     isDate(val) {
         const valueType = typeof val;
-        if ('object' === valueType && (val instanceof Date || val instanceof core_1.LocalDate)) {
+        if ('object' === valueType && (val instanceof Date || val instanceof LocalDate)) {
             return true;
         }
         if ('string' === valueType) {
-            return date_time_validation_1.isValidDate(val);
+            return isValidDate(val);
         }
         return false;
     }
     isTime(val) {
         const valueType = typeof val;
-        if ('object' === valueType && (val instanceof Date || val instanceof core_1.LocalTime)) {
+        if ('object' === valueType && (val instanceof Date || val instanceof LocalTime)) {
             return true;
         }
         if ('string' === valueType) {
-            return date_time_validation_1.isShortTime(val);
+            return isShortTime(val);
         }
         return false;
     }
     isLongTime(val) {
         const valueType = typeof val;
-        if ('object' === valueType && (val instanceof Date || val instanceof core_1.LocalTime)) {
+        if ('object' === valueType && (val instanceof Date || val instanceof LocalTime)) {
             return true;
         }
         if ('string' === valueType) {
-            return date_time_validation_1.isValidTime(val) && !date_time_validation_1.isShortTime(val);
+            return isValidTime(val) && !isShortTime(val);
         }
         return false;
     }
     isDateTime(val) {
         const valueType = typeof val;
-        if ('object' === valueType && (val instanceof Date || val instanceof core_1.LocalDateTime)) {
+        if ('object' === valueType && (val instanceof Date || val instanceof LocalDateTime)) {
             return true;
         }
         if ('string' === valueType) {
-            return date_time_validation_1.isShortDateTime(val);
+            return isShortDateTime(val);
         }
         return false;
     }
     isLongDateTime(val) {
         const valueType = typeof val;
-        if ('object' === valueType && (val instanceof Date || val instanceof core_1.LocalDateTime)) {
+        if ('object' === valueType && (val instanceof Date || val instanceof LocalDateTime)) {
             return true;
         }
         if ('string' === valueType) {
-            return date_time_validation_1.isValidDateTime(val) && !date_time_validation_1.isShortDateTime(val);
+            return isValidDateTime(val) && !isShortDateTime(val);
         }
         return false;
     }
@@ -143,14 +140,13 @@ class ValueTypeDetector {
         return values.map(v => this.detect(v));
     }
 }
-exports.ValueTypeDetector = ValueTypeDetector;
 /**
  * Adjust the value according to the given or detected value type.
  *
  * @param v Value to adjust.
  * @param valueType Desired value type. Optional. If not informed, the type is detected.
  */
-function adjustValueToTheRightType(v, valueType, formatters) {
+export function adjustValueToTheRightType(v, valueType, formatters) {
     const vType = valueType || (new ValueTypeDetector()).detect(v.toString().trim());
     let valueAfter;
     switch (vType) {
@@ -165,41 +161,41 @@ function adjustValueToTheRightType(v, valueType, formatters) {
             // } catch {
             //     valueAfter = LocalDate.now();
             // }
-            const defaultFormatter = core_1.DateTimeFormatter.ofPattern("uuuuu-MM-dd");
+            const defaultFormatter = DateTimeFormatter.ofPattern("uuuuu-MM-dd");
             const formattersToUse = [...(formatters || []), defaultFormatter, undefined];
             let success = false;
             for (const fmt of formattersToUse) {
                 try {
-                    valueAfter = core_1.LocalDate.parse(v, fmt);
+                    valueAfter = LocalDate.parse(v, fmt);
                     success = true;
                     break;
                 }
-                catch (_a) {
+                catch {
                     // ignore
                 }
             }
             if (!success) {
-                valueAfter = core_1.LocalDate.now();
+                valueAfter = LocalDate.now();
             }
             break;
         }
         case ValueType.LONG_TIME:
         case ValueType.TIME: {
             try {
-                valueAfter = core_1.LocalTime.parse(v);
+                valueAfter = LocalTime.parse(v);
             }
-            catch (_b) {
-                valueAfter = core_1.LocalTime.now();
+            catch {
+                valueAfter = LocalTime.now();
             }
             break;
         }
         case ValueType.LONG_DATE_TIME:
         case ValueType.DATE_TIME: {
             try {
-                valueAfter = core_1.LocalDateTime.parse(v);
+                valueAfter = LocalDateTime.parse(v);
             }
-            catch (_c) {
-                valueAfter = core_1.LocalDateTime.now();
+            catch {
+                valueAfter = LocalDateTime.now();
             }
             break;
         }
@@ -213,4 +209,3 @@ function adjustValueToTheRightType(v, valueType, formatters) {
     }
     return valueAfter;
 }
-exports.adjustValueToTheRightType = adjustValueToTheRightType;

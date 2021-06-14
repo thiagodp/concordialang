@@ -1,14 +1,14 @@
-import * as arrayDiff from 'arr-diff';
+import arrayDiff from 'arr-diff';
 import { Location } from 'concordialang-types';
-import * as deepcopy from 'deepcopy';
+import deepcopy from 'deepcopy';
 import * as enumUtil from 'enum-util';
 import { basename } from 'path';
+
 import { Document, EntityValueType, Step, UIElement, UIPropertyReference, UIPropertyTypes } from '../ast';
 import { LocatedException, RuntimeException, Warning } from '../error';
-import { EnglishKeywordDictionary } from '../language/EnglishKeywordDictionary';
+import { dictionaryForLanguage, LanguageMap } from '../language/data/map';
 import { KeywordDictionary } from '../language/KeywordDictionary';
-import { LanguageContent } from '../language/LanguageContent';
-import { LanguageContentLoader } from '../language/LanguageContentLoader';
+import { LanguageDictionary } from '../language/LanguageDictionary';
 import { Entities, NLPEntity, NLPUtil } from '../nlp';
 import { GivenWhenThenSentenceRecognizer } from '../nlp/GivenWhenThenSentenceRecognizer';
 import { SyntacticException } from '../parser/SyntacticException';
@@ -25,7 +25,17 @@ import { DataTestCaseAnalyzer, DTCAnalysisResult, DTCMap, UIEVariableToDTCMap } 
 import { Random } from '../testdata/random/Random';
 import { RandomString, RandomStringOptions } from '../testdata/random/RandomString';
 import { UIElementValueGenerator, ValueGenContext } from '../testdata/UIElementValueGenerator';
-import { Actions, convertCase, isDefined, ReferenceReplacer, TargetTypeUtil, UIElementNameHandler, UIElementPropertyExtractor, UIPropertyReferenceExtractor, upperFirst } from '../util';
+import {
+    Actions,
+    convertCase,
+    isDefined,
+    ReferenceReplacer,
+    TargetTypeUtil,
+    UIElementNameHandler,
+    UIElementPropertyExtractor,
+    UIPropertyReferenceExtractor,
+    upperFirst,
+} from '../util';
 import { CaseType } from '../util/CaseType';
 import { createDefaultLocaleMap } from './locale';
 import { LocaleContext } from './LocaleContext';
@@ -72,7 +82,7 @@ export class PreTestCaseGenerator {
 
     constructor(
         private readonly _variantSentenceRec: GivenWhenThenSentenceRecognizer,
-        public readonly langContentLoader: LanguageContentLoader,
+        public readonly languageMap: LanguageMap,
         public readonly defaultLanguage: string,
         public readonly seed: string,
         public readonly uiLiteralCaseOption: CaseType = CaseType.CAMEL,
@@ -142,7 +152,7 @@ export class PreTestCaseGenerator {
 
         // Determine the language to use
         const language = this.docLanguage( ctx.doc );
-        const langContent = this.langContentLoader.load( language );
+        const languageDictionary = dictionaryForLanguage( language );
 
         // Locale context
         const localeContext = new LocaleContext( language, language, createDefaultLocaleMap() );
@@ -160,7 +170,7 @@ export class PreTestCaseGenerator {
                 step.nlpResult.entities, step.location.line );
 
             let languageIndependentReferences: UIPropertyReference[] =
-                this.checkUIPropertyReferences( references, langContent, ctx );
+                this.checkUIPropertyReferences( references, languageDictionary, ctx );
 
             if ( ! step.uiePropertyReferences ) {
                 step.uiePropertyReferences = languageIndependentReferences;
@@ -169,7 +179,7 @@ export class PreTestCaseGenerator {
 
         // # Replace UI LITERALS without VALUES with VALUES
         let newSteps: Step[] = this.fillUILiteralsWithoutValueInSteps(
-            clonedSteps, language, langContent.keywords, ctx
+            clonedSteps, language, languageDictionary.keywords, ctx
         );
 
         // # (NEW-2019-03-16) Replace UI ELEMENTS with VALUES by UI LITERALS
@@ -184,7 +194,7 @@ export class PreTestCaseGenerator {
                 this.replaceUIElementsWithUILiterals(
                     [ step ],
                     language,
-                    langContent,
+                    languageDictionary,
                     ctx,
                     UIElementReplacementOption.JUST_INPUT_ACTIONS
                     );
@@ -194,7 +204,7 @@ export class PreTestCaseGenerator {
                 this.replaceUIElementsWithUILiterals(
                     [ step ],
                     language,
-                    langContent,
+                    languageDictionary,
                     ctx,
                     UIElementReplacementOption.NO_INPUT_ACTIONS
                     );
@@ -323,7 +333,7 @@ export class PreTestCaseGenerator {
                 let [ resultingSteps, correspondingOtherwiseSteps ] =
                     await this.fillUIElementWithValueAndReplaceByUILiteralInStep(
                         step,
-                        langContent,
+                        languageDictionary,
                         plan.dataTestCases,
                         uieVariableToValueMap,
                         localeContext,
@@ -346,7 +356,7 @@ export class PreTestCaseGenerator {
                 }
             }
 
-            this.normalizeOracleSentences( filledOtherwiseSteps, langContent.keywords );
+            this.normalizeOracleSentences( filledOtherwiseSteps, languageDictionary.keywords );
 
             // # (2019-07-13)
             await this.replaceUIPropertyReferencesInsideValues(
@@ -354,7 +364,7 @@ export class PreTestCaseGenerator {
                 filledOtherwiseSteps,
                 uieVariableToValueMap,
                 localeContext,
-                langContent,
+                languageDictionary,
                 ctx
             );
             // ---
@@ -588,7 +598,7 @@ export class PreTestCaseGenerator {
     replaceUIElementsWithUILiterals(
         steps: Step[],
         language: string,
-        langContent: LanguageContent,
+        languageDictionary: LanguageDictionary,
         ctx: GenContext,
         option: UIElementReplacementOption
     ): void {
@@ -617,7 +627,7 @@ export class PreTestCaseGenerator {
             step.targetTypes = this._targetTypeUtil.extractTargetTypes( step, ctx.doc, ctx.spec, this._uiePropExtractor );
 
             let [ newContent, comment ] = refReplacer.replaceUIElementsWithUILiterals(
-                step, hasInputAction, ctx.doc, ctx.spec, langContent, this.uiLiteralCaseOption );
+                step, hasInputAction, ctx.doc, ctx.spec, languageDictionary, this.uiLiteralCaseOption );
 
             // Replace content
             step.content = newContent;
@@ -636,7 +646,7 @@ export class PreTestCaseGenerator {
 
     async fillUIElementWithValueAndReplaceByUILiteralInStep(
         inputStep: Step,
-        langContent: LanguageContent,
+        languageDictionary: LanguageDictionary,
         uieVariableToUIETestPlanMap: Map< string, UIETestPlan >,
         uieVariableToValueMap: Map< string, EntityValueType >,
         localeContext: LocaleContext,
@@ -667,7 +677,7 @@ export class PreTestCaseGenerator {
         if ( null === dataInputActionEntity || this.hasValue( step ) || this.hasNumber( step ) ) {
             let steps = [ step ];
             this.replaceUIElementsWithUILiterals(
-                steps, localeContext.language, langContent, ctx, UIElementReplacementOption.ALL
+                steps, localeContext.language, languageDictionary, ctx, UIElementReplacementOption.ALL
             );
             // console.log( "EXIT 1" );
             return [ steps, [] ];
@@ -683,7 +693,7 @@ export class PreTestCaseGenerator {
             return [ [ step ], [] ]; // nothing to do
         }
 
-        const keywords = langContent.keywords || new EnglishKeywordDictionary();
+        const keywords = languageDictionary.keywords;
 
         let nodeType = step.nodeType;
         let prefix = this.stepPrefixNodeType( nodeType, keywords );
@@ -753,7 +763,7 @@ export class PreTestCaseGenerator {
             // Analyze whether it is an input target type
             let targetType: string = '';
             if ( ! dataInputActionEntity ) {
-                targetType = this._targetTypeUtil.analyzeInputTargetTypes( step, langContent ) + ' ';
+                targetType = this._targetTypeUtil.analyzeInputTargetTypes( step, languageDictionary ) + ' ';
             }
 
 
@@ -799,7 +809,7 @@ export class PreTestCaseGenerator {
 
                     // Process ORACLES as steps
                     let oraclesClone = this.processOracles(
-                        uieTestPlan.otherwiseSteps, localeContext.language, langContent, keywords, ctx );
+                        uieTestPlan.otherwiseSteps, localeContext.language, languageDictionary, keywords, ctx );
 
                     // Add comments in them
                     for ( let o of oraclesClone ) {
@@ -816,8 +826,8 @@ export class PreTestCaseGenerator {
                     expectedResult = keywordValid;
                 }
 
-                if ( isDefined( langContent.testCaseNames ) ) {
-                    dtc = langContent.testCaseNames[ uieTestPlan.dtc ] || ( uieTestPlan.dtc || '??? (no data test case)' ).toString();
+                if ( isDefined( languageDictionary.testCaseNames ) ) {
+                    dtc = languageDictionary.testCaseNames[ uieTestPlan.dtc ] || ( uieTestPlan.dtc || '??? (no data test case)' ).toString();
                 } else {
                     dtc = ( uieTestPlan.dtc || '??? (no translation and data test case)' ).toString();
                 }
@@ -879,7 +889,7 @@ export class PreTestCaseGenerator {
     processOracles(
         steps: Step[],
         language: string,
-        langContent: LanguageContent,
+        languageDictionary: LanguageDictionary,
         keywords: KeywordDictionary,
         ctx: GenContext
     ): Step[] {
@@ -902,7 +912,7 @@ export class PreTestCaseGenerator {
 
         // UI ELEMENTS
 
-        this.replaceUIElementsWithUILiterals( stepsClone, language, langContent, ctx, UIElementReplacementOption.ALL );
+        this.replaceUIElementsWithUILiterals( stepsClone, language, languageDictionary, ctx, UIElementReplacementOption.ALL );
 
         // Note: Oracle steps cannot have 'fill' steps
 
@@ -987,15 +997,15 @@ export class PreTestCaseGenerator {
         oracles: Step[],
         uieVariableToValueMap: Map< string, EntityValueType >,
         localeContext: LocaleContext,
-        langContent: LanguageContent,
+        languageDictionary: LanguageDictionary,
         ctx: GenContext
     ): Promise< void > {
         for ( let step of steps ) {
-            await this.replaceUIPropertyReferencesInsideValuesOfStep( step, uieVariableToValueMap, localeContext, langContent, ctx );
+            await this.replaceUIPropertyReferencesInsideValuesOfStep( step, uieVariableToValueMap, localeContext, languageDictionary, ctx );
         }
 
         for ( let step of oracles ) {
-            await this.replaceUIPropertyReferencesInsideValuesOfStep( step, uieVariableToValueMap, localeContext, langContent, ctx );
+            await this.replaceUIPropertyReferencesInsideValuesOfStep( step, uieVariableToValueMap, localeContext, languageDictionary, ctx );
         }
     }
 
@@ -1003,7 +1013,7 @@ export class PreTestCaseGenerator {
         step: Step,
         uieVariableToValueMap: Map< string, EntityValueType >,
         localeContext: LocaleContext,
-        langContent: LanguageContent,
+        languageDictionary: LanguageDictionary,
         ctx: GenContext
     ): Promise< void > {
         const extractor = new UIPropertyReferenceExtractor();
@@ -1018,7 +1028,7 @@ export class PreTestCaseGenerator {
             const before: string = entity.value; // Assumes that it is a language-independent value (!)
             const references: UIPropertyReference[] = extractor.extractReferencesFromValue( before, step.location.line );
 
-            this.checkUIPropertyReferences( references, langContent, ctx ); // Also transforms into language-independent format
+            this.checkUIPropertyReferences( references, languageDictionary, ctx ); // Also transforms into language-independent format
 
             const after: string = await replacer.replaceUIPropertyReferencesByTheirValue(
                 localeContext, step, before, references, uieVariableToValueMap, ctx, true );
@@ -1062,10 +1072,11 @@ export class PreTestCaseGenerator {
      * Errors or warning are added to the generation context.
      *
      * @param references References to check.
-     * @param langContent Language content.
+     * @param languageDictionary Language dictionary.
      * @param ctx Generation context.
      */
-    checkUIPropertyReferences( references: UIPropertyReference[], langContent: LanguageContent, ctx: GenContext ): UIPropertyReference[] {
+    checkUIPropertyReferences(
+        references: UIPropertyReference[], languageDictionary: LanguageDictionary, ctx: GenContext ): UIPropertyReference[] {
 
         let languageIndependentReferences: UIPropertyReference[] = [];
         for ( let uipRef of references ) {
@@ -1074,7 +1085,7 @@ export class PreTestCaseGenerator {
                 uipRef.location.filePath = ctx.doc.fileInfo.path;
             }
 
-            this.transformLanguageDependentIntoLanguageIndependent( uipRef, langContent );
+            this.transformLanguageDependentIntoLanguageIndependent( uipRef, languageDictionary );
 
             if ( ! this.hasLanguageIndependentProperty( uipRef ) ) {
                 const msg: string = 'Incorrect reference to a UI Element property: ' + uipRef.content;
@@ -1087,7 +1098,7 @@ export class PreTestCaseGenerator {
             }
 
             // CURRENTLY, only the property `value` is supported <<<
-            if ( ! this.isUIPropertyReferenceToValue( uipRef, langContent ) ) {
+            if ( ! this.isUIPropertyReferenceToValue( uipRef, languageDictionary ) ) {
                 const msg: string = 'Unsupported reference to a UI Element property: ' + uipRef.content;
                 const e = new Warning( msg, uipRef.location );
                 ctx.warnings.push( e );
@@ -1101,11 +1112,11 @@ export class PreTestCaseGenerator {
      * Adjusts the given UIE property reference' property to have a language-independent property.
      *
      * @param uipRef UIE property reference.
-     * @param langContent Language content.
+     * @param languageDictionary Language dictionary.
      */
-    transformLanguageDependentIntoLanguageIndependent( uipRef: UIPropertyReference, langContent: LanguageContent ): void {
+    transformLanguageDependentIntoLanguageIndependent( uipRef: UIPropertyReference, languageDictionary: LanguageDictionary ): void {
         // TO-DO: refactor magic values
-        const langUIProperties = ( ( langContent.nlp[ "ui" ] || {} )[ "ui_property" ] || {} );
+        const langUIProperties = ( ( languageDictionary.nlp[ "ui" ] || {} )[ "ui_property" ] || {} );
         const uipRefProp = uipRef.property.toLowerCase();
         for ( let prop in langUIProperties ) {
             const propValues = langUIProperties[ prop ] || [];
@@ -1129,12 +1140,12 @@ export class PreTestCaseGenerator {
      * Returns `true` if the given UIE property reference is a value property, or `false` otherwise.
      *
      * @param uipRef UIE property reference.
-     * @param langContent Language content.
+     * @param languageDictionary Language dictionary.
      */
-    isUIPropertyReferenceToValue( uipRef: UIPropertyReference, langContent: LanguageContent ): boolean {
+    isUIPropertyReferenceToValue( uipRef: UIPropertyReference, languageDictionary: LanguageDictionary ): boolean {
         const VALUE = 'value';
         // TO-DO: refactor magic values
-        const valuesOfThePropertyValue: string[] = ( ( langContent.nlp[ "ui" ] || {} )[ "ui_property" ] || {} )[ VALUE ] || {};
+        const valuesOfThePropertyValue: string[] = ( ( languageDictionary.nlp[ "ui" ] || {} )[ "ui_property" ] || {} )[ VALUE ] || {};
         const uipRefProp = uipRef.property.toLowerCase();
         return VALUE === uipRefProp || valuesOfThePropertyValue.indexOf( uipRefProp ) >= 0;
     }

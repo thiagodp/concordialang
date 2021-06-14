@@ -1,20 +1,16 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.FeatureLexer = void 0;
-const NodeTypes_1 = require("../req/NodeTypes");
-const NamedNodeLexer_1 = require("./NamedNodeLexer");
+import { NodeTypes } from "../req/NodeTypes";
+import { NamedNodeLexer } from "./NamedNodeLexer";
 /**
  * Detects a Feature.
  *
  * @author Thiago Delgado Pinto
  */
-class FeatureLexer extends NamedNodeLexer_1.NamedNodeLexer {
+export class FeatureLexer extends NamedNodeLexer {
     constructor(words) {
-        super(words, NodeTypes_1.NodeTypes.FEATURE);
+        super(words, NodeTypes.FEATURE);
     }
     /** @inheritDoc */
     suggestedNextNodeTypes() {
-        return [NodeTypes_1.NodeTypes.SCENARIO];
+        return [NodeTypes.SCENARIO];
     }
 }
-exports.FeatureLexer = FeatureLexer;

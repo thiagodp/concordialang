@@ -1,36 +1,20 @@
-import * as fs from 'fs';
-import { resolve } from 'path';
-import { promisify } from 'util';
-
-import { DEFAULT_DIR_LANGUAGE } from '../../modules/app/default-options';
 import { SingleFileCompiler } from '../../modules/compiler/SingleFileCompiler';
 import { FileProblemMapper } from '../../modules/error';
-import { JsonLanguageContentLoader, LanguageContentLoader } from '../../modules/language';
+import languageMap from '../../modules/language/data/map';
 import { Lexer } from '../../modules/lexer/Lexer';
 import { NLPBasedSentenceRecognizer } from '../../modules/nlp/NLPBasedSentenceRecognizer';
 import { NLPTrainer } from '../../modules/nlp/NLPTrainer';
 import { Parser } from '../../modules/parser/Parser';
 import { TestCaseFileGenerator } from '../../modules/testcase/TestCaseFileGenerator';
-import { FSFileHandler } from '../../modules/util/fs/FSFileHandler';
 
 describe( 'TestCaseFileGenerator', () => {
 
     const LANGUAGE = 'en';
-	const dir = resolve( process.cwd(), 'dist/' );
-	const langDir = resolve( dir, DEFAULT_DIR_LANGUAGE );
-
-    const fileHandler = new FSFileHandler( fs, promisify );
-    const langLoader: LanguageContentLoader = new JsonLanguageContentLoader(
-        langDir,
-        {},
-        fileHandler,
-        fileHandler
-        );
 
     let sfc = new SingleFileCompiler(
-        new Lexer( LANGUAGE, langLoader ),
+        new Lexer( LANGUAGE, languageMap ),
         new Parser(),
-        new NLPBasedSentenceRecognizer( new NLPTrainer( langLoader ) ),
+        new NLPBasedSentenceRecognizer( new NLPTrainer( languageMap ) ),
         LANGUAGE,
         true // <<< Semantic analysis ignored
     );
@@ -54,7 +38,7 @@ describe( 'TestCaseFileGenerator', () => {
         const errors = problems.getAllErrors();
         expect( errors ).toHaveLength( 0 );
 
-        const gen = new TestCaseFileGenerator( langLoader, language ); // under test
+        const gen = new TestCaseFileGenerator( language ); // under test
 
         const output: string[] = gen.createLinesFromDoc( doc, errors, true )
                 .map( s => s.toLowerCase() );

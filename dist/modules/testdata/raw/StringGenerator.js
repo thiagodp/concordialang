@@ -1,14 +1,11 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.StringGenerator = void 0;
-const StringLimits_1 = require("../limits/StringLimits");
-const MinMaxChecker_1 = require("../util/MinMaxChecker");
+import { StringLimits } from "../limits/StringLimits";
+import { MinMaxChecker } from "../util/MinMaxChecker";
 /**
  * String generator.
  *
  * @author Thiago Delgado Pinto
  */
-class StringGenerator {
+export class StringGenerator {
     /**
      * Constructor.
      *
@@ -21,21 +18,21 @@ class StringGenerator {
      */
     constructor(_randomString, minLength, maxLength, maxPossibleLength) {
         this._randomString = _randomString;
-        (new MinMaxChecker_1.MinMaxChecker()).check(minLength, maxLength); // may throw Error
+        (new MinMaxChecker()).check(minLength, maxLength); // may throw Error
         // Additional verifications
-        if (minLength && minLength < StringLimits_1.StringLimits.MIN) {
-            throw Error('Minimum string length is ' + StringLimits_1.StringLimits.MIN);
+        if (minLength && minLength < StringLimits.MIN) {
+            throw Error('Minimum string length is ' + StringLimits.MIN);
         }
-        if (maxLength && maxLength > StringLimits_1.StringLimits.MAX) {
-            throw Error('Maximum string length is ' + StringLimits_1.StringLimits.MAX);
+        if (maxLength && maxLength > StringLimits.MAX) {
+            throw Error('Maximum string length is ' + StringLimits.MAX);
         }
-        if (maxPossibleLength && maxPossibleLength > StringLimits_1.StringLimits.MAX) {
-            throw Error('Maximum possible string length is ' + StringLimits_1.StringLimits.MAX);
+        if (maxPossibleLength && maxPossibleLength > StringLimits.MAX) {
+            throw Error('Maximum possible string length is ' + StringLimits.MAX);
         }
-        this._minLength = minLength ? minLength : StringLimits_1.StringLimits.MIN; // 0
-        this._maxLength = maxLength ? maxLength : StringLimits_1.StringLimits.MAX_USUAL; // 255
+        this._minLength = minLength ? minLength : StringLimits.MIN; // 0
+        this._maxLength = maxLength ? maxLength : StringLimits.MAX_USUAL; // 255
         this._maxPossibleLength = (maxPossibleLength == undefined || maxPossibleLength === null)
-            ? StringLimits_1.StringLimits.MAX
+            ? StringLimits.MAX
             : maxPossibleLength;
     }
     minLength() {
@@ -57,11 +54,11 @@ class StringGenerator {
     }
     /** @inheritDoc */
     hasValuesBelowMin() {
-        return this._minLength > StringLimits_1.StringLimits.MIN;
+        return this._minLength > StringLimits.MIN;
     }
     /** @inheritDoc */
     hasValuesAboveMax() {
-        return this._maxLength < StringLimits_1.StringLimits.MAX;
+        return this._maxLength < StringLimits.MAX;
     }
     /** @inheritDoc */
     isZeroBetweenMinAndMax() {
@@ -85,7 +82,7 @@ class StringGenerator {
         if (!this.hasValuesBelowMin()) {
             return this.lowest();
         }
-        return this._randomString.between(StringLimits_1.StringLimits.MIN, this._minLength - 1);
+        return this._randomString.between(StringLimits.MIN, this._minLength - 1);
     }
     /** @inheritDoc */
     justBelowMin() {
@@ -147,4 +144,3 @@ class StringGenerator {
         return this._randomString.exactly(this._maxPossibleLength);
     }
 }
-exports.StringGenerator = StringGenerator;

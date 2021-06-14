@@ -1,25 +1,22 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.SpecFilter = void 0;
-const events_1 = require("events");
-const ImportBasedGraphBuilder_1 = require("../compiler/ImportBasedGraphBuilder");
-const GraphFilter_1 = require("./GraphFilter");
+import { EventEmitter } from 'events';
+import { ImportBasedGraphBuilder } from '../compiler/ImportBasedGraphBuilder';
+import { GraphFilter, GraphFilterEvent } from './GraphFilter';
 /**
  * Specification filter
  *
  * @author Thiago Delgado Pinto
  */
-class SpecFilter extends events_1.EventEmitter {
+export class SpecFilter extends EventEmitter {
     constructor(_spec) {
         super();
         this._spec = _spec;
-        this._graphFilter = new GraphFilter_1.GraphFilter();
+        this._graphFilter = new GraphFilter();
         this._graph = null;
     }
     filter(fn) {
         // Adds a listener for excluded documents, in order to remove them from the specification
-        this._graphFilter.addListener(GraphFilter_1.GraphFilterEvent.DOCUMENT_NOT_INCLUDED, (doc) => {
-            this.emit(GraphFilter_1.GraphFilterEvent.DOCUMENT_NOT_INCLUDED);
+        this._graphFilter.addListener(GraphFilterEvent.DOCUMENT_NOT_INCLUDED, (doc) => {
+            this.emit(GraphFilterEvent.DOCUMENT_NOT_INCLUDED);
             this.removeDocumentFromSpecification(doc);
         });
         // Overwrites the current graph with the filtered one
@@ -45,7 +42,7 @@ class SpecFilter extends events_1.EventEmitter {
         // Build a graph from the documents and its Imports, since it is expected
         // that references to another document's declarations need Imports.
         // Cyclic references are validated previously, by the ImportSSA.
-        return (new ImportBasedGraphBuilder_1.ImportBasedGraphBuilder()).buildFrom(this._spec);
+        return (new ImportBasedGraphBuilder()).buildFrom(this._spec);
     }
     removeDocumentFromSpecification(doc) {
         const pos = this._spec.docs.indexOf(doc);
@@ -54,4 +51,3 @@ class SpecFilter extends events_1.EventEmitter {
         }
     }
 }
-exports.SpecFilter = SpecFilter;

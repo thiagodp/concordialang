@@ -1,16 +1,15 @@
-import { Location } from "concordialang-types";
-import { Document } from "../ast/Document";
-import { EnglishKeywordDictionary } from "../language/EnglishKeywordDictionary";
-import { KeywordDictionary } from "../language/KeywordDictionary";
-import { LanguageContentLoader } from "../language/LanguageContentLoader";
-import { NodeTypes } from "../req/NodeTypes";
-import { Symbols } from "../req/Symbols";
-import { upperFirst } from "../util/CaseConversor";
+import { Location } from 'concordialang-types';
+
+import { Document } from '../ast/Document';
+import { dictionaryForLanguage } from '../language/data/map';
+import { KeywordDictionary } from '../language/KeywordDictionary';
+import { NodeTypes } from '../req/NodeTypes';
+import { Symbols } from '../req/Symbols';
+import { upperFirst } from '../util/CaseConversor';
 
 
 /**
  * Generates files for Documents with Test Cases.
- *
  * @author Thiago Delgado Pinto
  */
 export class TestCaseFileGenerator {
@@ -24,13 +23,8 @@ export class TestCaseFileGenerator {
 
     private _dict: KeywordDictionary;
 
-    constructor(
-        private _languageContentLoader: LanguageContentLoader,
-        private language: string
-    ) {
-        // Loads/gets the dictionary according to the current language
-        let langContent = _languageContentLoader.load( language );
-        this._dict = langContent.keywords || new EnglishKeywordDictionary();
+    constructor( language: string ) {
+        this._dict = dictionaryForLanguage( language ).keywords;
     }
 
 
@@ -61,7 +55,7 @@ export class TestCaseFileGenerator {
         if ( doc.language ) {
 
             // Get dictionary
-            dict = this.dictionaryForLanguage( doc.language.value, errors ) || this._dict;
+            dict = dictionaryForLanguage( doc.language.value ).keywords;
             // Transform to text
             let line = this.generateLanguageLine( doc.language.value, dict );
 
@@ -159,16 +153,6 @@ export class TestCaseFileGenerator {
         }
 
         return lines;
-    }
-
-
-    dictionaryForLanguage( language: string, errors: Error[] ): KeywordDictionary | null {
-        try {
-            return this._languageContentLoader.load( language ).keywords || null;
-        } catch ( err ) {
-            errors.push( err );
-            return null;
-        }
     }
 
     generateLanguageLine( language: string, dict: KeywordDictionary ): string {

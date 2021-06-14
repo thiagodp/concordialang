@@ -1,15 +1,3 @@
-"use strict";
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.installedDateLocales = void 0;
 // import { makePackageInstallCommand, makePackageUninstallCommand } from "../util/package-installation";
 // import { runCommand } from "../util/run-command";
 /**
@@ -19,13 +7,11 @@ exports.installedDateLocales = void 0;
  * @param dirSearcher Directory searcher to use.
  * @param path NodeJS `path` library instance.
  */
-function allInstalledLocales(baseDirectory, dirSearcher, path) {
-    return __awaiter(this, void 0, void 0, function* () {
-        const dateLocales = yield installedDateLocales(baseDirectory, dirSearcher, path);
-        const numberLocales = yield installedNumberLocales(baseDirectory, dirSearcher);
-        const intersection = dateLocales.filter(l => numberLocales.includes(l));
-        return intersection;
-    });
+async function allInstalledLocales(baseDirectory, dirSearcher, path) {
+    const dateLocales = await installedDateLocales(baseDirectory, dirSearcher, path);
+    const numberLocales = await installedNumberLocales(baseDirectory, dirSearcher);
+    const intersection = dateLocales.filter(l => numberLocales.includes(l));
+    return intersection;
 }
 /**
  * Return installed date locales.
@@ -34,22 +20,19 @@ function allInstalledLocales(baseDirectory, dirSearcher, path) {
  * @param dirSearcher Directory searcher to use.
  * @param path NodeJS `path` library instance.
  */
-function installedDateLocales(baseDirectory, dirSearcher, path) {
-    return __awaiter(this, void 0, void 0, function* () {
-        const options = {
-            directory: path.join(baseDirectory, 'date-fns', 'locale'),
-            recursive: false,
-            regexp: /^[A-Za-z-]+$/
-        };
-        const directories = yield dirSearcher.search(options);
-        if (directories.length < 1) {
-            return [];
-        }
-        const extractName = dir => /([A-Za-z-]+)$/.exec(dir)[1];
-        return directories.map(extractName);
-    });
+export async function installedDateLocales(baseDirectory, dirSearcher, path) {
+    const options = {
+        directory: path.join(baseDirectory, 'date-fns', 'locale'),
+        recursive: false,
+        regexp: /^[A-Za-z-]+$/
+    };
+    const directories = await dirSearcher.search(options);
+    if (directories.length < 1) {
+        return [];
+    }
+    const extractName = dir => /([A-Za-z-]+)$/.exec(dir)[1];
+    return directories.map(extractName);
 }
-exports.installedDateLocales = installedDateLocales;
 /**
  * Return installed number locales.
  *
@@ -58,10 +41,8 @@ exports.installedDateLocales = installedDateLocales;
  * @param baseDirectory Directory to search. Usually `node_modules`.
  * @param dirSearcher Directory searcher to use.
  */
-function installedNumberLocales(baseDirectory, dirSearcher) {
-    return __awaiter(this, void 0, void 0, function* () {
-        return ['en', 'en-US', 'pt', 'pt-BR']; // FIXME: fake values
-    });
+async function installedNumberLocales(baseDirectory, dirSearcher) {
+    return ['en', 'en-US', 'pt', 'pt-BR']; // FIXME: fake values
 }
 // TODO: To implement when number locales are available
 /*

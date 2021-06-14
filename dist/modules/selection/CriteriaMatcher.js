@@ -1,17 +1,14 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.CriteriaMatcher = void 0;
-const default_options_1 = require("../app/default-options");
-const Tag_1 = require("../ast/Tag");
-const TagUtil_1 = require("../util/TagUtil");
-const TypeChecking_1 = require("../util/TypeChecking");
-const FilterCriterion_1 = require("./FilterCriterion");
-class CriteriaMatcher {
-    constructor(_ignoreKeywords = [Tag_1.ReservedTags.IGNORE], _importanceKeywords = [Tag_1.ReservedTags.IMPORTANCE], _defaultImportanceValue = default_options_1.DEFAULT_IMPORTANCE) {
+import { DEFAULT_IMPORTANCE } from '../app/default-options';
+import { ReservedTags } from '../ast/Tag';
+import { TagUtil } from '../util/TagUtil';
+import { isString } from '../util/TypeChecking';
+import { FilterCriterion } from './FilterCriterion';
+export class CriteriaMatcher {
+    constructor(_ignoreKeywords = [ReservedTags.IGNORE], _importanceKeywords = [ReservedTags.IMPORTANCE], _defaultImportanceValue = DEFAULT_IMPORTANCE) {
         this._ignoreKeywords = _ignoreKeywords;
         this._importanceKeywords = _importanceKeywords;
         this._defaultImportanceValue = _defaultImportanceValue;
-        this._tagUtil = new TagUtil_1.TagUtil();
+        this._tagUtil = new TagUtil();
     }
     /**
      * Returns true whether the given criteria are match.
@@ -33,7 +30,7 @@ class CriteriaMatcher {
             : this._defaultImportanceValue;
         // Whether the criterion is established, ignore those with @ignore
         if (hasTags
-            && criteria.has(FilterCriterion_1.FilterCriterion.IGNORE_TAG_NOT_DECLARED)
+            && criteria.has(FilterCriterion.IGNORE_TAG_NOT_DECLARED)
             && this.hasIgnoreTag(nodeTags)) {
             return false; // Does not match, i.e., has ignore tag
         }
@@ -42,35 +39,35 @@ class CriteriaMatcher {
             // Importance
             const criterionIsAboutImportance = criterion.toString().startsWith(importanceCriterionPrefix);
             if (criterionIsAboutImportance) {
-                const val = TypeChecking_1.isString(value) ? parseInt(value.toString()) : Number(value);
+                const val = isString(value) ? parseInt(value.toString()) : Number(value);
                 switch (criterion) {
-                    case FilterCriterion_1.FilterCriterion.IMPORTANCE_GTE: return tagImportanceValue >= val;
-                    case FilterCriterion_1.FilterCriterion.IMPORTANCE_LTE: return tagImportanceValue <= val;
-                    case FilterCriterion_1.FilterCriterion.IMPORTANCE_EQ: return tagImportanceValue == val;
+                    case FilterCriterion.IMPORTANCE_GTE: return tagImportanceValue >= val;
+                    case FilterCriterion.IMPORTANCE_LTE: return tagImportanceValue <= val;
+                    case FilterCriterion.IMPORTANCE_EQ: return tagImportanceValue == val;
                 }
             }
             if (hasTags) {
                 // Tag keyword
                 switch (criterion) {
-                    case FilterCriterion_1.FilterCriterion.TAG_EQ:
+                    case FilterCriterion.TAG_EQ:
                         return this._tagUtil.tagsWithNameInKeywords(nodeTags, [value.toString()]).length > 0;
-                    case FilterCriterion_1.FilterCriterion.TAG_NEQ:
+                    case FilterCriterion.TAG_NEQ:
                         return 0 === this._tagUtil.tagsWithNameInKeywords(nodeTags, [value.toString()]).length;
-                    case FilterCriterion_1.FilterCriterion.TAG_IN:
+                    case FilterCriterion.TAG_IN:
                         return this._tagUtil.tagsWithNameInKeywords(nodeTags, value).length > 0;
-                    case FilterCriterion_1.FilterCriterion.TAG_NOT_IN:
+                    case FilterCriterion.TAG_NOT_IN:
                         return this._tagUtil.tagsWithNameInKeywords(nodeTags, value).length < 1;
                 }
             }
             // Node name
             switch (criterion) {
-                case FilterCriterion_1.FilterCriterion.NAME_EQ:
+                case FilterCriterion.NAME_EQ:
                     return nodeName.toLowerCase() === value.toString().toLowerCase();
-                case FilterCriterion_1.FilterCriterion.NAME_STARTING_WITH:
+                case FilterCriterion.NAME_STARTING_WITH:
                     return nodeName.toLowerCase().startsWith(value.toString().toLowerCase());
-                case FilterCriterion_1.FilterCriterion.NAME_ENDING_WITH:
+                case FilterCriterion.NAME_ENDING_WITH:
                     return nodeName.toLowerCase().endsWith(value.toString().toLowerCase());
-                case FilterCriterion_1.FilterCriterion.NAME_CONTAINING:
+                case FilterCriterion.NAME_CONTAINING:
                     return nodeName.toLowerCase().indexOf(value.toString().toLowerCase()) >= 0;
             }
         }
@@ -84,4 +81,3 @@ class CriteriaMatcher {
         return filtered.length > 0;
     }
 }
-exports.CriteriaMatcher = CriteriaMatcher;

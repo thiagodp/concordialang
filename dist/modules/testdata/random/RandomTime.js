@@ -1,14 +1,11 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.RandomTime = void 0;
-const core_1 = require("@js-joda/core");
-const TimeLimits_1 = require("../limits/TimeLimits");
+import { ChronoUnit } from "@js-joda/core";
+import { TimeLimits } from "../limits/TimeLimits";
 /**
  * Generates random time values.
  *
  * @author Thiago Delgado Pinto
  */
-class RandomTime {
+export class RandomTime {
     constructor(_randomLong) {
         this._randomLong = _randomLong;
     }
@@ -19,7 +16,7 @@ class RandomTime {
      * @param max Maximum time
      */
     between(min, max) {
-        const diffInSeconds = min.until(max, core_1.ChronoUnit.SECONDS);
+        const diffInSeconds = min.until(max, ChronoUnit.SECONDS);
         if (0 === diffInSeconds) {
             return min;
         }
@@ -32,7 +29,7 @@ class RandomTime {
      * @param max Maximum time
      */
     before(max) {
-        return this.between(TimeLimits_1.TimeLimits.MIN, max.minusSeconds(1));
+        return this.between(TimeLimits.MIN, max.minusSeconds(1));
     }
     /**
      * Returns a random time after the given time.
@@ -40,7 +37,6 @@ class RandomTime {
      * @param min Minimum time
      */
     after(min) {
-        return this.between(min.plusSeconds(1), TimeLimits_1.TimeLimits.MAX);
+        return this.between(min.plusSeconds(1), TimeLimits.MAX);
     }
 }
-exports.RandomTime = RandomTime;

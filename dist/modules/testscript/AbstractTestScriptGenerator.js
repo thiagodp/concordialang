@@ -1,17 +1,14 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.AbstractTestScriptGenerator = void 0;
-const concordialang_plugin_1 = require("concordialang-plugin");
-const DatabaseToAbstractDatabase_1 = require("../db/DatabaseToAbstractDatabase");
-const DatabaseTypes_1 = require("../db/DatabaseTypes");
-const Entities_1 = require("../nlp/Entities");
-const Symbols_1 = require("../req/Symbols");
-const Actions_1 = require("../util/Actions");
-const TypeChecking_1 = require("../util/TypeChecking");
+import { AbstractTestScript, ATSCommand, ATSConsoleCommand, ATSDatabaseCommand, ATSEvent, ATSTestCase, NamedATSElement } from 'concordialang-plugin';
+import { DatabaseToAbstractDatabase } from '../db/DatabaseToAbstractDatabase';
+import { supportTablesInQueries } from '../db/DatabaseTypes';
+import { Entities } from '../nlp/Entities';
+import { Symbols } from '../req/Symbols';
+import { Actions } from '../util/Actions';
+import { isDefined } from '../util/TypeChecking';
 /**
  * Generates Abstract Test Script
  */
-class AbstractTestScriptGenerator {
+export class AbstractTestScriptGenerator {
     /**
      * Generates for the given documents.
      * @param docs Documents
@@ -25,7 +22,7 @@ class AbstractTestScriptGenerator {
                 continue;
             }
             const ats = this.generateFromDocument(doc, spec);
-            if (TypeChecking_1.isDefined(ats)) {
+            if (isDefined(ats)) {
                 // console.log( 'CREATED ATS from', ats.sourceFile );
                 all.push(ats);
             }
@@ -41,7 +38,7 @@ class AbstractTestScriptGenerator {
     generateFromDocument(doc, spec) {
         // console.log( 'DOC is', doc.fileInfo.path );
         // console.log( 'Test cases', doc.testCases );
-        if (TypeChecking_1.isDefined(doc.feature)) { // Only consider test case files
+        if (isDefined(doc.feature)) { // Only consider test case files
             return null;
         }
         let beforeAll = doc.beforeAll;
@@ -54,27 +51,27 @@ class AbstractTestScriptGenerator {
         let feature = !doc.feature ? null : doc.feature;
         if (!feature) {
             const docsWithFeature = spec.importedDocumentsOf(doc)
-                .filter(impDoc => TypeChecking_1.isDefined(impDoc.feature));
+                .filter(impDoc => isDefined(impDoc.feature));
             // Not found -> get the first feature of a imported document
             if (docsWithFeature.length > 0) {
                 const firstDoc = docsWithFeature[0];
                 feature = firstDoc.feature;
-                if (!beforeAll && TypeChecking_1.isDefined(firstDoc.beforeAll)) {
+                if (!beforeAll && isDefined(firstDoc.beforeAll)) {
                     beforeAll = firstDoc.beforeAll;
                 }
-                if (!afterAll && TypeChecking_1.isDefined(firstDoc.afterAll)) {
+                if (!afterAll && isDefined(firstDoc.afterAll)) {
                     afterAll = firstDoc.afterAll;
                 }
-                if (!beforeFeature && TypeChecking_1.isDefined(firstDoc.beforeFeature)) {
+                if (!beforeFeature && isDefined(firstDoc.beforeFeature)) {
                     beforeFeature = firstDoc.beforeFeature;
                 }
-                if (!afterFeature && TypeChecking_1.isDefined(firstDoc.afterFeature)) {
+                if (!afterFeature && isDefined(firstDoc.afterFeature)) {
                     afterFeature = firstDoc.afterFeature;
                 }
-                if (!beforeEachScenario && TypeChecking_1.isDefined(firstDoc.beforeEachScenario)) {
+                if (!beforeEachScenario && isDefined(firstDoc.beforeEachScenario)) {
                     beforeEachScenario = firstDoc.beforeEachScenario;
                 }
-                if (!afterEachScenario && TypeChecking_1.isDefined(firstDoc.afterEachScenario)) {
+                if (!afterEachScenario && isDefined(firstDoc.afterEachScenario)) {
                     afterEachScenario = firstDoc.afterEachScenario;
                 }
             }
@@ -86,21 +83,21 @@ class AbstractTestScriptGenerator {
             : feature.location;
         const featureName = !feature ? 'Unknown feature' : feature.name;
         // ABSTRACT TEST SCRIPT
-        let ats = new concordialang_plugin_1.AbstractTestScript();
+        let ats = new AbstractTestScript();
         // feature, location, sourceFile
         ats.sourceFile = doc.fileInfo.path;
-        ats.feature = new concordialang_plugin_1.NamedATSElement(location, featureName);
+        ats.feature = new NamedATSElement(location, featureName);
         // scenarios
         let scenarioNames = [];
-        if (TypeChecking_1.isDefined(feature)) {
+        if (isDefined(feature)) {
             for (let s of feature.scenarios || []) {
-                ats.scenarios.push(new concordialang_plugin_1.NamedATSElement(s.location, s.name));
+                ats.scenarios.push(new NamedATSElement(s.location, s.name));
                 scenarioNames.push(s.name);
             }
         }
         // testCases
         for (let tc of doc.testCases || []) {
-            let absTC = new concordialang_plugin_1.ATSTestCase(tc.location, tc.name);
+            let absTC = new ATSTestCase(tc.location, tc.name);
             absTC.scenario = scenarioNames[(tc.declaredScenarioIndex || 1) - 1] || 'Unknown scenario';
             absTC.invalid = tc.shouldFail;
             for (let sentence of tc.sentences) {
@@ -121,17 +118,17 @@ class AbstractTestScriptGenerator {
         };
         for (let e in allTestEvents) {
             let event = allTestEvents[e];
-            if (!TypeChecking_1.isDefined(event) || !TypeChecking_1.isDefined(event.sentences) ||
+            if (!isDefined(event) || !isDefined(event.sentences) ||
                 event.sentences.length < 1) {
                 continue;
             }
-            ats[e] = new concordialang_plugin_1.ATSEvent();
+            ats[e] = new ATSEvent();
             ats[e].commands = this.convertTestEventSentencesToCommands(event, spec);
         }
         // console.log( ats );
         return ats;
     }
-    sentenceToCommand(sentence, obj = new concordialang_plugin_1.ATSCommand(), valuesOverwrite) {
+    sentenceToCommand(sentence, obj = new ATSCommand(), valuesOverwrite) {
         let cmd = obj;
         cmd.location = sentence.location;
         cmd.action = sentence.action;
@@ -145,27 +142,27 @@ class AbstractTestScriptGenerator {
         return cmd;
     }
     convertTestEventSentencesToCommands(event, spec) {
-        const dbConversor = new DatabaseToAbstractDatabase_1.DatabaseToAbstractDatabase();
+        const dbConversor = new DatabaseToAbstractDatabase();
         // const DATABASE_OPTION = 'database';
         // const SCRIPT_OPTION = 'script';
         const COMMAND_OPTION = 'command';
         const dbNames = spec.databaseNames();
-        const dbVarNames = dbNames.map(name => Symbols_1.Symbols.CONSTANT_PREFIX + name + Symbols_1.Symbols.CONSTANT_SUFFIX);
+        const dbVarNames = dbNames.map(name => Symbols.CONSTANT_PREFIX + name + Symbols.CONSTANT_SUFFIX);
         const makeDbNameRegex = function makeDbNameRegex(dbName) {
-            const r = '\\' + Symbols_1.Symbols.CONSTANT_PREFIX + dbName + '\\' + Symbols_1.Symbols.CONSTANT_SUFFIX + '\\.?';
+            const r = '\\' + Symbols.CONSTANT_PREFIX + dbName + '\\' + Symbols.CONSTANT_SUFFIX + '\\.?';
             return new RegExp(r, 'gi');
         };
         let commands = [];
         for (let s of event.sentences || []) {
             // Action is "connect" or "disconnect"
-            if (s.action === Actions_1.Actions.CONNECT || s.action === Actions_1.Actions.DISCONNECT) {
-                let dbRef = s.nlpResult.entities.find(e => e.entity === Entities_1.Entities.CONSTANT);
+            if (s.action === Actions.CONNECT || s.action === Actions.DISCONNECT) {
+                let dbRef = s.nlpResult.entities.find(e => e.entity === Entities.CONSTANT);
                 if (!dbRef) {
                     console.log('ERROR: database reference not found in:', s.content);
                     continue;
                 }
                 const dbName = dbRef.value;
-                if (s.action === Actions_1.Actions.CONNECT) {
+                if (s.action === Actions.CONNECT) {
                     const db = spec.databaseWithName(dbName);
                     if (!db) {
                         console.log('ERROR: database not found with name:', dbName);
@@ -173,17 +170,17 @@ class AbstractTestScriptGenerator {
                     }
                     const absDB = dbConversor.convertFromNode(db, spec.basePath);
                     const values = [dbName, absDB];
-                    const cmd = this.sentenceToCommand(s, new concordialang_plugin_1.ATSDatabaseCommand(), values);
+                    const cmd = this.sentenceToCommand(s, new ATSDatabaseCommand(), values);
                     cmd.db = absDB;
                     commands.push(cmd);
                 }
                 else {
-                    commands.push(this.sentenceToCommand(s, new concordialang_plugin_1.ATSCommand(), [dbName]));
+                    commands.push(this.sentenceToCommand(s, new ATSCommand(), [dbName]));
                 }
                 continue;
             }
             // Action is not "run"
-            if (Actions_1.Actions.RUN !== s.action) {
+            if (Actions.RUN !== s.action) {
                 commands.push(this.sentenceToCommand(s));
                 continue;
             }
@@ -194,7 +191,7 @@ class AbstractTestScriptGenerator {
             const options = s.actionOptions || [];
             // options have "command"
             if (options.indexOf(COMMAND_OPTION) >= 0) {
-                let cmd = this.sentenceToCommand(s, new concordialang_plugin_1.ATSConsoleCommand());
+                let cmd = this.sentenceToCommand(s, new ATSConsoleCommand());
                 commands.push(cmd);
                 continue;
             }
@@ -219,7 +216,7 @@ class AbstractTestScriptGenerator {
                 sqlCommand = sqlCommand.toString().replace(makeDbNameRegex(dbName), '');
                 // Removes some keywords from the command, depending on the database type
                 const absDB = dbConversor.convertFromNode(db, spec.basePath);
-                if (!DatabaseTypes_1.supportTablesInQueries(absDB.driverName)) {
+                if (!supportTablesInQueries(absDB.driverName)) {
                     const uppercased = sqlCommand.toUpperCase().trim();
                     if (uppercased.startsWith('DELETE FROM')) {
                         // Remove the " FROM"
@@ -231,7 +228,7 @@ class AbstractTestScriptGenerator {
                     }
                 }
                 // Transforms to a command
-                let cmd = this.sentenceToCommand(s, new concordialang_plugin_1.ATSDatabaseCommand(), [dbName, sqlCommand]);
+                let cmd = this.sentenceToCommand(s, new ATSDatabaseCommand(), [dbName, sqlCommand]);
                 commands.push(cmd);
                 break;
             }
@@ -242,4 +239,3 @@ class AbstractTestScriptGenerator {
         return commands;
     }
 }
-exports.AbstractTestScriptGenerator = AbstractTestScriptGenerator;

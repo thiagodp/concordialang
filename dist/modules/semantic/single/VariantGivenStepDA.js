@@ -1,10 +1,7 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.VariantGivenStepDA = void 0;
-const SemanticException_1 = require("../../error/SemanticException");
-const nlp_1 = require("../../nlp");
-const NodeTypes_1 = require("../../req/NodeTypes");
-const TypeChecking_1 = require("../../util/TypeChecking");
+import { SemanticException } from "../../error/SemanticException";
+import { Entities, NLPUtil } from "../../nlp";
+import { NodeTypes } from "../../req/NodeTypes";
+import { isDefined } from "../../util/TypeChecking";
 /**
  * Analyzes Variant's Given step declarations for a single document.
  *
@@ -14,21 +11,21 @@ const TypeChecking_1 = require("../../util/TypeChecking");
  *
  * @author Thiago Delgado Pinto
  */
-class VariantGivenStepDA {
+export class VariantGivenStepDA {
     constructor() {
-        this._nlpUtil = new nlp_1.NLPUtil();
+        this._nlpUtil = new NLPUtil();
     }
     analyze(doc, errors) {
         if (!doc.feature) {
             return;
         }
         // Feature's Variant Background
-        if (TypeChecking_1.isDefined(doc.feature.variantBackground)) {
+        if (isDefined(doc.feature.variantBackground)) {
             this.analyzeGivenSteps(doc.feature.variantBackground.sentences, errors);
         }
         for (let scenario of doc.feature.scenarios || []) {
             // Scenario's Variant Background
-            if (TypeChecking_1.isDefined(scenario.variantBackground)) {
+            if (isDefined(scenario.variantBackground)) {
                 this.analyzeGivenSteps(scenario.variantBackground.sentences, errors);
             }
             // Scenario's Variants
@@ -41,11 +38,11 @@ class VariantGivenStepDA {
         let lastWasGiven = null;
         let index = 0, preconditionsCount = 0;
         for (let step of steps || []) {
-            if (NodeTypes_1.NodeTypes.STEP_GIVEN === step.nodeType) {
+            if (NodeTypes.STEP_GIVEN === step.nodeType) {
                 // Check if the Given step appears after other step type
                 if (false === lastWasGiven) {
                     const msg = 'A Given step cannot be declared after other step than Given.';
-                    const err = new SemanticException_1.SemanticException(msg, step.location);
+                    const err = new SemanticException(msg, step.location);
                     errors.push(err);
                 }
                 lastWasGiven = true;
@@ -57,7 +54,7 @@ class VariantGivenStepDA {
                     preconditionsCount++;
                 }
             }
-            else if (NodeTypes_1.NodeTypes.STEP_AND === step.nodeType) {
+            else if (NodeTypes.STEP_AND === step.nodeType) {
                 // Check state
                 if (lastWasGiven && this.hasState(step)) {
                     if (preconditionsCount < index) {
@@ -73,11 +70,10 @@ class VariantGivenStepDA {
         }
     }
     hasState(step) {
-        return this._nlpUtil.hasEntityNamed(nlp_1.Entities.STATE, step.nlpResult);
+        return this._nlpUtil.hasEntityNamed(Entities.STATE, step.nlpResult);
     }
     makeStateError(step) {
         const msg = 'Given steps with state must be declared before other Given steps.';
-        return new SemanticException_1.SemanticException(msg, step.location);
+        return new SemanticException(msg, step.location);
     }
 }
-exports.VariantGivenStepDA = VariantGivenStepDA;

@@ -1,17 +1,17 @@
-import { Document, FileInfo, TestCase, Variant } from "../../modules/ast";
-import { FileProblemMapper } from "../../modules/error";
-import { LocatedException } from "../../modules/error/LocatedException";
-import { AugmentedSpec } from "../../modules/req/AugmentedSpec";
-import { IndexOfEachStrategy } from "../../modules/selection/CombinationStrategy";
-import { SpecFilter } from "../../modules/selection/SpecFilter";
-import { BatchSpecificationAnalyzer } from "../../modules/semantic/BatchSpecificationAnalyzer";
-import { JustOneInvalidMix, UnfilteredMix } from "../../modules/testcase/DataTestCaseMix";
-import { TestCaseGenerator } from "../../modules/testcase/TestCaseGenerator";
-import { TestPlanner } from "../../modules/testcase/TestPlanner";
-import { LongLimits } from "../../modules/testdata/limits/LongLimits";
-import { GenContext, PreTestCaseGenerator } from "../../modules/testscenario/PreTestCaseGenerator";
-import { TestScenario } from "../../modules/testscenario/TestScenario";
-import { SimpleCompiler } from "../SimpleCompiler";
+import { Document, FileInfo, TestCase, Variant } from '../../modules/ast';
+import { FileProblemMapper } from '../../modules/error';
+import languageMap from '../../modules/language/data/map';
+import { AugmentedSpec } from '../../modules/req/AugmentedSpec';
+import { IndexOfEachStrategy } from '../../modules/selection/CombinationStrategy';
+import { SpecFilter } from '../../modules/selection/SpecFilter';
+import { BatchSpecificationAnalyzer } from '../../modules/semantic/BatchSpecificationAnalyzer';
+import { JustOneInvalidMix, UnfilteredMix } from '../../modules/testcase/DataTestCaseMix';
+import { TestCaseGenerator } from '../../modules/testcase/TestCaseGenerator';
+import { TestPlanner } from '../../modules/testcase/TestPlanner';
+import { LongLimits } from '../../modules/testdata/limits/LongLimits';
+import { GenContext, PreTestCaseGenerator } from '../../modules/testscenario/PreTestCaseGenerator';
+import { TestScenario } from '../../modules/testscenario/TestScenario';
+import { SimpleCompiler } from '../SimpleCompiler';
 
 describe( 'TestCaseGenerator', () => {
 
@@ -28,7 +28,7 @@ describe( 'TestCaseGenerator', () => {
 
         preTCGen = new PreTestCaseGenerator(
             cp.nlpRec.variantSentenceRec,
-            cp.langLoader,
+            languageMap,
             cp.language,
             SEED
         );

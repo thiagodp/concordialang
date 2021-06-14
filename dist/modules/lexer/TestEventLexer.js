@@ -1,65 +1,56 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.AfterEachScenarioLexer = exports.BeforeEachScenarioLexer = exports.AfterFeatureLexer = exports.BeforeFeatureLexer = exports.AfterAllLexer = exports.BeforeAllLexer = void 0;
-const NodeTypes_1 = require("../req/NodeTypes");
-const BlockLexer_1 = require("./BlockLexer");
-class BeforeAllLexer extends BlockLexer_1.BlockLexer {
+import { NodeTypes } from '../req/NodeTypes';
+import { BlockLexer } from './BlockLexer';
+export class BeforeAllLexer extends BlockLexer {
     constructor(words) {
-        super(words, NodeTypes_1.NodeTypes.BEFORE_ALL);
+        super(words, NodeTypes.BEFORE_ALL);
     }
     /** @inheritDoc */
     suggestedNextNodeTypes() {
-        return [NodeTypes_1.NodeTypes.STEP_GIVEN];
+        return [NodeTypes.STEP_GIVEN];
     }
 }
-exports.BeforeAllLexer = BeforeAllLexer;
-class AfterAllLexer extends BlockLexer_1.BlockLexer {
+export class AfterAllLexer extends BlockLexer {
     constructor(words) {
-        super(words, NodeTypes_1.NodeTypes.AFTER_ALL);
+        super(words, NodeTypes.AFTER_ALL);
     }
     /** @inheritDoc */
     suggestedNextNodeTypes() {
-        return [NodeTypes_1.NodeTypes.STEP_GIVEN];
+        return [NodeTypes.STEP_GIVEN];
     }
 }
-exports.AfterAllLexer = AfterAllLexer;
-class BeforeFeatureLexer extends BlockLexer_1.BlockLexer {
+export class BeforeFeatureLexer extends BlockLexer {
     constructor(words) {
-        super(words, NodeTypes_1.NodeTypes.BEFORE_FEATURE);
+        super(words, NodeTypes.BEFORE_FEATURE);
     }
     /** @inheritDoc */
     suggestedNextNodeTypes() {
-        return [NodeTypes_1.NodeTypes.STEP_GIVEN];
+        return [NodeTypes.STEP_GIVEN];
     }
 }
-exports.BeforeFeatureLexer = BeforeFeatureLexer;
-class AfterFeatureLexer extends BlockLexer_1.BlockLexer {
+export class AfterFeatureLexer extends BlockLexer {
     constructor(words) {
-        super(words, NodeTypes_1.NodeTypes.AFTER_FEATURE);
+        super(words, NodeTypes.AFTER_FEATURE);
     }
     /** @inheritDoc */
     suggestedNextNodeTypes() {
-        return [NodeTypes_1.NodeTypes.STEP_GIVEN];
+        return [NodeTypes.STEP_GIVEN];
     }
 }
-exports.AfterFeatureLexer = AfterFeatureLexer;
-class BeforeEachScenarioLexer extends BlockLexer_1.BlockLexer {
+export class BeforeEachScenarioLexer extends BlockLexer {
     constructor(words) {
-        super(words, NodeTypes_1.NodeTypes.BEFORE_EACH_SCENARIO);
+        super(words, NodeTypes.BEFORE_EACH_SCENARIO);
     }
     /** @inheritDoc */
     suggestedNextNodeTypes() {
-        return [NodeTypes_1.NodeTypes.STEP_GIVEN];
+        return [NodeTypes.STEP_GIVEN];
     }
 }
-exports.BeforeEachScenarioLexer = BeforeEachScenarioLexer;
-class AfterEachScenarioLexer extends BlockLexer_1.BlockLexer {
+export class AfterEachScenarioLexer extends BlockLexer {
     constructor(words) {
-        super(words, NodeTypes_1.NodeTypes.AFTER_EACH_SCENARIO);
+        super(words, NodeTypes.AFTER_EACH_SCENARIO);
     }
     /** @inheritDoc */
     suggestedNextNodeTypes() {
-        return [NodeTypes_1.NodeTypes.STEP_GIVEN];
+        return [NodeTypes.STEP_GIVEN];
     }
 }
-exports.AfterEachScenarioLexer = AfterEachScenarioLexer;

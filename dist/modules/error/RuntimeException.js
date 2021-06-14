@@ -1,13 +1,10 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.RuntimeException = void 0;
-const LocatedException_1 = require("./LocatedException");
+import { LocatedException } from "./LocatedException";
 /**
  * Runtime exception
  *
  * @author Thiago Delgado Pinto
  */
-class RuntimeException extends LocatedException_1.LocatedException {
+export class RuntimeException extends LocatedException {
     constructor() {
         super(...arguments);
         this.name = 'RuntimeException';
@@ -18,4 +15,3 @@ class RuntimeException extends LocatedException_1.LocatedException {
         return e;
     }
 }
-exports.RuntimeException = RuntimeException;

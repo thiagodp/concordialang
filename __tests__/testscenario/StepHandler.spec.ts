@@ -1,9 +1,6 @@
-import * as deepcopy from 'deepcopy';
+import deepcopy from 'deepcopy';
 
 import { Step } from '../../modules/ast/Step';
-import { EnglishKeywordDictionary } from '../../modules/language/EnglishKeywordDictionary';
-import { InMemoryLanguageContentLoader } from '../../modules/language/InMemoryLanguageContentLoader';
-import { LanguageContent } from '../../modules/language/LanguageContent';
 import { NodeTypes } from '../../modules/req/NodeTypes';
 import { StepHandler } from '../../modules/testscenario/StepHandler';
 
@@ -12,8 +9,6 @@ describe( 'StepHandler', () => {
 	let handler: StepHandler;
 
 	const LANGUAGE = 'en';
-	const _map: Map< string, LanguageContent > = new Map< string, LanguageContent >();
-	const _loader = new InMemoryLanguageContentLoader( _map );
 
 	const _AND = NodeTypes.STEP_AND;
 	const _GIVEN = NodeTypes.STEP_GIVEN;
@@ -22,11 +17,7 @@ describe( 'StepHandler', () => {
 	const _OTHERWISE = NodeTypes.STEP_OTHERWISE;
 
 	beforeAll( () => {
-		const lc = new LanguageContent(
-			new EnglishKeywordDictionary()
-		);
-		_map.set( LANGUAGE, lc );
-		handler = new StepHandler( _loader, LANGUAGE );
+		handler = new StepHandler( LANGUAGE );
 	} );
 
 	afterAll( () => {

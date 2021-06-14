@@ -1,12 +1,9 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.NodeIterator = void 0;
 /**
  * Node iterator.
  *
  * @author Thiago Delgado Pinto
  */
-class NodeIterator {
+export class NodeIterator {
     constructor(_nodes, _index = -1) {
         this._nodes = _nodes;
         this._index = _index;
@@ -64,4 +61,3 @@ class NodeIterator {
         return this._nodes;
     }
 }
-exports.NodeIterator = NodeIterator;

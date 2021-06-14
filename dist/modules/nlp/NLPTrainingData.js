@@ -1,7 +1,4 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.NLPTrainingIntentExample = exports.NLPTrainingMatch = exports.NLPTrainingEntity = exports.NLPTrainingIntent = exports.NLPTrainingData = exports.NLP_PRIORITIES = void 0;
-exports.NLP_PRIORITIES = {
+export const NLP_PRIORITIES = {
     "testcase": {
         "ui_action_modifier": 2,
         "ui_action": 2,
@@ -26,60 +23,55 @@ exports.NLP_PRIORITIES = {
  *
  * @author Thiago Delgado Pinto
  */
-class NLPTrainingData {
+export class NLPTrainingData {
     constructor(intents = [], examples = [], priorities) {
         this.intents = intents;
         this.examples = examples;
         this.priorities = priorities;
     }
 }
-exports.NLPTrainingData = NLPTrainingData;
 /**
  * Training Intent.
  *
  * @author Thiago Delgado Pinto
  */
-class NLPTrainingIntent {
+export class NLPTrainingIntent {
     constructor(name, entities = []) {
         this.name = name;
         this.entities = entities;
     }
 }
-exports.NLPTrainingIntent = NLPTrainingIntent;
 /**
  * Training Entity.
  *
  * @author Thiago Delgado Pinto
  */
-class NLPTrainingEntity {
+export class NLPTrainingEntity {
     constructor(name, matches = []) {
         this.name = name;
         this.matches = matches;
     }
 }
-exports.NLPTrainingEntity = NLPTrainingEntity;
 /**
  * Match for the training data.
  *
  * @author Thiago Delgado Pinto
  */
-class NLPTrainingMatch {
+export class NLPTrainingMatch {
     constructor(id, samples = []) {
         this.id = id;
         this.samples = samples;
     }
 }
-exports.NLPTrainingMatch = NLPTrainingMatch;
 /**
  * Entity usage example for the training data.
  *
  * @author Thiago Delgado Pinto
  */
-class NLPTrainingIntentExample {
+export class NLPTrainingIntentExample {
     constructor(intent, // result
     sentences = []) {
         this.intent = intent;
         this.sentences = sentences;
     }
 }
-exports.NLPTrainingIntentExample = NLPTrainingIntentExample;

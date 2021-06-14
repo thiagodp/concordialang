@@ -1,12 +1,9 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.EditableActionTargets = exports.ActionTargets = void 0;
 /**
  * Actions targets
  *
  * @author Thiago Delgado Pinto
  */
-var ActionTargets;
+export var ActionTargets;
 (function (ActionTargets) {
     ActionTargets["NONE"] = "";
     ActionTargets["APP"] = "app";
@@ -45,13 +42,13 @@ var ActionTargets;
     ActionTargets["WINDOW"] = "window";
     ActionTargets["UL"] = "ul";
     ActionTargets["URL"] = "url"; // web, mobile web
-})(ActionTargets = exports.ActionTargets || (exports.ActionTargets = {}));
+})(ActionTargets || (ActionTargets = {}));
 /**
  * Editable actions targets
  *
  * @author Thiago Delgado Pinto
  */
-var EditableActionTargets;
+export var EditableActionTargets;
 (function (EditableActionTargets) {
     EditableActionTargets["CHECKBOX"] = "checkbox";
     EditableActionTargets["FILE_INPUT"] = "fileInput";
@@ -59,4 +56,4 @@ var EditableActionTargets;
     EditableActionTargets["TABLE"] = "table";
     EditableActionTargets["TEXTBOX"] = "textbox";
     EditableActionTargets["TEXTAREA"] = "textarea";
-})(EditableActionTargets = exports.EditableActionTargets || (exports.EditableActionTargets = {}));
+})(EditableActionTargets || (EditableActionTargets = {}));

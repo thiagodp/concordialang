@@ -1,28 +1,20 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.TestCaseFileGenerator = void 0;
-const EnglishKeywordDictionary_1 = require("../language/EnglishKeywordDictionary");
-const NodeTypes_1 = require("../req/NodeTypes");
-const Symbols_1 = require("../req/Symbols");
-const CaseConversor_1 = require("../util/CaseConversor");
+import { dictionaryForLanguage } from '../language/data/map';
+import { NodeTypes } from '../req/NodeTypes';
+import { Symbols } from '../req/Symbols';
+import { upperFirst } from '../util/CaseConversor';
 /**
  * Generates files for Documents with Test Cases.
- *
  * @author Thiago Delgado Pinto
  */
-class TestCaseFileGenerator {
-    constructor(_languageContentLoader, language) {
-        this._languageContentLoader = _languageContentLoader;
-        this.language = language;
+export class TestCaseFileGenerator {
+    constructor(language) {
         this.fileHeader = [
             '# Generated with ❤ by Concordia',
             '#',
             '# THIS IS A GENERATED FILE - MODIFICATIONS CAN BE LOST !',
             ''
         ];
-        // Loads/gets the dictionary according to the current language
-        let langContent = _languageContentLoader.load(language);
-        this._dict = langContent.keywords || new EnglishKeywordDictionary_1.EnglishKeywordDictionary();
+        this._dict = dictionaryForLanguage(language).keywords;
     }
     /**
      * Generates lines from a document.
@@ -42,7 +34,7 @@ class TestCaseFileGenerator {
         // Generate language, if declared
         if (doc.language) {
             // Get dictionary
-            dict = this.dictionaryForLanguage(doc.language.value, errors) || this._dict;
+            dict = dictionaryForLanguage(doc.language.value).keywords;
             // Transform to text
             let line = this.generateLanguageLine(doc.language.value, dict);
             // Adjust location
@@ -71,7 +63,7 @@ class TestCaseFileGenerator {
             let newTagsContent = testCase.tags.map(t => (t.content || '')).join('');
             if (lastTagsContent != newTagsContent) {
                 if (lastTagsContent !== '') {
-                    lines.push(Symbols_1.Symbols.COMMENT_PREFIX + ' ' + '-'.repeat(80 - 2));
+                    lines.push(Symbols.COMMENT_PREFIX + ' ' + '-'.repeat(80 - 2));
                     lines.push(''); // empty line
                 }
                 lastTagsContent = newTagsContent;
@@ -104,11 +96,11 @@ class TestCaseFileGenerator {
                 }
                 // Transform into text
                 let ind = indentation;
-                if (NodeTypes_1.NodeTypes.STEP_AND === sentence.nodeType) {
+                if (NodeTypes.STEP_AND === sentence.nodeType) {
                     ind += indentation;
                 }
                 let line = ind + sentence.content +
-                    (!sentence.comment ? '' : '  ' + Symbols_1.Symbols.COMMENT_PREFIX + sentence.comment);
+                    (!sentence.comment ? '' : '  ' + Symbols.COMMENT_PREFIX + sentence.comment);
                 // Adjust location
                 sentence.location = {
                     line: lineNumber++,
@@ -119,30 +111,20 @@ class TestCaseFileGenerator {
         }
         return lines;
     }
-    dictionaryForLanguage(language, errors) {
-        try {
-            return this._languageContentLoader.load(language).keywords || null;
-        }
-        catch (err) {
-            errors.push(err);
-            return null;
-        }
-    }
     generateLanguageLine(language, dict) {
-        return Symbols_1.Symbols.COMMENT_PREFIX +
+        return Symbols.COMMENT_PREFIX +
             (!dict.language ? 'language' : dict.language[0] || 'language') +
-            Symbols_1.Symbols.LANGUAGE_SEPARATOR + language;
+            Symbols.LANGUAGE_SEPARATOR + language;
     }
     generateImportLine(path, dict) {
         return (!dict.import ? 'import' : dict.import[0] || 'import') + ' ' +
-            Symbols_1.Symbols.IMPORT_PREFIX + path + Symbols_1.Symbols.IMPORT_SUFFIX;
+            Symbols.IMPORT_PREFIX + path + Symbols.IMPORT_SUFFIX;
     }
     generateTagLine(name, content) {
-        return Symbols_1.Symbols.TAG_PREFIX + name + (!content ? '' : '(' + content + ')');
+        return Symbols.TAG_PREFIX + name + (!content ? '' : '(' + content + ')');
     }
     generateTestCaseHeader(name, dict) {
-        return CaseConversor_1.upperFirst(!dict ? 'Test Case' : dict.testCase[0] || 'Test Case') +
-            Symbols_1.Symbols.TITLE_SEPARATOR + ' ' + name;
+        return upperFirst(!dict ? 'Test Case' : dict.testCase[0] || 'Test Case') +
+            Symbols.TITLE_SEPARATOR + ' ' + name;
     }
 }
-exports.TestCaseFileGenerator = TestCaseFileGenerator;

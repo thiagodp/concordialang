@@ -1,20 +1,17 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.StartingKeywordLexer = void 0;
-const Warning_1 = require("../error/Warning");
-const Expressions_1 = require("../req/Expressions");
-const LineChecker_1 = require("../req/LineChecker");
-const CommentHandler_1 = require("./CommentHandler");
+import { Warning } from '../error/Warning';
+import { Expressions } from '../req/Expressions';
+import { LineChecker } from '../req/LineChecker';
+import { CommentHandler } from './CommentHandler';
 /**
  * Detects a node in the format "keyword anything".
  *
  * @author Thiago Delgado Pinto
  */
-class StartingKeywordLexer {
+export class StartingKeywordLexer {
     constructor(_words, _nodeType) {
         this._words = _words;
         this._nodeType = _nodeType;
-        this._lineChecker = new LineChecker_1.LineChecker();
+        this._lineChecker = new LineChecker();
     }
     /** @inheritDoc */
     nodeType() {
@@ -33,10 +30,10 @@ class StartingKeywordLexer {
         this._words = words;
     }
     makeRegexForTheWords(words) {
-        return '^' + Expressions_1.Expressions.OPTIONAL_SPACES_OR_TABS
+        return '^' + Expressions.OPTIONAL_SPACES_OR_TABS
             + '(?:' + words.join('|') + ')'
-            + Expressions_1.Expressions.AT_LEAST_ONE_SPACE_OR_TAB_OR_COMMA
-            + '(' + Expressions_1.Expressions.ANYTHING + ')';
+            + Expressions.AT_LEAST_ONE_SPACE_OR_TAB_OR_COMMA
+            + '(' + Expressions.ANYTHING + ')';
     }
     /** @inheritDoc */
     analyze(line, lineNumber) {
@@ -45,7 +42,7 @@ class StartingKeywordLexer {
         if (!result) {
             return null;
         }
-        const commentHandler = new CommentHandler_1.CommentHandler();
+        const commentHandler = new CommentHandler();
         let value = commentHandler.removeComment(result[1]);
         let content = commentHandler.removeComment(line);
         let pos = this._lineChecker.countLeftSpacesAndTabs(line);
@@ -59,10 +56,9 @@ class StartingKeywordLexer {
         }
         let warnings = [];
         if (value.length < 1) {
-            let w = new Warning_1.Warning('Value is empty', node.location);
+            let w = new Warning('Value is empty', node.location);
             warnings.push(w);
         }
         return { nodes: [node], errors: [], warnings: warnings };
     }
 }
-exports.StartingKeywordLexer = StartingKeywordLexer;

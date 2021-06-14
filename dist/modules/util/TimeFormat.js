@@ -1,6 +1,3 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.millisToString = exports.millisObjectToString = exports.millisToObject = void 0;
 /**
  * Converts a value in milliseconds to an object that may contain `day`, `hour`,
  * `min`, `sec`, and `ms`.
@@ -8,7 +5,7 @@ exports.millisToString = exports.millisObjectToString = exports.millisToObject =
  * @param ms Milliseconds
  * @returns object
  */
-function millisToObject(ms) {
+export function millisToObject(ms) {
     if (ms < 1000) {
         return { ms: ms };
     }
@@ -32,7 +29,6 @@ function millisToObject(ms) {
     }
     return { day: _day, hour: _hour, min: _min, sec: _sec, ms: _ms };
 }
-exports.millisToObject = millisToObject;
 /**
  * Transform an object that contain time properties to a human-readable string.
  *
@@ -41,7 +37,7 @@ exports.millisToObject = millisToObject;
  * @param separator Character used as separator. Optional. Default is empty.
  * @returns string
  */
-function millisObjectToString(o, i18n, separator) {
+export function millisObjectToString(o, i18n, separator) {
     i18n = i18n || {};
     separator = separator || '';
     var s = [];
@@ -57,7 +53,6 @@ function millisObjectToString(o, i18n, separator) {
         s.push(o.ms + (i18n.ms !== undefined ? i18n.ms : 'ms'));
     return s.join(separator);
 }
-exports.millisObjectToString = millisObjectToString;
 /**
  * Transform a value in milliseconds to a human-readable string.
  *
@@ -66,7 +61,6 @@ exports.millisObjectToString = millisObjectToString;
  * @param separator Character used as separator. Optional. Default is empty.
  * @returns string
  */
-function millisToString(ms, i18n, separator) {
+export function millisToString(ms, i18n, separator) {
     return millisObjectToString(millisToObject(ms), i18n, separator);
 }
-exports.millisToString = millisToString;

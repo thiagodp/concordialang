@@ -1,12 +1,9 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.removeDuplicated = void 0;
 /**
  * Remove duplicated items from contiguous arrays with same type.
  *
  * @author Thiago Delgado Pinto
  */
-function removeDuplicated(arr, areEqual = (a, b) => a === b) {
+export function removeDuplicated(arr, areEqual = (a, b) => a === b) {
     let removeCount = 0;
     for (let end = arr.length; end >= 0; --end) {
         const down = arr[end];
@@ -24,4 +21,3 @@ function removeDuplicated(arr, areEqual = (a, b) => a === b) {
     }
     return removeCount;
 }
-exports.removeDuplicated = removeDuplicated;

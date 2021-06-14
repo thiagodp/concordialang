@@ -1,6 +1,8 @@
-import * as alasql from 'alasql';
-import { SqlHelper } from "../../modules/db/SqlHelper";
-import { ValueTypeDetector } from "../../modules/util/ValueTypeDetector";
+// @ts-ignore
+import alasql from 'alasql';
+
+import { SqlHelper } from '../../modules/db/SqlHelper';
+import { ValueTypeDetector } from '../../modules/util/ValueTypeDetector';
 
 
 describe( 'SqlHelper', () => {

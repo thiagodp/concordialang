@@ -1,6 +1,3 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.Intents = void 0;
 /**
  * Intents for NLP
  *
@@ -8,11 +5,11 @@ exports.Intents = void 0;
  *
  * @see Entities
  */
-var Intents;
+export var Intents;
 (function (Intents) {
     Intents["ALL"] = "*";
     Intents["TEST_CASE"] = "testcase";
     Intents["UI"] = "ui";
     // UI_ITEM_QUERY = 'ui_item_query',
     Intents["DATABASE"] = "database";
-})(Intents = exports.Intents || (exports.Intents = {}));
+})(Intents || (Intents = {}));

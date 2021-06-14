@@ -1,20 +1,16 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.UIPropertyLexer = void 0;
-const NodeTypes_1 = require("../req/NodeTypes");
-const ListItemLexer_1 = require("./ListItemLexer");
+import { NodeTypes } from '../req/NodeTypes';
+import { ListItemLexer } from './ListItemLexer';
 /**
  * Detects a UIProperty node.
  *
  * @author Thiago Delgado Pinto
  */
-class UIPropertyLexer extends ListItemLexer_1.ListItemLexer {
+export class UIPropertyLexer extends ListItemLexer {
     constructor() {
-        super(NodeTypes_1.NodeTypes.UI_PROPERTY);
+        super(NodeTypes.UI_PROPERTY);
     }
     /** @inheritDoc */
     suggestedNextNodeTypes() {
-        return [NodeTypes_1.NodeTypes.UI_PROPERTY];
+        return [NodeTypes.UI_PROPERTY];
     }
 }
-exports.UIPropertyLexer = UIPropertyLexer;

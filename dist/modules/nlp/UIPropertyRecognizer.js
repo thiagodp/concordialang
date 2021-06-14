@@ -1,23 +1,20 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.UIPropertyRecognizer = void 0;
-const core_1 = require("@js-joda/core");
-const ast_1 = require("../ast");
-const UIPropertyTypes_1 = require("../ast/UIPropertyTypes");
-const Entities_1 = require("../nlp/Entities");
-const TypeChecking_1 = require("../util/TypeChecking");
-const ValueTypeDetector_1 = require("../util/ValueTypeDetector");
-const Intents_1 = require("./Intents");
-const NLPException_1 = require("./NLPException");
-const NodeSentenceRecognizer_1 = require("./NodeSentenceRecognizer");
-const SyntaxRuleBuilder_1 = require("./syntax/SyntaxRuleBuilder");
-const UIPropertySyntaxRules_1 = require("./syntax/UIPropertySyntaxRules");
+import { DateTimeFormatter, LocalDate } from '@js-joda/core';
+import { EntityValue } from '../ast';
+import { UIPropertyTypes } from '../ast/UIPropertyTypes';
+import { Entities } from '../nlp/Entities';
+import { isDefined } from '../util/TypeChecking';
+import { adjustValueToTheRightType } from '../util/ValueTypeDetector';
+import { Intents } from './Intents';
+import { NLPException } from './NLPException';
+import { NodeSentenceRecognizer } from './NodeSentenceRecognizer';
+import { SyntaxRuleBuilder } from './syntax/SyntaxRuleBuilder';
+import { DEFAULT_UI_PROPERTY_SYNTAX_RULE, UI_PROPERTY_SYNTAX_RULES } from './syntax/UIPropertySyntaxRules';
 /**
  * UI element property sentence recognizer.
  *
  * @author Thiago Delgado Pinto
  */
-class UIPropertyRecognizer {
+export class UIPropertyRecognizer {
     constructor(_nlp) {
         this._nlp = _nlp;
         this._syntaxRules = this.buildSyntaxRules();
@@ -29,7 +26,7 @@ class UIPropertyRecognizer {
         return this._nlp.isTrained(language);
     }
     trainMe(trainer, language) {
-        return trainer.trainNLP(this._nlp, language, Intents_1.Intents.UI);
+        return trainer.trainNLP(this._nlp, language, Intents.UI);
         // && trainer.trainNLP( this._nlp, language, Intents.UI_ITEM_QUERY );
     }
     /**
@@ -43,17 +40,17 @@ class UIPropertyRecognizer {
      * @throws Error If the NLP is not trained.
      */
     recognizeSentences(language, nodes, errors, warnings) {
-        const recognizer = new NodeSentenceRecognizer_1.NodeSentenceRecognizer(this._nlp);
+        const recognizer = new NodeSentenceRecognizer(this._nlp);
         const syntaxRules = this._syntaxRules;
         const _this = this;
         let processor = function (node, r, errors, warnings) {
             const recognizedEntityNames = r.entities.map(e => e.entity);
             // console.log( r.entities );
             // Must have a UI Property
-            const propertyIndex = recognizedEntityNames.indexOf(Entities_1.Entities.UI_PROPERTY);
+            const propertyIndex = recognizedEntityNames.indexOf(Entities.UI_PROPERTY);
             if (propertyIndex < 0) {
                 const msg = 'Unrecognized (' + language + '): ' + node.content;
-                warnings.push(new NLPException_1.NLPException(msg, node.location));
+                warnings.push(new NLPException(msg, node.location));
                 return;
             }
             const property = r.entities[propertyIndex].value;
@@ -68,62 +65,62 @@ class UIPropertyRecognizer {
                 //
                 let entityValue;
                 switch (e.entity) {
-                    case Entities_1.Entities.VALUE: // next
-                    case Entities_1.Entities.NUMBER:
-                        entityValue = new ast_1.EntityValue(e.entity, ValueTypeDetector_1.adjustValueToTheRightType(e.value));
+                    case Entities.VALUE: // next
+                    case Entities.NUMBER:
+                        entityValue = new EntityValue(e.entity, adjustValueToTheRightType(e.value));
                         break;
                     // case Entities.VALUE_LIST     : uiv = new EntityValue( e.entity, _this.makeValueList( e.value ) ); break;
-                    case Entities_1.Entities.DATE:
-                        entityValue = new ast_1.EntityValue(e.entity, _this.convertToDateIfNeeded(e.value, language));
+                    case Entities.DATE:
+                        entityValue = new EntityValue(e.entity, _this.convertToDateIfNeeded(e.value, language));
                         break;
-                    case Entities_1.Entities.LONG_TIME: // next
-                    case Entities_1.Entities.TIME:
-                        entityValue = new ast_1.EntityValue(e.entity, e.value);
+                    case Entities.LONG_TIME: // next
+                    case Entities.TIME:
+                        entityValue = new EntityValue(e.entity, e.value);
                         break;
-                    case Entities_1.Entities.LONG_DATE_TIME: // next
-                    case Entities_1.Entities.DATE_TIME:
-                        entityValue = new ast_1.EntityValue(e.entity, e.value);
+                    case Entities.LONG_DATE_TIME: // next
+                    case Entities.DATE_TIME:
+                        entityValue = new EntityValue(e.entity, e.value);
                         break;
-                    case Entities_1.Entities.VALUE_LIST:
-                        entityValue = new ast_1.EntityValue(e.entity, e.value);
+                    case Entities.VALUE_LIST:
+                        entityValue = new EntityValue(e.entity, e.value);
                         break;
-                    case Entities_1.Entities.QUERY:
-                        entityValue = new ast_1.EntityValue(e.entity, e.value);
+                    case Entities.QUERY:
+                        entityValue = new EntityValue(e.entity, e.value);
                         break;
-                    case Entities_1.Entities.UI_ELEMENT_REF:
-                        entityValue = new ast_1.EntityValue(e.entity, e.value);
+                    case Entities.UI_ELEMENT_REF:
+                        entityValue = new EntityValue(e.entity, e.value);
                         break;
-                    case Entities_1.Entities.UI_LITERAL:
-                        entityValue = new ast_1.EntityValue(e.entity, e.value);
+                    case Entities.UI_LITERAL:
+                        entityValue = new EntityValue(e.entity, e.value);
                         break;
-                    case Entities_1.Entities.UI_PROPERTY_REF:
-                        entityValue = new ast_1.EntityValue(e.entity, e.value);
+                    case Entities.UI_PROPERTY_REF:
+                        entityValue = new EntityValue(e.entity, e.value);
                         break;
-                    case Entities_1.Entities.CONSTANT:
-                        entityValue = new ast_1.EntityValue(e.entity, e.value);
+                    case Entities.CONSTANT:
+                        entityValue = new EntityValue(e.entity, e.value);
                         break;
-                    case Entities_1.Entities.UI_DATA_TYPE:
-                        entityValue = new ast_1.EntityValue(e.entity, e.value);
+                    case Entities.UI_DATA_TYPE:
+                        entityValue = new EntityValue(e.entity, e.value);
                         break;
-                    case Entities_1.Entities.BOOL_VALUE:
-                        entityValue = new ast_1.EntityValue(e.entity, 'true' === e.value);
+                    case Entities.BOOL_VALUE:
+                        entityValue = new EntityValue(e.entity, 'true' === e.value);
                         break;
                     default: entityValue = null;
                 }
-                if (TypeChecking_1.isDefined(entityValue)) {
+                if (isDefined(entityValue)) {
                     item.value = entityValue;
                     break;
                 }
             }
             // A boolean property without value ?
-            const booleanProperties = [UIPropertyTypes_1.UIPropertyTypes.REQUIRED, UIPropertyTypes_1.UIPropertyTypes.EDITABLE];
+            const booleanProperties = [UIPropertyTypes.REQUIRED, UIPropertyTypes.EDITABLE];
             if (booleanProperties.indexOf(property) >= 0 &&
-                !r.entities.find(e => e.entity === Entities_1.Entities.BOOL_VALUE)) {
-                item.value = new ast_1.EntityValue(Entities_1.Entities.BOOL_VALUE, true);
+                !r.entities.find(e => e.entity === Entities.BOOL_VALUE)) {
+                item.value = new EntityValue(Entities.BOOL_VALUE, true);
             }
             return item;
         };
-        recognizer.recognize(language, nodes, [Intents_1.Intents.UI], 'UI Element', errors, warnings, processor);
+        recognizer.recognize(language, nodes, [Intents.UI], 'UI Element', errors, warnings, processor);
         // this.adjustRecognizedValues( nodes );
     }
     // /**
@@ -160,17 +157,17 @@ class UIPropertyRecognizer {
         if (typeof value != 'string') {
             return value;
         }
-        const f = core_1.DateTimeFormatter.ofPattern("uuuu-MM-dd");
+        const f = DateTimeFormatter.ofPattern("uuuu-MM-dd");
         try {
-            return core_1.LocalDate.parse(value, f);
+            return LocalDate.parse(value, f);
         }
-        catch (_a) {
+        catch {
             try {
                 // const f2 = DateTimeFormatter.ofPattern( this.dateFormatFrom( language ) );
                 // return LocalDate.parse( value, f2 );
-                return core_1.LocalDate.parse(value);
+                return LocalDate.parse(value);
             }
-            catch (_b) {
+            catch {
                 // will return original value
             }
         }
@@ -184,7 +181,6 @@ class UIPropertyRecognizer {
     //     }
     // }
     buildSyntaxRules() {
-        return (new SyntaxRuleBuilder_1.SyntaxRuleBuilder()).build(UIPropertySyntaxRules_1.UI_PROPERTY_SYNTAX_RULES, UIPropertySyntaxRules_1.DEFAULT_UI_PROPERTY_SYNTAX_RULE);
+        return (new SyntaxRuleBuilder()).build(UI_PROPERTY_SYNTAX_RULES, DEFAULT_UI_PROPERTY_SYNTAX_RULE);
     }
 }
-exports.UIPropertyRecognizer = UIPropertyRecognizer;

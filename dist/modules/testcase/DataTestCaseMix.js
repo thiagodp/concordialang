@@ -1,8 +1,5 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.UnfilteredMix = exports.OnlyInvalidMix = exports.JustOneInvalidMix = exports.OnlyValidMix = void 0;
-const DataTestCaseAnalyzer_1 = require("../testdata/DataTestCaseAnalyzer");
-const UIETestPlan_1 = require("./UIETestPlan");
+import { DTCAnalysisResult } from '../testdata/DataTestCaseAnalyzer';
+import { UIETestPlan } from './UIETestPlan';
 /**
  * All UI Elements will contain VALID DataTestCases only.
  *
@@ -21,22 +18,21 @@ const UIETestPlan_1 = require("./UIETestPlan");
  *
  * @author Thiago Delgado Pinto
  */
-class OnlyValidMix {
+export class OnlyValidMix {
     /** @inheritDoc */
     select(map, alwaysValidVariables) {
         let obj = {};
         for (let [uieName, dtcMap] of map) {
             obj[uieName] = [];
             for (let [dtc, data] of dtcMap) {
-                if (DataTestCaseAnalyzer_1.DTCAnalysisResult.VALID === data.result) {
-                    obj[uieName].push(new UIETestPlan_1.UIETestPlan(dtc, data.result, data.oracles));
+                if (DTCAnalysisResult.VALID === data.result) {
+                    obj[uieName].push(new UIETestPlan(dtc, data.result, data.oracles));
                 }
             }
         }
         return [obj];
     }
 }
-exports.OnlyValidMix = OnlyValidMix;
 /**
  * One UI Element will contain only INVALID DataTestCases and
  * the other ones will contain only VALID DataTestCases.
@@ -67,7 +63,7 @@ exports.OnlyValidMix = OnlyValidMix;
  *
  * @author Thiago Delgado Pinto
  */
-class JustOneInvalidMix {
+export class JustOneInvalidMix {
     /** @inheritDoc */
     select(map, alwaysValidVariables) {
         let all = [];
@@ -84,14 +80,14 @@ class JustOneInvalidMix {
             let isTheTargetUIE = uieName === targetUIEName;
             let currentMustBeValid = alwaysValidVariables.indexOf(uieName) >= 0;
             for (let [dtc, data] of dtcMap) {
-                if (DataTestCaseAnalyzer_1.DTCAnalysisResult.VALID === data.result) {
+                if (DTCAnalysisResult.VALID === data.result) {
                     if (!isTheTargetUIE || currentMustBeValid) {
-                        obj[uieName].push(new UIETestPlan_1.UIETestPlan(dtc, data.result, data.oracles));
+                        obj[uieName].push(new UIETestPlan(dtc, data.result, data.oracles));
                     }
                 }
-                else if (DataTestCaseAnalyzer_1.DTCAnalysisResult.INVALID === data.result) {
+                else if (DTCAnalysisResult.INVALID === data.result) {
                     if (isTheTargetUIE && !currentMustBeValid) {
-                        obj[uieName].push(new UIETestPlan_1.UIETestPlan(dtc, data.result, data.oracles));
+                        obj[uieName].push(new UIETestPlan(dtc, data.result, data.oracles));
                     }
                 }
             }
@@ -99,7 +95,6 @@ class JustOneInvalidMix {
         return obj;
     }
 }
-exports.JustOneInvalidMix = JustOneInvalidMix;
 // TODO: InvalidPairMix - only two UI Elements will receive INVALID DataTestCases at a time
 // TODO: InvalidTripletMix - only three UI Elements will receive INVALID DataTestCases at a time
 // TODO: UntouchedMix - all the DataTestCases will be combined.
@@ -120,7 +115,7 @@ exports.JustOneInvalidMix = JustOneInvalidMix;
  *
  * @author Thiago Delgado Pinto
  */
-class OnlyInvalidMix {
+export class OnlyInvalidMix {
     /** @inheritDoc */
     select(map, alwaysValidVariables) {
         let obj = {};
@@ -128,23 +123,22 @@ class OnlyInvalidMix {
             obj[uieName] = [];
             let currentMustBeValid = alwaysValidVariables.indexOf(uieName) >= 0;
             for (let [dtc, data] of dtcMap) {
-                if ((DataTestCaseAnalyzer_1.DTCAnalysisResult.INVALID === data.result && !currentMustBeValid)
-                    || (DataTestCaseAnalyzer_1.DTCAnalysisResult.VALID === data.result && currentMustBeValid)) {
-                    obj[uieName].push(new UIETestPlan_1.UIETestPlan(dtc, data.result, data.oracles));
+                if ((DTCAnalysisResult.INVALID === data.result && !currentMustBeValid)
+                    || (DTCAnalysisResult.VALID === data.result && currentMustBeValid)) {
+                    obj[uieName].push(new UIETestPlan(dtc, data.result, data.oracles));
                 }
             }
         }
         return [obj];
     }
 }
-exports.OnlyInvalidMix = OnlyInvalidMix;
 /**
  * Does not filter the available elements, except for the incompatible ones
  * and the alwaysValidVariables.
  *
  * @author Thiago Delgado Pinto
  */
-class UnfilteredMix {
+export class UnfilteredMix {
     /** @inheritDoc */
     select(map, alwaysValidVariables) {
         let obj = {};
@@ -152,14 +146,13 @@ class UnfilteredMix {
             obj[uieName] = [];
             let currentMustBeValid = alwaysValidVariables.indexOf(uieName) >= 0;
             for (let [dtc, data] of dtcMap) {
-                if (DataTestCaseAnalyzer_1.DTCAnalysisResult.INCOMPATIBLE === data.result
-                    || (currentMustBeValid && DataTestCaseAnalyzer_1.DTCAnalysisResult.INVALID === data.result)) {
+                if (DTCAnalysisResult.INCOMPATIBLE === data.result
+                    || (currentMustBeValid && DTCAnalysisResult.INVALID === data.result)) {
                     continue;
                 }
-                obj[uieName].push(new UIETestPlan_1.UIETestPlan(dtc, data.result, data.oracles));
+                obj[uieName].push(new UIETestPlan(dtc, data.result, data.oracles));
             }
         }
         return [obj];
     }
 }
-exports.UnfilteredMix = UnfilteredMix;

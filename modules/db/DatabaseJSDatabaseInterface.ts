@@ -1,4 +1,4 @@
-import dbjs = require( 'database-js' );
+import dbjs from 'database-js';
 
 import { Database, Table } from '../ast';
 import { DatabaseInterface } from '../dbi/DatabaseInterface';

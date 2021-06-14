@@ -1,6 +1,7 @@
-import * as cartesian from 'cartesian';
-import * as oneWise from 'one-wise';
-import * as shuffleObjArrays from 'shuffle-obj-arrays';
+import cartesian from 'cartesian';
+import oneWise from 'one-wise';
+import shuffleObjArrays from 'shuffle-obj-arrays';
+
 import { Random } from '../testdata/random/Random';
 import { RandomLong } from '../testdata/random/RandomLong';
 

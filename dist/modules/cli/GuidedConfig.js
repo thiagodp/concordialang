@@ -1,51 +1,36 @@
-"use strict";
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.GuidedConfig = void 0;
-const inquirer = require("inquirer");
-const package_installation_1 = require("../util/package-installation");
+import * as inquirer from 'inquirer';
+import { packageManagers } from '../util/package-installation';
 /**
  * Guided Concordia configuration.
  */
-class GuidedConfig {
+export class GuidedConfig {
     /**
      *
      * @param options Defined options are ignored for prompt and their value is returned.
      * @returns
      */
-    prompt(options) {
-        return __awaiter(this, void 0, void 0, function* () {
-            const q = new ConcordiaQuestions();
-            const questions = [
-                q.directory(),
-                q.language(),
-                q.dirScript(),
-                q.dirResult(),
-            ];
-            const hasPackageManager = options && !!options.packageManager;
-            if (!hasPackageManager) {
-                questions.push(q.packageManager());
-            }
-            questions.push(q.plugin());
-            questions.push(q.pluginInstall());
-            questions.push(q.databases());
-            const r = yield inquirer.prompt(questions);
-            if (hasPackageManager) {
-                r.packageManager = options.packageManager;
-            }
-            return r;
-        });
+    async prompt(options) {
+        const q = new ConcordiaQuestions();
+        const questions = [
+            q.directory(),
+            q.language(),
+            q.dirScript(),
+            q.dirResult(),
+        ];
+        const hasPackageManager = options && !!options.packageManager;
+        if (!hasPackageManager) {
+            questions.push(q.packageManager());
+        }
+        questions.push(q.plugin());
+        questions.push(q.pluginInstall());
+        questions.push(q.databases());
+        const r = await inquirer.prompt(questions);
+        if (hasPackageManager) {
+            r.packageManager = options.packageManager;
+        }
+        return r;
     }
 }
-exports.GuidedConfig = GuidedConfig;
 class ConcordiaQuestions {
     // TO-DO: load language options dynamically
     language() {
@@ -84,7 +69,7 @@ class ConcordiaQuestions {
         };
     }
     packageManager() {
-        const choices = package_installation_1.packageManagers().map(tool => ({ value: tool, short: tool, name: tool }));
+        const choices = packageManagers().map(tool => ({ value: tool, short: tool, name: tool }));
         return {
             type: 'list',
             name: 'packageManager',

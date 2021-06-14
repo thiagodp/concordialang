@@ -1,19 +1,16 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.AfterAllParser = void 0;
-const TypeChecking_1 = require("../util/TypeChecking");
-const SyntacticException_1 = require("./SyntacticException");
+import { isDefined } from '../util/TypeChecking';
+import { SyntacticException } from './SyntacticException';
 /**
  * AfterAll parser
  *
  * @author Thiago Delgado Pinto
  */
-class AfterAllParser {
+export class AfterAllParser {
     /** @inheritDoc */
     analyze(node, context, it, errors) {
         // Check whether a similar node was already declared
-        if (TypeChecking_1.isDefined(context.doc.afterAll)) {
-            let e = new SyntacticException_1.SyntacticException('Event already declared: After All', node.location);
+        if (isDefined(context.doc.afterAll)) {
+            let e = new SyntacticException('Event already declared: After All', node.location);
             errors.push(e);
             return false;
         }
@@ -25,4 +22,3 @@ class AfterAllParser {
         return true;
     }
 }
-exports.AfterAllParser = AfterAllParser;

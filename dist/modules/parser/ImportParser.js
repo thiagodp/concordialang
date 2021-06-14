@@ -1,13 +1,10 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.ImportParser = void 0;
-const SyntacticException_1 = require("./SyntacticException");
+import { SyntacticException } from "./SyntacticException";
 /**
  * Import parser.
  *
  * @author Thiago Delgado Pinto
  */
-class ImportParser {
+export class ImportParser {
     /** @inheritDoc */
     analyze(node, context, it, errors) {
         // Checks the structure
@@ -16,7 +13,7 @@ class ImportParser {
         }
         // Checks if a feature is declared before it
         if (context.doc.feature) {
-            let e = new SyntacticException_1.SyntacticException('An import must be declared before a feature.', node.location);
+            let e = new SyntacticException('An import must be declared before a feature.', node.location);
             errors.push(e);
             return false;
         }
@@ -25,4 +22,3 @@ class ImportParser {
         return true;
     }
 }
-exports.ImportParser = ImportParser;

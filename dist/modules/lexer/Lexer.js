@@ -1,41 +1,38 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.Lexer = void 0;
-const ast_1 = require("../ast");
-const TestEventLexer_1 = require("../lexer/TestEventLexer");
-const NodeTypes_1 = require("../req/NodeTypes");
-const BackgroundLexer_1 = require("./BackgroundLexer");
-const ConstantBlockLexer_1 = require("./ConstantBlockLexer");
-const ConstantLexer_1 = require("./ConstantLexer");
-const DatabaseLexer_1 = require("./DatabaseLexer");
-const DatabasePropertyLexer_1 = require("./DatabasePropertyLexer");
-const FeatureLexer_1 = require("./FeatureLexer");
-const ImportLexer_1 = require("./ImportLexer");
-const LanguageLexer_1 = require("./LanguageLexer");
-const LongStringLexer_1 = require("./LongStringLexer");
-const RegexBlockLexer_1 = require("./RegexBlockLexer");
-const RegexLexer_1 = require("./RegexLexer");
-const ScenarioLexer_1 = require("./ScenarioLexer");
-const StepAndLexer_1 = require("./StepAndLexer");
-const StepGivenLexer_1 = require("./StepGivenLexer");
-const StepOtherwiseLexer_1 = require("./StepOtherwiseLexer");
-const StepThenLexer_1 = require("./StepThenLexer");
-const StepWhenLexer_1 = require("./StepWhenLexer");
-const TableLexer_1 = require("./TableLexer");
-const TableRowLexer_1 = require("./TableRowLexer");
-const TagLexer_1 = require("./TagLexer");
-const TestCaseLexer_1 = require("./TestCaseLexer");
-const TextLexer_1 = require("./TextLexer");
-const UIElementLexer_1 = require("./UIElementLexer");
-const UIPropertyLexer_1 = require("./UIPropertyLexer");
-const VariantBackgroundLexer_1 = require("./VariantBackgroundLexer");
-const VariantLexer_1 = require("./VariantLexer");
+import { ReservedTags } from '../ast';
+import { AfterAllLexer, AfterEachScenarioLexer, AfterFeatureLexer, BeforeAllLexer, BeforeEachScenarioLexer, BeforeFeatureLexer, } from '../lexer/TestEventLexer';
+import { NodeTypes } from '../req/NodeTypes';
+import { BackgroundLexer } from './BackgroundLexer';
+import { ConstantBlockLexer } from './ConstantBlockLexer';
+import { ConstantLexer } from './ConstantLexer';
+import { DatabaseLexer } from './DatabaseLexer';
+import { DatabasePropertyLexer } from './DatabasePropertyLexer';
+import { FeatureLexer } from './FeatureLexer';
+import { ImportLexer } from './ImportLexer';
+import { LanguageLexer } from './LanguageLexer';
+import { LongStringLexer } from './LongStringLexer';
+import { RegexBlockLexer } from './RegexBlockLexer';
+import { RegexLexer } from './RegexLexer';
+import { ScenarioLexer } from './ScenarioLexer';
+import { StepAndLexer } from './StepAndLexer';
+import { StepGivenLexer } from './StepGivenLexer';
+import { StepOtherwiseLexer } from './StepOtherwiseLexer';
+import { StepThenLexer } from './StepThenLexer';
+import { StepWhenLexer } from './StepWhenLexer';
+import { TableLexer } from './TableLexer';
+import { TableRowLexer } from './TableRowLexer';
+import { TagLexer, TagSubLexer } from './TagLexer';
+import { TestCaseLexer } from './TestCaseLexer';
+import { TextLexer } from './TextLexer';
+import { UIElementLexer } from './UIElementLexer';
+import { UIPropertyLexer } from './UIPropertyLexer';
+import { VariantBackgroundLexer } from './VariantBackgroundLexer';
+import { VariantLexer } from './VariantLexer';
 /**
  * Lexer
  *
  * @author Thiago Delgado Pinto
  */
-class Lexer {
+export class Lexer {
     /**
      * Constructs the lexer.
      *
@@ -45,9 +42,9 @@ class Lexer {
      *
      * @throws Error if the given default language could not be found.
      */
-    constructor(_defaultLanguage, _languageContentLoader, _stopOnFirstError = false) {
+    constructor(_defaultLanguage, _languageMap, _stopOnFirstError = false) {
         this._defaultLanguage = _defaultLanguage;
-        this._languageContentLoader = _languageContentLoader;
+        this._languageMap = _languageMap;
         this._stopOnFirstError = _stopOnFirstError;
         this._nodes = [];
         this._errors = [];
@@ -62,51 +59,51 @@ class Lexer {
             throw new Error('Cannot load a dictionary for the language: ' + _defaultLanguage);
         }
         this._tagSubLexers = [
-            new TagLexer_1.TagSubLexer(ast_1.ReservedTags.IGNORE, dictionary.tagIgnore),
-            new TagLexer_1.TagSubLexer(ast_1.ReservedTags.GENERATED, dictionary.tagGenerated),
-            new TagLexer_1.TagSubLexer(ast_1.ReservedTags.FAIL, dictionary.tagFail),
-            new TagLexer_1.TagSubLexer(ast_1.ReservedTags.SCENARIO, dictionary.tagScenario),
-            new TagLexer_1.TagSubLexer(ast_1.ReservedTags.VARIANT, dictionary.tagVariant),
-            new TagLexer_1.TagSubLexer(ast_1.ReservedTags.FEATURE, dictionary.tagFeature),
-            new TagLexer_1.TagSubLexer(ast_1.ReservedTags.GENERATE_ONLY_VALID_VALUES, dictionary.tagGenerateOnlyValidValues),
-            new TagLexer_1.TagSubLexer(ast_1.ReservedTags.IMPORTANCE, dictionary.tagImportance),
-            new TagLexer_1.TagSubLexer(ast_1.ReservedTags.GLOBAL, dictionary.tagGlobal)
+            new TagSubLexer(ReservedTags.IGNORE, dictionary.tagIgnore),
+            new TagSubLexer(ReservedTags.GENERATED, dictionary.tagGenerated),
+            new TagSubLexer(ReservedTags.FAIL, dictionary.tagFail),
+            new TagSubLexer(ReservedTags.SCENARIO, dictionary.tagScenario),
+            new TagSubLexer(ReservedTags.VARIANT, dictionary.tagVariant),
+            new TagSubLexer(ReservedTags.FEATURE, dictionary.tagFeature),
+            new TagSubLexer(ReservedTags.GENERATE_ONLY_VALID_VALUES, dictionary.tagGenerateOnlyValidValues),
+            new TagSubLexer(ReservedTags.IMPORTANCE, dictionary.tagImportance),
+            new TagSubLexer(ReservedTags.GLOBAL, dictionary.tagGlobal)
         ];
         this._lexers = [
-            new LongStringLexer_1.LongStringLexer(),
-            new LanguageLexer_1.LanguageLexer(dictionary.language),
-            new TagLexer_1.TagLexer(this._tagSubLexers),
-            new ImportLexer_1.ImportLexer(dictionary.import),
-            new FeatureLexer_1.FeatureLexer(dictionary.feature),
-            new BackgroundLexer_1.BackgroundLexer(dictionary.background),
-            new VariantBackgroundLexer_1.VariantBackgroundLexer(dictionary.variantBackground),
-            new ScenarioLexer_1.ScenarioLexer(dictionary.scenario),
-            new StepGivenLexer_1.StepGivenLexer(dictionary.stepGiven),
-            new StepWhenLexer_1.StepWhenLexer(dictionary.stepWhen),
-            new StepThenLexer_1.StepThenLexer(dictionary.stepThen),
-            new StepAndLexer_1.StepAndLexer(dictionary.stepAnd),
-            new StepOtherwiseLexer_1.StepOtherwiseLexer(dictionary.stepOtherwise),
-            new VariantLexer_1.VariantLexer(dictionary.variant),
-            new TestCaseLexer_1.TestCaseLexer(dictionary.testCase),
-            new ConstantBlockLexer_1.ConstantBlockLexer(dictionary.constantBlock),
-            new ConstantLexer_1.ConstantLexer(dictionary.is) // "name" is "value"
+            new LongStringLexer(),
+            new LanguageLexer(dictionary.language),
+            new TagLexer(this._tagSubLexers),
+            new ImportLexer(dictionary.import),
+            new FeatureLexer(dictionary.feature),
+            new BackgroundLexer(dictionary.background),
+            new VariantBackgroundLexer(dictionary.variantBackground),
+            new ScenarioLexer(dictionary.scenario),
+            new StepGivenLexer(dictionary.stepGiven),
+            new StepWhenLexer(dictionary.stepWhen),
+            new StepThenLexer(dictionary.stepThen),
+            new StepAndLexer(dictionary.stepAnd),
+            new StepOtherwiseLexer(dictionary.stepOtherwise),
+            new VariantLexer(dictionary.variant),
+            new TestCaseLexer(dictionary.testCase),
+            new ConstantBlockLexer(dictionary.constantBlock),
+            new ConstantLexer(dictionary.is) // "name" is "value"
             ,
-            new RegexBlockLexer_1.RegexBlockLexer(dictionary.regexBlock),
-            new RegexLexer_1.RegexLexer(dictionary.is) // "name" is "value"
+            new RegexBlockLexer(dictionary.regexBlock),
+            new RegexLexer(dictionary.is) // "name" is "value"
             ,
-            new TableLexer_1.TableLexer(dictionary.table),
-            new TableRowLexer_1.TableRowLexer(),
-            new UIElementLexer_1.UIElementLexer(dictionary.uiElement),
-            new UIPropertyLexer_1.UIPropertyLexer(),
-            new DatabaseLexer_1.DatabaseLexer(dictionary.database),
-            new DatabasePropertyLexer_1.DatabasePropertyLexer(),
-            new TestEventLexer_1.BeforeAllLexer(dictionary.beforeAll),
-            new TestEventLexer_1.AfterAllLexer(dictionary.afterAll),
-            new TestEventLexer_1.BeforeFeatureLexer(dictionary.beforeFeature),
-            new TestEventLexer_1.AfterFeatureLexer(dictionary.afterFeature),
-            new TestEventLexer_1.BeforeEachScenarioLexer(dictionary.beforeEachScenario),
-            new TestEventLexer_1.AfterEachScenarioLexer(dictionary.afterEachScenario),
-            new TextLexer_1.TextLexer() // captures any non-empty
+            new TableLexer(dictionary.table),
+            new TableRowLexer(),
+            new UIElementLexer(dictionary.uiElement),
+            new UIPropertyLexer(),
+            new DatabaseLexer(dictionary.database),
+            new DatabasePropertyLexer(),
+            new BeforeAllLexer(dictionary.beforeAll),
+            new AfterAllLexer(dictionary.afterAll),
+            new BeforeFeatureLexer(dictionary.beforeFeature),
+            new AfterFeatureLexer(dictionary.afterFeature),
+            new BeforeEachScenarioLexer(dictionary.beforeEachScenario),
+            new AfterEachScenarioLexer(dictionary.afterEachScenario),
+            new TextLexer() // captures any non-empty
         ];
         // Building the map
         for (let lex of this._lexers) {
@@ -157,7 +154,7 @@ class Lexer {
         result.errors = [];
         result.warnings = [];
         for (let node of result.nodes) {
-            node.nodeType = NodeTypes_1.NodeTypes.TEXT;
+            node.nodeType = NodeTypes.TEXT;
         }
     }
     /**
@@ -179,7 +176,7 @@ class Lexer {
             const suggestedNodeTypes = this._lastLexer.suggestedNextNodeTypes();
             for (let nodeType of suggestedNodeTypes) {
                 // Ignores text
-                if (NodeTypes_1.NodeTypes.TEXT === nodeType) {
+                if (NodeTypes.TEXT === nodeType) {
                     continue; // next lexer
                 }
                 let lexer = this._lexersMap.get(nodeType);
@@ -213,7 +210,7 @@ class Lexer {
     }
     dealWithResult(result) {
         // Whether a Long String node was detected, indicates it.
-        if (result.nodes.length > 0 && NodeTypes_1.NodeTypes.LONG_STRING === result.nodes[0].nodeType) {
+        if (result.nodes.length > 0 && NodeTypes.LONG_STRING === result.nodes[0].nodeType) {
             this.longStringDetected();
             // Else whether recognition is disabled, change node type to TEXT
         }
@@ -221,7 +218,7 @@ class Lexer {
             this.changeResultToRecognizedAsText(result);
         }
         // Detects a language node and tries to change the language
-        if (result.nodes.length > 0 && NodeTypes_1.NodeTypes.LANGUAGE === result.nodes[0].nodeType) {
+        if (result.nodes.length > 0 && NodeTypes.LANGUAGE === result.nodes[0].nodeType) {
             let language = result.nodes[0].value;
             if (language != this._defaultLanguage) { // needs to change ?
                 try {
@@ -276,11 +273,9 @@ class Lexer {
      * Loads a dictionary
      *
      * @param language Language
-     * @throws Error
      */
     loadDictionary(language) {
-        const content = this._languageContentLoader.load(language); // may throw Error
-        return content ? content.keywords : null;
+        return this._languageMap[language]?.keywords;
     }
     isAWordBasedLexer(obj) {
         return obj.updateWords !== undefined;
@@ -293,4 +288,3 @@ class Lexer {
         }
     }
 }
-exports.Lexer = Lexer;

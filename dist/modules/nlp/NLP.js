@@ -1,56 +1,53 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.NLP = void 0;
-const core_1 = require("@js-joda/core");
-const Bravey = require("../../lib/bravey");
-const Entities_1 = require("../nlp/Entities");
-const EntityRecognizerMaker_1 = require("./EntityRecognizerMaker");
+import { Clock, Instant, ZoneId } from '@js-joda/core';
+import Bravey from '../../lib/bravey';
+import { Entities } from '../nlp/Entities';
+import { EntityRecognizerMaker } from './EntityRecognizerMaker';
 /**
  * Natural Language Processor
  *
  * @author Thiago Delgado Pinto
  */
-class NLP {
+export class NLP {
     constructor(_useFuzzyProcessor = true) {
         this._useFuzzyProcessor = _useFuzzyProcessor;
         this._nlpMap = {}; // Maps language => Bravey.NLP
         this._additionalEntities = [];
         this._additionalRecognizers = [];
-        const erMaker = new EntityRecognizerMaker_1.EntityRecognizerMaker();
+        const erMaker = new EntityRecognizerMaker();
         // Add an entity named "value" and its recognizer
-        this._additionalEntities.push(Entities_1.Entities.VALUE);
-        this._additionalRecognizers.push(erMaker.makeValue(Entities_1.Entities.VALUE));
+        this._additionalEntities.push(Entities.VALUE);
+        this._additionalRecognizers.push(erMaker.makeValue(Entities.VALUE));
         // Add an entity named "ui_element" and its recognizer
-        this._additionalEntities.push(Entities_1.Entities.UI_ELEMENT_REF);
-        this._additionalRecognizers.push(erMaker.makeUIElementReference(Entities_1.Entities.UI_ELEMENT_REF));
+        this._additionalEntities.push(Entities.UI_ELEMENT_REF);
+        this._additionalRecognizers.push(erMaker.makeUIElementReference(Entities.UI_ELEMENT_REF));
         // Add an entity named "ui_property_ref" and its recognizer
-        this._additionalEntities.push(Entities_1.Entities.UI_PROPERTY_REF);
-        this._additionalRecognizers.push(erMaker.makeUIPropertyReference(Entities_1.Entities.UI_PROPERTY_REF));
+        this._additionalEntities.push(Entities.UI_PROPERTY_REF);
+        this._additionalRecognizers.push(erMaker.makeUIPropertyReference(Entities.UI_PROPERTY_REF));
         // Add an entity named "ui_element_literal" and its recognizer
-        this._additionalEntities.push(Entities_1.Entities.UI_LITERAL);
-        this._additionalRecognizers.push(erMaker.makeUILiteral(Entities_1.Entities.UI_LITERAL));
+        this._additionalEntities.push(Entities.UI_LITERAL);
+        this._additionalRecognizers.push(erMaker.makeUILiteral(Entities.UI_LITERAL));
         // Add an entity named "number" and its recognizer
-        this._additionalEntities.push(Entities_1.Entities.NUMBER);
-        this._additionalRecognizers.push(erMaker.makeNumber(Entities_1.Entities.NUMBER));
+        this._additionalEntities.push(Entities.NUMBER);
+        this._additionalRecognizers.push(erMaker.makeNumber(Entities.NUMBER));
         // Add an entity named "query" and its recognizer
-        this._additionalEntities.push(Entities_1.Entities.QUERY);
-        this._additionalRecognizers.push(erMaker.makeQuery(Entities_1.Entities.QUERY));
+        this._additionalEntities.push(Entities.QUERY);
+        this._additionalRecognizers.push(erMaker.makeQuery(Entities.QUERY));
         // Add an entity named "constant" and its recognizer
-        this._additionalEntities.push(Entities_1.Entities.CONSTANT);
-        this._additionalRecognizers.push(erMaker.makeConstant(Entities_1.Entities.CONSTANT));
+        this._additionalEntities.push(Entities.CONSTANT);
+        this._additionalRecognizers.push(erMaker.makeConstant(Entities.CONSTANT));
         // Add an entity named "value_list" and its recognizer
-        this._additionalEntities.push(Entities_1.Entities.VALUE_LIST);
-        this._additionalRecognizers.push(erMaker.makeValueList(Entities_1.Entities.VALUE_LIST));
+        this._additionalEntities.push(Entities.VALUE_LIST);
+        this._additionalRecognizers.push(erMaker.makeValueList(Entities.VALUE_LIST));
         // Add an entity named "state" and its recognizer
-        this._additionalEntities.push(Entities_1.Entities.STATE);
-        this._additionalRecognizers.push(erMaker.makeState(Entities_1.Entities.STATE));
+        this._additionalEntities.push(Entities.STATE);
+        this._additionalRecognizers.push(erMaker.makeState(Entities.STATE));
         // Add an entity named "command" and its recognizer
-        this._additionalEntities.push(Entities_1.Entities.COMMAND);
-        this._additionalRecognizers.push(erMaker.makeCommand(Entities_1.Entities.COMMAND));
+        this._additionalEntities.push(Entities.COMMAND);
+        this._additionalRecognizers.push(erMaker.makeCommand(Entities.COMMAND));
         // Language-based entities
-        this._additionalEntities.push(Entities_1.Entities.DATE);
-        this._additionalEntities.push(Entities_1.Entities.TIME);
-        this._additionalEntities.push(Entities_1.Entities.DATE_TIME);
+        this._additionalEntities.push(Entities.DATE);
+        this._additionalEntities.push(Entities.TIME);
+        this._additionalEntities.push(Entities.DATE_TIME);
         // this._additionalEntities.push( Entities.TIME_PERIOD );
         // this._additionalEntities.push( Entities.YEAR_OF );
     }
@@ -98,10 +95,10 @@ class NLP {
         // Add default recognizers
         this.addDefaultRecognizersTo(nlp);
         // Add language-based recognizers
-        const erMaker = new EntityRecognizerMaker_1.EntityRecognizerMaker();
-        nlp.addEntity(erMaker.makeDate(language, Entities_1.Entities.DATE));
-        nlp.addEntity(erMaker.makeTime(language, Entities_1.Entities.TIME));
-        nlp.addEntity(erMaker.makeDateTime(language, Entities_1.Entities.DATE_TIME));
+        const erMaker = new EntityRecognizerMaker();
+        nlp.addEntity(erMaker.makeDate(language, Entities.DATE));
+        nlp.addEntity(erMaker.makeTime(language, Entities.TIME));
+        nlp.addEntity(erMaker.makeDateTime(language, Entities.DATE_TIME));
         // nlp.addEntity( erMaker.makeTimePeriod( language, Entities.TIME_PERIOD ) );
         // nlp.addEntity( erMaker.makeYearOf( language, Entities.YEAR_OF ) );
         // Train with examples that include the added entities
@@ -162,8 +159,8 @@ class NLP {
      * @param temporal A LocalTime or LocalDate for example
      */
     createFixedClockFromNow() {
-        return core_1.Clock.fixed(core_1.Instant.now(), // Instant.parse( "2018-08-19T16:02:42.00Z" ),
-        core_1.ZoneId.systemDefault());
+        return Clock.fixed(Instant.now(), // Instant.parse( "2018-08-19T16:02:42.00Z" ),
+        ZoneId.systemDefault());
     }
     // -------------------------------------------------------------------------
     createNLP() {
@@ -192,4 +189,3 @@ class NLP {
         }
     }
 }
-exports.NLP = NLP;

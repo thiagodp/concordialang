@@ -1,20 +1,13 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.valueOrNull = exports.isDefined = exports.isNumber = exports.isString = void 0;
-function isString(val) {
+export function isString(val) {
     return typeof val === 'string'
         || ((isDefined(val) && 'object' === typeof val) && '[object String]' === Object.prototype.toString.call(val));
 }
-exports.isString = isString;
-function isNumber(val) {
+export function isNumber(val) {
     return isDefined(val) && !isNaN(val);
 }
-exports.isNumber = isNumber;
-function isDefined(val) {
+export function isDefined(val) {
     return typeof val != 'undefined' && val !== null;
 }
-exports.isDefined = isDefined;
-function valueOrNull(val) {
+export function valueOrNull(val) {
     return isDefined(val) ? val : null;
 }
-exports.valueOrNull = valueOrNull;

@@ -15,6 +15,10 @@ export interface PluginListener {
 
     showMessagePackageFileNotFound( file: string ): void;
 
+    warnAboutOldPluginVersion(): void;
+
+    showPluginServeUndefined( name: string ): void;
+
     showPluginServeStart( name: string ): void;
 
     showCommandStarted( command: string ): void;

@@ -1,14 +1,11 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.DataTestCaseVsValueType = void 0;
-const ValueTypeDetector_1 = require("../util/ValueTypeDetector");
-const DataTestCase_1 = require("./DataTestCase");
+import { ValueType } from "../util/ValueTypeDetector";
+import { DataTestCaseGroup, DataTestCaseGroupDef } from "./DataTestCase";
 /**
  * Compatibility between data test cases and value types.
  *
  * @author Thiago Delgado Pinto
  */
-class DataTestCaseVsValueType {
+export class DataTestCaseVsValueType {
     constructor() {
         this._defs = [];
         this.addStringDefs();
@@ -30,55 +27,54 @@ class DataTestCaseVsValueType {
         return this._defs.filter(v => v.compatible && v.val === valueType).map(v => v.tc);
     }
     addStringDefs() {
-        const valueType = ValueTypeDetector_1.ValueType.STRING;
-        this.addForGroup(valueType, false, DataTestCase_1.DataTestCaseGroup.VALUE);
-        this.addForGroup(valueType, true, DataTestCase_1.DataTestCaseGroup.LENGTH);
-        this.addForGroup(valueType, true, DataTestCase_1.DataTestCaseGroup.FORMAT);
-        this.addForGroup(valueType, true, DataTestCase_1.DataTestCaseGroup.SET);
-        this.addForGroup(valueType, true, DataTestCase_1.DataTestCaseGroup.REQUIRED);
-        this.addForGroup(valueType, true, DataTestCase_1.DataTestCaseGroup.COMPUTATION);
+        const valueType = ValueType.STRING;
+        this.addForGroup(valueType, false, DataTestCaseGroup.VALUE);
+        this.addForGroup(valueType, true, DataTestCaseGroup.LENGTH);
+        this.addForGroup(valueType, true, DataTestCaseGroup.FORMAT);
+        this.addForGroup(valueType, true, DataTestCaseGroup.SET);
+        this.addForGroup(valueType, true, DataTestCaseGroup.REQUIRED);
+        this.addForGroup(valueType, true, DataTestCaseGroup.COMPUTATION);
     }
     addIntegerDefs() {
-        this.addValueDef(ValueTypeDetector_1.ValueType.INTEGER);
+        this.addValueDef(ValueType.INTEGER);
     }
     addDoubleDefs() {
-        this.addValueDef(ValueTypeDetector_1.ValueType.DOUBLE);
+        this.addValueDef(ValueType.DOUBLE);
     }
     addDateDefs() {
-        this.addValueDef(ValueTypeDetector_1.ValueType.DATE);
+        this.addValueDef(ValueType.DATE);
     }
     addTimeDefs() {
-        this.addValueDef(ValueTypeDetector_1.ValueType.TIME);
+        this.addValueDef(ValueType.TIME);
     }
     addDateTimeDefs() {
-        this.addValueDef(ValueTypeDetector_1.ValueType.DATE_TIME);
+        this.addValueDef(ValueType.DATE_TIME);
     }
     addBooleanDefs() {
-        const valueType = ValueTypeDetector_1.ValueType.BOOLEAN;
-        this.addForGroup(valueType, false, DataTestCase_1.DataTestCaseGroup.VALUE);
-        this.addForGroup(valueType, false, DataTestCase_1.DataTestCaseGroup.LENGTH);
-        this.addForGroup(valueType, false, DataTestCase_1.DataTestCaseGroup.FORMAT);
-        this.addForGroup(valueType, false, DataTestCase_1.DataTestCaseGroup.SET);
-        this.addForGroup(valueType, true, DataTestCase_1.DataTestCaseGroup.REQUIRED);
-        this.addForGroup(valueType, true, DataTestCase_1.DataTestCaseGroup.COMPUTATION);
+        const valueType = ValueType.BOOLEAN;
+        this.addForGroup(valueType, false, DataTestCaseGroup.VALUE);
+        this.addForGroup(valueType, false, DataTestCaseGroup.LENGTH);
+        this.addForGroup(valueType, false, DataTestCaseGroup.FORMAT);
+        this.addForGroup(valueType, false, DataTestCaseGroup.SET);
+        this.addForGroup(valueType, true, DataTestCaseGroup.REQUIRED);
+        this.addForGroup(valueType, true, DataTestCaseGroup.COMPUTATION);
     }
     addValueDef(valueType) {
-        this.addForGroup(valueType, true, DataTestCase_1.DataTestCaseGroup.VALUE);
-        this.addForGroup(valueType, false, DataTestCase_1.DataTestCaseGroup.LENGTH);
-        this.addForGroup(valueType, true, DataTestCase_1.DataTestCaseGroup.FORMAT);
-        this.addForGroup(valueType, true, DataTestCase_1.DataTestCaseGroup.SET);
-        this.addForGroup(valueType, true, DataTestCase_1.DataTestCaseGroup.REQUIRED);
-        this.addForGroup(valueType, true, DataTestCase_1.DataTestCaseGroup.COMPUTATION);
+        this.addForGroup(valueType, true, DataTestCaseGroup.VALUE);
+        this.addForGroup(valueType, false, DataTestCaseGroup.LENGTH);
+        this.addForGroup(valueType, true, DataTestCaseGroup.FORMAT);
+        this.addForGroup(valueType, true, DataTestCaseGroup.SET);
+        this.addForGroup(valueType, true, DataTestCaseGroup.REQUIRED);
+        this.addForGroup(valueType, true, DataTestCaseGroup.COMPUTATION);
     }
     with(valueType, compatible, tc) {
         return { val: valueType, compatible: compatible, tc: tc };
     }
     addForGroup(valueType, compatible, group) {
-        const groupsDef = new DataTestCase_1.DataTestCaseGroupDef();
+        const groupsDef = new DataTestCaseGroupDef();
         const testcases = groupsDef.ofGroup(group);
         for (let tc of testcases) {
             this._defs.push(this.with(valueType, compatible, tc));
         }
     }
 }
-exports.DataTestCaseVsValueType = DataTestCaseVsValueType;

@@ -1,14 +1,10 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.Symbols = void 0;
 /**
  * Language symbols.
  *
  * @author Thiago Delgado Pinto
  */
-class Symbols {
+export class Symbols {
 }
-exports.Symbols = Symbols;
 // prefixes
 Symbols.COMMENT_PREFIX = '#';
 Symbols.IMPORT_PREFIX = '"';

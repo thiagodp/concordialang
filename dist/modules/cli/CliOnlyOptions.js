@@ -1,14 +1,10 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.hasSomePluginAction = void 0;
-function hasSomePluginAction(o) {
+export function hasSomePluginAction(o) {
     return o.pluginList
         || !!o.pluginAbout
         || !!o.pluginInstall
         || !!o.pluginUninstall
         || !!o.pluginServe;
 }
-exports.hasSomePluginAction = hasSomePluginAction;
 // /**
 //  * CLI options
 //  */

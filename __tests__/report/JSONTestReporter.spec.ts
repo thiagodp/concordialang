@@ -13,37 +13,34 @@ describe( 'JSONTestReporter', () => {
 
     describe( 'makeFilename', () => {
 
+        const tr = new JSONTestReporter( fileWriter );
+
         it( 'empty options', () => {
-            const tr = new JSONTestReporter( fileWriter, path );
             const file = tr.makeFilename();
             expect( file ).toEqual( DEFAULT_FILENAME + tr.fileExtension() );
         } );
 
         it( 'with file', () => {
-            const tr = new JSONTestReporter( fileWriter, path );
             const file = tr.makeFilename( { file: 'hello' } );
             expect( file ).toEqual( 'hello' + tr.fileExtension() );
         } );
 
         it( 'with dir', () => {
-            const tr = new JSONTestReporter( fileWriter, path );
             const file = tr.makeFilename( { directory: '/foo/bar', file: 'hello' } );
             const toUnixFile = toUnixPath( file );
             expect( toUnixFile ).toEqual( '/foo/bar/hello' + tr.fileExtension() );
         } );
 
         it( 'with dir and file', () => {
-            const tr = new JSONTestReporter( fileWriter, path );
             const file = tr.makeFilename( { directory: '/foo/bar', file: 'hello' } );
             const toUnixFile = toUnixPath( file );
             expect( toUnixFile ).toEqual( '/foo/bar/hello' + tr.fileExtension() );
         } );
 
         it( 'with dir, file and timestamp', () => {
-            const tr = new JSONTestReporter( fileWriter, path );
             const file = tr.makeFilename( { directory: '/foo/bar', file: 'hello', useTimestamp: true } );
             const toUnixFile = toUnixPath( file );
-            expect( toUnixFile ).toMatch( /^\/foo\/bar\/hello\-[0-9]{4}-[0-9]{2}-[0-9]{2}_[0-9]{2}-[0-9]{2}-[0-9]{2}\.json$/ );
+            expect( toUnixFile ).toMatch( /^\/foo\/bar\/hello\-[0-9]{4}-[0-9]{2}-[0-9]{2}_[0-9]{2}-[0-9]{2}-[0-9]{2}\..+$/ );
         } );
 
     } );

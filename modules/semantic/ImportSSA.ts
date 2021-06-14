@@ -1,6 +1,7 @@
-import Graph = require('graph.js/dist/graph.full.js');
 import { Location } from 'concordialang-types';
+import Graph from 'graph.js/dist/graph.full.js';
 import { basename } from 'path';
+
 import { Document } from '../ast/Document';
 import { ProblemMapper, SemanticException } from '../error';
 import { AugmentedSpec } from '../req/AugmentedSpec';

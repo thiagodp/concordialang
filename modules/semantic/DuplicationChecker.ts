@@ -1,6 +1,6 @@
 // TO-DO: remove the following dependencies:
-import * as colors from 'chalk';
-import * as logSymbols from 'log-symbols';
+import colors from 'chalk';
+import logSymbols from 'log-symbols';
 // --
 import { Location } from "concordialang-types";
 import { NamedNode } from "../ast/Node";

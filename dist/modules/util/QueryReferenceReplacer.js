@@ -1,14 +1,11 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.QueryReferenceReplacer = void 0;
-const sqlstring_1 = require("sqlstring");
-const QueryParser_1 = require("../db/QueryParser");
+import { escape } from 'sqlstring';
+import { QueryParser } from '../db/QueryParser';
 /**
  * Query reference replacer
  *
  * @author Thiago Delgado Pinto
  */
-class QueryReferenceReplacer {
+export class QueryReferenceReplacer {
     replaceConstantInQuery(query, variable, value) {
         const regex = this.makeNameRegex(variable);
         return query.replace(regex, this.wrapValue(value));
@@ -32,13 +29,13 @@ class QueryReferenceReplacer {
         return query.replace(regex, internalName);
     }
     wrapValue(content) {
-        return sqlstring_1.escape(content);
+        return escape(content);
     }
     // private wrapName( content: string ): string {
     //     return escapeId( content );
     // }
     makeVarRegex(name) {
-        return (new QueryParser_1.QueryParser()).makeVariableRegex(name);
+        return (new QueryParser()).makeVariableRegex(name);
     }
     /**
      * Make a regex for a Concordia name: constant, table or database.
@@ -47,7 +44,6 @@ class QueryReferenceReplacer {
      * @param replaceDot Whether is desired to replace dot. Optional. Default is false.
      */
     makeNameRegex(name, replaceDot = false) {
-        return (new QueryParser_1.QueryParser()).makeNameRegex(name, replaceDot);
+        return (new QueryParser()).makeNameRegex(name, replaceDot);
     }
 }
-exports.QueryReferenceReplacer = QueryReferenceReplacer;

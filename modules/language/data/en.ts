@@ -1,7 +1,65 @@
-{
-    "keywords": null,
+import { KeywordDictionary } from '../KeywordDictionary';
+import { LanguageDictionary } from '../LanguageDictionary';
+
+export const englishKeywords: KeywordDictionary = {
+
+    // Not available in Gherkin
+
+    import: [ 'import' ],
+    regexBlock: [ 'regexes', 'regular expressions' ],
+    constantBlock: [ 'constants' ],
+    variant: [ 'variant' ],
+    variantBackground: [ 'variant background' ],
+    testCase: [ 'test case' ],
+    uiElement: [ 'ui element', 'user interface element' ],
+    database: [ 'database' ],
+
+    beforeAll: [ 'before all' ],
+    afterAll: [ 'after all' ],
+    beforeFeature: [ 'before feature' ],
+    afterFeature: [ 'after feature' ],
+    beforeEachScenario: [ 'before each scenario' ],
+    afterEachScenario: [ 'after each scenario' ],
+
+    i: [ 'I' ],
+    is: [ 'is' ],
+    with: [ 'with' ],
+    valid: [ 'valid' ],
+    invalid: [ 'invalid' ],
+    random: [ 'random' ],
+    from: [ 'from' ],
+
+    tagGlobal: [ 'global' ],
+    tagFeature: [ 'feature' ],
+    tagScenario: [ 'scenario' ],
+    tagVariant: [ 'variant' ],
+    tagImportance: [ 'importance' ],
+    tagIgnore: [ 'ignore' ],
+    tagGenerated: [ 'generated' ],
+    tagFail: [ 'fail' ],
+    tagGenerateOnlyValidValues: [ 'generate-only-valid-values' ],
+
+    // Also available in Gherkin
+
+    language: [ 'language' ],
+
+    feature: [ 'feature', 'story', 'user story' ],
+    background: [ 'background' ],
+    scenario: [ 'scenario' ],
+
+    stepGiven: [ 'given that', 'given' ],
+    stepWhen: [ 'when' ],
+    stepThen: [ 'then' ],
+    stepAnd: [ 'and', 'but' ],
+    stepOtherwise: [ 'otherwise', 'when invalid', 'if invalid', 'whether invalid' ], // not in Gherkin
+
+    table: [ 'table' ],
+};
 
 
+const englishDictionary: LanguageDictionary = {
+
+    "keywords": englishKeywords,
 
     "testCaseNames": {
 
@@ -314,4 +372,6 @@
 
     ]
 
-}
+};
+
+export default englishDictionary;

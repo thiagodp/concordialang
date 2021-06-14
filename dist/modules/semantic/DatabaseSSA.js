@@ -1,17 +1,5 @@
-"use strict";
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.DatabaseSSA = void 0;
-const DatabaseConnectionChecker_1 = require("../db/DatabaseConnectionChecker");
-const SpecificationAnalyzer_1 = require("./SpecificationAnalyzer");
+import { DatabaseConnectionChecker } from '../db/DatabaseConnectionChecker';
+import { SpecificationAnalyzer } from './SpecificationAnalyzer';
 /**
  * Analyzes Databases in a specification.
  *
@@ -21,26 +9,21 @@ const SpecificationAnalyzer_1 = require("./SpecificationAnalyzer");
  *
  * @author Thiago Delgado Pinto
  */
-class DatabaseSSA extends SpecificationAnalyzer_1.SpecificationAnalyzer {
+export class DatabaseSSA extends SpecificationAnalyzer {
     /** @inheritDoc */
-    analyze(problems, spec, graph) {
-        return __awaiter(this, void 0, void 0, function* () {
-            let errors = [];
-            this._checker.checkDuplicatedNamedNodes(spec.databases(), errors, 'database');
-            const ok1 = 0 === errors.length;
-            if (!ok1) {
-                problems.addGenericError(...errors);
-            }
-            const ok2 = yield this.checkConnections(problems, spec);
-            return ok1 && ok2;
-        });
+    async analyze(problems, spec, graph) {
+        let errors = [];
+        this._checker.checkDuplicatedNamedNodes(spec.databases(), errors, 'database');
+        const ok1 = 0 === errors.length;
+        if (!ok1) {
+            problems.addGenericError(...errors);
+        }
+        const ok2 = await this.checkConnections(problems, spec);
+        return ok1 && ok2;
     }
-    checkConnections(problems, spec) {
-        return __awaiter(this, void 0, void 0, function* () {
-            let checker = new DatabaseConnectionChecker_1.DatabaseConnectionChecker();
-            let r = yield checker.check(spec, problems);
-            return r ? r.success : false;
-        });
+    async checkConnections(problems, spec) {
+        let checker = new DatabaseConnectionChecker();
+        let r = await checker.check(spec, problems);
+        return r ? r.success : false;
     }
 }
-exports.DatabaseSSA = DatabaseSSA;

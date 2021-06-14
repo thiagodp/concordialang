@@ -1,8 +1,5 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.ACTION_TARGET_MAP = void 0;
-const Actions_1 = require("./Actions");
-const ActionTargets_1 = require("./ActionTargets");
+import { Actions } from "./Actions";
+import { ActionTargets } from "./ActionTargets";
 /**
  * Maps an action to its default target. This is useful in cases in which
  * a UI Element is not defined, but just a UI Literal, and the UI Element type
@@ -10,46 +7,46 @@ const ActionTargets_1 = require("./ActionTargets");
  *
  * @author Thiago Delgado Pinto
  */
-exports.ACTION_TARGET_MAP = new Map([
-    [Actions_1.Actions.ACCEPT, ActionTargets_1.ActionTargets.NONE],
-    [Actions_1.Actions.AM_ON, ActionTargets_1.ActionTargets.URL],
-    [Actions_1.Actions.APPEND, ActionTargets_1.ActionTargets.LISTBOX],
-    [Actions_1.Actions.ATTACH_FILE, ActionTargets_1.ActionTargets.DIV],
-    [Actions_1.Actions.CANCEL, ActionTargets_1.ActionTargets.NONE],
-    [Actions_1.Actions.CHECK, ActionTargets_1.ActionTargets.CHECKBOX],
-    [Actions_1.Actions.CLEAR, ActionTargets_1.ActionTargets.TEXTBOX],
-    [Actions_1.Actions.CLICK, ActionTargets_1.ActionTargets.BUTTON],
-    [Actions_1.Actions.CLOSE, ActionTargets_1.ActionTargets.WINDOW],
-    [Actions_1.Actions.CONNECT, ActionTargets_1.ActionTargets.DATABASE],
-    [Actions_1.Actions.DISCONNECT, ActionTargets_1.ActionTargets.DATABASE],
-    [Actions_1.Actions.DOUBLE_CLICK, ActionTargets_1.ActionTargets.IMAGE],
-    [Actions_1.Actions.DRAG, ActionTargets_1.ActionTargets.IMAGE],
-    [Actions_1.Actions.FILL, ActionTargets_1.ActionTargets.TEXTBOX],
-    [Actions_1.Actions.HIDE, ActionTargets_1.ActionTargets.TEXTBOX],
-    [Actions_1.Actions.INSTALL, ActionTargets_1.ActionTargets.NONE],
-    [Actions_1.Actions.MAXIMIZE, ActionTargets_1.ActionTargets.WINDOW],
-    [Actions_1.Actions.MOVE, ActionTargets_1.ActionTargets.CURSOR],
-    [Actions_1.Actions.MOUSE_OUT, ActionTargets_1.ActionTargets.CURSOR],
-    [Actions_1.Actions.MOUSE_OVER, ActionTargets_1.ActionTargets.CURSOR],
-    [Actions_1.Actions.OPEN, ActionTargets_1.ActionTargets.URL],
-    [Actions_1.Actions.PRESS, ActionTargets_1.ActionTargets.KEY],
-    [Actions_1.Actions.PULL, ActionTargets_1.ActionTargets.TEXT],
-    [Actions_1.Actions.REFRESH, ActionTargets_1.ActionTargets.CURRENT_PAGE],
-    [Actions_1.Actions.REMOVE, ActionTargets_1.ActionTargets.TEXT],
-    [Actions_1.Actions.RESIZE, ActionTargets_1.ActionTargets.WINDOW],
-    [Actions_1.Actions.RIGHT_CLICK, ActionTargets_1.ActionTargets.IMAGE],
-    [Actions_1.Actions.ROTATE, ActionTargets_1.ActionTargets.TEXT],
-    [Actions_1.Actions.RUN, ActionTargets_1.ActionTargets.NONE],
-    [Actions_1.Actions.SAVE_SCREENSHOT, ActionTargets_1.ActionTargets.NONE],
-    [Actions_1.Actions.SCROLL_TO, ActionTargets_1.ActionTargets.CURRENT_PAGE],
-    [Actions_1.Actions.SEE, ActionTargets_1.ActionTargets.TEXT],
-    [Actions_1.Actions.SELECT, ActionTargets_1.ActionTargets.SELECT],
-    [Actions_1.Actions.SHAKE, ActionTargets_1.ActionTargets.NONE],
+export const ACTION_TARGET_MAP = new Map([
+    [Actions.ACCEPT, ActionTargets.NONE],
+    [Actions.AM_ON, ActionTargets.URL],
+    [Actions.APPEND, ActionTargets.LISTBOX],
+    [Actions.ATTACH_FILE, ActionTargets.DIV],
+    [Actions.CANCEL, ActionTargets.NONE],
+    [Actions.CHECK, ActionTargets.CHECKBOX],
+    [Actions.CLEAR, ActionTargets.TEXTBOX],
+    [Actions.CLICK, ActionTargets.BUTTON],
+    [Actions.CLOSE, ActionTargets.WINDOW],
+    [Actions.CONNECT, ActionTargets.DATABASE],
+    [Actions.DISCONNECT, ActionTargets.DATABASE],
+    [Actions.DOUBLE_CLICK, ActionTargets.IMAGE],
+    [Actions.DRAG, ActionTargets.IMAGE],
+    [Actions.FILL, ActionTargets.TEXTBOX],
+    [Actions.HIDE, ActionTargets.TEXTBOX],
+    [Actions.INSTALL, ActionTargets.NONE],
+    [Actions.MAXIMIZE, ActionTargets.WINDOW],
+    [Actions.MOVE, ActionTargets.CURSOR],
+    [Actions.MOUSE_OUT, ActionTargets.CURSOR],
+    [Actions.MOUSE_OVER, ActionTargets.CURSOR],
+    [Actions.OPEN, ActionTargets.URL],
+    [Actions.PRESS, ActionTargets.KEY],
+    [Actions.PULL, ActionTargets.TEXT],
+    [Actions.REFRESH, ActionTargets.CURRENT_PAGE],
+    [Actions.REMOVE, ActionTargets.TEXT],
+    [Actions.RESIZE, ActionTargets.WINDOW],
+    [Actions.RIGHT_CLICK, ActionTargets.IMAGE],
+    [Actions.ROTATE, ActionTargets.TEXT],
+    [Actions.RUN, ActionTargets.NONE],
+    [Actions.SAVE_SCREENSHOT, ActionTargets.NONE],
+    [Actions.SCROLL_TO, ActionTargets.CURRENT_PAGE],
+    [Actions.SEE, ActionTargets.TEXT],
+    [Actions.SELECT, ActionTargets.SELECT],
+    [Actions.SHAKE, ActionTargets.NONE],
     // [ Actions.SHOW            , ActionTargets.WINDOW       ],
-    [Actions_1.Actions.SWIPE, ActionTargets_1.ActionTargets.SCREEN],
-    [Actions_1.Actions.SWITCH, ActionTargets_1.ActionTargets.FRAME],
-    [Actions_1.Actions.TAP, ActionTargets_1.ActionTargets.BUTTON],
-    [Actions_1.Actions.UNCHECK, ActionTargets_1.ActionTargets.CHECKBOX],
-    [Actions_1.Actions.UNINSTALL, ActionTargets_1.ActionTargets.NONE],
-    [Actions_1.Actions.WAIT, ActionTargets_1.ActionTargets.TEXT]
+    [Actions.SWIPE, ActionTargets.SCREEN],
+    [Actions.SWITCH, ActionTargets.FRAME],
+    [Actions.TAP, ActionTargets.BUTTON],
+    [Actions.UNCHECK, ActionTargets.CHECKBOX],
+    [Actions.UNINSTALL, ActionTargets.NONE],
+    [Actions.WAIT, ActionTargets.TEXT]
 ]);

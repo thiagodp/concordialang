@@ -1,17 +1,14 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.RegexBlockParser = void 0;
-const SyntacticException_1 = require("./SyntacticException");
+import { SyntacticException } from "./SyntacticException";
 /**
  * Regex block parser
  *
  * @author Thiago Delgado Pinto
  */
-class RegexBlockParser {
+export class RegexBlockParser {
     /** @inheritDoc */
     analyze(node, context, it, errors) {
         if (context.doc.regexBlock) {
-            let e = new SyntacticException_1.SyntacticException('Just one regex block declaration is allowed.', node.location);
+            let e = new SyntacticException('Just one regex block declaration is allowed.', node.location);
             errors.push(e);
             return false;
         }
@@ -24,4 +21,3 @@ class RegexBlockParser {
         return true;
     }
 }
-exports.RegexBlockParser = RegexBlockParser;

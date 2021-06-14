@@ -1,12 +1,9 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.SyntaxRuleBuilder = void 0;
 /**
  * Rule Builder.
  *
  * @author Thiago Delgado Pinto
  */
-class SyntaxRuleBuilder {
+export class SyntaxRuleBuilder {
     /**
      * Creates an array of rules applying the default rule to each object,
      * and then applying the partial rule.
@@ -27,4 +24,3 @@ class SyntaxRuleBuilder {
         return rules;
     }
 }
-exports.SyntaxRuleBuilder = SyntaxRuleBuilder;

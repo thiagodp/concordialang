@@ -1,12 +1,9 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.TestScenario = void 0;
 /**
  * Test Scenario
  *
  * @author Thiago Delgado Pinto
  */
-class TestScenario {
+export class TestScenario {
     constructor() {
         /**
          * When the respective Feature or Variant has a tag `ignore`,
@@ -57,4 +54,3 @@ class TestScenario {
         // return ts;
     }
 }
-exports.TestScenario = TestScenario;

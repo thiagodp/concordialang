@@ -1,25 +1,22 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.TextLexer = void 0;
-const LineChecker_1 = require("../req/LineChecker");
-const NodeTypes_1 = require("../req/NodeTypes");
-const Symbols_1 = require("../req/Symbols");
+import { LineChecker } from "../req/LineChecker";
+import { NodeTypes } from '../req/NodeTypes';
+import { Symbols } from '../req/Symbols';
 /**
  * Detects anything not empty.
  *
  * @author Thiago Delgado Pinto
  */
-class TextLexer {
+export class TextLexer {
     constructor() {
-        this._lineChecker = new LineChecker_1.LineChecker();
+        this._lineChecker = new LineChecker();
     }
     /** @inheritDoc */
     nodeType() {
-        return NodeTypes_1.NodeTypes.TEXT;
+        return NodeTypes.TEXT;
     }
     /** @inheritDoc */
     suggestedNextNodeTypes() {
-        return [NodeTypes_1.NodeTypes.TEXT];
+        return [NodeTypes.TEXT];
     }
     /** @inheritDoc */
     analyze(line, lineNumber) {
@@ -29,17 +26,16 @@ class TextLexer {
             return null;
         }
         // Comment is not accepted
-        const commentPos = trimmedLine.indexOf(Symbols_1.Symbols.COMMENT_PREFIX);
+        const commentPos = trimmedLine.indexOf(Symbols.COMMENT_PREFIX);
         if (0 === commentPos) {
             return null;
         }
         const pos = this._lineChecker.countLeftSpacesAndTabs(line);
         let node = {
-            nodeType: NodeTypes_1.NodeTypes.TEXT,
+            nodeType: NodeTypes.TEXT,
             location: { line: lineNumber || 0, column: pos + 1 },
             content: line
         };
         return { nodes: [node], errors: [] };
     }
 }
-exports.TextLexer = TextLexer;

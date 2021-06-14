@@ -1,13 +1,10 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.NLPTrainingDataConversor = void 0;
-const NLPTrainingData_1 = require("./NLPTrainingData");
+import { NLPTrainingData, NLPTrainingEntity, NLPTrainingIntent, NLPTrainingMatch } from './NLPTrainingData';
 /**
  * Training data conversor.
  *
  * @author Thiago Delgado Pinto
  */
-class NLPTrainingDataConversor {
+export class NLPTrainingDataConversor {
     /**
      * Build training data from a translation map and training documents.
      *
@@ -29,14 +26,14 @@ class NLPTrainingDataConversor {
      * @param examples             Training examples.
      */
     convert(translationMap4NLP, examples) {
-        let data = new NLPTrainingData_1.NLPTrainingData();
+        let data = new NLPTrainingData();
         // i18n
         for (let intentName in translationMap4NLP) {
-            let intent = new NLPTrainingData_1.NLPTrainingIntent(intentName);
+            let intent = new NLPTrainingIntent(intentName);
             for (let entityName in translationMap4NLP[intentName]) {
-                let entity = new NLPTrainingData_1.NLPTrainingEntity(entityName);
+                let entity = new NLPTrainingEntity(entityName);
                 for (let matchName in translationMap4NLP[intentName][entityName]) {
-                    let match = new NLPTrainingData_1.NLPTrainingMatch(matchName);
+                    let match = new NLPTrainingMatch(matchName);
                     match.samples = translationMap4NLP[intentName][entityName][matchName];
                     // add the match to the entity
                     entity.matches.push(match);
@@ -52,4 +49,3 @@ class NLPTrainingDataConversor {
         return data;
     }
 }
-exports.NLPTrainingDataConversor = NLPTrainingDataConversor;

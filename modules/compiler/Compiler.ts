@@ -1,16 +1,17 @@
-import Graph = require( 'graph.js/dist/graph.full.js' );
-import { dirname, resolve } from "path";
-import { Document } from "../ast/Document";
+import Graph from 'graph.js/dist/graph.full.js';
+import { dirname, resolve } from 'path';
+
+import { Document } from '../ast/Document';
 import { ProblemMapper } from '../error';
 import { FileProblemMapper } from '../error/FileProblemMapper';
 import { RuntimeException } from '../error/RuntimeException';
 import { AugmentedSpec } from '../req/AugmentedSpec';
 import { BatchSpecificationAnalyzer } from '../semantic/BatchSpecificationAnalyzer';
-import { FileReader } from "../util/file/FileReader";
-import { toUnixPath } from "../util/file/path-transformer";
+import { FileReader } from '../util/file/FileReader';
+import { toUnixPath } from '../util/file/path-transformer';
 import { runAllWithoutThrow } from '../util/p-all';
 import { ImportBasedGraphBuilder } from './ImportBasedGraphBuilder';
-import { SingleFileCompiler } from "./SingleFileCompiler";
+import { SingleFileCompiler } from './SingleFileCompiler';
 
 enum FileStatus {
     PENDING = 0,

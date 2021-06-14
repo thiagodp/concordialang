@@ -1,31 +1,27 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.IndexOfEachStrategy = exports.SingleRandomOfEachStrategy = exports.ShuffledOneWiseStrategy = exports.OneWiseStrategy = exports.CartesianProductStrategy = void 0;
-const cartesian = require("cartesian");
-const oneWise = require("one-wise");
-const shuffleObjArrays = require("shuffle-obj-arrays");
-const Random_1 = require("../testdata/random/Random");
-const RandomLong_1 = require("../testdata/random/RandomLong");
+import cartesian from 'cartesian';
+import oneWise from 'one-wise';
+import shuffleObjArrays from 'shuffle-obj-arrays';
+import { Random } from '../testdata/random/Random';
+import { RandomLong } from '../testdata/random/RandomLong';
 /**
  * Performs a cartesian product of the elements.
  *
  * @author Thiago Delgado Pinto
  */
-class CartesianProductStrategy {
+export class CartesianProductStrategy {
     /** @inheritDoc */
     combine(map) {
         return cartesian(map);
     }
 }
-exports.CartesianProductStrategy = CartesianProductStrategy;
 /**
  * Performs a 1-wise combination of the elements.
  *
  * @author Thiago Delgado Pinto
  */
-class OneWiseStrategy {
+export class OneWiseStrategy {
     constructor(seed) {
-        this._random = new Random_1.Random(seed);
+        this._random = new Random(seed);
     }
     /** @inheritDoc */
     combine(map) {
@@ -33,15 +29,14 @@ class OneWiseStrategy {
         return oneWise(map, rng);
     }
 }
-exports.OneWiseStrategy = OneWiseStrategy;
 /**
  * Performs a shuffled 1-wise combination of the elements.
  *
  * @author Thiago Delgado Pinto
  */
-class ShuffledOneWiseStrategy {
+export class ShuffledOneWiseStrategy {
     constructor(seed) {
-        this._random = new Random_1.Random(seed);
+        this._random = new Random(seed);
     }
     /** @inheritDoc */
     combine(map) {
@@ -50,15 +45,14 @@ class ShuffledOneWiseStrategy {
         return oneWise(shuffleObjArrays(map, options), rng);
     }
 }
-exports.ShuffledOneWiseStrategy = ShuffledOneWiseStrategy;
 /**
  * Selects a single, random element from each.
  *
  * @author Thiago Delgado Pinto
  */
-class SingleRandomOfEachStrategy {
+export class SingleRandomOfEachStrategy {
     constructor(seed) {
-        this._randomLong = new RandomLong_1.RandomLong(new Random_1.Random(seed));
+        this._randomLong = new RandomLong(new Random(seed));
     }
     /** @inheritDoc */
     combine(map) {
@@ -74,7 +68,6 @@ class SingleRandomOfEachStrategy {
         return [obj];
     }
 }
-exports.SingleRandomOfEachStrategy = SingleRandomOfEachStrategy;
 /**
  * Selects the given index of each element.
  *
@@ -84,7 +77,7 @@ exports.SingleRandomOfEachStrategy = SingleRandomOfEachStrategy;
  *
  * @author Thiago Delgado Pinto
  */
-class IndexOfEachStrategy {
+export class IndexOfEachStrategy {
     constructor(_index) {
         this._index = _index;
     }
@@ -102,4 +95,3 @@ class IndexOfEachStrategy {
         return [obj];
     }
 }
-exports.IndexOfEachStrategy = IndexOfEachStrategy;

@@ -1,7 +1,4 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.InvertedLogicListBasedDataGenerator = void 0;
-class InvertedLogicListBasedDataGenerator {
+export class InvertedLogicListBasedDataGenerator {
     /**
      * Constructor
      *
@@ -30,4 +27,3 @@ class InvertedLogicListBasedDataGenerator {
         return this._gen.randomElement();
     }
 }
-exports.InvertedLogicListBasedDataGenerator = InvertedLogicListBasedDataGenerator;

@@ -1,6 +1,3 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.DatabasePropertyAlias = exports.DatabaseProperties = void 0;
 /**
  * Database properties.
  *
@@ -9,7 +6,7 @@ exports.DatabasePropertyAlias = exports.DatabaseProperties = void 0;
  *
  * @author Thiago Delgado Pinto
  */
-var DatabaseProperties;
+export var DatabaseProperties;
 (function (DatabaseProperties) {
     DatabaseProperties["TYPE"] = "type";
     DatabaseProperties["PATH"] = "path";
@@ -19,8 +16,8 @@ var DatabaseProperties;
     DatabaseProperties["PASSWORD"] = "password";
     DatabaseProperties["CHARSET"] = "charset";
     DatabaseProperties["OPTIONS"] = "options";
-})(DatabaseProperties = exports.DatabaseProperties || (exports.DatabaseProperties = {}));
-var DatabasePropertyAlias;
+})(DatabaseProperties || (DatabaseProperties = {}));
+export var DatabasePropertyAlias;
 (function (DatabasePropertyAlias) {
     DatabasePropertyAlias["NAME"] = "name"; // alias for "path"
-})(DatabasePropertyAlias = exports.DatabasePropertyAlias || (exports.DatabasePropertyAlias = {}));
+})(DatabasePropertyAlias || (DatabasePropertyAlias = {}));

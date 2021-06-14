@@ -1,6 +1,3 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.Entities = void 0;
 /**
  * Entities for NLP
  *
@@ -8,7 +5,7 @@ exports.Entities = void 0;
  *
  * @see Intents
  */
-var Entities;
+export var Entities;
 (function (Entities) {
     //
     // REMEMBER: On update any of these values, update SyntaxRules and .json files as well.
@@ -44,4 +41,4 @@ var Entities;
     Entities["BOOL_VALUE"] = "bool_value";
     // from the intent "database"
     Entities["DB_PROPERTY"] = "db_property"; //                      e.g.: host, port, ...
-})(Entities = exports.Entities || (exports.Entities = {}));
+})(Entities || (Entities = {}));

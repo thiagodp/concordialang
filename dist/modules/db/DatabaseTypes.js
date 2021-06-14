@@ -1,13 +1,10 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.supportTablesInQueries = exports.stringToDatabaseTypeString = exports.isPathBasedDatabaseType = exports.DatabaseType = void 0;
-const enum_util_1 = require("enum-util");
+import { isValue } from "enum-util";
 /**
  * Currently supported database types, through `database-js`.
  *
  * @see https://github.com/mlaanderson/database-js
  */
-var DatabaseType;
+export var DatabaseType;
 (function (DatabaseType) {
     DatabaseType["MYSQL"] = "mysql";
     DatabaseType["POSTGRESQL"] = "postgres";
@@ -19,8 +16,8 @@ var DatabaseType;
     DatabaseType["CSV"] = "csv";
     DatabaseType["JSON"] = "json";
     DatabaseType["MSSQL"] = "mssql";
-})(DatabaseType = exports.DatabaseType || (exports.DatabaseType = {}));
-function isPathBasedDatabaseType(dbType) {
+})(DatabaseType || (DatabaseType = {}));
+export function isPathBasedDatabaseType(dbType) {
     return [
         DatabaseType.SQLITE.toString(),
         DatabaseType.ADO.toString(),
@@ -30,14 +27,13 @@ function isPathBasedDatabaseType(dbType) {
         DatabaseType.JSON.toString()
     ].indexOf(stringToDatabaseTypeString(dbType)) >= 0;
 }
-exports.isPathBasedDatabaseType = isPathBasedDatabaseType;
-function stringToDatabaseTypeString(dbType) {
+export function stringToDatabaseTypeString(dbType) {
     if (!dbType) {
         return 'unknown';
     }
     const lowerCasedType = dbType.toLowerCase();
     // Check DatabaseType
-    if (enum_util_1.isValue(DatabaseType, lowerCasedType)) {
+    if (isValue(DatabaseType, lowerCasedType)) {
         return lowerCasedType;
     }
     // Check similar values
@@ -50,17 +46,15 @@ function stringToDatabaseTypeString(dbType) {
         default: return 'unknown';
     }
 }
-exports.stringToDatabaseTypeString = stringToDatabaseTypeString;
 /**
  * Returns true whether the database supports table or collections in queries.
  *
  * @param dbType Database type
  */
-function supportTablesInQueries(dbType) {
+export function supportTablesInQueries(dbType) {
     // The following DOES NOT SUPPORT the concept of tables or collections
     return [
         DatabaseType.CSV.toString(),
         DatabaseType.JSON.toString()
     ].indexOf(stringToDatabaseTypeString(dbType)) < 0;
 }
-exports.supportTablesInQueries = supportTablesInQueries;

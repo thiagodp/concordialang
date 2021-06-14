@@ -1,7 +1,4 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.extractNumberFromSuffixedMatch = exports.suffixedRegex = exports.extractNumberFromPrefixedMatch = exports.prefixedRegex = exports.extractPrefixedDDE = exports.makeSuffixedDDE = exports.makePrefixedDDE = exports.datePropertyToDate = exports.propertyByMatch = exports.joinExpressions = exports.expressionsOf = void 0;
-const core_1 = require("@js-joda/core");
+import { LocalDate } from "@js-joda/core";
 const PT = {
     "date": {
         "lastYear": "ano passado|ano anterior",
@@ -70,19 +67,17 @@ const DATE_TIME_EXPRESSIONS = {
     "pt": PT,
     "en": EN
 };
-function expressionsOf(language) {
+export function expressionsOf(language) {
     return DATE_TIME_EXPRESSIONS[language] || DATE_TIME_EXPRESSIONS['en'];
 }
-exports.expressionsOf = expressionsOf;
-function joinExpressions(expressions) {
+export function joinExpressions(expressions) {
     let exp = [];
     for (const prop in expressions) {
         exp.push(expressions[prop]);
     }
     return exp.join('|');
 }
-exports.joinExpressions = joinExpressions;
-function propertyByMatch(match, expressions) {
+export function propertyByMatch(match, expressions) {
     for (const prop in expressions) {
         const ok = expressions[prop].split('|')
             .find((value) => value == match);
@@ -92,9 +87,8 @@ function propertyByMatch(match, expressions) {
     }
     return null;
 }
-exports.propertyByMatch = propertyByMatch;
-function datePropertyToDate(property) {
-    let date = core_1.LocalDate.now();
+export function datePropertyToDate(property) {
+    let date = LocalDate.now();
     switch (property) {
         case "lastYear": return date.minusYears(1);
         case "lastSemester": return date.minusMonths(6);
@@ -112,7 +106,6 @@ function datePropertyToDate(property) {
     }
     return date;
 }
-exports.datePropertyToDate = datePropertyToDate;
 const EN_DYNAMIC_DATE = {
     "pastPrefix": "last",
     "pastSuffix": "ago|in the past",
@@ -135,40 +128,33 @@ const PT_DYNAMIC_DATE = {
     "pastSuffix": "atr[áa]s",
     "futureSuffix": "[àa] frente|adiante"
 };
-function makePrefixedDDE(dde, prefix, period) {
+export function makePrefixedDDE(dde, prefix, period) {
     return `(${dde[prefix]})([0-9]+)(?: )+(${dde[period]})`;
     // groups:    0            1      2          3
 }
-exports.makePrefixedDDE = makePrefixedDDE;
-function makeSuffixedDDE(dde, suffix, period) {
+export function makeSuffixedDDE(dde, suffix, period) {
     return `([0-9]+)(?: )+(${dde[period]})(?: )*(${dde[suffix]})`;
     // groups:  0     1       2            3          4
 }
-exports.makeSuffixedDDE = makeSuffixedDDE;
-function extractPrefixedDDE(match, past) {
+export function extractPrefixedDDE(match, past) {
     const [, number, , period] = match;
     switch (period) {
     }
     return null;
 }
-exports.extractPrefixedDDE = extractPrefixedDDE;
-function prefixedRegex(prefix, periodValue) {
+export function prefixedRegex(prefix, periodValue) {
     return new RegExp(`(${prefix})(?: )+([0-9]+)(?: )+(${periodValue})`, 'i');
     // groups:               0       1      2      3          4
 }
-exports.prefixedRegex = prefixedRegex;
-function extractNumberFromPrefixedMatch(match) {
+export function extractNumberFromPrefixedMatch(match) {
     const [, , number] = match;
     return Number(number);
 }
-exports.extractNumberFromPrefixedMatch = extractNumberFromPrefixedMatch;
-function suffixedRegex(suffix, periodValue) {
+export function suffixedRegex(suffix, periodValue) {
     return new RegExp(`([0-9]+)(?: )+(${periodValue})(?: )*(${suffix})`, 'i');
     // groups:             0      1         2           3         4
 }
-exports.suffixedRegex = suffixedRegex;
-function extractNumberFromSuffixedMatch(match) {
+export function extractNumberFromSuffixedMatch(match) {
     const [number] = match;
     return Number(number);
 }
-exports.extractNumberFromSuffixedMatch = extractNumberFromSuffixedMatch;

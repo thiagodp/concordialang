@@ -1,11 +1,12 @@
-import * as deepcopy from 'deepcopy';
-import { LanguageContent, LanguageContentLoader } from '../language';
+import deepcopy from 'deepcopy';
+
+import { dictionaryForLanguage, LanguageMap } from '../language/data/map';
+import { LanguageDictionary } from '../language/LanguageDictionary';
 import { isDefined } from '../util/TypeChecking';
 import { BASE_TRAINING_EXAMPLES } from './BaseTrainingExamples';
 import { NLP } from './NLP';
-import { NLPTrainingData, NLP_PRIORITIES } from './NLPTrainingData';
+import { NLP_PRIORITIES, NLPTrainingData } from './NLPTrainingData';
 import { NLPTrainingDataConversor } from './NLPTrainingDataConversor';
-
 
 /**
  * NLP trainer.
@@ -20,12 +21,12 @@ export class NLPTrainer {
     private _trainedIntents: string[] = [];
 
     constructor(
-        private _langLoader: LanguageContentLoader
+        private _languageMap: LanguageMap
     ) {
     }
 
     canBeTrained( language: string ): boolean {
-        return this._langLoader.has( language );
+        return !! this._languageMap[ language ];
     }
 
     isIntentTrained( language: string, intent: string ): boolean {
@@ -48,7 +49,7 @@ export class NLPTrainer {
             return true;
         }
 
-        let content: LanguageContent = deepcopy( this._langLoader.load( language ) );
+        let languageDictionary: LanguageDictionary = deepcopy( dictionaryForLanguage( language ) );
 
         // Add base training sentences;
 
@@ -56,7 +57,7 @@ export class NLPTrainer {
 
             // console.log( 'INTENT DEFINED:', intentNameFilter );
 
-            let example = content.training.find( ex => ex.intent === intentNameFilter );
+            let example = languageDictionary.training.find( ex => ex.intent === intentNameFilter );
             const baseIntentExample = BASE_TRAINING_EXAMPLES.find( ex => ex.intent === intentNameFilter );
 
             if ( isDefined( example ) && isDefined( baseIntentExample ) ) {
@@ -85,7 +86,7 @@ export class NLPTrainer {
                 }
                 // console.log( '-> base intent untrained:', baseEx.intent );
 
-                let example = content.training.find( ex => ex.intent === baseEx.intent );
+                let example = languageDictionary.training.find( ex => ex.intent === baseEx.intent );
                 if ( ! example ) {
                     continue;
                 }
@@ -104,27 +105,27 @@ export class NLPTrainer {
         }
 
         // COPY SOME PARTS TO OTHERS
-        if ( isDefined( content.nlp[ "testcase" ] ) && isDefined( content.nlp[ "ui" ] ) ) {
+        if ( isDefined( languageDictionary.nlp[ "testcase" ] ) && isDefined( languageDictionary.nlp[ "ui" ] ) ) {
 
             // Copy "ui_element_type" from "testcase" to "ui"
-            if ( isDefined( content.nlp[ "testcase" ][ "ui_element_type" ] )
-                && ! isDefined( content.nlp[ "ui" ][ "ui_element_type" ] ) ) {
-                content.nlp[ "ui" ][ "ui_element_type" ] = content.nlp[ "testcase" ][ "ui_element_type" ];
+            if ( isDefined( languageDictionary.nlp[ "testcase" ][ "ui_element_type" ] )
+                && ! isDefined( languageDictionary.nlp[ "ui" ][ "ui_element_type" ] ) ) {
+                languageDictionary.nlp[ "ui" ][ "ui_element_type" ] = languageDictionary.nlp[ "testcase" ][ "ui_element_type" ];
             }
 
             // Add items of "ui_property" from "ui" to "testcase"
-            if ( isDefined( content.nlp[ "testcase" ][ "ui_property" ] )
-                && ! isDefined( content.nlp[ "ui" ][ "ui_property" ] ) ) {
-                const uiProperties = content.nlp[ "ui" ][ "ui_property" ];
+            if ( isDefined( languageDictionary.nlp[ "testcase" ][ "ui_property" ] )
+                && ! isDefined( languageDictionary.nlp[ "ui" ][ "ui_property" ] ) ) {
+                const uiProperties = languageDictionary.nlp[ "ui" ][ "ui_property" ];
                 for ( const p in uiProperties ) {
-                    content.nlp[ "testcase" ][ "ui_property" ][ p ] = content.nlp[ "ui" ][ "ui_property" ][ p ];
+                    languageDictionary.nlp[ "testcase" ][ "ui_property" ][ p ] = languageDictionary.nlp[ "ui" ][ "ui_property" ][ p ];
                 }
             }
 
         }
 
         let conversor: NLPTrainingDataConversor = new NLPTrainingDataConversor();
-        let converted: NLPTrainingData = conversor.convert( content.nlp || {}, content.training || [] );
+        let converted: NLPTrainingData = conversor.convert( languageDictionary.nlp || {}, languageDictionary.training || [] );
         converted.priorities = NLP_PRIORITIES;
 
         nlp.train( language, converted, intentNameFilter );

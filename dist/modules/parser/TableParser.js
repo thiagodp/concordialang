@@ -1,14 +1,11 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.TableParser = void 0;
-const CaseType_1 = require("../util/CaseType");
-const CaseConversor_1 = require("../util/CaseConversor");
+import { CaseType } from "../util/CaseType";
+import { convertCase, removeDiacritics } from "../util/CaseConversor";
 /**
  * Table parser
  *
  * @author Thiago Delgado Pinto
  */
-class TableParser {
+export class TableParser {
     /** @inheritDoc */
     analyze(node, context, it, errors) {
         // Checks the structure
@@ -16,7 +13,7 @@ class TableParser {
             context.doc.tables = [];
         }
         // Generates the internal name
-        node.internalName = CaseConversor_1.removeDiacritics(CaseConversor_1.convertCase(node.name, CaseType_1.CaseType.SNAKE));
+        node.internalName = removeDiacritics(convertCase(node.name, CaseType.SNAKE));
         // Adjusts the content
         context.resetInValues();
         context.inTable = true;
@@ -26,4 +23,3 @@ class TableParser {
         return true;
     }
 }
-exports.TableParser = TableParser;

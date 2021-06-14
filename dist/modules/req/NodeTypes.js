@@ -1,15 +1,11 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.NodeTypes = void 0;
-const Keywords_1 = require("./Keywords");
+import { Keywords } from "./Keywords";
 /**
  * Node types
  *
  * @author Thiago Delgado Pinto
  */
-class NodeTypes extends Keywords_1.Keywords {
+export class NodeTypes extends Keywords {
 }
-exports.NodeTypes = NodeTypes;
 // Not available in Gherkin
 NodeTypes.REGEX = 'regex';
 NodeTypes.CONSTANT = 'constant';

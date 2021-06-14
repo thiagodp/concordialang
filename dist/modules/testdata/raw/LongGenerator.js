@@ -1,14 +1,11 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.LongGenerator = void 0;
-const LongLimits_1 = require("../limits/LongLimits");
-const MinMaxChecker_1 = require("../util/MinMaxChecker");
+import { LongLimits } from '../limits/LongLimits';
+import { MinMaxChecker } from '../util/MinMaxChecker';
 /**
  * Long generator.
  *
  * @author Thiago Delgado Pinto
  */
-class LongGenerator {
+export class LongGenerator {
     /**
      * Constructor.
      *
@@ -20,9 +17,9 @@ class LongGenerator {
      */
     constructor(_random, min, max) {
         this._random = _random;
-        (new MinMaxChecker_1.MinMaxChecker()).check(min, max); // may throw Error
-        this._min = min !== null && min !== undefined ? min : LongLimits_1.LongLimits.MIN;
-        this._max = max !== null && max !== undefined ? max : LongLimits_1.LongLimits.MAX;
+        (new MinMaxChecker()).check(min, max); // may throw Error
+        this._min = min !== null && min !== undefined ? min : LongLimits.MIN;
+        this._max = max !== null && max !== undefined ? max : LongLimits.MAX;
     }
     diff() {
         return this._max - this._min;
@@ -34,11 +31,11 @@ class LongGenerator {
     }
     /** @inheritDoc */
     hasValuesBelowMin() {
-        return this._min > LongLimits_1.LongLimits.MIN;
+        return this._min > LongLimits.MIN;
     }
     /** @inheritDoc */
     hasValuesAboveMax() {
-        return this._max < LongLimits_1.LongLimits.MAX;
+        return this._max < LongLimits.MAX;
     }
     /** @inheritDoc */
     isZeroBetweenMinAndMax() {
@@ -55,7 +52,7 @@ class LongGenerator {
     // DATA GENERATION
     /** @inheritDoc */
     lowest() {
-        return LongLimits_1.LongLimits.MIN;
+        return LongLimits.MIN;
     }
     /** @inheritDoc */
     randomBelowMin() {
@@ -117,7 +114,6 @@ class LongGenerator {
     }
     /** @inheritDoc */
     greatest() {
-        return LongLimits_1.LongLimits.MAX;
+        return LongLimits.MAX;
     }
 }
-exports.LongGenerator = LongGenerator;

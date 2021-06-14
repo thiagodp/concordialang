@@ -1,24 +1,12 @@
-"use strict";
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.DatabaseJSDatabaseInterface = void 0;
-const dbjs = require("database-js");
-const DatabaseToAbstractDatabase_1 = require("./DatabaseToAbstractDatabase");
-const DatabaseTypes_1 = require("./DatabaseTypes");
+import dbjs from 'database-js';
+import { DatabaseToAbstractDatabase } from './DatabaseToAbstractDatabase';
+import { isPathBasedDatabaseType } from './DatabaseTypes';
 /**
  * Handles databases using DatabaseJS.
  *
  * @author Thiago Delgado Pinto
  */
-class DatabaseJSDatabaseInterface {
+export class DatabaseJSDatabaseInterface {
     constructor() {
         this._dbConnection = null;
         this._db = null;
@@ -27,74 +15,60 @@ class DatabaseJSDatabaseInterface {
         //
         /** @inheritDoc */
         this.hasFileBasedDriver = (databaseType) => {
-            return DatabaseTypes_1.isPathBasedDatabaseType(databaseType);
+            return isPathBasedDatabaseType(databaseType);
         };
     }
     /** @inheritDoc */
-    isConnected() {
-        return __awaiter(this, void 0, void 0, function* () {
-            return !!this._dbConnection;
-        });
+    async isConnected() {
+        return !!this._dbConnection;
     }
     /** @inheritDoc */
-    connect(db, basePath) {
-        return __awaiter(this, void 0, void 0, function* () {
-            this._db = db;
-            this._basePath = basePath;
-            this._dbConnection = this.createConnectionFromNode(db, basePath); // may throw an Error
-            return true;
-        });
+    async connect(db, basePath) {
+        this._db = db;
+        this._basePath = basePath;
+        this._dbConnection = this.createConnectionFromNode(db, basePath); // may throw an Error
+        return true;
     }
     /** @inheritDoc */
-    disconnect() {
-        return __awaiter(this, void 0, void 0, function* () {
-            if (!this._dbConnection) {
-                throw this.dbiError();
-            }
-            if (!!this._dbConnection.close) {
-                return yield this._dbConnection.close();
-            }
-            return true;
-        });
+    async disconnect() {
+        if (!this._dbConnection) {
+            throw this.dbiError();
+        }
+        if (!!this._dbConnection.close) {
+            return await this._dbConnection.close();
+        }
+        return true;
     }
     /** @inheritDoc */
-    reconnect() {
-        return __awaiter(this, void 0, void 0, function* () {
-            if (!this._dbConnection) {
-                throw this.dbiError();
-            }
-            if (yield this.isConnected()) {
-                yield this.disconnect();
-            }
-            return yield this.connect(this._db, this._basePath);
-        });
+    async reconnect() {
+        if (!this._dbConnection) {
+            throw this.dbiError();
+        }
+        if (await this.isConnected()) {
+            await this.disconnect();
+        }
+        return await this.connect(this._db, this._basePath);
     }
     /** @inheritDoc */
-    exec(cmd, params) {
-        return __awaiter(this, void 0, void 0, function* () {
-            if (!params) {
-                return this._dbConnection.prepareStatement(cmd).execute();
-            }
-            return this._dbConnection.prepareStatement(cmd).execute(...params);
-        });
+    async exec(cmd, params) {
+        if (!params) {
+            return this._dbConnection.prepareStatement(cmd).execute();
+        }
+        return this._dbConnection.prepareStatement(cmd).execute(...params);
     }
     /** @inheritDoc */
-    createTable(table) {
-        return __awaiter(this, void 0, void 0, function* () {
-            throw new Error('Table creation not supported for the DatabaseJS interface.');
-        });
+    async createTable(table) {
+        throw new Error('Table creation not supported for the DatabaseJS interface.');
     }
     //
     // FROM Queryable
     //
     /** @inheritDoc */
-    query(cmd, params) {
-        return __awaiter(this, void 0, void 0, function* () {
-            if (!params) {
-                return this._dbConnection.prepareStatement(cmd).query();
-            }
-            return this._dbConnection.prepareStatement(cmd).query(...params);
-        });
+    async query(cmd, params) {
+        if (!params) {
+            return this._dbConnection.prepareStatement(cmd).query();
+        }
+        return this._dbConnection.prepareStatement(cmd).query(...params);
     }
     //
     // PRIVATE
@@ -106,7 +80,7 @@ class DatabaseJSDatabaseInterface {
      * @param basePath Base path, in case of the database is file-based.
      */
     createConnectionFromNode(db, basePath) {
-        let conversor = new DatabaseToAbstractDatabase_1.DatabaseToAbstractDatabase();
+        let conversor = new DatabaseToAbstractDatabase();
         let absDB = conversor.convertFromNode(db, basePath);
         return new dbjs.Connection(absDB);
     }
@@ -117,4 +91,3 @@ class DatabaseJSDatabaseInterface {
         return new Error('Internal database interface not instantiated.');
     }
 }
-exports.DatabaseJSDatabaseInterface = DatabaseJSDatabaseInterface;

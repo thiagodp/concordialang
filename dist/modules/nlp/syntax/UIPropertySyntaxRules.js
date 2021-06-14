@@ -1,33 +1,30 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.UI_PROPERTY_SYNTAX_RULES = exports.DEFAULT_UI_PROPERTY_SYNTAX_RULE = void 0;
-const ast_1 = require("../../ast");
-const Entities_1 = require("../Entities");
+import { UIPropertyTypes } from '../../ast';
+import { Entities } from '../Entities';
 const UIP_RULES = {
     minTargets: 1,
     maxTargets: 1,
-    targets: [Entities_1.Entities.VALUE],
+    targets: [Entities.VALUE],
 };
-UIP_RULES[Entities_1.Entities.VALUE] = { min: 1, max: 1 };
-UIP_RULES[Entities_1.Entities.VALUE_LIST] = { min: 1, max: 1 };
-UIP_RULES[Entities_1.Entities.NUMBER] = { min: 1, max: 1 };
-UIP_RULES[Entities_1.Entities.CONSTANT] = { min: 1, max: 1 };
-UIP_RULES[Entities_1.Entities.QUERY] = { min: 1, max: 1 };
-UIP_RULES[Entities_1.Entities.UI_PROPERTY] = { min: 1, max: 1 };
-UIP_RULES[Entities_1.Entities.UI_DATA_TYPE] = { min: 1, max: 1 };
-UIP_RULES[Entities_1.Entities.BOOL_VALUE] = { min: 1, max: 1 };
-UIP_RULES[Entities_1.Entities.COMMAND] = { min: 1, max: 1 };
-UIP_RULES[Entities_1.Entities.DATE] = { min: 1, max: 1 };
-UIP_RULES[Entities_1.Entities.TIME] = { min: 1, max: 1 };
-UIP_RULES[Entities_1.Entities.DATE_TIME] = { min: 1, max: 1 };
-UIP_RULES[Entities_1.Entities.LONG_TIME] = { min: 1, max: 1 };
-UIP_RULES[Entities_1.Entities.LONG_DATE_TIME] = { min: 1, max: 1 };
+UIP_RULES[Entities.VALUE] = { min: 1, max: 1 };
+UIP_RULES[Entities.VALUE_LIST] = { min: 1, max: 1 };
+UIP_RULES[Entities.NUMBER] = { min: 1, max: 1 };
+UIP_RULES[Entities.CONSTANT] = { min: 1, max: 1 };
+UIP_RULES[Entities.QUERY] = { min: 1, max: 1 };
+UIP_RULES[Entities.UI_PROPERTY] = { min: 1, max: 1 };
+UIP_RULES[Entities.UI_DATA_TYPE] = { min: 1, max: 1 };
+UIP_RULES[Entities.BOOL_VALUE] = { min: 1, max: 1 };
+UIP_RULES[Entities.COMMAND] = { min: 1, max: 1 };
+UIP_RULES[Entities.DATE] = { min: 1, max: 1 };
+UIP_RULES[Entities.TIME] = { min: 1, max: 1 };
+UIP_RULES[Entities.DATE_TIME] = { min: 1, max: 1 };
+UIP_RULES[Entities.LONG_TIME] = { min: 1, max: 1 };
+UIP_RULES[Entities.LONG_DATE_TIME] = { min: 1, max: 1 };
 /**
  * Default syntax rule for UI Properties.
  *
  * @author Thiago Delgado Pinto
  */
-exports.DEFAULT_UI_PROPERTY_SYNTAX_RULE = UIP_RULES;
+export const DEFAULT_UI_PROPERTY_SYNTAX_RULE = UIP_RULES;
 /**
  * Syntax rules for the supported UI Properties.
  *
@@ -35,93 +32,93 @@ exports.DEFAULT_UI_PROPERTY_SYNTAX_RULE = UIP_RULES;
  *
  * @author Thiago Delgado Pinto
  */
-exports.UI_PROPERTY_SYNTAX_RULES = [
-    { name: ast_1.UIPropertyTypes.ID,
+export const UI_PROPERTY_SYNTAX_RULES = [
+    { name: UIPropertyTypes.ID,
         targets: [
-            Entities_1.Entities.VALUE,
-            Entities_1.Entities.COMMAND
+            Entities.VALUE,
+            Entities.COMMAND
         ] },
-    { name: ast_1.UIPropertyTypes.TYPE,
+    { name: UIPropertyTypes.TYPE,
         targets: [
-            Entities_1.Entities.UI_PROPERTY
+            Entities.UI_PROPERTY
         ] },
-    { name: ast_1.UIPropertyTypes.EDITABLE,
+    { name: UIPropertyTypes.EDITABLE,
         targets: [
-            Entities_1.Entities.BOOL_VALUE,
-            Entities_1.Entities.NUMBER
+            Entities.BOOL_VALUE,
+            Entities.NUMBER
         ],
         minTargets: 0 },
-    { name: ast_1.UIPropertyTypes.DATA_TYPE,
+    { name: UIPropertyTypes.DATA_TYPE,
         targets: [
-            Entities_1.Entities.UI_DATA_TYPE // e.g. string, integer, ...
+            Entities.UI_DATA_TYPE // e.g. string, integer, ...
         ] },
-    { name: ast_1.UIPropertyTypes.VALUE,
+    { name: UIPropertyTypes.VALUE,
         targets: [
-            Entities_1.Entities.VALUE,
-            Entities_1.Entities.NUMBER,
-            Entities_1.Entities.CONSTANT,
-            Entities_1.Entities.QUERY,
-            Entities_1.Entities.VALUE_LIST,
-            Entities_1.Entities.TIME,
-            Entities_1.Entities.DATE_TIME,
-            Entities_1.Entities.LONG_TIME,
-            Entities_1.Entities.LONG_DATE_TIME
+            Entities.VALUE,
+            Entities.NUMBER,
+            Entities.CONSTANT,
+            Entities.QUERY,
+            Entities.VALUE_LIST,
+            Entities.TIME,
+            Entities.DATE_TIME,
+            Entities.LONG_TIME,
+            Entities.LONG_DATE_TIME
         ] },
-    { name: ast_1.UIPropertyTypes.MIN_LENGTH,
+    { name: UIPropertyTypes.MIN_LENGTH,
         targets: [
-            Entities_1.Entities.NUMBER,
-            Entities_1.Entities.CONSTANT,
-            Entities_1.Entities.QUERY,
+            Entities.NUMBER,
+            Entities.CONSTANT,
+            Entities.QUERY,
         ] },
-    { name: ast_1.UIPropertyTypes.MAX_LENGTH,
+    { name: UIPropertyTypes.MAX_LENGTH,
         targets: [
-            Entities_1.Entities.NUMBER,
-            Entities_1.Entities.CONSTANT,
-            Entities_1.Entities.QUERY,
+            Entities.NUMBER,
+            Entities.CONSTANT,
+            Entities.QUERY,
         ] },
-    { name: ast_1.UIPropertyTypes.MIN_VALUE,
+    { name: UIPropertyTypes.MIN_VALUE,
         targets: [
-            Entities_1.Entities.VALUE,
-            Entities_1.Entities.NUMBER,
-            Entities_1.Entities.CONSTANT,
-            Entities_1.Entities.QUERY,
-            Entities_1.Entities.DATE,
-            Entities_1.Entities.TIME,
-            Entities_1.Entities.DATE_TIME,
-            Entities_1.Entities.LONG_TIME,
-            Entities_1.Entities.LONG_DATE_TIME
+            Entities.VALUE,
+            Entities.NUMBER,
+            Entities.CONSTANT,
+            Entities.QUERY,
+            Entities.DATE,
+            Entities.TIME,
+            Entities.DATE_TIME,
+            Entities.LONG_TIME,
+            Entities.LONG_DATE_TIME
         ] },
-    { name: ast_1.UIPropertyTypes.MAX_VALUE,
+    { name: UIPropertyTypes.MAX_VALUE,
         targets: [
-            Entities_1.Entities.VALUE,
-            Entities_1.Entities.NUMBER,
-            Entities_1.Entities.CONSTANT,
-            Entities_1.Entities.QUERY,
-            Entities_1.Entities.DATE,
-            Entities_1.Entities.TIME,
-            Entities_1.Entities.DATE_TIME,
-            Entities_1.Entities.LONG_TIME,
-            Entities_1.Entities.LONG_DATE_TIME
+            Entities.VALUE,
+            Entities.NUMBER,
+            Entities.CONSTANT,
+            Entities.QUERY,
+            Entities.DATE,
+            Entities.TIME,
+            Entities.DATE_TIME,
+            Entities.LONG_TIME,
+            Entities.LONG_DATE_TIME
         ] },
-    { name: ast_1.UIPropertyTypes.FORMAT,
+    { name: UIPropertyTypes.FORMAT,
         targets: [
-            Entities_1.Entities.VALUE,
-            Entities_1.Entities.CONSTANT
+            Entities.VALUE,
+            Entities.CONSTANT
         ] },
-    { name: ast_1.UIPropertyTypes.REQUIRED,
+    { name: UIPropertyTypes.REQUIRED,
         targets: [
-            Entities_1.Entities.BOOL_VALUE,
-            Entities_1.Entities.NUMBER
+            Entities.BOOL_VALUE,
+            Entities.NUMBER
         ],
         minTargets: 0 },
-    { name: ast_1.UIPropertyTypes.LOCALE,
+    { name: UIPropertyTypes.LOCALE,
         targets: [
-            Entities_1.Entities.VALUE,
-            Entities_1.Entities.CONSTANT
+            Entities.VALUE,
+            Entities.CONSTANT
         ] },
-    { name: ast_1.UIPropertyTypes.LOCALE_FORMAT,
+    { name: UIPropertyTypes.LOCALE_FORMAT,
         targets: [
-            Entities_1.Entities.VALUE,
-            Entities_1.Entities.CONSTANT
+            Entities.VALUE,
+            Entities.CONSTANT
         ] },
 ];

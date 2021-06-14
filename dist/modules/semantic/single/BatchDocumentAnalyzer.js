@@ -1,24 +1,21 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.BatchDocumentAnalyzer = void 0;
-const DatabaseDA_1 = require("./DatabaseDA");
-const ImportDA_1 = require("./ImportDA");
-const ScenarioDA_1 = require("./ScenarioDA");
-const UIElementDA_1 = require("./UIElementDA");
-const VariantGivenStepDA_1 = require("./VariantGivenStepDA");
+import { DatabaseDA } from './DatabaseDA';
+import { ImportDA } from './ImportDA';
+import { ScenarioDA } from './ScenarioDA';
+import { UIElementDA } from './UIElementDA';
+import { VariantGivenStepDA } from './VariantGivenStepDA';
 /**
  * Executes a series of semantic analyzers to a document.
  *
  * @author Thiago Delgado Pinto
  */
-class BatchDocumentAnalyzer {
+export class BatchDocumentAnalyzer {
     constructor() {
         this._analyzers = [
-            new ImportDA_1.ImportDA(),
-            new ScenarioDA_1.ScenarioDA(),
-            new DatabaseDA_1.DatabaseDA(),
-            new UIElementDA_1.UIElementDA(),
-            new VariantGivenStepDA_1.VariantGivenStepDA()
+            new ImportDA(),
+            new ScenarioDA(),
+            new DatabaseDA(),
+            new UIElementDA(),
+            new VariantGivenStepDA()
         ];
     }
     analyze(doc, errorMapper) {
@@ -31,4 +28,3 @@ class BatchDocumentAnalyzer {
         }
     }
 }
-exports.BatchDocumentAnalyzer = BatchDocumentAnalyzer;

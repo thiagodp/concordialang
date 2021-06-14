@@ -1,14 +1,11 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.RandomDateTime = void 0;
-const core_1 = require("@js-joda/core");
-const DateTimeLimits_1 = require("../limits/DateTimeLimits");
+import { ChronoUnit } from "@js-joda/core";
+import { DateTimeLimits } from '../limits/DateTimeLimits';
 /**
  * Generates random datetime values.
  *
  * @author Thiago Delgado Pinto
  */
-class RandomDateTime {
+export class RandomDateTime {
     constructor(_randomLong) {
         this._randomLong = _randomLong;
     }
@@ -19,7 +16,7 @@ class RandomDateTime {
      * @param max Maximum date time
      */
     between(min, max) {
-        const diffInSeconds = min.until(max, core_1.ChronoUnit.SECONDS);
+        const diffInSeconds = min.until(max, ChronoUnit.SECONDS);
         if (0 === diffInSeconds) {
             return min;
         }
@@ -32,7 +29,7 @@ class RandomDateTime {
      * @param max Maximum date time
      */
     before(max) {
-        return this.between(DateTimeLimits_1.DateTimeLimits.MIN, max.minusSeconds(1));
+        return this.between(DateTimeLimits.MIN, max.minusSeconds(1));
     }
     /**
      * Returns a random date time after the given date time.
@@ -40,7 +37,6 @@ class RandomDateTime {
      * @param min Minimum date time
      */
     after(min) {
-        return this.between(min.plusSeconds(1), DateTimeLimits_1.DateTimeLimits.MAX);
+        return this.between(min.plusSeconds(1), DateTimeLimits.MAX);
     }
 }
-exports.RandomDateTime = RandomDateTime;

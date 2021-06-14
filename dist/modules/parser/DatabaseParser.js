@@ -1,12 +1,9 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.DatabaseParser = void 0;
 /**
  * Database parser
  *
  * @author Thiago Delgado Pinto
  */
-class DatabaseParser {
+export class DatabaseParser {
     analyze(node, context, it, errors) {
         // Adjusts the context
         context.resetInValues();
@@ -20,4 +17,3 @@ class DatabaseParser {
         return true;
     }
 }
-exports.DatabaseParser = DatabaseParser;

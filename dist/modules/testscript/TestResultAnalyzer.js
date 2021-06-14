@@ -1,11 +1,8 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.TestResultAnalyzer = void 0;
-const deepcopy = require("deepcopy");
+import deepcopy from 'deepcopy';
 /**
  * Test Result Analyzer
  */
-class TestResultAnalyzer {
+export class TestResultAnalyzer {
     adjustResult(executionResult, abstractTestScripts) {
         const er = deepcopy(executionResult);
         for (let r of er.results || []) {
@@ -56,4 +53,3 @@ class TestResultAnalyzer {
         return 'failed' === methodResult.status && ats.invalid;
     }
 }
-exports.TestResultAnalyzer = TestResultAnalyzer;

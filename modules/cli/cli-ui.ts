@@ -6,7 +6,7 @@ import { AppListener } from 'modules/app/app-listener';
 import { basename, dirname, relative } from 'path';
 import * as readline from 'readline';
 import { sprintf } from 'sprintf-js';
-import * as terminalLink from 'terminal-link';
+import terminalLink from 'terminal-link';
 
 import { AppOptions } from '../app/app-options';
 import { DEFAULT_LANGUAGE } from '../app/default-options';
@@ -175,7 +175,9 @@ export class UI implements AppListener {
         }
     }
 
+    //
 	// CLI
+    //
 
     /** @inheritdoc */
     showHelp( content: string ): void {
@@ -761,13 +763,11 @@ export class UI implements AppListener {
     /** @inheritdoc */
     public drawSinglePlugin( p: PluginData ): void {
         const format = "  - %-12s: %s"; // util.format does not support padding :(
-        const authors = p.authors.map( ( a, idx ) => 0 === idx ? a : sprintf( '%-17s %s', '', a ) );
+        const formattedAuthors = p.authors.map( ( a, idx ) => 0 === idx ? a : sprintf( '%-17s %s', '', a ) );
         this.info( sprintf( 'Plugin %s', this.highlight( p.name ) ) );
         this.writeln( sprintf( format, 'version', p.version ) );
         this.writeln( sprintf( format, 'description', p.description ) );
-        this.writeln( sprintf( format, 'authors', authors.join( '\n' ) ) );
-        this.writeln( sprintf( format, 'file', this._debugMode ? p.file : basename( p.file ) ) );
-        this.writeln( sprintf( format, 'class', p.class ) );
+        this.writeln( sprintf( format, 'authors', formattedAuthors.join( '\n' ) ) );
     }
 
     /** @inheritdoc */
@@ -810,6 +810,16 @@ export class UI implements AppListener {
         this.warn(
             sprintf( 'Could not find %s. I will create it for you.', this.highlight( file ) )
             );
+    }
+
+    /** @inheritdoc */
+    public warnAboutOldPluginVersion(): void {
+        this.warn( this.highlight( 'You are using an old plug-in version. Please update it or uninstall it and then install it again.' ) );
+    }
+
+    /** @inheritdoc */
+    public showPluginServeUndefined( name: string ): void {
+        this.info( `Plug-in ${name} does not provide a serve command. Probably it does not need one.` );
     }
 
     /** @inheritdoc */

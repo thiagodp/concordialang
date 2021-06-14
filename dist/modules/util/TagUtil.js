@@ -1,12 +1,9 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.TagUtil = void 0;
 /**
  * Tag utilities
  *
  * @author Thiago Delgado Pinto
  */
-class TagUtil {
+export class TagUtil {
     isNameInKeywords(tag, keywords) {
         return keywords.indexOf(tag.name.toLowerCase()) >= 0;
     }
@@ -25,4 +22,3 @@ class TagUtil {
         return null;
     }
 }
-exports.TagUtil = TagUtil;

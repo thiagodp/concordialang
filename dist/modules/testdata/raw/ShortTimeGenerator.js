@@ -1,10 +1,7 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.ShortTimeGenerator = void 0;
-const core_1 = require("@js-joda/core");
-const TypeChecking_1 = require("../../util/TypeChecking");
-const TimeLimits_1 = require("../limits/TimeLimits");
-class ShortTimeGenerator {
+import { ChronoUnit } from '@js-joda/core';
+import { isDefined } from '../../util/TypeChecking';
+import { ShortTimeLimits } from '../limits/TimeLimits';
+export class ShortTimeGenerator {
     /**
      * Constructor.
      *
@@ -16,15 +13,15 @@ class ShortTimeGenerator {
      */
     constructor(_randomTimeGen, min, max) {
         this._randomTimeGen = _randomTimeGen;
-        this.ZERO = TimeLimits_1.ShortTimeLimits.MIN;
-        if (TypeChecking_1.isDefined(min) && TypeChecking_1.isDefined(max) && min.isAfter(max)) {
+        this.ZERO = ShortTimeLimits.MIN;
+        if (isDefined(min) && isDefined(max) && min.isAfter(max)) {
             throw new Error('min time should not be greater than max');
         }
-        this._min = TypeChecking_1.isDefined(min) ? min : TimeLimits_1.ShortTimeLimits.MIN;
-        this._max = TypeChecking_1.isDefined(max) ? max : TimeLimits_1.ShortTimeLimits.MAX;
+        this._min = isDefined(min) ? min : ShortTimeLimits.MIN;
+        this._max = isDefined(max) ? max : ShortTimeLimits.MAX;
     }
     diffInMinutes() {
-        return this._min.until(this._max, core_1.ChronoUnit.MINUTES);
+        return this._min.until(this._max, ChronoUnit.MINUTES);
     }
     // RANGE ANALYSIS
     /** @inheritDoc */
@@ -33,11 +30,11 @@ class ShortTimeGenerator {
     }
     /** @inheritDoc */
     hasValuesBelowMin() {
-        return this._min.isAfter(TimeLimits_1.ShortTimeLimits.MIN);
+        return this._min.isAfter(ShortTimeLimits.MIN);
     }
     /** @inheritDoc */
     hasValuesAboveMax() {
-        return this._max.isBefore(TimeLimits_1.ShortTimeLimits.MAX);
+        return this._max.isBefore(ShortTimeLimits.MAX);
     }
     /** @inheritDoc */
     isZeroBetweenMinAndMax() {
@@ -55,7 +52,7 @@ class ShortTimeGenerator {
     // DATA GENERATION
     /** @inheritDoc */
     lowest() {
-        return TimeLimits_1.ShortTimeLimits.MIN;
+        return ShortTimeLimits.MIN;
     }
     /** @inheritDoc */
     randomBelowMin() {
@@ -117,7 +114,6 @@ class ShortTimeGenerator {
     }
     /** @inheritDoc */
     greatest() {
-        return TimeLimits_1.ShortTimeLimits.MAX;
+        return ShortTimeLimits.MAX;
     }
 }
-exports.ShortTimeGenerator = ShortTimeGenerator;

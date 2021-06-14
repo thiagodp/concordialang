@@ -1,13 +1,10 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.RandomDouble = void 0;
-const DoubleLimits_1 = require("../limits/DoubleLimits");
+import { DoubleLimits } from '../limits/DoubleLimits';
 /**
  * Generates random double values.
  *
  * @author Thiago Delgado Pinto
  */
-class RandomDouble {
+export class RandomDouble {
     constructor(_random) {
         this._random = _random;
     }
@@ -30,7 +27,7 @@ class RandomDouble {
      * @return		A random value before the maximum value.
      */
     before(value, delta) {
-        return this.between(DoubleLimits_1.DoubleLimits.MIN, value - delta);
+        return this.between(DoubleLimits.MIN, value - delta);
     }
     /**
      * Generates a random value after a minimum value.
@@ -39,7 +36,6 @@ class RandomDouble {
      * @return		A random value after the minimum value.
      */
     after(value, delta) {
-        return this.between(value + delta, DoubleLimits_1.DoubleLimits.MAX);
+        return this.between(value + delta, DoubleLimits.MAX);
     }
 }
-exports.RandomDouble = RandomDouble;

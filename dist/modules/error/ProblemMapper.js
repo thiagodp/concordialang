@@ -1,9 +1,6 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.ProblemMapper = exports.ProblemInfo = exports.GENERIC_ERROR_KEY = void 0;
 /** Key for generic errors */
-exports.GENERIC_ERROR_KEY = '*';
-class ProblemInfo {
+export const GENERIC_ERROR_KEY = '*';
+export class ProblemInfo {
     constructor(errors = [], warnings = []) {
         this.errors = errors;
         this.warnings = warnings;
@@ -18,13 +15,12 @@ class ProblemInfo {
         return !this.hasErrors() && !this.hasWarnings();
     }
 }
-exports.ProblemInfo = ProblemInfo;
 /**
  * Maps a key to a `ProblemInfo`.
  *
  * Note: `GENERIC_ERROR_KEY` is used for generic errors.
  */
-class ProblemMapper {
+export class ProblemMapper {
     constructor(_needsToConvertKey = false) {
         this._needsToConvertKey = _needsToConvertKey;
         this._map = new Map();
@@ -43,7 +39,7 @@ class ProblemMapper {
         target.errors.push.apply(target.errors, errors);
     }
     addGenericError(...errors) {
-        this.addError(exports.GENERIC_ERROR_KEY, ...errors);
+        this.addError(GENERIC_ERROR_KEY, ...errors);
     }
     /**
      * Add one or more warnings.
@@ -56,7 +52,7 @@ class ProblemMapper {
         target.warnings.push.apply(target.warnings, errors);
     }
     addGenericWarning(...errors) {
-        this.addWarning(exports.GENERIC_ERROR_KEY, ...errors);
+        this.addWarning(GENERIC_ERROR_KEY, ...errors);
     }
     get(key, assureExists = true) {
         const cKey = this._needsToConvertKey ? this.convertKey(key) : key;
@@ -68,7 +64,7 @@ class ProblemMapper {
         return target;
     }
     getGeneric(assureExists = true) {
-        return this.get(exports.GENERIC_ERROR_KEY, assureExists);
+        return this.get(GENERIC_ERROR_KEY, assureExists);
     }
     getErrors(key) {
         const target = this.get(key, false);
@@ -78,7 +74,7 @@ class ProblemMapper {
         return target.errors;
     }
     getGenericErrors() {
-        return this.getErrors(exports.GENERIC_ERROR_KEY);
+        return this.getErrors(GENERIC_ERROR_KEY);
     }
     getAllErrors() {
         const errors = [];
@@ -95,7 +91,7 @@ class ProblemMapper {
         return target.warnings;
     }
     getGenericWarnings() {
-        return this.getWarnings(exports.GENERIC_ERROR_KEY);
+        return this.getWarnings(GENERIC_ERROR_KEY);
     }
     getAllWarnings() {
         const warnings = [];
@@ -106,7 +102,7 @@ class ProblemMapper {
     }
     nonGeneric() {
         const mapClone = new Map(this._map);
-        mapClone.delete(exports.GENERIC_ERROR_KEY);
+        mapClone.delete(GENERIC_ERROR_KEY);
         return mapClone;
     }
     remove(key) {
@@ -123,4 +119,3 @@ class ProblemMapper {
         return this._map.size;
     }
 }
-exports.ProblemMapper = ProblemMapper;

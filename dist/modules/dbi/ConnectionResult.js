@@ -1,12 +1,9 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.ConnectionCheckResult = void 0;
 /**
  * Connection check result.
  *
  * @author Thiago Delgado Pinto
  */
-class ConnectionCheckResult {
+export class ConnectionCheckResult {
     constructor(success = false, resultsMap = {} // name => ConnectionResult
     ) {
         this.success = success;
@@ -32,4 +29,3 @@ class ConnectionCheckResult {
         return results;
     }
 }
-exports.ConnectionCheckResult = ConnectionCheckResult;

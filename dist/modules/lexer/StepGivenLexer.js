@@ -1,20 +1,16 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.StepGivenLexer = void 0;
-const NodeTypes_1 = require("../req/NodeTypes");
-const StartingKeywordLexer_1 = require("./StartingKeywordLexer");
+import { NodeTypes } from "../req/NodeTypes";
+import { StartingKeywordLexer } from './StartingKeywordLexer';
 /**
  * Detects a Given node.
  *
  * @author Thiago Delgado Pinto
  */
-class StepGivenLexer extends StartingKeywordLexer_1.StartingKeywordLexer {
+export class StepGivenLexer extends StartingKeywordLexer {
     constructor(words) {
-        super(words, NodeTypes_1.NodeTypes.STEP_GIVEN);
+        super(words, NodeTypes.STEP_GIVEN);
     }
     /** @inheritDoc */
     suggestedNextNodeTypes() {
-        return [NodeTypes_1.NodeTypes.STEP_AND, NodeTypes_1.NodeTypes.STEP_WHEN, NodeTypes_1.NodeTypes.STEP_THEN];
+        return [NodeTypes.STEP_AND, NodeTypes.STEP_WHEN, NodeTypes.STEP_THEN];
     }
 }
-exports.StepGivenLexer = StepGivenLexer;

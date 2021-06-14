@@ -1,13 +1,10 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.MinMaxChecker = void 0;
-const TypeChecking_1 = require("../../util/TypeChecking");
+import { isDefined } from '../../util/TypeChecking';
 /**
  * Checks minimum and maximum values.
  *
  * @author Thiago Delgado Pinto
  */
-class MinMaxChecker {
+export class MinMaxChecker {
     /**
      * Check the given values, throwing an exception whether one of them is invalid.
      *
@@ -19,19 +16,19 @@ class MinMaxChecker {
      */
     check(min, max, delta) {
         // min
-        if (TypeChecking_1.isDefined(min) && isNaN(min)) {
+        if (isDefined(min) && isNaN(min)) {
             throw new Error("min is NaN.");
         }
         // max
-        if (TypeChecking_1.isDefined(max) && isNaN(max)) {
+        if (isDefined(max) && isNaN(max)) {
             throw new Error("max is NaN.");
         }
         // min > max
-        if (TypeChecking_1.isDefined(min) && TypeChecking_1.isDefined(max) && Number(min) > Number(max)) {
+        if (isDefined(min) && isDefined(max) && Number(min) > Number(max)) {
             throw new Error("The minimum value cannot be greater than the maximum value.");
         }
         // delta
-        if (TypeChecking_1.isDefined(delta) && delta < 0) {
+        if (isDefined(delta) && delta < 0) {
             throw new Error("delta can't be negative.");
         }
     }
@@ -66,7 +63,7 @@ class MinMaxChecker {
      * @param num Number
      */
     fractionalPartLength(num) {
-        if (!TypeChecking_1.isDefined(num) || '' === num)
+        if (!isDefined(num) || '' === num)
             return 0;
         const numStr = num.toString(); // Just to guarantee the right type in the conversion to JS
         const idx = numStr.lastIndexOf('.');
@@ -75,4 +72,3 @@ class MinMaxChecker {
         return numStr.substring(idx + 1).length;
     }
 }
-exports.MinMaxChecker = MinMaxChecker;

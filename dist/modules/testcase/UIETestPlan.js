@@ -1,8 +1,5 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.UIETestPlan = void 0;
-const DataTestCaseAnalyzer_1 = require("../testdata/DataTestCaseAnalyzer");
-class UIETestPlan {
+import { DTCAnalysisResult } from "../testdata/DataTestCaseAnalyzer";
+export class UIETestPlan {
     constructor(dtc, result, otherwiseSteps) {
         this.dtc = dtc;
         this.result = result;
@@ -12,11 +9,10 @@ class UIETestPlan {
         return (this.otherwiseSteps || []).length > 0;
     }
     isResultInvalid() {
-        return DataTestCaseAnalyzer_1.DTCAnalysisResult.INVALID === this.result;
+        return DTCAnalysisResult.INVALID === this.result;
     }
     /** Remember: still have to analyse whether the steps have Then without states */
     shouldFail() {
         return this.isResultInvalid() && !this.hasOtherwiseSteps();
     }
 }
-exports.UIETestPlan = UIETestPlan;

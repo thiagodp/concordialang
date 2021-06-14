@@ -1,28 +1,29 @@
 {
     "compilerOptions": {
         "baseUrl": ".",
+        "paths": {
+            "modules/*": [ "modules/*" ],
+            "@/*": [ "modules/*" ]
+        },
         "outDir": "dist",
-        "module": "commonjs",
-        "target": "es6",
+
+        "module": "ES2020",
+        "target": "ES2020",
+        "moduleResolution": "node",
+        "esModuleInterop": true,
+
         "noImplicitAny": false,
         "sourceMap": false,
         "allowJs": true,
+        "keyofStringsOnly": true,
         "typeRoots": [
             "./node_modules/@types"
-        ],
-        "keyofStringsOnly": true
+        ]
     },
     "include": [
         "data",
         "lib",
         "modules",
         "main.ts"
-    ],
-    "exclude": [
-        "__tests__",
-        "node_modules",
-        "typings/globals",
-        "dist",
-        "modules/req/alt-lexer"
     ]
 }

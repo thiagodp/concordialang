@@ -1,6 +1,3 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.sortErrorsByLocation = void 0;
 /**
  * Returns the errors sorted by `location`, without considering the file name.
  *
@@ -9,7 +6,7 @@ exports.sortErrorsByLocation = void 0;
  *
  * @param errors Errors
  */
-function sortErrorsByLocation(errors) {
+export function sortErrorsByLocation(errors) {
     const compare = (a, b) => {
         if (a.location && b.location) {
             // Compare the line
@@ -29,4 +26,3 @@ function sortErrorsByLocation(errors) {
     // return Array.sort( errors, compare );
     return errors.sort(compare);
 }
-exports.sortErrorsByLocation = sortErrorsByLocation;

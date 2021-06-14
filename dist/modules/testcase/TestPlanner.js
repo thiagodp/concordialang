@@ -1,18 +1,15 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.TestPlanner = void 0;
-const objectToArray = require("object-to-array");
-const DataTestCaseAnalyzer_1 = require("../testdata/DataTestCaseAnalyzer");
-const Random_1 = require("../testdata/random/Random");
-const RandomLong_1 = require("../testdata/random/RandomLong");
-const TestPlan_1 = require("./TestPlan");
+import objectToArray from 'object-to-array';
+import { DTCAnalysisResult } from '../testdata/DataTestCaseAnalyzer';
+import { Random } from '../testdata/random/Random';
+import { RandomLong } from '../testdata/random/RandomLong';
+import { TestPlan } from './TestPlan';
 /**
  * Uses the given mixing strategy to select the DataTestCases that will be included
  * for every UI Element and then combine these DataTestCases to form TestPlans.
  *
  * @author Thiago Delgado Pinto
  */
-class TestPlanner {
+export class TestPlanner {
     /**
      * Constructor
      *
@@ -39,14 +36,14 @@ class TestPlanner {
         // console.log( 'alwaysValidVariables', alwaysValidVariables );
         // console.log( 'INPUT map      ', map );
         if (alwaysValidVariables.length > 0) {
-            const randomLong = new RandomLong_1.RandomLong(new Random_1.Random(this.seed));
+            const randomLong = new RandomLong(new Random(this.seed));
             for (let uieVar of alwaysValidVariables) {
                 let dtcMap = map.get(uieVar);
                 if (!dtcMap) {
                     continue;
                 }
                 for (let [dtc, data] of dtcMap) {
-                    if (data.result === DataTestCaseAnalyzer_1.DTCAnalysisResult.INVALID || data.result === DataTestCaseAnalyzer_1.DTCAnalysisResult.INCOMPATIBLE) {
+                    if (data.result === DTCAnalysisResult.INVALID || data.result === DTCAnalysisResult.INCOMPATIBLE) {
                         dtcMap.delete(dtc);
                     }
                 }
@@ -91,7 +88,7 @@ class TestPlanner {
             // Each combination now is a map uieName => UIEPlan
             // It will be transformed in a TestPlan
             for (let combObj of combinations) {
-                let plan = new TestPlan_1.TestPlan();
+                let plan = new TestPlan();
                 plan.dataTestCases = new Map(objectToArray(combObj));
                 plans.push(plan);
             }
@@ -99,4 +96,3 @@ class TestPlanner {
         return plans;
     }
 }
-exports.TestPlanner = TestPlanner;

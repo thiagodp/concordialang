@@ -1,7 +1,4 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.UIPropertyTypes = void 0;
-var UIPropertyTypes;
+export var UIPropertyTypes;
 (function (UIPropertyTypes) {
     UIPropertyTypes["ID"] = "id";
     UIPropertyTypes["TYPE"] = "type";
@@ -16,4 +13,4 @@ var UIPropertyTypes;
     UIPropertyTypes["REQUIRED"] = "required";
     UIPropertyTypes["LOCALE"] = "locale";
     UIPropertyTypes["LOCALE_FORMAT"] = "localeFormat";
-})(UIPropertyTypes = exports.UIPropertyTypes || (exports.UIPropertyTypes = {}));
+})(UIPropertyTypes || (UIPropertyTypes = {}));

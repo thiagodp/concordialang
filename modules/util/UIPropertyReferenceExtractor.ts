@@ -1,10 +1,10 @@
-import * as cloneRegExp from 'clone-regexp';
+import cloneRegExp from 'clone-regexp';
 import { Location } from 'concordialang-types';
-import { UIPropertyReference } from '../ast/UIPropertyReference';
-import { Entities, NLPEntity } from "../nlp";
-import { Symbols } from '../req/Symbols';
-import { UI_PROPERTY_REF_REGEX } from '../nlp/EntityRecognizerMaker';
 
+import { UIPropertyReference } from '../ast/UIPropertyReference';
+import { Entities, NLPEntity } from '../nlp';
+import { UI_PROPERTY_REF_REGEX } from '../nlp/EntityRecognizerMaker';
+import { Symbols } from '../req/Symbols';
 
 /**
  * Extracts references to UIProperties.

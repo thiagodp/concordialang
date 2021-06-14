@@ -1,11 +1,10 @@
 import { Step } from '../ast/Step';
+import { dictionaryForLanguage } from '../language/data/map';
 import { KeywordDictionary } from '../language/KeywordDictionary';
-import { LanguageContentLoader } from '../language/LanguageContentLoader';
+import { STATE_REGEX } from '../nlp/EntityRecognizerMaker';
 import { NodeTypes } from '../req/NodeTypes';
 import { upperFirst } from '../util/CaseConversor';
 import { isDefined } from '../util/TypeChecking';
-import { Entities } from '../nlp/Entities';
-import { STATE_REGEX } from '../nlp/EntityRecognizerMaker'
 
 
 const hasState = sentence => STATE_REGEX.test( sentence );
@@ -18,10 +17,7 @@ export class StepHandler {
 	private _keywords: Map< string, Map< string, string > > =
 		new Map< string, Map< string, string > >();
 
-	constructor(
-		private _langContentLoader: LanguageContentLoader,
-		private _defaultLanguage: string
-	) {
+	constructor( private _defaultLanguage: string ) {
 	}
 
 	private keywordMapForLanguage( docLanguage: string ): Map< string, string > {
@@ -30,8 +26,8 @@ export class StepHandler {
 
 		let dictionary: Map< string, string > = this._keywords.get( lang )
 		if ( ! dictionary ) {
-			const langContent = this._langContentLoader.load( lang );
-			const keywords: KeywordDictionary = langContent.keywords;
+			const languageDictionary = dictionaryForLanguage( lang );
+			const keywords: KeywordDictionary = languageDictionary.keywords;
 
 			dictionary = new Map< string, string >();
 			dictionary.set( NodeTypes.STEP_GIVEN, ( keywords.stepGiven || [ 'given' ] )[ 0 ] );

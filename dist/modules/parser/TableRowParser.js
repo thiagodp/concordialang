@@ -1,17 +1,14 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.TableRowParser = void 0;
-const SyntacticException_1 = require("./SyntacticException");
+import { SyntacticException } from './SyntacticException';
 /**
  * TableRow parser.
  *
  * @author Thiago Delgado Pinto
  */
-class TableRowParser {
+export class TableRowParser {
     /** @inheritDoc */
     analyze(node, context, it, errors) {
         if (!context.inTable || !context.currentTable) {
-            let e = new SyntacticException_1.SyntacticException('A table row should be declared after a Table declaration.', node.location);
+            let e = new SyntacticException('A table row should be declared after a Table declaration.', node.location);
             errors.push(e);
             return false;
         }
@@ -24,4 +21,3 @@ class TableRowParser {
         return true;
     }
 }
-exports.TableRowParser = TableRowParser;

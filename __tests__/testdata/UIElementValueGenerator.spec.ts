@@ -1,17 +1,18 @@
-import { join } from "path";
-import { EntityValueType, FileInfo } from "../../modules/ast";
-import { FileProblemMapper } from "../../modules/error/FileProblemMapper";
-import { AugmentedSpec } from "../../modules/req/AugmentedSpec";
-import { SpecFilter } from "../../modules/selection/SpecFilter";
-import { BatchSpecificationAnalyzer } from "../../modules/semantic/BatchSpecificationAnalyzer";
-import { UIETestPlan } from "../../modules/testcase/UIETestPlan";
-import { DataGenerator } from "../../modules/testdata/DataGenerator";
-import { DataGeneratorBuilder } from "../../modules/testdata/DataGeneratorBuilder";
-import { DataTestCase } from "../../modules/testdata/DataTestCase";
-import { DTCAnalysisResult } from "../../modules/testdata/DataTestCaseAnalyzer";
-import { UIElementValueGenerator, ValueGenContext } from "../../modules/testdata/UIElementValueGenerator";
-import { SimpleCompiler } from "../SimpleCompiler";
-import { LocalDate, LocalTime } from "@js-joda/core";
+import { LocalDate, LocalTime } from '@js-joda/core';
+import { join } from 'path';
+
+import { EntityValueType, FileInfo } from '../../modules/ast';
+import { FileProblemMapper } from '../../modules/error/FileProblemMapper';
+import { AugmentedSpec } from '../../modules/req/AugmentedSpec';
+import { SpecFilter } from '../../modules/selection/SpecFilter';
+import { BatchSpecificationAnalyzer } from '../../modules/semantic/BatchSpecificationAnalyzer';
+import { UIETestPlan } from '../../modules/testcase/UIETestPlan';
+import { DataGenerator } from '../../modules/testdata/DataGenerator';
+import { DataGeneratorBuilder } from '../../modules/testdata/DataGeneratorBuilder';
+import { DataTestCase } from '../../modules/testdata/DataTestCase';
+import { DTCAnalysisResult } from '../../modules/testdata/DataTestCaseAnalyzer';
+import { UIElementValueGenerator, ValueGenContext } from '../../modules/testdata/UIElementValueGenerator';
+import { SimpleCompiler } from '../SimpleCompiler';
 
 describe( 'UIElementValueGenerator', () => {
 

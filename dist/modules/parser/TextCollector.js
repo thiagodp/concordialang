@@ -1,13 +1,10 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.TextCollector = void 0;
-const NodeTypes_1 = require("../req/NodeTypes");
+import { NodeTypes } from '../req/NodeTypes';
 /**
  * Text collector
  *
  * @author Thiago Delgado Pinto
  */
-class TextCollector {
+export class TextCollector {
     /**
      * Add forward text nodes.
      *
@@ -17,10 +14,9 @@ class TextCollector {
      */
     addForwardTextNodes(it, target, changeIterator = false) {
         let nodeIt = changeIterator ? it : it.clone();
-        while (nodeIt.hasNext() && nodeIt.spyNext().nodeType === NodeTypes_1.NodeTypes.TEXT) {
+        while (nodeIt.hasNext() && nodeIt.spyNext().nodeType === NodeTypes.TEXT) {
             let text = nodeIt.next();
             target.push(text);
         }
     }
 }
-exports.TextCollector = TextCollector;

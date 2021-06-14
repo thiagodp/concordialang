@@ -1,4 +1,4 @@
-import * as arrayDiff from 'arr-diff';
+import arrayDiff from 'arr-diff';
 import * as enumUtil from 'enum-util';
 
 import { Constant, ReservedTags, Step, UIElement, UIProperty } from '../ast';

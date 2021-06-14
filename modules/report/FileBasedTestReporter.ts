@@ -1,4 +1,5 @@
 import { TestScriptExecutionResult } from 'concordialang-types';
+import { join } from 'path';
 
 import { FileWriter } from '../util/file/FileWriter';
 import { addTimeStampToFilename, changeFileExtension } from '../util/fs/ext-changer';
@@ -13,7 +14,7 @@ export interface FileBasedTestReporterOptions extends TestReporterOptions {
     useTimestamp?: boolean;
 }
 
-export const DEFAULT_FILENAME: string = 'cc-report';
+export const DEFAULT_FILENAME: string = 'concordia-report';
 
 /**
  * File-based test reporter.
@@ -23,12 +24,7 @@ export const DEFAULT_FILENAME: string = 'cc-report';
 export abstract class FileBasedTestReporter
     implements TestReporter< FileBasedTestReporterOptions > {
 
-    constructor(
-        protected readonly _fileWriter: FileWriter,
-        protected readonly _pathLibrary: any,
-    ) {
-    }
-
+    constructor( protected readonly _fileWriter: FileWriter ) {}
 
     /** @inheritdoc */
     abstract report(
@@ -43,17 +39,13 @@ export abstract class FileBasedTestReporter
 
     /** Creates a file name from the given options */
     makeFilename(options?: FileBasedTestReporterOptions): string {
-        const { join } = this._pathLibrary;
-        let fileName = options ? options.file || DEFAULT_FILENAME : DEFAULT_FILENAME;
-        const fileExtension = this.fileExtension();
-        fileName = changeFileExtension( fileName, fileExtension, this._pathLibrary );
-        if ( ! options ) {
-            return fileName;
+        let fileName = options?.file || DEFAULT_FILENAME;
+        if ( options?.directory ) {
+            fileName = join( options.directory, fileName );
         }
-        fileName = join( options.directory || '.', fileName );
-        if ( options.useTimestamp ) {
-            fileName = addTimeStampToFilename(
-                fileName, fileExtension, new Date(), this._pathLibrary );
+        fileName = changeFileExtension( fileName, this.fileExtension() );
+        if ( options?.useTimestamp ) {
+            fileName = addTimeStampToFilename( fileName, new Date() );
         }
         return fileName;
     }

@@ -1,12 +1,9 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.DataTestCaseGroupDef = exports.DataTestCaseGroup = exports.DataTestCase = void 0;
 /**
  * Data test cases.
  *
  * @author Thiago Delgado Pinto
  */
-var DataTestCase;
+export var DataTestCase;
 (function (DataTestCase) {
     // value
     DataTestCase["VALUE_LOWEST"] = "VALUE_LOWEST";
@@ -49,13 +46,13 @@ var DataTestCase;
     // computation
     DataTestCase["COMPUTATION_RIGHT"] = "COMPUTATION_RIGHT";
     DataTestCase["COMPUTATION_WRONG"] = "COMPUTATION_WRONG";
-})(DataTestCase = exports.DataTestCase || (exports.DataTestCase = {}));
+})(DataTestCase || (DataTestCase = {}));
 /**
  * Data test case group.
  *
  * @author Thiago Delgado Pinto
  */
-var DataTestCaseGroup;
+export var DataTestCaseGroup;
 (function (DataTestCaseGroup) {
     DataTestCaseGroup[DataTestCaseGroup["VALUE"] = 0] = "VALUE";
     DataTestCaseGroup[DataTestCaseGroup["LENGTH"] = 1] = "LENGTH";
@@ -63,13 +60,13 @@ var DataTestCaseGroup;
     DataTestCaseGroup[DataTestCaseGroup["SET"] = 3] = "SET";
     DataTestCaseGroup[DataTestCaseGroup["REQUIRED"] = 4] = "REQUIRED";
     DataTestCaseGroup[DataTestCaseGroup["COMPUTATION"] = 5] = "COMPUTATION";
-})(DataTestCaseGroup = exports.DataTestCaseGroup || (exports.DataTestCaseGroup = {}));
+})(DataTestCaseGroup || (DataTestCaseGroup = {}));
 /**
  * Data test cases of each group.
  *
  * @author Thiago Delgado Pinto
  */
-class DataTestCaseGroupDef {
+export class DataTestCaseGroupDef {
     constructor() {
         this.value = [
             DataTestCase.VALUE_LOWEST,
@@ -157,4 +154,3 @@ class DataTestCaseGroupDef {
         return DataTestCaseGroup.REQUIRED;
     }
 }
-exports.DataTestCaseGroupDef = DataTestCaseGroupDef;

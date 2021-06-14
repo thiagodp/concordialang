@@ -1,20 +1,16 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.RegexBlockLexer = void 0;
-const NodeTypes_1 = require("../req/NodeTypes");
-const BlockLexer_1 = require("./BlockLexer");
+import { NodeTypes } from "../req/NodeTypes";
+import { BlockLexer } from "./BlockLexer";
 /**
  * Detects a Regex Block.
  *
  * @author Thiago Delgado Pinto
  */
-class RegexBlockLexer extends BlockLexer_1.BlockLexer {
+export class RegexBlockLexer extends BlockLexer {
     constructor(words) {
-        super(words, NodeTypes_1.NodeTypes.REGEX_BLOCK);
+        super(words, NodeTypes.REGEX_BLOCK);
     }
     /** @inheritDoc */
     suggestedNextNodeTypes() {
-        return [NodeTypes_1.NodeTypes.REGEX];
+        return [NodeTypes.REGEX];
     }
 }
-exports.RegexBlockLexer = RegexBlockLexer;

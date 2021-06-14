@@ -1,12 +1,9 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.Expressions = void 0;
 /**
  * Commonly-used regular expressions.
  *
  * @author Thiago Delgado Pinto
  */
-class Expressions {
+export class Expressions {
     /**
      * Escape characters to be used in a regex.
      *
@@ -33,7 +30,6 @@ class Expressions {
         return new RegExp('^((?![' + values.join('') + ']).)*$', modifiers);
     }
 }
-exports.Expressions = Expressions;
 Expressions.AT_LEAST_ONE_SPACE_OR_TAB_OR_COMMA = '(?:\t| |,)+'; // "?:" means "not remember"
 Expressions.OPTIONAL_SPACES_OR_TABS = '(?:\t| )*'; // "?:" means "not remember"
 Expressions.ANYTHING = '.*';

@@ -1,9 +1,10 @@
 import { EventEmitter } from 'events';
+import Graph from 'graph.js/dist/graph.full.js';
+
 import { Document } from '../ast/Document';
 import { ImportBasedGraphBuilder } from '../compiler/ImportBasedGraphBuilder';
 import { AugmentedSpec } from '../req/AugmentedSpec';
 import { GraphFilter, GraphFilterEvent } from './GraphFilter';
-import Graph = require('graph.js/dist/graph.full.js');
 
 
 /**

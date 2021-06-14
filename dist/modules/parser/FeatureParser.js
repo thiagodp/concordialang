@@ -1,20 +1,17 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.FeatureParser = void 0;
-const SyntacticException_1 = require("./SyntacticException");
-const TagCollector_1 = require("./TagCollector");
-const TextCollector_1 = require("./TextCollector");
+import { SyntacticException } from './SyntacticException';
+import { TagCollector } from './TagCollector';
+import { TextCollector } from './TextCollector';
 /**
  * Feature parser
  *
  * @author Thiago Delgado Pinto
  */
-class FeatureParser {
+export class FeatureParser {
     /** @inheritDoc */
     analyze(node, context, it, errors) {
         // Checks if it is already declared
         if (context.doc.feature) {
-            let e = new SyntacticException_1.SyntacticException('Just one feature declaration is allowed.', node.location);
+            let e = new SyntacticException('Just one feature declaration is allowed.', node.location);
             errors.push(e);
             return false;
         }
@@ -29,10 +26,9 @@ class FeatureParser {
         context.resetInValues();
         context.inFeature = true;
         // Add backwards tags
-        (new TagCollector_1.TagCollector()).addBackwardTags(it, node.tags); // does not touch the iterator
+        (new TagCollector()).addBackwardTags(it, node.tags); // does not touch the iterator
         // Add forward text sentences
-        (new TextCollector_1.TextCollector()).addForwardTextNodes(it, node.sentences, true); // true == change iterator
+        (new TextCollector()).addForwardTextNodes(it, node.sentences, true); // true == change iterator
         return true;
     }
 }
-exports.FeatureParser = FeatureParser;

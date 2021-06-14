@@ -1,4 +1,5 @@
-import * as deepcopy from 'deepcopy';
+import deepcopy from 'deepcopy';
+
 import { EntityValueType } from '../ast';
 import { isDefined } from '../util/TypeChecking';
 import { ValueType, ValueTypeDetector } from '../util/ValueTypeDetector';

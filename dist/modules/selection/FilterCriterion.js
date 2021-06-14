@@ -1,6 +1,3 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.FilterCriterion = void 0;
 /**
  * Filter criterion
  *
@@ -12,7 +9,7 @@ exports.FilterCriterion = void 0;
  *
  * @author Thiago Delgado Pinto
  */
-var FilterCriterion;
+export var FilterCriterion;
 (function (FilterCriterion) {
     // GTE = Greater Than or Equal to
     // LTE = Less Than or Equal to
@@ -30,4 +27,4 @@ var FilterCriterion;
     FilterCriterion["NAME_STARTING_WITH"] = "name_starting_with";
     FilterCriterion["NAME_ENDING_WITH"] = "name_ending_with";
     FilterCriterion["NAME_CONTAINING"] = "name_containing";
-})(FilterCriterion = exports.FilterCriterion || (exports.FilterCriterion = {}));
+})(FilterCriterion || (FilterCriterion = {}));

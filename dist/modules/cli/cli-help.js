@@ -1,9 +1,6 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.helpContent = void 0;
-const colors = require("chalk");
-const default_options_1 = require("../app/default-options");
-function helpContent() {
+import * as colors from 'chalk';
+import { DEFAULT_RANDOM_MAX_STRING_SIZE, DEFAULT_RANDOM_TRIES_TO_INVALID_VALUE } from '../app/default-options';
+export function helpContent() {
     const exeName = colors.magenta('concordia');
     // *** USE SPACES INSTEAD OF TAB INSIDE THE STRING ***
     return `
@@ -95,9 +92,9 @@ ${colors.gray('Random generation')}
 --random-min-string-size <number>       Minimum random string size.
                                         The default is 0.
 --random-max-string-size <number>       Minimum random string size.
-                                        The default is ${default_options_1.DEFAULT_RANDOM_MAX_STRING_SIZE}.
+                                        The default is ${DEFAULT_RANDOM_MAX_STRING_SIZE}.
 --random-tries <number>                 Random tries to generate invalid values.
-                                        The default is ${default_options_1.DEFAULT_RANDOM_TRIES_TO_INVALID_VALUE}.
+                                        The default is ${DEFAULT_RANDOM_TRIES_TO_INVALID_VALUE}.
 
 ${colors.gray('Combination strategies')}
 
@@ -165,4 +162,3 @@ ${colors.yellowBright('Examples')}
  $ ${exeName} --no-run --no-result
 `;
 } // function content()
-exports.helpContent = helpContent;

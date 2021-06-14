@@ -4,7 +4,7 @@ import { join, normalize } from 'path';
 import { promisify } from 'util';
 
 import { PackageBasedPluginFinder } from '../../modules/plugin/PackageBasedPluginFinder';
-import { PLUGIN_PROPERTY, PluginData } from '../../modules/plugin/PluginData';
+import { PLUGIN_PROPERTY, PluginData, OldPluginData } from '../../modules/plugin/PluginData';
 import { FSDirSearcher } from '../../modules/util/fs/FSDirSearcher';
 import { FSFileHandler } from '../../modules/util/fs/FSFileHandler';
 
@@ -37,7 +37,7 @@ describe( 'PackageBasedPluginFinder', () => {
         file: 'path/to/main.js',
         class: 'Main',
         serve: 'npm --version'
-    } as PluginData;
+    } as OldPluginData;
 
     const makeFinder = () => {
         const fileReader = new FSFileHandler( fs, promisify );
@@ -109,27 +109,6 @@ describe( 'PackageBasedPluginFinder', () => {
     } );
 
 
-    it( 'returns class file with path', async () => {
-
-        vol.mkdirpSync( localPluginDir ); // local
-        vol.writeFileSync( localPluginPackageFile, JSON.stringify( pkg ) ); // local
-
-        const pkg2 = { ... pkg }; // copy properties
-        pkg2.name += '-global';
-
-        vol.mkdirpSync( globalPluginDir ); // global
-        vol.writeFileSync( globalPluginPackageFile, JSON.stringify( pkg2 ) ); // global
-
-        const finder: PackageBasedPluginFinder = makeFinder();
-        const pluginData: PluginData[] = await finder.find();
-        expect( pluginData ).toHaveLength( 2 );
-
-        const first = pluginData[ 0 ];
-
-        expect( first.file ).toContain( localPluginDir );
-    } );
-
-
     it( 'ignores a package that is not a plugin', async () => {
 
         vol.mkdirpSync( localPluginDir ); // local
@@ -145,6 +124,30 @@ describe( 'PackageBasedPluginFinder', () => {
         const finder: PackageBasedPluginFinder = makeFinder();
         const pluginData: PluginData[] = await finder.find();
         expect( pluginData ).toHaveLength( 1 );
+    } );
+
+    describe( 'old plugin structure', () => {
+
+        it( 'returns file with path', async () => {
+
+            vol.mkdirpSync( localPluginDir ); // local
+            vol.writeFileSync( localPluginPackageFile, JSON.stringify( pkg ) ); // local
+
+            const pkg2 = { ... pkg }; // copy properties
+            pkg2.name += '-global';
+
+            vol.mkdirpSync( globalPluginDir ); // global
+            vol.writeFileSync( globalPluginPackageFile, JSON.stringify( pkg2 ) ); // global
+
+            const finder: PackageBasedPluginFinder = makeFinder();
+            const pluginData = await finder.find();
+            expect( pluginData ).toHaveLength( 2 );
+
+            const first = pluginData[ 0 ] as OldPluginData;
+
+            expect( first.file ).toContain( localPluginDir );
+        } );
+
     } );
 
 } );

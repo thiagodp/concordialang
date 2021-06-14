@@ -1,20 +1,16 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.StepOtherwiseLexer = void 0;
-const NodeTypes_1 = require("../req/NodeTypes");
-const StartingKeywordLexer_1 = require("./StartingKeywordLexer");
+import { NodeTypes } from "../req/NodeTypes";
+import { StartingKeywordLexer } from './StartingKeywordLexer';
 /**
  * Detects an Otherwise node.
  *
  * @author Thiago Delgado Pinto
  */
-class StepOtherwiseLexer extends StartingKeywordLexer_1.StartingKeywordLexer {
+export class StepOtherwiseLexer extends StartingKeywordLexer {
     constructor(words) {
-        super(words, NodeTypes_1.NodeTypes.STEP_OTHERWISE);
+        super(words, NodeTypes.STEP_OTHERWISE);
     }
     /** @inheritDoc */
     suggestedNextNodeTypes() {
-        return [NodeTypes_1.NodeTypes.STEP_AND];
+        return [NodeTypes.STEP_AND];
     }
 }
-exports.StepOtherwiseLexer = StepOtherwiseLexer;

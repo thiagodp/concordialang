@@ -1,14 +1,11 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.RandomDate = void 0;
-const core_1 = require("@js-joda/core");
-const DateLimits_1 = require("../limits/DateLimits");
+import { ChronoUnit } from "@js-joda/core";
+import { DateLimits } from "../limits/DateLimits";
 /**
  * Generates random date values.
  *
  * @author Thiago Delgado Pinto
  */
-class RandomDate {
+export class RandomDate {
     constructor(_randomLong) {
         this._randomLong = _randomLong;
     }
@@ -19,7 +16,7 @@ class RandomDate {
      * @param max Maximum date
      */
     between(min, max) {
-        const daysBetween = min.until(max, core_1.ChronoUnit.DAYS);
+        const daysBetween = min.until(max, ChronoUnit.DAYS);
         if (0 === daysBetween) {
             return min;
         }
@@ -32,7 +29,7 @@ class RandomDate {
      * @param max Maximum date
      */
     before(max) {
-        return this.between(DateLimits_1.DateLimits.MIN, max.minusDays(1));
+        return this.between(DateLimits.MIN, max.minusDays(1));
     }
     /**
      * Returns a random date after the given date.
@@ -40,7 +37,6 @@ class RandomDate {
      * @param min Minimum date
      */
     after(min) {
-        return this.between(min.plusDays(1), DateLimits_1.DateLimits.MAX);
+        return this.between(min.plusDays(1), DateLimits.MAX);
     }
 }
-exports.RandomDate = RandomDate;

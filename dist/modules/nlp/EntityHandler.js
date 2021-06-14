@@ -1,12 +1,9 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.EntityHandler = void 0;
 /**
  * Entity handler
  *
  * @author Thiago Delgado Pinto
  */
-class EntityHandler {
+export class EntityHandler {
     with(r, target) {
         if (!r.entities) {
             return [];
@@ -23,4 +20,3 @@ class EntityHandler {
         return this.with(r, target).map(e => e.value);
     }
 }
-exports.EntityHandler = EntityHandler;

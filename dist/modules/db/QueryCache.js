@@ -1,12 +1,9 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.QueryCache = void 0;
 /**
  * Query cache.
  *
  * @author Thiago Delgado Pinto
  */
-class QueryCache {
+export class QueryCache {
     constructor() {
         // query => [ { field1 => value1, field2 => value2, ... }, { ... } ]
         // ex: 'SELECT bla' => [ { 'col1': 'valA', 'col2': 'valB' }, { 'col1': 'valC', 'col2': 'valD' } ]
@@ -28,4 +25,3 @@ class QueryCache {
         this._cache.clear();
     }
 }
-exports.QueryCache = QueryCache;

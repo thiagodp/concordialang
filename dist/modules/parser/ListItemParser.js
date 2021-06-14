@@ -1,22 +1,19 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.ListItemParser = void 0;
-const ConstantParser_1 = require("./ConstantParser");
-const DatabasePropertyParser_1 = require("./DatabasePropertyParser");
-const RegexParser_1 = require("./RegexParser");
-const UIPropertyParser_1 = require("./UIPropertyParser");
+import { ConstantParser } from './ConstantParser';
+import { DatabasePropertyParser } from './DatabasePropertyParser';
+import { RegexParser } from './RegexParser';
+import { UIPropertyParser } from './UIPropertyParser';
 /**
  * Parses a ListItem node and decide what node type it will be.
  *
  * @author Thiago Delgado Pinto
  */
-class ListItemParser {
+export class ListItemParser {
     constructor() {
         this._nodeParsers = [];
-        this._nodeParsers.push(new ConstantParser_1.ConstantParser());
-        this._nodeParsers.push(new RegexParser_1.RegexParser());
-        this._nodeParsers.push(new UIPropertyParser_1.UIPropertyParser());
-        this._nodeParsers.push(new DatabasePropertyParser_1.DatabasePropertyParser());
+        this._nodeParsers.push(new ConstantParser());
+        this._nodeParsers.push(new RegexParser());
+        this._nodeParsers.push(new UIPropertyParser());
+        this._nodeParsers.push(new DatabasePropertyParser());
     }
     analyze(node, context, it, errors) {
         if (!it.hasPrior()) {
@@ -31,4 +28,3 @@ class ListItemParser {
         return true;
     }
 }
-exports.ListItemParser = ListItemParser;

@@ -1,26 +1,23 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.StepAndParser = void 0;
-const NodeTypes_1 = require("../req/NodeTypes");
-const SyntacticException_1 = require("./SyntacticException");
+import { NodeTypes } from '../req/NodeTypes';
+import { SyntacticException } from './SyntacticException';
 /**
  * Step And node parser.
  *
  * @author Thiago Delgado Pinto
  */
-class StepAndParser {
+export class StepAndParser {
     /** @inheritDoc */
     analyze(node, context, it, errors) {
         // Checks prior nodes
         const allowedPriorNodes = [
-            NodeTypes_1.NodeTypes.STEP_GIVEN,
-            NodeTypes_1.NodeTypes.STEP_WHEN,
-            NodeTypes_1.NodeTypes.STEP_THEN,
-            NodeTypes_1.NodeTypes.STEP_AND,
-            NodeTypes_1.NodeTypes.STEP_OTHERWISE
+            NodeTypes.STEP_GIVEN,
+            NodeTypes.STEP_WHEN,
+            NodeTypes.STEP_THEN,
+            NodeTypes.STEP_AND,
+            NodeTypes.STEP_OTHERWISE
         ];
         if (!it.hasPrior() || allowedPriorNodes.indexOf(it.spyPrior().nodeType) < 0) {
-            let e = new SyntacticException_1.SyntacticException('The "' + node.nodeType + '" clause must be declared after a Given, When, Then, And, or Otherwise.', node.location);
+            let e = new SyntacticException('The "' + node.nodeType + '" clause must be declared after a Given, When, Then, And, or Otherwise.', node.location);
             errors.push(e);
             return false;
         }
@@ -60,12 +57,12 @@ class StepAndParser {
             else if (context.inAfterEachScenario)
                 owner = context.doc.afterEachScenario;
             else {
-                let e = new SyntacticException_1.SyntacticException('The "' + node.nodeType + '" clause must be declared after a Background, Scenario, Variant Background, Variant, Test Case, Before All, After All, Before Feature, After Feature, Before Each Scenario, AfterEachScenario or UI Element Property.', node.location);
+                let e = new SyntacticException('The "' + node.nodeType + '" clause must be declared after a Background, Scenario, Variant Background, Variant, Test Case, Before All, After All, Before Feature, After Feature, Before Each Scenario, AfterEachScenario or UI Element Property.', node.location);
                 errors.push(e);
                 return false;
             }
             if (!owner) {
-                let e = new SyntacticException_1.SyntacticException('Invalid context for the step "' + node.nodeType + '".', node.location);
+                let e = new SyntacticException('Invalid context for the step "' + node.nodeType + '".', node.location);
                 errors.push(e);
                 return false;
             }
@@ -78,4 +75,3 @@ class StepAndParser {
         return true;
     }
 }
-exports.StepAndParser = StepAndParser;

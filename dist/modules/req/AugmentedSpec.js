@@ -1,13 +1,10 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.AugmentedSpec = exports.IN_MEMORY_DATABASE_NAME = void 0;
-const path_1 = require("path");
-const CaseType_1 = require("../util/CaseType");
-const ast_1 = require("../ast");
-const DocumentUtil_1 = require("../util/DocumentUtil");
-const file_1 = require("../util/file");
-const TypeChecking_1 = require("../util/TypeChecking");
-const UIElementNameHandler_1 = require("../util/UIElementNameHandler");
+import { dirname, resolve } from 'path';
+import { CaseType } from '../util/CaseType';
+import { Spec } from '../ast';
+import { DocumentUtil } from '../util/DocumentUtil';
+import { toUnixPath } from '../util/file';
+import { isDefined, valueOrNull } from '../util/TypeChecking';
+import { UIElementNameHandler } from '../util/UIElementNameHandler';
 class MappedContent {
     constructor() {
         this.feature = false;
@@ -17,7 +14,7 @@ class MappedContent {
         this.table = false;
     }
 }
-exports.IN_MEMORY_DATABASE_NAME = '___concordia___';
+export const IN_MEMORY_DATABASE_NAME = '___concordia___';
 /**
  * Augmented specification
  *
@@ -25,7 +22,7 @@ exports.IN_MEMORY_DATABASE_NAME = '___concordia___';
  *
  * @author Thiago Delgado Pinto
  */
-class AugmentedSpec extends ast_1.Spec {
+export class AugmentedSpec extends Spec {
     constructor(basePath) {
         super(basePath);
         this._docFullyMapped = new Map();
@@ -39,7 +36,7 @@ class AugmentedSpec extends ast_1.Spec {
         this._constantNameToValueMap = new Map();
         this._uiElementVariableMap = new Map(); // *all* UI Elements
         this._databaseNameToInterfaceMap = new Map();
-        this._uiLiteralCaseOption = CaseType_1.CaseType.CAMEL; // defined by setter
+        this._uiLiteralCaseOption = CaseType.CAMEL; // defined by setter
         this._docToAccessibleUIElementsCache = new Map();
         this.databaseNames = (rebuildCache = false) => {
             return this.databases(rebuildCache).map(db => db.name);
@@ -96,12 +93,11 @@ class AugmentedSpec extends ast_1.Spec {
         return true;
     }
     formatPath(path) {
-        return file_1.toUnixPath(path_1.resolve(path_1.dirname(this.basePath), path)).toLowerCase();
+        return toUnixPath(resolve(dirname(this.basePath), path)).toLowerCase();
         // return toUnixPath( resolve( dirname( this.basePath ), path ) );
     }
     addToDocPath(doc) {
-        var _a;
-        const path = this.formatPath(((_a = doc === null || doc === void 0 ? void 0 : doc.fileInfo) === null || _a === void 0 ? void 0 : _a.path) || '');
+        const path = this.formatPath((doc?.fileInfo?.path) || '');
         if (this._pathToDocCache.has(path)) {
             return false;
         }
@@ -116,7 +112,7 @@ class AugmentedSpec extends ast_1.Spec {
     }
     assureDoc(doc) {
         let mc = this._docFullyMapped.get(doc);
-        if (!TypeChecking_1.isDefined(mc)) {
+        if (!isDefined(mc)) {
             mc = new MappedContent();
             this._docFullyMapped.set(doc, mc);
         }
@@ -204,7 +200,7 @@ class AugmentedSpec extends ast_1.Spec {
             this._featureCache = [];
         }
         // Adjust filePath if not defined
-        if (TypeChecking_1.isDefined(doc.feature.location) && !TypeChecking_1.isDefined(doc.feature.location.filePath) && TypeChecking_1.isDefined(doc.fileInfo)) {
+        if (isDefined(doc.feature.location) && !isDefined(doc.feature.location.filePath) && isDefined(doc.fileInfo)) {
             doc.feature.location.filePath = doc.fileInfo.path || '';
         }
         this._featureCache.push(doc.feature);
@@ -215,7 +211,7 @@ class AugmentedSpec extends ast_1.Spec {
             return;
         }
         // Maps local and global UI elements to the variables cache
-        (new DocumentUtil_1.DocumentUtil()).mapUIElementVariables(doc, this._uiElementVariableMap, false, this._uiLiteralCaseOption);
+        (new DocumentUtil()).mapUIElementVariables(doc, this._uiElementVariableMap, false, this._uiLiteralCaseOption);
         // Adds global UI elements to the UI elements cache, if defined
         if (!doc.uiElements || doc.uiElements.length < 1) {
             this.assureDoc(doc).uiElement = true;
@@ -258,10 +254,10 @@ class AugmentedSpec extends ast_1.Spec {
      */
     docWithPath(filePath, referencePath = '.', rebuildCache = false) {
         // Rebuild cache ?
-        if (!TypeChecking_1.isDefined(this._pathToDocCache) || rebuildCache) {
+        if (!isDefined(this._pathToDocCache) || rebuildCache) {
             this.rebuildDocPath();
         }
-        const path = path_1.resolve(path_1.dirname(referencePath), filePath);
+        const path = resolve(dirname(referencePath), filePath);
         const targetFile = this.formatPath(path);
         let doc = this._pathToDocCache.get(targetFile);
         return doc || null;
@@ -279,10 +275,10 @@ class AugmentedSpec extends ast_1.Spec {
         return this.findByName(name, this.features(rebuildCache));
     }
     uiElementByVariable(variable, doc = null) {
-        if (TypeChecking_1.isDefined(doc)) {
-            const docUtil = new DocumentUtil_1.DocumentUtil();
+        if (isDefined(doc)) {
+            const docUtil = new DocumentUtil();
             const ui = docUtil.findUIElementInTheDocument(variable, doc);
-            if (TypeChecking_1.isDefined(ui)) {
+            if (isDefined(ui)) {
                 return ui;
             }
             return this.findUIElementInDocumentImports(variable, doc);
@@ -294,19 +290,19 @@ class AugmentedSpec extends ast_1.Spec {
             return null;
         }
         const lowerCasedName = name.toLowerCase();
-        return TypeChecking_1.valueOrNull(nodes.find(n => n.name ? n.name.toLowerCase() === lowerCasedName : false));
+        return valueOrNull(nodes.find(n => n.name ? n.name.toLowerCase() === lowerCasedName : false));
     }
     //
     // OTHER
     //
     constantValue(name) {
-        return TypeChecking_1.valueOrNull(this.constantNameToValueMap().get(name));
+        return valueOrNull(this.constantNameToValueMap().get(name));
     }
     /**
      * Return all databases. Results are cached.
      */
     databases(rebuildCache = false) {
-        if (TypeChecking_1.isDefined(this._databaseCache) && !rebuildCache) {
+        if (isDefined(this._databaseCache) && !rebuildCache) {
             return this._databaseCache;
         }
         this._databaseCache = [];
@@ -316,7 +312,7 @@ class AugmentedSpec extends ast_1.Spec {
         return this._databaseCache;
     }
     isConstantCacheFilled() {
-        return TypeChecking_1.isDefined(this._constantCache);
+        return isDefined(this._constantCache);
     }
     /**
      * Return all constants. Results are cached.
@@ -347,7 +343,7 @@ class AugmentedSpec extends ast_1.Spec {
      * Return all tables. Results are cached.
      */
     tables(rebuildCache = false) {
-        if (TypeChecking_1.isDefined(this._tableCache) && !rebuildCache) {
+        if (isDefined(this._tableCache) && !rebuildCache) {
             return this._tableCache;
         }
         this._tableCache = [];
@@ -363,7 +359,7 @@ class AugmentedSpec extends ast_1.Spec {
      * Return all features. Results are cached.
      */
     features(rebuildCache = false) {
-        if (TypeChecking_1.isDefined(this._featureCache) && !rebuildCache) {
+        if (isDefined(this._featureCache) && !rebuildCache) {
             return this._featureCache;
         }
         this._featureCache = [];
@@ -420,12 +416,12 @@ class AugmentedSpec extends ast_1.Spec {
         if (!doc.imports || doc.imports.length < 1) {
             return null;
         }
-        const uieNameHandler = new UIElementNameHandler_1.UIElementNameHandler();
+        const uieNameHandler = new UIElementNameHandler();
         const [featureName,] = uieNameHandler.extractNamesOf(variable);
-        if (!TypeChecking_1.isDefined(featureName) && doc.imports.length > 1) {
+        if (!isDefined(featureName) && doc.imports.length > 1) {
             return null;
         }
-        const docUtil = new DocumentUtil_1.DocumentUtil();
+        const docUtil = new DocumentUtil();
         for (let impDoc of doc.imports) {
             let otherDoc = this.docWithPath(impDoc.value, doc.fileInfo.path);
             if (!otherDoc) {
@@ -437,7 +433,7 @@ class AugmentedSpec extends ast_1.Spec {
                 continue;
             }
             let uie = docUtil.findUIElementInTheDocument(variable, otherDoc);
-            if (TypeChecking_1.isDefined(uie)) {
+            if (isDefined(uie)) {
                 return uie;
             }
         }
@@ -461,7 +457,7 @@ class AugmentedSpec extends ast_1.Spec {
      * @param includeGlobals Whether globals should be included
      */
     extractVariablesFromDocumentAndImports(doc, includeGlobals = false) {
-        const docUtil = new DocumentUtil_1.DocumentUtil();
+        const docUtil = new DocumentUtil();
         let variables = [];
         variables.push.apply(variables, docUtil.extractDocumentVariables(doc, includeGlobals));
         for (let impDoc of doc.imports || []) {
@@ -481,10 +477,10 @@ class AugmentedSpec extends ast_1.Spec {
      */
     extractUIElementsFromDocumentAndImports(doc, includeGlobals = false) {
         let elements = this._docToAccessibleUIElementsCache.get(doc) || null;
-        if (TypeChecking_1.isDefined(elements)) {
+        if (isDefined(elements)) {
             return elements;
         }
-        const docUtil = new DocumentUtil_1.DocumentUtil();
+        const docUtil = new DocumentUtil();
         elements = [];
         elements.push.apply(elements, docUtil.extractUIElements(doc, includeGlobals));
         for (let impDoc of doc.imports || []) {
@@ -497,4 +493,3 @@ class AugmentedSpec extends ast_1.Spec {
         return elements;
     }
 }
-exports.AugmentedSpec = AugmentedSpec;

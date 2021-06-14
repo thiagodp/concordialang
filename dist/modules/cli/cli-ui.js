@@ -1,20 +1,17 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.UI = exports.pluralS = void 0;
-const colors = require("chalk");
-const figures = require("figures");
-const logSymbols = require("log-symbols");
-const path_1 = require("path");
-const readline = require("readline");
-const sprintf_js_1 = require("sprintf-js");
-const terminalLink = require("terminal-link");
-const default_options_1 = require("../app/default-options");
-const ErrorSorting_1 = require("../error/ErrorSorting");
-const TimeFormat_1 = require("../util/TimeFormat");
-exports.pluralS = (count, singular, plural) => {
+import * as colors from 'chalk';
+import * as figures from 'figures';
+import * as logSymbols from 'log-symbols';
+import { basename, dirname, relative } from 'path';
+import * as readline from 'readline';
+import { sprintf } from 'sprintf-js';
+import terminalLink from 'terminal-link';
+import { DEFAULT_LANGUAGE } from '../app/default-options';
+import { sortErrorsByLocation } from '../error/ErrorSorting';
+import { millisToString } from '../util/TimeFormat';
+export const pluralS = (count, singular, plural) => {
     return 1 === count ? singular : (plural || (singular + 's'));
 };
-class UI {
+export class UI {
     // Ora has a bug that swallows lines before stop that spinner and that's why it was removed.
     // @see https://github.com/sindresorhus/ora/issues/90
     // Note: Same problem using "elegant-spinner" with "log-update"
@@ -136,7 +133,9 @@ class UI {
             this.error(error.message);
         }
     }
+    //
     // CLI
+    //
     /** @inheritdoc */
     showHelp(content) {
         this.writeln(content);
@@ -155,7 +154,7 @@ class UI {
     /** @inheritdoc */
     announceOptions(options) {
         // Language
-        if (default_options_1.DEFAULT_LANGUAGE !== options.language) {
+        if (DEFAULT_LANGUAGE !== options.language) {
             this.info('Default language is', this.highlight(options.language));
         }
         // VERBOSE MODE
@@ -307,7 +306,7 @@ class UI {
     /** @inheritdoc */
     showGeneratedTestScriptFiles(scriptDir, files, durationMS) {
         const fileCount = files.length;
-        const fileStr = exports.pluralS(fileCount, 'file');
+        const fileStr = pluralS(fileCount, 'file');
         this.info(this.highlight(fileCount), 'test script ' + fileStr, 'generated', this.formatDuration(durationMS));
         // VERBOSE MODE
         if (!this._verboseMode) {
@@ -318,7 +317,7 @@ class UI {
             return text;
         };
         for (const file of files) {
-            const relPath = path_1.relative(path_1.dirname(scriptDir), file);
+            const relPath = relative(dirname(scriptDir), file);
             const link = terminalLink(relPath, file, { fallback: fallback }); // clickable URL
             this.success('Generated script', this.highlight(link));
         }
@@ -396,7 +395,7 @@ class UI {
     }
     /** @inheritDoc */
     announceConfigurationFileLoaded(filePath, durationMS) {
-        this.info('Configuration file loaded:', this.highlight(this._debugMode ? filePath : path_1.basename(filePath)), this._verboseMode ? this.formatDuration(durationMS) : '');
+        this.info('Configuration file loaded:', this.highlight(this._debugMode ? filePath : basename(filePath)), this._verboseMode ? this.formatDuration(durationMS) : '');
     }
     /** @inheritDoc */
     announceSeed(seed, generatedSeed) {
@@ -450,11 +449,11 @@ class UI {
             if (!hasErrors && !hasWarnings) {
                 return;
             }
-            this.writeln(color(symbol), this.highlight(path_1.relative(dirTestCases, filePath)) + ':');
+            this.writeln(color(symbol), this.highlight(relative(dirTestCases, filePath)) + ':');
             this.showErrors([...errors, ...warnings], true);
         }
         else {
-            this.writeln(color(symbol), 'Generated', this.highlight(path_1.relative(dirTestCases, filePath)), 'with', this.highlight(testCasesCount), exports.pluralS(testCasesCount, 'test case'));
+            this.writeln(color(symbol), 'Generated', this.highlight(relative(dirTestCases, filePath)), 'with', this.highlight(testCasesCount), pluralS(testCasesCount, 'test case'));
             if (!hasErrors && !hasWarnings) {
                 return;
             }
@@ -463,7 +462,7 @@ class UI {
     }
     /** @inheritDoc */
     testCaseGenerationFinished(filesCount, testCasesCount, durationMs) {
-        this.info(this.highlight(filesCount), 'test case', exports.pluralS(filesCount, 'file'), 'generated:', this.highlight(testCasesCount), exports.pluralS(testCasesCount, 'test case'), 'total', this.formatDuration(durationMs));
+        this.info(this.highlight(filesCount), 'test case', pluralS(filesCount, 'file'), 'generated:', this.highlight(testCasesCount), pluralS(testCasesCount, 'test case'), 'total', this.formatDuration(durationMs));
     }
     //
     // CompilerListener
@@ -489,7 +488,7 @@ class UI {
         if (!this._verboseMode) {
             return;
         }
-        this.info(this.highlight(filesFoundCount), exports.pluralS(filesFoundCount, 'file'), 'given,', this.highlight(filesIgnoredCount), 'test case', exports.pluralS(filesIgnoredCount, 'file'), 'ignored', this.formatDuration(durationMS));
+        this.info(this.highlight(filesFoundCount), pluralS(filesFoundCount, 'file'), 'given,', this.highlight(filesIgnoredCount), 'test case', pluralS(filesIgnoredCount, 'file'), 'ignored', this.formatDuration(durationMS));
     }
     /** @inheritDoc */
     announceCompilerStarted(options) {
@@ -500,7 +499,7 @@ class UI {
     announceCompilerFinished(compiledFilesCount, featuresCount, testCasesCount, durationMS) {
         // this.stopSpinner();
         this.clearLine();
-        this.info(this.highlight(compiledFilesCount), exports.pluralS(compiledFilesCount, 'file'), 'compiled:', this.highlight(featuresCount), 'feature', exports.pluralS(featuresCount, 'file'), 'and', this.highlight(testCasesCount), 'testcase', exports.pluralS(testCasesCount, 'file'), this.formatDuration(durationMS));
+        this.info(this.highlight(compiledFilesCount), pluralS(compiledFilesCount, 'file'), 'compiled:', this.highlight(featuresCount), 'feature', pluralS(featuresCount, 'file'), 'and', this.highlight(testCasesCount), 'testcase', pluralS(testCasesCount, 'file'), this.formatDuration(durationMS));
     }
     /** @inheritdoc */
     reportProblems(problems, basePath) {
@@ -522,7 +521,7 @@ class UI {
             }
             const color = this.properColor(hasErrors, hasWarnings);
             const symbol = this.properSymbol(hasErrors, hasWarnings);
-            const text = path_1.relative(basePath, filePath);
+            const text = relative(basePath, filePath);
             const link = terminalLink(text, filePath, { fallback: fallback }); // clickable URL
             this.writeln(color(symbol), this.highlight(link));
             this.showErrors([...problemInfo.errors, ...problemInfo.warnings], true);
@@ -548,49 +547,55 @@ class UI {
         this.info('Installed Plugins:');
         for (let p of plugins) {
             this.writeln(' ');
-            this.writeln(sprintf_js_1.sprintf(format, '  Name'), highlight(p.name));
-            this.writeln(sprintf_js_1.sprintf(format, '  Version'), p.version);
-            this.writeln(sprintf_js_1.sprintf(format, '  Description'), p.description);
+            this.writeln(sprintf(format, '  Name'), highlight(p.name));
+            this.writeln(sprintf(format, '  Version'), p.version);
+            this.writeln(sprintf(format, '  Description'), p.description);
         }
     }
     /** @inheritdoc */
     drawSinglePlugin(p) {
         const format = "  - %-12s: %s"; // util.format does not support padding :(
-        const authors = p.authors.map((a, idx) => 0 === idx ? a : sprintf_js_1.sprintf('%-17s %s', '', a));
-        this.info(sprintf_js_1.sprintf('Plugin %s', this.highlight(p.name)));
-        this.writeln(sprintf_js_1.sprintf(format, 'version', p.version));
-        this.writeln(sprintf_js_1.sprintf(format, 'description', p.description));
-        this.writeln(sprintf_js_1.sprintf(format, 'authors', authors.join('\n')));
-        this.writeln(sprintf_js_1.sprintf(format, 'file', this._debugMode ? p.file : path_1.basename(p.file)));
-        this.writeln(sprintf_js_1.sprintf(format, 'class', p.class));
+        const formattedAuthors = p.authors.map((a, idx) => 0 === idx ? a : sprintf('%-17s %s', '', a));
+        this.info(sprintf('Plugin %s', this.highlight(p.name)));
+        this.writeln(sprintf(format, 'version', p.version));
+        this.writeln(sprintf(format, 'description', p.description));
+        this.writeln(sprintf(format, 'authors', formattedAuthors.join('\n')));
     }
     /** @inheritdoc */
     showMessagePluginNotFound(name) {
-        this.error(sprintf_js_1.sprintf('No plugins installed with the name "%s".', this.highlight(name)));
+        this.error(sprintf('No plugins installed with the name "%s".', this.highlight(name)));
     }
     /** @inheritdoc */
     showMessagePluginAlreadyInstalled(name) {
-        this.info(sprintf_js_1.sprintf('The plugin %s is already installed.', this.highlight(name)));
+        this.info(sprintf('The plugin %s is already installed.', this.highlight(name)));
     }
     /** @inheritdoc */
     showMessageTryingToInstall(name, tool) {
-        this.info(sprintf_js_1.sprintf('Trying to install %s with %s.', this.highlight(name), tool));
+        this.info(sprintf('Trying to install %s with %s.', this.highlight(name), tool));
     }
     /** @inheritdoc */
     showMessageTryingToUninstall(name, tool) {
-        this.info(sprintf_js_1.sprintf('Trying to uninstall %s with %s.', this.highlight(name), tool));
+        this.info(sprintf('Trying to uninstall %s with %s.', this.highlight(name), tool));
     }
     /** @inheritdoc */
     showMessageCouldNoFindInstalledPlugin(name) {
-        this.info(sprintf_js_1.sprintf('Could not find installed plug-in %s. Please try again.', this.highlight(name)));
+        this.info(sprintf('Could not find installed plug-in %s. Please try again.', this.highlight(name)));
     }
     /** @inheritdoc */
     showMessagePackageFileNotFound(file) {
-        this.warn(sprintf_js_1.sprintf('Could not find %s. I will create it for you.', this.highlight(file)));
+        this.warn(sprintf('Could not find %s. I will create it for you.', this.highlight(file)));
+    }
+    /** @inheritdoc */
+    warnAboutOldPluginVersion() {
+        this.warn(this.highlight('You are using an old plug-in version. Please update it or uninstall it and then install it again.'));
+    }
+    /** @inheritdoc */
+    showPluginServeUndefined(name) {
+        this.info(`Plug-in ${name} does not provide a serve command. Probably it does not need one.`);
     }
     /** @inheritdoc */
     showPluginServeStart(name) {
-        this.info(sprintf_js_1.sprintf('Serving %s...', this.highlight(name)));
+        this.info(sprintf('Serving %s...', this.highlight(name)));
     }
     /** @inheritdoc */
     showCommandStarted(command) {
@@ -649,7 +654,7 @@ class UI {
         const errorStr = t.error ? this.bgCriticalError(t.error + ' with error') : '';
         const skippedStr = t.skipped ? t.skipped + ' skipped' : '';
         const totalStr = (t.tests || '0') + ' total';
-        this.writeln('  ', [passedStr, adjustedStr, failedStr, errorStr, skippedStr, totalStr].filter(s => s.length > 0).join(', '), this.colorDiscreet('in ' + TimeFormat_1.millisToString(r.durationMs, null, ' ')), "\n");
+        this.writeln('  ', [passedStr, adjustedStr, failedStr, errorStr, skippedStr, totalStr].filter(s => s.length > 0).join(', '), this.colorDiscreet('in ' + millisToString(r.durationMs, null, ' ')), "\n");
         if (0 == t.failed && 0 == t.error) {
             return;
         }
@@ -686,7 +691,7 @@ class UI {
         if (!errors || errors.length < 1) {
             return;
         }
-        const sortedErrors = ErrorSorting_1.sortErrorsByLocation(errors);
+        const sortedErrors = sortErrorsByLocation(errors);
         const spaces = ' ';
         for (let e of sortedErrors) {
             const symbol = e.isWarning ? this.symbolWarning : this.symbolError;
@@ -714,4 +719,3 @@ class UI {
         return this.colorDiscreet('(' + durationMs.toString() + 'ms)');
     }
 }
-exports.UI = UI;

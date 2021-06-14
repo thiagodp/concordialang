@@ -1,21 +1,18 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.ReferenceReplacer = void 0;
-const sqlstring_1 = require("sqlstring");
-const QueryParser_1 = require("../db/QueryParser");
-const nlp_1 = require("../nlp");
-const Symbols_1 = require("../req/Symbols");
-const CaseConversor_1 = require("./CaseConversor");
-const TargetTypeUtil_1 = require("./TargetTypeUtil");
-const TypeChecking_1 = require("./TypeChecking");
-const ValueTypeDetector_1 = require("./ValueTypeDetector");
+import { escape, escapeId } from 'sqlstring';
+import { QueryParser } from '../db/QueryParser';
+import { Entities } from '../nlp';
+import { Symbols } from '../req/Symbols';
+import { convertCase } from './CaseConversor';
+import { TargetTypeUtil } from './TargetTypeUtil';
+import { isDefined } from './TypeChecking';
+import { ValueTypeDetector } from './ValueTypeDetector';
 /**
  * Replaces references to Concordia constructions - such as named databases,
  * named tables, ui element names, and constants - with their corresponding values.
  *
  * @author Thiago Delgado Pinto
  */
-class ReferenceReplacer {
+export class ReferenceReplacer {
     // public replaceQuery(
     //     sentence: string,
     //     databaseNameToNameMap: Map< string, string >,
@@ -37,22 +34,22 @@ class ReferenceReplacer {
      */
     replaceConstantsWithTheirValues(sentence, nlpResult, spec) {
         let newSentence = sentence;
-        const valueTypeDetector = new ValueTypeDetector_1.ValueTypeDetector();
+        const valueTypeDetector = new ValueTypeDetector();
         let constants = [];
         for (let e of nlpResult.entities || []) {
-            if (nlp_1.Entities.CONSTANT === e.entity) {
+            if (Entities.CONSTANT === e.entity) {
                 let valueContent = spec.constantNameToValueMap().get(e.value);
                 if (undefined === valueContent) {
                     valueContent = '';
                 }
                 const value = valueTypeDetector.isNumber(valueContent)
                     ? valueContent.toString() // e.g., 5
-                    : Symbols_1.Symbols.VALUE_WRAPPER + valueContent + Symbols_1.Symbols.VALUE_WRAPPER; // e.g., "bar"
+                    : Symbols.VALUE_WRAPPER + valueContent + Symbols.VALUE_WRAPPER; // e.g., "bar"
                 // Replace
-                newSentence = this.replaceConstantAtPosition(newSentence, e.position, Symbols_1.Symbols.CONSTANT_PREFIX + e.value + Symbols_1.Symbols.CONSTANT_SUFFIX, // e.g., [bar]
+                newSentence = this.replaceConstantAtPosition(newSentence, e.position, Symbols.CONSTANT_PREFIX + e.value + Symbols.CONSTANT_SUFFIX, // e.g., [bar]
                 value // e.g., "bar"
                 );
-                constants.push(Symbols_1.Symbols.CONSTANT_PREFIX + e.value + Symbols_1.Symbols.CONSTANT_SUFFIX);
+                constants.push(Symbols.CONSTANT_PREFIX + e.value + Symbols.CONSTANT_SUFFIX);
             }
         }
         return [newSentence, constants.join(', ')];
@@ -66,28 +63,28 @@ class ReferenceReplacer {
      * @param step
      * @param doc
      * @param spec
-     * @param langContent
+     * @param languageDictionary
      * @param uiLiteralCaseOption
      */
-    replaceUIElementsWithUILiterals(step, hasInputAction, doc, spec, langContent, uiLiteralCaseOption) {
+    replaceUIElementsWithUILiterals(step, hasInputAction, doc, spec, languageDictionary, uiLiteralCaseOption) {
         let sentence = step.content;
         let nlpResult = step.nlpResult;
         let newSentence = sentence;
         let uiElements = [];
-        const targetTypeUtil = new TargetTypeUtil_1.TargetTypeUtil();
+        const targetTypeUtil = new TargetTypeUtil();
         for (let e of nlpResult.entities || []) {
-            if (nlp_1.Entities.UI_ELEMENT_REF != e.entity) {
+            if (Entities.UI_ELEMENT_REF != e.entity) {
                 continue;
             }
             // Get the UI_LITERAL name by the UI_ELEMENT name
             const ui = spec.uiElementByVariable(e.value, doc);
-            let literalName = TypeChecking_1.isDefined(ui) && TypeChecking_1.isDefined(ui.info)
+            let literalName = isDefined(ui) && isDefined(ui.info)
                 ? ui.info.uiLiteral
-                : CaseConversor_1.convertCase(e.value, uiLiteralCaseOption); // Uses the UI_ELEMENT name as the literal name, when it is not found.
-            const uiLiteral = Symbols_1.Symbols.UI_LITERAL_PREFIX + literalName + Symbols_1.Symbols.UI_LITERAL_SUFFIX;
+                : convertCase(e.value, uiLiteralCaseOption); // Uses the UI_ELEMENT name as the literal name, when it is not found.
+            const uiLiteral = Symbols.UI_LITERAL_PREFIX + literalName + Symbols.UI_LITERAL_SUFFIX;
             let targetType = '';
-            if (!hasInputAction && !targetTypeUtil.hasInputTargetInTheSentence(step.content, langContent)) {
-                targetType = targetTypeUtil.analyzeInputTargetTypes(step, langContent);
+            if (!hasInputAction && !targetTypeUtil.hasInputTargetInTheSentence(step.content, languageDictionary)) {
+                targetType = targetTypeUtil.analyzeInputTargetTypes(step, languageDictionary);
             }
             const prefixedUILiteral = targetType.length > 0 ? targetType + ' ' + uiLiteral : uiLiteral;
             // Replace
@@ -98,25 +95,25 @@ class ReferenceReplacer {
             //     prefixedUILiteral // e.g., <foo>
             // );
             // E.g. {Foo} -> <foo>
-            newSentence = newSentence.replace(Symbols_1.Symbols.UI_ELEMENT_PREFIX + e.value + Symbols_1.Symbols.UI_ELEMENT_SUFFIX, prefixedUILiteral);
-            uiElements.push(Symbols_1.Symbols.UI_ELEMENT_PREFIX + e.value + Symbols_1.Symbols.UI_ELEMENT_SUFFIX);
+            newSentence = newSentence.replace(Symbols.UI_ELEMENT_PREFIX + e.value + Symbols.UI_ELEMENT_SUFFIX, prefixedUILiteral);
+            uiElements.push(Symbols.UI_ELEMENT_PREFIX + e.value + Symbols.UI_ELEMENT_SUFFIX);
         }
         return [newSentence, uiElements.join(', ')];
     }
     replaceConstantAtPosition(sentence, position, from, to) {
         let pos = position;
         // --- Solves a Bravey problem on recognizing something with "["
-        if (sentence.charAt(pos) !== Symbols_1.Symbols.CONSTANT_PREFIX) {
-            if (Symbols_1.Symbols.CONSTANT_PREFIX === sentence.charAt(pos + 1)) {
+        if (sentence.charAt(pos) !== Symbols.CONSTANT_PREFIX) {
+            if (Symbols.CONSTANT_PREFIX === sentence.charAt(pos + 1)) {
                 pos++;
             }
-            else if (Symbols_1.Symbols.CONSTANT_PREFIX === sentence.charAt(pos - 1)) {
+            else if (Symbols.CONSTANT_PREFIX === sentence.charAt(pos - 1)) {
                 pos--;
             }
         }
         // ---
-        if (sentence.charAt(pos) !== Symbols_1.Symbols.CONSTANT_PREFIX) {
-            pos = sentence.indexOf(Symbols_1.Symbols.CONSTANT_PREFIX, pos); // find starting at pos
+        if (sentence.charAt(pos) !== Symbols.CONSTANT_PREFIX) {
+            pos = sentence.indexOf(Symbols.CONSTANT_PREFIX, pos); // find starting at pos
         }
         return this.replaceAtPosition(sentence, pos, from, to);
     }
@@ -180,16 +177,15 @@ class ReferenceReplacer {
         return s;
     }
     wrapName(content) {
-        return sqlstring_1.escapeId(content);
+        return escapeId(content);
     }
     wrapValue(content) {
-        return sqlstring_1.escape(content);
+        return escape(content);
     }
     makeVarRegex(name) {
-        return (new QueryParser_1.QueryParser()).makeVariableRegex(name);
+        return (new QueryParser()).makeVariableRegex(name);
     }
     makeNameRegex(name) {
-        return (new QueryParser_1.QueryParser()).makeNameRegex(name);
+        return (new QueryParser()).makeNameRegex(name);
     }
 }
-exports.ReferenceReplacer = ReferenceReplacer;
