@@ -25,14 +25,14 @@ import { Entities } from '../nlp';
 import { AugmentedSpec, IN_MEMORY_DATABASE_NAME } from '../req/AugmentedSpec';
 import { NodeTypes } from '../req/NodeTypes';
 import { UIETestPlan } from '../testcase/UIETestPlan';
-import { QueryReferenceReplacer } from '../util/QueryReferenceReplacer';
-import { isDefined, valueOrNull } from '../util/TypeChecking';
+import { QueryReferenceReplacer } from './util/QueryReferenceReplacer';
+import { isDefined, valueOrNull } from '../util/type-checking';
 import { UIElementNameHandler } from '../util/UIElementNameHandler';
-import { UIElementOperatorChecker } from '../util/UIElementOperatorChecker';
 import { UIElementPropertyExtractor } from '../util/UIElementPropertyExtractor';
 import { adjustValueToTheRightType } from '../util/ValueTypeDetector';
 import { DataGenConfig, DataGenerator } from './DataGenerator';
 import { DataTestCaseGroup, DataTestCaseGroupDef } from './DataTestCase';
+import { UIElementOperatorChecker } from './util/UIElementOperatorChecker';
 
 // value is equal to          <number>|<value>|<constant>|<ui_element>
 // value is not equal to      <number>|<value>|<constant>|<ui_element>

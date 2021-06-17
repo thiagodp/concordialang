@@ -1,4 +1,4 @@
-import { QueryReferenceReplacer } from "../../modules/util/QueryReferenceReplacer";
+import { QueryReferenceReplacer } from "../../../modules/testdata/util/QueryReferenceReplacer";
 
 describe( 'QueryReferenceReplacer', () => {
 

@@ -1,5 +1,14 @@
-import { Entities, NLPUtil } from '../nlp';
-import { UIElementOperator, UIElementOperatorModifier } from './UIElementOperator';
+import { Entities, NLPUtil } from '../../nlp';
+export var UIElementOperator;
+(function (UIElementOperator) {
+    UIElementOperator["EQUAL_TO"] = "equalTo";
+    UIElementOperator["IN"] = "in";
+    UIElementOperator["COMPUTED_BY"] = "computedBy";
+})(UIElementOperator || (UIElementOperator = {}));
+export var UIElementOperatorModifier;
+(function (UIElementOperatorModifier) {
+    UIElementOperatorModifier["NOT"] = "not";
+})(UIElementOperatorModifier || (UIElementOperatorModifier = {}));
 /**
  * UI Element operator checker.
  *

@@ -1,5 +1,5 @@
 import { AfterEachScenario } from '../ast/TestEvent';
-import { isDefined } from '../util/TypeChecking';
+import { isDefined } from '../util/type-checking';
 import { NodeIterator } from './NodeIterator';
 import { NodeParser } from './NodeParser';
 import { ParsingContext } from './ParsingContext';

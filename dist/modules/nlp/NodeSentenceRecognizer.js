@@ -1,5 +1,5 @@
 import { Warning } from '../error/Warning';
-import { isDefined } from '../util/TypeChecking';
+import { isDefined } from '../util/type-checking';
 import { NLPException } from './NLPException';
 /**
  * Node sentence recognizer

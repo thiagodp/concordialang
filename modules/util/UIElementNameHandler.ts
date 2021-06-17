@@ -1,5 +1,5 @@
 import { Symbols } from "../req/Symbols";
-import { isDefined } from "./TypeChecking";
+import { isDefined } from "./type-checking";
 
 /**
  * Handles names of UI Elements.

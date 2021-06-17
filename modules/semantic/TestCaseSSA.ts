@@ -7,7 +7,7 @@ import { LocatedException, ProblemMapper, SemanticException } from '../error';
 import { KeywordDictionary } from '../language';
 import { englishKeywords } from '../language/data/en';
 import { AugmentedSpec } from '../req/AugmentedSpec';
-import { isDefined } from '../util/TypeChecking';
+import { isDefined } from '../util/type-checking';
 import { SpecificationAnalyzer } from './SpecificationAnalyzer';
 
 

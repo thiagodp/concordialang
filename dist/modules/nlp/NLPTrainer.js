@@ -1,6 +1,6 @@
 import deepcopy from 'deepcopy';
 import { dictionaryForLanguage } from '../language/data/map';
-import { isDefined } from '../util/TypeChecking';
+import { isDefined } from '../util/type-checking';
 import { BASE_TRAINING_EXAMPLES } from './BaseTrainingExamples';
 import { NLP_PRIORITIES } from './NLPTrainingData';
 import { NLPTrainingDataConversor } from './NLPTrainingDataConversor';

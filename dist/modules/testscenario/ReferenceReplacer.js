@@ -2,10 +2,10 @@ import { escape, escapeId } from 'sqlstring';
 import { QueryParser } from '../db/QueryParser';
 import { Entities } from '../nlp';
 import { Symbols } from '../req/Symbols';
-import { convertCase } from './CaseConversor';
+import { convertCase } from '../util/case-conversor';
+import { isDefined } from '../util/type-checking';
+import { ValueTypeDetector } from '../util/ValueTypeDetector';
 import { TargetTypeUtil } from './TargetTypeUtil';
-import { isDefined } from './TypeChecking';
-import { ValueTypeDetector } from './ValueTypeDetector';
 /**
  * Replaces references to Concordia constructions - such as named databases,
  * named tables, ui element names, and constants - with their corresponding values.

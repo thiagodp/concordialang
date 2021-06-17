@@ -11,7 +11,7 @@ import { SemanticException } from '../error/SemanticException';
 import { Entities } from '../nlp/Entities';
 import { AugmentedSpec } from '../req/AugmentedSpec';
 import { VariantStateDetector } from '../testscenario/VariantStateDetector';
-import { isDefined } from '../util/TypeChecking';
+import { isDefined } from '../util/type-checking';
 import { SpecificationAnalyzer } from './SpecificationAnalyzer';
 
 type FilePath = string;

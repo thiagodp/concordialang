@@ -1,11 +1,8 @@
-import { RegexUtil } from '../util/RegexUtil';
+import { matches } from '../util/matches';
 /**
  * @author Thiago Delgado Pinto
  */
 export class QueryParser {
-    constructor() {
-        this._regexUtil = new RegexUtil();
-    }
     //
     // Idea is replacing fields/constants/etc with the corresponding "real" values.
     //
@@ -29,7 +26,7 @@ export class QueryParser {
      */
     parseAnyVariables(command) {
         const regex = /(?:\{)([^}]+)(?:\})/g;
-        return this._regexUtil.matches(regex, command, true);
+        return matches(regex, command, true);
     }
     /**
      * Parse Concordia names, in the format [anything], ignoring contents with dollar ($).
@@ -40,7 +37,7 @@ export class QueryParser {
     parseAnyNames(command) {
         //const regex = /(?:\{\{)([^}}]+)(?:\}\})/g;
         const regex = /(?:\[)([^\$\]]+)(?:\])/g;
-        return this._regexUtil.matches(regex, command, true);
+        return matches(regex, command, true);
     }
     /**
      * Returns a regex for the given variable name.

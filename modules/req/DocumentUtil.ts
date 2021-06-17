@@ -1,8 +1,8 @@
-import { CaseType } from './CaseType';
+import { CaseType } from '../util/CaseType';
 import { Document, Scenario, UIElement, UIElementInfo, Variant } from '../ast';
-import { isDefined } from './TypeChecking';
-import { UIElementNameHandler } from './UIElementNameHandler';
-import { UIElementPropertyExtractor } from './UIElementPropertyExtractor';
+import { isDefined } from '../util/type-checking';
+import { UIElementNameHandler } from '../util/UIElementNameHandler';
+import { UIElementPropertyExtractor } from '../util/UIElementPropertyExtractor';
 
 export class DocumentUtil {
 

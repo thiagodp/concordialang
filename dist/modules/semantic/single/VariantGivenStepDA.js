@@ -1,7 +1,7 @@
 import { SemanticException } from "../../error/SemanticException";
 import { Entities, NLPUtil } from "../../nlp";
 import { NodeTypes } from "../../req/NodeTypes";
-import { isDefined } from "../../util/TypeChecking";
+import { isDefined } from "../../util/type-checking";
 /**
  * Analyzes Variant's Given step declarations for a single document.
  *

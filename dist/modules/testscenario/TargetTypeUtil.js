@@ -1,7 +1,7 @@
 import { Entities } from '../nlp/Entities';
-import { ACTION_TARGET_MAP } from './ActionMap';
-import { EditableActionTargets } from './ActionTargets';
-import { isDefined } from './TypeChecking';
+import { ACTION_TARGET_MAP } from '../util/ActionMap';
+import { EditableActionTargets } from '../util/ActionTargets';
+import { isDefined } from '../util/type-checking';
 export class TargetTypeUtil {
     /**
      * Returns an empty string if the target type is not an input,

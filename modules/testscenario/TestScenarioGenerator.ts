@@ -11,7 +11,7 @@ import { OnlyValidMix } from '../testcase/DataTestCaseMix';
 import { TestPlanner } from '../testcase/TestPlanner';
 import { Random } from '../testdata/random/Random';
 import { RandomLong } from '../testdata/random/RandomLong';
-import { isDefined } from '../util/TypeChecking';
+import { isDefined } from '../util/type-checking';
 import { GenContext, PreTestCaseGenerator } from './PreTestCaseGenerator';
 import { StepHandler } from './StepHandler';
 import { TestScenario } from './TestScenario';

@@ -6,11 +6,11 @@ import { LanguageDictionary } from '../language/LanguageDictionary';
 import { Entities, NLPResult } from '../nlp';
 import { AugmentedSpec } from '../req/AugmentedSpec';
 import { Symbols } from '../req/Symbols';
-import { convertCase } from './CaseConversor';
-import { CaseType } from './CaseType';
+import { convertCase } from '../util/case-conversor';
+import { CaseType } from '../util/CaseType';
+import { isDefined } from '../util/type-checking';
+import { ValueTypeDetector } from '../util/ValueTypeDetector';
 import { TargetTypeUtil } from './TargetTypeUtil';
-import { isDefined } from './TypeChecking';
-import { ValueTypeDetector } from './ValueTypeDetector';
 
 
 /**

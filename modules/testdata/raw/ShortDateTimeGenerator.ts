@@ -1,6 +1,6 @@
 import { ChronoUnit, LocalDateTime } from '@js-joda/core';
 
-import { isDefined } from '../../util/TypeChecking';
+import { isDefined } from '../../util/type-checking';
 import { ShortDateTimeLimits } from '../limits/DateTimeLimits';
 import { RandomShortDateTime } from '../random/RandomShortDateTime';
 import { RawDataGenerator } from './RawDataGenerator';

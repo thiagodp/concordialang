@@ -4,7 +4,7 @@ import { supportTablesInQueries } from '../db/DatabaseTypes';
 import { Entities } from '../nlp/Entities';
 import { Symbols } from '../req/Symbols';
 import { Actions } from '../util/Actions';
-import { isDefined } from '../util/TypeChecking';
+import { isDefined } from '../util/type-checking';
 /**
  * Generates Abstract Test Script
  */

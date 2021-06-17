@@ -7,7 +7,7 @@ import { sprintf } from 'sprintf-js';
 import terminalLink from 'terminal-link';
 import { DEFAULT_LANGUAGE } from '../app/default-options';
 import { sortErrorsByLocation } from '../error/ErrorSorting';
-import { millisToString } from '../util/TimeFormat';
+import { millisToString } from '../util/time-format';
 export const pluralS = (count, singular, plural) => {
     return 1 === count ? singular : (plural || (singular + 's'));
 };

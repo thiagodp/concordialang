@@ -3,8 +3,8 @@ import { CaseType } from './CaseType';
 import { UIElement, UIProperty, UIPropertyTypes } from '../ast';
 import { Entities, NLPEntity, NLPUtil } from '../nlp';
 import { ActionTargets, EditableActionTargets } from './ActionTargets';
-import { convertCase } from './CaseConversor';
-import { isDefined } from './TypeChecking';
+import { convertCase } from './case-conversor';
+import { isDefined } from './type-checking';
 import { ValueType, ValueTypeDetector } from './ValueTypeDetector';
 
 

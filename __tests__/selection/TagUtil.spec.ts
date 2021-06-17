@@ -1,4 +1,4 @@
-import { TagUtil } from "../../modules/util/TagUtil";
+import { TagUtil } from "../../modules/selection/TagUtil";
 import { Tag } from "../../modules/ast/Tag";
 
 describe( 'TagUtil', () => {

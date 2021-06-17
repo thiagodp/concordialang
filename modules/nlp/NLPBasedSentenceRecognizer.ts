@@ -1,7 +1,7 @@
 import { Document } from '../ast/Document';
 import { LocatedException } from '../error/LocatedException';
 import { Warning } from '../error/Warning';
-import { isDefined } from '../util/TypeChecking';
+import { isDefined } from '../util/type-checking';
 import { DatabasePropertyRecognizer } from './DatabasePropertyRecognizer';
 import { GivenWhenThenSentenceRecognizer } from './GivenWhenThenSentenceRecognizer';
 import { NLP } from './NLP';

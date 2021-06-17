@@ -1,5 +1,5 @@
 import { Document, Feature, UIElement } from "../../modules/ast";
-import { DocumentUtil } from "../../modules/util/DocumentUtil";
+import { DocumentUtil } from "../../modules/req/DocumentUtil";
 
 describe( 'DocumentUtil', () => {
 

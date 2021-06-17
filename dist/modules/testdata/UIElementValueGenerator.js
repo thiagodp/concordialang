@@ -4,14 +4,14 @@ import { RuntimeException } from '../error';
 import { Entities } from '../nlp';
 import { IN_MEMORY_DATABASE_NAME } from '../req/AugmentedSpec';
 import { NodeTypes } from '../req/NodeTypes';
-import { QueryReferenceReplacer } from '../util/QueryReferenceReplacer';
-import { isDefined, valueOrNull } from '../util/TypeChecking';
+import { QueryReferenceReplacer } from './util/QueryReferenceReplacer';
+import { isDefined, valueOrNull } from '../util/type-checking';
 import { UIElementNameHandler } from '../util/UIElementNameHandler';
-import { UIElementOperatorChecker } from '../util/UIElementOperatorChecker';
 import { UIElementPropertyExtractor } from '../util/UIElementPropertyExtractor';
 import { adjustValueToTheRightType } from '../util/ValueTypeDetector';
 import { DataGenConfig } from './DataGenerator';
 import { DataTestCaseGroup, DataTestCaseGroupDef } from './DataTestCase';
+import { UIElementOperatorChecker } from './util/UIElementOperatorChecker';
 // value is equal to          <number>|<value>|<constant>|<ui_element>
 // value is not equal to      <number>|<value>|<constant>|<ui_element>
 // value in                   <value_list>|<query>

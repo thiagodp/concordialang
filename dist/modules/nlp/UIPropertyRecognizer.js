@@ -2,7 +2,7 @@ import { DateTimeFormatter, LocalDate } from '@js-joda/core';
 import { EntityValue } from '../ast';
 import { UIPropertyTypes } from '../ast/UIPropertyTypes';
 import { Entities } from '../nlp/Entities';
-import { isDefined } from '../util/TypeChecking';
+import { isDefined } from '../util/type-checking';
 import { adjustValueToTheRightType } from '../util/ValueTypeDetector';
 import { Intents } from './Intents';
 import { NLPException } from './NLPException';

@@ -5,7 +5,7 @@ import { UIPropertyTypes } from '../ast/UIPropertyTypes';
 import { LocatedException } from '../error/LocatedException';
 import { Entities } from '../nlp/Entities';
 import { NLPResult } from '../nlp/NLPResult';
-import { isDefined } from '../util/TypeChecking';
+import { isDefined } from '../util/type-checking';
 import { adjustValueToTheRightType } from '../util/ValueTypeDetector';
 import { Intents } from './Intents';
 import { NLP } from './NLP';

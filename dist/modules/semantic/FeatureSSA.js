@@ -4,7 +4,7 @@ import { RuntimeException } from '../error/RuntimeException';
 import { SemanticException } from '../error/SemanticException';
 import { Entities } from '../nlp/Entities';
 import { VariantStateDetector } from '../testscenario/VariantStateDetector';
-import { isDefined } from '../util/TypeChecking';
+import { isDefined } from '../util/type-checking';
 import { SpecificationAnalyzer } from './SpecificationAnalyzer';
 /**
  * Analyzes Features and its cross-document declarations.

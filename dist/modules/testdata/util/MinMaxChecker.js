@@ -1,4 +1,4 @@
-import { isDefined } from '../../util/TypeChecking';
+import { isDefined } from '../../util/type-checking';
 /**
  * Checks minimum and maximum values.
  *

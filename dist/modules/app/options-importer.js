@@ -1,6 +1,6 @@
 import * as enumUtil from 'enum-util';
 import { isAbsolute, resolve } from 'path';
-import { isNumber, isString } from '../util/TypeChecking';
+import { isNumber, isString } from '../util/type-checking';
 import { CombinationOptions, VariantSelectionOptions, InvalidSpecialOptions } from './combination-options';
 /**
  * Copy options

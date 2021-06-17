@@ -1,5 +1,5 @@
 import { CaseType } from "../util/CaseType";
-import { convertCase, removeDiacritics } from "../util/CaseConversor";
+import { convertCase, removeDiacritics } from "../util/case-conversor";
 /**
  * Table parser
  *

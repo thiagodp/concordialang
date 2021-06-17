@@ -1,8 +1,8 @@
 import { dictionaryForLanguage } from '../language/data/map';
 import { STATE_REGEX } from '../nlp/EntityRecognizerMaker';
 import { NodeTypes } from '../req/NodeTypes';
-import { upperFirst } from '../util/CaseConversor';
-import { isDefined } from '../util/TypeChecking';
+import { upperFirst } from '../util/case-conversor';
+import { isDefined } from '../util/type-checking';
 const hasState = sentence => STATE_REGEX.test(sentence);
 const stepHasState = (step) => step ? hasState(step.content) : false;
 export class StepHandler {

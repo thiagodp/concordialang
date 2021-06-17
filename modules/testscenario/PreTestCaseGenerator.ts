@@ -25,24 +25,16 @@ import { DataTestCaseAnalyzer, DTCAnalysisResult, DTCMap, UIEVariableToDTCMap } 
 import { Random } from '../testdata/random/Random';
 import { RandomString, RandomStringOptions } from '../testdata/random/RandomString';
 import { UIElementValueGenerator, ValueGenContext } from '../testdata/UIElementValueGenerator';
-import {
-    Actions,
-    convertCase,
-    isDefined,
-    ReferenceReplacer,
-    TargetTypeUtil,
-    UIElementNameHandler,
-    UIElementPropertyExtractor,
-    UIPropertyReferenceExtractor,
-    upperFirst,
-} from '../util';
+import { Actions, convertCase, isDefined, UIElementNameHandler, UIElementPropertyExtractor, upperFirst } from '../util';
 import { CaseType } from '../util/CaseType';
 import { createDefaultLocaleMap } from './locale';
 import { LocaleContext } from './LocaleContext';
 import { CorrespondingOtherwiseSteps, PreTestCase } from './PreTestCase';
+import { ReferenceReplacer } from './ReferenceReplacer';
+import { TargetTypeUtil } from './TargetTypeUtil';
+import { UIPropertyReferenceExtractor } from './UIPropertyReferenceExtractor';
 import { UIPropertyReferenceReplacer } from './UIPropertyReferenceReplacer';
 import { formatValueToUseInASentence } from './value-formatter';
-
 
 
 export class GenContext {

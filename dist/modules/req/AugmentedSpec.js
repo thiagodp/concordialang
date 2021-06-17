@@ -1,9 +1,9 @@
 import { dirname, resolve } from 'path';
 import { CaseType } from '../util/CaseType';
 import { Spec } from '../ast';
-import { DocumentUtil } from '../util/DocumentUtil';
+import { DocumentUtil } from './DocumentUtil';
 import { toUnixPath } from '../util/file';
-import { isDefined, valueOrNull } from '../util/TypeChecking';
+import { isDefined, valueOrNull } from '../util/type-checking';
 import { UIElementNameHandler } from '../util/UIElementNameHandler';
 class MappedContent {
     constructor() {

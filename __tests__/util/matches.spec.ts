@@ -1,16 +1,14 @@
-import { RegexUtil } from '../../modules/util/RegexUtil';
+import { matches } from '../../modules/util/matches';
 
-describe( 'RegexUtil', () => {
-
-    let ru = new RegexUtil();
+describe( '#matches', () => {
 
     it( 'returns the full match and group match by default', () => {
-        let r = ru.matches( /(foo)/, 'foo' );
+        let r = matches( /(foo)/, 'foo' );
         expect( r ).toEqual( [ 'foo', 'foo' ] );
     } );
 
     it( 'can ignore full matches', () => {
-        let r = ru.matches( /(foo)/, 'foo', true );
+        let r = matches( /(foo)/, 'foo', true );
         expect( r ).toEqual( [ 'foo' ] );
     } );
 

@@ -3,8 +3,8 @@ import { dictionaryForLanguage } from '../language/data/map';
 import { KeywordDictionary } from '../language/KeywordDictionary';
 import { STATE_REGEX } from '../nlp/EntityRecognizerMaker';
 import { NodeTypes } from '../req/NodeTypes';
-import { upperFirst } from '../util/CaseConversor';
-import { isDefined } from '../util/TypeChecking';
+import { upperFirst } from '../util/case-conversor';
+import { isDefined } from '../util/type-checking';
 
 
 const hasState = sentence => STATE_REGEX.test( sentence );

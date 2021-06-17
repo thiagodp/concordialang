@@ -1,7 +1,7 @@
 import deepcopy from 'deepcopy';
 import { SemanticException } from '../error';
 import { englishKeywords } from '../language/data/en';
-import { isDefined } from '../util/TypeChecking';
+import { isDefined } from '../util/type-checking';
 import { SpecificationAnalyzer } from './SpecificationAnalyzer';
 /**
  * Analyzes Test Cases from a specification.

@@ -2,9 +2,9 @@ import { dirname, resolve } from 'path';
 import { CaseType } from '../util/CaseType';
 import { Constant, Database, Document, Feature, NamedNode, Spec, Table, UIElement } from '../ast';
 import { DatabaseInterface } from '../dbi';
-import { DocumentUtil } from '../util/DocumentUtil';
+import { DocumentUtil } from './DocumentUtil';
 import { toUnixPath } from '../util/file';
-import { isDefined, valueOrNull } from '../util/TypeChecking';
+import { isDefined, valueOrNull } from '../util/type-checking';
 import { UIElementNameHandler } from '../util/UIElementNameHandler';
 
 

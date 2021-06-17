@@ -5,7 +5,7 @@ import { dictionaryForLanguage } from '../language/data/map';
 import { KeywordDictionary } from '../language/KeywordDictionary';
 import { NodeTypes } from '../req/NodeTypes';
 import { Symbols } from '../req/Symbols';
-import { upperFirst } from '../util/CaseConversor';
+import { upperFirst } from '../util/case-conversor';
 
 
 /**

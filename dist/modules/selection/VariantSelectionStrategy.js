@@ -1,6 +1,6 @@
 import { Random } from "../testdata/random/Random";
 import { RandomLong } from "../testdata/random/RandomLong";
-import { TagUtil } from "../util/TagUtil";
+import { TagUtil } from "./TagUtil";
 /**
  * Variant selection strategy in which all variants are selected
  *

@@ -1,6 +1,15 @@
-import { UIProperty } from '../ast';
-import { Entities, NLPUtil } from '../nlp';
-import { UIElementOperator, UIElementOperatorModifier } from './UIElementOperator';
+import { UIProperty } from '../../ast';
+import { Entities, NLPUtil } from '../../nlp';
+
+export enum UIElementOperator {
+    EQUAL_TO = 'equalTo',
+    IN = 'in',
+    COMPUTED_BY = 'computedBy'
+}
+
+export enum UIElementOperatorModifier {
+    NOT = 'not'
+}
 
 /**
  * UI Element operator checker.

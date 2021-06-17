@@ -1,7 +1,8 @@
-import { Location } from "concordialang-types";
-import { UIPropertyReference } from "../../modules/ast";
-import { NLP, NLPResult, NLPTrainingData, NLPTrainingDataConversor } from "../../modules/nlp";
-import { UIPropertyReferenceExtractor } from '../../modules/util/UIPropertyReferenceExtractor';
+import { Location } from 'concordialang-types';
+
+import { UIPropertyReference } from '../../modules/ast';
+import { NLP, NLPResult, NLPTrainingData, NLPTrainingDataConversor } from '../../modules/nlp';
+import { UIPropertyReferenceExtractor } from '../../modules/testscenario/UIPropertyReferenceExtractor';
 
 
 describe( 'UIPropertyReferenceExtractor', () => {

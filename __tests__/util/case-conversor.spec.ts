@@ -1,6 +1,6 @@
-import { removeDiacritics } from '../../modules/util/CaseConversor';
+import { removeDiacritics } from '../../modules/util/case-conversor';
 
-describe( 'CaseConversor', () => {
+describe( 'case-conversor', () => {
 
     describe( '#removeDiacritics', () => {
 

@@ -2,10 +2,10 @@ import { Document, Step } from '../ast';
 import { LanguageDictionary } from '../language/LanguageDictionary';
 import { Entities } from '../nlp/Entities';
 import { AugmentedSpec } from '../req/AugmentedSpec';
-import { ACTION_TARGET_MAP } from './ActionMap';
-import { EditableActionTargets } from './ActionTargets';
-import { isDefined } from './TypeChecking';
-import { UIElementPropertyExtractor } from './UIElementPropertyExtractor';
+import { ACTION_TARGET_MAP } from '../util/ActionMap';
+import { EditableActionTargets } from '../util/ActionTargets';
+import { isDefined } from '../util/type-checking';
+import { UIElementPropertyExtractor } from '../util/UIElementPropertyExtractor';
 
 export class TargetTypeUtil {
 

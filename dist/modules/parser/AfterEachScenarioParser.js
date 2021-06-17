@@ -1,4 +1,4 @@
-import { isDefined } from '../util/TypeChecking';
+import { isDefined } from '../util/type-checking';
 import { SyntacticException } from './SyntacticException';
 /**
  * AfterEachScenario parser

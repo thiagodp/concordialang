@@ -3,7 +3,7 @@ import * as enumUtil from 'enum-util';
 import { ReservedTags } from '../ast';
 import { UIPropertyTypes } from '../ast/UIPropertyTypes';
 import { Entities, NLPUtil } from '../nlp';
-import { isDefined } from '../util/TypeChecking';
+import { isDefined } from '../util/type-checking';
 import { UIElementPropertyExtractor } from '../util/UIElementPropertyExtractor';
 import { adjustValueToTheRightType } from '../util/ValueTypeDetector';
 import { DataGeneratorBuilder } from './DataGeneratorBuilder';

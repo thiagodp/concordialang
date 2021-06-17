@@ -2,7 +2,7 @@ import deepcopy from 'deepcopy';
 
 import { dictionaryForLanguage, LanguageMap } from '../language/data/map';
 import { LanguageDictionary } from '../language/LanguageDictionary';
-import { isDefined } from '../util/TypeChecking';
+import { isDefined } from '../util/type-checking';
 import { BASE_TRAINING_EXAMPLES } from './BaseTrainingExamples';
 import { NLP } from './NLP';
 import { NLP_PRIORITIES, NLPTrainingData } from './NLPTrainingData';

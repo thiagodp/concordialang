@@ -1,5 +1,5 @@
 import { escape } from 'sqlstring';
-import { QueryParser } from '../db/QueryParser';
+import { QueryParser } from '../../db/QueryParser';
 /**
  * Query reference replacer
  *

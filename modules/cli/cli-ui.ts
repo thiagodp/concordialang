@@ -15,7 +15,7 @@ import { LocatedException } from '../error/LocatedException';
 import { ProblemMapper } from '../error/ProblemMapper';
 import { Warning } from '../error/Warning';
 import { PluginData } from '../plugin/PluginData';
-import { millisToString } from '../util/TimeFormat';
+import { millisToString } from '../util/time-format';
 
 
 export const pluralS = ( count: number, singular: string, plural?: string ) => {

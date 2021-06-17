@@ -1,5 +1,5 @@
 import { ChronoUnit } from '@js-joda/core';
-import { isDefined } from '../../util/TypeChecking';
+import { isDefined } from '../../util/type-checking';
 import { DateTimeLimits } from '../limits/DateTimeLimits';
 export class DateTimeGenerator {
     /**

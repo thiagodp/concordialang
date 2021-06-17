@@ -7,7 +7,7 @@ import { Entities } from '../nlp/Entities';
 import { AugmentedSpec } from "../req/AugmentedSpec";
 import { Symbols } from '../req/Symbols';
 import { Actions } from '../util/Actions';
-import { isDefined } from '../util/TypeChecking';
+import { isDefined } from '../util/type-checking';
 
 /**
  * Generates Abstract Test Script

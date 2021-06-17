@@ -1,7 +1,7 @@
 import { dictionaryForLanguage } from '../language/data/map';
 import { NodeTypes } from '../req/NodeTypes';
 import { Symbols } from '../req/Symbols';
-import { upperFirst } from '../util/CaseConversor';
+import { upperFirst } from '../util/case-conversor';
 /**
  * Generates files for Documents with Test Cases.
  * @author Thiago Delgado Pinto

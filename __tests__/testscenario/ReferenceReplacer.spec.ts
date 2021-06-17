@@ -1,4 +1,4 @@
-import { ReferenceReplacer } from '../../modules/util/ReferenceReplacer';
+import { ReferenceReplacer } from '../../modules/testscenario/ReferenceReplacer';
 
 describe( 'ReferenceReplacer', () => {
 

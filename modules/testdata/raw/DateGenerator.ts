@@ -1,5 +1,5 @@
 import { ChronoUnit, LocalDate } from "@js-joda/core";
-import { isDefined } from '../../util/TypeChecking';
+import { isDefined } from '../../util/type-checking';
 import { DateLimits } from "../limits/DateLimits";
 import { RandomDate } from "../random/RandomDate";
 import { RangeAnalyzer } from "./RangeAnalyzer";
