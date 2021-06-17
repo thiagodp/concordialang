@@ -19,7 +19,10 @@ export class PackageBasedPluginFinder implements PluginFinder {
     constructor(
         private readonly _processPath: string,
         private readonly _fileReader: FileReader,
-        private readonly _dirSearcher: DirSearcher
+        private readonly _dirSearcher: DirSearcher,
+		private readonly _listener?: {
+			warn: ( message: string ) => void,
+		}
         ) {
     }
 
@@ -28,97 +31,95 @@ export class PackageBasedPluginFinder implements PluginFinder {
     public async find(): Promise< NewOrOldPluginData[] > {
 
         const localPackagesDir = resolve( this._processPath, this.NODE_MODULES );
-        // console.log( ' Finding at', localPackagesDir, '...' );
-        const localPluginData = await this.findOnDir( localPackagesDir );
-
         const globalPackagesDir = globalDirs.npm.packages;
-        // console.log( ' Finding at', globalPackagesDir, '...' );
-        const globalPluginData = await this.findOnDir( globalPackagesDir );
 
-        // console.log( 'Local', localPluginData.length, 'found. Global', globalPluginData.length, 'found.' );
+		const [ localPluginData, globalPluginData ] = await Promise.all( [
+			this.findOnDir( localPackagesDir ),
+			this.findOnDir( globalPackagesDir )
+		 ] )
 
         // Removes local packages from the global ones
         const globalNotInLocal = globalPluginData.filter(
-            globalData => ! localPluginData.find( localData => localData.name == globalData.name ) );
+            globalData => ! localPluginData.find( localData => localData.name == globalData.name )
+		);
 
         return localPluginData.concat( globalNotInLocal );
     }
-
-    // /** @inheritdoc */
-    // public async classFileFor( pluginData: PluginData ): Promise< string > {
-    //     // The property pluginData.file is changed when the file is loaded,
-    //     // so it have the full path.
-    //     return pluginData.main;
-    // }
 
     /**
      * Finds Concordia plug-ins and returns their data.
      *
      * @param dir Directory to find.
      */
-    private async findOnDir( dir: string ): Promise< NewOrOldPluginData[] > {
+    public async findOnDir( dir: string ): Promise< NewOrOldPluginData[] > {
 
         let packageDirectories: string[] = [];
         try {
-            packageDirectories = await this.detectPluginPackageDirectories( dir );
+            packageDirectories = await this.detectPluginPackageDirectoriesOnDir( dir );
         } catch ( err ) {
             return [];
         }
-        // console.log( 'Detected directories to analyze:', packageDirectories );
 
         let allPluginData: NewOrOldPluginData[] = [];
         for ( const pkgDir of packageDirectories ) {
 
             const pkgFile: string = join( pkgDir, PACKAGE_FILE );
-            // console.log( 'Reading', pkgFile, '...' );
 
+			// Read file
             let content: string;
             try {
                 content = await this._fileReader.read( pkgFile );
-                if ( ! content ) {
-                    continue; // Ignores a file that does not exist
-                }
             } catch ( err ) {
-                if ( 'ENOENT' === err.code ) {
-                    continue; // Ignores a file that does not exist
-                }
-                throw new Error( `Cannot read plugin data from "${pkgFile}" because the file cannot be read. Details: ` + err.message );
+				if ( this._listener ) {
+					const msg = `Cannot read plugin data from "${pkgFile}" because the file cannot be read. Details: ${err.message}`;
+					this._listener.warn( msg );
+				}
+                continue; // Ignores a file that does not exist or cannot be read
             }
-            const pkg: any = JSON.parse( content );
 
-            // Ignore concordialang- packages without the plugin-related property
+			// Ignore an empty content
+			if ( ! content ) {
+				continue; // Ignores a file that does not exist
+			}
+
+			// Parse JSON
+            let pkg: any;
+			try {
+				pkg = JSON.parse( content );
+			} catch ( err ) {
+				if ( this._listener ) {
+					this._listener.warn( `Plugin ${pkgDir} cannot be parsed.` );
+				}
+				continue; // cannot parse -> ignore the file
+			}
+
+            // Ignore "concordialang-" packages without the plugin-related property
             if ( pkg && ! isPlugin( pkg ) ) {
                 continue; // ignore
             }
 
             const pluginData = pluginDataFromPackage( pkg );
+			// Invalid format
             if ( ! pluginData ) {
-                // continue; // Cannot convert to plugin data
-                throw new Error( `Cannot convert package file "${pkgFile}" to plugin data. ` );
+				if ( this._listener ) {
+					this._listener.warn( `Plugin ${pkgDir} does not have the data required by Concordia Compiler.` );
+				}
+				continue;
             }
 
+            // Update the property that contains the plug-in file to include the directory
             const old = pluginData as OldPluginData;
             const isOldPlugin = !! old.file;
             if ( isOldPlugin ) {
-                // Update the property 'file' to include the directory and maybe the package name
                 if ( old.file.indexOf( pluginData.name ) < 0 ) {
                     old.file = join( dir, pluginData.name, old.file );
                 } else {
                     old.file = join( dir, old.file );
                 }
             } else {
-
-                // pluginData.main = join( dir, pluginData.name, pluginData.main );
                 pluginData.main = toUnixPath( relative( '.', join( dir, pluginData.name, pluginData.main || '' ) ) );
-
-
-                // // Update the property 'main' to include the directory and maybe the package name
-                // if ( pluginData.main.indexOf( pluginData.name ) < 0 ) {
-                //     pluginData.main = join( dir, pluginData.name, pluginData.main );
-                // } else {
-                //     pluginData.main = join( dir, pluginData.main );
-                // }
             }
+
 
             allPluginData.push( pluginData );
         }
@@ -132,13 +133,13 @@ export class PackageBasedPluginFinder implements PluginFinder {
      *
      * @param dir Directory to find.
      */
-    private async detectPluginPackageDirectories( dir: string ): Promise< string[] > {
+    private async detectPluginPackageDirectoriesOnDir( dir: string ): Promise< string[] > {
         const o = {
             directory: dir,
             recursive: false,
             regexp: new RegExp( PLUGIN_PREFIX )
         };
-        return await this._dirSearcher.search( o );
+        return this._dirSearcher.search( o );
     }
 
 }

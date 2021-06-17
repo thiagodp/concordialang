@@ -2,6 +2,8 @@ import { PluginData } from "./PluginData";
 
 export interface PluginListener {
 
+	warn( message: string ): void;
+
 
     drawPluginList( plugins: PluginData[] ): void;
 
