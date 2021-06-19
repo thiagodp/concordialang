@@ -1,10 +1,10 @@
-import * as alasql from 'alasql';
-import { Table } from "../ast";
-import { RuntimeException } from "../error";
-import { isDefined, ValueType, ValueTypeDetector } from "../util";
-import { AlaSqlDatabase } from './AlaSqlTypes';
-import { SqlHelper } from "./SqlHelper";
+import alasql from 'alasql';
 
+import { Table } from '../ast';
+import { RuntimeException } from '../error';
+import { isDefined, ValueType, ValueTypeDetector } from '../util';
+import { AlaSqlDatabase } from './AlaSqlTypes';
+import { SqlHelper } from './SqlHelper';
 
 
 /**

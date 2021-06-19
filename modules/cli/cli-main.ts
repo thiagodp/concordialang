@@ -3,12 +3,13 @@ import { cosmiconfig } from 'cosmiconfig';
 import { distance } from 'damerau-levenshtein-js';
 import * as fs from 'fs';
 import * as path from 'path';
-import * as readPkgUp from 'read-pkg-up';
+import readPkgUp from 'read-pkg-up';
 import semverDiff from 'semver-diff';
-import * as updateNotifier from 'update-notifier';
+import { UpdateNotifier } from 'update-notifier';
 import { promisify } from 'util';
+import _case from 'case';
 
-import { App } from '../app/app';
+import { runApp } from '../app/app';
 import { AppOptions } from '../app/app-options';
 import { createPersistableCopy } from '../app/options-exporter';
 import { copyOptions } from '../app/options-importer';
@@ -16,7 +17,7 @@ import { makeAllOptions } from '../app/options-maker';
 import { allInstalledDatabases } from '../db/database-package-manager';
 import { availableLanguages } from '../language/data/map';
 import { installedDateLocales } from '../language/locale-manager';
-import { PackageBasedPluginFinder, PluginController, PluginManager } from '../plugin';
+import { PackageBasedPluginFinder, PluginManager } from '../plugin';
 import { bestMatch } from '../util/best-match';
 import { DirSearcher } from '../util/file';
 import { FSDirSearcher, FSFileHandler } from '../util/fs';
@@ -34,7 +35,11 @@ import { helpContent } from './cli-help';
 import { UI } from './cli-ui';
 import { CliOnlyOptions, hasSomePluginAction } from './CliOnlyOptions';
 import { GuidedConfig, PromptOptions } from './GuidedConfig';
+import { processPluginOptions } from './plugin-processor';
+import { PluginController } from './PluginController';
 
+
+const { kebab } = _case;
 
 // Prevent caching of this module so module.parent is always accurate
 // delete require.cache[__filename];
@@ -52,14 +57,50 @@ export async function main( appPath: string, processPath: string ): Promise< boo
 	// console.log( 'ARGS:', args );
 
 	// Show invalid options whether needed
-	const unexpectedKeys: string[] = args && args.unexpected
-		? Object.keys( args.unexpected )
-		: [];
+
+	const unexpectedKeys: string[] = args && args.unexpected ? Object.keys( args.unexpected ) : [];
 	if ( unexpectedKeys.length > 0 ) {
-		const similarity = ( a, b ) => 1/distance( a, b );
+
+		const simi = ( a: string, b: string ): number => {
+			const piecesA = a.split( /\-/g );
+			const piecesB = b.split( /\-/g );
+			const maxA = piecesA.length - 1;
+			let i = 0;
+			let totalDistance = 0.0000001;
+			for ( const pB of piecesB ) {
+				if ( i > maxA ) {
+					break;
+				}
+				const pA = piecesA[ i ];
+				if ( pA === pB ) {
+					totalDistance += pA.length;
+					++i;
+					continue;
+				}
+				let x = 0;
+				const pALen = pA.length;
+				const pBLen = pB.length;
+				do {
+					if ( pA[ x ] === pB[ x ] ) {
+						totalDistance += 1;
+					}
+					++x;
+				} while ( x < pALen && x < pBLen );
+
+				totalDistance += pALen - distance( pA, pB );
+
+				totalDistance *= i + 1;
+
+				++i;
+			}
+			return totalDistance;
+		};
+
+		// const similarity = ( a, b ) => 1/distance( a, b );
 		const putDashes = t => '-'.repeat( 1 === t.length ? 1 : 2 ) + t;
+		const flags = Array.from( new Set( args.allFlags.map( kebab ) ) );
 		for ( const k of unexpectedKeys ) {
-			const match = bestMatch( k, args.allFlags, similarity );
+			const match = bestMatch( k, flags, simi );
 			const dK = putDashes( k );
 			if ( ! match ) {
 				console.log( `Invalid option: "${dK}"` );
@@ -126,7 +167,7 @@ export async function main( appPath: string, processPath: string ): Promise< boo
 	}
 
     // Check for updates
-    const notifier = updateNotifier(
+    const notifier = new UpdateNotifier(
         {
             pkg,
             updateCheckInterval: 1000 * 60 * 60 * 12 // 12 hours
@@ -359,17 +400,17 @@ export async function main( appPath: string, processPath: string ): Promise< boo
 		const pluginFinder = new PackageBasedPluginFinder(
 			options.processPath, fileHandler, dirSearcher );
 
-		const pluginManager: PluginManager = new PluginManager(
+		const pluginManager: PluginManager = new PluginManager( pluginFinder );
+
+		const pluginController: PluginController = new PluginController(
+			pluginManager,
 			options.packageManager,
 			ui,
-			pluginFinder,
 			fileHandler
 			);
 
-		const pluginController: PluginController = new PluginController();
-
 		try {
-			await pluginController.process( options, pluginManager, ui );
+			await processPluginOptions( options, pluginManager, pluginController, ui );
 		} catch ( err ) {
 			ui.showException( err );
 			return false;
@@ -378,8 +419,7 @@ export async function main( appPath: string, processPath: string ): Promise< boo
 	}
 
 
-    const app = new App( fs, path, promisify );
-	const { spec, success } = await app.start( options, ui );
+	const { spec, success } = await runApp( { fs, path, promisify }, options, ui );
 
 	// AST
 

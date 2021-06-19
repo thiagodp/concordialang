@@ -23,7 +23,7 @@ export class PackageBasedPluginFinder implements PluginFinder {
 		private readonly _listener?: {
 			warn: ( message: string ) => void,
 		}
-        ) {
+    ) {
     }
 
 

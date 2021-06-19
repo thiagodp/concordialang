@@ -1,4 +1,5 @@
-const XRegExp = require( 'xregexp' );
+// const XRegExp = require( 'xregexp' );
+import XRegExp from 'xregexp';
 
 import { ReservedTags, Tag } from '../ast/Tag';
 import { NodeTypes } from '../req/NodeTypes';

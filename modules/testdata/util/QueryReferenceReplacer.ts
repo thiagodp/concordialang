@@ -1,6 +1,9 @@
-import { escape } from 'sqlstring';
+// import { escape } from 'sqlstring';
+import * as sqlstring from 'sqlstring';
 
 import { QueryParser } from '../../db/QueryParser';
+
+const { escape } = sqlstring;
 
 /**
  * Query reference replacer

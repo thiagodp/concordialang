@@ -63,6 +63,19 @@ type Author = { name: string, email?: string, url?: string, site?: string };
 
 
 /**
+ * Sort plug-ins by name
+ *
+ * @param plugins Plug-in data to sort
+ * @returns
+ */
+export function sortPluginsByName( plugins: PluginData[] ): PluginData[] {
+	return plugins.sort( ( a: PluginData, b: PluginData ): number => {
+		return a.name.toLowerCase() > b.name.toLowerCase() ? 1 : -1;
+	} );
+}
+
+
+/**
  * Returns a string array from the property `author` or `authors` of `package.json`.
  * Input value can be string, Author, array of string or array of Author.
  *

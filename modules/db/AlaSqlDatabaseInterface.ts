@@ -14,6 +14,7 @@ import { SqlHelper } from './SqlHelper';
  */
 export class AlaSqlDatabaseInterface implements DatabaseInterface {
 
+	// @ts-ignore
     public readonly dbConnection: AlaSqlDatabase;
 
     private _db: Database;

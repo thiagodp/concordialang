@@ -63,7 +63,10 @@
     "dist/**/*",
     "bin/**/*"
   ],
+  "source": "./main.ts",
   "main": "./dist/main.js",
+  "module": "dist/index.js",
+  "type": "module",
   "bin": {
     "concordia": "./bin/concordia.js"
   },
@@ -74,8 +77,13 @@
     "clean": "rimraf dist",
     "prebuild": "npm run clean",
     "build": "tsc && npm run test:check",
+    "build:new": "microbundle --no-sourcemap --target node --format esm",
+    "compress": "microbundle --no-sourcemap --target node --format esm --compress",
     "watch": "npm run build && tsc --watch",
-    "test": "jest",
+    "watch:new": "microbundle --no-sourcemap --target node --format esm --watch",
+    "fixup": "git commit --fixup HEAD & git rebase --autosquash -i HEAD~2 && git push --force",
+    "test_": "jest",
+    "test": "cross-env NODE_OPTIONS=--experimental-vm-modules npx jest",
     "test:check": "tsc --noEmit -p __tests__",
     "test:check:watch": "tsc --noEmit -p __tests__ --watch",
     "test:coverage": "jest --coverage --coverageDirectory=\"coverage\"",
@@ -112,7 +120,7 @@
     "better-randstr": "^1.0.0",
     "cartesian": "^1.0.1",
     "case": "^1.6.3",
-    "chalk": "^3.0.0",
+    "chalk": "^4.1.1",
     "clone-regexp": "^2.2.0",
     "concordialang-plugin": "git+https://github.com/thiagodp/concordialang-plugin.git",
     "concordialang-types": "git+https://github.com/thiagodp/concordialang-types.git",
@@ -129,7 +137,6 @@
     "inquirer": "^6.5.2",
     "is-valid-path": "^0.1.1",
     "jsesc": "^3.0.2",
-    "load-plugin": "^4.0.0",
     "log-symbols": "^3.0.0",
     "node-fs-extra": "^0.8.2",
     "object-to-array": "^2.0.1",
@@ -153,17 +160,19 @@
     "@types/core-js": "^0.9.46",
     "@types/jest": "^25.2.3",
     "@types/node": "^8.10.66",
+    "cross-env": "^7.0.3",
     "depcheck": "^0.9.2",
     "glob": "^7.1.6",
     "jest": "^26.6.3",
     "jest-sonar": "^0.2.12",
     "jest-watch-typeahead": "^0.6.4",
     "memfs": "^2.17.1",
+    "microbundle": "^0.13.3",
     "rimraf": "^2.7.1",
     "ts-jest": "^26.5.6",
-    "typescript": "^3.9.9"
+    "typescript": "^3.9.10"
   },
   "engines": {
-    "node": ">=8"
+    "node": ">=12.20"
   }
 }

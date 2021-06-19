@@ -81,12 +81,10 @@ describe( 'locale', () => {
 
         it( 'accepts an existing but not pre-loaded language with country', async () => {
             const r = await fallbackToLanguage( 'en-GB', map );
-            expect( r ).toEqual( 'en-GB' );
-        } );
+            expect( r ).toEqual( 'en' );
 
-        it( 'accepts an existing but not pre-loaded language with country', async () => {
-            const r = await fallbackToLanguage( 'fr', map );
-            expect( r ).toEqual( 'fr' );
+            const r2 = await fallbackToLanguage( 'fr', map );
+            expect( r2 ).toEqual( 'fr' );
         } );
 
         it( 'a non existing country fallbacks to an existing language', async () => {

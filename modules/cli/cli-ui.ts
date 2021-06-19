@@ -1,7 +1,7 @@
-import * as colors from 'chalk';
+import colors from 'chalk';
 import { TestScriptExecutionResult } from 'concordialang-types';
-import * as figures from 'figures';
-import * as logSymbols from 'log-symbols';
+import figures from 'figures';
+import logSymbols from 'log-symbols';
 import { AppListener } from 'modules/app/app-listener';
 import { basename, dirname, relative } from 'path';
 import * as readline from 'readline';
@@ -51,24 +51,25 @@ export class UI implements AppListener {
 
     // COLORS
 
-    readonly colorSuccess = colors.greenBright.bind( colors ); // chalk.rgb(0, 255, 0);
-    readonly colorError = colors.redBright.bind( colors ); // colors.rgb(255, 0, 0);
+    //readonly colorSuccess = colors.greenBright; // chalk.rgb(0, 255, 0);
+	readonly colorSuccess = colors.greenBright; // chalk.rgb(0, 255, 0);
+    readonly colorError = colors.redBright; // colors.rgb(255, 0, 0);
     readonly colorCriticalError = colors.rgb( 139, 0, 0 ); // dark red
-    readonly colorWarning = colors.yellow.bind( colors );
-    readonly colorDiscreet = colors.gray.bind( colors );
-    readonly highlight = colors.yellowBright.bind( colors ); // colors.rgb(255, 242, 0);
-    readonly colorText = colors.white.bind( colors );
-    readonly colorCyanBright = colors.cyanBright.bind( colors );
-    readonly colorMagenta = colors.magentaBright.bind( colors );
+    readonly colorWarning = colors.yellow;
+    readonly colorDiscreet = colors.gray;
+    readonly highlight = colors.yellowBright; // colors.rgb(255, 242, 0);
+    readonly colorText = colors.white;
+    readonly colorCyanBright = colors.cyanBright;
+    readonly colorMagenta = colors.magentaBright;
 
-    readonly bgSuccess = colors.bgGreenBright.bind( colors );
-    readonly bgError = colors.bgRed.bind( colors );
-    readonly bgCriticalError = colors.bgRgb( 139, 0, 0 ).bind( colors ); // dark red
-    readonly bgWarning = colors.bgYellow.bind( colors );
-    readonly bgInfo = colors.bgBlackBright.bind( colors ); // bgGray does not exist in colors
-    readonly bgHighlight = colors.bgYellowBright.bind( colors );
-    readonly bgText = colors.bgWhiteBright.bind( colors );
-    readonly bgCyan = colors.bgCyan.bind( colors );
+    readonly bgSuccess = colors.bgGreenBright;
+    readonly bgError = colors.bgRed;
+    readonly bgCriticalError = colors.bgRgb( 139, 0, 0 ); // dark red
+    readonly bgWarning = colors.bgYellow;
+    readonly bgInfo = colors.bgBlackBright; // bgGray does not exist in colors
+    readonly bgHighlight = colors.bgYellowBright;
+    readonly bgText = colors.bgWhiteBright;
+    readonly bgCyan = colors.bgCyan;
 
     // protected intervalFn = null;
 
@@ -101,7 +102,7 @@ export class UI implements AppListener {
         process.stdout.write( args.join( ' ' ) );
     }
 
-    protected writeln( ... args ) {
+    protected writeln( ...args ) {
         // console.log( ... args ); // weird, swallowing some lines sometimes...
         process.stdout.write( args.join( ' ' ) + '\n' );
     }
@@ -373,7 +374,7 @@ export class UI implements AppListener {
 		const all: string[] = locales.map( d => this.highlight( d ) );
 		this.info( `Installed ${locType}locales:`, all.join( ', ' ) );
 		if ( note ) {
-			this.write( this.colorWarning( '  Note: ' + note ) );
+			this.writeln( this.colorWarning( '  Note: ' + note ) );
 		}
 	}
 
@@ -621,7 +622,7 @@ export class UI implements AppListener {
     testCaseGenerationFinished( filesCount: number, testCasesCount: number, durationMs: number ): void {
 
         this.info(
-            this.highlight( filesCount ), 'test case', pluralS( filesCount, 'file' ), 'generated:',
+            this.highlight( filesCount ), 'test case', pluralS( filesCount, 'file' ), 'generated,',
             this.highlight( testCasesCount ), pluralS( testCasesCount, 'test case' ), 'total',
             this.formatDuration( durationMs )
         );
@@ -669,8 +670,13 @@ export class UI implements AppListener {
 
     /** @inheritDoc */
     public announceCompilerStarted( options: AppOptions ): void {
+
+		if ( ! this._verboseMode && ! this._debugMode ) {
+			return;
+		}
+
         // this.startSpinner();
-        this.write( this.symbolInfo, 'Compiling...' );
+        this.writeln( this.symbolInfo, 'Compiling...' );
     }
 
     /** @inheritdoc */
@@ -680,6 +686,11 @@ export class UI implements AppListener {
         testCasesCount: number,
         durationMS: number
         ): void {
+
+		if ( ! this._verboseMode && ! this._debugMode ) {
+			return;
+		}
+
         // this.stopSpinner();
 
         this.clearLine();
@@ -883,6 +894,10 @@ export class UI implements AppListener {
 
     /** @inheritDoc */
     showTestScriptAnalysis( r: TestScriptExecutionResult ): void {
+
+		if ( ! r || ! r.total ) {
+			return;
+		}
 
         let t = r.total;
         if ( ! t.tests ) {

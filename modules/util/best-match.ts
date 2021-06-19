@@ -17,7 +17,8 @@ export function bestMatch(
 	values: string[],
 	comparingFunction: ( a: string, b: string ) => number
 ): TextMatch | null {
-	const [ first ] = sortedMatches( text, values, comparingFunction );
+	const matches = sortedMatches( text, values, comparingFunction );
+	const [ first ] = matches;
 	return first || null;
 }
 

@@ -6,6 +6,11 @@
     "target": "ES2020",
     "moduleResolution": "node",
     "esModuleInterop": true,
+
+    "lib": [
+      "ES2015",
+      "DOM"
+    ]
   },
   "include": [
     "**/*.spec.ts"

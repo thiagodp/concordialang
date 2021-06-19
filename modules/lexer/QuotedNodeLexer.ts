@@ -1,4 +1,6 @@
-const XRegExp = require( 'xregexp' );
+// const XRegExp = require( 'xregexp' );
+import XRegExp from 'xregexp';
+
 import { ValuedNode } from '../ast/Node';
 import { Expressions } from '../req/Expressions';
 import { LineChecker } from '../req/LineChecker';

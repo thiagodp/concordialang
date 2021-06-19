@@ -10,13 +10,23 @@
         "module": "ES2020",
         "target": "ES2020",
         "moduleResolution": "node",
+
         "esModuleInterop": true,
+        "removeComments": true,
+        "declaration": false,
+        "declarationMap": false,
+        "sourceMap": true,
 
         "noImplicitAny": false,
         "allowJs": true,
         "keyofStringsOnly": true,
         "typeRoots": [
             "./node_modules/@types"
+        ],
+
+        "lib": [
+          "ES2015",
+          "DOM"
         ]
     },
     "include": [

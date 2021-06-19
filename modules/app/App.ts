@@ -10,7 +10,7 @@ import { TestScriptExecutionResult } from 'concordialang-types';
 import { Document, Spec } from '../ast';
 import { CompilerFacade } from '../compiler/CompilerFacade';
 import { PackageBasedPluginFinder } from '../plugin/PackageBasedPluginFinder';
-import { PluginManager } from '../plugin/PluginManager';
+import { filterPluginsByName, PluginManager } from '../plugin/PluginManager';
 import { FileBasedTestReporterOptions } from '../report/FileBasedTestReporter';
 import { JSONTestReporter } from '../report/JSONTestReporter';
 import { AugmentedSpec } from '../req/AugmentedSpec';
@@ -26,6 +26,14 @@ type AppResult = {
 	success: boolean,
 };
 
+export function runApp(
+	libs: { fs: any, path: any, promisify: any },
+	options: AppOptions,
+	listener: AppListener
+): Promise< AppResult > {
+	const app = new App( libs.fs, libs.path, libs.promisify );
+	return app.start( options, listener );
+}
 
 /**
  * Application facade
@@ -51,21 +59,20 @@ export class App {
 
 		// Load plug-in
 
-		let plugin: Plugin = null;
+		let plugin: Plugin;
+		let isPluginLoaded: boolean = false;
 
 		if ( hasSomeOptionThatRequiresAPlugin( options ) && options.plugin ) {
 
 			const dirSearcher: DirSearcher = new FSDirSearcher( fs, promisify );
 
 			const pluginManager: PluginManager = new PluginManager(
-                options.packageManager,
-				listener,
-				new PackageBasedPluginFinder( options.processPath, fileHandler, dirSearcher ),
-				fileHandler
-				);
+				new PackageBasedPluginFinder( options.processPath, fileHandler, dirSearcher )
+			);
 
             try {
-                const pluginData = await pluginManager.pluginWithName( options.plugin );
+				const all = await pluginManager.findAll();
+                const pluginData = await filterPluginsByName( all, options.plugin );
                 if ( ! pluginData ) {
                     listener.announcePluginNotFound( options.plugin );
                     return { success: false };;
@@ -77,17 +84,17 @@ export class App {
             }
             if ( ! plugin ) { // needed?
                 listener.announcePluginCouldNotBeLoaded( options.plugin );
-                return { success: false };;
-            }
+                return { success: false };
+            } else {
+				isPluginLoaded = true;
+			}
 
             // can continue
 		}
 
-		if ( ! plugin &&
-			( options.script || options.run || options.result )
-		) {
+		if ( ! options.plugin && ( options.script || options.run || options.result ) ) {
             listener.announceNoPluginWasDefined();
-            return { success: false };;
+            return { success: false };
 		}
 
 		// Compile
@@ -124,7 +131,7 @@ export class App {
             const atsGenerator = new AbstractTestScriptGenerator();
             abstractTestScripts = atsGenerator.generate( docs, spec );
 
-            if ( !! plugin.generateCode && !! abstractTestScripts && abstractTestScripts.length > 0 ) {
+            if ( !! plugin.generateCode && abstractTestScripts.length > 0 ) {
 
                 const startTime = Date.now();
 
@@ -157,9 +164,9 @@ export class App {
             }
         }
 
-        let executionResult: TestScriptExecutionResult = null;
+        let executionResult: TestScriptExecutionResult;
 
-        const shouldExecuteScripts: boolean =  !! plugin && !! plugin.executeCode &&
+        const shouldExecuteScripts: boolean =  isPluginLoaded && !! plugin.executeCode &&
             ( options.run &&
                 ( options.scriptFile?.length > 0 ||
                     generatedTestScriptFiles.length > 0 ||

@@ -1,5 +1,8 @@
 import { format, Locale } from 'date-fns';
-import { enUS, pt, ptBR } from "date-fns/locale";
+// import { enUS, pt, ptBR } from "date-fns/locale";
+import * as allLocales from 'date-fns/locale/index.js';
+
+const { enUS, pt, ptBR } = allLocales;
 
 export type LocaleData = Locale;
 export type LocaleMap = Map< string, LocaleData >;
@@ -49,13 +52,20 @@ export async function isLocaleAvailable(
     }
 
     try {
-        let lib = await import( `date-fns/locale/${locale}` );
-        // Use default export
-        if ( lib.default ) {
-            lib = lib.default;
-        }
-        map.set( locale, lib );
-        return true;
+        // let lib = await import( `date-fns/locale/${locale}/index.js` );
+        // // Use default export
+        // if ( lib.default ) {
+        //     lib = lib.default;
+        // }
+		//
+		// map.set( locale, lib );
+        // return true;
+
+		if ( allLocales[ locale ] ) {
+			map.set( locale, allLocales[ locale ] );
+			return true;
+		}
+		return false;
     } catch ( err ) {
         return false;
     }

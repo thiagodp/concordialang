@@ -1,4 +1,5 @@
-import { escape, escapeId } from 'sqlstring';
+// import { escape, escapeId } from 'sqlstring';
+import * as sqlstring from 'sqlstring';
 
 import { Document, Step } from '../ast';
 import { QueryParser } from '../db/QueryParser';
@@ -12,6 +13,8 @@ import { isDefined } from '../util/type-checking';
 import { ValueTypeDetector } from '../util/ValueTypeDetector';
 import { TargetTypeUtil } from './TargetTypeUtil';
 
+
+const { escape, escapeId } = sqlstring;
 
 /**
  * Replaces references to Concordia constructions - such as named databases,
