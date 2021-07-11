@@ -154,6 +154,8 @@ export class PluginManager {
         // console.log( 'cwd', process.cwd() );
         // const plugin = require( file );
         try {
+			// Supported in ES2020+ but it worked flawlessly in ES2015/ES2018 (Node 10)
+			// @ts-ignore
             let plugin = await import( file );
             // console.log( 'plugin', plugin );
 			if ( plugin.default ) {

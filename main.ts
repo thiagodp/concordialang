@@ -7,6 +7,9 @@ declare global {
 }
 
 import path from 'path';
+
+// Supported in ES2020+ but it worked flawlessly in ES2015/ES2018 (Node 10)
+// @ts-ignore
 const __dirname = path.join(path.dirname(decodeURI(new URL(import.meta.url).pathname))).replace(/^\\([A-Z]:\\)/, "$1");
 
 
