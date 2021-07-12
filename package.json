@@ -63,7 +63,7 @@
     "dist/**/*",
     "bin/**/*"
   ],
-  "source": "./main.ts",
+  "source": "./modules/main.ts",
   "main": "./dist/main.js",
   "module": "dist/index.js",
   "type": "module",

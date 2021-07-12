@@ -1,9 +1,9 @@
+import * as path from 'path';
+import path__default, { resolve, dirname, basename, join, relative, parse, normalize, isAbsolute } from 'path';
 import _case from 'case';
 import { cosmiconfig } from 'cosmiconfig';
 import { distance } from 'damerau-levenshtein-js';
 import * as fs from 'fs';
-import * as path from 'path';
-import path__default, { resolve, dirname, basename, join, relative, parse, normalize, isAbsolute } from 'path';
 import readPkgUp from 'read-pkg-up';
 import semverDiff from 'semver-diff';
 import { UpdateNotifier } from 'update-notifier';

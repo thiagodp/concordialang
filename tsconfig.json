@@ -31,7 +31,6 @@
     },
     "include": [
         "lib",
-        "modules",
-        "main.ts"
+        "modules"
     ]
 }

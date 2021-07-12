@@ -1,12 +1,12 @@
-import { main } from "./modules/cli/cli-main.js";
+import path from 'path';
+
+import { main } from './cli/cli-main.js';
 
 declare global {
 	interface ImportMeta {
 		url: string;
 	}
 }
-
-import path from 'path';
 
 // Supported in ES2020+ but it worked flawlessly in ES2015/ES2018 (Node 10)
 // @ts-ignore
