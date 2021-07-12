@@ -6,7 +6,6 @@ import {
     DEFAULT_CASE_UI,
     DEFAULT_CONFIG,
     DEFAULT_DATA_TEST_CASE_COMBINATION,
-    DEFAULT_DIR_LANGUAGE,
     DEFAULT_DIR_RESULT,
     DEFAULT_DIR_SCRIPT,
     DEFAULT_DIRECTORY,
@@ -37,9 +36,6 @@ export function makeAppOptions(
 	processPath: string = process.cwd()
 ): AppOptions {
 
-	// Concordia directories
-	const languageDir = resolve( appPath, DEFAULT_DIR_LANGUAGE );
-
 	// User-defined directories
 	const directory = resolve( processPath, DEFAULT_DIRECTORY );
 	const dirScript = resolve( processPath, DEFAULT_DIR_SCRIPT );
@@ -53,8 +49,6 @@ export function makeAppOptions(
 
 		appPath,
 		processPath,
-
-		languageDir,
 
 		// isGeneratedSeed
 		// realSeed

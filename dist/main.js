@@ -11349,7 +11349,6 @@ var InvalidSpecialOptions;
   InvalidSpecialOptions["DEFAULT"] = "smart";
 })(InvalidSpecialOptions || (InvalidSpecialOptions = {}));
 
-const DEFAULT_DIR_LANGUAGE = 'data/';
 const DEFAULT_DIRECTORY = '.';
 const DEFAULT_DIR_SCRIPT = '.';
 const DEFAULT_DIR_RESULT = '.';
@@ -21610,7 +21609,7 @@ class App {
 }
 
 function createPersistableCopy(source, defaultObject, useRelativePaths = false) {
-  const unwantedProperties = ['debug', 'languageDir', 'appPath', 'processPath', 'isGeneratedSeed', 'realSeed', 'languageList', 'pluginList', 'pluginAbout', 'pluginInstall', 'pluginUninstall', 'pluginServe', 'headless', `dbList`, 'dbInstall', 'dbUninstall', 'databases', 'localeList', 'init', 'saveConfig', 'ast', 'verbose', 'stopOnTheFirstError', 'x', 'justSpec', 'justTestCase', 'justScript', 'justRun', 'justResult', 'tcSuppressHeader', 'help', 'about', 'version', 'newer'];
+  const unwantedProperties = ['debug', 'appPath', 'processPath', 'isGeneratedSeed', 'realSeed', 'languageList', 'pluginList', 'pluginAbout', 'pluginInstall', 'pluginUninstall', 'pluginServe', 'headless', `dbList`, 'dbInstall', 'dbUninstall', 'databases', 'localeList', 'init', 'saveConfig', 'ast', 'verbose', 'stopOnTheFirstError', 'x', 'justSpec', 'justTestCase', 'justScript', 'justRun', 'justResult', 'tcSuppressHeader', 'help', 'about', 'version', 'newer'];
   const obj = Object.assign({}, source);
 
   if (obj.isGeneratedSeed) {
@@ -21821,14 +21820,12 @@ function fixInconsistences(to) {
 }
 
 function makeAppOptions(appPath = __dirname, processPath = process.cwd()) {
-  const languageDir = resolve(appPath, DEFAULT_DIR_LANGUAGE);
   const directory = resolve(processPath, DEFAULT_DIRECTORY);
   const dirScript = resolve(processPath, DEFAULT_DIR_SCRIPT);
   const dirResult = resolve(processPath, DEFAULT_DIR_RESULT);
   const o = {
     appPath,
     processPath,
-    languageDir,
     recursive: true,
     directory,
     dirScript,

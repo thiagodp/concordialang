@@ -20,7 +20,6 @@ export function createPersistableCopy(
 
 		// INTERNAL
 		'debug',
-		'languageDir',
         'appPath',
 		'processPath',
 

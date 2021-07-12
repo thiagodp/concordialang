@@ -1,6 +1,4 @@
-import { resolve } from 'path';
-
-import { DEFAULT_DIR_LANGUAGE, DEFAULT_LANGUAGE } from '../../modules/app/default-options';
+import { DEFAULT_LANGUAGE } from '../../modules/app/default-options';
 import { Database, DatabaseProperties, DatabaseProperty, Document, Table } from '../../modules/ast';
 import { AlaSqlDatabaseInterface } from '../../modules/db';
 import languageMap from '../../modules/language/data/map';
@@ -11,9 +9,6 @@ import { NodeTypes } from '../../modules/req/NodeTypes';
 describe( 'AlaSqlDatabaseInterface', () => {
 
     let dbi: AlaSqlDatabaseInterface; // under test
-
-	const dir = resolve( process.cwd(), 'dist/' );
-	const langDir = resolve( dir, DEFAULT_DIR_LANGUAGE );
 
     let parser = new Parser();
     let lexer: Lexer = new Lexer( DEFAULT_LANGUAGE, languageMap );

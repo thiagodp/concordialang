@@ -1,10 +1,6 @@
 import { CaseType } from '../util/CaseType';
 import { CombinationOptions, InvalidSpecialOptions, VariantSelectionOptions } from './combination-options';
 
-// INTERNAL DIRECTORIES
-
-export const DEFAULT_DIR_LANGUAGE: string = 'data/';
-
 // DIRECTORIES
 
 export const DEFAULT_DIRECTORY: string = '.';
