@@ -1,5 +1,4 @@
 import { Plugin } from 'concordialang-plugin';
-import { join } from 'path';
 
 import { toUnixPath } from '../util/file';
 import { OldPluginData, PluginData } from './PluginData';

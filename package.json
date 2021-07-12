@@ -86,8 +86,8 @@
     "test": "cross-env NODE_OPTIONS=--experimental-vm-modules npx jest",
     "test:check": "tsc --noEmit -p __tests__",
     "test:check:watch": "tsc --noEmit -p __tests__ --watch",
-    "test:coverage": "cross-env NODE_OPTIONS=--experimental-vm-modules npx jest --coverage --coverageDirectory=\"coverage\"",
-    "test:sonar": "cross-env NODE_OPTIONS=--experimental-vm-modules npx jest --coverage --coverageDirectory=\"coverage\" --reporters=\"default\" --reporters=\"jest-sonar\"",
+    "coverage": "cross-env NODE_OPTIONS=--experimental-vm-modules npx jest --coverage --coverageDirectory=\"coverage\"",
+    "sonar": "cross-env NODE_OPTIONS=--experimental-vm-modules npx jest --coverage --coverageDirectory=\"coverage\" --reporters=\"default\" --reporters=\"jest-sonar\"",
     "all": "npm run build && npm run test:check && npm run test",
     "start": "node bin/concordia.js",
     "depcheck": "depcheck",
@@ -173,6 +173,6 @@
     "typescript": "^3.9.10"
   },
   "engines": {
-    "node": ">=12.20"
+    "node": ">=10"
   }
 }
