@@ -1,11 +1,17 @@
 import * as globalDirs from 'global-dirs';
-import { join, relative, resolve } from 'path';
+import { join, resolve } from 'path';
 
-import { toUnixPath } from '../util/file';
 import { DirSearcher } from '../util/file/DirSearcher';
 import { FileReader } from '../util/file/FileReader';
-import { isPlugin, OldPluginData, PACKAGE_FILE, PLUGIN_PREFIX, pluginDataFromPackage } from './PluginData';
-import { NewOrOldPluginData, PluginFinder } from './PluginFinder';
+import {
+    isPlugin,
+    NewOrOldPluginData,
+    OldPluginData,
+    PACKAGE_FILE,
+    PLUGIN_PREFIX,
+    pluginDataFromPackage,
+} from './PluginData';
+import { PluginFinder } from './PluginFinder';
 
 /**
  * Finds plugins based on installed NodeJS packages.
@@ -107,7 +113,7 @@ export class PackageBasedPluginFinder implements PluginFinder {
 				continue;
             }
 
-            // Update the property that contains the plug-in file to include the directory
+            // Uses an absolute path in the plug-in file
             const old = pluginData as OldPluginData;
             const isOldPlugin = !! old.file;
             if ( isOldPlugin ) {
@@ -117,9 +123,8 @@ export class PackageBasedPluginFinder implements PluginFinder {
                     old.file = join( dir, old.file );
                 }
             } else {
-                pluginData.main = toUnixPath( relative( '.', join( dir, pluginData.name, pluginData.main || '' ) ) );
+                pluginData.main = join( dir, pluginData.name, pluginData.main || '' );
             }
-
 
             allPluginData.push( pluginData );
         }

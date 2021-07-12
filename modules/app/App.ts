@@ -10,7 +10,8 @@ import { TestScriptExecutionResult } from 'concordialang-types';
 import { Document, Spec } from '../ast';
 import { CompilerFacade } from '../compiler/CompilerFacade';
 import { PackageBasedPluginFinder } from '../plugin/PackageBasedPluginFinder';
-import { filterPluginsByName, PluginManager } from '../plugin/PluginManager';
+import { loadPlugin } from '../plugin/plugin-loader';
+import { filterPluginsByName } from '../plugin/PluginData';
 import { FileBasedTestReporterOptions } from '../report/FileBasedTestReporter';
 import { JSONTestReporter } from '../report/JSONTestReporter';
 import { AugmentedSpec } from '../req/AugmentedSpec';
@@ -66,18 +67,16 @@ export class App {
 
 			const dirSearcher: DirSearcher = new FSDirSearcher( fs, promisify );
 
-			const pluginManager: PluginManager = new PluginManager(
-				new PackageBasedPluginFinder( options.processPath, fileHandler, dirSearcher )
-			);
+			const pluginFinder = new PackageBasedPluginFinder( options.processPath, fileHandler, dirSearcher );
 
             try {
-				const all = await pluginManager.findAll();
+				const all = await pluginFinder.find();
                 const pluginData = await filterPluginsByName( all, options.plugin );
                 if ( ! pluginData ) {
                     listener.announcePluginNotFound( options.plugin );
                     return { success: false };;
                 }
-                plugin = await pluginManager.load( pluginData );
+                plugin = await loadPlugin( pluginData );
             } catch ( err ) {
                 listener.showException( err );
                 return { success: false };

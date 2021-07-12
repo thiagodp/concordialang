@@ -1,10 +1,9 @@
 import * as inquirer from 'inquirer';
 import { join } from 'path';
 
-import { OldPluginData, PACKAGE_FILE, PLUGIN_PREFIX } from '../plugin/PluginData';
-import { NewOrOldPluginData } from '../plugin/PluginFinder';
+import { loadPlugin } from '../plugin/plugin-loader';
+import { filterPluginsByName, NewOrOldPluginData, OldPluginData, PACKAGE_FILE } from '../plugin/PluginData';
 import { PluginListener } from '../plugin/PluginListener';
-import { filterPluginsByName, PluginManager } from '../plugin/PluginManager';
 import { FileReader } from '../util/file/FileReader';
 import {
     makePackageInitCommand,
@@ -18,7 +17,6 @@ import { runCommand } from '../util/run-command';
 export class PluginController {
 
     constructor(
-		private readonly _pluginManager: PluginManager,
         private readonly _packageManagerName: string,
         private readonly _pluginListener: PluginListener,
         private readonly _fileReader: FileReader
@@ -63,7 +61,7 @@ export class PluginController {
             // Create package.json if it does not exist
 
             if ( mustGeneratePackageFile ) {
-                const cmd = makePackageInitCommand( this._packageManagerName as PackageManager );  // 'npm init --yes';
+                const cmd = makePackageInitCommand( this._packageManagerName as PackageManager );  // e.g. 'npm init --yes';
                 await this.runCommand( cmd );
             }
         }
@@ -91,15 +89,6 @@ export class PluginController {
 
     public async serve( pluginData: NewOrOldPluginData ): Promise< number > {
 
-        /*
-        if ( ! pluginData.serve ) {
-            throw new Error( 'No "serve" property found in the plugin file. Can\'t serve.' );
-        }
-
-        this._pluginListener.showPluginServeStart( pluginData.name );
-        await this.runCommand( pluginData.serve );
-        */
-
         let serveCommand: string;
 
         const old = pluginData as OldPluginData;
@@ -108,7 +97,7 @@ export class PluginController {
         if ( isOldPlugin  ) {
             serveCommand = old.serve;
         } else {
-            const plugin = await this._pluginManager.load( pluginData );
+            const plugin = await loadPlugin( pluginData );
             if ( ! plugin ) {
                 throw new Error( 'Could not load the plug-in ' + ( pluginData?.name || '' ) );
             }

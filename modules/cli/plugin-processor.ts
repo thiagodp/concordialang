@@ -1,21 +1,21 @@
-import { PLUGIN_PREFIX } from '../plugin/PluginData';
 import { AppOptions } from '../app/app-options';
+import { filterPluginsByName, PLUGIN_PREFIX, sortPluginsByName } from '../plugin/PluginData';
+import { PluginFinder } from '../plugin/PluginFinder';
 import { PluginListener } from '../plugin/PluginListener';
-import { filterPluginsByName, PluginManager } from '../plugin/PluginManager';
 import { CliOnlyOptions } from './CliOnlyOptions';
 import { PluginController } from './PluginController';
 
 export async function processPluginOptions(
 	options: AppOptions & CliOnlyOptions,
-	pluginManager: PluginManager,
+	pluginFinder: PluginFinder,
 	pluginController: PluginController,
 	drawer: PluginListener
 	): Promise< boolean > {
 
-
 	if ( options.pluginList ) {
 		try {
-			drawer.drawPluginList( await pluginManager.findAll() );
+			const plugins = sortPluginsByName( await pluginFinder.find() );
+			drawer.drawPluginList( plugins );
 			return true;
 		} catch ( e ) {
 			drawer.showError( e );
@@ -34,7 +34,7 @@ export async function processPluginOptions(
 		pluginName = PLUGIN_PREFIX + pluginName;
 	}
 
-	const all = await pluginManager.findAll();
+	const all = await pluginFinder.find();
 	let pluginData = await filterPluginsByName( all, pluginName, false );
 
 	// Installation (ok whether it exists or not)

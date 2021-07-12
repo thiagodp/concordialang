@@ -1,3 +1,4 @@
+import _case from 'case';
 import { cosmiconfig } from 'cosmiconfig';
 import { distance } from 'damerau-levenshtein-js';
 import * as fs from 'fs';
@@ -7,7 +8,6 @@ import readPkgUp from 'read-pkg-up';
 import semverDiff from 'semver-diff';
 import { UpdateNotifier } from 'update-notifier';
 import { promisify } from 'util';
-import _case from 'case';
 import { AbstractTestScript, NamedATSElement, ATSTestCase, ATSEvent, ATSCommand, ATSDatabaseCommand, ATSConsoleCommand, TestScriptGenerationOptions } from 'concordialang-plugin';
 import { DateTimeFormatter, ResolverStyle, LocalDate as LocalDate$1, LocalDateTime as LocalDateTime$1, LocalTime as LocalTime$1, Clock, Instant, ZoneId, ChronoUnit } from '@js-joda/core';
 import { createHash } from 'crypto';
@@ -20790,6 +20790,37 @@ function sortPluginsByName(plugins) {
     return a.name.toLowerCase() > b.name.toLowerCase() ? 1 : -1;
   });
 }
+async function filterPluginsByName(all, name, partialComparison = false) {
+  const usualComparison = (from, to) => {
+    return from === to || from === PLUGIN_PREFIX + to || PLUGIN_PREFIX + from === to;
+  };
+
+  const removeVersionFromName = name => {
+    const index = name.lastIndexOf('@');
+
+    if (index < 0) {
+      return name;
+    }
+
+    return name.substring(0, index);
+  };
+
+  const compareNames = (from, to, partialComparison) => {
+    if (partialComparison) {
+      return from.includes(to);
+    }
+
+    if (usualComparison(from, to)) {
+      return true;
+    }
+
+    return usualComparison(removeVersionFromName(from), removeVersionFromName(to));
+  };
+
+  const lowerCasedName = name.toLowerCase();
+  const withName = all.filter(v => compareNames(v.name.toLowerCase(), lowerCasedName, partialComparison));
+  return withName.length > 0 ? withName[0] : undefined;
+}
 function authorsAsStringArray(author) {
   switch (typeof author) {
     case 'string':
@@ -20947,7 +20978,7 @@ class PackageBasedPluginFinder {
           old.file = join(dir, old.file);
         }
       } else {
-        pluginData.main = toUnixPath(relative('.', join(dir, pluginData.name, pluginData.main || '')));
+        pluginData.main = join(dir, pluginData.name, pluginData.main || '');
       }
 
       allPluginData.push(pluginData);
@@ -20967,82 +20998,37 @@ class PackageBasedPluginFinder {
 
 }
 
+async function loadPlugin(pluginData) {
+  const old = pluginData;
+  const isOldPlugin = !!old.file;
+
+  if (isOldPlugin) {
+    if (old.file.includes(':')) {
+      old.file = 'file:///' + old.file;
+    }
+
+    const pluginClassFileContext = await import(old.file);
+    const obj = createInstance(pluginClassFileContext, old.class, []);
+    return obj;
+  }
+
+  let file = pluginData.main;
+
+  if (file.includes(':')) {
+    file = 'file:///' + toUnixPath(file);
+  }
+
+  let plugin = await import(file);
+
+  if (plugin.default) {
+    plugin = plugin.default;
+  }
+
+  return plugin;
+}
+
 function createInstance(context, className, args) {
   return new context[className](...args);
-}
-
-async function filterPluginsByName(all, name, partialComparison = false) {
-  const usualComparison = (from, to) => {
-    return from === to || from === PLUGIN_PREFIX + to || PLUGIN_PREFIX + from === to;
-  };
-
-  const removeVersionFromName = name => {
-    const index = name.lastIndexOf('@');
-
-    if (index < 0) {
-      return name;
-    }
-
-    return name.substring(0, index);
-  };
-
-  const compareNames = (from, to, partialComparison) => {
-    if (partialComparison) {
-      return from.includes(to);
-    }
-
-    if (usualComparison(from, to)) {
-      return true;
-    }
-
-    return usualComparison(removeVersionFromName(from), removeVersionFromName(to));
-  };
-
-  const lowerCasedName = name.toLowerCase();
-  const withName = all.filter(v => compareNames(v.name.toLowerCase(), lowerCasedName, partialComparison));
-  return withName.length > 0 ? withName[0] : undefined;
-}
-class PluginManager {
-  constructor(_finder) {
-    this._finder = _finder;
-  }
-
-  async load(pluginData) {
-    const old = pluginData;
-    const isOldPlugin = !!old.file;
-
-    if (isOldPlugin) {
-      const pluginClassFileContext = require(old.file);
-
-      const obj = createInstance(pluginClassFileContext, old.class, []);
-      return obj;
-    }
-
-    let file = toUnixPath(join(process.cwd(), pluginData.main));
-
-    if (file.includes(':')) {
-      file = 'file:///' + file;
-    }
-
-    try {
-      let plugin = await import(file);
-
-      if (plugin.default) {
-        plugin = plugin.default;
-      }
-
-      return plugin;
-    } catch (err) {
-      console.log(err);
-      return;
-    }
-  }
-
-  async findAll() {
-    const all = await this._finder.find();
-    return sortPluginsByName(all);
-  }
-
 }
 
 const DEFAULT_FILENAME = 'concordia-report';
@@ -21434,10 +21420,10 @@ class App {
 
     if (hasSomeOptionThatRequiresAPlugin(options) && options.plugin) {
       const dirSearcher = new FSDirSearcher(fs, promisify);
-      const pluginManager = new PluginManager(new PackageBasedPluginFinder(options.processPath, fileHandler, dirSearcher));
+      const pluginFinder = new PackageBasedPluginFinder(options.processPath, fileHandler, dirSearcher);
 
       try {
-        const all = await pluginManager.findAll();
+        const all = await pluginFinder.find();
         const pluginData = await filterPluginsByName(all, options.plugin);
 
         if (!pluginData) {
@@ -21448,7 +21434,7 @@ class App {
           ;
         }
 
-        plugin = await pluginManager.load(pluginData);
+        plugin = await loadPlugin(pluginData);
       } catch (err) {
         listener.showException(err);
         return {
@@ -23023,10 +23009,11 @@ class ConcordiaQuestions {
 
 }
 
-async function processPluginOptions(options, pluginManager, pluginController, drawer) {
+async function processPluginOptions(options, pluginFinder, pluginController, drawer) {
   if (options.pluginList) {
     try {
-      drawer.drawPluginList(await pluginManager.findAll());
+      const plugins = sortPluginsByName(await pluginFinder.find());
+      drawer.drawPluginList(plugins);
       return true;
     } catch (e) {
       drawer.showError(e);
@@ -23045,7 +23032,7 @@ async function processPluginOptions(options, pluginManager, pluginController, dr
     pluginName = PLUGIN_PREFIX + pluginName;
   }
 
-  const all = await pluginManager.findAll();
+  const all = await pluginFinder.find();
   let pluginData = await filterPluginsByName(all, pluginName, false);
 
   if (options.pluginInstall) {
@@ -23092,8 +23079,7 @@ async function processPluginOptions(options, pluginManager, pluginController, dr
 }
 
 class PluginController {
-  constructor(_pluginManager, _packageManagerName, _pluginListener, _fileReader) {
-    this._pluginManager = _pluginManager;
+  constructor(_packageManagerName, _pluginListener, _fileReader) {
     this._packageManagerName = _packageManagerName;
     this._pluginListener = _pluginListener;
     this._fileReader = _fileReader;
@@ -23159,7 +23145,7 @@ class PluginController {
     if (isOldPlugin) {
       serveCommand = old.serve;
     } else {
-      const plugin = await this._pluginManager.load(pluginData);
+      const plugin = await loadPlugin(pluginData);
 
       if (!plugin) {
         throw new Error('Could not load the plug-in ' + ((pluginData == null ? void 0 : pluginData.name) || ''));
@@ -23499,11 +23485,10 @@ async function main(appPath, processPath) {
   if (hasSomePluginAction(options)) {
     const dirSearcher = new FSDirSearcher(fs, promisify);
     const pluginFinder = new PackageBasedPluginFinder(options.processPath, fileHandler, dirSearcher);
-    const pluginManager = new PluginManager(pluginFinder);
-    const pluginController = new PluginController(pluginManager, options.packageManager, ui, fileHandler);
+    const pluginController = new PluginController(options.packageManager, ui, fileHandler);
 
     try {
-      await processPluginOptions(options, pluginManager, pluginController, ui);
+      await processPluginOptions(options, pluginFinder, pluginController, ui);
     } catch (err) {
       ui.showException(err);
       return false;

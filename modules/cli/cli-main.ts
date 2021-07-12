@@ -1,4 +1,5 @@
 // console.log( '---> process.argv', process.argv );
+import _case from 'case';
 import { cosmiconfig } from 'cosmiconfig';
 import { distance } from 'damerau-levenshtein-js';
 import * as fs from 'fs';
@@ -7,7 +8,6 @@ import readPkgUp from 'read-pkg-up';
 import semverDiff from 'semver-diff';
 import { UpdateNotifier } from 'update-notifier';
 import { promisify } from 'util';
-import _case from 'case';
 
 import { runApp } from '../app/app';
 import { AppOptions } from '../app/app-options';
@@ -17,7 +17,7 @@ import { makeAllOptions } from '../app/options-maker';
 import { allInstalledDatabases } from '../db/database-package-manager';
 import { availableLanguages } from '../language/data/map';
 import { installedDateLocales } from '../language/locale-manager';
-import { PackageBasedPluginFinder, PluginManager } from '../plugin';
+import { PackageBasedPluginFinder } from '../plugin';
 import { bestMatch } from '../util/best-match';
 import { DirSearcher } from '../util/file';
 import { FSDirSearcher, FSFileHandler } from '../util/fs';
@@ -400,17 +400,14 @@ export async function main( appPath: string, processPath: string ): Promise< boo
 		const pluginFinder = new PackageBasedPluginFinder(
 			options.processPath, fileHandler, dirSearcher );
 
-		const pluginManager: PluginManager = new PluginManager( pluginFinder );
-
 		const pluginController: PluginController = new PluginController(
-			pluginManager,
 			options.packageManager,
 			ui,
 			fileHandler
 			);
 
 		try {
-			await processPluginOptions( options, pluginManager, pluginController, ui );
+			await processPluginOptions( options, pluginFinder, pluginController, ui );
 		} catch ( err ) {
 			ui.showException( err );
 			return false;
