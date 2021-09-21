@@ -1,7 +1,7 @@
-![npm (tag)](https://img.shields.io/npm/v/concordialang/alpha?color=green&label=NPM&style=for-the-badge)
+[![npm (tag)](https://img.shields.io/npm/v/concordialang/alpha?color=green&label=NPM&style=for-the-badge)](https://github.com/thiagodp/concordialang/releases)
 [![License](https://img.shields.io/npm/l/concordialang.svg?style=for-the-badge&color=green)](https://github.com/thiagodp/concordialang/blob/master/LICENSE.txt)
-![GitHub branch checks state](https://img.shields.io/github/checks-status/thiagodp/concordialang/v2?style=for-the-badge)
-![GitHub last commit (branch)](https://img.shields.io/github/last-commit/thiagodp/concordialang/v2?style=for-the-badge)
+[![GitHub branch checks state](https://img.shields.io/github/checks-status/thiagodp/concordialang/v2?style=for-the-badge)](https://github.com/thiagodp/concordialang/actions)
+[![GitHub last commit (branch)](https://img.shields.io/github/last-commit/thiagodp/concordialang/v2?style=for-the-badge)](https://github.com/thiagodp/concordialang/commit/v2)
 [![Slack](https://img.shields.io/badge/slack-chat-blue.svg?style=for-the-badge)](https://bit.ly/concordialang)
 
 # Concordia
@@ -18,7 +18,7 @@ At a glance:
 
 And More:
 - Concordia Compiler infers test data and test oracles and uses [effective testing techniques](https://concordialang.gitbook.io/concordialang/how-it-works/techniques#testing-techniques) to find bugs in your application.
-- You can [create your own plug-in](https://concordialang.gitbook.io/concordialang/development/creating-a-plug-in) whether your favorite programming language or testing framework [is not in the list](https://concordialang.gitbook.io/concordialang/introduction/plugins).
+- You can [create your own plug-in](https://concordialang.gitbook.io/concordialang/development/creating-a-plug-in) whether your favorite programming language or testing framework is not in [the list](https://concordialang.gitbook.io/concordialang/introduction/plugins).
 
 
 ## Documentation
@@ -29,6 +29,8 @@ And More:
 ## Installation
 
 `npm i -D concordialang@alpha`
+
+### [Related things](https://concordialang.gitbook.io/concordialang/introduction/related-things)
 
 ## License
 
