@@ -1,4 +1,3 @@
-// @ts-ignore
 import alasql from 'alasql';
 
 import { SqlHelper } from '../../modules/db/SqlHelper';
