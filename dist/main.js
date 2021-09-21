@@ -21576,8 +21576,8 @@ class App {
 
         const reportedResult = new TestResultAnalyzer().adjustResult(executionResult, abstractTestScripts);
 
-        if (!!((_plugin = plugin) != null && _plugin.beforeReport)) {
-          await plugin.beforeReport(reportedResult, tseo);
+        if (!!((_plugin = plugin) != null && _plugin.beforeReporting)) {
+          await plugin.beforeReporting(reportedResult, tseo);
         }
 
         listener.showTestScriptAnalysis(reportedResult);
@@ -21587,8 +21587,8 @@ class App {
           useTimestamp: false
         });
 
-        if (!!((_plugin2 = plugin) != null && _plugin2.afterReport)) {
-          await plugin.afterReport(reportedResult, tseo);
+        if (!!((_plugin2 = plugin) != null && _plugin2.afterReporting)) {
+          await plugin.afterReporting(reportedResult, tseo);
         }
 
         if (!hasErrors && ((reportedResult == null ? void 0 : (_reportedResult$total = reportedResult.total) == null ? void 0 : _reportedResult$total.failed) > 0 || (reportedResult == null ? void 0 : (_reportedResult$total2 = reportedResult.total) == null ? void 0 : _reportedResult$total2.error) > 0)) {

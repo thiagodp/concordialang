@@ -253,15 +253,13 @@ export class App {
 					abstractTestScripts
 				);
 
-                // @ts-ignore
-                if ( !! plugin?.beforeReport ) {
-                    // @ts-ignore
-                    await plugin.beforeReport( reportedResult, tseo );
+                if ( !! plugin?.beforeReporting ) {
+                    await plugin.beforeReporting( reportedResult, tseo );
                 }
 
 				listener.showTestScriptAnalysis( reportedResult );
 
-				// Save report to file
+				// Save report to file ---
                 const reporter = new JSONTestReporter( fileHandler );
                 await reporter.report(
                     reportedResult,
@@ -269,10 +267,8 @@ export class App {
                 );
                 // ---
 
-                // @ts-ignore
-                if ( !! plugin?.afterReport ) {
-                    // @ts-ignore
-                    await plugin.afterReport( reportedResult, tseo );
+                if ( !! plugin?.afterReporting ) {
+                    await plugin.afterReporting( reportedResult, tseo );
                 }
 
 				if ( ! hasErrors && ( reportedResult?.total?.failed > 0 || reportedResult?.total?.error > 0 ) ) {
