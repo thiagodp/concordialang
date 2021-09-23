@@ -1,3 +1,4 @@
+
 /**
  * Package file
  */
@@ -78,51 +79,6 @@ export function sortPluginsByName( plugins: PluginData[] ): PluginData[] {
 	return plugins.sort( ( a: PluginData, b: PluginData ): number => {
 		return a.name.toLowerCase() > b.name.toLowerCase() ? 1 : -1;
 	} );
-}
-
-
-/**
- * Filter the given plug-ins by name.
- *
- * @param all Plug-ins
- * @param name Name to filter
- * @param partialComparison
- * @returns
- */
- export async function filterPluginsByName( all: NewOrOldPluginData[], name: string, partialComparison: boolean = false ): Promise< NewOrOldPluginData | undefined > {
-
-	const usualComparison = ( from: string, to: string ) => {
-		return ( from === to )
-			|| ( from === PLUGIN_PREFIX + to )
-			|| ( PLUGIN_PREFIX + from === to );
-	};
-
-	const removeVersionFromName = ( name: string ) => {
-		const index = name.lastIndexOf( '@' );
-		if ( index < 0 ) {
-			return name;
-		}
-		return name.substring( 0, index );
-	};
-
-	const compareNames = ( from: string, to: string, partialComparison: boolean ): boolean => {
-
-		if ( partialComparison ) {
-			return from.includes( to );
-		}
-
-		if ( usualComparison( from, to ) ) {
-			return true;
-		}
-
-		return usualComparison( removeVersionFromName( from ), removeVersionFromName( to ) );
-	};
-
-	const lowerCasedName: string = name.toLowerCase();
-	const withName = all.filter(
-		v => compareNames( v.name.toLowerCase(), lowerCasedName, partialComparison ) );
-
-	return withName.length > 0 ? withName[ 0 ] : undefined;
 }
 
 

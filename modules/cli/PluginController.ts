@@ -1,8 +1,9 @@
 import * as inquirer from 'inquirer';
 import { join } from 'path';
 
+import { filterPluginsByName } from '../plugin/plugin-filter';
 import { loadPlugin } from '../plugin/plugin-loader';
-import { filterPluginsByName, NewOrOldPluginData, OldPluginData, PACKAGE_FILE } from '../plugin/PluginData';
+import { NewOrOldPluginData, OldPluginData, PACKAGE_FILE } from '../plugin/PluginData';
 import { PluginListener } from '../plugin/PluginListener';
 import { FileReader } from '../util/file/FileReader';
 import {
@@ -73,8 +74,8 @@ export class PluginController {
             return;
         }
 
-        // Check if it is installed
-        pluginData = await filterPluginsByName( all, name, false );
+        // Check if it is in the list of installed ones
+        pluginData = filterPluginsByName( all, name, false );
         if ( ! pluginData ) {
             this._pluginListener.showMessageCouldNoFindInstalledPlugin( name );
         }

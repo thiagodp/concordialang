@@ -1,5 +1,6 @@
 import { AppOptions } from '../app/app-options';
-import { filterPluginsByName, PLUGIN_PREFIX, sortPluginsByName } from '../plugin/PluginData';
+import { filterPluginsByName } from '../plugin/plugin-filter';
+import { PLUGIN_PREFIX, sortPluginsByName } from '../plugin/PluginData';
 import { PluginFinder } from '../plugin/PluginFinder';
 import { PluginListener } from '../plugin/PluginListener';
 import { CliOnlyOptions } from './CliOnlyOptions';
