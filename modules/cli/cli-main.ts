@@ -37,6 +37,7 @@ import { CliOnlyOptions, hasSomePluginAction } from './CliOnlyOptions';
 import { GuidedConfig, PromptOptions } from './GuidedConfig';
 import { processPluginOptions } from './plugin-processor';
 import { PluginController } from './PluginController';
+import fsExtra from 'fs-extra';
 
 
 const { kebab } = _case;
@@ -270,6 +271,16 @@ export async function main( appPath: string, processPath: string ): Promise< boo
 			for ( const e of errors ) {
 				console.log( e );
 			}
+
+
+			// Create the given directories whether they not exist
+			try {
+				await fsExtra.ensureDir( guidedOptions.directory );
+			} catch {} // Ignore - the user can create it manually
+			try {
+				await fsExtra.ensureDir( guidedOptions.dirScript );
+			} catch {} // Ignore - the user can create it manually
+
 
             options.saveConfig = true;
             const packages = guidedOptions.databases || [];
