@@ -92,7 +92,7 @@
     "start": "node bin/concordia.js",
     "depcheck": "depcheck",
     "preversion": "npm run all",
-    "postversion": "git push && git push --tags"
+    "postversion": "echo \"Don't forget to push the tags\""
   },
   "jest": {
     "transform": {
