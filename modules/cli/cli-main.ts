@@ -3,6 +3,7 @@ import _case from 'case';
 import { cosmiconfig } from 'cosmiconfig';
 import { distance } from 'damerau-levenshtein-js';
 import * as fs from 'fs';
+import fsExtra from 'fs-extra';
 import * as path from 'path';
 import readPkgUp from 'read-pkg-up';
 import semverDiff from 'semver-diff';
@@ -10,10 +11,11 @@ import { UpdateNotifier } from 'update-notifier';
 import { promisify } from 'util';
 
 import { runApp } from '../app/app';
-import { AppOptions } from '../app/app-options';
-import { createPersistableCopy } from '../app/options-exporter';
-import { copyOptions } from '../app/options-importer';
-import { makeAllOptions } from '../app/options-maker';
+import { AppOptions } from '../app/options/app-options';
+import { CliOnlyOptions, hasSomePluginAction } from '../app/options/cli-only-options';
+import { createPersistableCopy } from '../app/options/options-exporter';
+import { copyOptions } from '../app/options/options-importer';
+import { makeAllOptions } from '../app/options/options-maker';
 import { allInstalledDatabases } from '../db/database-package-manager';
 import { availableLanguages } from '../language/data/map';
 import { installedDateLocales } from '../language/locale-manager';
@@ -30,14 +32,12 @@ import {
     packageManagers,
 } from '../util/package-installation';
 import { runCommand } from '../util/run-command';
-import { parseArgs } from './args';
+import { parseArgs } from './cli-args';
 import { helpContent } from './cli-help';
 import { UI } from './cli-ui';
-import { CliOnlyOptions, hasSomePluginAction } from './CliOnlyOptions';
-import { GuidedConfig, PromptOptions } from './GuidedConfig';
+import { GuidedConfig, PromptOptions } from './guided-config';
+import { PluginController } from './plugin-controller';
 import { processPluginOptions } from './plugin-processor';
-import { PluginController } from './PluginController';
-import fsExtra from 'fs-extra';
 
 
 const { kebab } = _case;

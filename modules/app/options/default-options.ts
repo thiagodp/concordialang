@@ -1,4 +1,4 @@
-import { CaseType } from '../util/CaseType';
+import { CaseType } from '../../util/CaseType';
 import { CombinationOptions, InvalidSpecialOptions, VariantSelectionOptions } from './combination-options';
 
 // DIRECTORIES

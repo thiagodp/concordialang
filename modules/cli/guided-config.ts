@@ -1,4 +1,5 @@
 import inquirer from 'inquirer';
+
 import { packageManagers } from '../util/package-installation';
 
 export type GuidedConfigOptions = {

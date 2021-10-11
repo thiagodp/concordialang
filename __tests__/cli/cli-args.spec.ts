@@ -1,6 +1,6 @@
-import { parseArgs } from "../../modules/cli/args";
+import { parseArgs } from "../../modules/cli/cli-args";
 
-describe( 'args', () => {
+describe( 'cli-args', () => {
 
 	it( 'detects -d', () => {
 		const r = parseArgs( [ '-d', 'foo' ] );
@@ -170,6 +170,11 @@ describe( 'args', () => {
 	it( 'detects --plugin-install', () => {
 		const r = parseArgs( [ '--plugin-install', 'foo' ] );
 		expect( r.flags.pluginInstall ).toEqual( 'foo' );
+	} );
+
+	it( 'detects --plugin-update', () => {
+		const r = parseArgs( [ '--plugin-update', 'foo' ] );
+		expect( r.flags.pluginUpdate ).toEqual( 'foo' );
 	} );
 
 	it( 'detects --plugin-uninstall', () => {

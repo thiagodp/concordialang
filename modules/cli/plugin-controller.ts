@@ -9,6 +9,7 @@ import {
     makePackageInitCommand,
     makePackageInstallCommand,
     makePackageUninstallCommand,
+    makePackageUpdateCommand,
     PackageManager,
 } from '../util/package-installation';
 import { runCommand } from '../util/run-command';
@@ -81,11 +82,18 @@ export class PluginController {
     }
 
 
+    public async updateByName( name: string ): Promise< number > {
+        const command = makePackageUpdateCommand( name, this._packageManagerName as PackageManager );
+        return this.runCommand( command );
+    }
+
+
     public async uninstallByName( name: string ): Promise< number > {
         // Uninstall the package
         const command = makePackageUninstallCommand( name, this._packageManagerName as PackageManager );
         return this.runCommand( command );
     }
+
 
     public async serve( pluginData: NewOrOldPluginData ): Promise< number > {
 

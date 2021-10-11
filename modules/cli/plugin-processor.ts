@@ -1,9 +1,9 @@
-import { AppOptions } from '../app/app-options';
+import { AppOptions } from '../app/options/app-options';
+import { CliOnlyOptions } from '../app/options/cli-only-options';
 import { filterPluginsByName, PLUGIN_PREFIX, sortPluginsByName } from '../plugin/PluginData';
 import { PluginFinder } from '../plugin/PluginFinder';
 import { PluginListener } from '../plugin/PluginListener';
-import { CliOnlyOptions } from './CliOnlyOptions';
-import { PluginController } from './PluginController';
+import { PluginController } from './plugin-controller';
 
 export async function processPluginOptions(
 	options: AppOptions & CliOnlyOptions,
@@ -51,6 +51,15 @@ export async function processPluginOptions(
 	if ( ! pluginData ) {
 		drawer.showMessagePluginNotFound( pluginName );
 		return false;
+	}
+
+	if ( options.pluginUpdate ) {
+		try {
+			await pluginController.updateByName( pluginName );
+		} catch ( e ) {
+			drawer.showError( e );
+		}
+		return true;
 	}
 
 	if ( options.pluginUninstall ) {

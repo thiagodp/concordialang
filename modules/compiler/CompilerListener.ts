@@ -1,4 +1,4 @@
-import { AppOptions } from '../app/app-options';
+import { AppOptions } from '../app/options/app-options';
 import { ProblemMapper } from '../error/ProblemMapper';
 
 export interface CompilerListener {

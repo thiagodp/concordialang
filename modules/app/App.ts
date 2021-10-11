@@ -20,7 +20,7 @@ import { TestResultAnalyzer } from '../testscript/TestResultAnalyzer';
 import { DirSearcher } from '../util/file';
 import { FSDirSearcher, FSFileHandler } from '../util/fs';
 import { AppListener } from './app-listener';
-import { AppOptions, hasSomeOptionThatRequiresAPlugin } from './app-options';
+import { AppOptions, hasSomeOptionThatRequiresAPlugin } from './options/app-options';
 
 type AppResult = {
 	spec?: Spec,

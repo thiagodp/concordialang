@@ -1,4 +1,4 @@
-import { DEFAULT_LANGUAGE } from '../../modules/app/default-options';
+import { DEFAULT_LANGUAGE } from '../../modules/app/options/default-options';
 import languageMap from '../../modules/language/data/map';
 import { Lexer } from '../../modules/lexer/Lexer';
 import { NodeTypes } from '../../modules/req/NodeTypes';

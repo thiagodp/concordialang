@@ -8,8 +8,8 @@ import * as readline from 'readline';
 import { sprintf } from 'sprintf-js';
 import terminalLink from 'terminal-link';
 
-import { AppOptions } from '../app/app-options';
-import { DEFAULT_LANGUAGE } from '../app/default-options';
+import { AppOptions } from '../app/options/app-options';
+import { DEFAULT_LANGUAGE } from '../app/options/default-options';
 import { sortErrorsByLocation } from '../error/ErrorSorting';
 import { LocatedException } from '../error/LocatedException';
 import { ProblemMapper } from '../error/ProblemMapper';

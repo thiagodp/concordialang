@@ -1,6 +1,6 @@
 import { resolve } from 'path';
 
-import { CliOnlyOptions } from '../cli/CliOnlyOptions';
+import { CliOnlyOptions } from './cli-only-options';
 import { AppOptions } from './app-options';
 import {
     DEFAULT_CASE_UI,

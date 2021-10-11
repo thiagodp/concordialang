@@ -12,6 +12,14 @@ export function makePackageInstallCommand( pkgName: string, tool: PackageManager
     }
 }
 
+export function makePackageUpdateCommand( pkgName: string, tool: PackageManager = 'npm' ) {
+    switch ( tool ) {
+        case 'yarn' : return 'yarn upgrade ' + pkgName;
+        case 'pnpm' : return 'pnpm up ' + pkgName;
+        default     : return 'npm update ' + pkgName + ' --no-fund --no-audit --loglevel error --color=always';
+    }
+}
+
 export function makePackageUninstallCommand( pkgName: string, tool: PackageManager = 'npm' ) {
     switch ( tool ) {
         case 'yarn' : return 'yarn remove --silent ' + pkgName;

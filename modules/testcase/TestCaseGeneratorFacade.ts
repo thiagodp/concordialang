@@ -1,14 +1,14 @@
 import * as enumUtil from 'enum-util';
 import Graph from 'graph.js/dist/graph.full.js';
 
-import { AppOptions } from '../app/app-options';
-import { CombinationOptions, InvalidSpecialOptions, VariantSelectionOptions } from '../app/combination-options';
+import { AppOptions } from '../app/options/app-options';
+import { CombinationOptions, InvalidSpecialOptions, VariantSelectionOptions } from '../app/options/combination-options';
 import {
     DEFAULT_CASE_UI,
     DEFAULT_DATA_TEST_CASE_COMBINATION,
     DEFAULT_STATE_COMBINATION,
     DEFAULT_VARIANT_SELECTION,
-} from '../app/default-options';
+} from '../app/options/default-options';
 import { Document, ReservedTags, TestCase, Variant } from '../ast';
 import { LocatedException } from '../error/LocatedException';
 import { RuntimeException } from '../error/RuntimeException';
