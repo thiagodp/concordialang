@@ -1,4 +1,4 @@
-import * as inquirer from 'inquirer';
+import inquirer from 'inquirer';
 import { join } from 'path';
 
 import { loadPlugin } from '../plugin/plugin-loader';

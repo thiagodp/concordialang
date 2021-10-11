@@ -44,7 +44,7 @@ import figures from 'figures';
 import * as readline from 'readline';
 import { sprintf } from 'sprintf-js';
 import terminalLink from 'terminal-link';
-import * as inquirer from 'inquirer';
+import inquirer from 'inquirer';
 
 function sortErrorsByLocation(errors) {
   const compare = (a, b) => {
