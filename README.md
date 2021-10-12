@@ -30,7 +30,11 @@ And More:
 
 `npm i -D concordialang@alpha`
 
-### [Related things](https://concordialang.gitbook.io/concordialang/introduction/related-things)
+## See Also
+
+- [Related Projects](https://concordialang.gitbook.io/concordialang/introduction/related-things) ❤
+- [What's New in Version 2](https://github.com/thiagodp/concordialang/issues/56)
+- [Latest Updates](https://github.com/thiagodp/concordialang/releases)
 
 ## License
 

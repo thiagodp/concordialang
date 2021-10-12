@@ -23414,6 +23414,10 @@ async function main(appPath, processPath) {
         await fsExtra.ensureDir(guidedOptions.dirScript);
       } catch (_unused3) {}
 
+      try {
+        await fsExtra.ensureDir(guidedOptions.dirResult);
+      } catch (_unused4) {}
+
       options.saveConfig = true;
       const packages = guidedOptions.databases || [];
 
@@ -23462,7 +23466,7 @@ async function main(appPath, processPath) {
 
     try {
       code = await runCommand(cmd);
-    } catch (_unused4) {}
+    } catch (_unused5) {}
 
     ui.announceDatabasePackagesInstallationFinished(code);
     return 0 === code;
@@ -23476,7 +23480,7 @@ async function main(appPath, processPath) {
 
     try {
       code = await runCommand(cmd);
-    } catch (_unused5) {}
+    } catch (_unused6) {}
 
     ui.announceDatabasePackagesUninstallationFinished(code);
     return 0 === code;

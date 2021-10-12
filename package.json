@@ -76,7 +76,7 @@
     "switch:web": "npm run switch:un && npm i concordialang-types && npm i concordialang-plugin",
     "clean": "rimraf dist",
     "prebuild": "npm run clean",
-    "build": "microbundle --no-sourcemap --target node --format esm",
+    "build": "tsc --noEmit && microbundle --no-sourcemap --target node --format esm",
     "compress": "microbundle --no-sourcemap --target node --format esm --compress",
     "watch": "microbundle --no-sourcemap --target node --format esm --watch",
     "fixup": "git commit --fixup HEAD & git rebase --autosquash -i HEAD~2 && git push --force",

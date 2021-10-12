@@ -280,6 +280,9 @@ export async function main( appPath: string, processPath: string ): Promise< boo
 			try {
 				await fsExtra.ensureDir( guidedOptions.dirScript );
 			} catch {} // Ignore - the user can create it manually
+			try {
+				await fsExtra.ensureDir( guidedOptions.dirResult );
+			} catch {} // Ignore - the user can create it manually
 
 
             options.saveConfig = true;
