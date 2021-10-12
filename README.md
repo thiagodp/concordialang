@@ -28,7 +28,9 @@ And More:
 
 ## Installation
 
-`npm i -D concordialang@alpha`
+`npm i -D concordialang`
+
+⚠ It will install version 2, that is currently in _alpha_ stage, although stable.
 
 ## See Also
 

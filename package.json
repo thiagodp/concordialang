@@ -90,7 +90,8 @@
     "start": "node bin/concordia.js",
     "depcheck": "depcheck",
     "preversion": "npm run all",
-    "postversion": "echo \"Don't forget to push the tags\""
+    "postversion": "echo \"Don't forget to push the tags\"",
+    "postpublish": "echo \"Don't forget to run 'npm dist-tag add <pkg@version> alpha'\""
   },
   "jest": {
     "transform": {
