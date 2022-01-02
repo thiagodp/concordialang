@@ -20,6 +20,10 @@
         "noImplicitAny": false,
         "allowJs": true,
         "keyofStringsOnly": true,
+
+        "forceConsistentCasingInFileNames": true,
+        "importHelpers": true,
+
         "typeRoots": [
             "./node_modules/@types"
         ],

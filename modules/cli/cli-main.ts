@@ -10,7 +10,7 @@ import semverDiff from 'semver-diff';
 import { UpdateNotifier } from 'update-notifier';
 import { promisify } from 'util';
 
-import { runApp } from '../app/app';
+import { runApp } from '../app/execution';
 import { AppOptions } from '../app/options/app-options';
 import { CliOnlyOptions, hasSomePluginAction } from '../app/options/cli-only-options';
 import { createPersistableCopy } from '../app/options/options-exporter';
@@ -430,7 +430,7 @@ export async function main( appPath: string, processPath: string ): Promise< boo
 	}
 
 
-	const { spec, success } = await runApp( { fs, path, promisify }, options, ui );
+	const { spec, success } = await runApp( { fs, path }, options, ui );
 
 	// AST
 

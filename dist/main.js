@@ -21409,216 +21409,204 @@ function hasSomeOptionThatRequiresAPlugin(o) {
   return o.script || o.run || o.result;
 }
 
-function runApp(libs, options, listener) {
-  const app = new App(libs.fs, libs.path, libs.promisify);
-  return app.start(options, listener);
-}
-class App {
-  constructor(_fs, _path, _promisify) {
-    this._fs = _fs;
-    this._path = _path;
-    this._promisify = _promisify;
-  }
+async function runApp(libs, options, listener) {
+  var _options$scriptFile, _executionResult, _executionResult$tota, _executionResult2, _executionResult2$tot;
 
-  async start(options, listener) {
-    var _options$scriptFile, _executionResult, _executionResult$tota, _executionResult2, _executionResult2$tot;
+  const {
+    fs,
+    path
+  } = libs;
+  const fileHandler = new FSFileHandler(fs, promisify, options.encoding);
+  let plugin;
+  let isPluginLoaded = false;
 
-    const fs = this._fs;
-    const path = this._path;
-    const promisify = this._promisify;
-    const fileHandler = new FSFileHandler(fs, promisify, options.encoding);
-    let plugin;
-    let isPluginLoaded = false;
+  if (hasSomeOptionThatRequiresAPlugin(options) && options.plugin) {
+    const dirSearcher = new FSDirSearcher(fs, promisify);
+    const pluginFinder = new PackageBasedPluginFinder(options.processPath, fileHandler, dirSearcher);
 
-    if (hasSomeOptionThatRequiresAPlugin(options) && options.plugin) {
-      const dirSearcher = new FSDirSearcher(fs, promisify);
-      const pluginFinder = new PackageBasedPluginFinder(options.processPath, fileHandler, dirSearcher);
+    try {
+      const all = await pluginFinder.find();
+      const pluginData = await filterPluginsByName(all, options.plugin);
 
-      try {
-        const all = await pluginFinder.find();
-        const pluginData = await filterPluginsByName(all, options.plugin);
-
-        if (!pluginData) {
-          listener.announcePluginNotFound(options.plugin);
-          return {
-            success: false
-          };
-          ;
-        }
-
-        plugin = await loadPlugin(pluginData);
-      } catch (err) {
-        listener.showException(err);
+      if (!pluginData) {
+        listener.announcePluginNotFound(options.plugin);
         return {
           success: false
         };
+        ;
       }
 
-      if (!plugin) {
-        listener.announcePluginCouldNotBeLoaded(options.plugin);
-        return {
-          success: false
-        };
-      } else {
-        isPluginLoaded = true;
-      }
-    }
-
-    if (!options.plugin && (options.script || options.run || options.result)) {
-      listener.announceNoPluginWasDefined();
+      plugin = await loadPlugin(pluginData);
+    } catch (err) {
+      listener.showException(err);
       return {
         success: false
       };
     }
 
-    let hasErrors = false;
-    let spec = null;
-    listener.announceOptions(options);
-
-    if (options.spec) {
-      const compiler = new CompilerFacade(fs, promisify, listener, listener);
-
-      try {
-        [spec] = await compiler.compile(options);
-      } catch (err) {
-        hasErrors = true;
-        listener.showException(err);
-      }
-
-      if (null === spec && options.file.length > 0) {
-        return {
-          success: !hasErrors
-        };
-      }
-    }
-
-    let abstractTestScripts = [];
-    let generatedTestScriptFiles = [];
-    let tseo;
-
-    if (spec && options.script) {
-      let docs = spec.docs;
-      const atsGenerator = new AbstractTestScriptGenerator();
-      abstractTestScripts = atsGenerator.generate(docs, spec);
-
-      if (!!plugin.generateCode && abstractTestScripts.length > 0) {
-        const startTime = Date.now();
-        let errors = [];
-
-        try {
-          const r = await plugin.generateCode(abstractTestScripts, new TestScriptGenerationOptions(options.plugin, options.dirScript, options.directory));
-          generatedTestScriptFiles = (r == null ? void 0 : r.generatedFiles) || [];
-          errors = (r == null ? void 0 : r.errors) || [];
-        } catch (err) {
-          hasErrors = true;
-          listener.showException(err);
-        }
-
-        const durationMS = Date.now() - startTime;
-        listener.showGeneratedTestScriptFiles(options.dirScript, generatedTestScriptFiles, durationMS);
-        listener.showTestScriptGenerationErrors(errors);
-      }
-    }
-
-    let executionResult;
-    const shouldExecuteScripts = isPluginLoaded && !!plugin.executeCode && options.run && (((_options$scriptFile = options.scriptFile) == null ? void 0 : _options$scriptFile.length) > 0 || generatedTestScriptFiles.length > 0 || 'string' === typeof options.dirResult && options.dirResult != '');
-
-    if (shouldExecuteScripts) {
-      var _options$scriptFile2;
-
-      const scriptFiles = ((_options$scriptFile2 = options.scriptFile) == null ? void 0 : _options$scriptFile2.length) > 0 ? options.scriptFile.join(',') : generatedTestScriptFiles.length > 0 ? generatedTestScriptFiles.join(',') : undefined;
-      tseo = {
-        dirScript: options.dirScript,
-        dirResult: options.dirResult,
-        file: scriptFiles || undefined,
-        grep: options.scriptGrep || undefined,
-        target: options.target || undefined,
-        headless: options.headless || undefined,
-        instances: options.instances || undefined
+    if (!plugin) {
+      listener.announcePluginCouldNotBeLoaded(options.plugin);
+      return {
+        success: false
       };
-      listener.announceTestScriptExecutionStarted();
-
-      try {
-        executionResult = await plugin.executeCode(tseo);
-      } catch (err) {
-        hasErrors = true;
-        listener.announceTestScriptExecutionError(err);
-      }
-
-      listener.announceTestScriptExecutionFinished();
+    } else {
+      isPluginLoaded = true;
     }
+  }
 
-    if (!hasErrors && (((_executionResult = executionResult) == null ? void 0 : (_executionResult$tota = _executionResult.total) == null ? void 0 : _executionResult$tota.failed) > 0 || ((_executionResult2 = executionResult) == null ? void 0 : (_executionResult2$tot = _executionResult2.total) == null ? void 0 : _executionResult2$tot.error) > 0)) {
-      hasErrors = true;
-    }
-
-    if (options.result && !!plugin.defaultReportFile && !!plugin.convertReportFile) {
-      let reportFile;
-
-      if (!executionResult) {
-        const defaultReportFile = path.join(options.dirResult, await plugin.defaultReportFile());
-
-        if (!fs.existsSync(defaultReportFile)) {
-          listener.announceReportFileNotFound(defaultReportFile);
-          return {
-            success: false,
-            spec
-          };
-        }
-
-        reportFile = defaultReportFile;
-      } else {
-        reportFile = executionResult.sourceFile;
-      }
-
-      if (reportFile) {
-        listener.announceReportFile(reportFile);
-
-        try {
-          executionResult = await plugin.convertReportFile(reportFile);
-        } catch (err) {
-          hasErrors = true;
-          listener.showException(err);
-        }
-      }
-    }
-
-    if (executionResult) {
-      try {
-        var _plugin, _plugin2, _reportedResult$total, _reportedResult$total2;
-
-        const reportedResult = new TestResultAnalyzer().adjustResult(executionResult, abstractTestScripts);
-
-        if (!!((_plugin = plugin) != null && _plugin.beforeReporting)) {
-          await plugin.beforeReporting(reportedResult, tseo);
-        }
-
-        listener.showTestScriptAnalysis(reportedResult);
-        const reporter = new JSONTestReporter(fileHandler);
-        await reporter.report(reportedResult, {
-          directory: options.dirResult,
-          useTimestamp: false
-        });
-
-        if (!!((_plugin2 = plugin) != null && _plugin2.afterReporting)) {
-          await plugin.afterReporting(reportedResult, tseo);
-        }
-
-        if (!hasErrors && ((reportedResult == null ? void 0 : (_reportedResult$total = reportedResult.total) == null ? void 0 : _reportedResult$total.failed) > 0 || (reportedResult == null ? void 0 : (_reportedResult$total2 = reportedResult.total) == null ? void 0 : _reportedResult$total2.error) > 0)) {
-          hasErrors = true;
-        }
-      } catch (err) {
-        hasErrors = true;
-        listener.showException(err);
-      }
-    }
-
+  if (!options.plugin && (options.script || options.run || options.result)) {
+    listener.announceNoPluginWasDefined();
     return {
-      success: !hasErrors,
-      spec
+      success: false
     };
   }
 
+  let hasErrors = false;
+  let spec = null;
+  listener.announceOptions(options);
+
+  if (options.spec) {
+    const compiler = new CompilerFacade(fs, promisify, listener, listener);
+
+    try {
+      [spec] = await compiler.compile(options);
+    } catch (err) {
+      hasErrors = true;
+      listener.showException(err);
+    }
+
+    if (null === spec && options.file.length > 0) {
+      return {
+        success: !hasErrors
+      };
+    }
+  }
+
+  let abstractTestScripts = [];
+  let generatedTestScriptFiles = [];
+  let tseo;
+
+  if (spec && options.script) {
+    let docs = spec.docs;
+    const atsGenerator = new AbstractTestScriptGenerator();
+    abstractTestScripts = atsGenerator.generate(docs, spec);
+
+    if (!!plugin.generateCode && abstractTestScripts.length > 0) {
+      const startTime = Date.now();
+      let errors = [];
+
+      try {
+        const r = await plugin.generateCode(abstractTestScripts, new TestScriptGenerationOptions(options.plugin, options.dirScript, options.directory));
+        generatedTestScriptFiles = (r == null ? void 0 : r.generatedFiles) || [];
+        errors = (r == null ? void 0 : r.errors) || [];
+      } catch (err) {
+        hasErrors = true;
+        listener.showException(err);
+      }
+
+      const durationMS = Date.now() - startTime;
+      listener.showGeneratedTestScriptFiles(options.dirScript, generatedTestScriptFiles, durationMS);
+      listener.showTestScriptGenerationErrors(errors);
+    }
+  }
+
+  let executionResult;
+  const shouldExecuteScripts = isPluginLoaded && !!plugin.executeCode && options.run && (((_options$scriptFile = options.scriptFile) == null ? void 0 : _options$scriptFile.length) > 0 || generatedTestScriptFiles.length > 0 || 'string' === typeof options.dirResult && options.dirResult != '');
+
+  if (shouldExecuteScripts) {
+    var _options$scriptFile2;
+
+    const scriptFiles = ((_options$scriptFile2 = options.scriptFile) == null ? void 0 : _options$scriptFile2.length) > 0 ? options.scriptFile.join(',') : generatedTestScriptFiles.length > 0 ? generatedTestScriptFiles.join(',') : undefined;
+    tseo = {
+      dirScript: options.dirScript,
+      dirResult: options.dirResult,
+      file: scriptFiles || undefined,
+      grep: options.scriptGrep || undefined,
+      target: options.target || undefined,
+      headless: options.headless || undefined,
+      instances: options.instances || undefined
+    };
+    listener.announceTestScriptExecutionStarted();
+
+    try {
+      executionResult = await plugin.executeCode(tseo);
+    } catch (err) {
+      hasErrors = true;
+      listener.announceTestScriptExecutionError(err);
+    }
+
+    listener.announceTestScriptExecutionFinished();
+  }
+
+  if (!hasErrors && (((_executionResult = executionResult) == null ? void 0 : (_executionResult$tota = _executionResult.total) == null ? void 0 : _executionResult$tota.failed) > 0 || ((_executionResult2 = executionResult) == null ? void 0 : (_executionResult2$tot = _executionResult2.total) == null ? void 0 : _executionResult2$tot.error) > 0)) {
+    hasErrors = true;
+  }
+
+  if (options.result && !!plugin.defaultReportFile && !!plugin.convertReportFile) {
+    let reportFile;
+
+    if (!executionResult) {
+      const defaultReportFile = path.join(options.dirResult, await plugin.defaultReportFile());
+
+      if (!fs.existsSync(defaultReportFile)) {
+        listener.announceReportFileNotFound(defaultReportFile);
+        return {
+          success: false,
+          spec
+        };
+      }
+
+      reportFile = defaultReportFile;
+    } else {
+      reportFile = executionResult.sourceFile;
+    }
+
+    if (reportFile) {
+      listener.announceReportFile(reportFile);
+
+      try {
+        executionResult = await plugin.convertReportFile(reportFile);
+      } catch (err) {
+        hasErrors = true;
+        listener.showException(err);
+      }
+    }
+  }
+
+  if (executionResult) {
+    try {
+      var _plugin, _plugin2, _reportedResult$total, _reportedResult$total2;
+
+      const reportedResult = new TestResultAnalyzer().adjustResult(executionResult, abstractTestScripts);
+
+      if (!!((_plugin = plugin) != null && _plugin.beforeReporting)) {
+        await plugin.beforeReporting(reportedResult, tseo);
+      }
+
+      listener.showTestScriptAnalysis(reportedResult);
+      const reporter = new JSONTestReporter(fileHandler);
+      await reporter.report(reportedResult, {
+        directory: options.dirResult,
+        useTimestamp: false
+      });
+
+      if (!!((_plugin2 = plugin) != null && _plugin2.afterReporting)) {
+        await plugin.afterReporting(reportedResult, tseo);
+      }
+
+      if (!hasErrors && ((reportedResult == null ? void 0 : (_reportedResult$total = reportedResult.total) == null ? void 0 : _reportedResult$total.failed) > 0 || (reportedResult == null ? void 0 : (_reportedResult$total2 = reportedResult.total) == null ? void 0 : _reportedResult$total2.error) > 0)) {
+        hasErrors = true;
+      }
+    } catch (err) {
+      hasErrors = true;
+      listener.showException(err);
+    }
+  }
+
+  return {
+    success: !hasErrors,
+    spec
+  };
 }
 
 function hasSomePluginAction(o) {
@@ -23543,8 +23531,7 @@ async function main(appPath, processPath) {
     success
   } = await runApp({
     fs,
-    path,
-    promisify
+    path
   }, options, ui);
 
   if (spec && options.ast) {
