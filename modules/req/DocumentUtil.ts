@@ -12,13 +12,13 @@ export class DocumentUtil {
 
     mapVariantsOf( doc: Document ): Map< Variant, Scenario > {
 
-        let map = new Map< Variant, Scenario >();
+        const map = new Map< Variant, Scenario >();
 
-        if ( ! isDefined( doc.feature ) ) {
+        if ( ! doc.feature ) {
             return map;
         }
 
-        for ( let sc of doc.feature.scenarios ) {
+        for ( let sc of doc.feature.scenarios || [] ) {
             for ( let v of sc.variants || [] ) {
                 map.set( v, sc );
             }
@@ -42,22 +42,26 @@ export class DocumentUtil {
 
         const [ featureName, uiElementName ] = this._uieNameHandler.extractNamesOf( variable );
 
-        if ( isDefined( featureName ) )  {
+        if ( featureName )  {
 
-            if ( ! isDefined( doc.feature ) ) {
+            if ( ! doc.feature ) {
                 return null; // not in this document
             }
 
-            if ( featureName.toLowerCase() !== doc.feature.name.toLowerCase() ) {
+            if ( featureName!.toLowerCase() !== doc.feature.name.toLowerCase() ) {
                 return null; // feature names are different
             }
 
         }
 
+        if ( ! uiElementName ) {
+            return null;
+        }
         const lowerCasedUIElementName = uiElementName.toLowerCase();
 
         // Local UI element
-        if ( isDefined( doc.feature ) ) {
+        if ( doc.feature ) {
+
             // Let's search it in the feature
             for ( let uie of doc.feature.uiElements || [] ) {
                 if ( uie.name.toLowerCase() === lowerCasedUIElementName ) {
@@ -120,7 +124,7 @@ export class DocumentUtil {
             const uiLiteral: string = this._uiePropExtractor.extractId( uie, caseOption );
             // Creates the info if not defined
             if ( ! uie.info ) {
-                uie.info = new UIElementInfo( doc, uiLiteral, null );
+                uie.info = new UIElementInfo( doc, uiLiteral );
             }
 
             const variableName = this._uieNameHandler.makeVariableName( null, uie.name );
@@ -171,7 +175,7 @@ export class DocumentUtil {
         let variables: string[] = [];
 
         // Globals
-        if ( includeGlobals && ( doc.uiElements || [] ).length > 0 ) {
+        if ( includeGlobals && doc.uiElements && doc.uiElements.length > 0 ) {
             for ( let uie of doc.uiElements ) {
                 variables.push( uie.name );
             }
@@ -183,7 +187,7 @@ export class DocumentUtil {
             return variables;
         }
 
-        for ( let uie of doc.feature.uiElements || [] ) {
+        for ( let uie of ( doc.feature || {} ).uiElements || [] ) {
             variables.push( this._uieNameHandler.makeVariableName( featureName, uie.name ) );
         }
 
@@ -195,7 +199,7 @@ export class DocumentUtil {
         let elements: UIElement[] = [];
 
         // Globals
-        if ( includeGlobals && ( doc.uiElements || [] ).length > 0 ) {
+        if ( includeGlobals && doc.uiElements && doc.uiElements.length > 0 ) {
             for ( let uie of doc.uiElements ) {
                 elements.push( uie );
             }

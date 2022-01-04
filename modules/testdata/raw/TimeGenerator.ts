@@ -26,11 +26,11 @@ export class TimeGenerator implements RawDataGenerator< LocalTime >, RangeAnalyz
 		min?: LocalTime,
 		max?: LocalTime
 	) {
-		if ( isDefined( min ) && isDefined( max ) && min.isAfter( max ) ) {
+		if ( isDefined( min ) && isDefined( max ) && min!.isAfter( max! ) ) {
             throw new Error( 'min time should not be greater than max' );
         }
-        this._min = isDefined( min ) ? min: TimeLimits.MIN;
-		this._max = isDefined( max ) ? max: TimeLimits.MAX;
+        this._min = isDefined( min ) ? min! : TimeLimits.MIN;
+		this._max = isDefined( max ) ? max! : TimeLimits.MAX;
     }
 
 

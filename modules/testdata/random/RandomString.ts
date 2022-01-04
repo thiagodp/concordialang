@@ -96,8 +96,8 @@ export class RandomString {
 	 * @param min Minimum character code.
 	 */
     public minCharCode( min?: number ): number {
-        if ( isDefined( min ) && min >= 0 ) {
-            this._minCharCode = min;
+        if ( isDefined( min ) && min! >= 0 ) {
+            this._minCharCode = min!;
             // Prevent range error
             if ( this._maxCharCode < this._minCharCode ) {
                 this._minCharCode = this._maxCharCode;
@@ -112,8 +112,8 @@ export class RandomString {
 	 * @param max Maximum character code.
 	 */
     public maxCharCode( max?: number ): number  {
-        if ( isDefined( max ) && max >= 0 ) {
-            this._maxCharCode = max;
+        if ( isDefined( max ) && max! >= 0 ) {
+            this._maxCharCode = max!;
             // Prevent range error
             if ( this._minCharCode > this._maxCharCode ) {
                 this._maxCharCode = this._minCharCode;

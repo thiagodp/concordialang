@@ -27,11 +27,11 @@ export class ShortTimeGenerator implements RawDataGenerator< LocalTime >, RangeA
 		min?: LocalTime,
 		max?: LocalTime
 	) {
-		if ( isDefined( min ) && isDefined( max ) && min.isAfter( max ) ) {
+		if ( isDefined( min ) && isDefined( max ) && min!.isAfter( max! ) ) {
             throw new Error( 'min time should not be greater than max' );
         }
-        this._min = isDefined( min ) ? min: ShortTimeLimits.MIN;
-		this._max = isDefined( max ) ? max: ShortTimeLimits.MAX;
+        this._min = isDefined( min ) ? min! : ShortTimeLimits.MIN;
+		this._max = isDefined( max ) ? max! : ShortTimeLimits.MAX;
     }
 
 

@@ -201,7 +201,7 @@ export class TestScenarioGenerator {
 							// Adjust step index (precondition or state call)
 							let stepIndex: number = 0;
 							for ( let tsStep of ts.steps ) {
-								let tsState = tsStep.nlpResult.entities.find( e => e.entity === Entities.STATE );
+								let tsState = tsStep.nlpResult!.entities.find( e => e.entity === Entities.STATE );
 								if ( tsState && state.nameEquals( tsState.value ) ) {
 									state.stepIndex = stepIndex;
 									break;
@@ -326,11 +326,11 @@ export class TestScenarioGenerator {
 
     private mapPostconditionsOf( variant: Variant ): void {
         // Add the variant to the postconditions map
-        for ( let postc of variant.postconditions ) {
+        for ( let postc of ( variant.postconditions || [] ) ) {
             if ( this._postconditionNameToVariantsMap.has( postc.name ) ) {
                 let variants = this._postconditionNameToVariantsMap.get( postc.name );
                 // Add only if it does not exist
-                if ( variants.indexOf( variant ) < 0 ) {
+                if ( variants && variants.indexOf( variant ) < 0 ) {
                     variants.push( variant );
                 }
             } else {
@@ -370,7 +370,7 @@ export class TestScenarioGenerator {
     // Any test scenario would serve, then let's select randomly
     selectSingleValidTestScenarioOf( variant: Variant, errors: RuntimeException[] ): TestScenario | null {
 
-        const testScenarios: TestScenario[] = this._variantToTestScenarioMap.get( variant );
+        const testScenarios: TestScenario[] | undefined = this._variantToTestScenarioMap.get( variant );
 
         if ( ! testScenarios || testScenarios.length < 1 ) {
             // Generate an error
@@ -423,7 +423,7 @@ export class TestScenarioGenerator {
 		}
 
 		// Remove THEN steps with postconditions in REVERSE ORDER
-		for ( const state of variant.postconditions.reverse() ) {
+		for ( const state of ( variant.postconditions || [] ).reverse() ) {
 
 			// No valid step at the given index ? Ignore it.
 			if ( ! ts.steps[ state.stepIndex ] ) {
@@ -502,7 +502,7 @@ export class TestScenarioGenerator {
 		const keywords: KeywordDictionary = languageDictionary.keywords;
 
         ts.ignoreForTestCaseGeneration = this.containsIgnoreTag(
-			variant.tags, ( keywords.tagIgnore || [ 'ignore' ] ) );
+			( variant.tags || [] ), ( keywords.tagIgnore || [ 'ignore' ] ) );
 
 		this._stepHandler.adjustPrefixesToReplaceStates( ts.steps, docLanguage );
 

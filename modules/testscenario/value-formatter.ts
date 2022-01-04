@@ -34,7 +34,7 @@ export async function formatValueToUseInASentence(
 
         if ( isLocaleFormatDefined ) {
             formattedValue = await formatUsingLocale(
-                loc, localeContext.localeMap, nativeTime, localeContext.localeFormat );
+                loc, localeContext.localeMap, nativeTime, localeContext.localeFormat! );
         } else {
             const includeSeconds = valueType === ValueType.LONG_TIME;
             formattedValue = await formatTimeByLocale(
@@ -47,7 +47,7 @@ export async function formatValueToUseInASentence(
 
         if ( isLocaleFormatDefined ) {
             formattedValue = await formatUsingLocale(
-                loc, localeContext.localeMap, nativeDate, localeContext.localeFormat );
+                loc, localeContext.localeMap, nativeDate, localeContext.localeFormat! );
         } else {
             formattedValue = await formatDateByLocale(
                 loc, localeContext.localeMap, nativeDate );
@@ -63,7 +63,7 @@ export async function formatValueToUseInASentence(
 
         if ( isLocaleFormatDefined ) {
             formattedValue = await formatUsingLocale(
-                loc, localeContext.localeMap, nativeDateTime, localeContext.localeFormat );
+                loc, localeContext.localeMap, nativeDateTime, localeContext.localeFormat! );
         } else {
             formattedValue = await formatDateTimeByLocale(
                 loc, localeContext.localeMap, nativeDateTime, includeSeconds );

@@ -46,7 +46,7 @@ export class UIPropertyReferenceReplacer {
 
             // Properties different from VALUE are not supported yet
             if ( uipRef.property != UIPropertyTypes.VALUE ) {
-                const fileName = basename( ctx.doc.fileInfo.path );
+                const fileName = ctx.doc.fileInfo ? basename( ctx.doc.fileInfo.path ) : 'unknown file';
                 const locStr = '(' + step.location.line + ',' + step.location.column + ')';
                 const msg = 'Could not retrieve a value from ' +
                     Symbols.UI_ELEMENT_PREFIX + uipRef.uiElementName +
@@ -60,7 +60,7 @@ export class UIPropertyReferenceReplacer {
             const uieName = uipRef.uiElementName;
             const [ featureName, /* uieNameWithoutFeature */ ] = uieNameHandler.extractNamesOf( uieName );
             let variable: string;
-            let uie: UIElement;
+            let uie: UIElement | null;
 
             if ( isDefined( featureName ) ) {
                 variable = uieName;
@@ -69,9 +69,15 @@ export class UIPropertyReferenceReplacer {
                 uie = ctx.spec.uiElementByVariable( uieName, ctx.doc );
                 variable = ! uie ? uieName : ( ! uie.info ? uieName : uie.info.fullVariableName );
             }
+
+            if ( ! uie ) {
+                // TO-DO: add warning ?
+                continue;
+            }
+
             // variable is in the format Feature:UIElement
 
-            let value: EntityValueType = uieVariableToValueMap.get( variable );
+            let value: EntityValueType | undefined = uieVariableToValueMap.get( variable );
             if ( ! isDefined( value ) ) {
                 const fileName = ctx.doc.fileInfo ? basename( ctx.doc.fileInfo.path ) : 'unknown file';
                 const locStr = '(' + step.location.line + ',' + step.location.column + ')';

@@ -52,7 +52,7 @@ export abstract class Keywords {
     // Utilities
 
     static all(): string[] {
-        let set = [];
+        let set: string[] = [];
         for ( let x in Keywords ) {
             if ( 'string' === typeof x ) {
                 set.push( x );

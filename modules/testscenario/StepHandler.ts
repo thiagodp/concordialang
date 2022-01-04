@@ -24,7 +24,7 @@ export class StepHandler {
 
 		const lang = isDefined( docLanguage ) ? docLanguage : this._defaultLanguage;
 
-		let dictionary: Map< string, string > = this._keywords.get( lang )
+		let dictionary: Map< string, string > | undefined = this._keywords.get( lang )
 		if ( ! dictionary ) {
 			const languageDictionary = dictionaryForLanguage( lang );
 			const keywords: KeywordDictionary = languageDictionary.keywords;
@@ -109,7 +109,7 @@ export class StepHandler {
 		steps: Step[],
 		docLanguage: string
 	): void {
-		let lastStepType: NodeTypes;
+		let lastStepType: NodeTypes | undefined;
 		for ( const step of steps ) {
 
 			if ( step.nodeType !== NodeTypes.STEP_AND ) {
@@ -210,7 +210,7 @@ export class StepHandler {
 
 		const isTargetAnAndStep = target.nodeType === NodeTypes.STEP_AND;
 
-		const nextStep: Step = index + 1 < len ? steps[ index + 1 ] : null;
+		const nextStep: Step | null = index + 1 < len ? steps[ index + 1 ] : null;
 		const isNextAnAndStep = nextStep && nextStep.nodeType === NodeTypes.STEP_AND;
 
 		// Case 1:
@@ -285,8 +285,8 @@ export class StepHandler {
 	): Step[] {
 
 		let lastNonAndWasGiven: boolean = false;
-		let indexesToRemove = [];
-		let index = -1;
+		let indexesToRemove: number[] = [];
+		let index: number = -1;
 		for ( const step of steps ) {
 			++index;
 

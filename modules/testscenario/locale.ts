@@ -112,7 +112,7 @@ export async function fallbackToLanguage(
 async function loadLocale(
     locale: string,
     map: LocaleMap
-): Promise< LocaleData > {
+): Promise< LocaleData | undefined > {
     const isAvailable = await isLocaleAvailable( locale, map );
     return isAvailable ? map.get( locale ) : map.get( 'en' );
 }

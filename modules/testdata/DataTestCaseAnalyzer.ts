@@ -153,8 +153,9 @@ export class DataTestCaseAnalyzer {
 
         // Tags
         const propertyHasTagGenerateOnlyValidValues = ( p: UIProperty ): boolean => {
-            return p.tags && p.tags.length > 0
-                && p.tags.findIndex( tag => tag.subType === ReservedTags.GENERATE_ONLY_VALID_VALUES ) >= 0;
+            return isDefined( p.tags )
+                && p.tags!.length > 0
+                && p.tags!.findIndex( tag => tag.subType === ReservedTags.GENERATE_ONLY_VALID_VALUES ) >= 0;
         };
         const pRequiredHasTagGenerateOnlyValidValues = pRequired && propertyHasTagGenerateOnlyValidValues( pRequired );
         const pValueHasTagGenerateOnlyValidValues = pValue && propertyHasTagGenerateOnlyValidValues( pValue );
@@ -211,7 +212,7 @@ export class DataTestCaseAnalyzer {
                             return incompatiblePair;
 						}
 
-						const val = pFormat.value.value.toString();
+						const val = pFormat.value!.value!.toString();
 
 						const someExpressionsWithoutInvalidValues = [
 							'.', '^.', '(.)', '.*', '^.*',
@@ -237,7 +238,7 @@ export class DataTestCaseAnalyzer {
 
                         // Check whether the value has a reference to another UI Element
                         if ( isDefined( pValue ) ) {
-                            const hasQuery = this._nlpUtil.hasEntityNamed( Entities.QUERY, pValue.nlpResult );
+                            const hasQuery = this._nlpUtil.hasEntityNamed( Entities.QUERY, pValue!.nlpResult );
                             if ( hasQuery ) {
                                 // return new Pair( DTCAnalysisResult.INVALID, pRequired.otherwiseSentences || [] );
                                 return incompatiblePair;
@@ -266,13 +267,13 @@ export class DataTestCaseAnalyzer {
 						}
 
 						if ( isRequired ) {
-							return new DTCAnalysisData( DTCAnalysisResult.INVALID, pRequired.otherwiseSentences || [] );
+							return new DTCAnalysisData( DTCAnalysisResult.INVALID, pRequired!.otherwiseSentences || [] );
 						}
 
 						if ( pFormat ) {
 							// Check if an empty string is compatible with the regex
 							try {
-								const val = pFormat.value.value.toString();
+								const val = pFormat.value!.value!.toString();
 								// console.log( 'REQUIRED_NOT_FILLED - expression', val );
 								const r = new RegExp( val );
 								if ( ! r.test( '' ) ) {
@@ -402,7 +403,7 @@ export class DataTestCaseAnalyzer {
                 // - it must NOT generate VALID length values but it must generate invalid.
                 // - if it has negation, it must generate VALID as valid, and INVALID as invalid.
                 const hasValueProperty = isDefined( pValue );
-                const valueHasNegation = hasValueProperty && this.hasNegation( pValue ); // e.g., "value NOT IN ..."
+                const valueHasNegation = hasValueProperty && this.hasNegation( pValue! ); // e.g., "value NOT IN ..."
 
                 const shouldGenerateValid = ! hasValueProperty || ( hasValueProperty && valueHasNegation );
 
@@ -414,15 +415,15 @@ export class DataTestCaseAnalyzer {
                 }
 
                 let [ minValue, isToFakeMinValue ] = hasMinValue
-                    ? this.resolvePropertyValue( UIPropertyTypes.MIN_VALUE, pMinValue, valueType )
+                    ? this.resolvePropertyValue( UIPropertyTypes.MIN_VALUE, pMinValue!, valueType )
                     : [ null, false ];
 
                 let [ maxValue, isToFakeMaxValue ] = hasMaxValue
-                    ? this.resolvePropertyValue( UIPropertyTypes.MAX_VALUE, pMaxValue, valueType )
+                    ? this.resolvePropertyValue( UIPropertyTypes.MAX_VALUE, pMaxValue!, valueType )
                     : [ null, false ];
 
-                const invalidMinPair = new DTCAnalysisData( DTCAnalysisResult.INVALID, hasMinValue ? pMinValue.otherwiseSentences || [] : [] );
-                const invalidMaxPair = new DTCAnalysisData( DTCAnalysisResult.INVALID, hasMaxValue ? pMaxValue.otherwiseSentences || [] : [] );
+                const invalidMinPair = new DTCAnalysisData( DTCAnalysisResult.INVALID, hasMinValue ? pMinValue!.otherwiseSentences || [] : [] );
+                const invalidMaxPair = new DTCAnalysisData( DTCAnalysisResult.INVALID, hasMaxValue ? pMaxValue!.otherwiseSentences || [] : [] );
 
                 if ( isToFakeMinValue ) {
                     if ( isToFakeMaxValue ) {
@@ -535,7 +536,7 @@ export class DataTestCaseAnalyzer {
                 // - it must NOT generate VALID length values but it must generate invalid.
                 // - if it has negation, it must generate VALID as valid, and INVALID as invalid.
                 const hasValueProperty = isDefined( pValue );
-                const valueHasNegation = hasValueProperty && this.hasNegation( pValue ); // e.g., "value NOT IN ..."
+                const valueHasNegation = hasValueProperty && this.hasNegation( pValue! ); // e.g., "value NOT IN ..."
 
                 const shouldGenerateValid = ! hasValueProperty || ( hasValueProperty && valueHasNegation );
 
@@ -555,11 +556,11 @@ export class DataTestCaseAnalyzer {
                 // We are simulating min length and max length when they come from a QUERY or a UI_ELEMENT
 
                 let [ minLength, isToFakeMinLength ] = hasMinLength
-                    ? this.resolvePropertyValue( UIPropertyTypes.MIN_LENGTH, pMinLength, valueType )
+                    ? this.resolvePropertyValue( UIPropertyTypes.MIN_LENGTH, pMinLength!, valueType )
                     : [ null, false ];
 
                 let [ maxLength, isToFakeMaxLength ] = hasMaxLength
-                    ? this.resolvePropertyValue( UIPropertyTypes.MAX_LENGTH, pMaxLength, valueType )
+                    ? this.resolvePropertyValue( UIPropertyTypes.MAX_LENGTH, pMaxLength!, valueType )
                     : [ null, false ];
 
                 if ( isToFakeMinLength ) {
@@ -572,8 +573,8 @@ export class DataTestCaseAnalyzer {
 
                 let analyzer: RangeAnalyzer = this._dataGenBuilder.rawAnalyzer( valueType, minLength, maxLength );
 
-                const invalidMinPair = new DTCAnalysisData( DTCAnalysisResult.INVALID, hasMinLength ? pMinLength.otherwiseSentences || [] : [] );
-                const invalidMaxPair = new DTCAnalysisData( DTCAnalysisResult.INVALID, hasMaxLength ? pMaxLength.otherwiseSentences || [] : [] );
+                const invalidMinPair = new DTCAnalysisData( DTCAnalysisResult.INVALID, hasMinLength ? pMinLength!.otherwiseSentences || [] : [] );
+                const invalidMaxPair = new DTCAnalysisData( DTCAnalysisResult.INVALID, hasMaxLength ? pMaxLength!.otherwiseSentences || [] : [] );
 
 
                 switch ( dtc ) {

@@ -43,7 +43,7 @@ export class LocaleContext {
      * Returns an available locale according to the context.
      */
     public async resolve(): Promise< string > {
-        let loc: string;
+        let loc: string | null | undefined;
 
         if ( this.locale ) {
             loc = await fallbackToLanguage( this.locale, this.localeMap );

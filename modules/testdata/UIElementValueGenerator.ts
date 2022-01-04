@@ -66,13 +66,13 @@ export class UIElementValueGenerator {
     async generate(
         uieName: string,
         context: ValueGenContext,
-        doc: Document | null,
+        doc: Document,
         spec: AugmentedSpec,
         errors: LocatedException[]
     ): Promise< EntityValueType > {
 
         const uieNameHandler = new UIElementNameHandler();
-        const featureName = isDefined( doc ) && isDefined( doc.feature ) ? doc.feature.name : null;
+        const featureName = doc?.feature?.name || null;
         const fullVariableName = featureName !== null && null === uieNameHandler.extractFeatureNameOf( uieName )
             ? uieNameHandler.makeVariableName( featureName, uieName )
             : uieName;
@@ -80,12 +80,13 @@ export class UIElementValueGenerator {
         // Is in cache ? -> returns it
         const cachedValue = valueOrNull( context.uieVariableToValueMap.get( fullVariableName ) );
         if ( isDefined( cachedValue ) ) {
-            return cachedValue;
+            return cachedValue!;
         }
 
-        let uie: UIElement = spec.uiElementByVariable( uieName, doc );
+        let uie: UIElement | null = spec.uiElementByVariable( uieName, doc! );
         if ( ! uie ) {
-            const msg = 'Could not find UI Element: ' + uieName + '. It was referenced in "' + doc.fileInfo.path + '".';
+            const filePath = doc?.fileInfo?.path || 'Unknown file';
+            const msg = 'Could not find UI Element: ' + uieName + '. It was referenced in "' + filePath + '".';
             const err = new RuntimeException( msg );
             errors.push( err );
             return null;
@@ -97,7 +98,7 @@ export class UIElementValueGenerator {
         }
 
         // console.log( '>'.repeat( 10 ), context.uieVariableToPlanMap );
-        const plan: UIETestPlan = context.uieVariableToPlanMap.get( fullVariableName );
+        const plan: UIETestPlan | undefined = context.uieVariableToPlanMap.get( fullVariableName );
         if ( ! plan ) {
             const msg = 'Could not find Plan for the UI Element: ' + fullVariableName;
             const err = new RuntimeException( msg );
@@ -132,9 +133,10 @@ export class UIElementValueGenerator {
         const pFormat = propertiesMap.get( UIPropertyTypes.FORMAT ) || null;
         if ( isDefined( pFormat ) ) {
             try {
-                cfg.format = ( await this.resolvePropertyValue(
-                    UIPropertyTypes.FORMAT, pFormat, pFormat.value, context, doc, spec, errors
-                ) ).toString();
+                const v = await this.resolvePropertyValue(
+                    UIPropertyTypes.FORMAT, pFormat!, pFormat!.value, context, doc!, spec, errors
+                );
+                cfg.format = v ? v.toString() : null;
             } catch ( e ) {
                 const msg = msgPropertyValueError + UIPropertyTypes.FORMAT;
                 errors.push( new RuntimeException( msg ) );
@@ -150,7 +152,7 @@ export class UIElementValueGenerator {
         const pValue = propertiesMap.get( UIPropertyTypes.VALUE ) || null;
         if ( isDefined( pValue ) ) {
             try {
-                cfg.value = await this.resolvePropertyValue( UIPropertyTypes.VALUE, pValue, pValue.value, context, doc, spec, errors );
+                cfg.value = await this.resolvePropertyValue( UIPropertyTypes.VALUE, pValue!, pValue!.value, context, doc!, spec, errors );
             } catch ( e ) {
                 const msg = msgPropertyValueError + UIPropertyTypes.VALUE;
                 errors.push( new RuntimeException( msg ) );
@@ -161,7 +163,8 @@ export class UIElementValueGenerator {
         const pMinValue = propertiesMap.get( UIPropertyTypes.MIN_VALUE ) || null;
         if ( isDefined( pMinValue ) ) {
             try {
-                cfg.minValue = await this.resolvePropertyValue( UIPropertyTypes.MIN_VALUE, pMinValue, pMinValue.value, context, doc, spec, errors );
+                cfg.minValue = await this.resolvePropertyValue(
+                    UIPropertyTypes.MIN_VALUE, pMinValue!, pMinValue!.value, context, doc, spec, errors );
             } catch ( e ) {
                 const msg = msgPropertyValueError + UIPropertyTypes.MIN_VALUE;
                 errors.push( new RuntimeException( msg ) );
@@ -170,7 +173,8 @@ export class UIElementValueGenerator {
         const pMaxValue = propertiesMap.get( UIPropertyTypes.MAX_VALUE ) || null;
         if ( isDefined( pMaxValue ) ) {
             try {
-                cfg.maxValue = await this.resolvePropertyValue( UIPropertyTypes.MAX_VALUE, pMaxValue, pMaxValue.value, context, doc, spec, errors );
+                cfg.maxValue = await this.resolvePropertyValue(
+                    UIPropertyTypes.MAX_VALUE, pMaxValue!, pMaxValue!.value, context, doc, spec, errors );
             } catch ( e ) {
                 const msg = msgPropertyValueError + UIPropertyTypes.MAX_VALUE;
                 errors.push( new RuntimeException( msg ) );
@@ -183,7 +187,7 @@ export class UIElementValueGenerator {
         if ( isDefined( pMinLength ) ) {
             try {
                 cfg.minLength = Number(
-                    await this.resolvePropertyValue( UIPropertyTypes.MIN_LENGTH, pMinLength, pMinLength.value, context, doc, spec, errors )
+                    await this.resolvePropertyValue( UIPropertyTypes.MIN_LENGTH, pMinLength!, pMinLength!.value, context, doc, spec, errors )
                 );
             } catch ( e ) {
                 const msg = msgPropertyValueError + UIPropertyTypes.MIN_LENGTH;
@@ -194,7 +198,7 @@ export class UIElementValueGenerator {
         if ( isDefined( pMaxLength ) ) {
             try {
                 cfg.maxLength = Number(
-                    await this.resolvePropertyValue( UIPropertyTypes.MAX_LENGTH, pMaxLength, pMaxLength.value, context, doc, spec, errors )
+                    await this.resolvePropertyValue( UIPropertyTypes.MAX_LENGTH, pMaxLength!, pMaxLength!.value, context, doc, spec, errors )
                 );
             } catch ( e ) {
                 const msg = msgPropertyValueError + UIPropertyTypes.MAX_LENGTH;
@@ -278,8 +282,8 @@ export class UIElementValueGenerator {
         try {
             value = await this._dataGen.generate( dtc, cfg );
         } catch ( e ) {
-            const msg = 'Error generating value for "' + uieName + '": ' + e.message;
-            if ( ! uie.location.filePath ) {
+            const msg = 'Error generating value for "' + uieName + '": ' + ( e as Error ).message;
+            if ( ! uie.location.filePath && doc?.fileInfo?.path ) {
                 uie.location.filePath = doc.fileInfo.path;
             }
             errors.push( new RuntimeException( msg, uie.location ) );
@@ -308,7 +312,7 @@ export class UIElementValueGenerator {
             return null;
         }
 
-        const featureName = isDefined( doc ) && isDefined( doc.feature ) ? doc.feature.name : null;
+        const featureName = doc?.feature?.name;
 
         switch ( propertyValue.entity ) {
 
@@ -325,7 +329,7 @@ export class UIElementValueGenerator {
 
             case Entities.UI_ELEMENT_REF: {
                 const uie = propertyValue.references[ 0 ] as UIElement;
-                if ( isDefined( uie ) && isDefined( uie.info ) && isDefined( uie.info.fullVariableName ) ) {
+                if ( uie?.info?.fullVariableName ) {
 
                     // In cache?
                     let value = valueOrNull( context.uieVariableToValueMap.get( uie.info.fullVariableName ) );
@@ -339,7 +343,7 @@ export class UIElementValueGenerator {
                         }
                     }
 
-                    return value;
+                    return undefined === value ? null : value;
                 }
                 return null;
             }
@@ -378,7 +382,7 @@ export class UIElementValueGenerator {
                 const hasTable: boolean = tables.length > 0;
                 const hasBoth = hasDatabase && hasTable;
 
-                let msg = null;
+                let msg: string | null = null;
                 if ( hasBoth ) {
                     msg = 'Query cannot have a reference to a Database and a reference to a Table.';
                 } else if ( hasDatabase ) {
@@ -388,7 +392,7 @@ export class UIElementValueGenerator {
                         let query = propertyValue.value.toString();
                         try {
                             query = this.resolveConstantsInQuery( query, propertyValue.references );
-                            query = await this.resolveUIElementsInQuery( query, featureName, owner, context, doc, spec, errors );
+                            query = await this.resolveUIElementsInQuery( query, featureName!, owner, context, doc, spec, errors );
                             return await this.resolveDatabaseReferenceInQuery( propType, query, databases[ 0 ] as Database, spec, errors );
                         } catch ( e ) {
                             const msg = doc.fileInfo.path + ': Error trying to process a database query. ' + e.message;
@@ -402,7 +406,7 @@ export class UIElementValueGenerator {
                         let query = propertyValue.value.toString();
                         try {
                             query = this.resolveConstantsInQuery( query, propertyValue.references );
-                            query = await this.resolveUIElementsInQuery( query, featureName, owner, context, doc, spec, errors );
+                            query = await this.resolveUIElementsInQuery( query, featureName!, owner, context, doc, spec, errors );
                             return await this.resolveTableReferenceInQuery( propType, query, tables[ 0 ] as Table, spec, errors );
                         } catch ( e ) {
                             const msg = doc.fileInfo.path + ': Error trying to process a database query. ' + e.message;
@@ -412,7 +416,7 @@ export class UIElementValueGenerator {
 				}
 
                 if ( isDefined( msg ) ) {
-                    const err = new RuntimeException( msg, owner.location );
+                    const err = new RuntimeException( msg!, owner.location );
                     // Errors may have duplicated messages. Comparisons should
                     // be made after creating the error, since the exception
                     // could change it (like LocationException does).
@@ -448,7 +452,7 @@ export class UIElementValueGenerator {
 
     async resolveUIElementsInQuery(
         query: string,
-        currentFeatureName: string | null,
+        currentFeatureName: string,
         owner: UIProperty,
         context: ValueGenContext,
         doc: Document,
@@ -461,28 +465,31 @@ export class UIElementValueGenerator {
             return query;
         }
 
-        // const featureName = isDefined( currentFeatureName )
-        //     ? currentFeatureName
-        //     : '';
-
         const uieNameHandler = new UIElementNameHandler();
 
         let newQuery = query;
         for ( let variable of variables ) {
+
             // console.log( 'variable', variable );
-            let fullVariableName = variable;
+            let fullVariableName: string | undefined = variable;
             if ( null === uieNameHandler.extractFeatureNameOf( variable ) ) {
                 let uie = spec.uiElementByVariable( variable, doc );
                 // console.log( 'uie', ! uie ? 'null' : uie.name );
                 if ( ! uie ) {
                     fullVariableName = uieNameHandler.makeVariableName( currentFeatureName, variable );
                 } else {
-                    fullVariableName = uie.info.fullVariableName;
+                    fullVariableName = uie.info?.fullVariableName;
                 }
             }
+
             // console.log( '>'.repeat( 10 ), fullVariableName );
+            if ( ! fullVariableName ) {
+                // TO-DO: warn user
+                continue;
+            }
 
             let value = valueOrNull( context.uieVariableToValueMap.get( fullVariableName ) );
+
             // console.log( 'Value from cache', isDefined( value ) ? value : 'null' );
             if ( null === value ) {
                 try {
@@ -527,7 +534,8 @@ export class UIElementValueGenerator {
         }
 
         // Retrieve database interface
-        let intf: DatabaseInterface = spec.databaseNameToInterfaceMap().get( database.name );
+        let intf: DatabaseInterface | null | undefined =
+            spec.databaseNameToInterfaceMap().get( database.name );
 
         // Create the connection interface if not available
         if ( ! intf ) {
@@ -535,7 +543,7 @@ export class UIElementValueGenerator {
             try {
                 await intf.connect( database, spec.basePath );
             } catch ( err ) {
-                errors.push( err );
+                errors.push( err as LocatedException );
                 return null;
             }
             spec.databaseNameToInterfaceMap().set( database.name, intf );
@@ -545,7 +553,7 @@ export class UIElementValueGenerator {
         try {
             returnedData = await this.queryResult( newQuery, intf, errors );
         } catch ( err ) {
-            errors.push( err );
+            errors.push( err as LocatedException );
             return null;
         }
         // console.log( 'returnedData', returnedData );
@@ -599,7 +607,7 @@ export class UIElementValueGenerator {
             try {
                 await intf.connect( database, spec.basePath );
             } catch ( err ) {
-                errors.push( err );
+                errors.push( err as LocatedException );
                 return null;
             }
             spec.databaseNameToInterfaceMap().set( IN_MEMORY_DATABASE_NAME, intf );
@@ -608,7 +616,7 @@ export class UIElementValueGenerator {
         try {
             await intf.createTable( table );
         } catch ( err ) {
-            errors.push( err );
+            errors.push( err as LocatedException );
             return null;
         }
 
@@ -618,7 +626,7 @@ export class UIElementValueGenerator {
         try {
             returnedData = await this.queryResult( newQuery, intf, errors );
         } catch ( err ) {
-            errors.push( err );
+            errors.push( err as LocatedException );
             return null;
         }
         const firstColumnData = this.firstColumnOf( returnedData );
@@ -633,7 +641,7 @@ export class UIElementValueGenerator {
         try {
             return await intf.query( query );
         } catch ( err ) {
-            errors.push( err );
+            errors.push( err as LocatedException );
             return null;
         }
     }
@@ -688,11 +696,11 @@ export class UIElementValueGenerator {
     }
 
 
-    properDataFor( propType: UIPropertyTypes, data: any[] ): any {
+    properDataFor( propType: UIPropertyTypes, data?: any[] ): any {
         if ( UIPropertyTypes.VALUE === propType ) {
             return data;
         }
-        return ! data ? null : data[ 0 ] || null;
+        return undefined === data ? null : data[ 0 ] || null;
     }
 
 }

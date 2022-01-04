@@ -26,11 +26,11 @@ export class DateGenerator implements RawDataGenerator< LocalDate >, RangeAnalyz
 		min?: LocalDate,
 		max?: LocalDate
 	) {
-		if ( isDefined( min ) && isDefined( max ) && min.isAfter( max ) ) {
+		if ( isDefined( min ) && isDefined( max ) && min!.isAfter( max! ) ) {
             throw new Error( 'min date should not be greater than max' );
         }
-        this._min = isDefined( min ) ? min: DateLimits.MIN;
-		this._max = isDefined( max ) ? max: DateLimits.MAX;
+        this._min = isDefined( min ) ? min! : DateLimits.MIN;
+		this._max = isDefined( max ) ? max! : DateLimits.MAX;
     }
 
 

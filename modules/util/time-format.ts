@@ -41,7 +41,7 @@ export function millisToObject( ms: number ): any {
 export function millisObjectToString( o, i18n?: any, separator?: string ): string {
     i18n = i18n || {};
     separator = separator || '';
-    var s = [];
+    let s: string[] = [];
     if ( o.day ) s.push( o.day + ( i18n.day !== undefined ? i18n.day : 'd' ) );
     if ( o.hour ) s.push( o.hour + ( i18n.hour !== undefined ? i18n.hour : 'h' ) );
     if ( o.min ) s.push( o.min + ( i18n.min !== undefined ? i18n.min : 'm' ) );
