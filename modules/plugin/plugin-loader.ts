@@ -36,11 +36,24 @@ export async function loadPlugin( pluginData: PluginData ): Promise< Plugin > {
 	}
 	// Supported in ES2020+ but it worked flawlessly in ES2015/ES2018 (Node 10)
 	// @ts-ignore
-	let plugin = await import( file );
-	if ( plugin.default ) {
-		plugin = plugin.default;
+	const pluginContent = await import( file );
+
+	const exportedClasses = Object.getOwnPropertyNames( pluginContent );
+	if ( exportedClasses.length < 1 ) {
+		throw new Error( 'Plug-in has no exported classes.' );
 	}
-	return plugin as Plugin;
+	let obj: any;
+    if ( exportedClasses.indexOf( 'default' ) >= 0 ) {
+		if ( pluginContent[ 'default' ][ 'default' ] ) {
+			obj = createInstance( pluginContent[ 'default' ], 'default', [] );
+		} else {
+			obj = createInstance( pluginContent, 'default', [] );
+		}
+    } else {
+        const [ className ] = exportedClasses; // first class name
+        obj = createInstance( pluginContent, className, [] );
+    }
+	return obj as Plugin;
 }
 
 
@@ -52,6 +65,6 @@ export async function loadPlugin( pluginData: PluginData ): Promise< Plugin > {
  * @param args Constructor arguments.
  * @return An instance of the given class.
  */
- function createInstance( context: any, className: string, args: any[] ): any {
-	return new context[ className ]( ... args );
+function createInstance( context: any, className: string, args: any[] ): any {
+	return new context[ className ]( ...args );
 }

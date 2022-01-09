@@ -1,6 +1,6 @@
 {
   "name": "concordialang",
-  "version": "2.0.0-alpha.18",
+  "version": "2.0.0-alpha.19",
   "description": "Concordia Language Compiler",
   "keywords": [
     "concordia",
@@ -161,7 +161,7 @@
     "@types/node": "^10.17.60",
     "cross-env": "^7.0.3",
     "depcheck": "^0.9.2",
-    "jest": "^27.4.6",
+    "jest": "^27.4.7",
     "jest-sonar": "^0.2.12",
     "jest-watch-typeahead": "^1.0.0",
     "memfs": "^2.17.1",

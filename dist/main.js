@@ -21151,13 +21151,27 @@ async function loadPlugin(pluginData) {
     file = 'file:///' + toUnixPath(file);
   }
 
-  let plugin = await import(file);
+  const pluginContent = await import(file);
+  const exportedClasses = Object.getOwnPropertyNames(pluginContent);
 
-  if (plugin.default) {
-    plugin = plugin.default;
+  if (exportedClasses.length < 1) {
+    throw new Error('Plug-in has no exported classes.');
   }
 
-  return plugin;
+  let obj;
+
+  if (exportedClasses.indexOf('default') >= 0) {
+    if (pluginContent['default']['default']) {
+      obj = createInstance(pluginContent['default'], 'default', []);
+    } else {
+      obj = createInstance(pluginContent, 'default', []);
+    }
+  } else {
+    const [className] = exportedClasses;
+    obj = createInstance(pluginContent, className, []);
+  }
+
+  return obj;
 }
 
 function createInstance(context, className, args) {
