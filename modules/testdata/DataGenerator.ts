@@ -23,10 +23,10 @@ export class DataGenConfig {
 	public minValue: any = null;
 	public maxValue: any = null;
 
-	public minLength: number = null;
-	public maxLength: number = null;
+	public minLength: number | null = null;
+	public maxLength: number | null = null;
 
-	public format: string = null; // regex
+	public format: string | null = null; // regex
 
 	// public query: string = null;
 	// public queryable: Queryable = null; // queryable to use to query the value - db or memory
@@ -34,7 +34,7 @@ export class DataGenConfig {
 	public value: EntityValueType = null; // for value and list-based generation
 	public invertedLogic: boolean = false; // for list-based generation, when operator "not in" is used
 
-	public computedBy: string = null; // expression
+	public computedBy: string | null = null; // expression
 
 	constructor(
 		private _valueType: ValueType = ValueType.STRING
@@ -258,7 +258,7 @@ export class DataGenerator {
 	}
 
 	private regexGeneratorFor( cfg: DataGenConfig ): RegexBasedDataGenerator {
-		return this._builder.regex( cfg.valueType, cfg.format );
+		return this._builder.regex( cfg.valueType, cfg.format! );
 	}
 
 	// private queryGeneratorFor( cfg: DataGenConfig ): QueryBasedDataGenerator< any > | InvertedLogicQueryBasedDataGenerator< any > {

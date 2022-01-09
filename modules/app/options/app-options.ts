@@ -66,7 +66,7 @@ export interface AppOptions {
     // PLUGIN
 
     /** Plug-in (name) to use */
-    plugin?: string;
+    plugin?: string | string[];
 
     /** Target browsers or platforms */
     target?: string;
@@ -150,5 +150,5 @@ export interface AppOptions {
 
 
 export function hasSomeOptionThatRequiresAPlugin( o: AppOptions ): boolean {
-	return o.script || o.run || o.result;
+	return !! o.script || !! o.run || !! o.result;
 }

@@ -74,7 +74,7 @@ export class TestResultAnalyzer {
     }
 
     shouldAdjustMethodToPassed( ats: ATSTestCase, methodResult: TestMethodResult ): boolean {
-        return 'failed' === methodResult.status && ats.invalid;
+        return 'failed' === methodResult.status && true === ats.invalid;
     }
 
 }

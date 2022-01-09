@@ -43,7 +43,7 @@ export class UIPropertyReferenceExtractor {
     extractFromEntity(
         nlpEntity: NLPEntity,
         line: number = 1
-    ): UIPropertyReference {
+    ): UIPropertyReference | null {
 
         if ( nlpEntity.entity != Entities.UI_PROPERTY_REF ) {
             return null;
@@ -67,7 +67,7 @@ export class UIPropertyReferenceExtractor {
     ): UIPropertyReference[] {
         let regex: RegExp = cloneRegExp( UI_PROPERTY_REF_REGEX );
         let references: UIPropertyReference[] = [];
-        let result: RegExpExecArray;
+        let result: RegExpExecArray | null;
         while ( ( result = regex.exec( text ) ) !== null ) {
             const value = result[ 0 ] || '';
             let ref = this.makeReferenceFromString(

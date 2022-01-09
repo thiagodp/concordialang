@@ -1,11 +1,12 @@
 import { dirname, resolve } from 'path';
-import { CaseType } from '../util/CaseType';
+
 import { Constant, Database, Document, Feature, NamedNode, Spec, Table, UIElement } from '../ast';
 import { DatabaseInterface } from '../dbi';
-import { DocumentUtil } from './DocumentUtil';
+import { CaseType } from '../util/CaseType';
 import { toUnixPath } from '../util/file';
-import { isDefined, valueOrNull } from '../util/type-checking';
+import { isDefined } from '../util/type-checking';
 import { UIElementNameHandler } from '../util/UIElementNameHandler';
+import { DocumentUtil } from './DocumentUtil';
 
 
 class MappedContent {
@@ -31,12 +32,12 @@ export class AugmentedSpec extends Spec {
 
     private _pathToDocCache: Map< string, Document > = new Map< string, Document >();
 
-    private _databaseCache: Database[] = null;
-    private _constantCache: Constant[] = null;
-    private _tableCache: Table[] = null;
-    private _featureCache: Feature[] = null;
-    private _uiElementCache: UIElement[] = null; // global UI Elements
-    private _nonFeatureNamesCache: string[] = null;
+    private _databaseCache: Database[] | null = null;
+    private _constantCache: Constant[] | null = null;
+    private _tableCache: Table[] | null = null;
+    private _featureCache: Feature[] | null = null;
+    private _uiElementCache: UIElement[] | null = null; // global UI Elements
+    private _nonFeatureNamesCache: string[] | null = null;
 
     private _constantNameToValueMap: Map< string, string | number > = new Map< string, string | number >();
     private _uiElementVariableMap: Map< string, UIElement > = new Map< string, UIElement >(); // *all* UI Elements
@@ -103,6 +104,9 @@ export class AugmentedSpec extends Spec {
     }
 
     public replaceDocByIndex( index: number, newDoc: Document ): boolean {
+        if ( ! newDoc?.fileInfo?.path ) {
+            return false;
+        }
         const path = newDoc.fileInfo.path;
         const pathIndex = this.indexOfDocWithPath( path );
         if ( pathIndex != index ) {
@@ -138,7 +142,7 @@ export class AugmentedSpec extends Spec {
 
     private assureDoc( doc: Document ): MappedContent {
         let mc = this._docFullyMapped.get( doc );
-        if ( ! isDefined( mc ) ) {
+        if ( ! mc ) {
             mc = new MappedContent();
             this._docFullyMapped.set( doc, mc );
         }
@@ -254,8 +258,8 @@ export class AugmentedSpec extends Spec {
         }
 
         // Adjust filePath if not defined
-        if ( isDefined( doc.feature.location ) && ! isDefined( doc.feature.location.filePath ) && isDefined( doc.fileInfo ) ) {
-            doc.feature.location.filePath = doc.fileInfo.path || '';
+        if ( ! doc?.feature?.location?.filePath && doc.fileInfo?.path ) {
+            doc.feature.location.filePath = doc.fileInfo.path;
         }
 
         this._featureCache.push( doc.feature );
@@ -323,7 +327,7 @@ export class AugmentedSpec extends Spec {
     docWithPath( filePath: string, referencePath: string = '.', rebuildCache: boolean = false ): Document | null {
 
         // Rebuild cache ?
-        if ( ! isDefined( this._pathToDocCache ) || rebuildCache ) {
+        if ( ! this._pathToDocCache || rebuildCache ) {
             this.rebuildDocPath();
         }
 
@@ -352,12 +356,12 @@ export class AugmentedSpec extends Spec {
 
     uiElementByVariable(
         variable: string,
-        doc: Document = null
+        doc?: Document
     ): UIElement | null {
-        if ( isDefined( doc ) ) {
+        if ( doc ) {
             const docUtil = new DocumentUtil();
             const ui = docUtil.findUIElementInTheDocument( variable, doc );
-            if ( isDefined( ui ) ) {
+            if ( ui ) {
                 return ui;
             }
             return this.findUIElementInDocumentImports( variable, doc );
@@ -371,7 +375,8 @@ export class AugmentedSpec extends Spec {
 			return null;
 		}
         const lowerCasedName: string = name.toLowerCase();
-        return valueOrNull( nodes.find( n => n.name ? n.name.toLowerCase() === lowerCasedName : false ) );
+        const r = nodes.find( n => n.name ? n.name.toLowerCase() === lowerCasedName : false );
+        return undefined === r ? null : r;
     }
 
     //
@@ -379,14 +384,15 @@ export class AugmentedSpec extends Spec {
     //
 
     constantValue( name: string ): string | number | null {
-        return valueOrNull( this.constantNameToValueMap().get( name ) );
+        const r = this.constantNameToValueMap().get( name );
+        return undefined === r ? null : r;
     }
 
     /**
      * Return all databases. Results are cached.
      */
     public databases( rebuildCache: boolean = false ): Database[] {
-        if ( isDefined( this._databaseCache ) && ! rebuildCache ) {
+        if ( this._databaseCache && ! rebuildCache ) {
             return this._databaseCache;
         }
         this._databaseCache = [];
@@ -403,14 +409,14 @@ export class AugmentedSpec extends Spec {
 
 
     public isConstantCacheFilled(): boolean {
-        return isDefined( this._constantCache );
+        return !! this._constantCache;
     }
 
     /**
      * Return all constants. Results are cached.
      */
     public constants( rebuildCache: boolean = false ): Constant[] {
-        if ( this.isConstantCacheFilled() && ! rebuildCache ) {
+        if ( this._constantCache && ! rebuildCache ) {
             return this._constantCache;
         }
         return this.fillConstantsCache();
@@ -440,7 +446,7 @@ export class AugmentedSpec extends Spec {
      * Return all tables. Results are cached.
      */
     public tables( rebuildCache: boolean = false ): Table[] {
-        if ( isDefined( this._tableCache ) && ! rebuildCache ) {
+        if ( this._tableCache && ! rebuildCache ) {
             return this._tableCache;
         }
         this._tableCache = [];
@@ -459,7 +465,7 @@ export class AugmentedSpec extends Spec {
      * Return all features. Results are cached.
      */
     public features( rebuildCache: boolean = false ): Feature[] {
-        if ( isDefined( this._featureCache ) && ! rebuildCache ) {
+        if ( this._featureCache && ! rebuildCache ) {
             return this._featureCache;
         }
         this._featureCache = [];
@@ -533,7 +539,7 @@ export class AugmentedSpec extends Spec {
 
         const docUtil = new DocumentUtil();
         for ( let impDoc of doc.imports ) {
-            let otherDoc = this.docWithPath( impDoc.value, doc.fileInfo.path );
+            let otherDoc = this.docWithPath( impDoc.value, doc.fileInfo?.path );
             if ( ! otherDoc ) {
                 // console.log(
                 //     'WARNING - Imported document not found:', impDoc.value, "\n",
@@ -553,7 +559,7 @@ export class AugmentedSpec extends Spec {
     importedDocumentsOf( doc: Document ): Document[] {
         let docs: Document[] = [];
         for ( let impDoc of doc.imports || [] ) {
-            let otherDoc = this.docWithPath( impDoc.value, doc.fileInfo.path );
+            let otherDoc = this.docWithPath( impDoc.value, doc.fileInfo?.path );
             if ( ! otherDoc ) {
                 continue;
             }
@@ -574,7 +580,7 @@ export class AugmentedSpec extends Spec {
         let variables: string[] = [];
         variables.push.apply( variables, docUtil.extractDocumentVariables( doc, includeGlobals ) );
         for ( let impDoc of doc.imports || [] ) {
-            let otherDoc = this.docWithPath( impDoc.value, doc.fileInfo.path );
+            let otherDoc = this.docWithPath( impDoc.value, doc.fileInfo?.path );
             if ( ! otherDoc ) {
                 continue;
             }
@@ -590,15 +596,15 @@ export class AugmentedSpec extends Spec {
      * @param includeGlobals Whether globals should be included
      */
     extractUIElementsFromDocumentAndImports( doc: Document, includeGlobals: boolean = false ): UIElement[] {
-        let elements: UIElement[] = this._docToAccessibleUIElementsCache.get( doc ) || null;
-        if ( isDefined( elements ) ) {
+        let elements: UIElement[] | null = this._docToAccessibleUIElementsCache.get( doc ) || null;
+        if ( elements ) {
             return elements;
         }
         const docUtil = new DocumentUtil();
         elements = [];
         elements.push.apply( elements, docUtil.extractUIElements( doc, includeGlobals ) );
         for ( let impDoc of doc.imports || [] ) {
-            let otherDoc = this.docWithPath( impDoc.value, doc.fileInfo.path );
+            let otherDoc = this.docWithPath( impDoc.value, doc.fileInfo?.path );
             if ( ! otherDoc ) {
                 continue;
             }

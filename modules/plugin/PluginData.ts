@@ -70,6 +70,28 @@ type Author = { name: string, email?: string, url?: string, site?: string };
 
 
 /**
+ * Split plugin names separated by comma.
+ *
+ * @param names Names to split.
+ * @returns
+ */
+export function splitPluginNames( names: string ): string[] {
+    return names.split( ',' ).map( name => name.trim() );
+}
+
+/**
+ * Add the plug-in prefix if needed.
+ *
+ * @param name Plug-in name.
+ * @returns
+ */
+export function addPluginPrefixIfNeeded( name: string ): string {
+    const tName = name.trim();
+    return tName.startsWith( PLUGIN_PREFIX ) ? tName : PLUGIN_PREFIX + tName;
+}
+
+
+/**
  * Sort plug-ins by name
  *
  * @param plugins Plug-in data to sort
@@ -81,6 +103,10 @@ export function sortPluginsByName( plugins: PluginData[] ): PluginData[] {
 	} );
 }
 
+function authorObjectToString( obj: Author ): string {
+    const emailOrSite = obj.email || obj.url || obj.site;
+    return obj.name + ( emailOrSite ? ` <${emailOrSite}>` : '' );
+}
 
 /**
  * Returns a string array from the property `author` or `authors` of `package.json`.
@@ -95,13 +121,6 @@ export function authorsAsStringArray(
     switch ( typeof author ) {
         case 'string': return [ author ];
         case 'object': {
-            const authorObjectToString = ( obj?: Author ): string | undefined => {
-                if ( ! obj || typeof obj != 'object' ) {
-                    return; // undefined
-                }
-                const emailOrSite = ( obj.email || obj.url || obj.site ) ? ` <${obj.email || obj.url || obj.site}>` : '';
-                return obj.name + emailOrSite;
-            };
             if ( Array.isArray( author ) ) {
                 if ( author.length < 1 ) {
                     return [];
@@ -109,7 +128,7 @@ export function authorsAsStringArray(
                 if ( typeof author[ 0 ] === 'string' ) {
                     return author as string[];
                 }
-                return ( author as Author [] ).map( authorObjectToString ).filter( a => !!a );
+                return ( author as Author[] ).filter( a => !!a ).map( authorObjectToString );
             }
             return [ authorObjectToString( author ) ];
         }
@@ -125,7 +144,7 @@ export function authorsAsStringArray(
  * @returns
  */
 export function isPlugin( pkg?: { name?: string, version?: string, concordiaPlugin?: any } ): boolean {
-    return !! pkg && pkg?.name?.startsWith( PLUGIN_PREFIX ) && !! pkg[ PLUGIN_PROPERTY ];
+    return pkg?.name?.startsWith( PLUGIN_PREFIX ) && pkg?.concordiaPlugin;
 }
 
 /**

@@ -125,17 +125,20 @@ export class FeatureSSA extends SpecificationAnalyzer {
 		availableStates: Map< FilePath, Set< StateName > >
 	): boolean {
 
-		if ( ! doc.feature ||
-			! doc.feature.scenarios ||
-			doc.feature.scenarios.length < 1
-			) {
+        // No scenarios?
+		if ( ! doc.feature || ! doc.feature.scenarios || doc.feature.scenarios.length < 1 ) {
 			return true;
 		}
+
+        // No file path (consistecy check)
+        if ( ! doc.fileInfo || ! doc.fileInfo.path ) {
+            return true;
+        }
 
 		const path = doc.fileInfo.path;
 
 		// States of the current file
-		let states: Set< StateName > = availableStates.get( path );
+		let states: Set< StateName > | undefined = availableStates.get( path );
 		if ( ! states ) {
 			states = new Set< StateName >();
 			availableStates.set( path, states );
@@ -155,7 +158,7 @@ export class FeatureSSA extends SpecificationAnalyzer {
 			for ( const st of variantStates ) {
 
 				// Check the state in the same file
-				if ( states.has( st.name ) ) {
+				if ( states!.has( st.name ) ) {
 					continue;
 				}
 
@@ -163,6 +166,11 @@ export class FeatureSSA extends SpecificationAnalyzer {
 
 				let found: boolean = false;
 				for ( const d of importedDocs ) {
+
+                    if ( ! d.fileInfo || ! d.fileInfo.path ) {
+                        continue;
+                    }
+
 					const importedStates = availableStates.get( d.fileInfo.path );
 					if ( importedStates && importedStates.has( st.name ) ) {
 						found = true;
@@ -197,11 +205,11 @@ export class FeatureSSA extends SpecificationAnalyzer {
 
 				// Add variant's postconditions to the map
 				if ( v.postconditions && v.postconditions.length > 0 ) {
-					v.postconditions.forEach( s => states.add( s.name ) );
+					v.postconditions.forEach( s => states!.add( s.name ) );
 				}
 
-				checkStates( v, v.preconditions, 'Precondition', errors );
-				checkStates( v, v.stateCalls, 'State', errors );
+				checkStates( v, v.preconditions!, 'Precondition', errors );
+				checkStates( v, v.stateCalls!, 'State', errors );
 			}
 		}
 
@@ -224,7 +232,7 @@ export class FeatureSSA extends SpecificationAnalyzer {
         let errors: LocatedException[] = [];
 
         // Analyze UI elements from the Feature, when declared
-        if ( isDefined( doc.feature ) ) {
+        if ( doc.feature ) {
             for ( let uie of doc.feature.uiElements || [] ) {
                 this.analyzePropertiesReferencesOf( uie, doc, spec, errors );
             }
@@ -235,7 +243,7 @@ export class FeatureSSA extends SpecificationAnalyzer {
             this.analyzePropertiesReferencesOf( uie, doc, spec, errors );
         }
 
-        if ( errors.length > 0 ) {
+        if ( errors.length > 0 && doc?.fileInfo?.path ) {
             problems.addError( doc.fileInfo.path, ...errors );
             return false;
         }
@@ -257,11 +265,11 @@ export class FeatureSSA extends SpecificationAnalyzer {
             }
 
             const propValue = uiProperty.value;
-            if ( ! propValue ) {
+            if ( ! propValue || ! isDefined( propValue.value ) ) {
                 continue;
             }
 
-            const content = propValue.value.toString();
+            const content = propValue.value!.toString();
 
             // We will just deal with references to declarations!
             switch ( propValue.entity ) {
@@ -296,7 +304,7 @@ export class FeatureSSA extends SpecificationAnalyzer {
         errors: Error[]
     ): void {
         const node = spec.constantWithName( variable );
-        if ( isDefined( node ) ) {
+        if ( node ) {
             references.push( node );
         } else {
             const msg = 'Referenced constant not found: ' + variable;
@@ -314,7 +322,7 @@ export class FeatureSSA extends SpecificationAnalyzer {
         errors: Error[]
     ): void {
         const node = spec.uiElementByVariable( variable, doc );
-        if ( isDefined( node ) ) {
+        if ( node ) {
             references.push( node );
         } else {
             const msg = 'Referenced UI Element not found: ' + variable;
@@ -355,7 +363,7 @@ export class FeatureSSA extends SpecificationAnalyzer {
         errors: Error[]
     ): void {
         for ( let name of names || [] ) {
-            let node = null;
+            let node: any = null;
 
             // Constant ?
             node = spec.constantWithName( name );
@@ -384,7 +392,7 @@ export class FeatureSSA extends SpecificationAnalyzer {
 
     makeError( msg: string, location: Location, doc: Document ): SemanticException {
         let loc = deepcopy( location );
-        if ( ! loc.filePath ) {
+        if ( ! loc.filePath && doc.fileInfo?.path ) {
             loc.filePath = doc.fileInfo.path;
         }
         return new SemanticException( msg, loc );

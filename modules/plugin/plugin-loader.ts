@@ -14,8 +14,12 @@ export async function loadPlugin( pluginData: PluginData ): Promise< Plugin > {
 	const old = pluginData as OldPluginData;
 	const isOldPlugin: boolean = !! old.file;
 	if ( isOldPlugin ) {
+		if ( ! old.class ) {
+			throw new Error( `Plugin "${pluginData.name}" did not specified the class name.` );
+		}
+
 		// NOTE: "file" receives the absolute path when the package is loaded
-		if ( old.file.includes( ':' ) ) { // Windows
+		if ( old.file!.includes( ':' ) ) { // Windows
 			old.file = 'file:///' + old.file;
 		}
 		// Supported in ES2020+ but it worked flawlessly in ES2015/ES2018 (Node 10)

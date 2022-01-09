@@ -1,5 +1,8 @@
 import * as childProcess from 'child_process';
 
+export const SUCCESSFUL: number = 0;
+export const NOT_SUCCESSFUL: number = 1;
+
 /**
  * Run a command in the terminal/console. Returns the exit code.
  *
@@ -15,11 +18,16 @@ export async function runCommand( command: string ): Promise< number > {
         // stdio: 'inherit', // <<< not working on windows
     };
 
+    const matchArray = command.match( /[^"\s]+|"(?:\\"|[^"])+"/g );
+    if ( ! matchArray ) {
+        throw new Error( 'Invalid command syntax: ' + command );
+    }
+
     // Splits the command into pieces to pass to the process;
     //  mapping function simply removes quotes from each piece
-    let cmds = command.match( /[^"\s]+|"(?:\\"|[^"])+"/g )
-        .map( expr => {
-            return expr.charAt( 0 ) === '"' && expr.charAt( expr.length - 1 ) === '"' ? expr.slice( 1, -1 ) : expr;
+    let cmds = matchArray.map( expr => {
+            return expr.charAt( 0 ) === '"'
+                && expr.charAt( expr.length - 1 ) === '"' ? expr.slice( 1, -1 ) : expr;
         } );
     const runCMD = cmds[ 0 ];
     cmds.shift();
@@ -56,9 +64,9 @@ export async function runCommand( command: string ): Promise< number > {
 export async function runInBatch( commands: string[] ): Promise< number > {
     for ( const cmd of commands ) {
         const code = await runCommand( cmd );
-        if ( code != 0 ) {
+        if ( code != SUCCESSFUL ) {
             return code;
         }
     }
-    return 0;
+    return SUCCESSFUL;
 }

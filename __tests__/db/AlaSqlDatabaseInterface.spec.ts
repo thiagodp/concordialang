@@ -1,4 +1,4 @@
-import { DEFAULT_LANGUAGE } from '../../modules/app/default-options';
+import { DEFAULT_LANGUAGE } from '../../modules/app/options/default-options';
 import { Database, DatabaseProperties, DatabaseProperty, Document, Table } from '../../modules/ast';
 import { AlaSqlDatabaseInterface } from '../../modules/db';
 import languageMap from '../../modules/language/data/map';

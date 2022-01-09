@@ -8,8 +8,8 @@ import * as readline from 'readline';
 import { sprintf } from 'sprintf-js';
 import terminalLink from 'terminal-link';
 
-import { AppOptions } from '../app/app-options';
-import { DEFAULT_LANGUAGE } from '../app/default-options';
+import { AppOptions } from '../app/options/app-options';
+import { DEFAULT_LANGUAGE } from '../app/options/default-options';
 import { sortErrorsByLocation } from '../error/ErrorSorting';
 import { LocatedException } from '../error/LocatedException';
 import { ProblemMapper } from '../error/ProblemMapper';
@@ -279,13 +279,23 @@ export class UI implements AppListener {
     }
 
     /** @inheritDoc */
-    announcePluginNotFound( pluginName: string ): void {
-        this.error( `A plugin named "${pluginName}" was not found.` );
+    announcePluginsNotFound( pluginNames: string | string[] ): void {
+
+        const msg = typeof pluginNames === 'string'
+            ? `Plug-in not found: ${pluginNames}`
+            : `Plug-ins not found: ${pluginNames.join( ', ' )}`;
+
+        this.error( msg );
     }
 
     /** @inheritDoc */
-    announcePluginCouldNotBeLoaded( pluginName: string ): void {
-        this.error( `Could not load the plugin: ${pluginName}.` );
+    announcePluginsCouldNotBeLoaded( pluginNames: string | string[] ): void {
+
+        const msg = typeof pluginNames === 'string'
+            ? `Could not load the plug-in: ${pluginNames}`
+            : `Could not load the plug-ins: ${pluginNames.join( ', ' )}`;
+
+        this.error( msg );
     }
 
     /** @inheritDoc */
@@ -782,9 +792,11 @@ export class UI implements AppListener {
     }
 
     /** @inheritdoc */
-    public showMessagePluginNotFound( name: string ): void {
+    public showMessageNoPluginsFound( names: string[] ): void {
+        const word = names.length > 0 ? 'names' : 'name';
+        const values = '"' + names.join( '", "' ) + '"';
         this.error(
-            sprintf( 'No plugins installed with the name "%s".', this.highlight( name ) )
+            sprintf( `No plugins installed with the given ${word}: %s.`, this.highlight( values ) )
             );
     }
 
@@ -939,7 +951,7 @@ export class UI implements AppListener {
 
                 let color = this.cliColorForStatus( m.status );
                 let sLoc = e.scriptLocation;
-                let tcLoc = e.specLocation;
+                let tcLoc = e.specLocation!;
 
                 this.writeln(
                     '  ', this.symbolItem, ' '.repeat( 9 - m.status.length ) + color( m.status + ':' ),
@@ -994,7 +1006,7 @@ export class UI implements AppListener {
     }
 
     protected formattedStackOf( err: Error ): string {
-        return "\n  DETAILS: " + err.stack.substring( err.stack.indexOf( "\n" ) );
+        return err.stack ? "\n  DETAILS: " + err.stack.substring( err.stack.indexOf( "\n" ) ) : '';
     }
 
     // private formatHash( hash: string ): string {

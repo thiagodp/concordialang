@@ -32,7 +32,7 @@ export class VariantStateDetector {
         // Analyzing detected entities of the steps
 
         const nlpUtil = new NLPUtil();
-        let nodeType: NodeTypes = null;
+        let nodeType: NodeTypes | null = null;
 
         let stepIndex = -1;
         for ( let step of variantLike.sentences ) {
@@ -85,7 +85,9 @@ export class VariantStateDetector {
             for ( let prec of variant.preconditions || [] ) {
                 if ( prec.equals( postc ) ) {
                     removed.push( prec );
-                    variant.preconditions.splice( index, 1 );
+                    if ( variant.preconditions ) {
+                        variant.preconditions.splice( index, 1 );
+                    }
                 }
                 ++index;
             }

@@ -1,6 +1,6 @@
 import colors from 'chalk';
 
-import { DEFAULT_RANDOM_MAX_STRING_SIZE, DEFAULT_RANDOM_TRIES_TO_INVALID_VALUE } from '../app/default-options';
+import { DEFAULT_RANDOM_MAX_STRING_SIZE, DEFAULT_RANDOM_TRIES_TO_INVALID_VALUE } from '../app/options/default-options';
 
 export function helpContent(): string {
 
@@ -45,6 +45,7 @@ ${colors.gray('Plug-in')}
 -S, --plugin-serve [<name>]             Start a test server for a given plugin.
 --plugin-list                           List installed plug-ins.
 --plugin-install <name>                 Install a plug-in.
+--plugin-update <name>                  Update a plug-in.
 --plugin-uninstall <name>               Uninstall a plug-in.
 --plugin-about [<name>]                 Show information about an installed
                                         plug-in.

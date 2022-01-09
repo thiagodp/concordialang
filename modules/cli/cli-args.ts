@@ -1,7 +1,7 @@
 import getopts from 'getopts';
 
-import { AppOptions } from '../app/app-options';
-import { CliOnlyOptions } from './CliOnlyOptions';
+import { AppOptions } from '../app/options/app-options';
+import { CliOnlyOptions } from '../app/options/cli-only-options';
 
 
 interface ArgsResult {
@@ -122,6 +122,7 @@ function makeGetOptsOptions() {
 		plugin: 'p',
 		pluginAbout: [ 'plugin-about', 'plugin-info' ],
 		pluginInstall: 'plugin-install',
+		pluginUpdate: 'plugin-update',
 		pluginUninstall: 'plugin-uninstall',
 		pluginServe: [ 'plugin-serve', 'S' ],
 		pluginList: 'plugin-list',

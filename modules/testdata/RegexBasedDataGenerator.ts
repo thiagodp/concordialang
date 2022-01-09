@@ -43,7 +43,7 @@ export class RegexBasedDataGenerator {
             this._randomTriesToInvalidValues = 0;
 		}
 
-		if ( this._maxStringSize <= 0 ) {
+		if ( this._maxStringSize !== undefined && this._maxStringSize <= 0 ) {
 			this._maxStringSize = StringLimits.MAX;
 		}
     }

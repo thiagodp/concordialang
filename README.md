@@ -1,6 +1,6 @@
 [![npm (tag)](https://img.shields.io/npm/v/concordialang/alpha?color=green&label=NPM&style=for-the-badge)](https://github.com/thiagodp/concordialang/releases)
 [![License](https://img.shields.io/npm/l/concordialang.svg?style=for-the-badge&color=green)](https://github.com/thiagodp/concordialang/blob/master/LICENSE.txt)
-[![GitHub branch checks state](https://img.shields.io/github/checks-status/thiagodp/concordialang/v2?style=for-the-badge)](https://github.com/thiagodp/concordialang/actions)
+[![Build Status](https://img.shields.io/github/workflow/status/thiagodp/concordialang/Test?style=for-the-badge)](https://github.com/thiagodp/concordialang/actions)
 [![GitHub last commit (branch)](https://img.shields.io/github/last-commit/thiagodp/concordialang/v2?style=for-the-badge)](https://github.com/thiagodp/concordialang/commit/v2)
 [![Slack](https://img.shields.io/badge/slack-chat-blue.svg?style=for-the-badge)](https://bit.ly/concordialang)
 
@@ -28,9 +28,15 @@ And More:
 
 ## Installation
 
-`npm i -D concordialang@alpha`
+`npm i -D concordialang`
 
-### [Related things](https://concordialang.gitbook.io/concordialang/introduction/related-things)
+⚠ It will install version 2, that is currently in _alpha_ stage, although stable.
+
+## See Also
+
+- [Related Projects](https://concordialang.gitbook.io/concordialang/introduction/related-things) ❤
+- [What's New in Version 2](https://github.com/thiagodp/concordialang/issues/56)
+- [Latest Updates](https://github.com/thiagodp/concordialang/releases)
 
 ## License
 

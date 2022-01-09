@@ -26,11 +26,11 @@ export class DateTimeGenerator implements RawDataGenerator< LocalDateTime > {
 		min?: LocalDateTime,
 		max?: LocalDateTime
 	) {
-		if ( isDefined( min ) && isDefined( max ) && min.isAfter( max ) ) {
+		if ( isDefined( min ) && isDefined( max ) && min!.isAfter( max! ) ) {
             throw new Error( 'Minimum value should not be greater than the maximum value.' );
         }
-        this._min = isDefined( min ) ? min: DateTimeLimits.MIN;
-		this._max = isDefined( max ) ? max: DateTimeLimits.MAX;
+        this._min = isDefined( min ) ? min! : DateTimeLimits.MIN;
+		this._max = isDefined( max ) ? max! : DateTimeLimits.MAX;
     }
 
 	public diffInSeconds(): number {

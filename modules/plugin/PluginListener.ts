@@ -9,7 +9,7 @@ export interface PluginListener {
 
     drawSinglePlugin( p: PluginData ): void;
 
-    showMessagePluginNotFound( name: string ): void;
+    showMessageNoPluginsFound( names: string[] ): void;
 
     showMessagePluginAlreadyInstalled( name: string ): void;
 

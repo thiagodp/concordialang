@@ -1,6 +1,6 @@
 import { resolve } from 'path';
 
-import { CliOnlyOptions } from '../cli/CliOnlyOptions';
+import { CliOnlyOptions } from './cli-only-options';
 import { AppOptions } from './app-options';
 import {
     DEFAULT_CASE_UI,
@@ -12,6 +12,7 @@ import {
     DEFAULT_ENCODING,
     DEFAULT_EXTENSION_FEATURE,
     DEFAULT_EXTENSION_TEST_CASE,
+	DEFAULT_PACKAGE_MANAGER,
     DEFAULT_IMPORTANCE,
     DEFAULT_INVALID_DATA_TEST_CASES_AT_A_TIME,
     DEFAULT_LANGUAGE,
@@ -61,7 +62,7 @@ export function makeAppOptions(
 		dirScript,
 		dirResult,
 
-		packageManager: 'npm',
+		packageManager: DEFAULT_PACKAGE_MANAGER,
 
 		ignore: [],
 		file: [],

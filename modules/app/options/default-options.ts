@@ -1,4 +1,4 @@
-import { CaseType } from '../util/CaseType';
+import { CaseType } from '../../util/CaseType';
 import { CombinationOptions, InvalidSpecialOptions, VariantSelectionOptions } from './combination-options';
 
 // DIRECTORIES
@@ -18,6 +18,8 @@ export const DEFAULT_EXTENSION_TEST_CASE = '.testcase'; // Extension for test ca
 export const DEFAULT_LANGUAGE: string = 'en';
 export const DEFAULT_ENCODING: string = 'utf8';
 export const DEFAULT_LINE_BREAKER: string = "\n";
+
+export const DEFAULT_PACKAGE_MANAGER: string = 'npm';
 
 // CONTENT GENERATION
 

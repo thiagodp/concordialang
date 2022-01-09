@@ -1,4 +1,4 @@
-import * as inquirer from 'inquirer';
+import inquirer from 'inquirer';
 import { join } from 'path';
 
 import { filterPluginsByName } from '../plugin/plugin-filter';
@@ -10,9 +10,10 @@ import {
     makePackageInitCommand,
     makePackageInstallCommand,
     makePackageUninstallCommand,
+    makePackageUpdateCommand,
     PackageManager,
 } from '../util/package-installation';
-import { runCommand } from '../util/run-command';
+import { runCommand, SUCCESSFUL, NOT_SUCCESSFUL } from '../util/run-command';
 
 
 export class PluginController {
@@ -70,15 +71,21 @@ export class PluginController {
         // Install the package as a DEVELOPMENT dependency
         const command = makePackageInstallCommand( name, this._packageManagerName as PackageManager )
         const code: number = await this.runCommand( command );
-        if ( code !== 0 ) { // unsuccessful
+        if ( code != SUCCESSFUL ) {
             return;
         }
 
         // Check if it is in the list of installed ones
-        pluginData = filterPluginsByName( all, name, false );
+        [ pluginData ] = filterPluginsByName( all, name, false );
         if ( ! pluginData ) {
             this._pluginListener.showMessageCouldNoFindInstalledPlugin( name );
         }
+    }
+
+
+    public async updateByName( name: string ): Promise< number > {
+        const command = makePackageUpdateCommand( name, this._packageManagerName as PackageManager );
+        return this.runCommand( command );
     }
 
 
@@ -88,9 +95,10 @@ export class PluginController {
         return this.runCommand( command );
     }
 
+
     public async serve( pluginData: NewOrOldPluginData ): Promise< number > {
 
-        let serveCommand: string;
+        let serveCommand: string | undefined;
 
         const old = pluginData as OldPluginData;
         const isOldPlugin = !! old.file;
@@ -108,7 +116,7 @@ export class PluginController {
         // Warn the user that no server command is available
         if ( ! serveCommand ) {
             this._pluginListener.showPluginServeUndefined( pluginData.name );
-            return;
+            return NOT_SUCCESSFUL;
         }
 
         this._pluginListener.showPluginServeStart( pluginData.name );

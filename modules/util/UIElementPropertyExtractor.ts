@@ -27,14 +27,14 @@ export class UIElementPropertyExtractor {
         const item: UIProperty | null = this.extractProperty( uie, UIPropertyTypes.ID );
         if ( isDefined( item ) ) {
             // Find an entity "value" in the NLP result
-            let entity = item.nlpResult.entities.find( ( e: NLPEntity ) => Entities.VALUE === e.entity );
+            let entity = item!.nlpResult.entities.find( ( e: NLPEntity ) => Entities.VALUE === e.entity );
 
             if ( ! isDefined( entity ) ) { // Let's try as command
-                entity = item.nlpResult.entities.find( ( e: NLPEntity ) => Entities.COMMAND === e.entity );
+                entity = item!.nlpResult.entities.find( ( e: NLPEntity ) => Entities.COMMAND === e.entity );
             }
 
             if ( isDefined( entity ) ) {
-                return entity.value;
+                return entity!.value;
             }
         }
         // Use the UI_ELEMENT name as the id
@@ -46,16 +46,16 @@ export class UIElementPropertyExtractor {
         if ( ! isDefined( nlpEntity ) ) {
             return ActionTargets.TEXTBOX;
         }
-        return nlpEntity.value;
+        return nlpEntity!.value;
     }
 
     extractDataType( uie: UIElement ): ValueType | null {
         return this.extractDataTypeFromProperty(
             this.extractProperty( uie, UIPropertyTypes.DATA_TYPE )
-            );
+        );
     }
 
-    extractDataTypeFromProperty( property: UIProperty ): ValueType | null {
+    extractDataTypeFromProperty( property: UIProperty | null ): ValueType | null {
         if ( ! property ) {
             return null;
         }
@@ -63,7 +63,7 @@ export class UIElementPropertyExtractor {
         if ( ! isDefined( nlpEntity ) ) {
             return null;
         }
-        return this.stringToValueType( nlpEntity.value );
+        return this.stringToValueType( nlpEntity!.value );
     }
 
     stringToValueType( value: string ): ValueType | null {
@@ -83,8 +83,8 @@ export class UIElementPropertyExtractor {
 
         // Does it have data type ? -> extract it
         if ( map.has( UIPropertyTypes.DATA_TYPE ) ) {
-            const entityValue = map.get( UIPropertyTypes.DATA_TYPE ).value;
-            return this.stringToValueType( entityValue.value.toString() );
+            const entityValue = map.get( UIPropertyTypes.DATA_TYPE )!.value;
+            return this.stringToValueType( entityValue.value!.toString() ) || ValueType.STRING;
         }
 
         // Does it have min length or max length -> string
@@ -107,7 +107,7 @@ export class UIElementPropertyExtractor {
         for ( const pType of sequence ) {
             if ( map.has( pType ) ) {
                 // console.log( 'property of type', pType, '=', map.get( pType ) );
-                const entityValue = map.get( pType ).value;
+                const entityValue = map.get( pType )!.value;
                 // console.log( 'entityValue', entityValue );
                 return valueTypeDetector.detect( entityValue?.value || '' );
             }
@@ -123,6 +123,9 @@ export class UIElementPropertyExtractor {
      * @param uie UI Element
      */
     extractLocale( uie: UIElement ): string | null {
+        if ( ! uie ) {
+            return null;
+        }
         const nlpEntity = this.extractPropertyValueAsEntity(
             this.extractProperty( uie, UIPropertyTypes.LOCALE )
         );
@@ -138,6 +141,9 @@ export class UIElementPropertyExtractor {
      * @param uie UI Element
      */
     extractLocaleFormat( uie: UIElement ): string | null {
+        if ( ! uie ) {
+            return null;
+        }
         const nlpEntity = this.extractPropertyValueAsEntity(
             this.extractProperty( uie, UIPropertyTypes.LOCALE_FORMAT )
         );
@@ -158,13 +164,13 @@ export class UIElementPropertyExtractor {
         // Evaluate property 'editable' if defined
         const nlpEntity = this.extractPropertyValueAsEntity( this.extractProperty( uie, UIPropertyTypes.EDITABLE ) );
         if ( isDefined( nlpEntity ) ) {
-            return this.isEntityConsideredTrue( nlpEntity );
+            return this.isEntityConsideredTrue( nlpEntity! );
         }
 
         // Evaluate property 'type' (widget) if defined
         const typeNlpEntity = this.extractPropertyValueAsEntity( this.extractProperty( uie, UIPropertyTypes.TYPE ) );
         if ( isDefined( typeNlpEntity ) ) {
-            return enumUtil.isValue( EditableActionTargets, typeNlpEntity.value );
+            return enumUtil.isValue( EditableActionTargets, typeNlpEntity!.value );
         }
 
         // // Or does not have the property 'editable' but have one of the following properties defined:
@@ -200,12 +206,12 @@ export class UIElementPropertyExtractor {
 
 
     isPropertyConsideredTrue( uie: UIElement, property: string ): boolean {
-        const uip: UIProperty = this.extractProperty( uie, property );
+        const uip: UIProperty | null = this.extractProperty( uie, property );
         const nlpEntity = this.extractPropertyValueAsEntity( uip );
         if ( uip && ! nlpEntity ) {
             return true;
         }
-        return isDefined( nlpEntity ) && this.isEntityConsideredTrue( nlpEntity );
+        return isDefined( nlpEntity ) && this.isEntityConsideredTrue( nlpEntity! );
     }
 
     isEntityConsideredTrue( nlpEntity: NLPEntity ): boolean {
@@ -255,7 +261,7 @@ export class UIElementPropertyExtractor {
      *
      * @param prop UI Property
      */
-    extractPropertyValueAsEntity( prop: UIProperty ): NLPEntity | null {
+    extractPropertyValueAsEntity( prop: UIProperty | null ): NLPEntity | null {
         if ( ! prop ) {
             return null;
         }
@@ -308,7 +314,7 @@ export class UIElementPropertyExtractor {
         for ( const p of properties ) {
             const pType: UIPropertyTypes = p.property as UIPropertyTypes;
             if ( map.has( pType ) ) {
-                map.get( pType ).push( p );
+                map.get( pType )!.push( p );
             } else {
                 map.set( pType, [ p ] );
             }
@@ -429,8 +435,8 @@ export class UIElementPropertyExtractor {
                 if ( ! this.areIncompatible( a, b ) ) {
                     // Add incompatible UI Properties
                     incompatible.push( [
-                        declaredPropertyMap.get( a ),
-                        declaredPropertyMap.get( b )
+                        declaredPropertyMap.get( a )!,
+                        declaredPropertyMap.get( b )!
                     ] );
                 }
             }
@@ -454,7 +460,7 @@ export class UIElementPropertyExtractor {
             // in the properties, there is a problem.
             const operatorSet = new Set( properties
                 .map( p => nlpUtil.entityNamed( Entities.UI_CONNECTOR, p.nlpResult ) )
-                .map( entity => entity.entity )
+                .map( entity => entity!.entity )
             );
             if ( operatorSet.size > 1 ) {
                 incompatible.push( properties );
@@ -463,7 +469,7 @@ export class UIElementPropertyExtractor {
             // Same operator without modifier -> problem
             const modifiers = properties
                 .map( p => nlpUtil.entityNamed( Entities.UI_CONNECTOR_MODIFIER, p.nlpResult ) )
-                .map( entity => entity.entity );
+                .map( entity => entity!.entity );
             if ( modifiers.length != 1 ) { // e.g., 0 or 2
                 incompatible.push( properties );
             }

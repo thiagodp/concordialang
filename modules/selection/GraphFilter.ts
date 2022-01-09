@@ -39,6 +39,11 @@ export class GraphFilter extends EventEmitter {
                 continue;
             }
 
+            if ( ! doc.fileInfo?.path ) {
+                // TO-DO: emit error
+                continue;
+            }
+
             // Add a vertex for the document (overwrites if already exist)
             const fromKey = doc.fileInfo.path;
             newGraph.addVertex( fromKey, doc ); // key, value

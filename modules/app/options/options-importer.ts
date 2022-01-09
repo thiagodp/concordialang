@@ -1,10 +1,10 @@
 import * as enumUtil from 'enum-util';
 import { isAbsolute, resolve } from 'path';
 
-import { CliOnlyOptions } from '../cli/CliOnlyOptions';
-import { isNumber, isString } from '../util/type-checking';
+import { isNumber, isString } from '../../util/type-checking';
 import { AppOptions } from './app-options';
-import { CombinationOptions, VariantSelectionOptions, InvalidSpecialOptions } from './combination-options';
+import { CliOnlyOptions } from './cli-only-options';
+import { CombinationOptions, InvalidSpecialOptions, VariantSelectionOptions } from './combination-options';
 
 /**
  * Copy options
@@ -279,6 +279,8 @@ export function copyOptions(
 			to.plugin = to.pluginAbout;
 		} else if ( isStringNotEmpty( to.pluginInstall ) ) {
 			to.plugin = to.pluginInstall;
+		} else if ( isStringNotEmpty( to.pluginUpdate ) ) {
+			to.plugin = to.pluginUpdate;
 		} else if ( isStringNotEmpty( to.pluginUninstall ) ) {
 			to.plugin = to.pluginUninstall;
 		} else if ( isStringNotEmpty( to.pluginServe ) ) {

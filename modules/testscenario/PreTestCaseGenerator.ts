@@ -159,7 +159,7 @@ export class PreTestCaseGenerator {
         for ( let step of clonedSteps ) {
 
             const references: UIPropertyReference[] = referenceExtractor.extractReferences(
-                step.nlpResult.entities, step.location.line );
+                step.nlpResult ? step.nlpResult.entities : [], step.location.line );
 
             let languageIndependentReferences: UIPropertyReference[] =
                 this.checkUIPropertyReferences( references, languageDictionary, ctx );
@@ -270,7 +270,9 @@ export class PreTestCaseGenerator {
         let uieVariableToDTCMap: UIEVariableToDTCMap = new Map< string, DTCMap >();
         for ( let uie of allAvailableUIElements ) {
             let map = this._dtcAnalyzer.analyzeUIElement( uie, ctx.errors );
-            uieVariableToDTCMap.set( uie.info.fullVariableName, map );
+            if ( map && uie.info ) {
+                uieVariableToDTCMap.set( uie.info.fullVariableName, map );
+            }
         }
         // console.log( 'doc', ctx.doc.fileInfo.path );
         // console.log( 'UIE', stepUIElements.map( uie => uie.name ) );
@@ -306,7 +308,9 @@ export class PreTestCaseGenerator {
                         uieVar, context, ctx.doc, ctx.spec, ctx.errors
                     );
                 } catch ( e ) {
-                    ctx.doc.fileErrors.push( e );
+                    if ( ctx?.doc?.fileErrors ) {
+                        ctx.doc.fileErrors.push( e as Error );
+                    }
                     continue;
                 }
                 // console.log( 'GENERATED', generatedValue, '<'.repeat( 10 ) );
@@ -407,7 +411,7 @@ export class PreTestCaseGenerator {
 
             let before = step.content;
 
-            let [ newContent, comment ] = refReplacer.replaceConstantsWithTheirValues( step.content, step.nlpResult, ctx.spec );
+            let [ newContent, comment ] = refReplacer.replaceConstantsWithTheirValues( step.content, step.nlpResult!, ctx.spec );
 
             // Replace content
             step.content = newContent;
@@ -471,13 +475,13 @@ export class PreTestCaseGenerator {
             return [ step ];
         }
 
-        let uiLiterals = this._nlpUtil.entitiesNamed( Entities.UI_LITERAL, step.nlpResult );
+        let uiLiterals = this._nlpUtil.entitiesNamed( Entities.UI_LITERAL, step.nlpResult! );
         const uiLiteralsCount = uiLiterals.length;
         if ( uiLiteralsCount < 1 ) {
             return [ step ]; // nothing to do
         }
 
-        let uiElements = this._nlpUtil.entitiesNamed( Entities.UI_ELEMENT_REF, step.nlpResult );
+        let uiElements = this._nlpUtil.entitiesNamed( Entities.UI_ELEMENT_REF, step.nlpResult! );
 
         // Create a step with 'fill' step for every UI_LITERAL
 
@@ -514,7 +518,7 @@ export class PreTestCaseGenerator {
             }
 
             let sentence = prefix + ' ' + keywordI + ' ' + inputDataActionEntity.string + ' ';
-            let comment = null;
+            let comment: string | null = null;
 
             if ( Entities.UI_LITERAL === entity.entity ) {
                 sentence += Symbols.UI_LITERAL_PREFIX + entity.value + Symbols.UI_LITERAL_SUFFIX +
@@ -529,7 +533,7 @@ export class PreTestCaseGenerator {
             let newStep: Step = deepcopy( step ) as Step;
             newStep.nodeType = nodeType;
             newStep.content = sentence;
-            newStep.comment = comment;
+            newStep.comment = comment || undefined;
             newStep.location = {
                     // column: step.location.column,
                     column: this._lineChecker.countLeftSpacesAndTabs( sentence ),
@@ -579,7 +583,7 @@ export class PreTestCaseGenerator {
     extractUIElementNamesFromSteps( steps: Step[] ): string[] {
         let uniqueNames = new Set< string >();
         for ( let step of steps ) {
-            let entities: NLPEntity[] = this._nlpUtil.entitiesNamed( Entities.UI_ELEMENT_REF, step.nlpResult );
+            let entities: NLPEntity[] = this._nlpUtil.entitiesNamed( Entities.UI_ELEMENT_REF, step.nlpResult! );
             for ( let e of entities ) {
                 uniqueNames.add( e.value );
             }
@@ -665,8 +669,8 @@ export class PreTestCaseGenerator {
                 localeContext.language, [ step ], ctx.errors, ctx.warnings );
         }
 
-        const dataInputActionEntity: NLPEntity = this.extractDataInputActionEntity( step );
-        if ( null === dataInputActionEntity || this.hasValue( step ) || this.hasNumber( step ) ) {
+        const dataInputActionEntity: NLPEntity | null = this.extractDataInputActionEntity( step );
+        if ( ! dataInputActionEntity || this.hasValue( step ) || this.hasNumber( step ) ) {
             let steps = [ step ];
             this.replaceUIElementsWithUILiterals(
                 steps, localeContext.language, languageDictionary, ctx, UIElementReplacementOption.ALL
@@ -718,7 +722,7 @@ export class PreTestCaseGenerator {
 
             let [ featureName, uieNameWithoutFeature ] = uieNameHandler.extractNamesOf( uieName );
             let variable: string;
-            let uie: UIElement;
+            let uie: UIElement | null;
             if ( isDefined( featureName ) ) {
                 variable = uieName;
                 uie = ctx.spec.uiElementByVariable( uieName );
@@ -729,7 +733,7 @@ export class PreTestCaseGenerator {
 
             let value = uieVariableToValueMap.get( variable );
             if ( ! isDefined( value ) ) {
-                const fileName = basename( ctx.doc.fileInfo.path );
+                const fileName = ctx?.doc?.fileInfo?.path ? basename( ctx.doc.fileInfo.path ) : 'unknown file';
                 const locStr = '(' + step.location.line + ',' + step.location.column + ')';
                 const msg = 'Could not retrieve a value from ' +
                     Symbols.UI_ELEMENT_PREFIX + variable + Symbols.UI_ELEMENT_SUFFIX +
@@ -740,7 +744,7 @@ export class PreTestCaseGenerator {
                 value = '';
             }
 
-            let uieLiteral = isDefined( uie ) && isDefined( uie.info ) ? uie.info.uiLiteral : null;
+            let uieLiteral = uie?.info?.uiLiteral || null;
             // console.log( 'uieName', uieName, 'uieLiteral', uieLiteral, 'variable', variable, 'doc', ctx.doc.fileInfo.path );
 
 			// It happens when the UI Element is used in a step but it is not declared
@@ -759,11 +763,11 @@ export class PreTestCaseGenerator {
             }
 
 
-            const propertyMap = this._uiePropExtractor.mapFirstPropertyOfEachType( uie );
+            const propertyMap = this._uiePropExtractor.mapFirstPropertyOfEachType( uie! );
             const valueType = this._uiePropExtractor.guessDataType( propertyMap );
 
-            const uieLocale: string = this._uiePropExtractor.extractLocale( uie ) || localeContext.language;
-            const uieLocaleFormat: string | null = this._uiePropExtractor.extractLocaleFormat( uie );
+            const uieLocale: string = this._uiePropExtractor.extractLocale( uie! ) || localeContext.language;
+            const uieLocaleFormat: string | null = this._uiePropExtractor.extractLocaleFormat( uie! );
             const uieLocaleContext = localeContext.clone()
                 .withLocale( uieLocale )
                 .withLocaleFormat( uieLocaleFormat );
@@ -842,7 +846,8 @@ export class PreTestCaseGenerator {
                     line: line++,
                     filePath: step.location.filePath
                 } as Location;
-            newStep.isInvalidValue = ( isDefined( uieTestPlan ) && uieTestPlan.result === DTCAnalysisResult.INVALID );
+
+            newStep.isInvalidValue = isDefined( uieTestPlan ) && uieTestPlan!.result === DTCAnalysisResult.INVALID;
 
             // console.log( newStep );
 
@@ -1010,7 +1015,7 @@ export class PreTestCaseGenerator {
     ): Promise< void > {
         const extractor = new UIPropertyReferenceExtractor();
         const replacer = new UIPropertyReferenceReplacer();
-        const valueEntities = this._nlpUtil.entitiesNamed( Entities.VALUE, step.nlpResult );
+        const valueEntities = this._nlpUtil.entitiesNamed( Entities.VALUE, step.nlpResult! );
 
         const contentBefore: string = step.content;
 
@@ -1068,13 +1073,16 @@ export class PreTestCaseGenerator {
      * @param ctx Generation context.
      */
     checkUIPropertyReferences(
-        references: UIPropertyReference[], languageDictionary: LanguageDictionary, ctx: GenContext ): UIPropertyReference[] {
+        references: UIPropertyReference[],
+        languageDictionary: LanguageDictionary,
+        ctx: GenContext
+    ): UIPropertyReference[] {
 
         let languageIndependentReferences: UIPropertyReference[] = [];
         for ( let uipRef of references ) {
 
             if ( uipRef.location && ! uipRef.location.filePath ) {
-                uipRef.location.filePath = ctx.doc.fileInfo.path;
+                uipRef.location.filePath = ctx?.doc?.fileInfo?.path || 'unknow file';
             }
 
             this.transformLanguageDependentIntoLanguageIndependent( uipRef, languageDictionary );
@@ -1147,6 +1155,9 @@ export class PreTestCaseGenerator {
     //
 
     extractDataInputActionEntity( step: Step ): NLPEntity | null {
+        if ( ! step || ! step.nlpResult ) {
+            return null;
+        }
         return step.nlpResult.entities
             .find( e => e.entity === Entities.UI_ACTION && this.isDataInputAction( e.value ) ) || null;
     }

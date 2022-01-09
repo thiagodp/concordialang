@@ -1,85 +1,70 @@
-import { AppOptions } from '../app/app-options';
+import { AppOptions } from '../app/options/app-options';
+import { CliOnlyOptions } from '../app/options/cli-only-options';
 import { filterPluginsByName } from '../plugin/plugin-filter';
-import { PLUGIN_PREFIX, sortPluginsByName } from '../plugin/PluginData';
+import { addPluginPrefixIfNeeded, sortPluginsByName, splitPluginNames } from '../plugin/PluginData';
 import { PluginFinder } from '../plugin/PluginFinder';
 import { PluginListener } from '../plugin/PluginListener';
-import { CliOnlyOptions } from './CliOnlyOptions';
-import { PluginController } from './PluginController';
+import { PluginController } from './plugin-controller';
 
 export async function processPluginOptions(
 	options: AppOptions & CliOnlyOptions,
 	pluginFinder: PluginFinder,
 	pluginController: PluginController,
 	drawer: PluginListener
-	): Promise< boolean > {
+): Promise< void > {
 
 	if ( options.pluginList ) {
 		try {
 			const plugins = sortPluginsByName( await pluginFinder.find() );
 			drawer.drawPluginList( plugins );
-			return true;
 		} catch ( e ) {
-			drawer.showError( e );
-			return false;
+			drawer.showError( e as Error  );
+			return;
 		}
 	}
 
 	// Empty plugin name?
-	if ( ! options.plugin || options.plugin.trim().length < 1 ) {
+	if ( ! options.plugin ||
+		( typeof options.plugin === 'string' && options.plugin.trim().length < 1 ) ||
+		options.plugin.length < 1
+	) {
 		drawer.showError( new Error( 'Empty plugin name.' ) );
-		return false;
+		return;
 	}
 
-	let pluginName: string = options.plugin;
-	if ( ! pluginName.includes( PLUGIN_PREFIX ) ) {
-		pluginName = PLUGIN_PREFIX + pluginName;
+	const pluginNames: string[] = ( ( typeof options.plugin === 'string' )
+		? splitPluginNames( options.plugin )
+		: options.plugin ).map( addPluginPrefixIfNeeded );
+
+	const existingPlugins = await pluginFinder.find();
+
+	const filteredPlugins = await filterPluginsByName( existingPlugins, pluginNames, false );
+
+	// No plug-ins were found
+	if ( filteredPlugins.length < 1 ) {
+		drawer.showMessageNoPluginsFound( pluginNames );
+		return;
 	}
 
-	const all = await pluginFinder.find();
-	let pluginData = await filterPluginsByName( all, pluginName, false );
+	// Process each plug-in
 
-	// Installation (ok whether it exists or not)
-	if ( options.pluginInstall ) {
+	for ( const pluginData of filteredPlugins ) {
+		const name = pluginData.name;
 		try {
-			await pluginController.installByName( all, pluginData, pluginName );
+			if ( options.pluginInstall ) {
+				await pluginController.installByName(
+					existingPlugins, pluginData, name ); // It's ok whether it exists or not
+			} else if ( options.pluginUpdate ) {
+				await pluginController.updateByName( name );
+			} else if ( options.pluginUninstall ) {
+				await pluginController.uninstallByName( name );
+			} else if ( options.pluginAbout ) {
+				drawer.drawSinglePlugin( pluginData );
+			} else if ( options.pluginServe ) {
+				await pluginController.serve( pluginData );
+			}
 		} catch ( e ) {
-			drawer.showError( e );
+			drawer.showError( e as Error );
 		}
-		return true;
 	}
-
-	// Plugin not found ?
-	if ( ! pluginData ) {
-		drawer.showMessagePluginNotFound( pluginName );
-		return false;
-	}
-
-	if ( options.pluginUninstall ) {
-		try {
-			await pluginController.uninstallByName( pluginName );
-		} catch ( e ) {
-			drawer.showError( e );
-		}
-		return true;
-	}
-
-	if ( options.pluginAbout ) {
-		drawer.drawSinglePlugin( pluginData );
-		return true;
-	}
-
-	if ( options.pluginServe ) {
-		try {
-			await pluginController.serve( pluginData );
-		} catch ( e ) {
-			drawer.showError( e );
-		}
-		return true;
-	}
-
-	return true;
 }
-
-
-
-

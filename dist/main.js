@@ -4,6 +4,7 @@ import _case from 'case';
 import { cosmiconfig } from 'cosmiconfig';
 import { distance } from 'damerau-levenshtein-js';
 import * as fs from 'fs';
+import fsExtra from 'fs-extra';
 import readPkgUp from 'read-pkg-up';
 import semverDiff from 'semver-diff';
 import { UpdateNotifier } from 'update-notifier';
@@ -44,7 +45,25 @@ import figures from 'figures';
 import * as readline from 'readline';
 import { sprintf } from 'sprintf-js';
 import terminalLink from 'terminal-link';
-import * as inquirer from 'inquirer';
+import inquirer from 'inquirer';
+
+function _extends() {
+  _extends = Object.assign || function (target) {
+    for (var i = 1; i < arguments.length; i++) {
+      var source = arguments[i];
+
+      for (var key in source) {
+        if (Object.prototype.hasOwnProperty.call(source, key)) {
+          target[key] = source[key];
+        }
+      }
+    }
+
+    return target;
+  };
+
+  return _extends.apply(this, arguments);
+}
 
 function sortErrorsByLocation(errors) {
   const compare = (a, b) => {
@@ -2728,24 +2747,6 @@ class DatabasePropertyRecognizer {
     return new SyntaxRuleBuilder().build(DATABASE_PROPERTY_SYNTAX_RULES, DEFAULT_DATABASE_PROPERTY_SYNTAX_RULE);
   }
 
-}
-
-function _extends() {
-  _extends = Object.assign || function (target) {
-    for (var i = 1; i < arguments.length; i++) {
-      var source = arguments[i];
-
-      for (var key in source) {
-        if (Object.prototype.hasOwnProperty.call(source, key)) {
-          target[key] = source[key];
-        }
-      }
-    }
-
-    return target;
-  };
-
-  return _extends.apply(this, arguments);
 }
 
 var Actions;
@@ -11358,6 +11359,7 @@ const DEFAULT_EXTENSION_TEST_CASE = '.testcase';
 const DEFAULT_LANGUAGE = 'en';
 const DEFAULT_ENCODING = 'utf8';
 const DEFAULT_LINE_BREAKER = "\n";
+const DEFAULT_PACKAGE_MANAGER = 'npm';
 const DEFAULT_CASE_UI = CaseType.CAMEL.toString();
 CaseType.SNAKE.toString();
 const DEFAULT_TC_INDENTER = '  ';
@@ -13307,7 +13309,7 @@ class RegexBasedDataGenerator {
       this._randomTriesToInvalidValues = 0;
     }
 
-    if (this._maxStringSize <= 0) {
+    if (this._maxStringSize !== undefined && this._maxStringSize <= 0) {
       this._maxStringSize = StringLimits.MAX;
     }
   }
@@ -13566,7 +13568,7 @@ class UIElementPropertyExtractor {
 
     if (map.has(UIPropertyTypes.DATA_TYPE)) {
       const entityValue = map.get(UIPropertyTypes.DATA_TYPE).value;
-      return this.stringToValueType(entityValue.value.toString());
+      return this.stringToValueType(entityValue.value.toString()) || ValueType.STRING;
     }
 
     if (map.has(UIPropertyTypes.MIN_LENGTH) || map.has(UIPropertyTypes.MAX_LENGTH)) {
@@ -13587,6 +13589,10 @@ class UIElementPropertyExtractor {
   }
 
   extractLocale(uie) {
+    if (!uie) {
+      return null;
+    }
+
     const nlpEntity = this.extractPropertyValueAsEntity(this.extractProperty(uie, UIPropertyTypes.LOCALE));
 
     if (!nlpEntity) {
@@ -13597,6 +13603,10 @@ class UIElementPropertyExtractor {
   }
 
   extractLocaleFormat(uie) {
+    if (!uie) {
+      return null;
+    }
+
     const nlpEntity = this.extractPropertyValueAsEntity(this.extractProperty(uie, UIPropertyTypes.LOCALE_FORMAT));
 
     if (!nlpEntity) {
@@ -13935,7 +13945,7 @@ class DataTestCaseAnalyzer {
     const pFormat = propertiesMap.get(UIPropertyTypes.FORMAT) || null;
 
     const propertyHasTagGenerateOnlyValidValues = p => {
-      return p.tags && p.tags.length > 0 && p.tags.findIndex(tag => tag.subType === ReservedTags.GENERATE_ONLY_VALID_VALUES) >= 0;
+      return isDefined(p.tags) && p.tags.length > 0 && p.tags.findIndex(tag => tag.subType === ReservedTags.GENERATE_ONLY_VALID_VALUES) >= 0;
     };
 
     const pRequiredHasTagGenerateOnlyValidValues = pRequired && propertyHasTagGenerateOnlyValidValues(pRequired);
@@ -14459,6 +14469,18 @@ function makePackageInstallCommand(pkgName, tool = 'npm') {
       return 'npm i -D ' + pkgName + ' --no-fund --no-audit --loglevel error --color=always';
   }
 }
+function makePackageUpdateCommand(pkgName, tool = 'npm') {
+  switch (tool) {
+    case 'yarn':
+      return 'yarn upgrade ' + pkgName;
+
+    case 'pnpm':
+      return 'pnpm up ' + pkgName;
+
+    default:
+      return 'npm update ' + pkgName + ' --no-fund --no-audit --loglevel error --color=always';
+  }
+}
 function makePackageUninstallCommand(pkgName, tool = 'npm') {
   switch (tool) {
     case 'yarn':
@@ -14527,11 +14549,19 @@ function removeDuplicated(arr, areEqual = (a, b) => a === b) {
   return removeCount;
 }
 
+const SUCCESSFUL = 0;
+const NOT_SUCCESSFUL = 1;
 async function runCommand(command) {
   const options = {
     shell: true
   };
-  let cmds = command.match(/[^"\s]+|"(?:\\"|[^"])+"/g).map(expr => {
+  const matchArray = command.match(/[^"\s]+|"(?:\\"|[^"])+"/g);
+
+  if (!matchArray) {
+    throw new Error('Invalid command syntax: ' + command);
+  }
+
+  let cmds = matchArray.map(expr => {
     return expr.charAt(0) === '"' && expr.charAt(expr.length - 1) === '"' ? expr.slice(1, -1) : expr;
   });
   const runCMD = cmds[0];
@@ -14611,7 +14641,7 @@ function millisToObject(ms) {
 function millisObjectToString(o, i18n, separator) {
   i18n = i18n || {};
   separator = separator || '';
-  var s = [];
+  let s = [];
   if (o.day) s.push(o.day + (i18n.day !== undefined ? i18n.day : 'd'));
   if (o.hour) s.push(o.hour + (i18n.hour !== undefined ? i18n.hour : 'h'));
   if (o.min) s.push(o.min + (i18n.min !== undefined ? i18n.min : 'm'));
@@ -14648,7 +14678,7 @@ class UIElementNameHandler {
   }
 
   makeVariableName(featureName, uiElementName, surroundVariable = false) {
-    const variable = (isDefined(featureName) ? featureName + Symbols.FEATURE_TO_UI_ELEMENT_SEPARATOR : '') + uiElementName;
+    const variable = (featureName ? featureName + Symbols.FEATURE_TO_UI_ELEMENT_SEPARATOR : '') + uiElementName;
 
     if (!surroundVariable) {
       return variable;
@@ -15235,13 +15265,13 @@ class DocumentUtil {
   }
 
   mapVariantsOf(doc) {
-    let map = new Map();
+    const map = new Map();
 
-    if (!isDefined(doc.feature)) {
+    if (!doc.feature) {
       return map;
     }
 
-    for (let sc of doc.feature.scenarios) {
+    for (let sc of doc.feature.scenarios || []) {
       for (let v of sc.variants || []) {
         map.set(v, sc);
       }
@@ -15253,8 +15283,8 @@ class DocumentUtil {
   findUIElementInTheDocument(variable, doc) {
     const [featureName, uiElementName] = this._uieNameHandler.extractNamesOf(variable);
 
-    if (isDefined(featureName)) {
-      if (!isDefined(doc.feature)) {
+    if (featureName) {
+      if (!doc.feature) {
         return null;
       }
 
@@ -15263,9 +15293,13 @@ class DocumentUtil {
       }
     }
 
+    if (!uiElementName) {
+      return null;
+    }
+
     const lowerCasedUIElementName = uiElementName.toLowerCase();
 
-    if (isDefined(doc.feature)) {
+    if (doc.feature) {
       for (let uie of doc.feature.uiElements || []) {
         if (uie.name.toLowerCase() === lowerCasedUIElementName) {
           if (!uie.info) {
@@ -15299,7 +15333,7 @@ class DocumentUtil {
       const uiLiteral = this._uiePropExtractor.extractId(uie, caseOption);
 
       if (!uie.info) {
-        uie.info = new UIElementInfo(doc, uiLiteral, null);
+        uie.info = new UIElementInfo(doc, uiLiteral);
       }
 
       const variableName = this._uieNameHandler.makeVariableName(null, uie.name);
@@ -15331,7 +15365,7 @@ class DocumentUtil {
   extractDocumentVariables(doc, includeGlobals = false) {
     let variables = [];
 
-    if (includeGlobals && (doc.uiElements || []).length > 0) {
+    if (includeGlobals && doc.uiElements && doc.uiElements.length > 0) {
       for (let uie of doc.uiElements) {
         variables.push(uie.name);
       }
@@ -15343,7 +15377,7 @@ class DocumentUtil {
       return variables;
     }
 
-    for (let uie of doc.feature.uiElements || []) {
+    for (let uie of (doc.feature || {}).uiElements || []) {
       variables.push(this._uieNameHandler.makeVariableName(featureName, uie.name));
     }
 
@@ -15353,7 +15387,7 @@ class DocumentUtil {
   extractUIElements(doc, includeGlobals = false) {
     let elements = [];
 
-    if (includeGlobals && (doc.uiElements || []).length > 0) {
+    if (includeGlobals && doc.uiElements && doc.uiElements.length > 0) {
       for (let uie of doc.uiElements) {
         elements.push(uie);
       }
@@ -15457,6 +15491,12 @@ class AugmentedSpec extends Spec {
   }
 
   replaceDocByIndex(index, newDoc) {
+    var _newDoc$fileInfo;
+
+    if (!(newDoc != null && (_newDoc$fileInfo = newDoc.fileInfo) != null && _newDoc$fileInfo.path)) {
+      return false;
+    }
+
     const path = newDoc.fileInfo.path;
     const pathIndex = this.indexOfDocWithPath(path);
 
@@ -15501,7 +15541,7 @@ class AugmentedSpec extends Spec {
   assureDoc(doc) {
     let mc = this._docFullyMapped.get(doc);
 
-    if (!isDefined(mc)) {
+    if (!mc) {
       mc = new MappedContent();
 
       this._docFullyMapped.set(doc, mc);
@@ -15592,6 +15632,8 @@ class AugmentedSpec extends Spec {
   }
 
   mapDocumentFeatures(doc) {
+    var _doc$feature, _doc$feature$location, _doc$fileInfo2;
+
     if (!doc || this.assureDoc(doc).feature) {
       return;
     }
@@ -15605,8 +15647,8 @@ class AugmentedSpec extends Spec {
       this._featureCache = [];
     }
 
-    if (isDefined(doc.feature.location) && !isDefined(doc.feature.location.filePath) && isDefined(doc.fileInfo)) {
-      doc.feature.location.filePath = doc.fileInfo.path || '';
+    if (!(doc != null && (_doc$feature = doc.feature) != null && (_doc$feature$location = _doc$feature.location) != null && _doc$feature$location.filePath) && (_doc$fileInfo2 = doc.fileInfo) != null && _doc$fileInfo2.path) {
+      doc.feature.location.filePath = doc.fileInfo.path;
     }
 
     this._featureCache.push(doc.feature);
@@ -15648,7 +15690,7 @@ class AugmentedSpec extends Spec {
   }
 
   docWithPath(filePath, referencePath = '.', rebuildCache = false) {
-    if (!isDefined(this._pathToDocCache) || rebuildCache) {
+    if (!this._pathToDocCache || rebuildCache) {
       this.rebuildDocPath();
     }
 
@@ -15676,12 +15718,12 @@ class AugmentedSpec extends Spec {
     return this.findByName(name, this.features(rebuildCache));
   }
 
-  uiElementByVariable(variable, doc = null) {
-    if (isDefined(doc)) {
+  uiElementByVariable(variable, doc) {
+    if (doc) {
       const docUtil = new DocumentUtil();
       const ui = docUtil.findUIElementInTheDocument(variable, doc);
 
-      if (isDefined(ui)) {
+      if (ui) {
         return ui;
       }
 
@@ -15697,15 +15739,17 @@ class AugmentedSpec extends Spec {
     }
 
     const lowerCasedName = name.toLowerCase();
-    return valueOrNull(nodes.find(n => n.name ? n.name.toLowerCase() === lowerCasedName : false));
+    const r = nodes.find(n => n.name ? n.name.toLowerCase() === lowerCasedName : false);
+    return undefined === r ? null : r;
   }
 
   constantValue(name) {
-    return valueOrNull(this.constantNameToValueMap().get(name));
+    const r = this.constantNameToValueMap().get(name);
+    return undefined === r ? null : r;
   }
 
   databases(rebuildCache = false) {
-    if (isDefined(this._databaseCache) && !rebuildCache) {
+    if (this._databaseCache && !rebuildCache) {
       return this._databaseCache;
     }
 
@@ -15719,11 +15763,11 @@ class AugmentedSpec extends Spec {
   }
 
   isConstantCacheFilled() {
-    return isDefined(this._constantCache);
+    return !!this._constantCache;
   }
 
   constants(rebuildCache = false) {
-    if (this.isConstantCacheFilled() && !rebuildCache) {
+    if (this._constantCache && !rebuildCache) {
       return this._constantCache;
     }
 
@@ -15753,7 +15797,7 @@ class AugmentedSpec extends Spec {
   }
 
   tables(rebuildCache = false) {
-    if (isDefined(this._tableCache) && !rebuildCache) {
+    if (this._tableCache && !rebuildCache) {
       return this._tableCache;
     }
 
@@ -15771,7 +15815,7 @@ class AugmentedSpec extends Spec {
   }
 
   features(rebuildCache = false) {
-    if (isDefined(this._featureCache) && !rebuildCache) {
+    if (this._featureCache && !rebuildCache) {
       return this._featureCache;
     }
 
@@ -15844,7 +15888,9 @@ class AugmentedSpec extends Spec {
     const docUtil = new DocumentUtil();
 
     for (let impDoc of doc.imports) {
-      let otherDoc = this.docWithPath(impDoc.value, doc.fileInfo.path);
+      var _doc$fileInfo3;
+
+      let otherDoc = this.docWithPath(impDoc.value, (_doc$fileInfo3 = doc.fileInfo) == null ? void 0 : _doc$fileInfo3.path);
 
       if (!otherDoc) {
         continue;
@@ -15864,7 +15910,9 @@ class AugmentedSpec extends Spec {
     let docs = [];
 
     for (let impDoc of doc.imports || []) {
-      let otherDoc = this.docWithPath(impDoc.value, doc.fileInfo.path);
+      var _doc$fileInfo4;
+
+      let otherDoc = this.docWithPath(impDoc.value, (_doc$fileInfo4 = doc.fileInfo) == null ? void 0 : _doc$fileInfo4.path);
 
       if (!otherDoc) {
         continue;
@@ -15882,7 +15930,9 @@ class AugmentedSpec extends Spec {
     variables.push.apply(variables, docUtil.extractDocumentVariables(doc, includeGlobals));
 
     for (let impDoc of doc.imports || []) {
-      let otherDoc = this.docWithPath(impDoc.value, doc.fileInfo.path);
+      var _doc$fileInfo5;
+
+      let otherDoc = this.docWithPath(impDoc.value, (_doc$fileInfo5 = doc.fileInfo) == null ? void 0 : _doc$fileInfo5.path);
 
       if (!otherDoc) {
         continue;
@@ -15897,7 +15947,7 @@ class AugmentedSpec extends Spec {
   extractUIElementsFromDocumentAndImports(doc, includeGlobals = false) {
     let elements = this._docToAccessibleUIElementsCache.get(doc) || null;
 
-    if (isDefined(elements)) {
+    if (elements) {
       return elements;
     }
 
@@ -15906,7 +15956,9 @@ class AugmentedSpec extends Spec {
     elements.push.apply(elements, docUtil.extractUIElements(doc, includeGlobals));
 
     for (let impDoc of doc.imports || []) {
-      let otherDoc = this.docWithPath(impDoc.value, doc.fileInfo.path);
+      var _doc$fileInfo6;
+
+      let otherDoc = this.docWithPath(impDoc.value, (_doc$fileInfo6 = doc.fileInfo) == null ? void 0 : _doc$fileInfo6.path);
 
       if (!otherDoc) {
         continue;
@@ -16029,8 +16081,10 @@ class UIElementValueGenerator {
   }
 
   async generate(uieName, context, doc, spec, errors) {
+    var _doc$feature;
+
     const uieNameHandler = new UIElementNameHandler();
-    const featureName = isDefined(doc) && isDefined(doc.feature) ? doc.feature.name : null;
+    const featureName = (doc == null ? void 0 : (_doc$feature = doc.feature) == null ? void 0 : _doc$feature.name) || null;
     const fullVariableName = featureName !== null && null === uieNameHandler.extractFeatureNameOf(uieName) ? uieNameHandler.makeVariableName(featureName, uieName) : uieName;
     const cachedValue = valueOrNull(context.uieVariableToValueMap.get(fullVariableName));
 
@@ -16041,7 +16095,10 @@ class UIElementValueGenerator {
     let uie = spec.uiElementByVariable(uieName, doc);
 
     if (!uie) {
-      const msg = 'Could not find UI Element: ' + uieName + '. It was referenced in "' + doc.fileInfo.path + '".';
+      var _doc$fileInfo;
+
+      const filePath = (doc == null ? void 0 : (_doc$fileInfo = doc.fileInfo) == null ? void 0 : _doc$fileInfo.path) || 'Unknown file';
+      const msg = 'Could not find UI Element: ' + uieName + '. It was referenced in "' + filePath + '".';
       const err = new RuntimeException(msg);
       errors.push(err);
       return null;
@@ -16075,7 +16132,8 @@ class UIElementValueGenerator {
 
     if (isDefined(pFormat)) {
       try {
-        cfg.format = (await this.resolvePropertyValue(UIPropertyTypes.FORMAT, pFormat, pFormat.value, context, doc, spec, errors)).toString();
+        const v = await this.resolvePropertyValue(UIPropertyTypes.FORMAT, pFormat, pFormat.value, context, doc, spec, errors);
+        cfg.format = v ? v.toString() : null;
       } catch (e) {
         const msg = msgPropertyValueError + UIPropertyTypes.FORMAT;
         errors.push(new RuntimeException(msg));
@@ -16187,9 +16245,11 @@ class UIElementValueGenerator {
     try {
       value = await this._dataGen.generate(dtc, cfg);
     } catch (e) {
+      var _doc$fileInfo2;
+
       const msg = 'Error generating value for "' + uieName + '": ' + e.message;
 
-      if (!uie.location.filePath) {
+      if (!uie.location.filePath && doc != null && (_doc$fileInfo2 = doc.fileInfo) != null && _doc$fileInfo2.path) {
         uie.location.filePath = doc.fileInfo.path;
       }
 
@@ -16201,11 +16261,13 @@ class UIElementValueGenerator {
   }
 
   async resolvePropertyValue(propType, owner, propertyValue, context, doc, spec, errors) {
+    var _doc$feature2;
+
     if (!propertyValue) {
       return null;
     }
 
-    const featureName = isDefined(doc) && isDefined(doc.feature) ? doc.feature.name : null;
+    const featureName = doc == null ? void 0 : (_doc$feature2 = doc.feature) == null ? void 0 : _doc$feature2.name;
 
     switch (propertyValue.entity) {
       case Entities.CONSTANT:
@@ -16221,9 +16283,11 @@ class UIElementValueGenerator {
 
       case Entities.UI_ELEMENT_REF:
         {
+          var _uie$info;
+
           const uie = propertyValue.references[0];
 
-          if (isDefined(uie) && isDefined(uie.info) && isDefined(uie.info.fullVariableName)) {
+          if (uie != null && (_uie$info = uie.info) != null && _uie$info.fullVariableName) {
             let value = valueOrNull(context.uieVariableToValueMap.get(uie.info.fullVariableName));
 
             if (!isDefined(value)) {
@@ -16232,7 +16296,7 @@ class UIElementValueGenerator {
               } catch (e) {}
             }
 
-            return value;
+            return undefined === value ? null : value;
           }
 
           return null;
@@ -16329,8 +16393,14 @@ class UIElementValueGenerator {
         if (!uie) {
           fullVariableName = uieNameHandler.makeVariableName(currentFeatureName, variable);
         } else {
-          fullVariableName = uie.info.fullVariableName;
+          var _uie$info2;
+
+          fullVariableName = (_uie$info2 = uie.info) == null ? void 0 : _uie$info2.fullVariableName;
         }
+      }
+
+      if (!fullVariableName) {
+        continue;
       }
 
       let value = valueOrNull(context.uieVariableToValueMap.get(fullVariableName));
@@ -16482,7 +16552,7 @@ class UIElementValueGenerator {
       return data;
     }
 
-    return !data ? null : data[0] || null;
+    return undefined === data ? null : data[0] || null;
   }
 
 }
@@ -16754,7 +16824,7 @@ class TargetTypeUtil {
       return [];
     }
 
-    let targetTypes = step.targetTypes.slice(0);
+    let targetTypes = (step.targetTypes || []).slice(0);
 
     for (let e of step.nlpResult.entities || []) {
       switch (e.entity) {
@@ -16801,7 +16871,7 @@ class ReferenceReplacer {
     const valueTypeDetector = new ValueTypeDetector();
     let constants = [];
 
-    for (let e of nlpResult.entities || []) {
+    for (let e of (nlpResult || {}).entities || []) {
       if (Entities.CONSTANT === e.entity) {
         let valueContent = spec.constantNameToValueMap().get(e.value);
 
@@ -16825,13 +16895,13 @@ class ReferenceReplacer {
     let uiElements = [];
     const targetTypeUtil = new TargetTypeUtil();
 
-    for (let e of nlpResult.entities || []) {
+    for (let e of (nlpResult || {}).entities || []) {
       if (Entities.UI_ELEMENT_REF != e.entity) {
         continue;
       }
 
       const ui = spec.uiElementByVariable(e.value, doc);
-      let literalName = isDefined(ui) && isDefined(ui.info) ? ui.info.uiLiteral : convertCase(e.value, uiLiteralCaseOption);
+      let literalName = ui && ui.info ? ui.info.uiLiteral : convertCase(e.value, uiLiteralCaseOption);
       const uiLiteral = Symbols.UI_LITERAL_PREFIX + literalName + Symbols.UI_LITERAL_SUFFIX;
       let targetType = '';
 
@@ -17043,7 +17113,7 @@ class UIPropertyReferenceReplacer {
 
     for (let uipRef of uiePropertyReferences || []) {
       if (uipRef.property != UIPropertyTypes.VALUE) {
-        const fileName = basename(ctx.doc.fileInfo.path);
+        const fileName = ctx.doc.fileInfo ? basename(ctx.doc.fileInfo.path) : 'unknown file';
         const locStr = '(' + step.location.line + ',' + step.location.column + ')';
         const msg = 'Could not retrieve a value from ' + Symbols.UI_ELEMENT_PREFIX + uipRef.uiElementName + Symbols.UI_PROPERTY_REF_SEPARATOR + uipRef.property + Symbols.UI_ELEMENT_SUFFIX + ' in ' + fileName + ' ' + locStr + '. Not supported yet.';
         const err = new Warning(msg);
@@ -17062,6 +17132,10 @@ class UIPropertyReferenceReplacer {
       } else {
         uie = ctx.spec.uiElementByVariable(uieName, ctx.doc);
         variable = !uie ? uieName : !uie.info ? uieName : uie.info.fullVariableName;
+      }
+
+      if (!uie) {
+        continue;
       }
 
       let value = uieVariableToValueMap.get(variable);
@@ -17145,7 +17219,7 @@ class PreTestCaseGenerator {
     const referenceExtractor = new UIPropertyReferenceExtractor();
 
     for (let step of clonedSteps) {
-      const references = referenceExtractor.extractReferences(step.nlpResult.entities, step.location.line);
+      const references = referenceExtractor.extractReferences(step.nlpResult ? step.nlpResult.entities : [], step.location.line);
       let languageIndependentReferences = this.checkUIPropertyReferences(references, languageDictionary, ctx);
 
       if (!step.uiePropertyReferences) {
@@ -17181,7 +17255,9 @@ class PreTestCaseGenerator {
     for (let uie of allAvailableUIElements) {
       let map = this._dtcAnalyzer.analyzeUIElement(uie, ctx.errors);
 
-      uieVariableToDTCMap.set(uie.info.fullVariableName, map);
+      if (map && uie.info) {
+        uieVariableToDTCMap.set(uie.info.fullVariableName, map);
+      }
     }
 
     let allTestPlans = [];
@@ -17203,7 +17279,12 @@ class PreTestCaseGenerator {
         try {
           generatedValue = await this._uieValueGen.generate(uieVar, context, ctx.doc, ctx.spec, ctx.errors);
         } catch (e) {
-          ctx.doc.fileErrors.push(e);
+          var _ctx$doc;
+
+          if (ctx != null && (_ctx$doc = ctx.doc) != null && _ctx$doc.fileErrors) {
+            ctx.doc.fileErrors.push(e);
+          }
+
           continue;
         }
 
@@ -17347,7 +17428,7 @@ class PreTestCaseGenerator {
       let newStep = deepcopy(step);
       newStep.nodeType = nodeType;
       newStep.content = sentence;
-      newStep.comment = comment;
+      newStep.comment = comment || undefined;
       newStep.location = {
         column: this._lineChecker.countLeftSpacesAndTabs(sentence),
         line: line++,
@@ -17442,7 +17523,7 @@ class PreTestCaseGenerator {
 
     const dataInputActionEntity = this.extractDataInputActionEntity(step);
 
-    if (null === dataInputActionEntity || this.hasValue(step) || this.hasNumber(step)) {
+    if (!dataInputActionEntity || this.hasValue(step) || this.hasNumber(step)) {
       let steps = [step];
       this.replaceUIElementsWithUILiterals(steps, localeContext.language, languageDictionary, ctx, UIElementReplacementOption.ALL);
       return [steps, []];
@@ -17472,6 +17553,8 @@ class PreTestCaseGenerator {
     const uieNameHandler = new UIElementNameHandler();
 
     for (let entity of uieEntities) {
+      var _uie, _uie$info;
+
       if (count > 0) {
         nodeType = NodeTypes.STEP_AND;
         prefix = prefixAnd;
@@ -17493,14 +17576,16 @@ class PreTestCaseGenerator {
       let value = uieVariableToValueMap.get(variable);
 
       if (!isDefined(value)) {
-        const fileName = basename(ctx.doc.fileInfo.path);
+        var _ctx$doc2, _ctx$doc2$fileInfo;
+
+        const fileName = ctx != null && (_ctx$doc2 = ctx.doc) != null && (_ctx$doc2$fileInfo = _ctx$doc2.fileInfo) != null && _ctx$doc2$fileInfo.path ? basename(ctx.doc.fileInfo.path) : 'unknown file';
         const locStr = '(' + step.location.line + ',' + step.location.column + ')';
         const msg = 'Could not retrieve a value from ' + Symbols.UI_ELEMENT_PREFIX + variable + Symbols.UI_ELEMENT_SUFFIX + ' in ' + fileName + ' ' + locStr + '. It will receive an empty value.';
         ctx.warnings.push(new Warning(msg));
         value = '';
       }
 
-      let uieLiteral = isDefined(uie) && isDefined(uie.info) ? uie.info.uiLiteral : null;
+      let uieLiteral = ((_uie = uie) == null ? void 0 : (_uie$info = _uie.info) == null ? void 0 : _uie$info.uiLiteral) || null;
 
       if (null === uieLiteral) {
         uieLiteral = convertCase(variable, this.uiLiteralCaseOption);
@@ -17698,7 +17783,9 @@ class PreTestCaseGenerator {
 
     for (let uipRef of references) {
       if (uipRef.location && !uipRef.location.filePath) {
-        uipRef.location.filePath = ctx.doc.fileInfo.path;
+        var _ctx$doc3, _ctx$doc3$fileInfo;
+
+        uipRef.location.filePath = (ctx == null ? void 0 : (_ctx$doc3 = ctx.doc) == null ? void 0 : (_ctx$doc3$fileInfo = _ctx$doc3.fileInfo) == null ? void 0 : _ctx$doc3$fileInfo.path) || 'unknow file';
       }
 
       this.transformLanguageDependentIntoLanguageIndependent(uipRef, languageDictionary);
@@ -17748,6 +17835,10 @@ class PreTestCaseGenerator {
   }
 
   extractDataInputActionEntity(step) {
+    if (!step || !step.nlpResult) {
+      return null;
+    }
+
     return step.nlpResult.entities.find(e => e.entity === Entities.UI_ACTION && this.isDataInputAction(e.value)) || null;
   }
 
@@ -18254,7 +18345,10 @@ class VariantStateDetector {
       for (let prec of variant.preconditions || []) {
         if (prec.equals(postc)) {
           removed.push(prec);
-          variant.preconditions.splice(index, 1);
+
+          if (variant.preconditions) {
+            variant.preconditions.splice(index, 1);
+          }
         }
 
         ++index;
@@ -18400,11 +18494,11 @@ class TestScenarioGenerator {
   }
 
   mapPostconditionsOf(variant) {
-    for (let postc of variant.postconditions) {
+    for (let postc of variant.postconditions || []) {
       if (this._postconditionNameToVariantsMap.has(postc.name)) {
         let variants = this._postconditionNameToVariantsMap.get(postc.name);
 
-        if (variants.indexOf(variant) < 0) {
+        if (variants && variants.indexOf(variant) < 0) {
           variants.push(variant);
         }
       } else {
@@ -18473,7 +18567,7 @@ class TestScenarioGenerator {
       ts.steps = this._stepHandler.removeStep(ts.steps, state.stepIndex, docLanguage);
     }
 
-    for (const state of variant.postconditions.reverse()) {
+    for (const state of (variant.postconditions || []).reverse()) {
       if (!ts.steps[state.stepIndex]) {
         continue;
       }
@@ -18483,7 +18577,7 @@ class TestScenarioGenerator {
 
     const languageDictionary = dictionaryForLanguage(isDefined(docLanguage) ? docLanguage : this._defaultLanguage);
     const keywords = languageDictionary.keywords;
-    ts.ignoreForTestCaseGeneration = this.containsIgnoreTag(variant.tags, keywords.tagIgnore || ['ignore']);
+    ts.ignoreForTestCaseGeneration = this.containsIgnoreTag(variant.tags || [], keywords.tagIgnore || ['ignore']);
 
     this._stepHandler.adjustPrefixesToReplaceStates(ts.steps, docLanguage);
 
@@ -19549,6 +19643,10 @@ class FeatureSSA extends SpecificationAnalyzer {
       return true;
     }
 
+    if (!doc.fileInfo || !doc.fileInfo.path) {
+      return true;
+    }
+
     const path = doc.fileInfo.path;
     let states = availableStates.get(path);
 
@@ -19571,6 +19669,10 @@ class FeatureSSA extends SpecificationAnalyzer {
         let found = false;
 
         for (const d of importedDocs) {
+          if (!d.fileInfo || !d.fileInfo.path) {
+            continue;
+          }
+
           const importedStates = availableStates.get(d.fileInfo.path);
 
           if (importedStates && importedStates.has(st.name)) {
@@ -19618,9 +19720,11 @@ class FeatureSSA extends SpecificationAnalyzer {
   }
 
   analyzePropertiesReferences(doc, spec, problems) {
+    var _doc$fileInfo;
+
     let errors = [];
 
-    if (isDefined(doc.feature)) {
+    if (doc.feature) {
       for (let uie of doc.feature.uiElements || []) {
         this.analyzePropertiesReferencesOf(uie, doc, spec, errors);
       }
@@ -19630,7 +19734,7 @@ class FeatureSSA extends SpecificationAnalyzer {
       this.analyzePropertiesReferencesOf(uie, doc, spec, errors);
     }
 
-    if (errors.length > 0) {
+    if (errors.length > 0 && doc != null && (_doc$fileInfo = doc.fileInfo) != null && _doc$fileInfo.path) {
       problems.addError(doc.fileInfo.path, ...errors);
       return false;
     }
@@ -19646,7 +19750,7 @@ class FeatureSSA extends SpecificationAnalyzer {
 
       const propValue = uiProperty.value;
 
-      if (!propValue) {
+      if (!propValue || !isDefined(propValue.value)) {
         continue;
       }
 
@@ -19677,7 +19781,7 @@ class FeatureSSA extends SpecificationAnalyzer {
   analyzeConstant(variable, uiProperty, doc, spec, references, errors) {
     const node = spec.constantWithName(variable);
 
-    if (isDefined(node)) {
+    if (node) {
       references.push(node);
     } else {
       const msg = 'Referenced constant not found: ' + variable;
@@ -19688,7 +19792,7 @@ class FeatureSSA extends SpecificationAnalyzer {
   analyzeUIElement(variable, uiProperty, doc, spec, references, errors) {
     const node = spec.uiElementByVariable(variable, doc);
 
-    if (isDefined(node)) {
+    if (node) {
       references.push(node);
     } else {
       const msg = 'Referenced UI Element not found: ' + variable;
@@ -19730,9 +19834,11 @@ class FeatureSSA extends SpecificationAnalyzer {
   }
 
   makeError(msg, location, doc) {
+    var _doc$fileInfo2;
+
     let loc = deepcopy(location);
 
-    if (!loc.filePath) {
+    if (!loc.filePath && (_doc$fileInfo2 = doc.fileInfo) != null && _doc$fileInfo2.path) {
       loc.filePath = doc.fileInfo.path;
     }
 
@@ -20784,42 +20890,24 @@ class CompilerFacade {
 const PACKAGE_FILE = 'package.json';
 const PLUGIN_PROPERTY = 'concordiaPlugin';
 const PLUGIN_PREFIX = 'concordialang-';
+function splitPluginNames(names) {
+  return names.split(',').map(name => name.trim());
+}
+function addPluginPrefixIfNeeded(name) {
+  const tName = name.trim();
+  return tName.startsWith(PLUGIN_PREFIX) ? tName : PLUGIN_PREFIX + tName;
+}
 function sortPluginsByName(plugins) {
   return plugins.sort((a, b) => {
     return a.name.toLowerCase() > b.name.toLowerCase() ? 1 : -1;
   });
 }
-async function filterPluginsByName(all, name, partialComparison = false) {
-  const usualComparison = (from, to) => {
-    return from === to || from === PLUGIN_PREFIX + to || PLUGIN_PREFIX + from === to;
-  };
 
-  const removeVersionFromName = name => {
-    const index = name.lastIndexOf('@');
-
-    if (index < 0) {
-      return name;
-    }
-
-    return name.substring(0, index);
-  };
-
-  const compareNames = (from, to, partialComparison) => {
-    if (partialComparison) {
-      return from.includes(to);
-    }
-
-    if (usualComparison(from, to)) {
-      return true;
-    }
-
-    return usualComparison(removeVersionFromName(from), removeVersionFromName(to));
-  };
-
-  const lowerCasedName = name.toLowerCase();
-  const withName = all.filter(v => compareNames(v.name.toLowerCase(), lowerCasedName, partialComparison));
-  return withName.length > 0 ? withName[0] : undefined;
+function authorObjectToString(obj) {
+  const emailOrSite = obj.email || obj.url || obj.site;
+  return obj.name + (emailOrSite ? ` <${emailOrSite}>` : '');
 }
+
 function authorsAsStringArray(author) {
   switch (typeof author) {
     case 'string':
@@ -20827,15 +20915,6 @@ function authorsAsStringArray(author) {
 
     case 'object':
       {
-        const authorObjectToString = obj => {
-          if (!obj || typeof obj != 'object') {
-            return;
-          }
-
-          const emailOrSite = obj.email || obj.url || obj.site ? ` <${obj.email || obj.url || obj.site}>` : '';
-          return obj.name + emailOrSite;
-        };
-
         if (Array.isArray(author)) {
           if (author.length < 1) {
             return [];
@@ -20845,7 +20924,7 @@ function authorsAsStringArray(author) {
             return author;
           }
 
-          return author.map(authorObjectToString).filter(a => !!a);
+          return author.filter(a => !!a).map(authorObjectToString);
         }
 
         return [authorObjectToString(author)];
@@ -20858,7 +20937,7 @@ function authorsAsStringArray(author) {
 function isPlugin(pkg) {
   var _pkg$name;
 
-  return !!pkg && (pkg == null ? void 0 : (_pkg$name = pkg.name) == null ? void 0 : _pkg$name.startsWith(PLUGIN_PREFIX)) && !!pkg[PLUGIN_PROPERTY];
+  return (pkg == null ? void 0 : (_pkg$name = pkg.name) == null ? void 0 : _pkg$name.startsWith(PLUGIN_PREFIX)) && (pkg == null ? void 0 : pkg.concordiaPlugin);
 }
 function pluginDataFromPackage(pkg) {
   if (!pkg) {
@@ -20997,11 +21076,66 @@ class PackageBasedPluginFinder {
 
 }
 
+function filterPluginsByName(all, nameOrNames, partialComparison = false, pluginPrefix = PLUGIN_PREFIX) {
+  let pluginNames;
+
+  if (typeof nameOrNames === 'string') {
+    if (!nameOrNames.includes(',')) {
+      return all.filter(pluginData => arePluginNamesEqual(pluginData.name, nameOrNames, partialComparison, pluginPrefix));
+    }
+
+    pluginNames = nameOrNames.split(',');
+  } else {
+    pluginNames = nameOrNames;
+  }
+
+  pluginNames = pluginNames.filter(n => n && typeof n === 'string');
+  const found = [];
+
+  for (const p of all) {
+    for (const name of pluginNames) {
+      if (arePluginNamesEqual(p.name, name, partialComparison, pluginPrefix)) {
+        found.push(p);
+      }
+    }
+  }
+
+  return found;
+}
+function removeVersionFromPackageName(name) {
+  const index = name.lastIndexOf('@');
+
+  if (index < 0) {
+    return name;
+  }
+
+  return name.substring(0, index);
+}
+function areNamesConsideredEqual(name1, name2, prefix) {
+  const [n1, n2] = [name1.trim().toLowerCase(), name2.trim().toLowerCase()];
+  return n1 === n2 || n1 === prefix + n2 || prefix + n1 === n2;
+}
+function arePluginNamesEqual(name1, name2, partialComparison, prefix) {
+  if (partialComparison && (name1.includes(name2) || name2.includes(name1))) {
+    return true;
+  }
+
+  if (areNamesConsideredEqual(name1, name2, prefix)) {
+    return true;
+  }
+
+  return areNamesConsideredEqual(removeVersionFromPackageName(name1), removeVersionFromPackageName(name2), prefix);
+}
+
 async function loadPlugin(pluginData) {
   const old = pluginData;
   const isOldPlugin = !!old.file;
 
   if (isOldPlugin) {
+    if (!old.class) {
+      throw new Error(`Plugin "${pluginData.name}" did not specified the class name.`);
+    }
+
     if (old.file.includes(':')) {
       old.file = 'file:///' + old.file;
     }
@@ -21086,6 +21220,8 @@ class AbstractTestScriptGenerator {
   }
 
   generateFromDocument(doc, spec) {
+    var _doc$fileInfo;
+
     if (isDefined(doc.feature)) {
       return null;
     }
@@ -21103,7 +21239,7 @@ class AbstractTestScriptGenerator {
 
       if (docsWithFeature.length > 0) {
         const firstDoc = docsWithFeature[0];
-        feature = firstDoc.feature;
+        feature = firstDoc.feature || null;
 
         if (!beforeAll && isDefined(firstDoc.beforeAll)) {
           beforeAll = firstDoc.beforeAll;
@@ -21131,14 +21267,15 @@ class AbstractTestScriptGenerator {
       }
     }
 
+    const docFilePath = ((_doc$fileInfo = doc.fileInfo) == null ? void 0 : _doc$fileInfo.path) || '';
     const location = !feature ? {
       column: 1,
       line: 1,
-      filePath: doc.fileInfo.path
+      filePath: docFilePath
     } : feature.location;
     const featureName = !feature ? 'Unknown feature' : feature.name;
     let ats = new AbstractTestScript();
-    ats.sourceFile = doc.fileInfo.path;
+    ats.sourceFile = docFilePath;
     ats.feature = new NamedATSElement(location, featureName);
     let scenarioNames = [];
 
@@ -21359,7 +21496,7 @@ class TestResultAnalyzer {
   }
 
   shouldAdjustMethodToPassed(ats, methodResult) {
-    return 'failed' === methodResult.status && ats.invalid;
+    return 'failed' === methodResult.status && true === ats.invalid;
   }
 
 }
@@ -21393,176 +21530,242 @@ class FSDirSearcher {
 }
 
 function hasSomeOptionThatRequiresAPlugin(o) {
-  return o.script || o.run || o.result;
+  return !!o.script || !!o.run || !!o.result;
 }
 
-function runApp(libs, options, listener) {
-  const app = new App(libs.fs, libs.path, libs.promisify);
-  return app.start(options, listener);
-}
-class App {
-  constructor(_fs, _path, _promisify) {
-    this._fs = _fs;
-    this._path = _path;
-    this._promisify = _promisify;
-  }
+async function runApp(libs, options, listener) {
+  const {
+    fs
+  } = libs;
+  const fileHandler = new FSFileHandler(fs, promisify, options.encoding);
+  const pluginsInfo = [];
 
-  async start(options, listener) {
-    var _options$scriptFile, _executionResult, _executionResult$tota, _executionResult2, _executionResult2$tot;
+  if (hasSomeOptionThatRequiresAPlugin(options) && options.plugin) {
+    const dirSearcher = new FSDirSearcher(fs, promisify);
+    const pluginFinder = new PackageBasedPluginFinder(options.processPath, fileHandler, dirSearcher);
 
-    const fs = this._fs;
-    const path = this._path;
-    const promisify = this._promisify;
-    const fileHandler = new FSFileHandler(fs, promisify, options.encoding);
-    let plugin;
-    let isPluginLoaded = false;
+    try {
+      const all = await pluginFinder.find();
+      const pluginsData = await filterPluginsByName(all, options.plugin);
 
-    if (hasSomeOptionThatRequiresAPlugin(options) && options.plugin) {
-      const dirSearcher = new FSDirSearcher(fs, promisify);
-      const pluginFinder = new PackageBasedPluginFinder(options.processPath, fileHandler, dirSearcher);
+      if (!pluginsData || pluginsData.length < 1) {
+        listener.announcePluginsNotFound(options.plugin);
+        return {
+          success: false
+        };
+      }
 
-      try {
-        const all = await pluginFinder.find();
-        const pluginData = await filterPluginsByName(all, options.plugin);
-
-        if (!pluginData) {
-          listener.announcePluginNotFound(options.plugin);
-          return {
-            success: false
-          };
-          ;
+      for (const pluginData of pluginsData) {
+        try {
+          const plugin = await loadPlugin(pluginData);
+          pluginsInfo.push({
+            plugin,
+            pluginData
+          });
+        } catch (err) {
+          listener.showException(err);
         }
-
-        plugin = await loadPlugin(pluginData);
-      } catch (err) {
-        listener.showException(err);
-        return {
-          success: false
-        };
       }
-
-      if (!plugin) {
-        listener.announcePluginCouldNotBeLoaded(options.plugin);
-        return {
-          success: false
-        };
-      } else {
-        isPluginLoaded = true;
-      }
-    }
-
-    if (!options.plugin && (options.script || options.run || options.result)) {
-      listener.announceNoPluginWasDefined();
+    } catch (err) {
+      listener.showException(err);
       return {
         success: false
       };
     }
 
-    let hasErrors = false;
-    let spec = null;
-    listener.announceOptions(options);
+    if (pluginsInfo.length < 1) {
+      listener.announcePluginsCouldNotBeLoaded(options.plugin);
+      return {
+        success: false
+      };
+    }
+  }
 
-    if (options.spec) {
-      const compiler = new CompilerFacade(fs, promisify, listener, listener);
+  if (!options.plugin && (options.script || options.run || options.result)) {
+    listener.announceNoPluginWasDefined();
+    return {
+      success: false
+    };
+  }
+
+  listener.announceOptions(options);
+  let hasErrors = false;
+  let spec = null;
+
+  if (options.spec) {
+    const compiler = new CompilerFacade(fs, promisify, listener, listener);
+
+    try {
+      [spec] = await compiler.compile(options);
+    } catch (err) {
+      hasErrors = true;
+      listener.showException(err);
+    }
+
+    if (!spec && options.file && options.file.length > 0) {
+      return {
+        success: !hasErrors
+      };
+    }
+  }
+
+  let abstractTestScripts = [];
+
+  if (spec && options.script) {
+    const atsGenerator = new AbstractTestScriptGenerator();
+    abstractTestScripts = atsGenerator.generate(spec.docs, spec);
+    const anyErrors = await convertAbstractTestScriptsIntoTestScripts(abstractTestScripts, pluginsInfo, options, listener);
+    hasErrors = hasErrors || anyErrors;
+  }
+
+  if (options.run) {
+    const anyErrors = await executeTestScripts(pluginsInfo, options, listener);
+    hasErrors = hasErrors || anyErrors;
+  }
+
+  if (options.result) {
+    const anyErrors = await reportTestScriptResults(abstractTestScripts, pluginsInfo, options, listener, libs);
+    hasErrors = hasErrors || anyErrors;
+  }
+
+  return {
+    success: !hasErrors,
+    spec: spec || undefined
+  };
+}
+
+async function convertAbstractTestScriptsIntoTestScripts(abstractTestScripts, pluginsInfo, options, listener) {
+  let hasErrors = false;
+
+  for (const pInfo of pluginsInfo) {
+    const {
+      plugin,
+      pluginData
+    } = pInfo;
+
+    if (!!plugin.generateCode && abstractTestScripts.length > 0) {
+      const startTime = Date.now();
 
       try {
-        [spec] = await compiler.compile(options);
+        const r = await plugin.generateCode(abstractTestScripts, new TestScriptGenerationOptions(pluginData.name, options.dirScript, options.directory));
+        pInfo.generatedTestScriptFiles = (r == null ? void 0 : r.generatedFiles) || [];
+        pInfo.errors = (r == null ? void 0 : r.errors) || [];
       } catch (err) {
         hasErrors = true;
         listener.showException(err);
       }
 
-      if (null === spec && options.file.length > 0) {
-        return {
-          success: !hasErrors
-        };
+      const durationMS = Date.now() - startTime;
+      listener.showGeneratedTestScriptFiles(options.dirScript, pInfo.generatedTestScriptFiles || [], durationMS);
+
+      if (pInfo.errors) {
+        listener.showTestScriptGenerationErrors(pInfo.errors);
       }
     }
+  }
 
-    let abstractTestScripts = [];
-    let generatedTestScriptFiles = [];
-    let tseo;
+  return hasErrors;
+}
 
-    if (spec && options.script) {
-      let docs = spec.docs;
-      const atsGenerator = new AbstractTestScriptGenerator();
-      abstractTestScripts = atsGenerator.generate(docs, spec);
+async function executeTestScripts(pluginsInfo, options, listener) {
+  let hasErrors = false;
 
-      if (!!plugin.generateCode && abstractTestScripts.length > 0) {
-        const startTime = Date.now();
-        let errors = [];
+  if (!options.run) {
+    return hasErrors;
+  }
 
-        try {
-          const r = await plugin.generateCode(abstractTestScripts, new TestScriptGenerationOptions(options.plugin, options.dirScript, options.directory));
-          generatedTestScriptFiles = (r == null ? void 0 : r.generatedFiles) || [];
-          errors = (r == null ? void 0 : r.errors) || [];
-        } catch (err) {
-          hasErrors = true;
-          listener.showException(err);
-        }
+  const optionsHaveDefinedScriptFilesToRun = !!options.scriptFile && options.scriptFile.length > 0;
+  const tseo = {
+    dirScript: options.dirScript,
+    dirResult: options.dirResult,
+    file: undefined,
+    grep: options.scriptGrep || undefined,
+    target: options.target || undefined,
+    headless: options.headless || undefined,
+    instances: options.instances || undefined
+  };
 
-        const durationMS = Date.now() - startTime;
-        listener.showGeneratedTestScriptFiles(options.dirScript, generatedTestScriptFiles, durationMS);
-        listener.showTestScriptGenerationErrors(errors);
-      }
+  for (const pInfo of pluginsInfo) {
+    const {
+      plugin,
+      generatedTestScriptFiles
+    } = pInfo;
+    const pluginCanExecuteCode = !!plugin.executeCode;
+
+    if (!pluginCanExecuteCode) {
+      continue;
     }
 
-    let executionResult;
-    const shouldExecuteScripts = isPluginLoaded && !!plugin.executeCode && options.run && (((_options$scriptFile = options.scriptFile) == null ? void 0 : _options$scriptFile.length) > 0 || generatedTestScriptFiles.length > 0 || 'string' === typeof options.dirResult && options.dirResult != '');
+    const pluginContainsGeneratedScriptFiles = !!generatedTestScriptFiles && generatedTestScriptFiles.length > 0;
+    const shouldExecuteScripts = pluginCanExecuteCode && (optionsHaveDefinedScriptFilesToRun || pluginContainsGeneratedScriptFiles);
 
-    if (shouldExecuteScripts) {
-      var _options$scriptFile2;
+    if (!shouldExecuteScripts) {
+      continue;
+    }
 
-      const scriptFiles = ((_options$scriptFile2 = options.scriptFile) == null ? void 0 : _options$scriptFile2.length) > 0 ? options.scriptFile.join(',') : generatedTestScriptFiles.length > 0 ? generatedTestScriptFiles.join(',') : undefined;
-      tseo = {
-        dirScript: options.dirScript,
-        dirResult: options.dirResult,
-        file: scriptFiles || undefined,
-        grep: options.scriptGrep || undefined,
-        target: options.target || undefined,
-        headless: options.headless || undefined,
-        instances: options.instances || undefined
-      };
-      listener.announceTestScriptExecutionStarted();
+    const scriptFiles = optionsHaveDefinedScriptFilesToRun ? options.scriptFile.join(',') : pluginContainsGeneratedScriptFiles ? generatedTestScriptFiles.join(',') : undefined;
+    listener.announceTestScriptExecutionStarted();
 
-      try {
-        executionResult = await plugin.executeCode(tseo);
-      } catch (err) {
+    try {
+      var _pInfo$executionResul, _pInfo$executionResul2, _pInfo$executionResul3, _pInfo$executionResul4;
+
+      pInfo.testScriptExecutionOptions = _extends({}, tseo);
+      pInfo.testScriptExecutionOptions.file = scriptFiles;
+      pInfo.executionResult = await plugin.executeCode(pInfo.testScriptExecutionOptions);
+
+      if (!hasErrors && (((_pInfo$executionResul = pInfo.executionResult) == null ? void 0 : (_pInfo$executionResul2 = _pInfo$executionResul.total) == null ? void 0 : _pInfo$executionResul2.failed) > 0 || ((_pInfo$executionResul3 = pInfo.executionResult) == null ? void 0 : (_pInfo$executionResul4 = _pInfo$executionResul3.total) == null ? void 0 : _pInfo$executionResul4.error) > 0)) {
         hasErrors = true;
-        listener.announceTestScriptExecutionError(err);
       }
-
-      listener.announceTestScriptExecutionFinished();
-    }
-
-    if (!hasErrors && (((_executionResult = executionResult) == null ? void 0 : (_executionResult$tota = _executionResult.total) == null ? void 0 : _executionResult$tota.failed) > 0 || ((_executionResult2 = executionResult) == null ? void 0 : (_executionResult2$tot = _executionResult2.total) == null ? void 0 : _executionResult2$tot.error) > 0)) {
+    } catch (err) {
       hasErrors = true;
+      listener.announceTestScriptExecutionError(err);
     }
 
-    if (options.result && !!plugin.defaultReportFile && !!plugin.convertReportFile) {
+    listener.announceTestScriptExecutionFinished();
+  }
+
+  return hasErrors;
+}
+
+async function reportTestScriptResults(abstractTestScripts, pluginsInfo, options, listener, libs) {
+  let hasErrors = false;
+
+  if (!options.result) {
+    return hasErrors;
+  }
+
+  const {
+    fs,
+    path
+  } = libs;
+
+  for (const pInfo of pluginsInfo) {
+    const {
+      plugin
+    } = pInfo;
+
+    if (!!plugin.defaultReportFile && !!plugin.convertReportFile) {
       let reportFile;
 
-      if (!executionResult) {
+      if (!pInfo.executionResult) {
         const defaultReportFile = path.join(options.dirResult, await plugin.defaultReportFile());
 
         if (!fs.existsSync(defaultReportFile)) {
           listener.announceReportFileNotFound(defaultReportFile);
-          return {
-            success: false,
-            spec
-          };
+          hasErrors = true;
+          continue;
         }
 
         reportFile = defaultReportFile;
       } else {
-        reportFile = executionResult.sourceFile;
+        reportFile = pInfo.executionResult.sourceFile;
       }
 
       if (reportFile) {
         listener.announceReportFile(reportFile);
 
         try {
-          executionResult = await plugin.convertReportFile(reportFile);
+          pInfo.executionResult = await plugin.convertReportFile(reportFile);
         } catch (err) {
           hasErrors = true;
           listener.showException(err);
@@ -21570,25 +21773,26 @@ class App {
       }
     }
 
-    if (executionResult) {
+    if (pInfo.executionResult) {
       try {
-        var _plugin, _plugin2, _reportedResult$total, _reportedResult$total2;
+        var _reportedResult$total, _reportedResult$total2;
 
-        const reportedResult = new TestResultAnalyzer().adjustResult(executionResult, abstractTestScripts);
+        const reportedResult = new TestResultAnalyzer().adjustResult(pInfo.executionResult, abstractTestScripts);
 
-        if (!!((_plugin = plugin) != null && _plugin.beforeReporting)) {
-          await plugin.beforeReporting(reportedResult, tseo);
+        if (!!(plugin != null && plugin.beforeReporting)) {
+          await plugin.beforeReporting(reportedResult, pInfo.testScriptExecutionOptions);
         }
 
         listener.showTestScriptAnalysis(reportedResult);
+        const fileHandler = new FSFileHandler(fs, promisify, options.encoding);
         const reporter = new JSONTestReporter(fileHandler);
         await reporter.report(reportedResult, {
           directory: options.dirResult,
           useTimestamp: false
         });
 
-        if (!!((_plugin2 = plugin) != null && _plugin2.afterReporting)) {
-          await plugin.afterReporting(reportedResult, tseo);
+        if (!!(plugin != null && plugin.afterReporting)) {
+          await plugin.afterReporting(reportedResult, pInfo.testScriptExecutionOptions);
         }
 
         if (!hasErrors && ((reportedResult == null ? void 0 : (_reportedResult$total = reportedResult.total) == null ? void 0 : _reportedResult$total.failed) > 0 || (reportedResult == null ? void 0 : (_reportedResult$total2 = reportedResult.total) == null ? void 0 : _reportedResult$total2.error) > 0)) {
@@ -21599,13 +21803,13 @@ class App {
         listener.showException(err);
       }
     }
-
-    return {
-      success: !hasErrors,
-      spec
-    };
   }
 
+  return hasErrors;
+}
+
+function hasSomePluginAction(o) {
+  return o.pluginList || !!o.pluginAbout || !!o.pluginInstall || !!o.pluginUpdate || !!o.pluginUninstall || !!o.pluginServe;
 }
 
 function createPersistableCopy(source, defaultObject, useRelativePaths = false) {
@@ -21737,6 +21941,8 @@ function copyOptions(from, to) {
       to.plugin = to.pluginAbout;
     } else if (isStringNotEmpty(to.pluginInstall)) {
       to.plugin = to.pluginInstall;
+    } else if (isStringNotEmpty(to.pluginUpdate)) {
+      to.plugin = to.pluginUpdate;
     } else if (isStringNotEmpty(to.pluginUninstall)) {
       to.plugin = to.pluginUninstall;
     } else if (isStringNotEmpty(to.pluginServe)) {
@@ -21830,7 +22036,7 @@ function makeAppOptions(appPath = __dirname, processPath = process.cwd()) {
     directory,
     dirScript,
     dirResult,
-    packageManager: 'npm',
+    packageManager: DEFAULT_PACKAGE_MANAGER,
     ignore: [],
     file: [],
     scriptFile: [],
@@ -21974,6 +22180,7 @@ function makeGetOptsOptions() {
     plugin: 'p',
     pluginAbout: ['plugin-about', 'plugin-info'],
     pluginInstall: 'plugin-install',
+    pluginUpdate: 'plugin-update',
     pluginUninstall: 'plugin-uninstall',
     pluginServe: ['plugin-serve', 'S'],
     pluginList: 'plugin-list',
@@ -22058,6 +22265,7 @@ ${colors.gray('Plug-in')}
 -S, --plugin-serve [<name>]             Start a test server for a given plugin.
 --plugin-list                           List installed plug-ins.
 --plugin-install <name>                 Install a plug-in.
+--plugin-update <name>                  Update a plug-in.
 --plugin-uninstall <name>               Uninstall a plug-in.
 --plugin-about [<name>]                 Show information about an installed
                                         plug-in.
@@ -22374,12 +22582,14 @@ class UI {
     this.warn('You already have a configuration file.');
   }
 
-  announcePluginNotFound(pluginName) {
-    this.error(`A plugin named "${pluginName}" was not found.`);
+  announcePluginsNotFound(pluginNames) {
+    const msg = typeof pluginNames === 'string' ? `Plug-in not found: ${pluginNames}` : `Plug-ins not found: ${pluginNames.join(', ')}`;
+    this.error(msg);
   }
 
-  announcePluginCouldNotBeLoaded(pluginName) {
-    this.error(`Could not load the plugin: ${pluginName}.`);
+  announcePluginsCouldNotBeLoaded(pluginNames) {
+    const msg = typeof pluginNames === 'string' ? `Could not load the plug-in: ${pluginNames}` : `Could not load the plug-ins: ${pluginNames.join(', ')}`;
+    this.error(msg);
   }
 
   announceNoPluginWasDefined() {
@@ -22671,8 +22881,10 @@ class UI {
     this.writeln(sprintf(format, 'authors', formattedAuthors.join('\n')));
   }
 
-  showMessagePluginNotFound(name) {
-    this.error(sprintf('No plugins installed with the name "%s".', this.highlight(name)));
+  showMessageNoPluginsFound(names) {
+    const word = names.length > 0 ? 'names' : 'name';
+    const values = '"' + names.join('", "') + '"';
+    this.error(sprintf(`No plugins installed with the given ${word}: %s.`, this.highlight(values)));
   }
 
   showMessagePluginAlreadyInstalled(name) {
@@ -22834,17 +23046,13 @@ class UI {
   }
 
   formattedStackOf(err) {
-    return "\n  DETAILS: " + err.stack.substring(err.stack.indexOf("\n"));
+    return err.stack ? "\n  DETAILS: " + err.stack.substring(err.stack.indexOf("\n")) : '';
   }
 
   formatDuration(durationMs) {
     return this.colorDiscreet('(' + durationMs.toString() + 'ms)');
   }
 
-}
-
-function hasSomePluginAction(o) {
-  return o.pluginList || !!o.pluginAbout || !!o.pluginInstall || !!o.pluginUninstall || !!o.pluginServe;
 }
 
 class GuidedConfig {
@@ -23006,75 +23214,6 @@ class ConcordiaQuestions {
 
 }
 
-async function processPluginOptions(options, pluginFinder, pluginController, drawer) {
-  if (options.pluginList) {
-    try {
-      const plugins = sortPluginsByName(await pluginFinder.find());
-      drawer.drawPluginList(plugins);
-      return true;
-    } catch (e) {
-      drawer.showError(e);
-      return false;
-    }
-  }
-
-  if (!options.plugin || options.plugin.trim().length < 1) {
-    drawer.showError(new Error('Empty plugin name.'));
-    return false;
-  }
-
-  let pluginName = options.plugin;
-
-  if (!pluginName.includes(PLUGIN_PREFIX)) {
-    pluginName = PLUGIN_PREFIX + pluginName;
-  }
-
-  const all = await pluginFinder.find();
-  let pluginData = await filterPluginsByName(all, pluginName, false);
-
-  if (options.pluginInstall) {
-    try {
-      await pluginController.installByName(all, pluginData, pluginName);
-    } catch (e) {
-      drawer.showError(e);
-    }
-
-    return true;
-  }
-
-  if (!pluginData) {
-    drawer.showMessagePluginNotFound(pluginName);
-    return false;
-  }
-
-  if (options.pluginUninstall) {
-    try {
-      await pluginController.uninstallByName(pluginName);
-    } catch (e) {
-      drawer.showError(e);
-    }
-
-    return true;
-  }
-
-  if (options.pluginAbout) {
-    drawer.drawSinglePlugin(pluginData);
-    return true;
-  }
-
-  if (options.pluginServe) {
-    try {
-      await pluginController.serve(pluginData);
-    } catch (e) {
-      drawer.showError(e);
-    }
-
-    return true;
-  }
-
-  return true;
-}
-
 class PluginController {
   constructor(_packageManagerName, _pluginListener, _fileReader) {
     this._packageManagerName = _packageManagerName;
@@ -23118,15 +23257,20 @@ class PluginController {
     const command = makePackageInstallCommand(name, this._packageManagerName);
     const code = await this.runCommand(command);
 
-    if (code !== 0) {
+    if (code != SUCCESSFUL) {
       return;
     }
 
-    pluginData = await filterPluginsByName(all, name, false);
+    [pluginData] = filterPluginsByName(all, name, false);
 
     if (!pluginData) {
       this._pluginListener.showMessageCouldNoFindInstalledPlugin(name);
     }
+  }
+
+  async updateByName(name) {
+    const command = makePackageUpdateCommand(name, this._packageManagerName);
+    return this.runCommand(command);
   }
 
   async uninstallByName(name) {
@@ -23154,7 +23298,7 @@ class PluginController {
     if (!serveCommand) {
       this._pluginListener.showPluginServeUndefined(pluginData.name);
 
-      return;
+      return NOT_SUCCESSFUL;
     }
 
     this._pluginListener.showPluginServeStart(pluginData.name);
@@ -23174,10 +23318,58 @@ class PluginController {
 
 }
 
+async function processPluginOptions(options, pluginFinder, pluginController, drawer) {
+  if (options.pluginList) {
+    try {
+      const plugins = sortPluginsByName(await pluginFinder.find());
+      drawer.drawPluginList(plugins);
+    } catch (e) {
+      drawer.showError(e);
+      return;
+    }
+  }
+
+  if (!options.plugin || typeof options.plugin === 'string' && options.plugin.trim().length < 1 || options.plugin.length < 1) {
+    drawer.showError(new Error('Empty plugin name.'));
+    return;
+  }
+
+  const pluginNames = (typeof options.plugin === 'string' ? splitPluginNames(options.plugin) : options.plugin).map(addPluginPrefixIfNeeded);
+  const existingPlugins = await pluginFinder.find();
+  const filteredPlugins = await filterPluginsByName(existingPlugins, pluginNames, false);
+
+  if (filteredPlugins.length < 1) {
+    drawer.showMessageNoPluginsFound(pluginNames);
+    return;
+  }
+
+  for (const pluginData of filteredPlugins) {
+    const name = pluginData.name;
+
+    try {
+      if (options.pluginInstall) {
+        await pluginController.installByName(existingPlugins, pluginData, name);
+      } else if (options.pluginUpdate) {
+        await pluginController.updateByName(name);
+      } else if (options.pluginUninstall) {
+        await pluginController.uninstallByName(name);
+      } else if (options.pluginAbout) {
+        drawer.drawSinglePlugin(pluginData);
+      } else if (options.pluginServe) {
+        await pluginController.serve(pluginData);
+      }
+    } catch (e) {
+      drawer.showError(e);
+    }
+  }
+}
+
 const {
   kebab
 } = _case;
 async function main(appPath, processPath) {
+  var _readPkgUp$sync;
+
   let options = makeAllOptions(appPath, processPath);
   const args = parseArgs(process.argv.slice(2));
   const unexpectedKeys = args && args.unexpected ? Object.keys(args.unexpected) : [];
@@ -23222,6 +23414,10 @@ async function main(appPath, processPath) {
 
       return totalDistance;
     };
+
+    if (!args.allFlags) {
+      return false;
+    }
 
     const putDashes = t => '-'.repeat(1 === t.length ? 1 : 2) + t;
 
@@ -23271,16 +23467,17 @@ async function main(appPath, processPath) {
   }
 
   const parentDir = path.dirname(appPath);
-  const pkg = readPkgUp.sync({
+  const pkg = ((_readPkgUp$sync = readPkgUp.sync({
     cwd: parentDir,
     normalize: false
-  }).packageJson || {};
+  })) == null ? void 0 : _readPkgUp$sync.packageJson) || {};
 
   if (options.about) {
+    const defaultAuthor = 'Thiago Delgado Pinto';
     ui.showAbout({
       description: pkg.description || 'Concordia',
       version: pkg.version || '?',
-      author: pkg.author['name'] || 'Thiago Delgado Pinto',
+      author: pkg.author ? pkg.author['name'] || defaultAuthor : defaultAuthor,
       homepage: pkg.homepage || 'https://concordialang.org'
     });
     return true;
@@ -23312,7 +23509,7 @@ async function main(appPath, processPath) {
     return true;
   }
 
-  let fileOptions = null;
+  let fileOptions = {};
 
   try {
     const startTime = Date.now();
@@ -23322,7 +23519,7 @@ async function main(appPath, processPath) {
     };
     const explorer = cosmiconfig(MODULE_NAME, loadOptions);
     const cfg = await explorer.load(options.config);
-    fileOptions = cfg.config;
+    fileOptions = _extends({}, cfg.config);
     const optionsToConvert = [['dirResult', 'dirResults'], ['dirScript', 'dirScripts']];
 
     for (const [wanted, ...variations] of optionsToConvert) {
@@ -23374,13 +23571,25 @@ async function main(appPath, processPath) {
         console.log(e);
       }
 
+      try {
+        await fsExtra.ensureDir(guidedOptions.directory);
+      } catch (_unused2) {}
+
+      try {
+        await fsExtra.ensureDir(guidedOptions.dirScript);
+      } catch (_unused3) {}
+
+      try {
+        await fsExtra.ensureDir(guidedOptions.dirResult);
+      } catch (_unused4) {}
+
       options.saveConfig = true;
       const packages = guidedOptions.databases || [];
 
       if (packages.length > 0) {
         const cmd = makePackageInstallCommand(joinDatabasePackageNames(packages), options.packageManager);
         ui.announceDatabasePackagesInstallationStarted(1 === packages.length, cmd);
-        let code;
+        let code = 0;
 
         for (const pkg of packages) {
           const cmd = makePackageInstallCommand(pkg, options.packageManager);
@@ -23422,7 +23631,7 @@ async function main(appPath, processPath) {
 
     try {
       code = await runCommand(cmd);
-    } catch (_unused2) {}
+    } catch (_unused5) {}
 
     ui.announceDatabasePackagesInstallationFinished(code);
     return 0 === code;
@@ -23436,18 +23645,16 @@ async function main(appPath, processPath) {
 
     try {
       code = await runCommand(cmd);
-    } catch (_unused3) {}
+    } catch (_unused6) {}
 
     ui.announceDatabasePackagesUninstallationFinished(code);
     return 0 === code;
   }
 
   if (options.dbList) {
-    let databases = [];
-
     try {
       const nodeModulesDir = path.join(processPath, 'node_modules');
-      databases = await allInstalledDatabases(nodeModulesDir, new FSDirSearcher(fs, promisify));
+      const databases = await allInstalledDatabases(nodeModulesDir, new FSDirSearcher(fs, promisify));
       ui.drawDatabases(databases);
       return true;
     } catch (err) {
@@ -23499,8 +23706,7 @@ async function main(appPath, processPath) {
     success
   } = await runApp({
     fs,
-    path,
-    promisify
+    path
   }, options, ui);
 
   if (spec && options.ast) {

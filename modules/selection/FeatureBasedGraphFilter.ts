@@ -33,21 +33,23 @@ export class FeatureBasedGraphFilter {
     ): boolean {
 
         // Has a Feature ?
-        if ( isDefined( doc.feature ) ) {
+        if ( doc.feature ) {
             return this._matcher.matches( this._criteria, doc.feature.tags || [], doc.feature.name );
         }
 
         // A document WITHOUT a Feature should be included whether it dependes on
         // a Feature that should be included.
 
-        // Iterates over all outgoing edges of the `from` vertex
-        const fromKey = doc.fileInfo.path;
         let shouldBeIncluded: boolean = false;
-        for ( let [ /* toKey */, vertexValue ] of graph.verticesFrom( fromKey ) ) {
-            // Examine the included document (recursively)
-            if ( this.shouldBeIncluded( vertexValue, graph ) ) {
-                shouldBeIncluded = true;
-                break;
+        if ( doc.fileInfo ) {
+            // Iterates over all outgoing edges of the `from` vertex
+            const fromKey = doc.fileInfo.path;
+            for ( let [ /* toKey */, vertexValue ] of graph.verticesFrom( fromKey ) ) {
+                // Examine the included document (recursively)
+                if ( this.shouldBeIncluded( vertexValue, graph ) ) {
+                    shouldBeIncluded = true;
+                    break;
+                }
             }
         }
         return shouldBeIncluded;

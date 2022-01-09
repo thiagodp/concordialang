@@ -52,7 +52,7 @@ export class UIElementNameHandler {
      *
      * @param variable Variable to check.
      */
-    extractNamesOf( variable: string ): string[] {
+    extractNamesOf( variable: string ): Array< string | null > {
         const v = variable
             .replace( Symbols.UI_ELEMENT_PREFIX, '' )
             .replace( Symbols.UI_ELEMENT_SUFFIX, '' )
@@ -74,9 +74,11 @@ export class UIElementNameHandler {
      * @param uiElementName UI Element name
      * @param surroundVariable Whether it should surround the variable with its symbol (brackets).
      */
-    public makeVariableName( featureName: string | null, uiElementName: string, surroundVariable: boolean = false ): string {
-        const variable = ( isDefined( featureName ) ? featureName + Symbols.FEATURE_TO_UI_ELEMENT_SEPARATOR : '' ) +
+    public makeVariableName( featureName: string, uiElementName: string, surroundVariable: boolean = false ): string {
+        const variable =
+            ( featureName ? featureName + Symbols.FEATURE_TO_UI_ELEMENT_SEPARATOR  : '' ) +
             uiElementName;
+
         if ( ! surroundVariable ) {
             return variable;
         }

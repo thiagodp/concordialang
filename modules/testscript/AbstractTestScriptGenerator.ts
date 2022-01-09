@@ -29,7 +29,7 @@ export class AbstractTestScriptGenerator {
             const ats = this.generateFromDocument( doc, spec );
             if ( isDefined( ats ) ) {
                 // console.log( 'CREATED ATS from', ats.sourceFile );
-                all.push( ats );
+                all.push( ats! );
             }
         }
         return all;
@@ -69,7 +69,7 @@ export class AbstractTestScriptGenerator {
             if ( docsWithFeature.length > 0 ) {
                 const firstDoc = docsWithFeature[ 0 ];
 
-                feature = firstDoc.feature;
+                feature = firstDoc.feature || null;
 
                 if ( ! beforeAll && isDefined( firstDoc.beforeAll ) ) {
                     beforeAll = firstDoc.beforeAll;
@@ -100,9 +100,12 @@ export class AbstractTestScriptGenerator {
 
         // console.log( 'Feature', feature.name );
 
+        // TO-DO: validate doc.fileInfo.path instead of assuming a default value
+        const docFilePath = doc.fileInfo?.path || '';
+
         // Not found -> assumes a name and location
         const location: Location = ! feature
-            ? { column: 1, line: 1, filePath: doc.fileInfo.path } as Location
+            ? { column: 1, line: 1, filePath: docFilePath } as Location
             : feature.location;
         const featureName: string = ! feature ? 'Unknown feature' : feature.name;
 
@@ -111,13 +114,13 @@ export class AbstractTestScriptGenerator {
         let ats = new AbstractTestScript();
 
         // feature, location, sourceFile
-        ats.sourceFile = doc.fileInfo.path;
+        ats.sourceFile = docFilePath;
         ats.feature = new NamedATSElement( location, featureName );
 
         // scenarios
         let scenarioNames: string[] = [];
         if ( isDefined( feature ) ) {
-            for ( let s of feature.scenarios || [] ) {
+            for ( let s of feature!.scenarios || [] ) {
                 ats.scenarios.push(
                     new NamedATSElement( s.location, s.name )
                 );
@@ -207,7 +210,7 @@ export class AbstractTestScriptGenerator {
 
             // Action is "connect" or "disconnect"
             if ( s.action === Actions.CONNECT || s.action === Actions.DISCONNECT ) {
-                let dbRef = s.nlpResult.entities.find( e => e.entity === Entities.CONSTANT );
+                let dbRef = s.nlpResult!.entities.find( e => e.entity === Entities.CONSTANT );
                 if ( ! dbRef ) {
                     console.log( 'ERROR: database reference not found in:', s.content );
                     continue;
@@ -258,7 +261,7 @@ export class AbstractTestScriptGenerator {
 
             // options have "script"
 
-            let sqlCommand = s.values[ 0 ];
+            let sqlCommand = s.values![ 0 ];
             let found: boolean = false;
             // Find database names inside
             for ( let i in dbVarNames ) {

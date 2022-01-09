@@ -3,7 +3,7 @@ import { FileCompilationListener } from '../compiler/FileCompilationListener';
 import { PluginListener } from '../plugin/PluginListener';
 import { TestCaseGeneratorListener } from '../testcase/TestCaseGeneratorListener';
 import { TestScriptExecutionListener } from '../testscript/TestScriptExecutionListener';
-import { AppOptions } from './app-options';
+import { AppOptions } from './options/app-options';
 
 export interface AppListener extends
     FileCompilationListener,
@@ -27,9 +27,9 @@ export interface AppListener extends
 
     announceConfigurationFileAlreadyExists(): void;
 
-    announcePluginNotFound( pluginName: string ): void;
+    announcePluginsNotFound( pluginNames: string | string[] ): void;
 
-    announcePluginCouldNotBeLoaded( pluginName: string ): void;
+    announcePluginsCouldNotBeLoaded( pluginNames: string | string[] ): void;
 
     announceNoPluginWasDefined(): void;
 

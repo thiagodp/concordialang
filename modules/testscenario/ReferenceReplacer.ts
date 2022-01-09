@@ -9,7 +9,6 @@ import { AugmentedSpec } from '../req/AugmentedSpec';
 import { Symbols } from '../req/Symbols';
 import { convertCase } from '../util/case-conversor';
 import { CaseType } from '../util/CaseType';
-import { isDefined } from '../util/type-checking';
 import { ValueTypeDetector } from '../util/ValueTypeDetector';
 import { TargetTypeUtil } from './TargetTypeUtil';
 
@@ -54,11 +53,11 @@ export class ReferenceReplacer {
         let newSentence: string = sentence;
         const valueTypeDetector = new ValueTypeDetector();
         let constants: string[] = [];
-        for ( let e of nlpResult.entities || [] ) {
+        for ( let e of ( ( nlpResult || {} ).entities || [] ) ) {
 
             if ( Entities.CONSTANT === e.entity ) {
 
-                let valueContent: string | number = spec.constantNameToValueMap().get( e.value );
+                let valueContent: string | number | undefined = spec.constantNameToValueMap().get( e.value );
                 if ( undefined === valueContent ) {
                     valueContent = '';
                 }
@@ -103,14 +102,14 @@ export class ReferenceReplacer {
         uiLiteralCaseOption: CaseType
     ): [ string, string ] {
         let sentence: string = step.content;
-        let nlpResult: NLPResult = step.nlpResult;
+        let nlpResult: NLPResult | undefined = step.nlpResult;
 
         let newSentence: string = sentence;
         let uiElements: string[] = [];
 
         const targetTypeUtil = new TargetTypeUtil();
 
-        for ( let e of nlpResult.entities || [] ) {
+        for ( let e of ( ( nlpResult || {} ).entities || [] ) ) {
 
             if ( Entities.UI_ELEMENT_REF != e.entity ) {
                 continue;
@@ -119,7 +118,7 @@ export class ReferenceReplacer {
             // Get the UI_LITERAL name by the UI_ELEMENT name
             const ui = spec.uiElementByVariable( e.value, doc );
 
-            let literalName: string = isDefined( ui ) && isDefined( ui.info )
+            let literalName: string = ui && ui.info
                 ? ui.info.uiLiteral
                 : convertCase( e.value, uiLiteralCaseOption ); // Uses the UI_ELEMENT name as the literal name, when it is not found.
 

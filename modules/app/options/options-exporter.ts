@@ -1,7 +1,7 @@
 import { relative } from 'path';
 
 import { AppOptions } from './app-options';
-import { CliOnlyOptions } from '../cli/CliOnlyOptions';
+import { CliOnlyOptions } from './cli-only-options';
 
 /**
  * Returns an object that can be saved.
