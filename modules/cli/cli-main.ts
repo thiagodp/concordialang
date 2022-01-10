@@ -198,7 +198,7 @@ export async function main( appPath: string, processPath: string ): Promise< boo
 
 	// LOAD CONFIG FILE OPTIONS
 
-    let fileOptions: Record< string, any > = {};
+    let fileOptions: Record< string, any > | undefined = undefined;
     try {
         const startTime = Date.now();
         const MODULE_NAME = 'concordia';
@@ -207,7 +207,8 @@ export async function main( appPath: string, processPath: string ): Promise< boo
             stopDir: options.processPath
         };
         const explorer = cosmiconfig( MODULE_NAME, loadOptions );
-		const cfg: { config: any, filepath: string } = ( await explorer.load( options.config! ) ) as any;
+		const c = await explorer.load( options.config! );
+		const cfg: { config: any, filepath: string } = c;
 		fileOptions = { ...cfg.config };
 
 		// ADAPT KEYS

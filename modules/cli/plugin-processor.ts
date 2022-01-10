@@ -19,22 +19,19 @@ export async function processPluginOptions(
 			drawer.drawPluginList( plugins );
 		} catch ( e ) {
 			drawer.showError( e as Error  );
-			return;
 		}
+		return;
 	}
 
-	// Empty plugin name?
-	if ( ! options.plugin ||
-		( typeof options.plugin === 'string' && options.plugin.trim().length < 1 ) ||
-		options.plugin.length < 1
-	) {
+	if ( ! options.plugin ) {
 		drawer.showError( new Error( 'Empty plugin name.' ) );
 		return;
 	}
 
 	const pluginNames: string[] = ( ( typeof options.plugin === 'string' )
 		? splitPluginNames( options.plugin )
-		: options.plugin ).map( addPluginPrefixIfNeeded );
+		: options.plugin
+	).map( addPluginPrefixIfNeeded );
 
 	const existingPlugins = await pluginFinder.find();
 

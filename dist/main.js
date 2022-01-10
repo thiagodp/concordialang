@@ -23339,11 +23339,12 @@ async function processPluginOptions(options, pluginFinder, pluginController, dra
       drawer.drawPluginList(plugins);
     } catch (e) {
       drawer.showError(e);
-      return;
     }
+
+    return;
   }
 
-  if (!options.plugin || typeof options.plugin === 'string' && options.plugin.trim().length < 1 || options.plugin.length < 1) {
+  if (!options.plugin) {
     drawer.showError(new Error('Empty plugin name.'));
     return;
   }
@@ -23523,7 +23524,7 @@ async function main(appPath, processPath) {
     return true;
   }
 
-  let fileOptions = {};
+  let fileOptions = undefined;
 
   try {
     const startTime = Date.now();
@@ -23532,7 +23533,8 @@ async function main(appPath, processPath) {
       stopDir: options.processPath
     };
     const explorer = cosmiconfig(MODULE_NAME, loadOptions);
-    const cfg = await explorer.load(options.config);
+    const c = await explorer.load(options.config);
+    const cfg = c;
     fileOptions = _extends({}, cfg.config);
     const optionsToConvert = [['dirResult', 'dirResults'], ['dirScript', 'dirScripts']];
 
