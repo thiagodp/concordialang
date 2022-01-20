@@ -23317,14 +23317,14 @@ async function main(appPath, processPath) {
   }
 
   const parentDir = path.dirname(appPath);
-  const pkg = readPkgUp.sync({
+  const pkg = (readPkgUp.sync({
     cwd: parentDir,
     normalize: false
-  }).packageJson || {};
+  }) || {}).packageJson || {};
 
   if (options.about) {
     ui.showAbout({
-      description: pkg.description || 'Concordia',
+      description: pkg.description || 'Concordia Language Compiler',
       version: pkg.version || '?',
       author: pkg.author['name'] || 'Thiago Delgado Pinto',
       homepage: pkg.homepage || 'https://concordialang.org'

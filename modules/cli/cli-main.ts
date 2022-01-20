@@ -145,15 +145,15 @@ export async function main( appPath: string, processPath: string ): Promise< boo
 
 	// Retrieve package data
 	const parentDir = path.dirname( appPath );
-	const pkg = readPkgUp.sync( {
+	const pkg = ( readPkgUp.sync( {
 		cwd: parentDir,
 		normalize: false
-	} ).packageJson || {};
+	} ) || {} ).packageJson || {};
 
     // Show about
     if ( options.about ) {
         ui.showAbout( {
-			description: pkg.description || 'Concordia',
+			description: pkg.description || 'Concordia Language Compiler',
 			version: pkg.version || '?',
 			author: pkg.author[ 'name' ] || 'Thiago Delgado Pinto',
 			homepage: pkg.homepage || 'https://concordialang.org'
