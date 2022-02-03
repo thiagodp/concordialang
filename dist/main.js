@@ -5,7 +5,7 @@ import { cosmiconfig } from 'cosmiconfig';
 import { distance } from 'damerau-levenshtein-js';
 import * as fs from 'fs';
 import fsExtra from 'fs-extra';
-import readPkgUp from 'read-pkg-up';
+import readPackageUp from 'read-pkg-up';
 import semverDiff from 'semver-diff';
 import { UpdateNotifier } from 'update-notifier';
 import { promisify } from 'util';
@@ -76,6 +76,8 @@ function toUnixPath(path) {
 const GENERIC_ERROR_KEY = '*';
 class ProblemInfo {
   constructor(errors = [], warnings = []) {
+    this.errors = void 0;
+    this.warnings = void 0;
     this.errors = errors;
     this.warnings = warnings;
   }
@@ -95,8 +97,9 @@ class ProblemInfo {
 }
 class ProblemMapper {
   constructor(_needsToConvertKey = false) {
-    this._needsToConvertKey = _needsToConvertKey;
+    this._needsToConvertKey = void 0;
     this._map = new Map();
+    this._needsToConvertKey = _needsToConvertKey;
   }
 
   convertKey(key) {
@@ -227,9 +230,10 @@ class FileProblemMapper extends ProblemMapper {
 class LocatedException extends Error {
   constructor(message, location, messageShouldIncludeFilePath = false) {
     super(LocatedException.makeExceptionMessage(message, location, messageShouldIncludeFilePath));
-    this.location = location;
+    this.location = void 0;
     this.name = 'LocatedException';
     this.isWarning = false;
+    this.location = location;
   }
 
   static makeExceptionMessage(originalMessage, location, includeFilePath = false) {
@@ -250,8 +254,8 @@ class LocatedException extends Error {
 }
 
 class RuntimeException extends LocatedException {
-  constructor() {
-    super(...arguments);
+  constructor(...args) {
+    super(...args);
     this.name = 'RuntimeException';
   }
 
@@ -264,16 +268,16 @@ class RuntimeException extends LocatedException {
 }
 
 class SemanticException extends RuntimeException {
-  constructor() {
-    super(...arguments);
+  constructor(...args) {
+    super(...args);
     this.name = 'SemanticException';
   }
 
 }
 
 class Warning extends LocatedException {
-  constructor() {
-    super(...arguments);
+  constructor(...args) {
+    super(...args);
     this.name = 'Warning';
     this.isWarning = true;
   }
@@ -913,6 +917,10 @@ function tagsWithAnyOfTheNames(tags, names) {
 
 class UIElementInfo {
   constructor(document = null, uiLiteral = null, feature = null, fullVariableName = null) {
+    this.document = void 0;
+    this.uiLiteral = void 0;
+    this.feature = void 0;
+    this.fullVariableName = void 0;
     this.document = document;
     this.uiLiteral = uiLiteral;
     this.feature = feature;
@@ -926,6 +934,9 @@ class UIElementInfo {
 }
 class EntityValue {
   constructor(entity, value, references = []) {
+    this.entity = void 0;
+    this.value = void 0;
+    this.references = void 0;
     this.entity = entity;
     this.value = value;
     this.references = references;
@@ -937,6 +948,9 @@ class UIPropertyReference {
   constructor() {
     this.nodeType = 'ui_property_ref';
     this.location = null;
+    this.content = void 0;
+    this.uiElementName = void 0;
+    this.property = void 0;
   }
 
 }
@@ -961,13 +975,16 @@ var UIPropertyTypes;
 
 class State {
   constructor(name, stepIndex, notFound) {
+    this.name = void 0;
+    this.stepIndex = void 0;
+    this.notFound = void 0;
     this.name = name;
     this.stepIndex = stepIndex;
     this.notFound = notFound;
   }
 
   toString() {
-    return name;
+    return this.name;
   }
 
   equals(state) {
@@ -1152,8 +1169,8 @@ class CommentHandler {
 }
 
 class LexicalException extends LocatedException {
-  constructor() {
-    super(...arguments);
+  constructor(...args) {
+    super(...args);
     this.name = 'LexicalError';
   }
 
@@ -1161,10 +1178,12 @@ class LexicalException extends LocatedException {
 
 class BlockLexer {
   constructor(_words, _nodeType) {
-    this._words = _words;
-    this._nodeType = _nodeType;
+    this._words = void 0;
+    this._nodeType = void 0;
     this._separator = Symbols.TITLE_SEPARATOR;
     this._lineChecker = new LineChecker();
+    this._words = _words;
+    this._nodeType = _nodeType;
   }
 
   nodeType() {
@@ -1312,9 +1331,10 @@ class ConstantBlockLexer extends BlockLexer {
 
 class ConstantLexer {
   constructor(_words) {
-    this._words = _words;
+    this._words = void 0;
     this._lineChecker = new LineChecker();
     this._nodeType = NodeTypes.CONSTANT;
+    this._words = _words;
   }
 
   nodeType() {
@@ -1389,10 +1409,12 @@ class ConstantLexer {
 
 class NamedNodeLexer {
   constructor(_words, _nodeType) {
-    this._words = _words;
-    this._nodeType = _nodeType;
+    this._words = void 0;
+    this._nodeType = void 0;
     this._separator = Symbols.TITLE_SEPARATOR;
     this._lineChecker = new LineChecker();
+    this._words = _words;
+    this._nodeType = _nodeType;
   }
 
   nodeType() {
@@ -1475,9 +1497,10 @@ class DatabaseLexer extends NamedNodeLexer {
 
 class ListItemLexer {
   constructor(_nodeType) {
-    this._nodeType = _nodeType;
+    this._nodeType = void 0;
     this._symbol = Symbols.LIST_ITEM_PREFIX;
     this._lineChecker = new LineChecker();
+    this._nodeType = _nodeType;
   }
 
   makeRegex() {
@@ -1552,9 +1575,11 @@ class FeatureLexer extends NamedNodeLexer {
 
 class QuotedNodeLexer {
   constructor(_words, _nodeType) {
+    this._words = void 0;
+    this._nodeType = void 0;
+    this._lineChecker = new LineChecker();
     this._words = _words;
     this._nodeType = _nodeType;
-    this._lineChecker = new LineChecker();
   }
 
   nodeType() {
@@ -1638,8 +1663,9 @@ class ImportLexer extends QuotedNodeLexer {
 
 class LanguageLexer {
   constructor(_words) {
-    this._words = _words;
+    this._words = void 0;
     this._lineChecker = new LineChecker();
+    this._words = _words;
   }
 
   nodeType() {
@@ -1738,9 +1764,10 @@ class RegexBlockLexer extends BlockLexer {
 
 class RegexLexer {
   constructor(_words) {
-    this._words = _words;
+    this._words = void 0;
     this._lineChecker = new LineChecker();
     this._nodeType = NodeTypes.REGEX;
+    this._words = _words;
   }
 
   nodeType() {
@@ -1844,9 +1871,11 @@ class ScenarioLexer extends NamedNodeLexer {
 
 class StartingKeywordLexer {
   constructor(_words, _nodeType) {
+    this._words = void 0;
+    this._nodeType = void 0;
+    this._lineChecker = new LineChecker();
     this._words = _words;
     this._nodeType = _nodeType;
-    this._lineChecker = new LineChecker();
   }
 
   nodeType() {
@@ -2032,6 +2061,7 @@ class TableRowLexer {
 
 class TagLexer {
   constructor(_subLexers = []) {
+    this._subLexers = void 0;
     this._subLexers = _subLexers;
   }
 
@@ -2107,6 +2137,8 @@ class TagLexer {
 }
 class TagSubLexer {
   constructor(_affectedKeyword, _words) {
+    this._affectedKeyword = void 0;
+    this._words = void 0;
     this._affectedKeyword = _affectedKeyword;
     this._words = _words;
   }
@@ -2237,9 +2269,9 @@ class VariantLexer extends NamePlusNumberNodeLexer {
 
 class Lexer {
   constructor(_defaultLanguage, _languageMap, _stopOnFirstError = false) {
-    this._defaultLanguage = _defaultLanguage;
-    this._languageMap = _languageMap;
-    this._stopOnFirstError = _stopOnFirstError;
+    this._defaultLanguage = void 0;
+    this._languageMap = void 0;
+    this._stopOnFirstError = void 0;
     this._nodes = [];
     this._errors = [];
     this._lexers = [];
@@ -2248,6 +2280,9 @@ class Lexer {
     this._tagSubLexers = [];
     this._inLongString = false;
     this._mustRecognizeAsText = false;
+    this._defaultLanguage = _defaultLanguage;
+    this._languageMap = _languageMap;
+    this._stopOnFirstError = _stopOnFirstError;
     const dictionary = this.loadDictionary(_defaultLanguage);
 
     if (!dictionary) {
@@ -2495,8 +2530,8 @@ var Intents;
 })(Intents || (Intents = {}));
 
 class NLPException extends LocatedException {
-  constructor() {
-    super(...arguments);
+  constructor(...args) {
+    super(...args);
     this.name = 'NLPError';
   }
 
@@ -2504,6 +2539,7 @@ class NLPException extends LocatedException {
 
 class NodeSentenceRecognizer {
   constructor(_nlp) {
+    this._nlp = void 0;
     this._nlp = _nlp;
   }
 
@@ -2676,6 +2712,8 @@ class SyntaxRuleBuilder {
 
 class DatabasePropertyRecognizer {
   constructor(_nlp) {
+    this._nlp = void 0;
+    this._syntaxRules = void 0;
     this._nlp = _nlp;
     this._syntaxRules = this.buildSyntaxRules();
   }
@@ -3337,6 +3375,8 @@ const UI_ACTION_SYNTAX_RULES = [ACCEPT, AM_ON, APPEND, ATTACH_FILE, CANCEL, CHEC
 
 class GivenWhenThenSentenceRecognizer {
   constructor(_nlp) {
+    this._nlp = void 0;
+    this._syntaxRules = void 0;
     this._nlp = _nlp;
     this._syntaxRules = this.buildSyntaxRules();
   }
@@ -9514,10 +9554,11 @@ class EntityRecognizerMaker {
 
 class NLP {
   constructor(_useFuzzyProcessor = true) {
-    this._useFuzzyProcessor = _useFuzzyProcessor;
+    this._useFuzzyProcessor = void 0;
     this._nlpMap = {};
     this._additionalEntities = [];
     this._additionalRecognizers = [];
+    this._useFuzzyProcessor = _useFuzzyProcessor;
     const erMaker = new EntityRecognizerMaker();
 
     this._additionalEntities.push(Entities.VALUE);
@@ -9801,6 +9842,8 @@ const UI_PROPERTY_SYNTAX_RULES = [{
 
 class UIPropertyRecognizer {
   constructor(_nlp) {
+    this._nlp = void 0;
+    this._syntaxRules = void 0;
     this._nlp = _nlp;
     this._syntaxRules = this.buildSyntaxRules();
   }
@@ -9941,6 +9984,11 @@ class UIPropertyRecognizer {
 
 class NLPBasedSentenceRecognizer {
   constructor(_nlpTrainer, _useFuzzyProcessor) {
+    this._nlpTrainer = void 0;
+    this._useFuzzyProcessor = void 0;
+    this._uiPropertyRec = void 0;
+    this._variantSentenceRec = void 0;
+    this._dbPropertyRec = void 0;
     this._nlpTrainer = _nlpTrainer;
     this._useFuzzyProcessor = _useFuzzyProcessor;
     this._uiPropertyRec = new UIPropertyRecognizer(new NLP(_useFuzzyProcessor));
@@ -10095,6 +10143,9 @@ const NLP_PRIORITIES = {
 };
 class NLPTrainingData {
   constructor(intents = [], examples = [], priorities) {
+    this.intents = void 0;
+    this.examples = void 0;
+    this.priorities = void 0;
     this.intents = intents;
     this.examples = examples;
     this.priorities = priorities;
@@ -10103,6 +10154,8 @@ class NLPTrainingData {
 }
 class NLPTrainingIntent {
   constructor(name, entities = []) {
+    this.name = void 0;
+    this.entities = void 0;
     this.name = name;
     this.entities = entities;
   }
@@ -10110,6 +10163,8 @@ class NLPTrainingIntent {
 }
 class NLPTrainingEntity {
   constructor(name, matches = []) {
+    this.name = void 0;
+    this.matches = void 0;
     this.name = name;
     this.matches = matches;
   }
@@ -10117,6 +10172,8 @@ class NLPTrainingEntity {
 }
 class NLPTrainingMatch {
   constructor(id, samples = []) {
+    this.id = void 0;
+    this.samples = void 0;
     this.id = id;
     this.samples = samples;
   }
@@ -10153,10 +10210,11 @@ class NLPTrainingDataConversor {
 
 class NLPTrainer {
   constructor(_languageMap) {
-    this._languageMap = _languageMap;
+    this._languageMap = void 0;
     this.LANGUAGE_INTENT_SEPARATOR = ':';
     this.ALL_INTENTS = '*';
     this._trainedIntents = [];
+    this._languageMap = _languageMap;
   }
 
   canBeTrained(language) {
@@ -10231,8 +10289,8 @@ class NLPTrainer {
 }
 
 class SyntacticException extends LocatedException {
-  constructor() {
-    super(...arguments);
+  constructor(...args) {
+    super(...args);
     this.name = 'SyntacticError';
   }
 
@@ -10664,6 +10722,8 @@ class ListItemParser {
 
 class NodeIterator {
   constructor(_nodes, _index = -1) {
+    this._nodes = void 0;
+    this._index = void 0;
     this._nodes = _nodes;
     this._index = _index;
   }
@@ -11235,8 +11295,10 @@ class VariantParser {
 
 class Parser {
   constructor(_stopOnFirstError = false) {
-    this._stopOnFirstError = _stopOnFirstError;
+    this._stopOnFirstError = void 0;
     this._errors = [];
+    this._parsersMap = void 0;
+    this._stopOnFirstError = _stopOnFirstError;
     this._parsersMap = {};
     this._parsersMap[NodeTypes.LANGUAGE] = new LanguageParser();
     this._parsersMap[NodeTypes.IMPORT] = new ImportParser();
@@ -11373,6 +11435,7 @@ const DEFAULT_DATA_TEST_CASE_COMBINATION = CombinationOptions.SHUFFLED_ONE_WISE.
 
 class Random {
   constructor(seed) {
+    this._prng = void 0;
     this._prng = seedrandom.alea(seed || Date.now().toString());
   }
 
@@ -11388,6 +11451,7 @@ LongLimits.MAX = Number.MAX_SAFE_INTEGER;
 
 class RandomLong {
   constructor(_random) {
+    this._random = void 0;
     this._random = _random;
   }
 
@@ -11415,6 +11479,7 @@ class CartesianProductStrategy {
 }
 class OneWiseStrategy {
   constructor(seed) {
+    this._random = void 0;
     this._random = new Random(seed);
   }
 
@@ -11427,6 +11492,7 @@ class OneWiseStrategy {
 }
 class ShuffledOneWiseStrategy {
   constructor(seed) {
+    this._random = void 0;
     this._random = new Random(seed);
   }
 
@@ -11443,6 +11509,7 @@ class ShuffledOneWiseStrategy {
 }
 class SingleRandomOfEachStrategy {
   constructor(seed) {
+    this._randomLong = void 0;
     this._randomLong = new RandomLong(new Random(seed));
   }
 
@@ -11504,6 +11571,7 @@ class FirstVariantSelectionStrategy {
 }
 class SingleRandomVariantSelectionStrategy {
   constructor(_seed) {
+    this._seed = void 0;
     this._seed = _seed;
   }
 
@@ -11522,9 +11590,11 @@ class SingleRandomVariantSelectionStrategy {
 }
 class FirstMostImportantVariantSelectionStrategy {
   constructor(_defaultImportance, _importanceKeywords) {
+    this._defaultImportance = void 0;
+    this._importanceKeywords = void 0;
+    this._tagUtil = new TagUtil();
     this._defaultImportance = _defaultImportance;
     this._importanceKeywords = _importanceKeywords;
-    this._tagUtil = new TagUtil();
   }
 
   select(variants) {
@@ -11705,7 +11775,7 @@ class DataTestCaseGroupDef {
 
 class DataGenConfig {
   constructor(_valueType = ValueType.STRING) {
-    this._valueType = _valueType;
+    this._valueType = void 0;
     this.required = false;
     this.minValue = null;
     this.maxValue = null;
@@ -11715,6 +11785,7 @@ class DataGenConfig {
     this.value = null;
     this.invertedLogic = false;
     this.computedBy = null;
+    this._valueType = _valueType;
   }
 
   get min() {
@@ -11751,6 +11822,7 @@ class DataGenConfig {
 }
 class DataGenerator {
   constructor(_builder) {
+    this._builder = void 0;
     this._builder = _builder;
   }
 
@@ -11911,6 +11983,7 @@ class QueryCache {
 
 class InvertedLogicListBasedDataGenerator {
   constructor(_gen) {
+    this._gen = void 0;
     this._gen = _gen;
   }
 
@@ -11942,6 +12015,7 @@ class InvertedLogicListBasedDataGenerator {
 
 class InvertedLogicQueryBasedDataGenerator {
   constructor(_gen) {
+    this._gen = void 0;
     this._gen = _gen;
   }
 
@@ -11973,6 +12047,10 @@ class InvertedLogicQueryBasedDataGenerator {
 
 class ListBasedDataGenerator {
   constructor(_random, _rawDataGenerator, _values, _maxTries = 10) {
+    this._random = void 0;
+    this._rawDataGenerator = void 0;
+    this._values = void 0;
+    this._maxTries = void 0;
     this._random = _random;
     this._rawDataGenerator = _rawDataGenerator;
     this._values = _values;
@@ -12030,6 +12108,12 @@ class ListBasedDataGenerator {
 
 class QueryBasedDataGenerator {
   constructor(_random, _rawDataGenerator, _queryable, _queryCache, _query, _maxTries = 10) {
+    this._random = void 0;
+    this._rawDataGenerator = void 0;
+    this._queryable = void 0;
+    this._queryCache = void 0;
+    this._query = void 0;
+    this._maxTries = void 0;
     this._random = _random;
     this._rawDataGenerator = _rawDataGenerator;
     this._queryable = _queryable;
@@ -12132,6 +12216,7 @@ DateLimits.MAX = LocalDate$1.of(9999, 12, 31);
 
 class RandomDate {
   constructor(_randomLong) {
+    this._randomLong = void 0;
     this._randomLong = _randomLong;
   }
 
@@ -12166,6 +12251,7 @@ ShortDateTimeLimits.MAX = LocalDateTime$1.of(9999, 12, 31, 23, 59);
 
 class RandomDateTime {
   constructor(_randomLong) {
+    this._randomLong = void 0;
     this._randomLong = _randomLong;
   }
 
@@ -12197,6 +12283,7 @@ DoubleLimits.MAX = Number.MAX_SAFE_INTEGER;
 
 class RandomDouble {
   constructor(_random) {
+    this._random = void 0;
     this._random = _random;
   }
 
@@ -12218,6 +12305,7 @@ class RandomDouble {
 
 class RandomShortDateTime {
   constructor(_randomLong) {
+    this._randomLong = void 0;
     this._randomLong = _randomLong;
   }
 
@@ -12252,6 +12340,7 @@ ShortTimeLimits.MAX = LocalTime$1.of(23, 59, 0, 0);
 
 class RandomShortTime {
   constructor(_randomLong) {
+    this._randomLong = void 0;
     this._randomLong = _randomLong;
   }
 
@@ -12327,10 +12416,15 @@ function avoidDatabaseChar(char) {
 
 class RandomString {
   constructor(_random, options = Object.assign({}, DEFAULT_RANDOM_STRING_OPTIONS)) {
-    this._random = _random;
-    this.options = options;
+    this._random = void 0;
+    this.options = void 0;
     this.MIN_PRINTABLE_ASCII_ISO = 32;
     this.MAX_PRINTABLE_ASCII_ISO = 255;
+    this._randomLong = void 0;
+    this._minCharCode = void 0;
+    this._maxCharCode = void 0;
+    this._random = _random;
+    this.options = options;
     this._randomLong = new RandomLong(_random);
     this._minCharCode = this.MIN_PRINTABLE_ASCII_ISO;
     this._maxCharCode = this.MAX_PRINTABLE_ASCII_ISO;
@@ -12399,6 +12493,7 @@ class RandomString {
 
 class RandomTime {
   constructor(_randomLong) {
+    this._randomLong = void 0;
     this._randomLong = _randomLong;
   }
 
@@ -12426,8 +12521,11 @@ class RandomTime {
 
 class DateGenerator {
   constructor(_randomDateGen, min, max) {
-    this._randomDateGen = _randomDateGen;
+    this._randomDateGen = void 0;
     this.ZERO = DateLimits.MIN;
+    this._min = void 0;
+    this._max = void 0;
+    this._randomDateGen = _randomDateGen;
 
     if (isDefined(min) && isDefined(max) && min.isAfter(max)) {
       throw new Error('min date should not be greater than max');
@@ -12521,8 +12619,11 @@ class DateGenerator {
 
 class DateTimeGenerator {
   constructor(_randomDateTimeGen, min, max) {
-    this._randomDateTimeGen = _randomDateTimeGen;
+    this._randomDateTimeGen = void 0;
     this.ZERO = DateTimeLimits.MIN;
+    this._min = void 0;
+    this._max = void 0;
+    this._randomDateTimeGen = _randomDateTimeGen;
 
     if (isDefined(min) && isDefined(max) && min.isAfter(max)) {
       throw new Error('Minimum value should not be greater than the maximum value.');
@@ -12668,8 +12769,12 @@ class MinMaxChecker {
 
 class DoubleGenerator {
   constructor(_random, min, max, delta) {
-    this._random = _random;
+    this._random = void 0;
     this.DEFAULT_DELTA = 0.01;
+    this._min = void 0;
+    this._max = void 0;
+    this._delta = void 0;
+    this._random = _random;
     const checker = new MinMaxChecker();
     checker.check(min, max, delta);
     this._min = min !== null && min !== undefined ? Number(min) : DoubleLimits.MIN;
@@ -12765,6 +12870,9 @@ class DoubleGenerator {
 
 class LongGenerator {
   constructor(_random, min, max) {
+    this._random = void 0;
+    this._min = void 0;
+    this._max = void 0;
     this._random = _random;
     new MinMaxChecker().check(min, max);
     this._min = min !== null && min !== undefined ? min : LongLimits.MIN;
@@ -12855,8 +12963,11 @@ class LongGenerator {
 
 class ShortDateTimeGenerator {
   constructor(_randomGen, min, max) {
-    this._randomGen = _randomGen;
+    this._randomGen = void 0;
     this.ZERO = ShortDateTimeLimits.MIN;
+    this._min = void 0;
+    this._max = void 0;
+    this._randomGen = _randomGen;
 
     if (isDefined(min) && isDefined(max) && min.isAfter(max)) {
       throw new Error('Minimum value should not be greater than the maximum value.');
@@ -12966,8 +13077,11 @@ class ShortDateTimeGenerator {
 
 class ShortTimeGenerator {
   constructor(_randomTimeGen, min, max) {
-    this._randomTimeGen = _randomTimeGen;
+    this._randomTimeGen = void 0;
     this.ZERO = ShortTimeLimits.MIN;
+    this._min = void 0;
+    this._max = void 0;
+    this._randomTimeGen = _randomTimeGen;
 
     if (isDefined(min) && isDefined(max) && min.isAfter(max)) {
       throw new Error('min time should not be greater than max');
@@ -13066,6 +13180,10 @@ StringLimits.MAX_USUAL = 127;
 
 class StringGenerator {
   constructor(_randomString, minLength, maxLength, maxPossibleLength) {
+    this._randomString = void 0;
+    this._minLength = void 0;
+    this._maxLength = void 0;
+    this._maxPossibleLength = void 0;
     this._randomString = _randomString;
     new MinMaxChecker().check(minLength, maxLength);
 
@@ -13198,8 +13316,11 @@ class StringGenerator {
 
 class TimeGenerator {
   constructor(_randomTimeGen, min, max) {
-    this._randomTimeGen = _randomTimeGen;
+    this._randomTimeGen = void 0;
     this.ZERO = TimeLimits.MIN;
+    this._min = void 0;
+    this._max = void 0;
+    this._randomTimeGen = _randomTimeGen;
 
     if (isDefined(min) && isDefined(max) && min.isAfter(max)) {
       throw new Error('min time should not be greater than max');
@@ -13293,6 +13414,12 @@ class TimeGenerator {
 
 class RegexBasedDataGenerator {
   constructor(_randomLong, _randomString, _expression, _valueType = ValueType.STRING, _randomTriesToInvalidValues = 10, _maxStringSize) {
+    this._randomLong = void 0;
+    this._randomString = void 0;
+    this._expression = void 0;
+    this._valueType = void 0;
+    this._randomTriesToInvalidValues = void 0;
+    this._maxStringSize = void 0;
     this._randomLong = _randomLong;
     this._randomString = _randomString;
     this._expression = _expression;
@@ -13367,10 +13494,22 @@ class RegexBasedDataGenerator {
 
 class DataGeneratorBuilder {
   constructor(_seed, _randomTriesToInvalidValues = 10, _maxPossibleStringLength) {
+    this._seed = void 0;
+    this._randomTriesToInvalidValues = void 0;
+    this._maxPossibleStringLength = void 0;
+    this._random = void 0;
+    this._randomString = void 0;
+    this._randomLong = void 0;
+    this._randomDouble = void 0;
+    this._randomDate = void 0;
+    this._randomTime = void 0;
+    this._randomShortTime = void 0;
+    this._randomDateTime = void 0;
+    this._randomShortDateTime = void 0;
+    this._queryCache = new QueryCache();
     this._seed = _seed;
     this._randomTriesToInvalidValues = _randomTriesToInvalidValues;
     this._maxPossibleStringLength = _maxPossibleStringLength;
-    this._queryCache = new QueryCache();
     this._random = new Random(this._seed);
     this._randomString = new RandomString(this._random, {
       escapeChars: true,
@@ -13880,6 +14019,9 @@ var DTCAnalysisResult;
 
 class DTCAnalysisData {
   constructor(result, oracles = [], uieVariableDependencies = []) {
+    this.result = void 0;
+    this.oracles = void 0;
+    this.uieVariableDependencies = void 0;
     this.result = result;
     this.oracles = oracles;
     this.uieVariableDependencies = uieVariableDependencies;
@@ -13890,6 +14032,7 @@ class DataTestCaseAnalyzer {
   constructor(seed) {
     this._uiePropExtractor = new UIElementPropertyExtractor();
     this._nlpUtil = new NLPUtil();
+    this._dataGenBuilder = void 0;
     this._dataGenBuilder = new DataGeneratorBuilder(seed);
   }
 
@@ -14891,6 +15034,9 @@ class AlaSqlTableCreator {
 
 class AlaSqlDatabaseInterface {
   constructor() {
+    this.dbConnection = void 0;
+    this._db = void 0;
+    this._basePath = void 0;
     this._sqlHelper = new SqlHelper();
   }
 
@@ -14969,6 +15115,8 @@ class AlaSqlDatabaseInterface {
 
 class ConnectionCheckResult {
   constructor(success = false, resultsMap = {}) {
+    this.success = void 0;
+    this.resultsMap = void 0;
     this.success = success;
     this.resultsMap = resultsMap;
   }
@@ -15082,6 +15230,7 @@ class DatabaseJSDatabaseInterface {
   constructor() {
     this._dbConnection = null;
     this._db = null;
+    this._basePath = void 0;
 
     this.hasFileBasedDriver = databaseType => {
       return isPathBasedDatabaseType(databaseType);
@@ -16033,12 +16182,13 @@ class UIElementOperatorChecker {
 
 class UIElementValueGenerator {
   constructor(_dataGen) {
-    this._dataGen = _dataGen;
+    this._dataGen = void 0;
     this._queryRefReplacer = new QueryReferenceReplacer();
     this._uiePropExtractor = new UIElementPropertyExtractor();
     this._opChecker = new UIElementOperatorChecker();
     this._dbQueryCache = new Map();
     this._tblQueryCache = new Map();
+    this._dataGen = _dataGen;
   }
 
   async generate(uieName, context, doc, spec, errors) {
@@ -16501,6 +16651,8 @@ class UIElementValueGenerator {
 }
 class ValueGenContext {
   constructor(uieVariableToPlanMap = new Map(), uieVariableToValueMap = new Map()) {
+    this.uieVariableToPlanMap = void 0;
+    this.uieVariableToValueMap = void 0;
     this.uieVariableToPlanMap = uieVariableToPlanMap;
     this.uieVariableToValueMap = uieVariableToValueMap;
   }
@@ -16617,6 +16769,10 @@ async function formatUsingLocale(locale, map, nativeDate, localeFormat) {
 
 class LocaleContext {
   constructor(language, locale, localeMap, localeFormat) {
+    this.language = void 0;
+    this.locale = void 0;
+    this.localeMap = void 0;
+    this.localeFormat = void 0;
     this.language = language;
     this.locale = locale;
     this.localeMap = localeMap;
@@ -16655,6 +16811,10 @@ class LocaleContext {
 
 class PreTestCase {
   constructor(testPlan, steps = [], oracles = [], correspondingOracles = []) {
+    this.testPlan = void 0;
+    this.steps = void 0;
+    this.oracles = void 0;
+    this.correspondingOracles = void 0;
     this.testPlan = testPlan;
     this.steps = steps;
     this.oracles = oracles;
@@ -17106,6 +17266,10 @@ class UIPropertyReferenceReplacer {
 
 class GenContext {
   constructor(spec, doc, errors, warnings) {
+    this.spec = void 0;
+    this.doc = void 0;
+    this.errors = void 0;
+    this.warnings = void 0;
     this.spec = spec;
     this.doc = doc;
     this.errors = errors;
@@ -17126,6 +17290,22 @@ class PreTestCaseGenerator {
     escapeChars: true,
     avoidDatabaseChars: true
   }) {
+    this._variantSentenceRec = void 0;
+    this.languageMap = void 0;
+    this.defaultLanguage = void 0;
+    this.seed = void 0;
+    this.uiLiteralCaseOption = void 0;
+    this.minRandomStringSize = void 0;
+    this.maxRandomStringSize = void 0;
+    this.randomTriesToInvalidValues = void 0;
+    this.randomStringOptions = void 0;
+    this._nlpUtil = new NLPUtil();
+    this._uiePropExtractor = new UIElementPropertyExtractor();
+    this._lineChecker = new LineChecker();
+    this._randomString = void 0;
+    this._dtcAnalyzer = void 0;
+    this._uieValueGen = void 0;
+    this._targetTypeUtil = new TargetTypeUtil();
     this._variantSentenceRec = _variantSentenceRec;
     this.languageMap = languageMap;
     this.defaultLanguage = defaultLanguage;
@@ -17135,10 +17315,6 @@ class PreTestCaseGenerator {
     this.maxRandomStringSize = maxRandomStringSize;
     this.randomTriesToInvalidValues = randomTriesToInvalidValues;
     this.randomStringOptions = randomStringOptions;
-    this._nlpUtil = new NLPUtil();
-    this._uiePropExtractor = new UIElementPropertyExtractor();
-    this._lineChecker = new LineChecker();
-    this._targetTypeUtil = new TargetTypeUtil();
     const random = new Random(seed);
     this._randomString = new RandomString(random, randomStringOptions);
     this._dtcAnalyzer = new DataTestCaseAnalyzer(seed);
@@ -17823,6 +17999,9 @@ class PreTestCaseGenerator {
 
 class UIETestPlan {
   constructor(dtc, result, otherwiseSteps) {
+    this.dtc = void 0;
+    this.result = void 0;
+    this.otherwiseSteps = void 0;
     this.dtc = dtc;
     this.result = result;
     this.otherwiseSteps = otherwiseSteps;
@@ -17940,6 +18119,9 @@ class UnfilteredMix {
 
 class TestPlanner {
   constructor(mixingStrategy, combinationStrategy, seed) {
+    this.mixingStrategy = void 0;
+    this.combinationStrategy = void 0;
+    this.seed = void 0;
     this.mixingStrategy = mixingStrategy;
     this.combinationStrategy = combinationStrategy;
     this.seed = seed;
@@ -17999,8 +18181,9 @@ const stepHasState = step => step ? hasState(step.content) : false;
 
 class StepHandler {
   constructor(_defaultLanguage) {
-    this._defaultLanguage = _defaultLanguage;
+    this._defaultLanguage = void 0;
     this._keywords = new Map();
+    this._defaultLanguage = _defaultLanguage;
   }
 
   keywordMapForLanguage(docLanguage) {
@@ -18281,6 +18464,16 @@ class VariantStateDetector {
 
 class TestScenarioGenerator {
   constructor(_preTestCaseGenerator, _variantSelectionStrategy, _statePairCombinationStrategy, _variantToTestScenarioMap, _postconditionNameToVariantsMap) {
+    this._preTestCaseGenerator = void 0;
+    this._variantSelectionStrategy = void 0;
+    this._statePairCombinationStrategy = void 0;
+    this._variantToTestScenarioMap = void 0;
+    this._postconditionNameToVariantsMap = void 0;
+    this._randomLong = void 0;
+    this._defaultLanguage = void 0;
+    this._stepHandler = void 0;
+    this.seed = void 0;
+    this._validValuePlanMaker = void 0;
     this._preTestCaseGenerator = _preTestCaseGenerator;
     this._variantSelectionStrategy = _variantSelectionStrategy;
     this._statePairCombinationStrategy = _statePairCombinationStrategy;
@@ -18525,6 +18718,9 @@ class TestScenarioGenerator {
 
 class TestCaseDocumentGenerator {
   constructor(_extensionFeature, _extensionTestCase, _basePath) {
+    this._extensionFeature = void 0;
+    this._extensionTestCase = void 0;
+    this._basePath = void 0;
     this._extensionFeature = _extensionFeature;
     this._extensionTestCase = _extensionTestCase;
     this._basePath = _basePath;
@@ -18616,6 +18812,7 @@ class TestCaseDocumentGenerator {
 class TestCaseFileGenerator {
   constructor(language) {
     this.fileHeader = ['# Generated with ❤ by Concordia', '#', '# THIS IS A GENERATED FILE - MODIFICATIONS CAN BE LOST !', ''];
+    this._dict = void 0;
     this._dict = dictionaryForLanguage(language).keywords;
   }
 
@@ -18726,6 +18923,7 @@ class TestCaseFileGenerator {
 
 class TestCaseGenerator {
   constructor(_preTestCaseGenerator) {
+    this._preTestCaseGenerator = void 0;
     this._preTestCaseGenerator = _preTestCaseGenerator;
   }
 
@@ -18865,6 +19063,10 @@ function typedCombinationFor(value, defaultValue) {
 
 class TestCaseGeneratorFacade {
   constructor(_variantSentenceRec, _languageMap, _listener, _fileHandler) {
+    this._variantSentenceRec = void 0;
+    this._languageMap = void 0;
+    this._listener = void 0;
+    this._fileHandler = void 0;
     this._variantSentenceRec = _variantSentenceRec;
     this._languageMap = _languageMap;
     this._listener = _listener;
@@ -19114,6 +19316,9 @@ function addTimeStampToFilename(file, dateTime) {
 
 class FSFileHandler {
   constructor(_fs, _promisify, _encoding = 'utf8') {
+    this._fs = void 0;
+    this._promisify = void 0;
+    this._encoding = void 0;
     this._fs = _fs;
     this._promisify = _promisify;
     this._encoding = _encoding;
@@ -19183,6 +19388,7 @@ class FSFileHandler {
 
 class FSFileSearcher {
   constructor(_fs) {
+    this._fs = void 0;
     this._fs = _fs;
   }
 
@@ -19826,6 +20032,7 @@ class TableSSA extends SpecificationAnalyzer {
 class TestCaseSSA extends SpecificationAnalyzer {
   constructor(_keywords) {
     super();
+    this._keywords = void 0;
     this._keywords = _keywords;
 
     if (!this._keywords) {
@@ -20153,6 +20360,7 @@ class TestCaseSSA extends SpecificationAnalyzer {
 class BatchSpecificationAnalyzer extends SpecificationAnalyzer {
   constructor() {
     super();
+    this._analyzers = void 0;
     this._analyzers = [new ImportSSA(), new FeatureSSA(), new ConstantSSA(), new DatabaseSSA(), new TableSSA(), new TestCaseSSA(), new BeforeAllSSA(), new AfterAllSSA()];
   }
 
@@ -20206,6 +20414,9 @@ const DEFAULT_COMPILER_OPTIONS = {
 };
 class CompilerOutput {
   constructor(problems, spec, graph) {
+    this.problems = void 0;
+    this.spec = void 0;
+    this.graph = void 0;
     this.problems = problems;
     this.spec = spec;
     this.graph = graph;
@@ -20214,6 +20425,9 @@ class CompilerOutput {
 }
 class Compiler {
   constructor(_fileReader, _singleFileCompiler, _lineBreaker = "\n") {
+    this._fileReader = void 0;
+    this._singleFileCompiler = void 0;
+    this._lineBreaker = void 0;
     this._fileReader = _fileReader;
     this._singleFileCompiler = _singleFileCompiler;
     this._lineBreaker = _lineBreaker;
@@ -20364,6 +20578,7 @@ class DatabaseDA {
 
 class ImportDA {
   constructor(_fs = fs) {
+    this._fs = void 0;
     this._fs = _fs;
   }
 
@@ -20572,6 +20787,7 @@ class VariantGivenStepDA {
 
 class BatchDocumentAnalyzer {
   constructor() {
+    this._analyzers = void 0;
     this._analyzers = [new ImportDA(), new ScenarioDA(), new DatabaseDA(), new UIElementDA(), new VariantGivenStepDA()];
   }
 
@@ -20590,12 +20806,17 @@ class BatchDocumentAnalyzer {
 
 class SingleFileCompiler {
   constructor(_lexer, _parser, _nlpRec, _defaultLanguage, _ignoreSemanticAnalysis = false) {
+    this._lexer = void 0;
+    this._parser = void 0;
+    this._nlpRec = void 0;
+    this._defaultLanguage = void 0;
+    this._ignoreSemanticAnalysis = void 0;
+    this._documentAnalyzer = new BatchDocumentAnalyzer();
     this._lexer = _lexer;
     this._parser = _parser;
     this._nlpRec = _nlpRec;
     this._defaultLanguage = _defaultLanguage;
     this._ignoreSemanticAnalysis = _ignoreSemanticAnalysis;
-    this._documentAnalyzer = new BatchDocumentAnalyzer();
   }
 
   async process(problems, filePath, content, lineBreaker = "\n") {
@@ -20683,6 +20904,10 @@ function filterFilesToCompile(files, extensionFeature, extensionTestCase) {
 }
 class CompilerFacade {
   constructor(_fs, _promisify, _compilerListener, _tcGenListener) {
+    this._fs = void 0;
+    this._promisify = void 0;
+    this._compilerListener = void 0;
+    this._tcGenListener = void 0;
     this._fs = _fs;
     this._promisify = _promisify;
     this._compilerListener = _compilerListener;
@@ -20908,11 +21133,15 @@ function concordiaPluginPropertyValue(pkg) {
 
 class PackageBasedPluginFinder {
   constructor(_processPath, _fileReader, _dirSearcher, _listener) {
+    this._processPath = void 0;
+    this._fileReader = void 0;
+    this._dirSearcher = void 0;
+    this._listener = void 0;
+    this.NODE_MODULES = 'node_modules';
     this._processPath = _processPath;
     this._fileReader = _fileReader;
     this._dirSearcher = _dirSearcher;
     this._listener = _listener;
-    this.NODE_MODULES = 'node_modules';
   }
 
   async find() {
@@ -21060,6 +21289,7 @@ function createInstance(context, className, args) {
 const DEFAULT_FILENAME = 'concordia-report';
 class FileBasedTestReporter {
   constructor(_fileWriter) {
+    this._fileWriter = void 0;
     this._fileWriter = _fileWriter;
   }
 
@@ -21393,6 +21623,8 @@ class TestResultAnalyzer {
 
 class FSDirSearcher {
   constructor(_fs, _promisify) {
+    this._fs = void 0;
+    this._promisify = void 0;
     this._fs = _fs;
     this._promisify = _promisify;
   }
@@ -21429,6 +21661,9 @@ function runApp(libs, options, listener) {
 }
 class App {
   constructor(_fs, _path, _promisify) {
+    this._fs = void 0;
+    this._path = void 0;
+    this._promisify = void 0;
     this._fs = _fs;
     this._path = _path;
     this._promisify = _promisify;
@@ -22221,8 +22456,8 @@ const pluralS = (count, singular, plural) => {
 };
 class UI {
   constructor(_debugMode = false, _verboseMode = false) {
-    this._debugMode = _debugMode;
-    this._verboseMode = _verboseMode;
+    this._debugMode = void 0;
+    this._verboseMode = void 0;
     this.symbolPointer = figures.pointerSmall;
     this.symbolItem = figures.line;
     this.symbolSuccess = logSymbols.success;
@@ -22246,6 +22481,8 @@ class UI {
     this.bgHighlight = colors.bgYellowBright;
     this.bgText = colors.bgWhiteBright;
     this.bgCyan = colors.bgCyan;
+    this._debugMode = _debugMode;
+    this._verboseMode = _verboseMode;
   }
 
   clearLine() {
@@ -23039,6 +23276,9 @@ class ConcordiaQuestions {
 
 class PluginController {
   constructor(_packageManagerName, _pluginListener, _fileReader) {
+    this._packageManagerName = void 0;
+    this._pluginListener = void 0;
+    this._fileReader = void 0;
     this._packageManagerName = _packageManagerName;
     this._pluginListener = _pluginListener;
     this._fileReader = _fileReader;
@@ -23317,45 +23557,64 @@ async function main(appPath, processPath) {
   }
 
   const parentDir = path.dirname(appPath);
-  const pkg = readPkgUp.sync({
-    cwd: parentDir,
-    normalize: false
-  }).packageJson || {};
+  let pkg;
+  let couldReadPackage = false;
+
+  try {
+    var _pkg;
+
+    pkg = await readPackageUp({
+      cwd: parentDir,
+      normalize: false
+    });
+    pkg = (_pkg = pkg) == null ? void 0 : _pkg.packageJson;
+    couldReadPackage = !!pkg;
+  } catch (err) {
+    console.log('Could not find package.json');
+  }
+
+  if (!pkg) {
+    pkg = {
+      description: 'Concordia Language Compiler',
+      version: '?',
+      author: {
+        name: 'Thiago Delgado Pinto'
+      },
+      homepage: 'https://concordialang.org'
+    };
+  }
 
   if (options.about) {
-    ui.showAbout({
-      description: pkg.description || 'Concordia',
-      version: pkg.version || '?',
-      author: pkg.author['name'] || 'Thiago Delgado Pinto',
-      homepage: pkg.homepage || 'https://concordialang.org'
-    });
+    ui.showAbout(pkg);
     return true;
   }
 
   if (options.version) {
-    ui.showVersion(pkg.version || '?');
+    ui.showVersion(pkg.version);
     return true;
   }
 
-  const notifier = new UpdateNotifier({
-    pkg,
-    updateCheckInterval: 1000 * 60 * 60 * 12
-  });
-  notifier.notify();
+  if (couldReadPackage) {
+    const notifier = new UpdateNotifier({
+      pkg,
+      updateCheckInterval: 1000 * 60 * 60 * 12
+    });
+    notifier.notify();
 
-  if (!!notifier.update) {
-    const diff = semverDiff(notifier.update.current, notifier.update.latest);
-    const hasBreakingChange = 'major' === diff;
-    const url = 'https://github.com/thiagodp/concordialang/releases';
-    ui.announceUpdateAvailable(url, hasBreakingChange);
-  }
-
-  if (options.newer) {
-    if (!notifier.update) {
-      ui.announceNoUpdateAvailable();
+    if (!!notifier.update) {
+      const diff = semverDiff(notifier.update.current, notifier.update.latest);
+      const hasBreakingChange = 'major' === diff;
+      const url = 'https://github.com/thiagodp/concordialang/releases';
+      ui.announceUpdateAvailable(url, hasBreakingChange);
     }
 
-    return true;
+    if (options.newer) {
+      if (!notifier.update) {
+        ui.announceNoUpdateAvailable();
+      }
+
+      return true;
+    }
   }
 
   let fileOptions = null;

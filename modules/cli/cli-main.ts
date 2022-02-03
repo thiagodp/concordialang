@@ -5,7 +5,7 @@ import { distance } from 'damerau-levenshtein-js';
 import * as fs from 'fs';
 import fsExtra from 'fs-extra';
 import * as path from 'path';
-import readPkgUp from 'read-pkg-up';
+import readPackageUp from 'read-pkg-up';
 import semverDiff from 'semver-diff';
 import { UpdateNotifier } from 'update-notifier';
 import { promisify } from 'util';
@@ -145,51 +145,69 @@ export async function main( appPath: string, processPath: string ): Promise< boo
 
 	// Retrieve package data
 	const parentDir = path.dirname( appPath );
-	const pkg = readPkgUp.sync( {
-		cwd: parentDir,
-		normalize: false
-	} ).packageJson || {};
+
+	let pkg: any;
+	let couldReadPackage: boolean = false;
+	try {
+		pkg = await readPackageUp( {
+			cwd: parentDir,
+			normalize: false
+		} );
+		pkg = pkg?.packageJson;
+		couldReadPackage = !! pkg;
+	} catch ( err ) {
+		console.log( 'Could not find package.json' );
+	}
+	// Assume defaults
+	if ( ! pkg ) {
+		pkg = {
+			description: 'Concordia Language Compiler',
+			version: '?',
+			author: { name: 'Thiago Delgado Pinto' },
+			homepage: 'https://concordialang.org'
+		};
+	}
 
     // Show about
     if ( options.about ) {
-        ui.showAbout( {
-			description: pkg.description || 'Concordia',
-			version: pkg.version || '?',
-			author: pkg.author[ 'name' ] || 'Thiago Delgado Pinto',
-			homepage: pkg.homepage || 'https://concordialang.org'
-		});
+        ui.showAbout( pkg );
         return true;
     }
 
     // Show version
     if ( options.version ) {
-        ui.showVersion( pkg.version || '?' );
+        ui.showVersion( pkg.version );
         return true;
 	}
 
     // Check for updates
-    const notifier = new UpdateNotifier(
-        {
-            pkg,
-            updateCheckInterval: 1000 * 60 * 60 * 12 // 12 hours
-        }
-    );
-    notifier.notify(); // display a message only if an update is available
+	if ( couldReadPackage ) {
 
-    if ( !! notifier.update ) {
-        const diff = semverDiff( notifier.update.current, notifier.update.latest );
-        const hasBreakingChange: boolean = 'major' === diff;
-        const url = 'https://github.com/thiagodp/concordialang/releases';
-        ui.announceUpdateAvailable( url, hasBreakingChange );
+		const notifier = new UpdateNotifier(
+			{
+				pkg,
+				updateCheckInterval: 1000 * 60 * 60 * 12 // 12 hours
+			}
+		);
+		notifier.notify(); // display a message only if an update is available
+
+		if ( !! notifier.update ) {
+			const diff = semverDiff( notifier.update.current, notifier.update.latest );
+			const hasBreakingChange: boolean = 'major' === diff;
+			const url = 'https://github.com/thiagodp/concordialang/releases';
+			ui.announceUpdateAvailable( url, hasBreakingChange );
+		}
+
+		// Newer option ?
+		if ( options.newer ) {
+			if ( ! notifier.update ) {
+				ui.announceNoUpdateAvailable();
+			}
+			return true;
+		}
+
 	}
 
-    // Newer option ?
-    if ( options.newer ) {
-        if ( ! notifier.update ) {
-            ui.announceNoUpdateAvailable();
-        }
-        return true;
-    }
 
 	// LOAD CONFIG FILE OPTIONS
 
