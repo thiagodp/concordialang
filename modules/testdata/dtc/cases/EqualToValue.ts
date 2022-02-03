@@ -1,7 +1,6 @@
-import { isDefined } from "../../../util/TypeChecking";
-import { Cfg } from "../Cfg";
-import { DTCAnalyzer } from "../DTCAnalyzer";
-import { ExpectedResult } from "../ExpectedResult";
+import { PropCfg } from '../prop-cfg';
+import { DTCAnalyzer } from '../DTCAnalyzer';
+import { ExpectedResult } from '../ExpectedResult';
 
 /**
  * Evaluates `DataTestCase.EQUAL_TO_VALUE`
@@ -9,29 +8,31 @@ import { ExpectedResult } from "../ExpectedResult";
 export class EqualToValue implements DTCAnalyzer {
 
 	/** @inheritdoc */
-	analyze( cfg: Cfg ): ExpectedResult {
+	analyze( cfg: PropCfg ): ExpectedResult {
 
 		// Doesn't it have a value ?
-		if ( ! isDefined( cfg.value ) ) {
+		if ( ! cfg.value ) {
 			return ExpectedResult.INCOMPATIBLE;
 		}
 
+		let value = cfg.value.value;
+
 		// Is it an array ?
-		if ( Array.isArray( cfg.value ) ) {
+		if ( Array.isArray( value ) ) {
 
 			// More than one value ?
-			if ( cfg.value.length > 1 ) {
+			if ( value.length > 1 ) {
 				return ExpectedResult.INCOMPATIBLE;
 			}
+
+			value = value[ 0 ]; // First element
 		}
 
-		const value = Array.isArray( cfg.value ) ? cfg.value[ 0 ] : cfg.value;
-
 		// Is it required ?
-		if ( true === cfg.required ) {
+		if ( cfg.required?.value === true ) {
 			// Required but empty
-			if ( '' === value ) {
-				if ( cfg.requiredWithOnlyValidDTC ) {
+			if ( value === '' ) {
+				if ( cfg.required.onlyValidDTC ) {
 					return ExpectedResult.INCOMPATIBLE;
 				}
 				return ExpectedResult.INVALID;
@@ -40,7 +41,7 @@ export class EqualToValue implements DTCAnalyzer {
 			return ExpectedResult.VALID;
 		}
 		// Not required
-		else if ( false === cfg.required ) {
+		else if ( ! cfg.required?.value ) {
 			return ExpectedResult.VALID;
 		}
 		// Required not defined

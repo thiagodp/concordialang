@@ -1,4 +1,5 @@
-import * as objectToArray from 'object-to-array';
+import objectToArray from 'object-to-array';
+
 import { CombinationStrategy } from '../selection/CombinationStrategy';
 import { DTCAnalysisResult, UIEVariableToDTCMap } from '../testdata/DataTestCaseAnalyzer';
 import { Random } from '../testdata/random/Random';

@@ -1,4 +1,4 @@
-import Graph = require('graph.js/dist/graph.full.js');
+import Graph from 'graph.js/dist/graph.full.js';
 
 import { ProblemMapper } from '../error/ProblemMapper';
 import { SemanticException } from '../error/SemanticException';

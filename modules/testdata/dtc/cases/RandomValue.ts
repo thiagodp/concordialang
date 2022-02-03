@@ -1,7 +1,7 @@
-import { isDefined } from "../../../util/TypeChecking";
-import { Cfg } from "../Cfg";
-import { DTCAnalyzer } from "../DTCAnalyzer";
-import { ExpectedResult } from "../ExpectedResult";
+import { isDefined } from '../../../util/type-checking';
+import { PropCfg } from '../prop-cfg';
+import { DTCAnalyzer } from '../DTCAnalyzer';
+import { ExpectedResult } from '../ExpectedResult';
 
 /**
  * Evaluates `DataTestCase.RANDOM_VALUE`
@@ -9,15 +9,15 @@ import { ExpectedResult } from "../ExpectedResult";
 export class RandomValue implements DTCAnalyzer {
 
 	/** @inheritdoc */
-	analyze( cfg: Cfg ): ExpectedResult {
+	analyze( cfg: PropCfg ): ExpectedResult {
 
 		// All constraints but Required are accepted as incompatible
-		if ( isDefined( cfg.value ) ||
-			isDefined( cfg.format ) ||
-			isDefined( cfg.minimumLength ) ||
-			isDefined( cfg.maximumLength ) ||
-			isDefined( cfg.minimumValue ) ||
-			isDefined( cfg.maximumValue )
+		if ( cfg.value ||
+			cfg.format ||
+			cfg.minlength ||
+			cfg.maxlength ||
+			cfg.minvalue ||
+			cfg.maxvalue
 		) {
 			return ExpectedResult.INCOMPATIBLE;
 		}

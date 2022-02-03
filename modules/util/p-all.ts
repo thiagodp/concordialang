@@ -1,4 +1,4 @@
-import pMap = require( 'p-map' );
+import pMap from 'p-map';
 
 export const pAll = ( iterable, options ) => pMap( iterable, ( element: any )  => element(), options );
 

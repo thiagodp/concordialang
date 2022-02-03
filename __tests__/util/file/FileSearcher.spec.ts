@@ -2,7 +2,7 @@ import { fs, vol } from 'memfs';
 import { join, normalize, resolve } from 'path';
 
 import { FileSearcher, FileSearchOptions } from '../../../modules/util/file/FileSearcher';
-import { FSFileSearcher } from '../../../modules/util/file/FSFileSearcher';
+import { FSFileSearcher } from '../../../modules/util/fs/FSFileSearcher';
 
 describe( 'FileSearcher', () => {
 

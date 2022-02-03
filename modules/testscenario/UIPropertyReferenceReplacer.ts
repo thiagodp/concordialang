@@ -3,8 +3,9 @@ import { basename } from 'path';
 import { EntityValueType, Step, UIElement, UIPropertyReference, UIPropertyTypes } from '../ast';
 import { Warning } from '../error/Warning';
 import { Symbols } from '../req/Symbols';
-import { isDefined, UIElementNameHandler, UIElementPropertyExtractor } from '../util';
+import { isDefined, UIElementPropertyExtractor } from '../util';
 import { removeDuplicated } from '../util/remove-duplicated';
+import { extractFeatureNameOf } from '../util/variable-reference';
 import { LocaleContext } from './LocaleContext';
 import { GenContext } from './PreTestCaseGenerator';
 import { formatValueToUseInASentence } from './value-formatter';
@@ -37,7 +38,6 @@ export class UIPropertyReferenceReplacer {
         isAlreadyInsideAString: boolean = false
     ): Promise< string > {
 
-        const uieNameHandler = new UIElementNameHandler();
         const propExtractor = new UIElementPropertyExtractor();
 
         let newContent = content;
@@ -58,7 +58,7 @@ export class UIPropertyReferenceReplacer {
             }
 
             const uieName = uipRef.uiElementName;
-            const [ featureName, /* uieNameWithoutFeature */ ] = uieNameHandler.extractNamesOf( uieName );
+            const featureName = extractFeatureNameOf( uieName );
             let variable: string;
             let uie: UIElement;
 

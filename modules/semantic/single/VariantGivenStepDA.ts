@@ -2,7 +2,7 @@ import { Document, Step } from "../../ast";
 import { SemanticException } from "../../error/SemanticException";
 import { Entities, NLPUtil } from "../../nlp";
 import { NodeTypes } from "../../req/NodeTypes";
-import { isDefined } from "../../util/TypeChecking";
+import { isDefined } from "../../util/type-checking";
 import { DocumentAnalyzer } from "./DocumentAnalyzer";
 
 /**

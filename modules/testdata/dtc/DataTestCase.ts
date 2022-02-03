@@ -4,7 +4,7 @@
 //
 
 // A DataTestCase can be classified as Valid, Invalid or Incompatible, according
-// to the configuration of its corresponding UI ELement.
+// to the configuration of its corresponding UI Element.
 //
 // An Incompatible DataTestCase is not used.
 //

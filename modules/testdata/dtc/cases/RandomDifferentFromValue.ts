@@ -1,7 +1,6 @@
-import { isDefined } from "../../../util/TypeChecking";
-import { Cfg } from "../Cfg";
-import { DTCAnalyzer } from "../DTCAnalyzer";
-import { ExpectedResult } from "../ExpectedResult";
+import { PropCfg } from '../prop-cfg';
+import { DTCAnalyzer } from '../DTCAnalyzer';
+import { ExpectedResult } from '../ExpectedResult';
 
 /**
  * Evaluate `DataTestCase.RANDOM_DIFFERENT_FROM_VALUE`
@@ -9,22 +8,24 @@ import { ExpectedResult } from "../ExpectedResult";
 export class RandomDifferentFromValue implements DTCAnalyzer {
 
 	/** @inheritdoc */
-	analyze( cfg: Cfg ): ExpectedResult {
+	analyze( cfg: PropCfg ): ExpectedResult {
 
 		// Doesn't it have a value ?
-		if ( ! isDefined( cfg.value ) ) {
+		if ( ! cfg.value ) {
 			return ExpectedResult.INCOMPATIBLE;
 		}
 
+		const value = cfg.value.value;
+
 		// Is it an array ?
-		if ( Array.isArray( cfg.value ) ) {
+		if ( Array.isArray( value ) ) {
 			// More than one value ?
-			if ( cfg.value.length > 1 ) {
+			if ( value.length > 1 ) {
 				return ExpectedResult.INCOMPATIBLE;
 			}
 		}
 
-		if ( cfg.valueWithOnlyValidDTC ) {
+		if ( cfg.value.onlyValidDTC ) {
 			return ExpectedResult.INCOMPATIBLE;
 		}
 

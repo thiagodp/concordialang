@@ -1,4 +1,4 @@
-import * as deepcopy from 'deepcopy';
+import deepcopy from 'deepcopy';
 import { basename, dirname, join, relative } from 'path';
 
 import { Document, FileInfo, Import, Language, TestCase } from '../ast';

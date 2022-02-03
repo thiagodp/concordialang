@@ -1,6 +1,6 @@
-import { isDefined } from '../../../util/TypeChecking';
+import { isDefined } from '../../../util/type-checking';
 import { ValueType } from '../../../util/ValueTypeDetector';
-import { Cfg } from '../Cfg';
+import { PropCfg } from '../prop-cfg';
 import { DTCAnalyzer } from '../DTCAnalyzer';
 import { ExpectedResult } from '../ExpectedResult';
 
@@ -10,18 +10,17 @@ import { ExpectedResult } from '../ExpectedResult';
 export class RandomBetweenMinimumAndMaximumLength implements DTCAnalyzer {
 
 	/** @inheritdoc */
-	analyze( cfg: Cfg ): ExpectedResult {
+	analyze( cfg: PropCfg ): ExpectedResult {
 
-		if ( cfg.dataType !== ValueType.STRING ) {
+		if ( cfg.datatype && cfg.datatype.value !== ValueType.STRING ) {
 			return ExpectedResult.INCOMPATIBLE;
 		}
 
-		if ( ! isDefined( cfg.minimumLength ) ||
-			! isDefined( cfg.maximumLength ) ) {
+		if ( ! cfg.minlength || ! cfg.maxlength ) {
 			return ExpectedResult.INCOMPATIBLE;
 		}
 
-		const freeValues = cfg.maximumLength - cfg.minimumLength;
+		const freeValues = cfg.maxlength.value - cfg.minlength.value;
 		// It should have 3+ free values, since two of them will be covered
 		// by JustAboveMinimumLength and JustBelowMaximumLength
 		if ( freeValues <= 2 ) {

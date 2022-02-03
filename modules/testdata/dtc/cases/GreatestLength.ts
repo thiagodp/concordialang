@@ -1,7 +1,6 @@
-import { isDefined } from '../../../util/TypeChecking';
 import { ValueType } from '../../../util/ValueTypeDetector';
 import { StringLimits } from '../../limits/StringLimits';
-import { Cfg } from '../Cfg';
+import { PropCfg } from '../prop-cfg';
 import { DTCAnalyzer } from '../DTCAnalyzer';
 import { ExpectedResult } from '../ExpectedResult';
 
@@ -11,24 +10,24 @@ import { ExpectedResult } from '../ExpectedResult';
 export class GreatestLength implements DTCAnalyzer {
 
 	/** @inheritdoc */
-	analyze( cfg: Cfg ): ExpectedResult {
+	analyze( cfg: PropCfg ): ExpectedResult {
 
-		if ( cfg.dataType !== ValueType.STRING ) {
+		if ( cfg.datatype && cfg.datatype.value !== ValueType.STRING ) {
 			return ExpectedResult.INCOMPATIBLE;
 		}
 
-		if ( isDefined( cfg.format ) ) {
+		if ( ! cfg.format ) {
 			return ExpectedResult.INCOMPATIBLE;
 		}
 
-		if ( isDefined( cfg.maximumLength ) ) {
+		if ( cfg.maxlength ) {
 
 			// Equal to the MAX ? Not needed since there is EqualToMaximumLength
-			if ( cfg.maximumLength === StringLimits.MAX ) {
+			if ( cfg.maxlength.value === StringLimits.MAX ) {
 				return ExpectedResult.INCOMPATIBLE;
 			}
 
-			if ( cfg.maximumLengthWithOnlyValidDTC ) {
+			if ( cfg.maxlength.onlyValidDTC ) {
 				return ExpectedResult.INCOMPATIBLE;
 			}
 

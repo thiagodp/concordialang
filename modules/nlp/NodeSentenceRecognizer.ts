@@ -2,7 +2,7 @@ import { Location } from 'concordialang-types';
 import { ContentNode } from '../ast/Node';
 import { LocatedException } from '../error/LocatedException';
 import { Warning } from '../error/Warning';
-import { isDefined } from '../util/TypeChecking';
+import { isDefined } from '../util/type-checking';
 import { NLP } from './NLP';
 import { NLPException } from './NLPException';
 import { NLPResult } from './NLPResult';

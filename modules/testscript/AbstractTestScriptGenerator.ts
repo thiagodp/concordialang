@@ -2,12 +2,12 @@ import { AbstractTestScript, ATSCommand, ATSConsoleCommand, ATSDatabaseCommand, 
 import { Location } from 'concordialang-types';
 import { Document, Step, TestEvent } from '../ast';
 import { DatabaseToAbstractDatabase } from '../db/DatabaseToAbstractDatabase';
-import { supportTablesInQueries } from '../db/DatabaseTypes';
+import { databaseTypeSupportTablesInQueries } from '../db/DatabaseTypes';
 import { Entities } from '../nlp/Entities';
 import { AugmentedSpec } from "../req/AugmentedSpec";
 import { Symbols } from '../req/Symbols';
 import { Actions } from '../util/Actions';
-import { isDefined } from '../util/TypeChecking';
+import { isDefined } from '../util/type-checking';
 
 /**
  * Generates Abstract Test Script
@@ -283,7 +283,7 @@ export class AbstractTestScriptGenerator {
 
                 // Removes some keywords from the command, depending on the database type
                 const absDB = dbConversor.convertFromNode( db, spec.basePath );
-                if ( ! supportTablesInQueries( absDB.driverName ) ) {
+                if ( ! databaseTypeSupportTablesInQueries( absDB.driverName ) ) {
                     const uppercased = sqlCommand.toUpperCase().trim();
                     if ( uppercased.startsWith( 'DELETE FROM' ) ) {
                         // Remove the " FROM"

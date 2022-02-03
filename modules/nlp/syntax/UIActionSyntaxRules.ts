@@ -33,7 +33,14 @@ export const DEFAULT_UI_ACTION_SYNTAX_RULE: SyntaxRule = UI_ACTION_RULE;
 const ACCEPT: SyntaxRule = {
     name: Actions.ACCEPT,
     minTargets: 0,
-    maxTargets: 0,
+    maxTargets: 1,
+    targets: [
+        Entities.UI_ELEMENT_REF,
+        Entities.VALUE,
+        Entities.NUMBER,
+        Entities.CONSTANT,
+        Entities.UI_PROPERTY_REF,
+    ]
 };
 
 

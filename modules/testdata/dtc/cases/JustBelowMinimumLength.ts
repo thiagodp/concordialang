@@ -1,6 +1,5 @@
-import { isDefined } from '../../../util/TypeChecking';
 import { ValueType } from '../../../util/ValueTypeDetector';
-import { Cfg } from '../Cfg';
+import { PropCfg } from '../prop-cfg';
 import { DTCAnalyzer } from '../DTCAnalyzer';
 import { ExpectedResult } from '../ExpectedResult';
 
@@ -10,23 +9,23 @@ import { ExpectedResult } from '../ExpectedResult';
 export class JustBelowMinimumLength implements DTCAnalyzer {
 
 	/** @inheritdoc */
-	analyze( cfg: Cfg ): ExpectedResult {
+	analyze( cfg: PropCfg ): ExpectedResult {
 
-		if ( cfg.dataType !== ValueType.STRING ) {
+		if ( cfg.datatype && cfg.datatype.value !== ValueType.STRING ) {
 			return ExpectedResult.INCOMPATIBLE;
 		}
 
-		if ( ! isDefined( cfg.minimumLength ) ) {
+		if ( ! cfg.minlength ) {
 			return ExpectedResult.INCOMPATIBLE;
 		}
 
 		// Since JustBelowMinimumLength covers the predecessor and Empty
 		// covers 0, minimumLength should be 2+ in order to cover 1+
-		if ( cfg.minimumLength <= 1 ) {
+		if ( cfg.minlength?.value <= 1 ) {
 			return ExpectedResult.INCOMPATIBLE;
 		}
 
-		if ( cfg.minimumLengthWithOnlyValidDTC ) {
+		if ( cfg.minlength?.onlyValidDTC ) {
 			return ExpectedResult.INCOMPATIBLE;
 		}
 

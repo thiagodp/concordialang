@@ -118,6 +118,33 @@ describe( 'uie-sorting', () => {
             expect( elements[ 1 ].name ).toEqual( zoo.name );
         } );
 
+
+        it( 'detects a dependency from another element that depends on a queried value', async () => {
+
+            const doc1 = await cp.addToSpec(
+                spec,
+                [
+                    'Feature: L',
+                    'UI Element: Usuario',
+                    ' - valor é igual a "SELECT usuario FROM [Usuarios]"',
+                    'UI Element: Senha',
+                    ' - valor é igual a "SELECT senha FROM [Usuarios] WHERE usuario = {Usuario}"',
+                    'Tabela: Usuarios',
+                    '| usuario  | senha    |',
+                    '| bob      | bob123   |',
+                    '| alice    | alice456 |',
+                ],
+                { } as FileInfo
+            );
+
+            await bsa.analyze( new FileProblemMapper(), spec, new SpecFilter( spec ).graph() );
+
+            const [ usuario, senha ] = doc1.feature.uiElements;
+            const elements = dependenciesOfUIElements( senha );
+            expect( elements ).toHaveLength( 1 );
+            expect( elements[ 0 ].name ).toEqual( usuario.name );
+        } );
+
     } );
 
 
@@ -185,8 +212,6 @@ describe( 'uie-sorting', () => {
             await bsa.analyze( new FileProblemMapper(), spec, new SpecFilter( spec ).graph() );
 
             // console.log( doc1 );
-
-            const [ foo, bar, zoo ] = doc1.feature.uiElements;
 
             const problems = [];
             const elements = sortUIElementsByTheirDependencies( doc1.feature.uiElements, problems );

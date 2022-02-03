@@ -1,8 +1,8 @@
 import { Location } from 'concordialang-types';
-import * as deepcopy from 'deepcopy';
-import Graph = require('graph.js/dist/graph.full.js');
+import deepcopy from 'deepcopy';
+import Graph from 'graph.js/dist/graph.full.js';
 
-import { Document, Node, UIElement, UIProperty, State, Variant } from '../ast';
+import { Document, Node, State, UIElement, UIProperty, Variant } from '../ast';
 import { QueryParser } from '../db/QueryParser';
 import { LocatedException } from '../error/LocatedException';
 import { ProblemMapper } from '../error/ProblemMapper';
@@ -11,7 +11,7 @@ import { SemanticException } from '../error/SemanticException';
 import { Entities } from '../nlp/Entities';
 import { AugmentedSpec } from '../req/AugmentedSpec';
 import { VariantStateDetector } from '../testscenario/VariantStateDetector';
-import { isDefined } from '../util/TypeChecking';
+import { isDefined } from '../util/type-checking';
 import { SpecificationAnalyzer } from './SpecificationAnalyzer';
 
 type FilePath = string;

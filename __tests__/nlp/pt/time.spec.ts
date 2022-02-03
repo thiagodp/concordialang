@@ -1,12 +1,8 @@
 import { Clock, DateTimeFormatter, LocalTime } from '@js-joda/core';
-import * as fs from 'fs';
-import { resolve } from 'path';
 
-import { DEFAULT_DIR_LANGUAGE } from '../../../modules/app/default-options';
-import { JsonLanguageContentLoader, LanguageContentLoader } from '../../../modules/language';
+import languageMap from '../../../modules/language/data/map';
 import { Intents, NLP, NLPResult, NLPTrainer } from '../../../modules/nlp';
 import { Entities } from '../../../modules/nlp/Entities';
-import { FSFileHandler } from '../../../modules/util/file';
 import { shouldHaveUIEntities, shouldNotHaveEntities } from '../entity-util';
 
 describe( 'nlp.pt.time', () => {
@@ -16,21 +12,10 @@ describe( 'nlp.pt.time', () => {
     let clock: Clock; // helper
 
     const LANGUAGE = 'pt';
-	const dir = resolve( process.cwd(), 'dist/' );
-	const langDir = resolve( dir, DEFAULT_DIR_LANGUAGE );
-
-    const fileHandler = new FSFileHandler( fs );
-    const langLoader: LanguageContentLoader = new JsonLanguageContentLoader(
-        langDir,
-        {},
-        fileHandler,
-        fileHandler
-        );
-
 
     beforeAll( () => {
         nlp = new NLP();
-        const ok = ( new NLPTrainer( langLoader ) ).trainNLP( nlp, LANGUAGE );
+        const ok = ( new NLPTrainer( languageMap ) ).trainNLP( nlp, LANGUAGE );
         expect( ok ).toBeTruthy();
 
         clock = nlp.createFixedClockFromNow();

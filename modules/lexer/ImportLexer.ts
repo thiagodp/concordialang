@@ -1,6 +1,7 @@
-import * as isValidPath from 'is-valid-path';
+import isValidPath from 'is-valid-path';
+
 import { Import } from '../ast/Import';
-import { NodeTypes } from "../req/NodeTypes";
+import { NodeTypes } from '../req/NodeTypes';
 import { QuotedNodeLexer } from './QuotedNodeLexer';
 
 

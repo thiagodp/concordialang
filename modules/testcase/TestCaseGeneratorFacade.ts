@@ -1,19 +1,19 @@
 import * as enumUtil from 'enum-util';
-import Graph = require('graph.js/dist/graph.full.js');
+import Graph from 'graph.js/dist/graph.full.js';
 
-import { AppOptions } from '../app/AppOptions';
-import { CombinationOptions, InvalidSpecialOptions, VariantSelectionOptions } from '../app/CombinationOptions';
+import { AppOptions } from '../app/options/app-options';
+import { CombinationOptions, InvalidSpecialOptions, VariantSelectionOptions } from '../app/options/combination-options';
 import {
     DEFAULT_CASE_UI,
     DEFAULT_DATA_TEST_CASE_COMBINATION,
     DEFAULT_STATE_COMBINATION,
     DEFAULT_VARIANT_SELECTION,
-} from '../app/default-options';
+} from '../app/options/default-options';
 import { Document, ReservedTags, TestCase, Variant } from '../ast';
 import { LocatedException } from '../error/LocatedException';
 import { RuntimeException } from '../error/RuntimeException';
 import { Warning } from '../error/Warning';
-import { LanguageContentLoader } from '../language/LanguageContentLoader';
+import { LanguageMap } from '../language/data/map';
 import { GivenWhenThenSentenceRecognizer } from '../nlp/GivenWhenThenSentenceRecognizer';
 import { AugmentedSpec } from '../req/AugmentedSpec';
 import {
@@ -92,7 +92,7 @@ export class TestCaseGeneratorFacade {
 
     constructor(
         private _variantSentenceRec: GivenWhenThenSentenceRecognizer,
-        private _langLoader: LanguageContentLoader,
+        private _languageMap: LanguageMap,
         private _listener: TestCaseGeneratorListener,
         private _fileHandler: FileWriter & FileEraser,
         ) {
@@ -112,7 +112,7 @@ export class TestCaseGeneratorFacade {
 
         const preTCGen = new PreTestCaseGenerator(
             this._variantSentenceRec,
-            this._langLoader,
+            this._languageMap,
             options.language,
             options.realSeed,
             toCaseType( options.caseUi ),
@@ -147,7 +147,7 @@ export class TestCaseGeneratorFacade {
 
         const tcDocGen = new TestCaseDocumentGenerator( options.extensionFeature, options.extensionTestCase, options.directory );
 
-        const tcDocFileGen = new TestCaseFileGenerator( this._langLoader, options.language );
+        const tcDocFileGen = new TestCaseFileGenerator( options.language );
 
         //
         // generation
@@ -216,7 +216,7 @@ export class TestCaseGeneratorFacade {
                             continue;
                         }
 
-                        ++totalTestCasesCount;
+                        // ++totalTestCasesCount;
 
                         let tcIndex = 1;
                         for ( let tc of generatedTC ) {

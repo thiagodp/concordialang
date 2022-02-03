@@ -1,11 +1,9 @@
-import { RegexUtil } from '../util/RegexUtil';
+import { matches } from '../util/matches';
 
 /**
  * @author Thiago Delgado Pinto
  */
 export class QueryParser {
-
-    private _regexUtil = new RegexUtil();
 
     //
     // Idea is replacing fields/constants/etc with the corresponding "real" values.
@@ -31,7 +29,7 @@ export class QueryParser {
      */
     public parseAnyVariables( command: string ): string[] {
         const regex = /(?:\{)([^}]+)(?:\})/g;
-        return this._regexUtil.matches( regex, command, true );
+        return matches( regex, command, true );
     }
 
     /**
@@ -43,7 +41,7 @@ export class QueryParser {
     public parseAnyNames( command: string ): string[] {
         //const regex = /(?:\{\{)([^}}]+)(?:\}\})/g;
         const regex = /(?:\[)([^\$\]]+)(?:\])/g;
-        return this._regexUtil.matches( regex, command, true );
+        return matches( regex, command, true );
     }
 
 

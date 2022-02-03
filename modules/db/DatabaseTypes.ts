@@ -56,7 +56,7 @@ export function stringToDatabaseTypeString( dbType: string ): string {
  *
  * @param dbType Database type
  */
-export function supportTablesInQueries( dbType: string ): boolean {
+export function databaseTypeSupportTablesInQueries( dbType: string ): boolean {
     // The following DOES NOT SUPPORT the concept of tables or collections
     return [
         DatabaseType.CSV.toString(),

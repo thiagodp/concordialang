@@ -1,33 +1,21 @@
-import * as fs from 'fs';
-import { resolve } from 'path';
-
-import { DEFAULT_DIR_LANGUAGE } from '../../modules/app/default-options';
 import { Document } from '../../modules/ast/Document';
 import { SingleFileCompiler } from '../../modules/compiler/SingleFileCompiler';
 import { FileProblemMapper } from '../../modules/error';
-import { JsonLanguageContentLoader, LanguageContentLoader } from '../../modules/language';
+import languageMap from '../../modules/language/data/map';
 import { Lexer } from '../../modules/lexer/Lexer';
 import { NLPBasedSentenceRecognizer } from '../../modules/nlp/NLPBasedSentenceRecognizer';
 import { NLPTrainer } from '../../modules/nlp/NLPTrainer';
 import { Parser } from '../../modules/parser/Parser';
-import { FSFileHandler } from '../../modules/util/file/FSFileHandler';
 
 describe( 'SingleFileCompiler', () => {
 
 	const LANGUAGE = 'pt';
 
-	const dir = resolve( process.cwd(), 'dist/' );
-	const langDir = resolve( dir, DEFAULT_DIR_LANGUAGE );
-
-    const fileHandler = new FSFileHandler( fs );
-    const langLoader: LanguageContentLoader =
-        new JsonLanguageContentLoader( langDir, {}, fileHandler, fileHandler );
-
-    const lexer: Lexer = new Lexer( LANGUAGE, langLoader );
+    const lexer: Lexer = new Lexer( LANGUAGE, languageMap );
 
     const parser = new Parser();
 
-    const nlpTrainer = new NLPTrainer( langLoader );
+    const nlpTrainer = new NLPTrainer( languageMap );
     const nlpRec: NLPBasedSentenceRecognizer = new NLPBasedSentenceRecognizer( nlpTrainer );
 
     const singleDocProcessor: SingleFileCompiler = new SingleFileCompiler(

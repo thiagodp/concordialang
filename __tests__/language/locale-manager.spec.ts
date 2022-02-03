@@ -1,7 +1,9 @@
 import { fs, vol } from 'memfs';
 import * as path from 'path';
+import { promisify } from 'util';
+
 import { installedDateLocales } from '../../modules/language/locale-manager';
-import { FSDirSearcher } from '../../modules/util/file';
+import { FSDirSearcher } from '../../modules/util/fs/FSDirSearcher';
 
 describe( 'locale-manager', () => {
 
@@ -28,7 +30,7 @@ describe( 'locale-manager', () => {
 		vol.mkdirpSync( path.join( localeDir, enUS ) );
 		vol.mkdirpSync( path.join( localeDir, ptBR ) );
 
-		const s = new FSDirSearcher( fs );
+		const s = new FSDirSearcher( fs, promisify );
 		const r = await installedDateLocales( localModulesDir, s, path );
 
 		expect( r.length ).toEqual( 2 );

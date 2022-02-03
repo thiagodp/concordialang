@@ -16,8 +16,8 @@ import {
     AlaSqlDatabaseInterface,
     DatabaseJSDatabaseInterface,
     DatabaseToAbstractDatabase,
+    databaseTypeSupportTablesInQueries,
     QueryParser,
-    supportTablesInQueries,
 } from '../db';
 import { DatabaseInterface, Queryable } from '../dbi';
 import { LocatedException, RuntimeException } from '../error';
@@ -25,14 +25,14 @@ import { Entities } from '../nlp';
 import { AugmentedSpec, IN_MEMORY_DATABASE_NAME } from '../req/AugmentedSpec';
 import { NodeTypes } from '../req/NodeTypes';
 import { UIETestPlan } from '../testcase/UIETestPlan';
-import { QueryReferenceReplacer } from '../util/QueryReferenceReplacer';
-import { isDefined, valueOrNull } from '../util/TypeChecking';
-import { UIElementNameHandler } from '../util/UIElementNameHandler';
-import { UIElementOperatorChecker } from '../util/UIElementOperatorChecker';
+import { isDefined, valueOrNull } from '../util/type-checking';
 import { UIElementPropertyExtractor } from '../util/UIElementPropertyExtractor';
 import { adjustValueToTheRightType } from '../util/ValueTypeDetector';
+import { extractFeatureNameOf, makeVariableName } from '../util/variable-reference';
 import { DataGenConfig, DataGenerator } from './DataGenerator';
 import { DataTestCaseGroup, DataTestCaseGroupDef } from './DataTestCase';
+import { QueryReferenceReplacer } from './util/QueryReferenceReplacer';
+import { UIElementOperatorChecker } from './util/UIElementOperatorChecker';
 
 // value is equal to          <number>|<value>|<constant>|<ui_element>
 // value is not equal to      <number>|<value>|<constant>|<ui_element>
@@ -71,10 +71,9 @@ export class UIElementValueGenerator {
         errors: LocatedException[]
     ): Promise< EntityValueType > {
 
-        const uieNameHandler = new UIElementNameHandler();
         const featureName = isDefined( doc ) && isDefined( doc.feature ) ? doc.feature.name : null;
-        const fullVariableName = featureName !== null && null === uieNameHandler.extractFeatureNameOf( uieName )
-            ? uieNameHandler.makeVariableName( featureName, uieName )
+        const fullVariableName = featureName !== null && null === extractFeatureNameOf( uieName )
+            ? makeVariableName( featureName, uieName )
             : uieName;
 
         // Is in cache ? -> returns it
@@ -465,17 +464,15 @@ export class UIElementValueGenerator {
         //     ? currentFeatureName
         //     : '';
 
-        const uieNameHandler = new UIElementNameHandler();
-
         let newQuery = query;
         for ( let variable of variables ) {
             // console.log( 'variable', variable );
             let fullVariableName = variable;
-            if ( null === uieNameHandler.extractFeatureNameOf( variable ) ) {
+            if ( null === extractFeatureNameOf( variable ) ) {
                 let uie = spec.uiElementByVariable( variable, doc );
                 // console.log( 'uie', ! uie ? 'null' : uie.name );
                 if ( ! uie ) {
-                    fullVariableName = uieNameHandler.makeVariableName( currentFeatureName, variable );
+                    fullVariableName = makeVariableName( currentFeatureName, variable );
                 } else {
                     fullVariableName = uie.info.fullVariableName;
                 }
@@ -514,7 +511,7 @@ export class UIElementValueGenerator {
     ): Promise< EntityValueType > {
 
         const absDB = ( new DatabaseToAbstractDatabase() ).convertFromNode( database );
-        const supportTables = supportTablesInQueries( absDB.driverName );
+        const supportTables = databaseTypeSupportTablesInQueries( absDB.driverName );
 
         // console.log( 'before', query );
         // Remove database reference from the query

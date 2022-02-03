@@ -1,5 +1,5 @@
-import { isDefined } from "../../../util/TypeChecking";
-import { Cfg } from "../Cfg";
+import { isDefined } from '../../../util/type-checking';
+import { PropCfg } from "../prop-cfg";
 import { DTCAnalyzer } from "../DTCAnalyzer";
 import { ExpectedResult } from "../ExpectedResult";
 
@@ -9,9 +9,9 @@ import { ExpectedResult } from "../ExpectedResult";
 export class RandomFromFormat implements DTCAnalyzer {
 
 	/** @inheritdoc */
-	analyze( cfg: Cfg ): ExpectedResult {
+	analyze( cfg: PropCfg ): ExpectedResult {
 
-		if ( ! isDefined( cfg.format ) ) {
+		if ( ! cfg.format ) {
 			return ExpectedResult.INCOMPATIBLE;
 		}
 

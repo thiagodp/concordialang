@@ -1,8 +1,8 @@
-import { isDefined } from '../../../util/TypeChecking';
 import { ValueType } from '../../../util/ValueTypeDetector';
-import { Cfg } from '../Cfg';
+import { PropCfg } from '../prop-cfg';
 import { DTCAnalyzer } from '../DTCAnalyzer';
 import { ExpectedResult } from '../ExpectedResult';
+
 
 /**
  * Evaluate `DataTestCase.EQUAL_TO_MAXIMUM_LENGTH`
@@ -10,18 +10,18 @@ import { ExpectedResult } from '../ExpectedResult';
 export class EqualToMaximumLength implements DTCAnalyzer {
 
 	/** @inheritdoc */
-	analyze( cfg: Cfg ): ExpectedResult {
+	analyze( cfg: PropCfg ): ExpectedResult {
 
-		if ( cfg.dataType !== ValueType.STRING ) {
+		if ( cfg.datatype && cfg.datatype.value !== ValueType.STRING ) {
 			return ExpectedResult.INCOMPATIBLE;
 		}
 
-		if ( ! isDefined( cfg.maximumLength ) ) {
+		if ( ! cfg.maxlength ) {
 			return ExpectedResult.INCOMPATIBLE;
 		}
 
 		// Equal ? Then it's already covered by minimum length
-		if ( cfg.maximumLength === cfg.minimumLength ) {
+		if ( cfg.minlength && cfg.minlength.value === cfg.maxlength.value ) {
 			return ExpectedResult.INCOMPATIBLE;
 		}
 

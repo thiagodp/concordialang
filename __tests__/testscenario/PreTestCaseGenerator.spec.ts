@@ -1,16 +1,17 @@
-import { Document, FileInfo, Variant } from "../../modules/ast";
-import { FileProblemMapper } from "../../modules/error/FileProblemMapper";
-import { AugmentedSpec } from "../../modules/req/AugmentedSpec";
-import { IndexOfEachStrategy, SingleRandomOfEachStrategy } from "../../modules/selection/CombinationStrategy";
-import { SpecFilter } from "../../modules/selection/SpecFilter";
-import { BatchSpecificationAnalyzer } from "../../modules/semantic/BatchSpecificationAnalyzer";
-import { JustOneInvalidMix, OnlyValidMix } from "../../modules/testcase/DataTestCaseMix";
-import { TestPlanner } from "../../modules/testcase/TestPlanner";
-import { LongLimits } from "../../modules/testdata/limits/LongLimits";
-import { Random } from "../../modules/testdata/random/Random";
-import { RandomString } from "../../modules/testdata/random/RandomString";
-import { GenContext, PreTestCaseGenerator } from "../../modules/testscenario/PreTestCaseGenerator";
-import { SimpleCompiler } from "../SimpleCompiler";
+import { Document, FileInfo, Variant } from '../../modules/ast';
+import { FileProblemMapper } from '../../modules/error/FileProblemMapper';
+import languageMap from '../../modules/language/data/map';
+import { AugmentedSpec } from '../../modules/req/AugmentedSpec';
+import { IndexOfEachStrategy, SingleRandomOfEachStrategy } from '../../modules/selection/CombinationStrategy';
+import { SpecFilter } from '../../modules/selection/SpecFilter';
+import { BatchSpecificationAnalyzer } from '../../modules/semantic/BatchSpecificationAnalyzer';
+import { JustOneInvalidMix, OnlyValidMix } from '../../modules/testcase/DataTestCaseMix';
+import { TestPlanner } from '../../modules/testcase/TestPlanner';
+import { LongLimits } from '../../modules/testdata/limits/LongLimits';
+import { Random } from '../../modules/testdata/random/Random';
+import { RandomString } from '../../modules/testdata/random/RandomString';
+import { GenContext, PreTestCaseGenerator } from '../../modules/testscenario/PreTestCaseGenerator';
+import { SimpleCompiler } from '../SimpleCompiler';
 
 describe( 'PreTestCaseGenerator', () => {
 
@@ -27,7 +28,7 @@ describe( 'PreTestCaseGenerator', () => {
 
 			gen = new PreTestCaseGenerator(
 				cp.nlpRec.variantSentenceRec,
-				cp.langLoader,
+				languageMap,
 				cp.language,
 				SEED
 			);
@@ -654,7 +655,7 @@ describe( 'PreTestCaseGenerator', () => {
 
 			gen = new PreTestCaseGenerator(
 				cp.nlpRec.variantSentenceRec,
-				cp.langLoader,
+				languageMap,
 				cp.language,
 				SEED
 			);

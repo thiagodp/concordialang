@@ -1,4 +1,3 @@
-import * as path from 'path';
 import { filterFilesToCompile } from '../../modules/compiler/CompilerFacade';
 
 describe( 'CompilerFacade', () => {
@@ -13,7 +12,7 @@ describe( 'CompilerFacade', () => {
                 '/path/to/bar.feature',
                 '/path/to/bar.testcase',
                 '/path/to/zoo.testcase',
-            ], '.feature', '.testcase', path );
+            ], '.feature', '.testcase' );
 
             expect( r ).toHaveLength( 3 );
             expect( r ).toEqual(

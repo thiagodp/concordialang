@@ -1,3 +1,6 @@
+// const XRegExp = require( 'xregexp' );
+import XRegExp from 'xregexp';
+
 import { NamedNode } from '../ast/Node';
 import { Expressions } from '../req/Expressions';
 import { LineChecker } from '../req/LineChecker';
@@ -7,7 +10,6 @@ import { KeywordBasedLexer } from './KeywordBasedLexer';
 import { LexicalException } from './LexicalException';
 import { LexicalAnalysisResult, NodeLexer } from './NodeLexer';
 
-const XRegExp = require( 'xregexp' );
 
 /**
  * Detects a node in the format "keyword: name".

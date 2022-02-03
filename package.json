@@ -1,6 +1,6 @@
 {
   "name": "concordialang",
-  "version": "2.0.0-alpha.10",
+  "version": "2.0.0-alpha.19",
   "description": "Concordia Language Compiler",
   "keywords": [
     "concordia",
@@ -63,7 +63,10 @@
     "dist/**/*",
     "bin/**/*"
   ],
+  "source": "./modules/main.ts",
   "main": "./dist/main.js",
+  "module": "dist/index.js",
+  "type": "module",
   "bin": {
     "concordia": "./bin/concordia.js"
   },
@@ -71,18 +74,24 @@
     "switch:un": "npm uninstall concordialang-plugin concordialang-types",
     "switch:local": "npm run switch:un && npm i ../concordialang-types && npm i ../concordialang-plugin",
     "switch:web": "npm run switch:un && npm i concordialang-types && npm i concordialang-plugin",
-    "build": "rimraf dist && node copy.js && tsc",
-    "watch": "npm run build && tsc --watch",
-    "test": "node copy.js && jest --passWithNoTests",
+    "clean": "rimraf dist",
+    "prebuild": "npm run clean",
+    "build": "tsc --noEmit && microbundle --no-sourcemap --target node --format esm",
+    "compress": "microbundle --no-sourcemap --target node --format esm --compress",
+    "watch": "microbundle --no-sourcemap --target node --format esm --watch",
+    "fixup": "git commit --fixup HEAD & git rebase --autosquash -i HEAD~2 && git push --force",
+    "test": "cross-env NODE_OPTIONS=--experimental-vm-modules npx jest",
     "test:check": "tsc --noEmit -p __tests__",
     "test:check:watch": "tsc --noEmit -p __tests__ --watch",
-    "test:coverage": "node copy.js && jest --coverage --coverageDirectory=\"coverage\"",
-    "test:sonar": "node copy.js && jest --coverage --coverageDirectory=\"coverage\" --reporters=\"default\" --reporters=\"jest-sonar\"",
-    "all": "npm run build && npm run test:check && npm run test",
+    "test:all": "npm run test:check && npm run test",
+    "coverage": "cross-env NODE_OPTIONS=--experimental-vm-modules npx jest --coverage --coverageDirectory=\"coverage\"",
+    "sonar": "cross-env NODE_OPTIONS=--experimental-vm-modules npx jest --coverage --coverageDirectory=\"coverage\" --reporters=\"default\" --reporters=\"jest-sonar\"",
+    "all": "npm run build && npm run test:all",
     "start": "node bin/concordia.js",
     "depcheck": "depcheck",
     "preversion": "npm run all",
-    "postversion": "git push && git push --tags"
+    "postversion": "echo \"Don't forget to push the tags\"",
+    "postpublish": "echo \"Don't forget to run 'npm dist-tag add <pkg@version> alpha'\""
   },
   "jest": {
     "transform": {
@@ -104,31 +113,31 @@
   },
   "dependencies": {
     "@js-joda/core": "^2.0.0",
-    "@nodelib/fs.walk": "^1.2.4",
-    "alasql": "^0.4.11",
+    "@nodelib/fs.walk": "^1.2.8",
+    "alasql": "^1.7.3",
     "arr-diff": "^4.0.0",
     "better-randstr": "^1.0.0",
     "cartesian": "^1.0.1",
     "case": "^1.6.3",
-    "chalk": "^3.0.0",
+    "chalk": "^4.1.2",
     "clone-regexp": "^2.2.0",
-    "concordialang-plugin": "^1.0.0",
-    "concordialang-types": "^2.0.0",
+    "concordialang-plugin": "^1.3.2",
+    "concordialang-types": "^2.1.6",
     "cosmiconfig": "^6.0.0",
     "damerau-levenshtein-js": "^1.1.7",
-    "database-js": "^3.0.10",
-    "date-fns": "^2.15.0",
+    "database-js": "^3.0.11",
+    "date-fns": "^2.28.0",
     "deepcopy": "^0.6.3",
     "enum-util": "^1.7.1",
     "figures": "^3.2.0",
-    "getopts": "^2.2.5",
+    "fs-extra": "^10.0.0",
+    "getopts": "^2.3.0",
     "global-dirs": "^0.1.1",
     "graph.js": "^1.21.1",
-    "inquirer": "^6.5.2",
+    "inquirer": "^8.2.0",
     "is-valid-path": "^0.1.1",
-    "jsesc": "^3.0.1",
+    "jsesc": "^3.0.2",
     "log-symbols": "^3.0.0",
-    "node-fs-extra": "^0.8.2",
     "object-to-array": "^2.0.1",
     "one-wise": "^1.0.4",
     "p-map": "^3.0.0",
@@ -140,7 +149,7 @@
     "sprintf-js": "^1.1.2",
     "sqlstring": "^2.3.2",
     "terminal-link": "^2.1.1",
-    "update-notifier": "^4.1.0",
+    "update-notifier": "^4.1.3",
     "xregexp": "^3.2.0"
   },
   "optionalDependencies": {
@@ -148,19 +157,20 @@
   },
   "devDependencies": {
     "@types/core-js": "^0.9.46",
-    "@types/jest": "^25.2.3",
-    "@types/node": "^8.10.62",
+    "@types/jest": "^27.4.0",
+    "@types/node": "^8.10.66",
+    "cross-env": "^7.0.3",
     "depcheck": "^0.9.2",
-    "glob": "^7.1.6",
-    "jest": "^26.1.0",
-    "jest-sonar": "^0.2.10",
-    "jest-watch-typeahead": "^0.6.0",
+    "jest": "^27.4.7",
+    "jest-sonar": "^0.2.12",
+    "jest-watch-typeahead": "^1.0.0",
     "memfs": "^2.17.1",
+    "microbundle": "^0.13.3",
     "rimraf": "^2.7.1",
-    "ts-jest": "^26.1.4",
-    "typescript": "^3.9.7"
+    "ts-jest": "^27.1.3",
+    "typescript": "^3.9.10"
   },
   "engines": {
-    "node": ">=8"
+    "node": ">=10"
   }
 }

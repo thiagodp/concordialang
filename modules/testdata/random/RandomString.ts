@@ -1,5 +1,5 @@
 import { Options, randstr } from 'better-randstr';
-import { isDefined } from '../../util/TypeChecking';
+import { isDefined } from '../../util/type-checking';
 import { escapeChar } from "../util/escape";
 import { Random } from "./Random";
 import { RandomLong } from "./RandomLong";

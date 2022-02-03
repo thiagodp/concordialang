@@ -1,7 +1,6 @@
-import { minLimitOfType } from 'modules/testdata/limits/limits';
-import { isDefined } from '../../../util/TypeChecking';
+import { minLimitOfType } from '../../../testdata/limits/limits';
 import { ValueType } from '../../../util/ValueTypeDetector';
-import { Cfg } from '../Cfg';
+import { PropCfg } from '../prop-cfg';
 import { DTCAnalyzer } from '../DTCAnalyzer';
 import { ExpectedResult } from '../ExpectedResult';
 
@@ -11,23 +10,23 @@ import { ExpectedResult } from '../ExpectedResult';
 export class LowestValue implements DTCAnalyzer {
 
 	/** @inheritdoc */
-	analyze( cfg: Cfg ): ExpectedResult {
+	analyze( cfg: PropCfg ): ExpectedResult {
 
-		if ( ValueType.STRING === cfg.dataType ) {
+		if ( cfg.datatype?.value === ValueType.STRING ) {
 			return ExpectedResult.INCOMPATIBLE;
 		}
 
-		if ( isDefined( cfg.format ) ) {
+		if ( cfg.format ) {
 			return ExpectedResult.INCOMPATIBLE;
 		}
 
-		if ( isDefined( cfg.minimumValue ) ) {
+		if ( cfg.minvalue ) {
 
-			if ( cfg.minimumValue === minLimitOfType( cfg.dataType ) ) {
+			if ( cfg.minvalue.value === minLimitOfType( cfg.datatype?.value ) ) {
 				return ExpectedResult.INCOMPATIBLE;
 			}
 
-			if ( cfg.minimumValueWithOnlyValidDTC ) {
+			if ( cfg.minvalue.onlyValidDTC ) {
 				return ExpectedResult.INCOMPATIBLE;
 			}
 

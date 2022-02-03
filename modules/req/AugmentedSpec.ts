@@ -1,11 +1,12 @@
 import { dirname, resolve } from 'path';
-import { CaseType } from '../util/CaseType';
+
 import { Constant, Database, Document, Feature, NamedNode, Spec, Table, UIElement } from '../ast';
 import { DatabaseInterface } from '../dbi';
-import { DocumentUtil } from '../util/DocumentUtil';
+import { CaseType } from '../util/CaseType';
 import { toUnixPath } from '../util/file';
-import { isDefined, valueOrNull } from '../util/TypeChecking';
-import { UIElementNameHandler } from '../util/UIElementNameHandler';
+import { isDefined, valueOrNull } from '../util/type-checking';
+import { extractFeatureNameOf } from '../util/variable-reference';
+import { DocumentUtil } from './DocumentUtil';
 
 
 class MappedContent {
@@ -525,9 +526,8 @@ export class AugmentedSpec extends Spec {
             return null;
         }
 
-        const uieNameHandler = new UIElementNameHandler()
-        const [ featureName, /* uiElementName */ ] = uieNameHandler.extractNamesOf( variable );
-        if ( ! isDefined( featureName ) && doc.imports.length > 1 ) {
+        const featureName = extractFeatureNameOf( variable );
+        if ( ! featureName && doc.imports.length > 1 ) {
             return null;
         }
 

@@ -1,8 +1,15 @@
+import { LanguageMap } from '../language/data/map';
+
 import { Language, Node, ReservedTags } from '../ast';
 import { KeywordDictionary } from '../language/KeywordDictionary';
-import { LanguageContent } from '../language/LanguageContent';
-import { LanguageContentLoader } from '../language/LanguageContentLoader';
-import { AfterAllLexer, AfterEachScenarioLexer, AfterFeatureLexer, BeforeAllLexer, BeforeEachScenarioLexer, BeforeFeatureLexer } from '../lexer/TestEventLexer';
+import {
+    AfterAllLexer,
+    AfterEachScenarioLexer,
+    AfterFeatureLexer,
+    BeforeAllLexer,
+    BeforeEachScenarioLexer,
+    BeforeFeatureLexer,
+} from '../lexer/TestEventLexer';
 import { NodeTypes } from '../req/NodeTypes';
 import { BackgroundLexer } from './BackgroundLexer';
 import { ConstantBlockLexer } from './ConstantBlockLexer';
@@ -12,22 +19,22 @@ import { DatabasePropertyLexer } from './DatabasePropertyLexer';
 import { FeatureLexer } from './FeatureLexer';
 import { ImportLexer } from './ImportLexer';
 import { KeywordBasedLexer } from './KeywordBasedLexer';
-import { LanguageLexer } from "./LanguageLexer";
+import { LanguageLexer } from './LanguageLexer';
 import { LongStringLexer } from './LongStringLexer';
 import { LexicalAnalysisResult, NodeLexer } from './NodeLexer';
 import { RegexBlockLexer } from './RegexBlockLexer';
 import { RegexLexer } from './RegexLexer';
 import { ScenarioLexer } from './ScenarioLexer';
-import { StepAndLexer } from "./StepAndLexer";
-import { StepGivenLexer } from "./StepGivenLexer";
+import { StepAndLexer } from './StepAndLexer';
+import { StepGivenLexer } from './StepGivenLexer';
 import { StepOtherwiseLexer } from './StepOtherwiseLexer';
-import { StepThenLexer } from "./StepThenLexer";
-import { StepWhenLexer } from "./StepWhenLexer";
+import { StepThenLexer } from './StepThenLexer';
+import { StepWhenLexer } from './StepWhenLexer';
 import { TableLexer } from './TableLexer';
 import { TableRowLexer } from './TableRowLexer';
-import { TagLexer, TagSubLexer } from "./TagLexer";
+import { TagLexer, TagSubLexer } from './TagLexer';
 import { TestCaseLexer } from './TestCaseLexer';
-import { TextLexer } from "./TextLexer";
+import { TextLexer } from './TextLexer';
 import { UIElementLexer } from './UIElementLexer';
 import { UIPropertyLexer } from './UIPropertyLexer';
 import { VariantBackgroundLexer } from './VariantBackgroundLexer';
@@ -63,7 +70,7 @@ export class Lexer {
      */
     constructor(
         private _defaultLanguage: string,
-        private _languageContentLoader: LanguageContentLoader,
+        private _languageMap: LanguageMap,
         private _stopOnFirstError: boolean = false,
     ) {
         const dictionary: KeywordDictionary = this.loadDictionary( _defaultLanguage ); // may throw Error
@@ -322,11 +329,9 @@ export class Lexer {
      * Loads a dictionary
      *
      * @param language Language
-     * @throws Error
      */
-    private loadDictionary( language: string ): KeywordDictionary | null {
-        const content: LanguageContent = this._languageContentLoader.load( language ); // may throw Error
-        return content ? content.keywords : null;
+    private loadDictionary( language: string ): KeywordDictionary | undefined {
+        return this._languageMap[ language ]?.keywords;
     }
 
     private isAWordBasedLexer( obj: any ): obj is KeywordBasedLexer {

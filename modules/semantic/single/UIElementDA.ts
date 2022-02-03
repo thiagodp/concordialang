@@ -1,6 +1,6 @@
 import { Document, UIElement, UIProperty } from "../../ast";
 import { SemanticException } from "../../error/SemanticException";
-import { isDefined } from "../../util/TypeChecking";
+import { isDefined } from "../../util/type-checking";
 import { UIElementPropertyExtractor } from "../../util/UIElementPropertyExtractor";
 import { DuplicationChecker } from "../DuplicationChecker";
 import { DocumentAnalyzer } from "./DocumentAnalyzer";

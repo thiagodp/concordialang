@@ -3,7 +3,7 @@ import { UIElement } from '../../ast/UIElement';
 import { EntityValueType, UIProperty } from '../../ast/UIProperty';
 import { DataTestCase } from '../DataTestCase';
 import { UIElementValueGenerator } from '../UIElementValueGenerator';
-import { Cfg } from './Cfg';
+import { PropCfg } from './prop-cfg';
 import { ExpectedResult } from './ExpectedResult';
 
 // Map all UI Elements (and UI Literals?)
@@ -13,7 +13,7 @@ import { ExpectedResult } from './ExpectedResult';
 
 class ResolvedUIE {
 	value: EntityValueType;
-	cfg: Cfg
+	cfg: PropCfg
 }
 
 
@@ -21,7 +21,7 @@ function resolveUIE(
 	uie: UIElement,
 	uieValueGen: UIElementValueGenerator
 ): ResolvedUIE {
-	const cfg = new Cfg();
+	const cfg = new PropCfg();
 
 	return null;
 }
@@ -31,7 +31,7 @@ function resolveProperty( uip: UIProperty ): void {
 }
 
 type UIERefToUIE = Map< string, UIElement >;
-type UIERefToCfg = Map< string, Cfg >; // variable name to cfg
+type UIERefToCfg = Map< string, PropCfg >; // variable name to cfg
 type DTCMap = Map< DataTestCase, ExpectedResult >;
 type UIERefToDTCMap = Map< string, DTCMap >;
 

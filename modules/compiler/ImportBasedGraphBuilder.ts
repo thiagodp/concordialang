@@ -1,7 +1,7 @@
-import { AugmentedSpec } from "../req/AugmentedSpec";
-import { toUnixPath } from "../util/file";
-//const Graph = require( 'graph.js/dist/graph.full.js' );
-import  Graph = require( 'graph.js/dist/graph.full.js' );
+import Graph from 'graph.js/dist/graph.full.js';
+
+import { AugmentedSpec } from '../req/AugmentedSpec';
+import { toUnixPath } from '../util/file';
 
 /**
  * Import-based graph builder

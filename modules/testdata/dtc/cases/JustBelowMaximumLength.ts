@@ -1,6 +1,5 @@
-import { isDefined } from '../../../util/TypeChecking';
 import { ValueType } from '../../../util/ValueTypeDetector';
-import { Cfg } from '../Cfg';
+import { PropCfg } from '../prop-cfg';
 import { DTCAnalyzer } from '../DTCAnalyzer';
 import { ExpectedResult } from '../ExpectedResult';
 
@@ -10,18 +9,18 @@ import { ExpectedResult } from '../ExpectedResult';
 export class JustBelowMaximumLength implements DTCAnalyzer {
 
 	/** @inheritdoc */
-	analyze( cfg: Cfg ): ExpectedResult {
+	analyze( cfg: PropCfg ): ExpectedResult {
 
-		if ( cfg.dataType !== ValueType.STRING ) {
+		if ( cfg.datatype && cfg.datatype.value !== ValueType.STRING ) {
 			return ExpectedResult.INCOMPATIBLE;
 		}
 
-		if ( ! isDefined( cfg.maximumLength ) ) {
+		if ( ! cfg.maxlength ) {
 			return ExpectedResult.INCOMPATIBLE;
 		}
 
-		if ( isDefined( cfg.minimumLength ) ) {
-			const freeValues = cfg.maximumLength - cfg.minimumLength;
+		if ( cfg.minlength ) {
+			const freeValues = cfg.maxlength.value - cfg.minlength.value;
 			// It should have at least 2 values between them, since
 			// JustAboveMinimumLength will cover one of them.
 			if ( freeValues <= 1 ) {

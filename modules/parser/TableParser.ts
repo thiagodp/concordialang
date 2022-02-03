@@ -1,6 +1,6 @@
 import { CaseType } from "../util/CaseType";
 import { Table } from "../ast/Table";
-import { convertCase, removeDiacritics } from "../util/CaseConversor";
+import { convertCase, removeDiacritics } from "../util/case-conversor";
 import { NodeIterator } from './NodeIterator';
 import { NodeParser } from "./NodeParser";
 import { ParsingContext } from "./ParsingContext";

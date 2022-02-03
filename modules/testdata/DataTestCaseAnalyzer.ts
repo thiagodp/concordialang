@@ -1,11 +1,11 @@
-import * as arrayDiff from 'arr-diff';
+import arrayDiff from 'arr-diff';
 import * as enumUtil from 'enum-util';
 
 import { Constant, ReservedTags, Step, UIElement, UIProperty } from '../ast';
 import { UIPropertyTypes } from '../ast/UIPropertyTypes';
 import { RuntimeException } from '../error/RuntimeException';
 import { Entities, NLPUtil } from '../nlp';
-import { isDefined } from '../util/TypeChecking';
+import { isDefined } from '../util/type-checking';
 import { UIElementPropertyExtractor } from '../util/UIElementPropertyExtractor';
 import { adjustValueToTheRightType, ValueType } from '../util/ValueTypeDetector';
 import { DataGeneratorBuilder } from './DataGeneratorBuilder';

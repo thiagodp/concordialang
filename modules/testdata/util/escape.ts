@@ -1,5 +1,5 @@
 //
-// Inspired in https://stackoverflow.com/questions/7744912/making-a-javascript-string-sql-friendly/7760578#7760578
+// Inspired by https://stackoverflow.com/questions/7744912/making-a-javascript-string-sql-friendly/7760578#7760578
 //
 // Adapted for Concordia needs.
 //

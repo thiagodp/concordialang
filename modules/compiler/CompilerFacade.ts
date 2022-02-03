@@ -1,11 +1,10 @@
 import { DateTimeFormatter, LocalDateTime } from '@js-joda/core';
 import { createHash } from 'crypto';
-import Graph = require('graph.js/dist/graph.full.js');
+import Graph from 'graph.js/dist/graph.full.js';
 
-import { AppOptions } from '../app/AppOptions';
+import { AppOptions } from '../app/options/app-options';
 import { RuntimeException } from '../error';
-import { JsonLanguageContentLoader, LanguageContentLoader } from '../language';
-import { LanguageManager } from '../language/LanguageManager';
+import languageMap, { availableLanguages } from '../language/data/map';
 import { Lexer } from '../lexer/Lexer';
 import { NLPBasedSentenceRecognizer } from '../nlp/NLPBasedSentenceRecognizer';
 import { NLPTrainer } from '../nlp/NLPTrainer';
@@ -14,9 +13,9 @@ import { AugmentedSpec } from '../req/AugmentedSpec';
 import { TestCaseGeneratorFacade } from '../testcase/TestCaseGeneratorFacade';
 import { TestCaseGeneratorListener } from '../testcase/TestCaseGeneratorListener';
 import { FileSearchResults, toUnixPath } from '../util/file';
-import { changeFileExtension } from '../util/file/ext-changer';
-import { FSFileHandler } from '../util/file/FSFileHandler';
-import { FSFileSearcher } from '../util/file/FSFileSearcher';
+import { changeFileExtension } from '../util/fs/ext-changer';
+import { FSFileHandler } from '../util/fs/FSFileHandler';
+import { FSFileSearcher } from '../util/fs/FSFileSearcher';
 import { Compiler } from './Compiler';
 import { CompilerListener } from './CompilerListener';
 import { SingleFileCompiler } from './SingleFileCompiler';
@@ -25,8 +24,7 @@ import { SingleFileCompiler } from './SingleFileCompiler';
 export function filterFilesToCompile(
     files: string[],
     extensionFeature: string,
-    extensionTestCase: string,
-    pathLibrary: any
+    extensionTestCase: string
 ) {
     const featureFiles: string[] = files
         .filter( f => f.endsWith( extensionFeature ) )
@@ -38,7 +36,7 @@ export function filterFilesToCompile(
 
     const testCasesWithoutFeature: string[] = onlyTestCases
         .filter( tc => ! featureFiles.includes(
-            toUnixPath( changeFileExtension( tc, extensionFeature, pathLibrary ) ) )
+            toUnixPath( changeFileExtension( tc, extensionFeature ) ) )
             );
 
     return featureFiles.concat( testCasesWithoutFeature );
@@ -53,7 +51,7 @@ export class CompilerFacade {
 
     constructor(
         private readonly _fs: any,
-        private readonly _path: any,
+        private readonly _promisify: any,
         private readonly _compilerListener: CompilerListener,
         private readonly _tcGenListener: TestCaseGeneratorListener,
         ) {
@@ -89,7 +87,7 @@ export class CompilerFacade {
 			! options.run && ! options.result;
 
 		const filesToCompile: string[] = isJustGenerateScript ? files :
-			filterFilesToCompile( files, options.extensionFeature, options.extensionTestCase, this._path );
+			filterFilesToCompile( files, options.extensionFeature, options.extensionTestCase );
 
         const filesToCompileCount = filesToCompile.length;
 
@@ -104,19 +102,16 @@ export class CompilerFacade {
             return [ null, null ];
         }
 
-        const lm = new LanguageManager( fileSearcher, options.languageDir );
-        const availableLanguages: string[] = await lm.availableLanguages();
         if ( availableLanguages.indexOf( options.language ) < 0 ) { // not found
             throw new RuntimeException( 'Informed language is not available: ' + options.language );
         }
 
 
-        const fileHandler = new FSFileHandler( this._fs );
-        const langLoader: LanguageContentLoader = new JsonLanguageContentLoader(
-            options.languageDir, {}, fileHandler, fileHandler );
-        const lexer: Lexer = new Lexer( options.language, langLoader );
+        const fileHandler = new FSFileHandler( this._fs, this._promisify, options.encoding );
+
+        const lexer: Lexer = new Lexer( options.language, languageMap );
         const parser: Parser = new Parser();
-        const nlpTrainer: NLPTrainer = new NLPTrainer( langLoader );
+        const nlpTrainer: NLPTrainer = new NLPTrainer( languageMap );
         const nlpBasedSentenceRecognizer: NLPBasedSentenceRecognizer = new NLPBasedSentenceRecognizer( nlpTrainer );
 
         const singleFileCompiler = new SingleFileCompiler(
@@ -159,7 +154,7 @@ export class CompilerFacade {
 
         const tcGen = new TestCaseGeneratorFacade(
             nlpBasedSentenceRecognizer.variantSentenceRec,
-            langLoader,
+            languageMap,
             this._tcGenListener,
             fileHandler
             );

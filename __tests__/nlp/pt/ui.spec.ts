@@ -1,11 +1,6 @@
-import * as fs from 'fs';
-import { resolve } from 'path';
-
-import { DEFAULT_DIR_LANGUAGE } from '../../../modules/app/default-options';
-import { JsonLanguageContentLoader, LanguageContentLoader } from '../../../modules/language';
 import { Intents, NLP, NLPTrainer } from '../../../modules/nlp';
 import { Entities } from '../../../modules/nlp/Entities';
-import { FSFileHandler } from '../../../modules/util/file';
+import languageMap from '../../../modules/language/data/map';
 import { shouldHaveUIEntities } from '../entity-util';
 
 describe( 'nlp.pt.ui', () => {
@@ -13,16 +8,6 @@ describe( 'nlp.pt.ui', () => {
     let nlp: NLP; // under test
 
     const LANGUAGE = 'pt';
-	const dir = resolve( process.cwd(), 'dist/' );
-	const langDir = resolve( dir, DEFAULT_DIR_LANGUAGE );
-
-    const fileHandler = new FSFileHandler( fs );
-    const langLoader: LanguageContentLoader = new JsonLanguageContentLoader(
-        langDir,
-        {},
-        fileHandler,
-        fileHandler
-        );
 
     // entities
     const UI_ELEMENT: string = Entities.UI_ELEMENT_REF;
@@ -46,7 +31,7 @@ describe( 'nlp.pt.ui', () => {
 
     beforeAll( () => {
         nlp = new NLP();
-        const ok = ( new NLPTrainer( langLoader ) ).trainNLP( nlp, LANGUAGE );
+        const ok = ( new NLPTrainer( languageMap ) ).trainNLP( nlp, LANGUAGE );
         expect( ok ).toBeTruthy();
     } );
 

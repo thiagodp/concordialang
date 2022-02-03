@@ -1,8 +1,7 @@
-import { ValueType } from "modules/util";
-import { isDefined } from "../../../util/TypeChecking";
-import { Cfg } from "../Cfg";
-import { DTCAnalyzer } from "../DTCAnalyzer";
-import { ExpectedResult } from "../ExpectedResult";
+import { ValueType } from '../../../util/ValueTypeDetector';
+import { PropCfg } from '../prop-cfg';
+import { DTCAnalyzer } from '../DTCAnalyzer';
+import { ExpectedResult } from '../ExpectedResult';
 
 /**
  * Evaluates `DataTestCase.ZERO`
@@ -10,36 +9,38 @@ import { ExpectedResult } from "../ExpectedResult";
 export class Zero implements DTCAnalyzer {
 
 	/** @inheritdoc */
-	analyze( cfg: Cfg ): ExpectedResult {
+	analyze( cfg: PropCfg ): ExpectedResult {
 
-		if ( cfg.dataType !== ValueType.INTEGER &&
-			cfg.dataType !== ValueType.DOUBLE
+		if ( cfg.datatype &&
+			cfg.datatype.value !== ValueType.INTEGER &&
+			cfg.datatype.value !== ValueType.DOUBLE
 		) {
 			return ExpectedResult.INCOMPATIBLE;
 		}
 
-		if ( isDefined( cfg.format ) ||
-			isDefined( cfg.value ) ||
-			isDefined( cfg.minimumLength ) ||
-			isDefined( cfg.maximumLength )
+		if ( cfg.format ||
+			cfg.value ||
+			cfg.minlength ||
+			cfg.maxlength
 		) {
 			return ExpectedResult.INCOMPATIBLE;
 		}
 
 		// Minimum value
-		if ( 'number' === typeof cfg.minimumValue ) {
+		const minValue = cfg.minvalue?.value;
+		if ( typeof minValue === 'number' ) {
 
 			// There is already data test cases that cover these situations:
-			if ( 0 === cfg.minimumValue ||
-				0 === +cfg.minimumValue - 1 ||
-				0 === +cfg.minimumValue + 1
-				) {
+			if ( 0 === minValue ||
+				0 === +minValue - 1 ||
+				0 === +minValue + 1
+			) {
 				return ExpectedResult.INCOMPATIBLE;
 			}
 
-			if ( cfg.minimumValue > 0 ) {
+			if ( minValue > 0 ) {
 
-				if ( cfg.minimumValueWithOnlyValidDTC ) {
+				if ( cfg.minvalue?.onlyValidDTC ) {
 					return ExpectedResult.INCOMPATIBLE;
 				}
 
@@ -48,19 +49,20 @@ export class Zero implements DTCAnalyzer {
 		}
 
 		// Maximum value
-		if ( 'number' === typeof cfg.maximumValue ) {
+		const maxValue = cfg.maxvalue?.value;
+		if ( typeof maxValue === 'number' ) {
 
 			// There is already data test cases that cover these situations:
-			if ( 0 === cfg.maximumValue ||
-				0 === +cfg.maximumValue - 1 ||
-				0 === +cfg.maximumValue + 1
+			if ( 0 === maxValue ||
+				0 === +maxValue - 1 ||
+				0 === +maxValue + 1
 				) {
 				return ExpectedResult.INCOMPATIBLE;
 			}
 
-			if ( cfg.maximumValue < 0 ) {
+			if ( maxValue < 0 ) {
 
-				if ( cfg.maximumValueWithOnlyValidDTC ) {
+				if ( cfg.maxvalue?.onlyValidDTC ) {
 					return ExpectedResult.INCOMPATIBLE;
 				}
 

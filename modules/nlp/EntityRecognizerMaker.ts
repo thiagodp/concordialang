@@ -1,6 +1,8 @@
-import Bravey = require('../../lib/bravey'); // .js file
-import * as cloneRegExp from 'clone-regexp';
+import cloneRegExp from 'clone-regexp';
+
+import Bravey from '../../lib/bravey';
 import { adjustValueToTheRightType } from '../util/ValueTypeDetector';
+
 // import { expressionsOf, joinExpressions, propertyByMatch, datePropertyToDate, prefixedRegex, extractNumberFromPrefixedMatch } from './DateTimeExpressions';
 // import { LocalDate, DateTimeFormatter } from '@js-joda/core';
 

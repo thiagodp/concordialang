@@ -1,7 +1,6 @@
-import { isDefined } from "../../../util/TypeChecking";
-import { Cfg } from "../Cfg";
-import { DTCAnalyzer } from "../DTCAnalyzer";
-import { ExpectedResult } from "../ExpectedResult";
+import { PropCfg } from '../prop-cfg';
+import { DTCAnalyzer } from '../DTCAnalyzer';
+import { ExpectedResult } from '../ExpectedResult';
 
 /**
  * Evaluates `DataTestCase.RANDOM_NOT_IN_SET`
@@ -9,14 +8,14 @@ import { ExpectedResult } from "../ExpectedResult";
 export class RandomNotInSet implements DTCAnalyzer {
 
 	/** @inheritdoc */
-	analyze( cfg: Cfg ): ExpectedResult {
+	analyze( cfg: PropCfg ): ExpectedResult {
 
-		if ( isDefined( cfg.value ) &&
-			Array.isArray( cfg.value ) &&
-			cfg.value.length >= 2
+		if ( cfg.value &&
+			Array.isArray( cfg.value.value ) &&
+			cfg.value.value.length >= 2
 		) {
 
-			if ( cfg.valueWithOnlyValidDTC ) {
+			if ( cfg.value.onlyValidDTC ) {
 				return ExpectedResult.INCOMPATIBLE;
 			}
 

@@ -1,6 +1,5 @@
-import { isDefined } from '../../../util/TypeChecking';
 import { ValueType } from '../../../util/ValueTypeDetector';
-import { Cfg } from '../Cfg';
+import { PropCfg } from '../prop-cfg';
 import { DTCAnalyzer } from '../DTCAnalyzer';
 import { ExpectedResult } from '../ExpectedResult';
 
@@ -10,19 +9,19 @@ import { ExpectedResult } from '../ExpectedResult';
 export class EqualToMinimumLength implements DTCAnalyzer {
 
 	/** @inheritdoc */
-	analyze( cfg: Cfg ): ExpectedResult {
+	analyze( cfg: PropCfg ): ExpectedResult {
 
-		if ( cfg.dataType !== ValueType.STRING ) {
+		if ( cfg.datatype && cfg.datatype.value !== ValueType.STRING ) {
 			return ExpectedResult.INCOMPATIBLE;
 		}
 
-		if ( ! isDefined( cfg.minimumLength ) ) {
+		if ( ! cfg.minlength ) {
 			return ExpectedResult.INCOMPATIBLE;
 		}
 
-		if ( 0 === cfg.minimumLength && cfg.required ) {
+		if ( cfg.minlength?.value === 0 && cfg.required?.value === true ) {
 
-			if ( cfg.minimumLengthWithOnlyValidDTC || cfg.requiredWithOnlyValidDTC ) {
+			if ( cfg.minlength.onlyValidDTC || cfg.required.onlyValidDTC ) {
 				return ExpectedResult.INCOMPATIBLE;
 			}
 

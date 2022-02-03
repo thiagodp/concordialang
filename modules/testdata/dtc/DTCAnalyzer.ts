@@ -1,5 +1,5 @@
 import { ExpectedResult } from "./ExpectedResult";
-import { Cfg } from "./Cfg";
+import { PropCfg } from "./prop-cfg";
 
 export interface DTCAnalyzer {
 
@@ -10,6 +10,6 @@ export interface DTCAnalyzer {
 	 *
 	 * @param cfg Configuration
 	 */
-	analyze( cfg: Cfg ): ExpectedResult;
+	analyze( cfg: PropCfg ): ExpectedResult;
 
 }

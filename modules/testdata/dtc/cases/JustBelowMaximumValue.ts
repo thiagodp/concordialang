@@ -1,6 +1,5 @@
-import { isDefined } from '../../../util/TypeChecking';
 import { ValueType } from '../../../util/ValueTypeDetector';
-import { Cfg } from '../Cfg';
+import { hasFreeValuesBetweenThem, PropCfg } from '../prop-cfg';
 import { DTCAnalyzer } from '../DTCAnalyzer';
 import { ExpectedResult } from '../ExpectedResult';
 
@@ -10,19 +9,20 @@ import { ExpectedResult } from '../ExpectedResult';
 export class JustBelowMaximumValue implements DTCAnalyzer {
 
 	/** @inheritdoc */
-	analyze( cfg: Cfg ): ExpectedResult {
+	analyze( cfg: PropCfg ): ExpectedResult {
 
-		if ( ValueType.STRING === cfg.dataType ) {
+		if ( cfg.datatype?.value === ValueType.STRING ) {
 			return ExpectedResult.INCOMPATIBLE;
 		}
 
-		if ( ! isDefined( cfg.maximumValue ) ) {
+		if ( ! cfg.maxvalue ) {
 			return ExpectedResult.INCOMPATIBLE;
 		}
 
-		// No free values between them
-		if ( cfg.maximumValue === cfg.minimumValue ) { // integer only
-			return ExpectedResult.INCOMPATIBLE;
+		if ( cfg.minvalue ) {
+			if ( ! hasFreeValuesBetweenThem( cfg.minvalue.value, cfg.maxvalue.value ) ) {
+				return ExpectedResult.INCOMPATIBLE;
+			}
 		}
 
 		return ExpectedResult.VALID;

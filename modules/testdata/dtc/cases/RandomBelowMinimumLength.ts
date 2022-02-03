@@ -1,6 +1,5 @@
-import { isDefined } from '../../../util/TypeChecking';
 import { ValueType } from '../../../util/ValueTypeDetector';
-import { Cfg } from '../Cfg';
+import { PropCfg } from '../prop-cfg';
 import { DTCAnalyzer } from '../DTCAnalyzer';
 import { ExpectedResult } from '../ExpectedResult';
 
@@ -10,24 +9,24 @@ import { ExpectedResult } from '../ExpectedResult';
 export class RandomBelowMinimumLength implements DTCAnalyzer {
 
 	/** @inheritdoc */
-	analyze( cfg: Cfg ): ExpectedResult {
+	analyze( cfg: PropCfg ): ExpectedResult {
 
-		if ( cfg.dataType !== ValueType.STRING ) {
+		if ( cfg.datatype && cfg.datatype.value !== ValueType.STRING ) {
 			return ExpectedResult.INCOMPATIBLE;
 		}
 
-		if ( ! isDefined( cfg.minimumLength ) ) {
+		if ( ! cfg.minlength ) {
 			return ExpectedResult.INCOMPATIBLE;
 		}
 
 		// Since RandomBelowMinimumLength covers SOME predecessor,
 		// Empty covers 0, and BelowMinimumLength covers 1,
 		// minimumLength should be 3+ to have at least one uncovered value.
-		if ( cfg.minimumLength <= 2 ) {
+		if ( cfg.minlength.value <= 2 ) {
 			return ExpectedResult.INCOMPATIBLE;
 		}
 
-		if ( cfg.minimumLengthWithOnlyValidDTC ) {
+		if ( cfg.minlength.onlyValidDTC ) {
 			return ExpectedResult.INCOMPATIBLE;
 		}
 

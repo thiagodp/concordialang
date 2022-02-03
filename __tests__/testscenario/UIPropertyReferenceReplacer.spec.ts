@@ -1,13 +1,14 @@
-import { LocalDate, LocalDateTime, LocalTime } from "@js-joda/core";
+import { LocalDate, LocalDateTime, LocalTime } from '@js-joda/core';
+
 import { EntityValueType, Step } from '../../modules/ast';
-import { LocatedException } from "../../modules/error/LocatedException";
-import { AugmentedSpec } from "../../modules/req";
-import { createDefaultLocaleMap } from "../../modules/testscenario/locale";
-import { LocaleContext } from "../../modules/testscenario/LocaleContext";
-import { GenContext } from "../../modules/testscenario/PreTestCaseGenerator";
+import { LocatedException } from '../../modules/error/LocatedException';
+import { AugmentedSpec } from '../../modules/req';
+import { createDefaultLocaleMap } from '../../modules/testscenario/locale';
+import { LocaleContext } from '../../modules/testscenario/LocaleContext';
+import { GenContext } from '../../modules/testscenario/PreTestCaseGenerator';
+import { UIPropertyReferenceExtractor } from '../../modules/testscenario/UIPropertyReferenceExtractor';
 import { UIPropertyReferenceReplacer } from '../../modules/testscenario/UIPropertyReferenceReplacer';
-import { UIPropertyReferenceExtractor } from "../../modules/util/UIPropertyReferenceExtractor";
-import { SimpleCompiler } from "../SimpleCompiler";
+import { SimpleCompiler } from '../SimpleCompiler';
 
 
 describe( 'UIPropertyReferenceReplacer', () => {

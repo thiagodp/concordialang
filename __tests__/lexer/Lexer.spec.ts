@@ -1,27 +1,11 @@
-import * as fs from 'fs';
-import { resolve } from 'path';
-
-import { DEFAULT_DIR_LANGUAGE, DEFAULT_LANGUAGE } from '../../modules/app/default-options';
-import { JsonLanguageContentLoader, LanguageContentLoader } from '../../modules/language';
+import { DEFAULT_LANGUAGE } from '../../modules/app/options/default-options';
+import languageMap from '../../modules/language/data/map';
 import { Lexer } from '../../modules/lexer/Lexer';
 import { NodeTypes } from '../../modules/req/NodeTypes';
-import { FSFileHandler } from '../../modules/util/file/FSFileHandler';
 
 describe( 'Lexer', () => {
 
-	const dir = resolve( process.cwd(), 'dist/' );
-	const langDir = resolve( dir, DEFAULT_DIR_LANGUAGE );
-
-    const fileHandler = new FSFileHandler( fs );
-
-    const langLoader: LanguageContentLoader = new JsonLanguageContentLoader(
-        langDir,
-        {},
-        fileHandler,
-        fileHandler
-        );
-
-    const lexer: Lexer = new Lexer( DEFAULT_LANGUAGE, langLoader ); // under test
+    const lexer: Lexer = new Lexer( DEFAULT_LANGUAGE, languageMap ); // under test
 
     // Helper function
     function assertLineExpectations( lines: any[] ) {

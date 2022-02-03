@@ -1,25 +1,13 @@
-import * as fs from 'fs';
-import { resolve } from 'path';
-
 import { UIProperty } from '../../modules/ast/UIProperty';
-import { JsonLanguageContentLoader, LanguageContentLoader } from '../../modules/language';
+import languageMap from '../../modules/language/data/map';
 import { NLP, NLPTrainer, UIPropertyRecognizer } from '../../modules/nlp';
 import { NodeTypes } from '../../modules/req/NodeTypes';
-import { FSFileHandler } from '../../modules/util/file/FSFileHandler';
-import { DEFAULT_DIR_LANGUAGE } from '../../modules/app/default-options';
 
 describe( 'UIPropertyRecognizer', () => {
 
     let nodes = [];
     let errors = [];
 	let warnings = [];
-
-	const dir = resolve( process.cwd(), 'dist/' );
-	const langDir = resolve( dir, DEFAULT_DIR_LANGUAGE );
-
-    const fileHandler = new FSFileHandler( fs );
-    const langLoader: LanguageContentLoader =
-        new JsonLanguageContentLoader( langDir, {}, fileHandler, fileHandler );
 
     // helper
     function makeNode( content: string, line = 1, column = 1 ): UIProperty {
@@ -35,7 +23,7 @@ describe( 'UIPropertyRecognizer', () => {
         const LANGUAGE = 'pt';
         let nlp = new NLP();
         let rec = new UIPropertyRecognizer( nlp ); // under test
-        let nlpTrainer = new NLPTrainer( langLoader );
+        let nlpTrainer = new NLPTrainer( languageMap );
         rec.trainMe( nlpTrainer, LANGUAGE );
 
 

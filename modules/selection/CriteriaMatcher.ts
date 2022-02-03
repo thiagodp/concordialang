@@ -1,7 +1,7 @@
-import { DEFAULT_IMPORTANCE } from '../app/default-options';
+import { DEFAULT_IMPORTANCE } from '../app/options/default-options';
 import { ReservedTags, Tag } from '../ast/Tag';
-import { TagUtil } from '../util/TagUtil';
-import { isString } from '../util/TypeChecking';
+import { TagUtil } from './TagUtil';
+import { isString } from '../util/type-checking';
 import { FilterCriterion } from './FilterCriterion';
 
 export class CriteriaMatcher {
