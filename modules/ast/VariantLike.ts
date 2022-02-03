@@ -32,7 +32,7 @@ export class State {
     }
 
     toString(): string {
-        return name;
+        return this.name;
     }
 
     equals( state: State ): boolean {

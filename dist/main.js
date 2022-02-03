@@ -5,7 +5,7 @@ import { cosmiconfig } from 'cosmiconfig';
 import { distance } from 'damerau-levenshtein-js';
 import * as fs from 'fs';
 import fsExtra from 'fs-extra';
-import readPkgUp from 'read-pkg-up';
+import readPackageUp from 'read-pkg-up';
 import semverDiff from 'semver-diff';
 import { UpdateNotifier } from 'update-notifier';
 import { promisify } from 'util';
@@ -967,7 +967,7 @@ class State {
   }
 
   toString() {
-    return name;
+    return this.name;
   }
 
   equals(state) {
@@ -23316,45 +23316,64 @@ async function main(appPath, processPath) {
   }
 
   const parentDir = path.dirname(appPath);
-  const pkg = (readPkgUp.sync({
-    cwd: parentDir,
-    normalize: false
-  }) || {}).packageJson || {};
+  let pkg;
+  let couldReadPackage = false;
+
+  try {
+    var _pkg;
+
+    pkg = await readPackageUp({
+      cwd: parentDir,
+      normalize: false
+    });
+    pkg = (_pkg = pkg) == null ? void 0 : _pkg.packageJson;
+    couldReadPackage = !!pkg;
+  } catch (err) {
+    console.log('Could not find package.json');
+  }
+
+  if (!pkg) {
+    pkg = {
+      description: 'Concordia Language Compiler',
+      version: '?',
+      author: {
+        name: 'Thiago Delgado Pinto'
+      },
+      homepage: 'https://concordialang.org'
+    };
+  }
 
   if (options.about) {
-    ui.showAbout({
-      description: pkg.description || 'Concordia Language Compiler',
-      version: pkg.version || '?',
-      author: pkg.author['name'] || 'Thiago Delgado Pinto',
-      homepage: pkg.homepage || 'https://concordialang.org'
-    });
+    ui.showAbout(pkg);
     return true;
   }
 
   if (options.version) {
-    ui.showVersion(pkg.version || '?');
+    ui.showVersion(pkg.version);
     return true;
   }
 
-  const notifier = new UpdateNotifier({
-    pkg,
-    updateCheckInterval: 1000 * 60 * 60 * 12
-  });
-  notifier.notify();
+  if (couldReadPackage) {
+    const notifier = new UpdateNotifier({
+      pkg,
+      updateCheckInterval: 1000 * 60 * 60 * 12
+    });
+    notifier.notify();
 
-  if (!!notifier.update) {
-    const diff = semverDiff(notifier.update.current, notifier.update.latest);
-    const hasBreakingChange = 'major' === diff;
-    const url = 'https://github.com/thiagodp/concordialang/releases';
-    ui.announceUpdateAvailable(url, hasBreakingChange);
-  }
-
-  if (options.newer) {
-    if (!notifier.update) {
-      ui.announceNoUpdateAvailable();
+    if (!!notifier.update) {
+      const diff = semverDiff(notifier.update.current, notifier.update.latest);
+      const hasBreakingChange = 'major' === diff;
+      const url = 'https://github.com/thiagodp/concordialang/releases';
+      ui.announceUpdateAvailable(url, hasBreakingChange);
     }
 
-    return true;
+    if (options.newer) {
+      if (!notifier.update) {
+        ui.announceNoUpdateAvailable();
+      }
+
+      return true;
+    }
   }
 
   let fileOptions = null;
