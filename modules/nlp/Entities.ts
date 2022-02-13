@@ -8,7 +8,7 @@
 export enum Entities {
 
     //
-    // REMEMBER: On update any of these values, update SyntaxRules and .json files as well.
+    // REMEMBER: On update any of these values, update SyntaxRules and language files as well.
     //
 
     // Value entities (no specific intent)

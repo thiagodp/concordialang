@@ -7,6 +7,7 @@ export * from './StepHandler';
 export * from './TargetTypeUtil';
 export * from './TestScenario';
 export * from './TestScenarioGenerator';
+export * from './UIPropertyReferenceExtractor';
 export * from './UIPropertyReferenceReplacer';
 export * from './value-formatter';
 export * from './VariantStateDetector';

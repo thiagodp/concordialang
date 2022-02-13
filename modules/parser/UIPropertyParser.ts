@@ -35,7 +35,7 @@ export class UIPropertyParser implements ListItemNodeParser {
         // Checks the context
         if ( ! context.currentUIElement ) {
             const e = new SyntacticException(
-                'A "' + node.nodeType + '" is declared without a UI Element.',
+                'Property declared without a UI Element.',
                 node.location
                 );
             errors.push( e );

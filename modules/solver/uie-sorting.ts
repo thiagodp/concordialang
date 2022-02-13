@@ -1,21 +1,25 @@
 import Graph from 'graph.js/dist/graph.full.js';
 
-import { UIElement } from '../ast/UIElement';
+import { Document, UIElement, UIPropertyReference } from '../ast';
 import { SemanticException } from '../error/SemanticException';
+import { Entities } from '../nlp/Entities';
+import { AugmentedSpec } from '../req/AugmentedSpec';
 import { NodeTypes } from '../req/NodeTypes';
 import { UIElementPropertyExtractor } from '../util/UIElementPropertyExtractor';
 
 
 export function sortUIElementsByTheirDependencies(
     uiElements: UIElement[],
-    problems: SemanticException[],
+	spec: AugmentedSpec,
+	doc: Document,
     dependenciesGraph?: Graph // optional
-): UIElement[] {
+): { uiElements: UIElement[], problems: SemanticException[] } {
 
-    const graph = dependenciesGraph || makeGraphOfDependencies( uiElements );
+    const graph = dependenciesGraph || makeGraphOfDependencies( uiElements, spec, doc );
 
+	const problems: SemanticException[] = [];
     if ( hasCyclicReferences( graph, problems ) ) {
-        return [];
+        return { uiElements: [], problems };
     }
 
     const elements: UIElement[] = [];
@@ -23,15 +27,15 @@ export function sortUIElementsByTheirDependencies(
         elements.push( v );
     }
 
-    return elements;
+    return { uiElements: elements, problems };
 }
 
 
-function makeGraphOfDependencies( uiElements: UIElement[] ): Graph {
+function makeGraphOfDependencies( uiElements: UIElement[], spec: AugmentedSpec, doc: Document ): Graph {
     const graph = new Graph();
     for ( const uie of uiElements ) {
         graph.addVertex( uie.info.fullVariableName, uie ); // key, value
-        const deps = dependenciesOfUIElements( uie );
+        const deps = dependenciesOfUIElements( uie, spec, doc );
         for ( const depUIE of deps ) {
             graph.ensureVertex( depUIE.info.fullVariableName ); // no value
             graph.ensureEdge( depUIE.info.fullVariableName, uie.info.fullVariableName ); // to, from
@@ -70,19 +74,38 @@ function hasCyclicReferences( graph: Graph, problems: SemanticException[] ): boo
 }
 
 
-export function dependenciesOfUIElements( uie: UIElement ): UIElement[] {
+export function dependenciesOfUIElements( uie: UIElement, spec: AugmentedSpec, doc: Document ): UIElement[] {
 
     const propertiesMap = ( new UIElementPropertyExtractor() ).mapProperties( uie );
 
     const elements: UIElement[] = [];
     for ( const props of propertiesMap.values() ) {
-        for ( const v of props ) {
-            if ( undefined === v.value || null === v.value ) {
+        for ( const uiProperty of props ) {
+            if ( ! uiProperty.value ) {
                 continue;
             }
-            for ( const reference of v.value.references || [] ) {
-                if ( reference.nodeType === NodeTypes.UI_ELEMENT ) {
-                    const other: UIElement = reference as UIElement;
+
+			// UI Property Reference in the value, e.g., `- minimum value is {Other|minvalue}`
+			// TO-DO: Accept an expression, like `- minimum value is {Other|minvalue} + 1`
+			if ( uiProperty.value.entity === Entities.UI_PROPERTY_REF ) {
+
+				// Usually a single value, but let it recognize many
+				for ( const ref of uiProperty.value.references || [] ) {
+					const uipRef: UIPropertyReference = ref as UIPropertyReference;
+					if ( ! uipRef.uiElementName ) {
+						continue;
+					}
+					const other: UIElement = spec.uiElementByVariable( uipRef.uiElementName, doc );
+					if ( other ) {
+						elements.push( other );
+					}
+				}
+				continue;
+			}
+
+            for ( const ref of uiProperty.value.references || [] ) {
+                if ( ref.nodeType === NodeTypes.UI_ELEMENT ) {
+                    const other: UIElement = ref as UIElement;
                     elements.push( other );
                 }
             }

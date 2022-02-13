@@ -10,7 +10,6 @@ import {
     Node,
     Table,
     UIElement,
-    UIProperty,
     UIPropertyTypes,
 } from '../ast';
 import { AlaSqlDatabaseInterface } from '../db/AlaSqlDatabaseInterface';
@@ -37,7 +36,7 @@ export async function solveVariable(
 	propertyCache: UIEPropertyCache,
 	currentFeatureName: string,
 	docContext: DocContext,
-): Promise< any > {
+): Promise< EntityValueType > {
 
 	let { feature, uie, property } = extractVariableReferences( variable );
 	feature = feature || currentFeatureName;
@@ -54,13 +53,8 @@ export async function solveVariable(
 	}
 
 	// Retrieve the property value. If needed, it generates the value and add it to the cache.
-	const value = await retrievePropertyValue(
+	return retrievePropertyValue(
 		fullVariableName, property, propCfg, propertyCache, docContext );
-
-	if ( value === null || value === undefined ) {
-		return null; // Property value could not be retrieved
-	}
-	return value;
 }
 
 
@@ -144,6 +138,11 @@ export async function retrievePropertyValue(
 			break;
 		}
 
+		case UIPropertyTypes.REQUIRED: {
+			value = propExtractor.extractIsRequired( uie );
+			break;
+		}
+
 		case UIPropertyTypes.LOCALE: {
 			value = propExtractor.extractLocale( uie );
 			break;
@@ -158,28 +157,32 @@ export async function retrievePropertyValue(
 		// Possibly dynamic
 		//
 
-		case UIPropertyTypes.FORMAT: {
-			const pFormat =  propertiesMap.get( UIPropertyTypes.VALUE ) || null;
-			if ( pFormat ) {
+		default: {
+			const prop = propertiesMap.get( property as UIPropertyTypes );
+			if ( prop ) {
 				value = await solvePropertyEntityValue(
-					pFormat.value, propertyCache, currentFeatureName, docContext );
+					prop.value, propertyCache, currentFeatureName, docContext );
 			}
-			break;
 		}
 
 	}
 
-	if ( value === null ) {
+	if ( value === null || value === undefined ) {
 		return null;
 	}
 
+	// Property value that needs to be adjusted to number
+	if ( property === UIPropertyTypes.MIN_LENGTH || property === UIPropertyTypes.MAX_LENGTH ) {
+		value = Number( value );
+	}
 
 	// Set the property value
-	propCfg[ property ] = { value };
+	propCfg[ property ] = { value } as any;
 
 	// Set it (add/overwrite) in the cache
 	propertyCache.set( fullVariableName, propCfg );
 
+	return value;
 }
 
 

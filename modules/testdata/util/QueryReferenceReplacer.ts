@@ -12,7 +12,7 @@ const { escape } = sqlstring;
  */
 export class QueryReferenceReplacer {
 
-    replaceConstantInQuery( query: string, variable: string, value: string | number | boolean ): string {
+    replaceConstantInQuery( query: string, variable: string, value: any ): string {
         const regex = this.makeNameRegex( variable );
         return query.replace( regex, this.wrapValue( value ) );
     }
@@ -20,7 +20,7 @@ export class QueryReferenceReplacer {
     replaceUIElementInQuery(
 		query: string,
 		variable: string,
-		value: string | number | boolean
+		value: any
 	): string {
         const regex = this.makeVarRegex( variable );
 		return query.replace( regex, this.wrapValue( value ) );
@@ -42,7 +42,7 @@ export class QueryReferenceReplacer {
         return query.replace( regex, internalName );
     }
 
-    wrapValue( content: string | number | boolean ): string {
+    wrapValue( content: any ): string {
         return escape( content );
     }
 
